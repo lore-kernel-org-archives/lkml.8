@@ -2,294 +2,200 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAD_ENC_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF32CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76BBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A32220882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C5820882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Va3SkuIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgDUEVf (ORCPT
+        id S1726490AbgDUEYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:21:35 -0400
-Received: from h1.fbrelay.privateemail.com ([131.153.2.42]:41569 "EHLO
-        h1.fbrelay.privateemail.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725730AbgDUEVe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:21:34 -0400
-Received: from MTA-06-3.privateemail.com (mta-06.privateemail.com [68.65.122.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by h1.fbrelay.privateemail.com (Postfix) with ESMTPS id 5EF1481436
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 00:21:32 -0400 (EDT)
-Received: from MTA-06.privateemail.com (localhost [127.0.0.1])
-        by MTA-06.privateemail.com (Postfix) with ESMTP id F2D816003F;
-        Tue, 21 Apr 2020 00:21:30 -0400 (EDT)
-Received: from localhost (unknown [10.20.151.212])
-        by MTA-06.privateemail.com (Postfix) with ESMTPA id 970956003D;
-        Tue, 21 Apr 2020 04:21:30 +0000 (UTC)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <3a37ab41-ab0e-6fae-9fbe-710f83a945f2@c-s.fr>
-Originaldate: Sat Apr 18, 2020 at 12:27 PM
-Originalfrom: "Christophe Leroy" <christophe.leroy@c-s.fr>
-Original: =?utf-8?q?=0D=0A=0D=0ALe_15/04/2020_
- =C3=A0_18:22,_Christopher_M_Riedl_a_?= =?utf-8?q?=C3=A9crit=C2=A0:
- =0D=0A>>_On_April_15,_2020_4:12_AM_Christophe_?=
- =?utf-8?q?Leroy_<christophe.leroy@c-s.fr>_wrote:=0D=0A>>=0D=0A>>___=0D=0A?=
- =?utf-8?q?>>_Le_15/04/2020_=C3=A0_07:16,_Christopher_M_Riedl_a_=C3=A9crit?=
- =?utf-8?q?=C2=A0:=0D=0A>>>>_On_March_26,_2020_9:42_AM_Christophe_Leroy_<c?=
- =?utf-8?q?hristophe.leroy@c-s.fr>_wrote:=0D=0A>>>>=0D=0A>>>>____=0D=0A>>>?=
- =?utf-8?q?>_This_patch_fixes_the_RFC_series_identified_below.=0D=0A>>>>_I?=
- =?utf-8?q?t_fixes_three_points:=0D=0A>>>>_-_Failure_with_CONFIG=5FPPC=5FK?=
- =?utf-8?q?UAP=0D=0A>>>>_-_Failure_to_write_do_to_lack_of_DIRTY_bit_set_on?=
- =?utf-8?q?_the_8xx=0D=0A>>>>_-_Inadequaly_complex_WARN_post_verification?=
- =?utf-8?q?=0D=0A>>>>=0D=0A>>>>_However,_it_has_an_impact_on_the_CPU_load.?=
- =?utf-8?q?_Here_is_the_time=0D=0A>>>>_needed_on_an_8xx_to_run_the_ftrace_?=
- =?utf-8?q?selftests_without_and=0D=0A>>>>_with_this_series:=0D=0A>>>>_-_W?=
- =?utf-8?q?ithout_CONFIG=5FSTRICT=5FKERNEL=5FRWX=09=09=3D=3D>_38_seconds?=
- =?utf-8?q?=0D=0A>>>>_-_With_CONFIG=5FSTRICT=5FKERNEL=5FRWX=09=09=09=3D=3D?=
- =?utf-8?q?>_40_seconds=0D=0A>>>>_-_With_CONFIG=5FSTRICT=5FKERNEL=5FRWX_+_?=
- =?utf-8?q?this_series=09=3D=3D>_43_seconds=0D=0A>>>>=0D=0A>>>>_Link:_http?=
- =?utf-8?q?s://patchwork.ozlabs.org/project/linuxppc-dev/list/=3Fseries=3D?=
- =?utf-8?q?166003=0D=0A>>>>_Signed-off-by:_Christophe_Leroy_<christophe.le?=
- =?utf-8?q?roy@c-s.fr>=0D=0A>>>>_---=0D=0A>>>>____arch/powerpc/lib/code-pa?=
- =?utf-8?q?tching.c_|_5_++++-=0D=0A>>>>____1_file_changed,_4_insertions(+)?=
- =?utf-8?q?,_1_deletion(-)=0D=0A>>>>=0D=0A>>>>_diff_--git_a/arch/powerpc/l?=
- =?utf-8?q?ib/code-patching.c_b/arch/powerpc/lib/code-patching.c=0D=0A>>>>?=
- =?utf-8?q?_index_f156132e8975..4ccff427592e_100644=0D=0A>>>>_---_a/arch/p?=
- =?utf-8?q?owerpc/lib/code-patching.c=0D=0A>>>>_+++_b/arch/powerpc/lib/cod?=
- =?utf-8?q?e-patching.c=0D=0A>>>>_@@_-97,6_+97,7_@@_static_int_map=5Fpatch?=
- =?utf-8?q?(const_void_*addr,_struct_patch=5Fmapping_*patch=5Fmapping)=0D?=
- =?utf-8?q?=0A>>>>____=09}=0D=0A>>>>____=0D=0A>>>>____=09pte_=3D_mk=5Fpte(?=
- =?utf-8?q?page,_pgprot);=0D=0A>>>>_+=09pte_=3D_pte=5Fmkdirty(pte);=0D=0A>?=
- =?utf-8?q?>>>____=09set=5Fpte=5Fat(patching=5Fmm,_patching=5Faddr,_ptep,_?=
- =?utf-8?q?pte);=0D=0A>>>>____=0D=0A>>>>____=09init=5Ftemp=5Fmm(&patch=5Fm?=
- =?utf-8?q?apping->temp=5Fmm,_patching=5Fmm);=0D=0A>>>>_@@_-168,7_+169,9_@?=
- =?utf-8?q?@_static_int_do=5Fpatch=5Finstruction(unsigned_int_*addr,_unsig?=
- =?utf-8?q?ned_int_instr)=0D=0A>>>>____=09=09=09(offset=5Fin=5Fpage((unsig?=
- =?utf-8?q?ned_long)addr)_/=0D=0A>>>>____=09=09=09=09sizeof(unsigned_int))?=
- =?utf-8?q?;=0D=0A>>>>____=0D=0A>>>>_+=09allow=5Fwrite=5Fto=5Fuser(patch?=
- =?utf-8?q?=5Faddr,_sizeof(instr));=0D=0A>>>>____=09=5F=5Fpatch=5Finstruct?=
- =?utf-8?q?ion(addr,_instr,_patch=5Faddr);=0D=0A>>>>_+=09prevent=5Fwrite?=
- =?utf-8?q?=5Fto=5Fuser(patch=5Faddr,_sizeof(instr));=0D=0A>>>>=0D=0A>>>?=
- =?utf-8?q?=0D=0A>>>_On_radix_we_can_map_the_page_with_PAGE=5FKERNEL_prote?=
- =?utf-8?q?ction_which_ends_up=0D=0A>>>_setting_EAA[0]_in_the_radix_PTE._T?=
- =?utf-8?q?his_means_the_KUAP_(AMR)_protection_is=0D=0A>>>_ignored_(ISA_v3?=
- =?utf-8?q?.0b_Fig._35)_since_we_are_accessing_the_page_from_MSR[PR]=3D0.?=
- =?utf-8?q?=0D=0A>>>=0D=0A>>>_Can_we_employ_a_similar_approach_on_the_8xx?=
- =?utf-8?q?=3F_I_would_prefer_*not*_to_wrap=0D=0A>>>_the_=5F=5Fpatch=5Fins?=
- =?utf-8?q?truction()_with_the_allow=5F/prevent=5Fwrite=5Fto=5Fuser()_KUAP?=
- =?utf-8?q?_things=0D=0A>>>_because_this_is_a_temporary_kernel_mapping_whi?=
- =?utf-8?q?ch_really_isn't_userspace_in=0D=0A>>>_the_usual_sense.=0D=0A>>?=
- =?utf-8?q?=0D=0A>>_On_the_8xx,_that's_pretty_different.=0D=0A>>=0D=0A>>_T?=
- =?utf-8?q?he_PTE_doesn't_control_whether_a_page_is_user_page_or_a_kernel_?=
- =?utf-8?q?page.=0D=0A>>_The_only_thing_that_is_set_in_the_PTE_is_whether_?=
- =?utf-8?q?a_page_is_linked_to_a=0D=0A>>_given_PID_or_not.=0D=0A>>_PAGE=5F?=
- =?utf-8?q?KERNEL_tells_that_the_page_can_be_addressed_with_any_PID.=0D=0A?=
- =?utf-8?q?>>=0D=0A>>_The_user_access_right_is_given_by_a_kind_of_zone,_wh?=
- =?utf-8?q?ich_is_in_the_PGD=0D=0A>>_entry._Every_pages_above_PAGE=5FOFFSE?=
- =?utf-8?q?T_are_defined_as_belonging_to_zone_0.=0D=0A>>_Every_pages_below?=
- =?utf-8?q?_PAGE=5FOFFSET_are_defined_as_belonging_to_zone_1.=0D=0A>>=0D?=
- =?utf-8?q?=0A>>_By_default,_zone_0_can_only_be_accessed_by_kernel,_and_zo?=
- =?utf-8?q?ne_1_can_only=0D=0A>>_be_accessed_by_user._When_kernel_wants_to?=
- =?utf-8?q?_access_zone_1,_it_temporarily=0D=0A>>_changes_properties_of_zo?=
- =?utf-8?q?ne_1_to_allow_both_kernel_and_user_accesses.=0D=0A>>=0D=0A>>_So?=
- =?utf-8?q?,_if_your_mapping_is_below_PAGE=5FOFFSET,_it_is_in_zone_1_and_k?=
- =?utf-8?q?ernel=0D=0A>>_must_unlock_it_to_access_it.=0D=0A>>=0D=0A>>=0D?=
- =?utf-8?q?=0A>>_And_this_is_more_or_less_the_same_on_hash/32._This_is_man?=
- =?utf-8?q?aged_by_segment=0D=0A>>_registers._One_segment_register_corresp?=
- =?utf-8?q?onds_to_a_256Mbytes_area._Every=0D=0A>>_pages_below_PAGE=5FOFFS?=
- =?utf-8?q?ET_can_only_be_read_by_default_by_kernel._Only_user=0D=0A>>_can?=
- =?utf-8?q?_write_if_the_PTE_allows_it._When_the_kernel_needs_to_write_at_?=
- =?utf-8?q?an=0D=0A>>_address_below_PAGE=5FOFFSET,_it_must_change_the_segm?=
- =?utf-8?q?ent_properties_in_the=0D=0A>>_corresponding_segment_register.?=
- =?utf-8?q?=0D=0A>>=0D=0A>>_So,_for_both_cases,_if_we_want_to_have_it_loca?=
- =?utf-8?q?l_to_a_task_while_still=0D=0A>>_allowing_kernel_access,_it_mean?=
- =?utf-8?q?s_we_have_to_define_a_new_special_area=0D=0A>>_between_TASK=5FS?=
- =?utf-8?q?IZE_and_PAGE=5FOFFSET_which_belongs_to_kernel_zone.=0D=0A>>=0D?=
- =?utf-8?q?=0A>>_That_looks_complex_to_me_for_a_small_benefit,_especially_?=
- =?utf-8?q?as_8xx_is_not=0D=0A>>_SMP_and_neither_are_most_of_the_hash/32_t?=
- =?utf-8?q?argets.=0D=0A>>=0D=0A>_=0D=0A>_Agreed._So_I_guess_the_solution_?=
- =?utf-8?q?is_to_differentiate_between_radix/non-radix=0D=0A>_and_use_PAGE?=
- =?utf-8?q?=5FSHARED_for_non-radix_along_with_the_KUAP_functions_when_KUAP?=
- =?utf-8?q?=0D=0A>_is_enabled._Hmm,_I_need_to_think_about_this_some_more,_?=
- =?utf-8?q?especially_if_it's=0D=0A>_acceptable_to_temporarily_map_kernel_?=
- =?utf-8?q?text_as_PAGE=5FSHARED_for_patching._Do=0D=0A>_you_see_any_obvio?=
- =?utf-8?q?us_problems_on_8xx_and_hash/32_w/_using_PAGE=5FSHARED=3F=0D=0A?=
- =?utf-8?q?=0D=0ANo_it_shouldn't_be_a_problem_AFAICS,_except_maybe_the_CPU?=
- =?utf-8?q?_overhead_it_=0D=0Abrings_as_I_mentioned_previously_(ftrace_sel?=
- =?utf-8?q?ftests_going_from_40_to_43_=0D=0Aseconds_ie_8%_overhead.=0D=0A?=
- =?utf-8?q?=0D=0A>_=0D=0A>_I_don't_necessarily_want_to_drop_the_local_mm_p?=
- =?utf-8?q?atching_idea_for_non-radix=0D=0A>_platforms_since_that_means_we?=
- =?utf-8?q?_would_have_to_maintain_two_implementations.=0D=0A>_=0D=0A=0D?=
- =?utf-8?q?=0AWhat's_the_problem_with_RADIX,_why_can't_PAGE=5FSHARED_be_us?=
- =?utf-8?q?ed_on_radix_=3F=0D=0A=0D=0AChristophe=0D=0A?=
-Date:   Mon, 20 Apr 2020 23:22:49 -0500
-Cc:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [RFC PATCH] powerpc/lib: Fixing use a temporary mm for code
- patching
-From:   "Christopher M. Riedl" <cmr@informatik.wtf>
-To:     "Christophe Leroy" <christophe.leroy@c-s.fr>
-Message-Id: <C26LKGPLFN9C.57CFF2U7I7X0@geist>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 21 Apr 2020 00:24:20 -0400
+Received: from mail-eopbgr70078.outbound.protection.outlook.com ([40.107.7.78]:6236
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725904AbgDUEYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:24:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mOnXtCrvP9iPsgEzmm7PeoCitUSACvMKk+AOWdHhudRnDgl1d4tLekM70WRXaD025sZILL6HCXaDR66YVHSub6L+Isqp8RSNrLVL5RJSAT2f4S2uq19I78TUcVVkuDulJh4oJUmJ68v2aqktTJ31r5iis6Utqg1I0iUWWO8acaKEwCIQ0y/mcqMDwOjaqZdxaRCjEdCvbLwLVutInCOUf90mwECFLRQfCajLCfKXT1ttEGSY5Q2A4eKf+nTg2KNoOy1f9onPSvb1ouyBvU4JgPgTDWJ2qnfa7SfNUEd9XJMTW360GWR2y68LHtbpqdD7CSvGbx60I5dg/tfy5uyZjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aYFkmj6RzkiSUylBoP6WGnFjI7pLai8QRajtfwhTIXo=;
+ b=WqI+8o9jg1dRy2EnLfoVUsnI0ReOtJf9D6wPOcSxWW1OGx6LJjFtDtDcjr1l7rARuilyHC3UH6g5wQD/dvqSjjPkudh5fjrzbVRBOejgI80wL44CofXyN5vPd0uRPsJEcZKcpTYZQQaNaQHU1XXvJHgj/SQI1GgB4kslRJV6h9qx9m14R4njONL6H3RrpfAlmLptevcbxDVx1eZAfSqK2rKT+G8ZC2/sYWPbeN0rni7V8B8ew/GXq5omlLOtmlfXVk4M84OKM0DaGOv6tYS26GZ4D77Nqg5W7TQJ/fBCG70Wi7Y0hzFQjb8UK+Vzwm4W1qbA5NS97SLwJiRNIn2A6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aYFkmj6RzkiSUylBoP6WGnFjI7pLai8QRajtfwhTIXo=;
+ b=Va3SkuISmamMQ14nk6qzy/tpOtVyli88Sf9jHqBdDVQ6dIQ3N422kyFQI1qsdZOLiurwAAjv1lWa3YKbi9JhsvsMrdsgTUG+0XyCePggDo4oZThAXHU2TGj7BEsUGBvmKe0m72ow8yfKf2tj1gp+Ya9CQwyjrci50Q3T6fDRRrA=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6736.eurprd05.prod.outlook.com (2603:10a6:800:13f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Tue, 21 Apr
+ 2020 04:24:12 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
+ 04:24:11 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "nico@fluxnic.net" <nico@fluxnic.net>
+CC:     "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+Thread-Topic: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+Thread-Index: AQHWFFU+GtgmZSAXzkWfdBAfhtrsbqh/PqeAgAAC8YCAAA/HgIACZWqAgAFJ8gA=
+Date:   Tue, 21 Apr 2020 04:24:10 +0000
+Message-ID: <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com>
+References: <20200417011146.83973-1-saeedm@mellanox.com>
+         <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com>
+         <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr>
+         <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
+         <87v9lu1ra6.fsf@intel.com>
+In-Reply-To: <87v9lu1ra6.fsf@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9394e42d-8047-456e-4e65-08d7e5abd7c5
+x-ms-traffictypediagnostic: VI1PR05MB6736:
+x-microsoft-antispam-prvs: <VI1PR05MB6736DD8C8DED96CD32B4649DBED50@VI1PR05MB6736.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 038002787A
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(81156014)(2616005)(6486002)(26005)(91956017)(76116006)(66946007)(66446008)(6512007)(4326008)(186003)(66476007)(66556008)(64756008)(478600001)(36756003)(8936002)(86362001)(110136005)(54906003)(8676002)(7416002)(316002)(6506007)(2906002)(53546011)(5660300002)(71200400001);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jZ6Vmxh8rXQ9YJdu7YAN1rNFyPcCVzO8+xEcsNU5M0XRm4kyBpNfNFO+nKNzWb5SZ19bTevhneGSoJmeliDcsEbdyeeROdlqE4SMmet5ezCG9TeM5lpG39+BRdbTUIkJ1QeEWa3hjNoxzs9FA9wkT17KkfPO7a+stDT3T6Kak9t5JAPLhqr1ua/1OkS7P5GdpLV0i5MeUap2I8GXbIthE28KHWDprBvW7j1YxsnT39atbW7l/6KJJTRrpMKiQPcaHIrC3xVKcsAOkXNWnMbsiC3nVKM+1/YT6iX3Xvrxv9vArjyDVnvYFImlipntB7xHLq6BhXfdOV0RcxSPW3YOBZahTaSocfHbWqqGeEdzywidhr4ai9xEJ1Iub6l24myH7lh0qWnV9635W1aKqHnnkDIS+dEF/o8IOKvE4Z8j3mHVo+uJBcwbX5UFXzeT6xrW
+x-ms-exchange-antispam-messagedata: OnZwQUBRvngOL50kFO9ueCTTsPjCftBK9r6ccUe2MbhoeSh+VddYGBdXHt93YlzIseTCrP6qY2bM7aNOXxZg5ack182WZMbsaC4gSmBM5XmDaH2QykMcVCMAeUpfEcEVZ8+PJ1t5jdJsB632Fgj73g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <40FF8F174C3A9548A2417F06D6A6E851@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9394e42d-8047-456e-4e65-08d7e5abd7c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2020 04:24:11.5796
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c3wvqVBbXYBPgFWeAGTJhsqJWemhCU+5VbFATlZO+ugAg8cAZdDQF31s6Ywjr+Ytk5nhvsClBFJQMyAYQG18GQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6736
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat Apr 18, 2020 at 12:27 PM, Christophe Leroy wrote:
->
->=20
->
->=20
-> Le 15/04/2020 =C3=A0 18:22, Christopher M Riedl a =C3=A9crit :
-> >> On April 15, 2020 4:12 AM Christophe Leroy <christophe.leroy@c-s.fr> w=
-rote:
-> >>
-> >>  =20
-> >> Le 15/04/2020 =C3=A0 07:16, Christopher M Riedl a =C3=A9crit=C2=A0:
-> >>>> On March 26, 2020 9:42 AM Christophe Leroy <christophe.leroy@c-s.fr>=
- wrote:
-> >>>>
-> >>>>   =20
-> >>>> This patch fixes the RFC series identified below.
-> >>>> It fixes three points:
-> >>>> - Failure with CONFIG_PPC_KUAP
-> >>>> - Failure to write do to lack of DIRTY bit set on the 8xx
-> >>>> - Inadequaly complex WARN post verification
-> >>>>
-> >>>> However, it has an impact on the CPU load. Here is the time
-> >>>> needed on an 8xx to run the ftrace selftests without and
-> >>>> with this series:
-> >>>> - Without CONFIG_STRICT_KERNEL_RWX		=3D=3D> 38 seconds
-> >>>> - With CONFIG_STRICT_KERNEL_RWX			=3D=3D> 40 seconds
-> >>>> - With CONFIG_STRICT_KERNEL_RWX + this series	=3D=3D> 43 seconds
-> >>>>
-> >>>> Link: https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=
-=3D166003
-> >>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> >>>> ---
-> >>>>    arch/powerpc/lib/code-patching.c | 5 ++++-
-> >>>>    1 file changed, 4 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/cod=
-e-patching.c
-> >>>> index f156132e8975..4ccff427592e 100644
-> >>>> --- a/arch/powerpc/lib/code-patching.c
-> >>>> +++ b/arch/powerpc/lib/code-patching.c
-> >>>> @@ -97,6 +97,7 @@ static int map_patch(const void *addr, struct patc=
-h_mapping *patch_mapping)
-> >>>>    	}
-> >>>>   =20
-> >>>>    	pte =3D mk_pte(page, pgprot);
-> >>>> +	pte =3D pte_mkdirty(pte);
-> >>>>    	set_pte_at(patching_mm, patching_addr, ptep, pte);
-> >>>>   =20
-> >>>>    	init_temp_mm(&patch_mapping->temp_mm, patching_mm);
-> >>>> @@ -168,7 +169,9 @@ static int do_patch_instruction(unsigned int *ad=
-dr, unsigned int instr)
-> >>>>    			(offset_in_page((unsigned long)addr) /
-> >>>>    				sizeof(unsigned int));
-> >>>>   =20
-> >>>> +	allow_write_to_user(patch_addr, sizeof(instr));
-> >>>>    	__patch_instruction(addr, instr, patch_addr);
-> >>>> +	prevent_write_to_user(patch_addr, sizeof(instr));
-> >>>>
-> >>>
-> >>> On radix we can map the page with PAGE_KERNEL protection which ends u=
-p
-> >>> setting EAA[0] in the radix PTE. This means the KUAP (AMR) protection=
- is
-> >>> ignored (ISA v3.0b Fig. 35) since we are accessing the page from MSR[=
-PR]=3D0.
-> >>>
-> >>> Can we employ a similar approach on the 8xx? I would prefer *not* to =
-wrap
-> >>> the __patch_instruction() with the allow_/prevent_write_to_user() KUA=
-P things
-> >>> because this is a temporary kernel mapping which really isn't userspa=
-ce in
-> >>> the usual sense.
-> >>
-> >> On the 8xx, that's pretty different.
-> >>
-> >> The PTE doesn't control whether a page is user page or a kernel page.
-> >> The only thing that is set in the PTE is whether a page is linked to a
-> >> given PID or not.
-> >> PAGE_KERNEL tells that the page can be addressed with any PID.
-> >>
-> >> The user access right is given by a kind of zone, which is in the PGD
-> >> entry. Every pages above PAGE_OFFSET are defined as belonging to zone =
-0.
-> >> Every pages below PAGE_OFFSET are defined as belonging to zone 1.
-> >>
-> >> By default, zone 0 can only be accessed by kernel, and zone 1 can only
-> >> be accessed by user. When kernel wants to access zone 1, it temporaril=
-y
-> >> changes properties of zone 1 to allow both kernel and user accesses.
-> >>
-> >> So, if your mapping is below PAGE_OFFSET, it is in zone 1 and kernel
-> >> must unlock it to access it.
-> >>
-> >>
-> >> And this is more or less the same on hash/32. This is managed by segme=
-nt
-> >> registers. One segment register corresponds to a 256Mbytes area. Every
-> >> pages below PAGE_OFFSET can only be read by default by kernel. Only us=
-er
-> >> can write if the PTE allows it. When the kernel needs to write at an
-> >> address below PAGE_OFFSET, it must change the segment properties in th=
-e
-> >> corresponding segment register.
-> >>
-> >> So, for both cases, if we want to have it local to a task while still
-> >> allowing kernel access, it means we have to define a new special area
-> >> between TASK_SIZE and PAGE_OFFSET which belongs to kernel zone.
-> >>
-> >> That looks complex to me for a small benefit, especially as 8xx is not
-> >> SMP and neither are most of the hash/32 targets.
-> >>
-> >=20
-> > Agreed. So I guess the solution is to differentiate between radix/non-r=
-adix
-> > and use PAGE_SHARED for non-radix along with the KUAP functions when KU=
-AP
-> > is enabled. Hmm, I need to think about this some more, especially if it=
-'s
-> > acceptable to temporarily map kernel text as PAGE_SHARED for patching. =
-Do
-> > you see any obvious problems on 8xx and hash/32 w/ using PAGE_SHARED?
->
->=20
-> No it shouldn't be a problem AFAICS, except maybe the CPU overhead it
-> brings as I mentioned previously (ftrace selftests going from 40 to 43
-> seconds ie 8% overhead.
->
-Ok great. I will have some performance numbers for POWER8 and POWER9 with
-the next spin of the RFC
->=20
-> >=20
-> > I don't necessarily want to drop the local mm patching idea for non-rad=
-ix
-> > platforms since that means we would have to maintain two implementation=
-s.
-> >=20
->
->=20
-> What's the problem with RADIX, why can't PAGE_SHARED be used on radix ?
->
-It's not a problem. I would actually prefer to use PAGE_KERNEL since the
-mapping is really for a kernel page. On radix using PAGE_KERNEL allows us
-to avoid the KUAP functions due to the HW implementation (AMR and EAA).
->=20
-> Christophe
->
->=20
->
->=20
-
+T24gTW9uLCAyMDIwLTA0LTIwIGF0IDExOjQzICswMzAwLCBKYW5pIE5pa3VsYSB3cm90ZToNCj4g
+T24gU3VuLCAxOSBBcHIgMjAyMCwgTWFzYWhpcm8gWWFtYWRhIDxtYXNhaGlyb3lAa2VybmVsLm9y
+Zz4gd3JvdGU6DQo+ID4gT24gU3VuLCBBcHIgMTksIDIwMjAgYXQgNDoxMSBBTSBOaWNvbGFzIFBp
+dHJlIDxuaWNvQGZsdXhuaWMubmV0Pg0KPiA+IHdyb3RlOg0KPiA+ID4gT24gU3VuLCAxOSBBcHIg
+MjAyMCwgTWFzYWhpcm8gWWFtYWRhIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IChGT08gfHwgIUZP
+TykgaXMgZGlmZmljdWx0IHRvIHVuZGVyc3RhbmQsIGJ1dA0KPiA+ID4gPiB0aGUgYmVoYXZpb3Ig
+b2YgInVzZXMgRk9PIiBpcyBhcyBkaWZmaWN1bHQgdG8gZ3Jhc3AuDQo+ID4gPiANCj4gPiA+IENh
+bid0IHRoaXMgYmUgZXhwcmVzc2VkIGFzIHRoZSBmb2xsb3dpbmcgaW5zdGVhZDoNCj4gPiA+IA0K
+PiA+ID4gICAgICAgICBkZXBlbmRzIG9uIEZPTyBpZiBGT08NCj4gPiA+IA0KPiA+ID4gVGhhdCB3
+b3VsZCBiZSBhIGxpdHRsZSBjbGVhcmVyLg0KPiA+ID4gDQo+ID4gPiANCj4gPiA+IE5pY29sYXMN
+Cj4gPiANCj4gPiANCj4gPiAnZGVwZW5kcyBvbicgZG9lcyBub3QgdGFrZSB0aGUgJ2lmIDxleHBy
+PicNCj4gPiANCj4gPiAnZGVwZW5kcyBvbiBBIGlmIEInIGlzIHRoZSBzeW50YXggc3VnYXIgb2YN
+Cj4gPiAnZGVwZW5kcyBvbiAoQSB8fCAhQiksIHJpZ2h0ID8NCj4gPiANCj4gPiBJIGRvIG5vdCBr
+bm93IGhvdyBjbGVhcmVyIGl0IHdvdWxkIG1ha2UgdGhpbmdzLg0KPiA+IA0KPiA+IGRlcGVuZHMg
+b24gKG0gfHwgRk9PICE9IG0pDQo+ID4gaXMgYW5vdGhlciBlcXVpdmFsZW50LCBidXQgd2UgYXJl
+IGFsd2F5cw0KPiA+IHRhbGtpbmcgYWJvdXQgYSBtYXR0ZXIgb2YgZXhwcmVzc2lvbi4NCj4gPiAN
+Cj4gPiANCj4gPiBIb3cgaW1wb3J0YW50IGlzIGl0IHRvIHN0aWNrIHRvDQo+ID4gZGVwZW5kcyBv
+biAoRk9PIHx8ICFGT08pDQo+ID4gb3IgaXRzIGVxdWl2YWxlbnRzPw0KPiA+IA0KPiA+IA0KPiA+
+IElmIGEgZHJpdmVyIHdhbnRzIHRvIHVzZSB0aGUgZmVhdHVyZSBGT08NCj4gPiBpbiBtb3N0IHVz
+ZWNhc2VzLCAnZGVwZW5kcyBvbiBGT08nIGlzIHNlbnNpYmxlLg0KPiA+IA0KPiA+IElmIEZPTyBp
+cyBqdXN0IG9wdGlvbmFsLCB5b3UgY2FuIGdldCByaWQgb2YgdGhlIGRlcGVuZGVuY3ksDQo+ID4g
+YW5kIElTX1JFQUNIQUJMRSgpIHdpbGwgZG8gbG9naWNhbGx5IGNvcnJlY3QgdGhpbmdzLg0KPiAN
+Cj4gSWYgYnkgbG9naWNhbGx5IGNvcnJlY3QgeW91IG1lYW4gdGhlIGtlcm5lbCBidWlsZHMsIHlv
+dSdyZQ0KPiByaWdodC4gSG93ZXZlciB0aGUgcHJvbGlmZXJhdGlvbiBvZiBJU19SRUFDSEFCTEUo
+KSBpcyBtYWtpbmcgdGhlDQo+IGtlcm5lbA0KPiBjb25maWcgKmhhcmRlciogdG8gdW5kZXJzdGFu
+ZC4gVXNlciBlbmFibGVzIEZPTz1tIGFuZCBleHBlY3RzIEJBUiB0bw0KPiB1c2UNCj4gaXQsIGhv
+d2V2ZXIgaWYgQkFSPXkgaXQgc2lsZW50bHkgZ2V0cyBpZ25vcmVkLiBJIGhhdmUgYW5kIEkgd2ls
+bA0KPiBvcHBvc2UNCj4gYWRkaW5nIElTX1JFQUNIQUJMRSgpIHVzYWdlIHRvIGk5MTUgYmVjYXVz
+ZSBpdCdzIGp1c3Qgc2lsZW50bHkNCj4gYWNjZXB0aW5nDQo+IGNvbmZpZ3VyYXRpb25zIHRoYXQg
+c2hvdWxkIGJlIGZsYWdnZWQgYW5kIGZvcmJpZGRlbiBhdCBrY29uZmlnIHN0YWdlLg0KPiANCj4g
+PiBJIGRvIG5vdCB0aGluayBJU19SRUFDSEFCTEUoKSBpcyB0b28gYmFkLA0KPiA+IGJ1dCBpZiBp
+dCBpcyBjb25mdXNpbmcsIHdlIGNhbiBhZGQgb25lIG1vcmUNCj4gPiBvcHRpb24gdG8gbWFrZSBp
+dCBleHBsaWNpdC4NCj4gPiANCj4gPiANCj4gPiANCj4gPiBjb25maWcgRFJJVkVSX1gNCj4gPiAg
+ICAgICAgdHJpc3RhdGUgImRyaXZlciB4Ig0KPiA+IA0KPiA+IGNvbmZpZyBEUklWRVJfWF9VU0VT
+X0ZPTw0KPiA+ICAgICAgICBib29sICJ1c2UgRk9PIGZyb20gZHJpdmVyIFgiDQo+ID4gICAgICAg
+IGRlcGVuZHMgb24gRFJJVkVSX1gNCj4gPiAgICAgICAgZGVwZW5kcyBvbiBEUklWRVJfWCA8PSBG
+T08NCj4gPiAgICAgICAgaGVscA0KPiA+ICAgICAgICAgIERSSVZFUl9YIHdvcmtzIHdpdGhvdXQg
+Rk9PLCBidXQNCj4gPiAgICAgICAgICBVc2luZyBGT08gd2lsbCBwcm92aWRlIGJldHRlciB1c2Fi
+aWxpdHkuDQo+ID4gICAgICAgICAgU2F5IFkgaWYgeW91IHdhbnQgdG8gbWFrZSBkcml2ZXIgWCB1
+c2UgRk9PLg0KPiA+IA0KPiA+IA0KPiA+IA0KPiA+IE9mIGNvdXJzZSwNCj4gPiANCj4gPiAgICAg
+ICBpZiAoSVNfRU5BQkxFRChDT05GSUdfRFJJVkVSX1hfVVNFU19GT08pKQ0KPiA+ICAgICAgICAg
+ICAgICAgIGZvb19pbml0KCk7DQo+ID4gDQo+ID4gd29ya3MgbGlrZQ0KPiA+IA0KPiA+ICAgICAg
+IGlmIChJU19SRUFDSEFCTEUoQ09ORklHX0ZPTykpDQo+ID4gICAgICAgICAgICAgICAgIGZvb19p
+bml0KCk7DQo+ID4gDQo+ID4gDQo+ID4gQXQgbGVhc2UsIGl0IHdpbGwgZWxpbWluYXRlIGEgcXVl
+c3Rpb24gbGlrZQ0KPiA+ICJJIGxvYWRlZCB0aGUgbW9kdWxlIEZPTywgSSBzd2Vhci4NCj4gPiBC
+dXQgbXkgYnVpbHQtaW4gZHJpdmVyIFggc3RpbGwgd291bGQgbm90IHVzZSBGT08sIHdoeT8iDQo+
+IA0KDQphbmQgZHVwbGljYXRlIHRoaXMgYWxsIG92ZXIganVzdCB0byBhdm9pZCBuZXcga2V5d29y
+ZC4NCg0KDQo+IFBsZWFzZSBsZXQncyBub3QgbWFrZSB0aGF0IGEgbW9yZSB3aWRlc3ByZWFkIHBy
+b2JsZW0gdGhhbiBpdCBhbHJlYWR5DQo+IGlzLiBJIGhhdmUgeWV0IHRvIGhlYXIgKm9uZSogZ29v
+ZCByYXRpb25hbGUgZm9yIGFsbG93aW5nIHRoYXQgaW4gdGhlDQo+IGZpcnN0IHBsYWNlLiBBbmQg
+aWYgdGhhdCBwb3BzIHVwLCB5b3UgY2FuIG1ha2UgaXQgd29yayBieSB1c2luZw0KPiBJU19SRUFD
+SEFCTEUoKSAqd2l0aG91dCogdGhlIGRlcGVuZHMsIHNpbXBseSBieSBjaGVja2luZyBpZiB0aGUN
+Cj4gbW9kdWxlDQo+IGlzIHRoZXJlLg0KPiANCj4gTW9zdCB1c2UgY2FzZXMgaW5jcmVhc2luZ2x5
+IHNvbHZlZCBieSBJU19SRUFDSEFCTEUoKSBzaG91bGQgdXNlIHRoZQ0KPiAiZGVwZW5kcyBvbiBG
+T08gfHwgRk9PPW4iIGNvbnN0cnVjdCwgYnV0IHRoZSBwcm9ibGVtIGlzIHRoYXQncyBub3QNCj4g
+d2lkZWx5IHVuZGVyc3Rvb2QuIEknZCBsaWtlIHRvIGhhdmUgYW5vdGhlciBrZXl3b3JkIGZvciBw
+ZW9wbGUgdG8NCj4gY29weS1wYXN0ZSBpbnRvIHRoZWlyIEtjb25maWdzLg0KPiANCg0KKzEgDQoN
+CmRvIGFsbCBDIGRldmVsb3BlcnMga25vdyBob3cgdGhlIEMgY29tcGlsZXIgd29ya3MgPyBvZiBj
+b3Vyc2Ugbm90ICENClNhbWUgZ29lcyBoZXJlLCB0aGVyZSBpcyBhIGRlbWFuZCBmb3IgYSBuZXcg
+a2V5d29yZCwgc28gcGVvcGxlIHdpbGwNCmF2b2lkIGNvcHkgYW5kIHBhdGUgYW5kIGNhbiB1c2Ug
+dGhlIGtjb25maWcgbGFuZ3VhZ2UgaW4gYSBoaWdoZXINCnNpbXBsaWZpZWQgbGV2ZWwuDQoNCkkg
+anVzdCBkaWQgYSBxdWljayBncmVwIHRvIGZpbmQgb3V0IGhvdyByZWFsbHkgcGVvcGxlIHVzZSBk
+ZXBlbmQgb246DQoNCiMgQWxsIHVzYWdlIG9mIGRlcGVuZHMgb24gDQokIGdpdCBscy1maWxlcyB8
+IGdyZXAgS2NvbmZpZyB8IHhhcmdzIGdyZXAgLUUgImRlcGVuZHNccytvbiIgfCB3YyAtbA0KMTUw
+NzENCg0KIyBzaW1wbGUgc2luZ2xlIHN5bWJvbCBleHByZXNzaW9uIHVzYWdlIA0KJCBnaXQgbHMt
+ZmlsZXMgfCBncmVwIEtjb25maWcgfCB4YXJncyBncmVwIC1FICJkZXBlbmRzXHMrb25ccytbQS1a
+YS16MC0NCjlfXStccyokIiB8IHdjIC1sDQo4ODg5DQoNCmFsbW9zdCA2MCUuLiANCg0KcGVvcGxl
+IHJlYWxseSBsaWtlIHNpbXBsZSB0aGluZ3MgZXNwZWNpYWxseSBmb3IgdGhlIHRvb2xzIHRoZXkg
+YXJlDQp1c2luZyAibGlrZSBrY29uZmlnIiwgbm8gb25lIHJlYWxseSB3YW50cyB0byB1bmRlcnN0
+YW5kIGhvdyBpdCByZWFsbHkNCndvcmsgdW5kZXIgdGhlIGhvb2QgaWYgaXQgaXMgYSBvbmUgdGlt
+ZSB0aGluZyB0aGF0IHlvdSBuZWVkIHRvIHNldHVwDQpmb3IgeW91ciBrZXJuZWwgcHJvamVjdCwg
+dW5sZXNzIGl0IGlzIHJlYWxseSBuZWNlc3NhcnkgLi4NCg0KSSB3b25kZXIgaG93IG1hbnkgb2Yg
+dGhvc2UgODg4OSBjYXNlcyB3YW50ZWQgYSB3ZWFrIGRlcGVuZGVuY3kgYnV0DQpjb3VsZG4ndCBm
+aWd1cmUgb3V0IGhvdyB0byBkbyBpdCA/IA0KDQpVc2VycyBvZiBkZXBlbmRzIG9uIEZPTyB8fCAh
+Rk9PDQoNCiQgZ2l0IGxzLWZpbGVzIHwgZ3JlcCBLY29uZmlnIHwgeGFyZ3MgZ3JlcCAtRSBcDQog
+ICJkZXBlbmRzXHMrb25ccysoW0EtWmEtejAtOV9dKylccypcfFx8XHMqKFwhXHMqXDF8XDFccyo9
+XHMqbikiIFwNCiB8IHdjIC1sDQoNCjE1Ng0KDQphIG5ldyBrZXl3b3JkIGlzIHJlcXVpcmVkIDop
+IC4uIA0KDQoNCj4gSW4gYW5vdGhlciBtYWlsIEkgc3VnZ2VzdGVkDQo+IA0KPiAJb3B0aW9uYWxs
+eSBkZXBlbmRzIG9uIEZPTw0KPiANCj4gbWlnaHQgYmUgYSBiZXR0ZXIgYWx0ZXJuYXRpdmUgdGhh
+biAidXNlcyIuDQo+IA0KPiANCg0KaG93IGFib3V0IGp1c3Q6DQogICAgICBvcHRpb25hbCBGT08N
+Cg0KSXQgaXMgY2xlYXIgYW5kIGVhc3kgdG8gZG9jdW1lbnQgLi4gDQoNCg0KPiBCUiwNCj4gSmFu
+aS4NCj4gDQo=
