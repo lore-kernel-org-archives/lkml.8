@@ -2,65 +2,145 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1329BC54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AA5C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4B8D206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MU2YBSol"
+	by mail.kernel.org (Postfix) with ESMTP id D706620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 17:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587488658;
+	bh=A/gl9GiSINDqJ4PJGJrHlgv4JPVRUB394Q+IiwjdxOw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LcCbbMHxxr8Nt4lyApH2MHSdGBNOHxgb9a7a22P+iwd2BQ2GedMDK/VyOshd0YiqS
+	 0v2tHtk+NoThdAefWmJ4vgwi4iYDRHn9G0po1LQVZGthMnN4fIQ55bM/D0qCbCgRk4
+	 Oyxn6sblJO7+SU62rOZN0FbF03ghJYpv+YIV06Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgDURC0 (ORCPT
+        id S1729196AbgDURES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726018AbgDURCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 13:02:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C38C061A41;
-        Tue, 21 Apr 2020 10:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wuF6glVROYbPM3r9lPyVTY3Ec0nGVm2GCfVQiXVfRVY=; b=MU2YBSolyc8RiAMCdBHGeC3uNQ
-        qeGwbqtvVY+vbruuhfyMS/cq6/Liwo69PIxQcBbF7Nl+RMpyRr3fDePaF4pcFWY6Grjnn0mM2enUq
-        Z2oaw3kysp3dVPRzx9uMRwxAZHvb0oewZ9JfX/03N8GHr2JtJeEZ/AZnyJTD7IbkCMaNoUypckhFC
-        g4kKSLjan/BCiGdeVEy1UNYTYj9C46iWJH1/oVaLau/GJpEfEZewUhka8CfXw/u9XnyrR7ysVIHM1
-        XEZ5Xlo+1j49Ltz7//xo2TxIqrVAhAXtEiKXEMkaCkBPIuvazpyUVFpyPM86VjAD+Tzq59ZCtDs86
-        md+O3b2A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQwHv-0004SX-BR; Tue, 21 Apr 2020 17:02:23 +0000
-Date:   Tue, 21 Apr 2020 10:02:23 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
+        Tue, 21 Apr 2020 13:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbgDUREO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 13:04:14 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA0812070B;
+        Tue, 21 Apr 2020 17:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587488654;
+        bh=A/gl9GiSINDqJ4PJGJrHlgv4JPVRUB394Q+IiwjdxOw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=phBRWglMXtPcapPsj8eK7SRF7NlC1RIOXhbVo/a/GezVoyXq/28PllUsa3njugwmv
+         jUKsJIXiNdjfeVBAT5kVHzJ9lSg5I56PjcVy0qwHCFLRCzFUU6xoigXfiDBXvzW1AW
+         FMNRqUxuJIZEkxb3w66+CZ7kisqQgKipjbnZQem4=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jQwJg-00CmLe-42; Tue, 21 Apr 2020 19:04:12 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Becker <jlbec@evilplan.org>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to ReST
-Message-ID: <20200421170223.GP5820@bombadil.infradead.org>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org>
- <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
- <20200421165534.GA16511@lst.de>
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: [PATCH 03/10] docs: RCU: convert lockdep.txt to ReST
+Date:   Tue, 21 Apr 2020 19:04:04 +0200
+Message-Id: <1ebc0a13f0710a080c2b6f59f546e3c8b60f17b3.1587488137.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1587488137.git.mchehab+huawei@kernel.org>
+References: <cover.1587488137.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421165534.GA16511@lst.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 06:55:34PM +0200, Christoph Hellwig wrote:
-> NAK, this makes the document significantly harder to read.
+- Add a SPDX header;
+- Adjust document title;
+- Mark literal blocks as such;
+- Add it to RCU/index.rst.
 
-Really?  It reads more easily to me in the new format.  Enclosing
-section headers in [] is really weird.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/RCU/index.rst                    |  1 +
+ Documentation/RCU/{lockdep.txt => lockdep.rst} | 12 ++++++++----
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+ rename Documentation/RCU/{lockdep.txt => lockdep.rst} (96%)
+
+diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+index 430a37132b2c..fa7a2a8949b7 100644
+--- a/Documentation/RCU/index.rst
++++ b/Documentation/RCU/index.rst
+@@ -11,6 +11,7 @@ RCU concepts
+ 
+    arrayRCU
+    checklist
++   lockdep
+    lockdep-splat
+    rcubarrier
+    rcu_dereference
+diff --git a/Documentation/RCU/lockdep.txt b/Documentation/RCU/lockdep.rst
+similarity index 96%
+rename from Documentation/RCU/lockdep.txt
+rename to Documentation/RCU/lockdep.rst
+index 89db949eeca0..f1fc8ae3846a 100644
+--- a/Documentation/RCU/lockdep.txt
++++ b/Documentation/RCU/lockdep.rst
+@@ -1,4 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++========================
+ RCU and lockdep checking
++========================
+ 
+ All flavors of RCU have lockdep checking available, so that lockdep is
+ aware of when each task enters and leaves any flavor of RCU read-side
+@@ -8,7 +12,7 @@ tracking to include RCU state, which can sometimes help when debugging
+ deadlocks and the like.
+ 
+ In addition, RCU provides the following primitives that check lockdep's
+-state:
++state::
+ 
+ 	rcu_read_lock_held() for normal RCU.
+ 	rcu_read_lock_bh_held() for RCU-bh.
+@@ -63,7 +67,7 @@ checking of rcu_dereference() primitives:
+ The rcu_dereference_check() check expression can be any boolean
+ expression, but would normally include a lockdep expression.  However,
+ any boolean expression can be used.  For a moderately ornate example,
+-consider the following:
++consider the following::
+ 
+ 	file = rcu_dereference_check(fdt->fd[fd],
+ 				     lockdep_is_held(&files->file_lock) ||
+@@ -82,7 +86,7 @@ RCU read-side critical sections, in case (2) the ->file_lock prevents
+ any change from taking place, and finally, in case (3) the current task
+ is the only task accessing the file_struct, again preventing any change
+ from taking place.  If the above statement was invoked only from updater
+-code, it could instead be written as follows:
++code, it could instead be written as follows::
+ 
+ 	file = rcu_dereference_protected(fdt->fd[fd],
+ 					 lockdep_is_held(&files->file_lock) ||
+@@ -105,7 +109,7 @@ false and they are called from outside any RCU read-side critical section.
+ 
+ For example, the workqueue for_each_pwq() macro is intended to be used
+ either within an RCU read-side critical section or with wq->mutex held.
+-It is thus implemented as follows:
++It is thus implemented as follows::
+ 
+ 	#define for_each_pwq(pwq, wq)
+ 		list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,
+-- 
+2.25.2
+
