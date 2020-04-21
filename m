@@ -2,83 +2,120 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE661C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0419CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBC720882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63672076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 04:30:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iGfkHhTK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M+nksk/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgDUEZv (ORCPT
+        id S1726422AbgDUEa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:25:51 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:60443 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgDUEZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:25:50 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 92529dce;
-        Tue, 21 Apr 2020 04:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=zvvCeZA2387aZ4dB2b02Y3gaNhg=; b=iGfkHh
-        TK6cMmmzXfYLKEjyScILROnwUjgF89rl6fdjES/ogbS3L+PnK8ab0yst1LqhK703
-        542twOi1u53Ps0B7FqIHPC6hum4W3CyBwfVpGxMSAcyVGq/5Jqvg2gM2dGWVEx3v
-        9mlajNhxsA+DJIW8JvLJG2eaCGvObr8fUE/YsuEzPGbCXjcg0qhpJAkdjhSh/5uD
-        stOXstkkQWcoThCiSOJLWv2t65urtX9VHFFR36nkAjWEpSCE7+Ylt2EF2eBeHhk1
-        fd/7QfZ0gzm5t/NP2SFTg3hMLvZdvnZsPU8lV3E1cXuJHyTpeb41jyOZXx62oICN
-        ypkg/8u3TbtpwDIg==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 4f58fcca (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 21 Apr 2020 04:15:03 +0000 (UTC)
-Received: by mail-io1-f49.google.com with SMTP id u11so13670903iow.4;
-        Mon, 20 Apr 2020 21:25:44 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYkSc4OhDd5ZPJU1sP9htCPrWtJGo9dIbnbNZUrqdV9RIevTquf
-        6Xfzc0rjw0QNB+IxtmWO8VY0JzWLYSKvRvUaF6E=
-X-Google-Smtp-Source: APiQypIyRj2PoMMuv4crd15eUsa84Ysc6zLCi+qX7meem+au7YS2pQ0yUhvSUith/HDjNeRf03EIoEMHv9xqqlNoiSU=
-X-Received: by 2002:a05:6602:21d3:: with SMTP id c19mr18687073ioc.29.1587443144218;
- Mon, 20 Apr 2020 21:25:44 -0700 (PDT)
+        Tue, 21 Apr 2020 00:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgDUEaZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:30:25 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6049C061A0F;
+        Mon, 20 Apr 2020 21:30:23 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id k8so1537104ejv.3;
+        Mon, 20 Apr 2020 21:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JaRV6n7+ccaKT0v01yd0l6B+jTgUwBzSELbdheC0Jd8=;
+        b=M+nksk/9z+RBAC/I+whdt3ySMp6DprA4BX9reQA7ke7Rsc7Z+/wcR9fz6hLIKMACy0
+         rfjojAJJNUgt0MSj4Zt86k6z/lqrP2ZmVeo8C47lOEOcFHZTMsdszEdjvkMZ4AsWbjZh
+         D2yG/CmZkwds3D4UdU7ep8UJTORTr005UADm4mucoywmSXm4j/CgV2rTcc8lm3jVTJWh
+         7qSnStnVOeEhOkAjqGz/s/WYA9KHz0n5Ctx8Oj6oegvZ4GNGS/SX+QrgZNI1Nnt6+13Z
+         iaoAsdxUH76ViyzBVepub1KNUmaaGTVbeYD9/YHXKDFWlcBro4g908b2QhkHpqw0AulI
+         xtQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JaRV6n7+ccaKT0v01yd0l6B+jTgUwBzSELbdheC0Jd8=;
+        b=qIUFmM8ZfBYLwp0bk3eJlH9s4eB17GZ2zzVr03yx+FjpyKC1O/33yKG66MX9FJ4J5c
+         4ZzR09MrxaScwuvs3zYU6tdECEKjuJ1qEwAVD6vT7f5xe9j1UcZr9jt+57S9lZijnfRI
+         cX+cqfCGQRzkpEVAdXg8uRsGTlmOJjkBKr7UmxBHLbtTVbJ3LDoiZva699PFwA55YjU2
+         EDek6657ZTolLpVJhtQPhBrMaG6VTzLEBVQitjfdIkqFFQdE2QwbXDz1RNjTeiKhaYrt
+         SQ20wmxRgNrXDATEZGlpYZYep61r5PRJ32zVokE5l+1xYiB+e1KCOP/3LTgu5qm/FMy+
+         0ncw==
+X-Gm-Message-State: AGi0PuaoXFKjzaKxVy7wc10iPQHb8N7RT8PGEZhhs0HTH5v1ua+VujKt
+        HjD6J/wLrDMIQHc8Bo0ifLvoKLvMshqbo3vWiu4=
+X-Google-Smtp-Source: APiQypIMD70EtNdPatK85IUSaKOTriZ1+IxiJ4MjqkYjKGaWAZbX9pp08uyo1mYe6AKdkLOTgUPU0VUJcjgu3hKmZzw=
+X-Received: by 2002:a17:906:54cd:: with SMTP id c13mr18570001ejp.307.1587443422405;
+ Mon, 20 Apr 2020 21:30:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420075711.2385190-1-Jason@zx2c4.com> <2cdb57f2cdbd49e9bb1034d01d054bb7@AcuMS.aculab.com>
- <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
-In-Reply-To: <CAHmME9pq2Kdrp5C1+90PQyXsaG8xfdRwG-xGNs5U0ykVORrMbw@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 20 Apr 2020 22:25:33 -0600
-X-Gmail-Original-Message-ID: <CAHmME9pRFGRi8oxazFrd05S+m=_s7=WF5x_jfUAE_Qt+c5-anA@mail.gmail.com>
-Message-ID: <CAHmME9pRFGRi8oxazFrd05S+m=_s7=WF5x_jfUAE_Qt+c5-anA@mail.gmail.com>
-Subject: Re: FPU register granularity [Was: Re: [PATCH crypto-stable] crypto:
- arch/lib - limit simd usage to PAGE_SIZE chunks]
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20200421002804.5118-1-luke.r.nels@gmail.com>
+In-Reply-To: <20200421002804.5118-1-luke.r.nels@gmail.com>
+From:   Xi Wang <xi.wang@gmail.com>
+Date:   Mon, 20 Apr 2020 21:29:46 -0700
+Message-ID: <CAKU6vyYZqw2JgPXwQUps7SMAcT=7PRaa37yXnHCbCoK0Yt6D5Q@mail.gmail.com>
+Subject: Re: [PATCH bpf] bpf, riscv: Fix tail call count off by one in RV32
+ BPF JIT
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf@vger.kernel.org, Luke Nelson <luke.r.nels@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        netdev@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 10:14 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+On Mon, Apr 20, 2020 at 5:28 PM Luke Nelson <lukenels@cs.washington.edu> wrote:
+> This patch fixes an off by one error in the RV32 JIT handling for BPF
+> tail call. Currently, the code decrements TCC before checking if it
+> is less than zero. This limits the maximum number of tail calls to 32
+> instead of 33 as in other JITs. The fix is to instead check the old
+> value of TCC before decrementing.
 >
-> Hi David,
+> Fixes: 5f316b65e99f ("riscv, bpf: Add RV32G eBPF JIT")
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+> ---
+>  arch/riscv/net/bpf_jit_comp32.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 >
-> On Mon, Apr 20, 2020 at 2:32 AM David Laight <David.Laight@aculab.com> wrote:
-> > Maybe kernel_fp_begin() should be passed the address of somewhere
-> > the address of an fpu save area buffer can be written to.
-> > Then the pre-emption code can allocate the buffer and save the
-> > state into it.
+> diff --git a/arch/riscv/net/bpf_jit_comp32.c b/arch/riscv/net/bpf_jit_comp32.c
+> index 302934177760..11083d4d5f2d 100644
+> --- a/arch/riscv/net/bpf_jit_comp32.c
+> +++ b/arch/riscv/net/bpf_jit_comp32.c
+> @@ -770,12 +770,13 @@ static int emit_bpf_tail_call(int insn, struct rv_jit_context *ctx)
+>         emit_bcc(BPF_JGE, lo(idx_reg), RV_REG_T1, off, ctx);
 >
-> Interesting idea. It looks like `struct xregs_state` is only 576
-> bytes. That's not exactly small, but it's not insanely huge either,
-> and maybe we could justifiably stick that on the stack, or even
-> reserve part of the stack allocation for that that the function would
-> know about, without needing to specify any address.
+>         /*
+> -        * if ((temp_tcc = tcc - 1) < 0)
+> +        * temp_tcc = tcc - 1;
+> +        * if (tcc < 0)
+>          *   goto out;
+>          */
+>         emit(rv_addi(RV_REG_T1, RV_REG_TCC, -1), ctx);
+>         off = (tc_ninsn - (ctx->ninsns - start_insn)) << 2;
+> -       emit_bcc(BPF_JSLT, RV_REG_T1, RV_REG_ZERO, off, ctx);
+> +       emit_bcc(BPF_JSLT, RV_REG_TCC, RV_REG_ZERO, off, ctx);
 
-Hah-hah, nevermind here. extended_state_area is of course huge,
-bringing the whole structure to a whopping 3k with avx512. :)
+Nice catch!
+
+Acked-by: Xi Wang <xi.wang@gmail.com>
