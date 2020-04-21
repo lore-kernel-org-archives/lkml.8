@@ -2,182 +2,98 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9833C55189
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83637C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65AC206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 20:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547C5206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 21:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="KlbdCHno"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bYm640oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgDUU74 (ORCPT
+        id S1726112AbgDUVDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
+        Tue, 21 Apr 2020 17:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgDUU7y (ORCPT
+        by vger.kernel.org with ESMTP id S1725850AbgDUVDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:59:54 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93489C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:59:52 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id f8so5348plt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 13:59:52 -0700 (PDT)
+        Tue, 21 Apr 2020 17:03:34 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB8CC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:03:34 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id i16so34333ybq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 14:03:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mGu2WThtBl1zhV27yQH4z0XnKDROJXQ5WmCKZObfX6U=;
-        b=KlbdCHnojvjaEF7+cAxyf78C/VlfZSzasrdQ3RUbK9QsCxPbTNAm2nSkTQtm2PrkPw
-         lxPZo9y1i8VC+MUrciBYyjYrDZoMoC/wrCiIuzwB1xCmJ+fVFv7Ns/LcnTU4oLSr9IhH
-         BwTnF6cvtZQ+whqoUU2nu7mSQxNJfMCZdWNCkw4moeOYYS0ZOX6Y60e3+a+z6/RZoI+Q
-         u+e7nlBVK6OF4dFpl70X56alU0aphwO82jX2ZFFY1LgAnI5zXze0HswnR+VeO3ZPgOHk
-         lCnEJ3XE+ViryTY7yrq6QuPxfpgHnx+o4DntVa7UpAPteJ1fOACt+pVJDo6C3rZCMXuq
-         23eA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D01UCKv/MItQguC8mrAilu88fpXx1W32uPOZRB3PJZw=;
+        b=bYm640oeAhVA9NCZK2CCkb7t+VHMSBtBdHc230ZONtXxPm6MZiX5XvVPs8HaO2dWtu
+         27oqBNPDjPru7rEjMPUxcfNoLx/hERJNnPAI327ME2uQLv6xbAWEULPfUZjkDvqWG5fg
+         mcDCZcEQLgfvv0lG4j4GSmu5vkqKYta7aAF6dXIdj5+RsMxaYWYvu/LBG2I46AhLwcga
+         QJNMyOa3+qK9uGrd1WZEViqP7edeGBY5pw98RZnzwCvx8/TRVWKDCSRXXwZx2wpca0S/
+         JSAyA9M7ePLvVvrCfSZ1pnvqdRT3xMvZZdZXyjvj4JW/ipQ5SyVItafXOCTe7dAOtJCc
+         N4pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=mGu2WThtBl1zhV27yQH4z0XnKDROJXQ5WmCKZObfX6U=;
-        b=PfssONy7P6WGVtG6mZ/wilp+bN0gRtasKJZfWAUZJXYzPTC/Kx7wsdJ2PC03lD7xRg
-         Ypbsoemb7+XJavu9TnNnqQQ+54wRxQ/oCTBczMtUHlDqEXIinJUMp2GKmuTtfPVOKBOg
-         nWDScIO3NIYBaPHPgSUyjdMPHqA3lMwma0aaBqOPzizaypVAfxy6mJXDop56WjOjntF6
-         3cMusHmI01H7MlGOAkpaQc+z4e5TijNLxtpVi6D5wDWV/SctQQ0yeJO95hYQ758/8IKQ
-         8swDaHSoRAiglotn7Y1+gYPI+7kIR5hgnyYhRZIrgvllp8GnSqC7ymjo3mOv3BVhEFf2
-         730g==
-X-Gm-Message-State: AGi0PuZaOsJ/PSsadwiSx7oWiBvVsSVAcdBUoSOh0Ie6af1qsjBRF+0c
-        99jO8nkmGQPFFkFEpOUFP4TYFg==
-X-Google-Smtp-Source: APiQypLv+j0RYHdFp0/n8b33KtcEXNR6QCRYZKtbqHWmvnR+xe04MGRkOQVquloZaURvXnCSFOZ+1w==
-X-Received: by 2002:a17:90a:1b26:: with SMTP id q35mr6266948pjq.149.1587502791514;
-        Tue, 21 Apr 2020 13:59:51 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id f70sm3266534pfa.17.2020.04.21.13.59.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 13:59:50 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 13:59:50 -0700 (PDT)
-X-Google-Original-Date: Tue, 21 Apr 2020 13:59:44 PDT (-0700)
-Subject:     Re: [v4 PATCH 0/3] Add UEFI support for RISC-V
-In-Reply-To: <CAMj1kXEXTq8RhD-AM4i3ZmXRcLDTW8waNDbWNa0V8V1nz4zb_A@mail.gmail.com>
-CC:     Atish Patra <Atish.Patra@wdc.com>, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
-        masahiroy@kernel.org, xypron.glpk@gmx.de
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     ardb@kernel.org
-Message-ID: <mhng-2320bbe6-c880-40f4-914e-a6209d0f2f95@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D01UCKv/MItQguC8mrAilu88fpXx1W32uPOZRB3PJZw=;
+        b=YVy/lc9GtDQFBCPQguSVmlR4dnkFHXEYDJWuaN70gsfsS7SIQlQKW6/Azsp9WV5Ukt
+         mqR/bAl2PRkpDjhuvKKNPv9xPPn/kBFFsYSoRdljzbqHbwuxeXSEnpr9u6hyMvpgp4gC
+         zX0CEiNo/qXCAkDUdJcp2LuyKE3e1stNAV2uUotiogJ3/keOTwfcctClwTv88TVhXXIM
+         sAB3Z1HDA+PUJV407bQ2kcwY6JCiEsTDuEK/000HIxhJf6DvB/gDL8X6GGIfYclREbT9
+         njPXanExcdRf95wbafeybxCTVD19Z0vOXGExqW/ouFAvE1l4N81s5qsj5Ajd96EF7ezY
+         BRmA==
+X-Gm-Message-State: AGi0PuY8JzM/EIfB12MsO5J/zrR2vWPXUNDrYDhNTV0bqPSKgTJEv/3v
+        4KImdbxKx+ZngbMwwlZ1B4j0MDY290GZlz4Vg3ObEA==
+X-Google-Smtp-Source: APiQypLtN97fWtQ1tE6aTvwjmihM5lZ2075m+3KltJR1tPsePNmOSac2Wq+aX/nXHf+0gAdo3xFjvesh5VyBQdhlKtM=
+X-Received: by 2002:a25:4443:: with SMTP id r64mr29908611yba.41.1587503013619;
+ Tue, 21 Apr 2020 14:03:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200420190916.GA11695@gmail.com> <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
+In-Reply-To: <CAHk-=wiejBvKnrDysDva=DNFgyX02TZred_JMjzUnjFgVOUtOg@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 21 Apr 2020 14:03:22 -0700
+Message-ID: <CAP-5=fVhWREzzjnXH4j+dcnP-GbSMnT_07qVrZM8huAhx6wtVw@mail.gmail.com>
+Subject: Re: [GIT PULL] clang-format for v5.7-rc3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 00:24:04 PDT (-0700), ardb@kernel.org wrote:
-> On Tue, 21 Apr 2020 at 05:34, Atish Patra <atish.patra@wdc.com> wrote:
->>
->> This series adds UEFI support for RISC-V. Currently, only boot time
->> services have been added. Runtime services will be added in a separate
->> series. This series depends on some core EFI patches
->> present in current in efi-next and following other patches.
->>
->> U-Boot: Adds the boot hartid under chosen node.
->> https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
->>
->> Linux kernel: 5.7-rc1
->>
->> OpenSBI: master
->>
->> Patch 1 just moves arm-stub code to a generic code so that it can be used
->> across different architecture.
->>
->> Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
->> have create separate config to enable boot time services.
->> As runtime services are not enabled at this time, full generic early ioremap
->> support is also not added in this series.
->>
->> Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
->> respectively.
->>
->> The patches can also be found in following git repo.
->>
->> https://github.com/atishp04/linux/tree/wip_uefi_riscv_v4
->>
->> The patches have been verified on Qemu using bootefi command in U-Boot.
->>
->> Changes from v3->v4:
->> 1. Rebased on top of efi-next.
->> 2. Dropped patch 1 & 2 from this series as it is already queued in efi-next.
->> Changes from v2->v3:
->> 3. Improved handle_kernel_image() for RISC-V.
->>
+On Tue, Apr 21, 2020 at 12:10 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Thanks Atish. This looks nice and simple now.
+> On Mon, Apr 20, 2020 at 12:09 PM Miguel Ojeda
+> <miguel.ojeda.sandonis@gmail.com> wrote:
+> >
+> >  - Don't indent C++ namespaces (Ian Rogers)
 >
-> I will need an ack from the RISC-V maintainers on these, and it is up
-> to them to consider whether the changes to core kconfigs and makefiles
-> are likely to cause trouble or not. If so, I am happy to work out a
-> way to merge this via a shared stable branch.
+> I've taken this, since it doesn't matter, but I'm wondering at the
+> motivation for it (exactly because it shouldn't matter).
 
-Sorry it took me a while to get around to these, but they're essentially good
-with me.  There's some comments about needing ISA_C/c.li, but that's pretty
-trivial.  In terms of mechanics: I don't really ever understand how to do these
-multi-tree merges.  In an ideal world I'd like to have the arch/riscv/ stuff
-stay in riscv/for-next, both because I don't want to deal with merge conflicts
-and because that's where the RISC-V autobuilders look.
+Hi Linus!
 
-The best I can come up with is to split #3 up such that drivers/firmware/efi/
-is its own patch and then send that up along with the PE header definitions
-into an RC.  It'd be unused code at that point, but at least it'd break the
-dependency between the trees and it'll be getting tested in riscv/for-next so
-it won't rot.  We can ARMSTUB->GENERIC_STUB by just having the RISC-V support
-select woth ARMSTUB and GENERIC_STUB, with a cleanup going in after everything
-is merged.
+We (Google, Stephane Eranian, ..) have a tool that converts Intel's
+topdown metrics:
+https://download.01.org/perfmon/TMA_Metrics.xlsx
+into the json format used for metrics in perf. It is written in C++
+and we are planning to upstream it. In C++ there is preference for
+anonymous namespaces over static functions and the namespace
+indentation was pretty annoying for this. There's a little more
+motivation in the commit message too.
 
-That said, I'm happy if there's a better way to do this...
+Thanks,
+Ian Rogers
 
->> Changes from v1->v2:
->> 1. Rebased on 5.7-rc1.
->> 2. Fixed minor typos and removed redundant macros/comments.
->>
->> Changes from previous version:
->> 1. Renamed to the generic efi stub macro.
->> 2. Address all redundant comments.
->> 3. Supported EFI kernel image with normal booti command.
->> 4. Removed runtime service related macro defines.
->>
->> Atish Patra (3):
->> RISC-V: Define fixmap bindings for generic early ioremap support
->> RISC-V: Add PE/COFF header for EFI stub
->> RISC-V: Add EFI stub support.
->>
->> arch/riscv/Kconfig                        |  21 +++++
->> arch/riscv/Makefile                       |   1 +
->> arch/riscv/configs/defconfig              |   1 +
->> arch/riscv/include/asm/Kbuild             |   1 +
->> arch/riscv/include/asm/efi.h              |  44 +++++++++
->> arch/riscv/include/asm/fixmap.h           |  18 ++++
->> arch/riscv/include/asm/io.h               |   1 +
->> arch/riscv/include/asm/sections.h         |  13 +++
->> arch/riscv/kernel/Makefile                |   4 +
->> arch/riscv/kernel/efi-header.S            |  99 ++++++++++++++++++++
->> arch/riscv/kernel/head.S                  |  16 ++++
->> arch/riscv/kernel/image-vars.h            |  53 +++++++++++
->> arch/riscv/kernel/vmlinux.lds.S           |  20 +++-
->> drivers/firmware/efi/Kconfig              |   2 +-
->> drivers/firmware/efi/libstub/Makefile     |  10 ++
->> drivers/firmware/efi/libstub/riscv-stub.c | 106 ++++++++++++++++++++++
->> 16 files changed, 407 insertions(+), 3 deletions(-)
->> create mode 100644 arch/riscv/include/asm/efi.h
->> create mode 100644 arch/riscv/include/asm/sections.h
->> create mode 100644 arch/riscv/kernel/efi-header.S
->> create mode 100644 arch/riscv/kernel/image-vars.h
->> create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
->>
->> --
->> 2.24.0
->>
+>                    Linus
