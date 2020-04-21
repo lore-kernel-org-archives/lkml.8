@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42773C2BA19
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37AEC54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22999206F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED83206F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 03:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qp7VOZlv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1+3PuHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgDUD2B (ORCPT
+        id S1728441AbgDUD2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:28:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59520 "EHLO
+        Mon, 20 Apr 2020 23:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgDUD16 (ORCPT
+        with ESMTP id S1728345AbgDUD2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:27:58 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71037C061A0E;
-        Mon, 20 Apr 2020 20:27:58 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n17so9823755ejh.7;
-        Mon, 20 Apr 2020 20:27:58 -0700 (PDT)
+        Mon, 20 Apr 2020 23:28:03 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 109A5C061A0F;
+        Mon, 20 Apr 2020 20:28:03 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a8so4170823edv.2;
+        Mon, 20 Apr 2020 20:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wFUAHksPBRAFfm0oT11F+1uEzTcenvzx6QM0fJ+VVOk=;
-        b=Qp7VOZlvSF8XwlgdLJDUt8YtWJQYIO0KvozZgBSt3uAyJevyOVMfxjUUout6S4AP08
-         2u+TrWWopA4DjCHuDDlXkxNCcHbEI1r7zPqb0vH3b6FtQKqI/z9cpXQ+uF0G6r9Gpr6I
-         H63wk4f4QJZ1FsnIix0844IZcrmt+5mW1nec1gE/8VGijvjSSWfYxvj2lLyhRiYBlgvi
-         W294lY/ZL6H8e1N0xoSgWQ2iO4gjmLR7TulhAcLWaCP1wklKsFlxnbYpiCP/6q9zRdwD
-         eQq0iGTxDIFLqPBrnFKDnudYOfzmM24aHrieMQ5jrpPYeh6/DSeitp+hRpLvmkcYNHGo
-         Ob5A==
+        bh=4ZMzRuAjHXle1eKL+z9RKqBJOHZRk98XiZ1AhmO1964=;
+        b=A1+3PuHU5HU9VsfgZkik167p+kdv1QRz5lPfs3o1OlFsmK+EciwtnA/4paUulpKEI4
+         AQEOBAJVRAUgI8wa5cPNbLbk/U9xsqUo/ebtBr5xWdHnJu2yev+8+zgTBrhkMrmhd4rT
+         iaEHiB90azE5mqnCn5CDYsktHI7i46Xp7J7GPVfT6dgPgN6Z6Zo/a6qdWjTSuViVid3V
+         4whXqhf7BnpfumOgVJC0/hyjCu03VlgT/HdN+miNA+JSZZ8Uoh/F2xfBk7Vo+rYVah/l
+         7td9IO4KTDTiVOZuw/hS2+JS85n9Sd0+PaM3Ta4cMinA4OWg8AIGp08Fsut4KgRBXCgT
+         sNaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=wFUAHksPBRAFfm0oT11F+1uEzTcenvzx6QM0fJ+VVOk=;
-        b=LVfek76O6iMhsh7DwAKZqFmasqcD4YLScvGKNNiP5xEiQPfetJC2xKZJCHL3w5raTJ
-         1r58hmnQA+wCCDQc5VJTmq9vmcLOXBZU+K7oSpKZmEZPWS7LvWJTgn5qxECfDmk6UIF/
-         9A7ke9MXoomNFO8hzbQKzGJRkuL25jxJQsQVDNGMzyU0zefPOgTYCfl0I+MI9qWg7rSI
-         o1d1NnZEvzQLX7gyyc0G45ouEr1ak35cHYREeH82Tb2nQ6YFbOuz3xiwPrt7X6LLx8M8
-         5ZMda31pt1XnVdR2V31/3VS/Lka0NI6wxwy10xj9dRMXRsNN/ROGauo4XaQ+jtvodMhZ
-         1tvA==
-X-Gm-Message-State: AGi0PuY0oXXOSeNeAfswGYkfTEbZys6+1lti8/1BIhVGyuJDB2DhyMKf
-        9gudtevkKn0IafyIG7Jyv5TQ+jZF
-X-Google-Smtp-Source: APiQypIMOh+GBXJK4z2BsAarn9Md69Dr7IHUQfG2i74hwfe2lfrc4MywjOuGsrb8B2RjKQXs8pqOrA==
-X-Received: by 2002:a17:906:d14b:: with SMTP id br11mr19683143ejb.213.1587439676864;
-        Mon, 20 Apr 2020 20:27:56 -0700 (PDT)
+        bh=4ZMzRuAjHXle1eKL+z9RKqBJOHZRk98XiZ1AhmO1964=;
+        b=um8aT48da9Xtb3A5RdKk3PcDkmmefFTpR5psKmQevS+jzyzJw2VmG0v3rqaumJiLBT
+         Ix82RerdZy9xEB3dlyRT4elGpQwVnjFNA/65U9v5RnOtUE1n1b8A8GSn6O3kyTXkFH71
+         UlfcL++S3BBEtdTQNLMPZH/xwLCBvNTnt4FVx8XnNNg7iOCXT5RU3N+6/X84JsBYc+2/
+         qNVVpDQVvxF+9ASiOiG50VtT3JiBLLuikmHVQL5D3a2c2SX7UPqc1Mao5eu5/kJrImXy
+         H+UQGjRGNnglxc3On/IABm3w/JrEiNrEv9KWwdBJi5wAIgHoUefn7hN1S4BXPWA908Mu
+         EvHQ==
+X-Gm-Message-State: AGi0PuY+JMQv0asi1AxG50HDYTpNMYUp6EWYf8Xmr/zwxsYNq7p1fmiV
+        J6XIFW2qgKEOimoyYZdlKuQvX9Td
+X-Google-Smtp-Source: APiQypJtCaFRTCEUBZ/1GSc+tuVo8GV1Gn4qe+LnB1vE0ntUFI/XfnojSfowGcEGi+scQDpin0Og9A==
+X-Received: by 2002:a05:6402:b17:: with SMTP id bm23mr17645499edb.137.1587439681543;
+        Mon, 20 Apr 2020 20:28:01 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j9sm216836edl.67.2020.04.20.20.27.54
+        by smtp.gmail.com with ESMTPSA id j9sm216836edl.67.2020.04.20.20.27.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 20:27:56 -0700 (PDT)
+        Mon, 20 Apr 2020 20:28:00 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -66,9 +66,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Vivien Didelot <vivien.didelot@gmail.com>,
         linux-kernel@vger.kernel.org (open list), davem@davemloft.net,
         kuba@kernel.org
-Subject: [PATCH net v2 3/5] net: dsa: b53: Fix ARL register definitions
-Date:   Mon, 20 Apr 2020 20:26:53 -0700
-Message-Id: <20200421032655.5537-4-f.fainelli@gmail.com>
+Subject: [PATCH net v2 5/5] net: dsa: b53: b53_arl_rw_op() needs to select IVL or SVL
+Date:   Mon, 20 Apr 2020 20:26:55 -0700
+Message-Id: <20200421032655.5537-6-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200421032655.5537-1-f.fainelli@gmail.com>
 References: <20200421032655.5537-1-f.fainelli@gmail.com>
@@ -77,39 +77,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
-which means that when we read/wrote from/to ARL bin index 0, we were
-actually accessing the ARLA_RWCTRL register.
+Flip the IVL_SVL_SELECT bit correctly based on the VLAN enable status,
+the default is to perform Shared VLAN learning instead of Individual
+learning.
 
 Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/dsa/b53/b53_regs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 4 ++++
+ drivers/net/dsa/b53/b53_regs.h   | 1 +
+ 2 files changed, 5 insertions(+)
 
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 8cb41583bbad..c283593bef17 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1474,6 +1474,10 @@ static int b53_arl_rw_op(struct b53_device *dev, unsigned int op)
+ 		reg |= ARLTBL_RW;
+ 	else
+ 		reg &= ~ARLTBL_RW;
++	if (dev->vlan_enabled)
++		reg &= ~ARLTBL_IVL_SVL_SELECT;
++	else
++		reg |= ARLTBL_IVL_SVL_SELECT;
+ 	b53_write8(dev, B53_ARLIO_PAGE, B53_ARLTBL_RW_CTRL, reg);
+ 
+ 	return b53_arl_op_wait(dev);
 diff --git a/drivers/net/dsa/b53/b53_regs.h b/drivers/net/dsa/b53/b53_regs.h
-index 2a9f421680aa..d914e756cdab 100644
+index 14f617e9173d..c90985c294a2 100644
 --- a/drivers/net/dsa/b53/b53_regs.h
 +++ b/drivers/net/dsa/b53/b53_regs.h
-@@ -304,7 +304,7 @@
-  *
-  * BCM5325 and BCM5365 share most definitions below
-  */
--#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
-+#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
- #define   ARLTBL_MAC_MASK		0xffffffffffffULL
- #define   ARLTBL_VID_S			48
- #define   ARLTBL_VID_MASK_25		0xff
-@@ -316,7 +316,7 @@
- #define   ARLTBL_VALID_25		BIT(63)
+@@ -292,6 +292,7 @@
+ /* ARL Table Read/Write Register (8 bit) */
+ #define B53_ARLTBL_RW_CTRL		0x00
+ #define    ARLTBL_RW			BIT(0)
++#define    ARLTBL_IVL_SVL_SELECT	BIT(6)
+ #define    ARLTBL_START_DONE		BIT(7)
  
- /* ARL Table Data Entry N Registers (32 bit) */
--#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
-+#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
- #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
- #define   ARLTBL_TC(tc)			((3 & tc) << 11)
- #define   ARLTBL_AGE			BIT(14)
+ /* MAC Address Index Register (48 bit) */
 -- 
 2.17.1
 
