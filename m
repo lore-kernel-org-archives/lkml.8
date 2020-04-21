@@ -2,160 +2,106 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91AEC55182
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3188C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 892DF20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89E620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 10:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KycdRg1y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dKOtDCfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgDUKa6 (ORCPT
+        id S1728162AbgDUKdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:30:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbgDUKa5 (ORCPT
+        Tue, 21 Apr 2020 06:33:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21326 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726741AbgDUKdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 06:30:57 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C426C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 03:30:56 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id a6so4861436uao.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 03:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Nmmt4cUyHLEe6qve6WvcXD9XM2QrRLQtbhGo4+r1qY=;
-        b=KycdRg1y9oQM3pZPaP3bxRnhvW1zUmoQIZW2WRzxFR2dQn/3L4nMD8XzdppM8rTkZ1
-         m8aCfMmSkq/htN3OrmP7HBWGtLYHToudPjD8M8ZqZD+PW90JzYDbk0WqZP+D4YFljGJ4
-         VKCkoDHOYm82W6pyaTLd5gjAuSdQnWwL5SM2tXDmCG0d2VAvVArx7zWPt9Y+Dplm9ykj
-         AwnU3caAvLH/DIlTeloP07h0x+NMLq+s8LVzkPbObaHMecie8vvUYuJKAiPLGebkdG5o
-         Hb5JUODBuPGnGPHLnCglQWCwG/GlsoJhEaAg3FskzyNDu3V2k1CTXv6Ahy0ruIzMoaLh
-         kddw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Nmmt4cUyHLEe6qve6WvcXD9XM2QrRLQtbhGo4+r1qY=;
-        b=JQ8CULZtOeYdp/4nQRohK5Vc4QMFsOZyj+wYTy1vuUUJBh13G29+5j6YKSH+w9sAD+
-         OrFhr4SGY4PU7/C9tqF9UyWn445eSeJk+JCGqz6aWJwmhCEskqwA8g5w5wcF5yzhBFv+
-         hsfYhPptX0gO1YP+sz+v0bbeRsB14PNUXTcNxRJkbWuFx0m87N1SSUO4A/j1F5D/sex2
-         vdD/dAmLpU3mNgPLF9rBM9zR4dvY+Pra85Twas4vuJAoEem9TZhURJCHgoKHscex1xtD
-         Pei86GIRH5AHNkkrj89HzLD6BquEeax8mbcs3U5bWR3zyfN0tNkQg6bmOJ8NL7nGhssM
-         7jlQ==
-X-Gm-Message-State: AGi0Puat/cQSL8sQfJCgXXwV+OzqKl4SYiOGrsaUzvCvBVgNjrkCFG3e
-        QDtUBEcf2jLScPFD6o8oNr0WSCLXgYYE+nMJoYM1Mdaj
-X-Google-Smtp-Source: APiQypJjJlGRUhECl9LUNHsivRWgdQRbBS7vnJgH8AQX+Nfndksy1VNAV4ImNERQV4t9bCWuXCZorue5jXGTrIUmCJ0=
-X-Received: by 2002:a9f:25af:: with SMTP id 44mr11675574uaf.104.1587465054589;
- Tue, 21 Apr 2020 03:30:54 -0700 (PDT)
+        Tue, 21 Apr 2020 06:33:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587465193;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EyLblhX5X6lhg0t/llpl5uQpyQRjyyg8CobgDx/wvC0=;
+        b=dKOtDCfAuE1ONmyHyk9MVKuJdpcImXrkds7+mAiqzh4GEK+dD0wr1scXoeMlQmqYPWZkd8
+        qbrvU/Y9+1cFlm1JfE++Ujs7e7Mt3iqTZ5UwiteqDWamQKgGFGl0jCTZSpRHdjMkiFS/ZU
+        RWHxpQTFsVcVMEq/1W25zbppYFjQmxc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-456-wGxjjLoBOCe4u1_JRMt9JQ-1; Tue, 21 Apr 2020 06:33:11 -0400
+X-MC-Unique: wGxjjLoBOCe4u1_JRMt9JQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA27A8017FC;
+        Tue, 21 Apr 2020 10:33:09 +0000 (UTC)
+Received: from gondolin (ovpn-112-226.ams2.redhat.com [10.36.112.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E3FF1001B09;
+        Tue, 21 Apr 2020 10:32:59 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 12:32:56 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: stop using ioctl_by_bdev in the s390 DASD driver
+Message-ID: <20200421123256.2f5d9dbd.cohuck@redhat.com>
+In-Reply-To: <b7e4a728-1f58-f304-cb5b-1aa2206a6bb4@de.ibm.com>
+References: <20200421061226.33731-1-hch@lst.de>
+        <b7e4a728-1f58-f304-cb5b-1aa2206a6bb4@de.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <1888197.j9z7NJ8yPn@kreacher> <5673945.BT02kTCndr@kreacher>
-In-Reply-To: <5673945.BT02kTCndr@kreacher>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 21 Apr 2020 12:30:18 +0200
-Message-ID: <CAPDyKFoV-gMn34nghBBK91pRYy3c90D8jrA4-OP2SGxQPzxgdg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
- power management flags
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans De Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Apr 2020 at 19:11, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> Hi,
->
-> This is an update including some fixes and extra patches based on the
-> continuation of the discussion [1].
->
-> On Friday, April 10, 2020 5:46:27 PM CEST Rafael J. Wysocki wrote:
-> > Hi Alan,
-> >
-> > Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
-> > I have decided to follow some of your recommendations and make changes to the
-> > core code handling those flags.
-> >
-> > The purpose of this is basically to make the code more consistent internally,
-> > easier to follow and better documented.
-> >
-> > First of all, patch [1/7] changes the PM core to skip driver-level "late"
-> > and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
-> > still runtime-suspended during the "late" system-wide suspend phase (without
-> > the patch it does that only if subsystem-level late/noirq/early suspend/resume
-> > callbacks are not present for the device, which is demonstrably inconsistent)
-> > and updates the resume part of the code accordingly (it doesn't need to check
-> > whether or not the subsystem-level callbacks are present any more).
-> >
-> > The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
-> > the LOC number and move related pieces of code closer to each other.
->
-> The first two patches have not changed.
->
-> > Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
-> > callbacks during system-wide resume (without the patch they may be skipped in
-> > the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
-> > may be problematic) and to always run the driver's ->resume callback if the
-> > corresponding subsystem-level callback is not present (without the patch it
-> > may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
-> > by the driver's ->suspend callback (which always runs too) if need be.
->
-> The difference between this one and patch [3/9] in the v2 is the fixed
-> definition of dev_pm_may_skip_resume(), renamed to dev_pm_skip_resume() by
-> one of the next patches.
->
-> Patch [4/9] changes the handling of the power.may_skip_resume flag to set it
-> to 'true' by default and updates the subsystems aware of it to clear it when
-> they don't want devices to stay in suspend.
->
-> > Patches [4-6/7] rename one function in the PM core and two driver PM flags to
-> > make their names better reflect their purpose.
->
-> These are patches [5/9] and [7-8/9] in the v2 and patch [6/9] renames
-> dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
->
-> > Finally, patch [7/7] updates the documentation of the driver PM flags to
-> > reflect the new code flows.
->
-> This patch [9/9] now and it has been updated to reflect the new code changes.
->
-> The pm-sleep-core branch:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->   pm-sleep-core
->
-> contains the v2 now.
->
-> Cheers!
+On Tue, 21 Apr 2020 11:58:31 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Rafael, apologize for taking some time to review and respond. I
-noticed you have queued this up on your next branch by now, good.
+> On 21.04.20 08:12, Christoph Hellwig wrote:
+> > Hi Jens and DASD maintainers,
+> > 
+> > can you take a look at this series, which stops the DASD driver from
+> > issuing ioctls from kernel space, in preparation of removing
+> > ioctl_by_bdev.  I don't really like the new s390-only method, but short
+> > of forcing the dasd driver to be built into the kernel I can't think of
+> > anything better.  But maybe the s390 maintainers are fine with forcing
+> > the DASD driver to be built in, in which case we could go down that
+> > route?  
+> 
+> Hmm the defconfig results in dasd built-in anyway. But distros really like
+> to keep it modular.
+> 
+> Hmm, we do have
+> 
+> obj-$(CONFIG_DASD) += dasd_mod.o
+> obj-$(CONFIG_DASD_DIAG) += dasd_diag_mod.o
+> obj-$(CONFIG_DASD_ECKD) += dasd_eckd_mod.o
+> obj-$(CONFIG_DASD_FBA)  += dasd_fba_mod.o
+> 
+> Would it work to make CONFIG_DASD built-in only and keep the other 3 as modules?
+> Not sure about the implications. 
+> 
 
-In any case, I have looked through the series and I think it looks good, thanks!
+I don't think non-eckd dasd drivers are really useful outside of z/VM
+guests, so keeping at least the disciplines modular would be good.
 
-Kind regards
-Uffe
+Also, what about special purpose environments like the zfcp dumper?
+Would be good to be able to keep these small.
 
->
->
-> [1] https://lore.kernel.org/linux-pm/Pine.LNX.4.44L0.2003251631360.1724-100000@netrider.rowland.org/
->
->
->
+How big is the dasd code in the end?
+
