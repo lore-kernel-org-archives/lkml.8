@@ -2,115 +2,115 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060A7C54FC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BB6C54FCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E05092071C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:01:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nwQ42tRv"
+	by mail.kernel.org (Postfix) with ESMTP id 9D1952071C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 18:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgDUSBX (ORCPT
+        id S1729232AbgDUSC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:01:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57562 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDUSBW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:01:22 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LHwabV118752;
-        Tue, 21 Apr 2020 18:01:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=QGVtEOqCgBB+Nv3ETNm0ncvtWTeDNDelHZbNu+wNNYg=;
- b=nwQ42tRv1Wbt9K+XBtbw1IMUiEwtCbSLIhgOO8tqXver3yYbKYCa9BIXlA4BdRMZNgS4
- gaTBD3VsRhGEzhBaUW0Thax5QSSOdE+Yq9Os7BQ6swnpO/M5Eo2ZEja71mZvb2l5dl0b
- VkGSk7V5d5oBc+1sQGVKEf/8JhGZpjkNaA4oZhvR+uQHnzyJZZhT7/taqH0sFNnoJK9Q
- eVQuYFiepGMsiKTpdnd+m0/42ALhW0j3HEPX7tkIok5gpmrvrE8++eubDAV2IQq+Rzsb
- 0oHBcZwy7vKam9hIYwe7/BSl6w0JdKXQZFF9gpAMIoyJKxuhHJoDiXR0foKcE05ZXxFT PQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30fsgkxhjk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 18:01:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03LHuT3W140790;
-        Tue, 21 Apr 2020 18:01:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 30gbbeesen-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 18:01:14 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03LI1BSF000995;
-        Tue, 21 Apr 2020 18:01:12 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Apr 2020 11:01:11 -0700
-Date:   Tue, 21 Apr 2020 21:01:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Denis Straghkov <d.straghkov@ispras.ru>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: rtl8723bs: rtw_wlan_util: Add size check of
- SSID IE
-Message-ID: <20200421180102.GF2659@kadam>
-References: <20200421170806.18783-1-d.straghkov@ispras.ru>
+        Tue, 21 Apr 2020 14:02:28 -0400
+Received: from muru.com ([72.249.23.125]:50758 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbgDUSC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 14:02:27 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C86768081;
+        Tue, 21 Apr 2020 18:03:11 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 11:02:20 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
+ autosuspend
+Message-ID: <20200421180220.GB37466@atomide.com>
+References: <7B8C7DD9-095B-48FC-9642-695D07B79E97@goldelico.com>
+ <20200416184638.GI37466@atomide.com>
+ <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
+ <20200417164340.3d9043d1@aktux>
+ <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
+ <20200417150721.GL37466@atomide.com>
+ <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
+ <20200420150802.GR37466@atomide.com>
+ <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com>
+ <20200421085336.32cf8ffe@aktux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200421170806.18783-1-d.straghkov@ispras.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=21 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210138
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=21 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210138
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421085336.32cf8ffe@aktux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 08:08:06PM +0300, Denis Straghkov wrote:
->  	/* checking SSID */
-> +	ssid_len = 0;
->  	p = rtw_get_ie(bssid->IEs + _FIXED_IE_LENGTH_, _SSID_IE_, &len, bssid->IELength - _FIXED_IE_LENGTH_);
-> -	if (!p) {
-> -		DBG_871X("%s marc: cannot find SSID for survey event\n", __func__);
-> -		hidden_ssid = true;
-> -	} else {
-> -		hidden_ssid = false;
-> -	}
-> -
-> -	if ((NULL != p) && (false == hidden_ssid && (*(p + 1)))) {
-> -		memcpy(bssid->Ssid.Ssid, (p + 2), *(p + 1));
-> -		bssid->Ssid.SsidLength = *(p + 1);
-> -	} else {
-> -		bssid->Ssid.SsidLength = 0;
-> -		bssid->Ssid.Ssid[0] = '\0';
-> -	}
-> +        if (p) {
-> +                ssid_len = *(p + 1);
-> +                if (ssid_len > NDIS_802_11_LENGTH_SSID)
-> +                        ssid_len = 0;
-> +        }
-> +        memcpy(bssid->Ssid.Ssid, (p + 2), ssid_len);
-> +        bssid->Ssid.SsidLength = ssid_len;
+* Andreas Kemnade <andreas@kemnade.info> [200421 06:54]:
+> On Mon, 20 Apr 2020 23:11:18 +0200
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+> > The only maybe important observation was when I disabled all
+> > kernel modules except *hdq*.ko and *bq27*.ko. Then I did only
+> > get an emergency shell so that it is quite similar to the
+> > scenario Andreas has tested. With this setup it did work.
+> > 
+> So I guess without idling uarts?
+> 
+> > I then tried to reenable other kernel modules but the result
+> > wasn't convincing that it gives a reliable result.
+> > 
+> > So I have still no clear indication when the problem occurs and
+> > when not.
+> > 
+> Hmm, last summer I had problems even without that patch reading
+> temperature while doing umts transfers. Maybe there are some
+> connections,
+> maybe not. For that scenario we might have emc issues, thermal problems
+> or a real kernel problem.
 
-This is using spaces instead of tabs.  Please run ./scripts/checkpatch.pl
-on your patch.
+I have confimed here that logicpd torpedo devkit with battery
+works just fine while entering off mode during idle. I can see
+the temperature just fine with:
 
-regargs,
-dan carpenter
+# cat /sys/class/power_supply/bq27000-battery/uevent
+POWER_SUPPLY_NAME=bq27000-battery
+POWER_SUPPLY_STATUS=Charging
+POWER_SUPPLY_PRESENT=1
+POWER_SUPPLY_VOLTAGE_NOW=3829000
+POWER_SUPPLY_CURRENT_NOW=-592084
+POWER_SUPPLY_CAPACITY_LEVEL=Normal
+POWER_SUPPLY_TEMP=306
+POWER_SUPPLY_TECHNOLOGY=Li-ion
+POWER_SUPPLY_CHARGE_FULL_DESIGN=2056320
+POWER_SUPPLY_CYCLE_COUNT=0
+POWER_SUPPLY_POWER_AVG=0
+POWER_SUPPLY_MANUFACTURER=Texas Instruments
+
+This is 37xx though, maybe you have 35xx and there's some errata
+that we're not handling?
+
+I'm only seeing "2.7. HDQTM/1-Wire® Communication Constraints"
+for external pull-up resitor in 34xx errata at [0].
+
+I wonder if wrong external pull could cause flakyeness after
+enabling the hdq module?
+
+If nothing else helps, you could try to block idle for hdq
+module, but I have a feeling that's a workaround for something
+else.
+
+Regards,
+
+Tony
+
+[0] https://www.ti.com/pdfs/wtbu/SWPZ009A_OMAP4430_Errata_Public_vA.pdf
 
