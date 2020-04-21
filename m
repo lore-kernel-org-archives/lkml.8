@@ -2,153 +2,249 @@ Return-Path: <SRS0=8uoY=6F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC34C54FCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC72BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1A13206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D352082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Apr 2020 00:25:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QdQMa4F3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgDUAT3 (ORCPT
+        id S1726534AbgDUAZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:19:29 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:35569 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725550AbgDUAT3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Apr 2020 20:19:29 -0400
-Received: from dread.disaster.area (pa49-180-0-232.pa.nsw.optusnet.com.au [49.180.0.232])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2C5783A43C6;
-        Tue, 21 Apr 2020 10:19:24 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jQgdH-00074C-Bj; Tue, 21 Apr 2020 10:19:23 +1000
-Date:   Tue, 21 Apr 2020 10:19:23 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V8 10/11] fs/xfs: Change
- xfs_ioctl_setattr_dax_invalidate()
-Message-ID: <20200421001923.GS9800@dread.disaster.area>
-References: <20200415064523.2244712-1-ira.weiny@intel.com>
- <20200415064523.2244712-11-ira.weiny@intel.com>
- <20200420023131.GC9800@dread.disaster.area>
- <20200420183617.GB2838440@iweiny-DESK2.sc.intel.com>
+        Mon, 20 Apr 2020 20:25:26 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59393 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgDUAZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Apr 2020 20:25:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 495kqQ2mtrz9sSJ;
+        Tue, 21 Apr 2020 10:25:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587428722;
+        bh=4xUTtO2SNg9WQdVKIwgg2gtvt0w/E4L61n7U8thqfQg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QdQMa4F34NML50do8dWrNfJ/nsvl9l37tEH/H3Fg3cAf3p4Z1tT/ElD6LZriXVR8Q
+         sUuoEiJnomz6gLn4zQVhalmAHSLz7gUWiokNIBdQMggvfzoA6vEpjlYMq5Rb+9YhUa
+         fpRm4sNylMZEQ90qfJalJRZ99Q6weN9LsgfcNiDFoLOfGB5bb90PpvzNSlIMT6W+NV
+         AblhaCO/RHZHEsQ43GMKzJM92mhSDQyTk111SYXnnw04JaE2DVuV7uivZ/sMw6LaFD
+         po9zSWyMnKyfr/oRQfCgv7enzp66DvEi+afhwFzwfnc8pR1fZXz/N6+t3OvHTLbwED
+         xhGtup6S7htyg==
+Date:   Tue, 21 Apr 2020 10:25:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qu Wenruo <wqu@suse.com>
+Subject: linux-next: build failure after merge of the btrfs tree
+Message-ID: <20200421102520.53623f09@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420183617.GB2838440@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=XYjVcjsg+1UI/cdbgX7I7g==:117 a=XYjVcjsg+1UI/cdbgX7I7g==:17
-        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8
-        a=7-415B0cAAAA:8 a=v_MXh98pven9RYxNG_0A:9 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; boundary="Sig_/kpltGz3om1ny/1TFa7uFp9Y";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:36:17AM -0700, Ira Weiny wrote:
-> On Mon, Apr 20, 2020 at 12:31:31PM +1000, Dave Chinner wrote:
-> > On Tue, Apr 14, 2020 at 11:45:22PM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > -out_unlock:
-> > > -	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-> > > -	return error;
-> > > +	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS ||
-> > > +	    mp->m_flags & XFS_MOUNT_DAX_NEVER)
-> > > +		return;
-> > 
-> > 	if (mp->m_flags & (XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER))
-> > 		return;
-> > > +	if (((fa->fsx_xflags & FS_XFLAG_DAX) &&
-> > > +	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)) ||
-> > > +	    (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
-> > > +	     (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)))
-> > > +		flag_inode_dontcache(inode);
-> > 
-> > This doesn't set the XFS inode's "don't cache" flag, despite it
-> > having one that serves exactly the same purpose.  IOWs, if the XFS_IDONTCACHE
-> > flag is now redundant, please replace it's current usage with this new flag
-> > and get rid of the XFS inode flag. i.e.  the only place we set XFS_IDONTCACHE
-> > can be replaced with a call to this mark_inode_dontcache() call...
-> 
-> I agree, and I would have removed XFS_IDONTCACHE, except I was not convinced
-> that XFS_IDONTCACHE was redundant.
-> 
-> Currently XFS_IDONTCACHE can be cleared if the inode is found in the cache and
-> I was unable to convince myself that it would be ok to remove it.  I mentioned
-> this to Darrick in V7.
-> 
-> https://lore.kernel.org/lkml/20200413194432.GD1649878@iweiny-DESK2.sc.intel.com/
-> 
-> What am I missing with this code?
-> 
-> xfs_iget_cache_hit():
-> ...
->         if (!(flags & XFS_IGET_INCORE))
-> 		xfs_iflags_clear(ip, XFS_ISTALE | XFS_IDONTCACHE);
-> ...
-> 
-> Why is XFS_IDONTCACHE not 'sticky'?
-> And why does xfs_iget_cache_hit() clear it
+--Sig_/kpltGz3om1ny/1TFa7uFp9Y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Because it was designed to do exactly what bulkstat required, and
-nothing else.  xfs_iget() is an internal filesystem interface, not a
-VFS level interface. Hence we can make up whatever semantics we
-want. And if we get a cache hit, we have multiple references to the
-inode so we probably should cache it regardless of whether the
-original lookup said "I'm a one-shot wonder, so don't cache me".
+Hi all,
 
-IOWs, it's a classic "don't cache unless a second reference comes
-along during the current life cycle" algorithm.
+After merging the btrfs tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-This isn't actually a frequently travelled path - bulkstat is a
-pretty rare thing to be doing - so the behaviour is "be nice to the
-cache because we can do it easily", not a hard requirement.
+In file included from <command-line>:32:
+./usr/include/linux/btrfs_tree.h:1127:2: error: unknown type name 'u8'
+ 1127 |  u8 tree_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1128:2: error: unknown type name 'u8'
+ 1128 |  u8 chunk_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1129:2: error: unknown type name 'u8'
+ 1129 |  u8 extent_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1130:2: error: unknown type name 'u8'
+ 1130 |  u8 fs_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1131:2: error: unknown type name 'u8'
+ 1131 |  u8 dev_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1132:2: error: unknown type name 'u8'
+ 1132 |  u8 csum_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1134:2: error: unknown type name 'u8'
+ 1134 |  u8 unused_8[10];
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1148:2: error: unknown type name 'u8'
+ 1148 |  u8 csum[BTRFS_CSUM_SIZE];
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1150:2: error: unknown type name 'u8'
+ 1150 |  u8 fsid[BTRFS_FSID_SIZE];
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1177:2: error: unknown type name 'u8'
+ 1177 |  u8 root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1178:2: error: unknown type name 'u8'
+ 1178 |  u8 chunk_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1179:2: error: unknown type name 'u8'
+ 1179 |  u8 log_root_level;
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1188:2: error: unknown type name 'u8'
+ 1188 |  u8 metadata_uuid[BTRFS_FSID_SIZE];
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1192:2: error: unknown type name 'u8'
+ 1192 |  u8 sys_chunk_array[BTRFS_SYSTEM_CHUNK_ARRAY_SIZE];
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1283:2: error: unknown type name 'u8'
+ 1283 |  u8 csum[BTRFS_CSUM_SIZE];
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1284:2: error: unknown type name 'u8'
+ 1284 |  u8 fsid[BTRFS_FSID_SIZE]; /* FS specific uuid */
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1289:2: error: unknown type name 'u8'
+ 1289 |  u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
+      |  ^~
+./usr/include/linux/btrfs_tree.h:1293:2: error: unknown type name 'u8'
+ 1293 |  u8 level;
+      |  ^~
 
-> rather than fail when XFS_IDONTCACHE is set?
+Caused by commit
 
-Because then it would be impossible to access an inode that has
-IDONTCACHE set on it. e.g. bulkstat an inode, now you can't open()
-it because it has XFS_IDONTCACHE set and VFS pathwalk lookups fail
-trying to resolve the inode number to a struct inode....
+  8d80a063d508 ("btrfs: move on-disk structure definitions to btrfs_tree.h")
 
-Same goes for I_DONTCACHE - this does not prevent new lookups from
-taking references to the inode while it is still referenced. i.e.
-the reference count can still go up after the flag is set. The flag
-only takes effect when the reference count goes to zero.
+They should probably all be __u8 ...
 
-Hence the only difference between XFS_IDONTCACHE and I_DONTCACHE is
-the behaviour when cache hits on existing XFS_IDONTCACHE inodes
-occur. It's not going to make a significant difference to cache
-residency if we leave the I_DONTCACHE flag in place, because the
-vast majority of inodes with that flag (from bulkstat) are still
-one-shot wonders and hence the reclaim decision is still the
-overwhelmingly correct decision to be making...
+I have applied the following patch for today.
 
-And, realistically, we have a second layer of inode caching in XFS
-(the cluster buffers) and so it's likely if we evict and reclaim an
-inode just before it gets re-used, then we'll hit the buffer cache
-anyway. i.e. we still avoid the IO to read the inode back into
-memory, we just burn a little more CPU re-instantiating it from the
-buffer....
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 21 Apr 2020 10:19:20 +1000
+Subject: [PATCH] btrfs: uapi headers should use __<type>
 
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ include/uapi/linux/btrfs_tree.h | 36 ++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/include/uapi/linux/btrfs_tree.h b/include/uapi/linux/btrfs_tre=
+e.h
+index a02318e4d2a9..1adf5971a966 100644
+--- a/include/uapi/linux/btrfs_tree.h
++++ b/include/uapi/linux/btrfs_tree.h
+@@ -1124,14 +1124,14 @@ struct btrfs_root_backup {
+ 	/* future */
+ 	__le64 unused_64[4];
+=20
+-	u8 tree_root_level;
+-	u8 chunk_root_level;
+-	u8 extent_root_level;
+-	u8 fs_root_level;
+-	u8 dev_root_level;
+-	u8 csum_root_level;
++	__u8 tree_root_level;
++	__u8 chunk_root_level;
++	__u8 extent_root_level;
++	__u8 fs_root_level;
++	__u8 dev_root_level;
++	__u8 csum_root_level;
+ 	/* future and to align */
+-	u8 unused_8[10];
++	__u8 unused_8[10];
+ } __attribute__ ((__packed__));
+=20
+ /*
+@@ -1145,9 +1145,9 @@ struct btrfs_root_backup {
+ /* The super block basically lists the main trees of the FS. */
+ struct btrfs_super_block {
+ 	/* The first 4 fields must match struct btrfs_header */
+-	u8 csum[BTRFS_CSUM_SIZE];
++	__u8 csum[BTRFS_CSUM_SIZE];
+ 	/* FS specific UUID, visible to user */
+-	u8 fsid[BTRFS_FSID_SIZE];
++	__u8 fsid[BTRFS_FSID_SIZE];
+ 	__le64 bytenr; /* this block number */
+ 	__le64 flags;
+=20
+@@ -1174,9 +1174,9 @@ struct btrfs_super_block {
+ 	__le64 compat_ro_flags;
+ 	__le64 incompat_flags;
+ 	__le16 csum_type;
+-	u8 root_level;
+-	u8 chunk_root_level;
+-	u8 log_root_level;
++	__u8 root_level;
++	__u8 chunk_root_level;
++	__u8 log_root_level;
+ 	struct btrfs_dev_item dev_item;
+=20
+ 	char label[BTRFS_LABEL_SIZE];
+@@ -1185,11 +1185,11 @@ struct btrfs_super_block {
+ 	__le64 uuid_tree_generation;
+=20
+ 	/* The UUID written into btree blocks */
+-	u8 metadata_uuid[BTRFS_FSID_SIZE];
++	__u8 metadata_uuid[BTRFS_FSID_SIZE];
+=20
+ 	/* Future expansion */
+ 	__le64 reserved[28];
+-	u8 sys_chunk_array[BTRFS_SYSTEM_CHUNK_ARRAY_SIZE];
++	__u8 sys_chunk_array[BTRFS_SYSTEM_CHUNK_ARRAY_SIZE];
+ 	struct btrfs_root_backup super_roots[BTRFS_NUM_BACKUP_ROOTS];
+ } __attribute__ ((__packed__));
+=20
+@@ -1280,17 +1280,17 @@ struct btrfs_super_block {
+ /* Every tree block (leaf or node) starts with this header. */
+ struct btrfs_header {
+ 	/* These first four must match the super block */
+-	u8 csum[BTRFS_CSUM_SIZE];
+-	u8 fsid[BTRFS_FSID_SIZE]; /* FS specific uuid */
++	__u8 csum[BTRFS_CSUM_SIZE];
++	__u8 fsid[BTRFS_FSID_SIZE]; /* FS specific uuid */
+ 	__le64 bytenr; /* Which block this node is supposed to live in */
+ 	__le64 flags;
+=20
+ 	/* Allowed to be different from the super from here on down. */
+-	u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
++	__u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
+ 	__le64 generation;
+ 	__le64 owner;
+ 	__le32 nritems;
+-	u8 level;
++	__u8 level;
+ } __attribute__ ((__packed__));
+=20
+ /*
+--=20
+2.25.1
+
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--Sig_/kpltGz3om1ny/1TFa7uFp9Y
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6ePXAACgkQAVBC80lX
+0GzFcQf/cv7+mEE+TzG7VPcJbkUZeJYwrzfeH5ZQgRdF9Qmi395GrBjH2LRuHVkO
+lWDFwNmH1oyJBn1DQdw1TNs5E/lh3aQjgakcNkvxDOSRd4iqDlme6Es9aeHm+esT
+9vm/F8CI2Pxb+sp8RNnT1fhe2u+KH5+vua7u7vw14Ee1F/UpeeE4jOPUj/fQmI2a
+/kt4iy8X+8TBu3NlZaiz8HpB5qYUZQfiyJIpuJE6Ehsuk19tBWq5CbdkSSPDjcqm
+r9l9jAomze8muEciYRDOtj28MOb3hQp+moSSHkPJEPaO1shQPo5wlspMNClT1lah
+E79GupaY2w34nHfUTsjsKOlBwgah5w==
+=jjgi
+-----END PGP SIGNATURE-----
+
+--Sig_/kpltGz3om1ny/1TFa7uFp9Y--
