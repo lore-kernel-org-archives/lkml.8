@@ -2,53 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E01C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E7C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970722084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F742073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552575;
-	bh=EPpaxcS8UexAx2lSQrSz+suQLiTjBG6z20uWIReh5LU=;
+	s=default; t=1587552580;
+	bh=fhMCzs+5oAeNDilCXNjN57Y84x/pplV7/I0kKxgTNjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNHBIPd4kV5NgQnjybeA35PwkdamLsZMKfUdsBA47NtoU56fN6xelCMhV20U+vfXk
-	 TSQx2oHFQPgBzNElUJGMnxz2P9n2G04FzbDQbP23JDWixklrwMdIiS95GGmx5i9cEv
-	 nWP5UYKfCLrpxcBAAblM8as1H3XFPQq8XEoBWtpo=
+	b=qIFFB9ShSf6L5Dt3YpLDuMwVLGsoaJcauXPNr9tnhh/nb45hJBAyyzUYYKZYI2b5k
+	 VWsewm0dSL7s2r3KPwJIod5bIS5wiydPCujtVBKCl3wNncxa2kdL3UNtSXJktyPiBq
+	 pRc+wYtkqn7UInEbqZXv74EdEPmTXNPtzcMZgyiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732111AbgDVKtb (ORCPT
+        id S1729424AbgDVKNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47178 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbgDVKNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:21 -0400
+        id S1729375AbgDVKMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A05120575;
-        Wed, 22 Apr 2020 10:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0C282070B;
+        Wed, 22 Apr 2020 10:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550400;
-        bh=EPpaxcS8UexAx2lSQrSz+suQLiTjBG6z20uWIReh5LU=;
+        s=default; t=1587550371;
+        bh=fhMCzs+5oAeNDilCXNjN57Y84x/pplV7/I0kKxgTNjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dEpFmi8+28k23fsj7hYQP521hzXwdYLduWLH7VO2+6D8G79UectvwOaWLGjtXo+8t
-         kltj3kOYNZCVGwTZYZ/nEpo75P4ZGALIbFOr/r0g18fqfJLxlkjTevXps0O5hBJA47
-         gn0TFhaT6RVRNjgILhRN6iRHwC0c55lPI/jdCxPY=
+        b=o+Kr4FZt1hStmVhdQZ1QKKx+VD4VCFMiuWS1Z7ylcAU0OMLP7Ip8+bg/Tnyn2PUCh
+         Dlc+nbt+xhrn+8qbmxUwjjoUx4NmvvpsOiTipdBvIad0S4pq+TlPfWuN7Hec2VAZRn
+         KKoCKbibe3rmIwyqawQVIWhy73VSEc+73uZAEVDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Scott Wood <oss@buserror.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/199] powerpc/fsl_booke: Avoid creating duplicate tlb1 entry
-Date:   Wed, 22 Apr 2020 11:57:09 +0200
-Message-Id: <20200422095108.143377880@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 119/199] ASoC: Intel: mrfld: return error codes when an error occurs
+Date:   Wed, 22 Apr 2020 11:57:25 +0200
+Message-Id: <20200422095109.520131013@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,80 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit aa4113340ae6c2811e046f08c2bc21011d20a072 ]
+commit 3025571edd9df653e1ad649f0638368a39d1bbb5 upstream.
 
-In the current implementation, the call to loadcam_multi() is wrapped
-between switch_to_as1() and restore_to_as0() calls so, when it tries
-to create its own temporary AS=1 TLB1 entry, it ends up duplicating
-the existing one created by switch_to_as1(). Add a check to skip
-creating the temporary entry if already running in AS=1.
+Currently function sst_platform_get_resources always returns zero and
+error return codes set by the function are never returned. Fix this
+by returning the error return code in variable ret rather than the
+hard coded zero.
 
-Fixes: d9e1831a4202 ("powerpc/85xx: Load all early TLB entries at once")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Scott Wood <oss@buserror.net>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200123111914.2565-1-laurentiu.tudor@nxp.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Addresses-Coverity: ("Unused value")
+Fixes: f533a035e4da ("ASoC: Intel: mrfld - create separate module for pci part")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200208220720.36657-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/mm/tlb_nohash_low.S | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ sound/soc/intel/atom/sst/sst_pci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/tlb_nohash_low.S b/arch/powerpc/mm/tlb_nohash_low.S
-index 048b8e9f44928..63964af9a162e 100644
---- a/arch/powerpc/mm/tlb_nohash_low.S
-+++ b/arch/powerpc/mm/tlb_nohash_low.S
-@@ -400,7 +400,7 @@ _GLOBAL(set_context)
-  * extern void loadcam_entry(unsigned int index)
-  *
-  * Load TLBCAM[index] entry in to the L2 CAM MMU
-- * Must preserve r7, r8, r9, and r10
-+ * Must preserve r7, r8, r9, r10 and r11
-  */
- _GLOBAL(loadcam_entry)
- 	mflr	r5
-@@ -436,6 +436,10 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_BIG_PHYS)
-  */
- _GLOBAL(loadcam_multi)
- 	mflr	r8
-+	/* Don't switch to AS=1 if already there */
-+	mfmsr	r11
-+	andi.	r11,r11,MSR_IS
-+	bne	10f
+--- a/sound/soc/intel/atom/sst/sst_pci.c
++++ b/sound/soc/intel/atom/sst/sst_pci.c
+@@ -107,7 +107,7 @@ static int sst_platform_get_resources(st
+ 	dev_dbg(ctx->dev, "DRAM Ptr %p\n", ctx->dram);
+ do_release_regions:
+ 	pci_release_regions(pci);
+-	return 0;
++	return ret;
+ }
  
- 	/*
- 	 * Set up temporary TLB entry that is the same as what we're
-@@ -461,6 +465,7 @@ _GLOBAL(loadcam_multi)
- 	mtmsr	r6
- 	isync
- 
-+10:
- 	mr	r9,r3
- 	add	r10,r3,r4
- 2:	bl	loadcam_entry
-@@ -469,6 +474,10 @@ _GLOBAL(loadcam_multi)
- 	mr	r3,r9
- 	blt	2b
- 
-+	/* Don't return to AS=0 if we were in AS=1 at function start */
-+	andi.	r11,r11,MSR_IS
-+	bne	3f
-+
- 	/* Return to AS=0 and clear the temporary entry */
- 	mfmsr	r6
- 	rlwinm.	r6,r6,0,~(MSR_IS|MSR_DS)
-@@ -484,6 +493,7 @@ _GLOBAL(loadcam_multi)
- 	tlbwe
- 	isync
- 
-+3:
- 	mtlr	r8
- 	blr
- #endif
--- 
-2.20.1
-
+ /*
 
 
