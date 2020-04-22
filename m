@@ -2,119 +2,132 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B250EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB050C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF712082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3202082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgDVOQ5 (ORCPT
+        id S1727102AbgDVOT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:16:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35214 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgDVOQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:16:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 83D49ACF1;
-        Wed, 22 Apr 2020 14:16:54 +0000 (UTC)
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-To:     Jakub Jelinek <jakub@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <20200417085859.GU2424@tucnak> <20200417090909.GC7322@zn.tnic>
- <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
- <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
- <20200417190607.GY2424@tucnak>
- <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
- <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
- <20200422102309.GA26846@zn.tnic>
- <20200422114007.GC20730@hirez.programming.kicks-ass.net>
- <20200422134924.GB26846@zn.tnic> <20200422135531.GM2424@tucnak>
-From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
-Message-ID: <20a91f2e-0f25-8dba-e441-3233cc1ef398@suse.cz>
-Date:   Wed, 22 Apr 2020 16:16:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 10:19:27 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46408 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgDVOT1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:19:27 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 7BCB82A1EA1
+Message-ID: <c61815a2872c5092c72ccbf9656a2bd6501810a4.camel@collabora.com>
+Subject: Re: [PATCH] media: MAINTAINERS: Fix Hantro, Rga and Rkvdec entries
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Johan Jonker <jbx6244@gmail.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hans Verkuil <hverkuil@xs4all.nl>, kernel@collabora.com,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Date:   Wed, 22 Apr 2020 11:19:17 -0300
+In-Reply-To: <20200422160631.74390a06@coco.lan>
+References: <20200422111403.19114-1-ezequiel@collabora.com>
+         <73d3d8c1-1952-aeb1-5bc0-829503cf29bd@gmail.com>
+         <20200422160631.74390a06@coco.lan>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-In-Reply-To: <20200422135531.GM2424@tucnak>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 3:55 PM, Jakub Jelinek wrote:
-> On Wed, Apr 22, 2020 at 03:49:24PM +0200, Borislav Petkov wrote:
->> On Wed, Apr 22, 2020 at 01:40:07PM +0200, Peter Zijlstra wrote:
->>> You haz a whitespace issue there.
->>
->> Fixed.
->>
->>> Also, can we get this in writing, signed in blood, from the various
->>> compiler teams ;-)
->>
->> Yah, I wouldn't want to go fix this again in gcc11 or so. That's why I
->> wanted the explicit marking but let's try this first - it is too simple
->> to pass over without having tested it.
+On Wed, 2020-04-22 at 16:06 +0200, Mauro Carvalho Chehab wrote:
+> Em Wed, 22 Apr 2020 14:01:41 +0200
+> Johan Jonker <jbx6244@gmail.com> escreveu:
 > 
-> If virtual blood is enough, AFAIK GCC has never tried to accept volatile
-> inline asm (asm ("") is such; non-volatile asm such as int x; asm ("" : "=r" (x));
-> could be e.g. dead code eliminated) in the statements between function call and
-> return when deciding about what function can be tail-called or can use
-> tail-recursion and there are no plans to change that.
+> > Hi Ezequiel,
+> > 
+> > On 4/22/20 1:14 PM, Ezequiel Garcia wrote:
+> > > It seems recent merges introduced a couple issues
+> > > here, so let's fix them all. Also, reorder Rockchip
+> > > video decoder as per parse-maintainers.pl script
+> > > and add linux-rockchip mailing list.
+> > > 
+> > > Reported-by: Johan Jonker <jbx6244@gmail.com>
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > ---
+> > >  MAINTAINERS | 20 ++++++++++----------
+> > >  1 file changed, 10 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 09e0137df61d..4d5b06c6fe0f 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -7460,7 +7460,7 @@ L:	linux-media@vger.kernel.org
+> > >  L:	linux-rockchip@lists.infradead.org
+> > >  S:	Maintained
+> > >  F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+> > > -F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
+> > > +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+> > >  F:	drivers/staging/media/hantro/
+> > >  
+> > >  HARD DRIVE ACTIVE PROTECTION SYSTEM (HDAPS) DRIVER
+> > > @@ -14465,13 +14465,6 @@ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
+> > >  F:	drivers/hid/hid-roccat*
+> > >  F:	include/linux/hid-roccat*
+> > >  
+> > > -ROCKCHIP VIDEO DECODER DRIVER
+> > > -M:	Ezequiel Garcia <ezequiel@collabora.com>
+> > > -L:	linux-media@vger.kernel.org
+> > > -S:	Maintained
+> > > -F:	drivers/staging/media/rkvdec/
+> > > -F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> > > -
+> > >  ROCKCHIP ISP V1 DRIVER
+> > >  M:	Helen Koike <helen.koike@collabora.com>
+> > >  L:	linux-media@vger.kernel.org  
+> > 
+> > L:	linux-rockchip@lists.infradead.org
+> > 
+> > > @@ -14483,12 +14476,19 @@ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+> > >  M:	Jacob Chen <jacob-chen@iotwrt.com>
+> > >  M:	Ezequiel Garcia <ezequiel@collabora.com>
+> > >  L:	linux-media@vger.kernel.org
+> > > +L:	linux-rockchip@lists.infradead.org
+> > >  S:	Maintained
+> > > -F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+> > >  F:	Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> > > -F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+> > >  F:	drivers/media/platform/rockchip/rga/
+> > >  
+> > > +ROCKCHIP VIDEO DECODER DRIVER
+> > > +M:	Ezequiel Garcia <ezequiel@collabora.com>
+> > > +L:	linux-media@vger.kernel.org
+> > > +L:	linux-rockchip@lists.infradead.org
+> > > +S:	Maintained  
+> > > +F:	drivers/staging/media/rkvdec/
+> > > +F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml  
+> > 
+> > When I look at the other entries 'drivers/' is sort below 'Documentation/'.
+> > 
+> > ./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS
+> > --order
 > 
-> 	Jakub
+> Good point. It would be cool if checkpatch.pl could call it in order
+> to verify if MAKEFILE changes are at the right order.
 > 
+> As I noticed other fields that are out of the order on media,
+> due to some changes that didn't arrive upstream yet, I'll fix
+> them all on a single patch.
 > 
-> 
 
-One possible solution can be usage of a GCC pragma that will disable the tail-call optimization:
+Thanks for taking care of this.
 
-$ cat tail.c
-int foo(int);
+Ezequiel
 
-#pragma GCC push_options
-#pragma GCC optimize("-fno-optimize-sibling-calls")
-int baz(int a)
-{
-   int r = foo(a);
-   return r;
-}
-#pragma GCC pop_options
-
-I'm not sure if clang provides something similar (the -foptimize-sibling-calls option
-is supported as well).
-
-And as I talked to Boris, I would recommend to come up with a "configure" check
-that a compiler does not optimize the key code sequence:
-
-$ cat asm-detect.c
-int foo(int a);
-int bar(int a)
-{
-   int r = foo(a);
-   asm ("");
-   return r;
-}
-
-$ gcc -O2 -c asm-detect.c -S -o/dev/stdout | grep jmp
-[no output]
-
-Martin
