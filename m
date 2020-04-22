@@ -2,116 +2,112 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CF0C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA62C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE34A2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587570609;
-	bh=ez7+ZsWjDbKtPTHLw+h/ZrnG00It65erPt+3scOnxEI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=aISpwQVcq1N113rGFFr+ahOV2azWT1HnIGYcOR9ZLWpGJgiV1oO3KAT+fnYzpAZYx
-	 C4nGuY5rU59BUIIy/4qFJRphPznBuRLr3PgtThT9gINdy/hKEXnXLuVsyyiuua0ren
-	 LznEeAykocfxEO3jdyA5JYOSdVCll3EPO/0Cs7D4=
+	by mail.kernel.org (Postfix) with ESMTP id 1B06420776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:50:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hSq7erkh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDVPuJ (ORCPT
+        id S1726699AbgDVPuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbgDVPuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:50:08 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F1CB20767;
+        Wed, 22 Apr 2020 11:50:14 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:14973 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgDVPuN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:50:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587570613; x=1619106613;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=hDChm5isPAPEd65CcrlezjVWCRg1aImUyTNZ8pXg5oA=;
+  b=hSq7erkh0UcHcaWasn2zMC6yyQRuTpHHbyuxcqL9cGrGLe/Fc20y86+9
+   uktV3neDmNmk3h+aEo1Oxxj0Zad1E2LJL2KJ0tnZI8Bi17Y5eTwhFH8T3
+   LoEi3UviUNEQ3Rjw3buyO0Cb7po1dkG4BBajYAzZF/TQQnUAHVY78O26D
+   0=;
+IronPort-SDR: qyRT4HQqGjKUlgTHtQ18PQBLmHMmiKq/AyUKZT2Yv9wkvYewTT0iTRrkV/ZQFPAQHr8RByOCIX
+ koMWQMVsQ0/w==
+X-IronPort-AV: E=Sophos;i="5.73,414,1583193600"; 
+   d="scan'208";a="30459560"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Apr 2020 15:50:11 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id 43B991416AE;
         Wed, 22 Apr 2020 15:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587570608;
-        bh=ez7+ZsWjDbKtPTHLw+h/ZrnG00It65erPt+3scOnxEI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=N319B63a8bPYR1tPct/qnNKws4vGPRf7xGiJPSfc5mpsTEdUfvKZZ0svx6z4r/7ha
-         UncFjsX/iCEj+1bpXMVvqQirWXHX1XPIIqD95XzMVmsOj9yqrQ/zgBJWucHXnVU2An
-         TdnzeGHQtp+e9NqC810NhqaKAUBIIoOxNr8JSBCw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9A3FC35203BC; Wed, 22 Apr 2020 08:50:06 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 08:50:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, qais.yousef@arm.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, airlied@redhat.com,
-        alexander.deucher@amd.com, awalls@md.metrocast.net,
-        axboe@kernel.dk, broonie@kernel.org, daniel.lezcano@linaro.org,
-        gregkh@linuxfoundation.org, hannes@cmpxchg.org,
-        herbert@gondor.apana.org.au, hverkuil@xs4all.nl,
-        john.stultz@linaro.org, nico@fluxnic.net,
-        rafael.j.wysocki@intel.com, rmk+kernel@arm.linux.org.uk,
-        sudeep.holla@arm.com, ulf.hansson@linaro.org,
-        wim@linux-watchdog.org
-Subject: Re: [PATCH 01/23] sched: Provide sched_set_fifo()
-Message-ID: <20200422155006.GR17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200422112719.826676174@infradead.org>
- <20200422112831.266499893@infradead.org>
- <20200422131138.GL17661@paulmck-ThinkPad-P72>
- <20200422132648.GJ20730@hirez.programming.kicks-ass.net>
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 22 Apr 2020 15:50:08 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.52) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 22 Apr 2020 15:50:00 +0000
+Subject: Re: [PATCH v1 01/15] nitro_enclaves: Add ioctl interface definition
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <20200421184150.68011-2-andraprs@amazon.com>
+ <7e0cb729-60ca-3b2e-909b-8883b24908a8@infradead.org>
+ <716e0cfb-fa4a-5fc5-f198-6574fa8dc046@redhat.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <c70e18f1-bd3d-1d6d-7675-cac3566fb0ab@amazon.com>
+Date:   Wed, 22 Apr 2020 18:49:54 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422132648.GJ20730@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <716e0cfb-fa4a-5fc5-f198-6574fa8dc046@redhat.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.52]
+X-ClientProxiedBy: EX13d09UWA002.ant.amazon.com (10.43.160.186) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 03:26:48PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 22, 2020 at 06:11:38AM -0700, Paul E. McKenney wrote:
-> > On Wed, Apr 22, 2020 at 01:27:20PM +0200, Peter Zijlstra wrote:
-> > > SCHED_FIFO (or any static priority scheduler) is a broken scheduler
-> > > model; it is fundamentally incapable of resource management, the one
-> > > thing an OS is actually supposed to do.
-> > > 
-> > > It is impossible to compose static priority workloads. One cannot take
-> > > two well designed and functional static priority workloads and mash
-> > > them together and still expect them to work.
-> > > 
-> > > Therefore it doesn't make sense to expose the priority field; the
-> > > kernel is fundamentally incapable of setting a sensible value, it
-> > > needs systems knowledge that it doesn't have.
-> > > 
-> > > Take away sched_setschedule() / sched_setattr() from modules and
-> > > replace them with:
-> > > 
-> > >   - sched_set_fifo(p); create a FIFO task (at prio 50)
-> > >   - sched_set_fifo_low(p); create a task higher than NORMAL,
-> > > 	which ends up being a FIFO task at prio 1.
-> > >   - sched_set_normal(p, nice); (re)set the task to normal
-> > > 
-> > > This stops the proliferation of randomly chosen, and irrelevant, FIFO
-> > > priorities that dont't really mean anything anyway.
-> > > 
-> > > The system administrator/integrator, whoever has insight into the
-> > > actual system design and requirements (userspace) can set-up
-> > > appropriate priorities if and when needed.
-> > 
-> > The sched_setscheduler_nocheck() calls in rcu_spawn_gp_kthread(),
-> > rcu_cpu_kthread_setup(), and rcu_spawn_one_boost_kthread() all stay as
-> > is because they all use the rcutree.kthread_prio boot parameter, which is
-> > set at boot time by the system administrator (or {who,what}ever, correct?
-> 
-> Correct, also they are not modular afaict, so they escaped the dance ;-)
+CgpPbiAyMi8wNC8yMDIwIDAwOjQ1LCBQYW9sbyBCb256aW5pIHdyb3RlOgo+IE9uIDIxLzA0LzIw
+IDIwOjQ3LCBSYW5keSBEdW5sYXAgd3JvdGU6Cj4+PiArCj4+PiArLyoqCj4+PiArICogVGhlIGNv
+bW1hbmQgaXMgdXNlZCB0byB0cmlnZ2VyIGVuY2xhdmUgc3RhcnQgYWZ0ZXIgdGhlIGVuY2xhdmUg
+cmVzb3VyY2VzLAo+Pj4gKyAqIHN1Y2ggYXMgbWVtb3J5IGFuZCBDUFUsIGhhdmUgYmVlbiBzZXQu
+Cj4+PiArICoKPj4+ICsgKiBUaGUgZW5jbGF2ZSBzdGFydCBtZXRhZGF0YSBpcyBhbiBpbiAvIG91
+dCBkYXRhIHN0cnVjdHVyZS4gSXQgaW5jbHVkZXMKPj4+ICsgKiBwcm92aWRlZCBpbmZvIGJ5IHRo
+ZSBjYWxsZXIgLSBlbmNsYXZlIGNpZCBhbmQgZmxhZ3MgLSBhbmQgcmV0dXJucyB0aGUKPj4+ICsg
+KiBzbG90IHVpZCBhbmQgdGhlIGNpZCAoaWYgaW5wdXQgY2lkIGlzIDApLgo+Pj4gKyAqLwo+Pj4g
+KyNkZWZpbmUgTkVfRU5DTEFWRV9TVEFSVCBfSU9XUignQicsIDB4MSwgc3RydWN0IGVuY2xhdmVf
+c3RhcnRfbWV0YWRhdGEpCj4+IFBsZWFzZSBkb2N1bWVudCBpb2N0bCBtYWpvciAoJ0InIGluIHRo
+aXMgY2FzZSkgYW5kIHJhbmdlIHVzZWQgaW4KPj4gRG9jdW1lbnRhdGlvbi91c2Vyc3BhY2UtYXBp
+L2lvY3RsL2lvY3RsLW51bWJlci5yc3QuCj4+Cj4gU2luY2UgaXQncyByZWFsbHkganVzdCBhIGNv
+dXBsZSBpb2N0bHMsIEkgY2FuICJkb25hdGUiIHBhcnQgb2YgdGhlIEtWTQo+IHNwYWNlLCBmb3Ig
+ZXhhbXBsZSBtYWpvciAweEFFIG1pbm9yIDB4MjAtMHgzZi4KClJhbmR5LCB0aGFua3MgZm9yIHRo
+ZSBpb2N0bCBkb2MgcmVmcy4KCkkgY2FuIHVwZGF0ZSB0aGUgaW9jdGwtbnVtYmVyIGRvYyB0byBh
+ZGQgYW4gZW50cnkgZm9yIHRoZSB0aGUgTml0cm8gCkVuY2xhdmVzIHVhcGkgd2l0aCAweEFFIGFu
+ZCAweDIwLTB4M2YgcmFuZ2UgKyB1cGRhdGUgdGhlIEtWTSBlbnRyeSB0byAKaGF2ZSAweEFFIDB4
+MDAtMHgxZiBhbmQgMHg0MC0weGZmLgoKV2lsbCB0aGVuIHVzZSAweEFFIGFuZCAweDIwIGZvciBO
+RV9FTkNMQVZFX1NUQVJULgoKUGFvbG8sIGxldCBtZSBrbm93IGlmIHdlIHNob3VsZCBkbyB0aGlz
+IGlvY3RsIG51bWJlciB1cGRhdGUgb3RoZXIgd2F5LiAKQW5kIHRoYW5rcyBmb3IgdGhlIHByb3Bv
+c2FsLiA6KQoKVGhhbmtzLApBbmRyYQoKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9t
+YW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJD
+NSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJl
+ZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
 
-Indeed, an extreme form of insanity would be required to try to make core
-RCU be a module.  Not that such a form of insanity is a bad thing in and
-of itself, but it might best be directed towards less futile ventures.  ;-)
-
-							Thanx, Paul
