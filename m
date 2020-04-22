@@ -2,123 +2,107 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AE9C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43385C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 443E22077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553287;
-	bh=kB0zo3lBetf32IQvgyhg8RPLDDwuy69y9bOMl2+zrh8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YznQLMPUsNeP9ujTDUTNFTuE/S2XTyv0ksHZRt+wn7NbeBMVuYs41skJ+xF3Tofv0
-	 9u8uB7ANjHJXxXJNfGma6U/MsbT9e1MSHT89Ydz/6eQi9DTCKbozMeUZRjuvrRsLR+
-	 AoImpiFjVb6xz7vEasnyoFBMakvmHjAbXlpSaSYQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1C25220774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbgDVLB0 (ORCPT
+        id S1732290AbgDVLBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49402 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:01:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49028 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgDVKBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7BA52076C;
-        Wed, 22 Apr 2020 10:01:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549672;
-        bh=kB0zo3lBetf32IQvgyhg8RPLDDwuy69y9bOMl2+zrh8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQ9KyerjEKa65IqufONB93QG3eJosn5pNBe+pk6o09BZ4gKKmZ88JuNHBAY4ySZRZ
-         rleB34kFebVKEQuQJoH8vmuANARz39OXM7xcQjLNCHtwGolws1cw22YDNU2VmGn5A8
-         TqGZGFzpm5AVqA7loZEbAk1BgP5rqG/eenTeeRKY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 057/100] net: ipv6: do not consider routes via gateways for anycast address check
-Date:   Wed, 22 Apr 2020 11:56:27 +0200
-Message-Id: <20200422095033.383951683@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
-References: <20200422095022.476101261@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1726579AbgDVLB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:01:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 30876ABD6;
+        Wed, 22 Apr 2020 11:01:25 +0000 (UTC)
+Message-ID: <1587553284.9537.96.camel@suse.cz>
+Subject: Re: [BISECTED]: Kernel panic (was: Linux 5.7-rc2)
+From:   Giovanni Gherdovich <ggherdovich@suse.cz>
+To:     Harald Arnesen <harald@skogtun.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 22 Apr 2020 13:01:24 +0200
+In-Reply-To: <ecdc6ffa-0137-4ca0-3bdb-cf37178ba4ff@skogtun.org>
+References: <CAHk-=wiQsJu-ZFjt7+c9FVD5R40khtZiihrT+7O3UaVvHYz=HQ@mail.gmail.com>
+         <428bac87-b6dd-0867-c8f8-622cd606de3e@skogtun.org>
+         <CAHk-=wiX+NT2yxtdPszH9U_S96MCNQA56GJFXY45mZc47yG5KQ@mail.gmail.com>
+         <20200421212347.GV2483@worktop.programming.kicks-ass.net>
+         <1587546150.9537.84.camel@suse.cz>
+         <aec3c60e-2794-7eb2-eb11-ff2781223e90@skogtun.org>
+         <ecdc6ffa-0137-4ca0-3bdb-cf37178ba4ff@skogtun.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Stallard <code@timstallard.me.uk>
+On Wed, 2020-04-22 at 12:22 +0200, Harald Arnesen wrote:
+> Harald Arnesen [22.04.2020 11:37]:
+> 
+> > Giovanni Gherdovich [22.04.2020 11:02]:
+> > > 
+> > > Harald:
+> > > 
+> > > I'll echo Linus' request of testing that the patch series linked above fixes
+> > > the problem on your machine. Since you're testing -rc kernels and bisecting
+> > > bugs I assume you're comfortable with patching and compiling kernels, but if
+> > > that is not the case I am more than happy to assist by providing either an RPM
+> > > or a DEB package, depending on the distribution you're running. Let me know.
+> > Will try patching first, if I'm not successful, you may compile a DEB
+> > package for me.
+> 
+> I can confirm that my Thinkpad T510i boots normally with the four
+> patches added.
+> 
+> Thanks!
 
-[ Upstream commit 03e2a984b6165621f287fadf5f4b5cd8b58dcaba ]
+That's awesome, thank you for testing.
 
-The behaviour for what is considered an anycast address changed in
-commit 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after
-encountering pmtu exception"). This now considers the first
-address in a subnet where there is a route via a gateway
-to be an anycast address.
+Regarding the turbostat output you attached to an earlier email, it confirms
+the suspicion that the 4C turbo is reported as zero (being a 2 cores / 4 threads
+machine), explaining why the fix works:
 
-This breaks path MTU discovery and traceroutes when a host in a
-remote network uses the address at the start of a prefix
-(eg 2600:: advertised as 2600::/48 in the DFZ) as ICMP errors
-will not be sent to anycast addresses.
+  cpu2: MSR_TURBO_RATIO_LIMIT: 0x00001313
+  19 * 133.3 = 2533.3 MHz max turbo 2 active cores
+  19 * 133.3 = 2533.3 MHz max turbo 1 active cores
 
-This patch excludes any routes with a gateway, or via point to
-point links, like the behaviour previously from
-rt6_is_gw_or_nonexthop in net/ipv6/route.c.
+In the above, bits 31:24 are zero. It's not a universal rule, though: my laptop
+also has a 2 cores / 4 threads cpu, and that same MSR says:
 
-This can be tested with:
-ip link add v1 type veth peer name v2
-ip netns add test
-ip netns exec test ip link set lo up
-ip link set v2 netns test
-ip link set v1 up
-ip netns exec test ip link set v2 up
-ip addr add 2001:db8::1/64 dev v1 nodad
-ip addr add 2001:db8:100:: dev lo nodad
-ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
-ip netns exec test ip route add unreachable 2001:db8:1::1
-ip netns exec test ip route add 2001:db8:100::/64 via 2001:db8::1
-ip netns exec test sysctl net.ipv6.conf.all.forwarding=1
-ip route add 2001:db8:1::1 via 2001:db8::2
-ping -I 2001:db8::1 2001:db8:1::1 -c1
-ping -I 2001:db8:100:: 2001:db8:1::1 -c1
-ip addr delete 2001:db8:100:: dev lo
-ip netns delete test
+  cpu3: MSR_TURBO_RATIO_LIMIT: 0x1b1b1b1b1b1d
+  27 * 100.0 = 2700.0 MHz max turbo 6 active cores
+  27 * 100.0 = 2700.0 MHz max turbo 5 active cores
+  27 * 100.0 = 2700.0 MHz max turbo 4 active cores
+  27 * 100.0 = 2700.0 MHz max turbo 3 active cores
+  27 * 100.0 = 2700.0 MHz max turbo 2 active cores
+  29 * 100.0 = 2900.0 MHz max turbo 1 active cores
 
-Currently the first ping will get back a destination unreachable ICMP
-error, but the second will never get a response, with "icmp6_send:
-acast source" logged. After this patch, both get destination
-unreachable ICMP replies.
+So despite my CPU being similar to yours, it wouldn't show the bug. There is
+even more: the bug can show on large core counts too, as seen in
+https://lore.kernel.org/lkml/bf43772d-48e5-01d4-dd03-330110e487fa@linux.intel.com/
+Like Xu from Intel has an Atom P-Series with 24 physical cores, yet their
+MSR goes like:
 
-Fixes: 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after encountering pmtu exception")
-Signed-off-by: Tim Stallard <code@timstallard.me.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/ip6_route.h |    1 +
- 1 file changed, 1 insertion(+)
+  MSR_TURBO_RATIO_LIMIT: 0x00000016
 
---- a/include/net/ip6_route.h
-+++ b/include/net/ip6_route.h
-@@ -171,6 +171,7 @@ static inline bool ipv6_anycast_destinat
- 
- 	return rt->rt6i_flags & RTF_ANYCAST ||
- 		(rt->rt6i_dst.plen != 128 &&
-+		 !(rt->rt6i_flags & (RTF_GATEWAY | RTF_NONEXTHOP)) &&
- 		 ipv6_addr_equal(&rt->rt6i_dst.addr, daddr));
- }
- 
+which means only the 1C turbo is reported non-zero (that machine doesn't have
+turbo at all, 1C turbo is the same as base frequency).
 
 
+Thanks,
+Giovanni
