@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD13C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8EDC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9D72075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C518D2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549942;
-	bh=tLkQTUfr1Qq0auEeh7aiDCOZwq+IyDJN4FBlWtG9zl4=;
+	s=default; t=1587549945;
+	bh=A2UMnMA1ZND4qAGm1dxuSMBHu5SS4sAQGoBYRUZdWV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKLLNxqtAOjrd09GupUyxnaY0Xi1wZzh83EGwo7tfEezc+0iJAE/Ys+tU0+93mnfn
-	 JjRqn7aWIy1/2iTGywpn31eZY5eMouhzRkJGtyl6Auso46hetQ6G9TEeysIQHwcIBk
-	 kKfkblTLv/bYlaZiZX5gqmEhfWIBhE0iGyXCivo8=
+	b=FAaJHYhwXXvETksXBT8UFGzw74IPp1IX+DQjkgYmNYoXfQd6kZ7M47/uPeY1UxDaI
+	 LFhlV4MI97ox+tSPNUVSFWvRNiNYgehBV9/jwauAa68vPuTjjmQtrswzEKS+nyrjmg
+	 9IHGgts+Tdk0zbE42OB/xaX13OlcVgytHSEsE7HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgDVKFl (ORCPT
+        id S1728224AbgDVKFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56940 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:05:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbgDVKFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:38 -0400
+        id S1728206AbgDVKFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 941D72084D;
-        Wed, 22 Apr 2020 10:05:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0611820575;
+        Wed, 22 Apr 2020 10:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549938;
-        bh=tLkQTUfr1Qq0auEeh7aiDCOZwq+IyDJN4FBlWtG9zl4=;
+        s=default; t=1587549940;
+        bh=A2UMnMA1ZND4qAGm1dxuSMBHu5SS4sAQGoBYRUZdWV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nWxcmmxDAaQFYrKpOh3vu/EEgeP7iMT8h6kEf67dd+1dx+FZ+BTE0yqs/oFx51bmb
-         SSn58EKywJ7hFmDTA/kuQhCDx2bAdZDdLokmZnEAu5GjFOCJxVZdN5agVw6ZeUz8qK
-         2atvzZbySHLwrQ6HAo/tSqYxxwci8YznKlhKxT1I=
+        b=ujhdazpmTuRHFd4r/8bQDGUCNIN1FBln58n56/esmTK9ND6m9dakKQ0mjXc/ZVtAu
+         1bu7l7VqVavLGsYuisbmLSaQu1L6QJ8I3WllDw8qXDoLSGjjVBsd7hzs5lOO+mJy2X
+         jUKOiko1YbVVoZMVdhpS40Z7p61bWxmcrM1y29Rk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 069/125] net: ipv6: do not consider routes via gateways for anycast address check
-Date:   Wed, 22 Apr 2020 11:56:26 +0200
-Message-Id: <20200422095044.455399481@linuxfoundation.org>
+        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 070/125] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Wed, 22 Apr 2020 11:56:27 +0200
+Message-Id: <20200422095044.605451973@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -59,66 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Stallard <code@timstallard.me.uk>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 03e2a984b6165621f287fadf5f4b5cd8b58dcaba ]
+commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
 
-The behaviour for what is considered an anycast address changed in
-commit 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after
-encountering pmtu exception"). This now considers the first
-address in a subnet where there is a route via a gateway
-to be an anycast address.
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-This breaks path MTU discovery and traceroutes when a host in a
-remote network uses the address at the start of a prefix
-(eg 2600:: advertised as 2600::/48 in the DFZ) as ICMP errors
-will not be sent to anycast addresses.
-
-This patch excludes any routes with a gateway, or via point to
-point links, like the behaviour previously from
-rt6_is_gw_or_nonexthop in net/ipv6/route.c.
-
-This can be tested with:
-ip link add v1 type veth peer name v2
-ip netns add test
-ip netns exec test ip link set lo up
-ip link set v2 netns test
-ip link set v1 up
-ip netns exec test ip link set v2 up
-ip addr add 2001:db8::1/64 dev v1 nodad
-ip addr add 2001:db8:100:: dev lo nodad
-ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
-ip netns exec test ip route add unreachable 2001:db8:1::1
-ip netns exec test ip route add 2001:db8:100::/64 via 2001:db8::1
-ip netns exec test sysctl net.ipv6.conf.all.forwarding=1
-ip route add 2001:db8:1::1 via 2001:db8::2
-ping -I 2001:db8::1 2001:db8:1::1 -c1
-ping -I 2001:db8:100:: 2001:db8:1::1 -c1
-ip addr delete 2001:db8:100:: dev lo
-ip netns delete test
-
-Currently the first ping will get back a destination unreachable ICMP
-error, but the second will never get a response, with "icmp6_send:
-acast source" logged. After this patch, both get destination
-unreachable ICMP replies.
-
-Fixes: 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after encountering pmtu exception")
-Signed-off-by: Tim Stallard <code@timstallard.me.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/ip6_route.h |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/include/net/ip6_route.h
-+++ b/include/net/ip6_route.h
-@@ -195,6 +195,7 @@ static inline bool ipv6_anycast_destinat
- 
- 	return rt->rt6i_flags & RTF_ANYCAST ||
- 		(rt->rt6i_dst.plen != 128 &&
-+		 !(rt->rt6i_flags & (RTF_GATEWAY | RTF_NONEXTHOP)) &&
- 		 ipv6_addr_equal(&rt->rt6i_dst.addr, daddr));
- }
- 
+---
+ drivers/scsi/ufs/ufshcd.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -682,6 +682,11 @@ start:
+ 		 */
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 
 
