@@ -2,52 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC7FC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F40C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C11D820776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB2B2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551078;
-	bh=dgsp2o5jhO3cVaLbl6yI7GcuL8xJF4PWHyAwkSBbIFo=;
+	s=default; t=1587551082;
+	bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GMNHRne2JwudZNzYkHQ0RZEXlA8wV9JjxmJNqKeg1tkNbC/XmPFzqJfVKZphRRe0t
-	 s/HmWJ8coCtTW0NpxhP+yKmBaagkeNyLnO0tI36p0WJ/Pg3S6urhduXYhTFpW0aff8
-	 gmAnBtjPmKf8yYqUKpOJq9zXddOu/aed0h/L3iJg=
+	b=nCnOqPVpeKoKswIFVzycdlQ1GCKwfsZbVv2Sr86+xNabNSHambdsNzqHodcaF1mgN
+	 r6wPVq83FGu7d2s832AqNNezw4d+blSyELzcQX3+SMdv1I0xgLrmSCQAY0SK9SEO5w
+	 YCcb9mR4IjJfcYmW+dgUwwRB1hPwUKDI/txYHAEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730439AbgDVKYh (ORCPT
+        id S1730448AbgDVKYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60422 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbgDVKXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:52 -0400
+        id S1729949AbgDVKXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77DB2076B;
-        Wed, 22 Apr 2020 10:23:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC3220781;
+        Wed, 22 Apr 2020 10:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551032;
-        bh=dgsp2o5jhO3cVaLbl6yI7GcuL8xJF4PWHyAwkSBbIFo=;
+        s=default; t=1587551034;
+        bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWIJTMC45aiQN/C16lNhDB751ePEr9LYUCf215Lia9A4gOvgyzQlhF663a9jENkFO
-         ewybp+7I3jG2aQ4WSWpqvXNNzZIP9VIhLHgiaYkYwoROKkZ6dslYU6zjhB2yynIdCP
-         cqsxOEjn17J3hhBoIMK4y/cRH6D+6kBY0GEAgBtE=
+        b=f/9OobrWSbwn+RcWdOsWyfZNV6StUPhx/yCvC6va1H2U4zg9fEYv1av+NzD2InmyK
+         jsE0uLl6ns9hEtugi+tA4W0d7jM2fXFqLjGwXXUFQCBRas2sLzspOegwxtw9E/LMCY
+         WB8SsF905o7XGMrdSTocEi0MRfFjBb4VVa83njBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bui Quang Minh <minhquangbui99@gmail.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.6 020/166] xsk: Add missing check on user supplied headroom size
-Date:   Wed, 22 Apr 2020 11:55:47 +0200
-Message-Id: <20200422095050.640912048@linuxfoundation.org>
+        stable@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 067/166] arm64: dts: marvell: Fix cpu compatible for AP807-quad
+Date:   Wed, 22 Apr 2020 11:56:34 +0200
+Message-Id: <20200422095056.093853715@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,49 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Magnus Karlsson <magnus.karlsson@intel.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
 
-commit 99e3a236dd43d06c65af0a2ef9cb44306aef6e02 upstream.
+[ Upstream commit d136d2588b21b1a07515632ed61120c9f262909b ]
 
-Add a check that the headroom cannot be larger than the available
-space in the chunk. In the current code, a malicious user can set the
-headroom to a value larger than the chunk size minus the fixed XDP
-headroom. That way packets with a length larger than the supported
-size in the umem could get accepted and result in an out-of-bounds
-write.
+make -k ARCH=arm64 dtbs_check shows the following errors. Fix them by
+removing the "arm,armv8" compatible.
 
-Fixes: c0c77d8fb787 ("xsk: add user memory registration support sockopt")
-Reported-by: Bui Quang Minh <minhquangbui99@gmail.com>
-Signed-off-by: Magnus Karlsson <magnus.karlsson@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207225
-Link: https://lore.kernel.org/bpf/1586849715-23490-1-git-send-email-magnus.karlsson@intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long CHECK
+arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dt.yaml
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
 
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xdp_umem.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -343,7 +343,7 @@ static int xdp_umem_reg(struct xdp_umem
- 	u32 chunk_size = mr->chunk_size, headroom = mr->headroom;
- 	unsigned int chunks, chunks_per_page;
- 	u64 addr = mr->addr, size = mr->len;
--	int size_chk, err;
-+	int err;
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+index 840466e143b47..68782f161f122 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+@@ -17,7 +17,7 @@
  
- 	if (chunk_size < XDP_UMEM_MIN_CHUNK_SIZE || chunk_size > PAGE_SIZE) {
- 		/* Strictly speaking we could support this, if:
-@@ -382,8 +382,7 @@ static int xdp_umem_reg(struct xdp_umem
- 			return -EINVAL;
- 	}
- 
--	size_chk = chunk_size - headroom - XDP_PACKET_HEADROOM;
--	if (size_chk < 0)
-+	if (headroom >= chunk_size - XDP_PACKET_HEADROOM)
- 		return -EINVAL;
- 
- 	umem->address = (unsigned long)addr;
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x000>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+@@ -32,7 +32,7 @@
+ 		};
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x001>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+@@ -47,7 +47,7 @@
+ 		};
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x100>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+@@ -62,7 +62,7 @@
+ 		};
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x101>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+-- 
+2.20.1
+
 
 
