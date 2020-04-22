@@ -2,53 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BFEC5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E8EC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6206820780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF9D20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549934;
-	bh=1wBsX03h36FiQnS3XC1J8G/JuRtRGfhMB4qHM++zCQc=;
+	s=default; t=1587549937;
+	bh=+/PB+AYdWM6kXS4AUrEw7cQyj/+8hWvtqpBUiJRA5S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ImDg6Pum3sSVqmd8lfTWB9uKtop+n78H2a+Vci+yLG2UF8kYc/5fEM9hlw00MSOaE
-	 sI4kuPfiRbuSFATwafjBN4Lc/crPXgXZgjJUgk08LhmNLKLmqt/ZelB7fDOxF8Yk94
-	 qFMskHqfsjQY2TmaF2c7L0RFDm3lP1eBI7aAERGY=
+	b=GG9kzVvco+5moeHsygkQWG7WXfo2487GP6YCfKbFVaPH1iA93Varkvtrb0yKD3qWH
+	 wX6Q+itFNFdaU7YyX/xBfjKBdRCVl5FqtUVq75JMiNVvTv6oNLfB1atyapstdqsh5G
+	 JdwXbfnkXJ3MMzJ5izQbRV4+Z18G1udGYo5+a3n0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgDVKFd (ORCPT
+        id S1728190AbgDVKFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56536 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:05:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbgDVKFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:24 -0400
+        id S1726941AbgDVKFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CB5720774;
-        Wed, 22 Apr 2020 10:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49EB020780;
+        Wed, 22 Apr 2020 10:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549923;
-        bh=1wBsX03h36FiQnS3XC1J8G/JuRtRGfhMB4qHM++zCQc=;
+        s=default; t=1587549930;
+        bh=+/PB+AYdWM6kXS4AUrEw7cQyj/+8hWvtqpBUiJRA5S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSBcaCHSsOtCv6UCd3aroKyjBw7l0b/A7wldVS/YVD0ihuoaCISQPFa6XRFHdOjKp
-         8szKwutqJ66KBNw6ZZ/BpKIyLsp0nefJsemRgXhdSCBBnvgq18DOKnE0eAZ9uEFmhm
-         gnYpboKGWbhejw8+p+xIlmpVWE7cPpmGafUoC3/A=
+        b=it7CxpNpSUk4yGtwiTehBLfGbKgzgf8r2mzjS03PLai+nnpmU6x0COsWCRLus5LGZ
+         9SMKElBTEdOm33bvg3qnd/PZ8B7woXKuDQ3MHhs/6sf33gQ/d/K1fS0rye/hqEbJjB
+         Fqh5Q6ezk4a8jjmUmX2flFYAXf41KRnosPVV+aZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Scott Wood <oss@buserror.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 063/125] powerpc/fsl_booke: Avoid creating duplicate tlb1 entry
-Date:   Wed, 22 Apr 2020 11:56:20 +0200
-Message-Id: <20200422095043.529126957@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 066/125] hsr: check protocol version in hsr_newlink()
+Date:   Wed, 22 Apr 2020 11:56:23 +0200
+Message-Id: <20200422095043.948209729@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,80 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit aa4113340ae6c2811e046f08c2bc21011d20a072 ]
+[ Upstream commit 4faab8c446def7667adf1f722456c2f4c304069c ]
 
-In the current implementation, the call to loadcam_multi() is wrapped
-between switch_to_as1() and restore_to_as0() calls so, when it tries
-to create its own temporary AS=1 TLB1 entry, it ends up duplicating
-the existing one created by switch_to_as1(). Add a check to skip
-creating the temporary entry if already running in AS=1.
+In the current hsr code, only 0 and 1 protocol versions are valid.
+But current hsr code doesn't check the version, which is received by
+userspace.
 
-Fixes: d9e1831a4202 ("powerpc/85xx: Load all early TLB entries at once")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Scott Wood <oss@buserror.net>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200123111914.2565-1-laurentiu.tudor@nxp.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Test commands:
+    ip link add dummy0 type dummy
+    ip link add dummy1 type dummy
+    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1 version 4
+
+In the test commands, version 4 is invalid.
+So, the command should be failed.
+
+After this patch, following error will occur.
+"Error: hsr: Only versions 0..1 are supported."
+
+Fixes: ee1c27977284 ("net/hsr: Added support for HSR v1")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/mm/tlb_nohash_low.S | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ net/hsr/hsr_netlink.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/tlb_nohash_low.S b/arch/powerpc/mm/tlb_nohash_low.S
-index eabecfcaef7cf..204b4d9c44248 100644
---- a/arch/powerpc/mm/tlb_nohash_low.S
-+++ b/arch/powerpc/mm/tlb_nohash_low.S
-@@ -400,7 +400,7 @@ _GLOBAL(set_context)
-  * extern void loadcam_entry(unsigned int index)
-  *
-  * Load TLBCAM[index] entry in to the L2 CAM MMU
-- * Must preserve r7, r8, r9, and r10
-+ * Must preserve r7, r8, r9, r10 and r11
-  */
- _GLOBAL(loadcam_entry)
- 	mflr	r5
-@@ -436,6 +436,10 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_BIG_PHYS)
-  */
- _GLOBAL(loadcam_multi)
- 	mflr	r8
-+	/* Don't switch to AS=1 if already there */
-+	mfmsr	r11
-+	andi.	r11,r11,MSR_IS
-+	bne	10f
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -63,10 +63,15 @@ static int hsr_newlink(struct net *src_n
+ 	else
+ 		multicast_spec = nla_get_u8(data[IFLA_HSR_MULTICAST_SPEC]);
  
- 	/*
- 	 * Set up temporary TLB entry that is the same as what we're
-@@ -461,6 +465,7 @@ _GLOBAL(loadcam_multi)
- 	mtmsr	r6
- 	isync
+-	if (!data[IFLA_HSR_VERSION])
++	if (!data[IFLA_HSR_VERSION]) {
+ 		hsr_version = 0;
+-	else
++	} else {
+ 		hsr_version = nla_get_u8(data[IFLA_HSR_VERSION]);
++		if (hsr_version > 1) {
++			netdev_info(dev, "Only versions 0..1 are supported");
++			return -EINVAL;
++		}
++	}
  
-+10:
- 	mr	r9,r3
- 	add	r10,r3,r4
- 2:	bl	loadcam_entry
-@@ -469,6 +474,10 @@ _GLOBAL(loadcam_multi)
- 	mr	r3,r9
- 	blt	2b
- 
-+	/* Don't return to AS=0 if we were in AS=1 at function start */
-+	andi.	r11,r11,MSR_IS
-+	bne	3f
-+
- 	/* Return to AS=0 and clear the temporary entry */
- 	mfmsr	r6
- 	rlwinm.	r6,r6,0,~(MSR_IS|MSR_DS)
-@@ -484,6 +493,7 @@ _GLOBAL(loadcam_multi)
- 	tlbwe
- 	isync
- 
-+3:
- 	mtlr	r8
- 	blr
- #endif
--- 
-2.20.1
-
+ 	return hsr_dev_finalize(dev, link, multicast_spec, hsr_version);
+ }
 
 
