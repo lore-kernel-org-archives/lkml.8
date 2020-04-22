@@ -2,134 +2,96 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53638C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5158DC5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 313AA206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pVaaOgeK"
+	by mail.kernel.org (Postfix) with ESMTP id 37A08206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgDVOfq (ORCPT
+        id S1727982AbgDVOf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:35:46 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:54866 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbgDVOfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:35:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587566144; x=1619102144;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=VyvTAFNY/PJIZIzdT/RK7DKK5sVJPpUbovBzORaA9b8=;
-  b=pVaaOgeKOFmsL3WFr0E7ZUgFfOhXDpTKoou7ANhng/alZWHTtC2kpr4j
-   0TTFkL72eixXC5vE1a4t0GlTyOmsXMPsNSgqPgrvh+cXTm+VNU/52keVD
-   zgjghrAORs1hUKgyMEEinmZaQLbPcegTnjmmk1+uUViA0n/56Ibzrtpa6
-   o=;
-IronPort-SDR: oFf+XMB52+Nnq5FTYuJ0l5VruB5O5i2cc113aDzkRwYh2ixClq+z8wZGnnq9JKuLB2/h7tuTHF
- RKkey7pEQQ8A==
-X-IronPort-AV: E=Sophos;i="5.72,414,1580774400"; 
-   d="scan'208";a="28207546"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 22 Apr 2020 14:35:31 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 638A3A1B6D;
-        Wed, 22 Apr 2020 14:35:30 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Apr 2020 14:35:29 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.92) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 22 Apr 2020 14:35:21 +0000
-Subject: Re: [PATCH v1 13/15] nitro_enclaves: Add Kconfig for the Nitro
- Enclaves driver
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <20200421184150.68011-14-andraprs@amazon.com>
- <0b169445-a0c6-8eef-86b8-71a09021e143@infradead.org>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <65322574-8bdf-51c7-04e0-54c344f8014b@amazon.com>
-Date:   Wed, 22 Apr 2020 17:35:12 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 22 Apr 2020 10:35:56 -0400
+Received: from mga17.intel.com ([192.55.52.151]:64109 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727868AbgDVOfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:35:55 -0400
+IronPort-SDR: oV8hALOPIeLrauz3mfJvucmiVqo6GcKFeR+Y3eiaG+dl5TGEyO7hX9y61QHuHhqbf/6jYY3mc/
+ HaNI7WaSogFw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 07:35:54 -0700
+IronPort-SDR: WlTpxIToC63ZaYpO79c+hXOuLKvvFtmdV2ETux+G/lHPyZnaS4Ssrn2O84pniFCkKuBXEOjZjL
+ c38dSwyBRPnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
+   d="scan'208";a="259086733"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 07:35:54 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 34EA63019B5; Wed, 22 Apr 2020 07:35:54 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 07:35:54 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     John Haxby <john.haxby@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+        x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86/fpu: Allow clearcpuid= to clear several bits
+Message-ID: <20200422143554.GI608746@tassilo.jf.intel.com>
+References: <cover.1587555769.git.john.haxby@oracle.com>
+ <03a3a4d135b17115db9ad91413e21af73e244500.1587555769.git.john.haxby@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <0b169445-a0c6-8eef-86b8-71a09021e143@infradead.org>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.92]
-X-ClientProxiedBy: EX13D42UWA004.ant.amazon.com (10.43.160.18) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03a3a4d135b17115db9ad91413e21af73e244500.1587555769.git.john.haxby@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMS8wNC8yMDIwIDIxOjUwLCBSYW5keSBEdW5sYXAgd3JvdGU6Cj4gSGktLQo+Cj4gT24g
-NC8yMS8yMCAxMTo0MSBBTSwgQW5kcmEgUGFyYXNjaGl2IHdyb3RlOgo+PiBTaWduZWQtb2ZmLWJ5
-OiBBbmRyYSBQYXJhc2NoaXYgPGFuZHJhcHJzQGFtYXpvbi5jb20+Cj4+IC0tLQo+PiAgIGRyaXZl
-cnMvdmlydC9LY29uZmlnICAgICAgICB8ICAyICsrCj4+ICAgZHJpdmVycy92aXJ0L2FtYXpvbi9L
-Y29uZmlnIHwgMjggKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDIgZmlsZXMgY2hh
-bmdlZCwgMzAgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Zp
-cnQvYW1hem9uL0tjb25maWcKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlydC9LY29uZmln
-IGIvZHJpdmVycy92aXJ0L0tjb25maWcKPj4gaW5kZXggMzYzYWYyZWFmMmJhLi4wNmJiNWNmYTE5
-MWQgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvdmlydC9LY29uZmlnCj4+ICsrKyBiL2RyaXZlcnMv
-dmlydC9LY29uZmlnCj4+IEBAIC0zMiw0ICszMiw2IEBAIGNvbmZpZyBGU0xfSFZfTUFOQUdFUgo+
-PiAgICAgICAgICAgICBwYXJ0aXRpb24gc2h1dHMgZG93bi4KPj4KPj4gICBzb3VyY2UgImRyaXZl
-cnMvdmlydC92Ym94Z3Vlc3QvS2NvbmZpZyIKPj4gKwo+PiArc291cmNlICJkcml2ZXJzL3ZpcnQv
-YW1hem9uL0tjb25maWciCj4+ICAgZW5kaWYKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlydC9h
-bWF6b24vS2NvbmZpZyBiL2RyaXZlcnMvdmlydC9hbWF6b24vS2NvbmZpZwo+PiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjU3ZmQwYWE1ODgwMwo+PiAtLS0gL2Rl
-di9udWxsCj4+ICsrKyBiL2RyaXZlcnMvdmlydC9hbWF6b24vS2NvbmZpZwo+PiBAQCAtMCwwICsx
-LDI4IEBACj4+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4+ICsjCj4+ICsj
-IENvcHlyaWdodCAyMDIwIEFtYXpvbi5jb20sIEluYy4gb3IgaXRzIGFmZmlsaWF0ZXMuIEFsbCBS
-aWdodHMgUmVzZXJ2ZWQuCj4+ICsjCj4+ICsjIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJl
-OyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5IGl0Cj4+ICsjIHVuZGVyIHRo
-ZSB0ZXJtcyBhbmQgY29uZGl0aW9ucyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2Us
-Cj4+ICsjIHZlcnNpb24gMiwgYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5k
-YXRpb24uCj4+ICsjCj4+ICsjIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9w
-ZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAo+PiArIyBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7
-IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZgo+PiArIyBNRVJDSEFOVEFCSUxJ
-VFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuIFNlZSB0aGUKPj4gKyMgR05V
-IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4gKyMKPj4gKyMgWW91
-IHNob3VsZCBoYXZlIHJlY2VpdmVkIGEgY29weSBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
-Y2Vuc2UKPj4gKyMgYWxvbmcgd2l0aCB0aGlzIHByb2dyYW07IGlmIG5vdCwgc2VlIDxodHRwOi8v
-d3d3LmdudS5vcmcvbGljZW5zZXMvPi4KPj4gKwo+PiArIyBBbWF6b24gTml0cm8gRW5jbGF2ZXMg
-KE5FKSBzdXBwb3J0Lgo+PiArIyBOaXRybyBpcyBhIGh5cGVydmlzb3IgdGhhdCBoYXMgYmVlbiBk
-ZXZlbG9wZWQgYnkgQW1hem9uLgo+PiArCj4+ICtjb25maWcgTklUUk9fRU5DTEFWRVMKPj4gKyAg
-ICAgdHJpc3RhdGUgIk5pdHJvIEVuY2xhdmVzIFN1cHBvcnQiCj4+ICsgICAgIGRlcGVuZHMgb24g
-SE9UUExVR19DUFUKPj4gKyAgICAgLS0taGVscC0tLQo+IEZvciB2MjoKPiBXZSBhcmUgbW92aW5n
-IGF3YXkgZnJvbSB0aGUgdXNlIG9mICItLS1oZWxwLS0tIiB0byBqdXN0ICJoZWxwIi4KCkhpIFJh
-bmR5LAoKQWNrLCB0aGFuayB5b3UsIEkgdXBkYXRlZCBpbiB2Mi4KClRoYW5rcywKQW5kcmEKCj4K
-Pj4gKyAgICAgICBUaGlzIGRyaXZlciBjb25zaXN0cyBvZiBzdXBwb3J0IGZvciBlbmNsYXZlIGxp
-ZmV0aW1lIG1hbmFnZW1lbnQKPj4gKyAgICAgICBmb3IgTml0cm8gRW5jbGF2ZXMgKE5FKS4KPj4g
-Kwo+PiArICAgICAgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBN
-IGhlcmUuCj4+ICsgICAgICAgVGhlIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBuaXRyb19lbmNsYXZl
-cy4KPj4KPiB0aGFua3MuCj4gLS0KPiB+UmFuZHkKPgoKCgoKQW1hem9uIERldmVsb3BtZW50IENl
-bnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0
-cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4g
-UmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUu
-Cg==
 
+Thanks good catch.
+
+>  	if (cmdline_find_option(boot_command_line, "clearcpuid", arg,
+> -				sizeof(arg)) &&
+> -	    get_option(&argptr, &bit) &&
+> -	    bit >= 0 &&
+> -	    bit < NCAPINTS * 32)
+> -		setup_clear_cpu_cap(bit);
+> +				sizeof(arg))) {
+> +		/* cpuid bit numbers are mostly three digits */
+> +		enum  { nints = sizeof(arg)/(3+1) + 1 };
+
+Not sure what the digits have to do with the stack space of an int array.
+
+We should have enough stack to afford some more than 8.
+
+Would be good to have a warning if the arguments are longer.
+
+Maybe it would be simpler to fix the early arg parser
+to allow multiple instances again? That would also avoid the limit,
+and keep everything compatible.
+
+-Andi
+
+
+> +		int i, bits[nints];
+> +
+> +		get_options(arg, nints, bits);
+> +		for (i = 1; i <= bits[0]; i++) {
+> +			if (bits[i] >= 0 && bits[i] < NCAPINTS * 32)
+> +				setup_clear_cpu_cap(bits[i]);
+> +		}
+> +	}
+>  }
+>  
+>  /*
+> -- 
+> 2.25.3
+> 
