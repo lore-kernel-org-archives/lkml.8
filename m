@@ -2,138 +2,134 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA9DC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E24C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C91520784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4617D20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549615;
-	bh=+U3prn+/Xwk6KvRtW9pZv7787tBJrTh6JRlUQJZZSfQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wgDqji8gjUtd/060bbL6fq2tKN6OIWElKYQiVuJSCUeBxz5meYQXD5vVveufh/O1/
-	 3IQOr1Rtnf4K8UZ1ro1hKi/tjIzmrITl+9nxN6nPD5ltfKxsAbJtVJm3ZdrONOenl4
-	 +axOObRM4oPpoSlaUPAk9c26xNHo2laN79u/femY=
+	s=default; t=1587549618;
+	bh=fTbTECVBN+Kz09FDYc7YbldgvRd8WnH3neoB4D6wj34=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=vu50IWCtsxv++NZsrTN/ZwDyQnk/vp8GdYqj/s6aKMZkvC+qNhIVtJzuYrdyroIzJ
+	 BUS9Q+ajGEEV75fbEFISVppQL6pdGEU0hT4lklPN8yCTd3tWs08e3fOfWWe4WtuAxh
+	 M0xYiNkMn923+iyS7jq2KtX2pQr97RjE0Z6Azfe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgDVKAO (ORCPT
+        id S1726476AbgDVKAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:00:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgDVKAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726590AbgDVKAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 06:00:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0B262076C;
-        Wed, 22 Apr 2020 10:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF0320776;
+        Wed, 22 Apr 2020 10:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1587549602;
-        bh=+U3prn+/Xwk6KvRtW9pZv7787tBJrTh6JRlUQJZZSfQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aqGnl+1ZJWRKRvsJqSSS0OhFOPc36S6zQaYLraZyJhGrNTF5KVh01ia9NbbYh2zFX
-         SAzaSNoMHHF6JVYUYr9nGF0inUQhUsuwk5Vdqt0oOZ3v+xiuH9vgn/dh/33QX6GJ/F
-         zuaNyfMa5Xv376UoFtLwiB+isdEZGzkQnLR3MoSU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 4.4 031/100] signal: Extend exec_id to 64bits
-Date:   Wed, 22 Apr 2020 11:56:01 +0200
-Message-Id: <20200422095028.419279027@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
-References: <20200422095022.476101261@linuxfoundation.org>
-User-Agent: quilt/0.66
+        bh=fTbTECVBN+Kz09FDYc7YbldgvRd8WnH3neoB4D6wj34=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=CyXnhtVQc/tjmkDRIYakYjCI5CAGw3rGlNL21QcC8sdhycajuvegJUEGK6GEUDnEz
+         te+rOS0eVTHZKW4ZCrTH3neUWbLJqt2rMAOOmJGQvCrt1ID0sBcQxwAZPtGxFb6+1t
+         LEZr/4pkNDHM8aSZQ3K75+O1a+/FaU4LRlcqPAy8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200414193616.1368209-2-aford173@gmail.com>
+References: <20200414193616.1368209-1-aford173@gmail.com> <20200414193616.1368209-2-aford173@gmail.com>
+Subject: Re: [PATCH 2/3] clk: vc5: Enable addition output configurations of the Versaclock
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
+        Adam Ford <aford173@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org
+Date:   Wed, 22 Apr 2020 03:00:01 -0700
+Message-ID: <158754960123.132238.9912757167863379129@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+Quoting Adam Ford (2020-04-14 12:36:15)
+> @@ -865,6 +904,77 @@ static int vc5_probe(struct i2c_client *client,
+>                                 init.name);
+>                         goto err_clk;
+>                 }
+> +
+> +               /* Fetch Clock Output configuration from DT (if specified=
+) */
+> +               child_name =3D kasprintf(GFP_KERNEL, "OUT%d", n);
+> +               np_output =3D of_get_child_by_name(client->dev.of_node, c=
+hild_name);
+> +               kfree(child_name);
+> +               if (!np_output)
+> +                       continue;
+> +               if (!(ret || of_property_read_u32(np_output,
+> +                       "idt,mode", &value))) {
+> +                       vc5->clk_out[n].clk_output_cfg0_mask |=3D VC5_CLK=
+_OUTPUT_CFG0_CFG_MASK;
+> +                       switch (value) {
+> +                       case VC5_CLK_OUTPUT_CFG0_CFG_LVPECL:
+> +                       case VC5_CLK_OUTPUT_CFG0_CFG_CMOS:
+> +                       case VC5_CLK_OUTPUT_CFG0_CFG_HCSL33:
+> +                       case VC5_CLK_OUTPUT_CFG0_CFG_LVDS:
+> +                       case VC5_CLK_OUTPUT_CFG0_CFG_CMOS2:
+> +                       case VC5_CLK_OUTPUT_CFG0_CFG_CMOSD:
+> +                       case VC5_CLK_OUTPUT_CFG0_CFG_HCSL25:
+> +                               vc5->clk_out[n].clk_output_cfg0 |=3D valu=
+e << VC5_CLK_OUTPUT_CFG0_CFG_SHIFT;
+> +                               break;
+> +                       default:
+> +                               ret =3D -EINVAL;
+> +                               break;
+> +                       }
+> +               }
 
-commit d1e7fd6462ca9fc76650fbe6ca800e35b24267da upstream.
+Can these three things be functions that are called and passed a
+vc5->clk_out[n] pointer? Then the code would be something like=20
 
-Replace the 32bit exec_id with a 64bit exec_id to make it impossible
-to wrap the exec_id counter.  With care an attacker can cause exec_id
-wrap and send arbitrary signals to a newly exec'd parent.  This
-bypasses the signal sending checks if the parent changes their
-credentials during exec.
-
-The severity of this problem can been seen that in my limited testing
-of a 32bit exec_id it can take as little as 19s to exec 65536 times.
-Which means that it can take as little as 14 days to wrap a 32bit
-exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
-days.  Even my slower timing is in the uptime of a typical server.
-Which means self_exec_id is simply a speed bump today, and if exec
-gets noticably faster self_exec_id won't even be a speed bump.
-
-Extending self_exec_id to 64bits introduces a problem on 32bit
-architectures where reading self_exec_id is no longer atomic and can
-take two read instructions.  Which means that is is possible to hit
-a window where the read value of exec_id does not match the written
-value.  So with very lucky timing after this change this still
-remains expoiltable.
-
-I have updated the update of exec_id on exec to use WRITE_ONCE
-and the read of exec_id in do_notify_parent to use READ_ONCE
-to make it clear that there is no locking between these two
-locations.
-
-Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
-Fixes: 2.3.23pre2
-Cc: stable@vger.kernel.org
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/exec.c             |    2 +-
- include/linux/sched.h |    4 ++--
- kernel/signal.c       |    2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1207,7 +1207,7 @@ void setup_new_exec(struct linux_binprm
- 
- 	/* An exec changes our domain. We are no longer part of the thread
- 	   group */
--	current->self_exec_id++;
-+	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
- 	flush_signal_handlers(current, 0);
- }
- EXPORT_SYMBOL(setup_new_exec);
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1612,8 +1612,8 @@ struct task_struct {
- 	struct seccomp seccomp;
- 
- /* Thread group tracking */
--   	u32 parent_exec_id;
--   	u32 self_exec_id;
-+	u64 parent_exec_id;
-+	u64 self_exec_id;
- /* Protection of (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed,
-  * mempolicy */
- 	spinlock_t alloc_lock;
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1660,7 +1660,7 @@ bool do_notify_parent(struct task_struct
- 		 * This is only possible if parent == real_parent.
- 		 * Check if it has changed security domain.
- 		 */
--		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
-+		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
- 			sig = SIGCHLD;
- 	}
- 
+ ret =3D prop1_parse_and_update(vc5->clk_out[n]);
+ if (ret)
+ 	goto err_clk;
+ ret =3D prop2_parse_and_update(...)
+ if (ret)
+ 	goto err_clk;
 
 
+> +               if (!(ret || of_property_read_u32(np_output,
+> +                       "idt,voltage-microvolts", &value))) {
+> +                       vc5->clk_out[n].clk_output_cfg0_mask |=3D VC5_CLK=
+_OUTPUT_CFG0_PWR_MASK;
+> diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindings/c=
+lk/versaclock.h
+> new file mode 100644
+> index 000000000000..30add3488713
+> --- /dev/null
+> +++ b/include/dt-bindings/clk/versaclock.h
+> @@ -0,0 +1,13 @@
+> +/* HEADER */
+
+Any SPDX license for this in place of HEADER?
+
+> +
+> +/* This file defines field values used by the versaclock 6 family
+> + * for defining output type
+> + */
+> +
+> +#define VC5_LVPECL     0
+> +#define VC5_CMOS       1
+> +#define VC5_HCSL33     2
+> +#define VC5_LVDS       3
+> +#define VC5_CMOS2      4
+> +#define VC5_CMOSD      5
+> +#define VC5_HCSL25     6
