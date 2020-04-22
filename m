@@ -2,160 +2,97 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9820FC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5184C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 731E12075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kko1a6Qu"
+	by mail.kernel.org (Postfix) with ESMTP id B9BD22075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587541175;
+	bh=RnDWO7dM9txe51VHGs0QOaPAEq5owpW0a53Byz4Aryg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JjdFAAcwLgsTRnQ68Wz1ARSBX/ijDLDCeWril2eKuCpMkPzROUs9azGg083jsjfgT
+	 3E81zJEDMU42QDv8P+VKDUbf2i7PlPNADR18MbqlpIx4cXtvmVw6U3rKwdFoewcBRh
+	 OhX7qc6PZ8JkZD8XM5/I6tp0Zh3pm2gZaYm8AiOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgDVHjb (ORCPT
+        id S1726586AbgDVHje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:39:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726523AbgDVHjT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:39:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62F3C03C1A6;
-        Wed, 22 Apr 2020 00:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=ItZJQeDojdrN4phdsGWttBe7rKiWn9nspYUjzo9YapI=; b=Kko1a6QuYDP4VO1OE93spQhTax
-        WBknwYTuLoBc6K5EMBxfxBRXmnM3elpzonzPd7/kBU08eGiuOc5afifjhgoK+8JQ04Kq1unMxL3Ya
-        tUWajs+VBoj8Ihage8qKt3xLCXzFhTuOl8+uQyUfGQ0VDppjFyYwP9UB3LnaRqURHmWnLH7v4nk9m
-        uNfXrfciLuzY5voOToKlpJf4yoSqaRSVmlZOvnpi6REPAcMT3gLGvG/+OKIFI32OdBqWY5/Hc+UnC
-        awoEGY9uPD3zfdEsZ6nu0Qf21AajgnG/cIUTzEchVdncgO/9xa29BhYzilkldIyh4Zwg4IfD9v5fl
-        hCTgRgVQ==;
-Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jR9yS-0000DT-TE; Wed, 22 Apr 2020 07:39:13 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
-        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 8/9] bdi: simplify bdi_alloc
-Date:   Wed, 22 Apr 2020 09:38:50 +0200
-Message-Id: <20200422073851.303714-9-hch@lst.de>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200422073851.303714-1-hch@lst.de>
-References: <20200422073851.303714-1-hch@lst.de>
+        Wed, 22 Apr 2020 03:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbgDVHjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:39:32 -0400
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62E93206A2;
+        Wed, 22 Apr 2020 07:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587541171;
+        bh=RnDWO7dM9txe51VHGs0QOaPAEq5owpW0a53Byz4Aryg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xdLaHAs4ifiovQ8cW9ySsd/SFz/w+PrIrbKhZxCqsVRwP5UCLCbNf4P9lh8AUroot
+         G0wDca7ZKtVUu4GoRM/QsyDH5gNgA2rqn178igYJSEAF1DvagLLZn04fsq7tSXejHK
+         fpMahL8DQaVY9m3ATQFwqa6/STDJHDmgok6EtmEI=
+Received: by mail-io1-f48.google.com with SMTP id e9so1297397iok.9;
+        Wed, 22 Apr 2020 00:39:31 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYJUL673sXcLZdw+1BHonfqviPtd9fUFVZMB2t7gVrzeTkWux8z
+        Q4J8E67X7DjBd4hj9okOV6ZBbaQa6FB4Q6njNtg=
+X-Google-Smtp-Source: APiQypIOD3MLCJCWegGwFiasQHrx/Z50Nx7XZRqMk6mTr0/9I4V/gRZuKtyrEjBB3TxLoITpe4F/M+bgvZaWUlhlq3M=
+X-Received: by 2002:a02:7785:: with SMTP id g127mr23633017jac.134.1587541170836;
+ Wed, 22 Apr 2020 00:39:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200420075711.2385190-1-Jason@zx2c4.com> <20200422040415.GA2881@sol.localdomain>
+ <CAHmME9q=hMRjBG=SBX8gCC3qx-t1wdEwMOYx952m9HkByjiofA@mail.gmail.com>
+In-Reply-To: <CAHmME9q=hMRjBG=SBX8gCC3qx-t1wdEwMOYx952m9HkByjiofA@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 22 Apr 2020 09:39:19 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE-UZxw0C3WRVh7RfuWE0BNDT4bt4qJa1SyOH3K-qBBcQ@mail.gmail.com>
+Message-ID: <CAMj1kXE-UZxw0C3WRVh7RfuWE0BNDT4bt4qJa1SyOH3K-qBBcQ@mail.gmail.com>
+Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
+ PAGE_SIZE chunks
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the _node vs normal version and drop the superflous gfp_t argument.
+On Wed, 22 Apr 2020 at 09:32, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Tue, Apr 21, 2020 at 10:04 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> > Seems this should just be a 'while' loop?
+> >
+> >         while (bytes) {
+> >                 unsigned int todo = min_t(unsigned int, PAGE_SIZE, bytes);
+> >
+> >                 kernel_neon_begin();
+> >                 chacha_doneon(state, dst, src, todo, nrounds);
+> >                 kernel_neon_end();
+> >
+> >                 bytes -= todo;
+> >                 src += todo;
+> >                 dst += todo;
+> >         }
+>
+> The for(;;) is how it's done elsewhere in the kernel (that this patch
+> doesn't touch), because then we can break out of the loop before
+> having to increment src and dst unnecessarily. Likely a pointless
+> optimization as probably the compiler can figure out how to avoid
+> that. But maybe it can't. If you have a strong preference, I can
+> reactor everything to use `while (bytes)`, but if you don't care,
+> let's keep this as-is. Opinion?
+>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- block/blk-core.c            | 2 +-
- drivers/mtd/mtdcore.c       | 2 +-
- fs/super.c                  | 2 +-
- include/linux/backing-dev.h | 6 +-----
- mm/backing-dev.c            | 7 +++----
- 5 files changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 7e4a1da0715e..ab87f2833ab2 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -484,7 +484,7 @@ struct request_queue *__blk_alloc_queue(int node_id)
- 	if (ret)
- 		goto fail_id;
- 
--	q->backing_dev_info = bdi_alloc_node(GFP_KERNEL, node_id);
-+	q->backing_dev_info = bdi_alloc(node_id);
- 	if (!q->backing_dev_info)
- 		goto fail_split;
- 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 2916674208b3..39ec563d9a14 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -2036,7 +2036,7 @@ static struct backing_dev_info * __init mtd_bdi_init(char *name)
- 	struct backing_dev_info *bdi;
- 	int ret;
- 
--	bdi = bdi_alloc(GFP_KERNEL);
-+	bdi = bdi_alloc(NUMA_NO_NODE);
- 	if (!bdi)
- 		return ERR_PTR(-ENOMEM);
- 
-diff --git a/fs/super.c b/fs/super.c
-index cd352530eca9..dd28fcd706ff 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1598,7 +1598,7 @@ int super_setup_bdi_name(struct super_block *sb, char *fmt, ...)
- 	int err;
- 	va_list args;
- 
--	bdi = bdi_alloc(GFP_KERNEL);
-+	bdi = bdi_alloc(NUMA_NO_NODE);
- 	if (!bdi)
- 		return -ENOMEM;
- 
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 4098ed6ba6b4..6b3504bf7a42 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -36,11 +36,7 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt,
- void bdi_set_owner(struct backing_dev_info *bdi, struct device *owner);
- void bdi_unregister(struct backing_dev_info *bdi);
- 
--struct backing_dev_info *bdi_alloc_node(gfp_t gfp_mask, int node_id);
--static inline struct backing_dev_info *bdi_alloc(gfp_t gfp_mask)
--{
--	return bdi_alloc_node(gfp_mask, NUMA_NO_NODE);
--}
-+struct backing_dev_info *bdi_alloc(int node_id);
- 
- void wb_start_background_writeback(struct bdi_writeback *wb);
- void wb_workfn(struct work_struct *work);
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index bb993f99d424..1f55d5b8269f 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -865,12 +865,11 @@ static int bdi_init(struct backing_dev_info *bdi)
- 	return ret;
- }
- 
--struct backing_dev_info *bdi_alloc_node(gfp_t gfp_mask, int node_id)
-+struct backing_dev_info *bdi_alloc(int node_id)
- {
- 	struct backing_dev_info *bdi;
- 
--	bdi = kmalloc_node(sizeof(struct backing_dev_info),
--			   gfp_mask | __GFP_ZERO, node_id);
-+	bdi = kzalloc_node(sizeof(*bdi), GFP_KERNEL, node_id);
- 	if (!bdi)
- 		return NULL;
- 
-@@ -880,7 +879,7 @@ struct backing_dev_info *bdi_alloc_node(gfp_t gfp_mask, int node_id)
- 	}
- 	return bdi;
- }
--EXPORT_SYMBOL(bdi_alloc_node);
-+EXPORT_SYMBOL(bdi_alloc);
- 
- static struct rb_node **bdi_lookup_rb_node(u64 id, struct rb_node **parentp)
- {
--- 
-2.26.1
-
+Since we're bikeshedding, I'd prefer 'do { } while (bytes);' here,
+given that bytes is guaranteed to be non-zero before we enter the
+loop. But in any case, I'd prefer avoiding for(;;) or while(1) where
+we can.
