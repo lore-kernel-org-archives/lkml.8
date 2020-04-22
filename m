@@ -2,116 +2,221 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97198C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C61DC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7162076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:13:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kPVI68HX"
+	by mail.kernel.org (Postfix) with ESMTP id 2E0DF20706
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgDVNNV (ORCPT
+        id S1726416AbgDVNNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:13:21 -0400
-Received: from mail.efficios.com ([167.114.26.124]:44338 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgDVNNU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:13:20 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 7D41424BBCE;
-        Wed, 22 Apr 2020 09:13:19 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id LivSnvv1xuAw; Wed, 22 Apr 2020 09:13:19 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 2934E24BCB4;
-        Wed, 22 Apr 2020 09:13:19 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2934E24BCB4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1587561199;
-        bh=XxfwCStd65W3SUVeYq1AfAiyjAtX6BLtoIdBlLjGZM4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=kPVI68HXH+9CBE9fhZpJKo2/qo0O6pESqyfaUwVc7J0wy/nI4nOjcbrkY2ISX9Gja
-         PZQ6NamnA+k+St4TA0IcppITqrESnC+fQnrgaQbIUkj7f+AjgQudGKf0JHIIazYS02
-         bRQnhcB2czeuJrklHyqquJFM3xcDovjW1ffeNyggCvgiD6MiRFSIKEnXA4XV0y/y5o
-         MPzJtjiT3jsskcrx02pLUCzhWQI9LR+SUOgSGNIqcv4WhtH2VrkP85/JyBsypSPs6B
-         aFIwgt8/4+XzCtD4f7jkz5JxvcLcWGnGR4ZJxu6Lp8tDgdLSA1OvkTju61TMdi/yjE
-         ZFBkINZQt+5kA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id zJR-EsYqK08y; Wed, 22 Apr 2020 09:13:19 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 1BAEA24BBCB;
-        Wed, 22 Apr 2020 09:13:19 -0400 (EDT)
-Date:   Wed, 22 Apr 2020 09:13:19 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     linux-kernel@vger.kernel.org, lttng-dev@lists.lttng.org,
-        rp@svcs.cs.pdx.edu
-Cc:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Message-ID: <1277451188.63391.1587561199034.JavaMail.zimbra@efficios.com>
-Subject: [RELEASE] Userspace RCU 0.12.1, 0.11.2, 0.10.3, 0.9.7
+        Wed, 22 Apr 2020 09:13:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:49866 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726468AbgDVNNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 09:13:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBD7031B;
+        Wed, 22 Apr 2020 06:13:51 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EFAD3F6CF;
+        Wed, 22 Apr 2020 06:13:49 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 14:13:47 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200422131346.sfjntmurigv6uajb@e107158-lin.cambridge.arm.com>
+References: <20200403123020.13897-1-qais.yousef@arm.com>
+ <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
+ <20200420151341.7zni3bwroso2kpdc@e107158-lin.cambridge.arm.com>
+ <de020088-3b06-3674-dab9-244ae577cc54@arm.com>
+ <20200421112733.4jbguidgbqwzhv23@e107158-lin.cambridge.arm.com>
+ <45236ccd-24d2-3b99-cd9b-bac13cfaceab@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF75 (Linux)/8.8.15_GA_3895)
-Thread-Index: FXK0zFflj44usWFd7MeHID9rQ7EAUg==
-Thread-Topic: Userspace RCU 0.12.1, 0.11.2, 0.10.3, 0.9.7
+Content-Disposition: inline
+In-Reply-To: <45236ccd-24d2-3b99-cd9b-bac13cfaceab@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 04/22/20 12:59, Dietmar Eggemann wrote:
+> On 21/04/2020 13:27, Qais Yousef wrote:
+> > On 04/21/20 13:18, Dietmar Eggemann wrote:
+> >> On 20/04/2020 17:13, Qais Yousef wrote:
+> >>> On 04/20/20 10:29, Dietmar Eggemann wrote:
+> >>>> On 03.04.20 14:30, Qais Yousef wrote:
+> >>>>
+> >>>> [...]
+> >>>>
+> >>>>> @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+> >>>>>  	return uc_req;
+> >>>>>  }
+> >>>>>  
+> >>>>> +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
+> >>>>> +{
+> >>>>> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+> >>>>> +
+> >>>>> +	if (!uc_se->user_defined)
+> >>>>> +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
+> >>>>> +}
+> >>>>> +
+> >>>>>  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+> >>>>>  {
+> >>>>>  	struct uclamp_se uc_eff;
+> >>>>> @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+> >>>>>  	if (unlikely(!p->sched_class->uclamp_enabled))
+> >>>>>  		return;
+> >>>>>  
+> >>>>> +	/*
+> >>>>> +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
+> >>>>> +	 * user, we apply any new value on the next wakeup, which is here.
+> >>>>> +	 */
+> >>>>> +	uclamp_rt_sync_default_util_min(p);
+> >>>>> +
+> >>>>
+> >>>> Does this have to be an extra function? Can we not reuse
+> >>>> uclamp_tg_restrict() by slightly rename it to uclamp_restrict()?
+> 
+> Btw, there was an issue in my little snippet. I used uc_req.user_defined
+> uninitialized in uclamp_restrict().
+> 
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index f3706dad32ce..7e6b2b7cd1e5 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -903,12 +903,11 @@ uclamp_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+>  {
+>  	struct uclamp_se uc_req, __maybe_unused uc_max;
+>  
+> -	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN &&
+> -	    !uc_req.user_defined) {
+> +	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN) {
+>  		struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
+>  		int rt_min = sysctl_sched_rt_default_uclamp_util_min;
+>  
+> -		if (uc_se->value != rt_min) {
+> +		if (!uc_se->user_defined && uc_se->value != rt_min) {
+>  			uclamp_se_set(uc_se, rt_min, false);
+>  			printk("uclamp_restrict() [%s %d] p->uclamp_req[%d].value=%d\n",
+>  			       p->comm, p->pid, clamp_id, uc_se->value);
+> 
+> >>> Hmm the thing is that we're not restricting here. In contrary we're boosting,
+> >>> so the name would be misleading.
+> >>
+> >> I always thought that we're restricting p->uclamp_req[UCLAMP_MIN].value (default 1024) to
+> >> sysctl_sched_rt_default_uclamp_util_min (0-1024)?
+> > 
+> > The way I look at it is that we're *setting* it to
+> > sysctl_sched_rt_default_uclamp_util_min if !user_defined.
+> > 
+> > The restriction mechanism that ensures this set value doesn't escape
+> > cgroup/global restrictions setup.
+> 
+> I guess we overall agree here. 
+> 
+> I see 3 restriction levels: (!user_defined) task -> taskgroup -> system
+> 
+> I see sysctl_sched_rt_default_uclamp_util_min (min_rt_default) as a
+> restriction on task level.
 
-This is a release announcement for the liburcu project. Those releases
-are bugfix only releases within each of the currently supported
-branches: 0.12.1, 0.11.2, 0.10.3, 0.9.7.
+Hmm from code perspective it is a request. One that is applied by default if
+the user didn't make any request.
 
-Note that the 0.9.7 and 0.10.3 releases mark the end of life of the
-stable-0.9 and stable-0.10 branches. Users should upgrade to 0.11.x
-or 0.12.x for an actively maintained liburcu.
+Since restriction has a different meaning from code point of view, I think
+interchanging both could be confusing.
 
-* Noteworthy in these releases
+A restriction from the code view is that you can request 1024, but if cgroup or
+global settings doesn't allow you, the system will automatically crop it.
 
-One relevant fix included in all of those releases applies to tls-compat.h.
-It fixes use-cases where liburcu is compiled with a compiler detecting that
-_Thread_local should be used for TLS, but an application using tls-compat.h
-uses an older compiler which does not support _Thread_local.
+The new sysctl doesn't result in any cropping. It is equivalent to a user
+making a sched_setattr() call to change UCLAMP_MIN value of a task. It's just
+this request is applied automatically by default, if !user_defined.
 
-The 0.10.3 and 0.11.2 releases include a fix for a hang when using the
-RCU lock-free hash table with the signal-based urcu flavor. (urcu-signal)
+But if you meant your high level view of how it works you think of it as
+a restriction, then yeah, it could be abstracted in this way. The terminology
+just conflicts with the code.
 
+> 
+> It's true that the task level restriction is setting the value at the same time.
+> 
+> For CFS (id=UCLAMP_[MIN\|MAX]) and RT (id=UCLAMP_MAX) we use
+> uclamp_none(id) and those values (0, 1024) are fixed so these task level
+> values don't need to be further restricted.
 
-liburcu is a LGPLv2.1 userspace RCU (read-copy-update) library. This
-data synchronization library provides read-side access which scales
-linearly with the number of cores. It does so by allowing multiple
-copies of a given data structure to live at the same time, and by
-monitoring the data structure accesses to detect grace periods after
-which memory reclamation is possible.
+I wouldn't think of these as restriction. They're default requests, if
+I understood what you're saying correctly, by default:
 
-liburcu-cds provides efficient data structures based on RCU and
-lock-free algorithms. Those structures include hash tables, queues,
-stacks, and doubly-linked lists.
+	cfs_task->util_min = 0
+	cfs_task->util_max = 1024
 
-Project website: http://liburcu.org
-Git repository: git://git.liburcu.org/urcu.git
+	rt_task->util_min = 1024
+	rt_task->util_max = 1024
 
-Enjoy!
+Which are the requested value.
 
-Mathieu
+sysctl_util_clamp_{min,max} are the default restriction which by default would
+allow the tasks to request any value within the full range.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+The root taskgroup will inherit this value by default. And new cgroups will
+inherit from the root taskgroup.
+
+> 
+> For RT (id=UCLAMP_MIN) we use 'min_rt_default' and since it can change
+> we have to check the task level restriction in 'uclamp_eff_get() ->
+> uclamp_(tg)_restrict()'.
+
+Yes. If we take the approach to apply the default request in uclamp_eff_get(),
+then this must be applied before uclamp_tg_restrict() call.
+
+> 
+> root@h960:~# echo 999 > /proc/sys/kernel/sched_rt_default_util_clamp_min
+> 
+> [ 2540.507236] uclamp_eff_get() [rtkit-daemon 419] tag=0 uclamp_id=0 uc_req.value=1024
+> [ 2540.514947] uclamp_eff_get() [rtkit-daemon 419] tag=1 uclamp_id=0 uc_req.value=1024
+> [ 2548.015208] uclamp_restrict() [rtkit-daemon 419] p->uclamp_req[0].value=999
+> 
+> root@h960:~# echo 666 > /proc/sys/kernel/sched_util_clamp_min
+> 
+> [ 2548.022219] uclamp_eff_get() [rtkit-daemon 419] tag=0 uclamp_id=0 uc_req.value=999
+> [ 2548.029825] uclamp_eff_get() [rtkit-daemon 419] tag=1 uclamp_id=0 uc_req.value=999
+> [ 2553.479509] uclamp_eff_get() [rtkit-daemon 419] tag=0 uclamp_id=0 uc_max.value=666
+> [ 2553.487131] uclamp_eff_get() [rtkit-daemon 419] tag=1 uclamp_id=0 uc_max.value=666
+> 
+> Haven't tried to put an rt task into a taskgroup other than root.
+
+I do run a test that Patrick had which checks for cgroup values. One of the
+tests checks if RT are boosted to max, and it fails when I change the default
+RT max-boost value :)
+
+I think we're in agreement, but the terminology is probably making things a bit
+confusing.
+
+Thanks
+
+--
+Qais Yousef
