@@ -2,115 +2,111 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0897C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558EEC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2FC220767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E60F20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:17:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="g6cvQ0mB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgDVUR2 (ORCPT
+        id S1726697AbgDVURo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 16:17:44 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:34387 "EHLO mail.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgDVUR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:17:28 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409E02074B;
-        Wed, 22 Apr 2020 20:17:27 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 16:17:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        jpoimboe@redhat.com, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, jthierry@redhat.com, alexandre.chartre@oracle.com
-Subject: Re: [PATCH 3/3] x86/ftrace: Do not jump to direct code in created
- trampolines
-Message-ID: <20200422161725.667fa9aa@gandalf.local.home>
-In-Reply-To: <20200422200808.GX2483@worktop.programming.kicks-ass.net>
-References: <20200422162539.808362933@goodmis.org>
-        <20200422162750.638839749@goodmis.org>
-        <20200422200808.GX2483@worktop.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725779AbgDVURn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:17:43 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 5d86e8b1;
+        Wed, 22 Apr 2020 20:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=zcAqlsS6cbJG+9ZYLKubSmS1+4E=; b=g6cvQ0
+        mBzP+iPykSyvY4aC9vay4EW/eOKh++k2StorKsZG8KSB6v5eFkQlIg2+ebDfyg7i
+        KGISl+E9XBYJ0QU4/x8BZ376+rbdgF6Vo33zoCc/5ZyAghtXhswLRm6MmW42iUaC
+        i7mNpDBcfVymXJUGUH/NqiJgT/V6y1yi6qqtR2huKeF/7pYsS4wtmC320tZG7kSA
+        2a1PzDcQhWSanXwNVMC7Rmb1sym+sjCygvZnGIjEBOAlkY/s+FWdV7c1U2PYB+ci
+        KbzyJUL62dRxT45/JPY/Zau6c0jukMD6PYDap/6FCcSXpsO9chNDuOPNlirZaL4f
+        IAyim/Uu747aoWLA==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 850def34 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Wed, 22 Apr 2020 20:06:45 +0000 (UTC)
+Received: by mail-io1-f48.google.com with SMTP id 19so3880811ioz.10;
+        Wed, 22 Apr 2020 13:17:39 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYlG+XLCi2JR3fVxl+cskGrZ2NrfOB8eNUfhVX310Fj6hMqp0DE
+        aXQFJNm3hKtHxNTRzW3ZBzv1a8BpAS+lIjKuJwQ=
+X-Google-Smtp-Source: APiQypLeAfwZfIEvq8SjW1sawfpEIZjTTCkUn7CnS7yPa/RT9YO6yz9/p22sOOAYPD7ud6+ZqfrnecelDN4vSeaLASo=
+X-Received: by 2002:a05:6638:4e:: with SMTP id a14mr171449jap.108.1587586659063;
+ Wed, 22 Apr 2020 13:17:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200420075711.2385190-1-Jason@zx2c4.com> <20200422040415.GA2881@sol.localdomain>
+ <CAHmME9q=hMRjBG=SBX8gCC3qx-t1wdEwMOYx952m9HkByjiofA@mail.gmail.com>
+ <CAMj1kXE-UZxw0C3WRVh7RfuWE0BNDT4bt4qJa1SyOH3K-qBBcQ@mail.gmail.com> <CAHmME9qXy4X3GtCtt5_1+KTxTXd6+nfhvE_c8Xn6_iJdRWhQmA@mail.gmail.com>
+In-Reply-To: <CAHmME9qXy4X3GtCtt5_1+KTxTXd6+nfhvE_c8Xn6_iJdRWhQmA@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Wed, 22 Apr 2020 14:17:28 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rqG56i+TfOhY-yt52XZrFRRTv0Vwr27qn5yL0=OpQa-A@mail.gmail.com>
+Message-ID: <CAHmME9rqG56i+TfOhY-yt52XZrFRRTv0Vwr27qn5yL0=OpQa-A@mail.gmail.com>
+Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
+ PAGE_SIZE chunks
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 22:08:08 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, Apr 22, 2020 at 1:51 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Wed, Apr 22, 2020 at 1:39 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Wed, 22 Apr 2020 at 09:32, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > >
+> > > On Tue, Apr 21, 2020 at 10:04 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > > Seems this should just be a 'while' loop?
+> > > >
+> > > >         while (bytes) {
+> > > >                 unsigned int todo = min_t(unsigned int, PAGE_SIZE, bytes);
+> > > >
+> > > >                 kernel_neon_begin();
+> > > >                 chacha_doneon(state, dst, src, todo, nrounds);
+> > > >                 kernel_neon_end();
+> > > >
+> > > >                 bytes -= todo;
+> > > >                 src += todo;
+> > > >                 dst += todo;
+> > > >         }
+> > >
+> > > The for(;;) is how it's done elsewhere in the kernel (that this patch
+> > > doesn't touch), because then we can break out of the loop before
+> > > having to increment src and dst unnecessarily. Likely a pointless
+> > > optimization as probably the compiler can figure out how to avoid
+> > > that. But maybe it can't. If you have a strong preference, I can
+> > > reactor everything to use `while (bytes)`, but if you don't care,
+> > > let's keep this as-is. Opinion?
+> > >
+> >
+> > Since we're bikeshedding, I'd prefer 'do { } while (bytes);' here,
+> > given that bytes is guaranteed to be non-zero before we enter the
+> > loop. But in any case, I'd prefer avoiding for(;;) or while(1) where
+> > we can.
+>
+> Okay, will do-while it up for v2.
 
-> On Wed, Apr 22, 2020 at 12:25:42PM -0400, Steven Rostedt wrote:
-> 
-> > @@ -367,6 +371,17 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
-> >  	if (WARN_ON(ret < 0))
-> >  		goto fail;
-> >  
-> > +	/* No need to test direct calls on created trampolines */
-> > +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-> > +		/* NOP the jnz 1f; but make sure it's a 2 byte jnz */
-> > +		ip = trampoline + (jmp_offset - start_offset);
-> > +		if (WARN_ON(*(char *)ip != 0x75))
-> > +			goto fail;
-> > +		ret = probe_kernel_read(ip, ideal_nops[2], 2);  
-> 
-> Now you're just being silly, are you really, actually worried you can't
-> read ideal_nops[] ?
+I just sent v2 containing do-while, and I'm fine with that going in
+that way. But just in the interest of curiosity in the pan-tone
+palette, check this out:
 
-Hah, that was more cut and paste. I guess a memcpy() would be more
-appropriate.
+https://godbolt.org/z/VxXien
 
-
-> 
-> > +		if (ret < 0)
-> > +			goto fail;
-> > +	}
-> > +
-> >  	/*
-> >  	 * The address of the ftrace_ops that is used for this trampoline
-> >  	 * is stored at the end of the trampoline. This will be used to
-> > diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-> > index 0882758d165a..f72ef157feb3 100644
-> > --- a/arch/x86/kernel/ftrace_64.S
-> > +++ b/arch/x86/kernel/ftrace_64.S
-> > @@ -241,6 +241,7 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
-> >  	 */
-> >  	movq ORIG_RAX(%rsp), %rax
-> >  	testq	%rax, %rax
-> > +SYM_INNER_LABEL(ftrace_regs_caller_jmp, SYM_L_GLOBAL)
-> >  	jnz	1f
-> >    
-> 
-> I you worry about performance, it would make more sense to do something
-> like so:
-> 
-> SYM_INNER_LABEL(ftrace_regs_caller_from, SYM_L_GLOBAL)
-> 	movq ORIG_RAX(%rsp), %rax
-> 	testq	%rax, %rax
-> 	jnz	1f
-> SYM_INNER_LABEL(ftrace_regs_caller_to, SYM_L_GLOBAL)
-> 
-> 	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-> 		ip = trampoline + (ftrace_regs_caller_from - start_offset);
-> 		((u8[])ip)[0] = JMP8_INSN_OPCODE;
-> 		((u8[])ip)[1] = ftrace_regs_caller_to - ftrace_regs_caller_from - JMP8_INSN_SIZE;
-> 	}
-> 
-> Or nop the whole range, but it's like 10 bytes so I'm not sure that's
-> actually faster.
-
-That could work too. I'll play with that and actually do some benchmarks to
-see how much it affects things.
-
-Thanks!
-
--- Steve
+It looks like on mine, the compiler avoids unnecessarily calling those
+adds on the last iteration, but on the other hand, it results in an
+otherwise unnecessary unconditional jump for the < 4096 case. Sort of
+interesting. Arm64 code is more or less the same difference too.
