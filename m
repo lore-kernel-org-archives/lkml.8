@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC5AC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8750C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6252077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B77A20735
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549700;
-	bh=X7tkqdwf/gdG2Xy9w+W21yJY2bhLGPbO3mQXETkAvbU=;
+	s=default; t=1587549702;
+	bh=IFkZWEB3WhI1gXb220OqHSG1WKXvIjlzIsYwxUlyfB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8ceBCzvhT4clIpjLXwJioxYGDRZNEo5G6/keaan852g3pd8YLzRDZxuV+OhC7u/c
-	 qLFfaZRumiJdTEJd14VEMd8jdhdLOuOEfTxjVjv2NpSoWTdbaDwcRExFdyqejlheWR
-	 FCgXrQAAQmgCSdZAX5xk5pAXqRJzx0F641DZF6b8=
+	b=uBiAwB5CH+rsxpLJjQC7mhTjxaOELH4+YE3eEZA8KDVuQWdIjFIeEUFly6yiSSenY
+	 Wu13/YTrMFzE3+drrj9Po4iC/J8Q0SJ37saIN4+81PNZifsCX4VTD4vHhqMe+M0AkM
+	 oWRvTQnhf8aHHJg9hEFGreAEeqBbWRb/Ns00cegM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgDVKBj (ORCPT
+        id S1726857AbgDVKBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbgDVKBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:34 -0400
+        id S1726838AbgDVKBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A0902076C;
-        Wed, 22 Apr 2020 10:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CB0E2076C;
+        Wed, 22 Apr 2020 10:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549694;
-        bh=X7tkqdwf/gdG2Xy9w+W21yJY2bhLGPbO3mQXETkAvbU=;
+        s=default; t=1587549696;
+        bh=IFkZWEB3WhI1gXb220OqHSG1WKXvIjlzIsYwxUlyfB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VFJDJWfbWPzJNUMgOzT1/CmsCGiFjgBZtCpmjVLXGWpP1MphyseHlazlLySW33w+w
-         52VpZeg/pVk1nVCnLkYt/ID2+6z4KZfDctu5pljgpmgEa97/z5NE6iUMTf9KddCLse
-         //sUiUtQMCfw04VZZfn4DMmFPziDrm0xQ/+RF4YU=
+        b=futQjkZpDyIjyAE03vPqUOetP3m51S/F9DUsDDgkOwqE5VhVLHOc3hT2PXcOTRcje
+         zOVjiKjB880bpHuFG6QFJLZ7vmndRwEj9mfJZ+JrMCZF2/oG9qD7X9boCgoKi1foZF
+         gWo+sNLjtDTTH2JtQfvC3sSC2ZWtZQbkzPtAJXUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.4 069/100] x86/mitigations: Clear CPU buffers on the SYSCALL fast path
-Date:   Wed, 22 Apr 2020 11:56:39 +0200
-Message-Id: <20200422095035.514854526@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.4 070/100] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
+Date:   Wed, 22 Apr 2020 11:56:40 +0200
+Message-Id: <20200422095035.711619868@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -58,54 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Xiao Yang <yangx.jy@cn.fujitsu.com>
 
-The fast SYSCALL exit path returns with SYSRET to userspace after
-verifying that there's no pending work. MDS mitigation mandates that CPU
-buffers must be cleared on transition from kernel to userspace so do
-that here too.
+commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
+Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
+or snapshot_count_trigger()) when register_snapshot_trigger() has completed
+registration but doesn't allocate buffer for 'snapshot' event trigger.  In
+the rare case, 'snapshot' operation always detects the lack of allocated
+buffer so make register_snapshot_trigger() allocate buffer first.
+
+trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
+-----------------------------------------------------------
+cat trace
+...
+ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
+     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
+     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
+-----------------------------------------------------------
+
+Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
+
+Cc: stable@vger.kernel.org
+Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
+Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/entry/entry_64.S        |    2 ++
- arch/x86/include/asm/spec-ctrl.h |    2 ++
- arch/x86/kernel/cpu/bugs.c       |    5 +++++
- 3 files changed, 9 insertions(+)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -218,6 +218,8 @@ entry_SYSCALL_64_fastpath:
- 	testl	$_TIF_ALLWORK_MASK, ASM_THREAD_INFO(TI_flags, %rsp, SIZEOF_PTREGS)
- 	jnz	int_ret_from_sys_call_irqs_off	/* Go to the slow path */
+---
+ kernel/trace/trace_events_trigger.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -910,14 +910,10 @@ register_snapshot_trigger(char *glob, st
+ 			  struct event_trigger_data *data,
+ 			  struct trace_event_file *file)
+ {
+-	int ret = register_trigger(glob, ops, data, file);
++	if (tracing_alloc_snapshot() != 0)
++		return 0;
  
-+	call	mds_user_clear_buffers
-+
- 	movq	RIP(%rsp), %rcx
- 	movq	EFLAGS(%rsp), %r11
- 	RESTORE_C_REGS_EXCEPT_RCX_R11
---- a/arch/x86/include/asm/spec-ctrl.h
-+++ b/arch/x86/include/asm/spec-ctrl.h
-@@ -85,4 +85,6 @@ static inline void speculative_store_byp
- extern void speculation_ctrl_update(unsigned long tif);
- extern void speculation_ctrl_update_current(void);
- 
-+extern void mds_user_clear_buffers(void);
-+
- #endif
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -263,6 +263,11 @@ static int __init mds_cmdline(char *str)
+-	if (ret > 0 && tracing_alloc_snapshot() != 0) {
+-		unregister_trigger(glob, ops, data, file);
+-		ret = 0;
+-	}
+-
+-	return ret;
++	return register_trigger(glob, ops, data, file);
  }
- early_param("mds", mds_cmdline);
  
-+void mds_user_clear_buffers(void)
-+{
-+	mds_user_clear_cpu_buffers();
-+}
-+
- #undef pr_fmt
- #define pr_fmt(fmt)	"TAA: " fmt
- 
+ static int
 
 
