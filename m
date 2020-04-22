@@ -2,180 +2,143 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B60C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB7AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B69120656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fzgZu7PP"
+	by mail.kernel.org (Postfix) with ESMTP id 3CC0C206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDVIqq (ORCPT
+        id S1726473AbgDVIqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:46:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49088 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725961AbgDVIqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:46:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587545205;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RSM2YhynE3slUTVy5GW7CvhSLhSswiDZKQZbz6/cses=;
-        b=fzgZu7PPf90fv7b7lWwVaI0yBmlpkJAstfXQ0OI1WdIuxEplqJAEVI1xAH1deiEiDLJd6t
-        2/iGi4GWUWY2cOqWM0LhVzmwl3R+BMbL5PEOCr+k54gFoLRpXmwQmsPNk4Wn8M6zbCwtAN
-        zBs7OEO8UtrtWPzSxrHO+j/9QEDd9PY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-z_VAvBPuP02g-IazalJ9sQ-1; Wed, 22 Apr 2020 04:46:43 -0400
-X-MC-Unique: z_VAvBPuP02g-IazalJ9sQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01777107ACC4;
-        Wed, 22 Apr 2020 08:46:42 +0000 (UTC)
-Received: from krava (unknown [10.40.196.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E0AB21001DD8;
-        Wed, 22 Apr 2020 08:46:38 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 10:46:35 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf record: add dummy event during system wide
- synthesis
-Message-ID: <20200422084635.GF962614@krava>
-References: <20200421061103.109440-1-irogers@google.com>
+        Wed, 22 Apr 2020 04:46:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47914 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbgDVIqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:46:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 754F1AC52;
+        Wed, 22 Apr 2020 08:46:47 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 717701E0E5A; Wed, 22 Apr 2020 10:46:47 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 10:46:47 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 09/11] fs: Introduce DCACHE_DONTCACHE
+Message-ID: <20200422084647.GC8775@quack2.suse.cz>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-10-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200421061103.109440-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200421191754.3372370-10-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:11:03PM -0700, Ian Rogers wrote:
-> During the processing of /proc during event synthesis new processes may
-> start. Add a dummy event if /proc is to be processed, to capture mmaps
-> for starting processes. This reuses the existing logic for
-> initial-delay.
+On Tue 21-04-20 12:17:51, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> v2 fixes the dummy event configuration and a branch stack issue.
-
-heya,
-it's breaking attr tests for me:
-
-[jolsa@krava perf]$ sudo ./perf test -v 17
-17: Setup struct perf_event_attr                          :
---- start ---
-test child forked, pid 1046560
-running './tests/attr/test-record-graph-default'
-running './tests/attr/test-record-raw'
-running './tests/attr/test-record-branch-filter-any'
-running './tests/attr/test-record-freq'
-running './tests/attr/test-record-branch-any'
-running './tests/attr/test-stat-group1'
-running './tests/attr/test-record-no-samples'
-running './tests/attr/test-record-graph-dwarf'
-running './tests/attr/test-stat-C0'
-running './tests/attr/test-stat-basic'
-running './tests/attr/test-record-group'
-running './tests/attr/test-record-branch-filter-k'
-running './tests/attr/test-stat-group'
-running './tests/attr/test-record-C0'
-expected config=0, got 9
-expected sample_type=391, got 455
-expected disabled=1, got 0
-FAILED './tests/attr/test-record-C0' - match failure
-test child finished with -1
----- end ----
-Setup struct perf_event_attr: FAILED!
-
-jirka
-
+> DCACHE_DONTCACHE indicates a dentry should not be cached on final
+> dput().
 > 
-> Suggested-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Also add a helper function to mark DCACHE_DONTCACHE on all dentries
+> pointing to a specific inode when that inode is being set I_DONTCACHE.
+> 
+> This facilitates dropping dentry references to inodes sooner which
+> require eviction to swap S_DAX mode.
+> 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
 > ---
->  tools/perf/builtin-record.c | 19 ++++++++++++++-----
->  tools/perf/util/evsel.c     |  5 ++++-
->  2 files changed, 18 insertions(+), 6 deletions(-)
+> Changes from V8:
+> 	Update commit message
+> 	Use mark_inode_dontcache in XFS
+> 	Fix locking...  can't use rcu here.
+> 	Change name to mark_inode_dontcache
+> ---
+>  fs/dcache.c            |  4 ++++
+>  fs/inode.c             | 15 +++++++++++++++
+>  fs/xfs/xfs_icache.c    |  2 +-
+>  include/linux/dcache.h |  2 ++
+>  include/linux/fs.h     |  1 +
+>  5 files changed, 23 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 1ab349abe904..8d1e93351298 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -805,19 +805,28 @@ static int record__open(struct record *rec)
->  	int rc = 0;
->  
->  	/*
-> -	 * For initial_delay we need to add a dummy event so that we can track
-> -	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
-> -	 * real events, the ones asked by the user.
-> +	 * For initial_delay or system wide, we need to add a dummy event so
-> +	 * that we can track PERF_RECORD_MMAP to cover the delay of waiting or
-> +	 * event synthesis.
->  	 */
-> -	if (opts->initial_delay) {
-> +	if (opts->initial_delay || target__has_cpu(&opts->target)) {
->  		if (perf_evlist__add_dummy(evlist))
->  			return -ENOMEM;
->  
-> +		/* Disable tracking of mmaps on lead event. */
->  		pos = evlist__first(evlist);
->  		pos->tracking = 0;
-> +		/* Set up dummy event. */
->  		pos = evlist__last(evlist);
->  		pos->tracking = 1;
-> -		pos->core.attr.enable_on_exec = 1;
-> +		/*
-> +		 * Enable the dummy event when the process is forked for
-> +		 * initial_delay, immediately for system wide.
-> +		 */
-> +		if (opts->initial_delay)
-> +			pos->core.attr.enable_on_exec = 1;
-> +		else
-> +			pos->immediate = 1;
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index b280e07e162b..0030fabab2c4 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -647,6 +647,10 @@ static inline bool retain_dentry(struct dentry *dentry)
+>  		if (dentry->d_op->d_delete(dentry))
+>  			return false;
 >  	}
->  
->  	perf_evlist__config(evlist, opts, &callchain_param);
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 6a571d322bb2..ca8f9533d8f9 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1163,11 +1163,14 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
->  	}
->  
->  	/*
-> +	 * A dummy event never triggers any actual counter and therefore
-> +	 * cannot be used with branch_stack.
-> +	 *
->  	 * For initial_delay, a dummy event is added implicitly.
->  	 * The software event will trigger -EOPNOTSUPP error out,
->  	 * if BRANCH_STACK bit is set.
->  	 */
-> -	if (opts->initial_delay && is_dummy_event(evsel))
-> +	if (is_dummy_event(evsel))
->  		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
+> +
+> +	if (unlikely(dentry->d_flags & DCACHE_DONTCACHE))
+> +		return false;
+> +
+>  	/* retain; LRU fodder */
+>  	dentry->d_lockref.count--;
+>  	if (unlikely(!(dentry->d_flags & DCACHE_LRU_LIST)))
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 93d9252a00ab..da7f3c4926cd 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1526,6 +1526,21 @@ int generic_delete_inode(struct inode *inode)
 >  }
+>  EXPORT_SYMBOL(generic_delete_inode);
 >  
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
-> 
+> +void mark_inode_dontcache(struct inode *inode)
+> +{
+> +	struct dentry *de;
+> +
+> +	spin_lock(&inode->i_lock);
+> +	hlist_for_each_entry(de, &inode->i_dentry, d_u.d_alias) {
+> +		spin_lock(&de->d_lock);
+> +		de->d_flags |= DCACHE_DONTCACHE;
+> +		spin_unlock(&de->d_lock);
+> +	}
+> +	spin_unlock(&inode->i_lock);
+> +	inode->i_state |= I_DONTCACHE;
 
+Modification of i_state should happen under i_lock.
+
+> +}
+> +EXPORT_SYMBOL(mark_inode_dontcache);
+> +
+>  /*
+>   * Called when we're dropping the last reference
+>   * to an inode.
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index de76f7f60695..3c8f44477804 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
+>  	 */
+>  	iflags = XFS_INEW;
+>  	if (flags & XFS_IGET_DONTCACHE)
+> -		VFS_I(ip)->i_state |= I_DONTCACHE;
+> +		mark_inode_dontcache(VFS_I(ip));
+
+And I know here modification of i_state didn't happen under i_lock but
+that's a special case because we are just instantiating the inode so it was
+not a real issue.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
