@@ -2,183 +2,234 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13A7C5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D554DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14EF2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62CC20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fAz/SXRp"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="MByQJymp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgDVRX7 (ORCPT
+        id S1726914AbgDVRYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 13:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44680 "EHLO
+        Wed, 22 Apr 2020 13:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726057AbgDVRX7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726057AbgDVRYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 13:23:59 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 707F2C03C1A9;
-        Wed, 22 Apr 2020 10:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587576236;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0rEv5vtIu8s1R6u/s9ENbcEJ/9O1X+purU+T3mOlO00=;
-        b=fAz/SXRpNvzrZQnNuQiahgyYTCE3Hh0/g3eciq8IQbb/HgOe9SnL2LFDjQUv71eNpS
-        jBqT6wKEtvRXoGgALTV9RxbkON6TB8UKjx2cwIMGhCFQwpr8or34KOZA9fOTCfnwt2+E
-        2vGICsVFvQKGjdHmgY6LUTOv99B5puvReTv67b5amKJJfMhuYRSW4Mw8qzAU4t2585vt
-        ftf5m5mJQef7KZiKjGqeM2xAZ1vl7I1D7R8/7MlesjW22QF+mnZOdcWG3DHrzx1g+sY1
-        Ro4RPQLTlNP5b7XCDNz2CKa7iOkNML9eh6aY2+tkb6FykalUOZrEQMSP6y+z1ykjhJQp
-        cSrg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMiw43tskc="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id R0acebw3MHNj3a9
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 22 Apr 2020 19:23:45 +0200 (CEST)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <MC879Q.XY9S0U9R35681@crapouillou.net>
-Date:   Wed, 22 Apr 2020 19:23:52 +0200
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Tony Lindgren <tony@atomide.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D90A610B-1F26-4AD4-843A-60EB4E410377@goldelico.com>
-References: <20200415130233.rgn7xrtwqicptke2@gilmour.lan> <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com> <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com> <20200420073842.nx4xb3zqvu23arkc@gilmour.lan> <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan> <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com> <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan> <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com> <MC879Q.XY9S0U9R35681@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 22 Apr 2020 13:24:24 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C25C03C1AA
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 10:24:23 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id d16so2102005edq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 10:24:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=APNUHzLUzqMTjpD++gENW9cK47rOtpcZ7nOkDc65bfc=;
+        b=MByQJympuDJNS+hBn6LYtGOyVLLcMOcuvUgrtqzIoVLJ+mX9g39QScWOin2wZMBJQc
+         YyvxjUFYlyQ7DZEFJc2mPjebsZso3N4MXF159pil7scVlahieg94VT6vw34UeQU6E1uF
+         a63WznrDe8rjEZUHdPw3QAItXutLSrOqHYGeW7aG7IWoHHHbpB9ub2/ed2FHoersmKDz
+         h6CM0ZqOU4IXr0950R3JFr52Z/2cK1U/d+IpJWO3coY9bekURc3HRHnnlxiiSxsLbuat
+         He6h4RTpF4YGJmq08XgrnHlJmBYGdqGkT8b1lvL9C2HQRHT8NiXbaKhdHt79z16VVXQq
+         u/8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=APNUHzLUzqMTjpD++gENW9cK47rOtpcZ7nOkDc65bfc=;
+        b=RNfsve8NBtltcX3sM8qhQwNJO22+qVyxJb+Cy3eZupfiAIVm0g2uIn4tt9tAwk3GuZ
+         wkE8LQxLZagO0JSSI0FrRrsRbNEiZd6KadcewHmjSClzygghfmjuxeQzEuX0qbdJ8xAT
+         srDdz3ne4Xt8hQmvTqbkU+QvKBL0Sx+VwXZO3PiGVK+BMuRI0lJ+sSiljGTGRknBOxZ2
+         eDlFODZ+X60aWjqePXcb7wrck49/F8Bo7b3J6zUfr6YIcBCZqhF7YM3VcC6oqNlvJaS1
+         UvkT9+E3AHvng9Nvuvl+1CkdZ9fmDqDz8sKNMvKIc179GKeXpjKTKaiEVL5hhK4lGeDj
+         Ss1A==
+X-Gm-Message-State: AGi0PuaDpUx3ctlFbtWV2XucoRGdbIUr5x605ps9nETXqoCxzBp1BRHu
+        icu8AGU6g6rQr9IB1EGjIY7oV8myXL1aviP4/poC/KWkMA==
+X-Google-Smtp-Source: APiQypIMvd7pFypaVAqurmo05vROlLEFVqAJCW3HhL11RtC5L7kaKf1j+c3e9Byi2T3gVtDbCY5W8CN8v1dmSnAPJR0=
+X-Received: by 2002:a05:6402:1adc:: with SMTP id ba28mr11965299edb.12.1587576262305;
+ Wed, 22 Apr 2020 10:24:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
+ <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+ <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca> <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
+ <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca> <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
+ <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca> <CAHC9VhQTsEMcYAF1CSHrrVn07DR450W9j6sFVfKAQZ0VpheOfw@mail.gmail.com>
+ <20200330162156.mzh2tsnovngudlx2@madcap2.tricolour.ca> <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
+ <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca> <CAHC9VhR_bKSHDn2WAUgkquu+COwZUanc0RV3GRjMDvpoJ5krjQ@mail.gmail.com>
+ <871ronf9x2.fsf@x220.int.ebiederm.org> <CAHC9VhR3gbmj5+5MY-whLtStKqDEHgvMRigU9hW0X1kpxF91ag@mail.gmail.com>
+ <871rol7nw3.fsf@x220.int.ebiederm.org>
+In-Reply-To: <871rol7nw3.fsf@x220.int.ebiederm.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 22 Apr 2020 13:24:10 -0400
+Message-ID: <CAHC9VhQvhja=vUEbT3uJgQqpj-480HZzWV7b5oc2GWtzFN1qJw@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>, nhorman@tuxdriver.com,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Fri, Apr 17, 2020 at 6:26 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> Paul Moore <paul@paul-moore.com> writes:
+> > On Thu, Apr 16, 2020 at 4:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> >> Paul Moore <paul@paul-moore.com> writes:
+> >> > On Mon, Mar 30, 2020 at 1:49 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >> >> On 2020-03-30 13:34, Paul Moore wrote:
+> >> >> > On Mon, Mar 30, 2020 at 12:22 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >> >> > > On 2020-03-30 10:26, Paul Moore wrote:
+> >> >> > > > On Mon, Mar 30, 2020 at 9:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >> >> > > > > On 2020-03-28 23:11, Paul Moore wrote:
+> >> >> > > > > > On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >> >> > > > > > > On 2020-03-23 20:16, Paul Moore wrote:
+> >> >> > > > > > > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >> >> > > > > > > > > On 2020-03-18 18:06, Paul Moore wrote:
+> >> >
+> >> > ...
+> >> >
+> >> >> > > Well, every time a record gets generated, *any* record gets generated,
+> >> >> > > we'll need to check for which audit daemons this record is in scope and
+> >> >> > > generate a different one for each depending on the content and whether
+> >> >> > > or not the content is influenced by the scope.
+> >> >> >
+> >> >> > That's the problem right there - we don't want to have to generate a
+> >> >> > unique record for *each* auditd on *every* record.  That is a recipe
+> >> >> > for disaster.
+> >> >> >
+> >> >> > Solving this for all of the known audit records is not something we
+> >> >> > need to worry about in depth at the moment (although giving it some
+> >> >> > casual thought is not a bad thing), but solving this for the audit
+> >> >> > container ID information *is* something we need to worry about right
+> >> >> > now.
+> >> >>
+> >> >> If you think that a different nested contid value string per daemon is
+> >> >> not acceptable, then we are back to issuing a record that has only *one*
+> >> >> contid listed without any nesting information.  This brings us back to
+> >> >> the original problem of keeping *all* audit log history since the boot
+> >> >> of the machine to be able to track the nesting of any particular contid.
+> >> >
+> >> > I'm not ruling anything out, except for the "let's just completely
+> >> > regenerate every record for each auditd instance".
+> >>
+> >> Paul I am a bit confused about what you are referring to when you say
+> >> regenerate every record.
+> >>
+> >> Are you saying that you don't want to repeat the sequence:
+> >>         audit_log_start(...);
+> >>         audit_log_format(...);
+> >>         audit_log_end(...);
+> >> for every nested audit daemon?
+> >
+> > If it can be avoided yes.  Audit performance is already not-awesome,
+> > this would make it even worse.
+>
+> As far as I can see not repeating sequences like that is fundamental
+> for making this work at all.  Just because only the audit subsystem
+> should know about one or multiple audit daemons.  Nothing else should
+> care.
 
-> Am 22.04.2020 um 18:55 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le mer. 22 avril 2020 =E0 18:09, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> Hi Maxime,
->>> Am 22.04.2020 um 17:13 schrieb Maxime Ripard <maxime@cerno.tech>:
->>> On Wed, Apr 22, 2020 at 09:10:57AM +0200, H. Nikolaus Schaller =
-wrote:
->>>>> Am 22.04.2020 um 08:58 schrieb Maxime Ripard <maxime@cerno.tech>:
->>>>>> It also allows to handle different number of clocks (A31 seems to
->>>>>> need 4, Samsung, A83 and JZ4780 one) without changing the sgx =
-bindings
->>>>>> or making big lists of conditionals. This variance would be =
-handled
->>>>>> outside the sgx core bindings and driver.
->>>>> I disagree. Every other GPU binding and driver is handling that =
-just fine, and
->>>>> the SGX is not special in any case here.
->>>> Can you please better explain this? With example or a description
->>>> or a proposal?
->>> I can't, I don't have any knowledge about this GPU.
->> Hm. Now I am fully puzzled.
->> You have no knowledge about this GPU but disagree with our proposal?
->> Is it just gut feeling?
->> Anyways, we need to find a solution. Together.
->>>> I simply do not have your experience with "every other GPU" as you =
-have.
->>>> And I admit that I can't read from your statement what we should do
->>>> to bring this topic forward.
->>>> So please make a proposal how it should be in your view.
->>> If you need some inspiration, I guess you could look at the mali and =
-vivante
->>> bindings once you have an idea of what the GPU needs across the SoCs =
-it's
->>> integrated in.
->> Well, I do not need inspiration, we need to come to an agreement =
-about
->> img,pvrsgx.yaml and we need some maintainer to finally pick it up.
->> I wonder how we can come to this stage.
->> If I look at vivante,gc.yaml or arm,mali-utgard.yaml I don't
->> see big differences to what we propose and those I see seem to come
->> from technical differences between sgx, vivante, mali etc. So there
->> is no single scheme that fits all different gpu types.
->> One thing we can learn is that "core" seems to be a de facto standard
->> for the core clock-name. An alternative "gpu" is used by =
-nvidia,gk20a.txt.
->=20
-> The Vivante GPU binding requires "bus", "core" and "shader" clocks. =
-But if your SoC only has one clock for the GPU, there's nothing that =
-prevents you from passing the very same clock as "bus", "core" and =
-"shader". This is what we do on the Ingenic JZ4770 SoC.
+Yes, exactly, this has been mentioned in the past.  Both the
+performance hit and the code complication in the caller are things we
+must avoid.
 
-Fine and good to know.
+> >> Or are you saying that you would like to literraly want to send the same
+> >> skb to each of the nested audit daemons?
+> >
+> > Ideally we would reuse the generated audit messages as much as
+> > possible.  Less work is better.  That's really my main concern here,
+> > let's make sure we aren't going to totally tank performance when we
+> > have a bunch of nested audit daemons.
+>
+> So I think there are two parts of this answer.  Assuming we are talking
+> about nesting audit daemons in containers we will have different
+> rulesets and I expect most of the events for a nested audit daemon won't
+> be of interest to the outer audit daemon.
 
-Well, for the SGX we so far only know a single "core" clock (with =
-different
-names). Only the A31 seems to be different.
+Yes, this is another thing that Richard and I have discussed in the
+past.  We will basically need to create per-daemon queues, rules,
+tracking state, etc.; that is easy enough.  What will be slightly more
+tricky is the part where we apply the filters to the individual
+records and decide if that record is valid/desired for a given daemon.
+I think it can be done without too much pain, and any changes to the
+callers, but it will require a bit of work to make sure it is done
+well and that records are needlessly duplicated in the kernel.
 
-Fortunately I finally found a little time to scan through the a31
-user manual: =
-http://dl.linux-sunxi.org/A31/A31%20User%20Manual%20V1.20.pdf
+> Beyond that it should be very straight forward to keep a pointer and
+> leave the buffer as a scatter gather list until audit_log_end
+> and translate pids, and rewrite ACIDs attributes in audit_log_end
+> when we build the final packet.  Either through collaboration with
+> audit_log_format or a special audit_log command that carefully sets
+> up the handful of things that need that information.
 
-There are 3 clock dividers. And there is a single clock PLL8 dedicated =
-to
-the gpu. The clock dividers are called "gpu core", "gpu mem", "gpu hyd".
+In order to maximize record re-use I think we will want to hold off on
+assembling the final packet until it is sent to the daemons in the
+kauditd thread.  We'll also likely need to create special
+audit_log_XXX functions to capture fields which we know will need
+translation, e.g. ACID information.  (the reason for the new
+audit_log_XXX functions would be to mark the new sg element and ensure
+the buffer is handled correctly)
 
-Then, there are dedicated clock gating registers. And idle/power status
-registers.
+Regardless of the details, I think the scatter gather approach is the
+key here - that seems like the best design idea I've seen thus far.
+It enables us to replace portions of the record as needed ... and
+possibly use the existing skb cow stuff ... it has been a while, but
+does the skb cow functions handle scatter gather skbs or do they need
+to be linear?
 
-Unfortunately, chapter "5.1. GPU" is almost empty and has no block =
-diagram.
-So I have no idea what "HYD" stands for. And if the memory and HYD =
-clocks
-are needed and how they should be initialized. If they are different =
-ones
-or can all be driven by PLL8 in parallel.
+> Hmm.  I am seeing that we send skbs to kauditd and then kauditd
+> sends those skbs to userspace.  I presume that is primary so that
+> sending messages to userspace does not block the process being audited.
+> Plus a little bit so that the retry logic will work.
 
-That scarce information makes it difficult to form a "proper" bindings
-document out of it. Any can fit or be false.
+Long story short, it's a poor design.  I'm not sure who came up with
+it, but I have about a 1000 questions that are variations on "why did
+this seem like a good idea?".
 
-At least there is something common with all other SGX implementations I
-am aware of: there is a "core" clock.
+I expect the audit_buffer definition to change significantly during
+the nested auditd work.
 
-So I'd suggest to get things moving forwards:
-* we add a "core" clock-names to the bindings
-* this can't be wrong for the A31 since it is defined in the data sheet
-* we make it optional since the omap chips have a clock wrapper
-* "core" is a name I think all architectures/drivers can live with
-  and can add later "shader", "bus" etc. if needed
-* any additions for the A31 will be additions
+> I think the naive implementation would be to simply have 1 kauditd
+> per auditd (strictly and audit context/namespace).  Although that can be
+> optimized if that is a problem.
+>
+> Beyond that I think we would need to look at profiles to really
+> understand where the bottlenecks are.
 
-If that sounds ok and nobody objects to it, I can submit a new patch
-version for further review.
+Agreed.  This is a hidden implementation detail that doesn't affect
+the userspace API or the in-kernel callers.  The first approach can be
+simple and we can complicate it as needed in future versions.
 
-BR and thanks,
-Nikolaus
+> > I'm open to any ideas people may have.  We have a problem, let's solve
+> > it.
+>
+> It definitely makes sense to look ahead to having audit daemons running
+> in containers, but in the grand scheme of things that is a nice to have.
+> Probably something we will and should get to, but we have lived a long
+> time without auditd running in containers so I expect we can live a
+> while longer.
 
+It looks like you are confusing my concern.  I'm not pushing Richard
+to implement support for this in the current patchset, I'm pushing
+Richard to consider the design aspect of having multiple audit daemons
+so that we don't code ourselves into a corner with the audit record
+changes he is proposing.  The audit record format is part of the
+kernel/userspace API and as a result requires great care when
+modifying/extending/etc.
+
+-- 
+paul moore
+www.paul-moore.com
