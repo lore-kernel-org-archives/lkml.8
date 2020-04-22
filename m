@@ -2,78 +2,109 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE00EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E0BC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 830AC2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524542077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j1svlTwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgDVUmG (ORCPT
+        id S1726366AbgDVUqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:42:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10492 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgDVUmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:42:06 -0400
-IronPort-SDR: kfSrRkHOnSjh6H53DTzMRtYkFQj/8pwM3bMbUb6nGjszav6unI/kh12MgpvQZ7gttDtUEJCelX
- vVB4KE1Nnjog==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 13:42:05 -0700
-IronPort-SDR: xBg8ru2THU27gYbXvzDcJOubD485D4k856TbNQPd/rTurIEctE94R/3lqD1MRTtmV+MJtEHwdg
- easCQ7x/UWJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="365793601"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 13:42:05 -0700
-Date:   Wed, 22 Apr 2020 13:41:17 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 0/7] x86: tag application address space for devices
-Message-ID: <20200422204117.GB229170@romley-ivt3.sc.intel.com>
-References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
+        Wed, 22 Apr 2020 16:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726117AbgDVUqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:46:03 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31478C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 13:46:02 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id e26so3476626otr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 13:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3bCg8bvNmgUuam7hE8aERJSHaUoXzmzcb4svUaIW+Bg=;
+        b=j1svlTwB5CMoY1MWPNS26eCTOItSrWPJwu5Xirgfy9OmjsrI/8neRVSDltcQTuXssH
+         MKz+GnOG0Y1eAQQgMyuqetCTCISJVqcQrwB42hbxF90ynmaH4CceJJmDU9nYJxRnq8Wj
+         c2IaIf9FmYsh6iHTdd2N13fp3IZsFxL/GBgnn680ozcDRzM9JQbvyi4HxQlsLbh0ulgu
+         lJDzCie2CjVLMNTBlGpLCW1jZ8DWARb/Ksc+dKjlbV/9Jd9ZC9hWpSuqqBm3aRYnKSRu
+         MkE82Bm1SE4q0gTQA8LybxWDORjmjnd85NQtOLHxajqG7O11MxHgOi2Qou+qQ99VhbwB
+         NIDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3bCg8bvNmgUuam7hE8aERJSHaUoXzmzcb4svUaIW+Bg=;
+        b=NWehbz1+6jIBpniGx1pEjMuDPgSjYyRAl2GKkJ/jfC0cjXimhLxeuDKbBlV/hYaBwl
+         yGMU2Zm1QTE3Fvyg2DvnD9krbDMMe3LnVE45quPQF2rnAu7pcg1aU7WNdMFz/ZHO1tZg
+         XZYdxmsSjohqA35BD//KuiH7urUeB8S6socI0hX60ZC3J6rlXHcmvYRWzjAn6jK+UGaY
+         18nBRZQk94PhhNy8Zre313XnfPOdtOzZzU0Gx17nyjqFCKE+sqdJBwJrK2J2Da3fl6Go
+         0ggW3dvpyv9li5wdwh1sCpvIydD9hD1AlSutCNgXlw+XKhEqLL09cmnjBBM5QqnNx1J1
+         Mujw==
+X-Gm-Message-State: AGi0PuZNCjo/yCS/yKQyyVW6iwUePerQqjnDyi2HuPYDF281tMyyTF97
+        Rhvpgsk3cTDVA1+6+AdzEQkwVetro5Gt/rQvfgkMMw==
+X-Google-Smtp-Source: APiQypITlavDSzc4OSiUD5yDWrzXGkJyW5M+cDplprwAPZfSa72YOKqxb8R4uBmPFp3TN/4VifziBqcENPZT5t0ZvDM=
+X-Received: by 2002:a05:6830:22dc:: with SMTP id q28mr749663otc.221.1587588361411;
+ Wed, 22 Apr 2020 13:46:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200225050828.56458-1-john.stultz@linaro.org>
+ <20200421235836.GA8319@lxhi-065.adit-jv.com> <CALAqxLXX455P0V0o11scc3-1MHvecnvcUoT=XBcwB+ma7Kyjqg@mail.gmail.com>
+ <20200422075413.GB4898@sirena.org.uk>
+In-Reply-To: <20200422075413.GB4898@sirena.org.uk>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 22 Apr 2020 13:45:49 -0700
+Message-ID: <CALAqxLW13oA376bqj7uTR4E4zmnX5ASK=rpqw3HMr4yOWQGaOw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] driver core: Improve and cleanup driver_deferred_probe_check_state()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 12:33:01PM -0700, Fenghua Yu wrote:
-> Typical hardware devices require a driver stack to translate application
-> buffers to hardware addresses, and a kernel-user transition to notify the
-> hardware of new work. What if both the translation and transition overhead
-> could be eliminated? This is what Shared Virtual Address (SVA) and ENQCMD
-> enabled hardware like Data Streaming Accelerator (DSA) aims to achieve.
-> Applications map portals in their local-address-space and directly submit
-> work to them using a new instruction.
-> 
-Hi, maintainers,
+On Wed, Apr 22, 2020 at 12:54 AM Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Apr 21, 2020 at 06:16:31PM -0700, John Stultz wrote:
+>
+> > The second reverts the default timeout back to 0:
+> >   https://lore.kernel.org/lkml/20200413204253.84991-1-john.stultz@linaro.org/
+>
+> If you're reverting the timeout we should revert the regulator change
+> too I think.
 
-Any comment on this series?
+Maybe? The main issue for me was my change was clearly breaking users
+with dts with missing dependencies where their setup was working
+before. I sort of feel like having a dtb with missing dependencies is
+less valid than wanting to load module dependencies from userland, but
+they were working first, so we have to keep them happy :) And at least
+now the latter can add the timeout boot argument to make it work.
 
-Thanks.
+For your case, I'm not sure if the timeout would run afoul on the nfs
+root mounting case this one tripped over.
 
--Fenghua
+thanks
+-john
