@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926D9C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F6C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63FE52087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B6420575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549808;
-	bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+	s=default; t=1587549811;
+	bh=KT2yBYzFcnG6X4wReHanZXpSDB758iWo6MWEDYasil8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vhy4VtvGaAhxJ+ZeARMGuKMzLkxplgzU5cGt2nxMUKGHJNLl29pOF9ZbDe5yhifJb
-	 P7FwExvcmVGk6YbUVSzSTczuYBqDC+L3GsN/fx6lrqcB/YB9W9/vbfOE7ah7VE36Qs
-	 0jn8cNfSlJXjB6e0LO353+EWlPGM0Mz3ze22kQ30=
+	b=z7mR1DcZqnAiWw2BJBg3ReKFXIeEWyGbeiS4WskqDk11ceo6kC6ZfGikSJmJlSNcJ
+	 p18pz8xBd6cQLMuUNAMseYCzoM3DFtUf5jL2EQ37Aem00lTqQe/YGxrivOLWANqEcP
+	 KCAmc/IPVyO9nYjYA7TC18oNkwRE/bh7CtMiNfzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgDVKDZ (ORCPT
+        id S1727823AbgDVKD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52928 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbgDVKDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:18 -0400
+        id S1727800AbgDVKDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A68420774;
-        Wed, 22 Apr 2020 10:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E81420774;
+        Wed, 22 Apr 2020 10:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549798;
-        bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+        s=default; t=1587549802;
+        bh=KT2yBYzFcnG6X4wReHanZXpSDB758iWo6MWEDYasil8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YlVDHnigydfBgOKFonG1CZZH3h420cLXt0el1o2dIp8cPL0kCH5P/LhWLx7Lbk5dS
-         yPbods0d2NQmqjQ3LKMMdETklPpZljqnOvOlWGjbc/IeOKVkd70B/s2DfXe7/mGXIA
-         PsaYBwU8bbKNXKsrY8fipT39dp6YrZs6+/33zkMw=
+        b=tdwA/pVc8AWPKeEtv8DOom+mNvJbvd/+IWY7PVoqkWWRlkg6W2jFSXl7GLsNHS6t3
+         LE9kx0gr4QcfFYnruG3NEaXDVpPtstE3FbpRfVRVn5Ho/k0D4HSISJUWgqoio84e89
+         Hn9wmsdGPxFJVeq5LX/Lu19GJGdJthCUXt3O/UiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 003/125] qlcnic: Fix bad kzalloc null test
-Date:   Wed, 22 Apr 2020 11:55:20 +0200
-Message-Id: <20200422095033.541183778@linuxfoundation.org>
+        stable@vger.kernel.org, Sungbo Eo <mans0n@gorani.run>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 005/125] irqchip/versatile-fpga: Handle chained IRQs properly
+Date:   Wed, 22 Apr 2020 11:55:22 +0200
+Message-Id: <20200422095033.835588878@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,33 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Wang <vulab@iscas.ac.cn>
+From: Sungbo Eo <mans0n@gorani.run>
 
-[ Upstream commit bcaeb886ade124331a6f3a5cef34a3f1484c0a03 ]
+[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
 
-In qlcnic_83xx_get_reset_instruction_template, the variable
-of null test is bad, so correct it.
+Enclose the chained handler with chained_irq_{enter,exit}(), so that the
+muxed interrupts get properly acked.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
+interrupt is never acked. The kernel waits a clock tick forever in
+calibrate_delay_converge(), which leads to a boot hang.
+
+Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index 07f9067affc65..cda5b0a9e9489 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 37dd4645bf188..66502bdefdf78 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -5,6 +5,7 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqchip/versatile-fpga.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+@@ -67,12 +68,16 @@ static void fpga_irq_unmask(struct irq_data *d)
  
- 	ahw->reset.seq_error = 0;
- 	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
--	if (p_dev->ahw->reset.buff == NULL)
-+	if (ahw->reset.buff == NULL)
- 		return -ENOMEM;
+ static void fpga_irq_handle(struct irq_desc *desc)
+ {
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+-	u32 status = readl(f->base + IRQ_STATUS);
++	u32 status;
++
++	chained_irq_enter(chip, desc);
  
- 	p_buff = p_dev->ahw->reset.buff;
++	status = readl(f->base + IRQ_STATUS);
+ 	if (status == 0) {
+ 		do_bad_IRQ(desc);
+-		return;
++		goto out;
+ 	}
+ 
+ 	do {
+@@ -81,6 +86,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(f->domain, irq));
+ 	} while (status);
++
++out:
++	chained_irq_exit(chip, desc);
+ }
+ 
+ /*
 -- 
 2.20.1
 
