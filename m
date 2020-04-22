@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FDDC55189
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75639C55186
 	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F2F20857
+	by mail.kernel.org (Postfix) with ESMTP id 466AD2168B
 	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1587550894;
-	bh=ZwYuWogEoMguMqy8IBBG5/+pe0y6k0fPBiOgbUr18LM=;
+	bh=f+MIyflL7PoUCPvmXSbksyJDbP3lDfOTiJtP3BLlWqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4qLPOAFOe5jC3ec8q0mG0noM3NjIy7w8En/91S9cuJcvpb3U/N1j569n0PxXcSHe
-	 pDr8B2rEhRSe0/Kq28kLjOuJrAe0Jwfl3c62e2NY3L1ONOZ8J8PyNHIjWHdGB9J+e7
-	 d1fi0Y36FD9gLZbmWlWvVWPyCOcbO1WrkXiwY8v4=
+	b=tjPzBMqTKi11Qjg08SsMkYizTald9eusirFv9Tzz0WUPcyAb8nP4r5euqAEVCDq5d
+	 ZxxbJ8FI9kvPy9BHm4Jk6Q0vXZnLSy4U+k1/kma2LOsH3lt3HiNd46Ta88hcKXoPUl
+	 jJdsWI0CtFlHkFdR99PA3tfgd5ca1dfinJmYAoiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgDVKVQ (ORCPT
+        id S1730181AbgDVKVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbgDVKSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:30 -0400
+        id S1729971AbgDVKSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EC622070B;
-        Wed, 22 Apr 2020 10:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E17E2076E;
+        Wed, 22 Apr 2020 10:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550709;
-        bh=ZwYuWogEoMguMqy8IBBG5/+pe0y6k0fPBiOgbUr18LM=;
+        s=default; t=1587550712;
+        bh=f+MIyflL7PoUCPvmXSbksyJDbP3lDfOTiJtP3BLlWqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QxieqCrvFU1VTeESXIGqquyAjb8hFIFQr/YDXDYVZ02t/W0wSo7er4CxJoP96UJku
-         QUfPewUo5mTL+mul2wjPeXyLIZNEL9eNAi5MJ2uux34Rw0Wy1mm1SUfX2+lsbUVuLK
-         rRm7vLAgZPsDCgnLVmewvuI+VCOqzBwKX2tBHPvE=
+        b=aPSDLGpNzSaWstvYlNFiz8UbjQcNEOpvVgW+O/EuNZ1QdChT4P51Sgfo9uKixX5LM
+         0RMFFcRMpwfmTOLl4Lligm3eKvDqSnci3XSEjnaxkavaWcNuOhzWZpq3ckAQWD5t3q
+         L02VBClZ/B2ltOQpmAlrNb4I2cB0xjeKyv0FrYhk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Domenico Andreoli <domenico.andreoli@linux.com>,
-        Marian Klein <mkleinsoft@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/118] hibernate: Allow uswsusp to write to swap
-Date:   Wed, 22 Apr 2020 11:57:02 +0200
-Message-Id: <20200422095042.013796362@linuxfoundation.org>
+Subject: [PATCH 5.4 062/118] btrfs: add RCU locks around block group initialization
+Date:   Wed, 22 Apr 2020 11:57:03 +0200
+Message-Id: <20200422095042.165012684@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -62,48 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Domenico Andreoli <domenico.andreoli@linux.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 56939e014a6c212b317414faa307029e2e80c3b9 ]
+[ Upstream commit 29566c9c773456467933ee22bbca1c2b72a3506c ]
 
-It turns out that there is one use case for programs being able to
-write to swap devices, and that is the userspace hibernation code.
+The space_info list is normally RCU protected and should be traversed
+with rcu_read_lock held. There's a warning
 
-Quick fix: disable the S_SWAPFILE check if hibernation is configured.
+  [29.104756] WARNING: suspicious RCU usage
+  [29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
+  [29.105231] -----------------------------
+  [29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
 
-Fixes: dc617f29dbe5 ("vfs: don't allow writes to swap files")
-Reported-by: Domenico Andreoli <domenico.andreoli@linux.com>
-Reported-by: Marian Klein <mkleinsoft@gmail.com>
-Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+pointing out that the locking is missing in btrfs_read_block_groups.
+However this is not necessary as the list traversal happens at mount
+time when there's no other thread potentially accessing the list.
+
+To fix the warning and for consistency let's add the RCU lock/unlock,
+the code won't be affected much as it's doing some lightweight
+operations.
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/block_dev.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/block-group.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index d612468ee66bf..34644ce4b5025 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -34,6 +34,7 @@
- #include <linux/task_io_accounting_ops.h>
- #include <linux/falloc.h>
- #include <linux/uaccess.h>
-+#include <linux/suspend.h>
- #include "internal.h"
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 7dcfa7d7632a1..95330f40f998c 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -1829,6 +1829,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+ 		}
+ 	}
  
- struct bdev_inode {
-@@ -1975,7 +1976,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (bdev_read_only(I_BDEV(bd_inode)))
- 		return -EPERM;
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(space_info, &info->space_info, list) {
+ 		if (!(btrfs_get_alloc_profile(info, space_info->flags) &
+ 		      (BTRFS_BLOCK_GROUP_RAID10 |
+@@ -1849,6 +1850,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+ 				list)
+ 			inc_block_group_ro(cache, 1);
+ 	}
++	rcu_read_unlock();
  
--	if (IS_SWAPFILE(bd_inode))
-+	/* uswsusp needs write permission to the swap */
-+	if (IS_SWAPFILE(bd_inode) && !hibernation_available())
- 		return -ETXTBSY;
- 
- 	if (!iov_iter_count(from))
+ 	btrfs_init_global_block_rsv(info);
+ 	ret = check_chunk_block_group_mappings(info);
 -- 
 2.20.1
 
