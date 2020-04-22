@@ -2,115 +2,98 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2944C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956E1C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A72021473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD172098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KcTXmBwo"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="diK9Pqlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDVSyV (ORCPT
+        id S1726735AbgDVSz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:54:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58680 "EHLO
+        Wed, 22 Apr 2020 14:55:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgDVSyV (ORCPT
+        with ESMTP id S1726208AbgDVSz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:54:21 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE5C2C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:54:20 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l78so3583653qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:54:20 -0700 (PDT)
+        Wed, 22 Apr 2020 14:55:29 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CEFC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:55:27 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b188so1996327qkd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Cf7V5KoTnxdr5/vwnYfKOK1hbcf2VCNupE2mGkiuZek=;
-        b=KcTXmBwoIyFsReVVYls7BajqrIrspSH0iNNqeeoSCbJ1km/PQo8w0qd1DVGlcI5wtd
-         epSmrLWikleQZqX3pHCfL1JFUrerpfeHCOpdeJ6TxQpMMFgjU8UnAbUqnm9n4odpGC0Z
-         h8dSAvVDfqEV2uWYahcHsKm3bbR1r9+sFqCfE4TJbB5qezAoSSBAWMj2ODHe5Yx4JErg
-         K3TsP/aFzT/M5NpCX45/+kL4+YQw9T0MowYiB4l0//03Xe7/DKB1It8+Di3fsheISnnx
-         9oa+6NLukM5zhR65LouLFnBzAd4ReYdNXebNbIGHm06k8xOvUYEfvXY5um7HH4a+ZuhH
-         zFyw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xLUryRWs2hS8C6rmdpuM1w1GZL5DMkigM47LhtMAQbY=;
+        b=diK9Pqlk64BLQ1DKCWq4alJLwqOwl8lX2xNeh6ahfNizfenun/PLDEBEaoSIcU2+O2
+         kty4ZXG4ZSbMldO5+OnRbMo4RjQeqZlFlxPS0kXnkP0HKz7ED2okkR0jk19mt2gOUSiI
+         vHK3sbe0Xh1tR/QYvB88Lid/yNGCMfkgGygQtdtPdvdXjCz3Zl7lRjF/3CJh6jrQGQlW
+         B7m4ucg4dYftjbTZ1IN9cj6hcr1+h+saAcYtxAouFgD8S6dHw0ePHREQ3TWWatqxz2Ls
+         cnevsjBa3KSH+mOXAnAiFz0EuEsie6sKJ0dA7xzSDCVoZyGsIxRobey12WGXWDJ1w74c
+         A4/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Cf7V5KoTnxdr5/vwnYfKOK1hbcf2VCNupE2mGkiuZek=;
-        b=OdTXxTEfFKh6zE9rlzZesN9yUckB65Izugz+npOYd3wOIUDOPwTMuzhkOzswYgWpMN
-         j8a55eqhRjEb/5o/StbxqSqhT4uYwcAr7Apgiii07YB4ww8yjnsfOEHGO5zXfmR7UNfc
-         RVDPp6Rl/2pvymvAl8PHPZ7JrhMKTtQIUVy5kuJS9T8ILM+kuVSzuA8BqYwcrjfVOSkd
-         0lhbniv7N/N72rEjrO0CIVlSO8ryKFrzaaZ9ApQhUvWciyqACZVqmyVXqHouLn6J20Fp
-         sjbphrlDVumLJ3cFnCBW8tGEq3Ku2EONKQ5HjMjg7VZsl57DOHjwb+MQMBkR4LEOkxsO
-         P/Dw==
-X-Gm-Message-State: AGi0PuYjNMfNE1hCoCmbiq53IPVzsopmTlatB7hJhMAQui/mEpsSxVyO
-        Xa5QyG5eKDr+wShl6hwe+a716A==
-X-Google-Smtp-Source: APiQypLefFFUCOrVXY/c295ql6Ptfv0WWhhMmxgYsFJPpBKPqVLuPU1BCIMA7YXBtpYWKf4YlHt2xw==
-X-Received: by 2002:a37:4c4d:: with SMTP id z74mr27822914qka.53.1587581660096;
-        Wed, 22 Apr 2020 11:54:20 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id c41sm29245qta.96.2020.04.22.11.54.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Apr 2020 11:54:19 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: AMD boot woe due to "x86/mm: Cleanup pgprot_4k_2_large() and
- pgprot_large_2_4k()"
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200422164703.GD26846@zn.tnic>
-Date:   Wed, 22 Apr 2020 14:54:18 -0400
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <48A05550-75AD-40EA-921E-BAE43453AC47@lca.pw>
-References: <20200422161757.GC26846@zn.tnic>
- <59604C7F-696A-45A3-BF4F-C8913E09DD4C@lca.pw>
- <20200422164703.GD26846@zn.tnic>
-To:     Borislav Petkov <bp@alien8.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xLUryRWs2hS8C6rmdpuM1w1GZL5DMkigM47LhtMAQbY=;
+        b=meaX4vVL5Z1kovNlIDruRvNRqAxEVmv87V/J6u7dSGFMav585fJuk1KPPdkEskYmdF
+         GtSsNfZovMTSje3x6O6qhvlUhEj6Xrh7f/rZ/Xl4K0CMHLSUzbFe04lH2dZLjc77uKCm
+         GKtwzwe4Bo0vXH+Hoty4tDYn0zEA889PvVeKIN3+Cf2ltzQ4fbTJz60kAV7TuX4YkJMU
+         E3YnEel5VidQwrCIcsYzzE1KjAtwWfauQ/x8NDtm5t7I1RSUXxuZueQqT99AUhC/wuoB
+         w7T0DUhbiOCIz0douKZ9aXZrBhk8gPagjjCC2ljI4fb+XQjRVPKDG+tcJGM4QLOPQ3FR
+         pzXw==
+X-Gm-Message-State: AGi0PuZ1VS/Rz0gXjlsmiVjPCa89WZHH68kU5p9Lr/h6LwurcPdShBw3
+        MrW1HhDKVFyuQIyvU5+ilKwTEg==
+X-Google-Smtp-Source: APiQypLxT4cQDVOJW5C6AxROGVfl/mi3cYixvqOcyBz8pQ58M8OWm5vyj6Ueu2R3gSlG6DiLoDcZ9w==
+X-Received: by 2002:a37:7443:: with SMTP id p64mr26002162qkc.269.1587581726859;
+        Wed, 22 Apr 2020 11:55:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id o94sm62648qtd.34.2020.04.22.11.55.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Apr 2020 11:55:26 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jRKWr-0003jf-Oo; Wed, 22 Apr 2020 15:55:25 -0300
+Date:   Wed, 22 Apr 2020 15:55:25 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: Re: [PATCH rdma-rc 0/2] Two fixes in handling FD object
+Message-ID: <20200422185525.GA14322@ziepe.ca>
+References: <20200421082929.311931-1-leon@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421082929.311931-1-leon@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 11:29:27AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Hi,
+> 
+> These two patches are fixing two crashes in FD object handling.
+> 
+> Thanks
+> 
+> Leon Romanovsky (2):
+>   RDMA/core: Prevent mixed use of FDs between shared ufiles
+>   RDMA/core: Fix overwriting of uobj in case of error
 
+Applied to for-rc, thanks
 
-> On Apr 22, 2020, at 12:47 PM, Borislav Petkov <bp@alien8.de> wrote:
->=20
-> On Wed, Apr 22, 2020 at 12:35:08PM -0400, Qian Cai wrote:
->> The config has a few extra memory debugging options enabled like
->> KASAN, debug_pagealloc, debug_vm etc.
->=20
-> How about you specify exactly which CONFIG_ switches and cmdline =
-options
-> you have enabled deliberately? I can rhyme up the rest from the =
-.config
-> file.
-
-The thing is pretty much the same debug kernel config has been used for
-a few years, so I don=E2=80=99t deliberately enable anything today.
-
-The best bet is probably to skim through the =E2=80=9CKernel hacking=E2=80=
-=9D section of
-the config and enable whatever you feel relevant if you have not enabled
-already.
-
-The cmdline is also in the .config via CONFIG_CMDLINE.
-
->=20
-> Full dmesg would be good too, sent privately's fine too.
-
-https://cailca.github.io/files/dmesg.txt
-
-First, it comes with the dmesg that crashes and followed by the good =
-dmesg
-after reverting the commits (starting from line 644).=
+Jason
