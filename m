@@ -2,52 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78912C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D6BC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F1820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153592071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550330;
-	bh=ZMr3cobph3pHX+whIvaq3dvLnbLGICj7rLWUDrQdOC0=;
+	s=default; t=1587550334;
+	bh=oo0YQqQ2h9LJQli6zfhSSJEsVYe6Lnd8Pdi+X7mDI9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/aa9EyVp8TGzIs1LiP+ldVL7vPB6rbq1woxg89sfZhxlrP+QDKZpJrybi6r6VLKK
-	 fO/SJofTb8N4abjW4Q2BoZ2bvB4ueh9L5mf1B+ZRkmPvjvsxDRVteHoFYEXS0o1hMY
-	 oVkAvCis1fQ/TdRWuCvnmwl1RokwPHIzoZ14kHk4=
+	b=mEsQQ9440pAgGJJKe7jI6PCNAmCxShTu9+WIRJqBl2usT34yZZ3tZORhxsp/522gh
+	 iPrA5tYuC/z+BVPkVW930DRfG+bJPV2jtpe4JjwffkGO1HAeD5AOfnksnNeeT0p1pm
+	 /+1e8Qu454l3aAKJ2c4U+VS+h3XOyhphk2avwTaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgDVKMJ (ORCPT
+        id S1729313AbgDVKMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44560 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbgDVKLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:55 -0400
+        id S1729286AbgDVKMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD5AE20575;
-        Wed, 22 Apr 2020 10:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6782070B;
+        Wed, 22 Apr 2020 10:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550315;
-        bh=ZMr3cobph3pHX+whIvaq3dvLnbLGICj7rLWUDrQdOC0=;
+        s=default; t=1587550322;
+        bh=oo0YQqQ2h9LJQli6zfhSSJEsVYe6Lnd8Pdi+X7mDI9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkyqiBCzn/w/KUAgloKfAdg9DXZbvMm0PYubIceBZtyA7UkSUJQfjNKkmwn8F02af
-         zGZYgcUWr3IrJZQFM+1G5KuDgKO0+YTz3BwHisCtn47tOjNxECUavKGN+EFdCGvvNT
-         JW/jqWQHBZJXWx8qu5pLry5b+2JKQ9hyhT0MMdpA=
+        b=P2IgJDVqXw27avO2cYhL49u3VJNnHadHBV/Yn/q5j0r9roGEHQmYA3WPkZ1MPawk2
+         ZUZLi3ejC76dstCliNPyH6M2HK4RhnorXzQfbxZf3TDpp0Q3hOuSv1Xy0gm0Bwy+Nj
+         NsljWffk0HzRmmtH4mIqSiw7XO/4P0iLv1WGhDKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Clement Courbet <courbet@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 094/199] powerpc: Make setjmp/longjmp signature standard
-Date:   Wed, 22 Apr 2020 11:57:00 +0200
-Message-Id: <20200422095107.457740465@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 097/199] dm zoned: remove duplicate nr_rnd_zones increase in dmz_init_zone()
+Date:   Wed, 22 Apr 2020 11:57:03 +0200
+Message-Id: <20200422095107.694755412@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,73 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Clement Courbet <courbet@google.com>
+From: Bob Liu <bob.liu@oracle.com>
 
-commit c17eb4dca5a353a9dbbb8ad6934fe57af7165e91 upstream.
+[ Upstream commit b8fdd090376a7a46d17db316638fe54b965c2fb0 ]
 
-Declaring setjmp()/longjmp() as taking longs makes the signature
-non-standard, and makes clang complain. In the past, this has been
-worked around by adding -ffreestanding to the compile flags.
+zmd->nr_rnd_zones was increased twice by mistake. The other place it
+is increased in dmz_init_zone() is the only one needed:
 
-The implementation looks like it only ever propagates the value
-(in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
-with integer parameters.
-
-This allows removing -ffreestanding from the compilation flags.
-
-Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Clement Courbet <courbet@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200330080400.124803-1-courbet@google.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+1131                 zmd->nr_useable_zones++;
+1132                 if (dmz_is_rnd(zone)) {
+1133                         zmd->nr_rnd_zones++;
+					^^^
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/setjmp.h |    6 ++++--
- arch/powerpc/kernel/Makefile      |    3 ---
- arch/powerpc/xmon/Makefile        |    3 ---
- 3 files changed, 4 insertions(+), 8 deletions(-)
+ drivers/md/dm-zoned-metadata.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/powerpc/include/asm/setjmp.h
-+++ b/arch/powerpc/include/asm/setjmp.h
-@@ -12,7 +12,9 @@
+diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
+index e3b67b145027b..4d658a0c60258 100644
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1105,7 +1105,6 @@ static int dmz_init_zone(struct dmz_metadata *zmd, struct dm_zone *zone,
  
- #define JMP_BUF_LEN    23
- 
--extern long setjmp(long *) __attribute__((returns_twice));
--extern void longjmp(long *, long) __attribute__((noreturn));
-+typedef long jmp_buf[JMP_BUF_LEN];
-+
-+extern int setjmp(jmp_buf env) __attribute__((returns_twice));
-+extern void longjmp(jmp_buf env, int val) __attribute__((noreturn));
- 
- #endif /* _ASM_POWERPC_SETJMP_H */
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -5,9 +5,6 @@
- 
- CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
- 
--# Avoid clang warnings around longjmp/setjmp declarations
--CFLAGS_crash.o += -ffreestanding
--
- subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
- 
- ifeq ($(CONFIG_PPC64),y)
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -1,9 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for xmon
- 
--# Avoid clang warnings around longjmp/setjmp declarations
--subdir-ccflags-y := -ffreestanding
--
- subdir-ccflags-$(CONFIG_PPC_WERROR) += -Werror
- 
- GCOV_PROFILE := n
+ 	if (blkz->type == BLK_ZONE_TYPE_CONVENTIONAL) {
+ 		set_bit(DMZ_RND, &zone->flags);
+-		zmd->nr_rnd_zones++;
+ 	} else if (blkz->type == BLK_ZONE_TYPE_SEQWRITE_REQ ||
+ 		   blkz->type == BLK_ZONE_TYPE_SEQWRITE_PREF) {
+ 		set_bit(DMZ_SEQ, &zone->flags);
+-- 
+2.20.1
+
 
 
