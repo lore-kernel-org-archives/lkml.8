@@ -2,93 +2,72 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84176C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C422FC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA3520767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1AB2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgDVJi4 (ORCPT
+        id S1726046AbgDVJlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:38:56 -0400
-Received: from m17616.mail.qiye.163.com ([59.111.176.16]:59276 "EHLO
-        m17616.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgDVJi4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:38:56 -0400
-X-Greylist: delayed 572 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 05:38:55 EDT
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17616.mail.qiye.163.com (Hmail) with ESMTPA id 73336108499;
-        Wed, 22 Apr 2020 17:29:19 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [PATCH] io: correct documentation mismatches for io memcpy
-Date:   Wed, 22 Apr 2020 02:29:05 -0700
-Message-Id: <20200422092905.39529-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VCQ0tCQkJCT01OQk9JT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mwg6TTo5Ijg2GgE2AzVKGTod
-        IUMwFDxVSlVKTkNMTk9MTE1KTENLVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUlIQks3Bg++
-X-HM-Tid: 0a71a138641b9374kuws73336108499
+        Wed, 22 Apr 2020 05:41:08 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59040 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725912AbgDVJlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:41:07 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7A41AEE064F3C02F7725;
+        Wed, 22 Apr 2020 17:41:04 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 22 Apr 2020 17:40:56 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <wangzhou1@hisilicon.com>, <lorenzo.pieralisi@arm.com>,
+        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] PCI: dwc: Make hisi_pcie_platform_ops static
+Date:   Wed, 22 Apr 2020 17:47:09 +0800
+Message-ID: <1587548829-107925-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Minor mismatches exist between funtion documentations and parameter
-definitions.
+Fix the following sparse warning:
 
-Function definition lines are as following:
-static inline void memcpy_fromio(void *buffer,
-				 const volatile void __iomem *addr,
-				 size_t size)
+drivers/pci/controller/dwc/pcie-hisi.c:365:21: warning:
+symbol 'hisi_pcie_platform_ops' was not declared. Should it be static?
 
-static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
-			       size_t size)
-
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
 ---
- include/asm-generic/io.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/controller/dwc/pcie-hisi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index d39ac997dda8..63131ec4857f 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -1067,9 +1067,9 @@ static inline void memset_io(volatile void __iomem *addr, int value,
- #define memcpy_fromio memcpy_fromio
- /**
-  * memcpy_fromio	Copy a block of data from I/O memory
-- * @dst:		The (RAM) destination for the copy
-- * @src:		The (I/O memory) source for the data
-- * @count:		The number of bytes to copy
-+ * @buffer:		The (RAM) destination for the copy
-+ * @addr:		The (I/O memory) source for the data
-+ * @size:		The number of bytes to copy
-  *
-  * Copy a block of data from I/O memory.
-  */
-@@ -1085,9 +1085,9 @@ static inline void memcpy_fromio(void *buffer,
- #define memcpy_toio memcpy_toio
- /**
-  * memcpy_toio		Copy a block of data into I/O memory
-- * @dst:		The (I/O memory) destination for the copy
-- * @src:		The (RAM) source for the data
-- * @count:		The number of bytes to copy
-+ * @addr:		The (I/O memory) destination for the copy
-+ * @buffer:		The (RAM) source for the data
-+ * @size:		The number of bytes to copy
-  *
-  * Copy a block of data to I/O memory.
-  */
+diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
+index 6d9e1b2..b440f40 100644
+--- a/drivers/pci/controller/dwc/pcie-hisi.c
++++ b/drivers/pci/controller/dwc/pcie-hisi.c
+@@ -362,7 +362,8 @@ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
+ 	return 0;
+ }
+ 
+-struct pci_ecam_ops hisi_pcie_platform_ops = {
++static struct pci_ecam_ops hisi_pcie_platform_ops = {
++	}
+ 	.bus_shift    = 20,
+ 	.init         =  hisi_pcie_platform_init,
+ 	.pci_ops      = {
 -- 
-2.17.1
+2.6.2
 
