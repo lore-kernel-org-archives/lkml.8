@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F2DC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBACC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82FD22076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19982075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550663;
-	bh=rWyMJ9/5BvPz5zxCT7OMcSHFKQEbZj3LzdGRHpnuOQc=;
+	s=default; t=1587550668;
+	bh=J1JkjCc5mTHrf38+AhcltY41zhe8rWp5/agC1s7A4H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2MbTZfnUYi///njQUW5kNTv86zZRs9GOgjnFH3NTtVu+Wx3QtSz1ndX4jI2slCN78
-	 vrt4l9/4FAYOkIYGSa9LzC1xH2orJKuw4Bs+UDjZP0WakrLgs8sVATfOUt+YA2DtQe
-	 p3trzMQOkwSFA/7qTUnV8OsfETuUjP3RpLS+FxDY=
+	b=MJ2vANLbK29gw9VBagd91gd2hg1Vl4+OMuzGBEQshNnltg0zib6WjDTxlssF0uvY1
+	 Azze470XvJ9kWY4mcpa9Uu/L4eDMMvk/3ZrOcW6sGHW4PGXGYBIIL6hUXD+GDrS19B
+	 5swgUOWhdIF84B80uJhqNEroi7B6N7Nywk127NQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgDVKRm (ORCPT
+        id S1729876AbgDVKRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52418 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:17:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbgDVKQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:36 -0400
+        id S1726599AbgDVKQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 778662075A;
-        Wed, 22 Apr 2020 10:16:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7E212076E;
+        Wed, 22 Apr 2020 10:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550595;
-        bh=rWyMJ9/5BvPz5zxCT7OMcSHFKQEbZj3LzdGRHpnuOQc=;
+        s=default; t=1587550598;
+        bh=J1JkjCc5mTHrf38+AhcltY41zhe8rWp5/agC1s7A4H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFJwtdJ8z4UqaKBhdwhJJ2Ls+iqC76uc6OypNdyqaHW833nMQGlXkGggb7pYIFg5x
-         0CPI5llb77fH/sLhcQyniBQj6fG2jo8j9SN1nj1+WA0YrFDyCa684scvhWXhh/IXXp
-         QhboE4znyA3Ksh4xeBn3UZJfx12qbFczHk54/l5s=
+        b=G7rh7bmfOSICT+NAAgoM3ZQgiIEkNlIbOYZHWxeY/1aeaxGCarT5Ob2V4ZlFNv4H0
+         bhR97ZfIJXz44CPv+lZHKeEF39vB5I6a6psty1S/8oVqMDKCG7QWwLvQa0dkaEhAcb
+         xhy6RNxnH7k0juchnHYqvZwBE9ZPadvfuC1ZYjVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
         Frank Rowand <frank.rowand@sony.com>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 016/118] of: unittest: kmemleak in of_unittest_platform_populate()
-Date:   Wed, 22 Apr 2020 11:56:17 +0200
-Message-Id: <20200422095034.228127725@linuxfoundation.org>
+Subject: [PATCH 5.4 017/118] of: unittest: kmemleak in of_unittest_overlay_high_level()
+Date:   Wed, 22 Apr 2020 11:56:18 +0200
+Message-Id: <20200422095034.404330418@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -62,42 +62,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-commit 216830d2413cc61be3f76bc02ffd905e47d2439e upstream.
+commit 145fc138f9aae4f9e1331352e301df28e16aed35 upstream.
 
 kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 2 of 5.
+This is the fix for problem 3 of 5.
 
-of_unittest_platform_populate() left an elevated reference count for
-grandchild nodes (which are platform devices).  Fix the platform
-device reference counts so that the memory will be freed.
+of_unittest_overlay_high_level() failed to kfree the newly created
+property when the property named 'name' is skipped.
 
-Fixes: fb2caa50fbac ("of/selftest: add testcase for nodes with same name and address")
+Fixes: 39a751a4cb7e ("of: change overlay apply input data from unflattened to FDT")
 Reported-by: Erhard F. <erhard_f@mailbox.org>
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/of/unittest.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/of/unittest.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 --- a/drivers/of/unittest.c
 +++ b/drivers/of/unittest.c
-@@ -1065,10 +1065,13 @@ static void __init of_unittest_platform_
- 
- 	of_platform_populate(np, match, NULL, &test_bus->dev);
- 	for_each_child_of_node(np, child) {
--		for_each_child_of_node(child, grandchild)
--			unittest(of_find_device_by_node(grandchild),
-+		for_each_child_of_node(child, grandchild) {
-+			pdev = of_find_device_by_node(grandchild);
-+			unittest(pdev,
- 				 "Could not create device for node '%pOFn'\n",
- 				 grandchild);
-+			of_dev_put(pdev);
-+		}
- 	}
- 
- 	of_platform_depopulate(&test_bus->dev);
+@@ -2481,8 +2481,11 @@ static __init void of_unittest_overlay_h
+ 				goto err_unlock;
+ 			}
+ 			if (__of_add_property(of_symbols, new_prop)) {
++				kfree(new_prop->name);
++				kfree(new_prop->value);
++				kfree(new_prop);
+ 				/* "name" auto-generated by unflatten */
+-				if (!strcmp(new_prop->name, "name"))
++				if (!strcmp(prop->name, "name"))
+ 					continue;
+ 				unittest(0, "duplicate property '%s' in overlay_base node __symbols__",
+ 					 prop->name);
 
 
