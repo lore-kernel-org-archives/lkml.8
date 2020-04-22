@@ -2,225 +2,119 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BADFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C1CC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7F221707
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F81215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP/akETD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8o49Scr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgDVT2z (ORCPT
+        id S1726371AbgDVTaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
+        Wed, 22 Apr 2020 15:30:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726056AbgDVT2z (ORCPT
+        by vger.kernel.org with ESMTP id S1725935AbgDVTaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:28:55 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E3EC03C1A9;
-        Wed, 22 Apr 2020 12:28:54 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id k22so2429008eds.6;
-        Wed, 22 Apr 2020 12:28:54 -0700 (PDT)
+        Wed, 22 Apr 2020 15:30:00 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF30C03C1A9;
+        Wed, 22 Apr 2020 12:29:59 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id a2so2883646oia.11;
+        Wed, 22 Apr 2020 12:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4eHXvH1GDSckReIfUt4f8dPPiIKiU77VF1j9+W80uRQ=;
-        b=uP/akETD4Vrnve92vVb/IdfXa33kcUNoReGjk2EFxDlRxxvgTfCx/O1XGnHkAySkQD
-         ubwoL1j/AzgcwCUeuTmwgej97lfen5MpXb+JPt8Rkmpsn2RX+GrRDF3G0E9W4gWGr3y8
-         3cFJu02+dBj6qRCc3zfQcB8E0UecHmeEpSElzx9kxOgH3FOaLiFcu+eDJVCWePf3xLxc
-         7oxq48VCBot3zepcu+jlumW5b8Xmpi2HbCw7LYlV0kGxDjqF4D2cpH911gMF4Cte9dLo
-         4eIcKINvfwUTUPDCkXpxvzcMfYcTht10ALztBX22buJ7PGCVm4FPX2kyHNQ/ERuxRQZ+
-         Uf5A==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hGficyrZ4sebWDfX+hwwWhlXqmUAh4bJFNFxwgCc5Eo=;
+        b=D8o49ScrY7NLNMFAFIwnzcxywXle16BkKRYYFPamPiL1A5Y28OsEGTb1XDc4fn2N4r
+         vqOcSW2MJ7SWMkvFuSOK9szCbpGI7LhpBDstOPRwaobjEJqsQLEFOE+ZTT0wkM8d5ACE
+         vZPIVfKRgSA14d1Wgw3kG2Tf5bJxy74HDc71maU+4PPw9vk1UsaCKnKHXNSwolW7DTCm
+         TFHwT4fJF26184kwM0BejI7th1rPnipq4i8M8J13vPEFnvufCbLshWVm4yn16XHGCzmn
+         rw00DobnF94u6tP041vKYm4UpI9cFctKTp4hGV2h3RxTpSPEQedzCf1S9O7goT3EJb3R
+         vrqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4eHXvH1GDSckReIfUt4f8dPPiIKiU77VF1j9+W80uRQ=;
-        b=lgOEZH3KOkaDzY4lj67rRgxhfhsris7IVCBMTR+o4feJxA4/gtwZ0SKj1eEdMew+k+
-         ygJ94Q7k2A63kuGulF5HWBVcptNDjIVZOIh0MbqqcR6jFNlzxExtcAwnlhH+A5lza/H/
-         tu2AM7FxSk8xj+yoZEQboITdS0+A3EnVnLj2xKlKdxX9xxWL9uzpVzEYtQ1MyNkWr839
-         7Jqeqt+7UVc/Y1wv46NKlxj2M7Q1XLCjDRT1gSVaOJI4umuW4lVWYur5QHZlOE8nN9M4
-         0KC4hKaac+KJ7rMD8WFBiqPwqUwbGl1MhIbvLAi71g2nQQNUMppXeZMXtUeHBsCqt5Cx
-         Tuwg==
-X-Gm-Message-State: AGi0PuaqkDc2PyVUXDp20W8xGl260XF9sq0X4CA4xQ7x6WJK77jrucrD
-        FMrg1A+hk2yGfsuj+ctSQxaYkiV3KjcQiMUGUN8=
-X-Google-Smtp-Source: APiQypI7OeDRVTXbyCq1O3B/kdlwU1xDJ3TrABi9IgyUeSvz5pdUmQcw/lj4bMN9FStfuPpjznzaR3gi6ZQgFZa1j/c=
-X-Received: by 2002:a50:aca3:: with SMTP id x32mr154548edc.368.1587583733380;
- Wed, 22 Apr 2020 12:28:53 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hGficyrZ4sebWDfX+hwwWhlXqmUAh4bJFNFxwgCc5Eo=;
+        b=QPh8SpeizrgmzzphBgczqMnVbqTMZr9UipWzqlufegI0qvpn+04T0oBda7mLNa/tsK
+         i5FaB10tD0OvQNCsU+1Qw05KkK/lqi0tPgTxhXpBVTIH1twmFAu4/znXX/Qbgx/kjgJ4
+         wedS93ZeGdZvf28LRu/uIOl1nvlsbACsuQbn7Rx+p37qHwDYQHzRN/g2jeQqnwqktI+U
+         DWXH3cHgkBCaB2LiMwHARGGcsf2nn2AmIp/VitJtGAZNszLVDapUCSWQQlT/UUvebE8s
+         W1+hbwM+tBHgZoFB6/vIWbq+YgQwFe8cBoXZOvD5rpzf8Y0y8NC7FFJAROMD8tvVCBNR
+         y1yw==
+X-Gm-Message-State: AGi0PuZ056C3KbtK8DgljIOpGFCJInAEwQXabvpeMyPl7apSflJpvjaE
+        XHuQs7eAEz/gkX9DL9oT9w==
+X-Google-Smtp-Source: APiQypID6N0FltxN8PtBLSw2l+eD9zcQ9ni2qkgCcvwCIAMCk3D8FqLC4TRtP5Vc6aFhC2FhsbS+8w==
+X-Received: by 2002:a05:6808:3d4:: with SMTP id o20mr390469oie.47.1587583798838;
+        Wed, 22 Apr 2020 12:29:58 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c81sm35623oib.35.2020.04.22.12.29.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 12:29:58 -0700 (PDT)
+From:   Rob Herring <robherring2@gmail.com>
+X-Google-Original-From: Rob Herring <rob@rob-hp-laptop.gmail.com>
+Received: (nullmailer pid 22790 invoked by uid 1000);
+        Wed, 22 Apr 2020 19:29:57 -0000
+Date:   Wed, 22 Apr 2020 14:29:57 -0500
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI: dra7xx: Don't select CONFIG_PCI_DRA7XX_HOST by
+ default
+Message-ID: <20200422192957.6lwr3aig4a3dcynr@rob-hp-laptop>
+References: <20200415001244.144623-1-helgaas@kernel.org>
+ <20200415001244.144623-2-helgaas@kernel.org>
 MIME-Version: 1.0
-References: <20200418011211.31725-5-Po.Liu@nxp.com> <20200422024852.23224-1-Po.Liu@nxp.com>
- <20200422024852.23224-2-Po.Liu@nxp.com> <20200422191910.gacjlviegrjriwcx@ws.localdomain>
-In-Reply-To: <20200422191910.gacjlviegrjriwcx@ws.localdomain>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 22 Apr 2020 22:28:42 +0300
-Message-ID: <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
-Subject: Re: [v3,net-next 1/4] net: qos: introduce a gate control flow action
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Po Liu <Po.Liu@nxp.com>, "David S. Miller" <davem@davemloft.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        michael.chan@broadcom.com, vishal@chelsio.com, saeedm@mellanox.com,
-        leon@kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        simon.horman@netronome.com, pablo@netfilter.org,
-        moshe@mellanox.com, Murali Karicheri <m-karicheri2@ti.com>,
-        Andre Guedes <andre.guedes@linux.intel.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415001244.144623-2-helgaas@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Allan,
+On Tue, Apr 14, 2020 at 07:12:41PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Drivers should not be selected by default because that bloats the kernel
+> for people who don't need them.
+> 
+> Remove the "default y" for CONFIG_PCI_DRA7XX_HOST.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: linux-omap@vger.kernel.org
+> ---
+>  drivers/pci/controller/dwc/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 03dcaf65d159..ea335ee7ca8e 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -26,7 +26,6 @@ config PCI_DRA7XX_HOST
+>  	depends on OF && HAS_IOMEM && TI_PIPE3
+>  	select PCIE_DW_HOST
+>  	select PCI_DRA7XX
+> -	default y
 
-On Wed, 22 Apr 2020 at 22:20, Allan W. Nielsen
-<allan.nielsen@microchip.com> wrote:
->
-> Hi Po,
->
-> Nice to see even more work on the TSN standards in the upstream kernel.
->
-> On 22.04.2020 10:48, Po Liu wrote:
-> >EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >
-> >Introduce a ingress frame gate control flow action.
-> >Tc gate action does the work like this:
-> >Assume there is a gate allow specified ingress frames can be passed at
-> >specific time slot, and be dropped at specific time slot. Tc filter
-> >chooses the ingress frames, and tc gate action would specify what slot
-> >does these frames can be passed to device and what time slot would be
-> >dropped.
-> >Tc gate action would provide an entry list to tell how much time gate
-> >keep open and how much time gate keep state close. Gate action also
-> >assign a start time to tell when the entry list start. Then driver would
-> >repeat the gate entry list cyclically.
-> >For the software simulation, gate action requires the user assign a time
-> >clock type.
-> >
-> >Below is the setting example in user space. Tc filter a stream source ip
-> >address is 192.168.0.20 and gate action own two time slots. One is last
-> >200ms gate open let frame pass another is last 100ms gate close let
-> >frames dropped. When the frames have passed total frames over 8000000
-> >bytes, frames will be dropped in one 200000000ns time slot.
-> >
-> >> tc qdisc add dev eth0 ingress
-> >
-> >> tc filter add dev eth0 parent ffff: protocol ip \
-> >           flower src_ip 192.168.0.20 \
-> >           action gate index 2 clockid CLOCK_TAI \
-> >           sched-entry open 200000000 -1 8000000 \
-> >           sched-entry close 100000000 -1 -1
->
-> First of all, it is a long time since I read the 802.1Qci and when I did
-> it, it was a draft. So please let me know if I'm completly off here.
->
-> I know you are focusing on the gate control in this patch serie, but I
-> assume that you later will want to do the policing and flow-meter as
-> well. And it could make sense to consider how all of this work
-> toghether.
->
-> A common use-case for the policing is to have multiple rules pointing at
-> the same policing instance. Maybe you want the sum of the traffic on 2
-> ports to be limited to 100mbit. If you specify such action on the
-> individual rule (like done with the gate), then you can not have two
-> rules pointing at the same policer instance.
->
-> Long storry short, have you considered if it would be better to do
-> something like:
->
->    tc filter add dev eth0 parent ffff: protocol ip \
->             flower src_ip 192.168.0.20 \
->             action psfp-id 42
->
-> And then have some other function to configure the properties of psfp-id
-> 42?
->
->
-> /Allan
->
+Perhaps 'default y if SOC_DRA7XX'?
 
-It is very good that you brought it up though, since in my opinion too
-it is a rather important aspect, and it seems that the fact this
-feature is already designed-in was a bit too subtle.
-
-"psfp-id" is actually his "index" argument.
-
-You can actually do this:
-tc filter add dev eth0 ingress \
-        flower skip_hw dst_mac 01:80:c2:00:00:0e \
-        action gate index 1 clockid CLOCK_TAI \
-        base-time 200000000000 \
-        sched-entry OPEN 200000000 -1 -1 \
-        sched-entry CLOSE 100000000 -1 -1
-tc filter add dev eth0 ingress \
-        flower skip_hw dst_mac 01:80:c2:00:00:0f \
-        action gate index 1
-
-Then 2 filters get created with the same action:
-
-tc -s filter show dev swp2 ingress
-filter protocol all pref 49151 flower chain 0
-filter protocol all pref 49151 flower chain 0 handle 0x1
-  dst_mac 01:80:c2:00:00:0f
-  skip_hw
-  not_in_hw
-        action order 1:
-        priority wildcard       clockid TAI     flags 0x6404f
-        base-time 200000000000                  cycle-time 300000000
-         cycle-time-ext 0
-         number    0    gate-state open         interval 200000000
-         ipv wildcard    max-octets wildcard
-         number    1    gate-state close        interval 100000000
-         ipv wildcard    max-octets wildcard
-        pipe
-         index 2 ref 2 bind 2 installed 168 sec used 168 sec
-        Action statistics:
-        Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
-        backlog 0b 0p requeues 0
-
-filter protocol all pref 49152 flower chain 0
-filter protocol all pref 49152 flower chain 0 handle 0x1
-  dst_mac 01:80:c2:00:00:0e
-  skip_hw
-  not_in_hw
-        action order 1:
-        priority wildcard       clockid TAI     flags 0x6404f
-        base-time 200000000000                  cycle-time 300000000
-         cycle-time-ext 0
-         number    0    gate-state open         interval 200000000
-         ipv wildcard    max-octets wildcard
-         number    1    gate-state close        interval 100000000
-         ipv wildcard    max-octets wildcard
-        pipe
-         index 2 ref 2 bind 2 installed 168 sec used 168 sec
-        Action statistics:
-        Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
-        backlog 0b 0p requeues 0
-
-Actually my only concern is that maybe this mechanism should (?) have
-been more generic. At the moment, this patch series implements it via
-a TCA_GATE_ENTRY_INDEX netlink attribute, so every action which wants
-to be shared across filters needs to reinvent this wheel.
-
-Thoughts, everyone?
-
-Thanks,
--Vladimir
+>  	help
+>  	  Enables support for the PCIe controller in the DRA7xx SoC to work in
+>  	  host mode. There are two instances of PCIe controller in DRA7xx.
+> -- 
+> 2.26.0.110.g2183baf09c-goog
+> 
