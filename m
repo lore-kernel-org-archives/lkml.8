@@ -2,145 +2,94 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4488BC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B135C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15460206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TBCmMaM4"
+	by mail.kernel.org (Postfix) with ESMTP id 3CDA220747
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDVBQr (ORCPT
+        id S1726359AbgDVBSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 21:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgDVBQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 21:16:46 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD3CC061BD3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 18:16:45 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id b13so735909oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 18:16:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ZAB7lOGfupOo4knhmJHwegkG6G2R+Ivec9h4JrnPCY=;
-        b=TBCmMaM4nW1BKdzeRNHxyhsxN7yHhlFd+e3vnicrWjkCfrdVwe56nyBewfNqYv51hD
-         zy0qJLA6SzEhUAWAfa/QwRO5kUXJA7G9q6BlkVdMqU8xGLXwUKql6DzwtadxE0W6JxGG
-         3MFKuQSAfouttoL5apcl/QzbuMG44XGeJWvpYK+90ozMgxBEMDjVe0Bbu1yXWwGW6eCo
-         HOInPnB8UsZpi67xElpb1e7lCOtrBSMGoR2ld2cq8DxROVmcPh8u/zPoauE3uIDgHvQE
-         fAol/uCIZm0f8TpjBO1EcVnELCbSBeDWXcTa5uhsNPkx4kWMyIUHksxPgfRVBctqWHaK
-         b42A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ZAB7lOGfupOo4knhmJHwegkG6G2R+Ivec9h4JrnPCY=;
-        b=sTufCroM1zfaZWFxBSJVgy+5BP4ja67kZrZJPESrD24Wk6IsOS9OiO2VitgaNV+bxZ
-         Swf6dM1VL9rkhaAoxEovqoYZnZ8Od8pXgc22gA7Oe2pH4qemWDybSzCsYoj23T10WGUC
-         c/sTxfuLWtGrFv2asLJa0wuF4umBG5hHSOnGsHXs7SkAHLSZ8j4JJ3bdhtMogpYckEVP
-         2QZIb7VPGSkdYoAKIGElj5MdTIyigxWq1P7GMyMzuixzE8XZwcJfFfYFwG7EowGmHNHg
-         uJhfVzcd1NChmRbwyok2fFf6ItnrB3YLNtJFvthszevs7HJafXESJe8MBlqvc1mAszmo
-         onMQ==
-X-Gm-Message-State: AGi0PubtAVG1sRTjLBEyy1OkHvfii2gWE/CG54tSUupW8ug2HW7nt7IL
-        Lx78BGhPY7Xk7KlYcNAR8Wbe46ExIUcAlPxL3GBjxg==
-X-Google-Smtp-Source: APiQypIzDPILAHh9p+2DyPNQ/95jPeU/YiMoZZ68Ru0vZToWV9S8nIGlpBgVkOZhkoTziFYp8meUCUyRS6+Zk8j7m9o=
-X-Received: by 2002:a05:6830:1589:: with SMTP id i9mr16604890otr.102.1587518203493;
- Tue, 21 Apr 2020 18:16:43 -0700 (PDT)
+        Tue, 21 Apr 2020 21:18:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:32180 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbgDVBSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 21:18:03 -0400
+IronPort-SDR: mPF/MjPpdp1hShjwy3PUg9c6QNhmFnNaRksMWzfVf2YxavAyMUnkJ6lMAEXD3MXAP69R4iXJHP
+ cSFppLR6e+3Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 18:18:03 -0700
+IronPort-SDR: 6l6YK4sA5Ns3pKrIUT/p5tb8q0agx3EDFMEWSNFL1xj4zJzkoITPI9nyz+AfyYptrSi3a5rg1V
+ AYAkdLsXWzjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
+   d="scan'208";a="402370693"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga004.jf.intel.com with ESMTP; 21 Apr 2020 18:18:01 -0700
+Subject: Re: [kbuild-all] Re: sound/soc/soc-compress.c:75:28: warning:
+ 'component' is used uninitialized in this function
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+References: <202004201540.vYPhhYMs%lkp@intel.com>
+ <87eeshuzla.wl-kuninori.morimoto.gx@renesas.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <21c9be58-057d-a151-f64d-e8f85f1c585c@intel.com>
+Date:   Wed, 22 Apr 2020 09:17:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20200225050828.56458-1-john.stultz@linaro.org> <20200421235836.GA8319@lxhi-065.adit-jv.com>
-In-Reply-To: <20200421235836.GA8319@lxhi-065.adit-jv.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 21 Apr 2020 18:16:31 -0700
-Message-ID: <CALAqxLXX455P0V0o11scc3-1MHvecnvcUoT=XBcwB+ma7Kyjqg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] driver core: Improve and cleanup driver_deferred_probe_check_state()
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87eeshuzla.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 4:59 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
->
-> Hi John,
-> Cc: linux-renesas-soc
->
-> On Tue, Feb 25, 2020 at 05:08:22AM +0000, John Stultz wrote:
-> > This series goal is to improve and cleanup the
-> > driver_deferred_probe_check_state() code in the driver core.
-> >
-> > This series is useful for being able to support modules
-> > dependencies which may be loaded by userland, far after
-> > late_initcall is done. For instance, this series allows us to
-> > successfully use various clk drivers as modules on the db845c
-> > board. And without it, those drivers have to be statically built
-> > in to work.
-> >
-> > Since I first sent out this patch, Saravana suggested an
-> > alternative approach which also works for our needs, and is a
-> > bit simpler:
-> >  https://lore.kernel.org/lkml/20200220055250.196456-1-saravanak@google.com/T/#u
-> >
-> > However, while that patch provides the functionality we need,
-> > I still suspect the driver_deferred_probe_check_state() code
-> > could benefit from the cleanup in this patch, as the existing
-> > logic is somewhat muddy.
-> >
-> > New in v5:
-> > * Reworked the driver_deferred_probe_check_state() logic as
-> >   suggested by Saravana to tie the initcall_done checking with
-> >   modules being enabled.
-> > * Cleanup some comment wording as suggested by Rafael
-> > * Try to slightly simplify the regulator logic as suggested by
-> >   Bjorn
-> >
-> > Thanks so much to Bjorn, Saravana and Rafael for their reviews
-> > and suggestions! Additional review and feedback is always greatly
-> > appreciated!
->
-> Building a recent [0] kernel using vanilla arm64 defconfig
-> and booting it on H3ULCB, I get buried into backtraces [1].
->
-> After reverting this series, up to and including its first commit,
-> booting goes back to normal [2].
->
-> Any chance to get a fix or at least some hints where to dig into?
-
-Yea. There's two patch sets I have for this. The first quiets down the
-warnings(we don't need stack dumps for these):
-  https://lore.kernel.org/lkml/20200330202715.86609-1-john.stultz@linaro.org/
-
-The second reverts the default timeout back to 0:
-  https://lore.kernel.org/lkml/20200413204253.84991-1-john.stultz@linaro.org/
 
 
-Let me know if those work for you, or if you're still having trouble
-afterwards.  I need to resubmit the set as I'm guessing they've been
-overlooked.
+On 4/21/20 2:23 PM, Kuninori Morimoto wrote:
+> Hi
+>
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   7a56db0299f9d43b4fe076838150c5cc293df131
+>> commit: 613fb50059cf19aa6acbc503a00265d9151c0b09 ASoC: soc-core: remove snd_soc_rtdcom_list
+>> date:   3 months ago
+>> config: i386-randconfig-a002-20200420 (attached as .config)
+>> compiler: gcc-6 (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+>> reproduce:
+>>          git checkout 613fb50059cf19aa6acbc503a00265d9151c0b09
+>>          # save the attached .config to linux build tree
+>>          make ARCH=i386
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>     sound/soc/soc-compress.c: In function 'soc_compr_open':
+>>>> sound/soc/soc-compress.c:75:28: warning: 'component' is used uninitialized in this function [-Wuninitialized]
+>>       struct snd_soc_component *component, *save = NULL;
+>>                                 ^~~~~~~~~
+> Hmm... I still can't reproduce this issue.
+> I don't have gcc-6, thus can't try it.
+> Is this the issue ??
 
-thanks
--john
+Hi Kuninori,
+
+We can reproduce the warning with gcc-6 (gcc version 6.5.0 20181026 
+(Debian 6.5.0-2)),
+and the warning can be closed if changed to "struct snd_soc_component 
+*component = NULL, *save = NULL;"
+
+Best Regards,
+Rong Chen
