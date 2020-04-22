@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87327C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAC9C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9242070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2662076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550743;
-	bh=euQa/IrC+M5frlOR1iG3WPuzEiQuZ/BuYmF5XaRlhqM=;
+	s=default; t=1587550748;
+	bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hlJDWb3fOwjwsJwSSPuvB+jNnaE2Ul6kWQVHpKQLTkYv2y82+pe8KpavIrJWh3mn7
-	 ae4VfJdQHWGB+BzveOsOnOS83ywi4kb393kZ5vY5PCs6mu2YBGCXOnCa2CrtBIVAqC
-	 X/heXT044N0QR+HbKYNp6qqWzmSuQXRxxiWentkU=
+	b=ZSzRpB553sm3HETEqDsClkpwYWB3dz8zVuo8B0ZY5/NauqilG7v1H6ZhTjYpB8I4f
+	 IZjADTIfRTTcjuK/XWQq6ie9sZFQi8+mn+PrheKThJQvnnAUq6Bdasi9cDxSHvzdyy
+	 VEFBCWb1COZbGiZZ0fb0uIO+LDhbFSzgQq+uO14E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbgDVKTC (ORCPT
+        id S1730043AbgDVKTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54474 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:19:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729024AbgDVKSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:05 -0400
+        id S1729578AbgDVKSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD412070B;
-        Wed, 22 Apr 2020 10:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA0720781;
+        Wed, 22 Apr 2020 10:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550682;
-        bh=euQa/IrC+M5frlOR1iG3WPuzEiQuZ/BuYmF5XaRlhqM=;
+        s=default; t=1587550687;
+        bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EDB2UAp0i7Qy2IZ/Wft+v+hLFD/0S55WO5ochjy9Ulg1SQR9XXE+xNbR/oWfeeeWF
-         85Hx3wqC/lZn/dU6VZ2yLq3U5j7ImgOAhkyMWXNGGA7QNdDWbAgOktVFfHWGhsX9Kd
-         DUYFpEcBNpX50Iawf29+BlvKgdBz8rB0MmLz4kFQ=
+        b=mQuQCax6ZwBlohfKsccfU0q0m9TeSpZ73IszbH+n3utUTm/S5lOpb+LJJ3tCjKLHE
+         I5KNbNgHz6PjtHtQJcbJuu42VXEJka6Ax1GiSsp0Uka5e6JbACAhlujNkr0+VTo+ls
+         G8km0mewfu/RmF7vhjXgsm16+qNYYUyeJBhkny38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/118] NFSv4/pnfs: Return valid stateids in nfs_layout_find_inode_by_stateid()
-Date:   Wed, 22 Apr 2020 11:56:52 +0200
-Message-Id: <20200422095040.410692868@linuxfoundation.org>
+Subject: [PATCH 5.4 053/118] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
+Date:   Wed, 22 Apr 2020 11:56:54 +0200
+Message-Id: <20200422095040.718760526@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,34 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit d911c57a19551c6bef116a3b55c6b089901aacb0 ]
+[ Upstream commit 1a7e99599dffd836fcb720cdc0eaf3cd43d7af4a ]
 
-Make sure to test the stateid for validity so that we catch instances
-where the server may have been reusing stateids in
-nfs_layout_find_inode_by_stateid().
+A test with the command below gives this error:
 
-Fixes: 7b410d9ce460 ("pNFS: Delay getting the layout header in CB_LAYOUTRECALL handlers")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
+'ports' is a required property
+
+Fix error by adding a ports wrapper for port@0 and port@1
+inside the 'lvds-encoder' node for rk3188-bqedison2qc.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
+bridge/lvds-codec.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200316174647.5598-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/callback_proc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index f39924ba050b1..fc775b0b5194f 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -130,6 +130,8 @@ static struct inode *nfs_layout_find_inode_by_stateid(struct nfs_client *clp,
+diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+index 8afb2fd5d9f1b..66a0ff196eb1f 100644
+--- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
++++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+@@ -58,20 +58,25 @@
  
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry(lo, &server->layouts, plh_layouts) {
-+			if (!pnfs_layout_is_valid(lo))
-+				continue;
- 			if (stateid != NULL &&
- 			    !nfs4_stateid_match_other(stateid, &lo->plh_stateid))
- 				continue;
+ 	lvds-encoder {
+ 		compatible = "ti,sn75lvds83", "lvds-encoder";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 
+-		port@0 {
+-			reg = <0>;
+-			lvds_in_vop0: endpoint {
+-				remote-endpoint = <&vop0_out_lvds>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				lvds_in_vop0: endpoint {
++					remote-endpoint = <&vop0_out_lvds>;
++				};
+ 			};
+-		};
+ 
+-		port@1 {
+-			reg = <1>;
+-			lvds_out_panel: endpoint {
+-				remote-endpoint = <&panel_in_lvds>;
++			port@1 {
++				reg = <1>;
++
++				lvds_out_panel: endpoint {
++					remote-endpoint = <&panel_in_lvds>;
++				};
+ 			};
+ 		};
+ 	};
 -- 
 2.20.1
 
