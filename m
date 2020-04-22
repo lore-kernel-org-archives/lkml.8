@@ -2,88 +2,90 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EBFC38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A22DC38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9BE20706
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28651206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JH1Gipnw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gb7ek6Yt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgDVGnZ (ORCPT
+        id S1726609AbgDVGnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:43:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26618 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725787AbgDVGnZ (ORCPT
+        Wed, 22 Apr 2020 02:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbgDVGng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:43:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587537804; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=MhadrjD6wrcZES5GZ8r8n4iG7AMqQlccgK3i8GcHrT0=;
- b=JH1Gipnwz/RsI+MJaZiw9qT3yq6p0yhxRIHZvbzDSPlfJJ/FFOROeTQFWGbtZevny/AsMEoW
- KxFs9aZxHbVNCsvwNpSSILn2NyhWgssLTwjxiffb9qQ244EplHRMccut9kL1VGrsWrS16+Fa
- eLV7UHoTZqs/m4GTNy4bIJTdnVw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9fe779.7fe1d876e7d8-smtp-out-n04;
- Wed, 22 Apr 2020 06:43:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7659C433F2; Wed, 22 Apr 2020 06:43:04 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35B2FC433D2;
-        Wed, 22 Apr 2020 06:43:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35B2FC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 22 Apr 2020 02:43:36 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A861DC03C1A6;
+        Tue, 21 Apr 2020 23:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=n7bSWCy+yjEVd5/eEit7zxHT7ampFTjRw0vL4VxyfNM=; b=Gb7ek6Ytu/i+eVBcw6iQxNRQEX
+        lFgqHAf+9baTdGXdabiAr/PxaKU/oTW7Od3ihMdBHDjmsw2H9DdSVYQ4FcFp/AXzBP9uD0vzsacV/
+        tapmfrVksjcwdz0iIZuA5IBGrntQKC4uadFOFu+jhE2oUFc5Y8eNtHx8OPg8ZOGvMM5H8XOFUjtYb
+        jnV/wJiasU6SV/kWNNNaYsCWbiJMLiM6eA8QR1Tyjvqq3D/oU/b1o+4SsGGVGBp0y5/Uswp+dlj1Z
+        K7xwQEHwC3D/bE1rZnu8fqFKkgIFx9hPGXQSQ3wxr3r/2mZXpv9GXLabkoKPcyLT6Yw6wjLd+2wkO
+        UKrLSXjQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jR96S-0004JA-9L; Wed, 22 Apr 2020 06:43:24 +0000
+Date:   Tue, 21 Apr 2020 23:43:24 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     huobean@gmail.com
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] UFS Host Performance Booster (HPB v1.0) driver
+Message-ID: <20200422064324.GF20318@infradead.org>
+References: <20200416203126.1210-1-beanhuo@micron.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath11k: remove conversion to bool in
- ath11k_debug_fw_stats_process()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200420123745.4159-1-yanaijie@huawei.com>
-References: <20200420123745.4159-1-yanaijie@huawei.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     <davem@davemloft.net>, <colin.king@canonical.com>,
-        <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jason Yan <yanaijie@huawei.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200422064304.D7659C433F2@smtp.codeaurora.org>
-Date:   Wed, 22 Apr 2020 06:43:04 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416203126.1210-1-beanhuo@micron.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason Yan <yanaijie@huawei.com> wrote:
-
-> The '==' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
+On Thu, Apr 16, 2020 at 10:31:21PM +0200, huobean@gmail.com wrote:
+> From: Bean Huo <beanhuo@micron.com>
 > 
-> drivers/net/wireless/ath/ath11k/debug.c:198:57-62: WARNING: conversion
-> to bool not needed here
-> drivers/net/wireless/ath/ath11k/debug.c:218:58-63: WARNING: conversion
-> to bool not needed here
+> Hi,
+> I disclose my development/changes on UFS HPB (UFS Host Performance Booster) to
+> the community, as this would enable more UFS developers to test and start an
+> iterative review and update process.
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> The HPB is defined in Jedec Standard Universal Flash (UFS) Host Performance
+> Booster (HPB) Extension Version 1.0, which is designed to improve  read
+> performance by utilizing the host side memory. Based on our testing, the HPB
+> can increase the random read performance by up to about 46% in the random read.
+> 
+> The original HPB driver is from [1]. Based on it, I did optimizations,
+> simplifications, fixed reliability issues, implemented HPB host control mode
+> and make it much more readable. which's pushed to here [2] as V1.
+> 
+> To avoid touching the traditional SCSI core, the HPB driver in this series HPB
+> patch chooses to develop under SCSI sub-system layer, and sits the same layer
+> with UFSHCD. At the same time, to minimize changes to UFSHCD driver, the HPB
+> driver submits its HPB READ BUFFER and HPB WRITE BUFFER requests to the scsi
+> device->request_queueu to execute, rather than that directly go through
+> raw UPIU request path.
 
-Patch applied to ath-next branch of ath.git, thanks.
+This feature is completley broken, and rather dangerous due to feeding
+"physical" addresses looked up by the host in.  I do not think we should
+support something that broken in Linux.
 
-d81709346cea ath11k: remove conversion to bool in ath11k_debug_fw_stats_process()
-
--- 
-https://patchwork.kernel.org/patch/11498785/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Independent of that using two requests in the I/O path is not going
+to fly either.  The whole thing seems like an exercise in benchmarketing.
