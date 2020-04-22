@@ -2,113 +2,105 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAEFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37E0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A11F920774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587571638;
-	bh=3hAvloG3FEiInv7a/XxULIlTAFNsEYQy44R5EJLextc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=d/bq8zhY54ITL/aAhunXqKT4ujmjEvyMRKmXwjIWonfvHj9oi8FBw9qZlLd7DkoVv
-	 +0W6vqyIuUlISaafWhRLSODLH9k2+v1bdtSJduOqSGgSaffi2J3ra9jcyAMJHHZSXj
-	 mxHELu43xnPzWAOH1ohKUmU4HNNrO0r9tsD9NHmk=
+	by mail.kernel.org (Postfix) with ESMTP id 8E8C420776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="op9xXMUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgDVQHS (ORCPT
+        id S1726696AbgDVQH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:07:18 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:52481 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgDVQHR (ORCPT
+        Wed, 22 Apr 2020 12:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbgDVQH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:07:17 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 03MG748e015897;
-        Thu, 23 Apr 2020 01:07:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 03MG748e015897
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587571624;
-        bh=4+b4NFpou9AA8YnP7/zLI0QcCDlnCJGmg71suxeIPFk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yMcRgYbGGnxJSIejoGRjkixdgrF+qbOIx/rtFBzQfvEjhv29U7GH19YM2uMlZ2mIX
-         N8naMi4tlVtwnYxt0EmoHi3woIhj4ac4LIr14YpOHStnAiyj0ICjifW1mwgd8HuNN0
-         STL60Fzwj7Ss7HP3yXEhvx51Pqa8dSLZ0dkGIpQ2lHNiNm5mOeYU7lwZ4XC2UeRR2l
-         /F9VsZD/0yQQrvWda7a660utYl0kGW7BXHLrE/hKvzqQRStjrFNkmSDEv5gbZGzsAj
-         HB49ykix0neVfF/XMB5HJhR93Kk66TAaxCUF2G3HaTVlf6MX4nxTIHA/y8dHuG3KQh
-         +MUN+qG0jJQjg==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id f59so2194524uaf.9;
-        Wed, 22 Apr 2020 09:07:04 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZQYCoua6X4j7tnhexMpJ4cILmwdi687vkyhZVyt0/eYS5ZYLFm
-        tnw6WO5Fh1WjxCWa5scAy+3KOrtl32U66qAYwrM=
-X-Google-Smtp-Source: APiQypIVGw2eaYqMU5Dw663QxfANI+6dEFgzsuroVXj18lqpc/GgU+vPtcf9hSVnxv32CYZ9wJ0TWAa1qEuwZ3CA7QQ=
-X-Received: by 2002:ab0:2e84:: with SMTP id f4mr2977785uaa.121.1587571623320;
- Wed, 22 Apr 2020 09:07:03 -0700 (PDT)
+        Wed, 22 Apr 2020 12:07:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D2FC03C1A9;
+        Wed, 22 Apr 2020 09:07:28 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v63so1307291pfb.10;
+        Wed, 22 Apr 2020 09:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m5xEoHET9vfaEq5LIR2V1cy0U7HP7GDZ0ojpw/b8noo=;
+        b=op9xXMUQE7+eoyEI/3bjdKIOPzkykzXpyT3jwTtohkIl/ROFGP/BywJFuagmDWuwpE
+         Pm5ctXySjJG9ycaY6+T7WIubSLShz3za1aa2QQQP2EWNTUevUAcBRBQWqzsiYJ1BJKu7
+         xy9YWh4AxbbdlChIZ8hlpmnFtegES9UKefSEfv0DtRS5RB3l1JV6s1Sfc0CgakQkl929
+         JJjZKyNRND5IAl/p9dFWBZv7zrgLmldP7Bm1ACO7tqLlvaZvwOyrsXQtqf39Q9laMd4L
+         2VgpBRjFkOlqvJcgJ/lym5BH+kMH9uN3kZdLbzSsn4XisvPqq0VHigRydEu2zxmhl9YN
+         goXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m5xEoHET9vfaEq5LIR2V1cy0U7HP7GDZ0ojpw/b8noo=;
+        b=CDjcODNvd2MBqzTejfilL0k+Ytp4/L/vlnQzr70wBNkxqNgY4rlEbK72ACS5s+3CYm
+         P6RBS8k62A4B3aR5L3KgkSJSpeUt/3q7wLHRKTKl06xUTqdjUt3hIMK64aBM5EBPbe01
+         hs24wFmN0y6qVBKcmgFVFrJOWE87eRFeZFJmoRzNASzj8m2iZR/v9sEgKK4J3wRhbga6
+         mdcyQcQFVcZqC1LSgIW0YfgHyl7pmHmvywa/EeSXP8SZrMueiyd6iuKPet7ujbmv2eHi
+         4maxw1aVLxpHJQxpCwWqBMdDePR/A6wJMAMeoPZLNa+DmnH9GqdAqNYtgA/+HN7Cn9dW
+         e63g==
+X-Gm-Message-State: AGi0PubbBsKqGJ5wGZ7MYGhUumaBMPwICUwplPVV7SXofaQs0CmwgWPU
+        cFhp7p4j0GfkEJuVoLb0yyRCOcgG
+X-Google-Smtp-Source: APiQypIKUZKH++J4SaK/mpXI+7xB04AVhcJdfDXy62fFLjyb3yakjYt0JDm/ostuKjQSOUQvZvH34g==
+X-Received: by 2002:a63:df42:: with SMTP id h2mr27572335pgj.216.1587571647496;
+        Wed, 22 Apr 2020 09:07:27 -0700 (PDT)
+Received: from localhost ([89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id p190sm4179323pfp.207.2020.04.22.09.07.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Apr 2020 09:07:26 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+        b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v1] video: fbdev: sm712fb: fix an issue about iounmap for a wrong address
+Date:   Thu, 23 Apr 2020 00:07:19 +0800
+Message-Id: <20200422160719.27763-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200421161355.1357112-1-masahiroy@kernel.org> <20200422131729.GB20103@linux-8ccs>
-In-Reply-To: <20200422131729.GB20103@linux-8ccs>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 23 Apr 2020 01:06:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ-WcKf1QDOnefjkzg7Cq1fKNuEPDvH9TYU8tLwbUhtmg@mail.gmail.com>
-Message-ID: <CAK7LNAQ-WcKf1QDOnefjkzg7Cq1fKNuEPDvH9TYU8tLwbUhtmg@mail.gmail.com>
-Subject: Re: [PATCH v2] arch: split MODULE_ARCH_VERMAGIC definitions out to <asm/vermagic.h>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:17 PM Jessica Yu <jeyu@kernel.org> wrote:
->
-> +++ Masahiro Yamada [22/04/20 01:13 +0900]:
-> [snip]
-> >diff --git a/arch/xtensa/include/asm/module.h b/arch/xtensa/include/asm/vermagic.h
-> >similarity index 72%
-> >rename from arch/xtensa/include/asm/module.h
-> >rename to arch/xtensa/include/asm/vermagic.h
-> >index 488b40c6f9b9..6f9e359a54ac 100644
-> >--- a/arch/xtensa/include/asm/module.h
-> >+++ b/arch/xtensa/include/asm/vermagic.h
-> >@@ -1,6 +1,4 @@
-> > /*
-> >- * include/asm-xtensa/module.h
-> >- *
-> >  * This file contains the module code specific to the Xtensa architecture.
->
-> Maybe we can remove this comment too? Since it's now asm/vermagic.h and
-> not asm/module.h anymore.
+the sfb->fb->screen_base is not save the value get by iounmap() when
+the chip id is 0x720. so iounmap() for address sfb->fb->screen_base
+is not right.
 
-OK, I will delete it.
+Fixes: 1461d6672864854 ("staging: sm7xxfb: merge sm712fb with fbdev")
+CC: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/video/fbdev/sm712fb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for checking it closely.
-
-
-
-
->
-> Thanks for the cleanup. I agree that <linux/vermagic.h> shouldn't have
-> any ordering dependency on <linux/module.h>.
->
-> I just double checked to see if there were any other users of
-> MODULE_ARCH_VERMAGIC that needed it through module.h, and there are
-> none. It was literally just being defined in asm/module.h to be used
-> in linux/vermagic.h. So there was no reason really to confine the
-> MODULE_ARCH_VERMAGIC definition to asm/module.h.
->
-> Acked-by: Jessica Yu <jeyu@kernel.org>
-
-
-
+diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
+index 6a1b4a853d9e..8cd655d6d628 100644
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1429,6 +1429,8 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
+ static void smtc_unmap_smem(struct smtcfb_info *sfb)
+ {
+ 	if (sfb && sfb->fb->screen_base) {
++		if (sfb->chip_id == 0x720)
++			sfb->fb->screen_base -= 0x00200000;
+ 		iounmap(sfb->fb->screen_base);
+ 		sfb->fb->screen_base = NULL;
+ 	}
 -- 
-Best Regards
-Masahiro Yamada
+2.25.0
+
