@@ -2,118 +2,85 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35854C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5811C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2212077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E88D2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:17:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnJh9sM7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VKT9+XVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDVWQr (ORCPT
+        id S1726359AbgDVWRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbgDVWQq (ORCPT
+        Wed, 22 Apr 2020 18:17:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23920 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725839AbgDVWRl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:16:46 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80857C03C1A9;
-        Wed, 22 Apr 2020 15:16:46 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id m18so3637369otq.9;
-        Wed, 22 Apr 2020 15:16:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hdhi8o/uOWcv18fMCxckchm+UgJLFPrhgXGldfLApj0=;
-        b=UnJh9sM7TSGeIv5MmNHB3mprcjGwRVXmTsZwxjCCzsUMzS+l7EtlEXjRCSRxgr1I70
-         JydOlv45izuM8lq0rY7WwxAW32zwlU4ZhpUV9EGBGCeXCVFER6QJ1uSgtl3gi4eJ4OmI
-         6FZzTKPDSRP6yySRUQe1ahy0LgvocWhJ8qwXhrbmsK0H4BEpxFM/YQjkLKddCTqBFXoR
-         Enwa9d4YFYqbYEmFQBGdTSseKQ+AWJNsK/iCwElHIxJgTQTpfQj+pjIJsUHfmHx6FLm/
-         nhU7ZfCo6c5htRQM1tzhTAhbiGtDYIzrA1m/woRwVLY61lu039f3kkXHB9lWtEaGKd2G
-         33RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hdhi8o/uOWcv18fMCxckchm+UgJLFPrhgXGldfLApj0=;
-        b=BMNC8zftxy7MvhrtA8Oi+sSk7OhkCeyPRQ5EUUkqxqHhqTP5YYlJmavPk8w3ze6kLZ
-         WYwo50VDzR5ZU7CVuLnQc7X+q5mVl1bRIyLWyaqaeCjlx+X3aoFI+3rNIbM+MsT9WxpR
-         qG87gWELyZyizbXzhO6oyjuf1XME8B2hppbxzPpsn1LMJinUJSaeZXTYY50KOkh47Ns8
-         nOFGPzcG1LH4f4EflMYC0J5HreMJdcuIoWOt06qVAXCQQqKPtHqbByuQ2rMXKq5DLqxy
-         wjwn1wmbFy7pRfj0N9jSqc2SOGl0b3Z/Av3b72xXlYMQCyO9xvTxZeBvgeS/Cmm/2PTq
-         5EEw==
-X-Gm-Message-State: AGi0PuYaeocX8hvYaAiBeProWCjvmqQaEl2Gf2z9NFugWvzhfBU9uEoM
-        YnQvzFpIvqssMdMQC2/NH/M=
-X-Google-Smtp-Source: APiQypKDY7D7Ugla8GvkGcOcThXiQDbHYF9zM45CaLEWSa0aMvcq3ZC8x2ch5cZFJoO4NsH7Y9UiBA==
-X-Received: by 2002:a05:6830:18e3:: with SMTP id d3mr1034479otf.117.1587593805830;
-        Wed, 22 Apr 2020 15:16:45 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 186sm194282ooi.30.2020.04.22.15.16.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Apr 2020 15:16:45 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:16:43 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
-        "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit
- kernel
-Message-ID: <20200422221643.GA46781@ubuntu-s3-xlarge-x86>
-References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
- <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
+        Wed, 22 Apr 2020 18:17:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587593860;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/cWGqNrwRUi86LXOam7nhjqgeV8uCuXewweugzrbGz8=;
+        b=VKT9+XVYc3p2IjIFY1s1c8qHarMS59nnmMNV4aRkqJpOefuYTfuQSyzRTp2smvB3kf05Mi
+        KwHoSACQ/szmhvWwW/233qfqLMJOstUyaBGC5nx/mkkjeyIqLa6QW/xwZsCGGIyXjfwAM+
+        FDEv/LYiBFqtVCm7uJIYXIU7VL++2Ss=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-53-etYuuQxEORWvQuObNkoVTA-1; Wed, 22 Apr 2020 18:17:38 -0400
+X-MC-Unique: etYuuQxEORWvQuObNkoVTA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E500E8017FD;
+        Wed, 22 Apr 2020 22:17:35 +0000 (UTC)
+Received: from treble (unknown [10.10.115.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4010460C87;
+        Wed, 22 Apr 2020 22:17:34 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 17:17:32 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, Peter Zijlstra <peterz@infradead.org>,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecomb@intel.com
+Subject: Re: [PATCH 1/9] objtool: do not assume order of parent/child
+ functions
+Message-ID: <20200422221732.wmih73qrdh4fksog@treble>
+References: <20200415210452.27436-1-kristen@linux.intel.com>
+ <20200415210452.27436-2-kristen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200415210452.27436-2-kristen@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:32:54PM +0800, Jiaxun Yang wrote:
-> LLD failed to link vmlinux with 64bit load address for 32bit ELF
-> while bfd will strip 64bit address into 32bit silently.
-> To fix LLD build, we should truncate load address provided by platform
-> into 32bit for 32bit kernel.
+On Wed, Apr 15, 2020 at 02:04:43PM -0700, Kristen Carlson Accardi wrote:
+> If a .cold function is examined prior to it's parent, the link
+> to the parent/child function can be overwritten when the parent
+> is examined. Only update pfunc and cfunc if they were previously
+> nil to prevent this from happening.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/786
-> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-> Reviewed-by: Maciej W. Rozycki <macro@linux-mips.org>
-> Reviewed-by: Fangrui Song <maskray@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Cc: Nathan Chancellor <natechancellor@gmail.com>
-> --
-> V2: Take MaskRay's shell magic.
-> 
-> V3: After spent an hour on dealing with special character issue in
-> Makefile, I gave up to do shell hacks and write a util in C instead.
-> Thanks Maciej for pointing out Makefile variable problem.
-> 
-> v4: Finally we managed to find a Makefile method to do it properly
-> thanks to Kees. As it's too far from the initial version, I removed
-> Review & Test tag from Nick and Fangrui and Cc instead.
-> 
-> v5: Care vmlinuz as well.
+> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Hi Kristen,
+
+I grabbed this one and it will be merged into the -tip tree soon.
+Thanks!
+
+-- 
+Josh
+
