@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897A3C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FBDC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C7D20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC5A2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550445;
-	bh=ZIZwPWB9Q6NZv4fDKlr0cQJtBfcBFdOoZdqqJkEjXX4=;
+	s=default; t=1587550449;
+	bh=3Z5JyLwQNBx9DKwIuJSFdTwrYfhOFuoxKbc227IbNgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONwQseHd/oRqdCM05nxf7I1dcKo7gKw8GuB6FoUvnFJHBkFCgC3m+1waZ3Gt7wAHc
-	 iOi5Sg20y9f4bsR+4nLlCv0PyHfpxecLC7M2yhu9TytcORSrYsKfIeQhjKlT/TdKF7
-	 pc5EC1Y0rzW6yl+5SDaHBqHUo8lcv2w0djmQ/Wck=
+	b=XX+Bu6Z3zdCkAojwTfGnxbiGYvapFxq05I54yIrXZqQLbo/OiSOuyiHef6dJE0rHp
+	 7kA38s3E34Si+hTWZoO0wvEFwJda7F53gy+NubmhIJqSqsrbHPRbIzVDADkyodCgVr
+	 y8GnJcTdaGQZAeraROj1xQGHV1+8kCUw7zQ7OaFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgDVKOC (ORCPT
+        id S1729481AbgDVKOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48128 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726398AbgDVKN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:56 -0400
+        id S1729466AbgDVKOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 298BF2076E;
-        Wed, 22 Apr 2020 10:13:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7A5220775;
+        Wed, 22 Apr 2020 10:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550435;
-        bh=ZIZwPWB9Q6NZv4fDKlr0cQJtBfcBFdOoZdqqJkEjXX4=;
+        s=default; t=1587550440;
+        bh=3Z5JyLwQNBx9DKwIuJSFdTwrYfhOFuoxKbc227IbNgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmKaAKiZ+KQlZo3Ti14Vrm62pYsj04UFaDWa/U+8ULOprmmttvH7BiKzDw2wkXVys
-         ZQLu7EI0ZqKA3Wr+tNjJl+Ehr49Mf38RS6CdxL98uy8FMJ3LHMbAA5gM8M8MhdOE7j
-         C37P7YozVvaEHcH237MshOQneJ8IqUS/a0NR6yMI=
+        b=Cdh8giHBOE/HgIAELwMKhvj3Snr4ueaLWgPdpvpPE2NBbGjURrfgVjIk/fEEUBM9f
+         ETlxQr0ap+tfX59trXLGunIqwpCZzKX+TeQ/juoCpxap0cDISk5xUXux9e3b91Lshm
+         oJ+vr8wjDzGMjXjuzh3f593SZKjfItoIQGNPedm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/64] ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on LAN.
-Date:   Wed, 22 Apr 2020 11:56:51 +0200
-Message-Id: <20200422095013.710989670@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 09/64] irqchip/mbigen: Free msi_desc on device teardown
+Date:   Wed, 22 Apr 2020 11:56:53 +0200
+Message-Id: <20200422095014.189446952@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,56 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Fuzzey <martin.fuzzey@flowbird.group>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-commit 4141f1a40fc0789f6fd4330e171e1edf155426aa upstream.
+commit edfc23f6f9fdbd7825d50ac1f380243cde19b679 upstream.
 
-In order to wake from suspend by ethernet magic packets the GPC
-must be used as intc does not have wakeup functionality.
+Using irq_domain_free_irqs_common() on the irqdomain free path will
+leave the MSI descriptor unfreed when platform devices get removed.
+Properly free it by MSI domain free function.
 
-But the FEC DT node currently uses interrupt-extended,
-specificying intc, thus breaking WoL.
-
-This problem is probably fallout from the stacked domain conversion
-as intc used to chain to GPC.
-
-So replace "interrupts-extended" by "interrupts" to use the default
-parent which is GPC.
-
-Fixes: b923ff6af0d5 ("ARM: imx6: convert GPC to stacked domains")
-
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9650c60ebfec0 ("irqchip/mbigen: Create irq domain for each mbigen device")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200408114352.1604-1-yuzenghui@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6qdl.dtsi |    5 ++---
- arch/arm/boot/dts/imx6qp.dtsi  |    1 -
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-mbigen.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1013,9 +1013,8 @@
- 				compatible = "fsl,imx6q-fec";
- 				reg = <0x02188000 0x4000>;
- 				interrupt-names = "int0", "pps";
--				interrupts-extended =
--					<&intc 0 118 IRQ_TYPE_LEVEL_HIGH>,
--					<&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 119 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_ENET>,
- 					 <&clks IMX6QDL_CLK_ENET>,
- 					 <&clks IMX6QDL_CLK_ENET_REF>;
---- a/arch/arm/boot/dts/imx6qp.dtsi
-+++ b/arch/arm/boot/dts/imx6qp.dtsi
-@@ -77,7 +77,6 @@
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -231,10 +231,16 @@ static int mbigen_irq_domain_alloc(struc
+ 	return 0;
+ }
+ 
++static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
++				   unsigned int nr_irqs)
++{
++	platform_msi_domain_free(domain, virq, nr_irqs);
++}
++
+ static const struct irq_domain_ops mbigen_domain_ops = {
+ 	.translate	= mbigen_domain_translate,
+ 	.alloc		= mbigen_irq_domain_alloc,
+-	.free		= irq_domain_free_irqs_common,
++	.free		= mbigen_irq_domain_free,
  };
  
- &fec {
--	/delete-property/interrupts-extended;
- 	interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
- 		     <0 119 IRQ_TYPE_LEVEL_HIGH>;
- };
+ static int mbigen_of_create_domain(struct platform_device *pdev,
 
 
