@@ -2,179 +2,173 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E101C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A4CC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9F02071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A204420724
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n9EkAxNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgDVAxt (ORCPT
+        id S1726435AbgDVAyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:53:49 -0400
-Received: from mga09.intel.com ([134.134.136.24]:52610 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgDVAxs (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:53:48 -0400
-IronPort-SDR: 7dy2JvWpSVUnipmZirNjRuinsIr13PI5HXN9SZrWje7eOt5YbmvQwwVePIpBP+0k9B3BqZtHut
- 6wSgUruCwJHQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 17:53:47 -0700
-IronPort-SDR: B5XHrYzTIV+K7fiT2gaOztkRTRE7Tzlbhu9HW0fYL9AjyaLmanclAIdADlWtQZYFuKd+jCMfUA
- UW3R121cLdJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
-   d="scan'208";a="365519277"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Apr 2020 17:53:41 -0700
-Subject: Re: [PATCH v2] perf stat: Improve runtime stat for interval mode
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-References: <20200420145417.6864-1-yao.jin@linux.intel.com>
- <20200421135329.GA9110@kernel.org>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <b5724589-f653-f125-a227-b374ec575688@linux.intel.com>
-Date:   Wed, 22 Apr 2020 08:53:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 21 Apr 2020 20:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726012AbgDVAyW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:54:22 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D839C0610D5;
+        Tue, 21 Apr 2020 17:54:22 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k18so223575pll.6;
+        Tue, 21 Apr 2020 17:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YOdZFvk+6bmIjWVMk3ZS5OgJr20Jdq2fWyo55D6d2YE=;
+        b=n9EkAxNzxm5oKbg0/6Ld25HxkeLVB5k35B6s0UXQ/yYtU8fx2SqXvyp+vPo2us+ZWy
+         P/zC32Gd6vlT2CbT560rszwyu78rZrM2K2aMP+rmbsAoPvUvSuj+cfJkAhYZF8nZvpy2
+         Y0a9hQYnxZmSHF4S14x7P/F2cMXH6vmDrX1/IZ8zzdXgihagBZhmyJSmE/NCwcSfrwIg
+         1V1slQ0FY91qJDjXDay1507ut2oUQQC8K9xSoUgp7U09qnBVZmLzDegJ7Ijwhl+LK484
+         TmOOLVbL7sxyIQJvLYRVhBOpw2hYQBFrAmNfpF0dD8g7bWmvdQtfXPOyBJAzQLtlFA68
+         8U1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YOdZFvk+6bmIjWVMk3ZS5OgJr20Jdq2fWyo55D6d2YE=;
+        b=dusxenv/46FeBM2U0xTl17VwJrqDnrIqkVQ/Kq0namrAO/Y9onMVbXl+MJi1KCvKoB
+         FeiBr3gh717K/BGgSFXX30ET8f/1TUuTll72x2OpydNslHfJIeyafdLgoxj3VjP8QMbD
+         Q/iP70+IF3l5NSi5zbqe946P0Od/8IZQCKUHLWp+gnWP4vweYD9DOuxsWeQjZayTI49l
+         BnzSjg5S0TBSUaGiB2IvGuHiHP8FI1S5130LABOsepeLCq7vp39OuJZXOVRJoaaodCFa
+         Iyu5igRLOglzugxuwgM4H7y9365mQ2g5MyNXVTv2iHSXrtnNYs2kcVVidH4SecNvdywO
+         yJOg==
+X-Gm-Message-State: AGi0PubQWbl2CBu7qvcnUGWC5BGhgbio4s6eVMZ6tuKYoVAOXWZVKGFh
+        uFiVYfOE6CnRvLDuvJ6cS4ztfRAp54vm+Q==
+X-Google-Smtp-Source: APiQypLM9f008fp5IFx6gLV69yBrskOt/tFdR+z6lhjdhE+NpzJFeXdKMs3e/XH5IvGHEi4JCNvPAQ==
+X-Received: by 2002:a17:90b:14ce:: with SMTP id jz14mr664508pjb.30.1587516861090;
+        Tue, 21 Apr 2020 17:54:21 -0700 (PDT)
+Received: from ?IPv6:2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f? ([2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f])
+        by smtp.gmail.com with ESMTPSA id c15sm3602690pfo.188.2020.04.21.17.54.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 17:54:20 -0700 (PDT)
+Subject: Re: [PATCH] Input: xpad - Add custom init packet for Xbox One S
+ controllers
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        LuK1337 <priv.luk@gmail.com>
+Cc:     Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <436c79ed-ca21-c075-e2da-0934da5000a2@gmail.com>
+ <20200421092434.3360503-1-priv.luk@gmail.com>
+ <20200421180851.GA125362@dtor-ws>
+From:   Cameron Gutman <aicommander@gmail.com>
+Message-ID: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
+Date:   Tue, 21 Apr 2020 17:54:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200421135329.GA9110@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200421180851.GA125362@dtor-ws>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
-
-On 4/21/2020 9:53 PM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Apr 20, 2020 at 10:54:17PM +0800, Jin Yao escreveu:
->> For interval mode, the metric is printed after # if it exists. But
->> it's not calculated by the counts generated in this interval. See
->> following examples,
->>
->>   root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
->>   #           time             counts unit events
->>        1.000422803            764,809      inst_retired.any          #      2.9 CPI
->>        1.000422803          2,234,932      cycles
->>        2.001464585          1,960,061      inst_retired.any          #      1.6 CPI
->>        2.001464585          4,022,591      cycles
->>
->> The second CPI should not be 1.6 (4,022,591/1,960,061 is 2.1)
->>
->>   root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
->>   #           time             counts unit events
->>        1.000429493          2,869,311      cycles
->>        1.000429493            816,875      instructions              #    0.28  insn per cycle
->>        2.001516426          9,260,973      cycles
->>        2.001516426          5,250,634      instructions              #    0.87  insn per cycle
->>
->> The second 'insn per cycle' should not be 0.87 (5,250,634/9,260,973 is 0.57).
->>
->> The current code uses a global variable rt_stat for tracking and
->> updating the std dev of runtime stat. Unlike the counts, rt_stat is
->> not reset for interval. While the counts are reset for interval.
->>
->> perf_stat_process_counter()
->> {
->>          if (config->interval)
->>                  init_stats(ps->res_stats);
->> }
->>
->> So for interval, the rt_stat should be reset either.
+On 4/21/20 11:08 AM, Dmitry Torokhov wrote:
+> Adding Cameron...
 > 
->                                s/either/too/g right?
-> 
-
-Yes, should use "too" here. :)
-
-> And please try and find what was the cset that introduced the problem,
-> so that we can have a Fixes: line and the stable series can pick it, ok?
- >
-> - Arnaldo
->
-
-I have tried to find the patch which introduced this issue.
-
-51fd2df1e882 ("perf stat: Fix interval output values").
-
-This patch zeros stats for interval mode. I just think it should reset 
-rt_stat too.
-
-But I really don't know if it's fair to this patch so I don't add it in 
-my patch description.
-
-Thanks
-Jin Yao
-
->> This patch resets rt_stat before read_counters, so the runtime
->> stat is only calculated by the counts generated in this interval.
+> On Tue, Apr 21, 2020 at 11:24:33AM +0200, LuK1337 wrote:
+>> From: Łukasz Patron <priv.luk@gmail.com>
 >>
->> With this patch,
+>> Sending [ 0x05, 0x20, 0x02, 0x0f, 0x06 ] packet for
+>> Xbox One S controllers fixes an issue where controller
+>> is stuck in Bluetooth mode and not sending any inputs.
 >>
->>   root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
->>   #           time             counts unit events
->>        1.000420924          2,408,818      inst_retired.any          #      2.1 CPI
->>        1.000420924          5,010,111      cycles
->>        2.001448579          2,798,407      inst_retired.any          #      1.6 CPI
->>        2.001448579          4,599,861      cycles
->>
->>   root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
->>   #           time             counts unit events
->>        1.000428555          2,769,714      cycles
->>        1.000428555            774,462      instructions              #    0.28  insn per cycle
->>        2.001471562          3,595,904      cycles
->>        2.001471562          1,243,703      instructions              #    0.35  insn per cycle
->>
->> Now the second 'insn per cycle' and CPI are calculated by the counts
->> generated in this interval.
->>
->>   v2:
->>   ---
->>   Use just existing perf_stat__reset_shadow_per_stat(&rt_stat).
->>   We don't need to define new function perf_stat__reset_rt_stat.
->>
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+
+This one is much better. It's working on both the old 3.1 firmware and the
+new 4.8 firmware for the Xbox One S controller.
+
+Just for fun I also decided to test this against my other Xbox One gamepads:
+- idVendor=045e, idProduct=02ea, bcdDevice= 3.01
+- idVendor=045e, idProduct=02ea, bcdDevice= 4.08
+- idVendor=045e, idProduct=02dd, bcdDevice= 2.03
+- idVendor=24c6, idProduct=543a, bcdDevice= 1.01
+
+Initialization was successful on all 4 tested gamepads, so this packet looks
+well-tolerated across the range of devices.
+
+I think we should also mark this for stable to get this backported to older
+kernels, otherwise input will break as users update their firmware. Since you
+mentioned you are new to LKML, you can read about stable updates here [0]
+and include the Cc tag on v2 of this patch with my suggested changes below
+if you agree.
+
+>> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
 >> ---
->>   tools/perf/Documentation/perf-stat.txt | 2 ++
->>   tools/perf/builtin-stat.c              | 1 +
->>   2 files changed, 3 insertions(+)
+>>  drivers/input/joystick/xpad.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
 >>
->> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
->> index 4d56586b2fb9..3fb5028aef08 100644
->> --- a/tools/perf/Documentation/perf-stat.txt
->> +++ b/tools/perf/Documentation/perf-stat.txt
->> @@ -176,6 +176,8 @@ Print count deltas every N milliseconds (minimum: 1ms)
->>   The overhead percentage could be high in some cases, for instance with small, sub 100ms intervals.  Use with caution.
->>   	example: 'perf stat -I 1000 -e cycles -a sleep 5'
->>   
->> +If the metric exists, it is calculated by the counts generated in this interval and the metric is printed after #.
+>> diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+>> index 6b40a1c68f9f..4e1781968411 100644
+>> --- a/drivers/input/joystick/xpad.c
+>> +++ b/drivers/input/joystick/xpad.c
+>> @@ -458,6 +458,15 @@ static const u8 xboxone_fw2015_init[] = {
+>>  	0x05, 0x20, 0x00, 0x01, 0x00
+>>  };
+>>  
+>> +/*
+>> + * This packet is required for Xbox One S pads (0x045e:0x02ea)
+>> + * to initialize the controller that was previously used in
+>> + * Bluetooth mode.
+>> + */
+>> +static const u8 xboxone_s_init[] = {
+>> +	0x05, 0x20, 0x02, 0x0f, 0x06
+>> +};
+
+The sequence numbers are populated when the driver sends the init packet, so
+you should go ahead and replace that 0x02 with 0x00 to match the other packets.
+
 >> +
->>   --interval-count times::
->>   Print count deltas for fixed number of times.
->>   This option should be used together with "-I" option.
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index 9207b6c45475..3f050d85c277 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -359,6 +359,7 @@ static void process_interval(void)
->>   	clock_gettime(CLOCK_MONOTONIC, &ts);
->>   	diff_timespec(&rs, &ts, &ref_time);
->>   
->> +	perf_stat__reset_shadow_per_stat(&rt_stat);
->>   	read_counters(&rs);
->>   
->>   	if (STAT_RECORD) {
+>>  /*
+>>   * This packet is required for the Titanfall 2 Xbox One pads
+>>   * (0x0e6f:0x0165) to finish initialization and for Hori pads
+>> @@ -516,6 +525,7 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
+>>  	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
+>>  	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
+>>  	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
+>> +	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
+
+Can you also add an entry here for the Xbox One Elite Series 2 (0x045e, 0x0b00)
+gamepad? According to [1], it has the same problem as the Xbox One S with the
+4.8 firmware when exiting Bluetooth mode.
+
+>>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
+>>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
+>>  	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
 >> -- 
->> 2.17.1
+>> 2.26.0
 >>
 > 
+
+[0]: https://www.kernel.org/doc/html/v5.6/process/stable-kernel-rules.html
+[1]: https://github.com/spurious/SDL-mirror/commit/a0f80727972429bad309d7cf6cca949801d11d45
+
+Regards,
+Cameron
+
+
+
