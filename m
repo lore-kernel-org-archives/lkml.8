@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20128C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C583DC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1E9020857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA492075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550080;
-	bh=cIXdAdZ5dVYSOKb5XWstUFzFLikCgwTFPtbTJkH/Hy8=;
+	s=default; t=1587550082;
+	bh=BufB70BOJtnKBVjbWxfZqfEecSsOmUlsH5OZo5Dkf5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G9xgBt6tXkE+CVBK+MkCob9NgJsHIeCTOJxkkyYEsBmg0e8JNfowp3A9mNPzD+Aoc
-	 S1nMAHOGcfPYLcjnrwA0eU+ty14nM2aDPMT1OD4Hn0L92T/mHpCqQO2GRbXeWtjlFB
-	 DbpL4RvzIeQ3btdlIpncZAcomO8FI2UJNIBLhxD8=
+	b=kvqlH1d+NH4+AM6xavYw++OE0FB0wuRkrD98rqePGUWhQUS22dnTdc99A8dh1mZl8
+	 bf7rmPHsZQ16qK8b+Mp7r7GsCc8PNgh/ZgBzbQ5NSefbsh4rS0A0LFpp3OPYPtU3M/
+	 YViIzNkqyvR+GENDaUSd8WNvqdd8qcDSAJfn4wWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgDVKH7 (ORCPT
+        id S1728622AbgDVKIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgDVKHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:07:50 -0400
+        id S1728592AbgDVKHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39E842078C;
-        Wed, 22 Apr 2020 10:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6FDD2076C;
+        Wed, 22 Apr 2020 10:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550069;
-        bh=cIXdAdZ5dVYSOKb5XWstUFzFLikCgwTFPtbTJkH/Hy8=;
+        s=default; t=1587550072;
+        bh=BufB70BOJtnKBVjbWxfZqfEecSsOmUlsH5OZo5Dkf5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pz3/QuAYhPv2YbXx+Q4+/0prIz/tyaKTFN9DPF+exGbYBcIImTgIHtyS90Ouv0DWf
-         88xm43c/I9CYdFq41PmirN6/VaEXsGlSP70IfSqpzOQKR73Kr0EucC1syGYELxCu3a
-         aHWGR9mattO4FCqIP+C3d2d1jjLmiOiel4cEA9BM=
+        b=06Jem3rcSV4ntvhNmeKJvzZc7K+gMxkTWKMug+WZAd/T3PqqYWgj9SkcGSehcFw4b
+         Q3nhTUhR9UOnsmqdAEx2Sr6jbw6pI2OQDGguzvQnWpienaYPxFponQoT8+B+0W0jnG
+         2jQa+3hYqgUtMuXBZhI39wtgwdOf3AXJq7MClejg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Joern Engel <joern@lazybastard.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH 4.9 122/125] mtd: phram: fix a double free issue in error path
-Date:   Wed, 22 Apr 2020 11:57:19 +0200
-Message-Id: <20200422095052.175556837@linuxfoundation.org>
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Evalds Iodzevics <evalds.iodzevics@gmail.com>
+Subject: [PATCH 4.9 123/125] x86/CPU: Add native CPUID variants returning a single datum
+Date:   Wed, 22 Apr 2020 11:57:20 +0200
+Message-Id: <20200422095052.306897814@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -63,64 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Borislav Petkov <bp@suse.de>
 
-commit 49c64df880570034308e4a9a49c4bc95cf8cdb33 upstream.
+commit 5dedade6dfa243c130b85d1e4daba6f027805033 upstream.
 
-The variable 'name' is released multiple times in the error path,
-which may cause double free issues.
-This problem is avoided by adding a goto label to release the memory
-uniformly. And this change also makes the code a bit more cleaner.
+... similarly to the cpuid_<reg>() variants.
 
-Fixes: 4f678a58d335 ("mtd: fix memory leaks in phram_setup")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Joern Engel <joern@lazybastard.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200318153156.25612-1-wenyang@linux.alibaba.com
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: http://lkml.kernel.org/r/20170109114147.5082-2-bp@alien8.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Evalds Iodzevics <evalds.iodzevics@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/devices/phram.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/processor.h |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/drivers/mtd/devices/phram.c
-+++ b/drivers/mtd/devices/phram.c
-@@ -247,22 +247,25 @@ static int phram_setup(const char *val)
- 
- 	ret = parse_num64(&start, token[1]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal start address\n");
-+		goto error;
- 	}
- 
- 	ret = parse_num64(&len, token[2]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal device length\n");
-+		goto error;
- 	}
- 
- 	ret = register_device(name, start, len);
--	if (!ret)
--		pr_info("%s device: %#llx at %#llx\n", name, len, start);
--	else
--		kfree(name);
-+	if (ret)
-+		goto error;
- 
-+	pr_info("%s device: %#llx at %#llx\n", name, len, start);
-+	return 0;
-+
-+error:
-+	kfree(name);
- 	return ret;
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -213,6 +213,24 @@ static inline void native_cpuid(unsigned
+ 	    : "memory");
  }
  
++#define native_cpuid_reg(reg)					\
++static inline unsigned int native_cpuid_##reg(unsigned int op)	\
++{								\
++	unsigned int eax = op, ebx, ecx = 0, edx;		\
++								\
++	native_cpuid(&eax, &ebx, &ecx, &edx);			\
++								\
++	return reg;						\
++}
++
++/*
++ * Native CPUID functions returning a single datum.
++ */
++native_cpuid_reg(eax)
++native_cpuid_reg(ebx)
++native_cpuid_reg(ecx)
++native_cpuid_reg(edx)
++
+ static inline void load_cr3(pgd_t *pgdir)
+ {
+ 	write_cr3(__pa(pgdir));
 
 
