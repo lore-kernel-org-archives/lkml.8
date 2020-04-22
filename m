@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81009C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B2BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5666B20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5699120780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550156;
-	bh=7Wrp0PSfQ8AxYH33MglpUgdu3eVad235QHlg9qT66K0=;
+	s=default; t=1587550159;
+	bh=Ah1phaatKWQi3TK8AmYCuGygrGtfYztTNYjAIJTHsNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c9IrZzg6F7zfEKKh6ZXFqHoW/Z730OUa0M6RSIyEVlUTL8CDY8RnbRmZ88DYnu3Cv
-	 DH0vBvrbGSJySQ5E74xL3zFxLaE+bkAExmvQvfrP3RnQrkChkDj2GGyUCgN1oto1HR
-	 CMwtgZTbb/jCcnPK9kVkoY2ssfavcoQo/5Td/0gk=
+	b=dKAGKstzwQnNsyjOyVyGapb0kEcEgDgbEjMD+sRmNoi8eN7loP8uRhG8bMxEj5vdd
+	 /beu3uPT1vNibdOph8mI5tv2E2suSSmSTxqsoHM9JUonhjC+xd6VkEpwftXCPS8O3f
+	 MXLGaW7IO6qYGCXapVSUjtjJ422fFgrC0eJuC1sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgDVKJP (ORCPT
+        id S1728851AbgDVKJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35606 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:09:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbgDVKJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:11 -0400
+        id S1728814AbgDVKJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C0C2071E;
-        Wed, 22 Apr 2020 10:09:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B43520776;
+        Wed, 22 Apr 2020 10:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550150;
-        bh=7Wrp0PSfQ8AxYH33MglpUgdu3eVad235QHlg9qT66K0=;
+        s=default; t=1587550152;
+        bh=Ah1phaatKWQi3TK8AmYCuGygrGtfYztTNYjAIJTHsNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmrcXvI685Sv5862kRIOO34mcG2A3CqHsdkX+1DYH8N3wrzT7M2jERJgIvWN2A5JI
-         dFIAVRFuetTFEYrSw1Dvj5DuJn4a2rVW3EeyIf2yv2Pdt9KFuTSJsvQohWcj4PXuRL
-         7PEL7AEUlrjQdUgr8//Ph57YZNumewL+zVG+zn+g=
+        b=WaivvUGds2k9bNw98UBmASBVfSj5sqt9G4PtzNydQWdNdQzUDsiNdAcN80FEQmkDK
+         +WJjBuJ5oF4ed61jP6ubvBYUAvBWoEOyPJpXUTT11uumDDzfc6KMbKuHWtFHDUC5fj
+         5fC7ztyQt6ZE/ojJc2AtBWcTP7uq2FEAhq5ODXXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-        Bob Liu <bob.liu@oracle.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/199] block: keep bdi->io_pages in sync with max_sectors_kb for stacked devices
-Date:   Wed, 22 Apr 2020 11:55:38 +0200
-Message-Id: <20200422095059.423991176@linuxfoundation.org>
+Subject: [PATCH 4.14 030/199] misc: rtsx: set correct pcr_ops for rts522A
+Date:   Wed, 22 Apr 2020 11:55:56 +0200
+Message-Id: <20200422095101.092618537@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -62,46 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e74d93e96d721c4297f2a900ad0191890d2fc2b0 ]
+[ Upstream commit 10cea23b6aae15e8324f4101d785687f2c514fe5 ]
 
-Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
-size based on read-ahead setting") removes unneeded split of read requests.
+rts522a should use rts522a_pcr_ops, which is
+diffrent with rts5227 in phy/hw init setting.
 
-Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they set
-limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
-Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
-
-This patch updates io_pages after merging limits in disk_stack_limits().
-
-Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
-the same problem for device-mapper devices, this one fixes MD RAIDs.
-
-Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326032618.20472-1-yuehaibing@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-settings.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/rts5227.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 6c2faaa38cc1e..e0a744921ed3d 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -717,6 +717,9 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
- 		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
- 		       top, bottom);
- 	}
-+
-+	t->backing_dev_info->io_pages =
-+		t->limits.max_sectors >> (PAGE_SHIFT - 9);
- }
- EXPORT_SYMBOL(disk_stack_limits);
+diff --git a/drivers/mfd/rts5227.c b/drivers/mfd/rts5227.c
+index ff296a4bf3d23..dc6a9432a4b65 100644
+--- a/drivers/mfd/rts5227.c
++++ b/drivers/mfd/rts5227.c
+@@ -369,6 +369,7 @@ static const struct pcr_ops rts522a_pcr_ops = {
+ void rts522a_init_params(struct rtsx_pcr *pcr)
+ {
+ 	rts5227_init_params(pcr);
++	pcr->ops = &rts522a_pcr_ops;
  
+ 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
+ }
 -- 
 2.20.1
 
