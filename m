@@ -2,128 +2,141 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE3BC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77565C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE222077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5318720784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guEBXDyA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwar++eK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgDVLos (ORCPT
+        id S1727863AbgDVLpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:44:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58710 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726426AbgDVLos (ORCPT
+        Wed, 22 Apr 2020 07:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726426AbgDVLpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:44:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587555887;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xYjsgPTBbEllvea9H8SobRIIj2A4KdZWTwT6pRyZnis=;
-        b=guEBXDyAw8r58vc6D46YXpsEiBZYE6RrfxEBm2LGZRug1Y4xt+VG4WgE2EwJcQdnKFV50q
-        2NL4ldb5YYB9fa9qaqpHDR2HlPdIIoUhdzrMo7ZHnBCmXSV7KJkgsDJjhH9XhUeYwIr9/i
-        o4n/MNyiftD4ii311lwLVS+oKdex3Lk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-aTGTmnOjNNKKlr6hVs-fwg-1; Wed, 22 Apr 2020 07:44:45 -0400
-X-MC-Unique: aTGTmnOjNNKKlr6hVs-fwg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C8D910139AC;
-        Wed, 22 Apr 2020 11:44:42 +0000 (UTC)
-Received: from krava (unknown [10.40.196.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67234101E58A;
-        Wed, 22 Apr 2020 11:44:39 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 13:44:32 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        qiangqing.zhang@nxp.com, irogers@google.com, robin.murphy@arm.com,
-        zhangshaokun@hisilicon.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v2 10/13] perf metricgroup: Split up
- metricgroup__add_metric()
-Message-ID: <20200422114432.GH962614@krava>
-References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
- <1587120084-18990-11-git-send-email-john.garry@huawei.com>
+        Wed, 22 Apr 2020 07:45:15 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66974C03C1A8;
+        Wed, 22 Apr 2020 04:45:15 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id l19so1894422lje.10;
+        Wed, 22 Apr 2020 04:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tJg8AbjlH1I4fIrHvIylqzy5rYC5XErFrt9tt5uOmOk=;
+        b=lwar++eKXn7OMIQp5L2Bc1jMD711rhfBC629H9jcISA6sdQnkk+JWi+53cosyPrvn6
+         npkbP2eo+xpXVl0ViF+QzEFdCz5f1S4Lkxq1HuvRrpYI2xf799w/6C3Z53TaUnHd4aOX
+         uxO94GuGFAfqHycx/gcm3RClgLGlGQ6zKsFlAA7+c3nWgpp2qtawmIbLaenoKODO4l+Y
+         PFMDDhzOv+sCPO1hHOS4EUJ6UOb7vL7KTD655ylqk//6zrOL46O6qJndXPWLt2V9BfaO
+         j9n6dptn34aDT9P1Zc4QL3Q/CsP+NeUYGugFpPcx/UNd61xo/3r7xbo/mc8AThudE971
+         Kckw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tJg8AbjlH1I4fIrHvIylqzy5rYC5XErFrt9tt5uOmOk=;
+        b=haARF/kbnP6WBWC3WVdjrJTtczz+CKdPbJwS/GnJf/N1r7BwtLtq1KvDlpSAjaZJI1
+         JMcZxZf3wBQ4wI4tCfXX9+rI6csvRFlQc1laFYciN82W+FknjwDVP/JmxE/tTCba1ZYp
+         1LT10X3qQ7bIXFBIuzfQ/womvcYQxRcHjgJBC13SawMSF6PhGcG9kzxdic0TphIVZHLh
+         axRLhamhtCmlwZ9RNtNFtpLzirC2oxA/tAHheaEByvzedUOcAIOrbt1FkGF8QYD/WzJd
+         urh3fHjPHrhHWLPO7wym+07RuDslusVIqGM6zvV/3adgZWC4ek5cJ0RA5vVNYJdX7SB8
+         7Azw==
+X-Gm-Message-State: AGi0PuZyBJr68bOuE/oCQnFwVA96o7CgPe0nsVCme4+v/dbQYQ7hdQVI
+        4OPwIFLeYyut7auCbXTHnbM=
+X-Google-Smtp-Source: APiQypIVw3Rp00qV6+NXOadN+4qa01IwMXlqZJAAYgBk67ir1srjw5x4rxpJ9qrh49Ej1zKEuDUKvg==
+X-Received: by 2002:a2e:140e:: with SMTP id u14mr15621002ljd.252.1587555913815;
+        Wed, 22 Apr 2020 04:45:13 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id h14sm4499416lfm.60.2020.04.22.04.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 04:45:13 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 22 Apr 2020 13:45:06 +0200
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH rcu/dev -fixes 2/4] rcu/tree: Skip entry into the page
+ allocator for PREEMPT_RT
+Message-ID: <20200422114506.GA17108@pc636>
+References: <20200420153837.194532-1-joel@joelfernandes.org>
+ <20200420153837.194532-3-joel@joelfernandes.org>
+ <20200422103536.GA16263@pc636>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587120084-18990-11-git-send-email-john.garry@huawei.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200422103536.GA16263@pc636>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 06:41:21PM +0800, John Garry wrote:
-
-SNIP
-
->  static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->  				   struct list_head *group_list)
->  {
-> @@ -502,37 +542,12 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->  			break;
->  		if (!pe->metric_expr)
->  			continue;
-> -		if (match_metric(pe->metric_group, metric) ||
-> -		    match_metric(pe->metric_name, metric)) {
-> -			const char **ids;
-> -			int idnum;
-> -			struct egroup *eg;
-> -
-> -			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
->  
-> -			if (expr__find_other(pe->metric_expr,
-> -					     NULL, &ids, &idnum) < 0)
-> -				continue;
-> -			if (events->len > 0)
-> -				strbuf_addf(events, ",");
-> -
-> -			if (metricgroup__has_constraint(pe))
-> -				metricgroup__add_metric_non_group(events, ids, idnum);
-> -			else
-> -				metricgroup__add_metric_weak_group(events, ids, idnum);
-> -
-> -			eg = malloc(sizeof(struct egroup));
-> -			if (!eg) {
-> -				ret = -ENOMEM;
-> -				break;
-> -			}
-> -			eg->ids = ids;
-> -			eg->idnum = idnum;
-> -			eg->metric_name = pe->metric_name;
-> -			eg->metric_expr = pe->metric_expr;
-> -			eg->metric_unit = pe->unit;
-> -			list_add_tail(&eg->nd, group_list);
-> -			ret = 0;
-
-also this place got changed just recently a lot,
-so you might want to rebase to the Arnaldo's latest perf/core
-
-jirka
-
-> +		if (match_pe_metric(pe, metric)) {
-> +			ret = metricgroup__add_metric_pmu_event(pe, events,
-> +								group_list);
-> +			if (ret)
-> +				return ret;
->  		}
->  	}
->  	return ret;
-> -- 
-> 2.16.4
+On Wed, Apr 22, 2020 at 12:35:36PM +0200, Uladzislau Rezki wrote:
+> On Mon, Apr 20, 2020 at 11:38:35AM -0400, Joel Fernandes (Google) wrote:
+> > To keep kfree_rcu() path working on raw non-preemptible sections,
+> > prevent the optional entry into the allocator as it uses sleeping locks.
+> > In fact, even if the caller of kfree_rcu() is preemptible, this path
+> > still is not, as krcp->lock is a raw spinlock as done in previous
+> > patches. With additional page pre-allocation in the works, hitting this
+> > return is going to be much less likely soon so just prevent it for now
+> > so that PREEMPT_RT does not break. Note that page allocation here is an
+> > optimization and skipping it still makes kfree_rcu() work.
+> > 
+> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
+> > Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  kernel/rcu/tree.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index cf68d3d9f5b81..cd61649e1b001 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -3092,6 +3092,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+> >  		if (!bnode) {
+> >  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
+> >  
+> > +			/*
+> > +			 * To keep this path working on raw non-preemptible
+> > +			 * sections, prevent the optional entry into the
+> > +			 * allocator as it uses sleeping locks. In fact, even
+> > +			 * if the caller of kfree_rcu() is preemptible, this
+> > +			 * path still is not, as krcp->lock is a raw spinlock.
+> > +			 * With additional page pre-allocation in the works,
+> > +			 * hitting this return is going to be much less likely.
+> > +			 */
+> > +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> > +				return false;
+> > +
+> >  			bnode = (struct kfree_rcu_bulk_data *)
+> >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+> >  		}
+> This will not be correctly working by just reverting everything to the
+> "rcu_head path" for CONFIG_PREEMPT_RT kernel. We need to preallocate at
+> least once. I can add caching on top of this series to address it.
 > 
+Forgot to add: Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
+Caching should be added as separate patch.
+
+--
+Vlad Rezki
