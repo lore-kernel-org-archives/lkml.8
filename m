@@ -2,102 +2,139 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A42C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F08C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6192098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587558396;
-	bh=WoG2dRF24011ASSJYkMybNHc6GOGg8Zw81SdJa7uWmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jeLKy8E5R+cQQ/irX6+tsJ5yfTuzLAjQVlxSrO28pqbp6lld4mM459HonMbVFmXmM
-	 WaLA/UAVfvrayUUPv/FZ6ff00CJUDzOOtOv7VCaNZOIO9wsdptQwre3SgxZ0EPzh6U
-	 5KLbfkFIpxu0SFe2DwiUslpmwduanT9gr5DtwE2Y=
+	by mail.kernel.org (Postfix) with ESMTP id D7E9720882
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Y9jYQrTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgDVM0f (ORCPT
+        id S1726208AbgDVM2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVM0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:26:34 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D498620882;
-        Wed, 22 Apr 2020 12:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587558394;
-        bh=WoG2dRF24011ASSJYkMybNHc6GOGg8Zw81SdJa7uWmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JL01+7NyGCwL4SlN73HMZYvZs4+e0Kpgw5i4ViVCGIdgw9rRAAkJE1o9XG9xEXdzs
-         bmrk6baGNDggzYYVj4vUQIpIcMlF4kuKxlK/2MGRUlIeJLKFvmKPfouVDoupzAal9P
-         UJoM+AYccAuas6549mdjRFCs08BhdDEiaOjCYUxY=
-Date:   Wed, 22 Apr 2020 13:26:27 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
-Message-ID: <20200422122626.GA676@willie-the-truck>
-References: <20200421151537.19241-1-will@kernel.org>
- <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
- <20200422081838.GA29541@willie-the-truck>
- <20200422113721.GA20730@hirez.programming.kicks-ass.net>
+        Wed, 22 Apr 2020 08:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725968AbgDVM2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:28:21 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653DBC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:28:21 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l25so2116091qkk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=f0jbQ8lqR59CMuevuoKxB5R1TbGTdEWUgK8b7QwWaig=;
+        b=Y9jYQrTD+KBkq/Ivls3qIPwJpmM6ww7CJ2CqQanRl1MnnhVRBjIC8FJ9elhRHjgaAi
+         WtmVdh8KfHvs79NF9myzgKF3YDZQa+Kv8hbQ1f0XynyfQj818YgCxZe6+8zI0tDFDBNA
+         roHEPrdPPArwYVRbpIyKS14DdWpNtXoIySwVZMyzDaghAT7+l+UFo8jBdGkcVPgJmNK1
+         Ax88OWfXdaPqDS8yCuOPxz5U+/l5yJQY7Kk5uHPF34cinwO+6pSMWgPjLxzO6Hy1mSN2
+         GGyZFtH27zc+d6gpMknc6PTpEE65vwc0nQSxz8MYH4htOoqzKxDJB+0noiDXVVFZw7Q+
+         CcIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=f0jbQ8lqR59CMuevuoKxB5R1TbGTdEWUgK8b7QwWaig=;
+        b=CH0qdCQEy6hELDnRlTQTpNkNV0ph3/kzRKYx+JnhUrc9PqNlmi1Ng5zqBsmcfZ5/cO
+         ym9yiKdtmB4YhROUhxU1ywdlKDv3nEWcRR2F93yFwMexWH+nfkmgPEJlw9+xNNtQU9Rq
+         veAyNO7Xz3TcOFRCvzdBNdJ6UhG5/tZvFi0b/LoTy0sd2g+fKjNUUrl9d4fc7a2xS9bc
+         fZJo1Ruam1YXiXxw8PbHpscJ23MqmelgVfUQIrsMwckaIZv5txUuqXLhFISlNarTdEwt
+         BmFTjHuOme4aWWFLNkFQhHSm63xoqfw/M/bvsLL5T25LQ9kTquyRyuHXvV6NnoRz6pmb
+         OG/g==
+X-Gm-Message-State: AGi0PubJx6I6gDndzBpbjJvIeLHaEHXcidPRoF/MZ7cJy0yOPLdrruBY
+        /UFzA+5SiSe+H8KGcOc7HT2rBQ==
+X-Google-Smtp-Source: APiQypK0yZ624EmqPtADqI8HwZ3PCh6fLl7kwzINQkJkM5bvPq4ticXu2xFDQMmITKIA5k9hjWwx/g==
+X-Received: by 2002:a05:620a:8da:: with SMTP id z26mr19355762qkz.182.1587558500498;
+        Wed, 22 Apr 2020 05:28:20 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::921])
+        by smtp.gmail.com with ESMTPSA id 28sm3853059qkp.10.2020.04.22.05.28.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 05:28:19 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 08:28:18 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 10/18] mm: memcontrol: switch to native NR_ANON_MAPPED
+ counter
+Message-ID: <20200422122818.GB358439@cmpxchg.org>
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-11-hannes@cmpxchg.org>
+ <20200422065151.GJ6780@js1304-desktop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422113721.GA20730@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422065151.GJ6780@js1304-desktop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:37:21PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 22, 2020 at 09:18:39AM +0100, Will Deacon wrote:
-> > On Tue, Apr 21, 2020 at 11:42:56AM -0700, Linus Torvalds wrote:
-> > > On Tue, Apr 21, 2020 at 8:15 AM Will Deacon <will@kernel.org> wrote:
-> > > >
-> > > > It's me again. This is version four of the READ_ONCE() codegen improvement
-> > > > patches [...]
-> > > 
-> > > Let's just plan on biting the bullet and do this for 5.8. I'm assuming
-> > > that I'll juet get a pull request from you?
-> > 
-> > Sure thing, thanks. I'll get it into -next along with the arm64 bits for
-> > 5.8, but I'll send it as a separate pull when the time comes. I'll also
-> > include the sparc32 changes because otherwise the build falls apart and
-> > we'll get an army of angry robots yelling at us (they seem to form the
-> > majority of the active sparc32 user base afaict).
+Hello Joonsoo,
+
+On Wed, Apr 22, 2020 at 03:51:52PM +0900, Joonsoo Kim wrote:
+> On Mon, Apr 20, 2020 at 06:11:18PM -0400, Johannes Weiner wrote:
+> > @@ -3768,7 +3761,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
+> >  
+> >  static const unsigned int memcg1_stats[] = {
+> >  	NR_FILE_PAGES,
+> > -	MEMCG_RSS,
+> > +	NR_ANON_MAPPED,
+> >  	MEMCG_RSS_HUGE,
+> >  	NR_SHMEM,
+> >  	NR_FILE_MAPPED,
+> > @@ -5395,7 +5388,12 @@ static int mem_cgroup_move_account(struct page *page,
+> >  
+> >  	lock_page_memcg(page);
+> >  
+> > -	if (!PageAnon(page)) {
+> > +	if (PageAnon(page)) {
+> > +		if (page_mapped(page)) {
 > 
-> So I'm obviously all for these patches; do note however that it collides
-> most mighty with the KCSAN stuff, which I believe is still pending.
+> This page_mapped() check is newly inserted. Could you elaborate more
+> on why mem_cgroup_charge_statistics() doesn't need this check?
 
-That stuff has been pending for the last two releases afaict :/
+MEMCG_RSS extended from when the page was charged until it was
+uncharged, but NR_ANON_MAPPED is only counted while the page is really
+mapped into page tables. That starts shortly after we charge and ends
+shortly before we uncharge, so pages could move between cgroups before
+or after they are mapped, while they aren't counted in NR_ANON_MAPPED.
 
-Anyway, I'm happy to either provide a branch with this series on, or do
-the merge myself, or send this again based on something else. What works
-best for you? The only thing I'd obviously like to avoid is tightly
-coupling this to KCSAN if there's a chance of it missing the merge window
-again.
+So to know that the page is counted, charge_statistics() only needed
+to know that the page is charged and Anon; move_account() also needs
+to know that the page is mapped.
 
-Cheers,
+> > @@ -1181,7 +1187,7 @@ void page_add_new_anon_rmap(struct page *page,
+> >  		/* increment count (starts at -1) */
+> >  		atomic_set(&page->_mapcount, 0);
+> >  	}
+> > -	__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
+> > +	__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
+> >  	__page_set_anon_rmap(page, vma, address, 1);
+> >  }
+> 
+> memcg isn't setup yet and accounting isn't applied to proper memcg.
+> Maybe, it would be applied to root memcg. With this change, we don't
+> need the mapping to commit the charge so switching the order of
+> page_add_new_anon_rmap() and mem_cgroup_commit_charge() will solve the
+> issue.
 
-Will
+Good catch, it's that dreaded circular dependency. It's fixed two
+patches down when I charge anon pages earlier as well. But I'll change
+the rmap<->commit order in this patch to avoid the temporary bug.
+
+Thanks for your thorough review!
