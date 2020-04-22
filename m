@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164F2C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C12C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D43D62075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8D120575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550042;
-	bh=uKXv3sNvVy46P0r1i0/Dj6wNaleBNcC/QD5M1GPVccs=;
+	s=default; t=1587550046;
+	bh=9+x2FW9k7r3YtG8FnuuW9O/Ga8X9b8fEaiNci1x3PEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbxXRVsalOQmKc6TlKEV7XrYo8J7tMUds8q7fmnbI+FTGlae5Dg6OkFzxooWqO0FY
-	 5PFrfXnzfQ4zjbByAr6zXymtkHEYTjoto4sh8Ojm4/lQ0osZehReAUHTGeasDhX+5X
-	 K7FIDEbGCUteD+eqIYsqo+mo5VVc0TCy0q7YQGQA=
+	b=SfNSN9inrJ/KpXqqiZcwuSPmyu+oxNT2JVNAQ0gf1zGHV159cH+NlVLuMdyHxCHde
+	 qN/AGjiVwCV6cxLDwU9b2mJ6tU9DEQ9pqVm1zsFskKSCYdrP6j2yjFVjYkHDkm/A2i
+	 UYhnIsL+x6H0mLTdgw5rMLwJFmIVXkKkgVTionJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgDVKHV (ORCPT
+        id S1726685AbgDVKHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59806 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:07:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728508AbgDVKHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:07:18 -0400
+        id S1727941AbgDVKHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AA902076C;
-        Wed, 22 Apr 2020 10:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A3120780;
+        Wed, 22 Apr 2020 10:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550037;
-        bh=uKXv3sNvVy46P0r1i0/Dj6wNaleBNcC/QD5M1GPVccs=;
+        s=default; t=1587550040;
+        bh=9+x2FW9k7r3YtG8FnuuW9O/Ga8X9b8fEaiNci1x3PEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+XpvOKFzq1xADRbW8ZOyujsCQU1/EXmqLk9s4m4+3vK/8LNOypQuWjwL8YKvB1hC
-         yHuU4+OH8JoLBPn9cFa5MgwwnLQRuHGiDeND/omze7LH0bEUEba3vk+T4iZ+x85caV
-         TTFHF5sf4qMW322v7VkD6zEkLreqrLHzwf2ooWio=
+        b=QRi1JJ0yUquZ2iXQGg16WNJaOdor6jNFDgJLISbNI/vcuHIU8D45+QBBZE/Oulm2A
+         P3d2KLzShDQIUlGYItDdSGPZSikSUQnDQS033sipbgUeAidKjYyFMOjn+5mNm+9cRo
+         3WstKQ98eQgQCErkuBIqa0oIzJsSwTRdyw81dnNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, Vegard Nossum <vegard.nossum@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 110/125] percpu_counter: fix a data race at vm_committed_as
-Date:   Wed, 22 Apr 2020 11:57:07 +0200
-Message-Id: <20200422095050.524913120@linuxfoundation.org>
+Subject: [PATCH 4.9 111/125] compiler.h: fix error in BUILD_BUG_ON() reporting
+Date:   Wed, 22 Apr 2020 11:57:08 +0200
+Message-Id: <20200422095050.661714139@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -62,70 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Vegard Nossum <vegard.nossum@oracle.com>
 
-[ Upstream commit 7e2345200262e4a6056580f0231cccdaffc825f3 ]
+[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
 
-"vm_committed_as.count" could be accessed concurrently as reported by
-KCSAN,
+compiletime_assert() uses __LINE__ to create a unique function name.  This
+means that if you have more than one BUILD_BUG_ON() in the same source
+line (which can happen if they appear e.g.  in a macro), then the error
+message from the compiler might output the wrong condition.
 
- BUG: KCSAN: data-race in __vm_enough_memory / percpu_counter_add_batch
+For this source file:
 
- write to 0xffffffff9451c538 of 8 bytes by task 65879 on cpu 35:
-  percpu_counter_add_batch+0x83/0xd0
-  percpu_counter_add_batch at lib/percpu_counter.c:91
-  __vm_enough_memory+0xb9/0x260
-  dup_mm+0x3a4/0x8f0
-  copy_process+0x2458/0x3240
-  _do_fork+0xaa/0x9f0
-  __do_sys_clone+0x125/0x160
-  __x64_sys_clone+0x70/0x90
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+	#include <linux/build_bug.h>
 
- read to 0xffffffff9451c538 of 8 bytes by task 66773 on cpu 19:
-  __vm_enough_memory+0x199/0x260
-  percpu_counter_read_positive at include/linux/percpu_counter.h:81
-  (inlined by) __vm_enough_memory at mm/util.c:839
-  mmap_region+0x1b2/0xa10
-  do_mmap+0x45c/0x700
-  vm_mmap_pgoff+0xc0/0x130
-  ksys_mmap_pgoff+0x6e/0x300
-  __x64_sys_mmap+0x33/0x40
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+	#define macro() \
+		BUILD_BUG_ON(1); \
+		BUILD_BUG_ON(0);
 
-The read is outside percpu_counter::lock critical section which results in
-a data race.  Fix it by adding a READ_ONCE() in
-percpu_counter_read_positive() which could also service as the existing
-compiler memory barrier.
+	void foo()
+	{
+		macro();
+	}
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+gcc would output:
+
+./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
+  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+
+However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
+instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
+each BUILD_BUG_ON() gets a different function name and the correct
+condition is printed:
+
+./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
+  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+
+Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Marco Elver <elver@google.com>
-Link: http://lkml.kernel.org/r/1582302724-2804-1-git-send-email-cai@lca.pw
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Ian Abbott <abbotti@mev.co.uk>
+Cc: Joe Perches <joe@perches.com>
+Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/percpu_counter.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/compiler.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
-index 84a1094496100..b6332cb761a4c 100644
---- a/include/linux/percpu_counter.h
-+++ b/include/linux/percpu_counter.h
-@@ -76,9 +76,9 @@ static inline s64 percpu_counter_read(struct percpu_counter *fbc)
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 0020ee1cab37a..7837afabbd78e 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -546,7 +546,7 @@ unsigned long read_word_at_a_time(const void *addr)
+  * compiler has support to do so.
   */
- static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
- {
--	s64 ret = fbc->count;
-+	/* Prevent reloads of fbc->count */
-+	s64 ret = READ_ONCE(fbc->count);
+ #define compiletime_assert(condition, msg) \
+-	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
++	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
  
--	barrier();		/* Prevent reloads of fbc->count */
- 	if (ret >= 0)
- 		return ret;
- 	return 0;
+ #define compiletime_assert_atomic_type(t)				\
+ 	compiletime_assert(__native_word(t),				\
 -- 
 2.20.1
 
