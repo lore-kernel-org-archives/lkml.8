@@ -2,96 +2,111 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F59C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC85C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3E02070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9352071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587550269;
+	bh=QWITxttuyJgnv8eHJIR5mfNp46l+sx7de2YyG1DNOb4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wrAjSGuzH0WHsQidOJfxM+qxIbE6IPS3d7dkf0T6+6IIk/k2PuSSWg9UB5md6r25j
+	 Y+Mw2RUCC/Z7k4yP/c2lr5sXw2nkveKCr57Z1Y7V+RGuFDIfV8PrWr5uQYYWCLnnQN
+	 XEWhIMv4SXkP7BK4HmNg0Grn2aaSFWMbxPIa/RA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgDVKLF (ORCPT
+        id S1728640AbgDVKLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:11:05 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57691 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729105AbgDVKK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:57 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 64B203C004C;
-        Wed, 22 Apr 2020 12:10:54 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oguoUnbPx3nK; Wed, 22 Apr 2020 12:10:49 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Wed, 22 Apr 2020 06:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729128AbgDVKLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:11:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 69CC13C057F;
-        Wed, 22 Apr 2020 12:10:49 +0200 (CEST)
-Received: from lxhi-065.adit-jv.com (10.72.94.60) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 22 Apr
- 2020 12:10:48 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     <linux-renesas-soc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Yusuke Ashiduka <ashiduka@fujitsu.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <rosca.eugeniu@gmail.com>
-Subject: [RFC PATCH 0/3] gpio: rcar: Add support for GPIO alternative interrupt
-Date:   Wed, 22 Apr 2020 12:10:23 +0200
-Message-ID: <20200422101026.9220-1-erosca@de.adit-jv.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6080D2076E;
+        Wed, 22 Apr 2020 10:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587550260;
+        bh=QWITxttuyJgnv8eHJIR5mfNp46l+sx7de2YyG1DNOb4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ybxtd6BHHAUxaLi8yfKGOs233SUqdNmU978aqckHyq0qY+6jOjZYHYt6DEy6Sd4Qh
+         gE6z6mT8oCdbPEYljRB7mjiC2/TbW772CeNvm+ewS4Q1Wt7tURnhEvd29FIHH2+B5P
+         xtGOh6Wt+HeOcswbtBz1dkR3isUTQxtWss4hRQwc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fredrik Strupe <fredrik@strupe.net>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.14 074/199] arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
+Date:   Wed, 22 Apr 2020 11:56:40 +0200
+Message-Id: <20200422095105.551989545@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
+References: <20200422095057.806111593@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.72.94.60]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The motivation behind this series is described in commit
-("gpio: rcar: Add support for GPIO alternative interrupt").
+From: Fredrik Strupe <fredrik@strupe.net>
 
-The reasons for which RFC tag is attached are:
- - Have Renesas/linux-gpio communities been facing GPIO interrupt
-   partitioning questions in the past (specifically AP vs RT)?
- - Is it a no-go to have mandatory DTS dependencies like updating
-   'interrupts' on specifying the new 'use-alternative-interrupt'?
+commit fc2266011accd5aeb8ebc335c381991f20e26e33 upstream.
 
-Many thanks for your comments!
+For thumb instructions, call_undef_hook() in traps.c first reads a u16,
+and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
+u16 is read, which then makes up the the lower half-word of a T32
+instruction. For T16 instructions, the second u16 is not read,
+which makes the resulting u32 opcode always have the upper half set to
+0.
 
-Eugeniu Rosca (1):
-  [LOCAL] arm64: dts: renesas: ulcb: Showcase 'use-alternative-interrupt'
+However, having the upper half of instr_mask in the undef_hook set to 0
+masks out the upper half of all thumb instructions - both T16 and T32.
+This results in trapped T32 instructions with the lower half-word equal
+to the T16 encoding of setend (b650) being matched, even though the upper
+half-word is not 0000 and thus indicates a T32 opcode.
 
-Torii Kenichi (2):
-  dt-bindings: gpio-rcar: Add optional use-alternative-interrupt property
-  gpio: rcar: Add support for GPIO alternative interrupt
+An example of such a T32 instruction is eaa0b650, which should raise a
+SIGILL since T32 instructions with an eaa prefix are unallocated as per
+Arm ARM, but instead works as a SETEND because the second half-word is set
+to b650.
 
- Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt |  3 +++
- arch/arm64/boot/dts/renesas/ulcb.dtsi                        | 40 ++++++++++++++++++++++++++++++++++++++++
- drivers/gpio/gpio-rcar.c                                     | 22 +++++++++++++++++-----
- 3 files changed, 60 insertions(+), 5 deletions(-)
+This patch fixes the issue by extending instr_mask to include the
+upper u32 half, which will still match T16 instructions where the upper
+half is 0, but not T32 instructions.
 
--- 
-2.26.0
+Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
+Cc: <stable@vger.kernel.org> # 4.0.x-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arm64/kernel/armv8_deprecated.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -607,7 +607,7 @@ static struct undef_hook setend_hooks[]
+ 	},
+ 	{
+ 		/* Thumb mode */
+-		.instr_mask	= 0x0000fff7,
++		.instr_mask	= 0xfffffff7,
+ 		.instr_val	= 0x0000b650,
+ 		.pstate_mask	= (COMPAT_PSR_T_BIT | COMPAT_PSR_MODE_MASK),
+ 		.pstate_val	= (COMPAT_PSR_T_BIT | COMPAT_PSR_MODE_USR),
+
 
