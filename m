@@ -2,168 +2,128 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4E1C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE3BC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 752C62077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE222077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guEBXDyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgDVLoe (ORCPT
+        id S1727811AbgDVLos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:44:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726426AbgDVLoe (ORCPT
+        Wed, 22 Apr 2020 07:44:48 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58710 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726426AbgDVLos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:44:34 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D05C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 04:44:33 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jRDns-0000Vu-Fg; Wed, 22 Apr 2020 13:44:32 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jRDns-00051i-4t; Wed, 22 Apr 2020 13:44:32 +0200
+        Wed, 22 Apr 2020 07:44:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587555887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xYjsgPTBbEllvea9H8SobRIIj2A4KdZWTwT6pRyZnis=;
+        b=guEBXDyAw8r58vc6D46YXpsEiBZYE6RrfxEBm2LGZRug1Y4xt+VG4WgE2EwJcQdnKFV50q
+        2NL4ldb5YYB9fa9qaqpHDR2HlPdIIoUhdzrMo7ZHnBCmXSV7KJkgsDJjhH9XhUeYwIr9/i
+        o4n/MNyiftD4ii311lwLVS+oKdex3Lk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-aTGTmnOjNNKKlr6hVs-fwg-1; Wed, 22 Apr 2020 07:44:45 -0400
+X-MC-Unique: aTGTmnOjNNKKlr6hVs-fwg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C8D910139AC;
+        Wed, 22 Apr 2020 11:44:42 +0000 (UTC)
+Received: from krava (unknown [10.40.196.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67234101E58A;
+        Wed, 22 Apr 2020 11:44:39 +0000 (UTC)
 Date:   Wed, 22 Apr 2020 13:44:32 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     linux-fpga@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Moritz Fischer <mdf@kernel.org>
-Subject: How to upload fpga firmware
-Message-ID: <20200422114432.GM1694@pengutronix.de>
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
+        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
+        qiangqing.zhang@nxp.com, irogers@google.com, robin.murphy@arm.com,
+        zhangshaokun@hisilicon.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v2 10/13] perf metricgroup: Split up
+ metricgroup__add_metric()
+Message-ID: <20200422114432.GH962614@krava>
+References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
+ <1587120084-18990-11-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:41:04 up 62 days, 19:11, 111 users,  load average: 0.21, 0.16,
- 0.17
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1587120084-18990-11-git-send-email-john.garry@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Apr 17, 2020 at 06:41:21PM +0800, John Garry wrote:
 
-I wonder what can be done with the mainline state of drivers/fpga/. The
-entry to the framework seems to be fpga_mgr_load(). The only user of
-this function is fpga_region_program_fpga(). This in turn is only called
-in response of applying a device tree overlay. A device tree overlay is
-applied with of_overlay_fdt_apply() which has no users in the Kernel.
+SNIP
 
-My current task is to load a firmware to a FPGA. The code all seems to
-be there in the Kernel, it only lacks a way to trigger it. I am not very
-interested in device tree overlays since the FPGA appears as a PCI
-device (although applying a dtbo could enable the PCIe controller device
-tree node). Is there some mainline way to upload FPGA firmware? At the
-moment we are using the attached patch to trigger loading the firmware
-from userspace. Would something like this be acceptable for mainline?
+>  static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  				   struct list_head *group_list)
+>  {
+> @@ -502,37 +542,12 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  			break;
+>  		if (!pe->metric_expr)
+>  			continue;
+> -		if (match_metric(pe->metric_group, metric) ||
+> -		    match_metric(pe->metric_name, metric)) {
+> -			const char **ids;
+> -			int idnum;
+> -			struct egroup *eg;
+> -
+> -			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+>  
+> -			if (expr__find_other(pe->metric_expr,
+> -					     NULL, &ids, &idnum) < 0)
+> -				continue;
+> -			if (events->len > 0)
+> -				strbuf_addf(events, ",");
+> -
+> -			if (metricgroup__has_constraint(pe))
+> -				metricgroup__add_metric_non_group(events, ids, idnum);
+> -			else
+> -				metricgroup__add_metric_weak_group(events, ids, idnum);
+> -
+> -			eg = malloc(sizeof(struct egroup));
+> -			if (!eg) {
+> -				ret = -ENOMEM;
+> -				break;
+> -			}
+> -			eg->ids = ids;
+> -			eg->idnum = idnum;
+> -			eg->metric_name = pe->metric_name;
+> -			eg->metric_expr = pe->metric_expr;
+> -			eg->metric_unit = pe->unit;
+> -			list_add_tail(&eg->nd, group_list);
+> -			ret = 0;
 
-Sascha
+also this place got changed just recently a lot,
+so you might want to rebase to the Arnaldo's latest perf/core
 
----------------------------8<----------------------------------
+jirka
 
-From 71a5ea845dd673d4011391f9e57fdaf427767ed5 Mon Sep 17 00:00:00 2001
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Date: Tue, 2 Oct 2018 17:13:40 +0200
-Subject: [PATCH] fpga: region: Add sysfs attribute for loading firmware
+> +		if (match_pe_metric(pe, metric)) {
+> +			ret = metricgroup__add_metric_pmu_event(pe, events,
+> +								group_list);
+> +			if (ret)
+> +				return ret;
+>  		}
+>  	}
+>  	return ret;
+> -- 
+> 2.16.4
+> 
 
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
- drivers/fpga/fpga-region.c | 50 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
-index bde5a9d460c5..ca6dc830fadf 100644
---- a/drivers/fpga/fpga-region.c
-+++ b/drivers/fpga/fpga-region.c
-@@ -5,6 +5,7 @@
-  *  Copyright (C) 2013-2016 Altera Corporation
-  *  Copyright (C) 2017 Intel Corporation
-  */
-+#include <linux/device.h>
- #include <linux/fpga/fpga-bridge.h>
- #include <linux/fpga/fpga-mgr.h>
- #include <linux/fpga/fpga-region.h>
-@@ -170,11 +171,58 @@ static ssize_t compat_id_show(struct device *dev,
- 		       (unsigned long long)region->compat_id->id_h,
- 		       (unsigned long long)region->compat_id->id_l);
- }
--
- static DEVICE_ATTR_RO(compat_id);
- 
-+static ssize_t firmware_name_show(struct device *dev,
-+				  struct device_attribute *attr,
-+				  char *buf)
-+{
-+	struct fpga_region *region = to_fpga_region(dev);
-+
-+	if (!region->info || !region->info->firmware_name)
-+		return 0;
-+
-+	return sprintf(buf, "%s\n", region->info->firmware_name);
-+}
-+
-+static ssize_t firmware_name_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *firmware_name, size_t count)
-+{
-+	struct fpga_region *region = to_fpga_region(dev);
-+	struct fpga_image_info *info = region->info;
-+	int error;
-+
-+	if (!info) {
-+		info = fpga_image_info_alloc(dev);
-+		if (!info)
-+			return -ENOMEM;
-+	} else if (info->firmware_name) {
-+		devm_kfree(dev, info->firmware_name);
-+	}
-+
-+	info->firmware_name = devm_kstrdup(dev, firmware_name, GFP_KERNEL);
-+	if (!info->firmware_name)
-+		return -ENOMEM;
-+
-+	if (count >  0 && info->firmware_name[count - 1] == '\n')
-+		info->firmware_name[count - 1] = '\0';
-+
-+	region->info = info;
-+	error = fpga_region_program_fpga(region);
-+	if (error) {
-+		devm_kfree(dev, info->firmware_name);
-+		info->firmware_name = NULL;
-+	}
-+
-+	return error ? error : count;
-+}
-+
-+static DEVICE_ATTR_RW(firmware_name);
-+
- static struct attribute *fpga_region_attrs[] = {
- 	&dev_attr_compat_id.attr,
-+	&dev_attr_firmware_name.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(fpga_region);
--- 
-2.26.1
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
