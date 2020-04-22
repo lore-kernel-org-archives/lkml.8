@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826F2C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5B3C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF542075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998832075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551769;
-	bh=LvKT9IZJFoDqch09JWfp7jN4pO1lzW0qd658CKnycSo=;
+	s=default; t=1587551771;
+	bh=+zmJyGvrrdIfyn9TObi/EYhZ7NOkSHIQw8OjpaQMXmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZihSNRchDFkag2TeLfeqGmgjH3TsGto/c34flQnByoTVirO8O7C7mYmwKJVk+Z2V7
-	 N9sK8EDbsMIe84dnmaX61C1Ajp+Hoocj6zkcjT/8uTB0691yhXIQKuQhPODoaEi7wK
-	 i2LU+5D0UXH0kmonjbNRrJvNQpXIGSoIatCeMI0U=
+	b=KvUjtX5hEnLIhMugAeg71jxAzHtPqPizu6QoNQ12cjsCzvkG9EEngoj4VgqZYk8IX
+	 bYSZR1MvmJYUsJRK45gKhDZnoRo16K1j+iFrGBgB1Y090Lr2Q/RQUHA5NvOGJiEp8x
+	 GSuMYhcCpCKo6y0np6Ji+1k8KLItoZ0a3Hk0je9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbgDVKgI (ORCPT
+        id S1728988AbgDVKXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:23:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730291AbgDVKXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:15 -0400
+        id S1729189AbgDVKWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:22:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD122076E;
-        Wed, 22 Apr 2020 10:23:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A7542075A;
+        Wed, 22 Apr 2020 10:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550995;
-        bh=LvKT9IZJFoDqch09JWfp7jN4pO1lzW0qd658CKnycSo=;
+        s=default; t=1587550950;
+        bh=+zmJyGvrrdIfyn9TObi/EYhZ7NOkSHIQw8OjpaQMXmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EYJCNGj+s1I+uHjC+AWZ+K2ZTIZRto9GZGSjMoUR29ixYlEc/v1rBGuR5j0oty/HK
-         mpPsAx4BsTentRoB/vzjvlKIpuWtPuDi8pbqX45PZ86NzYCZ8CZGsLwKuCKBO5SaW8
-         ERBY04nShwZmOBM0rLry7ZHkMtlhKf7ruj6Syrms=
+        b=RNxNLylcMrCZL6EE2cZdyxxfed7PneGJUwQPXdjvRok70ZvQ8fJAIThiBCc0IhnEU
+         kag0L8MqvXqv6vaJib7VscBAY05CrEEuCu2+6eTEwjwUzpEu+9iHZkaxAKSEdiDQVK
+         MUfgQTvOa6AdTIIVvW6L/7bYvDAypvFPzDL4npLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 057/166] memory: tegra: Correct debugfs clk rate-range on Tegra124
-Date:   Wed, 22 Apr 2020 11:56:24 +0200
-Message-Id: <20200422095055.015947514@linuxfoundation.org>
+Subject: [PATCH 5.6 040/166] gfs2: clear ail1 list when gfs2 withdraws
+Date:   Wed, 22 Apr 2020 11:56:07 +0200
+Message-Id: <20200422095053.254546289@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,38 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 141267bffd1dc19a76e4d50e3e4829f85a806875 ]
+[ Upstream commit 30fe70a85a909a23dcbc2c628ca6655b2c85e7a1 ]
 
-Correctly set clk rate-range if number of available timings is zero.
-This fixes noisy "invalid range [4294967295, 0]" error messages during
-boot.
+This patch fixes a bug in which function gfs2_log_flush can get into
+an infinite loop when a gfs2 file system is withdrawn. The problem
+is the infinite loop "for (;;)" in gfs2_log_flush which would never
+finish because the io error and subsequent withdraw prevented the
+items from being taken off the ail list.
 
-Fixes: 6b9acd935546 ("memory: tegra: Refashion EMC debugfs interface on Tegra124")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+This patch tries to clean up the mess by allowing withdraw situations
+to move not-in-flight buffer_heads to the ail2 list, where they will
+be dealt with later.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/memory/tegra/tegra124-emc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/gfs2/log.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
-index 21f05240682b8..33b8216bac30c 100644
---- a/drivers/memory/tegra/tegra124-emc.c
-+++ b/drivers/memory/tegra/tegra124-emc.c
-@@ -1158,6 +1158,11 @@ static void emc_debugfs_init(struct device *dev, struct tegra_emc *emc)
- 			emc->debugfs.max_rate = emc->timings[i].rate;
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index 08dd6a4302344..60d911e293e68 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -104,16 +104,22 @@ __acquires(&sdp->sd_ail_lock)
+ 		gfs2_assert(sdp, bd->bd_tr == tr);
+ 
+ 		if (!buffer_busy(bh)) {
+-			if (!buffer_uptodate(bh) &&
+-			    !test_and_set_bit(SDF_AIL1_IO_ERROR,
++			if (buffer_uptodate(bh)) {
++				list_move(&bd->bd_ail_st_list,
++					  &tr->tr_ail2_list);
++				continue;
++			}
++			if (!test_and_set_bit(SDF_AIL1_IO_ERROR,
+ 					      &sdp->sd_flags)) {
+ 				gfs2_io_error_bh(sdp, bh);
+ 				*withdraw = true;
+ 			}
+-			list_move(&bd->bd_ail_st_list, &tr->tr_ail2_list);
+-			continue;
+ 		}
+ 
++		if (gfs2_withdrawn(sdp)) {
++			gfs2_remove_from_ail(bd);
++			continue;
++		}
+ 		if (!buffer_dirty(bh))
+ 			continue;
+ 		if (gl == bd->bd_gl)
+@@ -862,6 +868,8 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
+ 				if (gfs2_ail1_empty(sdp))
+ 					break;
+ 			}
++			if (gfs2_withdrawn(sdp))
++				goto out;
+ 			atomic_dec(&sdp->sd_log_blks_free); /* Adjust for unreserved buffer */
+ 			trace_gfs2_log_blocks(sdp, -1);
+ 			log_write_header(sdp, flags);
+@@ -874,6 +882,7 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
+ 			atomic_set(&sdp->sd_freeze_state, SFS_FROZEN);
  	}
  
-+	if (!emc->num_timings) {
-+		emc->debugfs.min_rate = clk_get_rate(emc->clk);
-+		emc->debugfs.max_rate = emc->debugfs.min_rate;
-+	}
-+
- 	err = clk_set_rate_range(emc->clk, emc->debugfs.min_rate,
- 				 emc->debugfs.max_rate);
- 	if (err < 0) {
++out:
+ 	trace_gfs2_log_flush(sdp, 0, flags);
+ 	up_write(&sdp->sd_log_flush_lock);
+ 
 -- 
 2.20.1
 
