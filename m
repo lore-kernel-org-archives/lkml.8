@@ -2,76 +2,95 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF9EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E58C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76FE206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA931206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgDVCMo (ORCPT
+        id S1726430AbgDVCNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:12:44 -0400
-Received: from m176115.mail.qiye.163.com ([59.111.176.115]:60984 "EHLO
-        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgDVCMo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:12:44 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id A6E676652E0;
-        Wed, 22 Apr 2020 10:10:53 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Liviu Dudau <liviu.dudau@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH] drm/arm: cleanup coding style in arm a bit
-Date:   Tue, 21 Apr 2020 19:10:46 -0700
-Message-Id: <20200422021046.4375-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 21 Apr 2020 22:13:54 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2827 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726024AbgDVCNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:13:53 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2520FFF88CC5973942B7;
+        Wed, 22 Apr 2020 10:13:51 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Apr 2020
+ 10:13:41 +0800
+Subject: Re: [PATCH v1 1/6] arm64: Detect the ARMv8.4 TTL feature
+To:     Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     <mark.rutland@arm.com>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
+        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
+        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
+        <steven.price@arm.com>, <broonie@kernel.org>,
+        <guohanjun@huawei.com>, <linux-arch@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <xiexiangyou@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linux-mm@kvack.org>,
+        <arm@kernel.org>, <prime.zeng@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>, <linux-arm-kernel@lists.infradead.org>
+References: <20200403090048.938-1-yezhenyu2@huawei.com>
+ <20200403090048.938-2-yezhenyu2@huawei.com>
+ <20200421165346.GA11171@infradead.org>
+ <20200421171328.GW20730@hirez.programming.kicks-ass.net>
+ <20200421171641.GA25391@infradead.org>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <62414595-298a-da11-28eb-36ad1dc59e65@huawei.com>
+Date:   Wed, 22 Apr 2020 10:13:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVOTEhCQkJDQ0pMT09IQ1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PzY6Dhw4Dzg5SwIDFhQTCkwC
-        TB9PC01VSlVKTkNMTklKT05IQ0JJVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSkJPTTcG
-X-HM-Tid: 0a719fa6fef29373kuwsa6e676652e0
+In-Reply-To: <20200421171641.GA25391@infradead.org>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the code logic, an alarm is thrown after failure, but the
-code continues to run and returns successfully, so to the caller
-the if check and return branch will never run.
-The change is to make the code a bit more readable.
+On 2020/4/22 1:16, Christoph Hellwig wrote:
+> On Tue, Apr 21, 2020 at 07:13:28PM +0200, Peter Zijlstra wrote:
+>> On Tue, Apr 21, 2020 at 09:53:46AM -0700, Christoph Hellwig wrote:
+>>> On Fri, Apr 03, 2020 at 05:00:43PM +0800, Zhenyu Ye wrote:
+>>>> From: Marc Zyngier <maz@kernel.org>
+>>>>
+>>>> In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
+>>>> feature allows TLBs to be issued with a level allowing for quicker
+>>>> invalidation.
+>>>
+>>> What does "issued with a level" mean?
+>>
+>> What I understood it to be is page-size based on page-table hierarchy.
+>> Just like we have on x86, 4k, 2m, 1g etc..
+>>
+>> So where x86 INVLPG will tear down any sized page for the address given,
+>> you can now day, kill me the PMD level translation for @addr.
+>>
+>> Power9 radix also has things like this.
+> 
+> Maybe this needs to be spelled out a little more?  The current commit
+> log sounds like paper generated by a neural network.
+>
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
----
- drivers/gpu/drm/arm/hdlcd_crtc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Emm... This patch was synchronized from Marc's NV series [1].
+"issued with a level" means the TLBs now can get which levels of
+page tables the @addr is in. You can also understand it as
+page-size as Peter said above, just like pud, pmd, pte...
 
-diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
-index af67fefed38d..32bda13250f5 100644
---- a/drivers/gpu/drm/arm/hdlcd_crtc.c
-+++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
-@@ -160,9 +160,7 @@ static void hdlcd_crtc_mode_set_nofb(struct drm_crtc *crtc)
- 	hdlcd_write(hdlcd, HDLCD_REG_H_SYNC, vm.hsync_len - 1);
- 	hdlcd_write(hdlcd, HDLCD_REG_POLARITIES, polarities);
- 
--	err = hdlcd_set_pxl_fmt(crtc);
--	if (err)
--		return;
-+	hdlcd_set_pxl_fmt(crtc);
- 
- 	clk_set_rate(hdlcd->clk, m->crtc_clock * 1000);
- }
--- 
-2.26.2
+Anyway, I will explain this in more detail.
+
+Thanks,
+Zhenyu
 
