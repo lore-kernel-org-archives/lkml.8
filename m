@@ -2,175 +2,89 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09760C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8864C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7CCE20706
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ENAoOIZe"
+	by mail.kernel.org (Postfix) with ESMTP id A34842098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgDVQoQ (ORCPT
+        id S1726534AbgDVQpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:44:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48810 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726147AbgDVQoP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:44:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587573854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c0nWZoKPKTTJxXUMabK38nbk8dEd9Y8pN0ufpg96O1o=;
-        b=ENAoOIZehoG8swNWwCsaw7PsBG6qyf7tYeALkBXSjWK7xMBdfiLIoQ9UKgImCf39OcPHar
-        bEHQeRP0RuB0D3V/nWh2217H2b7A+MzIOUw5zLCS/glXrHEkcZKz26W9VtOIrYbqsoLNWU
-        FYjM9vuoKR+BsD5DtFeukmQSQa40eiE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-201-9W6c9HByNa2NbULOmEnGpw-1; Wed, 22 Apr 2020 12:44:11 -0400
-X-MC-Unique: 9W6c9HByNa2NbULOmEnGpw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D753418FE860;
-        Wed, 22 Apr 2020 16:44:09 +0000 (UTC)
-Received: from treble (ovpn-117-114.rdu2.redhat.com [10.10.117.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 957706084B;
-        Wed, 22 Apr 2020 16:44:08 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 11:44:06 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: linux-next: Tree for Apr 22 (objtool warnings)
-Message-ID: <20200422164406.qhvd2my35wnjlzyg@treble>
-References: <20200422171016.484b031d@canb.auug.org.au>
- <2bf0635d-1406-23db-28c7-e55da9a07e05@infradead.org>
+        Wed, 22 Apr 2020 12:45:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:52630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbgDVQpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:45:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1813B1FB;
+        Wed, 22 Apr 2020 09:45:40 -0700 (PDT)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 146903F6CF;
+        Wed, 22 Apr 2020 09:45:37 -0700 (PDT)
+Subject: Re: [PATCH 04/23] sched,acpi_pad: Convert to sched_set_fifo*()
+To:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, rostedt@goodmis.org, qais.yousef@arm.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        bsegall@google.com, mgorman@suse.de, rafael.j.wysocki@intel.com
+References: <20200422112719.826676174@infradead.org>
+ <20200422112831.455977635@infradead.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <c620bb30-eeee-336b-f8d6-a98e903a48e2@arm.com>
+Date:   Wed, 22 Apr 2020 18:45:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200422112831.455977635@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2bf0635d-1406-23db-28c7-e55da9a07e05@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 08:35:29AM -0700, Randy Dunlap wrote:
-> On 4/22/20 12:10 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200421:
-> > 
+On 22/04/2020 13:27, Peter Zijlstra wrote:
+> Because SCHED_FIFO is a broken scheduler model (see previous patches)
+> take away the priority field, the kernel can't possibly make an
+> informed decision.
 > 
-> on x86_64:
+> In this case, use fifo_low, because it only cares about being above
+> SCHED_NORMAL. Effectively no change in behaviour.
+> 
+> XXX: this driver is still complete crap; why isn't it using proper
+> idle injection or at the very least play_idle() ?
+> 
+> Cc: rafael.j.wysocki@intel.com
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  drivers/acpi/acpi_pad.c |    3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> --- a/drivers/acpi/acpi_pad.c
+> +++ b/drivers/acpi/acpi_pad.c
+> @@ -136,12 +136,11 @@ static unsigned int idle_pct = 5; /* per
+>  static unsigned int round_robin_time = 1; /* second */
+>  static int power_saving_thread(void *data)
+>  {
+> -	struct sched_param param = {.sched_priority = 1};
+>  	int do_sleep;
+>  	unsigned int tsk_index = (unsigned long)data;
+>  	u64 last_jiffies = 0;
+>  
+> -	sched_setscheduler(current, SCHED_RR, &param);
 
-In both cases the unreachable instruction happens immediately after a
-call to a function which is truncated with a UD2 (because of
-UBSAN_TRAP).
+I was wondering what happened to the SCHED_RR cases but as I can see now
+they are handled here and in the next patch.
 
-When I remove UBSAN_TRAP, the UD2s are replaced with calls to
-__ubsan_handle_type_mismatch_v1().
-
-Kees, any idea?
-
-> arch/x86/net/bpf_jit_comp.o: warning: objtool: bpf_int_jit_compile()+0x246: unreachable instruction
-
-00000000000010a1 <do_jit>:
-    10a1:	55                   	push   %rbp
-    10a2:	53                   	push   %rbx
-    10a3:	48 81 ec d0 00 00 00 	sub    $0xd0,%rsp
-    10aa:	48 89 fb             	mov    %rdi,%rbx
-    10ad:	65 48 8b 04 25 28 00 	mov    %gs:0x28,%rax
-    10b4:	00 00 
-    10b6:	48 89 84 24 c8 00 00 	mov    %rax,0xc8(%rsp)
-    10bd:	00 
-    10be:	31 c0                	xor    %eax,%eax
-    10c0:	48 8b bc 24 e0 00 00 	mov    0xe0(%rsp),%rdi
-    10c7:	00 
-    10c8:	e8 00 00 00 00       	callq  10cd <do_jit+0x2c>
-			10c9: R_X86_64_PLT32	__tsan_func_entry-0x4
-    10cd:	f6 c3 07             	test   $0x7,%bl
-    10d0:	75 7f                	jne    1151 <do_jit+0xb0>
-    10d2:	48 8d 7b 0c          	lea    0xc(%rbx),%rdi
-    10d6:	e8 00 00 00 00       	callq  10db <do_jit+0x3a>
-			10d7: R_X86_64_PLT32	__tsan_read4-0x4
-    10db:	48 89 e7             	mov    %rsp,%rdi
-    10de:	e8 00 00 00 00       	callq  10e3 <do_jit+0x42>
-			10df: R_X86_64_PLT32	__tsan_write8-0x4
-    10e3:	48 8d 6c 24 08       	lea    0x8(%rsp),%rbp
-    10e8:	48 89 2c 24          	mov    %rbp,(%rsp)
-    10ec:	48 8d 7b 04          	lea    0x4(%rbx),%rdi
-    10f0:	e8 00 00 00 00       	callq  10f5 <do_jit+0x54>
-			10f1: R_X86_64_PLT32	__tsan_read4-0x4
-    10f5:	48 8d 7b 20          	lea    0x20(%rbx),%rdi
-    10f9:	e8 00 00 00 00       	callq  10fe <do_jit+0x5d>
-			10fa: R_X86_64_PLT32	__tsan_read8-0x4
-    10fe:	48 8b 7b 20          	mov    0x20(%rbx),%rdi
-    1102:	40 f6 c7 07          	test   $0x7,%dil
-    1106:	75 49                	jne    1151 <do_jit+0xb0>
-    1108:	48 83 c7 18          	add    $0x18,%rdi
-    110c:	e8 00 00 00 00       	callq  1111 <do_jit+0x70>
-			110d: R_X86_64_PLT32	__tsan_read4-0x4
-    1111:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
-			1114: R_X86_64_32S	ideal_nops
-    1118:	e8 00 00 00 00       	callq  111d <do_jit+0x7c>
-			1119: R_X86_64_PLT32	__tsan_read8-0x4
-    111d:	48 8b 1d 00 00 00 00 	mov    0x0(%rip),%rbx        # 1124 <do_jit+0x83>
-			1120: R_X86_64_PC32	ideal_nops-0x4
-    1124:	48 8d 7b 48          	lea    0x48(%rbx),%rdi
-    1128:	f6 c3 07             	test   $0x7,%bl
-    112b:	75 24                	jne    1151 <do_jit+0xb0>
-    112d:	e8 00 00 00 00       	callq  1132 <do_jit+0x91>
-			112e: R_X86_64_PLT32	__tsan_read8-0x4
-    1132:	48 8b 43 48          	mov    0x48(%rbx),%rax
-    1136:	8b 10                	mov    (%rax),%edx
-    1138:	89 55 00             	mov    %edx,0x0(%rbp)
-    113b:	0f b6 40 04          	movzbl 0x4(%rax),%eax
-    113f:	88 45 04             	mov    %al,0x4(%rbp)
-    1142:	48 8d 7c 24 0d       	lea    0xd(%rsp),%rdi
-    1147:	e8 00 00 00 00       	callq  114c <do_jit+0xab>
-			1148: R_X86_64_PLT32	__tsan_write1-0x4
-    114c:	c6 44 24 0d 55       	movb   $0x55,0xd(%rsp)
-    1151:	0f 0b                	ud2    
-
-> drivers/media/i2c/ir-kbd-i2c.o: warning: objtool: ir_probe()+0x745: unreachable instruction
-
-000000000000091e <zilog_init>:
-     91e:	55                   	push   %rbp
-     91f:	48 83 ec 70          	sub    $0x70,%rsp
-     923:	65 48 8b 04 25 28 00 	mov    %gs:0x28,%rax
-     92a:	00 00 
-     92c:	48 89 44 24 68       	mov    %rax,0x68(%rsp)
-     931:	31 c0                	xor    %eax,%eax
-     933:	48 8b 7c 24 78       	mov    0x78(%rsp),%rdi
-     938:	e8 00 00 00 00       	callq  93d <zilog_init+0x1f>
-			939: R_X86_64_PLT32	__tsan_func_entry-0x4
-     93d:	48 8d 6c 24 08       	lea    0x8(%rsp),%rbp
-     942:	be 60 00 00 00       	mov    $0x60,%esi
-     947:	48 89 ef             	mov    %rbp,%rdi
-     94a:	e8 00 00 00 00       	callq  94f <zilog_init+0x31>
-			94b: R_X86_64_PLT32	__tsan_write_range-0x4
-     94f:	b9 0c 00 00 00       	mov    $0xc,%ecx
-     954:	31 c0                	xor    %eax,%eax
-     956:	48 89 ef             	mov    %rbp,%rdi
-     959:	f3 48 ab             	rep stos %rax,%es:(%rdi)
-     95c:	48 89 ef             	mov    %rbp,%rdi
-     95f:	e8 00 00 00 00       	callq  964 <zilog_init+0x46>
-			960: R_X86_64_PLT32	__tsan_write1-0x4
-     964:	c6 44 24 08 60       	movb   $0x60,0x8(%rsp)
-     969:	0f 0b                	ud2    
-
-
--- 
-Josh
-
+> +	sched_set_fifo_low(current);
+>  
+>  	while (!kthread_should_stop()) {
+>  		unsigned long expire_time;
+> 
+> 
