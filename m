@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3800C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6EFC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999D420656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881A120656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551966;
-	bh=ZaYqdeRvQZPigS+ANvJSCa11Eqd6O2GHEYnBCZcLTBg=;
+	s=default; t=1587551969;
+	bh=NaUgTf5CoPckAeswaR8INBW8wgTIhdKbod2hpVowooM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aNipmQ24OQXmObq7SmjViKRcT/rXok166PjGhAr8zD9TVXGE9I2s7VyNsYXd3DcC1
-	 yW2BOLahqA5nlNhaxz+6VPEPpKQj3DrMdJk+irWWMqPheYe+Fe9X4unLAMifv/j6O1
-	 HZd0PoQhIn9jMyjMtA+M39bhfVLqioZeamfVjI84=
+	b=ofIN/d4yuCrXWfkHaEltSUYR09JMfVpwGp3sme1LwAja0nNWVEK8xnq/vZSr84xwO
+	 9y2gyBrwWB9CSKmDwNEyk4ZYHBjOZejx1vvRwLzxtfAjk5fRfj6cdCOiXcPD2ufbSM
+	 tyNuJ+EZVRNNHzzTUU3UQUJpg13VGkkftTCCZSOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731522AbgDVKjZ (ORCPT
+        id S1731530AbgDVKj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:39:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbgDVKV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:27 -0400
+        id S1726974AbgDVKVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C0520780;
-        Wed, 22 Apr 2020 10:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26ED920776;
+        Wed, 22 Apr 2020 10:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550886;
-        bh=ZaYqdeRvQZPigS+ANvJSCa11Eqd6O2GHEYnBCZcLTBg=;
+        s=default; t=1587550881;
+        bh=NaUgTf5CoPckAeswaR8INBW8wgTIhdKbod2hpVowooM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mdzrHt/PRwr+dB/O1GnGvO4lN9yFD5N6ZvMvi5D5EPiBOuHQqt7rVh0BL59dOVLce
-         6ZL+RQ/CgKK3j+hvqzsRGdnWDjStMX+fSOGo+4Bmt+mWHyeNYQPPyWfHT6UO3PJ6xJ
-         lCsC+ny5hBA3XCZMTy6cM0+KHavGiadTztIqNUJU=
+        b=Fx5crBn+ageKeDJHkrWlKhHCwSylZiCVv1a4B2FmW623HG7uOfINvh+XZBx+3QmPq
+         Q+lhTQsu8V8JGlISHQCmf/09WZxoJ88G/ohs6IYR0xMPMzwNQrXiTv4xMx+gBoB6xj
+         IZ1TsdWEuGhcR07WuYGl7N4rcKrX5VLouSil7q+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.6 015/166] irqchip/mbigen: Free msi_desc on device teardown
-Date:   Wed, 22 Apr 2020 11:55:42 +0200
-Message-Id: <20200422095049.987353070@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>,
+        Slava Bacherikov <slava@bacher09.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kees Cook <keescook@chromium.org>,
+        KP Singh <kpsingh@google.com>, Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 5.6 013/166] kbuild, btf: Fix dependencies for DEBUG_INFO_BTF
+Date:   Wed, 22 Apr 2020 11:55:40 +0200
+Message-Id: <20200422095049.715550359@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -59,43 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Slava Bacherikov <slava@bacher09.org>
 
-commit edfc23f6f9fdbd7825d50ac1f380243cde19b679 upstream.
+commit 7d32e69310d67e6b04af04f26193f79dfc2f05c7 upstream.
 
-Using irq_domain_free_irqs_common() on the irqdomain free path will
-leave the MSI descriptor unfreed when platform devices get removed.
-Properly free it by MSI domain free function.
+Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
+enabled will produce invalid btf file, since gen_btf function in
+link-vmlinux.sh script doesn't handle *.dwo files.
 
-Fixes: 9650c60ebfec0 ("irqchip/mbigen: Create irq domain for each mbigen device")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200408114352.1604-1-yuzenghui@huawei.com
+Enabling DEBUG_INFO_REDUCED will also produce invalid btf file,
+and using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
+
+Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
+Reported-by: Jann Horn <jannh@google.com>
+Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
+Signed-off-by: Slava Bacherikov <slava@bacher09.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: KP Singh <kpsingh@google.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200402204138.408021-1-slava@bacher09.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-mbigen.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ lib/Kconfig.debug |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -220,10 +220,16 @@ static int mbigen_irq_domain_alloc(struc
- 	return 0;
- }
- 
-+static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs)
-+{
-+	platform_msi_domain_free(domain, virq, nr_irqs);
-+}
-+
- static const struct irq_domain_ops mbigen_domain_ops = {
- 	.translate	= mbigen_domain_translate,
- 	.alloc		= mbigen_irq_domain_alloc,
--	.free		= irq_domain_free_irqs_common,
-+	.free		= mbigen_irq_domain_free,
- };
- 
- static int mbigen_of_create_domain(struct platform_device *pdev,
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -241,6 +241,8 @@ config DEBUG_INFO_DWARF4
+ config DEBUG_INFO_BTF
+ 	bool "Generate BTF typeinfo"
+ 	depends on DEBUG_INFO
++	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
++	depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
+ 	help
+ 	  Generate deduplicated BTF type information from DWARF debug info.
+ 	  Turning this on expects presence of pahole tool, which will convert
 
 
