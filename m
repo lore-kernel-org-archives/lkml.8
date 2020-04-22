@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633A8C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B8DC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3906520656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E63120656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551661;
-	bh=Y1oOwpvRztHomKDGyowfxLsgFTMmRI5+HPm22BtDbKY=;
+	s=default; t=1587551667;
+	bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0w9W8S00P+EPVV2YHu8rreM2vyn6zs/ycCWZi8mX/jSrSY0en3cf7M3PExYOC1Cex
-	 K9ju4F/sfx+dJTPTq8lHiwBIlKoNqKYtcxyfr4e1dHZQJfgT8qxWnHzX751VBXgC1M
-	 Rs63K9tgCcYl8f67sKQMU3eh04MAz2kxSFAfrrUg=
+	b=mIZJ2gYnOpUodc8VrQQCW+yPYfxgHWFmaDgA9swEkSZXqCuKgGcNkqm7FJFvgicUz
+	 vAxgBOb0PoP8sOlgLb1uZma4tCrXXfiVzPH3V4SyYDE1J7T0pQJeC3wuzDQuqyHqVp
+	 Db23p8kkNzvacIsdXtuqU3UWz8KhMKf18v72VJ48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731262AbgDVKeU (ORCPT
+        id S1731272AbgDVKe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730413AbgDVKYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:24 -0400
+        id S1730408AbgDVKYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8B022077D;
-        Wed, 22 Apr 2020 10:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C51E520780;
+        Wed, 22 Apr 2020 10:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551064;
-        bh=Y1oOwpvRztHomKDGyowfxLsgFTMmRI5+HPm22BtDbKY=;
+        s=default; t=1587551059;
+        bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DiglV4KIvmGGfeotokNXrT5xSg0uptFS0x8v48TPfgRy6WY3qmltwlklUly3utPuS
-         stP5aH7LJcHHOn3XEEYTnvIcEKHNzCe8RN0wjuM78GFhVnOkt8HtO2wi1OmoqUf/3a
-         g2CcPSHh1EZ+V0OWI8UFhGmBXscdUtIBQIDGYdNU=
+        b=vUFq/kQfWLZoa0I8dNrkGa1uAoaQoL3ZhQKWYBhl2FUF4F5VcATkX5NAcyJ8jTByh
+         +5WF5rcTUEfW5P/PScAQ100+vR7UjvFK/hddd3ndgbYrq+bw13FZEogflkhb/wvc0s
+         4I+fu2P4KXvDBX/PuLrFa7I68w5Sd/+yzh11+aEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 086/166] thermal/drivers/cpufreq_cooling: Fix return of cpufreq_set_cur_state
-Date:   Wed, 22 Apr 2020 11:56:53 +0200
-Message-Id: <20200422095057.925468831@linuxfoundation.org>
+Subject: [PATCH 5.6 085/166] MIPS: DTS: CI20: add DT node for IR sensor
+Date:   Wed, 22 Apr 2020 11:56:52 +0200
+Message-Id: <20200422095057.840559673@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -61,59 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+From: Alex Smith <alex.smith@imgtec.com>
 
-[ Upstream commit ff44f672d74178b3be19d41a169b98b3e391d4ce ]
+[ Upstream commit f5e8fcf85a25bac26c32a0000dbab5857ead9113 ]
 
-When setting the cooling device current state from userspace via sysfs,
-the operation fails by returning an -EINVAL.
+The infrared sensor on the CI20 board is connected to a GPIO and can
+be operated by using the gpio-ir-recv driver. Add a DT node for the
+sensor to allow that driver to be used.
 
-It appears the recent changes with the per-policy frequency QoS
-introduced a regression as reported by:
-
- https://lkml.org/lkml/2020/3/20/599
-
-The function freq_qos_update_request returns 0 or 1 describing update
-effectiveness, and a negative error code on failure. However,
-cpufreq_set_cur_state returns 0 on success or an error code otherwise.
-
-Consider the QoS update as successful if the function does not return
-an error.
-
-Fixes: 3000ce3c52f8b ("cpufreq: Use per-policy frequency QoS")
-Signed-off-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200321092740.7vvwfxsebcrznydh@macmini.local
+Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/cpufreq_cooling.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-index fe83d7a210d47..af55ac08e1bd5 100644
---- a/drivers/thermal/cpufreq_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -431,6 +431,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 				 unsigned long state)
- {
- 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+	int ret;
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index c340f947baa03..fc4e64200c3d5 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -62,6 +62,11 @@
+ 		enable-active-high;
+ 	};
  
- 	/* Request state should be less than max_level */
- 	if (WARN_ON(state > cpufreq_cdev->max_level))
-@@ -442,8 +443,9 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 
- 	cpufreq_cdev->cpufreq_state = state;
- 
--	return freq_qos_update_request(&cpufreq_cdev->qos_req,
--				get_state_freq(cpufreq_cdev, state));
-+	ret = freq_qos_update_request(&cpufreq_cdev->qos_req,
-+				      get_state_freq(cpufreq_cdev, state));
-+	return ret < 0 ? ret : 0;
- }
- 
- /* Bind cpufreq callbacks to thermal cooling device ops */
++	ir: ir {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
++	};
++
+ 	wlan0_power: fixedregulator@1 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "wlan0_power";
 -- 
 2.20.1
 
