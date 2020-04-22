@@ -2,59 +2,54 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E201C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24790C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F1F20735
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AD920776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549659;
-	bh=4Yfw7zDvXO8ES44N9Te9KXxXB+R1yHGUNOhl8YlHk/k=;
+	s=default; t=1587549663;
+	bh=0XlszoyFMe59iSqgMh03FHzcv92v+WCoY0GZ3XGuGbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRZZrdePb+Vb7sBZQaUvOpWHnBwyK9HxAtj6sHHm7IRSUccbxLUqquYu9klxYTAVy
-	 UBZ4H8gbSTld6DoobAYEORxR6HXn2N0y0PY5YOfm965C5T89KRDsqwxuxdkmDkeoYa
-	 FCgsH6grhdCGXsgpyZUW7+0KBtUrFg42jomYxvzs=
+	b=Tq8EaYR+crS0NwjIB96+1AzuTQ0/zprOLkWXKc/h720xCG0QACUy+c6GEa1TjidLj
+	 Mz4ybJma+bveIvDtjWss508acPB9nfTqn2Sz2061Qnxi1VYi0s291GOQYSozxwligL
+	 ZcKF43r4lQ2fSioAEbJrn4pO4r/lZsciIXPBOBBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgDVKA6 (ORCPT
+        id S1726720AbgDVKBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48280 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726662AbgDVKAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:44 -0400
+        id S1726707AbgDVKA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:00:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8C9420776;
-        Wed, 22 Apr 2020 10:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E6CF2076C;
+        Wed, 22 Apr 2020 10:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549643;
-        bh=4Yfw7zDvXO8ES44N9Te9KXxXB+R1yHGUNOhl8YlHk/k=;
+        s=default; t=1587549657;
+        bh=0XlszoyFMe59iSqgMh03FHzcv92v+WCoY0GZ3XGuGbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+sY7rUpOQ+Sj1AaxHr24y/pi08br3lzL32pVLb25cGPlGwRjZPUdhFEtHnHJYlvW
-         eqb+E50k+R4R13q67IGoTpI06h13R0YegcF7RasPVjhBPvdGb91bna2J06PeGz+fj1
-         NBm9RSf6kw4SXIHH0mK3BL8bn7sTeyAkg95HGYVs=
+        b=qem/+px26ycZXRAbBESLJ8xp065yMfcySIBzdeByiD7sXJLzEwdKxMz/bo9nOPvUc
+         bxaR3p5g22DqNWuUoBi5pxAhQFq6NBHfsIKlMG6eY7f0LpDmCMXt523SiJ9UVzuPgB
+         ndMBL/aMTAeDKZa0e4wV1D8n++dmhqz+Q4rujs84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Ben Hutchings <benh@debian.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 046/100] kmod: make request_module() return an error when autoloading is disabled
-Date:   Wed, 22 Apr 2020 11:56:16 +0200
-Message-Id: <20200422095030.658085703@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        openipmi-developer@lists.sourceforge.net,
+        Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 052/100] ipmi: fix hung processes in __get_guid()
+Date:   Wed, 22 Apr 2020 11:56:22 +0200
+Message-Id: <20200422095032.319462835@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -67,108 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-commit d7d27cfc5cf0766a26a8f56868c5ad5434735126 upstream.
+[ Upstream commit 32830a0534700f86366f371b150b17f0f0d140d7 ]
 
-Patch series "module autoloading fixes and cleanups", v5.
+The wait_event() function is used to detect command completion.
+When send_guid_cmd() returns an error, smi_send() has not been
+called to send data. Therefore, wait_event() should not be used
+on the error path, otherwise it will cause the following warning:
 
-This series fixes a bug where request_module() was reporting success to
-kernel code when module autoloading had been completely disabled via
-'echo > /proc/sys/kernel/modprobe'.
+[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
+[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
+[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
+[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
+[ 1361.856199] Call Trace:
+[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
+[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
+[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
+[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
+[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
+[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
+[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
+[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
+[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
+[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
+[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
+[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
+[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
+[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
+[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
+[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
+[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
+[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
+[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
 
-It also addresses the issues raised on the original thread
-(https://lkml.kernel.org/lkml/20200310223731.126894-1-ebiggers@kernel.org/T/#u)
-bydocumenting the modprobe sysctl, adding a self-test for the empty path
-case, and downgrading a user-reachable WARN_ONCE().
-
-This patch (of 4):
-
-It's long been possible to disable kernel module autoloading completely
-(while still allowing manual module insertion) by setting
-/proc/sys/kernel/modprobe to the empty string.
-
-This can be preferable to setting it to a nonexistent file since it
-avoids the overhead of an attempted execve(), avoids potential
-deadlocks, and avoids the call to security_kernel_module_request() and
-thus on SELinux-based systems eliminates the need to write SELinux rules
-to dontaudit module_request.
-
-However, when module autoloading is disabled in this way,
-request_module() returns 0.  This is broken because callers expect 0 to
-mean that the module was successfully loaded.
-
-Apparently this was never noticed because this method of disabling
-module autoloading isn't used much, and also most callers don't use the
-return value of request_module() since it's always necessary to check
-whether the module registered its functionality or not anyway.
-
-But improperly returning 0 can indeed confuse a few callers, for example
-get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
-
-	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
-		fs = __get_fs_type(name, len);
-		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-	}
-
-This is easily reproduced with:
-
-	echo > /proc/sys/kernel/modprobe
-	mount -t NONEXISTENT none /
-
-It causes:
-
-	request_module fs-NONEXISTENT succeeded, but still no fs?
-	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
-	[...]
-
-This should actually use pr_warn_once() rather than WARN_ONCE(), since
-it's also user-reachable if userspace immediately unloads the module.
-Regardless, request_module() should correctly return an error when it
-fails.  So let's make it return -ENOENT, which matches the error when
-the modprobe binary doesn't exist.
-
-I've also sent patches to document and test this case.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Jessica Yu <jeyu@kernel.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
+Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Corey Minyard <minyard@acm.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Ben Hutchings <benh@debian.org>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200310223731.126894-1-ebiggers@kernel.org
-Link: http://lkml.kernel.org/r/20200312202552.241885-1-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: openipmi-developer@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 2.6.17-
+Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kmod.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/kernel/kmod.c
-+++ b/kernel/kmod.c
-@@ -119,7 +119,7 @@ out:
-  * invoke it.
-  *
-  * If module auto-loading support is disabled then this function
-- * becomes a no-operation.
-+ * simply returns -ENOENT.
-  */
- int __request_module(bool wait, const char *fmt, ...)
- {
-@@ -140,7 +140,7 @@ int __request_module(bool wait, const ch
- 	WARN_ON_ONCE(wait && current_is_async());
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 5cb5e8ff02240..7b8c1a64a1009 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -2645,7 +2645,9 @@ get_guid(ipmi_smi_t intf)
+ 	if (rv)
+ 		/* Send failed, no GUID available. */
+ 		intf->bmc->guid_set = 0;
+-	wait_event(intf->waitq, intf->bmc->guid_set != 2);
++	else
++		wait_event(intf->waitq, intf->bmc->guid_set != 2);
++
+ 	intf->null_user_handler = NULL;
+ }
  
- 	if (!modprobe_path[0])
--		return 0;
-+		return -ENOENT;
- 
- 	va_start(args, fmt);
- 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
+-- 
+2.20.1
+
 
 
