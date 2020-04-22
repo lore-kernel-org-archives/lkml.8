@@ -2,71 +2,73 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB990C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE7EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8443820706
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185F02070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:48:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kzf8kWkh"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="KNhsmWT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgDVAm2 (ORCPT
+        id S1726321AbgDVAsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
+        Tue, 21 Apr 2020 20:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726012AbgDVAm1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726012AbgDVAsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:42:27 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D86C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:42:27 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f20so204263pgl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:42:27 -0700 (PDT)
+        Tue, 21 Apr 2020 20:48:50 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E540C0610D6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:48:49 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id s188so9903qkf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=un8H474QNqq9mh1Fli1mXz/+xpNjOExFpRjKSjnMqjw=;
-        b=kzf8kWkhX2BHoz/5S3IIj8vMuAjNeiv0HPear2pSraFd7aEaAxRP4HTuc88OeTp4qd
-         SXFuzDHFn2GoqNN9fFtnDCxLF62wJ1KvUDOrH1NFB6+Zkt7C8sWqz4ygWoZLy/glM6gX
-         rcwJzK49O+nah7/d97CzDLdT7elz52vRRrwWU=
+        bh=63fb5nFeJN7PoJsX4tG8GdYMct2l/caN8RuSWQJuLEw=;
+        b=KNhsmWT9X7NXWyY5qb/yjj1tgaB4Sc31PWWRCMn2oniNkKQO+l8nFnvWBfaZoB8LrW
+         MdmRsF69wY3y2esQ1/pOy1OTG71Wa3LSfHHLpIoETLNZ5Ff06H0Zu3/8SJ4+aFm5yDaM
+         InnJDDkCl8D/h1TdruetLvGvYX3Spyr9N3LVM40J4npyDDgpjQiN/lgbomNITF6ZsNsm
+         uw9oIuZ8OKxunofr/JwEa8PnFT0VGMIofbo7dlMLMG3KuA0Ohe+Ke1zjLh7I66hRmOoF
+         EQyPst2FljABILEn0ty9aYHmzBfeyWeX2XI8biSmgAZs2HeQ1Pi8Kg67NNjKB7m3Fk0D
+         TZxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=un8H474QNqq9mh1Fli1mXz/+xpNjOExFpRjKSjnMqjw=;
-        b=aRkA4F3MkLtXqnf/V+EQPSsdmoIMkGERH+RK2yuwLm0wTz+oFfZaujPcwuJe9gz6je
-         gbKQh/eWM09hnZLjT42bEm9uKbdbeNDAjh5ZOowq6BM/yh1KKLHMx0Kf8crbdM3ZlN4t
-         e0MxCiGNFP7zb06/w9YcmmaVDnaJCH66F0CvRjOwGYqeObtmRDUKxiDj/Gbk15jg5kzv
-         +i2cGEHobfcRFqFPSRxwiRNzKUp0OYpeJ7Q0a/mQb7appWJdx56Lwbsfl1/jXQ8DsiL7
-         Vbtj52DjKhejhfplOOOVUo7BzltybGraUchA7k0Afao1pyV0TiHeI+qDxCUHcGn+fBdR
-         pFkw==
-X-Gm-Message-State: AGi0Pua1xzInqAu1tSxGm1gGWfQv1OtE/UQnThMSzKnpOJZ4ZDQqOUj9
-        EfS3cbB8i3V8W/Syj4r6Be8MoVfEcRE=
-X-Google-Smtp-Source: APiQypIlMLdyvYdY2/U7CgcvU8u+BTWpLxLtDf0B4Kv+d/U2K6WFq0PwSs/pz8Qr6Dr/9xu1c9D9Tw==
-X-Received: by 2002:a63:554c:: with SMTP id f12mr19298211pgm.163.1587516147052;
-        Tue, 21 Apr 2020 17:42:27 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id o185sm3576066pfg.197.2020.04.21.17.42.26
+        bh=63fb5nFeJN7PoJsX4tG8GdYMct2l/caN8RuSWQJuLEw=;
+        b=XrcuuwN3bqU/FE1zxdGToamkZLyJTxpRCsflG+13iDEDRV0fq1ddN4qNPT7PsppZTA
+         1enBPp7K0Xzav8SxCA8EyJQ7e6q3tuD8Lx0UXfJcYVZay4cFtdK9Z4/1iwKYcJ9PDNkO
+         zlx3gy/JWbv5MvQxBOW1MXSZb/a8g8XbmLUmPoAjWGdSAOSp6Urtk/aQA8HneVxziBgu
+         Gz6YMuatX+HbOFotkbSI2S+V45W6ztvQswKNzfNe66e0H+b7C9bNCKbWzzr2h1f/YTUr
+         9zeEXZSgztGtrxHXI5hPJQLDPXjrR2V5OHsucDNUmWgY75Dk78ao/IlsXPJiVPRRE9bU
+         e/Og==
+X-Gm-Message-State: AGi0Pubf98eZ8HNyCj/zStVEgwB8BpcxmanullhJGfHGsPc2EqrzUcU/
+        B/xYQkSrF9c1S6v1YuLhx8ujsA==
+X-Google-Smtp-Source: APiQypKnVlQo7Y1vutvcGSf2A5oq23tHZdydqy9HFBp8gsiIfPRT3HdwngbfzECoA6y6lCBu7COf+w==
+X-Received: by 2002:ae9:f30f:: with SMTP id p15mr23756693qkg.178.1587516528359;
+        Tue, 21 Apr 2020 17:48:48 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id 60sm2867135qtb.95.2020.04.21.17.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 17:42:26 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH] platform/chrome: typec: Fix ret value check error
-Date:   Tue, 21 Apr 2020 17:41:51 -0700
-Message-Id: <20200422004151.116323-1-pmalani@chromium.org>
-X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
+        Tue, 21 Apr 2020 17:48:47 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com
+Cc:     masahiroy@kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v3] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
+Date:   Tue, 21 Apr 2020 21:48:44 -0300
+Message-Id: <20200422004844.53284-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,28 +76,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cros_typec_add_partner() returns 0 on success, so check for "ret"
-instead of "!ret" as an error.
+In this workflow:
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Fixes: 9d33ea331032 ("platform/chrome: cros_ec_typec: Register port partner")
+$ make ARCH=um defconfig && make ARCH=um -j8
+  [snip]
+$ make ARCH=um mrproper
+  [snip]
+$ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
+  [snip]
+  CC      scripts/mod/empty.o
+In file included from ../include/linux/types.h:6,
+                 from ../include/linux/mod_devicetable.h:12,
+                 from ../scripts/mod/devicetable-offsets.c:3:
+../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
+    5 | #include <asm/types.h>
+      |          ^~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
+make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
+make: *** [Makefile:180: sub-make] Error 2
+
+The cause of the error was because arch/$(SUBARCH)/include/generated files
+weren't properly cleaned by `make ARCH=um mrproper`.
+
+Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated
+before out-of-tree build").
+Reported-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
+Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
+Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
 ---
- drivers/platform/chrome/cros_ec_typec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+ * Explains what this PATCH does and the importance as suggested
+   by Brendan Higgins.
+v3:
+ * This problem only affects ARCH=um builds then arch/um/Makefile has
+   been changed as suggested by Masahiro Yamada;
+ * And with that the description has also been changed, and also to explain
+   missing points and correct the tags as suggested by Masahiro Yamada:
+   - Fix missing command `make ARCH=um mrproper`;
+   - Add build error message; 
+   - Add "Fixes" tag instead of "This bug was ...";
+   - Add "Link" tag instead of "Related bug ...";
+   - Add Reported-by and Suggested-by;
+---
+ arch/um/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index eda57db26f8d..66b8d21092af 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -263,7 +263,7 @@ static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
+diff --git a/arch/um/Makefile b/arch/um/Makefile
+index d2daa206872d..275f5ffdf6f0 100644
+--- a/arch/um/Makefile
++++ b/arch/um/Makefile
+@@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE)
+ # When cleaning we don't include .config, so we don't include
+ # TT or skas makefiles and don't clean skas_ptregs.h.
+ CLEAN_FILES += linux x.i gmon.out
++MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
  
- 		pd_en = resp->enabled & PD_CTRL_RESP_ENABLED_PD_CAPABLE;
- 		ret = cros_typec_add_partner(typec, port_num, pd_en);
--		if (!ret)
-+		if (ret)
- 			dev_warn(typec->dev,
- 				 "Failed to register partner on port: %d\n",
- 				 port_num);
+ archclean:
+ 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
 -- 
-2.26.1.301.g55bc3eb7cb9-goog
+2.25.1
 
