@@ -2,120 +2,121 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF98C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC458C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9E12076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552940;
-	bh=nlNAtfmE+7sDz1jRnaVYI4GkYHewHV8jPnDsjl9aIu0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lUdontwzfOGQdqovwnXEq/x431x+TVGTgc0vvP0xKeQsY/0vECOI80mF2VZcZEqwc
-	 CgwDKTBFMvZ0F+JXsU4OAKCQblMD+7e5CNfUhIoVzh0rrPLcYJxb4PN6/iIg8j+E1i
-	 SJsI7cKAWioMcKjkFxxXDNCO41rqaVZR96Ioj3NA=
+	by mail.kernel.org (Postfix) with ESMTP id 877F22076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="MXmMZ3qY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732179AbgDVKzj (ORCPT
+        id S1728428AbgDVKGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbgDVKG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E772F20774;
-        Wed, 22 Apr 2020 10:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550018;
-        bh=nlNAtfmE+7sDz1jRnaVYI4GkYHewHV8jPnDsjl9aIu0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVkMQgnvUq4PSv7WZxKXB85tUOfkVdFzBmaO14tHfNxLNzQx2iq7QWFfHkyl+48Sf
-         crOwsJ4swZu/CnKYw+fKqFyYF38Esx0xqVT4NrYS/f+h56DTNzc/gRQH4NTl/pIHn1
-         rukXEH3zdSmNSMKIcIDf0NyvjFj2BlAUwOzMYl0I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 058/125] powerpc/64/tm: Dont let userspace set regs->trap via sigreturn
-Date:   Wed, 22 Apr 2020 11:56:15 +0200
-Message-Id: <20200422095042.826990528@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
-References: <20200422095032.909124119@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Apr 2020 06:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgDVKGo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:44 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4CFC03C1A8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:06:43 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id d17so1644442wrg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:06:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c4k706ZSVjtoFxzG3fOOAAjo3JI2263vlECa+mTD4TY=;
+        b=MXmMZ3qYQcjhRwZSh9ypCfMLC6JfaTsD5/nBe5OW1Vr5WYTfMinHw2aUfRS75LfBgH
+         5Pbq5J3Nl8rLj6dbCYDINGCd5X8wkaKA4/0fTS+dGXVRj+WRzIzy8lYJcMtDkMwBRcMB
+         EBrG1ZZt77yrGYxcHv/RDxI7n4UBxGFvVChsLtpvgZMpxrKsAwYRUh7abVvVgdSqa6ph
+         e2a7pzdZB0P1Yp5EfM6stlnyuCLydEP32jGPOCvUb7T57K2KLf23I/UsjRJdZdTN+Vtk
+         g6ZRkvRDntzRiHXizBxEwWjdPY5k9yX4C5rBT7VaaCEl1RQTavKQZSI8EkuLyItUvZEk
+         UCOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c4k706ZSVjtoFxzG3fOOAAjo3JI2263vlECa+mTD4TY=;
+        b=CDCE7EiH+w/WUKCEjHFEVSRpLLFUX6nLiy4b+QJ/Mp1tD2gVWP+tx6g/lkeo/ji/gE
+         78pOT91r/0IhQkKsy3LDyPFVKe1cyqv1tX/8kUjxLsFvNoxsqZw9Sxs2fVZs/zblkAtL
+         KBUwzfLBmSOTJt8vfcvyz3V4NxXwtCzUt3wNAs5juSaagSgEjitkVxJh7hYR6Y7aKDwy
+         WdLrES2cWLhPb0G/MYuYAHyZuAdtPXjS/RmLSFZ6efCO7M/o0mKDs6dSVOLJirAQMgVZ
+         daMsSldFWd5oqLJ+wSBArb9/CT357OaUmAVfQcpg0avDVqwUI7z6izr4bSzhHyc9mtU0
+         l2cA==
+X-Gm-Message-State: AGi0PuZAUu8u3xo8b53t8D6cwGpJuxaS21ohXlsp5wR5L1KNZ3qsZ5cl
+        ggumqMt3fBuT9ihlMLkqjFfTGQ==
+X-Google-Smtp-Source: APiQypL2VyjVsQy2Trl1lObhl7WPbH2lgKTZGpODlZtiJj3Mf8TLFeihbDDyDR50ofmLLPXgOPlVzQ==
+X-Received: by 2002:a5d:658e:: with SMTP id q14mr30016060wru.92.1587550002459;
+        Wed, 22 Apr 2020 03:06:42 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id j13sm7812462wrq.24.2020.04.22.03.06.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 03:06:41 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
+Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
+        jaegeuk@kernel.org, Martijn Coenen <maco@android.com>
+Subject: [PATCH v2 0/5] Add a new LOOPSET_FD_AND_STATUS ioctl
+Date:   Wed, 22 Apr 2020 12:06:31 +0200
+Message-Id: <20200422100636.46357-1-maco@android.com>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+This series introduces a new ioctl that makes it possible to atomically
+configure a loop device. Previously, if you wanted to set parameters
+such as the offset on a loop device, this required calling LOOP_SET_FD
+to set the backing file, and then LOOP_SET_STATUS to set the offset.
+However, in between these two calls, the loop device is available and
+would accept requests, which is generally not desirable.
 
-commit c7def7fbdeaa25feaa19caf4a27c5d10bd8789e4 upstream.
+There are also performance benefits with combining these two ioctls into
+one, which are described in more detail in the last change in the
+series.
 
-In restore_tm_sigcontexts() we take the trap value directly from the
-user sigcontext with no checking:
+Note that this series depends on
+"loop: Call loop_config_discard() only after new config is applied."
+[0], which I sent as a separate patch as it fixes an unrelated bug.
 
-	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
-
-This means we can be in the kernel with an arbitrary regs->trap value.
-
-Although that's not immediately problematic, there is a risk we could
-trigger one of the uses of CHECK_FULL_REGS():
-
-	#define CHECK_FULL_REGS(regs)	BUG_ON(regs->trap & 1)
-
-It can also cause us to unnecessarily save non-volatile GPRs again in
-save_nvgprs(), which shouldn't be problematic but is still wrong.
-
-It's also possible it could trick the syscall restart machinery, which
-relies on regs->trap not being == 0xc00 (see 9a81c16b5275 ("powerpc:
-fix double syscall restarts")), though I haven't been able to make
-that happen.
-
-Finally it doesn't match the behaviour of the non-TM case, in
-restore_sigcontext() which zeroes regs->trap.
-
-So change restore_tm_sigcontexts() to zero regs->trap.
-
-This was discovered while testing Nick's upcoming rewrite of the
-syscall entry path. In that series the call to save_nvgprs() prior to
-signal handling (do_notify_resume()) is removed, which leaves the
-low-bit of regs->trap uncleared which can then trigger the FULL_REGS()
-WARNs in setup_tm_sigcontexts().
-
-Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
-Cc: stable@vger.kernel.org # v3.9+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200401023836.3286664-1-mpe@ellerman.id.au
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[0]: https://lkml.org/lkml/2020/3/31/755
 
 ---
- arch/powerpc/kernel/signal_64.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+v2:
+  - Addressed review comments from Bart van Assche:
+    -- Use SECTOR_SHIFT constant
+    -- Renamed loop_set_from_status() to loop_set_status_from_info()
+    -- Added kerneldoc for loop_set_status_from_info()
+    -- Removed dots in patch subject lines
+  - Addressed review comments from Christoph Hellwig:
+    -- Added missing padding in struct loop_fd_and_status
+    -- Cleaned up some __user pointer handling in lo_ioctl
+    -- Pass in a stack-initialized loop_info64 for the legacy
+       LOOP_SET_FD case
 
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -469,8 +469,10 @@ static long restore_tm_sigcontexts(struc
- 	err |= __get_user(tsk->thread.ckpt_regs.ccr,
- 			  &sc->gp_regs[PT_CCR]);
- 
-+	/* Don't allow userspace to set the trap value */
-+	regs->trap = 0;
-+
- 	/* These regs are not checkpointed; they can go in 'regs'. */
--	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
- 	err |= __get_user(regs->dar, &sc->gp_regs[PT_DAR]);
- 	err |= __get_user(regs->dsisr, &sc->gp_regs[PT_DSISR]);
- 	err |= __get_user(regs->result, &sc->gp_regs[PT_RESULT]);
+Martijn Coenen (5):
+  loop: Refactor size calculation
+  loop: Factor out configuring loop from status
+  loop: Move loop_set_status_from_info() and friends up
+  loop: rework lo_ioctl() __user argument casting
+  loop: Add LOOP_SET_FD_AND_STATUS ioctl
 
+ drivers/block/loop.c      | 327 ++++++++++++++++++++++----------------
+ include/uapi/linux/loop.h |   7 +
+ 2 files changed, 201 insertions(+), 133 deletions(-)
+
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
