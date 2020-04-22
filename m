@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E7C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F1BC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3F742073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1562073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552580;
-	bh=fhMCzs+5oAeNDilCXNjN57Y84x/pplV7/I0kKxgTNjk=;
+	s=default; t=1587552583;
+	bh=A8in5giTD5Iwl6EN+gPYLRg5+rVKYjzLzHAkpHGIlws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qIFFB9ShSf6L5Dt3YpLDuMwVLGsoaJcauXPNr9tnhh/nb45hJBAyyzUYYKZYI2b5k
-	 VWsewm0dSL7s2r3KPwJIod5bIS5wiydPCujtVBKCl3wNncxa2kdL3UNtSXJktyPiBq
-	 pRc+wYtkqn7UInEbqZXv74EdEPmTXNPtzcMZgyiU=
+	b=bAocm2Zawmoxr+ZwaTIXjb9xSZXkBb+i3Nt7ZrAtXqforV7ISBAckzUUJ3lIfxHxs
+	 JbhfZWp+WdOp2zd5T7404MXavwWXxKDukZAmVoWNFxtVzGPA1XjXTVE6o08Dfoz4tc
+	 HqpUfDkzdVCIE0DdvknPfJWXK6q0FHoUHxqV7RCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgDVKNH (ORCPT
+        id S1732118AbgDVKtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:13:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbgDVKMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:52 -0400
+        id S1729420AbgDVKNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0C282070B;
-        Wed, 22 Apr 2020 10:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE462087E;
+        Wed, 22 Apr 2020 10:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550371;
-        bh=fhMCzs+5oAeNDilCXNjN57Y84x/pplV7/I0kKxgTNjk=;
+        s=default; t=1587550386;
+        bh=A8in5giTD5Iwl6EN+gPYLRg5+rVKYjzLzHAkpHGIlws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+Kr4FZt1hStmVhdQZ1QKKx+VD4VCFMiuWS1Z7ylcAU0OMLP7Ip8+bg/Tnyn2PUCh
-         Dlc+nbt+xhrn+8qbmxUwjjoUx4NmvvpsOiTipdBvIad0S4pq+TlPfWuN7Hec2VAZRn
-         KKoCKbibe3rmIwyqawQVIWhy73VSEc+73uZAEVDA=
+        b=Y28fYNXtTLvdUcC63f7CWWsQBcxNlUaxzO4QP66c2hC9xCAEqnWhgPtCqEpA1MUtB
+         rACa9EafLS3VUQg8/RmudBmjMwVD3v01kQpwanE8WO6hyaUM+iycuU9MrEek8hwxyY
+         xEc171rXjiPoejfEVDfuTxqVDcfMKX7Qbk9YEesA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 119/199] ASoC: Intel: mrfld: return error codes when an error occurs
-Date:   Wed, 22 Apr 2020 11:57:25 +0200
-Message-Id: <20200422095109.520131013@linuxfoundation.org>
+        stable@vger.kernel.org, Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 125/199] dm flakey: check for null arg_name in parse_features()
+Date:   Wed, 22 Apr 2020 11:57:31 +0200
+Message-Id: <20200422095109.965957078@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,38 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Goldwyn Rodrigues <rgoldwyn@suse.com>
 
-commit 3025571edd9df653e1ad649f0638368a39d1bbb5 upstream.
+[ Upstream commit 7690e25302dc7d0cd42b349e746fe44b44a94f2b ]
 
-Currently function sst_platform_get_resources always returns zero and
-error return codes set by the function are never returned. Fix this
-by returning the error return code in variable ret rather than the
-hard coded zero.
+One can crash dm-flakey by specifying more feature arguments than the
+number of features supplied.  Checking for null in arg_name avoids
+this.
 
-Addresses-Coverity: ("Unused value")
-Fixes: f533a035e4da ("ASoC: Intel: mrfld - create separate module for pci part")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200208220720.36657-1-colin.king@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+dmsetup create flakey-test --table "0 66076080 flakey /dev/sdb9 0 0 180 2 drop_writes"
 
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst/sst_pci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-flakey.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/sound/soc/intel/atom/sst/sst_pci.c
-+++ b/sound/soc/intel/atom/sst/sst_pci.c
-@@ -107,7 +107,7 @@ static int sst_platform_get_resources(st
- 	dev_dbg(ctx->dev, "DRAM Ptr %p\n", ctx->dram);
- do_release_regions:
- 	pci_release_regions(pci);
--	return 0;
-+	return ret;
- }
+diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
+index b1b68e01b889c..53cd31199f212 100644
+--- a/drivers/md/dm-flakey.c
++++ b/drivers/md/dm-flakey.c
+@@ -70,6 +70,11 @@ static int parse_features(struct dm_arg_set *as, struct flakey_c *fc,
+ 		arg_name = dm_shift_arg(as);
+ 		argc--;
  
- /*
++		if (!arg_name) {
++			ti->error = "Insufficient feature arguments";
++			return -EINVAL;
++		}
++
+ 		/*
+ 		 * drop_writes
+ 		 */
+-- 
+2.20.1
+
 
 
