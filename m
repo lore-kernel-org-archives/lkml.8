@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B127C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06DDC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A1C20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5B420781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551167;
-	bh=zGk6FoANVMQFUDEne0uQaTPVZoZV1cfRSWWFR3MDCFw=;
+	s=default; t=1587551175;
+	bh=5KeCAVtoMwPKXDT6A0LjaClAan+jh+idXoAY0C6EKHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fPCgbYAMy71rrpW0mJvjDgBBj9f0P3Bw1cEfSf6OVDyAO4cZoDKPk2v45GdrqBxSy
-	 m04yJQGhWvKegDm7Qq15qr8k9k0g0TcCt7lH+7IgM6Siju5FfaGLA0WoOb9ErktBwu
-	 ULpIkcW64qwekpKNnKXdoWvF6H/ceOsfw1gSVhAw=
+	b=Q9iwil8tuk1LihbI6oCPFZp2Pvf8MQdJK/A+DA57y7E80jcZvTC/EfFhEteBc/FO8
+	 vuxr4SKd8rLafws36oAWqkW7qIi0qx6OqKkn7alCpZqZoJQgGcrmERzm6sqZn387DQ
+	 2WCt7BixuvaCsHHwm7mEdolpMsaJOLxKVVIe6OjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbgDVK0E (ORCPT
+        id S1730690AbgDVK0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34784 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:26:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730644AbgDVKZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:25:58 -0400
+        id S1730668AbgDVK0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:26:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90D2E2084D;
-        Wed, 22 Apr 2020 10:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B25120784;
+        Wed, 22 Apr 2020 10:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551158;
-        bh=zGk6FoANVMQFUDEne0uQaTPVZoZV1cfRSWWFR3MDCFw=;
+        s=default; t=1587551168;
+        bh=5KeCAVtoMwPKXDT6A0LjaClAan+jh+idXoAY0C6EKHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UsNsilXjLDvhDVUMTG4I0ZEn/o6GC21+lYL+YacTP7VCkuYDPnA8vihJzUo6oM4/G
-         fmBF8SSbIFEW+btqeZnYPRJRb2oMr7PKn8t00+eVWnzcf8VUKmXeVPSbqnUj6v7a5Z
-         7cu02z6TuDIoEusTkcC5BTq8gEaA00uDux4jpKgM=
+        b=qMRIoLYpsu5wzDlu1WIeT0SRE9qZ1ix74N2iLPehtf/+3eTa60xw/NvuJCgC2v+7+
+         6NUZd40SQtxGqk5BH1SiU13Jm75B4nEAyYpauWFlM+tiIEUALH4AHTwrI8601RJDO2
+         iDOBVsTVHEIY+aPm0w1QBT3EcRzJLClTZjTg24OQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 125/166] drm/vc4: Fix HDMI mode validation
-Date:   Wed, 22 Apr 2020 11:57:32 +0200
-Message-Id: <20200422095101.951417409@linuxfoundation.org>
+Subject: [PATCH 5.6 129/166] SUNRPC: fix krb5p mount to provide large enough buffer in rq_rcvsize
+Date:   Wed, 22 Apr 2020 11:57:36 +0200
+Message-Id: <20200422095102.304077278@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -62,59 +61,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-[ Upstream commit b1e7396a1d0e6af6806337fdaaa44098d6b3343c ]
+[ Upstream commit df513a7711712758b9cb1a48d86712e7e1ee03f4 ]
 
-Current mode validation impedes setting up some video modes which should
-be supported otherwise. Namely 1920x1200@60Hz.
+Ever since commit 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing
+reply buffer size"). It changed how "req->rq_rcvsize" is calculated. It
+used to use au_cslack value which was nice and large and changed it to
+au_rslack value which turns out to be too small.
 
-Fix this by lowering the minimum HDMI state machine clock to pixel clock
-ratio allowed.
+Since 5.1, v3 mount with sec=krb5p fails against an Ontap server
+because client's receive buffer it too small.
 
-Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks.")
-Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200326122001.22215-1-nsaenzjulienne@suse.de
+For gss krb5p, we need to account for the mic token in the verifier,
+and the wrap token in the wrap token.
+
+RFC 4121 defines:
+mic token
+Octet no   Name        Description
+         --------------------------------------------------------------
+         0..1     TOK_ID     Identification field.  Tokens emitted by
+                             GSS_GetMIC() contain the hex value 04 04
+                             expressed in big-endian order in this
+                             field.
+         2        Flags      Attributes field, as described in section
+                             4.2.2.
+         3..7     Filler     Contains five octets of hex value FF.
+         8..15    SND_SEQ    Sequence number field in clear text,
+                             expressed in big-endian order.
+         16..last SGN_CKSUM  Checksum of the "to-be-signed" data and
+                             octet 0..15, as described in section 4.2.4.
+
+that's 16bytes (GSS_KRB5_TOK_HDR_LEN) + chksum
+
+wrap token
+Octet no   Name        Description
+         --------------------------------------------------------------
+          0..1     TOK_ID    Identification field.  Tokens emitted by
+                             GSS_Wrap() contain the hex value 05 04
+                             expressed in big-endian order in this
+                             field.
+          2        Flags     Attributes field, as described in section
+                             4.2.2.
+          3        Filler    Contains the hex value FF.
+          4..5     EC        Contains the "extra count" field, in big-
+                             endian order as described in section 4.2.3.
+          6..7     RRC       Contains the "right rotation count" in big-
+                             endian order, as described in section
+                             4.2.5.
+          8..15    SND_SEQ   Sequence number field in clear text,
+                             expressed in big-endian order.
+          16..last Data      Encrypted data for Wrap tokens with
+                             confidentiality, or plaintext data followed
+                             by the checksum for Wrap tokens without
+                             confidentiality, as described in section
+                             4.2.4.
+
+Also 16bytes of header (GSS_KRB5_TOK_HDR_LEN), encrypted data, and cksum
+(other things like padding)
+
+RFC 3961 defines known cksum sizes:
+Checksum type              sumtype        checksum         section or
+                                value            size         reference
+   ---------------------------------------------------------------------
+   CRC32                            1               4           6.1.3
+   rsa-md4                          2              16           6.1.2
+   rsa-md4-des                      3              24           6.2.5
+   des-mac                          4              16           6.2.7
+   des-mac-k                        5               8           6.2.8
+   rsa-md4-des-k                    6              16           6.2.6
+   rsa-md5                          7              16           6.1.1
+   rsa-md5-des                      8              24           6.2.4
+   rsa-md5-des3                     9              24             ??
+   sha1 (unkeyed)                  10              20             ??
+   hmac-sha1-des3-kd               12              20            6.3
+   hmac-sha1-des3                  13              20             ??
+   sha1 (unkeyed)                  14              20             ??
+   hmac-sha1-96-aes128             15              20         [KRB5-AES]
+   hmac-sha1-96-aes256             16              20         [KRB5-AES]
+   [reserved]                  0x8003               ?         [GSS-KRB5]
+
+Linux kernel now mainly supports type 15,16 so max cksum size is 20bytes.
+(GSS_KRB5_MAX_CKSUM_LEN)
+
+Re-use already existing define of GSS_KRB5_MAX_SLACK_NEEDED that's used
+for encoding the gss_wrap tokens (same tokens are used in reply).
+
+Fixes: 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing reply buffer size")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ net/sunrpc/auth_gss/auth_gss.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index cea18dc15f77c..340719238753d 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -681,11 +681,23 @@ static enum drm_mode_status
- vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
- 			    const struct drm_display_mode *mode)
- {
--	/* HSM clock must be 108% of the pixel clock.  Additionally,
--	 * the AXI clock needs to be at least 25% of pixel clock, but
--	 * HSM ends up being the limiting factor.
-+	/*
-+	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
-+	 * be faster than pixel clock, infinitesimally faster, tested in
-+	 * simulation. Otherwise, exact value is unimportant for HDMI
-+	 * operation." This conflicts with bcm2835's vc4 documentation, which
-+	 * states HSM's clock has to be at least 108% of the pixel clock.
-+	 *
-+	 * Real life tests reveal that vc4's firmware statement holds up, and
-+	 * users are able to use pixel clocks closer to HSM's, namely for
-+	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
-+	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
-+	 * 162MHz.
-+	 *
-+	 * Additionally, the AXI clock needs to be at least 25% of
-+	 * pixel clock, but HSM ends up being the limiting factor.
- 	 */
--	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 108 / 100))
-+	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
- 		return MODE_CLOCK_HIGH;
- 
- 	return MODE_OK;
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index 24ca861815b1d..d6cd2a519d9fb 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -20,6 +20,7 @@
+ #include <linux/sunrpc/clnt.h>
+ #include <linux/sunrpc/auth.h>
+ #include <linux/sunrpc/auth_gss.h>
++#include <linux/sunrpc/gss_krb5.h>
+ #include <linux/sunrpc/svcauth_gss.h>
+ #include <linux/sunrpc/gss_err.h>
+ #include <linux/workqueue.h>
+@@ -1050,7 +1051,7 @@ gss_create_new(const struct rpc_auth_create_args *args, struct rpc_clnt *clnt)
+ 		goto err_put_mech;
+ 	auth = &gss_auth->rpc_auth;
+ 	auth->au_cslack = GSS_CRED_SLACK >> 2;
+-	auth->au_rslack = GSS_VERF_SLACK >> 2;
++	auth->au_rslack = GSS_KRB5_MAX_SLACK_NEEDED >> 2;
+ 	auth->au_verfsize = GSS_VERF_SLACK >> 2;
+ 	auth->au_ralign = GSS_VERF_SLACK >> 2;
+ 	auth->au_flags = 0;
 -- 
 2.20.1
 
