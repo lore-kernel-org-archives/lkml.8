@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8750C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75200C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B77A20735
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE252077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549702;
-	bh=IFkZWEB3WhI1gXb220OqHSG1WKXvIjlzIsYwxUlyfB8=;
+	s=default; t=1587549704;
+	bh=a8LiVpgiZbCvH/rqNM3q6PKvM9u9kGxCK1QukDRwi4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBiAwB5CH+rsxpLJjQC7mhTjxaOELH4+YE3eEZA8KDVuQWdIjFIeEUFly6yiSSenY
-	 Wu13/YTrMFzE3+drrj9Po4iC/J8Q0SJ37saIN4+81PNZifsCX4VTD4vHhqMe+M0AkM
-	 oWRvTQnhf8aHHJg9hEFGreAEeqBbWRb/Ns00cegM=
+	b=X0hwIkzoN6grfckj09D2dQGcjaQ/EpYpozfhIs/1KK24o6X8fePGOQOxw1KuXr3eb
+	 qrvYMR4phAIE7A5MDu4b1mMFgHUpVyOeav1cH9Y5ZiJCzd3nQ0t8SwKUnFl8RMXl4O
+	 dxkIqEh+MSu/uNtkAh+nslJc7PYa57a7/OV8ldBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgDVKBl (ORCPT
+        id S1726866AbgDVKBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50146 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgDVKBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:37 -0400
+        id S1726841AbgDVKBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CB0E2076C;
-        Wed, 22 Apr 2020 10:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE2C20735;
+        Wed, 22 Apr 2020 10:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549696;
-        bh=IFkZWEB3WhI1gXb220OqHSG1WKXvIjlzIsYwxUlyfB8=;
+        s=default; t=1587549698;
+        bh=a8LiVpgiZbCvH/rqNM3q6PKvM9u9kGxCK1QukDRwi4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=futQjkZpDyIjyAE03vPqUOetP3m51S/F9DUsDDgkOwqE5VhVLHOc3hT2PXcOTRcje
-         zOVjiKjB880bpHuFG6QFJLZ7vmndRwEj9mfJZ+JrMCZF2/oG9qD7X9boCgoKi1foZF
-         gWo+sNLjtDTTH2JtQfvC3sSC2ZWtZQbkzPtAJXUI=
+        b=vkDHpEHeKDFGAXmUcL4hGqjykr8cthOjBiQpM4qp+JxDeuD8wweK+MQ+O3xTyJzAV
+         aiXK6vtNRG6VetTQ5pfDDkWKudYWIXassBsMoaL9Ig/WRbN6yO3NUyhRsEUUu+C8v6
+         12qQpXFkG/8NR7PrZnhWeaF4okCLh/a8MiBLViCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.4 070/100] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
-Date:   Wed, 22 Apr 2020 11:56:40 +0200
-Message-Id: <20200422095035.711619868@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 071/100] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Wed, 22 Apr 2020 11:56:41 +0200
+Message-Id: <20200422095035.973504996@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -59,56 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Li Bin <huawei.libin@huawei.com>
 
-commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
+commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 upstream.
 
-Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
-or snapshot_count_trigger()) when register_snapshot_trigger() has completed
-registration but doesn't allocate buffer for 'snapshot' event trigger.  In
-the rare case, 'snapshot' operation always detects the lack of allocated
-buffer so make register_snapshot_trigger() allocate buffer first.
+If the dxfer_len is greater than 256M then the request is invalid and we
+need to call sg_remove_request in sg_common_write.
 
-trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
------------------------------------------------------------
-cat trace
-...
-ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
-     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
-     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
------------------------------------------------------------
-
-Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
-
-Cc: stable@vger.kernel.org
-Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_trigger.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/scsi/sg.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -910,14 +910,10 @@ register_snapshot_trigger(char *glob, st
- 			  struct event_trigger_data *data,
- 			  struct trace_event_file *file)
- {
--	int ret = register_trigger(glob, ops, data, file);
-+	if (tracing_alloc_snapshot() != 0)
-+		return 0;
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -820,8 +820,10 @@ sg_common_write(Sg_fd * sfp, Sg_request
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
  
--	if (ret > 0 && tracing_alloc_snapshot() != 0) {
--		unregister_trigger(glob, ops, data, file);
--		ret = 0;
--	}
--
--	return ret;
-+	return register_trigger(glob, ops, data, file);
- }
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
  
- static int
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 
 
