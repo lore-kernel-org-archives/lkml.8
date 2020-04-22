@@ -2,97 +2,135 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4245C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB78C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1692075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFFE20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552111;
-	bh=RaH8GmcCaHjF24H4jq5aU+IOTvZCTVKwCvJaJZS2Pvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rZx+k1nhWDW6ixj/TO3JCRAkrdHdlHA3ohAHoeC02/NDCSS1bjBa17ag5SpqBfJHP
-	 z9E44JEvDBJDtimWwbEuraYp3SeqOMJBMmp3QI41BRvs3UmwHERVadxsxUVR65k4wz
-	 d6rT+8ctqI6BtRL4NciG5k6zJ6XGnEztbs3ad19k=
+	s=default; t=1587552117;
+	bh=YJ7bYUlf7zCEYnR/9VYmjs8WvAL+Z+tSHxOOEZvYn5s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BftB0wRcNOroskZ9X9Dlz7alKUBlQj/t+tTfCxZyrrX8l13PDRPvtYXK8TTMNPDqo
+	 rr1/Mpg9KN2hxSZbDAKXJZSqwbslzJnvSxJXqLnB6uA6YJ0XNulcmhytMoegqb/Mt7
+	 f0OYCMAjYhl9yda/IyU4z8t4EGcp06EN9KGOW3SI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731682AbgDVKlu (ORCPT
+        id S1731689AbgDVKl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:41:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48260 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:41:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731676AbgDVKlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:41:45 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1729749AbgDVKUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13DB920656;
-        Wed, 22 Apr 2020 10:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58832076B;
+        Wed, 22 Apr 2020 10:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587552104;
-        bh=RaH8GmcCaHjF24H4jq5aU+IOTvZCTVKwCvJaJZS2Pvc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wEiD4PFlGQoID5iAv2BZy14zXuBWGKiqGD5MAuQwu5nFF6X3qjHwUAOz0Nvwtl0Vh
-         GQsSF8v8sH3AOBfat8LL2JQk0Y1UqLD6sPIUlO0x/WFoCX+8VHyZarb+pjEj4rEx5n
-         2ti1AHupvnAf7NH1ZQb64NDOzzAIgqeIWbtLvoM8=
-Date:   Wed, 22 Apr 2020 11:41:38 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 05/11] arm64: csum: Disable KASAN for do_csum()
-Message-ID: <20200422104138.GA30265@willie-the-truck>
-References: <20200421151537.19241-1-will@kernel.org>
- <20200421151537.19241-6-will@kernel.org>
- <20200422094951.GA54428@lakrids.cambridge.arm.com>
+        s=default; t=1587550805;
+        bh=YJ7bYUlf7zCEYnR/9VYmjs8WvAL+Z+tSHxOOEZvYn5s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n62lGuoi/FcQFE2xc5YZaHfVCG4bTQokYVsdg1q0cedvcfRIiLcP8eQ2cMCBbHSpn
+         jMDADOCt5RQJZWTtTkpkYKah9psN+aX3xxh7IoTnDdF/W82F6NVgkZnxZPPvJ/Zc8j
+         NWaiFdJl4mz/HThMApTc7zEoK92czJxu+voHtGzQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 083/118] f2fs: fix NULL pointer dereference in f2fs_write_begin()
+Date:   Wed, 22 Apr 2020 11:57:24 +0200
+Message-Id: <20200422095045.180430271@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
+References: <20200422095031.522502705@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422094951.GA54428@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:49:52AM +0100, Mark Rutland wrote:
-> On Tue, Apr 21, 2020 at 04:15:31PM +0100, Will Deacon wrote:
-> > do_csum() over-reads the source buffer and therefore abuses
-> > READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
-> > READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
-> > '__no_sanitize_address' annotation, just annotate do_csum() explicitly
-> > and fall back to normal loads.
-> > 
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> 
-> From a functional perspective:
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-Thanks.
+[ Upstream commit 62f63eea291b50a5677ae7503ac128803174698a ]
 
-> I know that Robin had a concern w.r.t. how this would affect the
-> codegen, but I think we can follow that up after the series as a whole
-> is merged.
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+RIP: 0010:f2fs_write_begin+0x823/0xb90 [f2fs]
+Call Trace:
+ f2fs_quota_write+0x139/0x1d0 [f2fs]
+ write_blk+0x36/0x80 [quota_tree]
+ get_free_dqblk+0x42/0xa0 [quota_tree]
+ do_insert_tree+0x235/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ qtree_write_dquot+0x70/0x190 [quota_tree]
+ v2_write_dquot+0x43/0x90 [quota_v2]
+ dquot_acquire+0x77/0x100
+ f2fs_dquot_acquire+0x2f/0x60 [f2fs]
+ dqget+0x310/0x450
+ dquot_transfer+0x7e/0x120
+ f2fs_setattr+0x11a/0x4a0 [f2fs]
+ notify_change+0x349/0x480
+ chown_common+0x168/0x1c0
+ do_fchownat+0xbc/0xf0
+ __x64_sys_fchownat+0x20/0x30
+ do_syscall_64+0x5f/0x220
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Makes sense. I did look at the codegen, fwiw, and it didn't seem especially
-bad. One of the LDP's gets cracked in the unlikely() path, but it didn't
-look like it would be a disaster (and sprinkling barrier() around to force
-the LDP felt really fragile!).
+Passing fsdata parameter to .write_{begin,end} in f2fs_quota_write(),
+so that if quota file is compressed one, we can avoid above NULL
+pointer dereference when updating quota content.
 
-Will
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 94caf26901e0b..5e1d4d9243a95 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1826,6 +1826,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 	int offset = off & (sb->s_blocksize - 1);
+ 	size_t towrite = len;
+ 	struct page *page;
++	void *fsdata = NULL;
+ 	char *kaddr;
+ 	int err = 0;
+ 	int tocopy;
+@@ -1835,7 +1836,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 								towrite);
+ retry:
+ 		err = a_ops->write_begin(NULL, mapping, off, tocopy, 0,
+-							&page, NULL);
++							&page, &fsdata);
+ 		if (unlikely(err)) {
+ 			if (err == -ENOMEM) {
+ 				congestion_wait(BLK_RW_ASYNC, HZ/50);
+@@ -1851,7 +1852,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 		flush_dcache_page(page);
+ 
+ 		a_ops->write_end(NULL, mapping, off, tocopy, tocopy,
+-						page, NULL);
++						page, fsdata);
+ 		offset = 0;
+ 		towrite -= tocopy;
+ 		off += tocopy;
+-- 
+2.20.1
+
+
+
