@@ -2,105 +2,141 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC12C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D69C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C1520776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911AF20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:20:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eulBV6VZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgDVRRh (ORCPT
+        id S1726755AbgDVRUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 13:17:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33930 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDVRRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 13:17:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A6D83AC19;
-        Wed, 22 Apr 2020 17:17:33 +0000 (UTC)
-Message-ID: <1587575853.9537.117.camel@suse.cz>
-Subject: Re: [PATCH] x86, sched: Prevent divisions by zero in frequency
- invariant accounting
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Wed, 22 Apr 2020 13:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726006AbgDVRUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 13:20:11 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 733DCC03C1A9;
+        Wed, 22 Apr 2020 10:20:11 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id p25so1414621pfn.11;
+        Wed, 22 Apr 2020 10:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kKcesp6qmf5FNzpaYA3INqLgOOg1x3Ai8a2NGucJe0Y=;
+        b=eulBV6VZFoAYrkvPdHJuhN6hWH+zrxQfQrWxXVQc5nUOyt4+6FYhtRWB7Y23BP1fuq
+         FgDvdGLaluCfqEr3+kDKU2fruaAV98O507p21whHp69JOA3Jc1jxuWwISlzWtpr8GfXt
+         El/+wy4rro419MguZVf41GEYDboQyiamLMRSnpbkthEvleuNQ5A3UZFgMAzhqAhKD827
+         4RbdFpLdJxnVGeLRxbG2Dg1AU5tCIaiiNLLE+vjsLvlfcWnUbKfvyACLNLqhfAvtXXu1
+         4d1GZBGAuKo4ovqoml+lBlta9QUuPOHMLFLmRGyAFC5q8NC7WSF2JfLw0QSgLE50sL9r
+         6HUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kKcesp6qmf5FNzpaYA3INqLgOOg1x3Ai8a2NGucJe0Y=;
+        b=mxGPVik2+FNMIxVQc3IUgQKBCSC2Fx1esLnenTfzCZDGcne1CUTWi0j80QBnem4aMJ
+         WMXHsIdSxEzT/cGfCTUZYuI96nkDtvziFyoLnZGgAfPtDPBH8YeVVRVtjakWKrzmJZ1c
+         8lGVNszunIA01S/aOJDsBCQLlyEy852JszViORl0JY0DuF4MN74442TtJQi8NV9PwIss
+         0kA+58vL/bt6KOE0dQG7BwGAAcdSXNF0dpEFN3d/5fkEJq3Ug8ip/m6ecYRgq8nrojJW
+         UlslNJSx3RIVyC+7NzcgF7x2EDOYf+8rvMeheui73JJPE5RGXVeuZdqVlg1oypUX09tl
+         +8Xg==
+X-Gm-Message-State: AGi0PuY3h36AL6Qb90eDJ8NDkVjnv47ilq17P/VnzRIx9uq2bpcd/mRW
+        XMI6mv8elhHi1zYr2OfTOB0tMWIfo2BHCQ==
+X-Google-Smtp-Source: APiQypJPVg7GYiSS/0Ov6/4EBEk2zjkAZ0/+GrKMa2RUJd2d2KLDyCNR9vC1Yimyepp386lyyW86KA==
+X-Received: by 2002:a63:6a84:: with SMTP id f126mr116473pgc.14.1587576010289;
+        Wed, 22 Apr 2020 10:20:10 -0700 (PDT)
+Received: from ?IPv6:2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f? ([2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f])
+        by smtp.gmail.com with ESMTPSA id 128sm55876pfy.5.2020.04.22.10.20.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 10:20:09 -0700 (PDT)
+Subject: Re: [PATCH] Input: xpad - Add custom init packet for Xbox One S
+ controllers
+To:     LuK1337 <priv.luk@gmail.com>
+Cc:     stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>
-Date:   Wed, 22 Apr 2020 19:17:33 +0200
-In-Reply-To: <20200422145334.GM20730@hirez.programming.kicks-ass.net>
-References: <20200422144055.18171-1-ggherdovich@suse.cz>
-         <20200422145334.GM20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
+ <20200422075206.18229-1-priv.luk@gmail.com>
+From:   Cameron Gutman <aicommander@gmail.com>
+Message-ID: <8015c173-79e5-4627-c955-0b87e17f3034@gmail.com>
+Date:   Wed, 22 Apr 2020 10:20:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200422075206.18229-1-priv.luk@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-22 at 16:53 +0200, Peter Zijlstra wrote:
-> On Wed, Apr 22, 2020 at 04:40:55PM +0200, Giovanni Gherdovich wrote:
-> > The product mcnt * arch_max_freq_ratio could be zero if it overflows u64.
-> > 
-> > For context, a large value for arch_max_freq_ratio would be 5000,
-> > corresponding to a turbo_freq/base_freq ratio of 5 (normally it's more like
-> > 1500-2000). A large increment frequency for the MPERF counter would be 5GHz
-> > (the base clock of all CPUs on the market today is less than that). With
-> > these figures, a CPU would need to go without a scheduler tick for around 8
-> > days for the u64 overflow to happen. It is unlikely, but the check is
-> > warranted.
-> > 
-> > Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-> > Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
-> > ---
-> >  arch/x86/kernel/smpboot.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> > index 8c89e4d9ad28..fb71395cbcad 100644
-> > --- a/arch/x86/kernel/smpboot.c
-> > +++ b/arch/x86/kernel/smpboot.c
-> > @@ -2055,14 +2055,14 @@ void arch_scale_freq_tick(void)
-> >  
-> >  	acnt = aperf - this_cpu_read(arch_prev_aperf);
-> >  	mcnt = mperf - this_cpu_read(arch_prev_mperf);
-> > -	if (!mcnt)
-> > -		return;
-> >  
-> >  	this_cpu_write(arch_prev_aperf, aperf);
-> >  	this_cpu_write(arch_prev_mperf, mperf);
-> >  
-> >  	acnt <<= 2*SCHED_CAPACITY_SHIFT;
-> >  	mcnt *= arch_max_freq_ratio;
-> > +	if (!mcnt)
-> > +		return;
+On 4/22/20 12:52 AM, LuK1337 wrote:
+> From: Łukasz Patron <priv.luk@gmail.com>
 > 
-> Should we not pr_warn() and disable the whole thing when this happens?
+> Sending [ 0x05, 0x20, 0x00, 0x0f, 0x06 ] packet for
+> Xbox One S controllers fixes an issue where controller
+> is stuck in Bluetooth mode and not sending any inputs.
+> 
+> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
+> Cc: stable@vger.kernel.org
 
-Ok, I will resend this patch disabling freq invariant accounting when this
-overflow happens.
+LGTM. Tested working on both of my Xbox One S gamepads:
+- idVendor=045e, idProduct=02ea, bcdDevice= 3.01
+- idVendor=045e, idProduct=02ea, bcdDevice= 4.08
 
-To elaborate further, your comment touches on an area where x86 freq
-invariance is very weak at the moment: what happens if the tick doesn't run on
-a cpu for a long time (answer: the estimation of freq_scale is garbage).
-And by "a long time" I mean a few seconds; the patch I'm about to resend only
-covers a minuscule fraction of those cases. That is, not only the tick has
-been missing for days (?!), but we only noticed because the product
-mcnt * arch_max_freq_ratio gave exactly 2^64 (aka 0). It could have been
-waiting for 1 more millis and we wouldn't have seen the issue.
+Reviewed-by: Cameron Gutman <aicommander@gmail.com>
 
-Anyways I agree on the principle: even if we can't address all problems now,
-let's at least cover those where the solution is easy.
+> ---
+>  drivers/input/joystick/xpad.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+> index 6b40a1c68f9f..c77cdb3b62b5 100644
+> --- a/drivers/input/joystick/xpad.c
+> +++ b/drivers/input/joystick/xpad.c
+> @@ -458,6 +458,16 @@ static const u8 xboxone_fw2015_init[] = {
+>  	0x05, 0x20, 0x00, 0x01, 0x00
+>  };
+>  
+> +/*
+> + * This packet is required for Xbox One S (0x045e:0x02ea)
+> + * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
+> + * initialize the controller that was previously used in
+> + * Bluetooth mode.
+> + */
+> +static const u8 xboxone_s_init[] = {
+> +	0x05, 0x20, 0x00, 0x0f, 0x06
+> +};
+> +
+>  /*
+>   * This packet is required for the Titanfall 2 Xbox One pads
+>   * (0x0e6f:0x0165) to finish initialization and for Hori pads
+> @@ -516,6 +526,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
+>  	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
+>  	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
+>  	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
+> +	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
+> +	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
+>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
+>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
+>  	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
+> 
 
-
-Giovanni
