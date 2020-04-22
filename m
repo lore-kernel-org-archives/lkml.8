@@ -2,116 +2,97 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409B9C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4245C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8002075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1692075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552107;
-	bh=CV4lsd8GFjskQ68BrjCsNHsoRiEhRicJFGhZqLBaR7M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y2zXQ7oujWqnaAkbobzp8Ts4qA50RatUryciJtrOkcATYMoZPc4Qi8t6erf7Ii6EI
-	 Nrl2/J4GsOIjhOLR+yZZwwKqJLH18CckVUD0UWTVjE4s7UdD9G8Vt+NPhEpkGOTCZD
-	 FSYSFJYuzLKhnK/efd6Y2vKF/rwA5vMB19OPJySI=
+	s=default; t=1587552111;
+	bh=RaH8GmcCaHjF24H4jq5aU+IOTvZCTVKwCvJaJZS2Pvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rZx+k1nhWDW6ixj/TO3JCRAkrdHdlHA3ohAHoeC02/NDCSS1bjBa17ag5SpqBfJHP
+	 z9E44JEvDBJDtimWwbEuraYp3SeqOMJBMmp3QI41BRvs3UmwHERVadxsxUVR65k4wz
+	 d6rT+8ctqI6BtRL4NciG5k6zJ6XGnEztbs3ad19k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbgDVKlm (ORCPT
+        id S1731682AbgDVKlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730074AbgDVKUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1731676AbgDVKlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:41:45 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61B45208E4;
-        Wed, 22 Apr 2020 10:20:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13DB920656;
+        Wed, 22 Apr 2020 10:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550807;
-        bh=CV4lsd8GFjskQ68BrjCsNHsoRiEhRicJFGhZqLBaR7M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QCQ0JxXzvLKxAe2hOJ0WUpgR4psir2T4VKXKfRNrJbFifgzpedsN649RaPAPIPl6w
-         5jjjd6UHgUkz/LgbAFZXztq1eX/s1kQLhU/5RdGorYNalcS0TQY8HNKMEKhSHt5mWy
-         jINg5Uk2ou5JXM8K5LSoUIg5ZC1vu3OhWhFRUPgw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 101/118] net: dsa: bcm_sf2: Fix overflow checks
-Date:   Wed, 22 Apr 2020 11:57:42 +0200
-Message-Id: <20200422095047.845206568@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
-References: <20200422095031.522502705@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1587552104;
+        bh=RaH8GmcCaHjF24H4jq5aU+IOTvZCTVKwCvJaJZS2Pvc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wEiD4PFlGQoID5iAv2BZy14zXuBWGKiqGD5MAuQwu5nFF6X3qjHwUAOz0Nvwtl0Vh
+         GQsSF8v8sH3AOBfat8LL2JQk0Y1UqLD6sPIUlO0x/WFoCX+8VHyZarb+pjEj4rEx5n
+         2ti1AHupvnAf7NH1ZQb64NDOzzAIgqeIWbtLvoM8=
+Date:   Wed, 22 Apr 2020 11:41:38 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 05/11] arm64: csum: Disable KASAN for do_csum()
+Message-ID: <20200422104138.GA30265@willie-the-truck>
+References: <20200421151537.19241-1-will@kernel.org>
+ <20200421151537.19241-6-will@kernel.org>
+ <20200422094951.GA54428@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422094951.GA54428@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+On Wed, Apr 22, 2020 at 10:49:52AM +0100, Mark Rutland wrote:
+> On Tue, Apr 21, 2020 at 04:15:31PM +0100, Will Deacon wrote:
+> > do_csum() over-reads the source buffer and therefore abuses
+> > READ_ONCE_NOCHECK() to avoid tripping up KASAN. In preparation for
+> > READ_ONCE_NOCHECK() becoming a macro, and therefore losing its
+> > '__no_sanitize_address' annotation, just annotate do_csum() explicitly
+> > and fall back to normal loads.
+> > 
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> 
+> From a functional perspective:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-commit d0802dc411f469569a537283b6f3833af47aece9 upstream.
+Thanks.
 
-Commit f949a12fd697 ("net: dsa: bcm_sf2: fix buffer overflow doing
-set_rxnfc") tried to fix the some user controlled buffer overflows in
-bcm_sf2_cfp_rule_set() and bcm_sf2_cfp_rule_del() but the fix was using
-CFP_NUM_RULES, which while it is correct not to overflow the bitmaps, is
-not representative of what the device actually supports. Correct that by
-using bcm_sf2_cfp_rule_size() instead.
+> I know that Robin had a concern w.r.t. how this would affect the
+> codegen, but I think we can follow that up after the series as a whole
+> is merged.
 
-The latter subtracts the number of rules by 1, so change the checks from
-greater than or equal to greater than accordingly.
+Makes sense. I did look at the codegen, fwiw, and it didn't seem especially
+bad. One of the LDP's gets cracked in the unlikely() path, but it didn't
+look like it would be a disaster (and sprinkling barrier() around to force
+the LDP felt really fragile!).
 
-Fixes: f949a12fd697 ("net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/dsa/bcm_sf2_cfp.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
---- a/drivers/net/dsa/bcm_sf2_cfp.c
-+++ b/drivers/net/dsa/bcm_sf2_cfp.c
-@@ -882,17 +882,14 @@ static int bcm_sf2_cfp_rule_set(struct d
- 	     fs->m_ext.data[1]))
- 		return -EINVAL;
- 
--	if (fs->location != RX_CLS_LOC_ANY && fs->location >= CFP_NUM_RULES)
-+	if (fs->location != RX_CLS_LOC_ANY &&
-+	    fs->location > bcm_sf2_cfp_rule_size(priv))
- 		return -EINVAL;
- 
- 	if (fs->location != RX_CLS_LOC_ANY &&
- 	    test_bit(fs->location, priv->cfp.used))
- 		return -EBUSY;
- 
--	if (fs->location != RX_CLS_LOC_ANY &&
--	    fs->location > bcm_sf2_cfp_rule_size(priv))
--		return -EINVAL;
--
- 	ret = bcm_sf2_cfp_rule_cmp(priv, port, fs);
- 	if (ret == 0)
- 		return -EEXIST;
-@@ -973,7 +970,7 @@ static int bcm_sf2_cfp_rule_del(struct b
- 	struct cfp_rule *rule;
- 	int ret;
- 
--	if (loc >= CFP_NUM_RULES)
-+	if (loc > bcm_sf2_cfp_rule_size(priv))
- 		return -EINVAL;
- 
- 	/* Refuse deleting unused rules, and those that are not unique since
-
-
+Will
