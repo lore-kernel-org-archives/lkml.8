@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280F1C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A2C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 057D020780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E7F20780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550261;
-	bh=QxZ8zXJ8KpX3iqu0j8yWWAIOGHgsBEcRzS5kYm1AuSg=;
+	s=default; t=1587550262;
+	bh=t3gf1WfgzA7QkhtiJsUlvysRRBiRev8FPPvrFOpxF64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZpHIMPOzlN41r3JZmST5WYHqQV5pWQhr3X+El51JQHJ/Dhdawt+X4KIqq0GKPDtV8
-	 x/VSuoqPLXau6r3bAb32k9AsRFR980ZmjYgtxyD9y8SjzRZy1R9yNwYcAFaUzxOUcA
-	 nQSdtOps8+qsdOIZkdhv4g02gSvSlB9FVCpY7ODE=
+	b=jYZrpBWiQH2yCTi99E+znXt70uNRHH32Ca/Hzm7vrvCFlJ6chyhNvBdHtwUU/cp2B
+	 AScnXiCGi4nSZAznNtpmq7BzGou5uDw7rQ5nfA3qZ30LZSsh8DgRsbkrNttcGTdmgp
+	 fbk3ryMYivVgae5GF4aDCbxcpNd7Reh0ChPfHdbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgDVKK7 (ORCPT
+        id S1729131AbgDVKLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:10:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41362 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729084AbgDVKKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:51 -0400
+        id S1728554AbgDVKKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80D7020575;
-        Wed, 22 Apr 2020 10:10:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D20892077D;
+        Wed, 22 Apr 2020 10:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550250;
-        bh=QxZ8zXJ8KpX3iqu0j8yWWAIOGHgsBEcRzS5kYm1AuSg=;
+        s=default; t=1587550253;
+        bh=t3gf1WfgzA7QkhtiJsUlvysRRBiRev8FPPvrFOpxF64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y90UIzhCBMaIIprAxErbMPeRQHAltZJH/xk4kQC6Ks7YniYkLrfRkplEtulRk/blT
-         nbX5eFxV3R2nWgSFlL1gFaKskwax4cqdRA6kQEPuLTqfZOaYA6chDZviCFP5zgdfMa
-         jZ3TUEbnj/vDGh4l908hcj6hL8i0Jpe6D40/4QtI=
+        b=q8Mpn1yGFBz8cWRcR42ma3UYosPCpvVcaxcBNnfTrOeeGctlfjANtnw7y5apXh/DB
+         yHs/CdqhQLfImRkaWkZsfHpSEHKRxMae9ydmbrjcUHY972YiUymTxU1SEjhp3Ujd9M
+         Yo+IYbCP8wXaoainv63YcgU+OpVIYl56z0NhhNvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 071/199] mm: Use fixed constant in page_frag_alloc instead of size + 1
-Date:   Wed, 22 Apr 2020 11:56:37 +0200
-Message-Id: <20200422095105.281754538@linuxfoundation.org>
+        Harshini Shetty <harshini.x.shetty@sony.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 072/199] dm verity fec: fix memory leak in verity_fec_dtr
+Date:   Wed, 22 Apr 2020 11:56:38 +0200
+Message-Id: <20200422095105.366516837@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,57 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+From: Shetty, Harshini X (EXT-Sony Mobile) <Harshini.X.Shetty@sony.com>
 
-commit 8644772637deb121f7ac2df690cbf83fa63d3b70 upstream.
+commit 75fa601934fda23d2f15bf44b09c2401942d8e15 upstream.
 
-This patch replaces the size + 1 value introduced with the recent fix for 1
-byte allocs with a constant value.
+Fix below kmemleak detected in verity_fec_ctr. output_pool is
+allocated for each dm-verity-fec device. But it is not freed when
+dm-table for the verity target is removed. Hence free the output
+mempool in destructor function verity_fec_dtr.
 
-The idea here is to reduce code overhead as the previous logic would have
-to read size into a register, then increment it, and write it back to
-whatever field was being used. By using a constant we can avoid those
-memory reads and arithmetic operations in favor of just encoding the
-maximum value into the operation itself.
+unreferenced object 0xffffffffa574d000 (size 4096):
+  comm "init", pid 1667, jiffies 4294894890 (age 307.168s)
+  hex dump (first 32 bytes):
+    8e 36 00 98 66 a8 0b 9b 00 00 00 00 00 00 00 00  .6..f...........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000060e82407>] __kmalloc+0x2b4/0x340
+    [<00000000dd99488f>] mempool_kmalloc+0x18/0x20
+    [<000000002560172b>] mempool_init_node+0x98/0x118
+    [<000000006c3574d2>] mempool_init+0x14/0x20
+    [<0000000008cb266e>] verity_fec_ctr+0x388/0x3b0
+    [<000000000887261b>] verity_ctr+0x87c/0x8d0
+    [<000000002b1e1c62>] dm_table_add_target+0x174/0x348
+    [<000000002ad89eda>] table_load+0xe4/0x328
+    [<000000001f06f5e9>] dm_ctl_ioctl+0x3b4/0x5a0
+    [<00000000bee5fbb7>] do_vfs_ioctl+0x5dc/0x928
+    [<00000000b475b8f5>] __arm64_sys_ioctl+0x70/0x98
+    [<000000005361e2e8>] el0_svc_common+0xa0/0x158
+    [<000000001374818f>] el0_svc_handler+0x6c/0x88
+    [<000000003364e9f4>] el0_svc+0x8/0xc
+    [<000000009d84cec9>] 0xffffffffffffffff
 
-Fixes: 2c2ade81741c ("mm: page_alloc: fix ref bias in page_frag_alloc() for 1-byte allocs")
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: a739ff3f543af ("dm verity: add support for forward error correction")
+Depends-on: 6f1c819c219f7 ("dm: convert to bioset_init()/mempool_init()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Harshini Shetty <harshini.x.shetty@sony.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/md/dm-verity-fec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4325,11 +4325,11 @@ refill:
- 		/* Even if we own the page, we do not use atomic_set().
- 		 * This would break get_page_unless_zero() users.
- 		 */
--		page_ref_add(page, size);
-+		page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
+--- a/drivers/md/dm-verity-fec.c
++++ b/drivers/md/dm-verity-fec.c
+@@ -552,6 +552,7 @@ void verity_fec_dtr(struct dm_verity *v)
+ 	mempool_destroy(f->rs_pool);
+ 	mempool_destroy(f->prealloc_pool);
+ 	mempool_destroy(f->extra_pool);
++	mempool_destroy(f->output_pool);
+ 	kmem_cache_destroy(f->cache);
  
- 		/* reset page count bias and offset to start of new frag */
- 		nc->pfmemalloc = page_is_pfmemalloc(page);
--		nc->pagecnt_bias = size + 1;
-+		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
- 		nc->offset = size;
- 	}
- 
-@@ -4345,10 +4345,10 @@ refill:
- 		size = nc->size;
- #endif
- 		/* OK, page count is 0, we can safely set it */
--		set_page_count(page, size + 1);
-+		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
- 
- 		/* reset page count bias and offset to start of new frag */
--		nc->pagecnt_bias = size + 1;
-+		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
- 		offset = size - fragsz;
- 	}
- 
+ 	if (f->data_bufio)
 
 
