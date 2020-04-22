@@ -2,379 +2,157 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB0BC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99277C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE992076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764F82076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GKxKz1Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgDVWBz (ORCPT
+        id S1726208AbgDVWBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:01:55 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:47630 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgDVWBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 18:01:54 -0400
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 280BD7DD; Wed, 22 Apr 2020 17:01:49 -0500 (CDT)
-Date:   Wed, 22 Apr 2020 17:01:49 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgDVWBx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 18:01:53 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E621C03C1AA
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:01:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j1so4462229wrt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=em+wcShpdUXMOwEuiMKWPovG1hGJ7vnjNO1+x5kgI0M=;
+        b=GKxKz1ZpRtm0Zath9tELAqG/QrfcwqyTN791UFjljwVoF/QYBEfF5W5V877GGat3MF
+         4a+wKQQkqA6adYYwVLZzyz1N8RXUac6p5fJZq08vBjqmQFrTjYVDL79IV6jj1Qo+LZLQ
+         3120q21JUFdmW+FqSTo2C7aY1tviiDz+7tJT0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=em+wcShpdUXMOwEuiMKWPovG1hGJ7vnjNO1+x5kgI0M=;
+        b=nVq/IU+P2nc6GGTfnL1YE6YBTuZqTqPABEPF1PU0c3csPQKudufMvIAUiuanMxuSfd
+         zDIBVByHvuSYwQmU3EIcgxdn5Ydq2cRFbo7u+a1Nh2GOV8+CJ3A9Acf4wAnpYOlOdblt
+         3wDGQUQEQh2ZZL4R5KcMfMwFlJ6rsKSxO19H16+xXM2hpupIJLvsGfhKRsoA6bONHr1S
+         /sK7zrS/J5iB6+OartWYT2HU6VkjSQ9HbFCWQpiYpDtgvCQkra/OsFOoO7yL0qYTVPTu
+         rl1Yo5hamaXEdh5/BxK9jBLR1VXaPXqz0TSi9/ivuEMKrWNz6UL8nYYCyQ0ayuLHZi+6
+         LKOA==
+X-Gm-Message-State: AGi0Pubi0OiRr9vjiK0qcZWveioeg5QrgJ1mCtpswtBpsaglztlkko/E
+        j90d2ZHfSDgPHZ1eIfgSYoJKtA==
+X-Google-Smtp-Source: APiQypKI8k4TySX2HxG45ANUOlTXZ016fEV88ihQ/i/kGs1Reh4zJF1QAgKUNB6iUGMJJTHVq4CGAw==
+X-Received: by 2002:adf:a309:: with SMTP id c9mr1154684wrb.97.1587592911938;
+        Wed, 22 Apr 2020 15:01:51 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id z10sm702728wrg.69.2020.04.22.15.01.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 15:01:50 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] misc: bcm-vk: add Broadcom VK driver
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        kbuild test robot <lkp@intel.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: Re: [PATCH v2 4/7] kernfs: handle multiple namespace tags
-Message-ID: <20200422220149.GA892@mail.hallyn.com>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
- <20200422145437.176057-5-christian.brauner@ubuntu.com>
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>,
+        kbuild-all@lists.01.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Dan Carpenter <error27@gmail.com>
+References: <20200420162809.17529-7-scott.branden@broadcom.com>
+ <202004221945.LY6x0DQD%lkp@intel.com> <20200422113558.GJ2659@kadam>
+ <b626e7fe-ae3f-827f-6f5b-2e6639f55775@broadcom.com>
+Message-ID: <d9e6d8a0-9e99-e822-8907-e1478c3a7f47@broadcom.com>
+Date:   Wed, 22 Apr 2020 15:01:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422145437.176057-5-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b626e7fe-ae3f-827f-6f5b-2e6639f55775@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:54:34PM +0200, Christian Brauner wrote:
-> Since [1] kernfs supports namespace tags. This feature is essential to
-> enable sysfs to present different views of on various parts depending on
-> the namespace tag. For example, the /sys/class/net/ directory will only
-> show network devices that belong to the network namespace that sysfs was
-> mounted in. This is achieved by stashing a reference to the network
-> namespace of the task mounting sysfs in the super block. And when a
-> lookup operation is performed on e.g. /sys/class/net/ kernfs will
-> compare the network namespace tag of the kernfs_node associated with the
-> device and kobject of the network device to the network namespace of the
-> network device. This ensures that only network devices owned by the
-> network namespace sysfs was mounted in are shown, a feature which is
-> essential to containers.
-> For loopfs to show correct permissions in sysfs just as with network
-> devices we need to be able to tag kernfs_super_info with additional
-> namespaces. This extension was even already mentioned in a comment to
-> struct kernfs_super_info:
->   /*
->    * Each sb is associated with one namespace tag, currently the
->    * network namespace of the task which mounted this kernfs
->    * instance.  If multiple tags become necessary, make the following
->    * an array and compare kernfs_node tag against every entry.
->    */
-> This patch extends the kernfs_super_info and kernfs_fs_context ns
-> pointers to fixed-size arrays of namespace tags. The size is taken from
-> the namespaces currently supported by kobjects, i.e. we don't extend it
-> to cover all namespace but only the ones kernfs needs to support.
-> In addition, the kernfs_node struct gains an additional member that
-> indicates the type of namespace this kernfs_node was tagged with. This
-> allows us to simply retrieve the correct namespace tag from the
-> kernfs_fs_context and kernfs_super_info ns array with a simple indexing
-> operation. This has the advantage that we can just keep passing down the
-> correct namespace instead of passing down the array.
-> 
-> [1]: 608b4b9548de ("netns: Teach network device kobjects which namespace they are in.")
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-by: Tejun Heo <tj@kernel.org>
 
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
 
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> ---
-> /* v2 */
-> unchanged
-> ---
->  fs/kernfs/dir.c             |  6 +++---
->  fs/kernfs/kernfs-internal.h |  9 ++++-----
->  fs/kernfs/mount.c           | 11 +++++++----
->  fs/sysfs/mount.c            | 10 +++++-----
->  include/linux/kernfs.h      | 22 ++++++++++++++--------
->  include/linux/sysfs.h       |  8 +++++---
->  lib/kobject.c               |  2 +-
->  7 files changed, 39 insertions(+), 29 deletions(-)
-> 
-> diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-> index 9aec80b9d7c6..1f2d894ae454 100644
-> --- a/fs/kernfs/dir.c
-> +++ b/fs/kernfs/dir.c
-> @@ -576,7 +576,7 @@ static int kernfs_dop_revalidate(struct dentry *dentry, unsigned int flags)
->  
->  	/* The kernfs node has been moved to a different namespace */
->  	if (kn->parent && kernfs_ns_enabled(kn->parent) &&
-> -	    kernfs_info(dentry->d_sb)->ns != kn->ns)
-> +	    kernfs_info(dentry->d_sb)->ns[kn->ns_type] != kn->ns)
->  		goto out_bad;
->  
->  	mutex_unlock(&kernfs_mutex);
-> @@ -1087,7 +1087,7 @@ static struct dentry *kernfs_iop_lookup(struct inode *dir,
->  	mutex_lock(&kernfs_mutex);
->  
->  	if (kernfs_ns_enabled(parent))
-> -		ns = kernfs_info(dir->i_sb)->ns;
-> +		ns = kernfs_info(dir->i_sb)->ns[parent->ns_type];
->  
->  	kn = kernfs_find_ns(parent, dentry->d_name.name, ns);
->  
-> @@ -1673,7 +1673,7 @@ static int kernfs_fop_readdir(struct file *file, struct dir_context *ctx)
->  	mutex_lock(&kernfs_mutex);
->  
->  	if (kernfs_ns_enabled(parent))
-> -		ns = kernfs_info(dentry->d_sb)->ns;
-> +		ns = kernfs_info(dentry->d_sb)->ns[parent->ns_type];
->  
->  	for (pos = kernfs_dir_pos(ns, parent, ctx->pos, pos);
->  	     pos;
-> diff --git a/fs/kernfs/kernfs-internal.h b/fs/kernfs/kernfs-internal.h
-> index 7ee97ef59184..7c972c00f84a 100644
-> --- a/fs/kernfs/kernfs-internal.h
-> +++ b/fs/kernfs/kernfs-internal.h
-> @@ -16,6 +16,7 @@
->  #include <linux/xattr.h>
->  
->  #include <linux/kernfs.h>
-> +#include <linux/kobject_ns.h>
->  #include <linux/fs_context.h>
->  
->  struct kernfs_iattrs {
-> @@ -62,12 +63,10 @@ struct kernfs_super_info {
->  	struct kernfs_root	*root;
->  
->  	/*
-> -	 * Each sb is associated with one namespace tag, currently the
-> -	 * network namespace of the task which mounted this kernfs
-> -	 * instance.  If multiple tags become necessary, make the following
-> -	 * an array and compare kernfs_node tag against every entry.
-> +	 * Each sb can be associated with namespace tags. They will be used
-> +	 * to compare kernfs_node tags against relevant entries.
->  	 */
-> -	const void		*ns;
-> +	const void		*ns[KOBJ_NS_TYPES];
->  
->  	/* anchored at kernfs_root->supers, protected by kernfs_mutex */
->  	struct list_head	node;
-> diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
-> index 9dc7e7a64e10..dc4ee0f0a597 100644
-> --- a/fs/kernfs/mount.c
-> +++ b/fs/kernfs/mount.c
-> @@ -279,14 +279,15 @@ static int kernfs_test_super(struct super_block *sb, struct fs_context *fc)
->  	struct kernfs_super_info *sb_info = kernfs_info(sb);
->  	struct kernfs_super_info *info = fc->s_fs_info;
->  
-> -	return sb_info->root == info->root && sb_info->ns == info->ns;
-> +	return sb_info->root == info->root &&
-> +	       memcmp(sb_info->ns, info->ns, sizeof(sb_info->ns)) == 0;
->  }
->  
->  static int kernfs_set_super(struct super_block *sb, struct fs_context *fc)
->  {
->  	struct kernfs_fs_context *kfc = fc->fs_private;
->  
-> -	kfc->ns_tag = NULL;
-> +	memset(kfc->ns_tag, 0, sizeof(kfc->ns_tag));
->  	return set_anon_super_fc(sb, fc);
->  }
->  
-> @@ -296,7 +297,7 @@ static int kernfs_set_super(struct super_block *sb, struct fs_context *fc)
->   *
->   * Return the namespace tag associated with kernfs super_block @sb.
->   */
-> -const void *kernfs_super_ns(struct super_block *sb)
-> +const void **kernfs_super_ns(struct super_block *sb)
->  {
->  	struct kernfs_super_info *info = kernfs_info(sb);
->  
-> @@ -324,7 +325,9 @@ int kernfs_get_tree(struct fs_context *fc)
->  		return -ENOMEM;
->  
->  	info->root = kfc->root;
-> -	info->ns = kfc->ns_tag;
-> +	BUILD_BUG_ON(sizeof(info->ns) != sizeof(kfc->ns_tag));
-> +	memcpy(info->ns, kfc->ns_tag, sizeof(info->ns));
-> +
->  	INIT_LIST_HEAD(&info->node);
->  
->  	fc->s_fs_info = info;
-> diff --git a/fs/sysfs/mount.c b/fs/sysfs/mount.c
-> index db81cfbab9d6..5e2ec88a709e 100644
-> --- a/fs/sysfs/mount.c
-> +++ b/fs/sysfs/mount.c
-> @@ -41,8 +41,8 @@ static void sysfs_fs_context_free(struct fs_context *fc)
->  {
->  	struct kernfs_fs_context *kfc = fc->fs_private;
->  
-> -	if (kfc->ns_tag)
-> -		kobj_ns_drop(KOBJ_NS_TYPE_NET, kfc->ns_tag);
-> +	if (kfc->ns_tag[KOBJ_NS_TYPE_NET])
-> +		kobj_ns_drop(KOBJ_NS_TYPE_NET, kfc->ns_tag[KOBJ_NS_TYPE_NET]);
->  	kernfs_free_fs_context(fc);
->  	kfree(kfc);
->  }
-> @@ -66,7 +66,7 @@ static int sysfs_init_fs_context(struct fs_context *fc)
->  	if (!kfc)
->  		return -ENOMEM;
->  
-> -	kfc->ns_tag = netns = kobj_ns_grab_current(KOBJ_NS_TYPE_NET);
-> +	kfc->ns_tag[KOBJ_NS_TYPE_NET] = netns = kobj_ns_grab_current(KOBJ_NS_TYPE_NET);
->  	kfc->root = sysfs_root;
->  	kfc->magic = SYSFS_MAGIC;
->  	fc->fs_private = kfc;
-> @@ -81,10 +81,10 @@ static int sysfs_init_fs_context(struct fs_context *fc)
->  
->  static void sysfs_kill_sb(struct super_block *sb)
->  {
-> -	void *ns = (void *)kernfs_super_ns(sb);
-> +	void **ns = (void **)kernfs_super_ns(sb);
->  
->  	kernfs_kill_sb(sb);
-> -	kobj_ns_drop(KOBJ_NS_TYPE_NET, ns);
-> +	kobj_ns_drop(KOBJ_NS_TYPE_NET, ns[KOBJ_NS_TYPE_NET]);
->  }
->  
->  static struct file_system_type sysfs_fs_type = {
-> diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
-> index 89f6a4214a70..d0544f2e0c99 100644
-> --- a/include/linux/kernfs.h
-> +++ b/include/linux/kernfs.h
-> @@ -16,6 +16,7 @@
->  #include <linux/atomic.h>
->  #include <linux/uidgid.h>
->  #include <linux/wait.h>
-> +#include <linux/kobject_ns.h>
->  
->  struct file;
->  struct dentry;
-> @@ -137,8 +138,9 @@ struct kernfs_node {
->  
->  	struct rb_node		rb;
->  
-> -	const void		*ns;	/* namespace tag */
-> -	unsigned int		hash;	/* ns + name hash */
-> +	const void		*ns;		/* namespace tag */
-> +	enum kobj_ns_type	ns_type;	/* type of namespace tag */
-> +	unsigned int		hash;		/* ns + name hash */
->  	union {
->  		struct kernfs_elem_dir		dir;
->  		struct kernfs_elem_symlink	symlink;
-> @@ -275,7 +277,7 @@ struct kernfs_ops {
->   */
->  struct kernfs_fs_context {
->  	struct kernfs_root	*root;		/* Root of the hierarchy being mounted */
-> -	void			*ns_tag;	/* Namespace tag of the mount (or NULL) */
-> +	void			*ns_tag[KOBJ_NS_TYPES]; /* Namespace tags of the mount (or empty) */
->  	unsigned long		magic;		/* File system specific magic number */
->  
->  	/* The following are set/used by kernfs_mount() */
-> @@ -319,17 +321,20 @@ static inline ino_t kernfs_gen(struct kernfs_node *kn)
->  
->  /**
->   * kernfs_enable_ns - enable namespace under a directory
-> - * @kn: directory of interest, should be empty
-> + * @kn:		directory of interest, should be empty
-> + * @ns_type:	type of namespace that should be enabled for this directory
->   *
->   * This is to be called right after @kn is created to enable namespace
->   * under it.  All children of @kn must have non-NULL namespace tags and
->   * only the ones which match the super_block's tag will be visible.
->   */
-> -static inline void kernfs_enable_ns(struct kernfs_node *kn)
-> +static inline void kernfs_enable_ns(struct kernfs_node *kn,
-> +				    enum kobj_ns_type ns_type)
->  {
->  	WARN_ON_ONCE(kernfs_type(kn) != KERNFS_DIR);
->  	WARN_ON_ONCE(!RB_EMPTY_ROOT(&kn->dir.children));
->  	kn->flags |= KERNFS_NS;
-> +	kn->ns_type = ns_type;
->  }
->  
->  /**
-> @@ -401,7 +406,7 @@ int kernfs_xattr_get(struct kernfs_node *kn, const char *name,
->  int kernfs_xattr_set(struct kernfs_node *kn, const char *name,
->  		     const void *value, size_t size, int flags);
->  
-> -const void *kernfs_super_ns(struct super_block *sb);
-> +const void **kernfs_super_ns(struct super_block *sb);
->  int kernfs_get_tree(struct fs_context *fc);
->  void kernfs_free_fs_context(struct fs_context *fc);
->  void kernfs_kill_sb(struct super_block *sb);
-> @@ -415,7 +420,8 @@ struct kernfs_node *kernfs_find_and_get_node_by_id(struct kernfs_root *root,
->  static inline enum kernfs_node_type kernfs_type(struct kernfs_node *kn)
->  { return 0; }	/* whatever */
->  
-> -static inline void kernfs_enable_ns(struct kernfs_node *kn) { }
-> +static inline void kernfs_enable_ns(struct kernfs_node *kn,
-> +				    enum kobj_ns_type ns_type) { }
->  
->  static inline bool kernfs_ns_enabled(struct kernfs_node *kn)
->  { return false; }
-> @@ -511,7 +517,7 @@ static inline int kernfs_xattr_set(struct kernfs_node *kn, const char *name,
->  				   const void *value, size_t size, int flags)
->  { return -ENOSYS; }
->  
-> -static inline const void *kernfs_super_ns(struct super_block *sb)
-> +static inline const void **kernfs_super_ns(struct super_block *sb)
->  { return NULL; }
->  
->  static inline int kernfs_get_tree(struct fs_context *fc)
-> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-> index 80bb865b3a33..d127b3487abc 100644
-> --- a/include/linux/sysfs.h
-> +++ b/include/linux/sysfs.h
-> @@ -306,9 +306,10 @@ void sysfs_notify(struct kobject *kobj, const char *dir, const char *attr);
->  
->  int __must_check sysfs_init(void);
->  
-> -static inline void sysfs_enable_ns(struct kernfs_node *kn)
-> +static inline void sysfs_enable_ns(struct kernfs_node *kn,
-> +				   enum kobj_ns_type ns_type)
->  {
-> -	return kernfs_enable_ns(kn);
-> +	return kernfs_enable_ns(kn, ns_type);
->  }
->  
->  int sysfs_file_change_owner(struct kobject *kobj, const char *name, kuid_t kuid,
-> @@ -531,7 +532,8 @@ static inline int __must_check sysfs_init(void)
->  	return 0;
->  }
->  
-> -static inline void sysfs_enable_ns(struct kernfs_node *kn)
-> +static inline void sysfs_enable_ns(struct kernfs_node *kn,
-> +				   enum kobj_ns_type ns_type)
->  {
->  }
->  
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index 6f07083cc111..c58c62d49a10 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -120,7 +120,7 @@ static int create_dir(struct kobject *kobj)
->  		BUG_ON(ops->type >= KOBJ_NS_TYPES);
->  		BUG_ON(!kobj_ns_type_registered(ops->type));
->  
-> -		sysfs_enable_ns(kobj->sd);
-> +		sysfs_enable_ns(kobj->sd, ops->type);
->  	}
->  
->  	return 0;
-> -- 
-> 2.26.1
+On 2020-04-22 9:13 a.m., Scott Branden wrote:
+>
+>
+> On 2020-04-22 4:35 a.m., Dan Carpenter wrote:
+>> On Wed, Apr 22, 2020 at 07:17:34PM +0800, kbuild test robot wrote:
+>>> Hi Scott,
+>>>
+>>> I love your patch! Perhaps something to improve:
+>>>
+>>> [auto build test WARNING on driver-core/driver-core-testing]
+>>> [also build test WARNING on next-20200421]
+>>> [cannot apply to char-misc/char-misc-testing kselftest/next 
+>>> linus/master v5.7-rc2]
+>>> [if your patch is applied to the wrong git tree, please drop us a 
+>>> note to help
+>>> improve the system. BTW, we also suggest to use '--base' option to 
+>>> specify the
+>>> base tree in git format-patch, please see 
+>>> https://stackoverflow.com/a/37406982]
+>>>
+>>> url: 
+>>> https://github.com/0day-ci/linux/commits/Scott-Branden/firmware-add-partial-read-support-in-request_firmware_into_buf/20200422-114528
+>>> base: 
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 
+>>> 55623260bb33e2ab849af76edf2253bc04cb241f
+>>> reproduce:
+>>>          # apt-get install sparse
+>>>          # sparse version: v0.6.1-191-gc51a0382-dirty
+>>>          make ARCH=x86_64 allmodconfig
+>>>          make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+>>                                             ^^^^^^^^^^^^^^^^^^^
+>>
+>> Sorry, you asked me about this earlier.  You will need to add
+>> -D__CHECK_ENDIAN__ to enable these Sparse warnings.
+> This is strange.  I ran the sparse build and thought I had fixed all 
+> the issues.
+> I'll have to try again.
+>
+> One other question with the sparse build.  I get many of the messages 
+> printed but the build seems to go to the end (even without my patches 
+> applied):
+> ./arch/x86/include/asm/paravirt.h:333:9: error: got __inline
+> ./arch/x86/include/asm/paravirt.h:338:9: error: Expected ( after asm
+> ./arch/x86/include/asm/paravirt.h:338:9: error: got __inline
+> ./arch/x86/include/asm/paravirt.h:343:9: error: Expected ( after asm
+> ./arch/x86/include/asm/paravirt.h:343:9: error: got __inline
+> ./arch/x86/include/asm/paravirt.h:348:9: error: Expected ( after asm
+> ./arch/x86/include/asm/paravirt.h:348:9: error: too many errors
+>
+> Any way to suppress or I am doing something wrong?  I just run the 2 
+> make commands:
+>
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+I figured out the sparse utility on ubuntu 18.04 is out of date causing 
+the issue.
+>
+>> regards,
+>> dan carpenter
+>>
+>
+
