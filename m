@@ -2,276 +2,176 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40C0C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41037C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27872076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1625F2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SMXjhCaO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a6/PaJZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgDVJnt (ORCPT
+        id S1726079AbgDVJpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:43:49 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35852 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725994AbgDVJns (ORCPT
+        Wed, 22 Apr 2020 05:45:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725912AbgDVJpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:43:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587548625;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ngmo1v7UlTjBtHXkdIAR6CVQRH0Anc2j7dfZIJYp0bk=;
-        b=SMXjhCaOkrEFJVJeZC+/luPzTq9FPlQfae5aApsNVp7a/hwJxJWOB4vjgN/LUi2atfCPs0
-        Y2JxPvQaEw97UCqczixXPEQVLAJO1C2WSwvqd1oB5Tisbb3sUv9t879CvyW9drpQOeEstY
-        n436TngaImeRmy8R8xCTWIebCFu8Ubk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-507-n5JIfCLNOYCNCKOtqlm7Iw-1; Wed, 22 Apr 2020 05:43:41 -0400
-X-MC-Unique: n5JIfCLNOYCNCKOtqlm7Iw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4937190B2A0;
-        Wed, 22 Apr 2020 09:43:38 +0000 (UTC)
-Received: from T590 (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6DA465C1D4;
-        Wed, 22 Apr 2020 09:43:25 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 17:43:20 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org, rostedt@goodmis.org,
-        mingo@redhat.com, jack@suse.cz, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200422094320.GH299948@T590>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
- <20200420201615.GC302402@kroah.com>
- <20200420204156.GO11244@42.do-not-panic.com>
- <20200421070048.GD347130@kroah.com>
- <20200422072859.GQ11244@42.do-not-panic.com>
+        Wed, 22 Apr 2020 05:45:20 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA12C03C1A8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 02:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=788E1MFAXW1wpQjFhhTXItaX7rDEk1l+jBolHhk7YTE=; b=a6/PaJZT3nHwDrb/j5yyNNRx6l
+        O51+kKixeRVqvsg/zh2HRODcE3Z/XwTeEhKtPvKjayNsp872SDrmEoatNl7TDdeRW4XjhcvWOgw88
+        mIW5KitD1rvpsEwLjav2cyx/I8upgLanlQ66agf0rDJgWXL5/pnNXHidgdPivlsgamfz5h8cRWtYF
+        bnWjXuMHORKwjLabrXNMORaZf1sZKIFI076dwyg+HP2nWJ3YGCdn9CEUVNBiuEApjBS7WT5Yl67oQ
+        KIiInFTt7efTUfoZmCe8SN6kYiq4qjuJQambSiVRiEjNO6KKeixU6fSVQfCbM0GD4uG7633H4VZxJ
+        k2uSzu8w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRBw2-0003m5-QK; Wed, 22 Apr 2020 09:44:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CCEC33011C6;
+        Wed, 22 Apr 2020 11:44:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2F5AC2012B92C; Wed, 22 Apr 2020 11:44:47 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 11:44:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        mbenes@suse.cz, jthierry@redhat.com, alexandre.chartre@oracle.com
+Subject: Re: [PATCH v5 04/17] x86,ftrace: Fix ftrace_regs_caller() unwind
+Message-ID: <20200422094446.GY20730@hirez.programming.kicks-ass.net>
+References: <20200416114706.625340212@infradead.org>
+ <20200416115118.749606694@infradead.org>
+ <20200421203345.4e165c4b@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422072859.GQ11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200421203345.4e165c4b@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 07:28:59AM +0000, Luis Chamberlain wrote:
-> On Tue, Apr 21, 2020 at 09:00:48AM +0200, Greg KH wrote:
-> > On Mon, Apr 20, 2020 at 08:41:56PM +0000, Luis Chamberlain wrote:
-> > > On Mon, Apr 20, 2020 at 10:16:15PM +0200, Greg KH wrote:
-> > > > On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
-> > > > 
-> > > > This patch triggered gmail's spam detection, your changelog text is
-> > > > whack...
-> > > 
-> > > Oh? What do you think triggered it?
-> > 
-> > No idea.
+On Tue, Apr 21, 2020 at 08:33:45PM -0400, Steven Rostedt wrote:
+> Hi Peter,
 > 
-> Alright, well I'm going to move most of the analysis to the bug report
-> and be as concise as possible on the commit log.
+> After looking at the code, I realized that the only possible way to do
+> the "direct call" part, is if the direct function helper is executed
+> there. All other ftrace_ops, will not call that path.
 > 
-> > > > > diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
-> > > > > index 19091e1effc0..d84038bce0a5 100644
-> > > > > --- a/block/blk-debugfs.c
-> > > > > +++ b/block/blk-debugfs.c
-> > > > > @@ -3,6 +3,9 @@
-> > > > >  /*
-> > > > >   * Shared request-based / make_request-based functionality
-> > > > >   */
-> > > > > +
-> > > > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > > > +
-> > > > >  #include <linux/kernel.h>
-> > > > >  #include <linux/blkdev.h>
-> > > > >  #include <linux/debugfs.h>
-> > > > > @@ -13,3 +16,30 @@ void blk_debugfs_register(void)
-> > > > >  {
-> > > > >  	blk_debugfs_root = debugfs_create_dir("block", NULL);
-> > > > >  }
-> > > > > +
-> > > > > +int __must_check blk_queue_debugfs_register(struct request_queue *q)
-> > > > > +{
-> > > > > +	struct dentry *dir = NULL;
-> > > > > +
-> > > > > +	/* This can happen if we have a bug in the lower layers */
-> > > > > +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> > > > > +	if (dir) {
-> > > > > +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> > > > > +			kobject_name(q->kobj.parent));
-> > > > > +		dput(dir);
-> > > > > +		return -EALREADY;
-> > > > > +	}
-> > > > > +
-> > > > > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > > > > +					    blk_debugfs_root);
-> > > > > +	if (!q->debugfs_dir)
-> > > > > +		return -ENOMEM;
-> > > > 
-> > > > Why doesn't the directory just live in the request queue, or somewhere
-> > > > else, so that you save it when it is created and then that's it.  No
-> > > > need to "look it up" anywhere else.
-> > > 
-> > > Its already there. And yes, after my changes it is technically possible
-> > > to just re-use it directly. But this is complicated by a few things. One
-> > > is that at this point in time, asynchronous request_queue removal is
-> > > still possible, and so a race was exposed where a requeust_queue may be
-> > > lingering but its old device is gone. That race is fixed by reverting us
-> > > back to synchronous request_queue removal, therefore ensuring that the
-> > > debugfs dir exists so long as the device does.
-> > > 
-> > > I can remove the debugfs_lookup() *after* we revert to synchronous
-> > > request_queue removal, or we just re-order the patches so that the
-> > > revert happens first. That should simplify this patch.
-> > > 
-> > > The code in this patch was designed to help dispute the logic behind
-> > > the CVE, in particular it shows exactly where debugfs_dir *is* the
-> > > one found by debugfs_lookup(), and shows the real issue behind the
-> > > removal.
-> > > 
-> > > But yeah, now that that is done, I hope its clear to all, and I think
-> > > this patch can be simplified if we just revert the async requeust_queue
-> > > removal first.
-> > 
-> > Don't try to "dispute" crazyness, that's not what kernel code is for.
-> > Just do the right thing, and simply saving off the pointer to the
-> > debugfs file when created is the "correct" thing to do, no matter what.
-> > No race conditions or anything else can happen when you do that.
+> I added a trampoline that points to ftrace_regs_caller to the direct
+> ftrace_ops, to force it never to allocate its own trampoline, and thus
+> no created trampoline should ever do the jump for a direct caller.
 > 
-> Nope, races are still possible even if we move revert back to sync
-> request_queue removal, but I do believe that just reveals a bug
-> elsewhere, which I'll just fix as I think I know where this is.
+> By doing this, I was able to move the code around to be a bit simpler,
+> and not need the double modifications (the double ret).
 > 
-> > > > Or do you do that in later patches?  I only see this one at the moment,
-> > > > sorry...
-> > > > 
-> > > > >  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-> > > > > +					    struct request_queue *q,
-> > > > >  					    struct blk_trace *bt)
-> > > > >  {
-> > > > >  	struct dentry *dir = NULL;
-> > > > >  
-> > > > > +	/* This can only happen if we have a bug on our lower layers */
-> > > > > +	if (!q->kobj.parent) {
-> > > > > +		pr_warn("%s: request_queue parent is gone\n", buts->name);
-> > > > 
-> > > > A kobject always has a parent, unless it has not been registered yet, so
-> > > > I don't know what you are testing could ever happen.
-> > > 
-> > > Or it has been kobject_del()'d?
-> > 
-> > If that happened, how in the world are you in this function anyway, as
-> > the request_queue is an invalid pointer at that point in time???
+> Of course, if any created trampoline were to touch the ORIG_RAX, then
+> it would crash. We could always nop that compare in the created
+> trampoline if that is a concern.
 > 
-> Nope, the block layer still finishes some work on it.
-> 
-> Drivers are allowed to cleanup a block device in this order, this
-> example,  is from the loop block driver:
-> 
-> static void loop_remove(struct loop_device *lo)                                 
-> {
-> 	del_gendisk(lo->lo_disk);
-> 	blk_cleanup_queue(lo->lo_queue);
-> 	blk_mq_free_tag_set(&lo->tag_set);
-> 	put_disk(lo->lo_disk);
-> 	kfree(lo);
-> }   
-> 
-> At this point in time patch-wise we still haven't reverted back to
-> synchronous request_queue removal. Considering this, a race with the
-> parent disappearing can happen because the request_queue removal is
-> deferred, that is, the request_queue's kobject's release() call used
-> schedule_work() to finish off its removal. We expect the last
-> blk_put_queue() to be called at the end of blk_cleanup_queue(). Since
+> Anyway, I added the below patch on top of your patches and it appears
+> to work. Thoughts?
 
-Actually no, we expect that request queue is released after disk is
-released. Don't forget that gendisk does hold one extra refcount of
-request queue.
+So can I push out those patches as is? :-) We can do this on top I
+suppose.
 
-> that is deferred and device_del() is called also at the end of
-> del_gendisk(), it means the release of the queue can happen in a
-> context where the disk is gone.
-> 
-> Although this issue is triggerable easily with the current async
-> request_queue removal, I can think of other ways to trigger an issue
-> here and one of them was suggested as possible by Christoph on the last
-> v1 patch series.
-> 
-> blk_queue_get() is not atomic and so what it returns can be incorrect:
-> 
-> bool blk_get_queue(struct request_queue *q)
-> {
-> 	if (likely(!blk_queue_dying(q))) {
-> 		__blk_get_queue(q);
-> 		return true;
-> 	}
-> 	----> we can schedule here easily and move the queue to dying
-> 	----> and race with blk_cleanup_queue() which will then allow
-> 	----> code paths to incorrectly trigger the release of the queue
-> 	----> in places we don't want
+Firstly; your patch isn't objtool clean:
 
-Right, actually caller of blk_get_queue() has to guarantee that
-the request queue is alive.
+  arch/x86/kernel/ftrace_64.o: warning: objtool: ftrace_regs_caller()+0x199: sibling call from callable instruction with modified stack frame
 
-Some users of blk_get_queue() aren't necessary, such as rbd and mmc.
+So 10 points deduction for that :-). You got the RET_OFFSET hint on the
+wrong sibling call.
 
-> 	return false;
-> }
-> EXPORT_SYMBOL(blk_get_queue);
-> 
-> Another area of concern I am seeing through code inspection is that
-> since the request_queue life depends on the disk, it seemse odd we call
-> device_del() before we remove the request_queue. If this is indeed
-> wrong, we could move the device_del() from del_gendisk() to
-> disk_release() triggered by the last put_disk().
+Secondly, yes, that ORIG_RAX issue for copies, that _might_ crash and
+burn, but who knows, you're jumping into uninitialized memory afaict. So
+that definitely needs fixing. I'm also not sure of stubbing out the
+test, that's actually more work than poking in the 1 extra ret and also
+gives unexpected behaviour. If anything we should poke an UD2 at the 1:
+location in the copy.
 
-Why do you think it is odd and want to change this way? Disk has to be
-removed first for draining dirty pages to queue, then we can cleanup
-queue. Once we start to clean up request queue, all data may not land
-disk any more.
+Over all, I'm thinking we should keep it as is. If you want to simplify
+the poking we can do something like the below; reading a known retq is
+daft.
 
-> 
-> I have a test now which shows that even if we revert back to synchronous
-> request_queue removal I can trigger a panic on the same use-after-free
-> case on debugfs on blktrace, and this is because we are overwriting the
-> same debugfs directory, and I think the above are its root causes.
-
-The reason should be shared debugfs dir between blktrace and blk-mq
-debugfs.
-
-> 
-> I can fix this bug, but that just moves the bug to conflicts within
-> two sysfs objects already existing, and this is because add_disk()
-> (which calls __device_add_disk() doesn't return errors). This is both
-> a blk layer bug in the sense we never check for error and a driver bug
-> for allowing conflicts. All this just needs to be fixed, and although I
-> thought this could be done later, I think I'm just going to fix all this
-> now.
-
-Yeah, we talked that several times, looks no one tries to post patch to
-fix that.
-
-
-Thanks, 
-Ming
-
+---
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 867c126ddabe..b334adbacb0e 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -307,8 +307,6 @@ union ftrace_op_code_union {
+ 	} __attribute__((packed));
+ };
+ 
+-#define RET_SIZE		1
+-
+ static unsigned long
+ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ {
+@@ -319,7 +317,6 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	unsigned long offset;
+ 	unsigned long npages;
+ 	unsigned long size;
+-	unsigned long retq;
+ 	unsigned long *ptr;
+ 	void *trampoline;
+ 	void *ip;
+@@ -347,11 +344,11 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	 * the iret , as well as the address of the ftrace_ops this
+ 	 * trampoline is used for.
+ 	 */
+-	trampoline = alloc_tramp(size + RET_SIZE + sizeof(void *));
++	trampoline = alloc_tramp(size + RET_INSN_SIZE + sizeof(void *));
+ 	if (!trampoline)
+ 		return 0;
+ 
+-	*tramp_size = size + RET_SIZE + sizeof(void *);
++	*tramp_size = size + RET_INSN_SIZE + sizeof(void *);
+ 	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
+ 
+ 	/* Copy ftrace_caller onto the trampoline memory */
+@@ -359,19 +356,13 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	if (WARN_ON(ret < 0))
+ 		goto fail;
+ 
+-	ip = trampoline + size;
+-
+ 	/* The trampoline ends with ret(q) */
+-	retq = (unsigned long)ftrace_stub;
+-	ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
+-	if (WARN_ON(ret < 0))
+-		goto fail;
++	ip = trampoline + size;
++	*(u8 *)ip = RET_INSN_OPCODE;
+ 
+ 	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+ 		ip = trampoline + (ftrace_regs_caller_ret - ftrace_regs_caller);
+-		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
+-		if (WARN_ON(ret < 0))
+-			goto fail;
++		*(u8 *)ip = RET_INSN_OPCODE;
+ 	}
+ 
+ 	/*
+@@ -382,7 +373,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	 * the global function_trace_op variable.
+ 	 */
+ 
+-	ptr = (unsigned long *)(trampoline + size + RET_SIZE);
++	ptr = (unsigned long *)(trampoline + size + RET_INSN_SIZE);
+ 	*ptr = (unsigned long)ops;
+ 
+ 	op_offset -= start_offset;
