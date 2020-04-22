@@ -2,52 +2,50 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F04EC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1648C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D38320780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E74C2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552535;
-	bh=Q5DNYxjUVax61dxGa44v4AmWO/qNyNhOY8NEP/zId20=;
+	s=default; t=1587552541;
+	bh=tjM+Gu6dhZqW2oK0pWrJ6jwHx7kK3RIuVIcVvonX61g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FjCiMIiTShcXDt0GQQ9YYhLMCbabkr4fuqbRuaxUtmWilNUP/QVIXIOj1keARIuau
-	 6jy/2WWzDeCQRGaihG2WRChHV24t7FPzzDlxnW8WqAdX0AMep3azQsiuRe8TFUbDi3
-	 gqI1k8WmaYkTqA+Ko3dpyzqUAAUVg+T/fbfruwO8=
+	b=gEPIwkIL4GrZawSaf66IETxskQ96GcqQ/PurqmU99vX42b9tv2y9gHhsIjkaYW24R
+	 N+BE+kbsKoycNFT9dtE8cw8IBCvT59NTacdZvkloCvkJU8G2dSfPq1EV/KSDNksPjs
+	 5hkE4DdVZ2Acm4UIwTd8iha47OWkZqKKEUNVbUVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbgDVKsy (ORCPT
+        id S1732074AbgDVKtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbgDVKON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:13 -0400
+        id S1729459AbgDVKN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A7F20575;
-        Wed, 22 Apr 2020 10:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B442076E;
+        Wed, 22 Apr 2020 10:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550452;
-        bh=Q5DNYxjUVax61dxGa44v4AmWO/qNyNhOY8NEP/zId20=;
+        s=default; t=1587550437;
+        bh=tjM+Gu6dhZqW2oK0pWrJ6jwHx7kK3RIuVIcVvonX61g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gsMKY/uu53plPFNmHtokmqJZx1bS12fHvXLo//M/L5Jru7gDe9oogGA/YPzL7tZ1e
-         gvwfyQ8iRQXkDzbM9TwCP/MpMOiwib/8AkW4VIBCAkYf/qV1U6JbLP7OdShPYvVHJy
-         HPhVSgMA/pkwsWteeO/6kJ9b5ZCte6QKvmTyn6jM=
+        b=FY9xkYxWCReaDsWGeH5BwiVDzUhi25iXwTXrYoe+FinqjIn5MT+SVcLm9Zrs/Cdos
+         TKRG0+GR7ffLJmNB+9EOK3GXwYUAU/U+eZv6oteybSJxzXcm6cTDB5HkK4ex+25zXS
+         k+tC1CznPshdAwFWc4N6dTjUe+2MisbwaKDaK2GY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/64] x86/Hyper-V: Trigger crash enlightenment only once during system crash.
-Date:   Wed, 22 Apr 2020 11:57:07 +0200
-Message-Id: <20200422095017.228507281@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 08/64] netfilter: nf_tables: report EOPNOTSUPP on unsupported flags/object type
+Date:   Wed, 22 Apr 2020 11:56:52 +0200
+Message-Id: <20200422095014.024164240@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,66 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 73f26e526f19afb3a06b76b970a76bcac2cafd05 ]
+commit d9583cdf2f38d0f526d9a8c8564dd2e35e649bc7 upstream.
 
-When a guest VM panics, Hyper-V should be notified only once via the
-crash synthetic MSRs.  Current Linux code might write these crash MSRs
-twice during a system panic:
-1) hyperv_panic/die_event() calling hyperv_report_panic()
-2) hv_kmsg_dump() calling hyperv_report_panic_msg()
+EINVAL should be used for malformed netlink messages. New userspace
+utility and old kernels might easily result in EINVAL when exercising
+new set features, which is misleading.
 
-Fix this by not calling hyperv_report_panic() if a kmsg dump has been
-successfully registered.  The notification will happen later via
-hyperv_report_panic_msg().
+Fixes: 8aeff920dcc9 ("netfilter: nf_tables: add stateful object reference to set elements")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-4-Tianyu.Lan@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/vmbus_drv.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ net/netfilter/nf_tables_api.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index dd6d18d918a4b..6469e1f2c4ae0 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -65,7 +65,13 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
- 
- 	vmbus_initiate_unload(true);
- 
--	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
-+	/*
-+	 * Hyper-V should be notified only once about a panic.  If we will be
-+	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
-+	 * the notification here.
-+	 */
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
-+	    && !hv_panic_page) {
- 		regs = current_pt_regs();
- 		hyperv_report_panic(regs, val);
- 	}
-@@ -78,7 +84,13 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
- 	struct die_args *die = (struct die_args *)args;
- 	struct pt_regs *regs = die->regs;
- 
--	hyperv_report_panic(regs, val);
-+	/*
-+	 * Hyper-V should be notified only once about a panic.  If we will be
-+	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
-+	 * the notification here.
-+	 */
-+	if (!hv_panic_page)
-+		hyperv_report_panic(regs, val);
- 	return NOTIFY_DONE;
- }
- 
--- 
-2.20.1
-
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -3450,7 +3450,7 @@ static int nf_tables_newset(struct net *
+ 			      NFT_SET_INTERVAL | NFT_SET_TIMEOUT |
+ 			      NFT_SET_MAP | NFT_SET_EVAL |
+ 			      NFT_SET_OBJECT))
+-			return -EINVAL;
++			return -EOPNOTSUPP;
+ 		/* Only one of these operations is supported */
+ 		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
+ 			     (NFT_SET_MAP | NFT_SET_OBJECT))
+@@ -3488,7 +3488,7 @@ static int nf_tables_newset(struct net *
+ 		objtype = ntohl(nla_get_be32(nla[NFTA_SET_OBJ_TYPE]));
+ 		if (objtype == NFT_OBJECT_UNSPEC ||
+ 		    objtype > NFT_OBJECT_MAX)
+-			return -EINVAL;
++			return -EOPNOTSUPP;
+ 	} else if (flags & NFT_SET_OBJECT)
+ 		return -EINVAL;
+ 	else
 
 
