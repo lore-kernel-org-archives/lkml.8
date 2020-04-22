@@ -2,197 +2,137 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E686C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BE3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC0622082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4331D20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q91bHmJw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fNBYRL8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgDVQE1 (ORCPT
+        id S1726745AbgDVQEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgDVQE0 (ORCPT
+        Wed, 22 Apr 2020 12:04:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24094 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726358AbgDVQE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:04:26 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D581C03C1AB
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:04:26 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id y10so2184929uao.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=R6uBiNfit5YCO191/wwIsaUUqzxSLO/g5l1s37v3Z3w=;
-        b=Q91bHmJwQtHKONLOIZVoVWCWA8wv4FJ6D+5JbGFlH88Y+/P8I6LlZJbyat1zNpYnaf
-         r9JaIC2uFsoEs8V9fc21pNnrEnBTY0z4mPbLva9ly4DlnJCI1pxsfQi5Qf874n/YBWXp
-         P6OzTz4nF2sutRlKNThQUqe+3ohrfIMiGWGbk/+l+YxGCV+2ATZ8bK8jV/D6rCN/17ja
-         05VW2Ria5KGkfQS3EngD394SpfJwwdv2/Ps+LXsLN29JPBGNyGewMdFTTABE14T4A4yC
-         4FASMLFN6kKn19Mg17U9anWakRdEGFgCyYqTvdEdi8pWvqQQpmzFhTBHb+r8UUDTIxGJ
-         nqMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=R6uBiNfit5YCO191/wwIsaUUqzxSLO/g5l1s37v3Z3w=;
-        b=eRwNH1L2+IhEwzb1Rc42EU7sgsjeIwSnl5P/wkCWSS4nflznnGTkEWa5RAVFFAHI6F
-         J9SsN1CvvJcrX+FSpdhRAVfKgGBhWO4Cw6pD3pCTfifvxfLNPPlmXsmRCJp5x0aakb3q
-         pAL+SZTufuCHMwXzqP+8nLTz1YrFCBYaS+XkSQ7XysSo4R+R042vC+B1qfc42tMmisN0
-         TV9YIKBuLJIkq/LS1wxPOebtd9YJf6ds/YhbF7ctU6GwU7q50aZ3GyzLk2uRt0FmVLGn
-         vep5cZa/+Ef/xwPuqrCBwBW5adbGthazf5znfc2/d3YREQqeZmfgWGXQjfFzFGUTEM23
-         T6bw==
-X-Gm-Message-State: AGi0Puanp0V3Dgz8l6W7eL9JXc93LrV10LcghmrqPrchS9quZlcpzKts
-        sMMnU7gBhbLtx1qUsUciWEBvAAhBOd9+vbOw1h2B3Q==
-X-Google-Smtp-Source: APiQypLRD/Imtj1vYufqpjP3oiW2KCXvoVlKWsNAdbd7j7U51hZYh0PP2WQvQ0URi1Cr71o91VK7Yv/5O96ZLwzvEtY=
-X-Received: by 2002:a67:ead1:: with SMTP id s17mr20427811vso.200.1587571464862;
- Wed, 22 Apr 2020 09:04:24 -0700 (PDT)
+        Wed, 22 Apr 2020 12:04:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587571467;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=amvTuf5wEMJvqdESpaeyMURJivlfDh/jRY31BzCdBPU=;
+        b=fNBYRL8dIeMWPKdRPaKlOIJjQrpAuXtCf735spMH9LOVsLfEFBv3PmJd7Ys5mIcH3m10Bq
+        VFwQkWVH4v0Hy+SJJBt+w3STHbUggtUbDwljx3fQV7JdJy0jMr+u/ICwbzOiNHE+KBJ/ab
+        laHtT1HvX46c4HrPwTBGCPIJX0lchD8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-5-QqutxDOl-cVj9GG-2gZA-1; Wed, 22 Apr 2020 12:04:23 -0400
+X-MC-Unique: 5-QqutxDOl-cVj9GG-2gZA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6898E107ACC9;
+        Wed, 22 Apr 2020 16:04:19 +0000 (UTC)
+Received: from gondolin (ovpn-112-195.ams2.redhat.com [10.36.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE51B19C70;
+        Wed, 22 Apr 2020 16:04:05 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 18:04:03 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
+        james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run'
+ parameters
+Message-ID: <20200422180403.03f60b0c.cohuck@redhat.com>
+In-Reply-To: <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
+References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
+        <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
+        <20200422154543.2efba3dd.cohuck@redhat.com>
+        <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200420161831.5043-1-ludovic.barre@st.com> <CAPDyKFqC3fdnQ9CMYhS-=5MiCET=r5Az2S5oFoA2v1gdDeGO3w@mail.gmail.com>
- <CAPDyKFrHcoVd=GKPB70gOFE8STOnTJrJbcZzE_DEgFWh1Vhszg@mail.gmail.com> <1d9cefd1-aaed-1eb5-92f2-b1f45b4da2ac@st.com>
-In-Reply-To: <1d9cefd1-aaed-1eb5-92f2-b1f45b4da2ac@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 22 Apr 2020 18:03:48 +0200
-Message-ID: <CAPDyKFpri4VBnH9nbqUa4L=3o_h+fSZ052v7AG_9MhJX2gKgCQ@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mmci_sdmmc: fix power on issue due to pwr_reg initialization
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 at 15:40, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> Le 4/21/20 =C3=A0 11:38 AM, Ulf Hansson a =C3=A9crit :
-> > On Tue, 21 Apr 2020 at 11:25, Ulf Hansson <ulf.hansson@linaro.org> wrot=
-e:
+On Wed, 22 Apr 2020 17:58:04 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+
+> On 22.04.20 15:45, Cornelia Huck wrote:
+> > On Wed, 22 Apr 2020 20:58:04 +0800
+> > Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+> >   
+> >> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+> >> structure. Earlier than historical reasons, many kvm-related function  
+> > 
+> > s/Earlier than/For/ ?
+> >   
+> >> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
+> >> This patch does a unified cleanup of these remaining redundant parameters.
 > >>
-> >> On Mon, 20 Apr 2020 at 18:18, Ludovic Barre <ludovic.barre@st.com> wro=
-te:
-> >>>
-> >>> This patch fix a power-on issue, and avoid to retry the power sequenc=
-e.
-> >>>
-> >>> In power off sequence: sdmmc must set pwr_reg in "power-cycle" state
-> >>> (value 0x2), to prevent the card from being supplied through the sign=
-al
-> >>> lines (all the lines are driven low).
-> >>>
-> >>> In power on sequence: when the power is stable, sdmmc must set pwr_re=
-g
-> >>> in "power-off" state (value 0x0) to drive all signal to high before t=
-o
-> >>> set "power-on".
+> >> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> >> ---
+> >>  arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
+> >>  1 file changed, 22 insertions(+), 15 deletions(-)
 > >>
-> >> Just a question to gain further understanding.
-> >>
-> >> Let's assume that the controller is a power-on state, because it's
-> >> been initialized by the boot loader. When the mmc core then starts the
-> >> power-on sequence (not doing a power-off first), would $subject patch
-> >> then cause the
-> >> MMCIPOWER to remain as is, or is it going to be overwritten?
->
-> On sdmmc controller, the PWRCTRL[1:0] field of MMCIPOWER register allow
-> to manage sd lines and has a specific bahavior.
->
-> PWRCTRL value:
->   - 0x0: After reset, Reset: the SDMMC is disabled and the clock to the
->          Card is stopped, SDMMC_D[7:0], and SDMMC_CMD are HiZ and
->          SDMMC_CK is driven low.
->          When written 00, power-off: the SDMMC is disabled and the clock
->          to the card is stopped, SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK
->          are driven high.
->
->   - 0x2: Power-cycle, the SDMMC is disabled and the clock to the card is
->          stopped, SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK are driven low.
->
->   - 0x3: Power-on: the card is clocked, The first 74 SDMMC_CK cycles the
->          SDMMC is still disabled. After the 74 cycles the SDMMC is
->          enabled and the SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK are
->          controlled according the SDMMC operation.
->          **Any further write will be ignored, PWRCTRL value
->          will keep 0x3**. when the SDMMC is ON (0x3) only a reset could
->          change pwrctrl value and the state of sdmmc lines.
->
-> So if the lines are already "ON", the power-on sequence (decribed in
-> commit message) not overwrite the pwctrl field and not disturb the sdmmc
-> lines.
+> >> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> >> index e335a7e5ead7..d7bb2e7a07ff 100644
+> >> --- a/arch/s390/kvm/kvm-s390.c
+> >> +++ b/arch/s390/kvm/kvm-s390.c
+> >> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
+> >>  	return rc;
+> >>  }
+> >>  
+> >> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> >> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
+> >>  {
+> >> +	struct kvm_run *kvm_run = vcpu->run;
+> >>  	struct runtime_instr_cb *riccb;
+> >>  	struct gs_cb *gscb;
+> >>  
+> >> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> >>  		}
+> >>  		if (vcpu->arch.gs_enabled) {
+> >>  			current->thread.gs_cb = (struct gs_cb *)
+> >> -						&vcpu->run->s.regs.gscb;
+> >> +						&kvm_run->s.regs.gscb;  
+> > 
+> > Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
+> > it. (It seems they amount to at least as much as the changes advertised
+> > in the patch description.)
+> > 
+> > Other opinions?  
+> 
+> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
+> function parameter list into the variable declaration)? Not sure if this is better.
+> 
 
-Thanks for the detailed information, much appreciated!
+There's more in this patch that I cut... but I think just moving
+kvm_run from the parameter list would be much less disruptive.
 
->
-> >>
-> >> I am a little worried that we may start to rely on boot loader
-> >> conditions, which isn't really what we want either...
-> >>
->
-> We not depend of boot loader conditions.
->
-> This patch simply allows to drive high the sd lines before to set
-> "power-on" value (no effect if already power ON).
-
-Yep, thanks!
-
->
-> >>>
-> >>> To avoid writing the same value to the power register several times, =
-this
-> >>> register is cached by the pwr_reg variable. At probe pwr_reg is initi=
-alized
-> >>> to 0 by kzalloc of mmc_alloc_host.
-> >>>
-> >>> Like pwr_reg value is 0 at probing, the power on sequence fail becaus=
-e
-> >>> the "power-off" state is not writes (value 0x0) and the lines
-> >>> remain drive to low.
-> >>>
-> >>> This patch initializes "pwr_reg" variable with power register value.
-> >>> This it done in sdmmc variant init to not disturb default mmci behavi=
-or.
-> >>>
-> >>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> >>
-> >> Besides the comment, the code and the approach seems reasonable to me.
-> >
-> > Another related question. I just realized why you probably haven't set
-> > .pwrreg_nopower for the variant_stm32_sdmmc and variant_stm32_sdmmcv2.
-> >
-> > I guess it's because you need a slightly different way to restore the
-> > context of MMCIPOWER register at ->runtime_resume(), rather than just
-> > re-writing it with the saved register values. Is this something that
-> > you are looking into as well?
->
-> Yes exactly, the sequence is slightly different. I can't write 0 on
-> mmci_runtime_suspend, and can't just re-writing the saved register.
-
-So, it seems like you need to use the ->set_ios() callback, to
-re-configure the controller correctly.
-
-Just tell if you need more help to make that work, otherwise I am here
-to review your patches.
-
-In regards to $subject patch, I have applied it for next, thanks!
-
-Kind regards
-Uffe
