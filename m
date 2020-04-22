@@ -2,180 +2,177 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4B0C55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FB6C38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEED206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F91206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:38:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsYir1MD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVDg0 convert rfc822-to-8bit (ORCPT
+        id S1726445AbgDVDiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 23:36:26 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:39218 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726321AbgDVDgZ (ORCPT
+        Tue, 21 Apr 2020 23:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726228AbgDVDip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 23:36:25 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TwHMyq2_1587526579;
-Received: from 30.27.116.1(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0TwHMyq2_1587526579)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 22 Apr 2020 11:36:20 +0800
-Content-Type: text/plain;
-        charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/2] sched: Defend cfs and rt bandwidth quota against
- overflow
-From:   changhuaixin <changhuaixin@linux.alibaba.com>
-In-Reply-To: <xm261roim4hi.fsf@google.com>
-Date:   Wed, 22 Apr 2020 11:36:19 +0800
-Cc:     changhuaixin <changhuaixin@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, chiluk+linux@indeed.com,
-        vincent.guittot@linaro.org, pauld@redhead.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9E9BB5A6-E282-4359-A6BB-4B3B53AE875D@linux.alibaba.com>
-References: <20200420024421.22442-1-changhuaixin@linux.alibaba.com>
- <20200420024421.22442-2-changhuaixin@linux.alibaba.com>
- <xm261roim4hi.fsf@google.com>
-To:     bsegall@google.com
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 21 Apr 2020 23:38:45 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D40C0610D6;
+        Tue, 21 Apr 2020 20:38:45 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id t11so448885lfe.4;
+        Tue, 21 Apr 2020 20:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cjSTi7hlF1/NelCXmbeNWnOnAcO/OjzgBK0nAtkVF1M=;
+        b=HsYir1MD1qN3cOFB5Lr3179LEcQcQ1a/Qq3NCUTytLRTeuLM6l9Rixek6ovajwT16b
+         BMP9vfjjaXChJCfi00vAzyGiJPpHofR2+PIw9/z7h8vSXN9Ha0RkgU3gQTFJgkAe2HGQ
+         W5fCz7w7LP1mkVNxJDhgDJsp586/okfTrd0rancohGo7/OAN863jRiEwLN8kGkOC4P+h
+         9IPyvWOfG/qXyqqXp4L2tadElFAk//2zk3q6qm3zcY0lBsTOw3BLEg0BSy6YGPPF+otf
+         pnpXsE6oUgHvE10hJqnJrncoARHmSXGczeEb3AZtba2V4x0ku1caTdPk7cba5nhn1Mw3
+         hYkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cjSTi7hlF1/NelCXmbeNWnOnAcO/OjzgBK0nAtkVF1M=;
+        b=oCHQFWo9/CeYmde5RL7xiQClD3oiFv1UVYIQ3O3G9k/dvWUmjfBhEzS9F7KSQVCeYn
+         fFp6teUs6ge8OmAnH848Nfq7KXeD1h9teTWI9LrwJ0gvmVl1xBIM2HQ1rCKlRHvmJ+2V
+         b4lw/Q+Qxd/aw5XZ4tW74HiZfXov/qo7T5T/Z3VnkGxlMF6V4Bk7UPcQohvZk8kkhMmK
+         b3bwUf9iTy3vKmx4srDyCzWsJL7mF7mXqnfheSqdxbLxXpRlRii+0YgkxX6xpn94ieIU
+         aGoMMtxCyqNCASc0CfuSyUssfL/8woZQ8WLQCr4YjBeT8dI+BK3FmsfGIpNXgOvGulmV
+         EvxA==
+X-Gm-Message-State: AGi0PubJvgD6GgKLOZbF/6AvPWX7OBDj9vKh1qI7/hM9S2hK+8WaTgHm
+        rJZPeUJIHmmcrtXuBzWzxMNev59chdo1E0feBkBtM4FiKQ0=
+X-Google-Smtp-Source: APiQypIpUMoiM4pLlpvoneXnVmUpQwIHtS5zEdjT4qynaypGLsgcvfd5TCUNGVuboXjX5mw49Gl/fP8JXcB430T44RI=
+X-Received: by 2002:ac2:519c:: with SMTP id u28mr15656394lfi.17.1587526723542;
+ Tue, 21 Apr 2020 20:38:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200420071548.62112-1-nate.karstens@garmin.com>
+ <20200420071548.62112-2-nate.karstens@garmin.com> <36dce9b4-a0bf-0015-f6bc-1006938545b1@gmail.com>
+In-Reply-To: <36dce9b4-a0bf-0015-f6bc-1006938545b1@gmail.com>
+From:   Changli Gao <xiaosuo@gmail.com>
+Date:   Wed, 22 Apr 2020 11:38:32 +0800
+Message-ID: <CABa6K_HWsy9DdjsKXE2d_JrC+OsNuW+OALS+-_HiV3r2XgC1bw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] fs: Implement close-on-fork
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Nate Karstens <nate.karstens@garmin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 20, 2020 at 6:25 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 4/20/20 12:15 AM, Nate Karstens wrote:
+> > The close-on-fork flag causes the file descriptor to be closed
+> > atomically in the child process before the child process returns
+> > from fork(). Implement this feature and provide a method to
+> > get/set the close-on-fork flag using fcntl(2).
+> >
+> > This functionality was approved by the Austin Common Standards
+> > Revision Group for inclusion in the next revision of the POSIX
+> > standard (see issue 1318 in the Austin Group Defect Tracker).
+>
+> Oh well... yet another feature slowing down a critical path.
+>
+> >
+> > Co-developed-by: Changli Gao <xiaosuo@gmail.com>
+> > Signed-off-by: Changli Gao <xiaosuo@gmail.com>
+> > Signed-off-by: Nate Karstens <nate.karstens@garmin.com>
+> > ---
+> >  fs/fcntl.c                             |  2 ++
+> >  fs/file.c                              | 50 +++++++++++++++++++++++++-
+> >  include/linux/fdtable.h                |  7 ++++
+> >  include/linux/file.h                   |  2 ++
+> >  include/uapi/asm-generic/fcntl.h       |  5 +--
+> >  tools/include/uapi/asm-generic/fcntl.h |  5 +--
+> >  6 files changed, 66 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/fs/fcntl.c b/fs/fcntl.c
+> > index 2e4c0fa2074b..23964abf4a1a 100644
+> > --- a/fs/fcntl.c
+> > +++ b/fs/fcntl.c
+> > @@ -335,10 +335,12 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
+> >               break;
+> >       case F_GETFD:
+> >               err = get_close_on_exec(fd) ? FD_CLOEXEC : 0;
+> > +             err |= get_close_on_fork(fd) ? FD_CLOFORK : 0;
+> >               break;
+> >       case F_SETFD:
+> >               err = 0;
+> >               set_close_on_exec(fd, arg & FD_CLOEXEC);
+> > +             set_close_on_fork(fd, arg & FD_CLOFORK);
+> >               break;
+> >       case F_GETFL:
+> >               err = filp->f_flags;
+> > diff --git a/fs/file.c b/fs/file.c
+> > index c8a4e4c86e55..de7260ba718d 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -57,6 +57,8 @@ static void copy_fd_bitmaps(struct fdtable *nfdt, struct fdtable *ofdt,
+> >       memset((char *)nfdt->open_fds + cpy, 0, set);
+> >       memcpy(nfdt->close_on_exec, ofdt->close_on_exec, cpy);
+> >       memset((char *)nfdt->close_on_exec + cpy, 0, set);
+> > +     memcpy(nfdt->close_on_fork, ofdt->close_on_fork, cpy);
+> > +     memset((char *)nfdt->close_on_fork + cpy, 0, set);
+> >
+>
+> I suggest we group the two bits of a file (close_on_exec, close_on_fork) together,
+> so that we do not have to dirty two separate cache lines.
+>
+> Otherwise we will add yet another cache line miss at every file opening/closing for processes
+> with big file tables.
+>
+> Ie having a _single_ bitmap array, even bit for close_on_exec, odd bit for close_on_fork
+>
+> static inline void __set_close_on_exec(unsigned int fd, struct fdtable *fdt)
+> {
+>         __set_bit(fd * 2, fdt->close_on_fork_exec);
+> }
+>
+> static inline void __set_close_on_fork(unsigned int fd, struct fdtable *fdt)
+> {
+>         __set_bit(fd * 2 + 1, fdt->close_on_fork_exec);
+> }
+>
+> Also the F_GETFD/F_SETFD implementation must use a single function call,
+> to not acquire the spinlock twice.
+>
+
+Good suggestions.
+
+At the same time, we'd better extend other syscalls, which set the
+FD_CLOEXEC when  creating FDs. i.e. open, pipe3...
 
 
-> 在 2020年4月21日，上午1:50，bsegall@google.com 写道：
-> 
-> Huaixin Chang <changhuaixin@linux.alibaba.com> writes:
-> 
->> Kernel limitation on cpu.cfs_quota_us is insufficient. Some large
->> numbers might cause overflow in to_ratio() calculation and produce
->> unexpected results.
->> 
->> For example, if we make two cpu cgroups and then write a reasonable
->> value and a large value into child's and parent's cpu.cfs_quota_us. This
->> will cause a write error.
->> 
->> 	cd /sys/fs/cgroup/cpu
->> 	mkdir parent; mkdir parent/child
->> 	echo 8000 > parent/child/cpu.cfs_quota_us
->> 	# 17592186044416 is (1UL << 44)
->> 	echo 17592186044416 > parent/cpu.cfs_quota_us
->> 
->> In this case, quota will overflow and thus fail the __cfs_schedulable
->> check. Similar overflow also affects rt bandwidth.
-> 
-> More to the point is that I think doing
-> 
-> echo 17592186044416 > parent/cpu.cfs_quota_us
-> echo 8000 > parent/child/cpu.cfs_quota_us
-> 
-> will only fail on the second write, while with this patch it will fail
-> on the first, which should be more understandable.
-> 
-> 
-> to_ratio could be altered to avoid unnecessary internal overflow, but
-> min_cfs_quota_period is less than 1<<BW_SHIFT, so a cutoff would still
-> be needed.
-> 
-
-Yes, I will rewrite commit log in the following patch.
-
-> Also tg_rt_schedulable sums a bunch of to_ratio(), and doesn't check for
-> overflow on that sum, so if we consider preventing weirdness around
-> schedulable checks and max quotas relevant we should probably fix that too.
-> 
-
-It seems to me that check for overflow on sum of to_ratio(rt_period, rt_runtime) is not necessary. As to_ratio() of a rt group is bounded by global_rt_period() and global_rt_runtime() due to the checks in tg_rt_schedulable(). And global_rt_runtime() is not allowed to be greater than global_rt_period() thanks to sched_rt_global_validate(). Thus, to_ratio() of a rt group will not exceed BW_UNIT, sum of which is unlikely to overflow then. Checks against rt_runtime overflow during to_ratio is still needed.
-
-Is that correct?
-
->> 
->> Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
->> ---
->> kernel/sched/core.c  | 8 ++++++++
->> kernel/sched/rt.c    | 9 +++++++++
->> kernel/sched/sched.h | 2 ++
->> 3 files changed, 19 insertions(+)
->> 
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index 3a61a3b8eaa9..f0a74e35c3f0 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -7390,6 +7390,8 @@ static DEFINE_MUTEX(cfs_constraints_mutex);
->> 
->> const u64 max_cfs_quota_period = 1 * NSEC_PER_SEC; /* 1s */
->> static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
->> +/* More than 203 days if BW_SHIFT equals 20. */
->> +static const u64 max_cfs_runtime = MAX_BW_USEC * NSEC_PER_USEC;
->> 
->> static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
->> 
->> @@ -7417,6 +7419,12 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
->> 	if (period > max_cfs_quota_period)
->> 		return -EINVAL;
->> 
->> +	/*
->> +	 * Bound quota to defend quota against overflow during bandwidth shift.
->> +	 */
->> +	if (quota != RUNTIME_INF && quota > max_cfs_runtime)
->> +		return -EINVAL;
->> +
->> 	/*
->> 	 * Prevent race between setting of cfs_rq->runtime_enabled and
->> 	 * unthrottle_offline_cfs_rqs().
->> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
->> index df11d88c9895..f5eea19d68c4 100644
->> --- a/kernel/sched/rt.c
->> +++ b/kernel/sched/rt.c
->> @@ -2569,6 +2569,9 @@ static int __rt_schedulable(struct task_group *tg, u64 period, u64 runtime)
->> 	return ret;
->> }
->> 
->> +/* More than 203 days if BW_SHIFT equals 20. */
->> +static const u64 max_rt_runtime = MAX_BW_USEC * NSEC_PER_USEC;
-> 
-> It looks to me like __rt_schedulable doesn't divide by NSEC_PER_USEC, so
-> to_ratio is operating on nsec, and the limit is in nsec, and MAX_BW_USEC
-> should probably not be named USEC then as well.
-
-Yes, the limit for rt_runtime is in nsec. This should be changed.
-
-> 
->> +
->> static int tg_set_rt_bandwidth(struct task_group *tg,
->> 		u64 rt_period, u64 rt_runtime)
->> {
->> @@ -2585,6 +2588,12 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
->> 	if (rt_period == 0)
->> 		return -EINVAL;
->> 
->> +	/*
->> +	 * Bound quota to defend quota against overflow during bandwidth shift.
->> +	 */
->> +	if (rt_runtime != RUNTIME_INF && rt_runtime > max_rt_runtime)
->> +		return -EINVAL;
->> +
->> 	mutex_lock(&rt_constraints_mutex);
->> 	err = __rt_schedulable(tg, rt_period, rt_runtime);
->> 	if (err)
->> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
->> index db3a57675ccf..6f6b7f545557 100644
->> --- a/kernel/sched/sched.h
->> +++ b/kernel/sched/sched.h
->> @@ -1918,6 +1918,8 @@ extern void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se);
->> #define BW_SHIFT		20
->> #define BW_UNIT			(1 << BW_SHIFT)
->> #define RATIO_SHIFT		8
->> +#define MAX_BW_BITS		(64 - BW_SHIFT)
->> +#define MAX_BW_USEC		((1UL << MAX_BW_BITS) - 1)
->> unsigned long to_ratio(u64 period, u64 runtime);
->> 
->> extern void init_entity_runnable_average(struct sched_entity *se);
-
+-- 
+Regards,
+Changli Gao(xiaosuo@gmail.com)
