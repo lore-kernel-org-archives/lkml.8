@@ -2,101 +2,147 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F49C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F53C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF4822071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9222620857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587585507;
+	bh=btBjp/HjR2Odh8KgO+D0AGQJ3GgI4CX2UkARUW4xUF4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=f/k8ChBbZr/upDpxWbhk5tc2wIbdwpVXRCOcXoJlKrDosz2GEEWYx/bozI1dB+ZJm
+	 iRI5khz4l6DAH2TVXrnTiwXHM2nJDb+JNrzEctZjM1a13H3TDwxSpg6Izuzi319php
+	 FIkq7u3l2AV536r1TpJiPMRl7jq6phOfZMIBS3Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDVT6Y (ORCPT
+        id S1726488AbgDVT61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:58:24 -0400
-Received: from mga18.intel.com ([134.134.136.126]:20218 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgDVT6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:58:23 -0400
-IronPort-SDR: EEwRg7byctDghsc1FPRi5gMLXTE8C4ANQqQeAhSY7L2Sz/u7s6+7dhDwUAADIvaKx/g+ILuVPA
- lD5zRTDhWNew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 12:58:22 -0700
-IronPort-SDR: aT2RPqHwr8m51PNAPbDq64LJkS+4JGwNNFc6WOCEF96cg94eEf4Hxm2hVi63X98J66ziHAv+vR
- NorCx654IAEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="457263281"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.134.45.139]) ([10.134.45.139])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Apr 2020 12:58:21 -0700
-Subject: Re: [PATCH v2 3/3] dmaengine: ioat: adding missed issue_pending to
- timeout handler
-To:     leonid.ravich@dell.com, dmaengine@vger.kernel.org
-Cc:     lravich@gmail.com, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wed, 22 Apr 2020 15:58:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56099 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbgDVT6Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 15:58:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e26so3865992wmk.5;
+        Wed, 22 Apr 2020 12:58:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=orSoP8CVp+BTvk77nTO3bh1BFXcHR89DeR85JOv6qR4=;
+        b=HG6hOP27SdCW233BPADQRHCYdvN/ehnURoovIFxe279mn//vGxl07X59ndyCCJnN2h
+         f11rkiL0/9eEe25RbtD94fB33IOCBDptC86mNcSsc9zEHPaS+26AlrHqgQQEPAVi1aaB
+         EIIpNIZczf9b+2tS2dzVnpseSnww+/+etmelvKrdaxcx5wM5kABbeuOphkS5/pP3eqmc
+         KmzK7Av9MJ9UGbSp+l62BJn62zNTulX9h7eVp4qmpSZ3RD42jeRoRbx570LroGv41kfu
+         eG814N3kUC0CRXMwcJDnnhG3HCfDpYk7CSdlAuOK7NVHWvQn8r//9JWspZuGb4sd68ch
+         9VIQ==
+X-Gm-Message-State: AGi0PuaaFUWqgMylp/0x3hhLZRJQeJcZVJclLeBgU3nXk1jQPnJ26lz4
+        xxi3ZLkHGIbZFltBC4WwpIrLmWpEEI8=
+X-Google-Smtp-Source: APiQypKXW+YBdVGKiF7M7cphAcClN7/OcR+JzG9JNQBF+KzYUkOXhg+iusfzbOxYCGbyh5ohfBD/jg==
+X-Received: by 2002:a1c:9852:: with SMTP id a79mr130312wme.27.1587585501946;
+        Wed, 22 Apr 2020 12:58:21 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m1sm314017wro.64.2020.04.22.12.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 12:58:21 -0700 (PDT)
+From:   Wei Liu <wei.liu@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        linux-kernel@vger.kernel.org
-References: <20200416170628.16196-2-leonid.ravich@dell.com>
- <1587583557-4113-1-git-send-email-leonid.ravich@dell.com>
- <1587583557-4113-3-git-send-email-leonid.ravich@dell.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <f84bff8c-7cab-7c29-1a9a-6713a9a9cbf7@intel.com>
-Date:   Wed, 22 Apr 2020 12:58:21 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Date:   Wed, 22 Apr 2020 19:58:15 +0000
+Message-Id: <20200422195818.35489-1-wei.liu@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1587583557-4113-3-git-send-email-leonid.ravich@dell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is a functionally identical function in pci-hyperv.c. Drop it and
+use pci_msi_get_hwirq instead.
 
+This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
 
-On 4/22/2020 12:25 PM, leonid.ravich@dell.com wrote:
-> From: Leonid Ravich <Leonid.Ravich@emc.com>
-> 
-> completion timeout might trigger unnesesery DMA engine hw reboot
-> in case of missed issue_pending() .
-> 
-> Acked-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
-> ---
-> Changing in v2
->    - add log in case of such scenario
->   drivers/dma/ioat/dma.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-> index 55a8cf1..a958aaf 100644
-> --- a/drivers/dma/ioat/dma.c
-> +++ b/drivers/dma/ioat/dma.c
-> @@ -955,6 +955,14 @@ void ioat_timer_event(struct timer_list *t)
->   		goto unlock_out;
->   	}
->   
-> +	/* handle missed issue pending case */
-> +	if (ioat_ring_pending(ioat_chan)) {
-> +		dev_dbg(to_dev(ioat_chan), "Complition timeout while pending\n")
-Completion timeout with pending descriptors.
+No functional change intended.
 
-Also, maybe dev_warn() you think?
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+---
+ arch/x86/include/asm/msi.h          | 4 ++++
+ arch/x86/kernel/apic/msi.c          | 5 +++--
+ drivers/pci/controller/pci-hyperv.c | 8 +-------
+ 3 files changed, 8 insertions(+), 9 deletions(-)
 
-> +		spin_lock_bh(&ioat_chan->prep_lock);
-> +		__ioat_issue_pending(ioat_chan);
-> +		spin_unlock_bh(&ioat_chan->prep_lock);
-> +	}
-> +
->   	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
->   	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
->   unlock_out:
-> 
+diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+index 25ddd0916bb2..353b80122b2e 100644
+--- a/arch/x86/include/asm/msi.h
++++ b/arch/x86/include/asm/msi.h
+@@ -11,4 +11,8 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 
+ void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
+ 
++struct msi_domain_info;
++irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
++				  msi_alloc_info_t *arg);
++
+ #endif /* _ASM_X86_MSI_H */
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 159bd0cb8548..56dcdd912564 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -204,11 +204,12 @@ void native_teardown_msi_irq(unsigned int irq)
+ 	irq_domain_free_irqs(irq, 1);
+ }
+ 
+-static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
+-					 msi_alloc_info_t *arg)
++irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
++				  msi_alloc_info_t *arg)
+ {
+ 	return arg->msi_hwirq;
+ }
++EXPORT_SYMBOL_GPL(pci_msi_get_hwirq);
+ 
+ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg)
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e6020480a28b..2b4a6452095f 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1520,14 +1520,8 @@ static struct irq_chip hv_msi_irq_chip = {
+ 	.irq_unmask		= hv_irq_unmask,
+ };
+ 
+-static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+-						   msi_alloc_info_t *arg)
+-{
+-	return arg->msi_hwirq;
+-}
+-
+ static struct msi_domain_ops hv_msi_ops = {
+-	.get_hwirq	= hv_msi_domain_ops_get_hwirq,
++	.get_hwirq	= pci_msi_get_hwirq,
+ 	.msi_prepare	= pci_msi_prepare,
+ 	.set_desc	= pci_msi_set_desc,
+ 	.msi_free	= hv_msi_free,
+-- 
+2.20.1
+
