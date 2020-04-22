@@ -2,163 +2,125 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA338C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D95C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7F522076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DAF20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Yp8bxIcS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJdTLMo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgDVHLM (ORCPT
+        id S1726460AbgDVHLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725907AbgDVHLL (ORCPT
+        Wed, 22 Apr 2020 03:11:15 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46844 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725907AbgDVHLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:11:11 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED86C03C1A6;
-        Wed, 22 Apr 2020 00:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587539467;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=x9g4xzih9SHZrw00RWoUucyKrGmw7cFSE/C08UHHhbo=;
-        b=Yp8bxIcS44j849A4MQvicvK+yl4C/uCwDApU0g29MmNVcsvsvTuHIxW7Wto7j197z5
-        L/kKtTxuuE6CG2/5RL0QZALxSiwemqThf8bOHNIz2OelEWuYlKXdwItCeKamyLUEhUKu
-        aXNEUs4mRpVdtGsS/GqYALWb7M5mUrqPCCyusa48oz/SoYsR0a3FmBZxcgXBPOqrqxVS
-        hCJMkxsZXJcTtXwyTqkQQHtp3CB9zTUo1AbAJa98QSgeyHi6M3S0SRVYUMqJ1L1+t5T5
-        YykSgrFeiE3kQ8VN5618m3/R4uS5M0DC065X+0zrl1hZJOpevb71xhVx/zyr09+VGDGv
-        dBdw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCym3NRQH2PRBNS67Wq1XcMUsV9wfG0LbuNrxINn"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:263a:4100:a53d:b96b:debd:cf9d]
-        by smtp.strato.de (RZmta 46.6.1 AUTH)
-        with ESMTPSA id e09987w3M7Ao19A
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 22 Apr 2020 09:10:50 +0200 (CEST)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+        Wed, 22 Apr 2020 03:11:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587539473;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+t4qriF4LAISoIYo0LzOgKybIeKJK2PEbk6hqnZTPw8=;
+        b=NJdTLMo3+Fdf9Q7S+DHffgNMNmqh/JolTQb8JK5469MA9Qnu2HEo7/sOQ8EkLrpw7ZsACx
+        tovO8ghqMJuJCBNhcV8NjD8xecgjtO92Fg8wwbaJcBVBNIJNU1kvaQ5nyHmihBEsgWmWcQ
+        vab+IpRkMUTa8jJvA1Ek/GQvmRoTWTw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-484-iUd4OEIsPYyEpLJUbET4Qw-1; Wed, 22 Apr 2020 03:11:08 -0400
+X-MC-Unique: iUd4OEIsPYyEpLJUbET4Qw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 020C5DB64;
+        Wed, 22 Apr 2020 07:11:07 +0000 (UTC)
+Received: from localhost (ovpn-12-47.pek2.redhat.com [10.72.12.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 27813B3A76;
+        Wed, 22 Apr 2020 07:11:02 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 15:11:00 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Tony Fischetti <tony.fischetti@gmail.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, dyoung@redhat.com, dave.hansen@linux.intel.com,
+        linux@roeck-us.net, keescook@chromium.org,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/setup: Add boot messages about cmdline builtins
+Message-ID: <20200422071100.GS4247@MiWiFi-R3L-srv>
+References: <20200422042007.4836-1-tony.fischetti@gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
-Date:   Wed, 22 Apr 2020 09:10:57 +0200
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
-References: <20200415101008.zxzxca2vlfsefpdv@gilmour.lan> <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com> <20200415130233.rgn7xrtwqicptke2@gilmour.lan> <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com> <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com> <20200420073842.nx4xb3zqvu23arkc@gilmour.lan> <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
-To:     Maxime Ripard <maxime@cerno.tech>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <20200422042007.4836-1-tony.fischetti@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On 04/22/20 at 12:20am, Tony Fischetti wrote:
+> While the ability to override or append to the boot command line has
+> been added, the boot messages contain no information as to whether the
+> cmdline was manipulated by the build-time options. This patch, for x86,
+> adds boot messages specifying whether the cmdline was manipulated and
+> waits for the potential changes to take place before printing the final
+> boot command line.
+> 
+> Signed-off-by: Tony Fischetti <tony.fischetti@gmail.com>
+> ---
+>  arch/x86/kernel/setup.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 4b3fa6cd3106..28d77f01fd0d 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -828,7 +828,6 @@ void __init setup_arch(char **cmdline_p)
+>  	 */
+>  	__flush_tlb_all();
+>  #else
+> -	printk(KERN_INFO "Command line: %s\n", boot_command_line);
+>  	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
+>  #endif
+>  
+> @@ -904,10 +903,12 @@ void __init setup_arch(char **cmdline_p)
+>  
+>  #ifdef CONFIG_CMDLINE_BOOL
+>  #ifdef CONFIG_CMDLINE_OVERRIDE
+> +	pr_info("Overriding command line with builtin\n");
+>  	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+>  #else
+>  	if (builtin_cmdline[0]) {
+>  		/* append boot loader cmdline to builtin */
+> +		pr_info("Appending command line to builtin\n");
+>  		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
+>  		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+>  		strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+> @@ -916,6 +917,7 @@ void __init setup_arch(char **cmdline_p)
+>  #endif
+>  
+>  	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+> +	pr_info("Command line: %s\n", command_line);
 
-> Am 22.04.2020 um 08:58 schrieb Maxime Ripard <maxime@cerno.tech>:
->=20
-> On Tue, Apr 21, 2020 at 07:29:32PM +0200, H. Nikolaus Schaller wrote:
->>=20
->>> Am 21.04.2020 um 16:15 schrieb Tony Lindgren <tony@atomide.com>:
->>>=20
->>> * Maxime Ripard <maxime@cerno.tech> [200421 11:22]:
->>>> On Tue, Apr 21, 2020 at 11:57:33AM +0200, Philipp Rossak wrote:
->>>>> I had a look on genpd and I'm not really sure if that fits.
->>>>>=20
->>>>> It is basically some bit that verify that the clocks should be =
-enabled or
->>>>> disabled.
->>>>=20
->>>> No, it can do much more than that. It's a framework to control the =
-SoCs power
->>>> domains, so clocks might be a part of it, but most of the time it's =
-going to be
->>>> about powering up a particular device.
->>>=20
->>> Note that on omaps there are actually SoC module specific registers.
->>=20
->> Ah, I see. This is of course a difference that the TI glue logic has
->> its own registers in the same address range as the sgx and this can't
->> be easily handled by a common sgx driver.
->>=20
->> This indeed seems to be unique with omap.
->>=20
->>> And there can be multiple devices within a single target module on
->>> omaps. So the extra dts node and device is justified there.
->>>=20
->>> For other SoCs, the SGX clocks are probably best handled directly
->>> in pvr-drv.c PM runtime functions unless a custom hardware wrapper
->>> with SoC specific registers exists.
->>=20
->> That is why we need to evaluate what the better strategy is.
->>=20
->> So we have
->> a) omap which has a custom wrapper around the sgx
->> b) others without, i.e. an empty (or pass-through) wrapper
->>=20
->> Which one do we make the "standard" and which one the "exception"?
->> What are good reasons for either one?
->>=20
->>=20
->> I am currently in strong favour of a) being standard because it
->> makes the pvr-drv.c simpler and really generic (independent of
->> wrapping into any SoC).
->>=20
->> This will likely avoid problems if we find more SoC with yet another
->> scheme how the SGX clocks are wrapped.
->>=20
->> It also allows to handle different number of clocks (A31 seems to
->> need 4, Samsung, A83 and JZ4780 one) without changing the sgx =
-bindings
->> or making big lists of conditionals. This variance would be handled
->> outside the sgx core bindings and driver.
->=20
-> I disagree. Every other GPU binding and driver is handling that just =
-fine, and
-> the SGX is not special in any case here.
+Yeah, adding info to tell there's action on overriding or apending
+command line looks good to me. Maybe keep the printing of the original
+command, we can get the final command line from '/proc/cmdline' after
+system boot, or just get it from the original cmdline + CONFIG_CMDLINE.
+Or print the original cmdline and the final cmdline both.
 
-Can you please better explain this? With example or a description
-or a proposal?
+Personal opinion.
 
-I simply do not have your experience with "every other GPU" as you have.
-And I admit that I can't read from your statement what we should do
-to bring this topic forward.
-
-So please make a proposal how it should be in your view.
-
-BR and thanks,
-Nikolaus
+>  	*cmdline_p = command_line;
+>  
+>  	/*
+> -- 
+> 2.20.1
+> 
 
