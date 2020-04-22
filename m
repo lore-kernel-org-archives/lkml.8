@@ -2,72 +2,123 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F37C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CD9C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33EFB20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF0020784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UMHVE5JL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgDVLfw (ORCPT
+        id S1726832AbgDVLga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:35:52 -0400
-Received: from smtp1.lauterbach.com ([62.154.241.196]:51883 "EHLO
-        smtp1.lauterbach.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgDVLfw (ORCPT
+        Wed, 22 Apr 2020 07:36:30 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54522 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbgDVLga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:35:52 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 07:35:51 EDT
-Received: (qmail 23104 invoked by uid 484); 22 Apr 2020 11:29:09 -0000
-X-Qmail-Scanner-Diagnostics: from 10.2.10.44 by smtp1.lauterbach.com (envelope-from <ingo.rohloff@lauterbach.com>, uid 484) with qmail-scanner-2.11 
- (mhr: 1.0. clamdscan: 0.99/21437. spamassassin: 3.4.0.  
- Clear:RC:1(10.2.10.44):. 
- Processed in 0.084966 secs); 22 Apr 2020 11:29:09 -0000
-Received: from unknown (HELO ingpc2.intern.lauterbach.com) (Authenticated_SSL:irohloff@[10.2.10.44])
-          (envelope-sender <ingo.rohloff@lauterbach.com>)
-          by smtp1.lauterbach.com (qmail-ldap-1.03) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <maz@kernel.org>; 22 Apr 2020 11:29:08 -0000
-From:   Ingo Rohloff <ingo.rohloff@lauterbach.com>
-To:     maz@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Ingo Rohloff <ingo.rohloff@lauterbach.com>
-Subject: [PATCH] irqchip/gic-v3: fix missing "__init" for gic_smp_init()
-Date:   Wed, 22 Apr 2020 13:28:57 +0200
-Message-Id: <20200422112857.4300-1-ingo.rohloff@lauterbach.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 22 Apr 2020 07:36:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBWSUR048449;
+        Wed, 22 Apr 2020 11:36:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=p0RVzc+WnEu1YNWU0XnqAO1VOpep+QDM8/eMCEip/YY=;
+ b=UMHVE5JLM8wd8wB6q2qC7PH8gxSMk6W2lZhEbNs7WPB1uO9uQU3icY/ygTpE9xIhha1b
+ JknhmQVEq8oUNKcQOT/RJTNcuA9q00cBNHrgWFKT6/isP69YrL0vWJSypJq8GMLxb7lu
+ BR/UPAbNmR1K98fI49S4M6SHbC63DVsjorEEHAj6+ak3a86ospOh1aGZUDfFD3VWOqKX
+ sGDFIfhUBh3hKIX9pqIV5QRcJ61RCKVRbSN/dU3bd4bvV+ZnB7JGiAmDE+OD9U9mm73J
+ 8N8UcBbIslKq+S59a9JjJo0U6bpTFMBnw7nlhw+FFJI1b15upfhbFVRryptUVAFONjaZ Uw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30fsgm28e9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 11:36:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBVf4r068288;
+        Wed, 22 Apr 2020 11:36:17 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 30gb3tsdmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 11:36:17 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03MBaA9L013317;
+        Wed, 22 Apr 2020 11:36:10 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Apr 2020 04:36:09 -0700
+Date:   Wed, 22 Apr 2020 14:35:58 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>,
+        kbuild-all@lists.01.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Dan Carpenter <error27@gmail.com>
+Subject: Re: [PATCH v3 6/7] misc: bcm-vk: add Broadcom VK driver
+Message-ID: <20200422113558.GJ2659@kadam>
+References: <20200420162809.17529-7-scott.branden@broadcom.com>
+ <202004221945.LY6x0DQD%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202004221945.LY6x0DQD%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220092
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With an SMP configuration, gic_smp_init() calls set_smp_cross_call().
-set_smp_cross_call() is marked with "__init".
-So gic_smp_init() should also be marked with "__init".
-gic_smp_init() is only called from gic_init_bases().
-gic_init_bases() is also marked with "__init";
-So marking gic_smp_init() with "__init" is fine.
+On Wed, Apr 22, 2020 at 07:17:34PM +0800, kbuild test robot wrote:
+> Hi Scott,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on driver-core/driver-core-testing]
+> [also build test WARNING on next-20200421]
+> [cannot apply to char-misc/char-misc-testing kselftest/next linus/master v5.7-rc2]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Scott-Branden/firmware-add-partial-read-support-in-request_firmware_into_buf/20200422-114528
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 55623260bb33e2ab849af76edf2253bc04cb241f
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.1-191-gc51a0382-dirty
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+                                           ^^^^^^^^^^^^^^^^^^^
 
-Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
----
- drivers/irqchip/irq-gic-v3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry, you asked me about this earlier.  You will need to add
+-D__CHECK_ENDIAN__ to enable these Sparse warnings.
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index d7006ef18a0d..98c886dab02d 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1150,7 +1150,7 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	isb();
- }
- 
--static void gic_smp_init(void)
-+static void __init gic_smp_init(void)
- {
- 	set_smp_cross_call(gic_raise_softirq);
- 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
--- 
-2.17.1
+regards,
+dan carpenter
 
