@@ -2,99 +2,313 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEBEC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439AFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3DBE20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD4420767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="o1sj58VO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgDVTdi (ORCPT
+        id S1726390AbgDVTfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:33:38 -0400
-Received: from muru.com ([72.249.23.125]:51032 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgDVTdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:33:37 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 6910580EE;
-        Wed, 22 Apr 2020 19:34:20 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 12:33:28 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Philipp Rossak <embed3d@gmail.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Message-ID: <20200422193328.GD37466@atomide.com>
-References: <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
- <20200421141543.GU37466@atomide.com>
- <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
- <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
- <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
- <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
- <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com>
- <MC879Q.XY9S0U9R35681@crapouillou.net>
- <D90A610B-1F26-4AD4-843A-60EB4E410377@goldelico.com>
- <a1fd55a3-23dd-aa0c-35dd-6956ff4baa1c@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1fd55a3-23dd-aa0c-35dd-6956ff4baa1c@gmail.com>
+        Wed, 22 Apr 2020 15:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725935AbgDVTfJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 15:35:09 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09556C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 12:35:09 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id t3so3792941qkg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 12:35:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=XUOj5ckwWLz2lEgwmqsauan+bflvXqJRztDKf8tU8MA=;
+        b=o1sj58VO5UXoRTDnFsVS6sjH247RYcCfp9v8AZQfqxzqFUV/n3OoDnc53qs4cQT9BJ
+         89Hdut3hRtAYSbwn6pFsTXlPJPgHxIywpNwCvym8MjfMRwHKu4WislZCAr5TcrGEgF2R
+         8xCtaJL9aP3mpc8PPbCqeDLKl4M0cm4Iz9QdKxOvCa7wNBYNaMBgwgwMdC2mLl+oAUOR
+         rA9gH8+cMyduhj6Lj58QwjJdVU0RB/Nz28iFrxsLTlJTaEKvXI5YoXgvSw7gfhyivc8v
+         1QVDGXusj3eSZkN2p7aWQy1O0IxMMmT56eJhmaJVK7zUHqlmqqc4i2KsrJGvDT//dg0D
+         2B5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=XUOj5ckwWLz2lEgwmqsauan+bflvXqJRztDKf8tU8MA=;
+        b=ugMt0YyQJRxsXHfi5wOaf1Ef6841Z+Jd6Jit424so23TvloOMu+geEvXAFfc1Noema
+         H2rJrlNJAjbSn9N/OVOMNE/Y5oXeE0SaIrxgg3f97yBbPH1DxZkeJnpcnNN6NHYaZKqs
+         PUZ92Zl7O/9+SJi2/yNJHsFaOqwvARbGAJK08YIA5MyQN7qmLC3P6TaO5nmCmGP+NNU5
+         mzTZgr/HJIkkCzNBTEvHnAQrSJowTK8gEUF/NmnU787CvmIz+QRkBGE7XFNATrF8aqgY
+         XNr1xOIoEn3VRMrLIBDUv9is44o0CDE0P0H4xl+ePzVVdeO/nQKAxvwnn4FjzDSzXpvR
+         +ByA==
+X-Gm-Message-State: AGi0PuY5sphGTuZ/Q2xEdDSjbQlooO1ErnTslYL0VImwGd3Qf8Vbf8uq
+        REPgtGzKORv74g6HRwOYkW0qHQ==
+X-Google-Smtp-Source: APiQypJtFpia/b9WJAjqdz0qbTKPrcNxYq2W3l1uSEcDwDd8r2V3oibM6z9SaNtVJ8x+4uQFj8hIPw==
+X-Received: by 2002:a37:638d:: with SMTP id x135mr19003866qkb.366.1587584108007;
+        Wed, 22 Apr 2020 12:35:08 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e133sm58554qkb.128.2020.04.22.12.35.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Apr 2020 12:35:07 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: out-of-bounds in pid_nr_ns() due to "proc: modernize proc to support
+ multiple private instances"
+Message-Id: <06B50A1C-406F-4057-BFA8-3A7729EA7469@lca.pw>
+Date:   Wed, 22 Apr 2020 15:35:05 -0400
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-fsdevel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Philipp Rossak <embed3d@gmail.com> [200422 19:05]:
-> A few years back, I did a big research on the PowerVR GPUs. Back then I
-> found an interesting TI datasheet. I forgot about this till I have seen the
-> right buzz words. Sorry that I remembered it that late.
-> 
-> Back then I came to the conclusion that all PowerVR GPU's have in general 3
-> Clocks.
-> 
-> A system clock, a memory clock and a core clock. [1].
+Reverted the whole series from linux-next,
 
-Hmm I'm not sure if those names are sgx or SoC specific.
+20d3928579da proc: use named enums for better readability
+e9fc842e1fb6 proc: use human-readable values for hidepid
+3ef9b8afc054 docs: proc: add documentation for "hidepid=3D4" and =
+"subset=3Dpid" options and new mount behavior
+f1031df957fa proc: add option to mount only a pids subset
+9153c0921a1e proc: instantiate only pids that we can ptrace on =
+'hidepid=3D4' mount option
+1ef97cee07dd proc: allow to mount many instances of proc in one pid =
+namespace
+39f8e6256b4b proc: rename struct proc_fs_info to proc_fs_opts=20
 
-Anyways, the sgx clocks for omap variants are already handled
-by the ti-sysc module as "fck" and "ick" so nothing to do there.
+fixed out-of-bounds in pid_nr_ns() while reading proc files.
 
-> The hyd_clk at sunxi devices seems to be the system clock.
-> 
-> With those additional information it should be very easy to get a proper
-> binding.
+=3D=3D=3D arm64 =3D=3D=3D
+[12140.366814] LTP: starting proc01 (proc01 -m 128)
+[12149.580943] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[12149.589521] BUG: KASAN: out-of-bounds in pid_nr_ns+0x2c/0x90
+pid_nr_ns at kernel/pid.c:456
+[12149.595939] Read of size 4 at addr 1bff000bfa8c0388 by task =
+proc01/50298
+[12149.603392] Pointer tag: [1b], memory tag: [fe]
 
-It would be best to find the clock(s) name used in the sgx docs
-to avoid using SoC specific naming :)
+[12149.610906] CPU: 69 PID: 50298 Comm: proc01 Tainted: G             L  =
+  5.7.0-rc2-next-20200422 #6
+[12149.620585] Hardware name: HPE Apollo 70             /C01_APACHE_MB   =
+      , BIOS L50_5.13_1.11 06/18/2019
+[12149.631074] Call trace:
+[12149.634304]  dump_backtrace+0x0/0x22c
+[12149.638745]  show_stack+0x28/0x34
+[12149.642839]  dump_stack+0x104/0x194
+[12149.647110]  print_address_description+0x70/0x3a4
+[12149.652576]  __kasan_report+0x188/0x238
+[12149.657169]  kasan_report+0x3c/0x58
+[12149.661430]  check_memory_region+0x98/0xa0
+[12149.666303]  __hwasan_load4_noabort+0x18/0x20
+[12149.671431]  pid_nr_ns+0x2c/0x90
+[12149.675446]  locks_translate_pid+0xf4/0x1a0
+[12149.680382]  locks_show+0x68/0x110
+[12149.684536]  seq_read+0x380/0x930
+[12149.688604]  pde_read+0x5c/0x78
+[12149.692498]  proc_reg_read+0x74/0xc0
+[12149.696813]  __vfs_read+0x84/0x1d0
+[12149.700939]  vfs_read+0xec/0x124
+[12149.704889]  ksys_read+0xb0/0x120
+[12149.708927]  __arm64_sys_read+0x54/0x88
+[12149.713485]  do_el0_svc+0x128/0x1dc
+[12149.717697]  el0_sync_handler+0x150/0x250
+[12149.722428]  el0_sync+0x164/0x180
 
-But yeah "sysclk" "memclk" and "coreclk" seem just fine for
-me for the optional clocks if that works for other SoCs.
+[12149.728672] Allocated by task 1:
+[12149.732624]  __kasan_kmalloc+0x124/0x188
+[12149.737269]  kasan_kmalloc+0x10/0x18
+[12149.741568]  kmem_cache_alloc_trace+0x2e4/0x3d4
+[12149.746820]  proc_fill_super+0x48/0x1fc
+[12149.751377]  vfs_get_super+0xcc/0x170
+[12149.755760]  get_tree_nodev+0x28/0x34
+[12149.760143]  proc_get_tree+0x24/0x30
+[12149.764439]  vfs_get_tree+0x54/0x158
+[12149.768736]  do_mount+0x80c/0xaf0
+[12149.772774]  __arm64_sys_mount+0xe0/0x18c
+[12149.777504]  do_el0_svc+0x128/0x1dc
+[12149.781715]  el0_sync_handler+0x150/0x250
+[12149.786445]  el0_sync+0x164/0x180
 
-Regards,
+[12149.792687] Freed by task 0:
+[12149.796285] (stack is not available)
 
-Tony
+[12149.802792] The buggy address belongs to the object at =
+ffff000bfa8c0300
+                which belongs to the cache kmalloc-128 of size 128
+[12149.816727] The buggy address is located 8 bytes to the right of
+                128-byte region [ffff000bfa8c0300, ffff000bfa8c0380)
+[12149.830223] The buggy address belongs to the page:
+[12149.835740] page:ffffffe002dea300 refcount:1 mapcount:0 =
+mapping:0000000037c9e9b5 index:0x31ff000bfa8c9e00
+[12149.846027] flags: 0x5ffffffe000200(slab)
+[12149.850765] raw: 005ffffffe000200 ffffffe022175788 ffffffe02215b788 =
+17ff0087a0020480
+[12149.859232] raw: 31ff000bfa8c9e00 0000000000660065 00000001ffffffff =
+0000000000000000
+[12149.867693] page dumped because: kasan: bad access detected
+[12149.873984] page_owner tracks the page as allocated
+[12149.879585] page last allocated via order 0, migratetype Unmovable, =
+gfp_mask 0x12cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY)
+[12149.891438]  post_alloc_hook+0x94/0xd4
+[12149.895908]  prep_new_page+0x34/0xcc
+[12149.900206]  get_page_from_freelist+0x4c4/0x60c
+[12149.905458]  __alloc_pages_nodemask+0x1c0/0x2e8
+[12149.910712]  alloc_page_interleave+0x38/0x18c
+[12149.915791]  alloc_pages_current+0x80/0xe0
+[12149.920610]  alloc_slab_page+0x154/0x3b4
+[12149.925254]  new_slab+0xc8/0x5f4
+[12149.929203]  ___slab_alloc+0x248/0x440
+[12149.933675]  kmem_cache_alloc_trace+0x368/0x3d4
+[12149.938928]  ftrace_free_mem+0x258/0x7ac
+[12149.943575]  ftrace_free_init_mem+0x20/0x28
+[12149.948482]  kernel_init+0x1c/0x204
+[12149.952692]  ret_from_fork+0x10/0x18
+[12149.956986] page_owner free stack trace missing
 
-> [1]: https://github.com/embed-3d/PVRSGX_hwdoc/blob/master/sources/pdfs/Spruh73c_chapter_SGX_Graphics_Accelerator.pdf
+[12149.964443] Memory state around the buggy address:
+[12149.969956]  ffff000bfa8c0100: fe fe fe fe fe fe fe fe fe fe fe fe fe =
+fe fe fe
+[12149.977899]  ffff000bfa8c0200: fe fe fe fe fe fe fe fe fe fe fe fe fe =
+fe fe fe
+[12149.985841] >ffff000bfa8c0300: 1b 1b 1b fe fe fe fe fe fe fe fe fe fe =
+fe fe fe
+[12149.993781]                                            ^
+[12149.999814]  ffff000bfa8c0400: fe fe fe fe fe fe fe fe fe fe fe fe fe =
+fe fe fe
+[12150.007757]  ffff000bfa8c0500: fe fe fe fe fe fe fe fe 6c 6c 6c 6c 6c =
+6c 6c 6c
+[12150.015697] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[12150.023638] Disabling lock debugging due to kernel taint
+
+=3D=3D=3D s390 =3D=3D=3D
+[14452.527006] LTP: starting proc01 (proc01 -m 128)
+[14455.663026] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[14455.664078] BUG: KASAN: slab-out-of-bounds in pid_nr_ns+0x34/0xa8
+[14455.664120] Read of size 4 at addr 000000000dabacc8 by task =
+proc01/41628
+
+[14455.664205] CPU: 1 PID: 41628 Comm: proc01 Not tainted =
+5.7.0-rc2-next-20200422 #2
+[14455.664248] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+[14455.664288] Call Trace:
+[14455.664335]  [<00000000084be28a>] show_stack+0x11a/0x1c8=20
+[14455.664382]  [<0000000008b147f4>] dump_stack+0x134/0x180=20
+[14455.664434]  [<00000000088b56c4>] =
+print_address_description.isra.9+0x5c/0x3e8=20
+[14455.664480]  [<00000000088b5cac>] __kasan_report+0x114/0x140=20
+[14455.664523]  [<00000000088b4bf4>] kasan_report+0x4c/0x58=20
+[14455.666150]  [<0000000008532a24>] pid_nr_ns+0x34/0xa8=20
+[14455.666203]  [<00000000089ee806>] locks_translate_pid+0xee/0x1c8=20
+[14455.666246]  [<00000000089eeea4>] locks_show+0x84/0x130=20
+[14455.666295]  [<0000000008958c3e>] seq_read+0x25e/0x7f0=20
+[14455.666343]  [<0000000008a14e70>] proc_reg_read+0x100/0x168=20
+[14455.666389]  [<000000000890fa22>] vfs_read+0x92/0x150=20
+[14455.666432]  [<000000000890feda>] ksys_read+0xe2/0x188=20
+[14455.666483]  [<0000000008e671d0>] system_call+0xd8/0x2b4=20
+[14455.666525] 5 locks held by proc01/41628:
+[14455.666562]  #0: 000000003e0e0c10 (&p->lock){+.+.}-{3:3}, at: =
+seq_read+0x5e/0x7f0
+[14455.666630]  #1: 00000000095deff0 (file_rwsem){++++}-{0:0}, at: =
+locks_start+0x66/0x98
+[14455.666695]  #2: 00000000095deed8 (blocked_lock_lock){+.+.}-{2:2}, =
+at: locks_start+0x72/0x98
+[14455.673879]  #3: 0000000009393b60 (rcu_read_lock){....}-{1:2}, at: =
+locks_translate_pid+0x5e/0x1c8
+[14455.673967]  #4: 00000000095367d0 (report_lock){....}-{2:2}, at: =
+__kasan_report+0x6e/0x140
+
+[14455.674077] Allocated by task 1:
+[14455.674128]  stack_trace_save+0xba/0xd0
+[14455.674169]  save_stack+0x30/0x58
+[14455.674211]  __kasan_kmalloc.isra.19+0xd4/0xe8
+[14455.674253]  kmem_cache_alloc_trace+0x246/0x390
+[14455.674296]  proc_fill_super+0x60/0x2e0
+[14455.674339]  vfs_get_super+0x10a/0x1a8
+[14455.674379]  vfs_get_tree+0x5e/0x158
+[14455.674424]  do_mount+0xbd2/0xe28
+[14455.674465]  __s390x_sys_mount+0xe2/0xf8
+[14455.674509]  system_call+0xd8/0x2b4
+
+[14455.674582] Freed by task 1:
+[14455.674622]  stack_trace_save+0xba/0xd0
+[14455.674663]  save_stack+0x30/0x58
+[14455.674704]  __kasan_slab_free+0x130/0x198
+[14455.674745]  slab_free_freelist_hook+0x7a/0x240
+[14455.674786]  kfree+0x10a/0x508
+[14455.674831]  __kthread_create_on_node+0x206/0x2f0
+[14455.674873]  kthread_create_on_node+0xa0/0xb8
+[14455.674915]  init_rescuer.part.13+0x66/0xf8
+[14455.674966]  workqueue_init+0x40e/0x658
+[14455.675010]  kernel_init_freeable+0x21e/0x590
+[14455.675056]  kernel_init+0x22/0x180
+[14455.675096]  ret_from_fork+0x30/0x34
+
+[14455.675296] The buggy address belongs to the object at =
+000000000dabac40
+                which belongs to the cache kmalloc-64 of size 64
+[14455.675345] The buggy address is located 72 bytes to the right of
+                64-byte region [000000000dabac40, 000000000dabac80)
+[14455.675391] The buggy address belongs to the page:
+[14455.675441] page:000003d08036ae80 refcount:1 mapcount:0 =
+mapping:00000000c06a91d7 index:0xdabae40
+[14455.675489] flags: 0x1fffe00000000200(slab)
+[14455.675536] raw: 1fffe00000000200 000003d0817ad788 000003d080c04908 =
+000000000ff8c600
+[14455.675582] raw: 000000000dabae40 0006001000000000 ffffffff00000001 =
+0000000000000000
+[14455.675624] page dumped because: kasan: bad access detected
+[14455.675666] page_owner tracks the page as allocated
+[14455.675707] page last allocated via order 0, migratetype Unmovable, =
+gfp_mask 0x0()
+[14455.675753]  stack_trace_save+0xba/0xd0
+[14455.675797]  register_early_stack+0x8c/0xb8
+[14455.675840]  init_page_owner+0x60/0x510
+[14455.675881]  kernel_init_freeable+0x278/0x590
+[14455.675919] page_owner free stack trace missing
+
+[14455.675993] Memory state around the buggy address:
+[14455.676034]  000000000dabab80: fc fc fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc
+[14455.676078]  000000000dabac00: fc fc fc fc fc fc fc fc 00 00 00 00 00 =
+fc fc fc
+[14455.676122] >000000000dabac80: fc fc fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc
+[14455.676171]                                               ^
+[14455.676213]  000000000dabad00: fc fc fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc
+[14455.676257]  000000000dabad80: fc fc fc fc fc fc fc fc fc fc fc fc fc =
+fc fc fc
+[14455.676299] =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[14455.676339] Disabling lock debugging due to kernel taint
+
+
