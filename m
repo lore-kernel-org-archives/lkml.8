@@ -2,195 +2,108 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23A7C5518E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8A3C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80215206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B0E205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEMC7jx1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+ruexNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgDVIQA (ORCPT
+        id S1726363AbgDVIS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
+        Wed, 22 Apr 2020 04:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725810AbgDVIP7 (ORCPT
+        by vger.kernel.org with ESMTP id S1725811AbgDVISZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:15:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2A4EC03C1A6;
-        Wed, 22 Apr 2020 01:15:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k1so1273013wrx.4;
-        Wed, 22 Apr 2020 01:15:58 -0700 (PDT)
+        Wed, 22 Apr 2020 04:18:25 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F361C03C1A6;
+        Wed, 22 Apr 2020 01:18:24 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so1307567ljg.5;
+        Wed, 22 Apr 2020 01:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=W1bwVVy/NtLxRgnoJUy2zNxPLp+Z6h7qsHb9WOhUubo=;
-        b=fEMC7jx1CLTOOK/5ySAQ9yyKtT2HbPV/yROeiAslCfHYmhzFoSmSvICfSP3N7z1/0C
-         G5VAOfKlIm0cds8bHhPXuAd4v33j8AtQTNB6NmCrU8a+x1KsGlmRxbwxWB8itzYZm5bG
-         6aO73LwdXbKtwIc4wJAwZHXC0jdGniNHJHJhYXvk84wOdG3RvGNDKQdry/v8CmCkFHgU
-         PZQscstx/0LQJb3YnDiAQkcTTeisPBwvLaLTz6nxTOvRuCG7DP4JCd+Go0N2EZGELaXr
-         H+f9hSZkviBHK/hB8uVVYgOblQNbX3HLgl3YQ36ocrKBf//ISRi5bwdulF8NQ+zJiueo
-         kd4w==
+        h=from:to:cc:subject:date:message-id;
+        bh=nt+kRiqmM2DnZoAPDCxq3F10ZB+J0rcax3yCDJcUZQo=;
+        b=O+ruexNnVUo5OzrLczwc6UYX+jSD+p7msm6KuPB2fMV3u/6qIzH5PiXt3i/UXFejdU
+         eX+aSwjvYfhvFYkV8XPDGAOo1/SmrJqWiAmWTNmduOfZ48pAf01ToMJT2Hyv/8ynP1t8
+         r6eBgt5i43TwWZm13zJ/cUe/KQJs7+JSa44ldvfQyT1m+JHQa/bXWHgKcji7pgcJldhn
+         QpRuSXm5AUkHrb75d2M+rOieLrKbMBKZf4cUtHkvA5qkegrdHqNIU/OZSKdcukUMcBO+
+         XSEWaPTQq95wYAWzpR2jCmygLUCK1wtzmPSyw61ROAwUQ4/nDORzCU/sYdIOo3g6CmGi
+         63hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=W1bwVVy/NtLxRgnoJUy2zNxPLp+Z6h7qsHb9WOhUubo=;
-        b=AwovcF7OD+PP1vPA/BVkhmDB9bjgvXpW6HOGBXCeBjwBUfmvIV26gECyRLM4/62HRb
-         5cgWgx/rerKPmXpmG5ieperfL0V3TyH+tJZn6fDCjloO4TK57R5bCRplgO9iRAOahefV
-         D2S5+pro0xOMavIa9HvaZsQM15dI1k+HrxCzIRrsP9nuPCP3ZIMimLeWVeM1z8M5eWdB
-         PNbSPK0D0BbNfRMLtUxL2PTEof4roFbI+Ns4zbsyaJBnwxkDkvnLQUoNN8T7keLGSGWA
-         bVr4kHpFMOiztVeGk+PRBdXRVRstNYiq4JgHAv+tOtvx7ECtAq9cB8SXsJe92tmVdJkE
-         0xXg==
-X-Gm-Message-State: AGi0PubIkizTG1qAQqQWaBte5OxUo/arllrkctDQGqzVzWw31pxIMpAD
-        wjn91uxVAYeHghZub/bxDFnuoOwpVq4=
-X-Google-Smtp-Source: APiQypLNP3FKxLdejyFGmo/PZCFB4G9yydsMN1CISrxGbgYnQpBB7EGeKZnnv9vuQkhjVUwPsH/F/Q==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr26964145wrs.22.1587543357363;
-        Wed, 22 Apr 2020 01:15:57 -0700 (PDT)
-Received: from [192.168.43.138] ([37.142.175.196])
-        by smtp.gmail.com with ESMTPSA id e5sm7154063wru.92.2020.04.22.01.15.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 01:15:56 -0700 (PDT)
-Subject: Re: [PATCH v6 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
- options
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
-References: <20200407162044.168890-1-amirmizi6@gmail.com>
- <20200407162044.168890-7-amirmizi6@gmail.com> <20200415152056.GA30547@bogus>
-From:   Amir Mizinski <amirmizi6@gmail.com>
-Message-ID: <5142cad6-7d22-bc80-a743-e3c75f7a237b@gmail.com>
-Date:   Wed, 22 Apr 2020 08:15:52 +0000
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200415152056.GA30547@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nt+kRiqmM2DnZoAPDCxq3F10ZB+J0rcax3yCDJcUZQo=;
+        b=LxjH02X1KxXtY/0NdN0FPov3SzSYhpTH3vBuQW1LtgBsjg+R9uoByfUPcokOnSyQlS
+         3kNdYjcTsog5edA1UTv84TfpfIxDdsZWF3YqdUrS43f2hYVJmp/+VUNyg3Y/+/JItck0
+         9rPXOlkOZXOUOgw+eJkK9g+v5JxbEA2sVYeCQ1alX3SRyExTttynJ3fLKGhK6uHf0AhZ
+         WgSRfQ1+DYIUdc99r9B58tyq3CbQV5TvVPZbnAloHntvlv1qR/PQFTt+VQg7DKcfTFkq
+         SVXH5/Ya/Uj6gnu6c9Ih6hsmPQ+m42+b+zVYzR0wnAxP9KHh6mtKHA1c1aJaOavxTU4X
+         pupQ==
+X-Gm-Message-State: AGi0PuaZoDdQRinnfAhsSc0ZUmnqrFQiY9cda7WdNf4Nb3DyhpvKQDd4
+        av2Mrc2P7fDUCyphRjJcNnqe5zQ8HwM=
+X-Google-Smtp-Source: APiQypJOPrvwNHcGRwIeARqlkuawGEIenbD2GGiUS/itar2r/mjHhhLGt7usGl8ha9CtKdAADnH41w==
+X-Received: by 2002:a2e:164b:: with SMTP id 11mr15263577ljw.23.1587543502188;
+        Wed, 22 Apr 2020 01:18:22 -0700 (PDT)
+Received: from test.lan ([91.105.39.216])
+        by smtp.gmail.com with ESMTPSA id f21sm3947163lfk.94.2020.04.22.01.18.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Apr 2020 01:18:21 -0700 (PDT)
+From:   Evalds Iodzevics <evalds.iodzevics@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de,
+        ben@decadent.org.uk, bp@suse.de,
+        Evalds Iodzevics <evalds.iodzevics@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] x86/microcode/intel: replace sync_core() with native_cpuid_reg(eax)
+Date:   Wed, 22 Apr 2020 11:17:59 +0300
+Message-Id: <20200422081759.1632-1-evalds.iodzevics@gmail.com>
+X-Mailer: git-send-email 2.17.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Intel it is required to do CPUID(1) before reading the microcode
+revision MSR. Current code in 4.4 an 4.9 relies on sync_core() to call
+CPUID, unfortunately on 32 bit machines code inside sync_core() always
+jumps past CPUID instruction as it depends on data structure boot_cpu_data
+witch are not populated correctly so early in boot sequence.
 
-On 2020-04-15 15:20, Rob Herring wrote:
-> On Tue, Apr 07, 2020 at 07:20:43PM +0300, amirmizi6@gmail.com wrote:
->> From: Amir Mizinski <amirmizi6@gmail.com>
->>
->> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
->> PTP based physical layer.
->>
->> This patch adds the documentation for corresponding device tree bindings of
->> I2C based Physical TPM.
->> Refer to the 'I2C Interface Definition' section in
->> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
->> for specification.
->>
->> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
->> ---
->>  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 47 ++++++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
->> new file mode 100644
->> index 0000000..13d7c2c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
->> @@ -0,0 +1,47 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: I2C PTP based TPM Device Tree Bindings
->> +
->> +maintainers:
->> +  - Amir Mizinski <amirmizi6@gmail.com>
->> +
->> +description:
->> +  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
->> +
->> +properties:
->> +  compatible:
->> +    contains:
->> +      const: tcg,tpm-tis-i2c
->
-> This is not sufficient. I assume you are testing on some specific TPM
-> chip.
->
+It depends on:
+commit 5dedade6dfa2 ("x86/CPU: Add native CPUID variants returning a single
+datum")
 
-I am, but this implementation follows the "TCG PC client Device Driver Design Principles for TPM 2.0"
-It's not meant solely for out chip.
+This patch is for 4.4 but also should apply to 4.9
 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupt:
->> +    maxItems: 1
->> +
->> +  crc-checksum:
->> +    $ref: /schemas/types.yaml#/definitions/flag
->> +    description:
->> +      CRC checksum enable.
->
-> Why would you not want CRC? Some chips support and some don't? If so,
-> the compatible for the chip should imply that.
->
+Signed-off-by: Evalds Iodzevics <evalds.iodzevics@gmail.com>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/include/asm/microcode_intel.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There's an Enable/Disable CRC option in the TPM chip, not all vendors
-use this by default.
-
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  - |
->> +    i2c {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      tpm-tis-i2c@2e {
->
-> tpm@2e
->
-
-I understand why i should remove "i2c", but i think it should be "tpm_tis@2e".
-Respectively with "tpm_tis_spi.txt" and "tpm_tis_mmio.txt".
-
->> +        compatible = "tcg,tpm-tis-i2c";
->> +        reg = <0x2e>;
->> +        crc-checksum;
->> +      };
->> +    };
->> +...
->> --
->> 2.7.4
->>
-
-Thank you for your feedback.
-Best regards,
-Amir Mizinski
+diff --git a/arch/x86/include/asm/microcode_intel.h b/arch/x86/include/asm/microcode_intel.h
+index 90343ba50485..92ce9c8a508b 100644
+--- a/arch/x86/include/asm/microcode_intel.h
++++ b/arch/x86/include/asm/microcode_intel.h
+@@ -60,7 +60,7 @@ static inline u32 intel_get_microcode_revision(void)
+ 	native_wrmsrl(MSR_IA32_UCODE_REV, 0);
+ 
+ 	/* As documented in the SDM: Do a CPUID 1 here */
+-	sync_core();
++	native_cpuid_eax(1);
+ 
+ 	/* get the current revision from MSR 0x8B */
+ 	native_rdmsr(MSR_IA32_UCODE_REV, dummy, rev);
+-- 
+2.17.4
 
