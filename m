@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE6FC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5419C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B26F2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FB52084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552074;
-	bh=w8ay4hs0GJbRR1//Q+FusngJfVtuAxS6jSP+LQOxm0g=;
+	s=default; t=1587552079;
+	bh=/3hD3gpZuo5EJNwa4Qh75iQMX/6jy1eF2zIF3xg+Ru4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E5LzgQGuGOm5NPly8ne8d3teSCxhuBFsj86k07a+tL1CD7mu8mCnnNsGF5xMjMMyX
-	 SIY4F/V9MNGhYNzGRjb9wyP5Q3puQUH9rndXQv8ZXAchHo8WZrWkR3RPVoSrAJ/6Hq
-	 yX8UT9yR2+43VAV6/hC9Y9AXYoxN4g4vQ/X6sTWE=
+	b=UjuAjjKnOmBWJrQzG7OhrweBnyzipiNlyjTklHe07zZ85/MkRRzy3F7KEhteMpRkc
+	 26EknZWXpBKy9FMPUFLgpXTMi6tMJdOg+HDegZLA/IIe3BOh59FOWTF9Pg/hQuPR1V
+	 TCcCXszp/82jtpSZAxfTe0YGhOPPURA9uAeitUzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbgDVKlN (ORCPT
+        id S1730080AbgDVKlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:41:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57188 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:41:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730090AbgDVKUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:30 -0400
+        id S1730087AbgDVKUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF31C2084D;
-        Wed, 22 Apr 2020 10:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 794FA2075A;
+        Wed, 22 Apr 2020 10:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550827;
-        bh=w8ay4hs0GJbRR1//Q+FusngJfVtuAxS6jSP+LQOxm0g=;
+        s=default; t=1587550824;
+        bh=/3hD3gpZuo5EJNwa4Qh75iQMX/6jy1eF2zIF3xg+Ru4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kI883auE6VELOx/xhXneCXJ872uazk1Ef+rmjiffOuYgWQusf1bWan2Zxad5QnHmj
-         5myCFxAMwyQVhQ5ZADifPMwumSzmjVWnJY8GI7dx1QAmezHVFS2bCvfedOQjWfy9sx
-         lQ3HlTDzH2WfztbmpYFs6GY2hD15BYnMZmCDmPkE=
+        b=vjZKoE/VedMj0r5vIYqNqEK/ilpIaEy8nBSqaOg8CH+sUef3X4TMLux+WR24B1ITE
+         8wH3BP163jeT9yFzWLnWm8gJEX8ienzneaJ4Bck73LDWg3xqPUNWpOObgh6jK7WDwh
+         wJC1PDMRAmnZjTBbf3uwzbQMFIW500pAUDQKx5yI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe Kerello <christophe.kerello@st.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 109/118] mtd: rawnand: free the nand_device object
-Date:   Wed, 22 Apr 2020 11:57:50 +0200
-Message-Id: <20200422095048.867543875@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 5.4 108/118] locktorture: Print ratio of acquisitions, not failures
+Date:   Wed, 22 Apr 2020 11:57:49 +0200
+Message-Id: <20200422095048.737340145@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,32 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Kerello <christophe.kerello@st.com>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-commit 009264605cdf1b12962c3a46f75818d05452e890 upstream.
+commit 80c503e0e68fbe271680ab48f0fe29bc034b01b7 upstream.
 
-This patch releases the resources allocated in nanddev_init function.
+The __torture_print_stats() function in locktorture.c carefully
+initializes local variable "min" to statp[0].n_lock_acquired, but
+then compares it to statp[i].n_lock_fail.  Given that the .n_lock_fail
+field should normally be zero, and given the initialization, it seems
+reasonable to display the maximum and minimum number acquisitions
+instead of miscomputing the maximum and minimum number of failures.
+This commit therefore switches from failures to acquisitions.
 
-Fixes: a7ab085d7c16 ("mtd: rawnand: Initialize the nand_device object")
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/1579767768-32295-1-git-send-email-christophe.kerello@st.com
+And this turns out to be not only a day-zero bug, but entirely my
+own fault.  I hate it when that happens!
+
+Fixes: 0af3fe1efa53 ("locktorture: Add a lock-torture kernel module")
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Will Deacon <will@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/nand_base.c |    2 ++
- 1 file changed, 2 insertions(+)
+ kernel/locking/locktorture.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -5907,6 +5907,8 @@ void nand_cleanup(struct nand_chip *chip
- 	    chip->ecc.algo == NAND_ECC_BCH)
- 		nand_bch_free((struct nand_bch_control *)chip->ecc.priv);
- 
-+	nanddev_cleanup(&chip->base);
-+
- 	/* Free bad block table memory */
- 	kfree(chip->bbt);
- 	kfree(chip->data_buf);
+--- a/kernel/locking/locktorture.c
++++ b/kernel/locking/locktorture.c
+@@ -697,10 +697,10 @@ static void __torture_print_stats(char *
+ 		if (statp[i].n_lock_fail)
+ 			fail = true;
+ 		sum += statp[i].n_lock_acquired;
+-		if (max < statp[i].n_lock_fail)
+-			max = statp[i].n_lock_fail;
+-		if (min > statp[i].n_lock_fail)
+-			min = statp[i].n_lock_fail;
++		if (max < statp[i].n_lock_acquired)
++			max = statp[i].n_lock_acquired;
++		if (min > statp[i].n_lock_acquired)
++			min = statp[i].n_lock_acquired;
+ 	}
+ 	page += sprintf(page,
+ 			"%s:  Total: %lld  Max/Min: %ld/%ld %s  Fail: %d %s\n",
 
 
