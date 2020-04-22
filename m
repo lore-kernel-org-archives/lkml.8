@@ -2,137 +2,149 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BE3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C1DC5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4331D20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226E620774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fNBYRL8d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4aMnoy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgDVQEa (ORCPT
+        id S1726795AbgDVQEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:04:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24094 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726358AbgDVQE2 (ORCPT
+        Wed, 22 Apr 2020 12:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbgDVQEj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:04:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587571467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=amvTuf5wEMJvqdESpaeyMURJivlfDh/jRY31BzCdBPU=;
-        b=fNBYRL8dIeMWPKdRPaKlOIJjQrpAuXtCf735spMH9LOVsLfEFBv3PmJd7Ys5mIcH3m10Bq
-        VFwQkWVH4v0Hy+SJJBt+w3STHbUggtUbDwljx3fQV7JdJy0jMr+u/ICwbzOiNHE+KBJ/ab
-        laHtT1HvX46c4HrPwTBGCPIJX0lchD8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177-5-QqutxDOl-cVj9GG-2gZA-1; Wed, 22 Apr 2020 12:04:23 -0400
-X-MC-Unique: 5-QqutxDOl-cVj9GG-2gZA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6898E107ACC9;
-        Wed, 22 Apr 2020 16:04:19 +0000 (UTC)
-Received: from gondolin (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE51B19C70;
-        Wed, 22 Apr 2020 16:04:05 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 18:04:03 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run'
- parameters
-Message-ID: <20200422180403.03f60b0c.cohuck@redhat.com>
-In-Reply-To: <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
-        <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
-        <20200422154543.2efba3dd.cohuck@redhat.com>
-        <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
-Organization: Red Hat GmbH
+        Wed, 22 Apr 2020 12:04:39 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0339C03C1AB
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:04:39 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id f59so2183736uaf.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/cP8XVqt/xrM6smjanv0aHXjrlwOSLxLfTMt/NqGVzE=;
+        b=Z4aMnoy/ZVB07dbXDok7KjZPOJ2h1vkz4objHI/15Tf4u+VtT5U3pH8FO5m92YjSDM
+         BH2cMUQL6fAX4FktgSRRayv0dQRUp4fEkBkCFEXbmgF5z339Qrd3xKfmvrRulaKSe6ld
+         /Cg9lCt/rg583e1+PlG9EtgIo/bJ5WcpZb2OJuJUULh6waljaWs7Vjyg7e9tbNG1zFkI
+         yMjVeXwV7bZ8FeKdD0TImiDWs6c1xYkt9omeqOvmTkITnoGFC61ZT411rj3CSVi53EXg
+         iusd4S1g62p+chlWNJpMRxByZl1vOpmxhwMToTNKJD5i6lurxWXQqPe6/xk53ahQrzyf
+         GT+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/cP8XVqt/xrM6smjanv0aHXjrlwOSLxLfTMt/NqGVzE=;
+        b=bp271jSuD2mJXLRBDFCpnqmawUPmA/S1YYchn78has21vVSCj0b0cNY1XFp7gCRtA/
+         aBxio2C8GgsZNrKDKt8spJEgciV77AQzIu2+O4zoKKW7SwqFhXL3oN1O8JZwjIrNyZd2
+         jbH+FMynvKMtwxwXEh4rqDu+HfVTVj7pf7EeIY1CxkOgXehJeTSUMOkS+GmMJJmROedr
+         qnx6MNRr+uNbMOIiaV+KHAHNoZl2XMicG6L35sOsyH7r4QIRgSUNCBX/mCOLUqQRO0mt
+         EuR57tUpBsIWta5XgeAV/us6QbSHeiYYT2mDLdsxoUS9pBk5NvybTROh9hB8yvgmRsT+
+         GTLQ==
+X-Gm-Message-State: AGi0PubouU1qIX/idOmZavgfKKQ8clqcHstNMSPW0Hthw6OZvijsaNKA
+        Z2xOM6xVmUDIxNujgcUlN+hGK6OeljmHEY5cnwsVmg==
+X-Google-Smtp-Source: APiQypJWMaZC4FSnpq5XwOmbJBjLbeyzLISOahTGgc/vgHCQqjQejfLQtbUxRUPnqG1L695riRbIRsjbHQWoF4zPu8M=
+X-Received: by 2002:ab0:544a:: with SMTP id o10mr16863075uaa.15.1587571478685;
+ Wed, 22 Apr 2020 09:04:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200422153401.7913-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200422153401.7913-1-yamada.masahiro@socionext.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 22 Apr 2020 18:04:02 +0200
+Message-ID: <CAPDyKFp3p7JMQG6fm_9FcNo=phE=bYfHqoOjVU83V8G5c_e7dw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-at91: make MMC_SDHCI_OF_AT91 depend on HAVE_CLK
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Takao Orito <orito.takao@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 17:58:04 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+On Wed, 22 Apr 2020 at 17:34, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> If sdhci-of-at91.c is compiled without CONFIG_HAVE_CLK, the line
+>
+>   caps1 |= FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
+>
+> ... emits "FIELD_PREP: value too large for the field" warning.
+>
+> The compiler seems to decide clk_mul is constant (unsigned int)-1,
+> because clk_get_rate() returns 0 when CONFIG_HAVE_CLK is disabled.
+>
+> Add HAVE_CLK to the depenency since this driver does not work without
+> the clock APIs anyway.
+>
+> Link: https://lkml.org/lkml/2020/4/17/613
+> Fixes: linux-next ("mmc: sdhci: use FIELD_GET/PREP for capabilities bit masks")
 
-> On 22.04.20 15:45, Cornelia Huck wrote:
-> > On Wed, 22 Apr 2020 20:58:04 +0800
-> > Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
-> >   
-> >> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> >> structure. Earlier than historical reasons, many kvm-related function  
-> > 
-> > s/Earlier than/For/ ?
-> >   
-> >> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
-> >> This patch does a unified cleanup of these remaining redundant parameters.
-> >>
-> >> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> >> ---
-> >>  arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
-> >>  1 file changed, 22 insertions(+), 15 deletions(-)
-> >>
-> >> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> >> index e335a7e5ead7..d7bb2e7a07ff 100644
-> >> --- a/arch/s390/kvm/kvm-s390.c
-> >> +++ b/arch/s390/kvm/kvm-s390.c
-> >> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
-> >>  	return rc;
-> >>  }
-> >>  
-> >> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
-> >>  {
-> >> +	struct kvm_run *kvm_run = vcpu->run;
-> >>  	struct runtime_instr_cb *riccb;
-> >>  	struct gs_cb *gscb;
-> >>  
-> >> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >>  		}
-> >>  		if (vcpu->arch.gs_enabled) {
-> >>  			current->thread.gs_cb = (struct gs_cb *)
-> >> -						&vcpu->run->s.regs.gscb;
-> >> +						&kvm_run->s.regs.gscb;  
-> > 
-> > Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
-> > it. (It seems they amount to at least as much as the changes advertised
-> > in the patch description.)
-> > 
-> > Other opinions?  
-> 
-> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
-> function parameter list into the variable declaration)? Not sure if this is better.
-> 
+I don't know about these, but I just decided to drop them.
 
-There's more in this patch that I cut... but I think just moving
-kvm_run from the parameter list would be much less disruptive.
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+> ---
+>
+> Ulf,
+>
+> I do not know how to fill the Fixes tag.
+> It is currently 8da1ff4f68a2 in linux-next, but I am not sure it is
+> stable. I just added 'linux-next'.
+
+...and there are no usefull commit hash to use from my tree either, as
+I am occasionally rebasing my next branch.
+
+
+>
+> If you have a preferred way, please modify it.
+>
+>
+>
+>
+>
+>  drivers/mmc/host/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 462b5352fea7..2aee844722d6 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -171,7 +171,7 @@ config MMC_SDHCI_OF_ASPEED
+>  config MMC_SDHCI_OF_AT91
+>         tristate "SDHCI OF support for the Atmel SDMMC controller"
+>         depends on MMC_SDHCI_PLTFM
+> -       depends on OF
+> +       depends on OF && HAVE_CLK
+>         help
+>           This selects the Atmel SDMMC driver
+>
+> --
+> 2.25.1
+>
