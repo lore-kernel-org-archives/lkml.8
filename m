@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBACC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C65C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19982075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0734920781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550668;
-	bh=J1JkjCc5mTHrf38+AhcltY41zhe8rWp5/agC1s7A4H4=;
+	s=default; t=1587550674;
+	bh=LXPWYG4z5+vvrhoERwmekrRYM9JEuLFtWYJbqt8j26E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJ2vANLbK29gw9VBagd91gd2hg1Vl4+OMuzGBEQshNnltg0zib6WjDTxlssF0uvY1
-	 Azze470XvJ9kWY4mcpa9Uu/L4eDMMvk/3ZrOcW6sGHW4PGXGYBIIL6hUXD+GDrS19B
-	 5swgUOWhdIF84B80uJhqNEroi7B6N7Nywk127NQU=
+	b=AX1cJeOB0ko4roKulwulAAQ1GzwdkVe76yYPvn8hfTXEs79gWB7VRU2QxqhWxiT3A
+	 b+oFTOWTVHbajtLiboL6hD2KfTBQFG96iwDHw/j5bcoaqTVssLt9XpBq32ymiuUZDG
+	 tplIBMHh1uG7y2jvSJtwg411TV2auiq3zM0vWxDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgDVKRr (ORCPT
+        id S1729890AbgDVKRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:17:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgDVKQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:39 -0400
+        id S1729776AbgDVKQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7E212076E;
-        Wed, 22 Apr 2020 10:16:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5590120776;
+        Wed, 22 Apr 2020 10:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550598;
-        bh=J1JkjCc5mTHrf38+AhcltY41zhe8rWp5/agC1s7A4H4=;
+        s=default; t=1587550605;
+        bh=LXPWYG4z5+vvrhoERwmekrRYM9JEuLFtWYJbqt8j26E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7rh7bmfOSICT+NAAgoM3ZQgiIEkNlIbOYZHWxeY/1aeaxGCarT5Ob2V4ZlFNv4H0
-         bhR97ZfIJXz44CPv+lZHKeEF39vB5I6a6psty1S/8oVqMDKCG7QWwLvQa0dkaEhAcb
-         xhy6RNxnH7k0juchnHYqvZwBE9ZPadvfuC1ZYjVE=
+        b=AOi4x8gXhn24bCR04I2SL/Ylttqks707xg+Kk5+q0JX9qYXWInn0G9GxBrgpsdH4n
+         d5u1eygxNcle+2adHD3MnRdmEVKUdo0ncxj/+pYcwhFkQ2kMwzkhEqNSJ7jsGb8kp+
+         NZ/StNLXMExzkN9s/yPgXrrBfdJemwB3RiI5/D8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 017/118] of: unittest: kmemleak in of_unittest_overlay_high_level()
-Date:   Wed, 22 Apr 2020 11:56:18 +0200
-Message-Id: <20200422095034.404330418@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 5.4 002/118] watchdog: sp805: fix restart handler
+Date:   Wed, 22 Apr 2020 11:56:03 +0200
+Message-Id: <20200422095031.891914693@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Michael Walle <michael@walle.cc>
 
-commit 145fc138f9aae4f9e1331352e301df28e16aed35 upstream.
+commit ea104a9e4d3e9ebc26fb78dac35585b142ee288b upstream.
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 3 of 5.
+The restart handler is missing two things, first, the registers
+has to be unlocked and second there is no synchronization for the
+write_relaxed() calls.
 
-of_unittest_overlay_high_level() failed to kfree the newly created
-property when the property named 'name' is skipped.
+This was tested on a custom board with the NXP LS1028A SoC.
 
-Fixes: 39a751a4cb7e ("of: change overlay apply input data from unflattened to FDT")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: 6c5c0d48b686c ("watchdog: sp805: add restart handler")
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200327162450.28506-1-michael@walle.cc
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/of/unittest.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/watchdog/sp805_wdt.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -2481,8 +2481,11 @@ static __init void of_unittest_overlay_h
- 				goto err_unlock;
- 			}
- 			if (__of_add_property(of_symbols, new_prop)) {
-+				kfree(new_prop->name);
-+				kfree(new_prop->value);
-+				kfree(new_prop);
- 				/* "name" auto-generated by unflatten */
--				if (!strcmp(new_prop->name, "name"))
-+				if (!strcmp(prop->name, "name"))
- 					continue;
- 				unittest(0, "duplicate property '%s' in overlay_base node __symbols__",
- 					 prop->name);
+--- a/drivers/watchdog/sp805_wdt.c
++++ b/drivers/watchdog/sp805_wdt.c
+@@ -137,10 +137,14 @@ wdt_restart(struct watchdog_device *wdd,
+ {
+ 	struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);
+ 
++	writel_relaxed(UNLOCK, wdt->base + WDTLOCK);
+ 	writel_relaxed(0, wdt->base + WDTCONTROL);
+ 	writel_relaxed(0, wdt->base + WDTLOAD);
+ 	writel_relaxed(INT_ENABLE | RESET_ENABLE, wdt->base + WDTCONTROL);
+ 
++	/* Flush posted writes. */
++	readl_relaxed(wdt->base + WDTLOCK);
++
+ 	return 0;
+ }
+ 
 
 
