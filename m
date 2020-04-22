@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8F5C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2086C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7947C20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB8E20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549786;
-	bh=6NosQb40PO6vCQGSmL9YTPubII9nqL0InDV35EY4yro=;
+	s=default; t=1587549789;
+	bh=XJr0lxy5vIcZ2OGNprXuiu1yZaGRxoLt/EV3+aKxOn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYGmCfbDaGK9stqSf3+XmvF5I2mghsvMZlnc8mk59Q5TdCzaFhnZXFNE+aEEYU4tq
-	 lOhY3VQJI6P1Y0Nfb01KrcgkxjhcH3qywQCwwsfLjnSkfuVpVY+Z5j4XUnv0jJ69dm
-	 Ou4pO0ljHQlsEYhiu/qKhor9Gg5tcBPw6Ca9iblM=
+	b=VqZnYdE3m3l1N/wRRuHVBIKYKs/Ah/kZuMze+z3lodZl2omsTZ3inYibohOw+pIWt
+	 iQviCrhtwL56phe6k1qHvgj9DKIs1Mcg+7IqmRB5uRNFkTOFyP64FzHwvdbWVT4szd
+	 qGNXohw1Jvz3LQ4Nw84gphNaKNPovYGmdeoUoh3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgDVKDF (ORCPT
+        id S1727118AbgDVKDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52454 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:03:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgDVKDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:01 -0400
+        id S1727100AbgDVKDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D2320784;
-        Wed, 22 Apr 2020 10:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC4EC208E4;
+        Wed, 22 Apr 2020 10:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549780;
-        bh=6NosQb40PO6vCQGSmL9YTPubII9nqL0InDV35EY4yro=;
+        s=default; t=1587549783;
+        bh=XJr0lxy5vIcZ2OGNprXuiu1yZaGRxoLt/EV3+aKxOn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJx6n6pMlQYeaMj/QBeaG2xEY6uf7aHtgr1D36QUmpQqmMW5n55GRAYCSDzHUEOQ1
-         infhcZBWlLpV8JFcmhuyWMtMnK9DBElf1oZL8ymsZMuprKdE51oJ3sGEnT8+wY1BDW
-         ggFyJfj32O0VQPa2/1UO1iq7dMA1dHuXW5z35o90=
+        b=lWA0ILj8Bdaw+kt3B1ofb7ZneWKzgNMT44P1iiE/7lUf4z8upT6erEJ2IhKLSCpKa
+         dlVQJ+TlxD5HDJVx9nY13acDdb/8Pb1ErDHUlMQTEnDh2CBFHcrx60aAIJM6Iq21hP
+         CICcK71bSZFBfPdMbEzpZcWdEWUvQq4tloAEw1mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6693adf1698864d21734@syzkaller.appspotmail.com,
-        syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com,
-        stable@kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 065/100] mac80211_hwsim: Use kstrndup() in place of kasprintf()
-Date:   Wed, 22 Apr 2020 11:56:35 +0200
-Message-Id: <20200422095034.740522811@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.4 066/100] ext4: do not zeroout extents beyond i_disksize
+Date:   Wed, 22 Apr 2020 11:56:36 +0200
+Message-Id: <20200422095034.909940954@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -62,68 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+From: Jan Kara <jack@suse.cz>
 
-commit 7ea862048317aa76d0f22334202779a25530980c upstream.
+commit 801674f34ecfed033b062a0f217506b93c8d5e8a upstream.
 
-syzbot reports a warning:
+We do not want to create initialized extents beyond end of file because
+for e2fsck it is impossible to distinguish them from a case of corrupted
+file size / extent tree and so it complains like:
 
-precision 33020 too large
-WARNING: CPU: 0 PID: 9618 at lib/vsprintf.c:2471 set_precision+0x150/0x180 lib/vsprintf.c:2471
- vsnprintf+0xa7b/0x19a0 lib/vsprintf.c:2547
- kvasprintf+0xb2/0x170 lib/kasprintf.c:22
- kasprintf+0xbb/0xf0 lib/kasprintf.c:59
- hwsim_del_radio_nl+0x63a/0x7e0 drivers/net/wireless/mac80211_hwsim.c:3625
- genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
- ...
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Inode 12, i_size is 147456, should be 163840.  Fix? no
 
-Thus it seems that kasprintf() with "%.*s" format can not be used for
-duplicating a string with arbitrary length. Replace it with kstrndup().
+Code in ext4_ext_convert_to_initialized() and
+ext4_split_convert_extents() try to make sure it does not create
+initialized extents beyond inode size however they check against
+inode->i_size which is wrong. They should instead check against
+EXT4_I(inode)->i_disksize which is the current inode size on disk.
+That's what e2fsck is going to see in case of crash before all dirty
+data is written. This bug manifests as generic/456 test failure (with
+recent enough fstests where fsx got fixed to properly pass
+FALLOC_KEEP_SIZE_FL flags to the kernel) when run with dioread_lock
+mount option.
 
-Note that later this string is limited to NL80211_WIPHY_NAME_MAXLEN == 64,
-but the code is simpler this way.
-
-Reported-by: syzbot+6693adf1698864d21734@syzkaller.appspotmail.com
-Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
-Cc: stable@kernel.org
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Link: https://lore.kernel.org/r/20200410123257.14559-1-tuomas.tynkkynen@iki.fi
-[johannes: add note about length limit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+CC: stable@vger.kernel.org
+Fixes: 21ca087a3891 ("ext4: Do not zero out uninitialized extents beyond i_size")
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200331105016.8674-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mac80211_hwsim.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/ext4/extents.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -2901,9 +2901,9 @@ static int hwsim_new_radio_nl(struct sk_
- 		param.no_vif = true;
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -3439,8 +3439,8 @@ static int ext4_ext_convert_to_initializ
+ 		(unsigned long long)map->m_lblk, map_len);
  
- 	if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
--		hwname = kasprintf(GFP_KERNEL, "%.*s",
--				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
--				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-+		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  GFP_KERNEL);
- 		if (!hwname)
- 			return -ENOMEM;
- 		param.hwname = hwname;
-@@ -2942,9 +2942,9 @@ static int hwsim_del_radio_nl(struct sk_
- 	if (info->attrs[HWSIM_ATTR_RADIO_ID]) {
- 		idx = nla_get_u32(info->attrs[HWSIM_ATTR_RADIO_ID]);
- 	} else if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
--		hwname = kasprintf(GFP_KERNEL, "%.*s",
--				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
--				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-+		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  GFP_KERNEL);
- 		if (!hwname)
- 			return -ENOMEM;
- 	} else
+ 	sbi = EXT4_SB(inode->i_sb);
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map_len)
+ 		eof_block = map->m_lblk + map_len;
+ 
+@@ -3701,8 +3701,8 @@ static int ext4_split_convert_extents(ha
+ 		  __func__, inode->i_ino,
+ 		  (unsigned long long)map->m_lblk, map->m_len);
+ 
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map->m_len)
+ 		eof_block = map->m_lblk + map->m_len;
+ 	/*
 
 
