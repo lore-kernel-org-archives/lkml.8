@@ -7,55 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D5EC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E300C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0B921835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCEC21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbgDVMRv (ORCPT
+        id S1728861AbgDVMRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53328 "EHLO
+        Wed, 22 Apr 2020 08:17:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728481AbgDVMRc (ORCPT
+        by vger.kernel.org with ESMTP id S1728643AbgDVMRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:17:32 -0400
+        Wed, 22 Apr 2020 08:17:35 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA08C03C1AE;
-        Wed, 22 Apr 2020 05:17:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF05C03C1AA;
+        Wed, 22 Apr 2020 05:17:35 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJS-0007YM-Dr; Wed, 22 Apr 2020 14:17:10 +0200
+        id 1jREJl-0007l5-8P; Wed, 22 Apr 2020 14:17:29 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DEC6E1C02FC;
-        Wed, 22 Apr 2020 14:17:09 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:09 -0000
-From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F38891C04D7;
+        Wed, 22 Apr 2020 14:17:21 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:21 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf hist: Add fast path for duplicate entries check
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Pavel Gerasimov <pavel.gerasimov@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
+Subject: [tip: perf/core] perf intel-pt: Add support for synthesizing
+ callchains for regular events
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200319202517.23423-18-kan.liang@linux.intel.com>
-References: <20200319202517.23423-18-kan.liang@linux.intel.com>
+In-Reply-To: <20200401101613.6201-12-adrian.hunter@intel.com>
+References: <20200401101613.6201-12-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158755782945.28353.13339923488972169310.tip-bot2@tip-bot2>
+Message-ID: <158755784160.28353.16391866213474126627.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,137 +61,254 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     12e89e65f446476951f42aedeef56b6bd6f7f1e6
-Gitweb:        https://git.kernel.org/tip/12e89e65f446476951f42aedeef56b6bd6f7f1e6
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 19 Mar 2020 13:25:17 -07:00
+Commit-ID:     2855c05cf14a5ee0d3b58168632acb11ea35721f
+Gitweb:        https://git.kernel.org/tip/2855c05cf14a5ee0d3b58168632acb11ea35721f
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Wed, 01 Apr 2020 13:16:08 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 18 Apr 2020 09:05:01 -03:00
+CommitterDate: Thu, 16 Apr 2020 12:19:17 -03:00
 
-perf hist: Add fast path for duplicate entries check
+perf intel-pt: Add support for synthesizing callchains for regular events
 
-Perf checks the duplicate entries in a callchain before adding an entry.
-However the check is very slow especially with deeper call stack.
-Almost ~50% elapsed time of perf report is spent on the check when the
-call stack is always depth of 32.
+Currently, callchains can be synthesized only for synthesized events.
+Support also synthesizing callchains for regular events.
 
-The hist_entry__cmp() is used to compare the new entry with the old
-entries. It will go through all the available sorts in the sort_list,
-and call the specific cmp of each sort, which is very slow.
+Example:
 
-Actually, for most cases, there are no duplicate entries in callchain.
-The symbols are usually different. It's much faster to do a quick check
-for symbols first. Only do the full cmp when the symbols are exactly the
-same.
+ # perf record --kcore --aux-sample -e '{intel_pt//,cycles}' -c 10000 uname
+ Linux
+ [ perf record: Woken up 3 times to write data ]
+ [ perf record: Captured and wrote 0.532 MB perf.data ]
+ # perf script --itrace=Ge | head -20
+ uname  4864 2419025.358181:      10000     cycles:
+        ffffffffbba56965 apparmor_bprm_committing_creds+0x35 ([kernel.kallsyms])
+        ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
+        ffffffffbba07422 security_bprm_committing_creds+0x22 ([kernel.kallsyms])
+        ffffffffbb89805d install_exec_creds+0xd ([kernel.kallsyms])
+        ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
 
-The quick check is only to check symbols, not dso. Export
-_sort__sym_cmp.
+ uname  4864 2419025.358185:      10000     cycles:
+        ffffffffbba56db0 apparmor_bprm_committed_creds+0x20 ([kernel.kallsyms])
+        ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
+        ffffffffbba07452 security_bprm_committed_creds+0x22 ([kernel.kallsyms])
+        ffffffffbb89809a install_exec_creds+0x4a ([kernel.kallsyms])
+        ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
 
-  $ perf record --call-graph lbr ./tchain_edit_64
+ uname  4864 2419025.358189:      10000     cycles:
+        ffffffffbb86fdf6 vma_adjust_trans_huge+0x6 ([kernel.kallsyms])
+        ffffffffbb821660 __vma_adjust+0x160 ([kernel.kallsyms])
+        ffffffffbb897be7 shift_arg_pages+0x97 ([kernel.kallsyms])
+        ffffffffbb897ed9 setup_arg_pages+0x1e9 ([kernel.kallsyms])
+        ffffffffbb90d9f2 load_elf_binary+0x3f2 ([kernel.kallsyms])
 
-  Without the patch
-  $time perf report --stdio
-  real    0m21.142s
-  user    0m21.110s
-  sys     0m0.033s
+Committer testing:
 
-  With the patch
-  $time perf report --stdio
-  real    0m10.977s
-  user    0m10.948s
-  sys     0m0.027s
+  # perf record --kcore --aux-sample -e '{intel_pt//,cycles}' -c 10000 uname
+  Linux
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.233 MB perf.data ]
+  #
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Then, before this patch:
+
+  # perf script --itrace=Ge | head -20
+     uname 28642 168664.856384: 10000 cycles: ffffffff9810aeaa commit_creds+0x2a ([kernel.kallsyms])
+     uname 28642 168664.856388: 10000 cycles: ffffffff982a24f1 mprotect_fixup+0x151 ([kernel.kallsyms])
+     uname 28642 168664.856392: 10000 cycles: ffffffff982a385b move_page_tables+0xbcb ([kernel.kallsyms])
+     uname 28642 168664.856396: 10000 cycles: ffffffff982fd4ec __mod_memcg_state+0x1c ([kernel.kallsyms])
+     uname 28642 168664.856400: 10000 cycles: ffffffff9829fddd do_mmap+0xfd ([kernel.kallsyms])
+     uname 28642 168664.856404: 10000 cycles: ffffffff9829c879 __vma_adjust+0x479 ([kernel.kallsyms])
+     uname 28642 168664.856408: 10000 cycles: ffffffff98238e94 __perf_addr_filters_adjust+0x34 ([kernel.kallsyms])
+     uname 28642 168664.856412: 10000 cycles: ffffffff98a38e0b down_write+0x1b ([kernel.kallsyms])
+     uname 28642 168664.856416: 10000 cycles: ffffffff983006a0 memcg_kmem_get_cache+0x0 ([kernel.kallsyms])
+     uname 28642 168664.856421: 10000 cycles: ffffffff98396eaf load_elf_binary+0x92f ([kernel.kallsyms])
+     uname 28642 168664.856425: 10000 cycles: ffffffff982e0222 kfree+0x62 ([kernel.kallsyms])
+     uname 28642 168664.856428: 10000 cycles: ffffffff9846dfd4 file_has_perm+0x54 ([kernel.kallsyms])
+     uname 28642 168664.856433: 10000 cycles: ffffffff98288911 vma_interval_tree_insert+0x51 ([kernel.kallsyms])
+     uname 28642 168664.856437: 10000 cycles: ffffffff9823e577 perf_event_mmap_output+0x27 ([kernel.kallsyms])
+     uname 28642 168664.856441: 10000 cycles: ffffffff98a26fa0 xas_load+0x40 ([kernel.kallsyms])
+     uname 28642 168664.856445: 10000 cycles: ffffffff98004f30 arch_setup_additional_pages+0x0 ([kernel.kallsyms])
+     uname 28642 168664.856448: 10000 cycles: ffffffff98a297c0 copy_user_generic_unrolled+0xa0 ([kernel.kallsyms])
+     uname 28642 168664.856452: 10000 cycles: ffffffff9853a87a strnlen_user+0x10a ([kernel.kallsyms])
+     uname 28642 168664.856456: 10000 cycles: ffffffff986638a7 randomize_page+0x27 ([kernel.kallsyms])
+     uname 28642 168664.856460: 10000 cycles: ffffffff98a3b645 _raw_spin_lock+0x5 ([kernel.kallsyms])
+
+  #
+
+And after:
+
+  # perf script --itrace=Ge | head -20
+  uname 28642 168664.856384:      10000     cycles:
+  	ffffffff9810aeaa commit_creds+0x2a ([kernel.kallsyms])
+  	ffffffff9831fe87 install_exec_creds+0x17 ([kernel.kallsyms])
+  	ffffffff983968d9 load_elf_binary+0x359 ([kernel.kallsyms])
+  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
+  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
+
+  uname 28642 168664.856388:      10000     cycles:
+  	ffffffff982a24f1 mprotect_fixup+0x151 ([kernel.kallsyms])
+  	ffffffff9831fa83 setup_arg_pages+0x123 ([kernel.kallsyms])
+  	ffffffff9839691f load_elf_binary+0x39f ([kernel.kallsyms])
+  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
+  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
+
+  uname 28642 168664.856392:      10000     cycles:
+  	ffffffff982a385b move_page_tables+0xbcb ([kernel.kallsyms])
+  	ffffffff9831f889 shift_arg_pages+0xa9 ([kernel.kallsyms])
+  	ffffffff9831fb4f setup_arg_pages+0x1ef ([kernel.kallsyms])
+  	ffffffff9839691f load_elf_binary+0x39f ([kernel.kallsyms])
+  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
+  #
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Pavel Gerasimov <pavel.gerasimov@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
-Link: http://lore.kernel.org/lkml/20200319202517.23423-18-kan.liang@linux.intel.com
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20200401101613.6201-12-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/hist.c | 23 +++++++++++++++++++++++
- tools/perf/util/sort.c |  2 +-
- tools/perf/util/sort.h |  2 ++
- 3 files changed, 26 insertions(+), 1 deletion(-)
+ tools/perf/util/intel-pt.c | 68 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 61 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 283a69f..c2550db 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1070,6 +1070,20 @@ iter_next_cumulative_entry(struct hist_entry_iter *iter,
- 	return fill_callchain_info(al, node, iter->hide_unresolved);
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index db25c77..a659b4a 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -124,6 +124,8 @@ struct intel_pt {
+ 
+ 	struct range *time_ranges;
+ 	unsigned int range_cnt;
++
++	struct ip_callchain *chain;
+ };
+ 
+ enum switch_state {
+@@ -868,6 +870,45 @@ static u64 intel_pt_ns_to_ticks(const struct intel_pt *pt, u64 ns)
+ 		pt->tc.time_mult;
  }
  
-+static bool
-+hist_entry__fast__sym_diff(struct hist_entry *left,
-+			   struct hist_entry *right)
++static struct ip_callchain *intel_pt_alloc_chain(struct intel_pt *pt)
 +{
-+	struct symbol *sym_l = left->ms.sym;
-+	struct symbol *sym_r = right->ms.sym;
++	size_t sz = sizeof(struct ip_callchain);
 +
-+	if (!sym_l && !sym_r)
-+		return left->ip != right->ip;
-+
-+	return !!_sort__sym_cmp(sym_l, sym_r);
++	/* Add 1 to callchain_sz for callchain context */
++	sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
++	return zalloc(sz);
 +}
 +
++static int intel_pt_callchain_init(struct intel_pt *pt)
++{
++	struct evsel *evsel;
 +
- static int
- iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 			       struct addr_location *al)
-@@ -1096,6 +1110,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 	};
- 	int i;
- 	struct callchain_cursor cursor;
-+	bool fast = hists__has(he_tmp.hists, sym);
- 
- 	callchain_cursor_snapshot(&cursor, &callchain_cursor);
- 
-@@ -1106,6 +1121,14 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 	 * It's possible that it has cycles or recursive calls.
- 	 */
- 	for (i = 0; i < iter->curr; i++) {
-+		/*
-+		 * For most cases, there are no duplicate entries in callchain.
-+		 * The symbols are usually different. Do a quick check for
-+		 * symbols first.
-+		 */
-+		if (fast && hist_entry__fast__sym_diff(he_cache[i], &he_tmp))
-+			continue;
++	evlist__for_each_entry(pt->session->evlist, evsel) {
++		if (!(evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN))
++			evsel->synth_sample_type |= PERF_SAMPLE_CALLCHAIN;
++	}
 +
- 		if (hist_entry__cmp(he_cache[i], &he_tmp) == 0) {
- 			/* to avoid calling callback function */
- 			iter->he = NULL;
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index f14cc72..dc15ddc 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -237,7 +237,7 @@ static int64_t _sort__addr_cmp(u64 left_ip, u64 right_ip)
- 	return (int64_t)(right_ip - left_ip);
- }
- 
--static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
-+int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
++	pt->chain = intel_pt_alloc_chain(pt);
++	if (!pt->chain)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static void intel_pt_add_callchain(struct intel_pt *pt,
++				   struct perf_sample *sample)
++{
++	struct thread *thread = machine__findnew_thread(pt->machine,
++							sample->pid,
++							sample->tid);
++
++	thread_stack__sample_late(thread, sample->cpu, pt->chain,
++				  pt->synth_opts.callchain_sz + 1, sample->ip,
++				  pt->kernel_start);
++
++	sample->callchain = pt->chain;
++}
++
+ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
+ 						   unsigned int queue_nr)
  {
- 	if (!sym_l || !sym_r)
- 		return cmp_null(sym_l, sym_r);
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index cfa6ac6..66d39c4 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -311,5 +311,7 @@ int64_t
- sort__daddr_cmp(struct hist_entry *left, struct hist_entry *right);
- int64_t
- sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right);
-+int64_t
-+_sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r);
- char *hist_entry__srcline(struct hist_entry *he);
- #endif	/* __PERF_SORT_H */
+@@ -880,11 +921,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
+ 		return NULL;
+ 
+ 	if (pt->synth_opts.callchain) {
+-		size_t sz = sizeof(struct ip_callchain);
+-
+-		/* Add 1 to callchain_sz for callchain context */
+-		sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
+-		ptq->chain = zalloc(sz);
++		ptq->chain = intel_pt_alloc_chain(pt);
+ 		if (!ptq->chain)
+ 			goto out_free;
+ 	}
+@@ -1992,7 +2029,8 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
+ 	if (!(state->type & INTEL_PT_BRANCH))
+ 		return 0;
+ 
+-	if (pt->synth_opts.callchain || pt->synth_opts.thread_stack)
++	if (pt->synth_opts.callchain || pt->synth_opts.add_callchain ||
++	    pt->synth_opts.thread_stack)
+ 		thread_stack__event(ptq->thread, ptq->cpu, ptq->flags, state->from_ip,
+ 				    state->to_ip, ptq->insn_len,
+ 				    state->trace_nr);
+@@ -2639,6 +2677,11 @@ static int intel_pt_process_event(struct perf_session *session,
+ 	if (err)
+ 		return err;
+ 
++	if (event->header.type == PERF_RECORD_SAMPLE) {
++		if (pt->synth_opts.add_callchain && !sample->callchain)
++			intel_pt_add_callchain(pt, sample);
++	}
++
+ 	if (event->header.type == PERF_RECORD_AUX &&
+ 	    (event->aux.flags & PERF_AUX_FLAG_TRUNCATED) &&
+ 	    pt->synth_opts.errors) {
+@@ -2710,6 +2753,7 @@ static void intel_pt_free(struct perf_session *session)
+ 	session->auxtrace = NULL;
+ 	thread__put(pt->unknown_thread);
+ 	addr_filters__exit(&pt->filts);
++	zfree(&pt->chain);
+ 	zfree(&pt->filter);
+ 	zfree(&pt->time_ranges);
+ 	free(pt);
+@@ -3348,6 +3392,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		    !session->itrace_synth_opts->inject) {
+ 			pt->synth_opts.branches = false;
+ 			pt->synth_opts.callchain = true;
++			pt->synth_opts.add_callchain = true;
+ 		}
+ 		pt->synth_opts.thread_stack =
+ 				session->itrace_synth_opts->thread_stack;
+@@ -3380,14 +3425,22 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		pt->branches_filter |= PERF_IP_FLAG_RETURN |
+ 				       PERF_IP_FLAG_TRACE_BEGIN;
+ 
+-	if (pt->synth_opts.callchain && !symbol_conf.use_callchain) {
++	if ((pt->synth_opts.callchain || pt->synth_opts.add_callchain) &&
++	    !symbol_conf.use_callchain) {
+ 		symbol_conf.use_callchain = true;
+ 		if (callchain_register_param(&callchain_param) < 0) {
+ 			symbol_conf.use_callchain = false;
+ 			pt->synth_opts.callchain = false;
++			pt->synth_opts.add_callchain = false;
+ 		}
+ 	}
+ 
++	if (pt->synth_opts.add_callchain) {
++		err = intel_pt_callchain_init(pt);
++		if (err)
++			goto err_delete_thread;
++	}
++
+ 	err = intel_pt_synth_events(pt, session);
+ 	if (err)
+ 		goto err_delete_thread;
+@@ -3410,6 +3463,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 	return 0;
+ 
+ err_delete_thread:
++	zfree(&pt->chain);
+ 	thread__zput(pt->unknown_thread);
+ err_free_queues:
+ 	intel_pt_log_disable();
