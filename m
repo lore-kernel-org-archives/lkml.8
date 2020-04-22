@@ -2,107 +2,113 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43385C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A741C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C25220774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7105E2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587553299;
+	bh=RvU73F7tLB9ZFjTmEy3uFpOJCsNs03yV0YlJ8KnNps0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ICjQHIVqmBD4HNz98DDm28Xu8giNkogYN/syZ920sfxytD3Ko26AkaeVUyoH8P+7K
+	 nPpr0Bdaej8p9PvaeF0Ku7IwxxiUiXccDpqAXwxbmKTOKx+NXLOCCj9jF1RVYazD11
+	 DPYqjKTByp6fJlA8RcxLXRYWgbe82lCgoCpLaj9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732290AbgDVLBe (ORCPT
+        id S1726745AbgDVKBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:01:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49028 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 06:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbgDVLB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:01:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 30876ABD6;
-        Wed, 22 Apr 2020 11:01:25 +0000 (UTC)
-Message-ID: <1587553284.9537.96.camel@suse.cz>
-Subject: Re: [BISECTED]: Kernel panic (was: Linux 5.7-rc2)
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Harald Arnesen <harald@skogtun.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 22 Apr 2020 13:01:24 +0200
-In-Reply-To: <ecdc6ffa-0137-4ca0-3bdb-cf37178ba4ff@skogtun.org>
-References: <CAHk-=wiQsJu-ZFjt7+c9FVD5R40khtZiihrT+7O3UaVvHYz=HQ@mail.gmail.com>
-         <428bac87-b6dd-0867-c8f8-622cd606de3e@skogtun.org>
-         <CAHk-=wiX+NT2yxtdPszH9U_S96MCNQA56GJFXY45mZc47yG5KQ@mail.gmail.com>
-         <20200421212347.GV2483@worktop.programming.kicks-ass.net>
-         <1587546150.9537.84.camel@suse.cz>
-         <aec3c60e-2794-7eb2-eb11-ff2781223e90@skogtun.org>
-         <ecdc6ffa-0137-4ca0-3bdb-cf37178ba4ff@skogtun.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726722AbgDVKBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F35720774;
+        Wed, 22 Apr 2020 10:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587549662;
+        bh=RvU73F7tLB9ZFjTmEy3uFpOJCsNs03yV0YlJ8KnNps0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oduSSCQBbLQITntmz2gyhvovhDD0B5B8HVaE5V0m9FmyZG/ZxOK6mRRsvE5E75vUl
+         3CGAC60iS9d8hbNfsWX9YbKJ6ehPWyHyxc2YEIhf/igQVgDAT4QKExvaE+/ey3/O5C
+         ogWVmuEaDzzFkWPTlQiUcsK+kYMmnhu+wvuC4z0w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 054/100] misc: echo: Remove unnecessary parentheses and simplify check for zero
+Date:   Wed, 22 Apr 2020 11:56:24 +0200
+Message-Id: <20200422095032.803893481@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
+References: <20200422095022.476101261@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-22 at 12:22 +0200, Harald Arnesen wrote:
-> Harald Arnesen [22.04.2020 11:37]:
-> 
-> > Giovanni Gherdovich [22.04.2020 11:02]:
-> > > 
-> > > Harald:
-> > > 
-> > > I'll echo Linus' request of testing that the patch series linked above fixes
-> > > the problem on your machine. Since you're testing -rc kernels and bisecting
-> > > bugs I assume you're comfortable with patching and compiling kernels, but if
-> > > that is not the case I am more than happy to assist by providing either an RPM
-> > > or a DEB package, depending on the distribution you're running. Let me know.
-> > Will try patching first, if I'm not successful, you may compile a DEB
-> > package for me.
-> 
-> I can confirm that my Thinkpad T510i boots normally with the four
-> patches added.
-> 
-> Thanks!
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-That's awesome, thank you for testing.
+[ Upstream commit 85dc2c65e6c975baaf36ea30f2ccc0a36a8c8add ]
 
-Regarding the turbostat output you attached to an earlier email, it confirms
-the suspicion that the 4C turbo is reported as zero (being a 2 cores / 4 threads
-machine), explaining why the fix works:
+Clang warns when multiple pairs of parentheses are used for a single
+conditional statement.
 
-  cpu2: MSR_TURBO_RATIO_LIMIT: 0x00001313
-  19 * 133.3 = 2533.3 MHz max turbo 2 active cores
-  19 * 133.3 = 2533.3 MHz max turbo 1 active cores
+drivers/misc/echo/echo.c:384:27: warning: equality comparison with
+extraneous parentheses [-Wparentheses-equality]
+        if ((ec->nonupdate_dwell == 0)) {
+             ~~~~~~~~~~~~~~~~~~~~^~~~
+drivers/misc/echo/echo.c:384:27: note: remove extraneous parentheses
+around the comparison to silence this warning
+        if ((ec->nonupdate_dwell == 0)) {
+            ~                    ^   ~
+drivers/misc/echo/echo.c:384:27: note: use '=' to turn this equality
+comparison into an assignment
+        if ((ec->nonupdate_dwell == 0)) {
+                                 ^~
+                                 =
+1 warning generated.
 
-In the above, bits 31:24 are zero. It's not a universal rule, though: my laptop
-also has a 2 cores / 4 threads cpu, and that same MSR says:
+Remove them and while we're at it, simplify the zero check as '!var' is
+used more than 'var == 0'.
 
-  cpu3: MSR_TURBO_RATIO_LIMIT: 0x1b1b1b1b1b1d
-  27 * 100.0 = 2700.0 MHz max turbo 6 active cores
-  27 * 100.0 = 2700.0 MHz max turbo 5 active cores
-  27 * 100.0 = 2700.0 MHz max turbo 4 active cores
-  27 * 100.0 = 2700.0 MHz max turbo 3 active cores
-  27 * 100.0 = 2700.0 MHz max turbo 2 active cores
-  29 * 100.0 = 2900.0 MHz max turbo 1 active cores
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/misc/echo/echo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So despite my CPU being similar to yours, it wouldn't show the bug. There is
-even more: the bug can show on large core counts too, as seen in
-https://lore.kernel.org/lkml/bf43772d-48e5-01d4-dd03-330110e487fa@linux.intel.com/
-Like Xu from Intel has an Atom P-Series with 24 physical cores, yet their
-MSR goes like:
-
-  MSR_TURBO_RATIO_LIMIT: 0x00000016
-
-which means only the 1C turbo is reported non-zero (that machine doesn't have
-turbo at all, 1C turbo is the same as base frequency).
+diff --git a/drivers/misc/echo/echo.c b/drivers/misc/echo/echo.c
+index 9597e9523cac4..fff13176f9b8b 100644
+--- a/drivers/misc/echo/echo.c
++++ b/drivers/misc/echo/echo.c
+@@ -454,7 +454,7 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
+ 	 */
+ 	ec->factor = 0;
+ 	ec->shift = 0;
+-	if ((ec->nonupdate_dwell == 0)) {
++	if (!ec->nonupdate_dwell) {
+ 		int p, logp, shift;
+ 
+ 		/* Determine:
+-- 
+2.20.1
 
 
-Thanks,
-Giovanni
+
