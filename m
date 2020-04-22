@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDBFC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20128C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED42075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E9020857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550077;
-	bh=zGC4dr+ld+nnucTsreo0JbDdkNckR7Sp2tOzN775+C0=;
+	s=default; t=1587550080;
+	bh=cIXdAdZ5dVYSOKb5XWstUFzFLikCgwTFPtbTJkH/Hy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mau5mdTS5W7M5iDz9ot04QAI6xwAVsIWlOX//sw9CYhIi9iQIFUDAhf94R8bJ6dP5
-	 StcTvnoz+II5bNJfImYIdrlowbRnM/H0v1loBfobqiTocuChmnQpC6/pNXU/mh/XNx
-	 yUtaHtHakNvhuaMyp4Kk9/u3NIr41TvRV322RD3w=
+	b=G9xgBt6tXkE+CVBK+MkCob9NgJsHIeCTOJxkkyYEsBmg0e8JNfowp3A9mNPzD+Aoc
+	 S1nMAHOGcfPYLcjnrwA0eU+ty14nM2aDPMT1OD4Hn0L92T/mHpCqQO2GRbXeWtjlFB
+	 DbpL4RvzIeQ3btdlIpncZAcomO8FI2UJNIBLhxD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgDVKH4 (ORCPT
+        id S1728613AbgDVKH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60498 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbgDVKHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:07:44 -0400
+        id S1728029AbgDVKHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04AF32076C;
-        Wed, 22 Apr 2020 10:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E842078C;
+        Wed, 22 Apr 2020 10:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550062;
-        bh=zGC4dr+ld+nnucTsreo0JbDdkNckR7Sp2tOzN775+C0=;
+        s=default; t=1587550069;
+        bh=cIXdAdZ5dVYSOKb5XWstUFzFLikCgwTFPtbTJkH/Hy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P83ZHGInT3Cesn5dQQVIz1TVZPfyGqfSOvGogrSxzJVr5keA1MxcHhMLBznyPtd64
-         tOWoVmam+yUC6Kk1kLKAFw3k3P0if7bV3z+KHlIuuc903P5J2+td+6W4zb+ni6VK44
-         ZxpcmMbfAwWLjJW9GS1+Dq1sgJ39OH6Fx3g/24mk=
+        b=pz3/QuAYhPv2YbXx+Q4+/0prIz/tyaKTFN9DPF+exGbYBcIImTgIHtyS90Ouv0DWf
+         88xm43c/I9CYdFq41PmirN6/VaEXsGlSP70IfSqpzOQKR73Kr0EucC1syGYELxCu3a
+         aHWGR9mattO4FCqIP+C3d2d1jjLmiOiel4cEA9BM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 119/125] tty: evh_bytechan: Fix out of bounds accesses
-Date:   Wed, 22 Apr 2020 11:57:16 +0200
-Message-Id: <20200422095051.784717539@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Joern Engel <joern@lazybastard.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH 4.9 122/125] mtd: phram: fix a double free issue in error path
+Date:   Wed, 22 Apr 2020 11:57:19 +0200
+Message-Id: <20200422095052.175556837@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,108 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-commit 3670664b5da555a2a481449b3baafff113b0ac35 upstream.
+commit 49c64df880570034308e4a9a49c4bc95cf8cdb33 upstream.
 
-ev_byte_channel_send() assumes that its third argument is a 16 byte
-array. Some places where it is called it may not be (or we can't
-easily tell if it is). Newer compilers have started producing warnings
-about this, so make sure we actually pass a 16 byte array.
+The variable 'name' is released multiple times in the error path,
+which may cause double free issues.
+This problem is avoided by adding a goto label to release the memory
+uniformly. And this change also makes the code a bit more cleaner.
 
-There may be more elegant solutions to this, but the driver is quite
-old and hasn't been updated in many years.
-
-The warnings (from a powerpc allyesconfig build) are:
-
-  In file included from include/linux/byteorder/big_endian.h:5,
-                   from arch/powerpc/include/uapi/asm/byteorder.h:14,
-                   from include/asm-generic/bitops/le.h:6,
-                   from arch/powerpc/include/asm/bitops.h:250,
-                   from include/linux/bitops.h:29,
-                   from include/linux/kernel.h:12,
-                   from include/asm-generic/bug.h:19,
-                   from arch/powerpc/include/asm/bug.h:109,
-                   from include/linux/bug.h:5,
-                   from include/linux/mmdebug.h:5,
-                   from include/linux/gfp.h:5,
-                   from include/linux/slab.h:15,
-                   from drivers/tty/ehv_bytechan.c:24:
-  drivers/tty/ehv_bytechan.c: In function ‘ehv_bc_udbg_putc’:
-  arch/powerpc/include/asm/epapr_hcalls.h:298:20: warning: array subscript 1 is outside array bounds of ‘const char[1]’ [-Warray-bounds]
-    298 |  r6 = be32_to_cpu(p[1]);
-  include/uapi/linux/byteorder/big_endian.h:40:51: note: in definition of macro ‘__be32_to_cpu’
-     40 | #define __be32_to_cpu(x) ((__force __u32)(__be32)(x))
-        |                                                   ^
-  arch/powerpc/include/asm/epapr_hcalls.h:298:7: note: in expansion of macro ‘be32_to_cpu’
-    298 |  r6 = be32_to_cpu(p[1]);
-        |       ^~~~~~~~~~~
-  drivers/tty/ehv_bytechan.c:166:13: note: while referencing ‘data’
-    166 | static void ehv_bc_udbg_putc(char c)
-        |             ^~~~~~~~~~~~~~~~
-
-Fixes: dcd83aaff1c8 ("tty/powerpc: introduce the ePAPR embedded hypervisor byte channel driver")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Tested-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-[mpe: Trim warnings from change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200109183912.5fcb52aa@canb.auug.org.au
+Fixes: 4f678a58d335 ("mtd: fix memory leaks in phram_setup")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Joern Engel <joern@lazybastard.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200318153156.25612-1-wenyang@linux.alibaba.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/ehv_bytechan.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/mtd/devices/phram.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/ehv_bytechan.c
-+++ b/drivers/tty/ehv_bytechan.c
-@@ -139,6 +139,21 @@ static int find_console_handle(void)
- 	return 1;
+--- a/drivers/mtd/devices/phram.c
++++ b/drivers/mtd/devices/phram.c
+@@ -247,22 +247,25 @@ static int phram_setup(const char *val)
+ 
+ 	ret = parse_num64(&start, token[1]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal start address\n");
++		goto error;
+ 	}
+ 
+ 	ret = parse_num64(&len, token[2]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal device length\n");
++		goto error;
+ 	}
+ 
+ 	ret = register_device(name, start, len);
+-	if (!ret)
+-		pr_info("%s device: %#llx at %#llx\n", name, len, start);
+-	else
+-		kfree(name);
++	if (ret)
++		goto error;
+ 
++	pr_info("%s device: %#llx at %#llx\n", name, len, start);
++	return 0;
++
++error:
++	kfree(name);
+ 	return ret;
  }
  
-+static unsigned int local_ev_byte_channel_send(unsigned int handle,
-+					       unsigned int *count,
-+					       const char *p)
-+{
-+	char buffer[EV_BYTE_CHANNEL_MAX_BYTES];
-+	unsigned int c = *count;
-+
-+	if (c < sizeof(buffer)) {
-+		memcpy(buffer, p, c);
-+		memset(&buffer[c], 0, sizeof(buffer) - c);
-+		p = buffer;
-+	}
-+	return ev_byte_channel_send(handle, count, p);
-+}
-+
- /*************************** EARLY CONSOLE DRIVER ***************************/
- 
- #ifdef CONFIG_PPC_EARLY_DEBUG_EHV_BC
-@@ -157,7 +172,7 @@ static void byte_channel_spin_send(const
- 
- 	do {
- 		count = 1;
--		ret = ev_byte_channel_send(CONFIG_PPC_EARLY_DEBUG_EHV_BC_HANDLE,
-+		ret = local_ev_byte_channel_send(CONFIG_PPC_EARLY_DEBUG_EHV_BC_HANDLE,
- 					   &count, &data);
- 	} while (ret == EV_EAGAIN);
- }
-@@ -224,7 +239,7 @@ static int ehv_bc_console_byte_channel_s
- 	while (count) {
- 		len = min_t(unsigned int, count, EV_BYTE_CHANNEL_MAX_BYTES);
- 		do {
--			ret = ev_byte_channel_send(handle, &len, s);
-+			ret = local_ev_byte_channel_send(handle, &len, s);
- 		} while (ret == EV_EAGAIN);
- 		count -= len;
- 		s += len;
-@@ -404,7 +419,7 @@ static void ehv_bc_tx_dequeue(struct ehv
- 			    CIRC_CNT_TO_END(bc->head, bc->tail, BUF_SIZE),
- 			    EV_BYTE_CHANNEL_MAX_BYTES);
- 
--		ret = ev_byte_channel_send(bc->handle, &len, bc->buf + bc->tail);
-+		ret = local_ev_byte_channel_send(bc->handle, &len, bc->buf + bc->tail);
- 
- 		/* 'len' is valid only if the return code is 0 or EV_EAGAIN */
- 		if (!ret || (ret == EV_EAGAIN))
 
 
