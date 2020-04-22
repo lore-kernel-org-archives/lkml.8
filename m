@@ -2,55 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088D5C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16821C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBADE20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E199A20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552153;
-	bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
+	s=default; t=1587552159;
+	bh=R1oW4WBsTpvLSSgLpCQO8YRdPKMjlk6GqAahhZObiYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gkqg4Z2JEuKu6SRANoZfB8lpa5PIqfl042bVNZQ/YTvX7jaJ1bq/zVzOf3owZIUbh
-	 CFaPQN7f2bkXqLeQoQcvEXmrSo0y2QD+JomL5KGwEKC0iF697KpQYVW0xuW586jNhh
-	 Z2aFXLzXmOxWWAyqQyI5gYd2RvlU7Efseg2sg08s=
+	b=STUJhg7q5lw0o2n0RggDuqZsM28n7FT/WzTvImVdBFekKy1MzRh2ZCUmK669ZMQ3A
+	 8ebXUJ8N6KBDHpm2/XH3NYNCj+8Y5Ya0nzyzX8xFrfGdzpd6quhaEtR80nKkD+KLUH
+	 zKOutFOQEF9HTuYjGhUAQe/+q3Rm28LzFeKaE4to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbgDVKma (ORCPT
+        id S1731496AbgDVKmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:42:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730127AbgDVKUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:55 -0400
+        id S1730122AbgDVKUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1B2A21569;
-        Wed, 22 Apr 2020 10:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A503421473;
+        Wed, 22 Apr 2020 10:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550854;
-        bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
+        s=default; t=1587550847;
+        bh=R1oW4WBsTpvLSSgLpCQO8YRdPKMjlk6GqAahhZObiYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEspjLrQzPo1TMhTyujyw474bAq7/khBZcXJgggtnEqIuW3gfeMNuQJZA2TrJaFwJ
-         pCp6/vpJVOt7vZdnIxAxbNfXkdBD3639RtmT0dMHbc2WIMhhRUwQNcRruvaqEo0zYR
-         otGlUE6QUQykGOqVu1XvnfMP0MKcni8JM1mQ2E9k=
+        b=qAD6M0u2piU2w/Sd2byQpwfsh2KefcuMaGEkfG9gszEwqWRNfhThXYpeokmda8/R8
+         xDycs0wVtbUcudlVjPb0KZ6Xsh1+9VfvQerXOQmYQQg2nlTDYfAydCO0eeL7jHwCC4
+         ylA+kTfC8flDkzjUmWw5pm1TSVY58SoLaJT2R6Cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 085/118] um: falloc.h needs to be directly included for older libc
-Date:   Wed, 22 Apr 2020 11:57:26 +0200
-Message-Id: <20200422095045.433904775@linuxfoundation.org>
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.4 116/118] bpf: Test_verifier, bpf_get_stack return value add <0
+Date:   Wed, 22 Apr 2020 11:57:57 +0200
+Message-Id: <20200422095049.809693082@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -63,47 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 35f3401317a3b26aa01fde8facfd320f2628fdcc ]
+commit 9ac26e9973bac5716a2a542e32f380c84db2b88c upstream.
 
-When building UML with glibc 2.17 installed, compilation
-of arch/um/os-Linux/file.c fails due to failure to find
-FALLOC_FL_PUNCH_HOLE and FALLOC_FL_KEEP_SIZE definitions.
+With current ALU32 subreg handling and retval refine fix from last
+patches we see an expected failure in test_verifier. With verbose
+verifier state being printed at each step for clarity we have the
+following relavent lines [I omit register states that are not
+necessarily useful to see failure cause],
 
-It appears that /usr/include/bits/fcntl-linux.h (indirectly
-included by /usr/include/fcntl.h) does not include falloc.h
-with an older glibc, whereas a more up-to-date version
-does.
+#101/p bpf_get_stack return R0 within range FAIL
+Failed to load prog 'Success'!
+[..]
+14: (85) call bpf_get_stack#67
+ R0_w=map_value(id=0,off=0,ks=8,vs=48,imm=0)
+ R3_w=inv48
+15:
+ R0=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+15: (b7) r1 = 0
+16:
+ R0=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+ R1_w=inv0
+16: (bf) r8 = r0
+17:
+ R0=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+ R1_w=inv0
+ R8_w=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+17: (67) r8 <<= 32
+18:
+ R0=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+ R1_w=inv0
+ R8_w=inv(id=0,smax_value=9223372032559808512,
+               umax_value=18446744069414584320,
+               var_off=(0x0; 0xffffffff00000000),
+               s32_min_value=0,
+               s32_max_value=0,
+               u32_max_value=0,
+               var32_off=(0x0; 0x0))
+18: (c7) r8 s>>= 32
+19
+ R0=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+ R1_w=inv0
+ R8_w=inv(id=0,smin_value=-2147483648,
+               smax_value=2147483647,
+               var32_off=(0x0; 0xffffffff))
+19: (cd) if r1 s< r8 goto pc+16
+ R0=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+ R1_w=inv0
+ R8_w=inv(id=0,smin_value=-2147483648,
+               smax_value=0,
+               var32_off=(0x0; 0xffffffff))
+20:
+ R0=inv(id=0,smax_value=48,var32_off=(0x0; 0xffffffff))
+ R1_w=inv0
+ R8_w=inv(id=0,smin_value=-2147483648,
+               smax_value=0,
+ R9=inv48
+20: (1f) r9 -= r8
+21: (bf) r2 = r7
+22:
+ R2_w=map_value(id=0,off=0,ks=8,vs=48,imm=0)
+22: (0f) r2 += r8
+value -2147483648 makes map_value pointer be out of bounds
 
-Adding the direct include to file.c resolves the issue
-and does not cause problems for more recent glibc.
+After call bpf_get_stack() on line 14 and some moves we have at line 16
+an r8 bound with max_value 48 but an unknown min value. This is to be
+expected bpf_get_stack call can only return a max of the input size but
+is free to return any negative error in the 32-bit register space. The
+C helper is returning an int so will use lower 32-bits.
 
-Fixes: 50109b5a03b4 ("um: Add support for DISCARD in the UBD Driver")
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Lines 17 and 18 clear the top 32 bits with a left/right shift but use
+ARSH so we still have worst case min bound before line 19 of -2147483648.
+At this point the signed check 'r1 s< r8' meant to protect the addition
+on line 22 where dst reg is a map_value pointer may very well return
+true with a large negative number. Then the final line 22 will detect
+this as an invalid operation and fail the program. What we want to do
+is proceed only if r8 is positive non-error. So change 'r1 s< r8' to
+'r1 s> r8' so that we jump if r8 is negative.
+
+Next we will throw an error because we access past the end of the map
+value. The map value size is 48 and sizeof(struct test_val) is 48 so
+we walk off the end of the map value on the second call to
+get bpf_get_stack(). Fix this by changing sizeof(struct test_val) to
+24 by using 'sizeof(struct test_val) / 2'. After this everything passes
+as expected.
+
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/158560426019.10843.3285429543232025187.stgit@john-Precision-5820-Tower
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/um/os-Linux/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/bpf/verifier/bpf_get_stack.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
-index 5133e3afb96f7..3996937e2c0dd 100644
---- a/arch/um/os-Linux/file.c
-+++ b/arch/um/os-Linux/file.c
-@@ -8,6 +8,7 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <signal.h>
-+#include <linux/falloc.h>
- #include <sys/ioctl.h>
- #include <sys/mount.h>
- #include <sys/socket.h>
--- 
-2.20.1
-
+--- a/tools/testing/selftests/bpf/verifier/bpf_get_stack.c
++++ b/tools/testing/selftests/bpf/verifier/bpf_get_stack.c
+@@ -9,17 +9,17 @@
+ 	BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0, BPF_FUNC_map_lookup_elem),
+ 	BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 28),
+ 	BPF_MOV64_REG(BPF_REG_7, BPF_REG_0),
+-	BPF_MOV64_IMM(BPF_REG_9, sizeof(struct test_val)),
++	BPF_MOV64_IMM(BPF_REG_9, sizeof(struct test_val)/2),
+ 	BPF_MOV64_REG(BPF_REG_1, BPF_REG_6),
+ 	BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
+-	BPF_MOV64_IMM(BPF_REG_3, sizeof(struct test_val)),
++	BPF_MOV64_IMM(BPF_REG_3, sizeof(struct test_val)/2),
+ 	BPF_MOV64_IMM(BPF_REG_4, 256),
+ 	BPF_EMIT_CALL(BPF_FUNC_get_stack),
+ 	BPF_MOV64_IMM(BPF_REG_1, 0),
+ 	BPF_MOV64_REG(BPF_REG_8, BPF_REG_0),
+ 	BPF_ALU64_IMM(BPF_LSH, BPF_REG_8, 32),
+ 	BPF_ALU64_IMM(BPF_ARSH, BPF_REG_8, 32),
+-	BPF_JMP_REG(BPF_JSLT, BPF_REG_1, BPF_REG_8, 16),
++	BPF_JMP_REG(BPF_JSGT, BPF_REG_1, BPF_REG_8, 16),
+ 	BPF_ALU64_REG(BPF_SUB, BPF_REG_9, BPF_REG_8),
+ 	BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
+ 	BPF_ALU64_REG(BPF_ADD, BPF_REG_2, BPF_REG_8),
+@@ -29,7 +29,7 @@
+ 	BPF_MOV64_REG(BPF_REG_3, BPF_REG_2),
+ 	BPF_ALU64_REG(BPF_ADD, BPF_REG_3, BPF_REG_1),
+ 	BPF_MOV64_REG(BPF_REG_1, BPF_REG_7),
+-	BPF_MOV64_IMM(BPF_REG_5, sizeof(struct test_val)),
++	BPF_MOV64_IMM(BPF_REG_5, sizeof(struct test_val)/2),
+ 	BPF_ALU64_REG(BPF_ADD, BPF_REG_1, BPF_REG_5),
+ 	BPF_JMP_REG(BPF_JGE, BPF_REG_3, BPF_REG_1, 4),
+ 	BPF_MOV64_REG(BPF_REG_1, BPF_REG_6),
 
 
