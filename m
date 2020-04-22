@@ -2,157 +2,144 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0BEC5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A5DC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37B2420774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9689C20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="T49hmSMs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="YUPfdBOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgDVQEz (ORCPT
+        id S1726405AbgDVQGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:04:55 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:41086 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726750AbgDVQEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:04:42 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 38DB84A0B4;
-        Wed, 22 Apr 2020 16:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1587571477; x=1589385878; bh=V1ItQ94tgCt4bYGsnfXpx+j3WI+zxWO6ZLI
-        jBknDkTU=; b=T49hmSMsdF+aH/wG/nm4+cftyGmm7Zodnu9uokXcCjjhjpKdzv5
-        r16zHSjmKyjtY5RFvIYTfutJRXGViUMsWxHgvfQ9DuwuiDTx9/n6DTiXfznXXaHN
-        33JRHvYOG54xx3UpuKGnB+WkZgaf0LJBswO2sgQRU0RRLsRRH5XMccbA=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pqDJHobbVXim; Wed, 22 Apr 2020 19:04:37 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id E03004A0B0;
-        Wed, 22 Apr 2020 19:04:36 +0300 (MSK)
-Received: from localhost.dev.yadro.com (10.199.3.42) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 22 Apr 2020 19:04:37 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v11 1/2] iio: proximity: provide device tree binding document
-Date:   Wed, 22 Apr 2020 19:05:08 +0300
-Message-ID: <20200422160509.7117-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200422160509.7117-1-i.mikhaylov@yadro.com>
-References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.3.42]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 22 Apr 2020 12:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgDVQGd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:06:33 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9499CC03C1A9;
+        Wed, 22 Apr 2020 09:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587571589;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=qf5WeCKhWRVkBqrtB4YnhK5c0ibFNbTbM6Y2qPPZD5I=;
+        b=YUPfdBOUCdPOhx2TuIUEJyeRiH33sl2G9EAZgfJB/XLat9rWE+DtR+mvecQQdL5JUZ
+        RPni/GKxVhYM3Mf0X3P28Mxe9OE91LE9+5jwduoAf+eYQEO1sW1uT5rkp2JxXha5N4cr
+        xULnnRljkBqKCcEWMCDwFEtKy0eBXfU835+pczSd6eqYGDmEvZHZZv56Gs75FWNPwS2Y
+        nJF0pri6/i7GGKEi8Ugg1V20tjHwlSIhIyoqA6eJMBnkge3KsDWQJxiuEwUmfe+OqXvG
+        PY/4asNzMa59GTW4SniHaZU3IQOIOQvXx/LULQFGXGXRRm+WNBH0lpJAYCp6F/QOGvJ6
+        y2SA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMiw43tskc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw3MG6G3Mi
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 22 Apr 2020 18:06:16 +0200 (CEST)
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200422120418.49a40c75@aktux>
+Date:   Wed, 22 Apr 2020 18:06:15 +0200
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6E3A50D9-0F15-4A56-8C5E-7CDC63E8AF9F@goldelico.com>
+References: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com> <20200417164340.3d9043d1@aktux> <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com> <20200417150721.GL37466@atomide.com> <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com> <20200420150802.GR37466@atomide.com> <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com> <20200421085336.32cf8ffe@aktux> <20200421180220.GB37466@atomide.com> <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com> <20200421182017.GC37466@atomide.com> <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com> <20200422120418.49a40c75@aktux>
+To:     Andreas Kemnade <andreas@kemnade.info>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mostly standard i2c driver with some additional led-current option
-for vcnl3020.
+Hi,
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> Am 22.04.2020 um 12:04 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> On Tue, 21 Apr 2020 22:40:39 +0200
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>=20
+>> Hi Tony,
+>>=20
+>>> Am 21.04.2020 um 20:20 schrieb Tony Lindgren <tony@atomide.com>:
+>>>=20
+>>>> Well, what helps is reverting the patch and using the old driver
+>>>> (which did work for several years). So I would not assume that
+>>>> there is a hardware influence. It seems to be something the new
+>>>> driver is doing differently. =20
+>>>=20
+>>> Well earlier hdq1w.c did not idle, now it does. =20
+>>=20
+>> Ah, I see!
+>>=20
+>>> If you just want to keep it enabled like earlier, you can just add =
+something like: =20
+>>=20
+>> Well, I don't want it enabled, it just should work as before.
+>> Ideally including all improvements :)
+>>=20
+>>>=20
+>>> &hdqw1w {
+>>> 	ti,no-idle;
+>>> }; =20
+>>=20
+>> I have added that and there might be a slightly different pattern
+>> (unless that is just by luck): the first two or three attempts to
+>> read the bq27xx/uevent did still time out. But then the next ones
+>> worked fine (with a response time of ca. 65 .. 230 ms).
+>>=20
+>> So as if something needs to be shaken into the right position after
+>> boot until it works.
+>>=20
+>=20
+> What about reading battery with just omap_hdq loaded and then continue
+> booting as usual, e.g. something like:
+>=20
+> have script init-bat.sh
+> #!/bin/sh
+> modprobe omap_hdq
+> cat /sys/class/power_supply/bq27000_battery/uevent
+> exec /sbin/init "$@"
+>=20
+> and then append to kernel parameters init=3D/init-bat.sh
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-new file mode 100644
-index 000000000000..ac47770609d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Integrated Proximity Sensor With Infrared Emitter
-+
-+maintainers:
-+  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-+
-+description: |
-+  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-+  that the infrared emitter is included in the package. It has 16-bit
-+  resolution. It includes a signal processing IC and features standard I2C
-+  communication interface. It features an interrupt function.
-+
-+  Specifications about the devices can be found at:
-+  https://www.vishay.com/docs/84150/vcnl3020.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,vcnl3020
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Regulator that provides power to the sensor
-+
-+  vddio-supply:
-+    description: Regulator that provides power to the bus
-+
-+  vishay,led-current-microamp:
-+    description:
-+      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-+      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
-+      higher than decimal 20.
-+    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-+          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
-+          180000, 190000, 200000]
-+    default: 20000
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        proximity@13 {
-+              compatible = "vishay,vcnl3020";
-+              reg = <0x13>;
-+              vishay,led-current-microamp = <200000>;
-+        };
-+    };
--- 
-2.21.1
+Interesting idea. But how would it help to identify the
+issue?
+
+I can confirm that after a while of attempting to read
+the uevent it suddenly starts to work.
+
+Then I can even swap the battery (and verify by looking
+at the cycle count which changes).
+
+I have some unconfirmed impression that it helps to run
+two cat /sys/class/power_supply/bq27000_battery/uevent
+in quick enough succession to get it out of the hickup mode.
+This needs more test.
+
+It would indicate that if a new omap_hdq_runtime_resume()
+is called by the second open+read+close sequence before
+the autosuspend (300ms) of the previous omap_hdq_runtime_suspend()
+happens, something gets back in place for the second
+omap_hdq_runtime_suspend().
+
+BR and thanks,
+Nikolaus
+
+
 
