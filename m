@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B61C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9791C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C391E2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B615E2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551286;
-	bh=aLEexzmvFjZs+xrFTUh+Epi0eEaW4BXGZTMzypmLQtI=;
+	s=default; t=1587551288;
+	bh=w8ay4hs0GJbRR1//Q+FusngJfVtuAxS6jSP+LQOxm0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYzEEBQySoGB5i+QQsjn2tpkZM4wexWbURpGTAb9J53hJxWNS+Vwzqt0f+jqXJhKH
-	 3SU1llOZd7BzTug2Fe9OrfuGqUAqwvD9K9/Ke4dwmv3lPsVQT/CxkA2MBQWLsTyDY3
-	 TSrbBPQs77+4euzPkzxPvkKwPqu4TzWlnvbD0wOI=
+	b=X3hi3GG4gErSMJD00Oy8BD2F8v+P+ichAkcaqHv8dq1lsoMZPMhRqraO7TS6RbZ7/
+	 UmZrBMh3l4zC/kgQ7Gzu1DVWvKnNLK+fjFCbUAoDShuIXpF3De2Pbh2Y5nR7xpP2eL
+	 eV15HLNPFKar18wv80y8Z+eZIi0fj5/OnFe9I070=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730987AbgDVK2F (ORCPT
+        id S1730992AbgDVK2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730418AbgDVK17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:27:59 -0400
+        id S1730979AbgDVK2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:28:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F8B2098B;
-        Wed, 22 Apr 2020 10:27:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9B19208E4;
+        Wed, 22 Apr 2020 10:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551278;
-        bh=aLEexzmvFjZs+xrFTUh+Epi0eEaW4BXGZTMzypmLQtI=;
+        s=default; t=1587551281;
+        bh=w8ay4hs0GJbRR1//Q+FusngJfVtuAxS6jSP+LQOxm0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHORauBwY+mujz8ddtLXagAuv0A2wo3ugRAGcf4l9gyDW0LXj/tT1zVJ+nWv3cn3+
-         dAU+pZCUw/pHBVIbb8XfsqiilZphMXxCXm3lQ/IpQs1o2vggyEni3RK8YeXY2p6F/7
-         ZrTqCSmbvCgGoBDgj5z2p+Nl88je9wm8t8pxdhZs=
+        b=IH78PKN3TeUEZUnJAOl0GAhi7b5KtlTux+ccfPzCl6uc2Xkmx76AVS7kc0cBp4CVl
+         KSgiwri1SHLeGGUg0l0Ivr6trYBNAk8BgBE6QFoCiep5PwG+2aUQwhFOtAbavzFY3E
+         Md3mIg+eu9+cqWv6YhESHxoRlYje5t1zG5dndCfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: [PATCH 5.6 166/166] bpf, test_verifier: switch bpf_get_stacks 0 s> r8 test
-Date:   Wed, 22 Apr 2020 11:58:13 +0200
-Message-Id: <20200422095106.153738046@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe Kerello <christophe.kerello@st.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.6 157/166] mtd: rawnand: free the nand_device object
+Date:   Wed, 22 Apr 2020 11:58:04 +0200
+Message-Id: <20200422095105.310981182@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,62 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Christophe Kerello <christophe.kerello@st.com>
 
-[ no upstream commit ]
+commit 009264605cdf1b12962c3a46f75818d05452e890 upstream.
 
-Switch the comparison, so that is_branch_taken() will recognize that below
-branch is never taken:
+This patch releases the resources allocated in nanddev_init function.
 
-  [...]
-  17: [...] R1_w=inv0 [...] R8_w=inv(id=0,smin_value=-2147483648,smax_value=-1,umin_value=18446744071562067968,var_off=(0xffffffff80000000; 0x7fffffff)) [...]
-  17: (67) r8 <<= 32
-  18: [...] R8_w=inv(id=0,smax_value=-4294967296,umin_value=9223372036854775808,umax_value=18446744069414584320,var_off=(0x8000000000000000; 0x7fffffff00000000)) [...]
-  18: (c7) r8 s>>= 32
-  19: [...] R8_w=inv(id=0,smin_value=-2147483648,smax_value=-1,umin_value=18446744071562067968,var_off=(0xffffffff80000000; 0x7fffffff)) [...]
-  19: (6d) if r1 s> r8 goto pc+16
-  [...] R1_w=inv0 [...] R8_w=inv(id=0,smin_value=-2147483648,smax_value=-1,umin_value=18446744071562067968,var_off=(0xffffffff80000000; 0x7fffffff)) [...]
-  [...]
-
-Currently we check for is_branch_taken() only if either K is source, or source
-is a scalar value that is const. For upstream it would be good to extend this
-properly to check whether dst is const and src not.
-
-For the sake of the test_verifier, it is probably not needed here:
-
-  # ./test_verifier 101
-  #101/p bpf_get_stack return R0 within range OK
-  Summary: 1 PASSED, 0 SKIPPED, 0 FAILED
-
-I haven't seen this issue in test_progs* though, they are passing fine:
-
-  # ./test_progs-no_alu32 -t get_stack
-  Switching to flavor 'no_alu32' subdirectory...
-  #20 get_stack_raw_tp:OK
-  Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-
-  # ./test_progs -t get_stack
-  #20 get_stack_raw_tp:OK
-  Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+Fixes: a7ab085d7c16 ("mtd: rawnand: Initialize the nand_device object")
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/1579767768-32295-1-git-send-email-christophe.kerello@st.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/testing/selftests/bpf/verifier/bpf_get_stack.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/testing/selftests/bpf/verifier/bpf_get_stack.c
-+++ b/tools/testing/selftests/bpf/verifier/bpf_get_stack.c
-@@ -19,7 +19,7 @@
- 	BPF_MOV64_REG(BPF_REG_8, BPF_REG_0),
- 	BPF_ALU64_IMM(BPF_LSH, BPF_REG_8, 32),
- 	BPF_ALU64_IMM(BPF_ARSH, BPF_REG_8, 32),
--	BPF_JMP_REG(BPF_JSGT, BPF_REG_1, BPF_REG_8, 16),
-+	BPF_JMP_REG(BPF_JSLT, BPF_REG_8, BPF_REG_1, 16),
- 	BPF_ALU64_REG(BPF_SUB, BPF_REG_9, BPF_REG_8),
- 	BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
- 	BPF_ALU64_REG(BPF_ADD, BPF_REG_2, BPF_REG_8),
+---
+ drivers/mtd/nand/raw/nand_base.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -5907,6 +5907,8 @@ void nand_cleanup(struct nand_chip *chip
+ 	    chip->ecc.algo == NAND_ECC_BCH)
+ 		nand_bch_free((struct nand_bch_control *)chip->ecc.priv);
+ 
++	nanddev_cleanup(&chip->base);
++
+ 	/* Free bad block table memory */
+ 	kfree(chip->bbt);
+ 	kfree(chip->data_buf);
 
 
