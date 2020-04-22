@@ -2,95 +2,140 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E58C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EBDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA931206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F22206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgDVCNy (ORCPT
+        id S1726396AbgDVCRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:13:54 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2827 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726024AbgDVCNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:13:53 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2520FFF88CC5973942B7;
-        Wed, 22 Apr 2020 10:13:51 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Apr 2020
- 10:13:41 +0800
-Subject: Re: [PATCH v1 1/6] arm64: Detect the ARMv8.4 TTL feature
-To:     Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     <mark.rutland@arm.com>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
-        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
-        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>, <linux-arch@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <xiexiangyou@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linux-mm@kvack.org>,
-        <arm@kernel.org>, <prime.zeng@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>, <linux-arm-kernel@lists.infradead.org>
-References: <20200403090048.938-1-yezhenyu2@huawei.com>
- <20200403090048.938-2-yezhenyu2@huawei.com>
- <20200421165346.GA11171@infradead.org>
- <20200421171328.GW20730@hirez.programming.kicks-ass.net>
- <20200421171641.GA25391@infradead.org>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <62414595-298a-da11-28eb-36ad1dc59e65@huawei.com>
-Date:   Wed, 22 Apr 2020 10:13:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 21 Apr 2020 22:17:43 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:52877 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgDVCRm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:17:42 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 03M2GmYg076103;
+        Wed, 22 Apr 2020 10:16:48 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id AE49095BC791A1749798;
+        Wed, 22 Apr 2020 10:16:48 +0800 (CST)
+In-Reply-To: <3097723.HxHl8gbcWJ@192.168.0.120>
+References: <1586163611-4565-1-git-send-email-masonccyang@mxic.com.tw> <1586163611-4565-3-git-send-email-masonccyang@mxic.com.tw> <3097723.HxHl8gbcWJ@192.168.0.120>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com
+Subject: Re: [PATCH 2/2] mtd: spi-nor: macronix: Add mx25u51245g support
 MIME-Version: 1.0
-In-Reply-To: <20200421171641.GA25391@infradead.org>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+X-KeepSent: 415076FF:CD74781E-48258552:000C02E7;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF415076FF.CD74781E-ON48258552.000C02E7-48258552.000C8626@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Wed, 22 Apr 2020 10:16:48 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/04/22 AM 10:16:48,
+        Serialize complete at 2020/04/22 AM 10:16:48
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 03M2GmYg076103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/22 1:16, Christoph Hellwig wrote:
-> On Tue, Apr 21, 2020 at 07:13:28PM +0200, Peter Zijlstra wrote:
->> On Tue, Apr 21, 2020 at 09:53:46AM -0700, Christoph Hellwig wrote:
->>> On Fri, Apr 03, 2020 at 05:00:43PM +0800, Zhenyu Ye wrote:
->>>> From: Marc Zyngier <maz@kernel.org>
->>>>
->>>> In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
->>>> feature allows TLBs to be issued with a level allowing for quicker
->>>> invalidation.
->>>
->>> What does "issued with a level" mean?
->>
->> What I understood it to be is page-size based on page-table hierarchy.
->> Just like we have on x86, 4k, 2m, 1g etc..
->>
->> So where x86 INVLPG will tear down any sized page for the address given,
->> you can now day, kill me the PMD level translation for @addr.
->>
->> Power9 radix also has things like this.
+
+ Hi Tudor,
+
+> On Monday, April 6, 2020 12:00:11 PM EEST Mason Yang wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know 
+the
+> > content is safe
+> > 
+> > mx25u51245g is a mass production for new design and
+> > replace mx66u51235f(phase out).
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  drivers/mtd/spi-nor/macronix.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/mtd/spi-nor/macronix.c 
+b/drivers/mtd/spi-nor/macronix.c
+> > index c864ac8..e685aec 100644
+> > --- a/drivers/mtd/spi-nor/macronix.c
+> > +++ b/drivers/mtd/spi-nor/macronix.c
+> > @@ -73,6 +73,9 @@
+> >         { "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024,
+> >                               SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> >                               SPI_NOR_4B_OPCODES) },
+> > +       { "mx25u51245g", INFO(0xc2253a, 0, 64 * 1024, 1024,
 > 
-> Maybe this needs to be spelled out a little more?  The current commit
-> log sounds like paper generated by a neural network.
->
+> Shouldn't the ID be 0xc2953a?
 
-Emm... This patch was synchronized from Marc's NV series [1].
-"issued with a level" means the TLBs now can get which levels of
-page tables the @addr is in. You can also understand it as
-page-size as Peter said above, just like pud, pmd, pte...
+no! 
+it's 0xc2253a
 
-Anyway, I will explain this in more detail.
+please refer to Macronix website
+https://www.macronix.com/zh-tw/products/NOR-Flash/Serial-NOR-Flash/Pages/spec.aspx?p=MX25U51245G&m=Serial%20NOR%20Flash&n=PM2244 
 
-Thanks,
-Zhenyu
+
+> 
+> We usually don't add new flashes if they are not tested. Please specify 
+in the 
+> commit message with which controller you tested the flash. Please do the 
+same 
+> for the previous patch.
+
+okay.
+
+> 
+> The minimal test is a read, erase, read back, write and read back. This 
+> sequence should verify if read, erase and pp work fine.
+
+sure.
+
+> 
+> Cheers,
+> ta
+> 
+
+thanks for your time & review.
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
