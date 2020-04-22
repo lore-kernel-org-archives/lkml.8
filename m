@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9986C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D9C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACEF7206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F4C206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgDVCwp (ORCPT
+        id S1726465AbgDVCxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:52:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52186 "EHLO huawei.com"
+        Tue, 21 Apr 2020 22:53:41 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2863 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726173AbgDVCwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:52:44 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 99E05367F653A2B1F84D;
-        Wed, 22 Apr 2020 10:52:42 +0800 (CST)
+        id S1726173AbgDVCxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:53:40 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 571D6B555698B4456EC4;
+        Wed, 22 Apr 2020 10:53:38 +0800 (CST)
 Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 22 Apr 2020 10:52:36 +0800
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 22 Apr 2020 10:53:27 +0800
 From:   Zou Wei <zou_wei@huawei.com>
-To:     <derek.kiernan@xilinx.com>, <dragan.cvetic@xilinx.com>,
-        <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <michal.simek@xilinx.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] misc: xilinx_sdfec: Use memdup_user() as a cleanup
-Date:   Wed, 22 Apr 2020 10:58:50 +0800
-Message-ID: <1587524330-119776-1-git-send-email-zou_wei@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] ide: Use memdup_user() as a cleanup
+Date:   Wed, 22 Apr 2020 10:59:41 +0800
+Message-ID: <1587524381-120136-1-git-send-email-zou_wei@huawei.com>
 X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -48,37 +47,54 @@ Fix coccicheck warning which recommends to use memdup_user().
 
 This patch fixes the following coccicheck warnings:
 
-drivers/misc/xilinx_sdfec.c:652:8-15: WARNING opportunity for memdup_user
+drivers/ide/ide-taskfile.c:492:11-18: WARNING opportunity for memdup_user
+drivers/ide/ide-taskfile.c:505:10-17: WARNING opportunity for memdup_user
 
-Fixes: 20ec628e8007 ("misc: xilinx_sdfec: Add ability to configure LDPC")
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Zou Wei <zou_wei@huawei.com>
 ---
- drivers/misc/xilinx_sdfec.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/ide/ide-taskfile.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 71bbaa5..7a75894 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -649,14 +649,9 @@ static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
- 	struct xsdfec_ldpc_params *ldpc;
- 	int ret, n;
+diff --git a/drivers/ide/ide-taskfile.c b/drivers/ide/ide-taskfile.c
+index aab6a10..336b575 100644
+--- a/drivers/ide/ide-taskfile.c
++++ b/drivers/ide/ide-taskfile.c
+@@ -489,28 +489,16 @@ int ide_taskfile_ioctl(ide_drive_t *drive, unsigned long arg)
  
--	ldpc = kzalloc(sizeof(*ldpc), GFP_KERNEL);
--	if (!ldpc)
--		return -ENOMEM;
--
--	if (copy_from_user(ldpc, arg, sizeof(*ldpc))) {
--		ret = -EFAULT;
--		goto err_out;
--	}
-+	ldpc = memdup_user(arg, sizeof(*ldpc));
-+	if (IS_ERR(ldpc))
-+		return PTR_ERR(ldpc);
+ 	if (taskout) {
+ 		int outtotal = tasksize;
+-		outbuf = kzalloc(taskout, GFP_KERNEL);
+-		if (outbuf == NULL) {
+-			err = -ENOMEM;
+-			goto abort;
+-		}
+-		if (copy_from_user(outbuf, buf + outtotal, taskout)) {
+-			err = -EFAULT;
+-			goto abort;
+-		}
++		outbuf = memdup_user(buf + outtotal, taskout);
++		if (IS_ERR(outbuf))
++			return PTR_ERR(outbuf);
+ 	}
  
- 	if (xsdfec->config.code == XSDFEC_TURBO_CODE) {
- 		ret = -EIO;
+ 	if (taskin) {
+ 		int intotal = tasksize + taskout;
+-		inbuf = kzalloc(taskin, GFP_KERNEL);
+-		if (inbuf == NULL) {
+-			err = -ENOMEM;
+-			goto abort;
+-		}
+-		if (copy_from_user(inbuf, buf + intotal, taskin)) {
+-			err = -EFAULT;
+-			goto abort;
+-		}
++		inbuf = memdup_user(buf + intotal, taskin);
++		if (IS_ERR(inbuf))
++			return PTR_ERR(inbuf);
+ 	}
+ 
+ 	memset(&cmd, 0, sizeof(cmd));
 -- 
 2.6.2
 
