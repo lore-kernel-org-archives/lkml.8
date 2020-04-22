@@ -2,55 +2,65 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FD3C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EDDC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6768520780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25BE320780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552369;
-	bh=OB6uo/HCyFxTsaJ3MtSPMJJb5ck8q2hYb6nWW83YjS4=;
+	s=default; t=1587552373;
+	bh=qtSnn8Vl3H5pXZ6mu5NFbfSFn7P/n2TnP5UxKduBso8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cqjZsF8fXUWSrFPtgOYCQ3D/qCoj0s5zdp6nrTze+18IjFJuqq1qQV1HcuiBu+myH
-	 ex0Sy4QdGT2xRh5p7Gn+c1NIs0sfnF7mrdF8ntKP3rYrinTLH36uhMhD88eP4+16aU
-	 LdQcH5jsfsxBX0siEzzAGYfLBEpSpGEHazYj+m/s=
+	b=zjG+p6J4uoXOwn+UcLKGAAn4zMidH2gCRfljwZptT1xx2ZLcVC79A9inwATTBYm5T
+	 xSD5eVi/meN4hzkkuh4a45UiyetA1kvakjuneRKaS9i86Klk2CK+tSEbQ40XJ0WTwy
+	 jIbQtGIYT69myqNJUOGbZ9fnlvTESMqXb6ssUBOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgDVKqI (ORCPT
+        id S1729807AbgDVKRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbgDVKRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:25 -0400
+        id S1726077AbgDVKQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55352070B;
-        Wed, 22 Apr 2020 10:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 904FE2070B;
+        Wed, 22 Apr 2020 10:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550645;
-        bh=OB6uo/HCyFxTsaJ3MtSPMJJb5ck8q2hYb6nWW83YjS4=;
+        s=default; t=1587550576;
+        bh=qtSnn8Vl3H5pXZ6mu5NFbfSFn7P/n2TnP5UxKduBso8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yrHhI+1uBi6QJB7871pwDdLc66nbI8NDM8uVOI/e25eY4vRdQcito0PCT7951zrOt
-         EqiUvpyxLA3XYLW8ky22E96zuyBzQlHMTfPyAGn/+fV48oDYEGKYPwG0ZgxcbcpPge
-         Yh03RJS6RKovdoqmQO18dw+5tZA+XF1h44IAEih0=
+        b=VvpJb7VXF/6aT4kODJo2uSUH8026fFnAxajjgYFQ7vivIcTyULe52Cgn0+xFYhogk
+         xWIgNv2vCW2lEDmkrhGA5+HdLvmlMgUINJKiFaWG4nTv4jdhOAFNaRoiJTlpfoXtZY
+         OU1X7rI/HbgoUrIHEzDgmKhYhB+N3qI2O3IWWAb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/118] x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
-Date:   Wed, 22 Apr 2020 11:56:35 +0200
-Message-Id: <20200422095037.497701884@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Peter Rosin <peda@axentia.se>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.19 56/64] fbdev: potential information leak in do_fb_ioctl()
+Date:   Wed, 22 Apr 2020 11:57:40 +0200
+Message-Id: <20200422095023.013014278@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
-References: <20200422095031.522502705@linuxfoundation.org>
+In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
+References: <20200422095008.799686511@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,52 +70,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7f11a2cc10a4ae3a70e2c73361f4a9a33503539b ]
+commit d3d19d6fc5736a798b118971935ce274f7deaa82 upstream.
 
-If kmsg_dump_register() fails, hv_panic_page will not be used
-anywhere.  So free and reset it.
+The "fix" struct has a 2 byte hole after ->ywrapstep and the
+"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
+on the compiler.  The solution is just to replace the assignment with an
+memcpy().
 
-Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-3-Tianyu.Lan@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrea Righi <righi.andrea@gmail.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200113100132.ixpaymordi24n3av@kili.mountain
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hv/vmbus_drv.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/core/fbmem.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 593107c20e977..40f6b73dae940 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1401,9 +1401,13 @@ static int vmbus_bus_init(void)
- 			hv_panic_page = (void *)get_zeroed_page(GFP_KERNEL);
- 			if (hv_panic_page) {
- 				ret = kmsg_dump_register(&hv_kmsg_dumper);
--				if (ret)
-+				if (ret) {
- 					pr_err("Hyper-V: kmsg dump register "
- 						"error 0x%x\n", ret);
-+					hv_free_hyperv_page(
-+					    (unsigned long)hv_panic_page);
-+					hv_panic_page = NULL;
-+				}
- 			} else
- 				pr_err("Hyper-V: panic message page memory "
- 					"allocation failed");
-@@ -1433,7 +1437,6 @@ static int vmbus_bus_init(void)
- 	hv_remove_vmbus_irq();
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -1122,7 +1122,7 @@ static long do_fb_ioctl(struct fb_info *
+ 	case FBIOGET_FSCREENINFO:
+ 		if (!lock_fb_info(info))
+ 			return -ENODEV;
+-		fix = info->fix;
++		memcpy(&fix, &info->fix, sizeof(fix));
+ 		unlock_fb_info(info);
  
- 	bus_unregister(&hv_bus);
--	free_page((unsigned long)hv_panic_page);
- 	unregister_sysctl_table(hv_ctl_table_hdr);
- 	hv_ctl_table_hdr = NULL;
- 	return ret;
--- 
-2.20.1
-
+ 		ret = copy_to_user(argp, &fix, sizeof(fix)) ? -EFAULT : 0;
 
 
