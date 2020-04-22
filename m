@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F1DC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA9CC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2404C2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE332076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549652;
-	bh=U7Sc4UcTpVDfD4AYm+6C7inxC7cWRxuNaqsEtdpjJLc=;
+	s=default; t=1587549655;
+	bh=TRPQ6FoNpaRGgTm1y3OvKRf/BeBHSp5t3/eYRALSrR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YdLMWcyq62b9gJFcWqxQgFxksyaaSs+KWyTOg0JuEKdf1+VmP2Hn9A7jeaa7o+1+R
-	 V95L670gDr71/rIuZnGfbtCpp8VVNiGUKw1BPW9Hny0Qs4fKLNuwV/SE4yTpgsFFZi
-	 FvHBUXtf1RRW9lVWRTs+AWEH6nqYJff5Z/mw3Px8=
+	b=oA76/0nzouzXuDwnqpXcRo1T/Rojp2Cg9G4UqpU50h2FTvIqdIHGpQBhPEE85kQ8W
+	 qoXwudY5ewkZsdjm2yHUTqPB9XlYWE0ofK5WFg1nvLPQG63r2eYmel8DIM1AY0qMQF
+	 9wHUUhbKAzNvHjEX62qbcZa8fNHuhFQypwvUfI6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgDVKAv (ORCPT
+        id S1726685AbgDVKAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgDVKAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:25 -0400
+        id S1726637AbgDVKA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:00:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9251420CC7;
-        Wed, 22 Apr 2020 10:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FAB420735;
+        Wed, 22 Apr 2020 10:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549624;
-        bh=U7Sc4UcTpVDfD4AYm+6C7inxC7cWRxuNaqsEtdpjJLc=;
+        s=default; t=1587549628;
+        bh=TRPQ6FoNpaRGgTm1y3OvKRf/BeBHSp5t3/eYRALSrR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oVVOzdwJmpVjp5k6JO4zoHDr4xcu+mWONUMA6eBGFMZwdH9noiZgFzAIlQcqjfXja
-         FYEYcv579At765qTLROJ8ODRy0JSw0KDHeyG37RciYhZwKzIPOdgkc0fT/JKNgsGks
-         8LmM6p2XumzMGBl7D12VIWpI++5a+CmwJyzQnLJc=
+        b=wndVlfhhkbsd2cz4v0nboi/FnmqT2oEqKeO0mpOFew8K0xkEK7omTqq8tBxTh6iKX
+         YtyvfDROcsmCfFCfwWsaJw0wUs4/3lkk6GIYiuWv6PRnsORI2V+x8W4+/ZnUP7eYGp
+         zOepJxtxRm9B1vsA9QNvTnLzUNBOqZ/p2CN6a64U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Vesker <valex@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 039/100] IB/ipoib: Fix lockdep issue found on ipoib_ib_dev_heavy_flush
-Date:   Wed, 22 Apr 2020 11:56:09 +0200
-Message-Id: <20200422095029.531359213@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fredrik Strupe <fredrik@strupe.net>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.4 041/100] arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
+Date:   Wed, 22 Apr 2020 11:56:11 +0200
+Message-Id: <20200422095029.893378840@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -61,102 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Vesker <valex@mellanox.com>
+From: Fredrik Strupe <fredrik@strupe.net>
 
-commit 1f80bd6a6cc8358b81194e1f5fc16449947396ec upstream.
+commit fc2266011accd5aeb8ebc335c381991f20e26e33 upstream.
 
-The locking order of vlan_rwsem (LOCK A) and then rtnl (LOCK B),
-contradicts other flows such as ipoib_open possibly causing a deadlock.
-To prevent this deadlock heavy flush is called with RTNL locked and
-only then tries to acquire vlan_rwsem.
-This deadlock is possible only when there are child interfaces.
+For thumb instructions, call_undef_hook() in traps.c first reads a u16,
+and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
+u16 is read, which then makes up the the lower half-word of a T32
+instruction. For T16 instructions, the second u16 is not read,
+which makes the resulting u32 opcode always have the upper half set to
+0.
 
-[  140.941758] ======================================================
-[  140.946276] WARNING: possible circular locking dependency detected
-[  140.950950] 4.15.0-rc1+ #9 Tainted: G           O
-[  140.954797] ------------------------------------------------------
-[  140.959424] kworker/u32:1/146 is trying to acquire lock:
-[  140.963450]  (rtnl_mutex){+.+.}, at: [<ffffffffc083516a>] __ipoib_ib_dev_flush+0x2da/0x4e0 [ib_ipoib]
-[  140.970006]
-but task is already holding lock:
-[  140.975141]  (&priv->vlan_rwsem){++++}, at: [<ffffffffc0834ee1>] __ipoib_ib_dev_flush+0x51/0x4e0 [ib_ipoib]
-[  140.982105]
-which lock already depends on the new lock.
-[  140.990023]
-the existing dependency chain (in reverse order) is:
-[  140.998650]
--> #1 (&priv->vlan_rwsem){++++}:
-[  141.005276]        down_read+0x4d/0xb0
-[  141.009560]        ipoib_open+0xad/0x120 [ib_ipoib]
-[  141.014400]        __dev_open+0xcb/0x140
-[  141.017919]        __dev_change_flags+0x1a4/0x1e0
-[  141.022133]        dev_change_flags+0x23/0x60
-[  141.025695]        devinet_ioctl+0x704/0x7d0
-[  141.029156]        sock_do_ioctl+0x20/0x50
-[  141.032526]        sock_ioctl+0x221/0x300
-[  141.036079]        do_vfs_ioctl+0xa6/0x6d0
-[  141.039656]        SyS_ioctl+0x74/0x80
-[  141.042811]        entry_SYSCALL_64_fastpath+0x1f/0x96
-[  141.046891]
--> #0 (rtnl_mutex){+.+.}:
-[  141.051701]        lock_acquire+0xd4/0x220
-[  141.055212]        __mutex_lock+0x88/0x970
-[  141.058631]        __ipoib_ib_dev_flush+0x2da/0x4e0 [ib_ipoib]
-[  141.063160]        __ipoib_ib_dev_flush+0x71/0x4e0 [ib_ipoib]
-[  141.067648]        process_one_work+0x1f5/0x610
-[  141.071429]        worker_thread+0x4a/0x3f0
-[  141.074890]        kthread+0x141/0x180
-[  141.078085]        ret_from_fork+0x24/0x30
-[  141.081559]
+However, having the upper half of instr_mask in the undef_hook set to 0
+masks out the upper half of all thumb instructions - both T16 and T32.
+This results in trapped T32 instructions with the lower half-word equal
+to the T16 encoding of setend (b650) being matched, even though the upper
+half-word is not 0000 and thus indicates a T32 opcode.
 
-other info that might help us debug this:
-[  141.088967]  Possible unsafe locking scenario:
-[  141.094280]        CPU0                    CPU1
-[  141.097953]        ----                    ----
-[  141.101640]   lock(&priv->vlan_rwsem);
-[  141.104771]                                lock(rtnl_mutex);
-[  141.109207]                                lock(&priv->vlan_rwsem);
-[  141.114032]   lock(rtnl_mutex);
-[  141.116800]
- *** DEADLOCK ***
+An example of such a T32 instruction is eaa0b650, which should raise a
+SIGILL since T32 instructions with an eaa prefix are unallocated as per
+Arm ARM, but instead works as a SETEND because the second half-word is set
+to b650.
 
-Fixes: b4b678b06f6e ("IB/ipoib: Grab rtnl lock on heavy flush when calling ndo_open/stop")
-Signed-off-by: Alex Vesker <valex@mellanox.com>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+This patch fixes the issue by extending instr_mask to include the
+upper u32 half, which will still match T16 instructions where the upper
+half is 0, but not T32 instructions.
+
+Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
+Cc: <stable@vger.kernel.org> # 4.0.x-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/ipoib/ipoib_ib.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/armv8_deprecated.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-@@ -1057,13 +1057,10 @@ static void __ipoib_ib_dev_flush(struct
- 		ipoib_ib_dev_down(dev);
- 
- 	if (level == IPOIB_FLUSH_HEAVY) {
--		rtnl_lock();
- 		if (test_bit(IPOIB_FLAG_INITIALIZED, &priv->flags))
- 			ipoib_ib_dev_stop(dev);
- 
--		result = ipoib_ib_dev_open(dev);
--		rtnl_unlock();
--		if (result)
-+		if (ipoib_ib_dev_open(dev))
- 			return;
- 
- 		if (netif_queue_stopped(dev))
-@@ -1102,7 +1099,9 @@ void ipoib_ib_dev_flush_heavy(struct wor
- 	struct ipoib_dev_priv *priv =
- 		container_of(work, struct ipoib_dev_priv, flush_heavy);
- 
-+	rtnl_lock();
- 	__ipoib_ib_dev_flush(priv, IPOIB_FLUSH_HEAVY, 0);
-+	rtnl_unlock();
- }
- 
- void ipoib_ib_dev_cleanup(struct net_device *dev)
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -605,7 +605,7 @@ static struct undef_hook setend_hooks[]
+ 	},
+ 	{
+ 		/* Thumb mode */
+-		.instr_mask	= 0x0000fff7,
++		.instr_mask	= 0xfffffff7,
+ 		.instr_val	= 0x0000b650,
+ 		.pstate_mask	= (COMPAT_PSR_T_BIT | COMPAT_PSR_MODE_MASK),
+ 		.pstate_val	= (COMPAT_PSR_T_BIT | COMPAT_PSR_MODE_USR),
 
 
