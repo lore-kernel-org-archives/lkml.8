@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C06C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80012C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 770E220775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517322076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553008;
-	bh=PRGD0wRBw8Ttc2ii2QSsMJutMXrZHYgDAb7KrM8IUUk=;
+	s=default; t=1587553013;
+	bh=q43WsyVwnxr+w9PBven+jALxwMWtgXu7qhQ+Mok4cgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O5BJmaKxRTcP38LZ+lqsG6d1rNZLeZ0HQTMwo2CgMnUrKJF2ANcNPJXjH0fQW4tzm
-	 l9LL8gd6p65MNpX6KNqv5ZIQO2YOoeZesNr+GWi9OaPt8akgzft7sivIG6Rd2/8uNb
-	 bDFvT2A7xkSe/rCLbYHA09+csGHK5JR1hxhBpyCk=
+	b=uIm6XiHV9Qk3uKejEiRMvndQFs2QoPfqhB2Uulq5S9ppe/IDT1AbYQUp+8DpsiJPZ
+	 BXLscOpYCpTG/ergGngJvVByFb+G4DV0poMGKGTqL0CTgu2je2hG1mCDBhDfF4CJ7N
+	 9ocHyxyLMQmrOt8KQ70vmp7Gy4DFFW/e0W4c64U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgDVKGG (ORCPT
+        id S1728271AbgDVKGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57710 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:06:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgDVKGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:03 -0400
+        id S1726997AbgDVKFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D1B20774;
-        Wed, 22 Apr 2020 10:06:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D7182076C;
+        Wed, 22 Apr 2020 10:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549962;
-        bh=PRGD0wRBw8Ttc2ii2QSsMJutMXrZHYgDAb7KrM8IUUk=;
+        s=default; t=1587549947;
+        bh=q43WsyVwnxr+w9PBven+jALxwMWtgXu7qhQ+Mok4cgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMnG0+LkhakrS7eF6F9LYuViJqvULXYiAdT6ZTq0/N8/wNJIuv1LTMh+Cl2mE8U8D
-         N6dHgdKLhWY1pS64nQYvNzyBoSnxar8EWW88UrAPgVYrgJf7L0DUsxQzexT1Vned57
-         LHzZrbLP4LBDhR6Ia3/LWF+1Smh7U0VHby+zhkC8=
+        b=2Z6Ypi8zY3mwV7JyTg+xiEzPfD31wAO26uRF/fE6GEb8eOcmcngRsEqXF4bYBgwBH
+         nPQOwlosSNiJNmRGLe5t/T63ExdZlFHUKsaFZpI0UEm5roxeOWpsvdwEGYVdmyMMeF
+         hsxwSgi8cW6HhBfGE/rr0t34Mtpm/5NBP7Z6b8oM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6693adf1698864d21734@syzkaller.appspotmail.com,
-        syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com,
-        stable@kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 078/125] mac80211_hwsim: Use kstrndup() in place of kasprintf()
-Date:   Wed, 22 Apr 2020 11:56:35 +0200
-Message-Id: <20200422095045.694170562@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 072/125] ext4: fix incorrect group count in ext4_fill_super error message
+Date:   Wed, 22 Apr 2020 11:56:29 +0200
+Message-Id: <20200422095044.903316387@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -62,68 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+From: Josh Triplett <josh@joshtriplett.org>
 
-commit 7ea862048317aa76d0f22334202779a25530980c upstream.
+commit df41460a21b06a76437af040d90ccee03888e8e5 upstream.
 
-syzbot reports a warning:
+ext4_fill_super doublechecks the number of groups before mounting; if
+that check fails, the resulting error message prints the group count
+from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
+computed group count instead (which at that point has just been computed
+in "blocks_count").
 
-precision 33020 too large
-WARNING: CPU: 0 PID: 9618 at lib/vsprintf.c:2471 set_precision+0x150/0x180 lib/vsprintf.c:2471
- vsnprintf+0xa7b/0x19a0 lib/vsprintf.c:2547
- kvasprintf+0xb2/0x170 lib/kasprintf.c:22
- kasprintf+0xbb/0xf0 lib/kasprintf.c:59
- hwsim_del_radio_nl+0x63a/0x7e0 drivers/net/wireless/mac80211_hwsim.c:3625
- genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
- ...
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Thus it seems that kasprintf() with "%.*s" format can not be used for
-duplicating a string with arbitrary length. Replace it with kstrndup().
-
-Note that later this string is limited to NL80211_WIPHY_NAME_MAXLEN == 64,
-but the code is simpler this way.
-
-Reported-by: syzbot+6693adf1698864d21734@syzkaller.appspotmail.com
-Reported-by: syzbot+a4aee3f42d7584d76761@syzkaller.appspotmail.com
-Cc: stable@kernel.org
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Link: https://lore.kernel.org/r/20200410123257.14559-1-tuomas.tynkkynen@iki.fi
-[johannes: add note about length limit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
+Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mac80211_hwsim.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/ext4/super.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3060,9 +3060,9 @@ static int hwsim_new_radio_nl(struct sk_
- 		param.no_vif = true;
- 
- 	if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
--		hwname = kasprintf(GFP_KERNEL, "%.*s",
--				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
--				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-+		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  GFP_KERNEL);
- 		if (!hwname)
- 			return -ENOMEM;
- 		param.hwname = hwname;
-@@ -3101,9 +3101,9 @@ static int hwsim_del_radio_nl(struct sk_
- 	if (info->attrs[HWSIM_ATTR_RADIO_ID]) {
- 		idx = nla_get_u32(info->attrs[HWSIM_ATTR_RADIO_ID]);
- 	} else if (info->attrs[HWSIM_ATTR_RADIO_NAME]) {
--		hwname = kasprintf(GFP_KERNEL, "%.*s",
--				   nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
--				   (char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]));
-+		hwname = kstrndup((char *)nla_data(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  nla_len(info->attrs[HWSIM_ATTR_RADIO_NAME]),
-+				  GFP_KERNEL);
- 		if (!hwname)
- 			return -ENOMEM;
- 	} else
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3951,9 +3951,9 @@ static int ext4_fill_super(struct super_
+ 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
+ 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
+ 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
+-		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
++		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
+ 		       "(block count %llu, first data block %u, "
+-		       "blocks per group %lu)", sbi->s_groups_count,
++		       "blocks per group %lu)", blocks_count,
+ 		       ext4_blocks_count(es),
+ 		       le32_to_cpu(es->s_first_data_block),
+ 		       EXT4_BLOCKS_PER_GROUP(sb));
 
 
