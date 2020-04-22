@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A75C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F5C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8474120774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57DC20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553105;
-	bh=3Z78rl4P9hYinx2mcFD5H2B/ysypUpZ7mhR6Pul/n3Y=;
+	s=default; t=1587553107;
+	bh=WALJuTDvlNBCj6twB6HtYszOz40olVvACI1e0Rm4CsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmWa0NgxKqT8rcq+BtZAU/oqW7aOlhIJSFzTNWYmYGrdYtyhLu1sbEAV0acM/ObA7
-	 XqdDV49O0A0VE7jaZx9dLjh3S3vx1aSDqz17fp7pD8hX76MRlEBfXRHBLi/+XyQHTs
-	 Bf5qw9yH1uusUCiUjGhoocUDnU/ko2Ezjr2f+myg=
+	b=Otc54nbk7QII/bc61jU/XHIOn+w3m3kY1x8bCYtixqzsWk0ugiIDpvt18cPr/gji/
+	 9AiYiuf7SyYo1Unkma2MnWVQxIhuZ2JwWMuVZ+4YTJC3rHk47SQIFMT/mQ+bsZwGWM
+	 G3PHJCEfWN8sLlPRLprUZY82uKoZmZTic42RP0iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732240AbgDVK6Y (ORCPT
+        id S1727957AbgDVKEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54506 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727981AbgDVKEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:15 -0400
+        id S1727933AbgDVKEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CBA920774;
-        Wed, 22 Apr 2020 10:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53DB72076C;
+        Wed, 22 Apr 2020 10:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549853;
-        bh=3Z78rl4P9hYinx2mcFD5H2B/ysypUpZ7mhR6Pul/n3Y=;
+        s=default; t=1587549843;
+        bh=WALJuTDvlNBCj6twB6HtYszOz40olVvACI1e0Rm4CsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vT2dBowA4dm6PQ1UrRI6invSpCqHqVyZRkTBXBNzJ5DvTz41dVhPDHAXgG/u57RP4
-         uf88nZ8hVA3HuivFPLMuDwKiuti/pn1pgn12Kni6ZqeLfdCEPFdfzkElCPRP1473nS
-         yRLvud34EEH62+y4Ec1bHJIb5bNwqodM/zlOmzps=
+        b=h7YIokuiyCncw+727ApSNTbvrja4wrn7SdEc0oYGTHjiIApA9q7PrJIDC0oQlxVWj
+         6LmcGbLBJqHhqQ8/xigMzSE0Cqam2shBJrx4+HEUkw6Gxg+f6rOHtiOObNKJAWILFv
+         sXT3Q+q/48sySHdxH53Bo8i89J7tCwnhujGOEyz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 4.9 033/125] signal: Extend exec_id to 64bits
-Date:   Wed, 22 Apr 2020 11:55:50 +0200
-Message-Id: <20200422095038.756745774@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 4.9 029/125] KEYS: reaching the keys quotas correctly
+Date:   Wed, 22 Apr 2020 11:55:46 +0200
+Message-Id: <20200422095038.056684890@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -58,82 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
 
-commit d1e7fd6462ca9fc76650fbe6ca800e35b24267da upstream.
+commit 2e356101e72ab1361821b3af024d64877d9a798d upstream.
 
-Replace the 32bit exec_id with a 64bit exec_id to make it impossible
-to wrap the exec_id counter.  With care an attacker can cause exec_id
-wrap and send arbitrary signals to a newly exec'd parent.  This
-bypasses the signal sending checks if the parent changes their
-credentials during exec.
+Currently, when we add a new user key, the calltrace as below:
 
-The severity of this problem can been seen that in my limited testing
-of a 32bit exec_id it can take as little as 19s to exec 65536 times.
-Which means that it can take as little as 14 days to wrap a 32bit
-exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
-days.  Even my slower timing is in the uptime of a typical server.
-Which means self_exec_id is simply a speed bump today, and if exec
-gets noticably faster self_exec_id won't even be a speed bump.
+add_key()
+  key_create_or_update()
+    key_alloc()
+    __key_instantiate_and_link
+      generic_key_instantiate
+        key_payload_reserve
+          ......
 
-Extending self_exec_id to 64bits introduces a problem on 32bit
-architectures where reading self_exec_id is no longer atomic and can
-take two read instructions.  Which means that is is possible to hit
-a window where the read value of exec_id does not match the written
-value.  So with very lucky timing after this change this still
-remains expoiltable.
+Since commit a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly"),
+we can reach max bytes/keys in key_alloc, but we forget to remove this
+limit when we reserver space for payload in key_payload_reserve. So we
+can only reach max keys but not max bytes when having delta between plen
+and type->def_datalen. Remove this limit when instantiating the key, so we
+can keep consistent with key_alloc.
 
-I have updated the update of exec_id on exec to use WRITE_ONCE
-and the read of exec_id in do_notify_parent to use READ_ONCE
-to make it clear that there is no locking between these two
-locations.
+Also, fix the similar problem in keyctl_chown_key().
 
-Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
-Fixes: 2.3.23pre2
-Cc: stable@vger.kernel.org
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: 0b77f5bfb45c ("keys: make the keyring quotas controllable through /proc/sys")
+Fixes: a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly")
+Cc: stable@vger.kernel.org # 5.0.x
+Cc: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c             |    2 +-
- include/linux/sched.h |    4 ++--
- kernel/signal.c       |    2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ security/keys/key.c    |    2 +-
+ security/keys/keyctl.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1353,7 +1353,7 @@ void setup_new_exec(struct linux_binprm
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -382,7 +382,7 @@ int key_payload_reserve(struct key *key,
+ 		spin_lock(&key->user->lock);
  
- 	/* An exec changes our domain. We are no longer part of the thread
- 	   group */
--	current->self_exec_id++;
-+	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
- 	flush_signal_handlers(current, 0);
- }
- EXPORT_SYMBOL(setup_new_exec);
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1720,8 +1720,8 @@ struct task_struct {
- 	struct seccomp seccomp;
+ 		if (delta > 0 &&
+-		    (key->user->qnbytes + delta >= maxbytes ||
++		    (key->user->qnbytes + delta > maxbytes ||
+ 		     key->user->qnbytes + delta < key->user->qnbytes)) {
+ 			ret = -EDQUOT;
+ 		}
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -881,8 +881,8 @@ long keyctl_chown_key(key_serial_t id, u
+ 				key_quota_root_maxbytes : key_quota_maxbytes;
  
- /* Thread group tracking */
--   	u32 parent_exec_id;
--   	u32 self_exec_id;
-+	u64 parent_exec_id;
-+	u64 self_exec_id;
- /* Protection of (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed,
-  * mempolicy */
- 	spinlock_t alloc_lock;
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1660,7 +1660,7 @@ bool do_notify_parent(struct task_struct
- 		 * This is only possible if parent == real_parent.
- 		 * Check if it has changed security domain.
- 		 */
--		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
-+		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
- 			sig = SIGCHLD;
- 	}
- 
+ 			spin_lock(&newowner->lock);
+-			if (newowner->qnkeys + 1 >= maxkeys ||
+-			    newowner->qnbytes + key->quotalen >= maxbytes ||
++			if (newowner->qnkeys + 1 > maxkeys ||
++			    newowner->qnbytes + key->quotalen > maxbytes ||
+ 			    newowner->qnbytes + key->quotalen <
+ 			    newowner->qnbytes)
+ 				goto quota_overrun;
 
 
