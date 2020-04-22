@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C33C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BEFC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 389DE2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFDF2075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552100;
-	bh=lUJfySIV4iy9oc8egJOB4Qa52Ho6PfQJ47fWOfGD2pw=;
+	s=default; t=1587552105;
+	bh=JqfIlilzAtnYw9GMvTatNQzCJGbLyz2Z0an4/12Cf7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M3m6sh4g321aF2WyKexxKr4HtzLhI7ZPvNclvtNEoiha8CS7Ol8zDWFsN7e2aXnr4
-	 Yy/BXB/RLU9q31STqQWSObe/XXIhhPOPYXyxHbMu4epXVvCbr7IAN+JnAvFWX0rNkr
-	 bgqORuFAEcE1EldUPCHXYhCxSc9Y65JWQ6iMJZOg=
+	b=F3j2wzYCV95sG81nDYmx/pvhITMtK5gd0uM6zsRlQh5avu0ZM5SPxoOiKzuqaXZHy
+	 5YKNYbPkhD+6kGQcWvkwDnEByRhmLuHLtPagbYBSRclBZ1Z9ti0L9uon9Y2hKoHefz
+	 3gmso2VEAT7DfQcv/W21+/UlMYRAouPhoCKCaXaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbgDVKlj (ORCPT
+        id S1731677AbgDVKlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56980 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730075AbgDVKUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:13 -0400
+        id S1730069AbgDVKUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A1EC2076E;
-        Wed, 22 Apr 2020 10:20:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D65092070B;
+        Wed, 22 Apr 2020 10:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550812;
-        bh=lUJfySIV4iy9oc8egJOB4Qa52Ho6PfQJ47fWOfGD2pw=;
+        s=default; t=1587550810;
+        bh=JqfIlilzAtnYw9GMvTatNQzCJGbLyz2Z0an4/12Cf7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjYvOcsDgjwWzzD0rH8vQLauinj1mZCYwm/9e4JgSocYuHSMlP2wE//pFsYVByGcB
-         iTqEz9W3qbn+p8pz4s0CKmt9IsfuwJCJ2fQKfYF+zplewDbVSypqd937ZkMF3iDiWS
-         H8OXiA/o7PBxg2K1LLaGYVk9vpXaZdu5VQEc1fM0=
+        b=S149Y/beqSN6kNU/w3/nqG8+hYWFoUe6Q6k0OPniNhjokxENuVk+f5Upb+w0L7eA1
+         oOViojjHTy2D5HiU3p0ua/9yFVyMsCkxpnbOnhRdqqKPa3f53/Ces9wL88EQOxOUz/
+         aqlBJFimFXMvlmJx7v9FJ3J3gJ6nZc3LRsyJYGqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Rosin <peda@axentia.se>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.4 103/118] fbdev: potential information leak in do_fb_ioctl()
-Date:   Wed, 22 Apr 2020 11:57:44 +0200
-Message-Id: <20200422095048.125647124@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.4 102/118] dma-debug: fix displaying of dma allocation type
+Date:   Wed, 22 Apr 2020 11:57:43 +0200
+Message-Id: <20200422095047.991429728@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -70,46 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-commit d3d19d6fc5736a798b118971935ce274f7deaa82 upstream.
+commit 9bb50ed7470944238ec8e30a94ef096caf9056ee upstream.
 
-The "fix" struct has a 2 byte hole after ->ywrapstep and the
-"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
-on the compiler.  The solution is just to replace the assignment with an
-memcpy().
+The commit 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using
+dma_map_page_attrs") removed "dma_debug_page" enum, but missed to update
+type2name string table. This causes incorrect displaying of dma allocation
+type.
+Fix it by removing "page" string from type2name string table and switch to
+use named initializers.
 
-Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200113100132.ixpaymordi24n3av@kili.mountain
+Before (dma_alloc_coherent()):
+k3-ringacc 4b800000.ringacc: scather-gather idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+k3-ringacc 4b800000.ringacc: scather-gather idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+
+After:
+k3-ringacc 4b800000.ringacc: coherent idx 2208 P=d1140000 N=d114 D=d1140000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+k3-ringacc 4b800000.ringacc: coherent idx 2216 P=d1150000 N=d115 D=d1150000 L=40 DMA_BIDIRECTIONAL dma map error check not applicable
+
+Fixes: 2e05ea5cdc1a ("dma-mapping: implement dma_map_single_attrs using dma_map_page_attrs")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/core/fbmem.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/dma/debug.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -1110,7 +1110,7 @@ static long do_fb_ioctl(struct fb_info *
- 		break;
- 	case FBIOGET_FSCREENINFO:
- 		lock_fb_info(info);
--		fix = info->fix;
-+		memcpy(&fix, &info->fix, sizeof(fix));
- 		if (info->flags & FBINFO_HIDE_SMEM_START)
- 			fix.smem_start = 0;
- 		unlock_fb_info(info);
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -137,9 +137,12 @@ static const char *const maperr2str[] =
+ 	[MAP_ERR_CHECKED] = "dma map error checked",
+ };
+ 
+-static const char *type2name[5] = { "single", "page",
+-				    "scather-gather", "coherent",
+-				    "resource" };
++static const char *type2name[] = {
++	[dma_debug_single] = "single",
++	[dma_debug_sg] = "scather-gather",
++	[dma_debug_coherent] = "coherent",
++	[dma_debug_resource] = "resource",
++};
+ 
+ static const char *dir2name[4] = { "DMA_BIDIRECTIONAL", "DMA_TO_DEVICE",
+ 				   "DMA_FROM_DEVICE", "DMA_NONE" };
 
 
