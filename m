@@ -2,130 +2,131 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C262C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848D7C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABFE20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:03:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oZ6I3DZ+"
+	by mail.kernel.org (Postfix) with ESMTP id 6DB122076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgDVXDZ (ORCPT
+        id S1726424AbgDVXEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726077AbgDVXDY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:03:24 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C738AC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:03:24 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id w18so1907155qvs.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q+ZUmGFleIQNVOFy8fFchFqrYnQYIl2Kzm4X0Ut4dcY=;
-        b=oZ6I3DZ+oVw9DiS9NwH9ubCLOmCZjMFu1LmScEI32LKMmsrmV8ERXRrqSIdw2wctfi
-         /sduzA/W/yc2gYcBwwRDVv40zmcI4Z45eG+c3sfRB/CFQxip2mHDO/dj7oQ7CDgm/sXm
-         d+18N/vsSc0iLhx+gvnDebageo5+ke+0dGWas=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q+ZUmGFleIQNVOFy8fFchFqrYnQYIl2Kzm4X0Ut4dcY=;
-        b=aae7kSgkECyJZunDz6lG8RvF0y3Bx9XE4z2CBKJ9uDjnm+RyZGhEFWs4FX5P3cd3cx
-         Re9OZUb7LIfeNmXEdZnsNCDmhjh8333Yh0+GdaeuIBLZ1qHOMRe7pu70jPcJWCRjn3zp
-         YGsNRBaxW1Ni7tpVj2TLBHUZ6EIIu7G7T7kATiMgpWx4yGjiEetVgoElBtecRvGs6ul9
-         ybhpgrrtqyw50YhjeYJGKUBTmIfb5E+07o3s8Pn+QMtlF2CaDHqSHfenYTtWaBj7lGGx
-         Ss6maN4dPLugh46ZksG7yY8OezZP1tmjTxSN+dW6Tu5E4E6+znliKzkwH6+VuoFZB9Id
-         oFzQ==
-X-Gm-Message-State: AGi0Puac6XexbY+dV5LomN/El4sYMbJB0EoVC/CgLHaHySr8OGr+hqCk
-        rqoXOV7oTxhISID8YYtqT9hnkQ==
-X-Google-Smtp-Source: APiQypLG48pUEwzbOklpqni6odRxIsyj2/KAASfEwNNej9pTvyYVGnFgJ4r2rHVRVvuHh0XP9YEo0w==
-X-Received: by 2002:a0c:9e6d:: with SMTP id z45mr1420079qve.206.1587596603750;
-        Wed, 22 Apr 2020 16:03:23 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g133sm400658qke.73.2020.04.22.16.03.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 16:03:23 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 19:03:22 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v1 5/6] rcu: rename kfree_call_rcu()/__kfree_rcu()
-Message-ID: <20200422230322.GA100393@google.com>
-References: <20200315181840.6966-1-urezki@gmail.com>
- <20200315181840.6966-6-urezki@gmail.com>
- <20200316152541.GD190951@google.com>
- <20200316190144.GB10577@pc636>
- <20200420201527.679247f6fa76cba4331f3cd3@linux-foundation.org>
- <20200421120358.GA5117@pc636>
+        Wed, 22 Apr 2020 19:04:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:7109 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbgDVXEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 19:04:24 -0400
+IronPort-SDR: 3uHv/mNBS2PuxZxmApi10iGniE4BDbo7a1FVY6YBZxfcuULMNbvrESa4GCrBdBmTmCrSKD8lnI
+ LSbwpX6W44QQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 16:04:23 -0700
+IronPort-SDR: 49PSRAP6HZ2kkUOmviJXbjwvhozsbej9LWy1KbXoOSWlD9Itl37uJJ9lcmtRvzpTqNciu0IzD/
+ O+hF9jv9BXmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="247589890"
+Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.254.185.101]) ([10.254.185.101])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2020 16:04:20 -0700
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+From:   "Dey, Megha" <megha.dey@linux.intel.com>
+Message-ID: <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
+Date:   Wed, 22 Apr 2020 16:04:20 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421120358.GA5117@pc636>
+In-Reply-To: <20200421235442.GO11945@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 02:03:58PM +0200, Uladzislau Rezki wrote:
-> Hello, Andrew.
+
+
+On 4/21/2020 4:54 PM, Jason Gunthorpe wrote:
+> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
+>> The actual code is independent of the stage 2 driver code submission that adds
+>> support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
+>> support dedicated workqueue on a guest with no vIOMMU.
+>>    
+>> A new device type "mdev" is introduced for the idxd driver. This allows the wq
+>> to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
+>> queue (wq) is enabled, an uuid generated by the user can be added to the wq
+>> through the uuid sysfs attribute for the wq.  After the association, a mdev can
+>> be created using this UUID. The mdev driver code will associate the uuid and
+>> setup the mdev on the driver side. When the create operation is successful, the
+>> uuid can be passed to qemu. When the guest boots up, it should discover a DSA
+>> device when doing PCI discovery.
 > 
-> > > > I based the kfree_rcu shrinker patches on an 'rcu/kfree' branch in my git
-> > > > tree: https://github.com/joelagnel/linux-kernel/tree/rcu/kfree
-> > > > 
-> > > > For now I manually applied 5/6. All others applied cleanly.
-> > > > 
-> > > > Updated the tree as I continue to review your patches.
-> > > >
-> > 
-> > I'm not sure what's happening here - these patches aren't yet in
-> > linux-next.
-> > 
-> Please have a look here, i explained in detail in my cover latter
-> what we would like to achieve: https://lkml.org/lkml/2020/3/23/242
+> I'm feeling really skeptical that adding all this PCI config space and
+> MMIO BAR emulation to the kernel just to cram this into a VFIO
+> interface is a good idea, that kind of stuff is much safer in
+> userspace.
 > 
-> > A couple of thoughts:
-> > 
-> > - Please cc linux-mm@kvack.org on this patchset and anything else
-> >   which impacts MM.
-> > 
-> OK. I thought that is related to RCU, therefore i did not want to
-> spam, but i included you :) Next time we will keep linux-mm@kvack.org
-> in a loop. Sorry for that.
-
-Sorry from my side as well. Will keep linux-mm in the loop henceforth.
-
-thanks,
-
- - Joel
-
-
+> Particularly since vfio is not really needed once a driver is using
+> the PASID stuff. We already have general code for drivers to use to
+> attach a PASID to a mm_struct - and using vfio while disabling all the
+> DMA/iommu config really seems like an abuse.
 > 
-> >
-> > - It's a bit strange to create new infrastructure which has but a
-> >   single call site.  Please tell us much more about "there was also
-> >   request/interest so there will be new comers" to set minds at ease. 
-> > 
-> >   Who/where are these possible new callsites and when can we expect to
-> >   see that code?
-> > 
-> https://lkml.org/lkml/2020/3/23/242 here i wrote motivation. Please
-> check it. If you have some questions please ask.
+> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
+> seems a lot simpler and saner kernel wise.
 > 
-> --
-> Vlad Rezki
+>> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
+>> interrupts for the guest. This preserves MSIX for host usages and also allows a
+>> significantly larger number of interrupt vectors for guest usage.
+> 
+> I never did get a reply to my earlier remarks on the IMS patches.
+> 
+> The concept of a device specific addr/data table format for MSI is not
+> Intel specific. This should be general code. We have a device that can
+> use this kind of kernel capability today.
+> 
+
+<resending to the mailing list, I had incorrect email options set>
+
+Hi Jason,
+
+I am sorry if I did not address your comments earlier.
+
+The present IMS code is quite generic, most of the code is in the 
+drivers/ folder. We basically introduce 2 APIS: allocate and free IMS 
+interrupts and a IMS IRQ domain to allocate these interrupts from. These 
+APIs are architecture agnostic.
+
+We also introduce a new IMS IRQ domain which is architecture specific. 
+This is because IMS generates interrupts only in the remappable format, 
+hence interrupt remapping should be enabled for IMS. Currently, the 
+interrupt remapping code is only available for Intel and AMD and I don’t 
+see anything for ARM.
+
+If a new architecture would want to use IMS, they must simply introduce 
+a new IMS IRQ domain. I am not sure if there is any other way around 
+this. If you have any ideas, please let me know.
+
+Also, could you give more details on the device that could use IMS? Do 
+you have some driver code already? We could then see if and how the 
+current IMS code could be made more generic.
+
+> Jason
+> 
