@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DC1C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2C6C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F522073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFF82076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552769;
-	bh=/3LBLbFaskxzFJjgyhptmFt7VqVQH1RAEmwmXCB/9dg=;
+	s=default; t=1587552772;
+	bh=RTuKNnHXxFHiX6vH4QmoVgDE+3nYGNXMsr7ILpti56U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jE7K2FHo/sRyIDtPDSE3FSeqMZSjz/YsGo3sWFyumIiRztYcdDpAhb5IMKJz+wOTp
-	 orH5q1fYjDrow5C3PxgShNC0fco3fQql7C25hkS5d8yT4TE98dDpTaB8waNV9UzJEP
-	 3rYJi+pbvZ8hbnhs21P++g76EbekZGhoXZKoObM0=
+	b=Oshto+d0V709dNqT1NnUoHyxGnjBWHu70+PJ8wcp7+5ac23T9hS+WM72F+jnE1B3Q
+	 AIhwVLtWoB2KTXzF4DjpwyZ5qtE7APbW+f16FGQWj+9h3l09A3bLs1e+CEPFisUMlO
+	 7IwXltMYrfn9mGYcbZOxJHVuS9Gs/doW0gMXoGAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbgDVKwr (ORCPT
+        id S1729411AbgDVKwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:52:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36636 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:52:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728889AbgDVKJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:41 -0400
+        id S1726788AbgDVKJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 800182071E;
-        Wed, 22 Apr 2020 10:09:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB6720575;
+        Wed, 22 Apr 2020 10:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550180;
-        bh=/3LBLbFaskxzFJjgyhptmFt7VqVQH1RAEmwmXCB/9dg=;
+        s=default; t=1587550175;
+        bh=RTuKNnHXxFHiX6vH4QmoVgDE+3nYGNXMsr7ILpti56U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iYfWvvUfcd4lKaKFEOaL+BS1cf6CshRAOX2SYSYEDMQwq470HCK29PPRcorj42Gkx
-         Vu+hZXgMk5cUwMYFYd+qOnXAX9LBbvLSn3LplHAzFya//DntjXnRmT9IT10VJgVd+4
-         gaak4HDxAPhIg1GK+Rpg6FDPJLBy2c8bedTctXIs=
+        b=DWz2Af+JKtXS1iU6jicgFeGdTBQRNrQZi2OcBnzFTUFa/wDLHPEOCPB0c4ZbgKMHD
+         K6pZeiG5+25SqcGHAK2MMIZjtpQBMCzeV/UOdBLYvOjGJ3QSr295+sQEbA0e2aJSiy
+         j/MlMJouSxUNKZr5FOwJS1uoG940jIOE+xc8wSPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 040/199] ALSA: hda: Fix potential access overflow in beep helper
-Date:   Wed, 22 Apr 2020 11:56:06 +0200
-Message-Id: <20200422095102.006731419@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 039/199] ALSA: hda: Add driver blacklist
+Date:   Wed, 22 Apr 2020 11:56:05 +0200
+Message-Id: <20200422095101.915636767@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,44 +60,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a upstream.
+commit 3c6fd1f07ed03a04debbb9a9d782205f1ef5e2ab upstream.
 
-The beep control helper function blindly stores the values in two
-stereo channels no matter whether the actual control is mono or
-stereo.  This is practically harmless, but it annoys the recently
-introduced sanity check, resulting in an error when the checker is
-enabled.
+The recent AMD platform exposes an HD-audio bus but without any actual
+codecs, which is internally tied with a USB-audio device, supposedly.
+It results in "no codecs" error of HD-audio bus driver, and it's
+nothing but a waste of resources.
 
-This patch corrects the behavior to store only on the defined array
-member.
+This patch introduces a static blacklist table for skipping such a
+known bogus PCI SSID entry.  As of writing this patch, the known SSIDs
+are:
+* 1043:874f - ASUS ROG Zenith II / Strix
+* 1462:cb59 - MSI TRX40 Creator
+* 1462:cb60 - MSI TRX40
 
-Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200408140449.22319-2-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_beep.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/sound/pci/hda/hda_beep.c
-+++ b/sound/pci/hda/hda_beep.c
-@@ -310,8 +310,12 @@ int snd_hda_mixer_amp_switch_get_beep(st
- {
- 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
- 	struct hda_beep *beep = codec->beep;
-+	int chs = get_amp_channels(kcontrol);
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2177,6 +2177,17 @@ static const struct hdac_io_ops pci_hda_
+ 	.dma_free_pages = dma_free_pages,
+ };
+ 
++/* Blacklist for skipping the whole probe:
++ * some HD-audio PCI entries are exposed without any codecs, and such devices
++ * should be ignored from the beginning.
++ */
++static const struct snd_pci_quirk driver_blacklist[] = {
++	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++	{}
++};
 +
- 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
--		ucontrol->value.integer.value[0] =
-+		if (chs & 1)
-+			ucontrol->value.integer.value[0] = beep->enabled;
-+		if (chs & 2)
- 			ucontrol->value.integer.value[1] = beep->enabled;
- 		return 0;
- 	}
+ static const struct hda_controller_ops pci_hda_ops = {
+ 	.disable_msi_reset_irq = disable_msi_reset_irq,
+ 	.substream_alloc_pages = substream_alloc_pages,
+@@ -2196,6 +2207,11 @@ static int azx_probe(struct pci_dev *pci
+ 	bool schedule_probe;
+ 	int err;
+ 
++	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++		dev_info(&pci->dev, "Skipping the blacklisted device\n");
++		return -ENODEV;
++	}
++
+ 	if (dev >= SNDRV_CARDS)
+ 		return -ENODEV;
+ 	if (!enable[dev]) {
 
 
