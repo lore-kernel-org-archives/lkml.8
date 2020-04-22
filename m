@@ -2,159 +2,101 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B93C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0E5C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A7821473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA89520781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdU2a2tT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgDVU5Z (ORCPT
+        id S1726316AbgDVVCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:57:25 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:45876 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbgDVU5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:57:25 -0400
-X-Greylist: delayed 391 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 16:57:22 EDT
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 2555C9A3; Wed, 22 Apr 2020 15:50:51 -0500 (CDT)
-Date:   Wed, 22 Apr 2020 15:50:51 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: Re: [PATCH v2 3/7] loop: use ns_capable for some loop operations
-Message-ID: <20200422205051.GA31944@mail.hallyn.com>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
- <20200422145437.176057-4-christian.brauner@ubuntu.com>
+        Wed, 22 Apr 2020 17:02:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgDVVCK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:02:10 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A02C03C1A9;
+        Wed, 22 Apr 2020 14:02:10 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so1749748pfn.5;
+        Wed, 22 Apr 2020 14:02:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vM87nllaJmlXnX4UfDWzv50cEvq54jUoqSc9qadX5i8=;
+        b=fdU2a2tT2HBq44vMfv6glQVIYFB71heRdkQLckx+Q4+Z5kSAOBp+ZJzryFgZN3JUWF
+         nt9qsUFzMbO67NmVnjK5s+C0yGBviTrnqyt15qMMOrB1rTvb2YG2EnqJ4QZ6YXAR4ePB
+         iU3arVyp25hGHX8yfL9CXObeCvTts9DtJwVI5Znx15ZLl3Dqwi+JdHUZZd5Rg3K63WrM
+         ATw7izjYcIvEbUlJXZXzZFx8ouPouQlrwg8XzX+wDhEXNzp/f7z3lZuIMjAJ/RLTURhL
+         M/ACXCtOZWlwIeHPxw2Sj687SJSIQfm1PbyzHT6q1u/yKYXn1esfOAVsNYV6M7I+V7lX
+         Bfsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vM87nllaJmlXnX4UfDWzv50cEvq54jUoqSc9qadX5i8=;
+        b=okSmT+jYjz88lGh2SMfSlx3Dy1K53sLkWKReypVSXAcx2C6m1XfqyuE6zcN5WWL8Ss
+         5ycTutJGYX4VWAy17o3I7jSK6NwckgBwJ7Hh5VGpzWGOYGdsL7DU7jkSWmbTe7/TDuFU
+         Aj0lAq9Sb9iduRugTP4eTu5ZPt+PqEwMIAcGWOCUgtxXWHFK2I9fE2duW+lOuAtIPCXG
+         hARh5H2ZyO8ROxgK/awfdVOljNiutS3MonW1eViZ3nMEQ2qlioHhtwGMI5q+4y1wxhPY
+         grx8KuZ3Swr3mLErdRJVikHpdoee6rVp6M8eFX2EaYOQ3tLLeOmObG8iC1M3ylMD9a2c
+         OE0g==
+X-Gm-Message-State: AGi0PuZwKUnLhyGP4BGL9czBOf2OHTbS23Gxqm8HEKLy5I6MKoAIUGBn
+        mCRfMR/cqNhp3XCyO84Ph3fX43n1
+X-Google-Smtp-Source: APiQypLK44Vr0SQ5de0EnOaZsXzgTdnmCH/6Rc9VV/B0cjaPxyDBY14F3UA1WjJM49oIcZ2+19nWWA==
+X-Received: by 2002:a62:dd4e:: with SMTP id w75mr412569pff.221.1587589329687;
+        Wed, 22 Apr 2020 14:02:09 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id m2sm150311pjl.21.2020.04.22.14.02.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 14:02:09 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 14:02:07 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Rob Herring <robh@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] Input: dlink-dir685-touchkeys: Fix a typo in driver name
+Message-ID: <20200422210207.GE125362@dtor-ws>
+References: <20200412213937.5287-1-christophe.jaillet@wanadoo.fr>
+ <CACRpkdZMLec8gXSJo-SpNXa3bBne2gDCRT3M_BEz21EtMXUAMw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422145437.176057-4-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACRpkdZMLec8gXSJo-SpNXa3bBne2gDCRT3M_BEz21EtMXUAMw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:54:33PM +0200, Christian Brauner wrote:
-> The following  LOOP_GET_STATUS, LOOP_SET_STATUS, and LOOP_SET_BLOCK_SIZE
-> operations are now allowed in non-initial namespaces. Most other
-> operations were already possible before.
+On Thu, Apr 16, 2020 at 01:08:28PM +0200, Linus Walleij wrote:
+> On Sun, Apr 12, 2020 at 11:39 PM Christophe JAILLET
+> <christophe.jaillet@wanadoo.fr> wrote:
 > 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Seth Forshee <seth.forshee@canonical.com>
-> Cc: Tom Gundersen <teg@jklm.no>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Christian Kellner <ckellner@redhat.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: David Rheinsberg <david.rheinsberg@gmail.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-
-> ---
-> /* v2 */
-> - Christian Brauner <christian.brauner@ubuntu.com>:
->   - Adapated loop_capable() based on changes in the loopfs
->     implementation patchset. Otherwise it is functionally equivalent to
->     the v1 version.
-> ---
->  drivers/block/loop.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
+> > According to the file name and Kconfig, a 'k' is missing in this driver
+> > name. It should be "dlink-dir685-touchkeys".
+> >
+> > Fixes: 131b3de7016b ("Input: add D-Link DIR-685 touchkeys driver")
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 52f7583dd17d..8e21d4b33e01 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -1352,6 +1352,16 @@ void loopfs_evict_locked(struct loop_device *lo)
->  	}
->  	mutex_unlock(&loop_ctl_mutex);
->  }
-> +
-> +static bool loop_capable(const struct loop_device *lo, int cap)
-> +{
-> +	return ns_capable(loopfs_ns(lo), cap);
-> +}
-> +#else /* !CONFIG_BLK_DEV_LOOPFS */
-> +static inline bool loop_capable(const struct loop_device *lo, int cap)
-> +{
-> +	return capable(cap);
-> +}
->  #endif /* CONFIG_BLK_DEV_LOOPFS */
->  
->  static int
-> @@ -1368,7 +1378,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
->  		return err;
->  	if (lo->lo_encrypt_key_size &&
->  	    !uid_eq(lo->lo_key_owner, uid) &&
-> -	    !capable(CAP_SYS_ADMIN)) {
-> +	    !loop_capable(lo, CAP_SYS_ADMIN)) {
->  		err = -EPERM;
->  		goto out_unlock;
->  	}
-> @@ -1499,7 +1509,7 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
->  	memcpy(info->lo_crypt_name, lo->lo_crypt_name, LO_NAME_SIZE);
->  	info->lo_encrypt_type =
->  		lo->lo_encryption ? lo->lo_encryption->number : 0;
-> -	if (lo->lo_encrypt_key_size && capable(CAP_SYS_ADMIN)) {
-> +	if (lo->lo_encrypt_key_size && loop_capable(lo, CAP_SYS_ADMIN)) {
->  		info->lo_encrypt_key_size = lo->lo_encrypt_key_size;
->  		memcpy(info->lo_encrypt_key, lo->lo_encrypt_key,
->  		       lo->lo_encrypt_key_size);
-> @@ -1723,7 +1733,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
->  		return loop_clr_fd(lo);
->  	case LOOP_SET_STATUS:
->  		err = -EPERM;
-> -		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
-> +		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
->  			err = loop_set_status_old(lo,
->  					(struct loop_info __user *)arg);
->  		}
-> @@ -1732,7 +1742,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
->  		return loop_get_status_old(lo, (struct loop_info __user *) arg);
->  	case LOOP_SET_STATUS64:
->  		err = -EPERM;
-> -		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
-> +		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
->  			err = loop_set_status64(lo,
->  					(struct loop_info64 __user *) arg);
->  		}
-> @@ -1742,7 +1752,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
->  	case LOOP_SET_CAPACITY:
->  	case LOOP_SET_DIRECT_IO:
->  	case LOOP_SET_BLOCK_SIZE:
-> -		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
-> +		if (!(mode & FMODE_WRITE) && !loop_capable(lo, CAP_SYS_ADMIN))
->  			return -EPERM;
->  		/* Fall through */
->  	default:
-> -- 
-> 2.26.1
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Applied, thank you.
+
+> 
+> Yours,
+> Linus Walleij
+
+-- 
+Dmitry
