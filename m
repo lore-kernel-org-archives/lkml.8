@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E75C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0FFC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5E42077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5AE2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549881;
-	bh=1ikYEs3EOoE+TbYWpEa/q2UTB0sAEjEFWOcDFUvzuAE=;
+	s=default; t=1587549884;
+	bh=i3Rhkjl2pl8lrpd2bvu8KC/WZTiZaXHdz5AcnTEfjMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M1expP/VqyqYhT27drF9tcCStnBr49OJqjPloJMhALnLh/RVJWOLyc1G2Zz2yQMGw
-	 f7xlR+tCrkyeX+r5yTFKClbdIas/ZrSXSP3NU4nzt4MZJhbHEtrQ0QG7lDF5AwuZsh
-	 EvCdmbJO2l1kYWl3Zj3koLd5SnHloT2VSeWqba0U=
+	b=QM6mFrlA+JLJEqKfLVa0vECy4liRKxidWkES1gxHXg/A1jkZfZ5RQI59njvBH9YFn
+	 P9z6kmak20eNyf1WTwU7OeMBPXrEslRLgnslSaNEqEB28m3DTX6teKCrTiCZRF0ymi
+	 e/9c5CPNPy3Lc3pEfnPX/HsDUjwPQGFs8fk+EYEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgDVKEk (ORCPT
+        id S1728067AbgDVKEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54958 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgDVKEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:32 -0400
+        id S1728023AbgDVKEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F77120575;
-        Wed, 22 Apr 2020 10:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 508FE2075A;
+        Wed, 22 Apr 2020 10:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549870;
-        bh=1ikYEs3EOoE+TbYWpEa/q2UTB0sAEjEFWOcDFUvzuAE=;
+        s=default; t=1587549877;
+        bh=i3Rhkjl2pl8lrpd2bvu8KC/WZTiZaXHdz5AcnTEfjMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j9FhSkIO+X+PpBacDBKOoFJIlLY8nJ/ASeeoldIo5ee/rFtcVBGZ/+SssgQ8Uvuw1
-         hC+VdNa91pABPYdTNjG6W2EYn5BaKHOHaEWdEcqfeZqKOD5wF/zBXMAqxzFn+79YBK
-         B7j7GW4Vbt4BXKjcYsLIDzyW+psI3kXbJ2KhOfQM=
+        b=UQ3DDe+bttroPiYUaodb8cpPAOpj69jLDD9CVaKeqCiiTVNFuAnyvALkYMJO9+ahQ
+         hHas9HcmzbxRQTenBWNyC88YHqTyPKv0fD9kIuZvsIdPAjP+MGwIfjVYr4QBM2HSZY
+         rx9ZIc4kCj9ZM4MCoyasXK0ppg1uVTGw5LNSZDL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 039/125] KVM: VMX: fix crash cleanup when KVM wasnt used
-Date:   Wed, 22 Apr 2020 11:55:56 +0200
-Message-Id: <20200422095039.813059238@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 042/125] ALSA: hda: Initialize power_state field properly
+Date:   Wed, 22 Apr 2020 11:55:59 +0200
+Message-Id: <20200422095040.344994387@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,75 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit dbef2808af6c594922fe32833b30f55f35e9da6d upstream.
+commit 183ab39eb0ea9879bb68422a83e65f750f3192f0 upstream.
 
-If KVM wasn't used at all before we crash the cleanup procedure fails with
- BUG: unable to handle page fault for address: ffffffffffffffc8
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 23215067 P4D 23215067 PUD 23217067 PMD 0
- Oops: 0000 [#8] SMP PTI
- CPU: 0 PID: 3542 Comm: bash Kdump: loaded Tainted: G      D           5.6.0-rc2+ #823
- RIP: 0010:crash_vmclear_local_loaded_vmcss.cold+0x19/0x51 [kvm_intel]
+The recent commit 98081ca62cba ("ALSA: hda - Record the current power
+state before suspend/resume calls") made the HD-audio driver to store
+the PM state in power_state field.  This forgot, however, the
+initialization at power up.  Although the codec drivers usually don't
+need to refer to this field in the normal operation, let's initialize
+it properly for consistency.
 
-The root cause is that loaded_vmcss_on_cpu list is not yet initialized,
-we initialize it in hardware_enable() but this only happens when we start
-a VM.
-
-Previously, we used to have a bitmap with enabled CPUs and that was
-preventing [masking] the issue.
-
-Initialized loaded_vmcss_on_cpu list earlier, right before we assign
-crash_vmclear_loaded_vmcss pointer. blocked_vcpu_on_cpu list and
-blocked_vcpu_on_cpu_lock are moved altogether for consistency.
-
-Fixes: 31603d4fc2bb ("KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Message-Id: <20200401081348.1345307-1-vkuznets@redhat.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 98081ca62cba ("ALSA: hda - Record the current power state before suspend/resume calls")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ sound/pci/hda/hda_codec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -3482,10 +3482,6 @@ static int hardware_enable(void)
- 	if (cr4_read_shadow() & X86_CR4_VMXE)
- 		return -EBUSY;
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -876,6 +876,7 @@ int snd_hda_codec_new(struct hda_bus *bu
  
--	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
--	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
--	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
--
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
+ 	/* power-up all before initialization */
+ 	hda_set_power_state(codec, AC_PWRST_D0);
++	codec->core.dev.power.power_state = PMSG_ON;
  
- 	test_bits = FEATURE_CONTROL_LOCKED;
-@@ -11860,7 +11856,7 @@ module_exit(vmx_exit)
+ 	snd_hda_codec_proc_new(codec);
  
- static int __init vmx_init(void)
- {
--	int r;
-+	int r, cpu;
- 
- 	r = kvm_init(&vmx_x86_ops, sizeof(struct vcpu_vmx),
- 		     __alignof__(struct vcpu_vmx), THIS_MODULE);
-@@ -11882,6 +11878,12 @@ static int __init vmx_init(void)
- 		}
- 	}
- 
-+	for_each_possible_cpu(cpu) {
-+		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-+		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-+		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-+	}
-+
- #ifdef CONFIG_KEXEC_CORE
- 	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
- 			   crash_vmclear_local_loaded_vmcss);
 
 
