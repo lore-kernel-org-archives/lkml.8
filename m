@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1291DC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF33C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D86022073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EFF2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552782;
-	bh=KErQhGHc/OJRqK6E4NzknUAPebN5O4IpqYQ8HLmCtiY=;
+	s=default; t=1587552789;
+	bh=SNp5Cfh7breCq57LI8vZEAzmEX05Q+IiYdGzMs2VsjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZsKrx8fLnjDnaHYeJqLPVNSg9dXUQq5QXLixkQI1xcK/v3M1BLphje6GXw7TVuEJL
-	 ki1+6xk7hBn6781NoQWoFYIy5tSU4QzqB1Hp9ieSnaqpkw2x8sU42/n73ssiesFBBW
-	 9rJbJ4CCh2S5wNjzW64o062Bt7EQEJii+oGYNgeM=
+	b=T4AxbYFeK6GcM2Md4aAk+6NRJrRl9XF0B1zIw6ePDho5THfcW6ncyGjuk2EWoZu/a
+	 stZV3zWzeqOMbqWmSDqiYWIfT1BGEbjus2m57T/ackZfN4N6qtcOfjL/1t57faqkXS
+	 uHzQfxcMK26dSkDvlgOLzvvhzndPvSA+xZFN0fEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgDVKxB (ORCPT
+        id S1732246AbgDVKxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbgDVKJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:30 -0400
+        id S1728842AbgDVKJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F99A20575;
-        Wed, 22 Apr 2020 10:09:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12CE2166E;
+        Wed, 22 Apr 2020 10:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550170;
-        bh=KErQhGHc/OJRqK6E4NzknUAPebN5O4IpqYQ8HLmCtiY=;
+        s=default; t=1587550155;
+        bh=SNp5Cfh7breCq57LI8vZEAzmEX05Q+IiYdGzMs2VsjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AmmnoSkckUUyujVZm9pSRiLqUJoWpHtwSDg/elUXfegfuJgNnDnQdSSOcwQsdXTw6
-         58BZ2qnzTmfoTOgjj0n1b9zQ0bKHMXbF15Jmz2jRV7mWN3b2eebMHlr172gD1CuTFz
-         3+f8lRG8AQCo/fAnfspXUe2pJM16iwpYS0xQACBA=
+        b=ozs3bRKde9n5OJRtvrzGbgY9kgLkYcF8QUYEmGSdh7g45LTxcE0GOdI4l/OZb24I6
+         vM1umhgW7PzAZbYWdqBUeiM2G0owM4KeFnSBEMdf9PUs0g0pW3dHNP45NzSIt3Txww
+         sjOrhXC1T/5/EQcXP3mAKxgrxrtDfO2JwETWdMcE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.14 037/199] usb: gadget: composite: Inform controller driver of self-powered
-Date:   Wed, 22 Apr 2020 11:56:03 +0200
-Message-Id: <20200422095101.731839198@linuxfoundation.org>
+        stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 031/199] slub: improve bit diffusion for freelist ptr obfuscation
+Date:   Wed, 22 Apr 2020 11:55:57 +0200
+Message-Id: <20200422095101.178110516@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -59,57 +65,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 5e5caf4fa8d3039140b4548b6ab23dd17fce9b2c upstream.
+commit 1ad53d9fa3f6168ebcf48a50e08b170432da2257 upstream.
 
-Different configuration/condition may draw different power. Inform the
-controller driver of the change so it can respond properly (e.g.
-GET_STATUS request). This fixes an issue with setting MaxPower from
-configfs. The composite driver doesn't check this value when setting
-self-powered.
+Under CONFIG_SLAB_FREELIST_HARDENED=y, the obfuscation was relatively weak
+in that the ptr and ptr address were usually so close that the first XOR
+would result in an almost entirely 0-byte value[1], leaving most of the
+"secret" number ultimately being stored after the third XOR.  A single
+blind memory content exposure of the freelist was generally sufficient to
+learn the secret.
 
-Cc: stable@vger.kernel.org
-Fixes: 88af8bbe4ef7 ("usb: gadget: the start of the configfs interface")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Add a swab() call to mix bits a little more.  This is a cheap way (1
+cycle) to make attacks need more than a single exposure to learn the
+secret (or to know _where_ the exposure is in memory).
+
+kmalloc-32 freelist walk, before:
+
+ptr              ptr_addr            stored value      secret
+ffff90c22e019020@ffff90c22e019000 is 86528eb656b3b5bd (86528eb656b3b59d)
+ffff90c22e019040@ffff90c22e019020 is 86528eb656b3b5fd (86528eb656b3b59d)
+ffff90c22e019060@ffff90c22e019040 is 86528eb656b3b5bd (86528eb656b3b59d)
+ffff90c22e019080@ffff90c22e019060 is 86528eb656b3b57d (86528eb656b3b59d)
+ffff90c22e0190a0@ffff90c22e019080 is 86528eb656b3b5bd (86528eb656b3b59d)
+...
+
+after:
+
+ptr              ptr_addr            stored value      secret
+ffff9eed6e019020@ffff9eed6e019000 is 793d1135d52cda42 (86528eb656b3b59d)
+ffff9eed6e019040@ffff9eed6e019020 is 593d1135d52cda22 (86528eb656b3b59d)
+ffff9eed6e019060@ffff9eed6e019040 is 393d1135d52cda02 (86528eb656b3b59d)
+ffff9eed6e019080@ffff9eed6e019060 is 193d1135d52cdae2 (86528eb656b3b59d)
+ffff9eed6e0190a0@ffff9eed6e019080 is f93d1135d52cdac2 (86528eb656b3b59d)
+
+[1] https://blog.infosectcbr.com.au/2020/03/weaknesses-in-linux-kernel-heap.html
+
+Fixes: 2482ddec670f ("mm: add SLUB free list pointer obfuscation")
+Reported-by: Silvio Cesare <silvio.cesare@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/202003051623.AF4F8CB@keescook
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[kees: Backport to v4.19 which doesn't call kasan_reset_untag()]
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/composite.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ mm/slub.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -850,6 +850,11 @@ static int set_config(struct usb_composi
- 	else
- 		power = min(power, 900U);
- done:
-+	if (power <= USB_SELF_POWER_VBUS_MAX_DRAW)
-+		usb_gadget_set_selfpowered(gadget);
-+	else
-+		usb_gadget_clear_selfpowered(gadget);
-+
- 	usb_gadget_vbus_draw(gadget, power);
- 	if (result >= 0 && cdev->delayed_status)
- 		result = USB_GADGET_DELAYED_STATUS;
-@@ -2281,6 +2286,7 @@ void composite_suspend(struct usb_gadget
- 
- 	cdev->suspended = 1;
- 
-+	usb_gadget_set_selfpowered(gadget);
- 	usb_gadget_vbus_draw(gadget, 2);
- }
- 
-@@ -2309,6 +2315,9 @@ void composite_resume(struct usb_gadget
- 		else
- 			maxpower = min(maxpower, 900U);
- 
-+		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW)
-+			usb_gadget_clear_selfpowered(gadget);
-+
- 		usb_gadget_vbus_draw(gadget, maxpower);
- 	}
- 
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -248,7 +248,7 @@ static inline void *freelist_ptr(const s
+ 				 unsigned long ptr_addr)
+ {
+ #ifdef CONFIG_SLAB_FREELIST_HARDENED
+-	return (void *)((unsigned long)ptr ^ s->random ^ ptr_addr);
++	return (void *)((unsigned long)ptr ^ s->random ^ swab(ptr_addr));
+ #else
+ 	return ptr;
+ #endif
 
 
