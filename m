@@ -2,97 +2,80 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FC4C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF1CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8F1020575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587514942;
-	bh=c+XFPyiH5BeEGClHqseQljbOxUU8e9tNUBpvWAMh/7s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=P9E1chKD9MZ7fM/jtQ04rpctD+bz4t5ZstmXBhNzlasIFZQA1Tei9rJC9FkO8BYxr
-	 qyTX2rW9613mKFk3aY+eDxU1G5DkeevnT3hcgIGI8TBy5WFIblMoZU7Ga0S7jhOLxK
-	 QgwxrZXk6d78lvYYmNo2ruNsgzKH1WsPtfvWbDSA=
+	by mail.kernel.org (Postfix) with ESMTP id 16D7F20735
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:29:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ar4qoLHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgDVAWV (ORCPT
+        id S1726337AbgDVA3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgDVAWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:22:20 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931D720575;
-        Wed, 22 Apr 2020 00:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587514939;
-        bh=c+XFPyiH5BeEGClHqseQljbOxUU8e9tNUBpvWAMh/7s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ht1cZBtsU4ZzklSV5cRr5Qx6XaFQ4W5lxRDq0/8EF2vd2jglMQT6aeg5HlTr+Y+cg
-         GvXxh4r2LskTeGgpwJ5Sx07ICokd+2snluTxFrmyUsyvTzXD+4Xjj4ugclehyDp9OU
-         Ueeuh3pweyX12GUi3BhHMzulqdR1JtYelrt3Dkgg=
-Received: by mail-qk1-f174.google.com with SMTP id j4so697888qkc.11;
-        Tue, 21 Apr 2020 17:22:19 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua5yrPq8jSWRo1KeGkfpSOGnjx4TtwIm4z9ri/o474X0y7HKmFs
-        RaoNBRKDqPSXQNk/1utSSxW1XrAa7To8eXnEUw==
-X-Google-Smtp-Source: APiQypJMvsjKJFcDSNI66nc6nxJLAcqRUC9yc5h1UoxDLBk/UtHLjSXOOVV0+6UfjqW5zRZ3zD4bGr0zEi0q5AN+k1A=
-X-Received: by 2002:a37:c43:: with SMTP id 64mr22162895qkm.119.1587514938757;
- Tue, 21 Apr 2020 17:22:18 -0700 (PDT)
+        Tue, 21 Apr 2020 20:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgDVA3k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:29:40 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F7EBC0610D5;
+        Tue, 21 Apr 2020 17:29:40 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id s9so508692eju.1;
+        Tue, 21 Apr 2020 17:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=rO0w5gDPjA7Di4DEnXW21M0BN8vGySQ7BavhtWpb4aI=;
+        b=Ar4qoLHsVjygj/AZzcdesVckef3gGyVpLWvpQjGGGhdEl4GxuX8/GqVgmx3+0y6Yle
+         W93O9+1aDGws6MbB0PG8GvKNL5Vqjc/ReY79QToenRjQUcKLw7L6Cu63I1TI1WO43bbI
+         OTzjV5kPdpqjtiUwrqoX8LT2vA/kox2aOF9ogkzLrb+qiEBZkMk61YZgvjn11EvM2wpw
+         MJOyoFH73Sv7oyzniFoxWuphjOKV0ylSCcFLYR8SN+BQf+7VhEaBkJnIF8jFxPELFLvK
+         FS2/ATNe1x6j42Ynei0xxbF+XMH8Ol9ayiZrkAyK0OPmwyRM7Bw3hr6YhLQi2FvD4u0a
+         gFlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=rO0w5gDPjA7Di4DEnXW21M0BN8vGySQ7BavhtWpb4aI=;
+        b=X2ft7BQIc+hUG2ACmBUCMzc1XOc/Fj6UdPcFNSQsmifjUx496jCRTMDnvrHxVN922u
+         Utu6GgQkpznM4Mnpp/wu8KE5rbtX70EXTJVS1BsEvxRTc2pwBcAgT7Zyw4C6G4N6tzJK
+         keNozQ83gTtSd6NkMJK5zo+4a65BD+UvOaEyc+lSFGv+VPxYBbbK3M+Ku43H+fYd6ujn
+         fMPC8Nw02Qh9JMbxEI/+WD+fPa/B+1RmkMbvBdFzruQCnSoax7aSMhJgInIbbSI166Vg
+         ORi5Lql/dFtSp8bWsIvhG4B5bWt63JnTO0EwHralMk2MC0VVn2qx7YqFLoYBswrbL6z+
+         pm7A==
+X-Gm-Message-State: AGi0PuZ8NKocx45a9tjvAB4xcwqsNyNcDB9m/WRWrulSN/rNasQHB5ZE
+        IhL7xzffKw4kIDBmTKuZhf/y+ZgYn/VH4ShAyUwYFkft
+X-Google-Smtp-Source: APiQypKpFh0SuFktFFKa4v7aZo3TvtlKswa6pyWUf+0w5RB/snw0giBc5drN8AHPopivqyDXfK2TWSHKNE2pipMvEI4=
+X-Received: by 2002:a17:906:6441:: with SMTP id l1mr10792113ejn.148.1587515376516;
+ Tue, 21 Apr 2020 17:29:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200421212004.6146-1-robh@kernel.org> <20200421233737.GH5983@pendragon.ideasonboard.com>
-In-Reply-To: <20200421233737.GH5983@pendragon.ideasonboard.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Apr 2020 19:22:07 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJkp3hQFVJRHCix_oEP=ukPgL1Ykci7E4cScrz7x1m85g@mail.gmail.com>
-Message-ID: <CAL_JsqJkp3hQFVJRHCix_oEP=ukPgL1Ykci7E4cScrz7x1m85g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Fix command line length limit calling dt-mk-schema
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
+From:   Joshua Abraham <j.abraham1776@gmail.com>
+Date:   Tue, 21 Apr 2020 20:29:25 -0400
+Message-ID: <CAMmOe3Q2cc_uzpKezojkNWFSdg+Pt+K6BqcijV46QRj5ZXod7g@mail.gmail.com>
+Subject: [RFC] unixmon virtual device for unix sockets
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 6:37 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Rob,
->
-> Thank you for the patch.
->
-> On Tue, Apr 21, 2020 at 04:20:03PM -0500, Rob Herring wrote:
-> > As the number of schemas has increased, we're starting to hit the error
-> > "execvp: /bin/sh: Argument list too long". This is due to passing all the
-> > schema files on the command line to dt-mk-schema. It currently is only
-> > with out of tree builds and is intermittent depending on the file path
-> > lengths.
-> >
-> > Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
-> > hitting this proplem more likely since the example validation now always
-> > gets the full list of schemas.
-> >
-> > Fix this by putting the schema file list into a temp file and using xargs.
-> >
-> > Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
->
-> Quite a bit slower than v5.6 when passing DT_SCHEMA_FILES, but
-> reasonable, and working now :-)
+There is currently no way to capture a connected unix domain socket
+without interrupting the connection. AF_UNIX socket transport is
+implemented in-kernel and enabling packet captures would require
+kernel support. This could be based on the design of the vsockmon and
+nlmon virtual devices.
 
-That's expected. It's validating with ~700 vs. 1 schema. The problem
-was folks only checking with DT_SCHEMA_FILES set, but a new schema can
-affect another example or existing schemas (including core schema) may
-fail on the new example.
+This would be very useful when debugging traffic traversing AF_UNIX
+sockets, such as DBUS traffic without modifying the user-space
+programs that are using the unix sockets.
 
-Rob
+Is this a worthwhile feature to implement?
+
+-Josh
