@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04772C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14290C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54DF20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BEB2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549952;
-	bh=XK9eMSM/yxlwNs6spFUXAH1CLJpeXLHJC3qRUonC59c=;
+	s=default; t=1587549958;
+	bh=vzyeGWSnxKHvry/0WkMZLr9DqVuc/TIqJByLXmq2mH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=be5wHKHcjZa1XembSfX8BPuKtq32kpW6673Wld8VeyK/lr0HuH5s1P2RPPxl9zu9F
-	 AAA0RIPsIJJWuuVsr6f+5ir5MpIMIaYbCWadNnK6BE98VH44l46JOxDwZjUqgPVRy6
-	 HZjUOGhNW0s4AeX52Kpln7kSkDbko6n+otB1NFtU=
+	b=15SuwrpjJ6zxXVv81ihtDV0QJfKUXnv3Mn7+L6Qg0GYx2LIapuuxWf6XSfHjojWbh
+	 +Joxb7QjQda5rTbG1NaDYkmT/cgITspDfJDpy5Y7+ZvmKCT9/hehmm0wI2NvIOcAtq
+	 A/oiouBpPgC2MJi2ib9VA+8mzbHlghXJQgpwrw5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgDVKFw (ORCPT
+        id S1728263AbgDVKF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:05:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57168 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgDVKFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:46 -0400
+        id S1727080AbgDVKFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E71C42075A;
-        Wed, 22 Apr 2020 10:05:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46CEB2075A;
+        Wed, 22 Apr 2020 10:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549945;
-        bh=XK9eMSM/yxlwNs6spFUXAH1CLJpeXLHJC3qRUonC59c=;
+        s=default; t=1587549952;
+        bh=vzyeGWSnxKHvry/0WkMZLr9DqVuc/TIqJByLXmq2mH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7ENCVFuq3fetWKESrlZAl+kE24dQK8AFaT3tl0bU3qzKq90FWWL3cIBOvTzKkzIx
-         LusbvnyiVJfNXEbIi0IlSdIC8r/HC4saTp6XPCrJ+THrvHB1JJfT95DBFHS0EpQAd7
-         cgoQpBmX9nnnBppN+sX6y/LIO3lP17iSyI3DN1/Q=
+        b=PBhCMwOsLqM5nPnB46P0vHNLaTm+J0CyV3vAbr+KPJSHFrGBk8n4gDlAFgHYq5Tzn
+         eFwxCHWLiO4mofSuZ1bwpJCn6QT74hE0COBHyDqPkY2J1AZIEeAxFIRr2hAEoSfYAH
+         GI16PTNDcBxYpLhX3LKMVwejJ1XP+4reYu7WrPoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.9 071/125] jbd2: improve comments about freeing data buffers whose page mapping is NULL
-Date:   Wed, 22 Apr 2020 11:56:28 +0200
-Message-Id: <20200422095044.766641370@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 074/125] ASoC: Intel: mrfld: fix incorrect check on p->sink
+Date:   Wed, 22 Apr 2020 11:56:31 +0200
+Message-Id: <20200422095045.153563016@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -59,41 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 780f66e59231fcf882f36c63f287252ee47cc75a upstream.
+commit f5e056e1e46fcbb5f74ce560792aeb7d57ce79e6 upstream.
 
-Improve comments in jbd2_journal_commit_transaction() to describe why
-we don't need to clear the buffer_mapped bit for freeing file mapping
-buffers whose page mapping is NULL.
+The check on p->sink looks bogus, I believe it should be p->source
+since the following code blocks are related to p->source. Fix
+this by replacing p->sink with p->source.
 
-Link: https://lore.kernel.org/r/20200217112706.20085-1-yi.zhang@huawei.com
-Fixes: c96dceeabf76 ("jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer")
-Suggested-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Addresses-Coverity: ("Copy-paste error")
+Link: https://lore.kernel.org/r/20191119113640.166940-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/jbd2/commit.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/soc/intel/atom/sst-atom-controls.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -990,9 +990,10 @@ restart_loop:
- 			 * journalled data) we need to unmap buffer and clear
- 			 * more bits. We also need to be careful about the check
- 			 * because the data page mapping can get cleared under
--			 * out hands, which alse need not to clear more bits
--			 * because the page and buffers will be freed and can
--			 * never be reused once we are done with them.
-+			 * our hands. Note that if mapping == NULL, we don't
-+			 * need to make buffer unmapped because the page is
-+			 * already detached from the mapping and buffers cannot
-+			 * get reused.
- 			 */
- 			mapping = READ_ONCE(bh->b_page->mapping);
- 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
+--- a/sound/soc/intel/atom/sst-atom-controls.c
++++ b/sound/soc/intel/atom/sst-atom-controls.c
+@@ -1343,7 +1343,7 @@ int sst_send_pipe_gains(struct snd_soc_d
+ 				dai->capture_widget->name);
+ 		w = dai->capture_widget;
+ 		snd_soc_dapm_widget_for_each_source_path(w, p) {
+-			if (p->connected && !p->connected(w, p->sink))
++			if (p->connected && !p->connected(w, p->source))
+ 				continue;
+ 
+ 			if (p->connect &&  p->source->power &&
 
 
