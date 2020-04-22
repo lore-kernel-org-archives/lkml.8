@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB75C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96B7C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFCF20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE492070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550301;
-	bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
+	s=default; t=1587550305;
+	bh=B8gJjDgNfO030o6GTT5ZleoRRIawVbH5PA9xnbNJMpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wpTrmAP+l29h4BH6JgeQGJC0x5UDxLc8wC/jd6rX6wRbFTDyzpjhhysXN+rzIYfoi
-	 Hy1jpbvYi9FGTpfUROlbZ5F5y15AVjdeoI6oAlGF7auq0+HeUpuD1nZLbYCbdVnpCh
-	 1z3NP6jFkftT2QetB75nqIBn82MyDJRM7PUT5TfE=
+	b=oy8YUcQ19QGFJmIuVlxuNWK8yV/zMXQbkOZXp6+52M85Be0P1uuLleboBI5OG4muE
+	 kF5IN/HgtE/3a6G18wjJ+EYqBJLuDGoDq9wJttMBrZkYzjhjYzMHeXNowWW1AX2zpU
+	 8oPxNc0oHK59WDLRcvx0ohWUYOa6JCAK6QE6GCaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgDVKLk (ORCPT
+        id S1728814AbgDVKLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbgDVKLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:30 -0400
+        id S1728779AbgDVKLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:11:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD28F2075A;
-        Wed, 22 Apr 2020 10:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B73A20575;
+        Wed, 22 Apr 2020 10:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550290;
-        bh=SoVqO3bK3jHNnFnqoHbBV+IZFxZYUJeXCaLy+Ihncvo=;
+        s=default; t=1587550292;
+        bh=B8gJjDgNfO030o6GTT5ZleoRRIawVbH5PA9xnbNJMpQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lvn4vTwuWvVK6NBiQcgDW1fIS0ss+l5+m9+aT8JMtNskukyhLe3q5y82XCLbOVEqY
-         ADKKPxgZpWyHGskwOZQ/eQrhlaK1TYnPDCAeYAZdEZjfkuOxRo9wDVS+a9hD7CRntz
-         yQXvSZsZj9eV6h27lvcXQJpe+vZjwEUKtejPeRKA=
+        b=hXihfboaR6fTcFUoKKOqCUlnJbao/ooSq6gUD3r5ldPoifNHbp3q7n3FWd7/APhcP
+         uys0iUX3cby8C+7L0XxQCDyw1sEQCfu+JSmbSemhlRHeFb6nGzu8z+T9uXTwFQYW5s
+         g2g/fmK/58Yart/Tr72V4y2tlbjgT/jTxEnWLasE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Gander <simon@tuxera.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 085/199] hfsplus: fix crash and filesystem corruption when deleting files
-Date:   Wed, 22 Apr 2020 11:56:51 +0200
-Message-Id: <20200422095106.605369560@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 086/199] libata: Return correct status in sata_pmp_eh_recover_pm() when ATA_DFLAG_DETACH is set
+Date:   Wed, 22 Apr 2020 11:56:52 +0200
+Message-Id: <20200422095106.699003191@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,52 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Gander <simon@tuxera.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 upstream.
+commit 8305f72f952cff21ce8109dc1ea4b321c8efc5af upstream.
 
-When removing files containing extended attributes, the hfsplus driver may
-remove the wrong entries from the attributes b-tree, causing major
-filesystem damage and in some cases even kernel crashes.
+During system resume from suspend, this can be observed on ASM1062 PMP
+controller:
 
-To remove a file, all its extended attributes have to be removed as well.
-The driver does this by looking up all keys in the attributes b-tree with
-the cnid of the file.  Each of these entries then gets deleted using the
-key used for searching, which doesn't contain the attribute's name when it
-should.  Since the key doesn't contain the name, the deletion routine will
-not find the correct entry and instead remove the one in front of it.  If
-parent nodes have to be modified, these become corrupt as well.  This
-causes invalid links and unsorted entries that not even macOS's fsck_hfs
-is able to fix.
+ata10.01: SATA link down (SStatus 0 SControl 330)
+ata10.02: hard resetting link
+ata10.02: SATA link down (SStatus 0 SControl 330)
+ata10.00: configured for UDMA/133
+Kernel panic - not syncing: stack-protector: Kernel
+ in: sata_pmp_eh_recover+0xa2b/0xa40
 
-To fix this, modify the search key before an entry is deleted from the
-attributes b-tree by copying the found entry's key into the search key,
-therefore ensuring that the correct entry gets removed from the tree.
+CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
+#49-Ubuntu
+Hardware name: System manufacturer System Product
+ 1001 12/10/2017
+Call Trace:
+dump_stack+0x63/0x8b
+panic+0xe4/0x244
+? sata_pmp_eh_recover+0xa2b/0xa40
+__stack_chk_fail+0x19/0x20
+sata_pmp_eh_recover+0xa2b/0xa40
+? ahci_do_softreset+0x260/0x260 [libahci]
+? ahci_do_hardreset+0x140/0x140 [libahci]
+? ata_phys_link_offline+0x60/0x60
+? ahci_stop_engine+0xc0/0xc0 [libahci]
+sata_pmp_error_handler+0x22/0x30
+ahci_error_handler+0x45/0x80 [libahci]
+ata_scsi_port_error_handler+0x29b/0x770
+? ata_scsi_cmd_error_handler+0x101/0x140
+ata_scsi_error+0x95/0xd0
+? scsi_try_target_reset+0x90/0x90
+scsi_error_handler+0xd0/0x5b0
+kthread+0x121/0x140
+? scsi_eh_get_sense+0x200/0x200
+? kthread_create_worker_on_cpu+0x70/0x70
+ret_from_fork+0x22/0x40
+Kernel Offset: 0xcc00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
-Signed-off-by: Simon Gander <simon@tuxera.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
+set, sata_pmp_eh_recover() continues to run. During retry it triggers
+the stack protector.
+
+Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
+jump to pmp_fail directly.
+
+BugLink: https://bugs.launchpad.net/bugs/1821434
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/hfsplus/attributes.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/ata/libata-pmp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -292,6 +292,10 @@ static int __hfsplus_delete_attr(struct
- 		return -ENOENT;
+--- a/drivers/ata/libata-pmp.c
++++ b/drivers/ata/libata-pmp.c
+@@ -764,6 +764,7 @@ static int sata_pmp_eh_recover_pmp(struc
+ 
+ 	if (dev->flags & ATA_DFLAG_DETACH) {
+ 		detach = 1;
++		rc = -ENODEV;
+ 		goto fail;
  	}
  
-+	/* Avoid btree corruption */
-+	hfs_bnode_read(fd->bnode, fd->search_key,
-+			fd->keyoffset, fd->keylength);
-+
- 	err = hfs_brec_remove(fd);
- 	if (err)
- 		return err;
 
 
