@@ -2,188 +2,273 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FA4C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F953C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FED92072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587517059;
-	bh=yF4IerkwF4biRl+OADsB8mxTEQrEvoTbOOESw96+zJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oOYKCFiAOeohteeCME1UZRQp1YMOWLTz4Ih3gSxUATmuEr9vC+wjKWhVzX7XtXRP6
-	 dmPaLMoK0lwm3+AdqxYuobpJEVBVx0ZbYT2M4vgeMWp/5Ee5nqvIwsNbqno7VRb91R
-	 nDDao9xG/SNGbb7Ym148HUSXdbKiw9O0QL7jY5g4=
+	by mail.kernel.org (Postfix) with ESMTP id 46A2820724
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:58:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Nkp7AL3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgDVA5i (ORCPT
+        id S1726446AbgDVA6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:57:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgDVA5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:57:38 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43952071E;
-        Wed, 22 Apr 2020 00:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587517057;
-        bh=yF4IerkwF4biRl+OADsB8mxTEQrEvoTbOOESw96+zJs=;
+        Tue, 21 Apr 2020 20:58:49 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52380 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgDVA6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:58:49 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ED71C528;
+        Wed, 22 Apr 2020 02:58:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587517126;
+        bh=GL4iZFSEcfpbOXWl+e6jnH7WplIr76A9hadrF+fnCks=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2LUpyG58mgT4D1es6Tuosf3vm8FN9eZ1fsiKVDO4vo3Rk2cfeBjFrVyRYJOwFBgL8
-         bhJIdS1dRXWrj03h8H9GygWayv3vdavMgibz/qfEuLpMZoJ7B5BgV5smmaE68sXTUt
-         /s5ZTXjuCQmg+JLBCYSd/OWDOpklIBKORt/zmiSo=
-Date:   Tue, 21 Apr 2020 20:57:35 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Haren Myneni <haren@us.ibm.com>, Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH AUTOSEL 5.4 52/84] linux/bits.h: add compile time sanity
- check of GENMASK inputs
-Message-ID: <20200422005735.GW1809@sasha-vm>
-References: <20200415114442.14166-1-sashal@kernel.org>
- <20200415114442.14166-52-sashal@kernel.org>
- <20200415194032.GA935@rikard>
+        b=Nkp7AL3qf+WJ0/uiwRQyf5dErVbNJSKmwtqyJY4uzp+IuPnFMdXQ0vc5f51lrwBs9
+         cexIQuzE1gofUnKZs6vUAXExBIT2BsL4TL/0AzfOcA3aaqNTQw4Rw8gArr0mrlQP7u
+         rhC9X+pXLMTc+NkTvpx7e5xaD0UjXz9dJ/o9UeSY=
+Date:   Wed, 22 Apr 2020 03:58:32 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>, kernel@collabora.com,
+        linux-stm32@st-md-mailman.stormreply.com, linux-imx@nxp.com,
+        Rob Herring <robh@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v7 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+Message-ID: <20200422005832.GK5983@pendragon.ideasonboard.com>
+References: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
+ <20200421161610.1501827-6-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200415194032.GA935@rikard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200421161610.1501827-6-adrian.ratiu@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 09:40:32PM +0200, Rikard Falkeborn wrote:
->On Wed, Apr 15, 2020 at 07:44:09AM -0400, Sasha Levin wrote:
->> From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
->>
->> [ Upstream commit 295bcca84916cb5079140a89fccb472bb8d1f6e2 ]
->>
->> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
->> the first argument and the low bit as the second argument.  Mixing them
->> will return a mask with zero bits set.
->>
->> Recent commits show getting this wrong is not uncommon, see e.g.  commit
->> aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
->> 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
->>
->> To prevent such mistakes from appearing again, add compile time sanity
->> checking to the arguments of GENMASK() and GENMASK_ULL().  If both
->> arguments are known at compile time, and the low bit is higher than the
->> high bit, break the build to detect the mistake immediately.
->>
->> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
->> instead of BUILD_BUG_ON().
->>
->> __builtin_constant_p does not evaluate is argument, it only checks if it
->> is a constant or not at compile time, and __builtin_choose_expr does not
->> evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
->> does only evaluate x++ once.
->>
->> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
->> available in assembly") made the macros in linux/bits.h available in
->> assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
->> checks if the file is included in an asm file.
->>
->> Due to bugs in GCC versions before 4.9 [0], disable the check if building
->> with a too old GCC compiler.
->>
->> [0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
->>
->> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
->> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->> Reviewed-by: Kees Cook <keescook@chromium.org>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->> Cc: Haren Myneni <haren@us.ibm.com>
->> Cc: Joe Perches <joe@perches.com>
->> Cc: Johannes Berg <johannes@sipsolutions.net>
->> Cc: lkml <linux-kernel@vger.kernel.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
->> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  include/linux/bits.h | 22 ++++++++++++++++++++--
->>  1 file changed, 20 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/bits.h b/include/linux/bits.h
->> index 669d69441a625..f108302a3121c 100644
->> --- a/include/linux/bits.h
->> +++ b/include/linux/bits.h
->> @@ -18,12 +18,30 @@
->>   * position @h. For example
->>   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
->>   */
->> -#define GENMASK(h, l) \
->> +#if !defined(__ASSEMBLY__) && \
->> +	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
->> +#include <linux/build_bug.h>
->> +#define GENMASK_INPUT_CHECK(h, l) \
->> +	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
->> +		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
->> +#else
->> +/*
->> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
->> + * disable the input check if that is the case.
->> + */
->> +#define GENMASK_INPUT_CHECK(h, l) 0
->> +#endif
->> +
->> +#define __GENMASK(h, l) \
->>  	(((~UL(0)) - (UL(1) << (l)) + 1) & \
->>  	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
->> +#define GENMASK(h, l) \
->> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
->>
->> -#define GENMASK_ULL(h, l) \
->> +#define __GENMASK_ULL(h, l) \
->>  	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
->>  	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
->> +#define GENMASK_ULL(h, l) \
->> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
->>
->>  #endif	/* __LINUX_BITS_H */
->> --
->> 2.20.1
->>
->
->This does not really fix anything, it's compile time prevention, so I
->don't know how appropriate this is for stable (it was also picked for
->5.5 and 5.6, but I'm just replying here now, I can ping the other
->selections if necessary if the patch should be dropped)?
->
->Also, for 5.4, it does somewhat depend on commit 8788994376d8
->("linux/build_bug.h: change type to int"). Without it, there may be a
->subtle integer promotion issue if sizeof(size_t) > sizeof(unsigned long)
->(I don't *think* such platform exists, but I don't have a warm a fuzzy
->feeling about it).
+Hi Adrian,
 
-I'll drop it from this selection, but ideally I'd like to have it in.
+Thank you for the patch.
 
-The codebase is different between Linus's tree and the stable trees, and
-I'm worried that some of these GENMASK issues were fixed upstream and
-not in the stable trees. Getting this patch back would help us fix those
-with minimal risk.
+On Tue, Apr 21, 2020 at 07:16:07PM +0300, Adrian Ratiu wrote:
+> This provides an example DT binding for the MIPI DSI host controller
+> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: devicetree@vger.kernel.org
+> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes since v6:
+>   - Added ref to the newly created snps,dw-mipi-dsi.yaml (Laurent)
+>   - Moved *-cells properties outside patternProperties (Laurent)
+>   - Removed the panel port documentation (Laurent)
+>   - Wrapped lines at 80 chars, typo fixes, sort includes (Laurent)
+> 
+> Changes since v5:
+>   - Fixed missing reg warning (Fabio)
+>   - Updated dt-schema and fixed warnings (Rob)
+> 
+> Changes since v4:
+>   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
+>   and addressed received binding feedback (Rob)
+> 
+> Changes since v3:
+>   - Added commit message (Neil)
+>   - Converted to yaml format (Neil)
+>   - Minor dt node + driver fixes (Rob)
+>   - Added small panel example to the host controller binding
+> 
+> Changes since v2:
+>   - Fixed commit tags (Emil)
+> ---
+>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 135 ++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> new file mode 100644
+> index 0000000000000..b73e3ae33a852
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX6 DW MIPI DSI Host Controller
+> +
+> +maintainers:
+> +  - Adrian Ratiu <adrian.ratiu@collabora.com>
+> +
+> +description: |
+> +  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
+> +  IP block with a companion PHY IP.
+> +
+> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
+> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
+> +  the following device-specific properties.
+> +
+> +allOf:
+> +  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
+> +
+> +properties:
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  compatible:
+> +    items:
+> +      - const: fsl,imx6q-mipi-dsi
+> +      - const: snps,dw-mipi-dsi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module Clock
+> +      - description: DSI bus clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: pclk
+> +
+> +  fsl,gpr:
+> +    description:
+> +      Phandle to the iomuxc-gpr region containing the multiplexer ctrl register.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description:
+> +          DSI input port node, connected to the ltdc rgb output port.
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          RGB output port node, connected to a panel or a bridge input port.
+
+Isn't it the other way around, doesn't the bridge take RGB input and
+output DSI ? And to be precise, it's not about RGB, but about the input
+being parallel interface (DSI will also carry RGB).
+
+I would add
+
+    required:
+      - port@0
+      - port@1
+
+
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  "^panel@[0-3]$":
+> +    type: object
+> +
+> +required:
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - ports
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    dsi: dsi@21e0000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
+> +        reg = <0x021e0000 0x4000>;
+> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+> +        fsl,gpr = <&gpr>;
+> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
+> +        clock-names = "ref", "pclk";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+
+port@0 is missing.
+
+> +            port@1 {
+> +                reg = <1>;
+> +                dsi_out: endpoint {
+> +                    remote-endpoint = <&panel_in>;
+> +                };
+> +            };
+> +        };
+> +
+> +        panel@0 {
+> +            compatible = "sharp,ls032b3sx01";
+> +            reg = <0>;
+> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                port@0 {
+> +                    reg = <0>;
+> +                    panel_in: endpoint {
+> +                        remote-endpoint = <&dsi_out>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
 
 -- 
-Thanks,
-Sasha
+Regards,
+
+Laurent Pinchart
