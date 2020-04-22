@@ -2,104 +2,111 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19BEC5518E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9CEC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB978206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483FE206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="bq86XvJQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bpp8EBJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgDVH4K (ORCPT
+        id S1726389AbgDVH4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726030AbgDVH4J (ORCPT
+        Wed, 22 Apr 2020 03:56:45 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57958 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgDVH4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:56:09 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D32DC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:56:09 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id g16so820427eds.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z1biaZy6y7PqsHY/+KktbP6zQiSCk/Tgyi9hv1rSztM=;
-        b=bq86XvJQnxv50SBPGcKLs3Fr8gh99Hv1Y4lzJCnHBgVuYJVbw6RrjrVKfGtFku6EZG
-         kO4dXzupMYLoia0Lmt+RHfv1Xuu9JA4Y2Vmd3a8UrJgbKKxBUsTKJGojbSu5aJgfhEmo
-         5EM4zr0i3Guzu9oLNTActfb698GxdY2nsEaBs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z1biaZy6y7PqsHY/+KktbP6zQiSCk/Tgyi9hv1rSztM=;
-        b=HrcHBp90vGOzRJ1rICgx1dWvDcTRGBnXCwv0msCZMmHs6XmKzcSz1iQet1t8HEs07q
-         eWLWwcqDoZX3tIwudcfrt3jxnZ9tDnuzz2I24ZnoIXIkbXq/m+YhpjGxnrOBGqfKFuGm
-         cWfSe2xGSqJFgXD4gtlFwpDx/7x/u1btdZfni52FlALv+YRPIZWM46rbYXwa0NjL2bsb
-         yE/UW+iStIiKfAuOGgR+DrnpIPuKi+Qpyonz0F6e6j/R0sMr9Vf0BXIfAQfx0hZCQ3OJ
-         /d16SsslV3U8vvBxRFPyVXAUZal5dgm+221xiWteMYNYobtbH7+t3Pq0gRFQO9Cer0AC
-         nHnw==
-X-Gm-Message-State: AGi0PuZez7J7bm5wUZA3YwFFos6zjd3Bnym9WFdzIe7V/o2zrargzjnK
-        paCKGK5Q9GDRxN3hOTEIT0aYQ2Vax3r8n6fAoiCQxA==
-X-Google-Smtp-Source: APiQypK9NkZBpfIRxtVZgJkwWgqgZC5WwR3a2fRu7Zp4jUgGSYA2Xwz4zVEf0igsy8uL0etsgNy6Z5nE2u7gSECiDNk=
-X-Received: by 2002:a05:6402:22ed:: with SMTP id dn13mr21651703edb.212.1587542168000;
- Wed, 22 Apr 2020 00:56:08 -0700 (PDT)
+        Wed, 22 Apr 2020 03:56:45 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03M7ubO6066220;
+        Wed, 22 Apr 2020 02:56:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587542197;
+        bh=20AKh3G777jQFV57EX4UtFeCp7GDZMZq/5EgmU1NXL8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Bpp8EBJE4ahCgNIXCcNZzdAxhLeuDYXiuLRfSKvXjD9kE9RzPVGxACBpCSbEhpInW
+         d0OlYcECAif/vO/MYWsgbdKhM2o7ShEJIqrmRD+jzURcfFHDny1bb09xAOzmg2tDqe
+         6PEkmH8DDdIF6ztQ3AfAcOcSDtthMZhj22zLhoD8=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03M7ubID092056;
+        Wed, 22 Apr 2020 02:56:37 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Apr 2020 02:56:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Apr 2020 02:56:37 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03M7uYD8041618;
+        Wed, 22 Apr 2020 02:56:35 -0500
+Subject: Re: [PATCH v2] PCI: endpoint: functions/pci-epf-test: Avoid DMA
+ release when DMA is unsupported
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587540287-10458-1-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <95116fe1-7908-1948-9f1e-bf4c8b5f2e2d@ti.com>
+Date:   Wed, 22 Apr 2020 13:26:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <cover.1587531463.git.josh@joshtriplett.org> <9873b8bd7d14ff8cd2a5782b434b39f076679eeb.1587531463.git.josh@joshtriplett.org>
- <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
-In-Reply-To: <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 22 Apr 2020 09:55:56 +0200
-Message-ID: <CAJfpegt=xe-8AayW2i3AYrk3q-=Pp_A+Hctsk+=sXoMed5hFQA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] fs: openat2: Extend open_how to allow
- userspace-selected fds
-To:     Michael Kerrisk <mtk.manpages@gmail.com>
-Cc:     Josh Triplett <josh@joshtriplett.org>, io-uring@vger.kernel.org,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1587540287-10458-1-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 8:06 AM Michael Kerrisk (man-pages)
-<mtk.manpages@gmail.com> wrote:
->
-> [CC += linux-api]
->
-> On Wed, 22 Apr 2020 at 07:20, Josh Triplett <josh@joshtriplett.org> wrote:
-> >
-> > Inspired by the X protocol's handling of XIDs, allow userspace to select
-> > the file descriptor opened by openat2, so that it can use the resulting
-> > file descriptor in subsequent system calls without waiting for the
-> > response to openat2.
-> >
-> > In io_uring, this allows sequences like openat2/read/close without
-> > waiting for the openat2 to complete. Multiple such sequences can
-> > overlap, as long as each uses a distinct file descriptor.
+Hi Kunihiko,
 
-If this is primarily an io_uring feature, then why burden the normal
-openat2 API with this?
+On 4/22/2020 12:54 PM, Kunihiko Hayashi wrote:
+> When unbinding pci_epf_test, pci_epf_test_clean_dma_chan() is called in
+> pci_epf_test_unbind() even though epf_test->dma_supported is false.
+> As a result, dma_release_channel() will occur null pointer access because
+> dma_chan isn't set.
+> 
+> This avoids calling dma_release_channel() if epf_test->dma_supported
+> is false.
+> 
+> Fixes: a1d105d4ab8e ("PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer data")
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-Add this flag to the io_uring API, by all means.
+Thank you for fixing this.
 
-This would also allow Implementing a private fd table for io_uring.
-I.e. add a flag interpreted by file ops (IORING_PRIVATE_FD), including
-openat2 and freely use the private fd space without having to worry
-about interactions with other parts of the system.
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-Thanks,
-Miklos
+Regards
+Kishon
+
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 60330f3e..c89a956 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -187,6 +187,9 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+>   */
+>  static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
+>  {
+> +	if (!epf_test->dma_supported)
+> +		return;
+> +
+>  	dma_release_channel(epf_test->dma_chan);
+>  	epf_test->dma_chan = NULL;
+>  }
+> 
