@@ -7,42 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7021C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58061C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4E620781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B99A20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgDVWZN (ORCPT
+        id S1726908AbgDVWZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
+        Wed, 22 Apr 2020 18:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726161AbgDVWZE (ORCPT
+        by vger.kernel.org with ESMTP id S1726735AbgDVWZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:25:04 -0400
+        Wed, 22 Apr 2020 18:25:07 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBF1C03C1A9;
-        Wed, 22 Apr 2020 15:25:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C291FC03C1AA;
+        Wed, 22 Apr 2020 15:25:07 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRNnV-0001RO-7L; Thu, 23 Apr 2020 00:24:50 +0200
+        id 1jRNna-0001Tu-Tg; Thu, 23 Apr 2020 00:24:56 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 612751C04D1;
-        Thu, 23 Apr 2020 00:24:45 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 22:24:44 -0000
-From:   "tip-bot2 for Sami Tolvanen" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0C87F1C0813;
+        Thu, 23 Apr 2020 00:24:50 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 22:24:49 -0000
+From:   "tip-bot2 for Julien Thierry" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Use sh_info to find the base for .rela sections
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+Subject: [tip: objtool/core] objtool: Use arch specific values in restore_reg()
+Cc:     Raphael Gault <raphael.gault@arm.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158759428485.28353.15005772572257518607.tip-bot2@tip-bot2>
+Message-ID: <158759428931.28353.13335784773110278925.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,40 +60,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     e2ccbff8f02d6b140b8ee71108264686c19b1c78
-Gitweb:        https://git.kernel.org/tip/e2ccbff8f02d6b140b8ee71108264686c19b1c78
-Author:        Sami Tolvanen <samitolvanen@google.com>
-AuthorDate:    Tue, 21 Apr 2020 11:25:01 -07:00
+Commit-ID:     da99afd93ae2dfbe99b1989b86b38b3f6976ee27
+Gitweb:        https://git.kernel.org/tip/da99afd93ae2dfbe99b1989b86b38b3f6976ee27
+Author:        Julien Thierry <jthierry@redhat.com>
+AuthorDate:    Fri, 27 Mar 2020 15:28:43 
 Committer:     Josh Poimboeuf <jpoimboe@redhat.com>
-CommitterDate: Tue, 21 Apr 2020 18:49:15 -05:00
+CommitterDate: Tue, 14 Apr 2020 10:39:25 -05:00
 
-objtool: Use sh_info to find the base for .rela sections
+objtool: Use arch specific values in restore_reg()
 
-ELF doesn't require .rela section names to match the base section. Use
-the section index in sh_info to find the section instead of looking it
-up by name.
+The initial register state is set up by arch specific code. Use the
+value the arch code has set when restoring registers from the stack.
 
-LLD, for example, generates a .rela section that doesn't match the base
-section name when we merge sections in a linker script for a binary
-compiled with -ffunction-sections.
-
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Suggested-by: Raphael Gault <raphael.gault@arm.com>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- tools/objtool/elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/check.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index c4857fa..c20dfe1 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -468,7 +468,7 @@ static int read_relas(struct elf *elf)
- 		if (sec->sh.sh_type != SHT_RELA)
- 			continue;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 34b3d7b..5044f4c 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1504,8 +1504,8 @@ static void save_reg(struct insn_state *state, unsigned char reg, int base,
  
--		sec->base = find_section_by_name(elf, sec->name + 5);
-+		sec->base = find_section_by_index(elf, sec->sh.sh_info);
- 		if (!sec->base) {
- 			WARN("can't find base section for rela section %s",
- 			     sec->name);
+ static void restore_reg(struct insn_state *state, unsigned char reg)
+ {
+-	state->regs[reg].base = CFI_UNDEFINED;
+-	state->regs[reg].offset = 0;
++	state->regs[reg].base = initial_func_cfi.regs[reg].base;
++	state->regs[reg].offset = initial_func_cfi.regs[reg].offset;
+ }
+ 
+ /*
