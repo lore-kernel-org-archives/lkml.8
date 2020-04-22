@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0DCC5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821B6C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E752073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED912075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551471;
-	bh=mHI9eyVLwiMuBtKcYBlu4Th72kzE+NJHQ4mxUFyM80E=;
+	s=default; t=1587551473;
+	bh=DB1F7DmshMsLEY2YqueSwvxRlGpbDWkuaDaxP+9e9Q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fkzYSJeItMJwnP37gn3silplz/++4WimqQNRx1L9BCDKWi1gPbxFh8byfzMsAcmkX
-	 JXQzhsSweab4BWUUb/F+LRPLqWcMjwqI5wEUGimfAjwfLDVcBT/2ZBA5vEK6M3W418
-	 gOjdx29NjSOnTLc06F8GD+iM7ulNL3ShIESOZjBE=
+	b=D8G4yPxVIwCmcZVaOLbk5vfD4s/E8AuBF4pJGB0MgskMV41eCWgzzlkVKjjYMQgkI
+	 hL0TQnSVZVugavDXteG7c78hpeuD6GTrAY1uVB7GS82ece8BNlll32BtICrdtJENZQ
+	 tIIUv+cRZ7llS1958ULRou+Ols6+YCKg0BpqcuHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbgDVK0T (ORCPT
+        id S1730996AbgDVKbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730688AbgDVK0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:26:13 -0400
+        id S1730707AbgDVK0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:26:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E4920781;
-        Wed, 22 Apr 2020 10:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 610E32071E;
+        Wed, 22 Apr 2020 10:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551172;
-        bh=mHI9eyVLwiMuBtKcYBlu4Th72kzE+NJHQ4mxUFyM80E=;
+        s=default; t=1587551177;
+        bh=DB1F7DmshMsLEY2YqueSwvxRlGpbDWkuaDaxP+9e9Q0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRhSN7KEWRACZHh5jbd73JnPKgyNvYrJeJ6DWM4E+n+qyHVWHNuN1JyPwrj9fThsp
-         elGPHywaHbh0P1k9o3ESF6RcMcOOhLivXAwQ/SZvIWCp1SqVqdcSth/VW3hr+bUk3m
-         ofwsA33YFFJNA+KqVBGq875l4xE+uSVzqZYApFuo=
+        b=2jPnZu9EM4dbMU4Qtsg1QCq+prqg5KBIshWGyjJhSZVqohRO2N0fNyexVuH27uP32
+         nX4oJ11I4BXWOhjTwNMKZF9TIAiLL0ZjAzyWKJAF0EYSe/dK5c2VtMnRiQtWc6i09g
+         1lZDNgYAYHu5v7x1WU9oQsoRydZ5KuVLpHc4oELE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 131/166] ext2: fix empty body warnings when -Wextra is used
-Date:   Wed, 22 Apr 2020 11:57:38 +0200
-Message-Id: <20200422095102.480750890@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 132/166] f2fs: fix to account compressed blocks in f2fs_compressed_blocks()
+Date:   Wed, 22 Apr 2020 11:57:39 +0200
+Message-Id: <20200422095102.577168876@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,55 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 44a52022e7f15cbaab957df1c14f7a4f527ef7cf ]
+[ Upstream commit 1a67cbe141cf991af252a88143d0fd975be2d9e7 ]
 
-When EXT2_ATTR_DEBUG is not defined, modify the 2 debug macros
-to use the no_printk() macro instead of <nothing>.
-This fixes gcc warnings when -Wextra is used:
+por_fsstress reports inconsistent status in orphan inode, the root cause
+of this is in f2fs_write_raw_pages() we decrease i_compr_blocks incorrectly
+due to wrong calculation in f2fs_compressed_blocks().
 
-../fs/ext2/xattr.c:252:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../fs/ext2/xattr.c:258:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../fs/ext2/xattr.c:330:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
-../fs/ext2/xattr.c:872:45: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+So this patch exposes below two functions based on __f2fs_cluster_blocks:
+- f2fs_compressed_blocks: get count of compressed blocks in compressed cluster
+- f2fs_cluster_blocks: get count of valid blocks (including reserved blocks)
+in compressed cluster.
 
-I have verified that the only object code change (with gcc 7.5.0) is
-the reversal of some instructions from 'cmp a,b' to 'cmp b,a'.
+Then use f2fs_compress_blocks() to get correct compressed blocks count in
+f2fs_write_raw_pages().
 
-Link: https://lore.kernel.org/r/e18a7395-61fb-2093-18e8-ed4f8cf56248@infradead.org
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jan Kara <jack@suse.com>
-Cc: linux-ext4@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
+sanity_check_inode: inode (ino=ad80) hash inconsistent i_compr_blocks:2, i_blocks:1, run fsck to fix
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext2/xattr.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/f2fs/compress.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
-index 0456bc990b5ee..b91f99d9482e9 100644
---- a/fs/ext2/xattr.c
-+++ b/fs/ext2/xattr.c
-@@ -56,6 +56,7 @@
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index ad8e25a1fbc26..11b13b881ada5 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -536,8 +536,7 @@ static bool __cluster_may_compress(struct compress_ctx *cc)
+ 	return true;
+ }
  
- #include <linux/buffer_head.h>
- #include <linux/init.h>
-+#include <linux/printk.h>
- #include <linux/slab.h>
- #include <linux/mbcache.h>
- #include <linux/quotaops.h>
-@@ -84,8 +85,8 @@
- 		printk("\n"); \
- 	} while (0)
- #else
--# define ea_idebug(f...)
--# define ea_bdebug(f...)
-+# define ea_idebug(inode, f...)	no_printk(f)
-+# define ea_bdebug(bh, f...)	no_printk(f)
- #endif
+-/* return # of compressed block addresses */
+-static int f2fs_compressed_blocks(struct compress_ctx *cc)
++static int __f2fs_cluster_blocks(struct compress_ctx *cc, bool compr)
+ {
+ 	struct dnode_of_data dn;
+ 	int ret;
+@@ -560,8 +559,13 @@ static int f2fs_compressed_blocks(struct compress_ctx *cc)
  
- static int ext2_xattr_set2(struct inode *, struct buffer_head *,
+ 			blkaddr = datablock_addr(dn.inode,
+ 					dn.node_page, dn.ofs_in_node + i);
+-			if (blkaddr != NULL_ADDR)
+-				ret++;
++			if (compr) {
++				if (__is_valid_data_blkaddr(blkaddr))
++					ret++;
++			} else {
++				if (blkaddr != NULL_ADDR)
++					ret++;
++			}
+ 		}
+ 	}
+ fail:
+@@ -569,6 +573,18 @@ static int f2fs_compressed_blocks(struct compress_ctx *cc)
+ 	return ret;
+ }
+ 
++/* return # of compressed blocks in compressed cluster */
++static int f2fs_compressed_blocks(struct compress_ctx *cc)
++{
++	return __f2fs_cluster_blocks(cc, true);
++}
++
++/* return # of valid blocks in compressed cluster */
++static int f2fs_cluster_blocks(struct compress_ctx *cc, bool compr)
++{
++	return __f2fs_cluster_blocks(cc, false);
++}
++
+ int f2fs_is_compressed_cluster(struct inode *inode, pgoff_t index)
+ {
+ 	struct compress_ctx cc = {
+@@ -578,7 +594,7 @@ int f2fs_is_compressed_cluster(struct inode *inode, pgoff_t index)
+ 		.cluster_idx = index >> F2FS_I(inode)->i_log_cluster_size,
+ 	};
+ 
+-	return f2fs_compressed_blocks(&cc);
++	return f2fs_cluster_blocks(&cc, false);
+ }
+ 
+ static bool cluster_may_compress(struct compress_ctx *cc)
+@@ -627,7 +643,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 	bool prealloc;
+ 
+ retry:
+-	ret = f2fs_compressed_blocks(cc);
++	ret = f2fs_cluster_blocks(cc, false);
+ 	if (ret <= 0)
+ 		return ret;
+ 
 -- 
 2.20.1
 
