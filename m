@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C840C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795D1C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E19220787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B85A20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549714;
-	bh=UhxRCud9eERBVQJgTbhJkRu2qnYOAzM72Fx3bVmz4As=;
+	s=default; t=1587549718;
+	bh=K/G1Ol3Qn2eJB/T6A0kj+OvSzOLbRHOEM+bWIrOdrnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmP3a/awCAuPzMOmbs9oqrNmxB97HyHYHRGrTAlmJXm9RhGV6inJ4B8Tey3Tvh0I2
-	 uy89R/HyKb9YS1676r05MQW5gCOXwXUdkz+k+rCPfemSWBepSjPpzbG4/5IfHr2LHZ
-	 5aspz9S9PZq1PitCY40CRVU6gHoMi5HG9qFhyi1Q=
+	b=CxhuF767Z5leWzSG2d3Rs839XuJKkHtlVfm+nsZwZVx9IuP+zx768iqeh4L5jvkBn
+	 yCRn/aULsl8veI0j2GMCJnfRpavtDZnxd6XcdG6hgihnZN8Xo+93dmQ97kVxj7Xc+O
+	 9woZZZJGuu61WTvRLOuyYY1rliK+WaF2nXr9ZRhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgDVKBx (ORCPT
+        id S1726911AbgDVKB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50506 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726881AbgDVKBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:49 -0400
+        id S1726889AbgDVKBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17A1020857;
-        Wed, 22 Apr 2020 10:01:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F7962084D;
+        Wed, 22 Apr 2020 10:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549708;
-        bh=UhxRCud9eERBVQJgTbhJkRu2qnYOAzM72Fx3bVmz4As=;
+        s=default; t=1587549711;
+        bh=K/G1Ol3Qn2eJB/T6A0kj+OvSzOLbRHOEM+bWIrOdrnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAtCtOwexHSpqjrw0tUKgvvnuXdfNWKoeC5YzGLIOCrDz/2FaKU07yktFNmmpahEm
-         imgCuqnX+gYO6yWW6KvRzAfVOK4h8ew9WpCtDQl1QaqtocY457lKv1JIHpEvdGvf6W
-         EOGJClEvbTWR+wDJcNi1TXg7djy/qeI09OmzwBCs=
+        b=NAwQcOs5EI61zwAIzY+gJRYEW13bJirBddOWR6DgUJHcyV51OkghEM6eh2UMLmNVx
+         dVFvnlT+kpux1ged8iHkC2RYhgRaHNlQEKojHfLCaFiuDhVEP3h9jDiB4LRtuGekAo
+         r/O9eggixDnL/tqdUNz0ttXfXmxuqPISgFOf9/gA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Moriarty <joe.moriarty@oracle.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Hamad Kadmany <hkadmany@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.4 075/100] drm: NULL pointer dereference [null-pointer-deref] (CWE 476) problem
-Date:   Wed, 22 Apr 2020 11:56:45 +0200
-Message-Id: <20200422095036.630899224@linuxfoundation.org>
+Subject: [PATCH 4.4 076/100] wil6210: increase firmware ready timeout
+Date:   Wed, 22 Apr 2020 11:56:46 +0200
+Message-Id: <20200422095036.785246209@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -61,46 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Moriarty <joe.moriarty@oracle.com>
+From: Hamad Kadmany <hkadmany@codeaurora.org>
 
-commit 22a07038c0eaf4d1315a493ce66dcd255accba19 upstream.
+[ Upstream commit 6ccae584014ef7074359eb4151086beef66ecfa9 ]
 
-The Parfait (version 2.1.0) static code analysis tool found the
-following NULL pointer derefernce problem.
+Firmware ready event may take longer than
+current timeout in some scenarios, for example
+with multiple RFs connected where each
+requires an initial calibration.
 
-- drivers/gpu/drm/drm_dp_mst_topology.c
-The call to drm_dp_calculate_rad() in function drm_dp_port_setup_pdt()
-could result in a NULL pointer being returned to port->mstb due to a
-failure to allocate memory for port->mstb.
+Increase the timeout to support these scenarios.
 
-Signed-off-by: Joe Moriarty <joe.moriarty@oracle.com>
-Reviewed-by: Steven Sistare <steven.sistare@oracle.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180212195144.98323-3-joe.moriarty@oracle.com
+Signed-off-by: Hamad Kadmany <hkadmany@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/wil6210/main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -1036,10 +1036,12 @@ static bool drm_dp_port_setup_pdt(struct
- 		lct = drm_dp_calculate_rad(port, rad);
+--- a/drivers/net/wireless/ath/wil6210/main.c
++++ b/drivers/net/wireless/ath/wil6210/main.c
+@@ -741,7 +741,7 @@ static void wil_bl_crash_info(struct wil
  
- 		port->mstb = drm_dp_add_mst_branch_device(lct, rad);
--		port->mstb->mgr = port->mgr;
--		port->mstb->port_parent = port;
-+		if (port->mstb) {
-+			port->mstb->mgr = port->mgr;
-+			port->mstb->port_parent = port;
+ static int wil_wait_for_fw_ready(struct wil6210_priv *wil)
+ {
+-	ulong to = msecs_to_jiffies(1000);
++	ulong to = msecs_to_jiffies(2000);
+ 	ulong left = wait_for_completion_timeout(&wil->wmi_ready, to);
  
--		send_link = true;
-+			send_link = true;
-+		}
- 		break;
- 	}
- 	return send_link;
+ 	if (0 == left) {
 
 
