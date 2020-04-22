@@ -2,83 +2,134 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA9DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6E0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB45F2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452E82076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hYv6h7G1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RFUf9SlO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgDVSp0 (ORCPT
+        id S1726522AbgDVSrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:45:26 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42279 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVSp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:45:26 -0400
-Received: from hanvin-mobl2.amr.corp.intel.com ([134.134.139.76])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 03MIi1bp1756663
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 22 Apr 2020 11:44:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 03MIi1bp1756663
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020032201; t=1587581047;
-        bh=dIQ0s7CSMK1UKyQ0AWlyM0gbBVakPmljyV3eEPda8bM=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=hYv6h7G1OIqP2oGYDKFgihUJ7y1uBmklu81bwutsUBYb5uLTqvrf9EdHSior/oD0i
-         DVy/dJw6Pf1/mu6noDD+0raFOhCGDpUZLNx3DiB2urI3khadAf120qbLu9iGwHpT6w
-         bRXeNpyQOuyk5F3yT41bDsH9/KBdYPSSlF9dP1iSx/u/iS/awSQ0tT5fTIev1SR1KB
-         pRtgLXoBB5nMFyjr1OyFzZl/Ay2YRjjSdZ5Z99HM86hAwGAtFMTp8iGn0TXCqyeX6L
-         DMHF+8t7dtHCgdHwKlcb9/YXGAxG3Z1xL0OqFbrP4jz0R7A7OAPsFLBmJF1M+84i9M
-         5qbMVq9zVwufQ==
-Subject: Re: [PATCH] bpf, x32: remove unneeded conversion to bool
-To:     Jason Yan <yanaijie@huawei.com>, udknight@gmail.com,
-        davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        lukenels@cs.washington.edu, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200420123727.3616-1-yanaijie@huawei.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <dff9a49b-0d00-54b0-0375-cc908289e65a@zytor.com>
-Date:   Wed, 22 Apr 2020 11:43:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 22 Apr 2020 14:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgDVSrl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:47:41 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BADC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:47:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id r14so1569314pfg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5k+yPGx/qr44nGnCycXueReY9HedaR9suO/n1V+xq9k=;
+        b=RFUf9SlO6v6pCUVmkWkRELNgk+1N3Zs9ucmPxL27YFrNXeKy55VzP5MIVle/v1F0y3
+         VD0ElDOeI+B64ryKAl8IBmi6hGumY21RHSNiRJ+uXkPlg0v39ASsZhYhhdckAR5aIvIQ
+         y6IzK01PbEzBGR8W4Uc1OHyusUmkCkOi8mYbyknc6ppZSuaCmxYlLYiNrgOsBfvtDlFG
+         en+sqwFn7adRwle5S4ucCO4m2jqY8Vy1hHFYPPXg1FSpBPP9lg+LgLwN6sJ7nciNIbCp
+         qgZm8hne2F5Mo3wOaeWsb38L0eFtVe1BHgm+KxDnMbHf+HKOEEPiDDl1nbKnRxlIUwlc
+         wISw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5k+yPGx/qr44nGnCycXueReY9HedaR9suO/n1V+xq9k=;
+        b=gTEo0tkInrMCxzRWwFP2tekElzxyCMWSDm5QnDDdd8fAvueDsDrnfx06HNpbm23gXa
+         cqC10ldQHBMTFXRvJYMazfakrh91SWpzTMAeIBTP3gJ2ykwKXVzc0iZ1iONR5vkrLLJR
+         SSd6pcpvY3RArPXluum+VfISM5RMMOpAJw80Brfg3eW40H0ExAcKTxaBIgcNaRyl4k8g
+         cd5fMl+45VVq62g0/qpIkJoez3adBUwa7l4pFpqRP/WlIZzKxrygscdlqbcTZKhuXSpI
+         DGYkp9fHShwoMxxSooaHNnJb+LWYCI6TQ0j+CMuEriigEotUSYSlKrwhvgZ1AHhVK5Hn
+         FAOA==
+X-Gm-Message-State: AGi0PubhhNZkF8ztLHfFBLKaJbTCAt9AfaucixF+ao0R2IRl9Ol2ZjY5
+        69l6kjNVLsA8ZySS1EJX1BJ14pc7MGYelEwxei71HQ==
+X-Google-Smtp-Source: APiQypIfTDLwLZ5OTQEx/9phiirzNlm3DRUesmAFFcs1aeUn+ht7YWYve7BhbFgSRDBb8i2MeRRn5DoW46yqw0GPiu8=
+X-Received: by 2002:a63:5009:: with SMTP id e9mr366799pgb.381.1587581260929;
+ Wed, 22 Apr 2020 11:47:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200420123727.3616-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
+ <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
+ <20200417190607.GY2424@tucnak> <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+ <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de> <20200422102309.GA26846@zn.tnic>
+ <20200422114007.GC20730@hirez.programming.kicks-ass.net> <20200422134924.GB26846@zn.tnic>
+ <20200422135531.GM2424@tucnak> <20a91f2e-0f25-8dba-e441-3233cc1ef398@suse.cz> <20200422165339.GE26846@zn.tnic>
+In-Reply-To: <20200422165339.GE26846@zn.tnic>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 22 Apr 2020 11:47:27 -0700
+Message-ID: <CAKwvOd=1CDhfgkcXJ1Q8bZcy0UKWFFoP4QCeCzt4OE7LTGq6yA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Matz <matz@suse.de>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-20 05:37, Jason Yan wrote:
-> The '==' expression itself is bool, no need to convert it to bool again.
-> This fixes the following coccicheck warning:
-> 
-> arch/x86/net/bpf_jit_comp32.c:1478:50-55: WARNING: conversion to bool
-> not needed here
-> arch/x86/net/bpf_jit_comp32.c:1479:50-55: WARNING: conversion to bool
-> not needed here
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  arch/x86/net/bpf_jit_comp32.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+On Wed, Apr 22, 2020 at 9:53 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Wed, Apr 22, 2020 at 04:16:53PM +0200, Martin Li=C5=A1ka wrote:
+> > And as I talked to Boris, I would recommend to come up with a "configur=
+e" check
+> > that a compiler does not optimize the key code sequence:
+> >
+> > $ cat asm-detect.c
+> > int foo(int a);
+> > int bar(int a)
+> > {
+> >   int r =3D foo(a);
+> >   asm ("");
+> >   return r;
+> > }
+> >
+> > $ gcc -O2 -c asm-detect.c -S -o/dev/stdout | grep jmp
+> > [no output]
+>
+> That is a good test to run at the beginning of the compilation I guess.
+>
+> Without the asm("") it produces:
+>
+> bar:
+> .LFB0:
+>         .cfi_startproc
+>         jmp     foo@PLT
+>         .cfi_endproc
+>
+> I'd like for LLVM folks to confirm that this is a good test for LLVM too
+> Trying that here with clang gives:
+>
+> bar:                                    # @bar
+>         .cfi_startproc
+> # %bb.0:
+>         jmp     foo                     # TAILCALL
+> .Lfunc_end0:
+>
+> so this *looks* like it would work with LLVM too but I might be missing
+> something...
 
-x32 is not i386.
 
-	-hpa
-
+LGTM https://godbolt.org/z/ExtHx7
+--=20
+Thanks,
+~Nick Desaulniers
