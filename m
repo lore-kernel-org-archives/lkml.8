@@ -2,113 +2,108 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F2FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46982C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9752098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8382098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WU6VTXSf"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="o8msrCuY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgDVTVX (ORCPT
+        id S1726772AbgDVTVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34644 "EHLO
+        Wed, 22 Apr 2020 15:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgDVTVW (ORCPT
+        by vger.kernel.org with ESMTP id S1726102AbgDVTVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:21:22 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93C6C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 12:21:22 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F0DC10061F884AD77E9675A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c100:61f8:84ad:77e9:675a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9767C1EC0D41;
-        Wed, 22 Apr 2020 21:21:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587583280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uwppnCchAiG8ZwLKxdIRMiSv5cSPYMqUKzvWQTerwHo=;
-        b=WU6VTXSf04lYkmozCkK5w5zhDZykha3Z6APpkq0CZgzMF+2U4teiuYnzU+maYFnlx6Qbrv
-        8AmuzpPScOyq8sIsCk9nwTGzABklMDoNUu1EJ3jS32gma6IXJqy5J9Tyu483Hn31cuHv1S
-        1AjAwAsCdf/beHQz5pr8WjHQjleLkUA=
-Date:   Wed, 22 Apr 2020 21:21:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200422192113.GG26846@zn.tnic>
-References: <20200417084224.GB7322@zn.tnic>
- <20200417085859.GU2424@tucnak>
- <20200417090909.GC7322@zn.tnic>
- <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
- <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
- <20200417190607.GY2424@tucnak>
- <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
- <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
- <20200422102309.GA26846@zn.tnic>
- <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
+        Wed, 22 Apr 2020 15:21:45 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B173AC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 12:21:43 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id j20so2434503edj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 12:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YxCJuKeYutDLDPXAPSEMJzIV43DxzgPvToiuGHFZFLc=;
+        b=o8msrCuYl9yzwxwdinHp/5zJ/iluTXdc1PKyO8gPAZru5AYRPBYpTv4YM7zOXc3nZ2
+         FGujQQrnudYueNgJjGfkvcAh+9/zKbk6PPZq6bKDzW6/flpD97bfMTX1npa9m0v9spXg
+         chVFpy1nyofJYumkysSQudI+cOAaRtj7pqe6tohr6PYBQvlIvsVKL0tQD9PjhghVSJiH
+         zN9nuJGnSUuENXK2lVmroUT265WhUirrk/aBSjMAScCtF3fleu1UAPyUaP4gx31qOlCk
+         QNC6+SqqfYISxB040FO1lDWibFTqu2SxfQZQxx/Mqavaf1xszxYhNDBN3QoHxy7651nB
+         FG8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YxCJuKeYutDLDPXAPSEMJzIV43DxzgPvToiuGHFZFLc=;
+        b=NubUsWqvQYddhdaGMENASJQXyUqN1T04i4xiyAuSEeTxCwOzUTSBiBkCdFygZ3eq6u
+         c7QZ2B6/1o9aLNTPAAAXaRANI+YqomM7oCnBVBEp+vpQFHnq2wqzbHYb+IbpQU3lrC3v
+         lteDcBsuRp0+c5b7XXjvYvGNRlPY5mp6VrC0ekTz4ZWUCjQS34qt6AzjpK5vFpWBZwXH
+         VUoOfpvFCKhlHqIzh04HcuKas3IUOUYgVOBL61fqDJCn+eVJElPP6ulqj3gZntiypdUn
+         5sivGD6MRPfZ+1AifldQpssXqOJbIb3RieGTmrT5j0hkmkIlC2mIyKzLObOQ+oCNjTcZ
+         rWtQ==
+X-Gm-Message-State: AGi0PubRWnc+8gnDEXZjHZXBnSo/guswsCLwfaXVc9nqadg9WP+JuhFW
+        ea/GTB/AV8dHf9RRu3UN9j1xhjvmRpdAJikRmslK
+X-Google-Smtp-Source: APiQypIvh77fUhTJY8QW3thwdXTgaIIw2VU2oQABHxAtS41WIPnpdUCvR4mja7yxyHkw8pkxV5zKKFWsvAua+tkBpBM=
+X-Received: by 2002:a50:d98b:: with SMTP id w11mr129015edj.196.1587583302343;
+ Wed, 22 Apr 2020 12:21:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200422190753.2077110-1-carnil@debian.org> <20200422191301.GA2361@lorien.valinor.li>
+In-Reply-To: <20200422191301.GA2361@lorien.valinor.li>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 22 Apr 2020 15:21:31 -0400
+Message-ID: <CAHC9VhSxMA3cjdjUt+wYFLnct835KedTL9JSRCgQsecqGs+wDQ@mail.gmail.com>
+Subject: Re: [PATCH] netlabel: Kconfig: Update reference for NetLabel Tools project
+To:     Salvatore Bonaccorso <carnil@debian.org>
+Cc:     netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 11:55:50AM -0700, Nick Desaulniers wrote:
-> Can you add by whom?  It's not clear to me which function call in
-> start_secondary modifies the stack protector guard.
+On Wed, Apr 22, 2020 at 3:13 PM Salvatore Bonaccorso <carnil@debian.org> wrote:
+> On Wed, Apr 22, 2020 at 09:07:53PM +0200, Salvatore Bonaccorso wrote:
+> > The NetLabel Tools project has moved from http://netlabel.sf.net to a
+> > GitHub. Update to directly refer to the new home for the tools.
+>
+> Oh, well s/GitHub/GitHub project/.
+>
+> >
+> > Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+> > ---
+> >  net/netlabel/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 
-How's that
+Thanks Salvatore.
 
-        /*
-         * Prevent tail call to cpu_startup_entry() because the stack protector
-         * guard has been changed a couple of functions up, in
-         * boot_init_stack_canary() and must not be checked before tail calling
-         * another function.
-         */
-        asm ("");
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-?
-
-> Another question.  Do we not want a stack protector at all in this
-> function?  I'm not super familiar with how they work; do we not want
-> them at all, or simply not to check the guard?
-
-Not to check the guard. See the beginning of
-arch/x86/include/asm/stackprotector.h about how they work.
-
-> But if we're not going to check it, I think
-> __attribute__((no_stack_protector)) applied to start_secondary might
-> be a more precise fix.
-
-No such attribute in gcc yet. But yes, this came up a bit upthread, you
-can go back in time for details. :)
-
-Thx.
+> > diff --git a/net/netlabel/Kconfig b/net/netlabel/Kconfig
+> > index 64280a1d3906..07b03c306f28 100644
+> > --- a/net/netlabel/Kconfig
+> > +++ b/net/netlabel/Kconfig
+> > @@ -14,6 +14,6 @@ config NETLABEL
+> >         Documentation/netlabel as well as the NetLabel SourceForge project
+> >         for configuration tools and additional documentation.
+> >
+> > -        * http://netlabel.sf.net
+> > +        * https://github.com/netlabel/netlabel_tools
+> >
+> >         If you are unsure, say N.
+> > --
+> > 2.26.2
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+paul moore
+www.paul-moore.com
