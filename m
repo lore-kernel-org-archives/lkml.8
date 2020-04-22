@@ -2,359 +2,142 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C25C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCACC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76BD320857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B302076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgDVW0e (ORCPT
+        id S1726161AbgDVWcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726508AbgDVWYv (ORCPT
+        Wed, 22 Apr 2020 18:32:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59432 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbgDVWcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:24:51 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECDA8C03C1A9;
-        Wed, 22 Apr 2020 15:24:50 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRNnG-0001MF-Ct; Thu, 23 Apr 2020 00:24:35 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 736021C0450;
-        Thu, 23 Apr 2020 00:24:33 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 22:24:32 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Implement noinstr validation
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416115119.106268040@infradead.org>
-References: <20200416115119.106268040@infradead.org>
+        Wed, 22 Apr 2020 18:32:00 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MM2Bau057961;
+        Wed, 22 Apr 2020 18:31:44 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmu9rm0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 18:31:44 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03MMQ2Wk028820;
+        Wed, 22 Apr 2020 18:31:43 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmu9rkys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 18:31:43 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03MMULFP011252;
+        Wed, 22 Apr 2020 22:31:42 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 30fs66vt1n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 22:31:42 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03MMVfAp18547120
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 22:31:41 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7D796A084;
+        Wed, 22 Apr 2020 22:31:39 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 643C96A067;
+        Wed, 22 Apr 2020 22:31:37 +0000 (GMT)
+Received: from oc3272150783.ibm.com (unknown [9.160.23.69])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Wed, 22 Apr 2020 22:31:37 +0000 (GMT)
+Subject: Re: [PATCH v2 08/11] perf metrics: fix parse errors in power8 metrics
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20200422220430.254014-1-irogers@google.com>
+ <20200422220430.254014-9-irogers@google.com>
+From:   Paul Clarke <pc@us.ibm.com>
+Message-ID: <70bb1987-c8cd-ecc1-a6d8-61569a83494c@us.ibm.com>
+Date:   Wed, 22 Apr 2020 17:31:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Message-ID: <158759427292.28353.10002474084884955071.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200422220430.254014-9-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_08:2020-04-22,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
+ impostorscore=0 mlxscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the objtool/core branch of tip:
+On 4/22/20 5:04 PM, Ian Rogers wrote:
+> Mismatched parentheses.
+> 
+> Fixes: dd81eafacc52 (perf vendor events power8: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/arch/powerpc/power8/metrics.json | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+> index bffb2d4a6420..ad71486a38e3 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+> @@ -169,7 +169,7 @@
+>      },
+>      {
+>          "BriefDescription": "Cycles GCT empty where dispatch was held",
+> -        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL)",
+> +        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL",
 
-Commit-ID:     1f6d80c69ef603a6b6b5b4eb8b0e77286b053702
-Gitweb:        https://git.kernel.org/tip/1f6d80c69ef603a6b6b5b4eb8b0e77286b053702
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 10 Mar 2020 18:57:41 +01:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 22 Apr 2020 23:10:07 +02:00
+OK. (Thank you!)
 
-objtool: Implement noinstr validation
+>          "MetricGroup": "cpi_breakdown",
+>          "MetricName": "gct_empty_disp_held_cpi"
+>      },
+> @@ -886,7 +886,7 @@
+>      },
+>      {
+>          "BriefDescription": "GCT slot utilization (11 to 14) as a % of cycles this thread had atleast 1 slot valid",
+> -        "MetricExpr": "PM_GCT_UTIL_11_14_ENTRIES / ( PM_RUN_CYC - PM_GCT_NOSLOT_CYC) * 100",
+> +        "MetricExpr": "PM_GCT_UTIL_11_14_ENTRIES / ( PM_RUN_CYC - PM_GCT_NOSLOT_CYC ) * 100",
 
-Validate that any call out of .noinstr.text is in between
-instr_begin() and instr_end() annotations.
+I think this is just a whitespace change?  Is it necessary?
+Curiosity, more than complaint.
 
-This annotation is useful to ensure correct behaviour wrt tracing
-sensitive code like entry/exit and idle code. When we run code in a
-sensitive context we want a guarantee no unknown code is ran.
+>          "MetricGroup": "general",
+>          "MetricName": "gct_util_11to14_slots_percent"
+>      },
 
-Since this validation relies on knowing the section of call
-destination symbols, we must run it on vmlinux.o instead of on
-individual object files.
+Reviewed-by: Paul A. Clarke <pc@us.ibm.com>
 
-Add two options:
-
- -d/--duplicate "duplicate validation for vmlinux"
- -l/--vmlinux "vmlinux.o validation"
-
-Where the latter auto-detects when objname ends with "vmlinux.o" and
-the former will force all validations, also those already done on
-!vmlinux object files.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200416115119.106268040@infradead.org
----
- tools/objtool/builtin-check.c | 11 +++-
- tools/objtool/builtin.h       |  2 +-
- tools/objtool/check.c         | 98 ++++++++++++++++++++++++++++++++++-
- tools/objtool/check.h         |  3 +-
- tools/objtool/elf.h           |  2 +-
- 5 files changed, 112 insertions(+), 4 deletions(-)
-
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 10fbe75..be42b71 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -14,10 +14,11 @@
-  */
- 
- #include <subcmd/parse-options.h>
-+#include <string.h>
- #include "builtin.h"
- #include "check.h"
- 
--bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
-+bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
- 
- static const char * const check_usage[] = {
- 	"objtool check [<options>] file.o",
-@@ -32,12 +33,14 @@ const struct option check_options[] = {
- 	OPT_BOOLEAN('b', "backtrace", &backtrace, "unwind on error"),
- 	OPT_BOOLEAN('a', "uaccess", &uaccess, "enable uaccess checking"),
- 	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
-+	OPT_BOOLEAN('d', "duplicate", &validate_dup, "duplicate validation for vmlinux.o"),
-+	OPT_BOOLEAN('l', "vmlinux", &vmlinux, "vmlinux.o validation"),
- 	OPT_END(),
- };
- 
- int cmd_check(int argc, const char **argv)
- {
--	const char *objname;
-+	const char *objname, *s;
- 
- 	argc = parse_options(argc, argv, check_options, check_usage, 0);
- 
-@@ -46,5 +49,9 @@ int cmd_check(int argc, const char **argv)
- 
- 	objname = argv[0];
- 
-+	s = strstr(objname, "vmlinux.o");
-+	if (s && !s[9])
-+		vmlinux = true;
-+
- 	return check(objname, false);
- }
-diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
-index 0b90790..85c979c 100644
---- a/tools/objtool/builtin.h
-+++ b/tools/objtool/builtin.h
-@@ -8,7 +8,7 @@
- #include <subcmd/parse-options.h>
- 
- extern const struct option check_options[];
--extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
-+extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
- 
- extern int cmd_check(int argc, const char **argv);
- extern int cmd_orc(int argc, const char **argv);
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 7e67b3c..39d1d4f 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -257,6 +257,9 @@ static int decode_instructions(struct objtool_file *file)
- 		    strncmp(sec->name, ".discard.", 9))
- 			sec->text = true;
- 
-+		if (!strcmp(sec->name, ".noinstr.text"))
-+			sec->noinstr = true;
-+
- 		for (offset = 0; offset < sec->len; offset += insn->len) {
- 			insn = malloc(sizeof(*insn));
- 			if (!insn) {
-@@ -1356,6 +1359,53 @@ static int read_retpoline_hints(struct objtool_file *file)
- 	return 0;
- }
- 
-+static int read_instr_hints(struct objtool_file *file)
-+{
-+	struct section *sec;
-+	struct instruction *insn;
-+	struct rela *rela;
-+
-+	sec = find_section_by_name(file->elf, ".rela.discard.instr_end");
-+	if (!sec)
-+		return 0;
-+
-+	list_for_each_entry(rela, &sec->rela_list, list) {
-+		if (rela->sym->type != STT_SECTION) {
-+			WARN("unexpected relocation symbol type in %s", sec->name);
-+			return -1;
-+		}
-+
-+		insn = find_insn(file, rela->sym->sec, rela->addend);
-+		if (!insn) {
-+			WARN("bad .discard.instr_end entry");
-+			return -1;
-+		}
-+
-+		insn->instr--;
-+	}
-+
-+	sec = find_section_by_name(file->elf, ".rela.discard.instr_begin");
-+	if (!sec)
-+		return 0;
-+
-+	list_for_each_entry(rela, &sec->rela_list, list) {
-+		if (rela->sym->type != STT_SECTION) {
-+			WARN("unexpected relocation symbol type in %s", sec->name);
-+			return -1;
-+		}
-+
-+		insn = find_insn(file, rela->sym->sec, rela->addend);
-+		if (!insn) {
-+			WARN("bad .discard.instr_begin entry");
-+			return -1;
-+		}
-+
-+		insn->instr++;
-+	}
-+
-+	return 0;
-+}
-+
- static void mark_rodata(struct objtool_file *file)
- {
- 	struct section *sec;
-@@ -1427,6 +1477,10 @@ static int decode_sections(struct objtool_file *file)
- 	if (ret)
- 		return ret;
- 
-+	ret = read_instr_hints(file);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
- }
- 
-@@ -2023,6 +2077,13 @@ static inline const char *call_dest_name(struct instruction *insn)
- 
- static int validate_call(struct instruction *insn, struct insn_state *state)
- {
-+	if (state->noinstr && state->instr <= 0 &&
-+	    (!insn->call_dest || insn->call_dest->sec != insn->sec)) {
-+		WARN_FUNC("call to %s() leaves .noinstr.text section",
-+				insn->sec, insn->offset, call_dest_name(insn));
-+		return 1;
-+	}
-+
- 	if (state->uaccess && !func_uaccess_safe(insn->call_dest)) {
- 		WARN_FUNC("call to %s() with UACCESS enabled",
- 				insn->sec, insn->offset, call_dest_name(insn));
-@@ -2051,6 +2112,12 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
- 
- static int validate_return(struct symbol *func, struct instruction *insn, struct insn_state *state)
- {
-+	if (state->noinstr && state->instr > 0) {
-+		WARN_FUNC("return with instrumentation enabled",
-+			  insn->sec, insn->offset);
-+		return 1;
-+	}
-+
- 	if (state->uaccess && !func_uaccess_safe(func)) {
- 		WARN_FUNC("return with UACCESS enabled",
- 			  insn->sec, insn->offset);
-@@ -2131,6 +2198,9 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 				return 0;
- 		}
- 
-+		if (state.noinstr)
-+			state.instr += insn->instr;
-+
- 		if (insn->hint)
- 			state.cfi = insn->cfi;
- 		else
-@@ -2438,6 +2508,14 @@ static int validate_section(struct objtool_file *file, struct section *sec)
- 	struct insn_state state;
- 	int ret, warnings = 0;
- 
-+	/*
-+	 * We need the full vmlinux for noinstr validation, otherwise we can
-+	 * not correctly determine insn->call_dest->sec (external symbols do
-+	 * not have a section).
-+	 */
-+	if (vmlinux)
-+		state.noinstr = sec->noinstr;
-+
- 	list_for_each_entry(func, &sec->symbol_list, list) {
- 		if (func->type != STT_FUNC)
- 			continue;
-@@ -2472,6 +2550,17 @@ static int validate_section(struct objtool_file *file, struct section *sec)
- 	return warnings;
- }
- 
-+static int validate_vmlinux_functions(struct objtool_file *file)
-+{
-+	struct section *sec;
-+
-+	sec = find_section_by_name(file->elf, ".noinstr.text");
-+	if (!sec)
-+		return 0;
-+
-+	return validate_section(file, sec);
-+}
-+
- static int validate_functions(struct objtool_file *file)
- {
- 	struct section *sec;
-@@ -2529,6 +2618,15 @@ int check(const char *_objname, bool orc)
- 	if (list_empty(&file.insn_list))
- 		goto out;
- 
-+	if (vmlinux && !validate_dup) {
-+		ret = validate_vmlinux_functions(&file);
-+		if (ret < 0)
-+			goto out;
-+
-+		warnings += ret;
-+		goto out;
-+	}
-+
- 	if (retpoline) {
- 		ret = validate_retpoline(&file);
- 		if (ret < 0)
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index 99413d4..12a9660 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -18,6 +18,8 @@ struct insn_state {
- 	unsigned int uaccess_stack;
- 	bool uaccess;
- 	bool df;
-+	bool noinstr;
-+	s8 instr;
- };
- 
- struct instruction {
-@@ -31,6 +33,7 @@ struct instruction {
- 	bool alt_group, dead_end, ignore, ignore_alts;
- 	bool hint;
- 	bool retpoline_safe;
-+	s8 instr;
- 	u8 visited;
- 	u8 ret_offset;
- 	struct symbol *call_dest;
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index 0b79c23..eb79cb9 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -39,7 +39,7 @@ struct section {
- 	char *name;
- 	int idx;
- 	unsigned int len;
--	bool changed, text, rodata;
-+	bool changed, text, rodata, noinstr;
- };
- 
- struct symbol {
+PC
