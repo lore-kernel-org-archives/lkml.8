@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDEAC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA7EC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4B62077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B7B2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549690;
-	bh=i37P6qfJRL6fKofulh3XjayC0x/qrLAECfJfJUdeHSU=;
+	s=default; t=1587549692;
+	bh=Q1oyFjKzbrGphP40si7zC/EVZ5glG1t3TqYutsH/IvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDwOOOYD6gYZLgeBxEYrBRNKX4mt/pUb8BqgAZxs/PMSc/wIwnbYqWAbOtRGu7yxr
-	 LUZ1h2reFSRTnd3yDRb8pAHKgTZQ9RyL4L9ouAkzVApLx0xU0Ne3EoFeDYozN2rWB7
-	 08D5miKkRfrrsWN3gQsjFoGrpYw1uCx0nsXEqszc=
+	b=AOsJfisWxNb1Gx7U2sbjpiJoadgVG1BxZdyYuT9dE5MgaoAqQIVdYec3HN/Y5Hi4S
+	 LdtzGBT1Y3omj7pt4gNSwFs4lCx6fxY8cvjvn1SytW54H3nG7je0znuiaezYTb/GJJ
+	 BXWdpWai7g+5bjlqJxtyciSKa+kuGuuyBihgH43Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgDVKB2 (ORCPT
+        id S1726831AbgDVKBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49838 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726812AbgDVKBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:25 -0400
+        id S1726799AbgDVKB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E601F20774;
-        Wed, 22 Apr 2020 10:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2C32077D;
+        Wed, 22 Apr 2020 10:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549684;
-        bh=i37P6qfJRL6fKofulh3XjayC0x/qrLAECfJfJUdeHSU=;
+        s=default; t=1587549686;
+        bh=Q1oyFjKzbrGphP40si7zC/EVZ5glG1t3TqYutsH/IvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOh+1hpKcNRMiXO8PSbaCMHxGmaxvgKjhKIuyye70LCPjJGFUM9p/FQeVtcbd98YV
-         YKSepeUo/93TH0xytQ4UEBsnem/mTIUrWKW6LI5mK9r7Q/5pehmXLJrPgGIjIKO+eq
-         o418nsaLmhM0iBpymtSf1a9QvfkijX9YQ2UL8g0A=
+        b=1edt9nyrwc+BTCfZYrm0BFeX1jXtc3VPGvDPnAvy/gwwxNidQwFHOvR1+7gl/airc
+         XV8oyTiCBBWvD43EvwYQynDGIN5/IId1jPWCxv8vK8mDxaqdgO/vTJl3opzT9GP5TW
+         2DFKtBkenQc7H2Z6eVyxO7Hies6ExFCLML55/JWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 023/100] ALSA: ice1724: Fix invalid access for enumerated ctl items
-Date:   Wed, 22 Apr 2020 11:55:53 +0200
-Message-Id: <20200422095026.928569164@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Jari Ruusu <jari.ruusu@gmail.com>
+Subject: [PATCH 4.4 024/100] ALSA: pcm: oss: Fix regression by buffer overflow fix
+Date:   Wed, 22 Apr 2020 11:55:54 +0200
+Message-Id: <20200422095027.091141598@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -61,44 +61,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit c47914c00be346bc5b48c48de7b0da5c2d1a296c upstream.
+commit ae769d3556644888c964635179ef192995f40793 upstream.
 
-The access to Analog Capture Source control value implemented in
-prodigy_hifi.c is wrong, as caught by the recently introduced sanity
-check; it should be accessing value.enumerated.item[] instead of
-value.integer.value[].  This patch corrects the wrong access pattern.
+The recent fix for the OOB access in PCM OSS plugins (commit
+f2ecf903ef06: "ALSA: pcm: oss: Avoid plugin buffer overflow") caused a
+regression on OSS applications.  The patch introduced the size check
+in client and slave size calculations to limit to each plugin's buffer
+size, but I overlooked that some code paths call those without
+allocating the buffer but just for estimation.
 
-Fixes: 6b8d6e5518e2 ("[ALSA] ICE1724: Added support for Audiotrak Prodigy 7.1 HiFi & HD2, Hercules Fortissimo IV")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+This patch fixes the bug by skipping the size check for those code
+paths while keeping checking in the actual transfer calls.
+
+Fixes: f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
+Tested-and-reported-by: Jari Ruusu <jari.ruusu@gmail.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200407084402.25589-3-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200403072515.25539-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/ice1712/prodigy_hifi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/core/oss/pcm_plugin.c |   32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
---- a/sound/pci/ice1712/prodigy_hifi.c
-+++ b/sound/pci/ice1712/prodigy_hifi.c
-@@ -569,7 +569,7 @@ static int wm_adc_mux_enum_get(struct sn
- 	struct snd_ice1712 *ice = snd_kcontrol_chip(kcontrol);
- 
- 	mutex_lock(&ice->gpio_mutex);
--	ucontrol->value.integer.value[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
-+	ucontrol->value.enumerated.item[0] = wm_get(ice, WM_ADC_MUX) & 0x1f;
- 	mutex_unlock(&ice->gpio_mutex);
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -196,7 +196,9 @@ int snd_pcm_plugin_free(struct snd_pcm_p
  	return 0;
  }
-@@ -583,7 +583,7 @@ static int wm_adc_mux_enum_put(struct sn
  
- 	mutex_lock(&ice->gpio_mutex);
- 	oval = wm_get(ice, WM_ADC_MUX);
--	nval = (oval & 0xe0) | ucontrol->value.integer.value[0];
-+	nval = (oval & 0xe0) | ucontrol->value.enumerated.item[0];
- 	if (nval != oval) {
- 		wm_put(ice, WM_ADC_MUX, nval);
- 		change = 1;
+-snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_pcm_uframes_t drv_frames)
++static snd_pcm_sframes_t plug_client_size(struct snd_pcm_substream *plug,
++					  snd_pcm_uframes_t drv_frames,
++					  bool check_size)
+ {
+ 	struct snd_pcm_plugin *plugin, *plugin_prev, *plugin_next;
+ 	int stream;
+@@ -209,7 +211,7 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
+ 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin && drv_frames > 0) {
+-			if (drv_frames > plugin->buf_frames)
++			if (check_size && drv_frames > plugin->buf_frames)
+ 				drv_frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames)
+@@ -222,7 +224,7 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
+ 			plugin_next = plugin->next;
+ 			if (plugin->dst_frames)
+ 				drv_frames = plugin->dst_frames(plugin, drv_frames);
+-			if (drv_frames > plugin->buf_frames)
++			if (check_size && drv_frames > plugin->buf_frames)
+ 				drv_frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+@@ -231,7 +233,9 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
+ 	return drv_frames;
+ }
+ 
+-snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug, snd_pcm_uframes_t clt_frames)
++static snd_pcm_sframes_t plug_slave_size(struct snd_pcm_substream *plug,
++					 snd_pcm_uframes_t clt_frames,
++					 bool check_size)
+ {
+ 	struct snd_pcm_plugin *plugin, *plugin_prev, *plugin_next;
+ 	snd_pcm_sframes_t frames;
+@@ -252,14 +256,14 @@ snd_pcm_sframes_t snd_pcm_plug_slave_siz
+ 				if (frames < 0)
+ 					return frames;
+ 			}
+-			if (frames > plugin->buf_frames)
++			if (check_size && frames > plugin->buf_frames)
+ 				frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin) {
+-			if (frames > plugin->buf_frames)
++			if (check_size && frames > plugin->buf_frames)
+ 				frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames) {
+@@ -274,6 +278,18 @@ snd_pcm_sframes_t snd_pcm_plug_slave_siz
+ 	return frames;
+ }
+ 
++snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug,
++					   snd_pcm_uframes_t drv_frames)
++{
++	return plug_client_size(plug, drv_frames, false);
++}
++
++snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug,
++					  snd_pcm_uframes_t clt_frames)
++{
++	return plug_slave_size(plug, clt_frames, false);
++}
++
+ static int snd_pcm_plug_formats(struct snd_mask *mask, snd_pcm_format_t format)
+ {
+ 	struct snd_mask formats = *mask;
+@@ -628,7 +644,7 @@ snd_pcm_sframes_t snd_pcm_plug_write_tra
+ 		src_channels = dst_channels;
+ 		plugin = next;
+ 	}
+-	return snd_pcm_plug_client_size(plug, frames);
++	return plug_client_size(plug, frames, true);
+ }
+ 
+ snd_pcm_sframes_t snd_pcm_plug_read_transfer(struct snd_pcm_substream *plug, struct snd_pcm_plugin_channel *dst_channels_final, snd_pcm_uframes_t size)
+@@ -638,7 +654,7 @@ snd_pcm_sframes_t snd_pcm_plug_read_tran
+ 	snd_pcm_sframes_t frames = size;
+ 	int err;
+ 
+-	frames = snd_pcm_plug_slave_size(plug, frames);
++	frames = plug_slave_size(plug, frames, true);
+ 	if (frames < 0)
+ 		return frames;
+ 
 
 
