@@ -2,108 +2,93 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27742C5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D9FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F260320644
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJTihIUp"
+	by mail.kernel.org (Postfix) with ESMTP id 83DCA20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgDVTNG (ORCPT
+        id S1726762AbgDVTNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33344 "EHLO
+        Wed, 22 Apr 2020 15:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725913AbgDVTNF (ORCPT
+        by vger.kernel.org with ESMTP id S1726444AbgDVTNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:13:05 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42516C03C1A9;
-        Wed, 22 Apr 2020 12:13:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b11so3849323wrs.6;
-        Wed, 22 Apr 2020 12:13:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kyf7m5anVJ/hrxFQtRlRUr5WSztIezngru5jjVYf0KI=;
-        b=jJTihIUpgN+krqZ47MmLRuGF/oFrwqUxmwOA9crF53teLZdI6Osmzl5OjDwBAZyhnS
-         PEuWuEfbWbKkXch3P81+n4BHUrgB4layLx/cd5J+XYT4FYOuL2ju+S+vhK8ELp3bzrIF
-         5MpeFX1m496AVUSZ6nVKeenR++tOJoSPeaQ2SmrmEdK4Y0+IHlLVefqtoTJQlSledYB8
-         tmI/JPF9+9qeee+hr29XX4qhNy3jJoJO3WMxLynkRFdjss8kKkGsaYOySn3BbhRd+unM
-         ECpCV+Vqk/wyxQaknjxo5s3I/DgfYjRM3apnwcuYnmP/YfWHB7ckXbqaTgqhBmgcbGCY
-         X/6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kyf7m5anVJ/hrxFQtRlRUr5WSztIezngru5jjVYf0KI=;
-        b=NW3Jl1Sks/llS7/Cm9/UOH/YSYd68FrR+iij4l7S+lV0vc5JqWrVh+EUqbOVKLSHAG
-         0cdMRUGzTJigrAbNeQDXKIzYJ4h37vjxpVBVa/16tGV+ybgdsMi2sf7JatMmXr93edTK
-         nkv8pD7PjBr61A/rIGNiGKgQrERdSKMlyBUicfJvraECX73LvhZMeqWti1ohRUR0KyLV
-         Rl9h0SnpFJtnHtVs328VUaX5woMOR53TWYbrhJcmeHOv80mpWyAmaOHmkrliaz+LFAyE
-         zkt47gKrHbbZ347rcAZ4xwned1BJqIPI+KrFMdNQXGCIz3Gf8/P6kvpNBGZekh2qRZmL
-         g8jg==
-X-Gm-Message-State: AGi0PuZkDBtDxj9a4lq2LuPugt7+0tPHhA4mqS5G1IGMV2gWSjEhK01z
-        OE7jMp+zKdUIKB4PRujc5B7HMD3cEtA=
-X-Google-Smtp-Source: APiQypJQ+QTW4RBTbQp5UpnepeJlIUfphpFiuz+PLLvTsIn3MYqgHABpClxU6d42ZJAUq9Mi2Oq40A==
-X-Received: by 2002:adf:df8e:: with SMTP id z14mr543518wrl.319.1587582783738;
-        Wed, 22 Apr 2020 12:13:03 -0700 (PDT)
-Received: from lorien (lorien.valinor.li. [2a01:4f8:192:61d5::2])
-        by smtp.gmail.com with ESMTPSA id q184sm276332wma.25.2020.04.22.12.13.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 12:13:02 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 21:13:01 +0200
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     netdev@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netlabel: Kconfig: Update reference for NetLabel Tools
- project
-Message-ID: <20200422191301.GA2361@lorien.valinor.li>
-References: <20200422190753.2077110-1-carnil@debian.org>
+        Wed, 22 Apr 2020 15:13:34 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7E0C03C1AA;
+        Wed, 22 Apr 2020 12:13:33 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jRKoK-00073W-HF; Wed, 22 Apr 2020 21:13:28 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 074B41C0450;
+        Wed, 22 Apr 2020 21:13:28 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 19:13:27 -0000
+From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/mm/mmap: Fix -Wmissing-prototypes warnings
+Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200402124307.10857-1-b.thiel@posteo.de>
+References: <20200402124307.10857-1-b.thiel@posteo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422190753.2077110-1-carnil@debian.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158758280764.28353.1786440205959432306.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 09:07:53PM +0200, Salvatore Bonaccorso wrote:
-> The NetLabel Tools project has moved from http://netlabel.sf.net to a
-> GitHub. Update to directly refer to the new home for the tools.
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Oh, well s/GitHub/GitHub project/.
+Commit-ID:     60abfd08e88b2b41366dcdb1e586614770c791fa
+Gitweb:        https://git.kernel.org/tip/60abfd08e88b2b41366dcdb1e586614770c791fa
+Author:        Benjamin Thiel <b.thiel@posteo.de>
+AuthorDate:    Thu, 02 Apr 2020 14:43:07 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 22 Apr 2020 20:19:48 +02:00
 
-> 
-> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
-> ---
->  net/netlabel/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/netlabel/Kconfig b/net/netlabel/Kconfig
-> index 64280a1d3906..07b03c306f28 100644
-> --- a/net/netlabel/Kconfig
-> +++ b/net/netlabel/Kconfig
-> @@ -14,6 +14,6 @@ config NETLABEL
->  	  Documentation/netlabel as well as the NetLabel SourceForge project
->  	  for configuration tools and additional documentation.
->  
-> -	   * http://netlabel.sf.net
-> +	   * https://github.com/netlabel/netlabel_tools
->  
->  	  If you are unsure, say N.
-> -- 
-> 2.26.2
-> 
+x86/mm/mmap: Fix -Wmissing-prototypes warnings
+
+Add includes for the prototypes of valid_phys_addr_range(),
+arch_mmap_rnd() and valid_mmap_phys_addr_range() in order to fix
+-Wmissing-prototypes warnings.
+
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200402124307.10857-1-b.thiel@posteo.de
+---
+ arch/x86/mm/mmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
+index cb91ecc..c90c209 100644
+--- a/arch/x86/mm/mmap.c
++++ b/arch/x86/mm/mmap.c
+@@ -18,7 +18,9 @@
+ #include <linux/sched/signal.h>
+ #include <linux/sched/mm.h>
+ #include <linux/compat.h>
++#include <linux/elf-randomize.h>
+ #include <asm/elf.h>
++#include <asm/io.h>
+ 
+ #include "physaddr.h"
+ 
