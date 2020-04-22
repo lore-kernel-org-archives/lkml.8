@@ -2,96 +2,93 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6A2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A41C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877582076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DBE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nw4Xj1fY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgDVPoB (ORCPT
+        id S1726674AbgDVPoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:44:01 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32121 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbgDVPoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:44:01 -0400
-IronPort-SDR: EkJZ5xH3CsMZl2nxn0B62GL0E6bODK3BPqvEiXgJ0/W4T8wZfnrV7fiVaHw2HDeIZKS17phkdn
- yh1ragYfSqPQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 08:44:01 -0700
-IronPort-SDR: uacoHrS/75vy0fPWVfYZWr90WFuxiU1gdrPpxIteIEZyoAgjFdEtLcjloN+lDtgm0kwddB598v
- 0XaXqF7klQ1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,303,1583222400"; 
-   d="scan'208";a="334662350"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 22 Apr 2020 08:43:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jRHXe-002TBj-6x; Wed, 22 Apr 2020 18:44:02 +0300
-Date:   Wed, 22 Apr 2020 18:44:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v4 4/7] kernel.h: Split out min()/max() et al helpers
-Message-ID: <20200422154402.GK185537@smile.fi.intel.com>
-References: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
- <20200422125201.37618-4-andriy.shevchenko@linux.intel.com>
- <5b413a379b8bba39fb75469699b7fd0d50d67e96.camel@perches.com>
+        Wed, 22 Apr 2020 11:44:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbgDVPoE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:44:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1F5C03C1A9;
+        Wed, 22 Apr 2020 08:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=d189Ht66WkNhS7qEev42XSV+pMJKpBQ+6wQXP4iX/B0=; b=nw4Xj1fY4FG1c+4lbVWravMDJg
+        FmJrQLxqg8GzrzqGIYlmpd4sbmocteJxuRA0UlFGIAtBEPVd8EtW0bO+XUYXYRGqoYWTkELYcq7Hk
+        PiOmvar7kH7mjR6YHZlQIIEtCU3WK6WpmPL7AhpJ4kxkDAz4qoGMAoc677HYTMwbqm2+mXtbjI6bO
+        EHSSg8CVovE2aDqNn3EGvysLCibViHIEs/7lXsfKT+1Y0ADQDs8wU6mWsqdT/ZR44ibgrGt87y0G3
+        T5VUBSvN8BIwJxipP0FAkplmTKSsCTDs/mUN5D9Fv6HicsQ2PmqoTca6GAbQZYAiUKDKA+kAGudKu
+        /vf0E95w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRHXY-0001vC-BB; Wed, 22 Apr 2020 15:43:56 +0000
+Date:   Wed, 22 Apr 2020 08:43:56 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Karstens, Nate" <Nate.Karstens@garmin.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Changli Gao <xiaosuo@gmail.com>
+Subject: Re: [PATCH 1/4] fs: Implement close-on-fork
+Message-ID: <20200422154356.GU5820@bombadil.infradead.org>
+References: <20200420071548.62112-1-nate.karstens@garmin.com>
+ <20200420071548.62112-2-nate.karstens@garmin.com>
+ <fa6c5c9c7c434f878c94a7c984cd43ba@garmin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b413a379b8bba39fb75469699b7fd0d50d67e96.camel@perches.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <fa6c5c9c7c434f878c94a7c984cd43ba@garmin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 07:52:32AM -0700, Joe Perches wrote:
-> On Wed, 2020-04-22 at 15:51 +0300, Andy Shevchenko wrote:
-> > kernel.h is being used as a dump for all kinds of stuff for a long time.
-> > Here is the attempt to start cleaning it up by splitting out min()/max()
-> > et al helpers.
-> 
-> While adding organization into kernel.h by splitting
-> out various bits into separate files is a fine idea,
-> I believe removing the generic #include <linux/kernel.h>
-> from various files and substituting the sub-includes
-> is not a good idea.
+On Wed, Apr 22, 2020 at 03:36:09PM +0000, Karstens, Nate wrote:
+> There was some skepticism about whether our practice of
+> closing/reopening sockets was advisable. Regardless, it does expose what
+> I believe to be something that was overlooked in the forking process
+> model. We posted two solutions to the Austin Group defect tracker:
 
-Are you sure?
+I don't think it was "overlooked" at all.  It's not safe to call system()
+from a threaded app.  That's all.  It's right there in the DESCRIPTION:
 
-> > At the same time convert users in header and lib folder to use new header.
-> > Though for time being include new header back to kernel.h to avoid twisted
-> > indirected includes for existing users.
-> 
-> Yeah, that's the difficult bit and it could make
-> using precompiled headers very cumbersome.
-> 
-> I'd rather make #include <linux/kernel.h>" _more_
-> common or even used as the mandatory first #include
-> for all kernel .c files.
+   The system() function need not be thread-safe.
+https://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
 
-Huh?
+> Ultimately the Austin Group felt that close-on-fork
+> was the preferred approach. I think it's also worth
+> pointing that out Solaris reportedly has this feature
+> (https://www.mail-archive.com/austin-group-l@opengroup.org/msg05359.html).
 
-Perhaps we may just cat include/linux/* > include/linux/kernel.h?
-
-> That would also ensure that common kernel facilities
-> are not duplicated or have naming conflicts with other
-> files.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I am perplexed that the Austin Group thought this was a good idea.
