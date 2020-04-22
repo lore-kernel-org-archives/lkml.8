@@ -2,138 +2,132 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331CCC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1A2C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 128FF2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3922420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:24:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hRjZLZSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgDVVWQ (ORCPT
+        id S1726482AbgDVVYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:22:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24777 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgDVVVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:21:20 -0400
-IronPort-SDR: 1ohNJLPiPz7lI3JlLmOr7nkLs3BmamoZQHZ4BRVjy2iji2FtsNdN7ezGP0S1XFjeYaWrIMCLT5
- 73btETRMQ3IA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:21:19 -0700
-IronPort-SDR: S2auKyJfl/wR/vW8f/SURq8zSGz9aCxNqu+pXA729LMWuIv+fHUut4o8EedrGSknJkgntenTLU
- IPCpmGczJAdw==
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="365802102"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:21:19 -0700
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: [PATCH V10 02/11] fs: Remove unneeded IS_DAX() check in io_is_direct()
-Date:   Wed, 22 Apr 2020 14:20:53 -0700
-Message-Id: <20200422212102.3757660-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200422212102.3757660-1-ira.weiny@intel.com>
-References: <20200422212102.3757660-1-ira.weiny@intel.com>
+        Wed, 22 Apr 2020 17:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgDVVYY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:24:24 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C293C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:24:24 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id p16so2682910edm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:24:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yRWrSisQQpY8wbjXn0iTmjToXXRth4qPvwTQ6Ad/CXE=;
+        b=hRjZLZSP41fQmWqXoFu0uMVGr5+fbRGYYJ7JqVPFOLUI80SYtPgeBODoIP+jTzQE0A
+         LvwfljRzDnz0pqQ8XV/j4e65bWWxGRzcX9aqxFcYUyvsohgV9Mseeh1CoXzpmmoMqLm2
+         PZkr5FTjKeb2qsVvQ5ZZJ9tk212oX/dPiVnZid1lZ8QYGUa485x/l8p+YzNSfl0cfUCF
+         UeksZGJll/cGu9FFxsvnhBJGh9020ED/FIg5bq4nehIIxxUZrzvqFOc4x6/cDEaKq2uo
+         +eh7FmdGU69lMG24JYdqoMzep30dL/8nqK0gRu/ucI4iEQH2ICs8GXLYOaI5YdWaMtKV
+         G0Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yRWrSisQQpY8wbjXn0iTmjToXXRth4qPvwTQ6Ad/CXE=;
+        b=EB/kCB3u6DV8FoqBvPrCIi8RYg9It3qXFu9cPnuWnJCOOlt6DWmG0kKUz2AZSbChBf
+         w9itwbeA020z3ohdIJqdVR93m/TO8pgSDARn5WWc/EcO9ezyPe4imO5mYZKe1GO2rlmh
+         JfvCAN4q//cRj0g4YVUpn/Anm3etT2k6jMaw2UXYvifhsD1vPMm/LzSPypA8TewZbDd8
+         YUh6Tzsp5lKlVpi9JFltRNGeNpvD7BZ2eR+0ZibrKnjBg8PifIRJecTIEJ4bYgcNfeUS
+         yTm6qt+k6m8HwqNrBjf0akhJ+1DNoaNJhIvYkia1lbfsNXuG1vGVLJzJxJAR27yX5nzT
+         I85w==
+X-Gm-Message-State: AGi0PubMFp1wkca2KH7JMYtdQLAC79DN8xitKfm1tD5JJQ4GLK4pvkI7
+        dJ/7YiGsf8IFEcXQN3iJ5jUL0iyDCfLoxzpv8SnTZg==
+X-Google-Smtp-Source: APiQypLVYeI+Z6fHZ231GXhNbP4EWDKpwlzMUtpHq46K+PNczHL9Qp9bLLshWMcSOuHvG1MKEBrYyZ6kugSSMSxZ3ko=
+X-Received: by 2002:a50:ee86:: with SMTP id f6mr498361edr.123.1587590662775;
+ Wed, 22 Apr 2020 14:24:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+In-Reply-To: <20200421235442.GO11945@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 22 Apr 2020 14:24:11 -0700
+Message-ID: <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Megha Dey <megha.dey@linux.intel.com>, maz@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
+        baolu.lu@intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
+        KVM list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Tue, Apr 21, 2020 at 4:55 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
+> > The actual code is independent of the stage 2 driver code submission that adds
+> > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
+> > support dedicated workqueue on a guest with no vIOMMU.
+> >
+> > A new device type "mdev" is introduced for the idxd driver. This allows the wq
+> > to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
+> > queue (wq) is enabled, an uuid generated by the user can be added to the wq
+> > through the uuid sysfs attribute for the wq.  After the association, a mdev can
+> > be created using this UUID. The mdev driver code will associate the uuid and
+> > setup the mdev on the driver side. When the create operation is successful, the
+> > uuid can be passed to qemu. When the guest boots up, it should discover a DSA
+> > device when doing PCI discovery.
+>
+> I'm feeling really skeptical that adding all this PCI config space and
+> MMIO BAR emulation to the kernel just to cram this into a VFIO
+> interface is a good idea, that kind of stuff is much safer in
+> userspace.
+>
+> Particularly since vfio is not really needed once a driver is using
+> the PASID stuff. We already have general code for drivers to use to
+> attach a PASID to a mm_struct - and using vfio while disabling all the
+> DMA/iommu config really seems like an abuse.
+>
+> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
+> seems a lot simpler and saner kernel wise.
+>
+> > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
+> > interrupts for the guest. This preserves MSIX for host usages and also allows a
+> > significantly larger number of interrupt vectors for guest usage.
+>
+> I never did get a reply to my earlier remarks on the IMS patches.
+>
+> The concept of a device specific addr/data table format for MSI is not
+> Intel specific. This should be general code. We have a device that can
+> use this kind of kernel capability today.
 
-Remove the check because DAX now has it's own read/write methods and
-file systems which support DAX check IS_DAX() prior to IOCB_DIRECT on
-their own.  Therefore, it does not matter if the file state is DAX when
-the iocb flags are created.
-
-Also remove io_is_direct() as it is just a simple flag check.
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
----
-Changes from v8:
-	Rebase to latest Linus tree
-
-Changes from v6:
-	remove io_is_direct() as well.
-	Remove Reviews since this is quite a bit different.
-
-Changes from v3:
-	Reword commit message.
-	Reordered to be a 'pre-cleanup' patch
----
- drivers/block/loop.c | 6 +++---
- include/linux/fs.h   | 7 +------
- 2 files changed, 4 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index da693e6a834e..14372df0f354 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -634,8 +634,8 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 
- static inline void loop_update_dio(struct loop_device *lo)
- {
--	__loop_update_dio(lo, io_is_direct(lo->lo_backing_file) |
--			lo->use_dio);
-+	__loop_update_dio(lo, (lo->lo_backing_file->f_flags & O_DIRECT) |
-+				lo->use_dio);
- }
- 
- static void loop_reread_partitions(struct loop_device *lo,
-@@ -1028,7 +1028,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
- 		blk_queue_write_cache(lo->lo_queue, true, false);
- 
--	if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
-+	if ((lo->lo_backing_file->f_flags & O_DIRECT) && inode->i_sb->s_bdev) {
- 		/* In case of direct I/O, match underlying block size */
- 		unsigned short bsize = bdev_logical_block_size(
- 			inode->i_sb->s_bdev);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4f6f59b4f22a..a87cc5845a02 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3394,11 +3394,6 @@ extern void setattr_copy(struct inode *inode, const struct iattr *attr);
- 
- extern int file_update_time(struct file *file);
- 
--static inline bool io_is_direct(struct file *filp)
--{
--	return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
--}
--
- static inline bool vma_is_dax(const struct vm_area_struct *vma)
- {
- 	return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
-@@ -3423,7 +3418,7 @@ static inline int iocb_flags(struct file *file)
- 	int res = 0;
- 	if (file->f_flags & O_APPEND)
- 		res |= IOCB_APPEND;
--	if (io_is_direct(file))
-+	if (file->f_flags & O_DIRECT)
- 		res |= IOCB_DIRECT;
- 	if ((file->f_flags & O_DSYNC) || IS_SYNC(file->f_mapping->host))
- 		res |= IOCB_DSYNC;
--- 
-2.25.1
-
+This has been my concern reviewing the implementation. IMS needs more
+than one in-tree user to validate degrees of freedom in the api. I had
+been missing a second "in-tree user" to validate the scope of the
+flexibility that was needed.
