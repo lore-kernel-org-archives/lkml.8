@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E300C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF29C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCEC21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793A322250
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgDVMRy (ORCPT
+        id S1728884AbgDVMR6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53350 "EHLO
+        Wed, 22 Apr 2020 08:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728643AbgDVMRf (ORCPT
+        by vger.kernel.org with ESMTP id S1728647AbgDVMRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 08:17:35 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF05C03C1AA;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C291C03C1A9;
         Wed, 22 Apr 2020 05:17:35 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJl-0007l5-8P; Wed, 22 Apr 2020 14:17:29 +0200
+        id 1jREJi-0007ig-C5; Wed, 22 Apr 2020 14:17:26 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F38891C04D7;
-        Wed, 22 Apr 2020 14:17:21 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:21 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8D3B01C04CF;
+        Wed, 22 Apr 2020 14:17:19 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:19 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf intel-pt: Add support for synthesizing
- callchains for regular events
+Subject: [tip: perf/core] perf tools: Add support for leader-sampling with AUX
+ area events
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401101613.6201-12-adrian.hunter@intel.com>
-References: <20200401101613.6201-12-adrian.hunter@intel.com>
+In-Reply-To: <20200401101613.6201-17-adrian.hunter@intel.com>
+References: <20200401101613.6201-17-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158755784160.28353.16391866213474126627.tip-bot2@tip-bot2>
+Message-ID: <158755783910.28353.11905978108277230782.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -61,254 +61,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     2855c05cf14a5ee0d3b58168632acb11ea35721f
-Gitweb:        https://git.kernel.org/tip/2855c05cf14a5ee0d3b58168632acb11ea35721f
+Commit-ID:     e345997914a8af5e8362e884d2fee38bd2e9c6d8
+Gitweb:        https://git.kernel.org/tip/e345997914a8af5e8362e884d2fee38bd2e9c6d8
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Wed, 01 Apr 2020 13:16:08 +03:00
+AuthorDate:    Wed, 01 Apr 2020 13:16:13 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 16 Apr 2020 12:19:17 -03:00
+CommitterDate: Sat, 18 Apr 2020 09:05:00 -03:00
 
-perf intel-pt: Add support for synthesizing callchains for regular events
+perf tools: Add support for leader-sampling with AUX area events
 
-Currently, callchains can be synthesized only for synthesized events.
-Support also synthesizing callchains for regular events.
+When AUX area events are used in sampling mode, they must be the group
+leader, but the group leader is also used for leader-sampling. However,
+it is not desirable to use an AUX area event as the leader for
+leader-sampling, because it doesn't have any samples of its own. To support
+leader-sampling with AUX area events, use the 2nd event of the group as the
+"leader" for the purposes of leader-sampling.
 
 Example:
 
- # perf record --kcore --aux-sample -e '{intel_pt//,cycles}' -c 10000 uname
- Linux
+ # perf record --kcore --aux-sample -e '{intel_pt//,cycles,instructions}:S' -c 10000 uname
  [ perf record: Woken up 3 times to write data ]
- [ perf record: Captured and wrote 0.532 MB perf.data ]
- # perf script --itrace=Ge | head -20
- uname  4864 2419025.358181:      10000     cycles:
-        ffffffffbba56965 apparmor_bprm_committing_creds+0x35 ([kernel.kallsyms])
-        ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
-        ffffffffbba07422 security_bprm_committing_creds+0x22 ([kernel.kallsyms])
-        ffffffffbb89805d install_exec_creds+0xd ([kernel.kallsyms])
-        ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
+ [ perf record: Captured and wrote 0.786 MB perf.data ]
+ # perf report
+ Samples: 380  of events 'anon group { cycles, instructions }', Event count (approx.): 3026164
+           Children              Self  Command  Shared Object      Symbol
+ +   38.76%  42.65%     0.00%   0.00%  uname    [kernel.kallsyms]  [k] __x86_indirect_thunk_rax
+ +   35.82%  31.33%     0.00%   0.00%  uname    ld-2.28.so         [.] _dl_start_user
+ +   34.29%  29.74%     0.55%   0.47%  uname    ld-2.28.so         [.] _dl_start
+ +   33.73%  28.62%     1.60%   0.97%  uname    ld-2.28.so         [.] dl_main
+ +   33.19%  29.04%     0.52%   0.32%  uname    ld-2.28.so         [.] _dl_sysdep_start
+ +   27.83%  33.74%     0.00%   0.00%  uname    [kernel.kallsyms]  [k] do_syscall_64
+ +   26.76%  33.29%     0.00%   0.00%  uname    [kernel.kallsyms]  [k] entry_SYSCALL_64_after_hwframe
+ +   23.78%  20.33%     5.97%   5.25%  uname    [kernel.kallsyms]  [k] page_fault
+ +   23.18%  24.60%     0.00%   0.00%  uname    libc-2.28.so       [.] __libc_start_main
+ +   22.64%  24.37%     0.00%   0.00%  uname    uname              [.] _start
+ +   21.04%  23.27%     0.00%   0.00%  uname    uname              [.] main
+ +   19.48%  18.08%     3.72%   3.64%  uname    ld-2.28.so         [.] _dl_relocate_object
+ +   19.47%  21.81%     0.00%   0.00%  uname    libc-2.28.so       [.] setlocale
+ +   19.44%  21.56%     0.52%   0.61%  uname    libc-2.28.so       [.] _nl_find_locale
+ +   17.87%  19.66%     0.00%   0.00%  uname    libc-2.28.so       [.] _nl_load_locale_from_archive
+ +   15.71%  13.73%     0.53%   0.52%  uname    [kernel.kallsyms]  [k] do_page_fault
+ +   15.18%  13.21%     1.03%   0.68%  uname    [kernel.kallsyms]  [k] handle_mm_fault
+ +   14.15%  12.53%     1.01%   1.12%  uname    [kernel.kallsyms]  [k] __handle_mm_fault
+ +   12.03%   9.67%     0.54%   0.32%  uname    ld-2.28.so         [.] _dl_map_object
+ +   10.55%   8.48%     0.00%   0.00%  uname    ld-2.28.so         [.] openaux
+ +   10.55%  20.20%     0.52%   0.61%  uname    libc-2.28.so       [.] __run_exit_handlers
 
- uname  4864 2419025.358185:      10000     cycles:
-        ffffffffbba56db0 apparmor_bprm_committed_creds+0x20 ([kernel.kallsyms])
-        ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
-        ffffffffbba07452 security_bprm_committed_creds+0x22 ([kernel.kallsyms])
-        ffffffffbb89809a install_exec_creds+0x4a ([kernel.kallsyms])
-        ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
+Comnmitter notes:
 
- uname  4864 2419025.358189:      10000     cycles:
-        ffffffffbb86fdf6 vma_adjust_trans_huge+0x6 ([kernel.kallsyms])
-        ffffffffbb821660 __vma_adjust+0x160 ([kernel.kallsyms])
-        ffffffffbb897be7 shift_arg_pages+0x97 ([kernel.kallsyms])
-        ffffffffbb897ed9 setup_arg_pages+0x1e9 ([kernel.kallsyms])
-        ffffffffbb90d9f2 load_elf_binary+0x3f2 ([kernel.kallsyms])
+Fixed up this problem:
 
-Committer testing:
-
-  # perf record --kcore --aux-sample -e '{intel_pt//,cycles}' -c 10000 uname
-  Linux
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.233 MB perf.data ]
-  #
-
-Then, before this patch:
-
-  # perf script --itrace=Ge | head -20
-     uname 28642 168664.856384: 10000 cycles: ffffffff9810aeaa commit_creds+0x2a ([kernel.kallsyms])
-     uname 28642 168664.856388: 10000 cycles: ffffffff982a24f1 mprotect_fixup+0x151 ([kernel.kallsyms])
-     uname 28642 168664.856392: 10000 cycles: ffffffff982a385b move_page_tables+0xbcb ([kernel.kallsyms])
-     uname 28642 168664.856396: 10000 cycles: ffffffff982fd4ec __mod_memcg_state+0x1c ([kernel.kallsyms])
-     uname 28642 168664.856400: 10000 cycles: ffffffff9829fddd do_mmap+0xfd ([kernel.kallsyms])
-     uname 28642 168664.856404: 10000 cycles: ffffffff9829c879 __vma_adjust+0x479 ([kernel.kallsyms])
-     uname 28642 168664.856408: 10000 cycles: ffffffff98238e94 __perf_addr_filters_adjust+0x34 ([kernel.kallsyms])
-     uname 28642 168664.856412: 10000 cycles: ffffffff98a38e0b down_write+0x1b ([kernel.kallsyms])
-     uname 28642 168664.856416: 10000 cycles: ffffffff983006a0 memcg_kmem_get_cache+0x0 ([kernel.kallsyms])
-     uname 28642 168664.856421: 10000 cycles: ffffffff98396eaf load_elf_binary+0x92f ([kernel.kallsyms])
-     uname 28642 168664.856425: 10000 cycles: ffffffff982e0222 kfree+0x62 ([kernel.kallsyms])
-     uname 28642 168664.856428: 10000 cycles: ffffffff9846dfd4 file_has_perm+0x54 ([kernel.kallsyms])
-     uname 28642 168664.856433: 10000 cycles: ffffffff98288911 vma_interval_tree_insert+0x51 ([kernel.kallsyms])
-     uname 28642 168664.856437: 10000 cycles: ffffffff9823e577 perf_event_mmap_output+0x27 ([kernel.kallsyms])
-     uname 28642 168664.856441: 10000 cycles: ffffffff98a26fa0 xas_load+0x40 ([kernel.kallsyms])
-     uname 28642 168664.856445: 10000 cycles: ffffffff98004f30 arch_setup_additional_pages+0x0 ([kernel.kallsyms])
-     uname 28642 168664.856448: 10000 cycles: ffffffff98a297c0 copy_user_generic_unrolled+0xa0 ([kernel.kallsyms])
-     uname 28642 168664.856452: 10000 cycles: ffffffff9853a87a strnlen_user+0x10a ([kernel.kallsyms])
-     uname 28642 168664.856456: 10000 cycles: ffffffff986638a7 randomize_page+0x27 ([kernel.kallsyms])
-     uname 28642 168664.856460: 10000 cycles: ffffffff98a3b645 _raw_spin_lock+0x5 ([kernel.kallsyms])
-
-  #
-
-And after:
-
-  # perf script --itrace=Ge | head -20
-  uname 28642 168664.856384:      10000     cycles:
-  	ffffffff9810aeaa commit_creds+0x2a ([kernel.kallsyms])
-  	ffffffff9831fe87 install_exec_creds+0x17 ([kernel.kallsyms])
-  	ffffffff983968d9 load_elf_binary+0x359 ([kernel.kallsyms])
-  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
-  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
-
-  uname 28642 168664.856388:      10000     cycles:
-  	ffffffff982a24f1 mprotect_fixup+0x151 ([kernel.kallsyms])
-  	ffffffff9831fa83 setup_arg_pages+0x123 ([kernel.kallsyms])
-  	ffffffff9839691f load_elf_binary+0x39f ([kernel.kallsyms])
-  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
-  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
-
-  uname 28642 168664.856392:      10000     cycles:
-  	ffffffff982a385b move_page_tables+0xbcb ([kernel.kallsyms])
-  	ffffffff9831f889 shift_arg_pages+0xa9 ([kernel.kallsyms])
-  	ffffffff9831fb4f setup_arg_pages+0x1ef ([kernel.kallsyms])
-  	ffffffff9839691f load_elf_binary+0x39f ([kernel.kallsyms])
-  	ffffffff98e00c45 __x86_indirect_thunk_rax+0x5 ([kernel.kallsyms])
-  #
+  util/record.c: In function ‘perf_evlist__config’:
+  util/record.c:256:3: error: too few arguments to function ‘perf_evsel__config_leader_sampling’
+    256 |   perf_evsel__config_leader_sampling(evsel);
+        |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  util/record.c:190:13: note: declared here
+    190 | static void perf_evsel__config_leader_sampling(struct evsel *evsel,
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200401101613.6201-12-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200401101613.6201-17-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 68 +++++++++++++++++++++++++++++++++----
- 1 file changed, 61 insertions(+), 7 deletions(-)
+ tools/perf/Documentation/perf-list.txt |  3 ++-
+ tools/perf/util/record.c               | 45 +++++++++++++++++++++----
+ 2 files changed, 42 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index db25c77..a659b4a 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -124,6 +124,8 @@ struct intel_pt {
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 6345db3..cb23667 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -258,6 +258,9 @@ Normally all events in an event group sample, but with :S only
+ the first event (the leader) samples, and it only reads the values of the
+ other events in the group.
  
- 	struct range *time_ranges;
- 	unsigned int range_cnt;
++However, in the case AUX area events (e.g. Intel PT or CoreSight), the AUX
++area event must be the leader, so then the second event samples, not the first.
 +
-+	struct ip_callchain *chain;
- };
+ OPTIONS
+ -------
  
- enum switch_state {
-@@ -868,6 +870,45 @@ static u64 intel_pt_ns_to_ticks(const struct intel_pt *pt, u64 ns)
- 		pt->tc.time_mult;
+diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+index 32aeeb8..6d3e3df 100644
+--- a/tools/perf/util/record.c
++++ b/tools/perf/util/record.c
+@@ -167,17 +167,46 @@ bool perf_can_aux_sample(void)
+ 	return true;
  }
  
-+static struct ip_callchain *intel_pt_alloc_chain(struct intel_pt *pt)
+-static void perf_evsel__config_leader_sampling(struct evsel *evsel)
++/*
++ * perf_evsel__config_leader_sampling() uses special rules for leader sampling.
++ * However, if the leader is an AUX area event, then assume the event to sample
++ * is the next event.
++ */
++static struct evsel *perf_evsel__read_sampler(struct evsel *evsel,
++					      struct evlist *evlist)
 +{
-+	size_t sz = sizeof(struct ip_callchain);
++	struct evsel *leader = evsel->leader;
 +
-+	/* Add 1 to callchain_sz for callchain context */
-+	sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
-+	return zalloc(sz);
-+}
-+
-+static int intel_pt_callchain_init(struct intel_pt *pt)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(pt->session->evlist, evsel) {
-+		if (!(evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN))
-+			evsel->synth_sample_type |= PERF_SAMPLE_CALLCHAIN;
++	if (perf_evsel__is_aux_event(leader)) {
++		evlist__for_each_entry(evlist, evsel) {
++			if (evsel->leader == leader && evsel != evsel->leader)
++				return evsel;
++		}
 +	}
 +
-+	pt->chain = intel_pt_alloc_chain(pt);
-+	if (!pt->chain)
-+		return -ENOMEM;
-+
-+	return 0;
++	return leader;
 +}
 +
-+static void intel_pt_add_callchain(struct intel_pt *pt,
-+				   struct perf_sample *sample)
-+{
-+	struct thread *thread = machine__findnew_thread(pt->machine,
-+							sample->pid,
-+							sample->tid);
-+
-+	thread_stack__sample_late(thread, sample->cpu, pt->chain,
-+				  pt->synth_opts.callchain_sz + 1, sample->ip,
-+				  pt->kernel_start);
-+
-+	sample->callchain = pt->chain;
-+}
-+
- static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
- 						   unsigned int queue_nr)
++static void perf_evsel__config_leader_sampling(struct evsel *evsel,
++					       struct evlist *evlist)
  {
-@@ -880,11 +921,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
- 		return NULL;
- 
- 	if (pt->synth_opts.callchain) {
--		size_t sz = sizeof(struct ip_callchain);
--
--		/* Add 1 to callchain_sz for callchain context */
--		sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
--		ptq->chain = zalloc(sz);
-+		ptq->chain = intel_pt_alloc_chain(pt);
- 		if (!ptq->chain)
- 			goto out_free;
- 	}
-@@ -1992,7 +2029,8 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
- 	if (!(state->type & INTEL_PT_BRANCH))
- 		return 0;
- 
--	if (pt->synth_opts.callchain || pt->synth_opts.thread_stack)
-+	if (pt->synth_opts.callchain || pt->synth_opts.add_callchain ||
-+	    pt->synth_opts.thread_stack)
- 		thread_stack__event(ptq->thread, ptq->cpu, ptq->flags, state->from_ip,
- 				    state->to_ip, ptq->insn_len,
- 				    state->trace_nr);
-@@ -2639,6 +2677,11 @@ static int intel_pt_process_event(struct perf_session *session,
- 	if (err)
- 		return err;
- 
-+	if (event->header.type == PERF_RECORD_SAMPLE) {
-+		if (pt->synth_opts.add_callchain && !sample->callchain)
-+			intel_pt_add_callchain(pt, sample);
-+	}
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	struct evsel *leader = evsel->leader;
++	struct evsel *read_sampler;
 +
- 	if (event->header.type == PERF_RECORD_AUX &&
- 	    (event->aux.flags & PERF_AUX_FLAG_TRUNCATED) &&
- 	    pt->synth_opts.errors) {
-@@ -2710,6 +2753,7 @@ static void intel_pt_free(struct perf_session *session)
- 	session->auxtrace = NULL;
- 	thread__put(pt->unknown_thread);
- 	addr_filters__exit(&pt->filts);
-+	zfree(&pt->chain);
- 	zfree(&pt->filter);
- 	zfree(&pt->time_ranges);
- 	free(pt);
-@@ -3348,6 +3392,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 		    !session->itrace_synth_opts->inject) {
- 			pt->synth_opts.branches = false;
- 			pt->synth_opts.callchain = true;
-+			pt->synth_opts.add_callchain = true;
- 		}
- 		pt->synth_opts.thread_stack =
- 				session->itrace_synth_opts->thread_stack;
-@@ -3380,14 +3425,22 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 		pt->branches_filter |= PERF_IP_FLAG_RETURN |
- 				       PERF_IP_FLAG_TRACE_BEGIN;
- 
--	if (pt->synth_opts.callchain && !symbol_conf.use_callchain) {
-+	if ((pt->synth_opts.callchain || pt->synth_opts.add_callchain) &&
-+	    !symbol_conf.use_callchain) {
- 		symbol_conf.use_callchain = true;
- 		if (callchain_register_param(&callchain_param) < 0) {
- 			symbol_conf.use_callchain = false;
- 			pt->synth_opts.callchain = false;
-+			pt->synth_opts.add_callchain = false;
- 		}
- 	}
- 
-+	if (pt->synth_opts.add_callchain) {
-+		err = intel_pt_callchain_init(pt);
-+		if (err)
-+			goto err_delete_thread;
-+	}
++	if (!leader->sample_read)
++		return;
 +
- 	err = intel_pt_synth_events(pt, session);
- 	if (err)
- 		goto err_delete_thread;
-@@ -3410,6 +3463,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 	return 0;
++	read_sampler = perf_evsel__read_sampler(evsel, evlist);
  
- err_delete_thread:
-+	zfree(&pt->chain);
- 	thread__zput(pt->unknown_thread);
- err_free_queues:
- 	intel_pt_log_disable();
+-	if (leader == evsel || !leader->sample_read)
++	if (evsel == read_sampler)
+ 		return;
+ 
+ 	/*
+-	 * Disable sampling for all group members other
+-	 * than leader in case leader 'leads' the sampling.
++	 * Disable sampling for all group members other than the leader in
++	 * case the leader 'leads' the sampling, except when the leader is an
++	 * AUX area event, in which case the 2nd event in the group is the one
++	 * that 'leads' the sampling.
+ 	 */
+ 	attr->freq           = 0;
+ 	attr->sample_freq    = 0;
+@@ -188,8 +217,12 @@ static void perf_evsel__config_leader_sampling(struct evsel *evsel)
+ 	 * We don't get a sample for slave events, we make them when delivering
+ 	 * the group leader sample. Set the slave event to follow the master
+ 	 * sample_type to ease up reporting.
++	 * An AUX area event also has sample_type requirements, so also include
++	 * the sample type bits from the leader's sample_type to cover that
++	 * case.
+ 	 */
+-	attr->sample_type = leader->core.attr.sample_type;
++	attr->sample_type = read_sampler->core.attr.sample_type |
++			    leader->core.attr.sample_type;
+ }
+ 
+ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
+@@ -220,7 +253,7 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
+ 
+ 	/* Configure leader sampling here now that the sample type is known */
+ 	evlist__for_each_entry(evlist, evsel)
+-		perf_evsel__config_leader_sampling(evsel);
++		perf_evsel__config_leader_sampling(evsel, evlist);
+ 
+ 	if (opts->full_auxtrace) {
+ 		/*
