@@ -2,86 +2,93 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B853EC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4A92087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587559911;
-	bh=SQkryVGgqoUzY3aJvT8Gf/kltSUg9byJ5NlefWiVwG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h6QrRU17d4y9iQ7B1exOfqd3Uhs7fsYVQCaoM0LBP7mAcInofzwIx5PaFFUAgVCsX
-	 441ZAUzmZHfDuJ5dul4YLD+2KJUJVGLOsT4YgrhEWg3s3vOyNo6JSWpu9jo3juCnBr
-	 GY34T00UgaI05d76tEL1BIQkwPc8OHCTtEoel1tg=
+	by mail.kernel.org (Postfix) with ESMTP id 696C72087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgDVMvv (ORCPT
+        id S1726848AbgDVMv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 08:51:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbgDVMvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:51:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726811AbgDVMv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:51:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87E9320857;
-        Wed, 22 Apr 2020 12:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587559910;
-        bh=SQkryVGgqoUzY3aJvT8Gf/kltSUg9byJ5NlefWiVwG8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QNKC+XKcszxrVfeKtalGm+ZbpxJ2JzzPkYK86b1m0xgOpypbG7OUXih/YGp1MOHDD
-         nLxoz1dKTQ9kEBGqoRj1++8cr6ub/J6Uzc8Y7NtfndEoSTPXaoN076qHyoKGY8Wv/b
-         PakdJLJ4IZAY0JIvab9iJ1+oIsMBCc6TVNLNMHzk=
-Date:   Wed, 22 Apr 2020 14:51:47 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chris Paterson <Chris.Paterson2@renesas.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 00/64] 4.19.118-rc1 review
-Message-ID: <20200422125147.GA3153333@kroah.com>
-References: <20200422095008.799686511@linuxfoundation.org>
- <TYAPR01MB22852052125D7E1B036BE8AAB7D20@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B5BD20787;
+        Wed, 22 Apr 2020 12:51:56 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 08:51:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        qais.yousef@arm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, wim@linux-watchdog.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: Re: [PATCH 16/23] sched,watchdog: Convert to sched_set_fifo()
+Message-ID: <20200422085155.7549ca94@gandalf.local.home>
+In-Reply-To: <20200422112832.165197058@infradead.org>
+References: <20200422112719.826676174@infradead.org>
+        <20200422112832.165197058@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB22852052125D7E1B036BE8AAB7D20@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 11:10:58AM +0000, Chris Paterson wrote:
-> Hello Greg,
-> 
-> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> > Behalf Of Greg Kroah-Hartman
-> > Sent: 22 April 2020 10:57
-> > 
-> > This is the start of the stable review cycle for the 4.19.118 release.
-> > There are 64 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> 
-> No build/boot issues seen for CIP configs for Linux 4.19.118-rc1 (b5f03cd61ab6).
-> 
-> Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/138626535
-> GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-pipelines/-/blob/master/trees/linux-4.19.y.yml
-> Relevant LAVA jobs: https://lava.ciplatform.org/scheduler/alljobs?length=25&search=b5f03cd61#table
+On Wed, 22 Apr 2020 13:27:35 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Thanks for testing 2 of these and letting me know.
+> Because SCHED_FIFO is a broken scheduler model (see previous patches)
+> take away the priority field, the kernel can't possibly make an
+> informed decision.
+> 
+> Effectively changes prio from 99 to 50.
 
-greg k-h
+Hmm, this being a watchdog, and looking at commit 38a1222ae4f364d
+("watchdog: core: make sure the watchdog worker always works")
+
+I wonder if we should add a sched_set_high(), or have some other kind of
+watchdog handler that is guaranteed to trigger.
+
+-- Steve
+
+
+> 
+> Cc: wim@linux-watchdog.org
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  drivers/watchdog/watchdog_dev.c |    3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -1144,14 +1144,13 @@ void watchdog_dev_unregister(struct watc
+>  int __init watchdog_dev_init(void)
+>  {
+>  	int err;
+> -	struct sched_param param = {.sched_priority = MAX_RT_PRIO - 1,};
+>  
+>  	watchdog_kworker = kthread_create_worker(0, "watchdogd");
+>  	if (IS_ERR(watchdog_kworker)) {
+>  		pr_err("Failed to create watchdog kworker\n");
+>  		return PTR_ERR(watchdog_kworker);
+>  	}
+> -	sched_setscheduler(watchdog_kworker->task, SCHED_FIFO, &param);
+> +	sched_set_fifo(watchdog_kworker->task);
+>  
+>  	err = class_register(&watchdog_class);
+>  	if (err < 0) {
+> 
+
