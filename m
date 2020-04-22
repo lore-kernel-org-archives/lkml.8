@@ -2,57 +2,55 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06186C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3293FC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D73A620656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F86220656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551986;
-	bh=5D9GczrhsgcqaRMt/zuHZZcdP2g+4HoM3usyp9z2034=;
+	s=default; t=1587551993;
+	bh=SN/5j2Okkn1eVrwRTaxVF3OLAi+cty+PbHxBtT3BDG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+HqG05H9Natb4h+Kt4rIHKPNopVEbYjdLuxJVtKKqklm2NNbU0l8O2+WS8/kg7nk
-	 aON/l8obF3iQbBoej1D8ubdPp+Nw3FlWO7bqhjRKL4oz989jJ2DBgsnKybMelvXELg
-	 FzekNoc9efhV3CwiIjfUKz0G37WX6PDRjfLOHDK0=
+	b=R+o/ZbM5k8FKs/sRvftQM/ExknGcEg/Mxaj5EqFn8DlVmwKO1biVy3RvDswj4hHyE
+	 SQjwlqilLO/wf8i930ObcoXIFuBRU6PdulKsg28YtMl7xEYBAkZvdO44T6LMIO3w0a
+	 0QvsCVVAJGJFrtK5YCMKF0BJruPzrDEND3oeNY04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgDVKVT (ORCPT
+        id S1730191AbgDVKjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55176 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbgDVKSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:37 -0400
+        id S1730161AbgDVKVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9335A20781;
-        Wed, 22 Apr 2020 10:18:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B312076B;
+        Wed, 22 Apr 2020 10:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550717;
-        bh=5D9GczrhsgcqaRMt/zuHZZcdP2g+4HoM3usyp9z2034=;
+        s=default; t=1587550876;
+        bh=SN/5j2Okkn1eVrwRTaxVF3OLAi+cty+PbHxBtT3BDG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZGopVuMpbgjaGs2ey9F1/ZTLWUlCd6FABw5FbWxcQBZvJ3c//+sqBVkwW/VlLakh
-         4v/lw/ySgVCeh2BYguiVEOzxNHSuOV67fV+upHpspQLqNrPG18crjYqSvrVZAmf8ib
-         quKXLAOGwkKXn0aUbJNYoJTXEGE5wAOThjIoy8Gw=
+        b=WWNejAhca18lcqwuOGeh4ZCU26fk49NsQE8Gtz+2v3BbFzyM+HzYKEJXmk5kmH8dj
+         McQEWU9gDl2FxjDG17hQUXKtfZbTEXBNYIwS5aCwQZYnuMVsR7YUr3Ci2Oms0/OHRZ
+         nWPPVGnNj7/zOklXjYW+ujpF3ZnpwFqN1/xGSRWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/118] powerpc/maple: Fix declaration made after definition
-Date:   Wed, 22 Apr 2020 11:57:05 +0200
-Message-Id: <20200422095042.432342366@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.6 011/166] bpf: Prevent re-mmap()ing BPF map as writable for initially r/o mapping
+Date:   Wed, 22 Apr 2020 11:55:38 +0200
+Message-Id: <20200422095049.430771557@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
-References: <20200422095031.522502705@linuxfoundation.org>
+In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
+References: <20200422095047.669225321@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,92 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
+commit 1f6cb19be2e231fe092f40decb71f066eba090d7 upstream.
 
-When building ppc64 defconfig, Clang errors (trimmed for brevity):
+VM_MAYWRITE flag during initial memory mapping determines if already mmap()'ed
+pages can be later remapped as writable ones through mprotect() call. To
+prevent user application to rewrite contents of memory-mapped as read-only and
+subsequently frozen BPF map, remove VM_MAYWRITE flag completely on initially
+read-only mapping.
 
-  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
-  must precede definition [-Werror,-Wignored-attributes]
-  machine_device_initcall(maple, maple_cpc925_edac_setup);
-  ^
+Alternatively, we could treat any memory-mapping on unfrozen map as writable
+and bump writecnt instead. But there is little legitimate reason to map
+BPF map as read-only and then re-mmap() it as writable through mprotect(),
+instead of just mmap()'ing it as read/write from the very beginning.
 
-machine_device_initcall expands to __define_machine_initcall, which in
-turn has the macro machine_is used in it, which declares mach_##name
-with an __attribute__((weak)). define_machine actually defines
-mach_##name, which in this file happens before the declaration, hence
-the warning.
+Also, at the suggestion of Jann Horn, drop unnecessary refcounting in mmap
+operations. We can just rely on VMA holding reference to BPF map's file
+properly.
 
-To fix this, move define_machine after machine_device_initcall so that
-the declaration occurs before the definition, which matches how
-machine_device_initcall and define_machine work throughout
-arch/powerpc.
+Fixes: fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jann Horn <jannh@google.com>
+Link: https://lore.kernel.org/bpf/20200410202613.3679837-1-andriin@fb.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-While we're here, remove some spaces before tabs.
-
-Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ kernel/bpf/syscall.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
-index 9cd6f3e1000b3..09a0594350b69 100644
---- a/arch/powerpc/platforms/maple/setup.c
-+++ b/arch/powerpc/platforms/maple/setup.c
-@@ -294,23 +294,6 @@ static int __init maple_probe(void)
- 	return 1;
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -592,9 +592,7 @@ static void bpf_map_mmap_open(struct vm_
+ {
+ 	struct bpf_map *map = vma->vm_file->private_data;
+ 
+-	bpf_map_inc_with_uref(map);
+-
+-	if (vma->vm_flags & VM_WRITE) {
++	if (vma->vm_flags & VM_MAYWRITE) {
+ 		mutex_lock(&map->freeze_mutex);
+ 		map->writecnt++;
+ 		mutex_unlock(&map->freeze_mutex);
+@@ -606,13 +604,11 @@ static void bpf_map_mmap_close(struct vm
+ {
+ 	struct bpf_map *map = vma->vm_file->private_data;
+ 
+-	if (vma->vm_flags & VM_WRITE) {
++	if (vma->vm_flags & VM_MAYWRITE) {
+ 		mutex_lock(&map->freeze_mutex);
+ 		map->writecnt--;
+ 		mutex_unlock(&map->freeze_mutex);
+ 	}
+-
+-	bpf_map_put_with_uref(map);
  }
  
--define_machine(maple) {
--	.name			= "Maple",
--	.probe			= maple_probe,
--	.setup_arch		= maple_setup_arch,
--	.init_IRQ		= maple_init_IRQ,
--	.pci_irq_fixup		= maple_pci_irq_fixup,
--	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
--	.restart		= maple_restart,
--	.halt			= maple_halt,
--       	.get_boot_time		= maple_get_boot_time,
--       	.set_rtc_time		= maple_set_rtc_time,
--       	.get_rtc_time		= maple_get_rtc_time,
--      	.calibrate_decr		= generic_calibrate_decr,
--	.progress		= maple_progress,
--	.power_save		= power4_idle,
--};
+ static const struct vm_operations_struct bpf_map_default_vmops = {
+@@ -641,14 +637,16 @@ static int bpf_map_mmap(struct file *fil
+ 	/* set default open/close callbacks */
+ 	vma->vm_ops = &bpf_map_default_vmops;
+ 	vma->vm_private_data = map;
++	vma->vm_flags &= ~VM_MAYEXEC;
++	if (!(vma->vm_flags & VM_WRITE))
++		/* disallow re-mapping with PROT_WRITE */
++		vma->vm_flags &= ~VM_MAYWRITE;
+ 
+ 	err = map->ops->map_mmap(map, vma);
+ 	if (err)
+ 		goto out;
+ 
+-	bpf_map_inc_with_uref(map);
 -
- #ifdef CONFIG_EDAC
- /*
-  * Register a platform device for CPC925 memory controller on
-@@ -367,3 +350,20 @@ static int __init maple_cpc925_edac_setup(void)
- }
- machine_device_initcall(maple, maple_cpc925_edac_setup);
- #endif
-+
-+define_machine(maple) {
-+	.name			= "Maple",
-+	.probe			= maple_probe,
-+	.setup_arch		= maple_setup_arch,
-+	.init_IRQ		= maple_init_IRQ,
-+	.pci_irq_fixup		= maple_pci_irq_fixup,
-+	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
-+	.restart		= maple_restart,
-+	.halt			= maple_halt,
-+	.get_boot_time		= maple_get_boot_time,
-+	.set_rtc_time		= maple_set_rtc_time,
-+	.get_rtc_time		= maple_get_rtc_time,
-+	.calibrate_decr		= generic_calibrate_decr,
-+	.progress		= maple_progress,
-+	.power_save		= power4_idle,
-+};
--- 
-2.20.1
-
+-	if (vma->vm_flags & VM_WRITE)
++	if (vma->vm_flags & VM_MAYWRITE)
+ 		map->writecnt++;
+ out:
+ 	mutex_unlock(&map->freeze_mutex);
 
 
