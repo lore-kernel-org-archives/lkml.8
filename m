@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC6C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EA4C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA79220787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E1C2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552458;
-	bh=g+/DlI/neXXLGTI4GaNTz0Xd8LaLWlzfFIRyTD5ifOs=;
+	s=default; t=1587552461;
+	bh=v7Vipc0VT/4/+NWQ5NLJhdexjHV4UhMafyaRIs4x8WU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqhtXoH5StzXKyG/w14e6/H9SLkNTTH5ATwMD+ZG4gYshek6JHsfbGWwO6yIJ9kqt
-	 GwEdUk0bnNtQhZpO7jdvNK4RLbVtRFEBeJ6DltzjgG7VDHJxsndEHUJC6ROirIu1SZ
-	 EDXc8cr74pY/uKmpg9yffMcGmAHd4weUseQaLLYQ=
+	b=ezkuA/wThjkv7xqMaQ7sj+R7UUn9vpLNBO9XLa3UiBgkTzP+9XiX1Ma8cPlvkbvO3
+	 fQedpfmzRkkASfxUho8HlJAAVzZamsUIcXAtqZh/Ff0GoHUM1Z/IjXKvKyGLptziJ6
+	 SvwFqS2Yu6I8IKopa7IGUyEysWysz1Si8Z5wIOV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732026AbgDVKri (ORCPT
+        id S1732018AbgDVKrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbgDVKPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:32 -0400
+        id S1729665AbgDVKPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25CF420575;
-        Wed, 22 Apr 2020 10:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2D112070B;
+        Wed, 22 Apr 2020 10:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550531;
-        bh=g+/DlI/neXXLGTI4GaNTz0Xd8LaLWlzfFIRyTD5ifOs=;
+        s=default; t=1587550534;
+        bh=v7Vipc0VT/4/+NWQ5NLJhdexjHV4UhMafyaRIs4x8WU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2Mw3+Y2ZeYao8fNUfnCW8NWDPYC+wR9dUdmU12jxBQmvtPL6mlI6oTik7pgHARhc
-         eJMdGsiZl8tcUU/zqpo6FAEy7bT7xVmF8Tw+MVVxB6i5K/GSgg0+rDpADGCK5z6vI3
-         +/c+5+/klIaITjkkaoP/LIg7Pkar/Sf+Bf2ULId8=
+        b=bpzjoLGuaav27l0wt7hVcgdfmIEIDy/e383t/W6dmd8BrYvlHuZP1Sc8x1+cRSkfS
+         YVALNGKdS695TpMYmffwcMCqHjd94XNNUMOQM0GA+nlvg2oWvbP3Ed4yZOsecVNUz2
+         dcEDPmFXINSNzFOP5p1GSqePiAzUdMZAOJAMiQcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/64] libnvdimm: Out of bounds read in __nd_ioctl()
-Date:   Wed, 22 Apr 2020 11:57:36 +0200
-Message-Id: <20200422095022.163163904@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Huang <ahuang12@lenovo.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 53/64] iommu/amd: Fix the configuration of GCR3 table root pointer
+Date:   Wed, 22 Apr 2020 11:57:37 +0200
+Message-Id: <20200422095022.347731069@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,41 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Adrian Huang <ahuang12@lenovo.com>
 
-[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
+[ Upstream commit c20f36534666e37858a14e591114d93cc1be0d34 ]
 
-The "cmd" comes from the user and it can be up to 255.  It it's more
-than the number of bits in long, it results out of bounds read when we
-check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
-ND_CMD_CALL (10) so I added a compare against that.
+The SPA of the GCR3 table root pointer[51:31] masks 20 bits. However,
+this requires 21 bits (Please see the AMD IOMMU specification).
+This leads to the potential failure when the bit 51 of SPA of
+the GCR3 table root pointer is 1'.
 
-Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+Fixes: 52815b75682e2 ("iommu/amd: Add support for IOMMUv2 domain mode")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/bus.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/iommu/amd_iommu_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 54a633e8cb5d2..48a070a37ea9b 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -984,8 +984,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 			return -EFAULT;
- 	}
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index 69f3d4c95b530..859b06424e5c4 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -352,7 +352,7 @@
  
--	if (!desc || (desc->out_num + desc->in_num == 0) ||
--			!test_bit(cmd, &cmd_mask))
-+	if (!desc ||
-+	    (desc->out_num + desc->in_num == 0) ||
-+	    cmd > ND_CMD_CALL ||
-+	    !test_bit(cmd, &cmd_mask))
- 		return -ENOTTY;
+ #define DTE_GCR3_VAL_A(x)	(((x) >> 12) & 0x00007ULL)
+ #define DTE_GCR3_VAL_B(x)	(((x) >> 15) & 0x0ffffULL)
+-#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0xfffffULL)
++#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0x1fffffULL)
  
- 	/* fail write commands (when read-only) */
+ #define DTE_GCR3_INDEX_A	0
+ #define DTE_GCR3_INDEX_B	1
 -- 
 2.20.1
 
