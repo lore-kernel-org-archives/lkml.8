@@ -2,142 +2,130 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F170C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C262C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8BA2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABFE20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:03:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="chRmDbJ0"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oZ6I3DZ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgDVXAb (ORCPT
+        id S1726398AbgDVXDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:00:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
+        Wed, 22 Apr 2020 19:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgDVXAa (ORCPT
+        by vger.kernel.org with ESMTP id S1726077AbgDVXDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:00:30 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279C3C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:00:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u16so4511063wmc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:00:30 -0700 (PDT)
+        Wed, 22 Apr 2020 19:03:24 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C738AC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:03:24 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id w18so1907155qvs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:03:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=e554rqOamBc28ZX8vvZpsq69HYHRpFVMDSx5grItHmM=;
-        b=chRmDbJ0uUdLZcdIJvf8cYaWYGgdwKM+jUSpQz7q9qlWn0tzs2WPYj6NQl2dhIh4fc
-         PvAWXm7KCUbFY2ABHnDTtEhST+1qxdmWmWoKLsOwTKX2Iv9osg6hHutG8/6VyWdI0SIm
-         Ik+2UYbOCpb0jVQ5GgDCcBUEw+v+wme1WnC60YGXRFZJfNhAhn8hWX038WJ3uJGvGGP5
-         ZL/4tbrKW6PgNzgkMNxGH0bX4DdfdBXlyVvLqG6HPlW96IS0WQwRk+tGnB9BVTbxxiFC
-         do2w3Wj1azkyqvzvX15VSwGD7f9/593SL5IjcuaK6BGiKA6EQ2xCuNpbQYy5TEXqvQxq
-         +QMg==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q+ZUmGFleIQNVOFy8fFchFqrYnQYIl2Kzm4X0Ut4dcY=;
+        b=oZ6I3DZ+oVw9DiS9NwH9ubCLOmCZjMFu1LmScEI32LKMmsrmV8ERXRrqSIdw2wctfi
+         /sduzA/W/yc2gYcBwwRDVv40zmcI4Z45eG+c3sfRB/CFQxip2mHDO/dj7oQ7CDgm/sXm
+         d+18N/vsSc0iLhx+gvnDebageo5+ke+0dGWas=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=e554rqOamBc28ZX8vvZpsq69HYHRpFVMDSx5grItHmM=;
-        b=lTFFeflJ/r2n0ZZvsHgncdq2qMHc23SmQPKbyYpUlzLnZIXOP5hkCgwSAIHdQw6xlu
-         Lwh7oO+aQUJ8LQE1Tpul9+0GYgLZP5XQJKqSJ72bUPuyHoUmW2ws8PecBek2wZriqTBV
-         D/2oKJ57ri0FqAtBFW3mDmggx1KsJJbBLzuZ7Tu6A62KxoUsuVtRHTnpD9m0LFyW0jH+
-         sgF7/ToZ59HhFb3FmTYTxFZhZsOI8Q/UMJUg5cVX77WLVqr7wvKRgbgnyhVUBv4pZ0FC
-         VB2vN4lSprlrMb7frte+BMjOMjSAccMa+Ue0RS80NQsqTEv3BgtERbkQ7aMSlsK/fqw4
-         Vuwg==
-X-Gm-Message-State: AGi0PuZsKS3sz6hRmhRPxjD2lSSRZo8MKrlXXn6XVKP6Fx8ktDrUEv38
-        +ywqYVgd/tUp/dQM7uUlzc8KYwrIxgE0PN1pKCXjng==
-X-Google-Smtp-Source: APiQypIBvwm616bfo/vRDZbkHiy6iwoJAtIW33eryYqczNrjRdeZMMvY1tlPxntuueFgSTp8Q1w80CJo4ZfmJvA8awo=
-X-Received: by 2002:a1c:9989:: with SMTP id b131mr788850wme.176.1587596428422;
- Wed, 22 Apr 2020 16:00:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q+ZUmGFleIQNVOFy8fFchFqrYnQYIl2Kzm4X0Ut4dcY=;
+        b=aae7kSgkECyJZunDz6lG8RvF0y3Bx9XE4z2CBKJ9uDjnm+RyZGhEFWs4FX5P3cd3cx
+         Re9OZUb7LIfeNmXEdZnsNCDmhjh8333Yh0+GdaeuIBLZ1qHOMRe7pu70jPcJWCRjn3zp
+         YGsNRBaxW1Ni7tpVj2TLBHUZ6EIIu7G7T7kATiMgpWx4yGjiEetVgoElBtecRvGs6ul9
+         ybhpgrrtqyw50YhjeYJGKUBTmIfb5E+07o3s8Pn+QMtlF2CaDHqSHfenYTtWaBj7lGGx
+         Ss6maN4dPLugh46ZksG7yY8OezZP1tmjTxSN+dW6Tu5E4E6+znliKzkwH6+VuoFZB9Id
+         oFzQ==
+X-Gm-Message-State: AGi0Puac6XexbY+dV5LomN/El4sYMbJB0EoVC/CgLHaHySr8OGr+hqCk
+        rqoXOV7oTxhISID8YYtqT9hnkQ==
+X-Google-Smtp-Source: APiQypLG48pUEwzbOklpqni6odRxIsyj2/KAASfEwNNej9pTvyYVGnFgJ4r2rHVRVvuHh0XP9YEo0w==
+X-Received: by 2002:a0c:9e6d:: with SMTP id z45mr1420079qve.206.1587596603750;
+        Wed, 22 Apr 2020 16:03:23 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g133sm400658qke.73.2020.04.22.16.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 16:03:23 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 19:03:22 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v1 5/6] rcu: rename kfree_call_rcu()/__kfree_rcu()
+Message-ID: <20200422230322.GA100393@google.com>
+References: <20200315181840.6966-1-urezki@gmail.com>
+ <20200315181840.6966-6-urezki@gmail.com>
+ <20200316152541.GD190951@google.com>
+ <20200316190144.GB10577@pc636>
+ <20200420201527.679247f6fa76cba4331f3cd3@linux-foundation.org>
+ <20200421120358.GA5117@pc636>
 MIME-Version: 1.0
-References: <20200421195629.GE608746@tassilo.jf.intel.com> <5957D3CC-B54B-4A1A-998A-0E6F58589CF4@amacapital.net>
- <20200421205119.GK1809@sasha-vm>
-In-Reply-To: <20200421205119.GK1809@sasha-vm>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Wed, 22 Apr 2020 16:00:16 -0700
-Message-ID: <CALCETrUGuvMgvcsUWsdmUr-=6c6BpRpOKC1MN+E16g17U7vyMQ@mail.gmail.com>
-Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        "Metzger, Markus T" <markus.t.metzger@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Pedro Alves <palves@redhat.com>,
-        Simon Marchi <simark@simark.ca>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421120358.GA5117@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 1:51 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> On Tue, Apr 21, 2020 at 01:21:39PM -0700, Andy Lutomirski wrote:
-> >
-> >
-> >> On Apr 21, 2020, at 12:56 PM, Andi Kleen <ak@linux.intel.com> wrote:
-> >>
-> >> =EF=BB=BF
-> >>>
-> >>> Andi's point is that there is no known user it breaks, and the Intel
-> >>> folks did some digging into potential users who might be affected by
-> >>> this, including 'rr' brought up by Andy, and concluded that there won=
-'t
-> >>> be breakage as a result of this patchset:
-> >>>
-> >>>    https://mail.mozilla.org/pipermail/rr-dev/2018-March/000616.html
-> >>>
-> >>> Sure, if you poke at it you could see a behavior change, but is there
-> >>> an actual user that will be affected by it? I suspect not.
-> >>
-> >> Actually we don't know of any behavior changes caused by the kernel
-> >> with selectors.
-> >>
-> >> The application can change itself of course, but only if it uses the
-> >> new instructions, which no current application does.
-> >
-> >If you use ptrace to change the gs selector, the behavior is different o=
-n a patched kernel.
-> >
-> >Again, I=E2=80=99m not saying that the change is problematic. But I will=
- say that the fact that anyone involved in this series keeps ignoring this =
-fact makes me quite uncomfortable with the patch set.
->
-> That's what I referred to with "poke at it". While the behavior may be
-> different, I fail to find anyone who cares.
->
-> >>
-> >> [This was different in the original patch kit long ago which could
-> >> change behavior on context switch for programs with out of sync select=
-ors,
-> >> but this has been long fixed]
-> >
-> >That=E2=80=99s the issue I was referring to.
-> >
-> >>
-> >> A debugger can also change behavior, but we're not aware of any case
-> >> that it would break.
-> >
-> >How hard did you look?
->
-> Come on, how does one respond to this?
->
-> Is there a real use case affected by this? If so, point it out and I'll
-> be happy to go test it. This was already done (per your previous
-> request) for gdb and rr.
->
+On Tue, Apr 21, 2020 at 02:03:58PM +0200, Uladzislau Rezki wrote:
+> Hello, Andrew.
+> 
+> > > > I based the kfree_rcu shrinker patches on an 'rcu/kfree' branch in my git
+> > > > tree: https://github.com/joelagnel/linux-kernel/tree/rcu/kfree
+> > > > 
+> > > > For now I manually applied 5/6. All others applied cleanly.
+> > > > 
+> > > > Updated the tree as I continue to review your patches.
+> > > >
+> > 
+> > I'm not sure what's happening here - these patches aren't yet in
+> > linux-next.
+> > 
+> Please have a look here, i explained in detail in my cover latter
+> what we would like to achieve: https://lkml.org/lkml/2020/3/23/242
+> 
+> > A couple of thoughts:
+> > 
+> > - Please cc linux-mm@kvack.org on this patchset and anything else
+> >   which impacts MM.
+> > 
+> OK. I thought that is related to RCU, therefore i did not want to
+> spam, but i included you :) Next time we will keep linux-mm@kvack.org
+> in a loop. Sorry for that.
 
-gdb and rr are certainly a good start.  If patches show up, I'll take a loo=
-k.
+Sorry from my side as well. Will keep linux-mm in the loop henceforth.
+
+thanks,
+
+ - Joel
+
+
+> 
+> >
+> > - It's a bit strange to create new infrastructure which has but a
+> >   single call site.  Please tell us much more about "there was also
+> >   request/interest so there will be new comers" to set minds at ease. 
+> > 
+> >   Who/where are these possible new callsites and when can we expect to
+> >   see that code?
+> > 
+> https://lkml.org/lkml/2020/3/23/242 here i wrote motivation. Please
+> check it. If you have some questions please ask.
+> 
+> --
+> Vlad Rezki
