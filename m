@@ -2,90 +2,114 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0353EC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84268C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D77BB2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611BA206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CtPbMAnP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgDVIJh (ORCPT
+        id S1726614AbgDVIKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:09:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3118 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVIJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:09:31 -0400
-IronPort-SDR: +m9f03o3W9SDK07bd3LqMR+nvhEDE7W6pQJuBEnjkB4ku3iNfa3D/PQsYQHM28bk9TVWj/6qlq
- k4KAXFmPoa9Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 01:09:31 -0700
-IronPort-SDR: Wn0DWR4rFVqBBrCZR51mE6qJ8Dy3fREZ6QTcElA5HhY5SG33s1lX4qDQ/7GX4xlVcjXdSgWO+R
- VTWyrEQ4b/vQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
-   d="scan'208";a="365609644"
-Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 01:09:29 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        Liu Yi L <yi.l.liu@intel.com>, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 4/4] iommu/vt-d: Remove redundant IOTLB flush
-Date:   Wed, 22 Apr 2020 16:06:11 +0800
-Message-Id: <20200422080611.15689-5-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200422080611.15689-1-baolu.lu@linux.intel.com>
-References: <20200422080611.15689-1-baolu.lu@linux.intel.com>
+        Wed, 22 Apr 2020 04:10:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725842AbgDVIKn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:10:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBDBC03C1A6;
+        Wed, 22 Apr 2020 01:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=67WpxxlCgmhP33pDM7+RRLK1Dw/Wlqp6Mzgtcg8F0+s=; b=CtPbMAnP7cpzodaISmc1Wdoj00
+        2ojUWAmmpSmN1TFTleYUebzjMSwlh8pw1C4LDZAM7BI/5vd44YDklxmJGVq33vu9939PUzqZyCvSM
+        d3oLyz2n+XFctDKmW2cRhZnPLLmeIRyCo9PbvCS2f5JSPTkzIYZ/GAsz2B9DPfMLMESpafZ3A37dM
+        kuhv7SZXlnMBRrRAvj+1fOi1E/OR1UPt1f9i9rVjYc68381u9Azn83v/CsMlUFKvIlL4c6lkbXozV
+        5szWgtf/8d4UdKL5e1bw8b/kuiQgqNaz/6uGaAr1YIWwxEHuLfgoct85LnxSNG7vuO/HwE5XvTsQe
+        ydyoqRfQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRASR-000054-Eh; Wed, 22 Apr 2020 08:10:11 +0000
+Date:   Wed, 22 Apr 2020 01:10:11 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
+Message-ID: <20200422081011.GA22409@infradead.org>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-4-mcgrof@kernel.org>
+ <20200422072715.GC19116@infradead.org>
+ <20200422074802.GS11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422074802.GS11244@42.do-not-panic.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOTLB flush already included in the PASID tear down and the page request
-drain process. There is no need to flush again.
+On Wed, Apr 22, 2020 at 07:48:02AM +0000, Luis Chamberlain wrote:
+> > I don't see why we need this check.  If it is valueable enough we
+> > should have a debugfs_create_dir_exclusive or so that retunrns an error
+> > for an exsting directory, instead of reimplementing it in the caller in
+> > a racy way.  But I'm not really sure we need it to start with.
+> 
+> In short races, and even with synchronous request_queue removal I'm
+> seeing the race is still possible, but that's due to some other races
+> I'm going to chase down now.
+> 
+> The easier solution really is to just have a debugfs dir created for
+> each partition if debugfs is enabled, this way the directory will
+> always be there, and the lookups are gone.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-svm.c | 3 ---
- 1 file changed, 3 deletions(-)
+That sounds like the best plan to me.
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 2534641ef707..543109fe2003 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -212,7 +212,6 @@ static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- 	list_for_each_entry_rcu(sdev, &svm->devs, list) {
- 		intel_pasid_tear_down_entry(svm->iommu, sdev->dev, svm->pasid);
- 		intel_svm_drain_prq(sdev->dev, svm->pasid);
--		intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 	}
- 	rcu_read_unlock();
- 
-@@ -406,7 +405,6 @@ int intel_svm_unbind_gpasid(struct device *dev, int pasid)
- 			list_del_rcu(&sdev->list);
- 			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
- 			intel_svm_drain_prq(dev, svm->pasid);
--			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 			kfree_rcu(sdev, rcu);
- 
- 			if (list_empty(&svm->devs)) {
-@@ -645,7 +643,6 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
- 			 * hard to be as defensive as we might like. */
- 			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
- 			intel_svm_drain_prq(dev, svm->pasid);
--			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
- 			kfree_rcu(sdev, rcu);
- 
- 			if (list_empty(&svm->devs)) {
--- 
-2.17.1
+> 
+> > > +
+> > > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> > > +					    blk_debugfs_root);
+> > > +	if (!q->debugfs_dir)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +void blk_queue_debugfs_unregister(struct request_queue *q)
+> > > +{
+> > > +	debugfs_remove_recursive(q->debugfs_dir);
+> > > +	q->debugfs_dir = NULL;
+> > > +}
+> > 
+> > Which to me suggests we can just fold these two into the callers,
+> > with an IS_ENABLED for the creation case given that we check for errors
+> > and the stub will always return an error.
+> 
+> Sorry not sure I follow this.
 
+Don't both with the two above functions and just open code them in
+the callers.  IFF you still want to check for errors after the
+discussion with Greg, wrap the call in a
+
+	if (IS_ENABLED(CONFIG_DEBUG_FS))
+
+to ensure that you don't fail queue creation in the !DEBUG_FS
+case.
