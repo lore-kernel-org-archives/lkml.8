@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1195C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF80C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A20CE2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6163D20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551677;
-	bh=0H5qTCo9MCcBp0sS1kS6EKUNGIM5n9EoGASG7YstmfQ=;
+	s=default; t=1587551682;
+	bh=uHb5jBjIoswJZxzBsYgMUJiHR8BPe/xFo1UMnp0/+P8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hg5zbPymgl9pqOFy1nN9IfLDw+FoBEg5jSOjuxCm/1QKu4UcPeGZjApA+P+V0rUqp
-	 VpEZOfgTHAhZeWruOHuTCFKBIn6UHYzdxtUMXcnqaXjFat9seK4n14H+fwnIODePk6
-	 o711419jzoYYLSgWTzAe4AvNs1ClPa61KBI0FzSQ=
+	b=Qex1m3l71J7uLqoL7dG4T9e4DllbXO2pA1IZTwtZF2nD2UuXa1KsBNoKADNNSLVxv
+	 yPd/WW70SToFwRN219FJ6NiHXp+HEu+Lk3OOgBeAzfg1LPz/GOzA6BVYOtHQGkejCn
+	 5G9dRkcxyyrNHp7WUn4nrb8xgKKrv/FH6p0jPBVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731288AbgDVKeg (ORCPT
+        id S1730395AbgDVKYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:34:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60752 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730401AbgDVKYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:12 -0400
+        id S1730273AbgDVKXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE1620776;
-        Wed, 22 Apr 2020 10:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F2862084D;
+        Wed, 22 Apr 2020 10:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551051;
-        bh=0H5qTCo9MCcBp0sS1kS6EKUNGIM5n9EoGASG7YstmfQ=;
+        s=default; t=1587551004;
+        bh=uHb5jBjIoswJZxzBsYgMUJiHR8BPe/xFo1UMnp0/+P8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tjiu8AjGRZXu8b/H1Fr/8AbUxPz9P76RsjeI4tAJcIWCucx6hDfzB4VnWepnq1ISk
-         ujAFCBGY1RhIjnnUw2fH0Ky9U3oB3JuwsvoSQFQFukrZ5eyZ320n63qOMS2BtnT9dn
-         kXipxx2u6UBr1iuJnESEmVknCqlVGklOsjSZ4qU8=
+        b=JKbaVX0GNT3c/L5dqV4E5YCZuZWliT/E+0hEbxrGbpPiYiK/97sLobWg6H6GumwJy
+         K8YRD/zXJMIOgui48NceCZdVzzjmGYlqGuYZS0w/eKTWQ0RNbFUgfswXpPnAXqXVLc
+         G6+XXEBsYcod53IV0LNtpUnZi9OeLpHmeTh5mwOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 082/166] f2fs: Fix mount failure due to SPO after a successful online resize FS
-Date:   Wed, 22 Apr 2020 11:56:49 +0200
-Message-Id: <20200422095057.555918140@linuxfoundation.org>
+Subject: [PATCH 5.6 060/166] clk: tegra: Fix Tegra PMC clock out parents
+Date:   Wed, 22 Apr 2020 11:56:27 +0200
+Message-Id: <20200422095055.277409896@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,50 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 682756827501dc52593bf490f2d437c65ec9efcb ]
+[ Upstream commit 6fe38aa8cac3a5db38154331742835a4d9740788 ]
 
-Even though online resize is successfully done, a SPO immediately
-after resize, still causes below error in the next mount.
+Tegra PMC clocks clk_out_1, clk_out_2, and clk_out_3 supported parents
+are osc, osc_div2, osc_div4 and extern clock.
 
-[   11.294650] F2FS-fs (sda8): Wrong user_block_count: 2233856
-[   11.300272] F2FS-fs (sda8): Failed to get valid F2FS checkpoint
+Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
+for PMC clocks.
 
-This is because after FS metadata is updated in update_fs_metadata()
-if the SBI_IS_DIRTY is not dirty, then CP will not be done to reflect
-the new user_block_count.
+This patch fixes this.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/gc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 9cff2502e3bc6..2f645c591a000 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1579,11 +1579,17 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
- 		goto out;
- 	}
+diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
+index bec3e008335f3..5e044ba1ae364 100644
+--- a/drivers/clk/tegra/clk-tegra-pmc.c
++++ b/drivers/clk/tegra/clk-tegra-pmc.c
+@@ -49,16 +49,16 @@ struct pmc_clk_init_data {
  
-+	mutex_lock(&sbi->cp_mutex);
- 	update_fs_metadata(sbi, -secs);
- 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
-+	set_sbi_flag(sbi, SBI_IS_DIRTY);
-+	mutex_unlock(&sbi->cp_mutex);
-+
- 	err = f2fs_sync_fs(sbi->sb, 1);
- 	if (err) {
-+		mutex_lock(&sbi->cp_mutex);
- 		update_fs_metadata(sbi, secs);
-+		mutex_unlock(&sbi->cp_mutex);
- 		update_sb_metadata(sbi, secs);
- 		f2fs_commit_super(sbi, false);
- 	}
+ static DEFINE_SPINLOCK(clk_out_lock);
+ 
+-static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern1",
++static const char *clk_out1_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern1",
+ };
+ 
+-static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern2",
++static const char *clk_out2_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern2",
+ };
+ 
+-static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern3",
++static const char *clk_out3_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern3",
+ };
+ 
+ static struct pmc_clk_init_data pmc_clks[] = {
 -- 
 2.20.1
 
