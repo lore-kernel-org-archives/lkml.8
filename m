@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B22C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735C0C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0012071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB8A2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551913;
-	bh=0y/5BMQGM3DYpHq4BrRPiLOjAhM4y++Aic+mXtCHW3s=;
+	s=default; t=1587551918;
+	bh=Jkaizt38vuK3ad4xV68G+hRZiQoc5INa/ZDzkOBwnko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wKF40x9wWt5ws9b9zqfIMmWaS0wHgyAqHibt88AEVJW5L/La4Ch68GtpcLdceWHPn
-	 fUCmX09lJklCoJ3i2nNKE7UPMgqORp+vBauTG519QxzdizPs7CfXidte2nToWNcZE/
-	 uAOWJkVGdtMtTxzkfODBuKQyEJnpOQfxtvnfLo+M=
+	b=SYQjgu+fnBw7Q5+yYjgXLxdr5LXvsM4PG3T3jiNyZ0SVpVc1xFjQeOuxZ25Ljex7H
+	 S5CF9doKGUd84v0BSCfh6CXSHNSX+k42/6pIslfVINdcoBqUZk1RXw4HGoGwWHdHAV
+	 HBKE2eMa9m9m8Chb3/uLY17fqqKvt/+CF6dhESEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbgDVKic (ORCPT
+        id S1731005AbgDVKi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58354 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:38:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729916AbgDVKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729846AbgDVKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 06:22:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2BE20780;
-        Wed, 22 Apr 2020 10:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 312B620CC7;
+        Wed, 22 Apr 2020 10:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550913;
-        bh=0y/5BMQGM3DYpHq4BrRPiLOjAhM4y++Aic+mXtCHW3s=;
+        s=default; t=1587550908;
+        bh=Jkaizt38vuK3ad4xV68G+hRZiQoc5INa/ZDzkOBwnko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLmId7krcogdJgacgP0luF/J+v6pM1dd3xKSBLMONM/yKS9/l5VxVD7V8ytU7ToHq
-         JpT1UaBlxmRbpxa/ZX0jtR1GxV71jVHKFfbtTmruHA4ULfEC1N9mM6EIZ2je1qvWmb
-         +2r8u8Ym94rKoShk05VNkh6u8nI6+DelqAWemzMk=
+        b=GG4gZyam3HWH9z/vBCFdzSMsYHqrZ8vMXoCAeAAi0x0UgkGSewvhID2w0AaSaStQ+
+         9qdZsSPHHoaWYP9YoWlIBQzLHuB4l1as1vP2JkexhDhn+6TJ2SyuttCMR5KY5ABUIV
+         CGMGcW/G7d6YTPdzsDYBihrD8YUfcvLtnEQkNSZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>
-Subject: [PATCH 5.6 008/166] xsk: Fix out of boundary write in __xsk_rcv_memcpy
-Date:   Wed, 22 Apr 2020 11:55:35 +0200
-Message-Id: <20200422095049.026646752@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Roman Gushchin <guro@fb.com>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.6 006/166] ext4: use non-movable memory for superblock readahead
+Date:   Wed, 22 Apr 2020 11:55:33 +0200
+Message-Id: <20200422095048.754376835@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -61,39 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Roman Gushchin <guro@fb.com>
 
-commit db5c97f02373917efe2c218ebf8e3d8b19e343b6 upstream.
+commit d87f639258a6a5980183f11876c884931ad93da2 upstream.
 
-first_len is the remainder of the first page we're copying.
-If this size is larger, then out of page boundary write will
-otherwise happen.
+Since commit a8ac900b8163 ("ext4: use non-movable memory for the
+superblock") buffers for ext4 superblock were allocated using
+the sb_bread_unmovable() helper which allocated buffer heads
+out of non-movable memory blocks. It was necessarily to not block
+page migrations and do not cause cma allocation failures.
 
-Fixes: c05cd3645814 ("xsk: add support to allow unaligned chunk placement")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Link: https://lore.kernel.org/bpf/1585813930-19712-1-git-send-email-lirongqing@baidu.com
+However commit 85c8f176a611 ("ext4: preload block group descriptors")
+broke this by introducing pre-reading of the ext4 superblock.
+The problem is that __breadahead() is using __getblk() underneath,
+which allocates buffer heads out of movable memory.
+
+It resulted in page migration failures I've seen on a machine
+with an ext4 partition and a preallocated cma area.
+
+Fix this by introducing sb_breadahead_unmovable() and
+__breadahead_gfp() helpers which use non-movable memory for buffer
+head allocations and use them for the ext4 superblock readahead.
+
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Link: https://lore.kernel.org/r/20200229001411.128010-1-guro@fb.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xdp/xsk.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/buffer.c                 |   11 +++++++++++
+ fs/ext4/inode.c             |    2 +-
+ fs/ext4/super.c             |    2 +-
+ include/linux/buffer_head.h |    8 ++++++++
+ 4 files changed, 21 insertions(+), 2 deletions(-)
 
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -131,8 +131,9 @@ static void __xsk_rcv_memcpy(struct xdp_
- 		u64 page_start = addr & ~(PAGE_SIZE - 1);
- 		u64 first_len = PAGE_SIZE - (addr - page_start);
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1377,6 +1377,17 @@ void __breadahead(struct block_device *b
+ }
+ EXPORT_SYMBOL(__breadahead);
  
--		memcpy(to_buf, from_buf, first_len + metalen);
--		memcpy(next_pg_addr, from_buf + first_len, len - first_len);
-+		memcpy(to_buf, from_buf, first_len);
-+		memcpy(next_pg_addr, from_buf + first_len,
-+		       len + metalen - first_len);
++void __breadahead_gfp(struct block_device *bdev, sector_t block, unsigned size,
++		      gfp_t gfp)
++{
++	struct buffer_head *bh = __getblk_gfp(bdev, block, size, gfp);
++	if (likely(bh)) {
++		ll_rw_block(REQ_OP_READ, REQ_RAHEAD, 1, &bh);
++		brelse(bh);
++	}
++}
++EXPORT_SYMBOL(__breadahead_gfp);
++
+ /**
+  *  __bread_gfp() - reads a specified block and returns the bh
+  *  @bdev: the block_device to read from
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4348,7 +4348,7 @@ make_io:
+ 			if (end > table)
+ 				end = table;
+ 			while (b <= end)
+-				sb_breadahead(sb, b++);
++				sb_breadahead_unmovable(sb, b++);
+ 		}
  
- 		return;
+ 		/*
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4331,7 +4331,7 @@ static int ext4_fill_super(struct super_
+ 	/* Pre-read the descriptors into the buffer cache */
+ 	for (i = 0; i < db_count; i++) {
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sb_breadahead(sb, block);
++		sb_breadahead_unmovable(sb, block);
  	}
+ 
+ 	for (i = 0; i < db_count; i++) {
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -189,6 +189,8 @@ struct buffer_head *__getblk_gfp(struct
+ void __brelse(struct buffer_head *);
+ void __bforget(struct buffer_head *);
+ void __breadahead(struct block_device *, sector_t block, unsigned int size);
++void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
++		  gfp_t gfp);
+ struct buffer_head *__bread_gfp(struct block_device *,
+ 				sector_t block, unsigned size, gfp_t gfp);
+ void invalidate_bh_lrus(void);
+@@ -319,6 +321,12 @@ sb_breadahead(struct super_block *sb, se
+ 	__breadahead(sb->s_bdev, block, sb->s_blocksize);
+ }
+ 
++static inline void
++sb_breadahead_unmovable(struct super_block *sb, sector_t block)
++{
++	__breadahead_gfp(sb->s_bdev, block, sb->s_blocksize, 0);
++}
++
+ static inline struct buffer_head *
+ sb_getblk(struct super_block *sb, sector_t block)
+ {
 
 
