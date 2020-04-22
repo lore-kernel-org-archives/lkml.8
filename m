@@ -2,171 +2,113 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD47C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F2FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D48012098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9752098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uhT1tnQf"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WU6VTXSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgDVTUq (ORCPT
+        id S1726576AbgDVTVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
+        Wed, 22 Apr 2020 15:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgDVTUp (ORCPT
+        by vger.kernel.org with ESMTP id S1725935AbgDVTVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:20:45 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7AAC03C1A9;
-        Wed, 22 Apr 2020 12:20:45 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so1593011pfc.12;
-        Wed, 22 Apr 2020 12:20:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KtmFmWbQrY8pc1EpVQXZVMz+o7YgDf3mMA7eDgpe41c=;
-        b=uhT1tnQfPSj/TjtZ3wZw+so7Z0Vt7cA+7T6xXaEseKDmfs5FBjyrvrTomdpZvQDiY2
-         2k5+TnTWWIoEE8Acv1BllsIWWxWBlBAcIqY4aYLDMMMYGCq2FM+9mKXgjzqBDTt8pqMC
-         oNbP3xVPWlH15/zlEZOQTawwTnBtbtNgjGJIxDlJlY0ETcRFB3H59NFbDMKKvi+PYdlF
-         P9XmiAm9GYIflk6+mwaBhQviWGrRoBjEM6x1PIPNbs5d04JFOQ4gfn6liDfD+LG8wOKn
-         3aFUdAl0kNG+iGbWf5QmqIkoszQHtXkfvo2qM3zaqtCD0YV82j+Q21XA6mhylE7eaIem
-         tXRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KtmFmWbQrY8pc1EpVQXZVMz+o7YgDf3mMA7eDgpe41c=;
-        b=buLPIHExYGurUyi7e1kAUHlS4xKha2C56YltIRc8SBwUJJtrrAiwQbVEm0TqpISr4j
-         Cg3MTu1VWIcySbv/sv3rB0t3r8x1qsDBSfL7u6+DDj3RDDZaDbDLzPF+9wKgTti/V7HU
-         SkcHR5RumgJyIwdGBpl7Sm/UpXrAFBLzTzfWD4CiyspBGE6Xmjp76sdJbJLLsX5fFZ09
-         F1Ju7IAjKGKGpH0RuREUJpZ6VebI2g9GnwaFK5128KCaWB00hzWy0hMCUP65bGtYCKNa
-         azjz7dJgmYgqSacFUPAmZYVaKU7XbGjPha1Q6YMbR8U3q9Xs5Awsr6fEKLMaELVA7v6N
-         zltw==
-X-Gm-Message-State: AGi0PuYm4x12zcIpEov81Gtg+lxurEHxPJf2YlRDX7jmHfSM1spr07VK
-        3a45m/lqJRq+LUMQKpCqRmf/xISzk9XU1ll92Fg=
-X-Google-Smtp-Source: APiQypITCf2xMd3UMkVUBCj0ZbhYW1/aHWeFytRZabsdA3yMLAvCt9JL2QIHRkyc3NlzpGV3HtiJhypU95zkkNQfOWE=
-X-Received: by 2002:a63:5511:: with SMTP id j17mr576026pgb.4.1587583245100;
- Wed, 22 Apr 2020 12:20:45 -0700 (PDT)
+        Wed, 22 Apr 2020 15:21:22 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93C6C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 12:21:22 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F0DC10061F884AD77E9675A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c100:61f8:84ad:77e9:675a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9767C1EC0D41;
+        Wed, 22 Apr 2020 21:21:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587583280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uwppnCchAiG8ZwLKxdIRMiSv5cSPYMqUKzvWQTerwHo=;
+        b=WU6VTXSf04lYkmozCkK5w5zhDZykha3Z6APpkq0CZgzMF+2U4teiuYnzU+maYFnlx6Qbrv
+        8AmuzpPScOyq8sIsCk9nwTGzABklMDoNUu1EJ3jS32gma6IXJqy5J9Tyu483Hn31cuHv1S
+        1AjAwAsCdf/beHQz5pr8WjHQjleLkUA=
+Date:   Wed, 22 Apr 2020 21:21:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200422192113.GG26846@zn.tnic>
+References: <20200417084224.GB7322@zn.tnic>
+ <20200417085859.GU2424@tucnak>
+ <20200417090909.GC7322@zn.tnic>
+ <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
+ <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
+ <20200417190607.GY2424@tucnak>
+ <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+ <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
+ <20200422102309.GA26846@zn.tnic>
+ <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
 MIME-Version: 1.0
-References: <cc41ea10be9ab96568f0371784e3b9f8d9f434b9.1587577548.git.sean.wang@mediatek.com>
-In-Reply-To: <cc41ea10be9ab96568f0371784e3b9f8d9f434b9.1587577548.git.sean.wang@mediatek.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Apr 2020 22:20:33 +0300
-Message-ID: <CAHp75VdSvE9RPq3V8LTVX7OjaYs1PThVi2f1roh3p5EY_k0ANA@mail.gmail.com>
-Subject: Re: [PATCH v3] tty: serial: don't do termios for BTIF
-To:     Sean Wang <sean.wang@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Stefan Roese <sr@denx.de>, Arnd Bergmann <arnd@arndb.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        tthayer <tthayer@opensource.altera.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 9:05 PM <sean.wang@mediatek.com> wrote:
->
-> From: Sean Wang <sean.wang@mediatek.com>
->
-> Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
-> BT in order to be instead of the UART interface between BT module and Host
-> CPU, and not exported to user space to access.
->
-> As the UART design, BTIF will be an APB slave and can transmit or receive
-> data by MCU access, but doesn't provide termios function like baudrate and
-> flow control setup.
->
-> Even LCR on offset 0xC that is just a FAKELCR
-> a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
->    will not be readable/writable.
->
-> b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
->    IIR(0x08), and LSR(0x14) will not be readable/writable.
->
-> So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
-> case.
->
-> Fixes: 1c16ae65e250 ("serial: 8250: of: Add new port type for MediaTek BTIF controller on MT7622/23 SoC")
-> Cc: Steven Liu <steven.liu@mediatek.com>
+On Wed, Apr 22, 2020 at 11:55:50AM -0700, Nick Desaulniers wrote:
+> Can you add by whom?  It's not clear to me which function call in
+> start_secondary modifies the stack protector guard.
 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+How's that
 
-I didn't suggest this change. I only commented on the name of the macro.
+        /*
+         * Prevent tail call to cpu_startup_entry() because the stack protector
+         * guard has been changed a couple of functions up, in
+         * boot_init_stack_canary() and must not be checked before tail calling
+         * another function.
+         */
+        asm ("");
 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
->
-> --
-> v1->v2:
-> no change on termios->c_cflag and refine commit message
->
-> v2->v3:
-> change the naming from NMOD to NTIO as TIO is a well established prefix
-> for termios IOCTLs.
-> ---
->  drivers/tty/serial/8250/8250.h      | 1 +
->  drivers/tty/serial/8250/8250_port.c | 5 ++++-
->  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-> index 33ad9d6de532..234d8db470c0 100644
-> --- a/drivers/tty/serial/8250/8250.h
-> +++ b/drivers/tty/serial/8250/8250.h
-> @@ -82,6 +82,7 @@ struct serial8250_config {
->  #define UART_CAP_MINI  (1 << 17)       /* Mini UART on BCM283X family lacks:
->                                          * STOP PARITY EPAR SPAR WLEN5 WLEN6
->                                          */
-> +#define UART_CAP_NTIO  (1 << 18)       /* UART doesn't do termios */
->
->  #define UART_BUG_QUOT  (1 << 0)        /* UART has buggy quot LSB */
->  #define UART_BUG_TXEN  (1 << 1)        /* UART has buggy TX IIR status */
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index 0325f2e53b74..abc974b4113f 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -286,7 +286,7 @@ static const struct serial8250_config uart_config[] = {
->                 .tx_loadsz      = 16,
->                 .fcr            = UART_FCR_ENABLE_FIFO |
->                                   UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT,
-> -               .flags          = UART_CAP_FIFO,
-> +               .flags          = UART_CAP_FIFO | UART_CAP_NTIO,
->         },
->         [PORT_NPCM] = {
->                 .name           = "Nuvoton 16550",
-> @@ -2544,6 +2544,9 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
->         unsigned long flags;
->         unsigned int baud, quot, frac = 0;
->
-> +       if (up->capabilities & UART_CAP_NTIO)
-> +               return;
-> +
->         if (up->capabilities & UART_CAP_MINI) {
->                 termios->c_cflag &= ~(CSTOPB | PARENB | PARODD | CMSPAR);
->                 if ((termios->c_cflag & CSIZE) == CS5 ||
-> --
-> 2.25.1
+?
 
+> Another question.  Do we not want a stack protector at all in this
+> function?  I'm not super familiar with how they work; do we not want
+> them at all, or simply not to check the guard?
 
+Not to check the guard. See the beginning of
+arch/x86/include/asm/stackprotector.h about how they work.
+
+> But if we're not going to check it, I think
+> __attribute__((no_stack_protector)) applied to start_secondary might
+> be a more precise fix.
+
+No such attribute in gcc yet. But yes, this came up a bit upthread, you
+can go back in time for details. :)
+
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
