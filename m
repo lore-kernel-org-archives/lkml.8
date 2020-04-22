@@ -2,52 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED936C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B732AC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8D8B2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912112070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550357;
-	bh=riH/lBRgNZh9iLXbysPeiUcE97OY0ociiRapqLHSDp0=;
+	s=default; t=1587550359;
+	bh=gWC0m1bf5GBLVpVZ+GDC5apO0b5wKNLHiXHzt13xFmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tta544Em2R431mCDRtlODNimGv9SxFI3p2BCfrpejTudBuzUJCmJBajIQ8Iry7J9U
-	 9xuWXb4UAKfMHOHOdb6vRnqB3UiCX2MRVpbacKoH7o6SlZzAr/Y1deTrI+hAmIX1Xm
-	 pJA8GqBsR+x8bou0Pol/oX8lHT6kL3bkYM/3cJKY=
+	b=fUZrtYr4B+H8u91FwDiQKWF8SpicEEFe5Hse6y/IZlOdiDkPCBeTVdqizk3+HOq/A
+	 EumoytfuCCoJcU+fQI6YWEZNyinPbscklbeHAemaTmw0HTTfGzHXf5AWxGocQDbD6y
+	 tkkP43xGdB17KvDZd2Oo+Lxya5ULvG+wfzm1wv2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgDVKMg (ORCPT
+        id S1729356AbgDVKMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45382 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgDVKMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:22 -0400
+        id S1728819AbgDVKMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629222075A;
-        Wed, 22 Apr 2020 10:12:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D616F20575;
+        Wed, 22 Apr 2020 10:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550341;
-        bh=riH/lBRgNZh9iLXbysPeiUcE97OY0ociiRapqLHSDp0=;
+        s=default; t=1587550344;
+        bh=gWC0m1bf5GBLVpVZ+GDC5apO0b5wKNLHiXHzt13xFmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZXmoUfbN8fUOlbkdR9s/cqBW89s9lUbrzYT6GbXTR258Asmd1jlL/VToxI22eln3
-         RJZRIv+iiUJ6uyMrR3iTEAQvqWVLDJ8xXkIb8EWUnqzgIXCG+LfqoT3TjliyiEgbSx
-         8hRlRaiKlM+OL4ZgOJ4UwaLC4L04/kSjZhlOvjqw=
+        b=DFbZfgFl1oejmNCrdiWX3fPatRTKQM9E7ATum+UzE3Rd/JyjKA9emkBIfcjyeDzN0
+         gyw+RD8C3c7YyBGtX6TL8PbVrX/wQ/HtGYz5bwLQNI8bvfMVkukVEc1NAywe6umNM0
+         Zh0G1v8ACn+LD5NWt7FNHOlnU7wvE6dEEvQHRGlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 100/199] drm: Remove PageReserved manipulation from drm_pci_alloc
-Date:   Wed, 22 Apr 2020 11:57:06 +0200
-Message-Id: <20200422095107.917541008@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 109/199] net: ipv6: do not consider routes via gateways for anycast address check
+Date:   Wed, 22 Apr 2020 11:57:15 +0200
+Message-Id: <20200422095108.624850147@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,98 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Tim Stallard <code@timstallard.me.uk>
 
-[ Upstream commit ea36ec8623f56791c6ff6738d0509b7920f85220 ]
+[ Upstream commit 03e2a984b6165621f287fadf5f4b5cd8b58dcaba ]
 
-drm_pci_alloc/drm_pci_free are very thin wrappers around the core dma
-facilities, and we have no special reason within the drm layer to behave
-differently. In particular, since
+The behaviour for what is considered an anycast address changed in
+commit 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after
+encountering pmtu exception"). This now considers the first
+address in a subnet where there is a route via a gateway
+to be an anycast address.
 
-commit de09d31dd38a50fdce106c15abd68432eebbd014
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Fri Jan 15 16:51:42 2016 -0800
+This breaks path MTU discovery and traceroutes when a host in a
+remote network uses the address at the start of a prefix
+(eg 2600:: advertised as 2600::/48 in the DFZ) as ICMP errors
+will not be sent to anycast addresses.
 
-    page-flags: define PG_reserved behavior on compound pages
+This patch excludes any routes with a gateway, or via point to
+point links, like the behaviour previously from
+rt6_is_gw_or_nonexthop in net/ipv6/route.c.
 
-    As far as I can see there's no users of PG_reserved on compound pages.
-    Let's use PF_NO_COMPOUND here.
+This can be tested with:
+ip link add v1 type veth peer name v2
+ip netns add test
+ip netns exec test ip link set lo up
+ip link set v2 netns test
+ip link set v1 up
+ip netns exec test ip link set v2 up
+ip addr add 2001:db8::1/64 dev v1 nodad
+ip addr add 2001:db8:100:: dev lo nodad
+ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
+ip netns exec test ip route add unreachable 2001:db8:1::1
+ip netns exec test ip route add 2001:db8:100::/64 via 2001:db8::1
+ip netns exec test sysctl net.ipv6.conf.all.forwarding=1
+ip route add 2001:db8:1::1 via 2001:db8::2
+ping -I 2001:db8::1 2001:db8:1::1 -c1
+ping -I 2001:db8:100:: 2001:db8:1::1 -c1
+ip addr delete 2001:db8:100:: dev lo
+ip netns delete test
 
-it has been illegal to combine GFP_COMP with SetPageReserved, so lets
-stop doing both and leave the dma layer to its own devices.
+Currently the first ping will get back a destination unreachable ICMP
+error, but the second will never get a response, with "icmp6_send:
+acast source" logged. After this patch, both get destination
+unreachable ICMP replies.
 
-Reported-by: Taketo Kabe
-Bug: https://gitlab.freedesktop.org/drm/intel/issues/1027
-Fixes: de09d31dd38a ("page-flags: define PG_reserved behavior on compound pages")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v4.5+
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200202171635.4039044-1-chris@chris-wilson.co.uk
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after encountering pmtu exception")
+Signed-off-by: Tim Stallard <code@timstallard.me.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/drm_pci.c | 25 ++-----------------------
- 1 file changed, 2 insertions(+), 23 deletions(-)
+ include/net/ip6_route.h |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/drm_pci.c b/drivers/gpu/drm/drm_pci.c
-index 1235c9877d6f1..2078d7706a67b 100644
---- a/drivers/gpu/drm/drm_pci.c
-+++ b/drivers/gpu/drm/drm_pci.c
-@@ -46,8 +46,6 @@
- drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t align)
- {
- 	drm_dma_handle_t *dmah;
--	unsigned long addr;
--	size_t sz;
+--- a/include/net/ip6_route.h
++++ b/include/net/ip6_route.h
+@@ -207,6 +207,7 @@ static inline bool ipv6_anycast_destinat
  
- 	/* pci_alloc_consistent only guarantees alignment to the smallest
- 	 * PAGE_SIZE order which is greater than or equal to the requested size.
-@@ -61,22 +59,13 @@ drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t ali
- 		return NULL;
- 
- 	dmah->size = size;
--	dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size, &dmah->busaddr, GFP_KERNEL | __GFP_COMP);
-+	dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size, &dmah->busaddr, GFP_KERNEL);
- 
- 	if (dmah->vaddr == NULL) {
- 		kfree(dmah);
- 		return NULL;
- 	}
- 
--	memset(dmah->vaddr, 0, size);
--
--	/* XXX - Is virt_to_page() legal for consistent mem? */
--	/* Reserve */
--	for (addr = (unsigned long)dmah->vaddr, sz = size;
--	     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
--		SetPageReserved(virt_to_page((void *)addr));
--	}
--
- 	return dmah;
+ 	return rt->rt6i_flags & RTF_ANYCAST ||
+ 		(rt->rt6i_dst.plen < 127 &&
++		 !(rt->rt6i_flags & (RTF_GATEWAY | RTF_NONEXTHOP)) &&
+ 		 ipv6_addr_equal(&rt->rt6i_dst.addr, daddr));
  }
  
-@@ -89,19 +78,9 @@ EXPORT_SYMBOL(drm_pci_alloc);
-  */
- void __drm_legacy_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah)
- {
--	unsigned long addr;
--	size_t sz;
--
--	if (dmah->vaddr) {
--		/* XXX - Is virt_to_page() legal for consistent mem? */
--		/* Unreserve */
--		for (addr = (unsigned long)dmah->vaddr, sz = dmah->size;
--		     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
--			ClearPageReserved(virt_to_page((void *)addr));
--		}
-+	if (dmah->vaddr)
- 		dma_free_coherent(&dev->pdev->dev, dmah->size, dmah->vaddr,
- 				  dmah->busaddr);
--	}
- }
- 
- /**
--- 
-2.20.1
-
 
 
