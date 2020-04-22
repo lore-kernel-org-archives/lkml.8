@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D754EC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896B6C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC9220575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BAA2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550529;
-	bh=+KmynoHUM8GPQn2SP+1MLZiKCFKLZrqLb2uvnd1KsQY=;
+	s=default; t=1587550536;
+	bh=SQIfffQX5o8Mt9NxkBRbUKPPSH7GU2Dpva5qCWMzl8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJCQm/bZaTJ4ZJ6uLnNMcMyRa1ae3ik5K4TtwLashQc/NY0LFBonPhAbtzSFLijF3
-	 hemWXBJ7Qqpg9N9/wP/uAjPtFUR/Ae7d5+zYQMTvD6ckex9SRv/qz24Z+sNadVDC2X
-	 na4XeJOtF0kNcBKLF63LqdRCkxlFDKKoPbTiQWR0=
+	b=KG0Dskf+4SGSkphXAoD9OfEJZF2SnyXMsUKx4SdVhiQEZl2ehTSRqbMhrGVBgPvhN
+	 38tV8a5GL1jkPOZ8guM16juD3NK9TsYdcWvBk0GpAA5pVPGTNJlHY4+kz9Cei387Dm
+	 F+JyXYyQpf9+fyfZKxX3eYJG1JS1iRI4v3Xcq2jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgDVKP2 (ORCPT
+        id S1729731AbgDVKPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50416 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgDVKPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:12 -0400
+        id S1729627AbgDVKPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 624A320575;
-        Wed, 22 Apr 2020 10:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CA120575;
+        Wed, 22 Apr 2020 10:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550511;
-        bh=+KmynoHUM8GPQn2SP+1MLZiKCFKLZrqLb2uvnd1KsQY=;
+        s=default; t=1587550524;
+        bh=SQIfffQX5o8Mt9NxkBRbUKPPSH7GU2Dpva5qCWMzl8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ged5WkkSCHAlTwyHpk+JdUnKwc2V/lrD1tYHP7zxC7ZhW2ZdYP6NIxQuE2b80ba0E
-         BgZkI29kYUXBisMskbjVWMavHDrqB9iO55obMkk3Y/y5XR+nWO3/UbbjuKdeeNJQMM
-         t65m+so3yqdhlOLRqPn15KAFm4ZwIpii15EY3AGY=
+        b=e8hta4oayfluRV0c37Rh1usC3M4t7+aiQsHksczHTX9UmKQrl7w9edu+tvjECc5Gt
+         Y8P0yRXINlztzY14fKuWhtqb58LFd8bMT+l7Bh5GKiBtylTmGTP/ii7Mxq93qk2iy9
+         0ILKCqX6F8C8Ubvafh86QVeRx9gYcfjtWDvZwwAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 45/64] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
-Date:   Wed, 22 Apr 2020 11:57:29 +0200
-Message-Id: <20200422095020.831749047@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 50/64] ext2: fix debug reference to ext2_xattr_cache
+Date:   Wed, 22 Apr 2020 11:57:34 +0200
+Message-Id: <20200422095021.834590396@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,54 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
+[ Upstream commit 32302085a8d90859c40cf1a5e8313f575d06ec75 ]
 
-If we just set the mirror count to 1 without first clearing out
-the mirrors, we can leak queued up requests.
+Fix a debug-only build error in ext2/xattr.c:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+When building without extra debugging, (and with another patch that uses
+no_printk() instead of <empty> for the ext2-xattr debug-print macros,
+this build error happens:
+
+../fs/ext2/xattr.c: In function ‘ext2_xattr_cache_insert’:
+../fs/ext2/xattr.c:869:18: error: ‘ext2_xattr_cache’ undeclared (first use in
+this function); did you mean ‘ext2_xattr_list’?
+     atomic_read(&ext2_xattr_cache->c_entry_count));
+
+Fix the problem by removing cached entry count from the debug message
+since otherwise we'd have to export the mbcache structure just for that.
+
+Fixes: be0726d33cb8 ("ext2: convert to mbcache2")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pagelist.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ fs/ext2/xattr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index 9cf59e2622f8e..5dae7c85d9b6e 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -865,15 +865,6 @@ static void nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
- 	pgio->pg_mirror_count = mirror_count;
- }
- 
--/*
-- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
-- */
--void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
--{
--	pgio->pg_mirror_count = 1;
--	pgio->pg_mirror_idx = 0;
--}
--
- static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
- {
- 	pgio->pg_mirror_count = 1;
-@@ -1302,6 +1293,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
- 	}
- }
- 
-+/*
-+ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
-+ */
-+void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
-+{
-+	nfs_pageio_complete(pgio);
-+}
-+
- int __init nfs_init_nfspagecache(void)
- {
- 	nfs_page_cachep = kmem_cache_create("nfs_page",
+diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
+index 4439bfaf1c57f..bd1d68ff3a9f8 100644
+--- a/fs/ext2/xattr.c
++++ b/fs/ext2/xattr.c
+@@ -839,8 +839,7 @@ ext2_xattr_cache_insert(struct mb_cache *cache, struct buffer_head *bh)
+ 	error = mb_cache_entry_create(cache, GFP_NOFS, hash, bh->b_blocknr, 1);
+ 	if (error) {
+ 		if (error == -EBUSY) {
+-			ea_bdebug(bh, "already in cache (%d cache entries)",
+-				atomic_read(&ext2_xattr_cache->c_entry_count));
++			ea_bdebug(bh, "already in cache");
+ 			error = 0;
+ 		}
+ 	} else
 -- 
 2.20.1
 
