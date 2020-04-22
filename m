@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8235AC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80BBC5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 593062070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893892071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550111;
-	bh=ayGMqr2YAgREXgmNx7uslr0j0P7JHAp6o6CM/Bz+Luw=;
+	s=default; t=1587550113;
+	bh=8PpGL1xkqmeHJ2Vira44+EEkc2xrM5AF6XsNGJQaXU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBnp3DNIKsu+Nq9Fr8Cl9V/uKI/N+SyKSzUrIBFpiXRTPfl4zQRj0kxpihcVmqiDM
-	 dg7fN5df9oqaFuPi8ivxGiHI8IKMNBvQrl5pRRYj5Tm897d8nB56aBL7UNnODb2H4F
-	 ERGuBXG64dqaOlP+sU9yDwNTYQwg+ZxXXfqCiIlw=
+	b=XZSbPh9ytrzerOc9p9kLmiLbPa/wl9x3jV6nD/eM6VchMcPQU4ht3qLxFfBhMG6ec
+	 xebkahUWJ8Q/a1BfHdWa+ueK+H594xVN40XyVsYA1o2gITjysNTSFDdCsVyVCOEwTR
+	 GkE8MRGg/Geq4BFzOJJKe6K6NGdhMurRiEm3IxBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbgDVKIa (ORCPT
+        id S1728720AbgDVKIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728694AbgDVKIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:08:24 -0400
+        id S1728113AbgDVKI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:08:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C0402075A;
-        Wed, 22 Apr 2020 10:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5129F2087E;
+        Wed, 22 Apr 2020 10:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550103;
-        bh=ayGMqr2YAgREXgmNx7uslr0j0P7JHAp6o6CM/Bz+Luw=;
+        s=default; t=1587550108;
+        bh=8PpGL1xkqmeHJ2Vira44+EEkc2xrM5AF6XsNGJQaXU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2l+YcfExGaqKbd0JIC3DFpWGyShqu2ScKek16KFeM4WHWEZ5QfFN/E9/lRCw4zhB
-         5w6SmaCiF76K6P2Kt8hRZkOhK+ZP2G+jd7Eczqx+lPKa4mbYtlAftpKnFxkl/9n8B2
-         61jf7KgvHozgwUyhUaUc/TKYov1KtlNO0OwD+eeU=
+        b=Gb63vfAHIdZQpl0veoul7VkDsNPkcE7bsqTkvk5V1N6qOYCg2gCA7FCHZVPSojaTB
+         GnFP5C5y/5rz/HefesiESHSGeUXnTnG0CvFIDhXqGn5HiMfXHwEZsJfTGGqv6L5nDN
+         ncSWFZ635HWELTQ0QKHwoR/UlTjdho67M1TeDewc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
+        stable@vger.kernel.org, Raju Rangoju <rajur@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 003/199] hinic: fix a bug of waitting for IO stopped
-Date:   Wed, 22 Apr 2020 11:55:29 +0200
-Message-Id: <20200422095058.180700450@linuxfoundation.org>
+Subject: [PATCH 4.14 005/199] cxgb4/ptp: pass the sign of offset delta in FW CMD
+Date:   Wed, 22 Apr 2020 11:55:31 +0200
+Message-Id: <20200422095058.378489135@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,90 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Raju Rangoju <rajur@chelsio.com>
 
-[ Upstream commit 96758117dc528e6d84bd23d205e8cf7f31eda029 ]
+[ Upstream commit 50e0d28d3808146cc19b0d5564ef4ba9e5bf3846 ]
 
-it's unreliable for fw to check whether IO is stopped, so driver
-wait for enough time to ensure IO process is done in hw before
-freeing resources
+cxgb4_ptp_fineadjtime() doesn't pass the signedness of offset delta
+in FW_PTP_CMD. Fix it by passing correct sign.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: Raju Rangoju <rajur@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
- 1 file changed, 2 insertions(+), 49 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 46aba02b8672b..5763e333a9afe 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -373,50 +373,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
- 	return -EFAULT;
- }
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+index 9f9d6cae39d55..758f2b8363282 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+@@ -246,6 +246,9 @@ static int  cxgb4_ptp_fineadjtime(struct adapter *adapter, s64 delta)
+ 			     FW_PTP_CMD_PORTID_V(0));
+ 	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
+ 	c.u.ts.sc = FW_PTP_SC_ADJ_FTIME;
++	c.u.ts.sign = (delta < 0) ? 1 : 0;
++	if (delta < 0)
++		delta = -delta;
+ 	c.u.ts.tm = cpu_to_be64(delta);
  
--static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
--{
--	struct hinic_cmd_io_status cmd_io_status;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
--	struct hinic_pfhwdev *pfhwdev;
--	unsigned long end;
--	u16 out_size;
--	int err;
--
--	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
--		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
--		return -EINVAL;
--	}
--
--	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
--
--	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
--
--	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
--	do {
--		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
--					HINIC_COMM_CMD_IO_STATUS_GET,
--					&cmd_io_status, sizeof(cmd_io_status),
--					&cmd_io_status, &out_size,
--					HINIC_MGMT_MSG_SYNC);
--		if ((err) || (out_size != sizeof(cmd_io_status))) {
--			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
--				err);
--			return err;
--		}
--
--		if (cmd_io_status.status == IO_STOPPED) {
--			dev_info(&pdev->dev, "IO stopped\n");
--			return 0;
--		}
--
--		msleep(20);
--	} while (time_before(jiffies, end));
--
--	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
--	return -ETIMEDOUT;
--}
--
- /**
-  * clear_io_resource - set the IO resources as not active in the NIC
-  * @hwdev: the NIC HW device
-@@ -436,11 +392,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
- 		return -EINVAL;
- 	}
- 
--	err = wait_for_io_stopped(hwdev);
--	if (err) {
--		dev_err(&pdev->dev, "IO has not stopped yet\n");
--		return err;
--	}
-+	/* sleep 100ms to wait for firmware stopping I/O */
-+	msleep(100);
- 
- 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
- 
+ 	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), NULL);
 -- 
 2.20.1
 
