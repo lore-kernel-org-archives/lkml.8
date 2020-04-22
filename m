@@ -2,210 +2,144 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFD9C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E5AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E79620784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B267F2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgDVMSn (ORCPT
+        id S1729305AbgDVMSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729194AbgDVMS1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:18:27 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BF5CC03C1A8;
-        Wed, 22 Apr 2020 05:18:27 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREK1-0008Bc-Ng; Wed, 22 Apr 2020 14:17:45 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ECFC61C0822;
-        Wed, 22 Apr 2020 14:17:37 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:37 -0000
-From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] capabilities: Introduce CAP_PERFMON to kernel and user space
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <5590d543-82c6-490a-6544-08e6a5517db0@linux.intel.com>
-References: <5590d543-82c6-490a-6544-08e6a5517db0@linux.intel.com>
+        Wed, 22 Apr 2020 08:18:51 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2872 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729017AbgDVMSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:18:10 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6D3479F84AA3A02A7E97;
+        Wed, 22 Apr 2020 20:18:05 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.154) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Apr 2020
+ 20:18:03 +0800
+Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+References: <20200421143149.45108-1-yuehaibing@huawei.com>
+ <20200422093344.GY13121@gauss3.secunet.de>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lucien.xin@gmail.com>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
+Date:   Wed, 22 Apr 2020 20:18:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Message-ID: <158755785749.28353.12235832076654598507.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200422093344.GY13121@gauss3.secunet.de>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On 2020/4/22 17:33, Steffen Klassert wrote:
+> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
+>> While update xfrm policy as follow:
+>>
+>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>  priority 1 mark 0 mask 0x10
+>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>  priority 2 mark 0 mask 0x00
+>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>  priority 2 mark 0 mask 0x10
+>>
+>> We get this warning:
+>>
+>> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
+>> Kernel panic - not syncing: panic_on_warn set ...
+>> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
+>> Call Trace:
+>> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
+>>  xfrm_policy_inexact_insert+0x70/0x330
+>>  xfrm_policy_insert+0x1df/0x250
+>>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
+>>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
+>>  netlink_rcv_skb+0x4c/0x120
+>>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
+>>  netlink_unicast+0x1b3/0x270
+>>  netlink_sendmsg+0x350/0x470
+>>  sock_sendmsg+0x4f/0x60
+>>
+>> Policy C and policy A has the same mark.v and mark.m, so policy A is
+>> matched in first round lookup while updating C. However policy C and
+>> policy B has same mark and priority, which also leads to matched. So
+>> the WARN_ON is triggered.
+>>
+>> xfrm policy lookup should only be matched when the found policy has the
+>> same lookup keys (mark.v & mark.m) no matter priority.
+>>
+>> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  net/xfrm/xfrm_policy.c | 16 +++++-----------
+>>  1 file changed, 5 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+>> index 297b2fd..67d0469 100644
+>> --- a/net/xfrm/xfrm_policy.c
+>> +++ b/net/xfrm/xfrm_policy.c
+>> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
+>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>  				   struct xfrm_policy *pol)
+>>  {
+>> -	u32 mark = policy->mark.v & policy->mark.m;
+>> -
+>> -	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>> -		return true;
+>> -
+>> -	if ((mark & pol->mark.m) == pol->mark.v &&
+>> -	    policy->priority == pol->priority)
+> 
+> If you remove the priority check, you can't insert policies with matching
+> mark and different priorities anymore. This brings us back the old bug.
 
-Commit-ID:     980737282232b752bb14dab96d77665c15889c36
-Gitweb:        https://git.kernel.org/tip/980737282232b752bb14dab96d77665c15889c36
-Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate:    Thu, 02 Apr 2020 11:45:31 +03:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 16 Apr 2020 12:19:06 -03:00
+Yes, this is true.
 
-capabilities: Introduce CAP_PERFMON to kernel and user space
+> 
+> I plan to apply the patch from Xin Long, this seems to be the right way
+> to address this problem.
 
-Introduce the CAP_PERFMON capability designed to secure system
-performance monitoring and observability operations so that CAP_PERFMON
-can assist CAP_SYS_ADMIN capability in its governing role for
-performance monitoring and observability subsystems.
+That still brings an issue, update like this:
 
-CAP_PERFMON hardens system security and integrity during performance
-monitoring and observability operations by decreasing attack surface that
-is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
-to system performance monitoring and observability operations under CAP_PERFMON
-capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
-chances to misuse the credentials and makes the operation more secure.
+policy A (mark.v = 1, mark.m = 0, priority = 1)
+policy B (mark.v = 1, mark.m = 0, priority = 1)
 
-Thus, CAP_PERFMON implements the principle of least privilege for
-performance monitoring and observability operations (POSIX IEEE 1003.1e:
-2.2.2.39 principle of least privilege: A security design principle that
-  states that a process or program be granted only those privileges
-(e.g., capabilities) necessary to accomplish its legitimate function,
-and only for the time that such privileges are actually required)
+A and B will all in the list.
 
-CAP_PERFMON meets the demand to secure system performance monitoring and
-observability operations for adoption in security sensitive, restricted,
-multiuser production environments (e.g. HPC clusters, cloud and virtual compute
-environments), where root or CAP_SYS_ADMIN credentials are not available to
-mass users of a system, and securely unblocks applicability and scalability
-of system performance monitoring and observability operations beyond root
-and CAP_SYS_ADMIN use cases.
+So should do this:
 
-CAP_PERFMON takes over CAP_SYS_ADMIN credentials related to system performance
-monitoring and observability operations and balances amount of CAP_SYS_ADMIN
-credentials following the recommendations in the capabilities man page [1]
-for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to kernel
-developers, below." For backward compatibility reasons access to system
-performance monitoring and observability subsystems of the kernel remains
-open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability
-usage for secure system performance monitoring and observability operations
-is discouraged with respect to the designed CAP_PERFMON capability.
+ static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+                                   struct xfrm_policy *pol)
+ {
+-       u32 mark = policy->mark.v & policy->mark.m;
+-
+-       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+-               return true;
+-
+-       if ((mark & pol->mark.m) == pol->mark.v &&
++       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
+            policy->priority == pol->priority)
+                return true;
 
-Although the software running under CAP_PERFMON can not ensure avoidance
-of related hardware issues, the software can still mitigate these issues
-following the official hardware issues mitigation procedure [2]. The bugs
-in the software itself can be fixed following the standard kernel development
-process [3] to maintain and harden security of system performance monitoring
-and observability operations.
 
-[1] http://man7.org/linux/man-pages/man7/capabilities.7.html
-[2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
-[3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-Acked-by: Serge E. Hallyn <serge@hallyn.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-man@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: selinux@vger.kernel.org
-Link: http://lore.kernel.org/lkml/5590d543-82c6-490a-6544-08e6a5517db0@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- include/linux/capability.h          | 4 ++++
- include/uapi/linux/capability.h     | 8 +++++++-
- security/selinux/include/classmap.h | 4 ++--
- 3 files changed, 13 insertions(+), 3 deletions(-)
+> 
+> .
+> 
 
-diff --git a/include/linux/capability.h b/include/linux/capability.h
-index ecce0f4..027d7e4 100644
---- a/include/linux/capability.h
-+++ b/include/linux/capability.h
-@@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct 
- extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
- extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
- extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
-+static inline bool perfmon_capable(void)
-+{
-+	return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
-+}
- 
- /* audit system wants to get cap info from files as well */
- extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
-diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-index 272dc69..e58c963 100644
---- a/include/uapi/linux/capability.h
-+++ b/include/uapi/linux/capability.h
-@@ -367,8 +367,14 @@ struct vfs_ns_cap_data {
- 
- #define CAP_AUDIT_READ		37
- 
-+/*
-+ * Allow system performance and observability privileged operations
-+ * using perf_events, i915_perf and other kernel subsystems
-+ */
-+
-+#define CAP_PERFMON		38
- 
--#define CAP_LAST_CAP         CAP_AUDIT_READ
-+#define CAP_LAST_CAP         CAP_PERFMON
- 
- #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
- 
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index 986f3ac..d233ab3 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -27,9 +27,9 @@
- 	    "audit_control", "setfcap"
- 
- #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
--		"wake_alarm", "block_suspend", "audit_read"
-+		"wake_alarm", "block_suspend", "audit_read", "perfmon"
- 
--#if CAP_LAST_CAP > CAP_AUDIT_READ
-+#if CAP_LAST_CAP > CAP_PERFMON
- #error New capability defined, please update COMMON_CAP2_PERMS.
- #endif
- 
