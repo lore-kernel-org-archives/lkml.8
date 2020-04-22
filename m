@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582A5C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B65C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3337A2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41752073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551871;
-	bh=qwp1kwgWdt0eV95GZl9VFWbIEj3NYzkRBOqFjzHMJ5A=;
+	s=default; t=1587551874;
+	bh=diEZJSbSIO+MnsYSZTyrg2M3dM6CyjSD/7Ket4healQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N94KhmCCRysboFCXMudfTzvs6XQWiRx2BmuZxt+B2gUkectP5yxSc9fkUAJPr0pYN
-	 c69cdkhtAQHGPzwyTdG10//gPmpko5FamnTMi7gWx1Rkb77rzuX41+zEvL92+tovx9
-	 Az912SuTJ2Y1z85HIefOLUAxqFjzNdQLnoyZZ11g=
+	b=KvSrZih0c5JJH4z9PWptzdlQFgWibBigVLw9Fgtv88UvvFFSYfNaKCPFZzCAqfT6c
+	 ehB7T3Zawtl14g/Vexk22dTxDKd3yaEYVRKLFNammtVpUx8uWXFqrGX9pjwC+JLAxm
+	 PeTEyBi7SytGbchIltldkfVfrSk2aNAahCK5Jeo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731120AbgDVKhu (ORCPT
+        id S1731427AbgDVKhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58616 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbgDVKW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:22:26 -0400
+        id S1729963AbgDVKWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:22:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DA7121582;
-        Wed, 22 Apr 2020 10:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4E6D215A4;
+        Wed, 22 Apr 2020 10:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550940;
-        bh=qwp1kwgWdt0eV95GZl9VFWbIEj3NYzkRBOqFjzHMJ5A=;
+        s=default; t=1587550943;
+        bh=diEZJSbSIO+MnsYSZTyrg2M3dM6CyjSD/7Ket4healQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivzU4h+nnKmEkkz8Uf3KSsJTbsN1/Ofa9X9U4g/8cpORVoGafrCGxHEof/rjKiiR7
-         x0rTY30k1E9UAL8dEr14LccwKglBMN0CaOi6vi48MbdNYej2UoZMM4CBqruJeuek6Q
-         VfVNdc+NzO0yYwLaEQRPtp/JYTcAOSLSaRL/d39o=
+        b=R5S7A6OjCjHt2Xt19ej47wT3qHZS+Z14XJDksI0JQa/O+f3pG1AORGqUsOH88EjZP
+         vHowtEB4oLlN3kZCOc4/538jUGOYl/JM1CfWaq0ed6elIAYD0XjVkMUcfTLG5mnIyX
+         ZDiuH2ZkMo37aqOAU9KZ3R5nGY0GCUtu/bJrVd2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, cki-project@redhat.com,
         Paolo Valente <paolo.valente@linaro.org>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.6 037/166] block, bfq: make reparent_leaf_entity actually work only on leaf entities
-Date:   Wed, 22 Apr 2020 11:56:04 +0200
-Message-Id: <20200422095052.823317575@linuxfoundation.org>
+Subject: [PATCH 5.6 038/166] block, bfq: invoke flush_idle_tree after reparent_active_queues in pd_offline
+Date:   Wed, 22 Apr 2020 11:56:05 +0200
+Message-Id: <20200422095052.959030321@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -62,21 +62,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paolo Valente <paolo.valente@linaro.org>
 
-commit 576682fa52cbd95deb3773449566274f206acc58 upstream.
+commit 4d38a87fbb77fb9ff2ff4e914162a8ae6453eff5 upstream.
 
-bfq_reparent_leaf_entity() reparents the input leaf entity (a leaf
-entity represents just a bfq_queue in an entity tree). Yet, the input
-entity is guaranteed to always be a leaf entity only in two-level
-entity trees. In this respect, because of the error fixed by
-commit 14afc5936197 ("block, bfq: fix overwrite of bfq_group pointer
-in bfq_find_set_group()"), all (wrongly collapsed) entity trees happened
-to actually have only two levels. After the latter commit, this does not
-hold any longer.
+In bfq_pd_offline(), the function bfq_flush_idle_tree() is invoked to
+flush the rb tree that contains all idle entities belonging to the pd
+(cgroup) being destroyed. In particular, bfq_flush_idle_tree() is
+invoked before bfq_reparent_active_queues(). Yet the latter may happen
+to add some entities to the idle tree. It happens if, in some of the
+calls to bfq_bfqq_move() performed by bfq_reparent_active_queues(),
+the queue to move is empty and gets expired.
 
-This commit fixes this problem by modifying
-bfq_reparent_leaf_entity(), so that it searches an active leaf entity
-down the path that stems from the input entity. Such a leaf entity is
-guaranteed to exist when bfq_reparent_leaf_entity() is invoked.
+This commit simply reverses the invocation order between
+bfq_flush_idle_tree() and bfq_reparent_active_queues().
 
 Tested-by: cki-project@redhat.com
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
@@ -84,87 +81,42 @@ Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/bfq-cgroup.c |   48 +++++++++++++++++++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 17 deletions(-)
+ block/bfq-cgroup.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
 --- a/block/bfq-cgroup.c
 +++ b/block/bfq-cgroup.c
-@@ -815,39 +815,53 @@ static void bfq_flush_idle_tree(struct b
- /**
-  * bfq_reparent_leaf_entity - move leaf entity to the root_group.
-  * @bfqd: the device data structure with the root group.
-- * @entity: the entity to move.
-+ * @entity: the entity to move, if entity is a leaf; or the parent entity
-+ *	    of an active leaf entity to move, if entity is not a leaf.
-  */
- static void bfq_reparent_leaf_entity(struct bfq_data *bfqd,
--				     struct bfq_entity *entity)
-+				     struct bfq_entity *entity,
-+				     int ioprio_class)
- {
--	struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
-+	struct bfq_queue *bfqq;
-+	struct bfq_entity *child_entity = entity;
+@@ -894,13 +894,6 @@ static void bfq_pd_offline(struct blkg_p
+ 		st = bfqg->sched_data.service_tree + i;
  
-+	while (child_entity->my_sched_data) { /* leaf not reached yet */
-+		struct bfq_sched_data *child_sd = child_entity->my_sched_data;
-+		struct bfq_service_tree *child_st = child_sd->service_tree +
-+			ioprio_class;
-+		struct rb_root *child_active = &child_st->active;
-+
-+		child_entity = bfq_entity_of(rb_first(child_active));
-+
-+		if (!child_entity)
-+			child_entity = child_sd->in_service_entity;
-+	}
-+
-+	bfqq = bfq_entity_to_bfqq(child_entity);
- 	bfq_bfqq_move(bfqd, bfqq, bfqd->root_group);
- }
- 
- /**
-- * bfq_reparent_active_entities - move to the root group all active
-- *                                entities.
-+ * bfq_reparent_active_queues - move to the root group all active queues.
-  * @bfqd: the device data structure with the root group.
-  * @bfqg: the group to move from.
-- * @st: the service tree with the entities.
-+ * @st: the service tree to start the search from.
-  */
--static void bfq_reparent_active_entities(struct bfq_data *bfqd,
--					 struct bfq_group *bfqg,
--					 struct bfq_service_tree *st)
-+static void bfq_reparent_active_queues(struct bfq_data *bfqd,
-+				       struct bfq_group *bfqg,
-+				       struct bfq_service_tree *st,
-+				       int ioprio_class)
- {
- 	struct rb_root *active = &st->active;
--	struct bfq_entity *entity = NULL;
+ 		/*
+-		 * The idle tree may still contain bfq_queues belonging
+-		 * to exited task because they never migrated to a different
+-		 * cgroup from the one being destroyed now.
+-		 */
+-		bfq_flush_idle_tree(st);
 -
--	if (!RB_EMPTY_ROOT(&st->active))
--		entity = bfq_entity_of(rb_first(active));
-+	struct bfq_entity *entity;
- 
--	for (; entity ; entity = bfq_entity_of(rb_first(active)))
--		bfq_reparent_leaf_entity(bfqd, entity);
-+	while ((entity = bfq_entity_of(rb_first(active))))
-+		bfq_reparent_leaf_entity(bfqd, entity, ioprio_class);
- 
- 	if (bfqg->sched_data.in_service_entity)
- 		bfq_reparent_leaf_entity(bfqd,
--			bfqg->sched_data.in_service_entity);
-+					 bfqg->sched_data.in_service_entity,
-+					 ioprio_class);
- }
- 
- /**
-@@ -898,7 +912,7 @@ static void bfq_pd_offline(struct blkg_p
- 		 * There is no need to put the sync queues, as the
+-		/*
+ 		 * It may happen that some queues are still active
+ 		 * (busy) upon group destruction (if the corresponding
+ 		 * processes have been forced to terminate). We move
+@@ -913,6 +906,19 @@ static void bfq_pd_offline(struct blkg_p
  		 * scheduler has taken no reference.
  		 */
--		bfq_reparent_active_entities(bfqd, bfqg, st);
-+		bfq_reparent_active_queues(bfqd, bfqg, st, i);
+ 		bfq_reparent_active_queues(bfqd, bfqg, st, i);
++
++		/*
++		 * The idle tree may still contain bfq_queues
++		 * belonging to exited task because they never
++		 * migrated to a different cgroup from the one being
++		 * destroyed now. In addition, even
++		 * bfq_reparent_active_queues() may happen to add some
++		 * entities to the idle tree. It happens if, in some
++		 * of the calls to bfq_bfqq_move() performed by
++		 * bfq_reparent_active_queues(), the queue to move is
++		 * empty and gets expired.
++		 */
++		bfq_flush_idle_tree(st);
  	}
  
  	__bfq_deactivate_entity(entity, false);
