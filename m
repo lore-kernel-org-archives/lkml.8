@@ -2,55 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DC1C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E46C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387C12075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECA220781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551317;
-	bh=x9o356t3GFTMdLhsII0MkSSipdwmAm2zA7xCIh92LPE=;
+	s=default; t=1587551318;
+	bh=FQLCavUo/9H+bwWjXvVXMibQQ4dnU0g9B7kxhkUSxHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SsR18Oq9XenouGDnQk7v8RRo+V+TMDCnzn9hTki1M6zx3cd5PbDm0k+4loN91g9Ck
-	 WW6bdzMTYgDpG/KF5i7qR0fRF4+/dXYsNF2158Y4NxlowJmhy9xVC6cUPFAkzapyU5
-	 +7hZLhxIVdeZ2jP0vPLePz3OnVs122PkGNa4zsA8=
+	b=hsld9VIvCQilWLjIkOsuMq8grD7nOmvyl/orHdg/DhU9HCYZgUjekY341RzRFihnY
+	 kPmNgyaIyrLJ5glCcIbjouH5ebs8agyfa2zv1cD+s03tcPk7KT+4fIZYKg1iexgUCL
+	 WRczubUvKNxRMYcbCV0Xt9dZOqRWDI9w64reEOck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgDVK2e (ORCPT
+        id S1730924AbgDVK1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:28:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36940 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730936AbgDVK1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:27:47 -0400
+        id S1730900AbgDVK1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:27:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C872076B;
-        Wed, 22 Apr 2020 10:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A66E20784;
+        Wed, 22 Apr 2020 10:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551266;
-        bh=x9o356t3GFTMdLhsII0MkSSipdwmAm2zA7xCIh92LPE=;
+        s=default; t=1587551251;
+        bh=FQLCavUo/9H+bwWjXvVXMibQQ4dnU0g9B7kxhkUSxHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WY5Z1SxCsjQYiwYENEs81E7f9kWcO3XpcwY1NnQUH+hjHqbO4BQkebpIMr3S5Kdhp
-         HFiJzCFoHAuqtP8ghgRLPFlbIqFNrvtgqbQ5y8CWimJfXj+pLP0g8k4C0h76Lj9qDE
-         62h9lIRRFUqDMkPE4XRQC04QQSFw9ZOVTqsdkWwk=
+        b=xqMcL22jA4/vSuvFwGFC4ZX2GLErkaIzwf6ocNofnls8csJFMbTP3J93X6ohqfJpI
+         8yYFAuk6ESk61Qi34XZhWWWary7oa61tTi8fjjgN4GMeg6JxAmutlp1qBs6pkUCJIU
+         r3kTw1bVFIoZmWD8ECFUNU3R7UuWXmfGQqdg9pCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Joern Engel <joern@lazybastard.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH 5.6 161/166] mtd: phram: fix a double free issue in error path
-Date:   Wed, 22 Apr 2020 11:58:08 +0200
-Message-Id: <20200422095105.674074170@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 120/166] f2fs: fix potential deadlock on compressed quota file
+Date:   Wed, 22 Apr 2020 11:57:27 +0200
+Message-Id: <20200422095101.496740578@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -63,64 +60,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 49c64df880570034308e4a9a49c4bc95cf8cdb33 upstream.
+[ Upstream commit 466357dc9b5ff555d16b7f9a0ff264eb9d5d908b ]
 
-The variable 'name' is released multiple times in the error path,
-which may cause double free issues.
-This problem is avoided by adding a goto label to release the memory
-uniformly. And this change also makes the code a bit more cleaner.
+generic/232 reports below deadlock:
 
-Fixes: 4f678a58d335 ("mtd: fix memory leaks in phram_setup")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Joern Engel <joern@lazybastard.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200318153156.25612-1-wenyang@linux.alibaba.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+fsstress        D    0 96980  96969 0x00084000
+Call Trace:
+ schedule+0x4a/0xb0
+ io_schedule+0x12/0x40
+ __lock_page+0x127/0x1d0
+ pagecache_get_page+0x1d8/0x250
+ prepare_compress_overwrite+0xe0/0x490 [f2fs]
+ f2fs_prepare_compress_overwrite+0x5d/0x80 [f2fs]
+ f2fs_write_begin+0x833/0xb90 [f2fs]
+ f2fs_quota_write+0x145/0x1e0 [f2fs]
+ write_blk+0x36/0x80 [quota_tree]
+ do_insert_tree+0x2ac/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ qtree_write_dquot+0x70/0x190 [quota_tree]
+ v2_write_dquot+0x43/0x90 [quota_v2]
+ dquot_acquire+0x77/0x100
+ f2fs_dquot_acquire+0x2f/0x60 [f2fs]
+ dqget+0x310/0x450
+ dquot_transfer+0xb2/0x120
+ f2fs_setattr+0x11a/0x4a0 [f2fs]
+ notify_change+0x349/0x480
+ chown_common+0x168/0x1c0
+ do_fchownat+0xbc/0xf0
+ __x64_sys_lchown+0x21/0x30
+ do_syscall_64+0x5f/0x220
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
+  task                        PC stack   pid father
+kworker/u256:0  D    0 103444      2 0x80084000
+Workqueue: writeback wb_workfn (flush-251:1)
+Call Trace:
+ schedule+0x4a/0xb0
+ schedule_timeout+0x15e/0x2f0
+ io_schedule_timeout+0x19/0x40
+ congestion_wait+0x7e/0x120
+ f2fs_write_multi_pages+0x12a/0x840 [f2fs]
+ f2fs_write_cache_pages+0x48f/0x790 [f2fs]
+ f2fs_write_data_pages+0x2db/0x330 [f2fs]
+ do_writepages+0x1a/0x60
+ __writeback_single_inode+0x3d/0x340
+ writeback_sb_inodes+0x225/0x4a0
+ wb_writeback+0xf7/0x320
+ wb_workfn+0xba/0x470
+ process_one_work+0x16c/0x3f0
+ worker_thread+0x4c/0x440
+ kthread+0xf8/0x130
+ ret_from_fork+0x35/0x40
+
+fsstress        D    0  5277   5266 0x00084000
+Call Trace:
+ schedule+0x4a/0xb0
+ rwsem_down_write_slowpath+0x29d/0x540
+ block_operations+0x105/0x360 [f2fs]
+ f2fs_write_checkpoint+0x101/0x1010 [f2fs]
+ f2fs_sync_fs+0xa8/0x130 [f2fs]
+ f2fs_do_sync_file+0x1ad/0x890 [f2fs]
+ do_fsync+0x38/0x60
+ __x64_sys_fdatasync+0x13/0x20
+ do_syscall_64+0x5f/0x220
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The root cause is there is potential deadlock between quota data
+update and writeback.
+
+Kworker					Thread B			Thread C
+- f2fs_write_cache_pages
+ - lock whole cluster	--- A
+ - f2fs_write_multi_pages
+  - f2fs_write_raw_pages
+   - f2fs_write_single_data_page
+    - f2fs_do_write_data_page
+					- f2fs_setattr
+					 - f2fs_lock_op	--- B
+									- f2fs_write_checkpoint
+									 - block_operations
+									  - f2fs_lock_all --- B
+					 - dquot_transfer
+					  - f2fs_quota_write
+					   - f2fs_prepare_compress_overwrite
+					    - pagecache_get_page --- A
+     - f2fs_trylock_op failed	--- B
+  - congestion_wait
+  - goto rewrite
+
+To fix this issue, during quota file writeback, just redirty all pages
+left in cluster rather holding pages' lock in cluster and looping retrying
+lock cp_rwsem.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/devices/phram.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ fs/f2fs/compress.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/mtd/devices/phram.c
-+++ b/drivers/mtd/devices/phram.c
-@@ -243,22 +243,25 @@ static int phram_setup(const char *val)
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index eb84c13c1182c..ad8e25a1fbc26 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -988,6 +988,15 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+ 				unlock_page(cc->rpages[i]);
+ 				ret = 0;
+ 			} else if (ret == -EAGAIN) {
++				/*
++				 * for quota file, just redirty left pages to
++				 * avoid deadlock caused by cluster update race
++				 * from foreground operation.
++				 */
++				if (IS_NOQUOTA(cc->inode)) {
++					err = 0;
++					goto out_err;
++				}
+ 				ret = 0;
+ 				cond_resched();
+ 				congestion_wait(BLK_RW_ASYNC, HZ/50);
+@@ -996,16 +1005,12 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+ 				goto retry_write;
+ 			}
+ 			err = ret;
+-			goto out_fail;
++			goto out_err;
+ 		}
  
- 	ret = parse_num64(&start, token[1]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal start address\n");
-+		goto error;
+ 		*submitted += _submitted;
  	}
- 
- 	ret = parse_num64(&len, token[2]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal device length\n");
-+		goto error;
- 	}
- 
- 	ret = register_device(name, start, len);
--	if (!ret)
--		pr_info("%s device: %#llx at %#llx\n", name, len, start);
--	else
--		kfree(name);
-+	if (ret)
-+		goto error;
- 
-+	pr_info("%s device: %#llx at %#llx\n", name, len, start);
-+	return 0;
-+
-+error:
-+	kfree(name);
- 	return ret;
- }
- 
+ 	return 0;
+-
+-out_fail:
+-	/* TODO: revoke partially updated block addresses */
+-	BUG_ON(compr_blocks);
+ out_err:
+ 	for (++i; i < cc->cluster_size; i++) {
+ 		if (!cc->rpages[i])
+-- 
+2.20.1
+
 
 
