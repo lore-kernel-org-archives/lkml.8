@@ -2,101 +2,183 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F577C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE51CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14B92076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587570720;
-	bh=erYIPpCttlAKmVk7+ZuIu29yGQ+f83fJdaXrHXypskw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=FaAYR8hfX0yQ2l9T55EhjGpa1+B/Pm1gZacxe3d5DkEja/KQNud8cnyNcT3bDQFs/
-	 KQ/uZdwz6g3pzPDjAKGCm9cH8GEowNwf7VqSJ4x7BSU4/AgcJybh99oyJJ6WfH1EWE
-	 fL+WYVKX9tIduE+tnWk6AnNB2yp++uEuptJ5fAVc=
+	by mail.kernel.org (Postfix) with ESMTP id B58E22082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgDVPv7 (ORCPT
+        id S1726827AbgDVPwF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:51:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57228 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 11:52:05 -0400
+Received: from mga17.intel.com ([192.55.52.151]:6011 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgDVPv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:51:58 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DFE620767;
-        Wed, 22 Apr 2020 15:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587570718;
-        bh=erYIPpCttlAKmVk7+ZuIu29yGQ+f83fJdaXrHXypskw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=eV+ic6cqswM4lN5NJv1zQbMoM/AXh3IbzYdwfvkGqAONMViojH7CxDYQ9wtGoyHLM
-         iGSIP25KHmrOqCQNVHEJOhOpE+7obhFd5JbMZ3qkbsHPodNUtqLAyy4lL2lusUkAHY
-         cQTyl672L9aXMPGUP6UWAH0epvHiEDnE6hSyhaHk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6002335203BC; Wed, 22 Apr 2020 08:51:58 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 08:51:58 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, qais.yousef@arm.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de
-Subject: Re: [PATCH 20/23] sched,rcutorture: Convert to sched_set_fifo_low()
-Message-ID: <20200422155158.GV17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200422112719.826676174@infradead.org>
- <20200422112832.403795265@infradead.org>
+        id S1726547AbgDVPwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:52:05 -0400
+IronPort-SDR: 8m2OxFzb3ldwl6XPo/9cO7OsNzpy/fMA3VIR/MvenoNprxf+vN1lOfsK+szpA6gIJ8w3Aej47N
+ CwQG81G5Jy9A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 08:52:04 -0700
+IronPort-SDR: TjUAltXeCoo925sIJYL3sVkWXBBK96XchWNtkhSibXo8PV4Aq6G3f8oErs7mfdwIV7yW37IqQ5
+ bId691ZTbd4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,303,1583222400"; 
+   d="scan'208";a="259113020"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 08:52:02 -0700
+Received: from fmsmsx125.amr.corp.intel.com (10.18.125.40) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 22 Apr 2020 08:51:27 -0700
+Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.13]) by
+ FMSMSX125.amr.corp.intel.com ([169.254.2.138]) with mapi id 14.03.0439.000;
+ Wed, 22 Apr 2020 08:51:27 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     Bernard Zhao <bernard@vivo.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        "Ori Messinger" <Ori.Messinger@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "opensource.kernel@vivo.com" <opensource.kernel@vivo.com>
+Subject: RE: [PATCH] amdgpu: fixes memleak issue when init failed
+Thread-Topic: [PATCH] amdgpu: fixes memleak issue when init failed
+Thread-Index: AQHWGHMwaB1WU0xlDki55E9Aceac76iFShmg
+Date:   Wed, 22 Apr 2020 15:51:27 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010212C230@FMSMSX108.amr.corp.intel.com>
+References: <20200421111715.1231-1-bernard@vivo.com>
+In-Reply-To: <20200421111715.1231-1-bernard@vivo.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.107]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422112832.403795265@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:27:39PM +0200, Peter Zijlstra wrote:
-> Because SCHED_FIFO is a broken scheduler model (see previous patches)
-> take away the priority field, the kernel can't possibly make an
-> informed decision.
-> 
-> Effectively no change.
-> 
-> Cc: paulmck@kernel.org
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
+>-----Original Message-----
+>From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>Bernard Zhao
+>Sent: Tuesday, April 21, 2020 7:17 AM
+>To: Alex Deucher <alexander.deucher@amd.com>; Christian König
+><christian.koenig@amd.com>; David (ChunMing) Zhou
+><David1.Zhou@amd.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
+><daniel@ffwll.ch>; Tom St Denis <tom.stdenis@amd.com>; Ori Messinger
+><Ori.Messinger@amd.com>; Sam Ravnborg <sam@ravnborg.org>; Bernard
+>Zhao <bernard@vivo.com>; amd-gfx@lists.freedesktop.org; dri-
+>devel@lists.freedesktop.org; linux-kernel@vger.kernel.org
+>Cc: opensource.kernel@vivo.com
+>Subject: [PATCH] amdgpu: fixes memleak issue when init failed
+>
+>VRAM manager and DRM MM when init failed, there is no operaction
+>to free kzalloc memory & remove device file.
+>This will lead to memleak & cause stability issue.
+>
+>Signed-off-by: Bernard Zhao <bernard@vivo.com>
+>---
+> drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 24
+>++++++++++++++++----
+> 1 file changed, 19 insertions(+), 5 deletions(-)
+>
+>diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+>b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+>index 82a3299e53c0..4c5fb153e6b4 100644
+>--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+>+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+>@@ -175,30 +175,44 @@ static int amdgpu_vram_mgr_init(struct
+>ttm_mem_type_manager *man,
+> 	ret = device_create_file(adev->dev,
+>&dev_attr_mem_info_vram_total);
+> 	if (ret) {
+> 		DRM_ERROR("Failed to create device file
+>mem_info_vram_total\n");
+>-		return ret;
+>+		goto VRAM_TOTAL_FAIL;
+> 	}
+> 	ret = device_create_file(adev->dev,
+>&dev_attr_mem_info_vis_vram_total);
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Have you looked at the DEVICE_ATTR mechanism?
 
-> ---
->  kernel/rcu/rcutorture.c |    4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -802,13 +802,11 @@ static int rcu_torture_boost(void *arg)
->  	unsigned long endtime;
->  	unsigned long oldstarttime;
->  	struct rcu_boost_inflight rbi = { .inflight = 0 };
-> -	struct sched_param sp;
->  
->  	VERBOSE_TOROUT_STRING("rcu_torture_boost started");
->  
->  	/* Set real-time priority. */
-> -	sp.sched_priority = 1;
-> -	if (sched_setscheduler(current, SCHED_FIFO, &sp) < 0) {
-> +	if (sched_set_fifo_low(current) < 0) {
->  		VERBOSE_TOROUT_STRING("rcu_torture_boost RT prio failed!");
->  		n_rcu_torture_boost_rterror++;
->  	}
-> 
-> 
+It is set up to add device files.  You won't get the granularity of each file,
+but it has a lot more automatic-ness to setting this stuff up.
+
+Mike
+
+> 	if (ret) {
+> 		DRM_ERROR("Failed to create device file
+>mem_info_vis_vram_total\n");
+>-		return ret;
+>+		goto VIS_VRAM_TOTA_FAIL;
+> 	}
+> 	ret = device_create_file(adev->dev,
+>&dev_attr_mem_info_vram_used);
+> 	if (ret) {
+> 		DRM_ERROR("Failed to create device file
+>mem_info_vram_used\n");
+>-		return ret;
+>+		goto VRAM_USED_FAIL;
+> 	}
+> 	ret = device_create_file(adev->dev,
+>&dev_attr_mem_info_vis_vram_used);
+> 	if (ret) {
+> 		DRM_ERROR("Failed to create device file
+>mem_info_vis_vram_used\n");
+>-		return ret;
+>+		goto VIS_VRAM_USED_FAIL;
+> 	}
+> 	ret = device_create_file(adev->dev,
+>&dev_attr_mem_info_vram_vendor);
+> 	if (ret) {
+> 		DRM_ERROR("Failed to create device file
+>mem_info_vram_vendor\n");
+>-		return ret;
+>+		goto VRAM_VERDOR_FAIL;
+> 	}
+>
+> 	return 0;
+>+
+>+VRAM_VERDOR_FAIL:
+>+	device_remove_file(adev->dev,
+>&dev_attr_mem_info_vis_vram_used);
+>+VIS_VRAM_USED_FAIL:
+>+	device_remove_file(adev->dev, &dev_attr_mem_info_vram_used);
+>+RVAM_USED_FAIL:
+>+	device_remove_file(adev->dev,
+>&dev_attr_mem_info_vis_vram_total);
+>+VIS_VRAM_TOTA_FAIL:
+>+	device_remove_file(adev->dev, &dev_attr_mem_info_vram_total);
+>+VRAM_TOTAL_FAIL:
+>+	kfree(mgr);
+>+	man->priv = NULL;
+>+
+>+	return ret;
+> }
+>
+> /**
+>--
+>2.26.2
+>
+>_______________________________________________
+>dri-devel mailing list
+>dri-devel@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/dri-devel
