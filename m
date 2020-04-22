@@ -2,351 +2,246 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29448C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D11DC5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E1D2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73DE2074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QL+0vdM+"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oAW0gxON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgDVH1f (ORCPT
+        id S1726454AbgDVH1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725811AbgDVH1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:27:34 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B4FC03C1A6;
-        Wed, 22 Apr 2020 00:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=w6+W3P29oG0Ik+/xl9IINFqyskOSahJ7kDz6S+fsYqM=; b=QL+0vdM+ILa3iIwSMSJGWUzbQf
-        gAEX1JnWUHat8xrpdCTvn9mOaoobYOEUALRqwObqRHNeAHNiZhXUFFfHa/+IiAtVyd/VUwqGlF4a2
-        wO3PlXjfdXLKGzhiKgdr86InVPN6myhOWlgnrnYsYjY8swHSyq2RdqeHIjr5Mba8IrcdR95Rjkuda
-        jud6XB3f4UI3rAIohXUcdIajL6NPQBb/wvjPtwedec/w4trHOLDfZkOrP+0Wt+h9E9+oanbHj0t0K
-        ssUDxXkRlxSxGBhJmjZnSluKEWmWUdvTizpqDhFswh99f3YeNuWH/uyOsrmL5ycF3YM94aCdnNN0x
-        5e7KtB5g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jR9mt-0000BL-6g; Wed, 22 Apr 2020 07:27:15 +0000
-Date:   Wed, 22 Apr 2020 00:27:15 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200422072715.GC19116@infradead.org>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
+        Wed, 22 Apr 2020 03:27:41 -0400
+Received: from mail-bn8nam12on2055.outbound.protection.outlook.com ([40.107.237.55]:33697
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725835AbgDVH1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:27:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oTsF/Qxw3vYTQ9s/pTYAbZqanaQ/vfBFbjc2P9KV0MyW8wL8epXS5/tb0HH52Wnru1Htv3/XBYV16ptYmJbqbxoWKGO33wkVw7gSwsNX/eUi/XQ4NZWCaWyrffGvMx6B/Vq0tWyWidnM+5A5AEcKtu50B9jqVxY/QP6jgSUq40grjnNBTIxn7Bt6sOjgqBqCJoi2y4VIU51Kk02C/3AOSppQVdJmAuHgK9Vuxop4N536YGR5qP8mlKS6f53IFX9DaLD/lL9PHP7inSZxkAmcZEusr8wig+3RtvSMZ3ryW9RZmvl9oSnA1eaR74AZzecJ+V+bi0+tOkFLu63jfBZGvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T2Hu4fnHgrIBo9bMY+tgFFyQLMP9QTTdpstcbGSqg9E=;
+ b=ME326Ekz0nadyj/Cp6wXcfZgY2sw8QXf39pcueK6lLlzSQ6eX4exv9vSvoANOM7XEIGnlVo6B1hXkiKC/Cvf4G6X4xhirt14bCrGxRywPLR/ZSuhTqHSqSScRiqz3cq6GASUqh8/3b7vzC88HK3YriurH6+rMSMslkTy+qzfFFbFf8AOli7g/KVF0F+L3s4hzYw3m1TV7UzmJRWVB55tXX0xWkcwSGeRGDqfZaRYy6FGxr3GLRpfHUs8/9J3ZoQrI3gtlBMA+DDIl9JWO1cZjyXXADQdIIVKmrM7/vHVKinKKtyat28JzppRVBfQF2Vhj/lt0JoX25CfkxBp8V1A0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T2Hu4fnHgrIBo9bMY+tgFFyQLMP9QTTdpstcbGSqg9E=;
+ b=oAW0gxONI4ZZB41n2a44rFSyuU1qthItbklP7lrmnrUG2LqSaMF8LPZ3NISOeatHZultLELkNQzqPxNHzECftd96LDsq/SmBOwROms89p3cukc2fTjF3QdTWSEPbKNlcDXNjWWaQ+AoblEWPBS0HL+aySMihqk3Npyakr3zB/OY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+ by DM6PR12MB2875.namprd12.prod.outlook.com (2603:10b6:5:15c::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Wed, 22 Apr
+ 2020 07:27:33 +0000
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.2921.030; Wed, 22 Apr 2020
+ 07:27:33 +0000
+Subject: Re: [PATCH] amdgpu: fixes memleak issue when init failed
+To:     =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        Ori Messinger <Ori.Messinger@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+References: <AKoA0wCVCNOygUrJso2wM4qv.3.1587516987209.Hmail.bernard@vivo.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <bbb231fc-228d-d22f-2922-4868ab5ddc80@amd.com>
+Date:   Wed, 22 Apr 2020 09:27:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <AKoA0wCVCNOygUrJso2wM4qv.3.1587516987209.Hmail.bernard@vivo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM5PR0502CA0019.eurprd05.prod.outlook.com
+ (2603:10a6:203:91::29) To DM6PR12MB4401.namprd12.prod.outlook.com
+ (2603:10b6:5:2a9::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419194529.4872-4-mcgrof@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM5PR0502CA0019.eurprd05.prod.outlook.com (2603:10a6:203:91::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Wed, 22 Apr 2020 07:27:30 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a453fcdf-1b50-410f-d6fc-08d7e68e9f5d
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2875:|DM6PR12MB2875:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB287541E9DB3B274C4282812583D20@DM6PR12MB2875.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 03818C953D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39850400004)(376002)(396003)(346002)(366004)(136003)(31696002)(36756003)(478600001)(54906003)(52116002)(31686004)(316002)(6666004)(6486002)(2616005)(2906002)(66574012)(186003)(66476007)(16526019)(6916009)(66946007)(86362001)(53546011)(8936002)(5660300002)(66556008)(81156014)(8676002)(4326008);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cx2eg8ALbM09ACzzSBk/9TP2BqgdEORdig8gvTUT+G8wjYUjKGBNQXSQjvhD+UC6FUdWYk2GdxaVIp/e2YGojjjf3iPNyw0/u78fWzvt/eeAo/II9iDWiWb7HnLYMZ3rAU/XRyfM2ljAu56gMRcD94zt2vynwTFylNG0KXckr6mI4gneaAmY8ApgwJ9UXfYWQplxhouewGBQIL+l05jw6fA7ucb95yJnIWY9z9tBv7/tysPr+92b1WcU9Txadho/PFvuqPXwXhYrjJgP+fV8+JSzS8lyCueDeyvgH7930jDj4PPr2HVXObXUHcpg1UMnbC4OMRjo6eV1X6J263S65BObN8qXmSCiBvcXQlPWq6ZxW2umx02Mrfo5RCVDNTyoerDvRrjwvciUDorjj+1HqJi2OrHTm+HNdE09JbRQw2bSjdcViRLc5X6t4G3wC+cw
+X-MS-Exchange-AntiSpam-MessageData: fZCtxmbFq0cTtYE+Lg1k7I7U2wCy+BHbCn5jHW0P0654sYATf8cc+hg3Omc4ZYer2+45/h+pXEsTJw0s/C1EKH+NNQJBbmrK91QtWqqwJPwsFo0a7LhloKMQyO3TlsugFqxS8MIPct/Bsz3oWjvyVlaXFpk98i0efsIatyng5THWL0Ra4yNeWJYxeHzPkvukSAq5yn2uFfaSJ5omGDs9RNp7VebJxnwZ1VmK6JBNojq88sqvZZ+1KTrimaUdbkCMRmSj025W9pAcwzLFdsYDjP/sibSixDE8h2Q18zgh49WP1dUXwF7xTHnQcmJ8OrxYOKrvVPRPIzHg4CGmD66XH3inH4qHZZEBZMHDIbALJd13Cutm1HLVDuYPKF8/XbHIvj7nLOCAIDY6Yv1pscpZmIJVFG7k+WTOghXFPxXFpgZaYg+CvTBk35oqG6Zw8SQdE1+ZQE8ec6gjrN68Qaw84OTA/6efVffN/bzU4wfe9J8dNss9S7i6ij9CwV1nQS+YbhkENb7gOf/509y1PwuKV1iCxe1N3bzYijUIbukiY3fdS4uNOrAVcmyDzggxfG5moZ3hud/8Stb1b+ipmJfaBUrjZputGnVUL2il8SDDO3Ul3DAMnEOJOeK6uxIuCendjgCc5zuwm/Miw8NcHwIS63F69+lns5Hvgis51Ud1auHf0FOCQcI9bcxp6IVKwU7N5gnzCyFJIUeVj943L8HxFI/Jecd2QJGaYxckGWEdalerUElGZCYPnxQEpjsv8nluuEkBQ65YE0jT/Rs2DyURhnbHNbze/4GdXFGLWkzFdcyr/XQIUW1+3zDKbkpETlBTTmjrcrQqll3et+UkjDQoEi9mETENJZH5r9WawtE+1bg=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a453fcdf-1b50-410f-d6fc-08d7e68e9f5d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2020 07:27:33.1906
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LKpbXvIzOVuxtvyYCEQKEBMn3SAjKYjj6NenpKH38RO8EaPHToRlLI8vrOlzosBm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2875
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
-> On commit 6ac93117ab00 ("blktrace: use existing disk debugfs directory")
-> merged on v4.12 Omar fixed the original blktrace code for request-based
-> drivers (multiqueue). This however left in place a possible crash, if you
-> happen to abuse blktrace in a way it was not intended, and even more so
-> with our current asynchronous request_queue removal.
-> 
-> Namely, if you loop adding a device, setup the blktrace with BLKTRACESETUP,
-> forget to BLKTRACETEARDOWN, and then just remove the device you end up
-> with a panic:
+Am 22.04.20 um 02:56 schrieb 赵军奎:
+> 发件人："Christian König" <christian.koenig@amd.com>
+> 发送日期：2020-04-21 22:53:47
+> 收件人："赵军奎" <bernard@vivo.com>
+> 抄送人：Alex Deucher <alexander.deucher@amd.com>,"David (ChunMing) Zhou" <David1.Zhou@amd.com>,David Airlie <airlied@linux.ie>,Daniel Vetter <daniel@ffwll.ch>,Tom St Denis <tom.stdenis@amd.com>,Ori Messinger <Ori.Messinger@amd.com>,Sam Ravnborg <sam@ravnborg.org>,amd-gfx@lists.freedesktop.org,dri-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,opensource.kernel@vivo.com
+> 主题：Re: [PATCH] amdgpu: fixes memleak issue when init failed>Am 21.04.20 um 15:39 schrieb 赵军奎:
+>>> 发件人："Christian König" <christian.koenig@amd.com>
+>>> 发送日期：2020-04-21 21:02:27
+>>> 收件人："赵军奎" <bernard@vivo.com>
+>>> 抄送人：Alex Deucher <alexander.deucher@amd.com>,"David (ChunMing) Zhou" <David1.Zhou@amd.com>,David Airlie <airlied@linux.ie>,Daniel Vetter <daniel@ffwll.ch>,Tom St Denis <tom.stdenis@amd.com>,Ori Messinger <Ori.Messinger@amd.com>,Sam Ravnborg <sam@ravnborg.org>,amd-gfx@lists.freedesktop.org,dri-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,opensource.kernel@vivo.com
+>>> 主题：Re: [PATCH] amdgpu: fixes memleak issue when init failed>Am 21.04.20 um 14:09 schrieb 赵军奎:
+>>>>> From: "Christian König" <christian.koenig@amd.com>
+>>>>> Date: 2020-04-21 19:22:49
+>>>>> To:  Bernard Zhao <bernard@vivo.com>,Alex Deucher <alexander.deucher@amd.com>,"David (ChunMing) Zhou" <David1.Zhou@amd.com>,David Airlie <airlied@linux.ie>,Daniel Vetter <daniel@ffwll.ch>,Tom St Denis <tom.stdenis@amd.com>,Ori Messinger <Ori.Messinger@amd.com>,Sam Ravnborg <sam@ravnborg.org>,amd-gfx@lists.freedesktop.org,dri-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org
+>>>>> Cc:  opensource.kernel@vivo.com
+>>>>> Subject: Re: [PATCH] amdgpu: fixes memleak issue when init failed>Am 21.04.20 um 13:17 schrieb Bernard Zhao:
+>>>>>>> VRAM manager and DRM MM when init failed, there is no operaction
+>>>>>>> to free kzalloc memory & remove device file.
+>>>>>>> This will lead to memleak & cause stability issue.
+>>>>>> NAK, failure to create sysfs nodes are not critical.
+>>>>>>
+>>>>>> Christian.
+>>>>>>
+>>>>> OK, get it.
+>>>>> By the way, should i modify this patch to just handle <kfree(mgr)> in error branch, or that it is also unnecessary?
+>>>> What you can do is to drop the "return ret" if anything with the sysfs
+>>>> nodes goes wrong and instead print the error code.
+>>> Emmm, for this part, i am not sure, my modify first print the error, secone release not free memory,
+>>> and last return error, make everything clear to the system.
+>>> I think it`s the same with what you mentioned, is there something that I misunderstood?
+>> Yes, maybe an example makes it more clear what to do here. Currently we
+>> print and error and return when something with the sysfs files goes wrong:
+>>
+>> if (ret) {
+>>      DRM_ERROR("Failed to create device file mem_info_vram_total\n");
+>>      return ret;
+>> }
+>>
+>> But what we should do instead is just to print an error and continue and
+>> in the end return success status:
+>>
+>> if (ret)
+>>      DRM_ERROR("Failed to create device file mem_info_vram_total
+>> (%d)\n", r);
+>>
+>> ...
+>> return 0;
+>>
+>> Regards,
+>> Christian.
+>>
+> Emmm,  i am still confused about two points:
+> 1 Does that mean there is no failed case in this function?
 
-FYI, I find all this backtrace garbage not hepful at all.  It requires
-me to scroll for so long that I've forgot what was written above by
-the time I'm past it.
+Well the kzalloc can still fail.
 
-> This splat happens to be very similar to the one reported via
-> kernel.org korg#205713, only that korg#205713 was for v4.19.83
-> and the above now includes the simple_recursive_removal() introduced
-> via commit a3d1e7eb5abe ("simple_recursive_removal(): kernel-side rm
-> -rf for ramfs-style filesystems") merged on v5.6.
-> 
-> korg#205713 then was used to create CVE-2019-19770 and claims that
-> the bug is in a use-after-free in the debugfs core code. The
-> implications of this being a generic UAF on debugfs would be
-> much more severe, as it would imply parent dentries can sometimes
-> not be positive, which we hold by design is just not possible.
-> 
-> Below is the splat explained with a bit more details, explaining
-> what is happening in userspace, kernel, and a print of the CPU on,
-> which the code runs on:
-> 
-> load loopback module
-> [   13.603371] == blk_mq_debugfs_register(12) start
-> [   13.604040] == blk_mq_debugfs_register(12) q->debugfs_dir created
+> 2 There is no need to free the kzmalloc space(no possibility of memory leak )?
 
-Same for this..  I think the real valuable changelog only stars below
-this 'trace'.
+Correct, yes.
 
-> The root cause to this issue is that debugfs_lookup() can find a
-> previous incarnation's dir of the same name which is about to get
-> removed from a not yet schedule work. When that happens, the the files
-> are taken underneath the nose of the blktrace, and when it comes time to
-> cleanup, these dentries are long gone because of a scheduled removal.
-> 
-> This issue is happening because of two reasons:
-> 
->   1) The request_queue is currently removed asynchronously as of commit
->      dc9edc44de6c ("block: Fix a blk_exit_rl() regression") merged on
->      v4.12, this allows races with userspace which were not possible
->      before unless as removal of a block device used to happen
->      synchronously with its request_queue. One could however still
->      parallelize blksetup calls while one loops on device addition and
->      removal.
-> 
->   2) There are no errors checks when we create the debugfs directory,
->      be it on init or for blktrace. The concept of when the directory
->      *should* really exist is further complicated by the fact that
->      we have asynchronous request_queue removal. And, we have no
->      real sanity checks to ensure we don't re-create the queue debugfs
->      directory.
-> 
-> We can fix the UAF by using a debugfs directory which moving forward
-> will always be accessible if debugfs is enabled, this way, its allocated
-> and avaialble always for both request-based block drivers or
-> make_request drivers (multiqueue) block drivers.
-> 
-> We also put sanity checks in place to ensure that if the directory is
-> found with debugfs_lookup() it is the dentry we expect. When doing a
-> blktrace against a parition, we will always be creating a temporary
-> debugfs directory, so ensure that only exists once as well to avoid
-> issues against concurrent blktrace runs.
-> 
-> Lastly, since we are now always creating the needed request_queue
-> debugfs directory upon init, we can also take the initiative to
-> proactively check against errors. We currently do not check for
-> errors on add_disk() and friends, but we shouldn't make the issue
-> any worse.
-> 
-> This also simplifies the code considerably, with the only penalty now
-> being that we're always creating the request queue debugfs directory for
-> the request-based block device drivers.
-> 
-> The UAF then is not a core debugfs issue, but instead a complex misuse
-> of debugfs, and this issue can only be triggered if you are root.
-> 
-> This issue can be reproduced with break-blktrace [2] using:
-> 
->   break-blktrace -c 10 -d -s
-> 
-> This patch fixes this issue. Note that there is also another
-> respective UAF but from the ioctl path [3], this should also fix
-> that issue.
-> 
-> This patch then also disputes the severity of CVE-2019-19770 as
-> this issue is only possible by being root and using blktrace.
-> 
-> It is not a core debugfs issue.
-> 
-> [0] https://bugzilla.kernel.org/show_bug.cgi?id=205713
-> [1] https://nvd.nist.gov/vuln/detail/CVE-2019-19770
-> [2] https://github.com/mcgrof/break-blktrace
-> [3] https://lore.kernel.org/lkml/000000000000ec635b059f752700@google.com/
+Regards,
+Christian.
 
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>
+> Regards,
+> Bernard
+>
+>>>> It's really annoying that loading, unloading and loading the driver
+>>>> again sometimes fails because we have a bug in the sysfs files cleanup.
+>>>>
+>>>> We certainly should fix those bugs as well, but they are just not
+>>>> critical for correct driver functionality.
+>>>>
+>>>> Regards,
+>>>> Christian.
+>>>>> Regards,
+>>>>> Bernard
+>>>>>
+>>>>>>> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+>>>>>>> ---
+>>>>>>>      drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 24 ++++++++++++++++----
+>>>>>>>      1 file changed, 19 insertions(+), 5 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+>>>>>>> index 82a3299e53c0..4c5fb153e6b4 100644
+>>>>>>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+>>>>>>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+>>>>>>> @@ -175,30 +175,44 @@ static int amdgpu_vram_mgr_init(struct ttm_mem_type_manager *man,
+>>>>>>>      	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_total);
+>>>>>>>      	if (ret) {
+>>>>>>>      		DRM_ERROR("Failed to create device file mem_info_vram_total\n");
+>>>>>>> -		return ret;
+>>>>>>> +		goto VRAM_TOTAL_FAIL;
+>>>>>>>      	}
+>>>>>>>      	ret = device_create_file(adev->dev, &dev_attr_mem_info_vis_vram_total);
+>>>>>>>      	if (ret) {
+>>>>>>>      		DRM_ERROR("Failed to create device file mem_info_vis_vram_total\n");
+>>>>>>> -		return ret;
+>>>>>>> +		goto VIS_VRAM_TOTA_FAIL;
+>>>>>>>      	}
+>>>>>>>      	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_used);
+>>>>>>>      	if (ret) {
+>>>>>>>      		DRM_ERROR("Failed to create device file mem_info_vram_used\n");
+>>>>>>> -		return ret;
+>>>>>>> +		goto VRAM_USED_FAIL;
+>>>>>>>      	}
+>>>>>>>      	ret = device_create_file(adev->dev, &dev_attr_mem_info_vis_vram_used);
+>>>>>>>      	if (ret) {
+>>>>>>>      		DRM_ERROR("Failed to create device file mem_info_vis_vram_used\n");
+>>>>>>> -		return ret;
+>>>>>>> +		goto VIS_VRAM_USED_FAIL;
+>>>>>>>      	}
+>>>>>>>      	ret = device_create_file(adev->dev, &dev_attr_mem_info_vram_vendor);
+>>>>>>>      	if (ret) {
+>>>>>>>      		DRM_ERROR("Failed to create device file mem_info_vram_vendor\n");
+>>>>>>> -		return ret;
+>>>>>>> +		goto VRAM_VERDOR_FAIL;
+>>>>>>>      	}
+>>>>>>>      
+>>>>>>>      	return 0;
+>>>>>>> +
+>>>>>>> +VRAM_VERDOR_FAIL:
+>>>>>>> +	device_remove_file(adev->dev, &dev_attr_mem_info_vis_vram_used);
+>>>>>>> +VIS_VRAM_USED_FAIL:
+>>>>>>> +	device_remove_file(adev->dev, &dev_attr_mem_info_vram_used);
+>>>>>>> +RVAM_USED_FAIL:
+>>>>>>> +	device_remove_file(adev->dev, &dev_attr_mem_info_vis_vram_total);
+>>>>>>> +VIS_VRAM_TOTA_FAIL:
+>>>>>>> +	device_remove_file(adev->dev, &dev_attr_mem_info_vram_total);
+>>>>>>> +VRAM_TOTAL_FAIL:
+>>>>>>> +	kfree(mgr);
+>>>>>>> +	man->priv = NULL;
+>>>>>>> +
+>>>>>>> +	return ret;
+>>>>>>>      }
+>>>>>>>      
+>>>>>>>      /**
+>
 
-This looks like an unrelated change.
-
-> +
->  #include <linux/kernel.h>
->  #include <linux/blkdev.h>
->  #include <linux/debugfs.h>
-> @@ -13,3 +16,30 @@ void blk_debugfs_register(void)
->  {
->  	blk_debugfs_root = debugfs_create_dir("block", NULL);
->  }
-> +
-> +int __must_check blk_queue_debugfs_register(struct request_queue *q)
-
-__must_check for a function with a single caller looks silly.
-
-> +{
-> +	struct dentry *dir = NULL;
-> +
-> +	/* This can happen if we have a bug in the lower layers */
-> +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> +	if (dir) {
-> +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> +			kobject_name(q->kobj.parent));
-> +		dput(dir);
-> +		return -EALREADY;
-> +	}
-
-I don't see why we need this check.  If it is valueable enough we
-should have a debugfs_create_dir_exclusive or so that retunrns an error
-for an exsting directory, instead of reimplementing it in the caller in
-a racy way.  But I'm not really sure we need it to start with.
-
-> +
-> +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> +					    blk_debugfs_root);
-> +	if (!q->debugfs_dir)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +void blk_queue_debugfs_unregister(struct request_queue *q)
-> +{
-> +	debugfs_remove_recursive(q->debugfs_dir);
-> +	q->debugfs_dir = NULL;
-> +}
-
-Which to me suggests we can just fold these two into the callers,
-with an IS_ENABLED for the creation case given that we check for errors
-and the stub will always return an error.
-
->  	debugfs_create_files(q->debugfs_dir, q, blk_mq_debugfs_queue_attrs);
->  
->  	/*
-> @@ -856,9 +853,7 @@ void blk_mq_debugfs_register(struct request_queue *q)
->  
->  void blk_mq_debugfs_unregister(struct request_queue *q)
->  {
-> -	debugfs_remove_recursive(q->debugfs_dir);
->  	q->sched_debugfs_dir = NULL;
-> -	q->debugfs_dir = NULL;
->  }
-
-This function is weird - the sched dir gets removed by the
-debugfs_remove_recursive, so just leaving a function that clears
-a pointer is rather odd.  In fact I don't think we need to clear
-either sched_debugfs_dir or debugfs_dir anywhere.
-
->  
-> @@ -975,6 +976,14 @@ int blk_register_queue(struct gendisk *disk)
->  		goto unlock;
->  	}
->  
-> +	ret = blk_queue_debugfs_register(q);
-> +	if (ret) {
-> +		blk_trace_remove_sysfs(dev);
-> +		kobject_del(&q->kobj);
-> +		kobject_put(&dev->kobj);
-> +		goto unlock;
-> +	}
-> +
-
-Please use a goto label to consolidate the common cleanup code.
-
-Also I think these generic debugfs changes probably should be separate
-to the blktrace changes.
-
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
->  #include <linux/kernel.h>
->  #include <linux/blkdev.h>
->  #include <linux/blktrace_api.h>
-> @@ -311,7 +314,15 @@ static void blk_trace_free(struct blk_trace *bt)
->  	debugfs_remove(bt->msg_file);
->  	debugfs_remove(bt->dropped_file);
->  	relay_close(bt->rchan);
-> -	debugfs_remove(bt->dir);
-> +	/*
-> +	 * backing_dir is set when we use the request_queue debugfs directory.
-> +	 * Otherwise we are using a temporary directory created only for the
-> +	 * purpose of blktrace.
-> +	 */
-> +	if (bt->backing_dir)
-> +		dput(bt->backing_dir);
-> +	else
-> +		debugfs_remove(bt->dir);
->  	free_percpu(bt->sequence);
->  	free_percpu(bt->msg_data);
->  	kfree(bt);
-> @@ -468,16 +479,89 @@ static void blk_trace_setup_lba(struct blk_trace *bt,
->  	}
->  }
->  
-> +static bool blk_trace_target_disk(const char *target, const char *diskname)
-> +{
-> +	if (strlen(target) != strlen(diskname))
-> +		return false;
-> +
-> +	if (!strncmp(target, diskname,
-> +		     min_t(size_t, strlen(target), strlen(diskname))))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-> +					    struct request_queue *q,
->  					    struct blk_trace *bt)
->  {
->  	struct dentry *dir = NULL;
->  
-> +	/* This can only happen if we have a bug on our lower layers */
-> +	if (!q->kobj.parent) {
-> +		pr_warn("%s: request_queue parent is gone\n", buts->name);
-> +		return NULL;
-> +	}
-
-Why is this not simply a WARN_ON_ONCE()?
-
-> +	/*
-> +	 * From a sysfs kobject perspective, the request_queue sits on top of
-> +	 * the gendisk, which has the name of the disk. We always create a
-> +	 * debugfs directory upon init for this gendisk kobject, so we re-use
-> +	 * that if blktrace is going to be done for it.
-> +	 */
-
--EPARSE.
-
-> +	if (blk_trace_target_disk(buts->name, kobject_name(q->kobj.parent))) {
-> +		if (!q->debugfs_dir) {
-> +			pr_warn("%s: expected request_queue debugfs_dir is not set\n",
-> +				buts->name);
-> +			return NULL;
-> +		}
-> +		/*
-> +		 * debugfs_lookup() is used to ensure the directory is not
-> +		 * taken from underneath us. We must dput() it later once
-> +		 * done with it within blktrace.
-> +		 */
-> +		dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> +		if (!dir) {
-> +			pr_warn("%s: expected request_queue debugfs_dir dentry is gone\n",
-> +				buts->name);
-> +			return NULL;
-> +		}
-> +		 /*
-> +		 * This is a reaffirmation that debugfs_lookup() shall always
-> +		 * return the same dentry if it was already set.
-> +		 */
-> +		if (dir != q->debugfs_dir) {
-> +			dput(dir);
-> +			pr_warn("%s: expected dentry dir != q->debugfs_dir\n",
-> +				buts->name);
-> +			return NULL;
-> +		}
-> +		bt->backing_dir = q->debugfs_dir;
-> +		return bt->backing_dir;
-> +	}
-
-Even with the gigantic commit log I don't get the point of this
-code.  It looks rather sketchy and I can't find a rationale for it.
