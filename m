@@ -7,104 +7,138 @@ X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8795C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29339C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A6F20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F234D20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587584303;
-	bh=9JICITPhJEYDOQWZ4DJJmaE3mVvh24ZEtKsKNXW5DqE=;
+	s=default; t=1587584556;
+	bh=GaIW5oMP5B+NAcRQLApP7i3Ktal9N5ktABFE84KEc30=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JdxLl5yScQMczZyRDn8z0uMJkNz9V+x23CJtt+ZEoHuiz00fUVjJBF1U7UzV7expt
-	 MpGo50yvk9NEH9jEReXL1Qu9NryMyVcNhCquaHmf8f9SI0X5rWD74ph7TMDpUyir5j
-	 VFfLJhDi4gShQr3vJYIiczFBiScGnFnPMc9mtxQY=
+	b=MgStD9om52vV6XcFrski0kLwnBDU05Xz0KkFGG8V9A4eP+VefET78c4dbsjCaP3Z8
+	 xWloC/uBR8RpYNhEowb2+J200YyEeumKcjMtqtH2L9pbcRKKAf5QKaLi++LAbC1CVu
+	 J6xMpCSRS84vg2VkY2j0ELz1IWeAkWvZubVf/tiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgDVTiX (ORCPT
+        id S1726200AbgDVTmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:38:23 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36386 "EHLO
+        Wed, 22 Apr 2020 15:42:35 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43089 "EHLO
         mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgDVTiW (ORCPT
+        with ESMTP id S1725961AbgDVTme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:38:22 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s202so2954472oih.3;
-        Wed, 22 Apr 2020 12:38:22 -0700 (PDT)
+        Wed, 22 Apr 2020 15:42:34 -0400
+Received: by mail-oi1-f193.google.com with SMTP id j16so2933318oih.10;
+        Wed, 22 Apr 2020 12:42:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r+bQz+oywLIfBY+qmz5dtgdjHfJr24roK+Q4M23wujE=;
-        b=VdQUNazYj0GYdBcUIACHIbMInWEb1oC4lWSukKdihJy1WY17f1ArTVWyNq0cYnJJOW
-         kzxhBFadrP2uo06xStn+SWa5CqcV9JZpre4C8zA2hU4a4MNocveIhyOBjRhCHvqwtXiQ
-         S1pC0Ba2LcMcuDM+jyLhMMaKnJ2f0Q1+MnDXn6Pmizv4Q0HbsbK5m/iUpbu4WO7ghaG4
-         GEk3i/23TITeO84DQisdHFXkLtCvdS0k9ihn/zSdrF3lbTqDD1mD4HUXdcG7t3WkrflZ
-         LbvXbKG9CKuTNaskKGDBxiGwMtOCucls/LqhL4lWKHG08T6DpzJvLjR8lvmAhqV0qAZG
-         vrsQ==
-X-Gm-Message-State: AGi0PuYk/zBYNCaCZIxWDnEyxROKJk4VinJL36UZXWaRnEkmr0QXPuAB
-        ZbhSJPLHCq2SKOck/3cvNA==
-X-Google-Smtp-Source: APiQypI14oeR06dFErUfwCsPEufwOtD3gkatiqcxhF0Yrwf5FslPbZlGF7qdSUieoA3OewdCEeZm0g==
-X-Received: by 2002:aca:440a:: with SMTP id r10mr415199oia.139.1587584301584;
-        Wed, 22 Apr 2020 12:38:21 -0700 (PDT)
+        bh=huAsohfgPjKhobu8tGI0Z2yU/DwK8rb6r7ozAP98pjc=;
+        b=IIgXHfjX57dWu0hHrecCag8mSCshPtXuJ83sV431C3F+xVEjSu1zbd5Ldh1W2EKdS4
+         ONHilFmOk/OAd5HwmdsYLwUmuO5EfQJFGEC1wqF3i0pBWjnVYkoJQjK67FbTjGo2FjGQ
+         LKOYQ9kghqInybHYM//AHpKCkszw/M+AETIk/X01IyGwI9I0pQeNMTRYxIyh8rohEG9E
+         CcyskEVJ4TEtfjNxctdpdvJiDAuESNNXaDqqh/uiaCdpAvXudUcPl4lFMrur77VHKddr
+         3x/8XIdgDDLEqnEHR2uyRvvKH7h27SpJAMyeKeTzPd0mQMUHRWhGjhmQASdOXwv6HSnA
+         v3MQ==
+X-Gm-Message-State: AGi0PuahJULyXMDAcvFijhh1u5F4860OmJt243KgA/bZ3cGOkFqgiWUZ
+        2zoUrUoCzg9Y+8AcuVzOJA==
+X-Google-Smtp-Source: APiQypIhe/Vj/x+9Tj76bJkE00Ecb+4p/RQomG76rndQXNYWtXWXHpxdZCnJwyfvOc0r/Nbba51iYQ==
+X-Received: by 2002:aca:ecd7:: with SMTP id k206mr432558oih.113.1587584553937;
+        Wed, 22 Apr 2020 12:42:33 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 80sm17588otd.35.2020.04.22.12.38.20
+        by smtp.gmail.com with ESMTPSA id h137sm46208oib.33.2020.04.22.12.42.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 12:38:20 -0700 (PDT)
-Received: (nullmailer pid 2056 invoked by uid 1000);
-        Wed, 22 Apr 2020 19:38:19 -0000
-Date:   Wed, 22 Apr 2020 14:38:19 -0500
+        Wed, 22 Apr 2020 12:42:33 -0700 (PDT)
+Received: (nullmailer pid 8268 invoked by uid 1000);
+        Wed, 22 Apr 2020 19:42:31 -0000
+Date:   Wed, 22 Apr 2020 14:42:31 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ben Levinsky <ben.levinsky@xilinx.com>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
-        Wendy Liang <jliang@xilinx.com>
-Subject: Re: [PATCH v3 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Message-ID: <20200422193819.GA1685@bogus>
-References: <1587421629-914-1-git-send-email-ben.levinsky@xilinx.com>
- <1587421629-914-5-git-send-email-ben.levinsky@xilinx.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-imx@nxp.com, Neil Armstrong <narmstrong@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v7 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+Message-ID: <20200422194231.GA6333@bogus>
+References: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
+ <20200421161610.1501827-6-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587421629-914-5-git-send-email-ben.levinsky@xilinx.com>
+In-Reply-To: <20200421161610.1501827-6-adrian.ratiu@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 15:27:08 -0700, Ben Levinsky wrote:
-> Add binding for ZynqMP R5 OpenAMP.
+On Tue, 21 Apr 2020 19:16:07 +0300, Adrian Ratiu wrote:
+> This provides an example DT binding for the MIPI DSI host controller
+> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
 > 
-> Represent the RPU domain resources in one device node. Each RPU
-> processor is a subnode of the top RPU domain node.
-> 
-> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> Signed-off-by: Jason Wu <j.wu@xilinx.com>
-> Signed-off-by: Wendy Liang <jliang@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: devicetree@vger.kernel.org
+> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 > ---
+> Changes since v6:
+>   - Added ref to the newly created snps,dw-mipi-dsi.yaml (Laurent)
+>   - Moved *-cells properties outside patternProperties (Laurent)
+>   - Removed the panel port documentation (Laurent)
+>   - Wrapped lines at 80 chars, typo fixes, sort includes (Laurent)
+> 
+> Changes since v5:
+>   - Fixed missing reg warning (Fabio)
+>   - Updated dt-schema and fixed warnings (Rob)
+> 
+> Changes since v4:
+>   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
+>   and addressed received binding feedback (Rob)
+> 
+> Changes since v3:
+>   - Added commit message (Neil)
+>   - Converted to yaml format (Neil)
+>   - Minor dt node + driver fixes (Rob)
+>   - Added small panel example to the host controller binding
+> 
 > Changes since v2:
-> 	- update zynqmp_r5 yaml parsing to not raise warnings for extra
-> 	 information in children of R5 node. The warning "node has a unit
-> 	 name, but no reg or ranges property" will still be raised though 
-> 	 as this particular node is needed to describe the
-> 	 '#address-cells' and '#size-cells' information.
+>   - Fixed commit tags (Emil)
 > ---
->  .../remoteproc/xilinx,zynqmp-r5-remoteproc.yaml    | 126 +++++++++++++++++++++
->  1 file changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 135 ++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:45.25-65.16: Warning (unit_address_vs_reg): /example-0/rpu@ff9a0000/r5@0: node has a unit name, but no reg or ranges property
+Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.6/dist-packages/dtschema/schemas/display/bridge/snps,dw-mipi-dsi.yaml'
+Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts] Error 255
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1273784
+See https://patchwork.ozlabs.org/patch/1274360
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
