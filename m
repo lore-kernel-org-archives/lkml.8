@@ -2,121 +2,125 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC458C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C719C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877F22076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="MXmMZ3qY"
+	by mail.kernel.org (Postfix) with ESMTP id 2750720774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587552948;
+	bh=ply7STCKTzRLwCtHHPvJalCJ1SwVkJNKXSg6UOLgnCI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n4nG8hU0qJQ4vGfV4KXx8IamXqiWCk/OfHl1en0q/3vSgjICe1BClpoGECyvDaUfi
+	 aoTTIQSjDXfEMAEWy3i8RKjOXgEN7yLnGTapHyo8hlwGqed+XSKGydAHgWj+exl3wT
+	 xdQnUNnfhn16SU1hCLx4qH7HT8U6OvqKBfBUNqnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgDVKGx (ORCPT
+        id S1728419AbgDVKGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:06:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgDVKGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4CFC03C1A8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:06:43 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id d17so1644442wrg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c4k706ZSVjtoFxzG3fOOAAjo3JI2263vlECa+mTD4TY=;
-        b=MXmMZ3qYQcjhRwZSh9ypCfMLC6JfaTsD5/nBe5OW1Vr5WYTfMinHw2aUfRS75LfBgH
-         5Pbq5J3Nl8rLj6dbCYDINGCd5X8wkaKA4/0fTS+dGXVRj+WRzIzy8lYJcMtDkMwBRcMB
-         EBrG1ZZt77yrGYxcHv/RDxI7n4UBxGFvVChsLtpvgZMpxrKsAwYRUh7abVvVgdSqa6ph
-         e2a7pzdZB0P1Yp5EfM6stlnyuCLydEP32jGPOCvUb7T57K2KLf23I/UsjRJdZdTN+Vtk
-         g6ZRkvRDntzRiHXizBxEwWjdPY5k9yX4C5rBT7VaaCEl1RQTavKQZSI8EkuLyItUvZEk
-         UCOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=c4k706ZSVjtoFxzG3fOOAAjo3JI2263vlECa+mTD4TY=;
-        b=CDCE7EiH+w/WUKCEjHFEVSRpLLFUX6nLiy4b+QJ/Mp1tD2gVWP+tx6g/lkeo/ji/gE
-         78pOT91r/0IhQkKsy3LDyPFVKe1cyqv1tX/8kUjxLsFvNoxsqZw9Sxs2fVZs/zblkAtL
-         KBUwzfLBmSOTJt8vfcvyz3V4NxXwtCzUt3wNAs5juSaagSgEjitkVxJh7hYR6Y7aKDwy
-         WdLrES2cWLhPb0G/MYuYAHyZuAdtPXjS/RmLSFZ6efCO7M/o0mKDs6dSVOLJirAQMgVZ
-         daMsSldFWd5oqLJ+wSBArb9/CT357OaUmAVfQcpg0avDVqwUI7z6izr4bSzhHyc9mtU0
-         l2cA==
-X-Gm-Message-State: AGi0PuZAUu8u3xo8b53t8D6cwGpJuxaS21ohXlsp5wR5L1KNZ3qsZ5cl
-        ggumqMt3fBuT9ihlMLkqjFfTGQ==
-X-Google-Smtp-Source: APiQypL2VyjVsQy2Trl1lObhl7WPbH2lgKTZGpODlZtiJj3Mf8TLFeihbDDyDR50ofmLLPXgOPlVzQ==
-X-Received: by 2002:a5d:658e:: with SMTP id q14mr30016060wru.92.1587550002459;
-        Wed, 22 Apr 2020 03:06:42 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id j13sm7812462wrq.24.2020.04.22.03.06.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:06:41 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
-Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
-        jaegeuk@kernel.org, Martijn Coenen <maco@android.com>
-Subject: [PATCH v2 0/5] Add a new LOOPSET_FD_AND_STATUS ioctl
-Date:   Wed, 22 Apr 2020 12:06:31 +0200
-Message-Id: <20200422100636.46357-1-maco@android.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+        Wed, 22 Apr 2020 06:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728388AbgDVKGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 642922076C;
+        Wed, 22 Apr 2020 10:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587549998;
+        bh=ply7STCKTzRLwCtHHPvJalCJ1SwVkJNKXSg6UOLgnCI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xvM1Q7p28g/eibymqrt35s/M2MQ9v4ngn0H/aUKsTc1kL5LE+S/4efSvT6vAkYKzz
+         GmAreD3FtFgqV/qgBymYxa3RCXr3tJpkBt82G4G89a7FcpRKhRXCjLDTaoO6hVcwT6
+         0BBihtWdLw1xki4sUnMGgpeCuwdAOOQ5TMWV0vOU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Timur Tabi <timur@codeaurora.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 091/125] Revert "gpio: set up initial state from .get_direction()"
+Date:   Wed, 22 Apr 2020 11:56:48 +0200
+Message-Id: <20200422095047.685351272@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
+References: <20200422095032.909124119@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces a new ioctl that makes it possible to atomically
-configure a loop device. Previously, if you wanted to set parameters
-such as the offset on a loop device, this required calling LOOP_SET_FD
-to set the backing file, and then LOOP_SET_STATUS to set the offset.
-However, in between these two calls, the loop device is available and
-would accept requests, which is generally not desirable.
+From: Timur Tabi <timur@codeaurora.org>
 
-There are also performance benefits with combining these two ioctls into
-one, which are described in more detail in the last change in the
-series.
+[ Upstream commit 1ca2a92b2a99323f666f1b669b7484df4bda05e4 ]
 
-Note that this series depends on
-"loop: Call loop_config_discard() only after new config is applied."
-[0], which I sent as a separate patch as it fixes an unrelated bug.
+This reverts commit 72d3200061776264941be1b5a9bb8e926b3b30a5.
 
-[0]: https://lkml.org/lkml/2020/3/31/755
+We cannot blindly query the direction of all GPIOs when the pins are
+first registered.  The get_direction callback normally triggers a
+read/write to hardware, but we shouldn't be touching the hardware for
+an individual GPIO until after it's been properly claimed.
 
+Signed-off-by: Timur Tabi <timur@codeaurora.org>
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-v2:
-  - Addressed review comments from Bart van Assche:
-    -- Use SECTOR_SHIFT constant
-    -- Renamed loop_set_from_status() to loop_set_status_from_info()
-    -- Added kerneldoc for loop_set_status_from_info()
-    -- Removed dots in patch subject lines
-  - Addressed review comments from Christoph Hellwig:
-    -- Added missing padding in struct loop_fd_and_status
-    -- Cleaned up some __user pointer handling in lo_ioctl
-    -- Pass in a stack-initialized loop_info64 for the legacy
-       LOOP_SET_FD case
+ drivers/gpio/gpiolib.c |   31 +++++++------------------------
+ 1 file changed, 7 insertions(+), 24 deletions(-)
 
-Martijn Coenen (5):
-  loop: Refactor size calculation
-  loop: Factor out configuring loop from status
-  loop: Move loop_set_status_from_info() and friends up
-  loop: rework lo_ioctl() __user argument casting
-  loop: Add LOOP_SET_FD_AND_STATUS ioctl
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1232,31 +1232,14 @@ int gpiochip_add_data(struct gpio_chip *
+ 		struct gpio_desc *desc = &gdev->descs[i];
+ 
+ 		desc->gdev = gdev;
+-		/*
+-		 * REVISIT: most hardware initializes GPIOs as inputs
+-		 * (often with pullups enabled) so power usage is
+-		 * minimized. Linux code should set the gpio direction
+-		 * first thing; but until it does, and in case
+-		 * chip->get_direction is not set, we may expose the
+-		 * wrong direction in sysfs.
+-		 */
+-
+-		if (chip->get_direction) {
+-			/*
+-			 * If we have .get_direction, set up the initial
+-			 * direction flag from the hardware.
+-			 */
+-			int dir = chip->get_direction(chip, i);
+ 
+-			if (!dir)
+-				set_bit(FLAG_IS_OUT, &desc->flags);
+-		} else if (!chip->direction_input) {
+-			/*
+-			 * If the chip lacks the .direction_input callback
+-			 * we logically assume all lines are outputs.
+-			 */
+-			set_bit(FLAG_IS_OUT, &desc->flags);
+-		}
++		/* REVISIT: most hardware initializes GPIOs as inputs (often
++		 * with pullups enabled) so power usage is minimized. Linux
++		 * code should set the gpio direction first thing; but until
++		 * it does, and in case chip->get_direction is not set, we may
++		 * expose the wrong direction in sysfs.
++		 */
++		desc->flags = !chip->direction_input ? (1 << FLAG_IS_OUT) : 0;
+ 	}
+ 
+ #ifdef CONFIG_PINCTRL
 
- drivers/block/loop.c      | 327 ++++++++++++++++++++++----------------
- include/uapi/linux/loop.h |   7 +
- 2 files changed, 201 insertions(+), 133 deletions(-)
-
--- 
-2.26.2.303.gf8c07b1a785-goog
 
