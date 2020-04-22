@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CB3C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A64C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E096720738
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD410206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgDVPDL (ORCPT
+        id S1728237AbgDVPDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:03:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58108 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 11:03:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58098 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728067AbgDVPDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:03:07 -0400
+        id S1728116AbgDVPDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:03:08 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5B6DEADC2;
+        by mx2.suse.de (Postfix) with ESMTP id 884A9AE6E;
         Wed, 22 Apr 2020 15:03:03 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 7CD441E0E89; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
+        id 8DA181E0E56; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 09/23] dax: Use dax_store_noinit() in grab_mapping_entry()
-Date:   Wed, 22 Apr 2020 17:02:42 +0200
-Message-Id: <20200422150256.23473-10-jack@suse.cz>
+Subject: [PATCH 13/23] mm: Use xas_store_noinit() when storing non-NULL
+Date:   Wed, 22 Apr 2020 17:02:46 +0200
+Message-Id: <20200422150256.23473-14-jack@suse.cz>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200422150256.23473-1-jack@suse.cz>
 References: <20200422150256.23473-1-jack@suse.cz>
@@ -40,33 +40,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although we store NULL here, there aren't any marks set on the entry
-so use xas_store_noinit() to save some time when trying to reinitialize
-marks. Furthermore we actually overwrite the entry shortly afterwards
-with new PTE entry anyway.
+When we store value different from NULL, xas_store_noinit() is
+equivalent to xas_store(). Transition these places to
+xas_store_noinit().
 
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- fs/dax.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ mm/filemap.c    | 6 +++---
+ mm/khugepaged.c | 6 +++---
+ mm/migrate.c    | 6 +++---
+ mm/shmem.c      | 4 ++--
+ mm/swap_state.c | 2 +-
+ 5 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index f8358928549c..03c6ca693f3c 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -523,7 +523,11 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 		}
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 48c488b505ad..4fb515d8c242 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -134,7 +134,7 @@ static void page_cache_delete(struct address_space *mapping,
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
+ 	VM_BUG_ON_PAGE(nr != 1 && shadow, page);
  
- 		dax_disassociate_entry(entry, mapping, false);
--		xas_store(xas, NULL);	/* undo the PMD join */
-+		/*
-+		 * Remove PMD entry. There should be no marks set for the entry
-+ 		 * so don't bother reinitializing them with xas_erase().
-+		 */
-+		xas_store_noinit(xas, NULL);
- 		dax_wake_entry(xas, entry, true);
- 		mapping->nrexceptional--;
- 		entry = NULL;
+-	xas_store(&xas, shadow);
++	xas_store_noinit(&xas, shadow);
+ 	xas_init_marks(&xas);
+ 
+ 	page->mapping = NULL;
+@@ -803,7 +803,7 @@ int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask)
+ 	new->index = offset;
+ 
+ 	xas_lock_irqsave(&xas, flags);
+-	xas_store(&xas, new);
++	xas_store_noinit(&xas, new);
+ 
+ 	old->mapping = NULL;
+ 	/* hugetlb pages do not participate in page cache accounting. */
+@@ -856,7 +856,7 @@ static int __add_to_page_cache_locked(struct page *page,
+ 		old = xas_load(&xas);
+ 		if (old && !xa_is_value(old))
+ 			xas_set_err(&xas, -EEXIST);
+-		xas_store(&xas, page);
++		xas_store_noinit(&xas, page);
+ 		if (xas_error(&xas))
+ 			goto unlock;
+ 
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 8da820c02de7..79e5f0d12517 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1588,7 +1588,7 @@ static void collapse_file(struct mm_struct *mm,
+ 					result = SCAN_FAIL;
+ 					goto xa_locked;
+ 				}
+-				xas_store(&xas, new_page);
++				xas_store_noinit(&xas, new_page);
+ 				nr_none++;
+ 				continue;
+ 			}
+@@ -1724,7 +1724,7 @@ static void collapse_file(struct mm_struct *mm,
+ 		list_add_tail(&page->lru, &pagelist);
+ 
+ 		/* Finally, replace with the new page. */
+-		xas_store(&xas, new_page);
++		xas_store_noinit(&xas, new_page);
+ 		continue;
+ out_unlock:
+ 		unlock_page(page);
+@@ -1828,7 +1828,7 @@ static void collapse_file(struct mm_struct *mm,
+ 			/* Unfreeze the page. */
+ 			list_del(&page->lru);
+ 			page_ref_unfreeze(page, 2);
+-			xas_store(&xas, page);
++			xas_store_noinit(&xas, page);
+ 			xas_pause(&xas);
+ 			xas_unlock_irq(&xas);
+ 			unlock_page(page);
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 7160c1556f79..1610b7336af8 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -459,13 +459,13 @@ int migrate_page_move_mapping(struct address_space *mapping,
+ 		SetPageDirty(newpage);
+ 	}
+ 
+-	xas_store(&xas, newpage);
++	xas_store_noinit(&xas, newpage);
+ 	if (PageTransHuge(page)) {
+ 		int i;
+ 
+ 		for (i = 1; i < HPAGE_PMD_NR; i++) {
+ 			xas_next(&xas);
+-			xas_store(&xas, newpage);
++			xas_store_noinit(&xas, newpage);
+ 		}
+ 	}
+ 
+@@ -536,7 +536,7 @@ int migrate_huge_page_move_mapping(struct address_space *mapping,
+ 
+ 	get_page(newpage);
+ 
+-	xas_store(&xas, newpage);
++	xas_store_noinit(&xas, newpage);
+ 
+ 	page_ref_unfreeze(page, expected_count - 1);
+ 
+diff --git a/mm/shmem.c b/mm/shmem.c
+index bd8840082c94..35a4abd9b417 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -361,7 +361,7 @@ static int shmem_replace_entry(struct address_space *mapping,
+ 	item = xas_load(&xas);
+ 	if (item != expected)
+ 		return -ENOENT;
+-	xas_store(&xas, replacement);
++	xas_store_noinit(&xas, replacement);
+ 	return 0;
+ }
+ 
+@@ -631,7 +631,7 @@ static int shmem_add_to_page_cache(struct page *page,
+ 		if (xas_error(&xas))
+ 			goto unlock;
+ next:
+-		xas_store(&xas, page);
++		xas_store_noinit(&xas, page);
+ 		if (++i < nr) {
+ 			xas_next(&xas);
+ 			goto next;
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index ebed37bbf7a3..1afbf68f1724 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -133,7 +133,7 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
+ 		for (i = 0; i < nr; i++) {
+ 			VM_BUG_ON_PAGE(xas.xa_index != idx + i, page);
+ 			set_page_private(page + i, entry.val + i);
+-			xas_store(&xas, page);
++			xas_store_noinit(&xas, page);
+ 			xas_next(&xas);
+ 		}
+ 		address_space->nrpages += nr;
 -- 
 2.16.4
 
