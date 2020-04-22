@@ -2,176 +2,132 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13718C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD28C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0CB520784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA252076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552918;
-	bh=ww+numSu/sg6g0Gjghz4ZNx882LLLEiS7ZERHRm3QMc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bXR+gQ04Tmobyw9NZ6/R8XqTE2wjz/pHtNkzjHq1F+OFrjcZBZgiLQ2NMYhfFa9s8
-	 +3e146gj7jwPu8S44yLyTM/rMHqu5hW3Ryvb+6y6ysCCSk6idntUXPaTuNd5VTH4Cq
-	 6LB1lBpPsf/7rG/rMsYe1R/d63GEzZgWI/q5Qw30=
+	s=default; t=1587552927;
+	bh=B8gJjDgNfO030o6GTT5ZleoRRIawVbH5PA9xnbNJMpQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u2ZDHUSUvzlVbvKh7AE40OFLnNLzwhqHjt4+RPr+2e4OinxmqJmgCPzbEIL8IKWJh
+	 buHTeMreXro92cUUe5CNwxOWo9pmqyvR5Uequ4YxRD46sjZIvbTOOj8Y6MLJrBROhJ
+	 /kZkJ1zsU0KVVugjpx39tb/jLSpPvqM9DMjN7EpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbgDVKzR (ORCPT
+        id S1728474AbgDVKHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:55:17 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63110 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbgDVKzM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:55:12 -0400
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 03MAsqcF021330;
-        Wed, 22 Apr 2020 19:54:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 03MAsqcF021330
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587552893;
-        bh=jfh1cK7HJOI325fUjanL8XPRkeokyI4Z/JTzo0Sr8Do=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=B80hubZ2FF2o4Lwg7A6dE55/FK55YkMbcV5VTqzDz1p5tgc6FqY7550SeasM8YlVa
-         UeFowE8sIQje/lY6KdTEL1qbZJ6owtDuynRDgUTmLz+d4w1aeNgSMq8ZZXaISqggo5
-         76YxmS3GHJ7zI7LZpGzd7hAludfGdAmPOK/TZgxECxYUZ9xphINa8ghnvHm4Ji+tXI
-         vmm3ypw23fGahpMLiilRKm7Sco+SvpNAR1XVibyiCVOm7NS/nrEbA1LTCAXLpgLSiJ
-         8OPgg8iLjg11vKjgS70d7Ma/IEwcl9kg7oZQuw3WKTrD5c6am6hmR3w8ufAedh3kYe
-         XXabkjRAbua7g==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id i5so1124855uaq.1;
-        Wed, 22 Apr 2020 03:54:52 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ0gepQY6A1cigEwLM0luW2OXuwH/xYgbHJooo9YdYEPC/byT99
-        fUb2wf/357qIyeQFKKcsl9vFV2GOozZDt3xdMjQ=
-X-Google-Smtp-Source: APiQypL30Nui5tPzkrGBdvSXz/n6jOoR3K76pfkfTXG9nIPiej9yLCr1V7+RXT0AY8ax3rsoJqDfvRVZu7IF2lj0zKA=
-X-Received: by 2002:a67:6542:: with SMTP id z63mr19799049vsb.179.1587552891425;
- Wed, 22 Apr 2020 03:54:51 -0700 (PDT)
+        Wed, 22 Apr 2020 06:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728436AbgDVKG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77FBE2076C;
+        Wed, 22 Apr 2020 10:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587550015;
+        bh=B8gJjDgNfO030o6GTT5ZleoRRIawVbH5PA9xnbNJMpQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QnT29dF1BYrpXBwbKt4tSevJq4cKiiR/1xO/xGdgO5kgpoJvxKZnlP9U842mwKzrM
+         hMy6epyRvPy8l1wCdabBhtTSY4ss4Ltf9nACTuz+UmVWyiig0rGErK0Y3ee2+uY/8g
+         xjegcogS5PgxoGnFqf6D8Fty9KumxxPhdBfINnH4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.9 057/125] libata: Return correct status in sata_pmp_eh_recover_pm() when ATA_DFLAG_DETACH is set
+Date:   Wed, 22 Apr 2020 11:56:14 +0200
+Message-Id: <20200422095042.659869282@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
+References: <20200422095032.909124119@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200417145017.3932443d@canb.auug.org.au> <995a958c-15a1-cb05-e276-065c7f6e57fd@infradead.org>
- <CAPDyKFqE7zfaKSbpBoBbrSCEnx+70dOrWs+=QG_x2G-Fpt6=ng@mail.gmail.com>
- <ce11a0b5-22a6-dd18-f858-5d30f43e1128@intel.com> <CAK7LNARCT3YQEnVE0NMCphSuqvjLoG2EXdpdcAZuoEOD_mFyEw@mail.gmail.com>
- <CAPDyKFqCnUzHQ9+FKH-w_VLRNQ_UvK4nmxw+hROwXkxucjzrUw@mail.gmail.com>
-In-Reply-To: <CAPDyKFqCnUzHQ9+FKH-w_VLRNQ_UvK4nmxw+hROwXkxucjzrUw@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Apr 2020 19:54:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASpn++MWTdBCvFbiu3WgHbNVFhDSm+Ts1CmnbmYL_84GA@mail.gmail.com>
-Message-ID: <CAK7LNASpn++MWTdBCvFbiu3WgHbNVFhDSm+Ts1CmnbmYL_84GA@mail.gmail.com>
-Subject: Re: linux-next: Tree for Apr 17 (mmc/host/sdhci-of-at91.c)
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@atmel.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-On Wed, Apr 22, 2020 at 7:15 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Mon, 20 Apr 2020 at 14:28, Masahiro Yamada <masahiroy@kernel.org> wrot=
-e:
-> >
-> > On Mon, Apr 20, 2020 at 7:28 PM Adrian Hunter <adrian.hunter@intel.com>=
- wrote:
-> > >
-> > > On 20/04/20 12:12 pm, Ulf Hansson wrote:
-> > > > + Masahiro Yamada, Adrian Hunter
-> > > >
-> > > > On Fri, 17 Apr 2020 at 16:48, Randy Dunlap <rdunlap@infradead.org> =
-wrote:
-> > > >>
-> > > >> On 4/16/20 9:50 PM, Stephen Rothwell wrote:
-> > > >>> Hi all,
-> > > >>>
-> > > >>> Changes since 20200416:
-> > > >>>
-> > > >>
-> > > >> on i386:
-> > > >>
-> > > >>   CC      drivers/mmc/host/sdhci-of-at91.o
-> > > >> In file included from ../include/linux/build_bug.h:5:0,
-> > > >>                  from ../include/linux/bitfield.h:10,
-> > > >>                  from ../drivers/mmc/host/sdhci-of-at91.c:9:
-> > > >> ../drivers/mmc/host/sdhci-of-at91.c: In function =E2=80=98sdhci_at=
-91_set_clks_presets=E2=80=99:
-> > > >> ../include/linux/compiler.h:394:38: error: call to =E2=80=98__comp=
-iletime_assert_63=E2=80=99 declared with attribute error: FIELD_PREP: value=
- too large for the field
-> > > >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COU=
-NTER__)
-> > > >>                                       ^
-> > > >> ../include/linux/compiler.h:375:4: note: in definition of macro =
-=E2=80=98__compiletime_assert=E2=80=99
-> > > >>     prefix ## suffix();    \
-> > > >>     ^~~~~~
-> > > >> ../include/linux/compiler.h:394:2: note: in expansion of macro =E2=
-=80=98_compiletime_assert=E2=80=99
-> > > >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COU=
-NTER__)
-> > > >>   ^~~~~~~~~~~~~~~~~~~
-> > > >> ../include/linux/build_bug.h:39:37: note: in expansion of macro =
-=E2=80=98compiletime_assert=E2=80=99
-> > > >>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), m=
-sg)
-> > > >>                                      ^~~~~~~~~~~~~~~~~~
-> > > >> ../include/linux/bitfield.h:49:3: note: in expansion of macro =E2=
-=80=98BUILD_BUG_ON_MSG=E2=80=99
-> > > >>    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
-> > > >>    ^~~~~~~~~~~~~~~~
-> > > >> ../include/linux/bitfield.h:94:3: note: in expansion of macro =E2=
-=80=98__BF_FIELD_CHECK=E2=80=99
-> > > >>    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-> > > >>    ^~~~~~~~~~~~~~~~
-> > > >> ../drivers/mmc/host/sdhci-of-at91.c:185:11: note: in expansion of =
-macro =E2=80=98FIELD_PREP=E2=80=99
-> > > >>   caps1 |=3D FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
-> > >
-> > > My guess is the compiler has decided clk_mul is constant (probably (u=
-nsigned
-> > > int)-1) because there is no CONFIG_COMMON_CLK i.e. clk_get_rate() is =
-0
-> > >
-> > > So maybe add to config MMC_SDHCI_OF_AT91
-> > >
-> > >         depends on COMMON_CLK
-> > >
-> > > >>            ^~~~~~~~~~
-> >
-> >
-> >
-> > I checked include/linux/clk.h
-> >
-> >
-> > clk_get_rate() is guarded by CONFIG_HAVE_CLK.
-> >
-> > I think
-> >
-> >     depends on HAVE_CLK
->
-> Do you have the possibility of sending a patch, asap. Otherwise I can
-> help to do it!?
+commit 8305f72f952cff21ce8109dc1ea4b321c8efc5af upstream.
+
+During system resume from suspend, this can be observed on ASM1062 PMP
+controller:
+
+ata10.01: SATA link down (SStatus 0 SControl 330)
+ata10.02: hard resetting link
+ata10.02: SATA link down (SStatus 0 SControl 330)
+ata10.00: configured for UDMA/133
+Kernel panic - not syncing: stack-protector: Kernel
+ in: sata_pmp_eh_recover+0xa2b/0xa40
+
+CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
+#49-Ubuntu
+Hardware name: System manufacturer System Product
+ 1001 12/10/2017
+Call Trace:
+dump_stack+0x63/0x8b
+panic+0xe4/0x244
+? sata_pmp_eh_recover+0xa2b/0xa40
+__stack_chk_fail+0x19/0x20
+sata_pmp_eh_recover+0xa2b/0xa40
+? ahci_do_softreset+0x260/0x260 [libahci]
+? ahci_do_hardreset+0x140/0x140 [libahci]
+? ata_phys_link_offline+0x60/0x60
+? ahci_stop_engine+0xc0/0xc0 [libahci]
+sata_pmp_error_handler+0x22/0x30
+ahci_error_handler+0x45/0x80 [libahci]
+ata_scsi_port_error_handler+0x29b/0x770
+? ata_scsi_cmd_error_handler+0x101/0x140
+ata_scsi_error+0x95/0xd0
+? scsi_try_target_reset+0x90/0x90
+scsi_error_handler+0xd0/0x5b0
+kthread+0x121/0x140
+? scsi_eh_get_sense+0x200/0x200
+? kthread_create_worker_on_cpu+0x70/0x70
+ret_from_fork+0x22/0x40
+Kernel Offset: 0xcc00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+
+Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
+set, sata_pmp_eh_recover() continues to run. During retry it triggers
+the stack protector.
+
+Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
+jump to pmp_fail directly.
+
+BugLink: https://bugs.launchpad.net/bugs/1821434
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/ata/libata-pmp.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/ata/libata-pmp.c
++++ b/drivers/ata/libata-pmp.c
+@@ -764,6 +764,7 @@ static int sata_pmp_eh_recover_pmp(struc
+ 
+ 	if (dev->flags & ATA_DFLAG_DETACH) {
+ 		detach = 1;
++		rc = -ENODEV;
+ 		goto fail;
+ 	}
+ 
 
 
-Sorry.
-
-I can send a patch if it is preferred.
-
-Do you need a separate patch, or
-do you want to squash the fix-up
-to keep the bisectability?
-
-
---=20
-Best Regards
-Masahiro Yamada
