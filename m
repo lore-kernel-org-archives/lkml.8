@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6624EC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA5EC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0842073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4C62073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552136;
-	bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
+	s=default; t=1587552139;
+	bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11YzJnbnZHlEj+Vb0Y0/Q5seeAuKNjW/SiDJpkT6mfE9uGgwY7O7Cnuf7N+5heZgG
-	 QiLciNLNJlFF2HgBiiweGZavFe9069BaUEilAONgM6p4xvxRjEgsoq22BNgBi3u3ZG
-	 qD55kNnGyBHgQ++DvzLrEmQUUeCN2m9/bkj2ufVA=
+	b=ZTC4+5mm8WY7wOsccNKmSL7cEfoFUC3LpWDh9RuTjaWQqyl7Fz/XWjyqXaMxsll6z
+	 qUEZIQ5syu0PmKFcZuYNL+mV4YXidM/xDkNcyri7kGh0/GtCE6d/DMOkvwA4V+TU49
+	 UVTGAjOlIFmRLpkViEj5UIKp96lZ/JXMXWqtX13U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbgDVKmP (ORCPT
+        id S1730311AbgDVKmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56640 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:42:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729678AbgDVKTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:19:51 -0400
+        id S1729664AbgDVKTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:19:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 353102084D;
-        Wed, 22 Apr 2020 10:19:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BEA720776;
+        Wed, 22 Apr 2020 10:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550790;
-        bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
+        s=default; t=1587550785;
+        bh=5Ci5tuTv9+UalY7YeLpOUErdM7aSS+N8D1vX52ppM9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EajzXHM8/hQebrC49fxtBlM6kygd1shpGN/bjD+9KBTfe32q2D111N2yV3BrQBMjg
-         qdrDjoRzciMkDMDLZgADHUMZzl3pIve7pk4anqYqt1XDVhB3NOQYpyfuqolUtDcOoL
-         HNNVCNccdPg41bd6PgDtnByj4Mrft9pfS+Mj7dUg=
+        b=K9bT7Wt/Qz1bDtnAfV8nBNeIkduvKEp94uCICyZkGI5WvtJSWIkIaZQs5AXsdZ1zj
+         Wwb4/kwStiUdv1CZ+j+K2iUW3lpunOzgb5DyVJaTc/8pp6BNw8FqWHzhuzYyCPG59b
+         F6YQt0lDmGi2OAhsUAxtcf/7PfyArvCpiykWlWbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 095/118] csky: Fixup init_fpu compile warning with __init
-Date:   Wed, 22 Apr 2020 11:57:36 +0200
-Message-Id: <20200422095046.907549132@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 093/118] ext2: fix debug reference to ext2_xattr_cache
+Date:   Wed, 22 Apr 2020 11:57:34 +0200
+Message-Id: <20200422095046.620926988@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,71 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 12879bda3c2a974b7e4fe199a9c21f0c5f6bca04 ]
+[ Upstream commit 32302085a8d90859c40cf1a5e8313f575d06ec75 ]
 
-WARNING: vmlinux.o(.text+0x2366): Section mismatch in reference from the
-function csky_start_secondary() to the function .init.text:init_fpu()
+Fix a debug-only build error in ext2/xattr.c:
 
-The function csky_start_secondary() references
-the function __init init_fpu().
-This is often because csky_start_secondary lacks a __init
-annotation or the annotation of init_fpu is wrong.
+When building without extra debugging, (and with another patch that uses
+no_printk() instead of <empty> for the ext2-xattr debug-print macros,
+this build error happens:
 
-Reported-by: Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+../fs/ext2/xattr.c: In function ‘ext2_xattr_cache_insert’:
+../fs/ext2/xattr.c:869:18: error: ‘ext2_xattr_cache’ undeclared (first use in
+this function); did you mean ‘ext2_xattr_list’?
+     atomic_read(&ext2_xattr_cache->c_entry_count));
+
+Fix the problem by removing cached entry count from the debug message
+since otherwise we'd have to export the mbcache structure just for that.
+
+Fixes: be0726d33cb8 ("ext2: convert to mbcache2")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/abiv2/fpu.c         | 5 -----
- arch/csky/abiv2/inc/abi/fpu.h | 3 ++-
- arch/csky/kernel/smp.c        | 3 +++
- 3 files changed, 5 insertions(+), 6 deletions(-)
+ fs/ext2/xattr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/csky/abiv2/fpu.c b/arch/csky/abiv2/fpu.c
-index 86d187d4e5af1..5acc5c2e544e1 100644
---- a/arch/csky/abiv2/fpu.c
-+++ b/arch/csky/abiv2/fpu.c
-@@ -10,11 +10,6 @@
- #define MTCR_DIST	0xC0006420
- #define MFCR_DIST	0xC0006020
- 
--void __init init_fpu(void)
--{
--	mtcr("cr<1, 2>", 0);
--}
--
- /*
-  * fpu_libc_helper() is to help libc to excute:
-  *  - mfcr %a, cr<1, 2>
-diff --git a/arch/csky/abiv2/inc/abi/fpu.h b/arch/csky/abiv2/inc/abi/fpu.h
-index 22ca3cf2794a1..09e2700a36936 100644
---- a/arch/csky/abiv2/inc/abi/fpu.h
-+++ b/arch/csky/abiv2/inc/abi/fpu.h
-@@ -9,7 +9,8 @@
- 
- int fpu_libc_helper(struct pt_regs *regs);
- void fpu_fpe(struct pt_regs *regs);
--void __init init_fpu(void);
-+
-+static inline void init_fpu(void) { mtcr("cr<1, 2>", 0); }
- 
- void save_to_user_fp(struct user_fp *user_fp);
- void restore_from_user_fp(struct user_fp *user_fp);
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index de61feb4b6df2..b5c5bc3afeb5c 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -22,6 +22,9 @@
- #include <asm/sections.h>
- #include <asm/mmu_context.h>
- #include <asm/pgalloc.h>
-+#ifdef CONFIG_CPU_HAS_FPU
-+#include <abi/fpu.h>
-+#endif
- 
- struct ipi_data_struct {
- 	unsigned long bits ____cacheline_aligned;
+diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
+index b91f99d9482e9..62acbe27d8bf4 100644
+--- a/fs/ext2/xattr.c
++++ b/fs/ext2/xattr.c
+@@ -865,8 +865,7 @@ ext2_xattr_cache_insert(struct mb_cache *cache, struct buffer_head *bh)
+ 				      true);
+ 	if (error) {
+ 		if (error == -EBUSY) {
+-			ea_bdebug(bh, "already in cache (%d cache entries)",
+-				atomic_read(&ext2_xattr_cache->c_entry_count));
++			ea_bdebug(bh, "already in cache");
+ 			error = 0;
+ 		}
+ 	} else
 -- 
 2.20.1
 
