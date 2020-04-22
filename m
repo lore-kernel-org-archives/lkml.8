@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A9CC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC98C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E3920784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CF420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OfkSuJ9n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e/JD0850"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgDVLaj (ORCPT
+        id S1728146AbgDVLah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45770 "EHLO
+        Wed, 22 Apr 2020 07:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726448AbgDVL3Z (ORCPT
+        by vger.kernel.org with ESMTP id S1726503AbgDVL3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 07:29:25 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 228D9C03C1AB
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272D1C03C1AD
         for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 04:29:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=llWoNTl7a6WItJGcLBTC8j7ePN5aoj4IZ6+7VC2n6DI=; b=OfkSuJ9norfNio6+xaZkqCPpmL
-        uNvQeSVJwV5Oekx6j971guWZ8znLdsuxfPzj8d/G6v9sjYot0CoKmY5mgCPKovW/DaU2bsjb8VbS+
-        h0NAlhdvBWEA5SDk79bbtEBTlg05I38pZCnmblEg67hikwX+mZt//ogXYs0+UXuDGBcRS38oNMWoZ
-        p0bZotU0LRp31LYLnI58R3VrSaZrf1rr4+2IEkc0fqgKROgNJDYM/rZ0Ij9MOKdTGhxT240nAmSlQ
-        YVUFRTA32gMMw2dy+vH9DQMq1yfIeW5728QgDY3Mgl9oPp/ApK/MXWZ5IvkzdqfNeUJhtXdPT0fpS
-        fbq8R3Dw==;
+        bh=0qa2+QIIiLbgBpsEjd4lNHJHXzCb6gCiam0xs4K3iIo=; b=e/JD0850HzBF4kjIX6kEHlcN3o
+        SQSTvLUXzdNEB0X5p5Y1jnlKh1lTWc2Sz48YgbEttEVlHy7cqjM5GN93hswpKzaVG8STH4c54tPCY
+        d/2YWycCzBBkXvN9Jn1qzjRZNJ627H6pQmf9m9Ja94/ibqinCh4IACKitOYLxfhUXlCtxRR+fqRQS
+        yEJCnU4fL68uUlOBtyCRMs5zvGHzUcWHnOkjfU6ES3t8fL03Qss3KZumG/rWgnPHRktG+dD1N7KzI
+        VNaL4J2/ufG3EGKEqD5Gj8IWsWCA7hEkqgOleB8NNABKBiHDo3HOhgXplaK6fsXgNH0qsgS6e1vbA
+        utEXAkzA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRDYy-0003bO-KM; Wed, 22 Apr 2020 11:29:08 +0000
+        id 1jRDYy-0003bR-L5; Wed, 22 Apr 2020 11:29:08 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5719D30797F;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 582B1307980;
         Wed, 22 Apr 2020 13:29:03 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 07F5C22B99F04; Wed, 22 Apr 2020 13:29:03 +0200 (CEST)
-Message-Id: <20200422112832.283981577@infradead.org>
+        id 0EE8E22B99F06; Wed, 22 Apr 2020 13:29:03 +0200 (CEST)
+Message-Id: <20200422112832.343851342@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 22 Apr 2020 13:27:37 +0200
+Date:   Wed, 22 Apr 2020 13:27:38 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, rostedt@goodmis.org, qais.yousef@arm.com,
         juri.lelli@redhat.com, vincent.guittot@linaro.org,
         dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
         peterz@infradead.org, paulmck@kernel.org
-Subject: [PATCH 18/23] sched,locktorture: Convert to sched_set_fifo()
+Subject: [PATCH 19/23] sched,rcuperf: Convert to sched_set_fifo_low()
 References: <20200422112719.826676174@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,50 +67,45 @@ Because SCHED_FIFO is a broken scheduler model (see previous patches)
 take away the priority field, the kernel can't possibly make an
 informed decision.
 
-Effectively changes prio from 99 to 50.
+Effectively no change.
 
 Cc: paulmck@kernel.org
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/locktorture.c |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ kernel/rcu/rcuperf.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/kernel/locking/locktorture.c
-+++ b/kernel/locking/locktorture.c
-@@ -436,8 +436,6 @@ static int torture_rtmutex_lock(void) __
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -353,7 +353,6 @@ rcu_perf_writer(void *arg)
+ 	int i_max;
+ 	long me = (long)arg;
+ 	struct rcu_head *rhp = NULL;
+-	struct sched_param sp;
+ 	bool started = false, done = false, alldone = false;
+ 	u64 t;
+ 	u64 *wdp;
+@@ -362,8 +361,7 @@ rcu_perf_writer(void *arg)
+ 	VERBOSE_PERFOUT_STRING("rcu_perf_writer task started");
+ 	WARN_ON(!wdpp);
+ 	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
+-	sp.sched_priority = 1;
+-	sched_setscheduler_nocheck(current, SCHED_FIFO, &sp);
++	sched_set_fifo_low(current);
  
- static void torture_rtmutex_boost(struct torture_random_state *trsp)
- {
--	int policy;
--	struct sched_param param;
- 	const unsigned int factor = 50000; /* yes, quite arbitrary */
- 
- 	if (!rt_task(current)) {
-@@ -448,8 +446,7 @@ static void torture_rtmutex_boost(struct
- 		 */
- 		if (trsp && !(torture_random(trsp) %
- 			      (cxt.nrealwriters_stress * factor))) {
--			policy = SCHED_FIFO;
--			param.sched_priority = MAX_RT_PRIO - 1;
-+			sched_set_fifo(current);
- 		} else /* common case, do nothing */
- 			return;
- 	} else {
-@@ -462,13 +459,10 @@ static void torture_rtmutex_boost(struct
- 		 */
- 		if (!trsp || !(torture_random(trsp) %
- 			       (cxt.nrealwriters_stress * factor * 2))) {
--			policy = SCHED_NORMAL;
--			param.sched_priority = 0;
+ 	if (holdoff)
+ 		schedule_timeout_uninterruptible(holdoff * HZ);
+@@ -419,9 +417,7 @@ rcu_perf_writer(void *arg)
+ 			started = true;
+ 		if (!done && i >= MIN_MEAS) {
+ 			done = true;
+-			sp.sched_priority = 0;
+-			sched_setscheduler_nocheck(current,
+-						   SCHED_NORMAL, &sp);
 +			sched_set_normal(current, 0);
- 		} else /* common case, do nothing */
- 			return;
- 	}
--
--	sched_setscheduler_nocheck(current, policy, &param);
- }
- 
- static void torture_rtmutex_delay(struct torture_random_state *trsp)
+ 			pr_alert("%s%s rcu_perf_writer %ld has %d measurements\n",
+ 				 perf_type, PERF_FLAG, me, MIN_MEAS);
+ 			if (atomic_inc_return(&n_rcu_perf_writer_finished) >=
 
 
