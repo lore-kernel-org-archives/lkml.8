@@ -2,200 +2,104 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C00C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A33C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 066AA206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE91A20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGgpj1Kt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgDVIUc (ORCPT
+        id S1726494AbgDVIUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:20:32 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33985 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbgDVIUb (ORCPT
+        Wed, 22 Apr 2020 04:20:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28023 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725811AbgDVIUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:20:31 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x23so923653lfq.1;
-        Wed, 22 Apr 2020 01:20:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Uyk+uICGnp6D8nQZ0Jii8T20Qhw16Iodx99VvAMvM10=;
-        b=iSbMDln03EjxzajPF5EllZvU5Zrx654EaoL2el8WPmyhU5FXGBBL5OybJnn7IkX6MX
-         nqY+/bHhdn6LCfAQkWBLNOjFmrf+lpA3JI7OWuZPPF4zR/IPg5VsHayjychjIPpxX4hW
-         zoT/iy7rbrFm6kx0Wnr9M4bRDdBA0X4KWt4YHQO9OaXgCxN5y7ZOLmy1edlVsWuVTGO6
-         LcMbi4S0kCnsgrzoeQeCxdZfShP5C4OGbwSNMYKzXMmi0W4ue4DhSm7aSsitXJ/66aws
-         UV+aRtb+iBPwUNow7wxsREKvWL0cCBra5fv/WJNSaPr8wGDMjvcpiEZwp3lFqJXIESsc
-         wS6w==
-X-Gm-Message-State: AGi0PuaEytgWi7w0Vl+0FIrfqgjjHxG2rEL9bAocJ2kGAeSMTZD0D9UW
-        D5odVAjnRIwNrCY2Yd3GfIELFbuvQTI=
-X-Google-Smtp-Source: APiQypJDtj9yig0Qaw6L+/QwF0wXE7G1FJkhC83/sOafqBSEczDe6T2JBnx0Dufn+EFolkKepxREbA==
-X-Received: by 2002:ac2:4836:: with SMTP id 22mr15976628lft.52.1587543626859;
-        Wed, 22 Apr 2020 01:20:26 -0700 (PDT)
-Received: from [192.168.8.103] ([213.87.162.215])
-        by smtp.gmail.com with ESMTPSA id w9sm779114ljj.88.2020.04.22.01.20.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 01:20:26 -0700 (PDT)
-To:     Willy Tarreau <w@1wt.eu>, Christoph Hellwig <hch@infradead.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200421125722.58959-1-efremov@linux.com>
- <20200421125722.58959-4-efremov@linux.com>
- <20200422070921.GA19116@infradead.org> <20200422071756.GA16814@1wt.eu>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [PATCH 3/3] floppy: suppress UBSAN warning in setup_rw_floppy()
-Message-ID: <c2cc742d-23f9-ce03-c326-7df648161427@linux.com>
-Date:   Wed, 22 Apr 2020 11:20:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 04:20:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587543635;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5h9sdbrr2N7++3Tl1ZR7K/rxjw4jvgt+CV+/7OZIYPM=;
+        b=gGgpj1KtE9s9KcCHV+xtDN67+vrAuezB4SEOhSsoGTmEKgbWG8Q9+ZeDk5T/rT/co7hgB4
+        7QhW1W+pVtsUSNt9/Sec6EHanuEURpOoMvZSOT5qEXGdeQvHo0q4hJhEvHckFXD23Ydw9H
+        zoO3ZY9/cZlHcTPWQZqYArUCFee57WA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-147-VgxUb8phNK6X18Z7mNTh9g-1; Wed, 22 Apr 2020 04:20:30 -0400
+X-MC-Unique: VgxUb8phNK6X18Z7mNTh9g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50F1D107B786;
+        Wed, 22 Apr 2020 08:20:29 +0000 (UTC)
+Received: from krava (unknown [10.40.196.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5CDF65C219;
+        Wed, 22 Apr 2020 08:20:19 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 10:20:16 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf script: avoid null dereference on symbol
+Message-ID: <20200422082016.GE962614@krava>
+References: <20200421004329.43109-1-irogers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422071756.GA16814@1wt.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421004329.43109-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/22/20 10:17 AM, Willy Tarreau wrote:
-> On Wed, Apr 22, 2020 at 12:09:21AM -0700, Christoph Hellwig wrote:
->> On Tue, Apr 21, 2020 at 03:57:22PM +0300, Denis Efremov wrote:
->>> UBSAN: array-index-out-of-bounds in drivers/block/floppy.c:1521:45
->>> index 16 is out of range for type 'unsigned char [16]'
->>> Call Trace:
->>> ...
->>>  setup_rw_floppy+0x5c3/0x7f0
->>>  floppy_ready+0x2be/0x13b0
->>>  process_one_work+0x2c1/0x5d0
->>>  worker_thread+0x56/0x5e0
->>>  kthread+0x122/0x170
->>>  ret_from_fork+0x35/0x40
->>>
->>> >From include/uapi/linux/fd.h:
->>> struct floppy_raw_cmd {
->>> 	...
->>> 	unsigned char cmd_count;
->>> 	unsigned char cmd[16];
->>> 	unsigned char reply_count;
->>> 	unsigned char reply[16];
->>> 	...
->>> }
->>>
->>> This out-of-bounds access is intentional. The command in struct
->>> floppy_raw_cmd may take up the space initially intended for the reply
->>> and the reply count. It is needed for long 82078 commands such as
->>> RESTORE, which takes 17 command bytes. Initial cmd size is not enough
->>> and since struct setup_rw_floppy is a part of uapi we check that
->>> cmd_count is in [0:16+1+16] in raw_cmd_copyin().
->>>
->>> The patch replaces array subscript with pointer arithetic to suppress
->>> UBSAN warning.
->>
+On Mon, Apr 20, 2020 at 05:43:29PM -0700, Ian Rogers wrote:
+> al->sym may be null given current if conditions and may cause a segv.
 > 
-> But isn't it a problem if struct floppy_raw_cmd is exposed to uapi ?
-> That said I remember a discussion with Linus who said that most if not
-> all of the floppy parts leaking to uapi were more of a side effect of
-> the include files reordering than a deliberate decision to expose it.
-> So maybe that could remain the best solution indeed.
+> Fixes: cd2bedb7863e9 (perf script: Allow --symbol to accept hexadecimal addresses)
 
-struct floppy_raw_cmd is input/output structure for FDRAWCMD ioctl.
+seems it's wrong commit number, I see it under d2bedb7863e9
 
+
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/event.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I must say I don't feel very comfortable either with replacing p[i]
-> with *(p+i) given that they are all supposed to be interchangeable and
-> equivalent (as well as i[p] as strange as it can look). So we're not
-> really protected against a later mechanical change or cleanup that
-> reintroduces it :-/
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index dc0e11214ae1..f581550a3015 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -626,7 +626,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
+>  			ret = strlist__has_entry(symbol_conf.sym_list,
+>  						al->sym->name);
+>  		}
+> -		if (!(ret && al->sym)) {
+> +		if (!ret && al->sym) {
 
->> Urghh.  I think the better way would be to use a union that creates
->> a larger cmd field, or something like:
->>
->> struct floppy_raw_cmd {
->> 	...
->> 	u8 buf[34];
->>
->> #define BUF_CMD_COUNT	0
->> #define BUF_CMD		1
->> #define BUF_REPLY_COUNT	17
->> #define BUF_REPLY	18
->>
->> and use addressing based on that.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
+thanks,
+jirka
 
-What do you think about changing it this way?
+>  			snprintf(al_addr_str, sz, "0x%"PRIx64,
+>  				al->map->unmap_ip(al->map, al->sym->start));
+>  			ret = strlist__has_entry(symbol_conf.sym_list,
+> -- 
+> 2.26.1.301.g55bc3eb7cb9-goog
+> 
 
-struct floppy_raw_cmd {
- 
-        unsigned char rate;
- 
--#define FD_RAW_CMD_SIZE 16
-+#define FD_RAW_CMD_SIZE 33
- #define FD_RAW_REPLY_SIZE 16
- 
-        unsigned char cmd_count;
--       unsigned char cmd[FD_RAW_CMD_SIZE];
--       unsigned char reply_count;
--       unsigned char reply[FD_RAW_REPLY_SIZE];
-+       union {
-+               struct {
-+                       unsigned char reserved[16];
-+                       unsigned char reply_count;
-+                       unsigned char reply[FD_RAW_REPLY_SIZE];
-+               };
-+               unsigned char cmd[FD_RAW_CMD_SIZE];
-+       };
-        int track;
-
-Denis
