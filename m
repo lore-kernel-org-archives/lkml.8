@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E09C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F77C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02E1120784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294922070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550721;
-	bh=75thLSJ4zjswmdRdpBYB2fBlkoCC/ZCTS41RhNUtlg0=;
+	s=default; t=1587550723;
+	bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=spBpBigwb96kHsvmyDhCkOQfTMoFhk3vN0H5BwHD5ANmDHUWZJ0UWrgONt+hlgRes
-	 Vq1VUonUhCxEDutpAdX2jBoYmQLbnD6N2Q0QvRwinksfHtg7nH/sBJnMCY6mp516lZ
-	 1sH9PsSP3NhwQ9bpew8JXEpfihRcNSAfJRx1C8yU=
+	b=QzMNrwo4jPPy5iy7bRzVCLlgJo7En80T9lri2WX7PBT3WaSZTaIKHUc0jvT4g6mhs
+	 DhkOsGNsKkVSdTE/DIDx1yEtpevsnkJUx0owRSHA+UCuF2Dul1VW08AxjNq2ESh1YR
+	 7f0ZuOioFYwgLBmfvhb+Imc72D9QDmGmnV2B3PX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgDVKSj (ORCPT
+        id S1726911AbgDVKSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:18:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54122 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729874AbgDVKRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:46 -0400
+        id S1729891AbgDVKRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF2512075A;
-        Wed, 22 Apr 2020 10:17:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CB4A2075A;
+        Wed, 22 Apr 2020 10:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550665;
-        bh=75thLSJ4zjswmdRdpBYB2fBlkoCC/ZCTS41RhNUtlg0=;
+        s=default; t=1587550672;
+        bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0mp8lyukHPymKcGlEK2aySuo/tFsaIyOwuZ10UBGKzhaMfbJ/fnVywN5n1x/KzNi
-         9RH1wO4tYj/LePtM3SmRLfQEa6DKhHPpLLbTRXYybJ/8WcAe3NvUPUZssbi1BemZz/
-         DaW0WxCNm5zTYOD49zDRfghY1eqLdCNtsvHR6qc4=
+        b=syM4ZPJMJX5Q8skGBTl+OfcWKdzFqnd1vmuYsk65V0OYoyIOn4JdrsqCrfKyV4UuY
+         KE7ut130M+ZQnbIPN+CIFdm77fs1skpOfpd51DyFzgJQ4U3Y8Cl9jIvhjUB02oJKrq
+         ecAkjDXZvS2PM80Y5+RBjih+opjfyyEKM2YmM92U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 036/118] clk: Dont cache errors from clk_ops::get_phase()
-Date:   Wed, 22 Apr 2020 11:56:37 +0200
-Message-Id: <20200422095037.828695876@linuxfoundation.org>
+Subject: [PATCH 5.4 047/118] soc: imx: gpc: fix power up sequencing
+Date:   Wed, 22 Apr 2020 11:56:48 +0200
+Message-Id: <20200422095039.685357916@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -62,132 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit f21cf9c77ee82ef8adfeb2143adfacf21ec1d5cc ]
+[ Upstream commit e0ea2d11f8a08ba7066ff897e16c5217215d1e68 ]
 
-We don't check for errors from clk_ops::get_phase() before storing away
-the result into the clk_core::phase member. This can lead to some fairly
-confusing debugfs information if these ops do return an error. Let's
-skip the store when this op fails to fix this. While we're here, move
-the locking outside of clk_core_get_phase() to simplify callers from
-the debugfs side.
+Currently we wait only until the PGC inverts the isolation setting
+before disabling the peripheral clocks. This doesn't ensure that the
+reset is properly propagated through the peripheral devices in the
+power domain.
 
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20200205232802.29184-2-sboyd@kernel.org
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+Wait until the PGC signals that the power up request is done and
+wait a bit for resets to propagate before disabling the clocks.
+
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 48 +++++++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+ drivers/soc/imx/gpc.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 62d0fc486d3a2..80b029713722b 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2642,12 +2642,14 @@ static int clk_core_get_phase(struct clk_core *core)
+diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
+index 98b9d9a902ae3..90a8b2c0676ff 100644
+--- a/drivers/soc/imx/gpc.c
++++ b/drivers/soc/imx/gpc.c
+@@ -87,8 +87,8 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
+ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
  {
- 	int ret;
+ 	struct imx_pm_domain *pd = to_imx_pm_domain(genpd);
+-	int i, ret, sw, sw2iso;
+-	u32 val;
++	int i, ret;
++	u32 val, req;
  
--	clk_prepare_lock();
-+	lockdep_assert_held(&prepare_lock);
-+	if (!core->ops->get_phase)
-+		return 0;
+ 	if (pd->supply) {
+ 		ret = regulator_enable(pd->supply);
+@@ -107,17 +107,18 @@ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
+ 	regmap_update_bits(pd->regmap, pd->reg_offs + GPC_PGC_CTRL_OFFS,
+ 			   0x1, 0x1);
+ 
+-	/* Read ISO and ISO2SW power up delays */
+-	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
+-	sw = val & 0x3f;
+-	sw2iso = (val >> 8) & 0x3f;
+-
+ 	/* Request GPC to power up domain */
+-	val = BIT(pd->cntr_pdn_bit + 1);
+-	regmap_update_bits(pd->regmap, GPC_CNTR, val, val);
++	req = BIT(pd->cntr_pdn_bit + 1);
++	regmap_update_bits(pd->regmap, GPC_CNTR, req, req);
+ 
+-	/* Wait ISO + ISO2SW IPG clock cycles */
+-	udelay(DIV_ROUND_UP(sw + sw2iso, pd->ipg_rate_mhz));
++	/* Wait for the PGC to handle the request */
++	ret = regmap_read_poll_timeout(pd->regmap, GPC_CNTR, val, !(val & req),
++				       1, 50);
++	if (ret)
++		pr_err("powerup request on domain %s timed out\n", genpd->name);
 +
- 	/* Always try to update cached phase if possible */
--	if (core->ops->get_phase)
--		core->phase = core->ops->get_phase(core->hw);
--	ret = core->phase;
--	clk_prepare_unlock();
-+	ret = core->ops->get_phase(core->hw);
-+	if (ret >= 0)
-+		core->phase = ret;
++	/* Wait for reset to propagate through peripherals */
++	usleep_range(5, 10);
  
- 	return ret;
- }
-@@ -2661,10 +2663,16 @@ static int clk_core_get_phase(struct clk_core *core)
-  */
- int clk_get_phase(struct clk *clk)
- {
-+	int ret;
-+
- 	if (!clk)
- 		return 0;
+ 	/* Disable reset clocks for all devices in the domain */
+ 	for (i = 0; i < pd->num_clks; i++)
+@@ -343,6 +344,7 @@ static const struct regmap_config imx_gpc_regmap_config = {
+ 	.rd_table = &access_table,
+ 	.wr_table = &access_table,
+ 	.max_register = 0x2ac,
++	.fast_io = true,
+ };
  
--	return clk_core_get_phase(clk->core);
-+	clk_prepare_lock();
-+	ret = clk_core_get_phase(clk->core);
-+	clk_prepare_unlock();
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(clk_get_phase);
- 
-@@ -2878,13 +2886,21 @@ static struct hlist_head *orphan_list[] = {
- static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
- 				 int level)
- {
--	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu %5d %6d\n",
-+	int phase;
-+
-+	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu ",
- 		   level * 3 + 1, "",
- 		   30 - level * 3, c->name,
- 		   c->enable_count, c->prepare_count, c->protect_count,
--		   clk_core_get_rate(c), clk_core_get_accuracy(c),
--		   clk_core_get_phase(c),
--		   clk_core_get_scaled_duty_cycle(c, 100000));
-+		   clk_core_get_rate(c), clk_core_get_accuracy(c));
-+
-+	phase = clk_core_get_phase(c);
-+	if (phase >= 0)
-+		seq_printf(s, "%5d", phase);
-+	else
-+		seq_puts(s, "-----");
-+
-+	seq_printf(s, " %6d\n", clk_core_get_scaled_duty_cycle(c, 100000));
- }
- 
- static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
-@@ -2921,6 +2937,7 @@ DEFINE_SHOW_ATTRIBUTE(clk_summary);
- 
- static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
- {
-+	int phase;
- 	unsigned long min_rate, max_rate;
- 
- 	clk_core_get_boundaries(c, &min_rate, &max_rate);
-@@ -2934,7 +2951,9 @@ static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
- 	seq_printf(s, "\"min_rate\": %lu,", min_rate);
- 	seq_printf(s, "\"max_rate\": %lu,", max_rate);
- 	seq_printf(s, "\"accuracy\": %lu,", clk_core_get_accuracy(c));
--	seq_printf(s, "\"phase\": %d,", clk_core_get_phase(c));
-+	phase = clk_core_get_phase(c);
-+	if (phase >= 0)
-+		seq_printf(s, "\"phase\": %d,", phase);
- 	seq_printf(s, "\"duty_cycle\": %u",
- 		   clk_core_get_scaled_duty_cycle(c, 100000));
- }
-@@ -3375,14 +3394,11 @@ static int __clk_core_init(struct clk_core *core)
- 		core->accuracy = 0;
- 
- 	/*
--	 * Set clk's phase.
-+	 * Set clk's phase by clk_core_get_phase() caching the phase.
- 	 * Since a phase is by definition relative to its parent, just
- 	 * query the current clock phase, or just assume it's in phase.
- 	 */
--	if (core->ops->get_phase)
--		core->phase = core->ops->get_phase(core->hw);
--	else
--		core->phase = 0;
-+	clk_core_get_phase(core);
- 
- 	/*
- 	 * Set clk's duty cycle.
+ static struct generic_pm_domain *imx_gpc_onecell_domains[] = {
 -- 
 2.20.1
 
