@@ -2,165 +2,208 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F69C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92112C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417F520722
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD5F20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EQfvQRYk"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="P6mqKLJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVBrs (ORCPT
+        id S1726415AbgDVBsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 21:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgDVBrr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 21:47:47 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D259C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 18:47:47 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x77so269676pfc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 18:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fCEr6pXIIH8a6wvkqNzUF108BpUBYKo9yQQ8CIUa6jU=;
-        b=EQfvQRYkh1XrsrAz+l9+x0k+vOSp/UM4fgbCnYQ64D1Dq8B1FWcLG+ca/ZEvrLDjeK
-         Lh2aJ9ttT5kKR1+EZokWVRzp6P4jAQiExqYM9Uq7+iSd8vkAer6L1ObRJBmwUbr+Saq+
-         DKZprigLH+OXKegSJ60ezTDhpCv/UN11QS9qQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fCEr6pXIIH8a6wvkqNzUF108BpUBYKo9yQQ8CIUa6jU=;
-        b=jrVp0nw0/QwVAQlx9Fbld9g/GoxH3hCI0I880BnqMQvkrBjmtTGvI/bBUEJf435N3U
-         GM6ziNisbBsuVq0wrQnxeREfjBA3zYz5prSz33TT8skkwSw0CRBsFkV3lyGukVPiYq9n
-         nXnTTr4Z8+uZLCQuXR8Ti+lkVYhO787UbOBSS/mcA8w0iTvS48qTUFtJZjuGoMxUqJxY
-         92LmHBKovJf81ShuMzwgTM/aS0thYeSNpVE86W403c/ctrUCM3hgTTsOnnSLJAT7qPxW
-         AhnQ8LYL1u4gn0fg8LZZ21eiuIpQQynyqvtGQFK8QL9vwQ+HzeYfRcql1E7MGlhpa8Fo
-         yyCQ==
-X-Gm-Message-State: AGi0PuYNc/8JBgnPfej3NsqPyHDtjVvW21lQHG26POcmq+stwItXTeEY
-        IxtgRjz6N0TCFGSbF6f2sbgCfDYcQtc=
-X-Google-Smtp-Source: APiQypKgi8OJ1mX+/HuwapaKLjl2kzCZ/sRFYkride4RhJDFkaVtcRpFwO+cu5rdBhyo9Ui5Zyzrvg==
-X-Received: by 2002:a63:4e21:: with SMTP id c33mr25258011pgb.305.1587520066806;
-        Tue, 21 Apr 2020 18:47:46 -0700 (PDT)
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com. [209.85.216.47])
-        by smtp.gmail.com with ESMTPSA id p65sm3489114pgp.51.2020.04.21.18.47.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 18:47:46 -0700 (PDT)
-Received: by mail-pj1-f47.google.com with SMTP id hi11so173489pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 18:47:46 -0700 (PDT)
-X-Received: by 2002:a67:907:: with SMTP id 7mr17409548vsj.42.1587519611840;
- Tue, 21 Apr 2020 18:40:11 -0700 (PDT)
+        Tue, 21 Apr 2020 21:48:38 -0400
+Received: from mail-eopbgr1310090.outbound.protection.outlook.com ([40.107.131.90]:30720
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725912AbgDVBsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 21:48:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FnCKwS/znCg3HKXDVc2aidWl+qts2X8KZNnTqBuWcdOzUuOrK29pJqm43IuGB+99/qQUv0Bv8F64fMYL0sPwAp7P6Ii6IxghsdO8CrIV/UwfXhrjLd/ieaFuDv575J52lRDQESLsrBCkeh0tQ5g7Z3GGycKScMX+3BwkB0sBv4MOrKkIdMq77yVLHluSuOgdwJTSAWqms8+i19CNmTtiEoengG/HaTWvyX0vLm5PEtC3YkxVSoBGVBdxQqFCbsRbUbWKMS5ObVlstfMsG8R/xBzYzVXAmK2cukgQG0i7TvLLjXjad7XSKgv+aT11nSItVpkCE1bxVK5YE/N0xXsrcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j3Trh7+kj0MFxRS/3SjryRd7oFAAvY9Ul8HamoF8EBY=;
+ b=gDDx+T/Zdel6jUUs1V+GCq+/dEwgaSLHEVJ8y7guRPKJvPM+rGrVFjcBo/OEfHVlqFbkbDFihHCNkmpCNiGch4NRNh2lG+S2fCibCHmE4RUrCVWJCGKdXcJ4XK+3MYDW4zPF5e8VKOFxii5xTYLPdch4wRZou+C0sJx3BvLUs198SxLQ9TaY9ROoOVvCEWHdHa6H6yDOIPCF2FeuNESEqm52+BEDMZgLes2frpVMyowcv1Wh0HAOZoy9gkd2rK+v7e2rbXjbYV1mQcV0RENrGR5lBKxf1c9VRVbaGUa031PqT5WaHhVFry4i94D98OfL/UiFiOKLXdLacExwVGyGxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j3Trh7+kj0MFxRS/3SjryRd7oFAAvY9Ul8HamoF8EBY=;
+ b=P6mqKLJ+NoaGYFwikHT49EuK7kauSwyxztrNBp/WD6Jz/P3g1uZc31Bocop2SAkjS8Xx+zKg2ycmnszydH4hsfqU/pMZBnHh1Aie7Ap76azUXRD/A7Xo5IsPzDzgI7txSBJ0QnhuSsTsWDqPwGjsu92o/BA5347NLDVYm56K6Mk=
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
+ HK0P153MB0276.APCP153.PROD.OUTLOOK.COM (52.132.236.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.2; Wed, 22 Apr 2020 01:48:25 +0000
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2958.006; Wed, 22 Apr 2020
+ 01:48:25 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "hare@suse.de" <hare@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+Thread-Topic: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+Thread-Index: AQHWGEVb6DFeJK2tFE2eFTHRpRyDH6iEXZcA
+Date:   Wed, 22 Apr 2020 01:48:25 +0000
+Message-ID: <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+ <20200422012814.GB299948@T590>
+In-Reply-To: <20200422012814.GB299948@T590>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-22T01:48:22.7841881Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a1b1cb9c-45ca-4119-bd15-cbd9e08eec1a;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:a0d3:b235:bb01:7ca2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d5044851-dd0e-48e4-f499-08d7e65f3f5d
+x-ms-traffictypediagnostic: HK0P153MB0276:|HK0P153MB0276:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB0276BC464B233A8187C27D02BFD20@HK0P153MB0276.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03818C953D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(366004)(136003)(376002)(396003)(186003)(82960400001)(82950400001)(107886003)(2906002)(66446008)(76116006)(7696005)(64756008)(66556008)(66476007)(33656002)(7416002)(316002)(6916009)(8936002)(478600001)(10290500003)(86362001)(8676002)(81156014)(54906003)(9686003)(6506007)(5660300002)(53546011)(55016002)(52536014)(66946007)(8990500004)(71200400001)(4326008);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TqRzhB+iCj+piFaC4TPZLtO7+Rw0Z2hlKI1Hh2z/cCDocxsgBY80+cx1/hUgf0ojWx5GY6XPFNGQp90GI01Yw9u8cdBQRBFDo+goIVkPNGHQH5pJlt+1jdAZ+KcQ/jyuzcUcaDuqWeutcNEoa1jqU+F+4jYn1vVEvuq/9xGUGbxxd7iLoe3h+QddE/B2S+QgjtnmWcavwPdO7CeqkJ88VJUbARoiiE6avwf/5mrEmoC8ZCqzCXTgm1rR5zvM3N4PiE7N4ZMggvUDaVYXUWn3EI6f1h1Acl4f/GVaQ1ulNB6SP5H8Tn+0NllIcN1L17WGdj8gIBOAz4Cj/r8VbTNWptDkx3Hxqq/S+TxMkuMD/KzaokqNNg3wmfZb8Ldam2vGy9wRf07hAPVF3eb9Av482YRCztGBO09kV02kmzarpCmPvNe6GTIxaR1wu3pZstvk
+x-ms-exchange-antispam-messagedata: cRZSigelK1iVcBOgxyKPQAIpJfUbfwMmWojoDKao/T3m9fUMefB5UE22RC31UNhZHH1sWKYYrixsQGXIxwg1heQBxBwuXSYz9NQ/4nrSEkPzp3gSdSesdp+F5bd2O/vUQ+620E831uN6u8NfuDDMcpRMN59phv1Ox0Hcp2fziO7MR2ulGpCj3m2D0Nc+8f6pmBV/T+bb2agZFO7hNF4c8WvjVazgLr+WR8cPHnQPDRjsOzfe4KY+t142jVf72bhHnR0qkJkWRrPLO6dObuoekQoCVpMyZ4su1xcRts5igsQf/SyW8W6mmhxST54cDkYiPU36kUOtCrrrQgcev/nsutg7JUT6qlGFF56gxnQbZZ2dxhkq5ZEPjYOKV8XjBaxptZLUEIMrhYGIidjb8VIc3Gaqx7W2RsLFrs1D3LkDM9untKFQqvrbz4GZ4sOL+dn0U7tKvNiofM71EiMksrjRQmyfy+g8/x2sWMyXd0eqkXr/3cLZcX3Atbmai5qMvUZ6ZaBSsilz1mZ9qzBgqwYNFwLRh1/Z4AwgEpsTKPOz5sKeNjYH8+l1kf/CiWbud8gfSIiea2zi3OAuumJtrxAqQnPqp4VMbN99hzv+GggTSBQg9SKxiXrQxF0BYcgoFLEJ5VpBeLlfNCOGKv1r/AHe/WYqdirZtnJn09AYPOpGv6MSWs669CweeIijEa/SQiqE7qUpxuBEZDPPDT8lJOLhaV8xsefEJhWXBKF1OB81WaHuO7KTzwZrjjAPhAiTHedTwmkca9xsYHxDxQkpKXF6XvDiUkxMl1A+/lSilg9vIGcmhYviH9HJEWejp+A4LwM4yGuuqUvCrFdfqWWl8LWw5ORDdGPtFuEv3r3cX0jHeV4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200421110520.197930-1-evanbenn@chromium.org>
- <20200421210403.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid> <CAODwPW9MtDLSL_up9W0TO1PcjyA_9cUtNo3No7XXusiwqKBLDw@mail.gmail.com>
-In-Reply-To: <CAODwPW9MtDLSL_up9W0TO1PcjyA_9cUtNo3No7XXusiwqKBLDw@mail.gmail.com>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Wed, 22 Apr 2020 11:39:44 +1000
-X-Gmail-Original-Message-ID: <CAKz_xw3-tvYoCDs07xEUBBMf024aezGMoZ35LsTN+_dXT9nC2Q@mail.gmail.com>
-Message-ID: <CAKz_xw3-tvYoCDs07xEUBBMf024aezGMoZ35LsTN+_dXT9nC2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] watchdog: Add new arm_smc_wdt watchdog driver
-To:     Julius Werner <jwerner@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5044851-dd0e-48e4-f499-08d7e65f3f5d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 01:48:25.1510
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dHUwvdJhlRLcLISeLqF93MiaE/PV399qpkRhHx9S3ER4pTQn0Cwx8RAyAeicw/vbAegSXGCk3rCgadT/D5koOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0276
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 6:31 AM Julius Werner <jwerner@chromium.org> wrote:
+> From: Ming Lei <ming.lei@redhat.com>
+> Sent: Tuesday, April 21, 2020 6:28 PM
+> To: Dexuan Cui <decui@microsoft.com>
+>=20
+> On Tue, Apr 21, 2020 at 05:17:24PM -0700, Dexuan Cui wrote:
+> > During hibernation, the sdevs are suspended automatically in
+> > drivers/scsi/scsi_pm.c before storvsc_suspend(), so after
+> > storvsc_suspend(), there is no disk I/O from the file systems, but ther=
+e
+> > can still be disk I/O from the kernel space, e.g. disk_check_events() -=
 >
-> > +static int smcwd_call(unsigned long smc_func_id, enum smcwd_call call,
-> > +                     unsigned long arg, struct arm_smccc_res *res)
->
-> I think you should just take a struct watchdog_device* here and do the
-> drvdata unpacking inside the function.
-
-That makes sense, I avoided it because smcwd_call's are made during
-'probe', ~while
-we are 'constructing' the wdd. But this is C, so I think I have
-permission to do this!
-
-> > +static int smcwd_probe(struct platform_device *pdev)
-> > +{
-> > +       struct watchdog_device *wdd;
-> > +       int err;
-> > +       struct arm_smccc_res res;
-> > +       u32 *smc_func_id;
+> > sr_block_check_events() -> cdrom_check_events() can still submit I/O
+> > to the storvsc driver, which causes a paic of NULL pointer dereference,
+> > since storvsc has closed the vmbus channel in storvsc_suspend(): refer
+> > to the below links for more info:
+> >
+> > Fix the panic by blocking/unblocking all the I/O queues properly.
+> >
+> > Note: this patch depends on another patch "scsi: core: Allow the state
+> > change from SDEV_QUIESCE to SDEV_BLOCK" (refer to the second link
+> above).
+> >
+> > Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > ---
+> >  drivers/scsi/storvsc_drv.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> > index fb41636519ee..fd51d2f03778 100644
+> > --- a/drivers/scsi/storvsc_drv.c
+> > +++ b/drivers/scsi/storvsc_drv.c
+> > @@ -1948,6 +1948,11 @@ static int storvsc_suspend(struct hv_device
+> *hv_dev)
+> >  	struct storvsc_device *stor_device =3D hv_get_drvdata(hv_dev);
+> >  	struct Scsi_Host *host =3D stor_device->host;
+> >  	struct hv_host_device *host_dev =3D shost_priv(host);
+> > +	int ret;
 > > +
-> > +       smc_func_id =
-> > +               devm_kzalloc(&pdev->dev, sizeof(*smc_func_id), GFP_KERNEL);
-> > +       if (!smc_func_id)
-> > +               return -ENOMEM;
->
-> nit: Could save the allocation by just casting the value itself to a
-> pointer? Or is that considered too hacky?
+> > +	ret =3D scsi_host_block(host);
+> > +	if (ret)
+> > +		return ret;
+> >
+> >  	storvsc_wait_to_drain(stor_device);
+> >
+> > @@ -1968,10 +1973,15 @@ static int storvsc_suspend(struct hv_device
+> *hv_dev)
+> >
+> >  static int storvsc_resume(struct hv_device *hv_dev)
+> >  {
+> > +	struct storvsc_device *stor_device =3D hv_get_drvdata(hv_dev);
+> > +	struct Scsi_Host *host =3D stor_device->host;
+> >  	int ret;
+> >
+> >  	ret =3D storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
+> >  				     hv_dev_is_fc(hv_dev));
+> > +	if (!ret)
+> > +		ret =3D scsi_host_unblock(host, SDEV_RUNNING);
+> > +
+> >  	return ret;
+> >  }
+>=20
+> scsi_host_block() is actually too heavy for just avoiding
+> scsi internal command, which can be done simply by one atomic
+> variable.
+>=20
+> Not mention scsi_host_block() is implemented too clumsy because
+> nr_luns * synchronize_rcu() are required in scsi_host_block(),
+> which should have been optimized to just one.
+>=20
+> Also scsi_device_quiesce() is heavy too, still takes 2
+> synchronize_rcu() for one LUN.
+>=20
+> That is said SCSI suspend may take (3 * nr_luns) sysnchronize_rcu() in
+> case that the HBA's suspend handler needs scsi_host_block().
+>=20
+> Thanks,
+> Ming
 
-I am not yet used to what hacks are allowed in the kernel.
-Where I learned C that would not be allowed.
-I assumed the kernel allocator has fast paths for tiny sizes though.
+When we're in storvsc_suspend(), all the userspace processes have been
+frozen and all the file systems have been flushed, and there should not
+be too much I/O from the kernel space, so IMO scsi_host_block() should be
+pretty fast here.=20
 
-> > +static const struct of_device_id smcwd_dt_ids[] = {
-> > +       { .compatible = "mediatek,mt8173-smc-wdt" },
-> > +       {}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, smcwd_dt_ids);
->
-> So I'm a bit confused about this... I thought the plan was to either
-> use arm,smc-id and then there'll be no reason to put platform-specific
-> quirks into the driver, so we can just use a generic "arm,smc-wdt"
-> compatible string on all platforms; or we put individual compatible
-> strings for each platform and use them to hardcode platform-specific
-> differences (like the SMC ID) in the driver. But now you're kinda
-> doing both by making the driver code platform-independent but still
-> using a platform-specific compatible string, that doesn't seem to fit
-> together. (If the driver can be platform independent, I think it's
-> nicer to have a generic compatible string so that future platforms
-> which support the same interface don't have to land code changes in
-> order to just use the driver.)
+Of cource, any performance improvement to the scsi_host_block() API is
+still great. :-)
 
-Yes I think you are correct. I got some reviews about the compatible name,
-but I think I misinterpreted those, and arm,smc-wdt would work. I did wonder
-if Xingyu from amlogic needed to modify the driver more, EG with different
-SMCWD_enum values for the amlogic chip, he could then just add an
-amlogic compatible
-and keep our devices running with the other compatible. Although of
-course it would be nicer if
-the amlogic firmware could copy the values here.
-
-Thanks
-
-Evan
+Thanks,
+-- Dexuan
