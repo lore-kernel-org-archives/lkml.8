@@ -2,125 +2,379 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF96C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FF6C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7790B20780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587557389;
-	bh=IY+tedtIcS7K+V1TYW/S4EUgvgOFuS/6peZPNSM8pP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nj23zNgzUWcgxS7bInKqDmeZHHR6VLCdM++RIfDNPnVNR1aihhEHLFrPik+2fXinb
-	 vbupW0bVzplgfzSmtXCiTOmSbeMrRQlNBzraFPHr3uDFo1XyGFvA9G/fXYWgMnfAOF
-	 eHNVohF2O32zdzGaiuH9qhXtj6pC3a+Lw3V3F11o=
+	by mail.kernel.org (Postfix) with ESMTP id CAB4120780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="B1T5UsPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgDVMJs (ORCPT
+        id S1728434AbgDVMJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52102 "EHLO
+        Wed, 22 Apr 2020 08:09:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726110AbgDVMJs (ORCPT
+        by vger.kernel.org with ESMTP id S1726110AbgDVMJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:09:48 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B7CC03C1A8;
-        Wed, 22 Apr 2020 05:09:48 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b11so2099879wrs.6;
-        Wed, 22 Apr 2020 05:09:47 -0700 (PDT)
+        Wed, 22 Apr 2020 08:09:49 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3E7C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:09:49 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b62so2037421qkf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:09:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LvqYruWYfHT7ASyvb8cck4F/WUjHt2b44E2w05ejnqY=;
-        b=I48Am3s/CigVFjSyz4laBhYyfckOYR4g67adqtAGRZ9mKwvMeoQ7bXKbYkZrhLuXIe
-         JA2qTPzCo0/Mlxl5BeIODaPbI7Gjl/JwiEeoUXxGyGkOD10jPJGoXb8oF16Q6WMA1+tw
-         FKe4z/7RnIooIYyvr5pK/bnsvIiH9nggRWZzzN7tJZGpPAECZKFbx2LgccYwjeFGbhFl
-         QBvy/REoPTboJ4P9HrjjJrb2CIrNgTa6dFsg5PX8lFix1lvih5ck4wmRFGdQtPEikBlj
-         EiqytkfeUHnWl5CO6GSWck2SiJ6FXPng+ehztTm5u1EMTqrwnX1jWHGLJYSpFa3k7bsf
-         f8cg==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ST4LiX96xV8yLXAe35gcjSqx9U+sn3aWX+BnsWu95cY=;
+        b=B1T5UsPQHUy2Y1UOr0gewMw69YVeuOfhAugFYjurULgUvtJhELfCK4C/ncJOdUX1OP
+         8Ffzslkx7W/hp5Y7adQq6IPwM5WDRTns2h9FldaV7YpFkoXYOpPjgBCOsIg7nhct11Ll
+         IlFmzl+EOcsaWl18333GDQlE0rcxDcaHLA4VduTTIZsXvR8z7a8G9+Zqn8780bJ2P5PL
+         l/unIJym2S97xwKDj/UHbOuHx6aJgygemrM7jvakkXVPK9AYefFB8XqSBppore1GzxzJ
+         ZP91vMWvlYyTSKAaanMymtNpl8M9T366AjcMf6VjCs40KjIEk6roUZRbZpK59zusaN09
+         qxtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LvqYruWYfHT7ASyvb8cck4F/WUjHt2b44E2w05ejnqY=;
-        b=jOJ8uOxNYXn84AlK1c4Aozk7Qz9phPwNUX74MLOu+M0zDnLDlXTpGWdVqtHmDKdj7V
-         fCi1FkpbKUU/z66wH+9Unqu4weldRIFO4Jw6B82PqIumid/8hQvz99Cd5u1TWlF8r8MW
-         FNrsRbEi8G6AePE5VdoQBiksFgxOFsZR0qsEZI/3ostIk1ZcuINsd9KqNqXIwYjNwDId
-         hTKdL8CwRky2k4CuZDHxpm0wO5jzAmfPVSQFBluxZDKkXd1XSmrY5AikO+xqBgw8A9vu
-         HDtyF9a0M6Erdb1IeXfGuZKsmmh8O5jZAFIykKc7X80/L+uo75sjWEGUyj5zh3JGnai0
-         Z97Q==
-X-Gm-Message-State: AGi0Puajb3aVRPB5h2KL2NQXONMkGbYfxzUoUVqktL9n5zfziaAYCLpa
-        aw3kH/0KWXvrsRQ6uftabdCb+F0D
-X-Google-Smtp-Source: APiQypImzIuOQWS8QX20yIOzj+742Obum4/tSlPOjx6t4l2XXsNeoBjv8cI567rOU/Y7mKVk1a6gCg==
-X-Received: by 2002:adf:e681:: with SMTP id r1mr32097666wrm.213.1587557386803;
-        Wed, 22 Apr 2020 05:09:46 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i17sm7614660wml.23.2020.04.22.05.09.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ST4LiX96xV8yLXAe35gcjSqx9U+sn3aWX+BnsWu95cY=;
+        b=jXK/Cmnp3ftr13gKxL1NEeebN3ZyWgTcxsGKOhdAVCnj8nZ8ZOUqtEvjC4ocQMEqb4
+         akjC+Uwe9wHBVJJv56YYAuk6m9dOcd0nodsNL52YNXvkk4kwc8h4lZTLWxrRzbHIeBBS
+         a6Oi8rbVnVaBH9hWvUoKdCaYM8ydlC1d+Akf53fXvro2xzC7bzK8RTCQl/cGexEMLVBC
+         D/PN6ryXrE6xfvh3/o+qWbDD+gxD7oQCmL9fxmyyOFeMxQSl2m9m7DT89zALTec09UEp
+         Pc53TeyHhPtwf3MgRquWKvunDRHyZCXEkr1oc8WODwzZkUlMEf2FA7R96vZxJkqRy2px
+         ZeSQ==
+X-Gm-Message-State: AGi0PuZlJCeBzTtVCbAOvaN8XL8RHOKOPhG4SXBvoDTd/npVJCUE0Ud6
+        sMWgcDf3Wd231RWXiOSfo+rtwA==
+X-Google-Smtp-Source: APiQypK09YPudcxqT2Viy2O0QAguhPxDO0BHJoVm6qTGnn01g3R3pXFPIBn2/B1Lcu027DAG35E0Fg==
+X-Received: by 2002:a05:620a:cd7:: with SMTP id b23mr25797554qkj.22.1587557388438;
+        Wed, 22 Apr 2020 05:09:48 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::921])
+        by smtp.gmail.com with ESMTPSA id h63sm3672896qkd.49.2020.04.22.05.09.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 05:09:46 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 14:09:43 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andreas Gerstmayr <agerstmayr@redhat.com>,
-        He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Konstantin Kharlamov <hi-angel@yandex.ru>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Message-ID: <20200422120943.GA110748@gmail.com>
-References: <20200420115316.18781-1-acme@kernel.org>
+        Wed, 22 Apr 2020 05:09:47 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 08:09:46 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Joonsoo Kim <js1304@gmail.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 05/18] mm: memcontrol: convert page cache to a new
+ mem_cgroup_charge() API
+Message-ID: <20200422120946.GA358439@cmpxchg.org>
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-6-hannes@cmpxchg.org>
+ <20200422064041.GE6780@js1304-desktop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422064041.GE6780@js1304-desktop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 22, 2020 at 03:40:41PM +0900, Joonsoo Kim wrote:
+> On Mon, Apr 20, 2020 at 06:11:13PM -0400, Johannes Weiner wrote:
+> > The try/commit/cancel protocol that memcg uses dates back to when
+> > pages used to be uncharged upon removal from the page cache, and thus
+> > couldn't be committed before the insertion had succeeded. Nowadays,
+> > pages are uncharged when they are physically freed; it doesn't matter
+> > whether the insertion was successful or not. For the page cache, the
+> > transaction dance has become unnecessary.
+> > 
+> > Introduce a mem_cgroup_charge() function that simply charges a newly
+> > allocated page to a cgroup and sets up page->mem_cgroup in one single
+> > step. If the insertion fails, the caller doesn't have to do anything
+> > but free/put the page.
+> > 
+> > Then switch the page cache over to this new API.
+> > 
+> > Subsequent patches will also convert anon pages, but it needs a bit
+> > more prep work. Right now, memcg depends on page->mapping being
+> > already set up at the time of charging, so that it can maintain its
+> > own MEMCG_CACHE and MEMCG_RSS counters. For anon, page->mapping is set
+> > under the same pte lock under which the page is publishd, so a single
+> > charge point that can block doesn't work there just yet.
+> > 
+> > The following prep patches will replace the private memcg counters
+> > with the generic vmstat counters, thus removing the page->mapping
+> > dependency, then complete the transition to the new single-point
+> > charge API and delete the old transactional scheme.
+> > 
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > ---
+> >  include/linux/memcontrol.h | 10 ++++
+> >  mm/filemap.c               | 24 ++++------
+> >  mm/memcontrol.c            | 27 +++++++++++
+> >  mm/shmem.c                 | 97 +++++++++++++++++---------------------
+> >  4 files changed, 89 insertions(+), 69 deletions(-)
+> > 
+> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> > index c7875a48c8c1..5e8b0e38f145 100644
+> > --- a/include/linux/memcontrol.h
+> > +++ b/include/linux/memcontrol.h
+> > @@ -367,6 +367,10 @@ int mem_cgroup_try_charge_delay(struct page *page, struct mm_struct *mm,
+> >  void mem_cgroup_commit_charge(struct page *page, struct mem_cgroup *memcg,
+> >  			      bool lrucare);
+> >  void mem_cgroup_cancel_charge(struct page *page, struct mem_cgroup *memcg);
+> > +
+> > +int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
+> > +		      bool lrucare);
+> > +
+> >  void mem_cgroup_uncharge(struct page *page);
+> >  void mem_cgroup_uncharge_list(struct list_head *page_list);
+> >  
+> > @@ -872,6 +876,12 @@ static inline void mem_cgroup_cancel_charge(struct page *page,
+> >  {
+> >  }
+> >  
+> > +static inline int mem_cgroup_charge(struct page *page, struct mm_struct *mm,
+> > +				    gfp_t gfp_mask, bool lrucare)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> >  static inline void mem_cgroup_uncharge(struct page *page)
+> >  {
+> >  }
+> > diff --git a/mm/filemap.c b/mm/filemap.c
+> > index 5b31af9d5b1b..5bdbda965177 100644
+> > --- a/mm/filemap.c
+> > +++ b/mm/filemap.c
+> > @@ -832,7 +832,6 @@ static int __add_to_page_cache_locked(struct page *page,
+> >  {
+> >  	XA_STATE(xas, &mapping->i_pages, offset);
+> >  	int huge = PageHuge(page);
+> > -	struct mem_cgroup *memcg;
+> >  	int error;
+> >  	void *old;
+> >  
+> > @@ -840,17 +839,16 @@ static int __add_to_page_cache_locked(struct page *page,
+> >  	VM_BUG_ON_PAGE(PageSwapBacked(page), page);
+> >  	mapping_set_update(&xas, mapping);
+> >  
+> > -	if (!huge) {
+> > -		error = mem_cgroup_try_charge(page, current->mm,
+> > -					      gfp_mask, &memcg);
+> > -		if (error)
+> > -			return error;
+> > -	}
+> > -
+> >  	get_page(page);
+> >  	page->mapping = mapping;
+> >  	page->index = offset;
+> >  
+> > +	if (!huge) {
+> > +		error = mem_cgroup_charge(page, current->mm, gfp_mask, false);
+> > +		if (error)
+> > +			goto error;
+> > +	}
+> > +
+> >  	do {
+> >  		xas_lock_irq(&xas);
+> >  		old = xas_load(&xas);
+> > @@ -874,20 +872,18 @@ static int __add_to_page_cache_locked(struct page *page,
+> >  		xas_unlock_irq(&xas);
+> >  	} while (xas_nomem(&xas, gfp_mask & GFP_RECLAIM_MASK));
+> >  
+> > -	if (xas_error(&xas))
+> > +	if (xas_error(&xas)) {
+> > +		error = xas_error(&xas);
+> >  		goto error;
+> > +	}
+> >  
+> > -	if (!huge)
+> > -		mem_cgroup_commit_charge(page, memcg, false);
+> >  	trace_mm_filemap_add_to_page_cache(page);
+> >  	return 0;
+> >  error:
+> >  	page->mapping = NULL;
+> >  	/* Leave page->index set: truncation relies upon it */
+> > -	if (!huge)
+> > -		mem_cgroup_cancel_charge(page, memcg);
+> >  	put_page(page);
+> > -	return xas_error(&xas);
+> > +	return error;
+> >  }
+> >  ALLOW_ERROR_INJECTION(__add_to_page_cache_locked, ERRNO);
+> >  
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 711d6dd5cbb1..b38c0a672d26 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -6577,6 +6577,33 @@ void mem_cgroup_cancel_charge(struct page *page, struct mem_cgroup *memcg)
+> >  	cancel_charge(memcg, nr_pages);
+> >  }
+> >  
+> > +/**
+> > + * mem_cgroup_charge - charge a newly allocated page to a cgroup
+> > + * @page: page to charge
+> > + * @mm: mm context of the victim
+> > + * @gfp_mask: reclaim mode
+> > + * @lrucare: page might be on the LRU already
+> > + *
+> > + * Try to charge @page to the memcg that @mm belongs to, reclaiming
+> > + * pages according to @gfp_mask if necessary.
+> > + *
+> > + * Returns 0 on success. Otherwise, an error code is returned.
+> > + */
+> > +int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask,
+> > +		      bool lrucare)
+> > +{
+> > +	struct mem_cgroup *memcg;
+> > +	int ret;
+> > +
+> > +	VM_BUG_ON_PAGE(!page->mapping, page);
+> > +
+> > +	ret = mem_cgroup_try_charge(page, mm, gfp_mask, &memcg);
+> > +	if (ret)
+> > +		return ret;
+> > +	mem_cgroup_commit_charge(page, memcg, lrucare);
+> > +	return 0;
+> > +}
+> > +
+> >  struct uncharge_gather {
+> >  	struct mem_cgroup *memcg;
+> >  	unsigned long pgpgout;
+> > diff --git a/mm/shmem.c b/mm/shmem.c
+> > index 52c66801321e..2384f6c7ef71 100644
+> > --- a/mm/shmem.c
+> > +++ b/mm/shmem.c
+> > @@ -605,11 +605,13 @@ static inline bool is_huge_enabled(struct shmem_sb_info *sbinfo)
+> >   */
+> >  static int shmem_add_to_page_cache(struct page *page,
+> >  				   struct address_space *mapping,
+> > -				   pgoff_t index, void *expected, gfp_t gfp)
+> > +				   pgoff_t index, void *expected, gfp_t gfp,
+> > +				   struct mm_struct *charge_mm)
+> >  {
+> >  	XA_STATE_ORDER(xas, &mapping->i_pages, index, compound_order(page));
+> >  	unsigned long i = 0;
+> >  	unsigned long nr = compound_nr(page);
+> > +	int error;
+> >  
+> >  	VM_BUG_ON_PAGE(PageTail(page), page);
+> >  	VM_BUG_ON_PAGE(index != round_down(index, nr), page);
+> > @@ -621,6 +623,16 @@ static int shmem_add_to_page_cache(struct page *page,
+> >  	page->mapping = mapping;
+> >  	page->index = index;
+> >  
+> > +	error = mem_cgroup_charge(page, charge_mm, gfp, PageSwapCache(page));
+> > +	if (error) {
+> > +		if (!PageSwapCache(page) && PageTransHuge(page)) {
+> > +			count_vm_event(THP_FILE_FALLBACK);
+> > +			count_vm_event(THP_FILE_FALLBACK_CHARGE);
+> > +		}
+> > +		goto error;
+> > +	}
+> > +	cgroup_throttle_swaprate(page, gfp);
+> > +
+> >  	do {
+> >  		void *entry;
+> >  		xas_lock_irq(&xas);
+> > @@ -648,12 +660,15 @@ static int shmem_add_to_page_cache(struct page *page,
+> >  	} while (xas_nomem(&xas, gfp));
+> >  
+> >  	if (xas_error(&xas)) {
+> > -		page->mapping = NULL;
+> > -		page_ref_sub(page, nr);
+> > -		return xas_error(&xas);
+> > +		error = xas_error(&xas);
+> > +		goto error;
+> >  	}
+> >  
+> >  	return 0;
+> > +error:
+> > +	page->mapping = NULL;
+> > +	page_ref_sub(page, nr);
+> > +	return error;
+> >  }
+> >  
+> >  /*
+> > @@ -1619,7 +1634,6 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
+> >  	struct address_space *mapping = inode->i_mapping;
+> >  	struct shmem_inode_info *info = SHMEM_I(inode);
+> >  	struct mm_struct *charge_mm = vma ? vma->vm_mm : current->mm;
+> > -	struct mem_cgroup *memcg;
+> >  	struct page *page;
+> >  	swp_entry_t swap;
+> >  	int error;
+> > @@ -1664,29 +1678,22 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
+> >  			goto failed;
+> >  	}
+> >  
+> > -	error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg);
+> > -	if (!error) {
+> > -		error = shmem_add_to_page_cache(page, mapping, index,
+> > -						swp_to_radix_entry(swap), gfp);
+> > -		/*
+> > -		 * We already confirmed swap under page lock, and make
+> > -		 * no memory allocation here, so usually no possibility
+> > -		 * of error; but free_swap_and_cache() only trylocks a
+> > -		 * page, so it is just possible that the entry has been
+> > -		 * truncated or holepunched since swap was confirmed.
+> > -		 * shmem_undo_range() will have done some of the
+> > -		 * unaccounting, now delete_from_swap_cache() will do
+> > -		 * the rest.
+> > -		 */
+> > -		if (error) {
+> > -			mem_cgroup_cancel_charge(page, memcg);
+> > -			delete_from_swap_cache(page);
+> > -		}
+> > -	}
+> > -	if (error)
+> > +	error = shmem_add_to_page_cache(page, mapping, index,
+> > +					swp_to_radix_entry(swap), gfp,
+> > +					charge_mm);
+> > +	/*
+> > +	 * We already confirmed swap under page lock, and make no
+> > +	 * memory allocation here, so usually no possibility of error;
+> > +	 * but free_swap_and_cache() only trylocks a page, so it is
+> > +	 * just possible that the entry has been truncated or
+> > +	 * holepunched since swap was confirmed.  shmem_undo_range()
+> > +	 * will have done some of the unaccounting, now
+> > +	 * delete_from_swap_cache() will do the rest.
+> > +	 */
+> > +	if (error) {
+> > +		delete_from_swap_cache(page);
+> >  		goto failed;
+> 
+> -EEXIST (from swap cache) and -ENOMEM (from memcg) should be handled
+> differently. delete_from_swap_cache() is for -EEXIST case.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Good catch, I accidentally changed things here.
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit cd0943357bc7570f081701d005318c20982178b8:
-> 
->   Merge tag 'perf-urgent-for-mingo-5.7-20200414' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2020-04-16 10:21:31 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.8-20200420
-> 
-> for you to fetch changes up to 12e89e65f446476951f42aedeef56b6bd6f7f1e6:
-> 
->   perf hist: Add fast path for duplicate entries check (2020-04-18 09:05:01 -0300)
+I was just going to change it back, but now I'm trying to understand
+how it actually works.
 
->  85 files changed, 1851 insertions(+), 513 deletions(-)
+Who is removing the page from swap cache if shmem_undo_range() races
+but we fail to charge the page?
 
-Pulled, thanks a lot Arnaldo!
+Here is how this race is supposed to be handled: The page is in the
+swapcache, we have it locked and confirmed that the entry in i_pages
+is indeed a swap entry. We charge the page, then we try to replace the
+swap entry in i_pages with the actual page. If we determine, under
+tree lock now, that shmem_undo_range has raced with us, unaccounted
+the swap space, but must have failed to get the page lock, we remove
+the page from swap cache on our side, to free up swap slot and page.
 
-	Ingo
+But what if shmem_undo_range() raced with us, deleted the swap entry
+from i_pages while we had the page locked, but then we simply failed
+to charge? We unlock the page and return -EEXIST (shmem_confirm_swap
+at the exit). The page with its userdata is now in swapcache, but no
+corresponding swap entry in i_pages. shmem_getpage_gfp() sees the
+-EEXIST, retries, finds nothing in i_pages and allocates a new, empty
+page.
+
+Aren't we leaking the swap slot and the page?
