@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795D1C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97573C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B85A20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8CF20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549718;
-	bh=K/G1Ol3Qn2eJB/T6A0kj+OvSzOLbRHOEM+bWIrOdrnI=;
+	s=default; t=1587549721;
+	bh=rrmnOmOsnTMK7HOIQLxfsYxR7IdNREV8GXUA269AL/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxhuF767Z5leWzSG2d3Rs839XuJKkHtlVfm+nsZwZVx9IuP+zx768iqeh4L5jvkBn
-	 yCRn/aULsl8veI0j2GMCJnfRpavtDZnxd6XcdG6hgihnZN8Xo+93dmQ97kVxj7Xc+O
-	 9woZZZJGuu61WTvRLOuyYY1rliK+WaF2nXr9ZRhM=
+	b=ixaukmmzBI8yMkDd17qDK2VlEpuEbJ0pAq7BwkSp9bzN4Vi5/02QcyuHueNTfKdxK
+	 GmM3Q4Itu/GwdA9m72lVdCj0BaZZ0eSqjBNPZBkJ66XI1msskpzQZhbRurxStFkkwM
+	 fTc1k0DcVc7kwN+0C02o+hntCjTLwpumKFUkY8y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgDVKB5 (ORCPT
+        id S1726920AbgDVKCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50570 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgDVKBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:51 -0400
+        id S1726889AbgDVKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F7962084D;
-        Wed, 22 Apr 2020 10:01:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B735D20735;
+        Wed, 22 Apr 2020 10:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549711;
-        bh=K/G1Ol3Qn2eJB/T6A0kj+OvSzOLbRHOEM+bWIrOdrnI=;
+        s=default; t=1587549718;
+        bh=rrmnOmOsnTMK7HOIQLxfsYxR7IdNREV8GXUA269AL/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NAwQcOs5EI61zwAIzY+gJRYEW13bJirBddOWR6DgUJHcyV51OkghEM6eh2UMLmNVx
-         dVFvnlT+kpux1ged8iHkC2RYhgRaHNlQEKojHfLCaFiuDhVEP3h9jDiB4LRtuGekAo
-         r/O9eggixDnL/tqdUNz0ttXfXmxuqPISgFOf9/gA=
+        b=C34qLx9S8mreB/viOxniADnELUGMxRmMGZKZJK/m99EY90+vB0k0Okiyx19qggdeG
+         OkhLxCrZO/6zKWzQAcZtebsAE8sRe172vmwODU3NzHkTIFKj1DwpXZgeFzIlFOTgky
+         4Q/naLGI90u1e9XBy9YwhqWD1ZPRMweDhJakMdyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hamad Kadmany <hkadmany@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.4 076/100] wil6210: increase firmware ready timeout
-Date:   Wed, 22 Apr 2020 11:56:46 +0200
-Message-Id: <20200422095036.785246209@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.4 061/100] ext4: fix incorrect inodes per group in error message
+Date:   Wed, 22 Apr 2020 11:56:31 +0200
+Message-Id: <20200422095034.054617285@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -61,36 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hamad Kadmany <hkadmany@codeaurora.org>
+From: Josh Triplett <josh@joshtriplett.org>
 
-[ Upstream commit 6ccae584014ef7074359eb4151086beef66ecfa9 ]
+commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb upstream.
 
-Firmware ready event may take longer than
-current timeout in some scenarios, for example
-with multiple RFs connected where each
-requires an initial calibration.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-Increase the timeout to support these scenarios.
-
-Signed-off-by: Hamad Kadmany <hkadmany@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/ath/wil6210/main.c |    2 +-
+ fs/ext4/super.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/wil6210/main.c
-+++ b/drivers/net/wireless/ath/wil6210/main.c
-@@ -741,7 +741,7 @@ static void wil_bl_crash_info(struct wil
- 
- static int wil_wait_for_fw_ready(struct wil6210_priv *wil)
- {
--	ulong to = msecs_to_jiffies(1000);
-+	ulong to = msecs_to_jiffies(2000);
- 	ulong left = wait_for_completion_timeout(&wil->wmi_ready, to);
- 
- 	if (0 == left) {
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3660,7 +3660,7 @@ static int ext4_fill_super(struct super_
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
+ 	}
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 
 
