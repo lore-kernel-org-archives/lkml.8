@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDAAC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B185BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3877320656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4332073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551650;
-	bh=cpi8xhq+oGMQDR0pcONOu5VnjZ2jS7IwZWsgpVsV+8s=;
+	s=default; t=1587551654;
+	bh=nkzQYljAqqsLT0KyQ1yxVxy4hdkqt9fzHI0OYpbHm4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cMjvNI6hn6gaPjio7whxHBU7e179ZDpj0iMI9Yc57JE+Mi5CbP1dEYSm8/zIQPriS
-	 43R1XXX4om5kHBLjNIRyVCYfQuCIWAiJVbTDgEg5pzlguDFMabZBZuyedf4sgDdKw3
-	 ULDbQ8A6BD+QCiFmzRFcwMMOYI+seXcHwGh2I14o=
+	b=PGuxD03EkereA5VnKmCHprj9X4XlxsTpP/iPKY4crJi1ICYw8asNwAX56l1mWt64F
+	 p4vx5lBPokehTqeNsO3pZJymHg+ym2kqjxJbrqFoxe+IKeHvhH0HuJLcT/HB8IS8bw
+	 ZXFi+MlEidruO0c6nIbOCprilPz5rcSJnLgULieo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbgDVKeJ (ORCPT
+        id S1731256AbgDVKeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32844 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:34:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730426AbgDVKY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:29 -0400
+        id S1730370AbgDVKY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC882075A;
-        Wed, 22 Apr 2020 10:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39CED2071E;
+        Wed, 22 Apr 2020 10:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551069;
-        bh=cpi8xhq+oGMQDR0pcONOu5VnjZ2jS7IwZWsgpVsV+8s=;
+        s=default; t=1587551066;
+        bh=nkzQYljAqqsLT0KyQ1yxVxy4hdkqt9fzHI0OYpbHm4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iD+4igIjAGjChRl6LgDU+5PjVZkDG+Jk2MwZEzeZu2a8HcRrGn05n8JnoUshishQ8
-         /USGlP5pbSMa/an6wBPgjJ727yDNc68f91a+sUx4tu767Agvlgltsjv7f7zqoYGmfI
-         X94FuQbmvyOi75YSN3IenPmrOBSYn8UCFRmbOTBU=
+        b=eLoQA0gH+RiORewGmVXUkfXE8uhmsvefVDoHA9BiK6vnisQ1+2U9HaQB+65ru06JS
+         Kc+sQ+nlWF05vlCoo6HdfQnBFOszo2zn0AvGUow+vbhj8D9MPGI4Sc5blibxZyx9ka
+         HkFPvinB5Juv5XpUv3hHS6YTU7QjmlYeM/nVO8HY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org,
+        Domenico Andreoli <domenico.andreoli@linux.com>,
+        Marian Klein <mkleinsoft@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 088/166] btrfs: add RCU locks around block group initialization
-Date:   Wed, 22 Apr 2020 11:56:55 +0200
-Message-Id: <20200422095058.125383678@linuxfoundation.org>
+Subject: [PATCH 5.6 087/166] hibernate: Allow uswsusp to write to swap
+Date:   Wed, 22 Apr 2020 11:56:54 +0200
+Message-Id: <20200422095058.017363119@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -61,55 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Domenico Andreoli <domenico.andreoli@linux.com>
 
-[ Upstream commit 29566c9c773456467933ee22bbca1c2b72a3506c ]
+[ Upstream commit 56939e014a6c212b317414faa307029e2e80c3b9 ]
 
-The space_info list is normally RCU protected and should be traversed
-with rcu_read_lock held. There's a warning
+It turns out that there is one use case for programs being able to
+write to swap devices, and that is the userspace hibernation code.
 
-  [29.104756] WARNING: suspicious RCU usage
-  [29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
-  [29.105231] -----------------------------
-  [29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
+Quick fix: disable the S_SWAPFILE check if hibernation is configured.
 
-pointing out that the locking is missing in btrfs_read_block_groups.
-However this is not necessary as the list traversal happens at mount
-time when there's no other thread potentially accessing the list.
-
-To fix the warning and for consistency let's add the RCU lock/unlock,
-the code won't be affected much as it's doing some lightweight
-operations.
-
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: dc617f29dbe5 ("vfs: don't allow writes to swap files")
+Reported-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Reported-by: Marian Klein <mkleinsoft@gmail.com>
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-group.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/block_dev.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 7f09147872dc7..c9a3bbc8c6afb 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -1987,6 +1987,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
- 		btrfs_release_path(path);
- 	}
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 69bf2fb6f7cda..84fe0162ff13e 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -34,6 +34,7 @@
+ #include <linux/task_io_accounting_ops.h>
+ #include <linux/falloc.h>
+ #include <linux/uaccess.h>
++#include <linux/suspend.h>
+ #include "internal.h"
  
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(space_info, &info->space_info, list) {
- 		if (!(btrfs_get_alloc_profile(info, space_info->flags) &
- 		      (BTRFS_BLOCK_GROUP_RAID10 |
-@@ -2007,6 +2008,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
- 				list)
- 			inc_block_group_ro(cache, 1);
- 	}
-+	rcu_read_unlock();
+ struct bdev_inode {
+@@ -2001,7 +2002,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (bdev_read_only(I_BDEV(bd_inode)))
+ 		return -EPERM;
  
- 	btrfs_init_global_block_rsv(info);
- 	ret = check_chunk_block_group_mappings(info);
+-	if (IS_SWAPFILE(bd_inode))
++	/* uswsusp needs write permission to the swap */
++	if (IS_SWAPFILE(bd_inode) && !hibernation_available())
+ 		return -ETXTBSY;
+ 
+ 	if (!iov_iter_count(from))
 -- 
 2.20.1
 
