@@ -2,52 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C6DC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3FBC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 312CA2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587C52076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550390;
-	bh=cNrBRcbbb935JBFxASk4tMSY3/ssx73m65BupJ79jDY=;
+	s=default; t=1587550395;
+	bh=n29kx90A4hA+tHkl8HeAC3woTJ6vGmPTmAgitgOvX3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j63pffebAILRjFyM+3cTY6foaCDQYicJiPjmXpsAddTxE54NV2TeH9T4hecm2dO/a
-	 +gpzd2IB9ddQeWTBaHsIiN5TxFmic44a47hRkLcmBZxn3ozX5CuZUy+ksSSmX9hGuN
-	 gCPKNAoXyBgEZ9PMkFhFKY1gt6XmxcV3SUmhTMU0=
+	b=t9cduKmdFJW3dNFladVLjoJliTbhxOfJ4BnrpfHtiYrHU0Zm15CSTkyDN8vBOyWD4
+	 lhUjfNti6B/ow5jxvRB4HIt+qCIof8GXHDImkQOCZPryz59F1wDtkcP5nRo9nisNf0
+	 Ptu5FblC6zwfhE+auMh2NvioWtIeUAOd9UJdn7VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgDVKNJ (ORCPT
+        id S1729443AbgDVKNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46476 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgDVKM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:59 -0400
+        id S1729437AbgDVKNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4863D2076E;
-        Wed, 22 Apr 2020 10:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A29D120775;
+        Wed, 22 Apr 2020 10:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550378;
-        bh=cNrBRcbbb935JBFxASk4tMSY3/ssx73m65BupJ79jDY=;
+        s=default; t=1587550391;
+        bh=n29kx90A4hA+tHkl8HeAC3woTJ6vGmPTmAgitgOvX3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OD4Zug0hM6TuD70bQ2Gy/iio/mgD3CzRNd74Ws1mv6a1NYiojyDWZguvJk/+477KW
-         7IqerLlOvfvVaWnxMpoed2WZh+zlTipbHiGFscZYyMwXYexEAZNtG07sAK+mZfAMII
-         rwo0cwmgQiRL8/R9Or5aAic5jM6AQQSHBE/zy9to=
+        b=WdUBdf4ITrxd/yscT9skUFMYWx5Eev3CfMtuPeSEPYuWrrwDIm0yXQp6fPSezsY21
+         oLWUUp0YQC9yyrsmmCMfnowShFgLkDFSOIRlFNmfyCovcDEmoYfXHNIkhm9Uk99XJk
+         4SpZUIwcZJTcXPLF4Fme35tLdtAV2DDNhj7rigd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 122/199] btrfs: check commit root generation in should_ignore_root
-Date:   Wed, 22 Apr 2020 11:57:28 +0200
-Message-Id: <20200422095109.746774152@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Maurizio Lombardi <mlombard@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 127/199] scsi: target: remove boilerplate code
+Date:   Wed, 22 Apr 2020 11:57:33 +0200
+Message-Id: <20200422095110.254553200@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,54 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Maurizio Lombardi <mlombard@redhat.com>
 
-commit 4d4225fc228e46948486d8b8207955f0c031b92e upstream.
+[ Upstream commit e49a7d994379278d3353d7ffc7994672752fb0ad ]
 
-Previously we would set the reloc root's last snapshot to transid - 1.
-However there was a problem with doing this, and we changed it to
-setting the last snapshot to the generation of the commit node of the fs
-root.
+iscsit_free_session() is equivalent to iscsit_stop_session() followed by a
+call to iscsit_close_session().
 
-This however broke should_ignore_root().  The assumption is that if we
-are in a generation newer than when the reloc root was created, then we
-would find the reloc root through normal backref lookups, and thus can
-ignore any fs roots we find with an old enough reloc root.
-
-Now that the last snapshot could be considerably further in the past
-than before, we'd end up incorrectly ignoring an fs root.  Thus we'd
-find no nodes for the bytenr we were searching for, and we'd fail to
-relocate anything.  We'd loop through the relocate code again and see
-that there were still used space in that block group, attempt to
-relocate those bytenr's again, fail in the same way, and just loop like
-this forever.  This is tricky in that we have to not modify the fs root
-at all during this time, so we need to have a block group that has data
-in this fs root that is not shared by any other root, which is why this
-has been difficult to reproduce.
-
-Fixes: 054570a1dc94 ("Btrfs: fix relocation incorrectly dropping data references")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200313170656.9716-2-mlombard@redhat.com
+Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/target/iscsi/iscsi_target.c | 46 ++---------------------------
+ drivers/target/iscsi/iscsi_target.h |  1 -
+ 2 files changed, 2 insertions(+), 45 deletions(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -538,8 +538,8 @@ static int should_ignore_root(struct btr
- 	if (!reloc_root)
- 		return 0;
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index fb7bd422e2e1f..40993c575017f 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4583,49 +4583,6 @@ void iscsit_fail_session(struct iscsi_session *sess)
+ 	sess->session_state = TARG_SESS_STATE_FAILED;
+ }
  
--	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
--	    root->fs_info->running_transaction->transid - 1)
-+	if (btrfs_header_generation(reloc_root->commit_root) ==
-+	    root->fs_info->running_transaction->transid)
- 		return 0;
- 	/*
- 	 * if there is reloc tree and it was created in previous
+-int iscsit_free_session(struct iscsi_session *sess)
+-{
+-	u16 conn_count = atomic_read(&sess->nconn);
+-	struct iscsi_conn *conn, *conn_tmp = NULL;
+-	int is_last;
+-
+-	spin_lock_bh(&sess->conn_lock);
+-	atomic_set(&sess->sleep_on_sess_wait_comp, 1);
+-
+-	list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
+-			conn_list) {
+-		if (conn_count == 0)
+-			break;
+-
+-		if (list_is_last(&conn->conn_list, &sess->sess_conn_list)) {
+-			is_last = 1;
+-		} else {
+-			iscsit_inc_conn_usage_count(conn_tmp);
+-			is_last = 0;
+-		}
+-		iscsit_inc_conn_usage_count(conn);
+-
+-		spin_unlock_bh(&sess->conn_lock);
+-		iscsit_cause_connection_reinstatement(conn, 1);
+-		spin_lock_bh(&sess->conn_lock);
+-
+-		iscsit_dec_conn_usage_count(conn);
+-		if (is_last == 0)
+-			iscsit_dec_conn_usage_count(conn_tmp);
+-
+-		conn_count--;
+-	}
+-
+-	if (atomic_read(&sess->nconn)) {
+-		spin_unlock_bh(&sess->conn_lock);
+-		wait_for_completion(&sess->session_wait_comp);
+-	} else
+-		spin_unlock_bh(&sess->conn_lock);
+-
+-	iscsit_close_session(sess);
+-	return 0;
+-}
+-
+ void iscsit_stop_session(
+ 	struct iscsi_session *sess,
+ 	int session_sleep,
+@@ -4710,7 +4667,8 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
+ 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
+ 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
+ 
+-		iscsit_free_session(sess);
++		iscsit_stop_session(sess, 1, 1);
++		iscsit_close_session(sess);
+ 		session_count++;
+ 	}
+ 
+diff --git a/drivers/target/iscsi/iscsi_target.h b/drivers/target/iscsi/iscsi_target.h
+index 42de1843aa40d..f0d2cbf594c92 100644
+--- a/drivers/target/iscsi/iscsi_target.h
++++ b/drivers/target/iscsi/iscsi_target.h
+@@ -43,7 +43,6 @@ extern int iscsi_target_rx_thread(void *);
+ extern int iscsit_close_connection(struct iscsi_conn *);
+ extern int iscsit_close_session(struct iscsi_session *);
+ extern void iscsit_fail_session(struct iscsi_session *);
+-extern int iscsit_free_session(struct iscsi_session *);
+ extern void iscsit_stop_session(struct iscsi_session *, int, int);
+ extern int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *, int);
+ 
+-- 
+2.20.1
+
 
 
