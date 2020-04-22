@@ -2,218 +2,193 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2279EC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903E7C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 016DF2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552664;
-	bh=RDoVa3j0A3Sp7LGrRexOitCz5JExBTwLTU838wJROiI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LmiY5BlkKpGTs2az54huumkCzGoShP/P8Lf4R2HqJ+afuHyU1BWZzrL6ohUt9r8PU
-	 wm64shEad83qjOKS8C5w2ecJlqlLBPD7zeqBq/vbwXgcvbUwRJpRIdUG072xnn9SwT
-	 7lthVhNxGqWKl4v+nz0MqDSwdApPnQYypWlcTkI4=
+	by mail.kernel.org (Postfix) with ESMTP id 738772073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgDVKL3 (ORCPT
+        id S1732191AbgDVKvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:11:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbgDVKLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 22 Apr 2020 06:51:09 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57722 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgDVKLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:11:23 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 66CD83C057F;
+        Wed, 22 Apr 2020 12:11:21 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OiO67EY15uNg; Wed, 22 Apr 2020 12:11:15 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9522020776;
-        Wed, 22 Apr 2020 10:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550285;
-        bh=RDoVa3j0A3Sp7LGrRexOitCz5JExBTwLTU838wJROiI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RvngvCBtmGv/owIUNnJt6Aipd1cQiod8PczDgIOqE8pX3N0wbTY97/3gAceFMR2Jf
-         w08CgS9Hpb0mcTgR9fCYorAV+CuMOLlUEsryXn1bDTcM7x7unCI19bT/B85ENvxaf2
-         8zyIhJKSkcidxoIFmiCQuflwGzmcj6/WKSyahXNM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 057/199] KVM: nVMX: Properly handle userspace interrupt window request
-Date:   Wed, 22 Apr 2020 11:56:23 +0200
-Message-Id: <20200422095103.983063347@linuxfoundation.org>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id EA02B3C004C;
+        Wed, 22 Apr 2020 12:11:15 +0200 (CEST)
+Received: from lxhi-065.adit-jv.com (10.72.94.60) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 22 Apr
+ 2020 12:11:15 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     <linux-renesas-soc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        Yusuke Ashiduka <ashiduka@fujitsu.com>,
+        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
+        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
+        Yasushi Asano <yasano@jp.adit-jv.com>,
+        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <rosca.eugeniu@gmail.com>
+Subject: [RFC PATCH 2/3] gpio: rcar: Add support for GPIO alternative interrupt
+Date:   Wed, 22 Apr 2020 12:10:25 +0200
+Message-ID: <20200422101026.9220-3-erosca@de.adit-jv.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
-References: <20200422095057.806111593@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200422101026.9220-1-erosca@de.adit-jv.com>
+References: <20200422101026.9220-1-erosca@de.adit-jv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.72.94.60]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
 
-commit a1c77abb8d93381e25a8d2df3a917388244ba776 upstream.
+INTC-AP accepts both GPIO interrupt and GPIO alternative interrupt,
+but INTC-RT can only handle GPIO interrupt, as depicted in below excerpt
+from 'Figure 7.1 GPIO Block Configuration (1)' of
+'R-Car3 HW User's Manual Rev.2.00, Jul 2019':
 
-Return true for vmx_interrupt_allowed() if the vCPU is in L2 and L1 has
-external interrupt exiting enabled.  IRQs are never blocked in hardware
-if the CPU is in the guest (L2 from L1's perspective) when IRQs trigger
-VM-Exit.
+  +------------------------------+
+  | Interrupt  display register  +----> GPIO.ch*  (to INTC-AP, INTC-RT)
+  |           (INTDTn)           +----> GPIO.ch*A (to INTC-AP)
+  +------------------------------+
 
-The new check percolates up to kvm_vcpu_ready_for_interrupt_injection()
-and thus vcpu_run(), and so KVM will exit to userspace if userspace has
-requested an interrupt window (to inject an IRQ into L1).
+It seems to be also the case for earlier Renesas SoCs like RZ/G,
+as per 'Figure 6.1 GPIO Block Configuration' in
+'RZ/G Series User’s Manual: Hardware Rev.1.00 Sep 2016' [1].
 
-Remove the @external_intr param from vmx_check_nested_events(), which is
-actually an indicator that userspace wants an interrupt window, e.g.
-it's named @req_int_win further up the stack.  Injecting a VM-Exit into
-L1 to try and bounce out to L0 userspace is all kinds of broken and is
-no longer necessary.
+To reduce the interference between RT domain (CR7/SH) and the AP domain
+(Cortex A5x) and to independently control GPIO interrupts in these two
+domains, add support for processing GPIO alternative interrupts in AP.
 
-Remove the hack in nested_vmx_vmexit() that attempted to workaround the
-breakage in vmx_check_nested_events() by only filling interrupt info if
-there's an actual interrupt pending.  The hack actually made things
-worse because it caused KVM to _never_ fill interrupt info when the
-LAPIC resides in userspace (kvm_cpu_has_interrupt() queries
-interrupt.injected, which is always cleared by prepare_vmcs12() before
-reaching the hack in nested_vmx_vmexit()).
+This allows handling normal GPIO interrupts exclusively by INTC-RT.
+The change is DT-driven and depends on the enablement of the
+'use-alternative-interrupt' DTS property.
 
-Fixes: 6550c4df7e50 ("KVM: nVMX: Fix interrupt window request with "Acknowledge interrupt on exit"")
-Cc: stable@vger.kernel.org
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+One caveat is that the 'interrupts' property update must go hand in hand
+with the newly added 'use-alternative-interrupt' property.
 
+[1] https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/rz/rzg/rzg1m.html#documents
+
+Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
+[erosca: enrich commit description]
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 ---
- arch/x86/include/asm/kvm_host.h |    2 +-
- arch/x86/kvm/vmx.c              |   27 +++++++++++----------------
- arch/x86/kvm/x86.c              |   10 +++++-----
- 3 files changed, 17 insertions(+), 22 deletions(-)
+ drivers/gpio/gpio-rcar.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1032,7 +1032,7 @@ struct kvm_x86_ops {
- 	bool (*mpx_supported)(void);
- 	bool (*xsaves_supported)(void);
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 7284473c9fe3..6bbab447bba8 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -43,6 +43,8 @@ struct gpio_rcar_priv {
+ 	bool has_outdtsel;
+ 	bool has_both_edge_trigger;
+ 	struct gpio_rcar_bank_info bank_info;
++	int intmsk;
++	int mskclr;
+ };
  
--	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
-+	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+ #define IOINTSEL 0x00	/* General IO/Interrupt Switching Register */
+@@ -56,6 +58,8 @@ struct gpio_rcar_priv {
+ #define POSNEG 0x20	/* Positive/Negative Logic Select Register */
+ #define EDGLEVEL 0x24	/* Edge/level Select Register */
+ #define FILONOFF 0x28	/* Chattering Prevention On/Off Register */
++#define INTMSKS 0x38	/* Interrupt Sub Mask Register */
++#define MSKCLRS 0x3c	/* Interrupt Sub Mask Clear Register */
+ #define OUTDTSEL 0x40	/* Output Data Select Register */
+ #define BOTHEDGE 0x4c	/* One Edge/Both Edge Select Register */
  
- 	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
+@@ -90,7 +94,7 @@ static void gpio_rcar_irq_disable(struct irq_data *d)
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct gpio_rcar_priv *p = gpiochip_get_data(gc);
  
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -6198,8 +6198,13 @@ static int vmx_nmi_allowed(struct kvm_vc
+-	gpio_rcar_write(p, INTMSK, ~BIT(irqd_to_hwirq(d)));
++	gpio_rcar_write(p, p->intmsk, ~BIT(irqd_to_hwirq(d)));
+ }
  
- static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
- {
--	return (!to_vmx(vcpu)->nested.nested_run_pending &&
--		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
-+	if (to_vmx(vcpu)->nested.nested_run_pending)
-+		return false;
+ static void gpio_rcar_irq_enable(struct irq_data *d)
+@@ -98,7 +102,7 @@ static void gpio_rcar_irq_enable(struct irq_data *d)
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct gpio_rcar_priv *p = gpiochip_get_data(gc);
+ 
+-	gpio_rcar_write(p, MSKCLR, BIT(irqd_to_hwirq(d)));
++	gpio_rcar_write(p, p->mskclr, BIT(irqd_to_hwirq(d)));
+ }
+ 
+ static void gpio_rcar_config_interrupt_input_mode(struct gpio_rcar_priv *p,
+@@ -203,7 +207,7 @@ static irqreturn_t gpio_rcar_irq_handler(int irq, void *dev_id)
+ 	unsigned int offset, irqs_handled = 0;
+ 
+ 	while ((pending = gpio_rcar_read(p, INTDT) &
+-			  gpio_rcar_read(p, INTMSK))) {
++			  gpio_rcar_read(p, p->intmsk))) {
+ 		offset = __ffs(pending);
+ 		gpio_rcar_write(p, INTCLR, BIT(offset));
+ 		generic_handle_irq(irq_find_mapping(p->gpio_chip.irq.domain,
+@@ -427,6 +431,14 @@ static int gpio_rcar_parse_dt(struct gpio_rcar_priv *p, unsigned int *npins)
+ 		*npins = RCAR_MAX_GPIO_PER_BANK;
+ 	}
+ 
++	if (of_get_property(np, "use-alternative-interrupt", NULL)) {
++		p->intmsk = INTMSKS;
++		p->mskclr = MSKCLRS;
++	} else {
++		p->intmsk = INTMSK;
++		p->mskclr = MSKCLR;
++	}
 +
-+	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
-+		return true;
-+
-+	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
- 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
- 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
- }
-@@ -11659,7 +11664,7 @@ static void vmcs12_save_pending_event(st
- 	}
+ 	return 0;
  }
  
--static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
-+static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long exit_qual;
-@@ -11697,8 +11702,7 @@ static int vmx_check_nested_events(struc
- 		return 0;
- 	}
+@@ -544,7 +556,7 @@ static int gpio_rcar_suspend(struct device *dev)
+ 	p->bank_info.iointsel = gpio_rcar_read(p, IOINTSEL);
+ 	p->bank_info.inoutsel = gpio_rcar_read(p, INOUTSEL);
+ 	p->bank_info.outdt = gpio_rcar_read(p, OUTDT);
+-	p->bank_info.intmsk = gpio_rcar_read(p, INTMSK);
++	p->bank_info.intmsk = gpio_rcar_read(p, p->intmsk);
+ 	p->bank_info.posneg = gpio_rcar_read(p, POSNEG);
+ 	p->bank_info.edglevel = gpio_rcar_read(p, EDGLEVEL);
+ 	if (p->has_both_edge_trigger)
+@@ -586,7 +598,7 @@ static int gpio_rcar_resume(struct device *dev)
+ 				!!(p->bank_info.bothedge & mask));
  
--	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
--	    nested_exit_on_intr(vcpu)) {
-+	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
- 		if (block_nested_events)
- 			return -EBUSY;
- 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
-@@ -12254,17 +12258,8 @@ static void nested_vmx_vmexit(struct kvm
- 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
- 
- 	if (likely(!vmx->fail)) {
--		/*
--		 * TODO: SDM says that with acknowledge interrupt on
--		 * exit, bit 31 of the VM-exit interrupt information
--		 * (valid interrupt) is always set to 1 on
--		 * EXIT_REASON_EXTERNAL_INTERRUPT, so we shouldn't
--		 * need kvm_cpu_has_interrupt().  See the commit
--		 * message for details.
--		 */
--		if (nested_exit_intr_ack_set(vcpu) &&
--		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
--		    kvm_cpu_has_interrupt(vcpu)) {
-+		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
-+		    nested_exit_intr_ack_set(vcpu)) {
- 			int irq = kvm_cpu_get_interrupt(vcpu);
- 			WARN_ON(irq < 0);
- 			vmcs12->vm_exit_intr_info = irq |
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6638,7 +6638,7 @@ static void update_cr8_intercept(struct
- 	kvm_x86_ops->update_cr8_intercept(vcpu, tpr, max_irr);
- }
- 
--static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
-+static int inject_pending_event(struct kvm_vcpu *vcpu)
- {
- 	int r;
- 
-@@ -6665,7 +6665,7 @@ static int inject_pending_event(struct k
- 	}
- 
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--		r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+		r = kvm_x86_ops->check_nested_events(vcpu);
- 		if (r != 0)
- 			return r;
- 	}
-@@ -6706,7 +6706,7 @@ static int inject_pending_event(struct k
- 		 * KVM_REQ_EVENT only on certain events and not unconditionally?
- 		 */
- 		if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--			r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+			r = kvm_x86_ops->check_nested_events(vcpu);
- 			if (r != 0)
- 				return r;
+ 			if (p->bank_info.intmsk & mask)
+-				gpio_rcar_write(p, MSKCLR, mask);
++				gpio_rcar_write(p, p->mskclr, mask);
  		}
-@@ -7152,7 +7152,7 @@ static int vcpu_enter_guest(struct kvm_v
- 			goto out;
- 		}
+ 	}
  
--		if (inject_pending_event(vcpu, req_int_win) != 0)
-+		if (inject_pending_event(vcpu) != 0)
- 			req_immediate_exit = true;
- 		else {
- 			/* Enable NMI/IRQ window open exits if needed.
-@@ -7360,7 +7360,7 @@ static inline int vcpu_block(struct kvm
- static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
- {
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events)
--		kvm_x86_ops->check_nested_events(vcpu, false);
-+		kvm_x86_ops->check_nested_events(vcpu);
- 
- 	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
- 		!vcpu->arch.apf.halted);
-
+-- 
+2.26.0
 
