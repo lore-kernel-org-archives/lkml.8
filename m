@@ -2,50 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA89C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2822C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7DF2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EBA20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549707;
-	bh=fLAfLN3G4F3KglmcYFW+ncJpdL37dik3FiohWmrlhXg=;
+	s=default; t=1587549710;
+	bh=uxZn+6iQBZhne3sVwParQxdimdS2QwyNL9wAwNIljlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoNwuo7nmNwRu/KMV8+YKFjEiqZiXts4ZGJO0n0ou6Q0o+oltD5weUJ6kviAxLmZu
-	 SN6VExYZmg3fXm9EvMtnS7s2e/bvOsFAqw1Taz9bf5egmOZFDpXP+ofDUL/N9gCdHM
-	 JE0s0fyVfBJS8zV0brTu5u5HXo+Bzbjn1r1Junq8=
+	b=0lPGDMjvOGWVNubURkqLCsNMjzijocrYE4buAcqb6pL6gOkbqzIgY8yVvov9+uice
+	 DJL5Ol9NXoln9Kjw/oeKX7A/aZiOfilfiVJfP1ldIMQeIbL6gJsrHU5knnBwLjY/HF
+	 MKfRRE4eQPbq9TM5Bf4ddExZjiLdLTUFIz/haTNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgDVKBq (ORCPT
+        id S1726884AbgDVKBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50274 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbgDVKBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:41 -0400
+        id S1726392AbgDVKBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D03DD21569;
-        Wed, 22 Apr 2020 10:01:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC49020780;
+        Wed, 22 Apr 2020 10:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549701;
-        bh=fLAfLN3G4F3KglmcYFW+ncJpdL37dik3FiohWmrlhXg=;
+        s=default; t=1587549706;
+        bh=uxZn+6iQBZhne3sVwParQxdimdS2QwyNL9wAwNIljlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDJ5HiciJ5NOGvPUxNhAeciwccCPk8xFBN6vzjN0aAz1utUb+UelC3cJDY9B8qm4+
-         07hGH9YAtaqBWomDfHIRnIe/w6ooy6EbUGZ2mlg1BYjpy/fvWzFM/fS71tB/OphbJ4
-         NNDRZIozvBlG2w77WOr6SHix1u5geJvyAuskbCrw=
+        b=gh2HgQXWPBq21OZf60DRg86gTctqNl0qZXEYS0Q7UUv+MnadLqjExFnrEKbL1OqHl
+         FRf00QWDaoHGdlfy+n0QsJDTTjHoom7UpmQoWsdqSAxUi9sSUn9zu/tElIK+Die4p5
+         wT7jY8bl1p+nbpCw9ppc82ZkNu1b0g3eDjqSy2Nc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 072/100] ALSA: hda: Dont release card at firmware loading error
-Date:   Wed, 22 Apr 2020 11:56:42 +0200
-Message-Id: <20200422095036.143802339@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Winischhofer <thomas@winischhofer.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.4 074/100] video: fbdev: sis: Remove unnecessary parentheses and commented code
+Date:   Wed, 22 Apr 2020 11:56:44 +0200
+Message-Id: <20200422095036.467188040@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -58,59 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 upstream.
+commit 864eb1afc60cb43e7df879b97f8ca0d719bbb735 upstream.
 
-At the error path of the firmware loading error, the driver tries to
-release the card object and set NULL to drvdata.  This may be referred
-badly at the possible PM action, as the driver itself is still bound
-and the PM callbacks read the card object.
+Clang warns when multiple pairs of parentheses are used for a single
+conditional statement.
 
-Instead, we continue the probing as if it were no option set.  This is
-often a better choice than the forced abort, too.
+drivers/video/fbdev/sis/init301.c:851:42: warning: equality comparison
+with extraneous parentheses [-Wparentheses-equality]
+      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+                 ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+drivers/video/fbdev/sis/init301.c:851:42: note: remove extraneous
+parentheses around the comparison to silence this warning
+      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+                ~                        ^   ~
+drivers/video/fbdev/sis/init301.c:851:42: note: use '=' to turn this
+equality comparison into an assignment
+      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+                                         ^~
+                                         =
+1 warning generated.
 
-Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Remove the parentheses and while we're at it, clean up the commented
+code, which has been here since the beginning of git history.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/118
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Thomas Winischhofer <thomas@winischhofer.net>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |   19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/video/fbdev/sis/init301.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1839,24 +1839,15 @@ static void azx_firmware_cb(const struct
- {
- 	struct snd_card *card = context;
- 	struct azx *chip = card->private_data;
--	struct pci_dev *pci = chip->pci;
+--- a/drivers/video/fbdev/sis/init301.c
++++ b/drivers/video/fbdev/sis/init301.c
+@@ -522,9 +522,7 @@ SiS_PanelDelay(struct SiS_Private *SiS_P
+ 	    SiS_DDC2Delay(SiS_Pr, 0x4000);
+ 	 }
  
--	if (!fw) {
--		dev_err(card->dev, "Cannot load firmware, aborting\n");
--		goto error;
--	}
--
--	chip->fw = fw;
-+	if (fw)
-+		chip->fw = fw;
-+	else
-+		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
- 	if (!chip->disabled) {
- 		/* continue probing */
--		if (azx_probe_continue(chip))
--			goto error;
-+		azx_probe_continue(chip);
- 	}
--	return; /* OK */
--
-- error:
--	snd_card_free(card);
--	pci_set_drvdata(pci, NULL);
- }
- #endif
+-      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+-	 (SiS_Pr->SiS_CustomT == CUT_COMPAQ1280) ||
+-	 (SiS_Pr->SiS_CustomT == CUT_CLEVO1400) */ ) {			/* 315 series, LVDS; Special */
++      } else if (SiS_Pr->SiS_IF_DEF_LVDS == 1) {			/* 315 series, LVDS; Special */
  
+ 	 if(SiS_Pr->SiS_IF_DEF_CH70xx == 0) {
+ 	    PanelID = SiS_GetReg(SiS_Pr->SiS_P3d4,0x36);
 
 
