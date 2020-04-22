@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EC7C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E430C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8917920857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5206020857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgDVWZy (ORCPT
+        id S1726928AbgDVWZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
+        Wed, 22 Apr 2020 18:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726730AbgDVWZH (ORCPT
+        by vger.kernel.org with ESMTP id S1726724AbgDVWZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:25:07 -0400
+        Wed, 22 Apr 2020 18:25:05 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372C6C03C1A9;
-        Wed, 22 Apr 2020 15:25:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED9FC03C1AA;
+        Wed, 22 Apr 2020 15:25:05 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRNnN-0001Oh-FN; Thu, 23 Apr 2020 00:24:42 +0200
+        id 1jRNnZ-0001TH-D1; Thu, 23 Apr 2020 00:24:54 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E92B1C04D7;
-        Thu, 23 Apr 2020 00:24:39 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 22:24:38 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D3FA41C047B;
+        Thu, 23 Apr 2020 00:24:47 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 22:24:47 -0000
+From:   "tip-bot2 for Julien Thierry" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Introduce HINT_RET_OFFSET
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: objtool/core] objtool: Split out arch-specific CFI definitions
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416115118.690601403@infradead.org>
-References: <20200416115118.690601403@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158759427864.28353.8226580518920056560.tip-bot2@tip-bot2>
+Message-ID: <158759428722.28353.11322555821987321171.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,163 +59,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     9949d38e5ee16c7ff20247b6b36cc3538c84195d
-Gitweb:        https://git.kernel.org/tip/9949d38e5ee16c7ff20247b6b36cc3538c84195d
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 01 Apr 2020 16:38:19 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 22 Apr 2020 23:10:05 +02:00
+Commit-ID:     f04f7d856a6d8de36a7ccf70e652565991db1b25
+Gitweb:        https://git.kernel.org/tip/f04f7d856a6d8de36a7ccf70e652565991db1b25
+Author:        Julien Thierry <jthierry@redhat.com>
+AuthorDate:    Fri, 27 Mar 2020 15:28:46 
+Committer:     Josh Poimboeuf <jpoimboe@redhat.com>
+CommitterDate: Tue, 14 Apr 2020 10:39:25 -05:00
 
-objtool: Introduce HINT_RET_OFFSET
+objtool: Split out arch-specific CFI definitions
 
-Normally objtool ensures a function keeps the stack layout invariant.
-But there is a useful exception, it is possible to stuff the return
-stack in order to 'inject' a 'call':
+Some CFI definitions used by generic objtool code have no reason to vary
+from one architecture to another.  Keep those definitions in generic
+code and move the arch-specific ones to a new arch-specific header.
 
-	push $fun
-	ret
-
-In this case the invariant mentioned above is violated.
-
-Add an objtool HINT to annotate this and allow a function exit with a
-modified stack frame.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200416115118.690601403@infradead.org
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/x86/include/asm/orc_types.h       |  1 +
- arch/x86/include/asm/unwind_hints.h    | 10 ++++++++++
- tools/arch/x86/include/asm/orc_types.h |  1 +
- tools/objtool/check.c                  | 24 ++++++++++++++++--------
- tools/objtool/check.h                  |  4 +++-
- 5 files changed, 31 insertions(+), 9 deletions(-)
+ tools/objtool/Makefile                    |  3 ++-
+ tools/objtool/arch/x86/include/cfi_regs.h | 25 ++++++++++++++++++++++-
+ tools/objtool/cfi.h                       | 21 +-----------------
+ 3 files changed, 29 insertions(+), 20 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/include/cfi_regs.h
 
-diff --git a/arch/x86/include/asm/orc_types.h b/arch/x86/include/asm/orc_types.h
-index 6e06090..5f18ca7 100644
---- a/arch/x86/include/asm/orc_types.h
-+++ b/arch/x86/include/asm/orc_types.h
-@@ -60,6 +60,7 @@
- #define ORC_TYPE_REGS_IRET		2
- #define UNWIND_HINT_TYPE_SAVE		3
- #define UNWIND_HINT_TYPE_RESTORE	4
-+#define UNWIND_HINT_TYPE_RET_OFFSET	5
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index d1ab0cc..6b91388 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -35,7 +35,8 @@ all: $(OBJTOOL)
  
- #ifndef __ASSEMBLY__
- /*
-diff --git a/arch/x86/include/asm/unwind_hints.h b/arch/x86/include/asm/unwind_hints.h
-index f5e2eb1..aabf7ac 100644
---- a/arch/x86/include/asm/unwind_hints.h
-+++ b/arch/x86/include/asm/unwind_hints.h
-@@ -94,6 +94,16 @@
- 	UNWIND_HINT type=UNWIND_HINT_TYPE_RESTORE
- .endm
- 
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+-	    -I$(srctree)/tools/arch/$(SRCARCH)/include
++	    -I$(srctree)/tools/arch/$(SRCARCH)/include	\
++	    -I$(srctree)/tools/objtool/arch/$(SRCARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+ CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+diff --git a/tools/objtool/arch/x86/include/cfi_regs.h b/tools/objtool/arch/x86/include/cfi_regs.h
+new file mode 100644
+index 0000000..79bc517
+--- /dev/null
++++ b/tools/objtool/arch/x86/include/cfi_regs.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
 +
-+/*
-+ * RET_OFFSET: Used on instructions that terminate a function; mostly RETURN
-+ * and sibling calls. On these, sp_offset denotes the expected offset from
-+ * initial_func_cfi.
-+ */
-+.macro UNWIND_HINT_RET_OFFSET sp_offset=8
-+	UNWIND_HINT type=UNWIND_HINT_TYPE_RET_OFFSET sp_offset=\sp_offset
-+.endm
++#ifndef _OBJTOOL_CFI_REGS_H
++#define _OBJTOOL_CFI_REGS_H
 +
- #else /* !__ASSEMBLY__ */
- 
- #define UNWIND_HINT(sp_reg, sp_offset, type, end)		\
-diff --git a/tools/arch/x86/include/asm/orc_types.h b/tools/arch/x86/include/asm/orc_types.h
-index 6e06090..5f18ca7 100644
---- a/tools/arch/x86/include/asm/orc_types.h
-+++ b/tools/arch/x86/include/asm/orc_types.h
-@@ -60,6 +60,7 @@
- #define ORC_TYPE_REGS_IRET		2
- #define UNWIND_HINT_TYPE_SAVE		3
- #define UNWIND_HINT_TYPE_RESTORE	4
-+#define UNWIND_HINT_TYPE_RET_OFFSET	5
- 
- #ifndef __ASSEMBLY__
- /*
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 72bf5cc..fe6ae45 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1277,6 +1277,9 @@ static int read_unwind_hints(struct objtool_file *file)
- 		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
- 			insn->restore = true;
- 			insn->hint = true;
++#define CFI_AX			0
++#define CFI_DX			1
++#define CFI_CX			2
++#define CFI_BX			3
++#define CFI_SI			4
++#define CFI_DI			5
++#define CFI_BP			6
++#define CFI_SP			7
++#define CFI_R8			8
++#define CFI_R9			9
++#define CFI_R10			10
++#define CFI_R11			11
++#define CFI_R12			12
++#define CFI_R13			13
++#define CFI_R14			14
++#define CFI_R15			15
++#define CFI_RA			16
++#define CFI_NUM_REGS		17
 +
-+		} else if (hint->type == UNWIND_HINT_TYPE_RET_OFFSET) {
-+			insn->ret_offset = hint->sp_offset;
- 			continue;
- 		}
++#endif /* _OBJTOOL_CFI_REGS_H */
+diff --git a/tools/objtool/cfi.h b/tools/objtool/cfi.h
+index 4427bf8..1a3e7b8 100644
+--- a/tools/objtool/cfi.h
++++ b/tools/objtool/cfi.h
+@@ -6,30 +6,13 @@
+ #ifndef _OBJTOOL_CFI_H
+ #define _OBJTOOL_CFI_H
  
-@@ -1440,20 +1443,25 @@ static bool is_fentry_call(struct instruction *insn)
- 	return false;
- }
- 
--static bool has_modified_stack_frame(struct insn_state *state)
-+static bool has_modified_stack_frame(struct instruction *insn, struct insn_state *state)
- {
-+	u8 ret_offset = insn->ret_offset;
- 	int i;
- 
--	if (state->cfa.base != initial_func_cfi.cfa.base ||
--	    state->cfa.offset != initial_func_cfi.cfa.offset ||
--	    state->stack_size != initial_func_cfi.cfa.offset ||
--	    state->drap)
-+	if (state->cfa.base != initial_func_cfi.cfa.base || state->drap)
-+		return true;
++#include "cfi_regs.h"
 +
-+	if (state->cfa.offset != initial_func_cfi.cfa.offset + ret_offset)
- 		return true;
+ #define CFI_UNDEFINED		-1
+ #define CFI_CFA			-2
+ #define CFI_SP_INDIRECT		-3
+ #define CFI_BP_INDIRECT		-4
  
--	for (i = 0; i < CFI_NUM_REGS; i++)
-+	if (state->stack_size != initial_func_cfi.cfa.offset + ret_offset)
-+		return true;
-+
-+	for (i = 0; i < CFI_NUM_REGS; i++) {
- 		if (state->regs[i].base != initial_func_cfi.regs[i].base ||
- 		    state->regs[i].offset != initial_func_cfi.regs[i].offset)
- 			return true;
-+	}
- 
- 	return false;
- }
-@@ -2030,7 +2038,7 @@ static int validate_call(struct instruction *insn, struct insn_state *state)
- 
- static int validate_sibling_call(struct instruction *insn, struct insn_state *state)
- {
--	if (has_modified_stack_frame(state)) {
-+	if (has_modified_stack_frame(insn, state)) {
- 		WARN_FUNC("sibling call from callable instruction with modified stack frame",
- 				insn->sec, insn->offset);
- 		return 1;
-@@ -2059,7 +2067,7 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
- 		return 1;
- 	}
- 
--	if (func && has_modified_stack_frame(state)) {
-+	if (func && has_modified_stack_frame(insn, state)) {
- 		WARN_FUNC("return with modified stack frame",
- 			  insn->sec, insn->offset);
- 		return 1;
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index 2c55f75..81ce27e 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -33,9 +33,11 @@ struct instruction {
- 	unsigned int len;
- 	enum insn_type type;
- 	unsigned long immediate;
--	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
-+	bool alt_group, dead_end, ignore, ignore_alts;
-+	bool hint, save, restore;
- 	bool retpoline_safe;
- 	u8 visited;
-+	u8 ret_offset;
- 	struct symbol *call_dest;
- 	struct instruction *jump_dest;
- 	struct instruction *first_jump_src;
+-#define CFI_AX			0
+-#define CFI_DX			1
+-#define CFI_CX			2
+-#define CFI_BX			3
+-#define CFI_SI			4
+-#define CFI_DI			5
+-#define CFI_BP			6
+-#define CFI_SP			7
+-#define CFI_R8			8
+-#define CFI_R9			9
+-#define CFI_R10			10
+-#define CFI_R11			11
+-#define CFI_R12			12
+-#define CFI_R13			13
+-#define CFI_R14			14
+-#define CFI_R15			15
+-#define CFI_RA			16
+-#define CFI_NUM_REGS		17
+-
+ struct cfi_reg {
+ 	int base;
+ 	int offset;
