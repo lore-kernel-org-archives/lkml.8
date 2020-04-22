@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97D1C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECE2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A9F206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3539720722
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgDVC5s (ORCPT
+        id S1726485AbgDVC53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:57:48 -0400
+        Tue, 21 Apr 2020 22:57:29 -0400
 Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:9490 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbgDVC53 (ORCPT
+        by vger.kernel.org with ESMTP id S1726359AbgDVC52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:57:29 -0400
+        Tue, 21 Apr 2020 22:57:28 -0400
 Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
   by alexa-out-sd-01.qualcomm.com with ESMTP; 21 Apr 2020 19:57:27 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
   by ironmsg04-sd.qualcomm.com with ESMTP; 21 Apr 2020 19:57:26 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 03E0D4B8D; Tue, 21 Apr 2020 19:57:26 -0700 (PDT)
+        id C40124C78; Tue, 21 Apr 2020 19:57:26 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -35,12 +35,11 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         David Collins <collinsd@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v13 08/11] pwm: sun4i: Use nsecs_to_jiffies to avoid a division
-Date:   Tue, 21 Apr 2020 19:57:20 -0700
-Message-Id: <03db1e817e6c79a88a06a5dc85cd508a24a67c2e.1587523702.git.gurus@codeaurora.org>
+        Alexander Shiyan <shc_work@mail.ru>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v13 04/11] pwm: clps711x: Cast period to u32 before use as divisor
+Date:   Tue, 21 Apr 2020 19:57:16 -0700
+Message-Id: <02ba64d8289bf84a8d140f5a3c38ed64a9474d3b.1587523702.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1587523702.git.gurus@codeaurora.org>
 References: <cover.1587523702.git.gurus@codeaurora.org>
@@ -51,33 +50,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using nsecs_to_jiffies() which
-does away with the need for a division operation.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by typecasting it to u32.
 
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Also, since the dividend is still a 32-bit number, any divisor greater
+than the numerator will cause the quotient to be zero, so return 0 in
+that case to efficiently skip the division.
+
+Cc: Alexander Shiyan <shc_work@mail.ru>
+Cc: Arnd Bergmann <arnd@arndb.de>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/pwm/pwm-sun4i.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-clps711x.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 5c677c5..1694e69 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -285,7 +285,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--		usecs_to_jiffies(cstate.period / 1000 + 1);
-+		nsecs_to_jiffies(cstate.period + 1000);
+diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+index 924d39a..0d368ac 100644
+--- a/drivers/pwm/pwm-clps711x.c
++++ b/drivers/pwm/pwm-clps711x.c
+@@ -43,7 +43,10 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+ static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+ {
+ 	/* Duty cycle 0..15 max */
+-	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
++	if ((u32)pwm->args.period > (v * 0xf))
++		return 0;
++
++	return DIV_ROUND_CLOSEST(v * 0xf, (u32)pwm->args.period);
+ }
  
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
+ static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
