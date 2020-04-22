@@ -5,54 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD44C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81009C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9ABD2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5666B20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550154;
-	bh=tmiSw4QrLdNYLOt8h7We+WoCE+44hydsGgrXYbzf7Fg=;
+	s=default; t=1587550156;
+	bh=7Wrp0PSfQ8AxYH33MglpUgdu3eVad235QHlg9qT66K0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ttX++pswjvoyHQBPO4yZkiAIqjPUD385B8z2gtcaaJX2smS0CnyXczjqlTc3xht9E
-	 tDQ630rxawWNRPyqjIiqUZWInu5FFWSeP6yVVJdjnAgNeKoL4u2Gb+S7a7I8Pa5BLj
-	 LvuFPpe+fjmTp0/uw+HfFUiGpHlgXZvObIPTdOwY=
+	b=c9IrZzg6F7zfEKKh6ZXFqHoW/Z730OUa0M6RSIyEVlUTL8CDY8RnbRmZ88DYnu3Cv
+	 DH0vBvrbGSJySQ5E74xL3zFxLaE+bkAExmvQvfrP3RnQrkChkDj2GGyUCgN1oto1HR
+	 CMwtgZTbb/jCcnPK9kVkoY2ssfavcoQo/5Td/0gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgDVKJN (ORCPT
+        id S1728841AbgDVKJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:09:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbgDVKJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:09 -0400
+        id S1728824AbgDVKJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16E420575;
-        Wed, 22 Apr 2020 10:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13C0C2071E;
+        Wed, 22 Apr 2020 10:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550148;
-        bh=tmiSw4QrLdNYLOt8h7We+WoCE+44hydsGgrXYbzf7Fg=;
+        s=default; t=1587550150;
+        bh=7Wrp0PSfQ8AxYH33MglpUgdu3eVad235QHlg9qT66K0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XU/CSONDXook00mgTeW1LR1rE9+fd+acHvQ/0nA7pYKwVpY5CtYxn/ip1KtdrgTh5
-         SBGJyPoQ/rNtirLh7x0ZZ9Gii7bR/HTVZNToMtFlOoKwJxLeAiPcjwfTk2VJ+egp6C
-         8xmuW2fbnexJSc/LTOPqgK/SElBzuvVedUsT16Mo=
+        b=OmrcXvI685Sv5862kRIOO34mcG2A3CqHsdkX+1DYH8N3wrzT7M2jERJgIvWN2A5JI
+         dFIAVRFuetTFEYrSw1Dvj5DuJn4a2rVW3EeyIf2yv2Pdt9KFuTSJsvQohWcj4PXuRL
+         7PEL7AEUlrjQdUgr8//Ph57YZNumewL+zVG+zn+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Joe Perches <joe@perches.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+        Bob Liu <bob.liu@oracle.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 029/199] uapi: rename ext2_swab() to swab() and share globally in swab.h
-Date:   Wed, 22 Apr 2020 11:55:55 +0200
-Message-Id: <20200422095100.993677564@linuxfoundation.org>
+Subject: [PATCH 4.14 012/199] block: keep bdi->io_pages in sync with max_sectors_kb for stacked devices
+Date:   Wed, 22 Apr 2020 11:55:38 +0200
+Message-Id: <20200422095059.423991176@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -65,114 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yury Norov <yury.norov@gmail.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit d5767057c9a76a29f073dad66b7fa12a90e8c748 ]
+[ Upstream commit e74d93e96d721c4297f2a900ad0191890d2fc2b0 ]
 
-ext2_swab() is defined locally in lib/find_bit.c However it is not
-specific to ext2, neither to bitmaps.
+Field bdi->io_pages added in commit 9491ae4aade6 ("mm: don't cap request
+size based on read-ahead setting") removes unneeded split of read requests.
 
-There are many potential users of it, so rename it to just swab() and
-move to include/uapi/linux/swab.h
+Stacked drivers do not call blk_queue_max_hw_sectors(). Instead they set
+limits of their devices by blk_set_stacking_limits() + disk_stack_limits().
+Field bio->io_pages stays zero until user set max_sectors_kb via sysfs.
 
-ABI guarantees that size of unsigned long corresponds to BITS_PER_LONG,
-therefore drop unneeded cast.
+This patch updates io_pages after merging limits in disk_stack_limits().
 
-Link: http://lkml.kernel.org/r/20200103202846.21616-1-yury.norov@gmail.com
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Joe Perches <joe@perches.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Commit c6d6e9b0f6b4 ("dm: do not allow readahead to limit IO size") fixed
+the same problem for device-mapper devices, this one fixes MD RAIDs.
+
+Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/swab.h      |  1 +
- include/uapi/linux/swab.h | 10 ++++++++++
- lib/find_bit.c            | 16 ++--------------
- 3 files changed, 13 insertions(+), 14 deletions(-)
+ block/blk-settings.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/swab.h b/include/linux/swab.h
-index e466fd159c857..bcff5149861a9 100644
---- a/include/linux/swab.h
-+++ b/include/linux/swab.h
-@@ -7,6 +7,7 @@
- # define swab16 __swab16
- # define swab32 __swab32
- # define swab64 __swab64
-+# define swab __swab
- # define swahw32 __swahw32
- # define swahb32 __swahb32
- # define swab16p __swab16p
-diff --git a/include/uapi/linux/swab.h b/include/uapi/linux/swab.h
-index 23cd84868cc3b..fa7f97da5b768 100644
---- a/include/uapi/linux/swab.h
-+++ b/include/uapi/linux/swab.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/types.h>
- #include <linux/compiler.h>
-+#include <asm/bitsperlong.h>
- #include <asm/swab.h>
- 
- /*
-@@ -132,6 +133,15 @@ static inline __attribute_const__ __u32 __fswahb32(__u32 val)
- 	__fswab64(x))
- #endif
- 
-+static __always_inline unsigned long __swab(const unsigned long y)
-+{
-+#if BITS_PER_LONG == 64
-+	return __swab64(y);
-+#else /* BITS_PER_LONG == 32 */
-+	return __swab32(y);
-+#endif
-+}
-+
- /**
-  * __swahw32 - return a word-swapped 32-bit value
-  * @x: value to wordswap
-diff --git a/lib/find_bit.c b/lib/find_bit.c
-index 6ed74f78380ce..883ef3755a1cb 100644
---- a/lib/find_bit.c
-+++ b/lib/find_bit.c
-@@ -133,18 +133,6 @@ EXPORT_SYMBOL(find_last_bit);
- 
- #ifdef __BIG_ENDIAN
- 
--/* include/linux/byteorder does not support "unsigned long" type */
--static inline unsigned long ext2_swab(const unsigned long y)
--{
--#if BITS_PER_LONG == 64
--	return (unsigned long) __swab64((u64) y);
--#elif BITS_PER_LONG == 32
--	return (unsigned long) __swab32((u32) y);
--#else
--#error BITS_PER_LONG not defined
--#endif
--}
--
- #if !defined(find_next_bit_le) || !defined(find_next_zero_bit_le)
- static unsigned long _find_next_bit_le(const unsigned long *addr,
- 		unsigned long nbits, unsigned long start, unsigned long invert)
-@@ -157,7 +145,7 @@ static unsigned long _find_next_bit_le(const unsigned long *addr,
- 	tmp = addr[start / BITS_PER_LONG] ^ invert;
- 
- 	/* Handle 1st word. */
--	tmp &= ext2_swab(BITMAP_FIRST_WORD_MASK(start));
-+	tmp &= swab(BITMAP_FIRST_WORD_MASK(start));
- 	start = round_down(start, BITS_PER_LONG);
- 
- 	while (!tmp) {
-@@ -168,7 +156,7 @@ static unsigned long _find_next_bit_le(const unsigned long *addr,
- 		tmp = addr[start / BITS_PER_LONG] ^ invert;
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 6c2faaa38cc1e..e0a744921ed3d 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -717,6 +717,9 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+ 		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
+ 		       top, bottom);
  	}
- 
--	return min(start + __ffs(ext2_swab(tmp)), nbits);
-+	return min(start + __ffs(swab(tmp)), nbits);
++
++	t->backing_dev_info->io_pages =
++		t->limits.max_sectors >> (PAGE_SHIFT - 9);
  }
- #endif
+ EXPORT_SYMBOL(disk_stack_limits);
  
 -- 
 2.20.1
