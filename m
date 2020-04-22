@@ -2,53 +2,55 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEC5C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879D7C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8CC20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D8F20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549675;
-	bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
+	s=default; t=1587549677;
+	bh=npYd3lh51a/ehBF6fTGdVyIDmLK+MDuSxQxua5ODT80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vWS3UsJ7vNojEC/n0SxIlEh+GHKktQK+931VWilMaQyfX/j3pKJT3C2oMN8C8L3mV
-	 WipDmqYWSa5W72n8rd6caxkLqy7O3t/VRPybtjX1DONt7JRW5DEQuVBK1K/LIeRTs5
-	 a8XrQFxsSbdYlttYpQAVHoFndY8ZK7Gl8Lw3oMBY=
+	b=ETUqiKzPJ3zod8han2zuJFVAwTjVnvBdEO1BVAKhk+G59x1CndtEqs/6C18eowfkw
+	 phVtxxo2DOr4nvs2Vn3M1JnzMCaqbKLAw7UU7pX9NeMj4wZpVkAb+1LX00hrL+hRJH
+	 72FlVuPaIsXvGOz6OfgoHVk6w/dhMZYYYGrf6O8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgDVKBO (ORCPT
+        id S1726788AbgDVKBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgDVKBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:09 -0400
+        id S1726442AbgDVKBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1E6320774;
-        Wed, 22 Apr 2020 10:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398A420774;
+        Wed, 22 Apr 2020 10:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549667;
-        bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
+        s=default; t=1587549674;
+        bh=npYd3lh51a/ehBF6fTGdVyIDmLK+MDuSxQxua5ODT80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U69WHqVLMS1vQH9JfAzVP0FdyUfvGiFCzjkKhzPYcV3aXnFH8PhhKJ3+4cCb/r9Uv
-         LqWtjOdJDvgq/fP4e2lpVZ6m1HvepUpXHofNerZBzcwht8iFtDC/dq7NOG6EQIhy95
-         3uwwmWMxoItjcn0Sr/ktrIQKyrO6zXDtb14myP2M=
+        b=IVUBhktRrurSNJrUKhm0Zzc788l4Kf+fMDpiV9BHlLOBEuItb/Zji38vAEOLtl/St
+         4fh/yfpy1f2yNgVhxzycPRxFmgrp84sr1EMcp6iC3GjA8lJDjJN6SxZ1zgancW8Jd3
+         OUqiQ0wqmV3yZuhdF/PqBPbF5368liltIOJNIRw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 055/100] mfd: dln2: Fix sanity checking for endpoints
-Date:   Wed, 22 Apr 2020 11:56:25 +0200
-Message-Id: <20200422095032.952292386@linuxfoundation.org>
+        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 058/100] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Wed, 22 Apr 2020 11:56:28 +0200
+Message-Id: <20200422095033.529908903@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -61,61 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
+commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
 
-While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-tries to harden the sanity checks it made at the same time a regression,
-i.e.  mixed in and out endpoints. Obviously it should have been not tested on
-real hardware at that time, but unluckily it didn't happen.
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-So, fix above mentioned typo and make device being enumerated again.
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-While here, introduce an enumerator for magic values to prevent similar issue
-to happen in the future.
-
-Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/dln2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
-index 95d0f2df0ad42..672831d5ee32e 100644
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -93,6 +93,11 @@ struct dln2_mod_rx_slots {
- 	spinlock_t lock;
- };
- 
-+enum dln2_endpoint {
-+	DLN2_EP_OUT	= 0,
-+	DLN2_EP_IN	= 1,
-+};
-+
- struct dln2_dev {
- 	struct usb_device *usb_dev;
- 	struct usb_interface *interface;
-@@ -740,10 +745,10 @@ static int dln2_probe(struct usb_interface *interface,
- 	    hostif->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
--	epin = &hostif->endpoint[0].desc;
--	epout = &hostif->endpoint[1].desc;
-+	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
- 	if (!usb_endpoint_is_bulk_out(epout))
- 		return -ENODEV;
-+	epin = &hostif->endpoint[DLN2_EP_IN].desc;
- 	if (!usb_endpoint_is_bulk_in(epin))
- 		return -ENODEV;
- 
--- 
-2.20.1
-
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -595,6 +595,11 @@ start:
+ 		 */
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 
 
