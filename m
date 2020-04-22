@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B8DC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2112C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E63120656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3DD20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551667;
-	bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
+	s=default; t=1587551669;
+	bh=5nkV7eDi5Bx2nfm80C2yfyXLGRKXoar9TVzuNHHDrnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mIZJ2gYnOpUodc8VrQQCW+yPYfxgHWFmaDgA9swEkSZXqCuKgGcNkqm7FJFvgicUz
-	 vAxgBOb0PoP8sOlgLb1uZma4tCrXXfiVzPH3V4SyYDE1J7T0pQJeC3wuzDQuqyHqVp
-	 Db23p8kkNzvacIsdXtuqU3UWz8KhMKf18v72VJ48=
+	b=joyWo5Oo/kxUGkgqT1/8U+PQ8Ukn69VOQpEOnuIfpQYdd3akPB2Ua1GqL/DGvdGUx
+	 P/wQV9y4lfKWvJVEWFZkCtEOib8WyiXYHXOWZeNkT3/te2rgeoBvBxw0DO9WDCUJ2m
+	 AnMhhFBaZ+iRbo5WbmKmSEK9JcnsKmL0k1XPEDuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgDVKe0 (ORCPT
+        id S1731278AbgDVKe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:34:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730408AbgDVKYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:19 -0400
+        id S1730407AbgDVKYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C51E520780;
-        Wed, 22 Apr 2020 10:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CDA22071E;
+        Wed, 22 Apr 2020 10:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551059;
-        bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
+        s=default; t=1587551056;
+        bh=5nkV7eDi5Bx2nfm80C2yfyXLGRKXoar9TVzuNHHDrnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUFq/kQfWLZoa0I8dNrkGa1uAoaQoL3ZhQKWYBhl2FUF4F5VcATkX5NAcyJ8jTByh
-         +5WF5rcTUEfW5P/PScAQ100+vR7UjvFK/hddd3ndgbYrq+bw13FZEogflkhb/wvc0s
-         4I+fu2P4KXvDBX/PuLrFa7I68w5Sd/+yzh11+aEk=
+        b=aE1+Q71iAjfUZC3ceusuCwHBIapfJGWNeJxzAj94mMcwi+AqhrEL4SeCqTpiikE5S
+         J90FIgC6iID4Lacqnxg877br//a4KfQL+LUtraEchaPCGOq0Fo00DreX5KUY/JAzl3
+         noXr+Peag7QTXZORgPOWlJzcmC4xovhop/FD7V/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 085/166] MIPS: DTS: CI20: add DT node for IR sensor
-Date:   Wed, 22 Apr 2020 11:56:52 +0200
-Message-Id: <20200422095057.840559673@linuxfoundation.org>
+Subject: [PATCH 5.6 084/166] s390/cpuinfo: fix wrong output when CPU0 is offline
+Date:   Wed, 22 Apr 2020 11:56:51 +0200
+Message-Id: <20200422095057.753892618@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -62,39 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-[ Upstream commit f5e8fcf85a25bac26c32a0000dbab5857ead9113 ]
+[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
 
-The infrared sensor on the CI20 board is connected to a GPIO and can
-be operated by using the gpio-ir-recv driver. Add a DT node for the
-sensor to allow that driver to be used.
+/proc/cpuinfo should not print information about CPU 0 when it is offline.
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+[heiko.carstens@de.ibm.com: shortened commit message]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/s390/kernel/processor.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index c340f947baa03..fc4e64200c3d5 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -62,6 +62,11 @@
- 		enable-active-high;
- 	};
+diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
+index 6ebc2117c66c7..91b9b3f73de6e 100644
+--- a/arch/s390/kernel/processor.c
++++ b/arch/s390/kernel/processor.c
+@@ -165,8 +165,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
+ static int show_cpuinfo(struct seq_file *m, void *v)
+ {
+ 	unsigned long n = (unsigned long) v - 1;
++	unsigned long first = cpumask_first(cpu_online_mask);
  
-+	ir: ir {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	wlan0_power: fixedregulator@1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "wlan0_power";
+-	if (!n)
++	if (n == first)
+ 		show_cpu_summary(m, v);
+ 	if (!machine_has_cpu_mhz)
+ 		return 0;
+@@ -179,6 +180,8 @@ static inline void *c_update(loff_t *pos)
+ {
+ 	if (*pos)
+ 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
++	else
++		*pos = cpumask_first(cpu_online_mask);
+ 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
+ }
+ 
 -- 
 2.20.1
 
