@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0C2C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21DDC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A84B82076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCF12076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550677;
-	bh=kSl5n1X0fqhL9UVctp/VXku8rEYPoENccDyZLyn7bqQ=;
+	s=default; t=1587550693;
+	bh=6vwtB1Qd6h66fX50E9WXVN5Wtzl4o77srn3IhBVEnAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lsTlQ2qChWYmMMKeuF7xmlGUK+7/K6sXqG/7fQpVk2DVQ3MxawbK7RGCTn7b1cCl1
-	 fcDuFW9c8jBznDRIJAvpDBZK9Jl7KTDwu/WJook0KyBh6jIpXif78JGkoeXOZYTr16
-	 NyACKrgdvjkUF76pRlqmEr3tYLn2GukUNVW56nvk=
+	b=y2vJ47Mbz9FFAlVg707HXaqap5ipSAWgYHFgkzrjJcH18zwbLSMntpNfCxBrhmslI
+	 gRfFatkq9K7y3lKebYricZko1WkL3knBKn5CstrOtOW6jJF/6v4AaUnaSs2HywoWPX
+	 Gqg/HBlH+jyQQzh+GlzPmf/2frHjOSjhyhzfp9n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgDVKR4 (ORCPT
+        id S1729929AbgDVKSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:17:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbgDVKQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:56 -0400
+        id S1729812AbgDVKRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49AAD20780;
-        Wed, 22 Apr 2020 10:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA18C2075A;
+        Wed, 22 Apr 2020 10:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550615;
-        bh=kSl5n1X0fqhL9UVctp/VXku8rEYPoENccDyZLyn7bqQ=;
+        s=default; t=1587550635;
+        bh=6vwtB1Qd6h66fX50E9WXVN5Wtzl4o77srn3IhBVEnAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LqOy8fmt6FDG8rfJL+Fry4kmN9Bu5jcUJQZzmNQxsdjQd3kV9asG6OvUAu8opSd1s
-         RoHxWPMHzywZMgUP3cZEIg31q8R+XPSlfcbjsl8cIOKsK/i3uoj2o4GYvf7y1MhY0W
-         6bU4Zz1CAcaMB/AiPV56WRwiJ/6aUUBGnLpgOivg=
+        b=aX+PDEbd2VqGIRp92A5xj2zJlkoyQjCGAR2Rb+mvfGoZu42LysAyvssbjYwcu3HcH
+         Sy6netx3JscfnR1/J99CKQrLjM/+4Hm/B09mofuERNaGLD6c8OwoWkQ45jU9UOZlML
+         wm/rYWk7VZTXayw6qrc2SQpHU17W5VBiq5+f6pdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH 5.4 023/118] x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-Date:   Wed, 22 Apr 2020 11:56:24 +0200
-Message-Id: <20200422095035.568397912@linuxfoundation.org>
+        stable@vger.kernel.org, cki-project@redhat.com,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 030/118] block, bfq: make reparent_leaf_entity actually work only on leaf entities
+Date:   Wed, 22 Apr 2020 11:56:31 +0200
+Message-Id: <20200422095036.800909372@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,94 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-commit f3a99e761efa616028b255b4de58e9b5b87c5545 upstream.
+commit 576682fa52cbd95deb3773449566274f206acc58 upstream.
 
-When oops happens with panic_on_oops unset, the oops
-thread is killed by die() and system continues to run.
-In such case, guest should not report crash register
-data to host since system still runs. Check panic_on_oops
-and return directly in hyperv_report_panic() when the function
-is called in the die() and panic_on_oops is unset. Fix it.
+bfq_reparent_leaf_entity() reparents the input leaf entity (a leaf
+entity represents just a bfq_queue in an entity tree). Yet, the input
+entity is guaranteed to always be a leaf entity only in two-level
+entity trees. In this respect, because of the error fixed by
+commit 14afc5936197 ("block, bfq: fix overwrite of bfq_group pointer
+in bfq_find_set_group()"), all (wrongly collapsed) entity trees happened
+to actually have only two levels. After the latter commit, this does not
+hold any longer.
 
-Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-7-Tianyu.Lan@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+This commit fixes this problem by modifying
+bfq_reparent_leaf_entity(), so that it searches an active leaf entity
+down the path that stems from the input entity. Such a leaf entity is
+guaranteed to exist when bfq_reparent_leaf_entity() is invoked.
+
+Tested-by: cki-project@redhat.com
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/hyperv/hv_init.c      |    6 +++++-
- drivers/hv/vmbus_drv.c         |    5 +++--
- include/asm-generic/mshyperv.h |    2 +-
- 3 files changed, 9 insertions(+), 4 deletions(-)
+ block/bfq-cgroup.c |   48 +++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 17 deletions(-)
 
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -19,6 +19,7 @@
- #include <linux/mm.h>
- #include <linux/hyperv.h>
- #include <linux/slab.h>
-+#include <linux/kernel.h>
- #include <linux/cpuhotplug.h>
- #include <clocksource/hyperv_timer.h>
- 
-@@ -354,11 +355,14 @@ void hyperv_cleanup(void)
- }
- EXPORT_SYMBOL_GPL(hyperv_cleanup);
- 
--void hyperv_report_panic(struct pt_regs *regs, long err)
-+void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die)
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -798,39 +798,53 @@ static void bfq_flush_idle_tree(struct b
+ /**
+  * bfq_reparent_leaf_entity - move leaf entity to the root_group.
+  * @bfqd: the device data structure with the root group.
+- * @entity: the entity to move.
++ * @entity: the entity to move, if entity is a leaf; or the parent entity
++ *	    of an active leaf entity to move, if entity is not a leaf.
+  */
+ static void bfq_reparent_leaf_entity(struct bfq_data *bfqd,
+-				     struct bfq_entity *entity)
++				     struct bfq_entity *entity,
++				     int ioprio_class)
  {
- 	static bool panic_reported;
- 	u64 guest_id;
+-	struct bfq_queue *bfqq = bfq_entity_to_bfqq(entity);
++	struct bfq_queue *bfqq;
++	struct bfq_entity *child_entity = entity;
  
-+	if (in_die && !panic_on_oops)
-+		return;
++	while (child_entity->my_sched_data) { /* leaf not reached yet */
++		struct bfq_sched_data *child_sd = child_entity->my_sched_data;
++		struct bfq_service_tree *child_st = child_sd->service_tree +
++			ioprio_class;
++		struct rb_root *child_active = &child_st->active;
 +
- 	/*
- 	 * We prefer to report panic on 'die' chain as we have proper
- 	 * registers to report, but if we miss it (e.g. on BUG()) we need
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -31,6 +31,7 @@
- #include <linux/kdebug.h>
- #include <linux/efi.h>
- #include <linux/random.h>
-+#include <linux/kernel.h>
- #include <linux/syscore_ops.h>
- #include <clocksource/hyperv_timer.h>
- #include "hyperv_vmbus.h"
-@@ -75,7 +76,7 @@ static int hyperv_panic_event(struct not
- 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
- 	    && hyperv_report_reg()) {
- 		regs = current_pt_regs();
--		hyperv_report_panic(regs, val);
-+		hyperv_report_panic(regs, val, false);
++		child_entity = bfq_entity_of(rb_first(child_active));
++
++		if (!child_entity)
++			child_entity = child_sd->in_service_entity;
++	}
++
++	bfqq = bfq_entity_to_bfqq(child_entity);
+ 	bfq_bfqq_move(bfqd, bfqq, bfqd->root_group);
+ }
+ 
+ /**
+- * bfq_reparent_active_entities - move to the root group all active
+- *                                entities.
++ * bfq_reparent_active_queues - move to the root group all active queues.
+  * @bfqd: the device data structure with the root group.
+  * @bfqg: the group to move from.
+- * @st: the service tree with the entities.
++ * @st: the service tree to start the search from.
+  */
+-static void bfq_reparent_active_entities(struct bfq_data *bfqd,
+-					 struct bfq_group *bfqg,
+-					 struct bfq_service_tree *st)
++static void bfq_reparent_active_queues(struct bfq_data *bfqd,
++				       struct bfq_group *bfqg,
++				       struct bfq_service_tree *st,
++				       int ioprio_class)
+ {
+ 	struct rb_root *active = &st->active;
+-	struct bfq_entity *entity = NULL;
+-
+-	if (!RB_EMPTY_ROOT(&st->active))
+-		entity = bfq_entity_of(rb_first(active));
++	struct bfq_entity *entity;
+ 
+-	for (; entity ; entity = bfq_entity_of(rb_first(active)))
+-		bfq_reparent_leaf_entity(bfqd, entity);
++	while ((entity = bfq_entity_of(rb_first(active))))
++		bfq_reparent_leaf_entity(bfqd, entity, ioprio_class);
+ 
+ 	if (bfqg->sched_data.in_service_entity)
+ 		bfq_reparent_leaf_entity(bfqd,
+-			bfqg->sched_data.in_service_entity);
++					 bfqg->sched_data.in_service_entity,
++					 ioprio_class);
+ }
+ 
+ /**
+@@ -881,7 +895,7 @@ static void bfq_pd_offline(struct blkg_p
+ 		 * There is no need to put the sync queues, as the
+ 		 * scheduler has taken no reference.
+ 		 */
+-		bfq_reparent_active_entities(bfqd, bfqg, st);
++		bfq_reparent_active_queues(bfqd, bfqg, st, i);
  	}
- 	return NOTIFY_DONE;
- }
-@@ -92,7 +93,7 @@ static int hyperv_die_event(struct notif
- 	 * the notification here.
- 	 */
- 	if (hyperv_report_reg())
--		hyperv_report_panic(regs, val);
-+		hyperv_report_panic(regs, val, true);
- 	return NOTIFY_DONE;
- }
  
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -163,7 +163,7 @@ static inline int cpumask_to_vpset(struc
- 	return nr_bank;
- }
- 
--void hyperv_report_panic(struct pt_regs *regs, long err);
-+void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
- void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
- bool hv_is_hyperv_initialized(void);
- void hyperv_cleanup(void);
+ 	__bfq_deactivate_entity(entity, false);
 
 
