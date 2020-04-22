@@ -2,142 +2,96 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F7EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8D6C5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF3F42082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACFB2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgDVOUN (ORCPT
+        id S1727833AbgDVOVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:20:13 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:37741 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727819AbgDVOUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:20:10 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.1.71])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 613665A6DE74;
-        Wed, 22 Apr 2020 16:13:08 +0200 (CEST)
-Received: from arch.lan (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 22 Apr
- 2020 16:13:07 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     <linux-iio@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <jic23@kernel.org>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH 5/6] dt-bindings: iio: scd30: add device binding file
-Date:   Wed, 22 Apr 2020 16:11:34 +0200
-Message-ID: <20200422141135.86419-6-tomasz.duszynski@octakon.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+        Wed, 22 Apr 2020 10:21:13 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59462 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbgDVOVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:21:12 -0400
+IronPort-SDR: IALa/HM26DhQi05Amo6LsEBg6DcPj86aTWPwGY/OVayfzlEKz48+YPNjef8J52GPPyaTZ+yMTm
+ YMf3KGH8xMxQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 07:21:12 -0700
+IronPort-SDR: RqFf85vPdG7OhYGX/uy86+jJlceh0IcUTUhO7yDiQIKsg98+tvEIvJiMI2uLuBJYrcwFTN7xEl
+ d3czeR6kZXBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
+   d="scan'208";a="457156383"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.134.45.139]) ([10.134.45.139])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Apr 2020 07:21:11 -0700
+Subject: Re: [PATCH 3/3] dmaengine: ioat: adding missed issue_pending to
+ timeout handler
+To:     leonid.ravich@dell.com, dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        linux-kernel@vger.kernel.org
+References: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
+ <1587554529-29839-3-git-send-email-leonid.ravich@dell.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <68c65d83-58fe-f2cb-d505-9b216caa1f4b@intel.com>
+Date:   Wed, 22 Apr 2020 07:21:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 5833287420189891607
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeejgdeikecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffojghfggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkpheptddrtddrtddrtddpkeelrdejtddrfedurddvtdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepjhhitgdvfeeskhgvrhhnvghlrdhorhhg
+In-Reply-To: <1587554529-29839-3-git-send-email-leonid.ravich@dell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SCD30 sensor binding file.
 
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
----
- .../iio/chemical/sensirion,scd30.yaml         | 71 +++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
 
-diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-new file mode 100644
-index 000000000000..b092b2530c76
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/chemical/sensirion,scd30.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sensirion SCD30 carbon dioxide sensor
-+
-+maintainers:
-+  - Tomasz Duszynski <tomasz.duszynski@octakon.com>
-+
-+description: |
-+  Air quality sensor capable of measuring co2 concentration, temperature
-+  and relative humidity.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sensirion,scd30
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+  sensirion,sel-gpios:
-+    description: GPIO connected to the SEL line
-+    maxItems: 1
-+
-+  sensirion,pwm-gpios:
-+    description: GPIO connected to the PWM line
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - vdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    # include <dt-bindings/gpio/gpio.h>
-+    # include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      scd30@61 {
-+        compatible = "sensirion,scd30";
-+        reg = <0x61>;
-+        vdd-supply = <&vdd>;
-+        interrupt-parrent = <&gpio0>;
-+        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+      };
-+    };
-+  - |
-+    # include <dt-bindings/gpio/gpio.h>
-+    # include <dt-bindings/interrupt-controller/irq.h>
-+    serial {
-+      scd30 {
-+        compatible = "sensirion,scd30";
-+        vdd-supply = <&vdd>;
-+        interrupt-parrent = <&gpio0>;
-+        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+      };
-+    };
-+
-+...
--- 
-2.26.1
+On 4/22/2020 4:22 AM, leonid.ravich@dell.com wrote:
+> From: Leonid Ravich <Leonid.Ravich@emc.com>
+> 
+> completion timeout might trigger unnesesery DMA engine hw reboot
+> in case of missed issue_pending() .
 
+Just curious, are you hitting a use case where this is happening? And 
+what's causing the completion timeout?
+
+> 
+> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+> ---
+>   drivers/dma/ioat/dma.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+> index 55a8cf1..2ab07a3 100644
+> --- a/drivers/dma/ioat/dma.c
+> +++ b/drivers/dma/ioat/dma.c
+> @@ -955,6 +955,13 @@ void ioat_timer_event(struct timer_list *t)
+>   		goto unlock_out;
+>   	}
+>   
+> +	/* handle missed issue pending case */
+> +	if (ioat_ring_pending(ioat_chan)) {
+> +		spin_lock_bh(&ioat_chan->prep_lock);
+> +		__ioat_issue_pending(ioat_chan);
+> +		spin_unlock_bh(&ioat_chan->prep_lock);
+> +	}
+> +
+>   	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
+>   	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
+>   unlock_out:
+> 
