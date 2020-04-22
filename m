@@ -2,48 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59867C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0866BC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2453F2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E712920857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgDVVUw (ORCPT
+        id S1726463AbgDVVUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53196 "EHLO
+        Wed, 22 Apr 2020 17:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgDVVUv (ORCPT
+        with ESMTP id S1726066AbgDVVUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:20:51 -0400
+        Wed, 22 Apr 2020 17:20:53 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17ABC03C1A9;
-        Wed, 22 Apr 2020 14:20:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60BEC03C1A9;
+        Wed, 22 Apr 2020 14:20:53 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRMnX-0000Ni-E1; Wed, 22 Apr 2020 23:20:47 +0200
+        id 1jRMnX-0000Nl-Tw; Wed, 22 Apr 2020 23:20:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0CA381C02FC;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 88EE81C0450;
         Wed, 22 Apr 2020 23:20:47 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 21:20:46 -0000
-From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+Date:   Wed, 22 Apr 2020 21:20:47 -0000
+From:   "tip-bot2 for Quentin Perret" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: fix parent pid/tid in task exit events
-Cc:     KP Singh <kpsingh@google.com>, Ian Rogers <irogers@google.com>,
+Subject: [tip: sched/urgent] sched/core: Fix reset-on-fork from RT with uclamp
+Cc:     Chitti Babu Theegala <ctheegal@codeaurora.org>,
+        Quentin Perret <qperret@google.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200417182842.12522-1-irogers@google.com>
-References: <20200417182842.12522-1-irogers@google.com>
+In-Reply-To: <20200416085956.217587-1-qperret@google.com>
+References: <20200416085956.217587-1-qperret@google.com>
 MIME-Version: 1.0
-Message-ID: <158759044657.28353.11787754973675408420.tip-bot2@tip-bot2>
+Message-ID: <158759044717.28353.7054325009828879499.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,64 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     f3bed55e850926614b9898fe982f66d2541a36a5
-Gitweb:        https://git.kernel.org/tip/f3bed55e850926614b9898fe982f66d2541a36a5
-Author:        Ian Rogers <irogers@google.com>
-AuthorDate:    Fri, 17 Apr 2020 11:28:42 -07:00
+Commit-ID:     eaf5a92ebde5bca3bb2565616115bd6d579486cd
+Gitweb:        https://git.kernel.org/tip/eaf5a92ebde5bca3bb2565616115bd6d579486cd
+Author:        Quentin Perret <qperret@google.com>
+AuthorDate:    Thu, 16 Apr 2020 09:59:56 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 22 Apr 2020 23:10:14 +02:00
+CommitterDate: Wed, 22 Apr 2020 23:10:13 +02:00
 
-perf/core: fix parent pid/tid in task exit events
+sched/core: Fix reset-on-fork from RT with uclamp
 
-Current logic yields the child task as the parent.
+uclamp_fork() resets the uclamp values to their default when the
+reset-on-fork flag is set. It also checks whether the task has a RT
+policy, and sets its uclamp.min to 1024 accordingly. However, during
+reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
+hence leading to an erroneous uclamp.min setting for the new task if it
+was forked from RT.
 
-Before:
-$ perf record bash -c "perf list > /dev/null"
-$ perf script -D |grep 'FORK\|EXIT'
-4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
-4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
-4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
-                                                   ^
-  Note the repeated values here -------------------/
+Fix this by removing the unnecessary check on rt_task() in
+uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
+set.
 
-After:
-383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
-383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
-383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
-
-Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
-Reported-by: KP Singh <kpsingh@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks")
+Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
+Signed-off-by: Quentin Perret <qperret@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
+Reviewed-by: Patrick Bellasi <patrick.bellasi@matbug.net>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Link: https://lkml.kernel.org/r/20200416085956.217587-1-qperret@google.com
 ---
- kernel/events/core.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ kernel/sched/core.c |  9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index bc9b98a..633b4ae 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7491,10 +7491,17 @@ static void perf_event_task_output(struct perf_event *event,
- 		goto out;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3a61a3b..9a2fbf9 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1232,13 +1232,8 @@ static void uclamp_fork(struct task_struct *p)
+ 		return;
  
- 	task_event->event_id.pid = perf_event_pid(event, task);
--	task_event->event_id.ppid = perf_event_pid(event, current);
+ 	for_each_clamp_id(clamp_id) {
+-		unsigned int clamp_value = uclamp_none(clamp_id);
 -
- 	task_event->event_id.tid = perf_event_tid(event, task);
--	task_event->event_id.ptid = perf_event_tid(event, current);
-+
-+	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
-+		task_event->event_id.ppid = perf_event_pid(event,
-+							task->real_parent);
-+		task_event->event_id.ptid = perf_event_pid(event,
-+							task->real_parent);
-+	} else {  /* PERF_RECORD_FORK */
-+		task_event->event_id.ppid = perf_event_pid(event, current);
-+		task_event->event_id.ptid = perf_event_tid(event, current);
-+	}
- 
- 	task_event->event_id.time = perf_event_clock(event);
+-		/* By default, RT tasks always get 100% boost */
+-		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+-			clamp_value = uclamp_none(UCLAMP_MAX);
+-
+-		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
++		uclamp_se_set(&p->uclamp_req[clamp_id],
++			      uclamp_none(clamp_id), false);
+ 	}
+ }
  
