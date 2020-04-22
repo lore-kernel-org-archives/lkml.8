@@ -2,119 +2,142 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429D7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C3DC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C868206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yxD/HtWh"
+	by mail.kernel.org (Postfix) with ESMTP id 6E332206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgDVNWB (ORCPT
+        id S1726453AbgDVNXp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgDVNWA (ORCPT
+        Wed, 22 Apr 2020 09:23:45 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45986 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgDVNXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:22:00 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8E8C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:21:59 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id g10so1606123lfj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=warOQZMnN+8uV4OA+3DzFVUnpPLSoRdRCB/511qDEfg=;
-        b=yxD/HtWhT0spIj3Te6eAFm69YzoVsGgw0KFTgyzeRKdbF4sNPmPbK+Uj4TQ8JOxgyk
-         Odwn4XY/lYQDDES8v2Jviymjhs00KKSm/IgG8wYzYu+tbyDt4dFSDqTzMjubiAPFl5Ff
-         yi8exEsWRp/eqwY+FVhpR4nnp88QkfdX/0QKQFpPCU5tSCXDE7/pLraquZ0ujS9cdSfa
-         SoVSIe/YRG4Bll+PI2520W7AOSueK4k9juBADOMq32nmM4MWIbja+Oz9Npyr7zWPGQVx
-         9E3PpU2bL1gZRuyXJe4CuDUtUo5oc/c1CrCoAct5MhyGhxoB4bkztxdsAyoRthjpgM7q
-         Z8Ag==
+        Wed, 22 Apr 2020 09:23:45 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jRFJK-0003jN-LO
+        for linux-kernel@vger.kernel.org; Wed, 22 Apr 2020 13:21:06 +0000
+Received: by mail-pl1-f197.google.com with SMTP id 7so1824654ple.19
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:21:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=warOQZMnN+8uV4OA+3DzFVUnpPLSoRdRCB/511qDEfg=;
-        b=B9MMs037bvy4frUruHGzJV/7fZ1bgedVOvcVMZnAMBnNtrDnDEWsxSpcaMJ214LnIb
-         mne/0CrIkFU7xzKbbSyyRJ9msgHd3KBYsHlSPH8q9QYEnPu5mIXQAxd/cpD9O7lNI5tG
-         C8Ydokz4sK02+L8hnWbqOEVpM148rXrnbXb0wE9kctEx/uSidnry9MEjWv5V5PBhUAay
-         2CP5mzTGQ1xQL4iGMeGO5cW/zuuVtOk62ZBG9c+nMVD9HtwcOj39Iif8ithWhtGNne/z
-         ysDpyWvm6/R86+aFM8xpTWR0FRPZBBv/ZbJVLZkjcPOE7f2e1A5ofC+DMaHZVN8Y/v78
-         0tUw==
-X-Gm-Message-State: AGi0PuaadyHNmHeJ5w0/lOEvGHZlP4gQD41FevBmbYsMPSIy3rporVZ1
-        +Dok6C7WtHIxdUrBV6tEnxQk612DjrA+bhlrc1VeOA==
-X-Google-Smtp-Source: APiQypK6aHNkNmAQLRyNYvHySvNjV/JodbscZlL/ss00FperuCqsPymgUAShOEb1XE2L9I+UgO5Ac5N96cr+gxD4CNU=
-X-Received: by 2002:ac2:46f9:: with SMTP id q25mr17308196lfo.149.1587561717947;
- Wed, 22 Apr 2020 06:21:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422112719.826676174@infradead.org> <20200422112831.988065598@infradead.org>
-In-Reply-To: <20200422112831.988065598@infradead.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 22 Apr 2020 15:21:45 +0200
-Message-ID: <CAKfTPtB8NiKqggZN3v6u=Rdwj4grzRwn1mW31ov0y5ZhDBcvuw@mail.gmail.com>
-Subject: Re: [PATCH 13/23] sched,ion: Convert to sched_set_normal()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        John Stultz <john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=T0LMZyTXWoFEf1aVh2cXDeose+ywIML9Nz9WjlzDhZo=;
+        b=aansu3808Zqci7a1w4yJZIy3Z+T4ymA2YkFSom+D4Le91YJUgeBLoodAZRA6ii3vek
+         PE0Ibwk7kYsSYfY83A96I6PuZmk2vgepiMJ4cKESmGNpfbTZgYvgcHe3ipBIRQNZrj1N
+         7Ave67b6pnm7L3VNmFG1R/vna4n64CFSSmSujJZp1yiUnGRd+vAMBYv4dxQESWS7wuZN
+         w1HiE8IrhtL3fiYKOZRU+IMs119OfRiDYRazslHF//TcXz9UJrDe7oQNFrwEdXtP7mZ1
+         0XlXMUZbXJfrp5+EXj17WILNT7fcSF3z+8ay00aQBD955L6kCAlm7Ffrj3G7rqLakc1z
+         APNw==
+X-Gm-Message-State: AGi0PuaWsFFp0qTrutOsXBFpe1TEo0LA8rFRoL7IU6+bbUJYyEWlHdZw
+        wQh6ONcRIkNvbIJh2IxAAWV7zEd/vJWGoBAWGaumVk+Lezpsf952sOJJcUYOhxjWeOs93sbx7HH
+        vjOsM3hLu+CqcaQzYy1+AcXiSNCJn+H2NKxlykMk2/g==
+X-Received: by 2002:a17:902:8a89:: with SMTP id p9mr26137225plo.286.1587561665310;
+        Wed, 22 Apr 2020 06:21:05 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLfA2O6VBk6BTeueKPVTORTPr78NbnZL7Zb6Nrl273jlScDPEo8rwuxAVxViRLC6q6jC2RXNA==
+X-Received: by 2002:a17:902:8a89:: with SMTP id p9mr26137195plo.286.1587561664959;
+        Wed, 22 Apr 2020 06:21:04 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id w66sm5456578pfw.50.2020.04.22.06.21.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Apr 2020 06:21:04 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2] xhci: Set port link to RxDetect if port is not enabled
+ after resume
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <B4E44BDC-5AFE-4F8A-8498-0EEE9CDAC0E1@canonical.com>
+Date:   Wed, 22 Apr 2020 21:21:01 +0800
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <635B3350-F064-4B45-B194-40F793423049@canonical.com>
+References: <20200311040456.25851-1-kai.heng.feng@canonical.com>
+ <B4E44BDC-5AFE-4F8A-8498-0EEE9CDAC0E1@canonical.com>
+To:     Mathias Nyman <mathias.nyman@intel.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 at 13:29, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> In an attempt to take away sched_setscheduler() from modules, change
-> this into sched_set_normal(.nice = 19).
->
-> Cc: john.stultz@linaro.org
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  drivers/staging/android/ion/ion_heap.c |    3 ---
->  1 file changed, 3 deletions(-)
->
-> --- a/drivers/staging/android/ion/ion_heap.c
-> +++ b/drivers/staging/android/ion/ion_heap.c
-> @@ -244,8 +244,6 @@ static int ion_heap_deferred_free(void *
->
->  int ion_heap_init_deferred_free(struct ion_heap *heap)
->  {
-> -       struct sched_param param = { .sched_priority = 0 };
-> -
->         INIT_LIST_HEAD(&heap->free_list);
->         init_waitqueue_head(&heap->waitqueue);
->         heap->task = kthread_run(ion_heap_deferred_free, heap,
-> @@ -255,7 +253,7 @@ int ion_heap_init_deferred_free(struct i
->                        __func__);
->                 return PTR_ERR_OR_ZERO(heap->task);
->         }
-> -       sched_setscheduler(heap->task, SCHED_IDLE, &param);
-> +       sched_set_normal(heap->task, 19);
 
-Would it make sense to have a sched_set_idle(task) to enable kernel
-setting SCHED_IDLE task ?
 
-SCHED_NORMAL w/ nice 19 and SCHED_IDLE tasks are not treated in the
-same way when checking for preemption at  wakeup
+> On Mar 26, 2020, at 19:33, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+> Hi Mathias,
+> 
+>> On Mar 11, 2020, at 12:04, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>> 
+>> On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
+>> then connects to ASMedia xHCI's root hub:
+>> 
+>> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
+>>   |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
+>>           |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
+>> 
+>> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+>> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
+>> Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+>> 
+>> The port is disabled after resume:
+>> xhci_hcd 0000:3f:00.0: Get port status 4-1 read: 0x280, return 0x280
+>> 
+>> According to xHCI 4.19.1.2.1, we should set link to RxDetect to transit
+>> it from disabled state to disconnected state, which allows the port to
+>> be set to U0 and completes the resume process.
+>> 
+>> My own test shows port can still resume when it's not enabled, as long
+>> as its link is in U states. So constrain the new logic only when link is
+>> not in any U state.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> 
+> Do you think this is a proper fix?
 
->
->         return 0;
->  }
->
->
+Another gentle ping...
+
+> 
+> Kai-Heng
+> 
+>> ---
+>> drivers/usb/host/xhci-hub.c | 8 ++++++++
+>> 1 file changed, 8 insertions(+)
+>> 
+>> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+>> index a9c87eb8951e..263f9a9237a1 100644
+>> --- a/drivers/usb/host/xhci-hub.c
+>> +++ b/drivers/usb/host/xhci-hub.c
+>> @@ -1776,6 +1776,14 @@ int xhci_bus_resume(struct usb_hcd *hcd)
+>> 			clear_bit(port_index, &bus_state->bus_suspended);
+>> 			continue;
+>> 		}
+>> +
+>> +		/* 4.19.1.2.1 */
+>> +		if (!(portsc & PORT_PE) && (portsc & PORT_PLS_MASK) > XDEV_U3) {
+>> +			portsc = xhci_port_state_to_neutral(portsc);
+>> +			portsc &= ~PORT_PLS_MASK;
+>> +			portsc |= PORT_LINK_STROBE | XDEV_RXDETECT;
+>> +		}
+>> +
+>> 		/* resume if we suspended the link, and it is still suspended */
+>> 		if (test_bit(port_index, &bus_state->bus_suspended))
+>> 			switch (portsc & PORT_PLS_MASK) {
+>> -- 
+>> 2.17.1
+>> 
+> 
+
