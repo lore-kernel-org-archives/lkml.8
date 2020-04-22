@@ -2,159 +2,104 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD12C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19BEC5518E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1E92070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB978206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:56:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkSfCfrb"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="bq86XvJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgDVHzd (ORCPT
+        id S1726489AbgDVH4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40826 "EHLO
+        Wed, 22 Apr 2020 03:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725810AbgDVHzc (ORCPT
+        by vger.kernel.org with ESMTP id S1726030AbgDVH4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:55:32 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 147B8C03C1A6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:55:31 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id v10so424035qvr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:55:31 -0700 (PDT)
+        Wed, 22 Apr 2020 03:56:09 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D32DC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:56:09 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id g16so820427eds.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=szeredi.hu; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xHJTiCZuYPHQ76leKfZ3xJ/74uh6M+nUkAErV8qQlvs=;
-        b=hkSfCfrbbAm+HLe+KrV3RnSh5abeV84ZxoVl1yBMh4PJWTsG6DPJ71QVKL9JnIizob
-         UlWuIriCsDXjOcyzBeWrjzDKgK1TD87LvDqAUih8jmOnGdkOK6wX+D1ZJOvVdXcAbmWv
-         1rr2qAB99SaM72ln8DVQI7B1G//UcBaebKO5JWsWryhmU7WXIm4GDPs5rnh5oNKDRdTH
-         c0vLrwcafB3oUhhyBPCF3d4YnqADvl7fxEFw97+EwoN5zRrDxHy3l6oR5m8snGjkqc22
-         O9EDoKCESqQPsJjlKuroJngWV2rzL6YZg1+QHtbhSqF3Ov/SKRKU6vAMQ9QIDYmqceFm
-         XcrQ==
+         :cc;
+        bh=z1biaZy6y7PqsHY/+KktbP6zQiSCk/Tgyi9hv1rSztM=;
+        b=bq86XvJQnxv50SBPGcKLs3Fr8gh99Hv1Y4lzJCnHBgVuYJVbw6RrjrVKfGtFku6EZG
+         kO4dXzupMYLoia0Lmt+RHfv1Xuu9JA4Y2Vmd3a8UrJgbKKxBUsTKJGojbSu5aJgfhEmo
+         5EM4zr0i3Guzu9oLNTActfb698GxdY2nsEaBs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xHJTiCZuYPHQ76leKfZ3xJ/74uh6M+nUkAErV8qQlvs=;
-        b=tqkA+wyv9Jr5H9Qep8riMltBRFgXlQ6ImEETWkMdr0+CeRJuzI4IuqBz5A8FwQ4/fw
-         FLL706DPYiF4D2ZgiQAZdLMFmMcAo6ck2BPhfYrkuSMk+/0J37iRwh5F3Wrtnd7bnGMo
-         0L5qDfEBMcVLlTQDPx9UHKrkoswMLftAocexdJwZMXI4iPMisfgg5j6rKM34680oxudj
-         GPrpFPvL9euFHmUGyfIPYfwdHJu2jRL7GcBLFMxSxTBwyvn02RtipDZ5v1dVVnTncB7Y
-         5xKQzGdVwOx1pyKUoo8aquQSstJDMtXOtPA9N4gEN6DfP0cKh524pljNV8mHwWJeNN+8
-         d9Xw==
-X-Gm-Message-State: AGi0PubS684ruoaPyhuGbkyp4z7LFDjcGpUtQ4AvQe50E3JfGF6FzZLm
-        yUYB4riZAPiBQjPysKKuu+umb50QZpCAWkcVJtA=
-X-Google-Smtp-Source: APiQypKE3uqNyzRviE2W0tPIBqg/0GXqy4kx8ZZl/teh095sCD9n/vA1kn9Jl8aI22VF+9NjuQOhGgAHTgJEjrjyIB8=
-X-Received: by 2002:a05:6214:7e1:: with SMTP id bp1mr23425411qvb.208.1587542130191;
- Wed, 22 Apr 2020 00:55:30 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=z1biaZy6y7PqsHY/+KktbP6zQiSCk/Tgyi9hv1rSztM=;
+        b=HrcHBp90vGOzRJ1rICgx1dWvDcTRGBnXCwv0msCZMmHs6XmKzcSz1iQet1t8HEs07q
+         eWLWwcqDoZX3tIwudcfrt3jxnZ9tDnuzz2I24ZnoIXIkbXq/m+YhpjGxnrOBGqfKFuGm
+         cWfSe2xGSqJFgXD4gtlFwpDx/7x/u1btdZfni52FlALv+YRPIZWM46rbYXwa0NjL2bsb
+         yE/UW+iStIiKfAuOGgR+DrnpIPuKi+Qpyonz0F6e6j/R0sMr9Vf0BXIfAQfx0hZCQ3OJ
+         /d16SsslV3U8vvBxRFPyVXAUZal5dgm+221xiWteMYNYobtbH7+t3Pq0gRFQO9Cer0AC
+         nHnw==
+X-Gm-Message-State: AGi0PuZez7J7bm5wUZA3YwFFos6zjd3Bnym9WFdzIe7V/o2zrargzjnK
+        paCKGK5Q9GDRxN3hOTEIT0aYQ2Vax3r8n6fAoiCQxA==
+X-Google-Smtp-Source: APiQypK9NkZBpfIRxtVZgJkwWgqgZC5WwR3a2fRu7Zp4jUgGSYA2Xwz4zVEf0igsy8uL0etsgNy6Z5nE2u7gSECiDNk=
+X-Received: by 2002:a05:6402:22ed:: with SMTP id dn13mr21651703edb.212.1587542168000;
+ Wed, 22 Apr 2020 00:56:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587369582-3882-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1587369582-3882-4-git-send-email-iamjoonsoo.kim@lge.com> <20200422074423.GA12288@infradead.org>
-In-Reply-To: <20200422074423.GA12288@infradead.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Wed, 22 Apr 2020 16:55:19 +0900
-Message-ID: <CAAmzW4MOzTU2BLffuVm_CHbWs3SJTcCdhEGQyfR3FsCgoiG1Dw@mail.gmail.com>
-Subject: Re: [PATCH 03/10] mm/migrate: separate PageHighMem() and
- PageHighMemZone() use case
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Laura Abbott <labbott@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <cover.1587531463.git.josh@joshtriplett.org> <9873b8bd7d14ff8cd2a5782b434b39f076679eeb.1587531463.git.josh@joshtriplett.org>
+ <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
+In-Reply-To: <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 22 Apr 2020 09:55:56 +0200
+Message-ID: <CAJfpegt=xe-8AayW2i3AYrk3q-=Pp_A+Hctsk+=sXoMed5hFQA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] fs: openat2: Extend open_how to allow
+ userspace-selected fds
+To:     Michael Kerrisk <mtk.manpages@gmail.com>
+Cc:     Josh Triplett <josh@joshtriplett.org>, io-uring@vger.kernel.org,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 4=EC=9B=94 22=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 4:44, C=
-hristoph Hellwig <hch@infradead.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On Wed, Apr 22, 2020 at 8:06 AM Michael Kerrisk (man-pages)
+<mtk.manpages@gmail.com> wrote:
 >
-> On Mon, Apr 20, 2020 at 04:59:35PM +0900, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > Until now, PageHighMem() is used for two different cases. One is to che=
-ck
-> > if there is a direct mapping for this page or not. The other is to chec=
-k
-> > the zone of this page, that is, weather it is the highmem type zone or =
-not.
-> >
-> > Now, we have separate functions, PageHighMem() and PageHighMemZone() fo=
-r
-> > each cases. Use appropriate one.
-> >
-> > Note that there are some rules to determine the proper macro.
-> >
-> > 1. If PageHighMem() is called for checking if the direct mapping exists
-> > or not, use PageHighMem().
-> > 2. If PageHighMem() is used to predict the previous gfp_flags for
-> > this page, use PageHighMemZone(). The zone of the page is related to
-> > the gfp_flags.
-> > 3. If purpose of calling PageHighMem() is to count highmem page and
-> > to interact with the system by using this count, use PageHighMemZone().
-> > This counter is usually used to calculate the available memory for an
-> > kernel allocation and pages on the highmem zone cannot be available
-> > for an kernel allocation.
-> > 4. Otherwise, use PageHighMemZone(). It's safe since it's implementatio=
-n
-> > is just copy of the previous PageHighMem() implementation and won't
-> > be changed.
-> >
-> > I apply the rule #2 for this patch.
-> >
-> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > ---
-> >  include/linux/migrate.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-> > index 3e546cb..9a57766 100644
-> > --- a/include/linux/migrate.h
-> > +++ b/include/linux/migrate.h
-> > @@ -47,7 +47,7 @@ static inline struct page *new_page_nodemask(struct p=
-age *page,
-> >               order =3D HPAGE_PMD_ORDER;
-> >       }
-> >
-> > -     if (PageHighMem(page) || (zone_idx(page_zone(page)) =3D=3D ZONE_M=
-OVABLE))
-> > +     if (PageHighMemZone(page) || zone_idx(page_zone(page)) =3D=3D ZON=
-E_MOVABLE)
-> >               gfp_mask |=3D __GFP_HIGHMEM;
+> [CC += linux-api]
 >
-> I think this would be much cleaner if you open coded PageHighMemZone
-> here.
->
-> E.g.
->
->         int zone =3D page_zone(page);
->
->         if (is_highmem_idx(zone) || zone_idx(zone) =3D=3D ZONE_MOVABLE)
+> On Wed, 22 Apr 2020 at 07:20, Josh Triplett <josh@joshtriplett.org> wrote:
+> >
+> > Inspired by the X protocol's handling of XIDs, allow userspace to select
+> > the file descriptor opened by openat2, so that it can use the resulting
+> > file descriptor in subsequent system calls without waiting for the
+> > response to openat2.
+> >
+> > In io_uring, this allows sequences like openat2/read/close without
+> > waiting for the openat2 to complete. Multiple such sequences can
+> > overlap, as long as each uses a distinct file descriptor.
 
-Okay. I will use open code here to make two condition checks similar form.
+If this is primarily an io_uring feature, then why burden the normal
+openat2 API with this?
 
-Thanks.
+Add this flag to the io_uring API, by all means.
+
+This would also allow Implementing a private fd table for io_uring.
+I.e. add a flag interpreted by file ops (IORING_PRIVATE_FD), including
+openat2 and freely use the private fd space without having to worry
+about interactions with other parts of the system.
+
+Thanks,
+Miklos
