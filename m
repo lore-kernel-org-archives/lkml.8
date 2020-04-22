@@ -2,152 +2,112 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE02C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518BCC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 595C02073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552009;
-	bh=TMC+9tWDsQ38FwH4z1iUXe3pVK+rAiUdtnxJ3vLWwfQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fTRZUraKVlLg/AaV6MdZVcpCrgWSEqIvY9Pgq86FCNSDCQhDzOC4FuLJ4wsYzkpHg
-	 Iyg6AoiPG624b4QSmzpFXYQ6hE5ixGw+jFD9OaGfOzHF9xRKRn3/UQvxcYFmT3fzU+
-	 6/h+D+lKXOuXRwxSiBe3tiQaVM+7HMdo02RGx7Ek=
+	by mail.kernel.org (Postfix) with ESMTP id 304A320656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdX4x+qG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbgDVKkH (ORCPT
+        id S1731348AbgDVKkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:40:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbgDVKVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730146AbgDVKVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 06:21:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DCD02168B;
-        Wed, 22 Apr 2020 10:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550871;
-        bh=TMC+9tWDsQ38FwH4z1iUXe3pVK+rAiUdtnxJ3vLWwfQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQWnAZMbaYm0QvVs+5e6ihux5YcaB9i5RHA2MjfHMazjQHTKUJ8wwGHWonTQiYLJe
-         q5gv6bRRil1rtzRZ3d1ZDYjxSk6S7ROM4jIZa24/Ep0AXmerzwM6GzriSrYnTA7DzP
-         z6r/ouw+UPRZAp7LKhzMIbJdL6YX6hUutPh57w9w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Stefano Brivio <sbrivio@redhat.com>
-Subject: [PATCH 5.6 001/166] netfilter: nft_set_rbtree: Drop spurious condition for overlap detection on insertion
-Date:   Wed, 22 Apr 2020 11:55:28 +0200
-Message-Id: <20200422095048.103244876@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
-References: <20200422095047.669225321@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A69C02C444
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:20:58 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b11so1722028wrs.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=btgS3gZtNuEgvZcnKQBJu8IZKoX68St04X3bJOueZjs=;
+        b=RdX4x+qG2UFE+QhOHI6m/WG5N1YO047NipJhXxhtmxO1wCHOS8qzIL29QlqDE7yr9H
+         OHBMwTlvd1+++4ldv5G6gl9mP334Us7ARgCeAEWL3biIqT4cFXBJmqDzz0H04CSilSzT
+         pwBEAdAvAz3DbhashwJepmXTNHJBkwLs+JcVzYgZ6PcYBbVlEf6qHIUNYNgOHz3MX6h5
+         DGpsLcInlW6sE8CTjl+rRFRVhXcw3L2gQKKZge24/6kwbpsUnLh5rF/2ZzGrUfkNcb7n
+         vF1NAGvkei9P7VFwGzbzULDYej5mF/pNhAhlP9H/rot4R6sUZhjKEivwv50Qyf0Ai/ta
+         ENJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=btgS3gZtNuEgvZcnKQBJu8IZKoX68St04X3bJOueZjs=;
+        b=fHu13ObB788AA0qtO8KW01Qy7sqFLKlT5kwgVkN2veOYYYVjthXY9ueRfG81ntiUIW
+         BLSLFv+/29BB8L3w/Lp3EkhGhv5IFrAlzjXdlEoTUrITU1TOHOL7C1BuhRWLnorj8oJD
+         bGgLsts5BMABqNZbifOyjd7mkWYwfVuP9MCMzFmIRLPe9TFpnQbe8cnudcSYVT7sTXAM
+         otkt+Y8j2d8GDOIXa5lwn5H5vdeAd2TcNUrXuDM6fizVsnggZGqmWqTqNbGVWhvhq3S6
+         dm/MdykVSEQFJXz5ox72OSN6ITkd5N1pNAPjeL6gzMGH7v/CWCfh+LzAF9oXPgsrCe2/
+         wuMw==
+X-Gm-Message-State: AGi0PuYq9zJHPPI9nzUPFWNwjWdT3if5x0RPAzpdWWLZRXCvhW0fNs1D
+        XOxx3V5zl5YFokmD1hb90nrBVA==
+X-Google-Smtp-Source: APiQypKjKYzHH5tG6rqSmZh+fWA4+JF/Tqqua8JrTKfSwJh2q7hIqmT4lA3T3+A5zTwwXumOLBgnPA==
+X-Received: by 2002:adf:9793:: with SMTP id s19mr10286450wrb.147.1587550857374;
+        Wed, 22 Apr 2020 03:20:57 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id h10sm7792460wrq.33.2020.04.22.03.20.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 03:20:56 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: db845c: fix asm dai setup
+Date:   Wed, 22 Apr 2020 11:20:44 +0100
+Message-Id: <20200422102044.8995-2-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200422102044.8995-1-srinivas.kandagatla@linaro.org>
+References: <20200422102044.8995-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+"direction" property is only valid for asm compressed dais,
+so remove it for non compressed dais
 
-commit 72239f2795fab9a58633bd0399698ff7581534a3 upstream.
-
-Case a1. for overlap detection in __nft_rbtree_insert() is not a valid
-one: start-after-start is not needed to detect any type of interval
-overlap and it actually results in a false positive if, while
-descending the tree, this is the only step we hit after starting from
-the root.
-
-This introduced a regression, as reported by Pablo, in Python tests
-cases ip/ip.t and ip/numgen.t:
-
-  ip/ip.t: ERROR: line 124: add rule ip test-ip4 input ip hdrlength vmap { 0-4 : drop, 5 : accept, 6 : continue } counter: This rule should not have failed.
-  ip/numgen.t: ERROR: line 7: add rule ip test-ip4 pre dnat to numgen inc mod 10 map { 0-5 : 192.168.10.100, 6-9 : 192.168.20.200}: This rule should not have failed.
-
-Drop case a1. and renumber others, so that they are a bit clearer. In
-order for these diagrams to be readily understandable, a bigger rework
-is probably needed, such as an ASCII art of the actual rbtree (instead
-of a flattened version).
-
-Shell script test sets/0044interval_overlap_0 should cover all
-possible cases for false negatives, so I consider that test case still
-sufficient after this change.
-
-v2: Fix comments for cases a3. and b3.
-
-Reported-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Fixes: 7c84d41416d8 ("netfilter: nft_set_rbtree: Detect partial overlaps on insertion")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 89a32a4e769c ("arm64: dts: qcom: db845c: add analog audio support")
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- net/netfilter/nft_set_rbtree.c |   23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -218,27 +218,26 @@ static int __nft_rbtree_insert(const str
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index a2e05926b429..21fd6f8d5799 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -442,17 +442,14 @@
+ &q6asmdai {
+ 	dai@0 {
+ 		reg = <0>;
+-		direction = <2>;
+ 	};
  
- 	/* Detect overlaps as we descend the tree. Set the flag in these cases:
- 	 *
--	 * a1. |__ _ _?  >|__ _ _  (insert start after existing start)
--	 * a2. _ _ __>|  ?_ _ __|  (insert end before existing end)
--	 * a3. _ _ ___|  ?_ _ _>|  (insert end after existing end)
--	 * a4. >|__ _ _   _ _ __|  (insert start before existing end)
-+	 * a1. _ _ __>|  ?_ _ __|  (insert end before existing end)
-+	 * a2. _ _ ___|  ?_ _ _>|  (insert end after existing end)
-+	 * a3. _ _ ___? >|_ _ __|  (insert start before existing end)
- 	 *
- 	 * and clear it later on, as we eventually reach the points indicated by
- 	 * '?' above, in the cases described below. We'll always meet these
- 	 * later, locally, due to tree ordering, and overlaps for the intervals
- 	 * that are the closest together are always evaluated last.
- 	 *
--	 * b1. |__ _ _!  >|__ _ _  (insert start after existing end)
--	 * b2. _ _ __>|  !_ _ __|  (insert end before existing start)
--	 * b3. !_____>|            (insert end after existing start)
-+	 * b1. _ _ __>|  !_ _ __|  (insert end before existing start)
-+	 * b2. _ _ ___|  !_ _ _>|  (insert end after existing start)
-+	 * b3. _ _ ___! >|_ _ __|  (insert start after existing end)
- 	 *
--	 * Case a4. resolves to b1.:
-+	 * Case a3. resolves to b3.:
- 	 * - if the inserted start element is the leftmost, because the '0'
- 	 *   element in the tree serves as end element
- 	 * - otherwise, if an existing end is found. Note that end elements are
- 	 *   always inserted after corresponding start elements.
- 	 *
--	 * For a new, rightmost pair of elements, we'll hit cases b1. and b3.,
-+	 * For a new, rightmost pair of elements, we'll hit cases b3. and b2.,
- 	 * in that order.
- 	 *
- 	 * The flag is also cleared in two special cases:
-@@ -262,9 +261,9 @@ static int __nft_rbtree_insert(const str
- 			p = &parent->rb_left;
+ 	dai@1 {
+ 		reg = <1>;
+-		direction = <2>;
+ 	};
  
- 			if (nft_rbtree_interval_start(new)) {
--				overlap = nft_rbtree_interval_start(rbe) &&
--					  nft_set_elem_active(&rbe->ext,
--							      genmask);
-+				if (nft_rbtree_interval_end(rbe) &&
-+				    nft_set_elem_active(&rbe->ext, genmask))
-+					overlap = false;
- 			} else {
- 				overlap = nft_rbtree_interval_end(rbe) &&
- 					  nft_set_elem_active(&rbe->ext,
-
+ 	dai@2 {
+ 		reg = <2>;
+-		direction = <1>;
+ 	};
+ 
+ 	dai@3 {
+-- 
+2.21.0
 
