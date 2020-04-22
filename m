@@ -2,172 +2,125 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933FDC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF96C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B27D20780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7790B20780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587557389;
+	bh=IY+tedtIcS7K+V1TYW/S4EUgvgOFuS/6peZPNSM8pP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nj23zNgzUWcgxS7bInKqDmeZHHR6VLCdM++RIfDNPnVNR1aihhEHLFrPik+2fXinb
+	 vbupW0bVzplgfzSmtXCiTOmSbeMrRQlNBzraFPHr3uDFo1XyGFvA9G/fXYWgMnfAOF
+	 eHNVohF2O32zdzGaiuH9qhXtj6pC3a+Lw3V3F11o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgDVMIS (ORCPT
+        id S1728302AbgDVMJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:08:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:48626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgDVMIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:08:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A2C131B;
-        Wed, 22 Apr 2020 05:08:16 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 983793F6CF;
-        Wed, 22 Apr 2020 05:08:14 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 13:08:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Alex Belits <abelits@marvell.com>
-Cc:     "frederic@kernel.org" <frederic@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v3 07/13] task_isolation: arch/arm64: enable task
- isolation functionality
-Message-ID: <20200422120811.GA3585@gaia>
-References: <07c25c246c55012981ec0296eee23e68c719333a.camel@marvell.com>
- <299c02b268a6438704693ddb77cdcb49f382c0ea.camel@marvell.com>
+        Wed, 22 Apr 2020 08:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726110AbgDVMJs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:09:48 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B7CC03C1A8;
+        Wed, 22 Apr 2020 05:09:48 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b11so2099879wrs.6;
+        Wed, 22 Apr 2020 05:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LvqYruWYfHT7ASyvb8cck4F/WUjHt2b44E2w05ejnqY=;
+        b=I48Am3s/CigVFjSyz4laBhYyfckOYR4g67adqtAGRZ9mKwvMeoQ7bXKbYkZrhLuXIe
+         JA2qTPzCo0/Mlxl5BeIODaPbI7Gjl/JwiEeoUXxGyGkOD10jPJGoXb8oF16Q6WMA1+tw
+         FKe4z/7RnIooIYyvr5pK/bnsvIiH9nggRWZzzN7tJZGpPAECZKFbx2LgccYwjeFGbhFl
+         QBvy/REoPTboJ4P9HrjjJrb2CIrNgTa6dFsg5PX8lFix1lvih5ck4wmRFGdQtPEikBlj
+         EiqytkfeUHnWl5CO6GSWck2SiJ6FXPng+ehztTm5u1EMTqrwnX1jWHGLJYSpFa3k7bsf
+         f8cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LvqYruWYfHT7ASyvb8cck4F/WUjHt2b44E2w05ejnqY=;
+        b=jOJ8uOxNYXn84AlK1c4Aozk7Qz9phPwNUX74MLOu+M0zDnLDlXTpGWdVqtHmDKdj7V
+         fCi1FkpbKUU/z66wH+9Unqu4weldRIFO4Jw6B82PqIumid/8hQvz99Cd5u1TWlF8r8MW
+         FNrsRbEi8G6AePE5VdoQBiksFgxOFsZR0qsEZI/3ostIk1ZcuINsd9KqNqXIwYjNwDId
+         hTKdL8CwRky2k4CuZDHxpm0wO5jzAmfPVSQFBluxZDKkXd1XSmrY5AikO+xqBgw8A9vu
+         HDtyF9a0M6Erdb1IeXfGuZKsmmh8O5jZAFIykKc7X80/L+uo75sjWEGUyj5zh3JGnai0
+         Z97Q==
+X-Gm-Message-State: AGi0Puajb3aVRPB5h2KL2NQXONMkGbYfxzUoUVqktL9n5zfziaAYCLpa
+        aw3kH/0KWXvrsRQ6uftabdCb+F0D
+X-Google-Smtp-Source: APiQypImzIuOQWS8QX20yIOzj+742Obum4/tSlPOjx6t4l2XXsNeoBjv8cI567rOU/Y7mKVk1a6gCg==
+X-Received: by 2002:adf:e681:: with SMTP id r1mr32097666wrm.213.1587557386803;
+        Wed, 22 Apr 2020 05:09:46 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id i17sm7614660wml.23.2020.04.22.05.09.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 05:09:46 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 14:09:43 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andreas Gerstmayr <agerstmayr@redhat.com>,
+        He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Konstantin Kharlamov <hi-angel@yandex.ru>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20200422120943.GA110748@gmail.com>
+References: <20200420115316.18781-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <299c02b268a6438704693ddb77cdcb49f382c0ea.camel@marvell.com>
+In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 03:23:35PM +0000, Alex Belits wrote:
-> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-> index f0cec4160136..7563098eb5b2 100644
-> --- a/arch/arm64/include/asm/thread_info.h
-> +++ b/arch/arm64/include/asm/thread_info.h
-> @@ -63,6 +63,7 @@ void arch_release_task_struct(struct task_struct *tsk);
->  #define TIF_FOREIGN_FPSTATE	3	/* CPU's FP state is not current's */
->  #define TIF_UPROBE		4	/* uprobe breakpoint or singlestep */
->  #define TIF_FSCHECK		5	/* Check FS is USER_DS on return */
-> +#define TIF_TASK_ISOLATION	6
->  #define TIF_NOHZ		7
->  #define TIF_SYSCALL_TRACE	8	/* syscall trace active */
->  #define TIF_SYSCALL_AUDIT	9	/* syscall auditing */
-> @@ -83,6 +84,7 @@ void arch_release_task_struct(struct task_struct *tsk);
->  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
->  #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
->  #define _TIF_FOREIGN_FPSTATE	(1 << TIF_FOREIGN_FPSTATE)
-> +#define _TIF_TASK_ISOLATION	(1 << TIF_TASK_ISOLATION)
->  #define _TIF_NOHZ		(1 << TIF_NOHZ)
->  #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
->  #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
-> @@ -96,7 +98,8 @@ void arch_release_task_struct(struct task_struct *tsk);
->  
->  #define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
->  				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
-> -				 _TIF_UPROBE | _TIF_FSCHECK)
-> +				 _TIF_UPROBE | _TIF_FSCHECK | \
-> +				 _TIF_TASK_ISOLATION)
->  
->  #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
->  				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
-> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> index cd6e5fa48b9c..b35b9b0c594c 100644
-> --- a/arch/arm64/kernel/ptrace.c
-> +++ b/arch/arm64/kernel/ptrace.c
-> @@ -29,6 +29,7 @@
->  #include <linux/regset.h>
->  #include <linux/tracehook.h>
->  #include <linux/elf.h>
-> +#include <linux/isolation.h>
->  
->  #include <asm/compat.h>
->  #include <asm/cpufeature.h>
-> @@ -1836,6 +1837,15 @@ int syscall_trace_enter(struct pt_regs *regs)
->  			return -1;
->  	}
->  
-> +	/*
-> +	 * In task isolation mode, we may prevent the syscall from
-> +	 * running, and if so we also deliver a signal to the process.
-> +	 */
-> +	if (test_thread_flag(TIF_TASK_ISOLATION)) {
-> +		if (task_isolation_syscall(regs->syscallno) == -1)
-> +			return -1;
-> +	}
 
-Is this supposed to be called only when syscall tracing is enabled?
-It only gets here if the task has any of the _TIF_SYSCALL_WORK flags.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
-> index 339882db5a91..d488c91a4877 100644
-> --- a/arch/arm64/kernel/signal.c
-> +++ b/arch/arm64/kernel/signal.c
-> @@ -20,6 +20,7 @@
->  #include <linux/tracehook.h>
->  #include <linux/ratelimit.h>
->  #include <linux/syscalls.h>
-> +#include <linux/isolation.h>
->  
->  #include <asm/daifflags.h>
->  #include <asm/debug-monitors.h>
-> @@ -898,6 +899,11 @@ static void do_signal(struct pt_regs *regs)
->  	restore_saved_sigmask();
->  }
->  
-> +#define NOTIFY_RESUME_LOOP_FLAGS \
-> +	(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
-> +	_TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
-> +	_TIF_UPROBE | _TIF_FSCHECK)
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit cd0943357bc7570f081701d005318c20982178b8:
+> 
+>   Merge tag 'perf-urgent-for-mingo-5.7-20200414' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2020-04-16 10:21:31 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.8-20200420
+> 
+> for you to fetch changes up to 12e89e65f446476951f42aedeef56b6bd6f7f1e6:
+> 
+>   perf hist: Add fast path for duplicate entries check (2020-04-18 09:05:01 -0300)
 
-AFAICT, that's just _TIF_WORK_MASK without _TIF_TASK_ISOLATION. I'd
-rather not duplicate these, they are prone to get out of sync. You could
-do something like:
+>  85 files changed, 1851 insertions(+), 513 deletions(-)
 
-#define NOTIFY_RESUME_LOOP_FLAGS (_TIF_WORK_MASK & ~_TIF_TASK_ISOLATION)
+Pulled, thanks a lot Arnaldo!
 
-> +
->  asmlinkage void do_notify_resume(struct pt_regs *regs,
->  				 unsigned long thread_flags)
->  {
-> @@ -908,6 +914,8 @@ asmlinkage void do_notify_resume(struct pt_regs *regs,
->  	 */
->  	trace_hardirqs_off();
->  
-> +	task_isolation_check_run_cleanup();
-> +
->  	do {
->  		/* Check valid user FS if needed */
->  		addr_limit_user_check();
-> @@ -938,7 +946,10 @@ asmlinkage void do_notify_resume(struct pt_regs *regs,
->  
->  		local_daif_mask();
->  		thread_flags = READ_ONCE(current_thread_info()->flags);
-> -	} while (thread_flags & _TIF_WORK_MASK);
-> +	} while (thread_flags & NOTIFY_RESUME_LOOP_FLAGS);
-> +
-> +	if (thread_flags & _TIF_TASK_ISOLATION)
-> +		task_isolation_start();
->  }
->  
->  unsigned long __ro_after_init signal_minsigstksz;
-
--- 
-Catalin
+	Ingo
