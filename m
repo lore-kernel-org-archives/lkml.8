@@ -2,123 +2,85 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0DEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18B6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01EE8206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8401B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgDVCuu (ORCPT
+        id S1726441AbgDVCvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:50:50 -0400
-Received: from m176150.mail.qiye.163.com ([59.111.176.150]:2433 "EHLO
-        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgDVCut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:50:49 -0400
-Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
-        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 5D7731A2065;
-        Wed, 22 Apr 2020 10:50:13 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AIsAfwDqCFqyDHqDpvcvoKov.3.1587523813368.Hmail.bernard@vivo.com>
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCBWM10gYW1kZ3B1Om9wdGltaXphdGlvbi0tIHJlZHVjZSBubyBuZWVkIG11dGV4X2xvY2sgYXJlYQ==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <08ef8975-43d2-049b-1c80-de33af7ebd4a@amd.com>
+        Tue, 21 Apr 2020 22:51:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2829 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726389AbgDVCvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:51:13 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5EDFA9E2B7CFECE1E29E;
+        Wed, 22 Apr 2020 10:51:11 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 22 Apr 2020 10:51:01 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <aacraid@microsemi.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] scsi: aacraid: Use memdup_user() as a cleanup
+Date:   Wed, 22 Apr 2020 10:57:12 +0800
+Message-ID: <1587524232-118733-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 22 Apr 2020 10:50:13 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
-Date:   Wed, 22 Apr 2020 10:50:13 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCSENCQkJNTklDTUlOTllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE5ITk5LSE9CN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6Mgg6HQw*Cjg9CgI*Mwo*Cw0YDRQwFA1VSFVKTkNMTklIQ0pIT0JLVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTE9PSjcG
-X-HM-Tid: 0a719fcb000e93b4kuws5d7731a2065
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ClN1cmUsIHRoaXMgc2VlbXMgdG8gYmUgYSBsb3QgbW9yZSBwcm9mZXNzaW9uYWwgdGhhbiBteSBw
-cmV2aW91cyBtb2RpZmljYXRpb24uIApNeSBvcmlnaW5hbCBpbnRlbnRpb24gaXMgdG8gbWFrZSB0
-aGUgY29kZSBlYXNpZXIgdG8gcmVhZCwgYW5kIEkgbGVhcm5lZCBhIGxvdCBmcm9tCnN1Ym1pdHRp
-bmcgdGhlc2UgcGF0Y2hlcy4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgYWxsIHlvdXIgZ3VpZGFu
-Y2UhCgpSZWdhcmRzLApCZXJuYXJkCgrlj5Hku7bkurrvvJpGZWxpeCBLdWVobGluZyA8ZmVsaXgu
-a3VlaGxpbmdAYW1kLmNvbT4K5Y+R6YCB5pel5pyf77yaMjAyMC0wNC0yMiAxMDoyNzoxNgrmlLbk
-u7bkurrvvJoxNTg3MTgxNDY0LTExNDIxNS0xLWdpdC1zZW5kLWVtYWlsLWJlcm5hcmRAdml2by5j
-b20sQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPiwiQ2hyaXN0aWFuIEvD
-tm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4sIkRhdmlkIChDaHVuTWluZykgWmhvdSIg
-PERhdmlkMS5aaG91QGFtZC5jb20+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4sRGFu
-aWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPixhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZyxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmcK5oqE6YCB5Lq677yab3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20sQmVybmFyZCBaaGFv
-IDxiZXJuYXJkQHZpdm8uY29tPgrkuLvpopjvvJpSZTogW1BBVENIIFYzXSBhbWRncHU6b3B0aW1p
-emF0aW9uLS0gcmVkdWNlIG5vIG5lZWQgbXV0ZXhfbG9jayBhcmVhCgpUaGFua3MgYWdhaW4gZm9y
-IHRoZSBwYXRjaC4gSSdtIGdvaW5nCiAgICAgIHRvIGFwcGx5IHRoaXMgd2l0aCBzb21lIG1pbm9y
-IGZpeGVzLiBUaGUgaGVhZGxpbmUgc2hvdWxkIHN0YXJ0CiAgICAgIHdpdGggImRybS9hbWRncHU6
-Ii7CoCBJJ2xsIGFsc28gY2hhbmdlIHRoZSB3b3JkaW5nIG9mIHRoZSBoZWFkbGluZQogICAgICBh
-bmQgY29tbWl0IG1lc3NhZ2U6Cgpkcm0vYW1kZ3B1OiBzaHJpbmsgY3JpdGljYWwgc2VjdGlvbgog
-ICAgICAgIGluIGFtZGdwdV9hbWRrZmRfZ3B1dm1fZnJlZV9tZW1vcnlfb2ZfZ3B1CgpSZWR1Y2Ug
-dGhlIG1lbS0+bG9ja2BzIHByb3RlY3RlZAogICAgICAgIGNvZGUgYXJlYSwgbm8gbmVlZCB0byBw
-cm90ZWN0IHByX2RlYnVnLgogICAgICAKVGhpcyBhbHNvIHNpbXBsaWZpZXMgZXJyb3IgaGFuZGxp
-bmcuCgpUaGVyZSBpcyBvbmUgbW9yZSBjb3NtZXRpYyBjaGFuZ2UgSSdtCiAgICAgIGdvaW5nIHRv
-IG1ha2UsIHNlZSBpbmxpbmUuIEknbGwgYXBwbHkgeW91ciBwYXRjaCB3aXRoIHRob3NlCiAgICAg
-IHVwZGF0ZXMgaWYgeW91J3JlIE9LIHdpdGggdGhhdC4KCk9uIDIwMjAtMDQtMjEgMjo0OCwgQmVy
-bmFyZCBaaGFvIHdyb3RlOgoKTWF5YmUgd2UgY291bGQgcmVkdWNlIHRoZSBtdXRleF9sb2NrKCZt
-ZW0tPmxvY2spYHMgcHJvdGVjdGVkIGNvZGUgYXJlYSwKYW5kIG5vIG5lZWQgdG8gcHJvdGVjdCBw
-cl9kZWJ1Zy4KClNpZ25lZC1vZmYtYnk6IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4K
-CkNoYW5nZXMgc2luY2UgVjE6Cipjb21taXQgbWVzc2FnZSBpbXByb3ZlCgpDaGFuZ2VzIHNpbmNl
-IFYyOgoqbW92ZSBjb21tZW50IGFsb25nIHdpdGggdGhlIG11dGV4X3VubG9jawoKTGluayBmb3Ig
-VjE6CipodHRwczovL25hbTExLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9
-aHR0cHMlM0ElMkYlMkZsb3JlLmtlcm5lbC5vcmclMkZwYXRjaHdvcmslMkZwYXRjaCUyRjEyMjY1
-ODglMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q0ZlbGl4Lkt1ZWhsaW5nJTQwYW1kLmNvbSU3Q2M3MTVm
-NWQwMmFhZTQwODQ2YjhmMDhkN2U1YzAwMWZkJTdDM2RkODk2MWZlNDg4NGU2MDhlMTFhODJkOTk0
-ZTE4M2QlN0MwJTdDMCU3QzYzNzIzMDQ4NTE1Mjc4OTY4MiZhbXA7c2RhdGE9NFVkWmlXTUFiVzhl
-UjFCUzIlMkY2cU12czVLNmNIV3k1YzhJMzJSZVE0dXowJTNEJmFtcDtyZXNlcnZlZD0wCkxpbmsg
-Zm9yIFYyOgoqaHR0cHM6Ly9uYW0xMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/
-dXJsPWh0dHBzJTNBJTJGJTJGbG9yZS5rZXJuZWwub3JnJTJGcGF0Y2h3b3JrJTJGcGF0Y2glMkYx
-MjI3OTA3JTJGJmFtcDtkYXRhPTAyJTdDMDElN0NGZWxpeC5LdWVobGluZyU0MGFtZC5jb20lN0Nj
-NzE1ZjVkMDJhYWU0MDg0NmI4ZjA4ZDdlNWMwMDFmZCU3QzNkZDg5NjFmZTQ4ODRlNjA4ZTExYTgy
-ZDk5NGUxODNkJTdDMCU3QzAlN0M2MzcyMzA0ODUxNTI3OTk2NzMmYW1wO3NkYXRhPVd0JTJCazdr
-NE10U1g0eklEZ21MRU9CNlpLemZ1cUFkNkdKWjNDcmVxZjFhWSUzRCZhbXA7cmVzZXJ2ZWQ9MAot
-LS0KIGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ3B1dm0uYyB8IDE0
-ICsrKysrKystLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA3IGRlbGV0
-aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9h
-bWRrZmRfZ3B1dm0uYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRf
-Z3B1dm0uYwppbmRleCAzMjczMTdjNTRmN2MuLmYwM2Q5ODQzZDcyMyAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FtZGtmZF9ncHV2bS5jCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ3B1dm0uYwpAQCAtMTI4NSwyMSAr
-MTI4NSwyMSBAQCBpbnQgYW1kZ3B1X2FtZGtmZF9ncHV2bV9mcmVlX21lbW9yeV9vZl9ncHUoCiAJ
-c3RydWN0IGJvX3ZtX3Jlc2VydmF0aW9uX2NvbnRleHQgY3R4OwogCXN0cnVjdCB0dG1fdmFsaWRh
-dGVfYnVmZmVyICpib19saXN0X2VudHJ5OwogCWludCByZXQ7CisJdW5zaWduZWQgaW50IG1hcHBl
-ZF90b19ncHVfbWVtb3J5OwogICAgCiAgICAKSSdsbCBtb3ZlIHRoaXMgYmVmb3JlIHRoZSAiaW50
-IHJldDsiIGxpbmUuIEl0IG1ha2VzIHRoZSBjb2RlIG1vcmUKICAgICAgcmVhZGFibGUgaWYgbG9u
-ZyBkZWNsYXJhdGlvbnMgY29tZSBiZWZvcmUgc2hvcnQgb25lcy4KICAgIApSZWdhcmRzLAoKICAg
-ICAgwqAgRmVsaXgKCgogCW11dGV4X2xvY2soJm1lbS0+bG9jayk7CisJbWFwcGVkX3RvX2dwdV9t
-ZW1vcnkgPSBtZW0tPm1hcHBlZF90b19ncHVfbWVtb3J5OworCW11dGV4X3VubG9jaygmbWVtLT5s
-b2NrKTsKKwkvKiBsb2NrIGlzIG5vdCBuZWVkZWQgYWZ0ZXIgdGhpcywgc2luY2UgbWVtIGlzIHVu
-dXNlZCBhbmQgd2lsbAorCSAqIGJlIGZyZWVkIGFueXdheQorCSAqLwogCi0JaWYgKG1lbS0+bWFw
-cGVkX3RvX2dwdV9tZW1vcnkgPiAwKSB7CisJaWYgKG1hcHBlZF90b19ncHVfbWVtb3J5ID4gMCkg
-ewogCQlwcl9kZWJ1ZygiQk8gVkEgMHglbGx4IHNpemUgMHglbHggaXMgc3RpbGwgbWFwcGVkLlxu
-IiwKIAkJCQltZW0tPnZhLCBib19zaXplKTsKLQkJbXV0ZXhfdW5sb2NrKCZtZW0tPmxvY2spOwog
-CQlyZXR1cm4gLUVCVVNZOwogCX0KIAotCW11dGV4X3VubG9jaygmbWVtLT5sb2NrKTsKLQkvKiBs
-b2NrIGlzIG5vdCBuZWVkZWQgYWZ0ZXIgdGhpcywgc2luY2UgbWVtIGlzIHVudXNlZCBhbmQgd2ls
-bAotCSAqIGJlIGZyZWVkIGFueXdheQotCSAqLwotCiAJLyogTm8gbW9yZSBNTVUgbm90aWZpZXJz
-ICovCiAJYW1kZ3B1X21uX3VucmVnaXN0ZXIobWVtLT5ibyk7CiAKCiAgICAKICAgIAoKICAgIAog
-IAoNCg0K
+Fix coccicheck warning which recommends to use memdup_user().
+
+This patch fixes the following coccicheck warnings:
+
+drivers/scsi/aacraid/commctrl.c:516:15-22: WARNING opportunity for memdup_user
+
+Fixes: 4645df1035b3 ("[PATCH] aacraid: swapped kmalloc args.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/scsi/aacraid/commctrl.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
+index ffe41bc..1ce1620 100644
+--- a/drivers/scsi/aacraid/commctrl.c
++++ b/drivers/scsi/aacraid/commctrl.c
+@@ -513,17 +513,9 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
+ 		goto cleanup;
+ 	}
+ 
+-	user_srbcmd = kmalloc(fibsize, GFP_KERNEL);
+-	if (!user_srbcmd) {
+-		dprintk((KERN_DEBUG"aacraid: Could not make a copy of the srb\n"));
+-		rcode = -ENOMEM;
+-		goto cleanup;
+-	}
+-	if(copy_from_user(user_srbcmd, user_srb,fibsize)){
+-		dprintk((KERN_DEBUG"aacraid: Could not copy srb from user\n"));
+-		rcode = -EFAULT;
+-		goto cleanup;
+-	}
++	user_srbcmd = memdup_user(user_srb, fibsize);
++	if (IS_ERR(user_srbcmd))
++		return PTR_ERR(user_srbcmd);
+ 
+ 	flags = user_srbcmd->flags; /* from user in cpu order */
+ 	switch (flags & (SRB_DataIn | SRB_DataOut)) {
+-- 
+2.6.2
+
