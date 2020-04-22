@@ -2,162 +2,103 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC52C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1A4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67C4B2098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587581771;
-	bh=v69b7vmZ0eLZh99wm9q28w3sHZaF7q7WgriZl7iMEOw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ku1yqyed/IfbRDxnz5ed0M2bw0nQm0zTS18xqeWV9iAOzTeh7tdD7Y0W+y/TJYBDa
-	 3UQv8LpaHo0Dp6REDyQMIk2EMe17juze68mlMCOLkOzDMOkasCdEfifYORzrZ1181s
-	 E4y5LlLq4WrzalAiG0ws44HgAnFgKmWWwrA7CDlQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9C1742098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgDVS4L (ORCPT
+        id S1726902AbgDVS43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36924 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 14:56:29 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46697 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgDVS4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:56:10 -0400
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A0D32098B;
-        Wed, 22 Apr 2020 18:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587581769;
-        bh=v69b7vmZ0eLZh99wm9q28w3sHZaF7q7WgriZl7iMEOw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R7PsJtfr815M6Brz+ry8bWH9Y1hGlVLp9bQvXw9Vchv8T2gb1ss7CDapjfIOR7vhk
-         jsZFTaDaDC+SbdXaEkfZRRwJ7odrdQGUr7bskWeBTFE56+6M8V8JCopvDHTkpFC3vQ
-         ZYn18s+4O9H3LhJonXfGV/ITThQv+iMBc1bEPsC4=
-Received: by mail-qv1-f41.google.com with SMTP id bu9so1445890qvb.13;
-        Wed, 22 Apr 2020 11:56:09 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua7kuLioJSadLef7eyK0A+OSQ8ZlKyHvw9R9v5bErp0CP71XJDX
-        35+k8q/luN/PM5OUYLRCiHMebMqLOCSwdJn0DQ==
-X-Google-Smtp-Source: APiQypIJaASJPwct+KoZCwFauHfNW3dT2aDQFGODpZYHuCnvrMX4GZazEr8aeaUodJU7mtFBPGEgyjTJSWIJIH0SwlI=
-X-Received: by 2002:a05:6214:1848:: with SMTP id d8mr379136qvy.136.1587581768236;
- Wed, 22 Apr 2020 11:56:08 -0700 (PDT)
+        id S1725895AbgDVS43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:56:29 -0400
+IronPort-SDR: jrI8fgAVnpaUvRxpAdMa9OCHEogusbxRZVNmZ+/tsfJfbGvJMcHxIos85jRePwHegIOZWVdQUs
+ EO3TeJZ4wstw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:56:28 -0700
+IronPort-SDR: lG+qqGqpanyyW25CBM/V+WVgbbpKNjbK6di35BFt6xqwg1ABYXlBETFfOaRdJddkei2sMvTKZJ
+ gmPfMINVnawA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="259171350"
+Received: from ddmurill-mobl.amr.corp.intel.com (HELO [10.255.229.247]) ([10.255.229.247])
+  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 11:56:28 -0700
+Subject: Re: [PATCH] x86/mpx: remove MPX leftovers
+To:     Jimmy Assarsson <jimmyassarsson@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+References: <20200402172507.2786-1-jimmyassarsson@gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <ad65b457-3975-6287-f352-48c487ddd4ae@intel.com>
+Date:   Wed, 22 Apr 2020 11:56:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20200421212004.6146-1-robh@kernel.org> <CAK7LNASrBW0mL+g=ocQAz1Ggt-c_WX5NyGeRdJGubwSfnhcHaA@mail.gmail.com>
-In-Reply-To: <CAK7LNASrBW0mL+g=ocQAz1Ggt-c_WX5NyGeRdJGubwSfnhcHaA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 22 Apr 2020 13:55:56 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+-vnqr_LLW0g4UuMw2BEJBAS-kBqFeuV3YBcY+8XBFPQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+-vnqr_LLW0g4UuMw2BEJBAS-kBqFeuV3YBcY+8XBFPQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Fix command line length limit calling dt-mk-schema
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200402172507.2786-1-jimmyassarsson@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:59 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Rob,
->
->
-> On Wed, Apr 22, 2020 at 6:20 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > As the number of schemas has increased, we're starting to hit the error
-> > "execvp: /bin/sh: Argument list too long". This is due to passing all the
-> > schema files on the command line to dt-mk-schema. It currently is only
-> > with out of tree builds and is intermittent depending on the file path
-> > lengths.
-> >
-> > Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
-> > hitting this proplem more likely since the example validation now always
-> > gets the full list of schemas.
-> >
-> > Fix this by putting the schema file list into a temp file and using xargs.
-> >
-> > Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/.gitignore | 2 +-
-> >  Documentation/devicetree/bindings/Makefile   | 3 ++-
-> >  2 files changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
-> > index 5c6d8ea1a09c..0a6aef915fa4 100644
-> > --- a/Documentation/devicetree/bindings/.gitignore
-> > +++ b/Documentation/devicetree/bindings/.gitignore
-> > @@ -1,3 +1,3 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >  *.example.dts
-> > -processed-schema*.yaml
-> > +processed-schema*.yaml*
-> > diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-> > index 1df680d07461..1c1cad860b7c 100644
-> > --- a/Documentation/devicetree/bindings/Makefile
-> > +++ b/Documentation/devicetree/bindings/Makefile
-> > @@ -14,7 +14,8 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
-> >  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
-> >
-> >  quiet_cmd_mk_schema = SCHEMA  $@
-> > -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
-> > +      cmd_mk_schema = $(file >$@.tmp, $(real-prereqs)) \
-> > +                      cat $@.tmp | xargs $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-> >
->
->
-> The built-in function $(file ...) is supported on GNU Make 4.0 or later.
-> The current minimal version is GNU Make 3.81.
->
-> If you want to use this function, you must update
-> Documentation/process/changes.rst first.
->
-> I am pretty sure some conservative distros
-> still stick to GNU Make 3.8*
-> but I am open to raising the minimal version
-> if it is useful.
+On 4/2/20 10:25 AM, Jimmy Assarsson wrote:
+> Remove leftovers from x86/mpx.
 
-I'd like to avoid that. I've come up with another solution.
+Thanks for finding these!
 
-> But, does this code work in the first place?
->
-> When a very long command is given, xargs
-> splits it into smaller chunks, and invokes
-> the command multiple times, right?
->
->
-> So, it boils down to this question:
->
-> Are the following two commands work equivalently?
->
->
-> "dt-mk-schema -o processed-schema-examples.yaml foo.yaml &&
-> dt-mk-schema -o processed-schema-examples.yaml bar.yaml &&
-> dt-mk-schema -o processed-schema-examples.yaml baz.yaml"
->
-> "dt-mk-schema -o processed-schema-examples.yaml foo.yaml bar.yaml baz.yaml"
->
->
-> I think the answer is no.
->
-> I confirmed the produced processed-schema-examples.yaml is broken.
 
-Indeed. We need to output to stdout and append the file instead.
-Sending a v2 out now.
-
-[...]
-
-> Can dt-mk-schema read the list of schema files
-> by other means?
-
-Not currently. Happy to add it, but I'd rather not require everyone
-update right away.
-
-Rob
