@@ -2,52 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB28C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9B3C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C7E2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C67B2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552699;
-	bh=PkqY5os02qCbo/HNGnzajYh6FNoNP4kntucX+B0/Sm0=;
+	s=default; t=1587552704;
+	bh=6YdfaL9CanGjWMKoi0iYRi2rB7H361ZUREXJglOHwNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IomPI2tNZiV5fIUP+xPI2Iw2EpUfzrl6ekRtgzhVrEkiObkuJgirZZI7y/mguoSyR
-	 CDlzl238glChQXGS6w26kXcSKqFMVfwsuHUDgsQoPMb//R7s7M+Yxka7peEWO0AUfa
-	 OutFmJgPVaXVIPZBn8BOlR3t0EWovHO+1A5lHEYg=
+	b=Ac99CgdVYQhBY2jgUV3vl7xWmJXXJL5y5wrR/2qtqW8h7RJ4qHXZNowt38jZgk6CL
+	 LVMY1skmpcelOMxRgakfpfGYY/l5paokOk9mL0uFTYIhZ/gpNt8cdIj69zsHk1DWiX
+	 1QcPiCVDUJ0mUrQHCoIeIP625btkEbcezm7l5+/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732215AbgDVKvh (ORCPT
+        id S1732218AbgDVKvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:51:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729135AbgDVKLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:03 -0400
+        id S1729119AbgDVKK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C558F208E4;
-        Wed, 22 Apr 2020 10:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC7542070B;
+        Wed, 22 Apr 2020 10:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550263;
-        bh=PkqY5os02qCbo/HNGnzajYh6FNoNP4kntucX+B0/Sm0=;
+        s=default; t=1587550258;
+        bh=6YdfaL9CanGjWMKoi0iYRi2rB7H361ZUREXJglOHwNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mDGkMlVehUC3SkkuQTh+yp+9Oj+7y2yAoTQ1FXbgkBtlvH7bxftrzECpX8dicTH+G
-         3uJTDdyL1WgY01/qejdXXyxUD5ZB4XzgERTfzgstHNH0K9qXZSOFEXkoHId7250wCa
-         PAedLTWvkodp6qLG+MVoXYWBDDgt5veJj51PYwuU=
+        b=iL7CfYKoEydFkzTlpKMacumG2h6tSTelTtfvLn37jKlrWVre6j/XEB64JfHDDwBPr
+         G/s8rVc7f1d5y1SxPOLlKJHSU7T8DWdb0mOR0G5+HOGHh2l6Lhx8cZ7CofB05MzhP2
+         NYwGTgWiVDuzQoWlem/R1WG3UGrutzuLJAkkt2EM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.14 075/199] rtc: omap: Use define directive for PIN_CONFIG_ACTIVE_HIGH
-Date:   Wed, 22 Apr 2020 11:56:41 +0200
-Message-Id: <20200422095105.646780527@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH 4.14 056/199] x86/entry/32: Add missing ASM_CLAC to general_protection entry
+Date:   Wed, 22 Apr 2020 11:56:22 +0200
+Message-Id: <20200422095103.870602810@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,55 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit c50156526a2f7176b50134e3e5fb108ba09791b2 upstream.
+commit 3d51507f29f2153a658df4a0674ec5b592b62085 upstream.
 
-Clang warns when one enumerated type is implicitly converted to another:
+All exception entry points must have ASM_CLAC right at the
+beginning. The general_protection entry is missing one.
 
-drivers/rtc/rtc-omap.c:574:21: warning: implicit conversion from
-enumeration type 'enum rtc_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        {"ti,active-high", PIN_CONFIG_ACTIVE_HIGH, 0},
-        ~                  ^~~~~~~~~~~~~~~~~~~~~~
-drivers/rtc/rtc-omap.c:579:12: warning: implicit conversion from
-enumeration type 'enum rtc_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        PCONFDUMP(PIN_CONFIG_ACTIVE_HIGH, "input active high", NULL, false),
-        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/144
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: e59d1b0a2419 ("x86-32, smap: Add STAC/CLAC instructions to 32-bit kernel entry")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200225220216.219537887@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-omap.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/x86/entry/entry_32.S |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/rtc/rtc-omap.c
-+++ b/drivers/rtc/rtc-omap.c
-@@ -559,9 +559,7 @@ static const struct pinctrl_ops rtc_pinc
- 	.dt_free_map = pinconf_generic_dt_free_map,
- };
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1057,6 +1057,7 @@ ENTRY(int3)
+ END(int3)
  
--enum rtc_pin_config_param {
--	PIN_CONFIG_ACTIVE_HIGH = PIN_CONFIG_END + 1,
--};
-+#define PIN_CONFIG_ACTIVE_HIGH		(PIN_CONFIG_END + 1)
- 
- static const struct pinconf_generic_params rtc_params[] = {
- 	{"ti,active-high", PIN_CONFIG_ACTIVE_HIGH, 0},
+ ENTRY(general_protection)
++	ASM_CLAC
+ 	pushl	$do_general_protection
+ 	jmp	common_exception
+ END(general_protection)
 
 
