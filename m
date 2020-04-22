@@ -2,143 +2,91 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DDAC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C18C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9619620774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5050F20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pw4+osXk"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="tPwEMj6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgDVPWf (ORCPT
+        id S1726497AbgDVPWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
+        Wed, 22 Apr 2020 11:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgDVPWd (ORCPT
+        with ESMTP id S1726161AbgDVPWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:22:33 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73121C03C1A9;
-        Wed, 22 Apr 2020 08:22:32 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id q204so600147ooq.1;
-        Wed, 22 Apr 2020 08:22:32 -0700 (PDT)
+        Wed, 22 Apr 2020 11:22:36 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358B0C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:22:36 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id h26so1651885qtu.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DhRwkh7hDxePI3EThl93gXt81KT2U83BYwmBpOJ1yA0=;
-        b=pw4+osXk6sAcBWZ4c2nFxicMVPIgxjukpj3OZu87w1PWtEC0+sia7xRN6rXVXUp8nJ
-         HiRiqQUPmNhqtBkIkkzlPAchUYtqkaZyYTjnXrhUx4ds9nR2ySdqolSXMUdfCjVSI9sS
-         pUjcHg25BWKBGl3SglgFrsjW9vh5H/XaYwLXyJqkj3L10A8EdtWxWrRdicsow8p/7yq3
-         Y39/UCO+ZAgN6mxsTRD9U7V5+4B9kVo9juAMrqiEaP6SDGf4+KamNvLqpeVRUjEFtd73
-         SYiqwCw43DVZMsV4sXyi31Ikx/5usAQu8pthl6kCVr4j0CC+j52uBrdetW99xRsNdzW/
-         /kuQ==
+         :content-disposition:in-reply-to;
+        bh=H/28R1sGK3+4tkWRg1nQ9VN24FGuw/7gkVIffhG3ews=;
+        b=tPwEMj6zwG6nfDpAp7JPbz5T8v5PSIyp1b6w5YDaBjAXhk4LUgl6MjkiOssn5gLYpa
+         Bzto6WMYQVAv09/g7zeTF3vmYHV1SLdoR5oqdt8OaTxXrAbsgsRveFQWFFdKd4pSiQG4
+         WsEkuWUcYjkdX3pZtIOG5gadk4WmWclJr6dmEfk7QRmgCsWgoux+7idDSLtawF8FFXSX
+         cFJLeMXgoOBJombQDxlanDNi98FplO231+4UFrwwANzKIIbDjXl4JXDsxDF91eZ9Gnbz
+         3vcgilyK91oZwJ+oq44GfUjo0p7czgVCeoj4PODN8lY59zWmGyd7mIkXc6sNePLJ/qSa
+         uP/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DhRwkh7hDxePI3EThl93gXt81KT2U83BYwmBpOJ1yA0=;
-        b=Y3ScZaU1WGibxVxK4lZ3BteiD/+Uurb41xNjkIWXGAEkEYjqpJx4uBFe47Ojoe9nfn
-         DSgWrJRUHDMMvSzLUoE8swBbsxTLm4Z1iYQ6spgYIlRPcXlTf6UIG1PBz8mDQhG/3dr9
-         NGGxlkVh1sEvKGTg9U4iCgtoAz46QHX3/Mw5CxH/YaXmR59EPHwnbgqhBpKEoDYF4tGC
-         RvepGz99dqWycqqzGc3eoRlC8HtxUqA4rWeVz+CFrVgSgu1LCRIzs6CKO//k0OOaC26w
-         QFx16ZK0lZqdqfSfgVUy/nPGkK4mSLN4Kzt5WfZDzJEv7v+cLDoXT57egff14LdrrAAC
-         XTRA==
-X-Gm-Message-State: AGi0PuYLEzQ6dVWp7scwRvNbxdaADEqVsmvOsRyPOszBUMh/du2WvcAN
-        K5eR7t9VYdNfiNWWIcLSGNE1PA2IVwE=
-X-Google-Smtp-Source: APiQypLn+fX7u0KM+9C2/1Jbw6Ib6SbmWHHoTHgqu3zVi/Kds1N8edIrwhapY439HPPIgCzoHQYy6g==
-X-Received: by 2002:a4a:a286:: with SMTP id h6mr15759338ool.38.1587568951701;
-        Wed, 22 Apr 2020 08:22:31 -0700 (PDT)
-Received: from raspberrypi (99-189-78-97.lightspeed.austtx.sbcglobal.net. [99.189.78.97])
-        by smtp.gmail.com with ESMTPSA id l19sm1587102otp.16.2020.04.22.08.22.29
+         :mime-version:content-disposition:in-reply-to;
+        bh=H/28R1sGK3+4tkWRg1nQ9VN24FGuw/7gkVIffhG3ews=;
+        b=DWpTmyvd218VTu8oM8gXUzRGJVyGnbDWkLu41DRNeO51nmtFtnBAxJktIuQ94eB+13
+         +LOWR40a+PmcBtrg7cIVd3KdwVPvowibaDKpCNOJamLyt0Wu34K3MsP3clFblT90mVnB
+         c9LrFF5WdDuIcyuiFtd+TvhC+Gt3PZ8ydoTQw1mSjlfarn5d+vN6LjeqBSbIK7PQ1qSw
+         eC6RlM4FYt96/NyzcoSEqwHcEvWE1sMY0K389AUbNbuotf/a0839akTfDN8TamXHLbdW
+         b4O1+FcxuYf7aAWsrqin1sh/wcCV/3oZP7arwjPmzp0JA7ACF8zT2d4sep6L0JEJLVPB
+         JrfA==
+X-Gm-Message-State: AGi0PubRRl3HXfEDQFljfurPPF3kQeQrMqyaaxsUDBOAra+b7H8/+RED
+        oQ2i5rlv2Utu1uV2/DZza7VPbQ==
+X-Google-Smtp-Source: APiQypIbqYykracNUBS2hJnE1z0ti85yeHPuSREdDKsUOf4gxNUml3Hx7QVKjiauiPVbl1sJfzh2Vg==
+X-Received: by 2002:ac8:3459:: with SMTP id v25mr24798077qtb.229.1587568955220;
+        Wed, 22 Apr 2020 08:22:35 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::921])
+        by smtp.gmail.com with ESMTPSA id e133sm4051525qkb.128.2020.04.22.08.22.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 08:22:30 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 10:22:28 -0500
-From:   Grant Peltier <grantpeltier93@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        adam.vaughn.xh@renesas.com, grant.peltier.jg@renesas.com
-Subject: Re: [PATCH 1/2] hwmon: (pmbus/isl68137) add debugfs config and black
- box endpoints
-Message-ID: <20200422152228.GA32630@raspberrypi>
-References: <cover.1587408025.git.grantpeltier93@gmail.com>
- <203a7cd37dd95a0127cc06de14986721ab621e93.1587408025.git.grantpeltier93@gmail.com>
- <20200421185851.GA95204@roeck-us.net>
- <20200421214917.GA28170@raspberrypi>
- <20200422020404.GA126375@roeck-us.net>
+        Wed, 22 Apr 2020 08:22:34 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 11:22:33 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        rostedt@goodmis.org, qais.yousef@arm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de
+Subject: Re: [PATCH 21/23] sched,psi: Convert to sched_set_fifo_low()
+Message-ID: <20200422152233.GA364282@cmpxchg.org>
+References: <20200422112719.826676174@infradead.org>
+ <20200422112832.465990342@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422020404.GA126375@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422112832.465990342@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 07:04:04PM -0700, Guenter Roeck wrote:
-> On Tue, Apr 21, 2020 at 04:49:17PM -0500, Grant Peltier wrote:
-> > On Tue, Apr 21, 2020 at 11:58:51AM -0700, Guenter Roeck wrote:
-> > > Normally this is emulated for such controllers. I don't recall seeing
-> > > such a need before. The code below duplicates similar code in
-> > > i2c_smbus_xfer_emulated(), which is much more sophisticated.
-> > > Are you sure this is needed ? Can you point me to an affected
-> > > controller ?
-> > > 
-> > > > +static s32 raa_smbus_read40(const struct i2c_client *client, u8 command,
-> > > > +			    unsigned char *data)
-> > > > +{
-> > > > +	int status;
-> > > > +	unsigned char msgbuf[1];
-> > > > +	struct i2c_msg msg[2] = {
-> > > > +		{
-> > > > +			.addr = client->addr,
-> > > > +			.flags = client->flags,
-> > > > +			.len = 1,
-> > > > +			.buf = msgbuf,
-> > > > +		},
-> > > > +		{
-> > > > +			.addr = client->addr,
-> > > > +			.flags = client->flags | I2C_M_RD,
-> > > > +			.len = 5,
-> > > > +			.buf = data,
-> > > > +		},
-> > > > +	};
-> > > > +
-> > > > +	msgbuf[0] = command;
-> > > > +	status = i2c_transfer(client->adapter, msg, 2);
-> > > > +	if (status != 2)
-> > > > +		return status;
-> > > 
-> > > i2c_transfer() can return 1 if only one of the two messages was sent.
-> > > 
-> > > > +	return 0;
-> > > > +}
-> > I have been using BCM2835 for most of my testing. I originally tried using
-> > i2c_smbus_read_block_data() but that was returning errors. However, from your
-> > email, I went back and tried i2c_smbus_read_i2c_block_data() and that appears
-> > to be working so I will switch to that instead.
-> > 
- 
-> This is odd, since the function should do a SMBus block read. Did you pass a
-> buffer that was too small, by any chance ?
+On Wed, Apr 22, 2020 at 01:27:40PM +0200, Peter Zijlstra wrote:
+> Because SCHED_FIFO is a broken scheduler model (see previous patches)
+> take away the priority field, the kernel can't possibly make an
+> informed decision.
+> 
+> Effectively no change.
+> 
+> Cc: hannes@cmpxchg.org
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Ingo Molnar <mingo@kernel.org>
 
-I tried with a variety of buffer sizes from 4 (data size) to 32 (max block size)
-and it always returned an error. I believe that i2c_smbus_read_block_data()
-attempts to do a legitimate SMBus block read which depends on the controller
-interpretting and reading the correct number of bytes as signaled from the
-client. This is in line with the docstring for the function and the fact that
-the BCM2835 responds with false (0) from i2c_check_functionality() for
-I2C_FUNC_SMBUS_READ_BLOCK_DATA. On the other hand,
-i2c_smbus_read_i2c_block_data() appears to do a fixed length read similar to
-the function that I wrote above.
-
-Thanks,
-Grant
- 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
