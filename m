@@ -2,123 +2,138 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B251AC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A75C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6972076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Wt31SlMc"
+	by mail.kernel.org (Postfix) with ESMTP id 8474120774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587553105;
+	bh=3Z78rl4P9hYinx2mcFD5H2B/ysypUpZ7mhR6Pul/n3Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PmWa0NgxKqT8rcq+BtZAU/oqW7aOlhIJSFzTNWYmYGrdYtyhLu1sbEAV0acM/ObA7
+	 XqdDV49O0A0VE7jaZx9dLjh3S3vx1aSDqz17fp7pD8hX76MRlEBfXRHBLi/+XyQHTs
+	 Bf5qw9yH1uusUCiUjGhoocUDnU/ko2Ezjr2f+myg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732276AbgDVK6Q (ORCPT
+        id S1732240AbgDVK6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728021AbgDVKE3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:29 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AECC03C1A8;
-        Wed, 22 Apr 2020 03:04:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xjPeTaJb6fDrWwRoeW49VkZts+eKBc+WVFAQnP6cFZM=; b=Wt31SlMc19Z0O6lY8IZJYheFde
-        oPfDUlaW46nJbFfm3gQ0kbJkR1RuLcrCT2GDTLcFfYwReBZFcSosQ40yi3chPXHqvXSrCdY8aX6xC
-        b6DkCSwnw6Aaeh+/fMad49xxZbNFRpCe07fN8+c2vc9QePrybW79oDED6Dl2FaJ5UBZI=;
-Received: from p200300ccff0a5d001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0a:5d00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jRCEt-0004YJ-At; Wed, 22 Apr 2020 12:04:19 +0200
-Date:   Wed, 22 Apr 2020 12:04:18 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20200422120418.49a40c75@aktux>
-In-Reply-To: <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com>
-References: <3197C3F0-DEB9-4221-AFBD-4F2A08C84C4C@goldelico.com>
-        <20200417164340.3d9043d1@aktux>
-        <6430AF54-849E-456B-8DB0-B4478BBDB78D@goldelico.com>
-        <20200417150721.GL37466@atomide.com>
-        <8E062482-5D5D-4837-9980-D6C708DD24D4@goldelico.com>
-        <20200420150802.GR37466@atomide.com>
-        <D1A77603-11FB-407F-B480-82C57E742C51@goldelico.com>
-        <20200421085336.32cf8ffe@aktux>
-        <20200421180220.GB37466@atomide.com>
-        <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com>
-        <20200421182017.GC37466@atomide.com>
-        <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 22 Apr 2020 06:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727981AbgDVKEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CBA920774;
+        Wed, 22 Apr 2020 10:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587549853;
+        bh=3Z78rl4P9hYinx2mcFD5H2B/ysypUpZ7mhR6Pul/n3Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vT2dBowA4dm6PQ1UrRI6invSpCqHqVyZRkTBXBNzJ5DvTz41dVhPDHAXgG/u57RP4
+         uf88nZ8hVA3HuivFPLMuDwKiuti/pn1pgn12Kni6ZqeLfdCEPFdfzkElCPRP1473nS
+         yRLvud34EEH62+y4Ec1bHJIb5bNwqodM/zlOmzps=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 4.9 033/125] signal: Extend exec_id to 64bits
+Date:   Wed, 22 Apr 2020 11:55:50 +0200
+Message-Id: <20200422095038.756745774@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
+References: <20200422095032.909124119@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 22:40:39 +0200
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-> Hi Tony,
-> 
-> > Am 21.04.2020 um 20:20 schrieb Tony Lindgren <tony@atomide.com>:
-> >   
-> >> Well, what helps is reverting the patch and using the old driver
-> >> (which did work for several years). So I would not assume that
-> >> there is a hardware influence. It seems to be something the new
-> >> driver is doing differently.  
-> > 
-> > Well earlier hdq1w.c did not idle, now it does.  
-> 
-> Ah, I see!
-> 
-> > If you just want to keep it enabled like earlier, you can just add something like:  
-> 
-> Well, I don't want it enabled, it just should work as before.
-> Ideally including all improvements :)
-> 
-> > 
-> > &hdqw1w {
-> > 	ti,no-idle;
-> > };  
-> 
-> I have added that and there might be a slightly different pattern
-> (unless that is just by luck): the first two or three attempts to
-> read the bq27xx/uevent did still time out. But then the next ones
-> worked fine (with a response time of ca. 65 .. 230 ms).
-> 
-> So as if something needs to be shaken into the right position after
-> boot until it works.
-> 
+commit d1e7fd6462ca9fc76650fbe6ca800e35b24267da upstream.
 
-What about reading battery with just omap_hdq loaded and then continue
-booting as usual, e.g. something like:
+Replace the 32bit exec_id with a 64bit exec_id to make it impossible
+to wrap the exec_id counter.  With care an attacker can cause exec_id
+wrap and send arbitrary signals to a newly exec'd parent.  This
+bypasses the signal sending checks if the parent changes their
+credentials during exec.
 
-have script init-bat.sh
-#!/bin/sh
-modprobe omap_hdq
-cat /sys/class/power_supply/bq27000_battery/uevent
-exec /sbin/init "$@"
+The severity of this problem can been seen that in my limited testing
+of a 32bit exec_id it can take as little as 19s to exec 65536 times.
+Which means that it can take as little as 14 days to wrap a 32bit
+exec_id.  Adam Zabrocki has succeeded wrapping the self_exe_id in 7
+days.  Even my slower timing is in the uptime of a typical server.
+Which means self_exec_id is simply a speed bump today, and if exec
+gets noticably faster self_exec_id won't even be a speed bump.
 
-and then append to kernel parameters init=/init-bat.sh
+Extending self_exec_id to 64bits introduces a problem on 32bit
+architectures where reading self_exec_id is no longer atomic and can
+take two read instructions.  Which means that is is possible to hit
+a window where the read value of exec_id does not match the written
+value.  So with very lucky timing after this change this still
+remains expoiltable.
 
-Regards,
-Andreas
+I have updated the update of exec_id on exec to use WRITE_ONCE
+and the read of exec_id in do_notify_parent to use READ_ONCE
+to make it clear that there is no locking between these two
+locations.
+
+Link: https://lore.kernel.org/kernel-hardening/20200324215049.GA3710@pi3.com.pl
+Fixes: 2.3.23pre2
+Cc: stable@vger.kernel.org
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/exec.c             |    2 +-
+ include/linux/sched.h |    4 ++--
+ kernel/signal.c       |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1353,7 +1353,7 @@ void setup_new_exec(struct linux_binprm
+ 
+ 	/* An exec changes our domain. We are no longer part of the thread
+ 	   group */
+-	current->self_exec_id++;
++	WRITE_ONCE(current->self_exec_id, current->self_exec_id + 1);
+ 	flush_signal_handlers(current, 0);
+ }
+ EXPORT_SYMBOL(setup_new_exec);
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1720,8 +1720,8 @@ struct task_struct {
+ 	struct seccomp seccomp;
+ 
+ /* Thread group tracking */
+-   	u32 parent_exec_id;
+-   	u32 self_exec_id;
++	u64 parent_exec_id;
++	u64 self_exec_id;
+ /* Protection of (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed,
+  * mempolicy */
+ 	spinlock_t alloc_lock;
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1660,7 +1660,7 @@ bool do_notify_parent(struct task_struct
+ 		 * This is only possible if parent == real_parent.
+ 		 * Check if it has changed security domain.
+ 		 */
+-		if (tsk->parent_exec_id != tsk->parent->self_exec_id)
++		if (tsk->parent_exec_id != READ_ONCE(tsk->parent->self_exec_id))
+ 			sig = SIGCHLD;
+ 	}
+ 
+
+
