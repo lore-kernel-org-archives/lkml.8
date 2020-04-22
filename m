@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF488C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA5FC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3E220656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B252073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551904;
-	bh=USHL728CC5BpJX28A7ujeCdhKKJonWU+NgiTGWGo5VA=;
+	s=default; t=1587551907;
+	bh=Nq/p5Yu5Y8F85wkdcOsUWekj/WRviFNnPxXsrikIyP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s+hhZQR+xta15fF1zOwxhjIvy+N1NYzKX0BIHG6+BfmH59SnbgGaV/JwcWdNXc7vV
-	 FROe3nWL7OhjPyICe1veGMPjI/VYVcBJJm2CK3nGQyUGvnNEMRiBVKj4mpviZMUN98
-	 x9Bw/YGyFoA6pO0lU7o6n5R1xh5KNIGb38R31GQQ=
+	b=jk72PR1mVSlyXyOF6IrhMud+96UXzeytf650tnTPgfV2ifGJg6kUJ1J6d44Cu12z1
+	 q27vjQcE1ZpiILe9CCdLe9/qCHBekBV9EWmvuDreoaH7HtKkEG9Noa/9R91sooOabd
+	 SQGdpCS7km6oC9+IREv3N9J7zqgpOpw3Jv0FGMNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731462AbgDVKiX (ORCPT
+        id S1731463AbgDVKi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:38:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:38:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgDVKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726077AbgDVKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 06:22:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC38214AF;
-        Wed, 22 Apr 2020 10:22:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1351B208E4;
+        Wed, 22 Apr 2020 10:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550926;
-        bh=USHL728CC5BpJX28A7ujeCdhKKJonWU+NgiTGWGo5VA=;
+        s=default; t=1587550923;
+        bh=Nq/p5Yu5Y8F85wkdcOsUWekj/WRviFNnPxXsrikIyP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JA6U5wSD+nc+2FmDgjgB+SfmOjY4fd8y4h3jirEQz41EJ4t6vhTP5vnzTdPu9agwM
-         VqlY+/mzsFbkPr3tqBkJW7bSKOLaCMbbiQxYVfVEhMeT/hiqjtCnpyebE/3cmsiMhF
-         3cZAC+4u8WR1xBBDOzkY8LbtDhv5mV41YctGaT1k=
+        b=Z1w/Jn54zP165g3JNjCvBzk2bEtm8Z/pebYoL3iP8Aa0QAKGrd3jgb/1PCIav5uE3
+         iQ49L7DVk9DzI/jxvmB9ClV+wQ5uaK43c150t/qOcrcztXL6UJP+4EsBmumKFhQlvt
+         iCCMte+DUVfu2qihgq33DLmbX+eMoa0YFZIDfaDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.6 031/166] afs: Fix missing XDR advance in xdr_decode_{AFS,YFS}FSFetchStatus()
-Date:   Wed, 22 Apr 2020 11:55:58 +0200
-Message-Id: <20200422095052.105632264@linuxfoundation.org>
+        stable@vger.kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH 5.6 030/166] x86/Hyper-V: Report crash data in die() when panic_on_oops is set
+Date:   Wed, 22 Apr 2020 11:55:57 +0200
+Message-Id: <20200422095051.956967154@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -58,122 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-commit c72057b56f7e24865840a6961d801a7f21d30a5f upstream.
+commit f3a99e761efa616028b255b4de58e9b5b87c5545 upstream.
 
-If we receive a status record that has VNOVNODE set in the abort field,
-xdr_decode_AFSFetchStatus() and xdr_decode_YFSFetchStatus() don't advance
-the XDR pointer, thereby corrupting anything subsequent decodes from the
-same block of data.
+When oops happens with panic_on_oops unset, the oops
+thread is killed by die() and system continues to run.
+In such case, guest should not report crash register
+data to host since system still runs. Check panic_on_oops
+and return directly in hyperv_report_panic() when the function
+is called in the die() and panic_on_oops is unset. Fix it.
 
-This has the potential to affect AFS.InlineBulkStatus and
-YFS.InlineBulkStatus operation, but probably doesn't since the status
-records are extracted as individual blocks of data and the buffer pointer
-is reset between blocks.
-
-It does affect YFS.RemoveFile2 operation, corrupting the volsync record -
-though that is not currently used.
-
-Other operations abort the entire operation rather than returning an error
-inline, in which case there is no decoding to be done.
-
-Fix this by unconditionally advancing the xdr pointer.
-
-Fixes: 684b0f68cf1c ("afs: Fix AFSFetchStatus decoder to provide OpenAFS compatibility")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Link: https://lore.kernel.org/r/20200406155331.2105-7-Tianyu.Lan@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/afs/fsclient.c  |   14 +++++++++-----
- fs/afs/yfsclient.c |   12 ++++++++----
- 2 files changed, 17 insertions(+), 9 deletions(-)
+ arch/x86/hyperv/hv_init.c      |    6 +++++-
+ drivers/hv/vmbus_drv.c         |    5 +++--
+ include/asm-generic/mshyperv.h |    2 +-
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -65,6 +65,7 @@ static int xdr_decode_AFSFetchStatus(con
- 	bool inline_error = (call->operation_ID == afs_FS_InlineBulkStatus);
- 	u64 data_version, size;
- 	u32 type, abort_code;
-+	int ret;
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -20,6 +20,7 @@
+ #include <linux/mm.h>
+ #include <linux/hyperv.h>
+ #include <linux/slab.h>
++#include <linux/kernel.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/syscore_ops.h>
+ #include <clocksource/hyperv_timer.h>
+@@ -419,11 +420,14 @@ void hyperv_cleanup(void)
+ }
+ EXPORT_SYMBOL_GPL(hyperv_cleanup);
  
- 	abort_code = ntohl(xdr->abort_code);
+-void hyperv_report_panic(struct pt_regs *regs, long err)
++void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die)
+ {
+ 	static bool panic_reported;
+ 	u64 guest_id;
  
-@@ -78,7 +79,7 @@ static int xdr_decode_AFSFetchStatus(con
- 			 */
- 			status->abort_code = abort_code;
- 			scb->have_error = true;
--			return 0;
-+			goto good;
- 		}
- 
- 		pr_warn("Unknown AFSFetchStatus version %u\n", ntohl(xdr->if_version));
-@@ -87,7 +88,7 @@ static int xdr_decode_AFSFetchStatus(con
- 
- 	if (abort_code != 0 && inline_error) {
- 		status->abort_code = abort_code;
--		return 0;
-+		goto good;
++	if (in_die && !panic_on_oops)
++		return;
++
+ 	/*
+ 	 * We prefer to report panic on 'die' chain as we have proper
+ 	 * registers to report, but if we miss it (e.g. on BUG()) we need
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -31,6 +31,7 @@
+ #include <linux/kdebug.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
++#include <linux/kernel.h>
+ #include <linux/syscore_ops.h>
+ #include <clocksource/hyperv_timer.h>
+ #include "hyperv_vmbus.h"
+@@ -75,7 +76,7 @@ static int hyperv_panic_event(struct not
+ 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+ 	    && hyperv_report_reg()) {
+ 		regs = current_pt_regs();
+-		hyperv_report_panic(regs, val);
++		hyperv_report_panic(regs, val, false);
  	}
- 
- 	type = ntohl(xdr->type);
-@@ -123,13 +124,16 @@ static int xdr_decode_AFSFetchStatus(con
- 	data_version |= (u64)ntohl(xdr->data_version_hi) << 32;
- 	status->data_version = data_version;
- 	scb->have_status = true;
--
-+good:
-+	ret = 0;
-+advance:
- 	*_bp = (const void *)*_bp + sizeof(*xdr);
--	return 0;
-+	return ret;
- 
- bad:
- 	xdr_dump_bad(*_bp);
--	return afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	ret = afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	goto advance;
+ 	return NOTIFY_DONE;
+ }
+@@ -92,7 +93,7 @@ static int hyperv_die_event(struct notif
+ 	 * the notification here.
+ 	 */
+ 	if (hyperv_report_reg())
+-		hyperv_report_panic(regs, val);
++		hyperv_report_panic(regs, val, true);
+ 	return NOTIFY_DONE;
  }
  
- static time64_t xdr_decode_expiry(struct afs_call *call, u32 expiry)
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -186,13 +186,14 @@ static int xdr_decode_YFSFetchStatus(con
- 	const struct yfs_xdr_YFSFetchStatus *xdr = (const void *)*_bp;
- 	struct afs_file_status *status = &scb->status;
- 	u32 type;
-+	int ret;
- 
- 	status->abort_code = ntohl(xdr->abort_code);
- 	if (status->abort_code != 0) {
- 		if (status->abort_code == VNOVNODE)
- 			status->nlink = 0;
- 		scb->have_error = true;
--		return 0;
-+		goto good;
- 	}
- 
- 	type = ntohl(xdr->type);
-@@ -220,13 +221,16 @@ static int xdr_decode_YFSFetchStatus(con
- 	status->size		= xdr_to_u64(xdr->size);
- 	status->data_version	= xdr_to_u64(xdr->data_version);
- 	scb->have_status	= true;
--
-+good:
-+	ret = 0;
-+advance:
- 	*_bp += xdr_size(xdr);
--	return 0;
-+	return ret;
- 
- bad:
- 	xdr_dump_bad(*_bp);
--	return afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	ret = afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	goto advance;
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -163,7 +163,7 @@ static inline int cpumask_to_vpset(struc
+ 	return nr_bank;
  }
  
- /*
+-void hyperv_report_panic(struct pt_regs *regs, long err);
++void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
+ void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
+ bool hv_is_hyperv_initialized(void);
+ bool hv_is_hibernation_supported(void);
 
 
