@@ -2,87 +2,154 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F81DC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228A2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53DCE20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587561455;
-	bh=Qf1qqVQztfXcBNzGDIudLfhiiqlMgOrtdH1LSy4VbT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vYKspgVr2hquDOai5xzWCi8wNPJ8NpozwsbCnwqcy728tSBQ+1DI4SUBke2CfLbOt
-	 I8X5ALwBsdLWcNY++gFnsZ2sidrwRmvdfxlKoc8+IjiqpdL8sXHRzoBgWEUrZ8UPtz
-	 NTD6dlTwi7YWM8xME+E/MUehMr1RSG2efu73fwwE=
+	by mail.kernel.org (Postfix) with ESMTP id EFC4D2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:18:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ql2EIoNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgDVNRe (ORCPT
+        id S1726457AbgDVNSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVNRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:17:34 -0400
-Received: from linux-8ccs (p5B281662.dip0.t-ipconnect.de [91.40.22.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 913B82084D;
-        Wed, 22 Apr 2020 13:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587561453;
-        bh=Qf1qqVQztfXcBNzGDIudLfhiiqlMgOrtdH1LSy4VbT8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I2UDQ43qhVG9ki82R10qKkY/DShwR7zJyvfvuAfLakBiNyCpvM+GIZTqeMW4U0ZlY
-         1S5nBp19p+F1owu9tioMq7jQe48Je2o/AtZX8kRTS9g9BsTtR5cra6DUOcApRBe09x
-         dtOZvjlcN/t8XN+WSdUhqNbZXDyOulfuq4JGcsPQ=
-Date:   Wed, 22 Apr 2020 15:17:29 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v2] arch: split MODULE_ARCH_VERMAGIC definitions out to
- <asm/vermagic.h>
-Message-ID: <20200422131729.GB20103@linux-8ccs>
-References: <20200421161355.1357112-1-masahiroy@kernel.org>
+        Wed, 22 Apr 2020 09:18:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725968AbgDVNSq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 09:18:46 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E7AC03C1AA
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:18:44 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l78so2252833qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=uchh9xZf9elSlIgf8Xxf4XgRxCWvLtd9mt90C/GbGKg=;
+        b=ql2EIoNR+wWfIzQqBbJJMFPRgg1I0z70qU2JcyGqtAgtrsN3U0iw4FYi6X2pU7se/K
+         RAyLat+RwH++zLGUGmwvJK130fMtCjZPMzM6bnPHR09d1U6W0QLEg2TqYoRH8n5ci73a
+         i/zlJs2qlo5eEHz9bcOsasJBkqIoRxjTYi+Nw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=uchh9xZf9elSlIgf8Xxf4XgRxCWvLtd9mt90C/GbGKg=;
+        b=eyMR8hAaVSYmAA3yUtSPGseo4OQ7zgcEPtlILIaEGljElCjtf7PXaZF2ssTo50EsSo
+         EO/17HubEEF4zQ53KqGHfLVGW5aDIaatRr0h4o8OYaQwmHLzhjw+Xh+K9KEvg9N+q7Eo
+         6UOzbZ0QtZ8K6kn35XPwzqvLwPD7CXymeYFsvj+dB8bXt6HhL1CzUjO5msPyaOvJDocm
+         gq7BnRw1tRHB0AubEInpX0l7VHJcdObHC8Zt61XTSQ5KdV8hiOqvQLJUOykA0TibxsG7
+         b/8PYfX4CQgKCNhsanEOxUWdWExiydY4IA32rTh+45hQGi00sd/M1V5pAd2+TTgfxv/+
+         uQ+Q==
+X-Gm-Message-State: AGi0PuYrJqkTGD0GwS2QCKy5hdATw3QOr2dwKGHJU+n/uWB3L04q5OAJ
+        oMmU9yMo+p48OmoMZx/CggrMww==
+X-Google-Smtp-Source: APiQypLAlOSp3e1LCS2yhCsQezJ74j5DgG7VCqGuCgfEutqf61Ct1fSw7UOLdAF4jQoY9VZq2OPb/A==
+X-Received: by 2002:a05:620a:2013:: with SMTP id c19mr26427324qka.162.1587561523779;
+        Wed, 22 Apr 2020 06:18:43 -0700 (PDT)
+Received: from [192.168.1.17] (c-71-62-121-229.hsd1.va.comcast.net. [71.62.121.229])
+        by smtp.gmail.com with ESMTPSA id p202sm3773299qke.120.2020.04.22.06.18.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 06:18:43 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 09:18:41 -0400
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200422103536.GA16263@pc636>
+References: <20200420153837.194532-1-joel@joelfernandes.org> <20200420153837.194532-3-joel@joelfernandes.org> <20200422103536.GA16263@pc636>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200421161355.1357112-1-masahiroy@kernel.org>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH rcu/dev -fixes 2/4] rcu/tree: Skip entry into the page allocator for PREEMPT_RT
+To:     Uladzislau Rezki <urezki@gmail.com>
+CC:     linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+From:   joel@joelfernandes.org
+Message-ID: <51A69C78-FDD4-4A15-8969-EEA17CBA5BBD@joelfernandes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [22/04/20 01:13 +0900]:
-[snip]
->diff --git a/arch/xtensa/include/asm/module.h b/arch/xtensa/include/asm/vermagic.h
->similarity index 72%
->rename from arch/xtensa/include/asm/module.h
->rename to arch/xtensa/include/asm/vermagic.h
->index 488b40c6f9b9..6f9e359a54ac 100644
->--- a/arch/xtensa/include/asm/module.h
->+++ b/arch/xtensa/include/asm/vermagic.h
->@@ -1,6 +1,4 @@
-> /*
->- * include/asm-xtensa/module.h
->- *
->  * This file contains the module code specific to the Xtensa architecture.
 
-Maybe we can remove this comment too? Since it's now asm/vermagic.h and
-not asm/module.h anymore.
 
-Thanks for the cleanup. I agree that <linux/vermagic.h> shouldn't have
-any ordering dependency on <linux/module.h>.
+On April 22, 2020 6:35:36 AM EDT, Uladzislau Rezki <urezki@gmail=2Ecom> wr=
+ote:
+>On Mon, Apr 20, 2020 at 11:38:35AM -0400, Joel Fernandes (Google)
+>wrote:
+>> To keep kfree_rcu() path working on raw non-preemptible sections,
+>> prevent the optional entry into the allocator as it uses sleeping
+>locks=2E
+>> In fact, even if the caller of kfree_rcu() is preemptible, this path
+>> still is not, as krcp->lock is a raw spinlock as done in previous
+>> patches=2E With additional page pre-allocation in the works, hitting
+>this
+>> return is going to be much less likely soon so just prevent it for
+>now
+>> so that PREEMPT_RT does not break=2E Note that page allocation here is
+>an
+>> optimization and skipping it still makes kfree_rcu() work=2E
+>>=20
+>> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix=2Ede>
+>> Co-developed-by: Uladzislau Rezki <urezki@gmail=2Ecom>
+>> Signed-off-by: Uladzislau Rezki <urezki@gmail=2Ecom>
+>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes=2Eorg>
+>> ---
+>>  kernel/rcu/tree=2Ec | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>=20
+>> diff --git a/kernel/rcu/tree=2Ec b/kernel/rcu/tree=2Ec
+>> index cf68d3d9f5b81=2E=2Ecd61649e1b001 100644
+>> --- a/kernel/rcu/tree=2Ec
+>> +++ b/kernel/rcu/tree=2Ec
+>> @@ -3092,6 +3092,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct
+>kfree_rcu_cpu *krcp,
+>>  		if (!bnode) {
+>>  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
+>> =20
+>> +			/*
+>> +			 * To keep this path working on raw non-preemptible
+>> +			 * sections, prevent the optional entry into the
+>> +			 * allocator as it uses sleeping locks=2E In fact, even
+>> +			 * if the caller of kfree_rcu() is preemptible, this
+>> +			 * path still is not, as krcp->lock is a raw spinlock=2E
+>> +			 * With additional page pre-allocation in the works,
+>> +			 * hitting this return is going to be much less likely=2E
+>> +			 */
+>> +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+>> +				return false;
+>> +
+>>  			bnode =3D (struct kfree_rcu_bulk_data *)
+>>  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+>>  		}
+>This will not be correctly working by just reverting everything to the
+>"rcu_head path" for CONFIG_PREEMPT_RT kernel=2E We need to preallocate at
+>least once=2E I can add caching on top of this series to address it=2E
+>
 
-I just double checked to see if there were any other users of
-MODULE_ARCH_VERMAGIC that needed it through module.h, and there are
-none. It was literally just being defined in asm/module.h to be used
-in linux/vermagic.h. So there was no reason really to confine the
-MODULE_ARCH_VERMAGIC definition to asm/module.h.
+I discussed with Vlad offline, this patch is fine for mainline as we don't=
+ have headless support yet=2E So this patch is good=2E Future patches addin=
+g caching will also add the headless support after additional caching, so s=
+kipping the allocation here is ok=2E
 
-Acked-by: Jessica Yu <jeyu@kernel.org>
+Thanks=2E
+
+- Joel
+
+
+
+
+>--
+>Vlad Rezki
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
