@@ -2,135 +2,134 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9CEC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBBBC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2796F2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pl9SzVv1"
+	by mail.kernel.org (Postfix) with ESMTP id 38CC620780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587551761;
+	bh=uM8RYOThTOAePXpnhO/MjXiLuve+HcAfoAQLYud7kjg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=agO5G4rjBFhWmJI7l11vP+PI4WaIXjTULdSbOXNpyIFa97h8ogwQIP4S194utIezw
+	 8QyIkbsKQ7iaGk1Lzigy/V2ZM8AHQ+t/wOSb3UxJ5VoBLldaf0hlrBmPw3Kr904oOR
+	 IjP86V14S6PlBg8E8bGfderAG0RgJv5e2SlGm9+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbgDVKfx (ORCPT
+        id S1730314AbgDVKXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731107AbgDVKfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:35:48 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE9AC03C1A8;
-        Wed, 22 Apr 2020 03:35:47 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e25so1711997ljg.5;
-        Wed, 22 Apr 2020 03:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EcjcBCMisxSrvOIyXUn8t/Z2HQERoHgRrxwf6c0lYoA=;
-        b=Pl9SzVv1JQtR3HbMFszvij+VHWA9WVSyFHTToSyD+LB//HCJRy260B2Wp2RQzrxuTw
-         9NPqH/cRptXKxFTZrKvJgy9cUbISAuo9jW3F6V8Pz8ajARd9xizsEvReCxiWYR4N2fec
-         H/orW+bSltcvbneXsFJw28PjL72pvwS6FzVtED8bAdnQ8x2Uu7lQeW/5Ds9FGU4970YS
-         zU/CWpkpKjjWg1jgvqUduNmS6CAxCUkU5i41f40SgnlXW440KxIW28nuqs8zCHxODru+
-         uGBhVRT9FKsLDSj5TIkQI+D4PTqk6BBEDv9sBcrY03uNLW+NwqfJQmbOB1guC+Z8vGPX
-         kjSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EcjcBCMisxSrvOIyXUn8t/Z2HQERoHgRrxwf6c0lYoA=;
-        b=CxXpS/6q463N03nACgt2yl2z/9DlHDy3dNNnZmomDS0EnA7vlLdp3/rSbQyNs2l8WM
-         c3iVQlD3fjelzWLaG/zovkV0YuyBwcm+vzgtVxbR58kvPEFrf/oE6hFXb0M2ws8RnFxL
-         PezyrCM/znK1vGw04/oM8+VParRmKHjYBm+OB6CZXF2Stxq2MQl806bvrDk3bAFcmZAp
-         83h8JneKDc8YHUdhWe6ugYdThqAkzsyxC7msnsqc7FJrtAnuOY4y0ldIQoL3xSvrSjok
-         N8jtdGjbYjQZmO9gSpMMFI1Se79faccxLInrsFVEzN4eZq5SxjOaPiKyphVBRI/54aJ/
-         aqmg==
-X-Gm-Message-State: AGi0Pua5K8ZTbYWFbywZb49kxe8v+EyNg8YUkmXDUre2MJ9sqzZOPOXd
-        DZp+yaQibTJzd/BEtGx8CYo=
-X-Google-Smtp-Source: APiQypI8yrYLAQ1fShd21gimlYy0KkVj7Jgppggs0qJFJV/wXUgMQ+RzDIYpdbzsCODzrKnxrOxGTw==
-X-Received: by 2002:a2e:a586:: with SMTP id m6mr14589992ljp.32.1587551746322;
-        Wed, 22 Apr 2020 03:35:46 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id v8sm4248533lfp.85.2020.04.22.03.35.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:35:45 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 22 Apr 2020 12:35:36 +0200
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH rcu/dev -fixes 2/4] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200422103536.GA16263@pc636>
-References: <20200420153837.194532-1-joel@joelfernandes.org>
- <20200420153837.194532-3-joel@joelfernandes.org>
+        Wed, 22 Apr 2020 06:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730254AbgDVKW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:22:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 691662075A;
+        Wed, 22 Apr 2020 10:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587550977;
+        bh=uM8RYOThTOAePXpnhO/MjXiLuve+HcAfoAQLYud7kjg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ksrfLgHYBxP94+GZl9eb+cvhLyg1mELZ1dWGN9O4w2Kr6Kc/ITldWcT64yJGfgUdu
+         SYmAQeywO2h0bDFsy+59RdJ/H7AJ2n4IbkJMEpl0fa32skgmERiOOzhexj+hs2OMTM
+         lNNocwzy4bjGzNanz2WZ8/8CR+oDXQSQSVAjN5EM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zorro Lang <zlang@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 050/166] xfs: fix iclog release error check race with shutdown
+Date:   Wed, 22 Apr 2020 11:56:17 +0200
+Message-Id: <20200422095054.425468418@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
+References: <20200422095047.669225321@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420153837.194532-3-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:38:35AM -0400, Joel Fernandes (Google) wrote:
-> To keep kfree_rcu() path working on raw non-preemptible sections,
-> prevent the optional entry into the allocator as it uses sleeping locks.
-> In fact, even if the caller of kfree_rcu() is preemptible, this path
-> still is not, as krcp->lock is a raw spinlock as done in previous
-> patches. With additional page pre-allocation in the works, hitting this
-> return is going to be much less likely soon so just prevent it for now
-> so that PREEMPT_RT does not break. Note that page allocation here is an
-> optimization and skipping it still makes kfree_rcu() work.
-> 
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
-> Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index cf68d3d9f5b81..cd61649e1b001 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3092,6 +3092,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
->  		if (!bnode) {
->  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
->  
-> +			/*
-> +			 * To keep this path working on raw non-preemptible
-> +			 * sections, prevent the optional entry into the
-> +			 * allocator as it uses sleeping locks. In fact, even
-> +			 * if the caller of kfree_rcu() is preemptible, this
-> +			 * path still is not, as krcp->lock is a raw spinlock.
-> +			 * With additional page pre-allocation in the works,
-> +			 * hitting this return is going to be much less likely.
-> +			 */
-> +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> +				return false;
-> +
->  			bnode = (struct kfree_rcu_bulk_data *)
->  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
->  		}
-This will not be correctly working by just reverting everything to the
-"rcu_head path" for CONFIG_PREEMPT_RT kernel. We need to preallocate at
-least once. I can add caching on top of this series to address it.
+From: Brian Foster <bfoster@redhat.com>
 
---
-Vlad Rezki
+[ Upstream commit 6b789c337a5963ae57cbc7fe9e41488c40a9b014 ]
+
+Prior to commit df732b29c8 ("xfs: call xlog_state_release_iclog with
+l_icloglock held"), xlog_state_release_iclog() always performed a
+locked check of the iclog error state before proceeding into the
+sync state processing code. As of this commit, part of
+xlog_state_release_iclog() was open-coded into
+xfs_log_release_iclog() and as a result the locked error state check
+was lost.
+
+The lockless check still exists, but this doesn't account for the
+possibility of a race with a shutdown being performed by another
+task causing the iclog state to change while the original task waits
+on ->l_icloglock. This has reproduced very rarely via generic/475
+and manifests as an assert failure in __xlog_state_release_iclog()
+due to an unexpected iclog state.
+
+Restore the locked error state check in xlog_state_release_iclog()
+to ensure that an iclog state update via shutdown doesn't race with
+the iclog release state processing code.
+
+Fixes: df732b29c807 ("xfs: call xlog_state_release_iclog with l_icloglock held")
+Reported-by: Zorro Lang <zlang@redhat.com>
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/xfs/xfs_log.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index f6006d94a581e..796ff37d5bb5b 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -605,18 +605,23 @@ xfs_log_release_iclog(
+ 	struct xlog		*log = mp->m_log;
+ 	bool			sync;
+ 
+-	if (iclog->ic_state == XLOG_STATE_IOERROR) {
+-		xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
+-		return -EIO;
+-	}
++	if (iclog->ic_state == XLOG_STATE_IOERROR)
++		goto error;
+ 
+ 	if (atomic_dec_and_lock(&iclog->ic_refcnt, &log->l_icloglock)) {
++		if (iclog->ic_state == XLOG_STATE_IOERROR) {
++			spin_unlock(&log->l_icloglock);
++			goto error;
++		}
+ 		sync = __xlog_state_release_iclog(log, iclog);
+ 		spin_unlock(&log->l_icloglock);
+ 		if (sync)
+ 			xlog_sync(log, iclog);
+ 	}
+ 	return 0;
++error:
++	xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
++	return -EIO;
+ }
+ 
+ /*
+-- 
+2.20.1
+
+
+
