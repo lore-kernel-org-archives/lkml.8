@@ -2,52 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026D1C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABF3C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C973A20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5962074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="so7aAamG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="crdpvsG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgDVUNz (ORCPT
+        id S1726993AbgDVUOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:13:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45400 "EHLO
+        Wed, 22 Apr 2020 16:14:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45432 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgDVUNy (ORCPT
+        with ESMTP id S1726954AbgDVUOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:13:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03MKDnQG066889;
-        Wed, 22 Apr 2020 15:13:49 -0500
+        Wed, 22 Apr 2020 16:14:03 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03MKDwUA066927;
+        Wed, 22 Apr 2020 15:13:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587586429;
-        bh=Y2N/EEerOV5w9IDe/x+RwXeyV0HvogK07RrJrP6gN1g=;
+        s=ti-com-17Q1; t=1587586438;
+        bh=UrTOimiuAAzyrw4UANGVa2szixUPjohq5e0XZDlu7gU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=so7aAamGJjjMDsW+62B9rmmN2SAHXKWwC/0Dl9e++iJBWXE4qLREM4mnRRJU1wLge
-         atKgZUnu3xO+ZfjOx3rZq62Yk0cnkosw616C1iJzEl/KS4UHd/SV9ZpyF5Ysx5rMz0
-         bUsha6iknYzopxGkOLHzhuDpXeN5mWIGKwzMOV6s=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03MKDn9U018459
+        b=crdpvsG6zwCEDKsEl5TkDzWza5gAn4t+iInoy+124RLKNwqxQRI0TpyyzyUjYnmnO
+         9tLtkFOhOxrTrAk1Gis0CQYMYhL1pwMMX3yf+Xuf2QwT2AryD/HGwRP0X0j0l3/Wd9
+         6CsKlAEnDAbmUM8QXW8Rkf8ZdQrliv95vOvUj2u8=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03MKDwn8099679
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Apr 2020 15:13:49 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Apr 2020 15:13:48 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 22 Apr 2020 15:13:58 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Apr 2020 15:13:58 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Apr 2020 15:13:48 -0500
+ Frontend Transport; Wed, 22 Apr 2020 15:13:58 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03MKDlbH070089;
-        Wed, 22 Apr 2020 15:13:48 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03MKDvVY105675;
+        Wed, 22 Apr 2020 15:13:57 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Richard Cochran <richardcochran@gmail.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
@@ -58,9 +58,9 @@ CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
         Murali Karicheri <m-karicheri2@ti.com>,
         <linux-omap@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v4 07/10] net: ethernet: ti: cpts: rework locking
-Date:   Wed, 22 Apr 2020 23:12:51 +0300
-Message-ID: <20200422201254.15232-8-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v4 09/10] net: ethernet: ti: cpts: add support for HW_TS_PUSH events
+Date:   Wed, 22 Apr 2020 23:12:53 +0300
+Message-ID: <20200422201254.15232-10-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200422201254.15232-1-grygorii.strashko@ti.com>
 References: <20200422201254.15232-1-grygorii.strashko@ti.com>
@@ -72,212 +72,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now spinlock is used to synchronize everything which is not required. Add
-mutex and use to sync access to PTP interface and PTP worker and use
-spinlock only to sync FIFO/events processing.
+Hence CPTS IRQ support is in place the W_TS_PUSH events can be added.
+PWM capable DmTimers can be used to generete input signals for CPTS on TI
+AM335x/AM437x/DRA7 SoCs to be timestamped:
+AM335x/AM437x: timer4 - timer7
+DRA7/AM57xx: timer13 - timer16
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Acked-by: Richard Cochran <richardcochran@gmail.com>
 ---
- drivers/net/ethernet/ti/cpts.c | 53 +++++++++++++++++++---------------
- drivers/net/ethernet/ti/cpts.h |  3 +-
- 2 files changed, 32 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/ti/cpsw_priv.c   |  5 ++-
+ drivers/net/ethernet/ti/cpts.c        | 49 ++++++++++++++++++++++++++-
+ drivers/net/ethernet/ti/cpts.h        |  5 +--
+ drivers/net/ethernet/ti/netcp_ethss.c |  3 +-
+ 4 files changed, 57 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+index 97a058ca60ac..099208927400 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.c
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -28,6 +28,8 @@
+ #include "cpsw_sl.h"
+ #include "davinci_cpdma.h"
+ 
++#define CPTS_N_ETX_TS 4
++
+ int (*cpsw_slave_index)(struct cpsw_common *cpsw, struct cpsw_priv *priv);
+ 
+ void cpsw_intr_enable(struct cpsw_common *cpsw)
+@@ -522,7 +524,8 @@ int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
+ 	if (!cpts_node)
+ 		cpts_node = cpsw->dev->of_node;
+ 
+-	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpts_node);
++	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpts_node,
++				 CPTS_N_ETX_TS);
+ 	if (IS_ERR(cpsw->cpts)) {
+ 		ret = PTR_ERR(cpsw->cpts);
+ 		cpdma_ctlr_destroy(cpsw->dma);
 diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index 55ba6b425fb5..8db9efdf1708 100644
+index 19fbea7275f8..97c3ff760f12 100644
 --- a/drivers/net/ethernet/ti/cpts.c
 +++ b/drivers/net/ethernet/ti/cpts.c
-@@ -99,9 +99,12 @@ static void cpts_purge_txq(struct cpts *cpts)
+@@ -32,6 +32,11 @@ struct cpts_skb_cb_data {
+ #define cpts_read32(c, r)	readl_relaxed(&c->reg->r)
+ #define cpts_write32(c, v, r)	writel_relaxed(v, &c->reg->r)
+ 
++static int cpts_event_port(struct cpts_event *event)
++{
++	return (event->high >> PORT_NUMBER_SHIFT) & PORT_NUMBER_MASK;
++}
++
+ static int event_expired(struct cpts_event *event)
+ {
+ 	return time_after(jiffies, event->tmo);
+@@ -99,6 +104,7 @@ static void cpts_purge_txq(struct cpts *cpts)
   */
  static int cpts_fifo_read(struct cpts *cpts, int match)
  {
-+	struct cpts_event *event;
-+	unsigned long flags;
- 	int i, type = -1;
- 	u32 hi, lo;
--	struct cpts_event *event;
-+
-+	spin_lock_irqsave(&cpts->lock, flags);
- 
- 	for (i = 0; i < CPTS_FIFO_DEPTH; i++) {
- 		if (cpts_fifo_pop(cpts, &hi, &lo))
-@@ -109,7 +112,7 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 
- 		if (list_empty(&cpts->pool) && cpts_purge_events(cpts)) {
- 			dev_warn(cpts->dev, "cpts: event pool empty\n");
--			return -1;
-+			break;
- 		}
- 
- 		event = list_first_entry(&cpts->pool, struct cpts_event, list);
-@@ -148,6 +151,9 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 		if (type == match)
- 			break;
- 	}
-+
-+	spin_unlock_irqrestore(&cpts->lock, flags);
-+
- 	return type == match ? 0 : -1;
- }
- 
-@@ -161,10 +167,15 @@ static u64 cpts_systim_read(const struct cyclecounter *cc)
- static void cpts_update_cur_time(struct cpts *cpts, int match,
- 				 struct ptp_system_timestamp *sts)
- {
-+	unsigned long flags;
-+
-+	/* use spin_lock_irqsave() here as it has to run very fast */
-+	spin_lock_irqsave(&cpts->lock, flags);
- 	ptp_read_system_prets(sts);
- 	cpts_write32(cpts, TS_PUSH, ts_push);
- 	cpts_read32(cpts, ts_push);
- 	ptp_read_system_postts(sts);
-+	spin_unlock_irqrestore(&cpts->lock, flags);
- 
- 	if (cpts_fifo_read(cpts, match) && match != -1)
- 		dev_err(cpts->dev, "cpts: unable to obtain a time stamp\n");
-@@ -174,11 +185,10 @@ static void cpts_update_cur_time(struct cpts *cpts, int match,
- 
- static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
- {
--	u64 adj;
--	u32 diff, mult;
--	int neg_adj = 0;
--	unsigned long flags;
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
-+	int neg_adj = 0;
-+	u32 diff, mult;
-+	u64 adj;
- 
- 	if (ppb < 0) {
- 		neg_adj = 1;
-@@ -189,25 +199,23 @@ static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
- 	adj *= ppb;
- 	diff = div_u64(adj, 1000000000ULL);
- 
--	spin_lock_irqsave(&cpts->lock, flags);
-+	mutex_lock(&cpts->ptp_clk_mutex);
- 
- 	cpts->mult_new = neg_adj ? mult - diff : mult + diff;
- 
- 	cpts_update_cur_time(cpts, CPTS_EV_PUSH, NULL);
- 
--	spin_unlock_irqrestore(&cpts->lock, flags);
--
-+	mutex_unlock(&cpts->ptp_clk_mutex);
- 	return 0;
- }
- 
- static int cpts_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
- {
--	unsigned long flags;
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
- 
--	spin_lock_irqsave(&cpts->lock, flags);
-+	mutex_lock(&cpts->ptp_clk_mutex);
- 	timecounter_adjtime(&cpts->tc, delta);
--	spin_unlock_irqrestore(&cpts->lock, flags);
-+	mutex_unlock(&cpts->ptp_clk_mutex);
- 
- 	return 0;
- }
-@@ -217,15 +225,14 @@ static int cpts_ptp_gettimeex(struct ptp_clock_info *ptp,
- 			      struct ptp_system_timestamp *sts)
- {
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
--	unsigned long flags;
- 	u64 ns;
- 
--	spin_lock_irqsave(&cpts->lock, flags);
-+	mutex_lock(&cpts->ptp_clk_mutex);
- 
- 	cpts_update_cur_time(cpts, CPTS_EV_PUSH, sts);
- 
- 	ns = timecounter_read(&cpts->tc);
--	spin_unlock_irqrestore(&cpts->lock, flags);
-+	mutex_unlock(&cpts->ptp_clk_mutex);
- 
- 	*ts = ns_to_timespec64(ns);
- 
-@@ -235,15 +242,14 @@ static int cpts_ptp_gettimeex(struct ptp_clock_info *ptp,
- static int cpts_ptp_settime(struct ptp_clock_info *ptp,
- 			    const struct timespec64 *ts)
- {
--	u64 ns;
--	unsigned long flags;
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
-+	u64 ns;
- 
- 	ns = timespec64_to_ns(ts);
- 
--	spin_lock_irqsave(&cpts->lock, flags);
-+	mutex_lock(&cpts->ptp_clk_mutex);
- 	timecounter_init(&cpts->tc, &cpts->cc, ns);
--	spin_unlock_irqrestore(&cpts->lock, flags);
-+	mutex_unlock(&cpts->ptp_clk_mutex);
- 
- 	return 0;
- }
-@@ -339,10 +345,9 @@ static long cpts_overflow_check(struct ptp_clock_info *ptp)
++	struct ptp_clock_event pevent;
+ 	bool need_schedule = false;
+ 	struct cpts_event *event;
  	unsigned long flags;
- 	u64 ns;
- 
--	spin_lock_irqsave(&cpts->lock, flags);
--	cpts_update_cur_time(cpts, -1, NULL);
--	spin_unlock_irqrestore(&cpts->lock, flags);
-+	mutex_lock(&cpts->ptp_clk_mutex);
- 
-+	cpts_update_cur_time(cpts, -1, NULL);
- 	ns = timecounter_read(&cpts->tc);
- 
- 	cpts_process_events(cpts);
-@@ -356,6 +361,7 @@ static long cpts_overflow_check(struct ptp_clock_info *ptp)
- 	spin_unlock_irqrestore(&cpts->txq.lock, flags);
- 
- 	dev_dbg(cpts->dev, "cpts overflow check at %lld\n", ns);
-+	mutex_unlock(&cpts->ptp_clk_mutex);
- 	return (long)delay;
+@@ -146,7 +152,12 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
+ 			break;
+ 		case CPTS_EV_ROLL:
+ 		case CPTS_EV_HALF:
++			break;
+ 		case CPTS_EV_HW:
++			pevent.timestamp = event->timestamp;
++			pevent.type = PTP_CLOCK_EXTTS;
++			pevent.index = cpts_event_port(event) - 1;
++			ptp_clock_event(cpts->clock, &pevent);
+ 			break;
+ 		default:
+ 			dev_err(cpts->dev, "cpts: unknown event type\n");
+@@ -272,9 +283,42 @@ static int cpts_ptp_settime(struct ptp_clock_info *ptp,
+ 	return 0;
  }
  
-@@ -425,8 +431,8 @@ static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb,
- 	u32 mtype_seqid;
- 	u64 ns = 0;
++static int cpts_extts_enable(struct cpts *cpts, u32 index, int on)
++{
++	u32 v;
++
++	if (((cpts->hw_ts_enable & BIT(index)) >> index) == on)
++		return 0;
++
++	mutex_lock(&cpts->ptp_clk_mutex);
++
++	v = cpts_read32(cpts, control);
++	if (on) {
++		v |= BIT(8 + index);
++		cpts->hw_ts_enable |= BIT(index);
++	} else {
++		v &= ~BIT(8 + index);
++		cpts->hw_ts_enable &= ~BIT(index);
++	}
++	cpts_write32(cpts, v, control);
++
++	mutex_unlock(&cpts->ptp_clk_mutex);
++
++	return 0;
++}
++
+ static int cpts_ptp_enable(struct ptp_clock_info *ptp,
+ 			   struct ptp_clock_request *rq, int on)
+ {
++	struct cpts *cpts = container_of(ptp, struct cpts, info);
++
++	switch (rq->type) {
++	case PTP_CLK_REQ_EXTTS:
++		return cpts_extts_enable(cpts, rq->extts.index, on);
++	default:
++		break;
++	}
++
+ 	return -EOPNOTSUPP;
+ }
  
--	spin_lock_irqsave(&cpts->lock, flags);
- 	cpts_fifo_read(cpts, -1);
-+	spin_lock_irqsave(&cpts->lock, flags);
- 	list_for_each_safe(this, next, &cpts->events) {
- 		event = list_entry(this, struct cpts_event, list);
- 		if (event_expired(event)) {
-@@ -703,6 +709,7 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
- 	cpts->dev = dev;
- 	cpts->reg = (struct cpsw_cpts __iomem *)regs;
- 	spin_lock_init(&cpts->lock);
-+	mutex_init(&cpts->ptp_clk_mutex);
+@@ -715,7 +759,7 @@ static int cpts_of_parse(struct cpts *cpts, struct device_node *node)
+ }
  
- 	ret = cpts_of_parse(cpts, node);
- 	if (ret)
+ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
+-			 struct device_node *node)
++			 struct device_node *node, u32 n_ext_ts)
+ {
+ 	struct cpts *cpts;
+ 	int ret;
+@@ -754,6 +798,9 @@ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
+ 	cpts->cc.mask = CLOCKSOURCE_MASK(32);
+ 	cpts->info = cpts_info;
+ 
++	if (n_ext_ts)
++		cpts->info.n_ext_ts = n_ext_ts;
++
+ 	cpts_calc_mult_shift(cpts);
+ 	/* save cc.mult original value as it can be modified
+ 	 * by cpts_ptp_adjfreq().
 diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
-index 421630049ee7..f16e14d67f5f 100644
+index 473d0622e861..07222f651d2e 100644
 --- a/drivers/net/ethernet/ti/cpts.h
 +++ b/drivers/net/ethernet/ti/cpts.h
-@@ -104,7 +104,7 @@ struct cpts {
- 	int rx_enable;
- 	struct ptp_clock_info info;
- 	struct ptp_clock *clock;
--	spinlock_t lock; /* protects time registers */
-+	spinlock_t lock; /* protects fifo/events */
- 	u32 cc_mult; /* for the nominal frequency */
- 	struct cyclecounter cc;
- 	struct timecounter tc;
-@@ -117,6 +117,7 @@ struct cpts {
- 	struct sk_buff_head txq;
- 	u64 cur_timestamp;
- 	u32 mult_new;
-+	struct mutex ptp_clk_mutex; /* sync PTP interface and worker */
+@@ -120,6 +120,7 @@ struct cpts {
+ 	struct mutex ptp_clk_mutex; /* sync PTP interface and worker */
+ 	bool irq_poll;
+ 	struct completion	ts_push_complete;
++	u32 hw_ts_enable;
  };
  
  void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
+@@ -127,7 +128,7 @@ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb);
+ int cpts_register(struct cpts *cpts);
+ void cpts_unregister(struct cpts *cpts);
+ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
+-			 struct device_node *node);
++			 struct device_node *node, u32 n_ext_ts);
+ void cpts_release(struct cpts *cpts);
+ void cpts_misc_interrupt(struct cpts *cpts);
+ 
+@@ -158,7 +159,7 @@ static inline void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
+ 
+ static inline
+ struct cpts *cpts_create(struct device *dev, void __iomem *regs,
+-			 struct device_node *node)
++			 struct device_node *node, u32 n_ext_ts)
+ {
+ 	return NULL;
+ }
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index fb36115e9c51..9d6e27fb710e 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -3716,7 +3716,8 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+ 	if (!cpts_node)
+ 		cpts_node = of_node_get(node);
+ 
+-	gbe_dev->cpts = cpts_create(gbe_dev->dev, gbe_dev->cpts_reg, cpts_node);
++	gbe_dev->cpts = cpts_create(gbe_dev->dev, gbe_dev->cpts_reg,
++				    cpts_node, 0);
+ 	of_node_put(cpts_node);
+ 	if (IS_ENABLED(CONFIG_TI_CPTS) && IS_ERR(gbe_dev->cpts)) {
+ 		ret = PTR_ERR(gbe_dev->cpts);
 -- 
 2.17.1
 
