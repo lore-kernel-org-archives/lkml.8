@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75639C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B672AC5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466AD2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DFE020776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550894;
-	bh=f+MIyflL7PoUCPvmXSbksyJDbP3lDfOTiJtP3BLlWqs=;
+	s=default; t=1587550902;
+	bh=UGUfe1U4LpfmshnMIP8jNUJV/ZQTslokztFJNdAPGx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tjPzBMqTKi11Qjg08SsMkYizTald9eusirFv9Tzz0WUPcyAb8nP4r5euqAEVCDq5d
-	 ZxxbJ8FI9kvPy9BHm4Jk6Q0vXZnLSy4U+k1/kma2LOsH3lt3HiNd46Ta88hcKXoPUl
-	 jJdsWI0CtFlHkFdR99PA3tfgd5ca1dfinJmYAoiE=
+	b=tL//sa37Ivv37CaUPNIeOu2qZi0glM2iHVYqCasfmgsauXHhEc4CDm9+KTLfmDko4
+	 sK/ywxDTtWDo3KHQ4opRUnSfs35IN31mzvkQKYhnhe6ePgEKbPFTdSK4/JXMKG/TPJ
+	 lkk3mHg0Cs4xUCOSXi2SDHo4S7N4UfilPACttWO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbgDVKVS (ORCPT
+        id S1729799AbgDVKVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbgDVKSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:32 -0400
+        id S1729999AbgDVKSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E17E2076E;
-        Wed, 22 Apr 2020 10:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 108802070B;
+        Wed, 22 Apr 2020 10:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550712;
-        bh=f+MIyflL7PoUCPvmXSbksyJDbP3lDfOTiJtP3BLlWqs=;
+        s=default; t=1587550719;
+        bh=UGUfe1U4LpfmshnMIP8jNUJV/ZQTslokztFJNdAPGx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aPSDLGpNzSaWstvYlNFiz8UbjQcNEOpvVgW+O/EuNZ1QdChT4P51Sgfo9uKixX5LM
-         0RMFFcRMpwfmTOLl4Lligm3eKvDqSnci3XSEjnaxkavaWcNuOhzWZpq3ckAQWD5t3q
-         L02VBClZ/B2ltOQpmAlrNb4I2cB0xjeKyv0FrYhk=
+        b=dx6MvKW3w5RasMtBpMgIjRAuSRvHwloR3xzLHeAss1yus/9im9CWZCbiwZL8/cXnc
+         8gUwBZnVZtd+exJWm8sKkxIUYU6MReXp9tkCHY7bCSZfxvMjJSRQYpisWJkWMT69cX
+         VrLmGJIuqf2ugwhPwn8g5B0SUHnkJKu6C/udxA+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/118] btrfs: add RCU locks around block group initialization
-Date:   Wed, 22 Apr 2020 11:57:03 +0200
-Message-Id: <20200422095042.165012684@linuxfoundation.org>
+Subject: [PATCH 5.4 038/118] net/mlx5e: Enforce setting of a single FEC mode
+Date:   Wed, 22 Apr 2020 11:56:39 +0200
+Message-Id: <20200422095038.180585894@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -61,55 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 29566c9c773456467933ee22bbca1c2b72a3506c ]
+[ Upstream commit 4bd9d5070b92da012f2715cf8e4859acb78b8f35 ]
 
-The space_info list is normally RCU protected and should be traversed
-with rcu_read_lock held. There's a warning
+Ethtool command allow setting of several FEC modes in a single set
+command. The driver can only set a single FEC mode at a time. With this
+patch driver will reply not-supported on setting several FEC modes.
 
-  [29.104756] WARNING: suspicious RCU usage
-  [29.105046] 5.6.0-rc4-next-20200305 #1 Not tainted
-  [29.105231] -----------------------------
-  [29.105401] fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
-
-pointing out that the locking is missing in btrfs_read_block_groups.
-However this is not necessary as the list traversal happens at mount
-time when there's no other thread potentially accessing the list.
-
-To fix the warning and for consistency let's add the RCU lock/unlock,
-the code won't be affected much as it's doing some lightweight
-operations.
-
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-group.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 7dcfa7d7632a1..95330f40f998c 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -1829,6 +1829,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
- 		}
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index 304ddce6b0872..39ee32518b106 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1548,6 +1548,10 @@ static int mlx5e_set_fecparam(struct net_device *netdev,
+ 	int mode;
+ 	int err;
  
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(space_info, &info->space_info, list) {
- 		if (!(btrfs_get_alloc_profile(info, space_info->flags) &
- 		      (BTRFS_BLOCK_GROUP_RAID10 |
-@@ -1849,6 +1850,7 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
- 				list)
- 			inc_block_group_ro(cache, 1);
- 	}
-+	rcu_read_unlock();
- 
- 	btrfs_init_global_block_rsv(info);
- 	ret = check_chunk_block_group_mappings(info);
++	if (bitmap_weight((unsigned long *)&fecparam->fec,
++			  ETHTOOL_FEC_BASER_BIT + 1) > 1)
++		return -EOPNOTSUPP;
++
+ 	for (mode = 0; mode < ARRAY_SIZE(pplm_fec_2_ethtool); mode++) {
+ 		if (!(pplm_fec_2_ethtool[mode] & fecparam->fec))
+ 			continue;
 -- 
 2.20.1
 
