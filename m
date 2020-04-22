@@ -2,223 +2,112 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926E8C5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B035C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A2A2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587541687;
-	bh=fgxsqBViMwAsci9ncSjKQiPsgSaITu+JNEbMX6/R8QA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KNNC1N84gpF9pc2pMXPrwrP2JJcbhofqM6CMMnYvcdnmGkkGqPef1l0xki8pJc0p3
-	 wu4YBesCW4rdRM9vr3XtN97uwcnDLADVAs4pV2FSRTbCaMcdMTY+gqWNlFnQq9DCfh
-	 CazdrJnm7tHim/QXaRTCTBv0jEHWF2CxKFkFF6aU=
+	by mail.kernel.org (Postfix) with ESMTP id 72F472070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ayqn1vfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgDVHsH (ORCPT
+        id S1726503AbgDVHsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:48:07 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36660 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbgDVHsG (ORCPT
+        Wed, 22 Apr 2020 03:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725842AbgDVHsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:48:06 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g30so671510pfr.3;
-        Wed, 22 Apr 2020 00:48:05 -0700 (PDT)
+        Wed, 22 Apr 2020 03:48:14 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17431C03C1A6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:14 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id c190so1363197pfc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9HUq00N6jmzIo0+nRmNO3NIJIF03YhOq9io6sQiHkEA=;
+        b=Ayqn1vfEmsn47YwBswhWoVXmXdRP/hQR9tPrzb9dQTfMlPK5PWPROXnwuzjTnrLeqF
+         uVOPdSYVquV3+hwARpMVKcvEb1Y9D7P4H/b7RfnpksCrA+wpMtZg7hLNCMkC3IPrgFMv
+         rPesoFKWyvLpFvxjdLf/4XTD7A7XNqwLUiM7ifqvcPlWJmHsDMV8hAYjcSUn3zEdHCIQ
+         Gg3SzoZ+fs8Xs86EM/9LlxtAtft3U2ZS1TSBciZLJpKlbbwSnIgKTI5BGjoA4UQuYNYg
+         X5/+27Lno7soggC2PcGeSO5aR30P204PSdNUlzzbeRL9xjtwpsx7SBdnoZ0J5I4iIdBp
+         kLQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+SMYq/4vJ74M0LfJtwun4BRKxfhWvtLo+wkfl9OYurc=;
-        b=aXiZj2rZEHQUVuS1IPtOwokWeWWRiskWQUgYfqeeF8bakjcUajCkH6RwRIMzjzFNXw
-         AvIfkFtHxgV3KLWzr0cXx0+U+o7atpgw40kGNFLCjqNWROrQdXM4sIBf/BHwdsT2Ymun
-         Cuk+K5FxNxnHVAHfN2nvI4uHAt6H5dUjzpsrJjW2ByTvpm1UDx5ZR3F1IIemSQH5S2mr
-         swCCIOAY3dkJhKdVxwL+0LC4KehjL4LmlAOyssagovXZ6gWA5xUN0pKxvHqoYunFFd7l
-         4DzHLjeYD02OB4YiG+pnROz01vkanXtGYUKf3B9r2ovAdO/4WFSv+/6Ci7R+4pqB++3y
-         JsmA==
-X-Gm-Message-State: AGi0PubOvXnSfmfOnPltDzmoH8XPU5yiK502xUeQeErw7pkL0d6wBozu
-        ilpbappA6Ru6AImLcSapfLA=
-X-Google-Smtp-Source: APiQypLRQPdTJrBV6I/vZtyxwxFN1GzQ0y7RzxhSMbXI2z5hooPeifS431qso2u8rbsgVBHwKEY4Bw==
-X-Received: by 2002:a63:6f07:: with SMTP id k7mr26600891pgc.274.1587541684638;
-        Wed, 22 Apr 2020 00:48:04 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id fh18sm16882435pjb.0.2020.04.22.00.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 00:48:03 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D50C1402A1; Wed, 22 Apr 2020 07:48:02 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 07:48:02 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200422074802.GS11244@42.do-not-panic.com>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
- <20200422072715.GC19116@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422072715.GC19116@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9HUq00N6jmzIo0+nRmNO3NIJIF03YhOq9io6sQiHkEA=;
+        b=OPJaEZiakeYo189A+MnxH2MnBqqowHTjhGN48dM6B6QLj7LYaCJj0AbRlLVFgF2Dwl
+         9VeKQYTu3rKOOGKIC9rK1ro7ZxFxYHNTJdGnLw0VKj/hpq/0vSUUofc2ihfiKzr8xmY1
+         6HuwwclPqshFsZoKhkZsIwzMxcsOXH5jY/CL1e1Yw6lqfRYwSPxpsSDYeSXbcszIJGaf
+         /uMlAfFf243Y63YEcmckMcMOI8iLfQB1kRUJazTmDK10EmnZLmbAAf/zFr0FEIr7yMow
+         hy35bBsQv2TjxPF1vl76LI95DKL1+p8NKeGexdyD0+De6L/ZnjjeDea6P4QVYNvPE2a6
+         pB4g==
+X-Gm-Message-State: AGi0PuYgdKyBIYIg0+Xsza6yREzIl59KLkIY+IvlmcZRQmg5jk0coRNW
+        IeoRLPdGxb+G2YSok6b53NDJH+UMIk28
+X-Google-Smtp-Source: APiQypJnukvej9k6sd3XOrpco3hQ6FbAtq2B4ko4qEepnvdy7OGC67aq8C+c1CGuV9g+Qx1361EfZcEz0RTD
+X-Received: by 2002:a17:90a:65c5:: with SMTP id i5mr10189197pjs.18.1587541693454;
+ Wed, 22 Apr 2020 00:48:13 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 00:48:01 -0700
+Message-Id: <20200422074809.160248-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
+Subject: [PATCH 0/8] perf metric fixes and test
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:27:15AM -0700, Christoph Hellwig wrote:
-> On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
-> > +{
-> > +	struct dentry *dir = NULL;
-> > +
-> > +	/* This can happen if we have a bug in the lower layers */
-> > +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
-> > +	if (dir) {
-> > +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
-> > +			kobject_name(q->kobj.parent));
-> > +		dput(dir);
-> > +		return -EALREADY;
-> > +	}
-> 
-> I don't see why we need this check.  If it is valueable enough we
-> should have a debugfs_create_dir_exclusive or so that retunrns an error
-> for an exsting directory, instead of reimplementing it in the caller in
-> a racy way.  But I'm not really sure we need it to start with.
+Add a test that all perf metrics (for your architecture) are
+parsable. Fix bugs in the expr parser and in x86 metrics. Untested on
+architectures other than x86.
 
-In short races, and even with synchronous request_queue removal I'm
-seeing the race is still possible, but that's due to some other races
-I'm going to chase down now.
+Ian Rogers (8):
+  perf expr: unlimited escaped characters in a symbol
+  perf metrics: fix parse errors in cascade lake metrics
+  perf metrics: fix parse errors in skylake metrics
+  perf expr: allow ',' to be an other token
+  perf expr: increase max other
+  perf expr: parse numbers as doubles
+  perf expr: debug lex if debugging yaxx
+  perf test: add expr test for pmu metrics
 
-The easier solution really is to just have a debugfs dir created for
-each partition if debugfs is enabled, this way the directory will
-always be there, and the lookups are gone.
+ .../arch/x86/cascadelakex/clx-metrics.json    | 10 +-
+ .../arch/x86/skylakex/skx-metrics.json        |  4 +-
+ tools/perf/tests/builtin-test.c               |  5 +
+ tools/perf/tests/expr.c                       | 91 ++++++++++++++++++-
+ tools/perf/tests/tests.h                      |  2 +
+ tools/perf/util/expr.c                        |  1 +
+ tools/perf/util/expr.h                        |  2 +-
+ tools/perf/util/expr.l                        | 16 ++--
+ tools/perf/util/expr.y                        |  2 +-
+ 9 files changed, 115 insertions(+), 18 deletions(-)
 
-> > +
-> > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > +					    blk_debugfs_root);
-> > +	if (!q->debugfs_dir)
-> > +		return -ENOMEM;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +void blk_queue_debugfs_unregister(struct request_queue *q)
-> > +{
-> > +	debugfs_remove_recursive(q->debugfs_dir);
-> > +	q->debugfs_dir = NULL;
-> > +}
-> 
-> Which to me suggests we can just fold these two into the callers,
-> with an IS_ENABLED for the creation case given that we check for errors
-> and the stub will always return an error.
+-- 
+2.26.2.303.gf8c07b1a785-goog
 
-Sorry not sure I follow this.
-
-> >  	debugfs_create_files(q->debugfs_dir, q, blk_mq_debugfs_queue_attrs);
-> >  
-> >  	/*
-> > @@ -856,9 +853,7 @@ void blk_mq_debugfs_register(struct request_queue *q)
-> >  
-> >  void blk_mq_debugfs_unregister(struct request_queue *q)
-> >  {
-> > -	debugfs_remove_recursive(q->debugfs_dir);
-> >  	q->sched_debugfs_dir = NULL;
-> > -	q->debugfs_dir = NULL;
-> >  }
-> 
-> This function is weird - the sched dir gets removed by the
-> debugfs_remove_recursive, so just leaving a function that clears
-> a pointer is rather odd.  In fact I don't think we need to clear
-> either sched_debugfs_dir or debugfs_dir anywhere.
-
-Indeed. Will clean it up.
-
-> > @@ -975,6 +976,14 @@ int blk_register_queue(struct gendisk *disk)
-> >  		goto unlock;
-> >  	}
-> >  
-> > +	ret = blk_queue_debugfs_register(q);
-> > +	if (ret) {
-> > +		blk_trace_remove_sysfs(dev);
-> > +		kobject_del(&q->kobj);
-> > +		kobject_put(&dev->kobj);
-> > +		goto unlock;
-> > +	}
-> > +
-> 
-> Please use a goto label to consolidate the common cleanup code.
-
-Sure.
-
-> Also I think these generic debugfs changes probably should be separate
-> to the blktrace changes.
-
-I'll try to do that.
-
-> >  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
-> > +					    struct request_queue *q,
-> >  					    struct blk_trace *bt)
-> >  {
-> >  	struct dentry *dir = NULL;
-> >  
-> > +	/* This can only happen if we have a bug on our lower layers */
-> > +	if (!q->kobj.parent) {
-> > +		pr_warn("%s: request_queue parent is gone\n", buts->name);
-> > +		return NULL;
-> > +	}
-> 
-> Why is this not simply a WARN_ON_ONCE()?
-
-I'll actually remove it and instead fix the race where it happens.
-
-> > +	if (blk_trace_target_disk(buts->name, kobject_name(q->kobj.parent))) {
-> > +		if (!q->debugfs_dir) {
-> > +			pr_warn("%s: expected request_queue debugfs_dir is not set\n",
-> > +				buts->name);
-> > +			return NULL;
-> > +		}
-> > +		/*
-> > +		 * debugfs_lookup() is used to ensure the directory is not
-> > +		 * taken from underneath us. We must dput() it later once
-> > +		 * done with it within blktrace.
-> > +		 */
-> > +		dir = debugfs_lookup(buts->name, blk_debugfs_root);
-> > +		if (!dir) {
-> > +			pr_warn("%s: expected request_queue debugfs_dir dentry is gone\n",
-> > +				buts->name);
-> > +			return NULL;
-> > +		}
-> > +		 /*
-> > +		 * This is a reaffirmation that debugfs_lookup() shall always
-> > +		 * return the same dentry if it was already set.
-> > +		 */
-> > +		if (dir != q->debugfs_dir) {
-> > +			dput(dir);
-> > +			pr_warn("%s: expected dentry dir != q->debugfs_dir\n",
-> > +				buts->name);
-> > +			return NULL;
-> > +		}
-> > +		bt->backing_dir = q->debugfs_dir;
-> > +		return bt->backing_dir;
-> > +	}
-> 
-> Even with the gigantic commit log I don't get the point of this
-> code.  It looks rather sketchy and I can't find a rationale for it.
-
-Yeah I think this is going to be much easier on the eyes with the
-revert to synchronous request_queue removal first.
-
-  Luis
