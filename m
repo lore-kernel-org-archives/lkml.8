@@ -5,60 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC87DC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A19C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9830720784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CEB2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgDVMT7 (ORCPT
+        id S1728803AbgDVMTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53432 "EHLO
+        Wed, 22 Apr 2020 08:19:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728871AbgDVMRy (ORCPT
+        by vger.kernel.org with ESMTP id S1728872AbgDVMRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 08:17:54 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6705FC03C1A8;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90800C03C1AB;
         Wed, 22 Apr 2020 05:17:54 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJw-00081i-M7; Wed, 22 Apr 2020 14:17:40 +0200
+        id 1jREJr-0007u5-50; Wed, 22 Apr 2020 14:17:35 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A11E11C0450;
-        Wed, 22 Apr 2020 14:17:33 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:33 -0000
-From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 627A51C04CD;
+        Wed, 22 Apr 2020 14:17:29 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:29 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] drivers/perf: Open access for CAP_PERFMON privileged process
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
+Subject: [tip: perf/core] perf expr: Add expr_ prefix for parse_ctx and parse_id
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Joe Mario <jmario@redhat.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <4ec1d6f7-548c-8d1c-f84a-cebeb9674e4e@linux.intel.com>
-References: <4ec1d6f7-548c-8d1c-f84a-cebeb9674e4e@linux.intel.com>
+In-Reply-To: <20200401203340.31402-2-kjain@linux.ibm.com>
+References: <20200401203340.31402-2-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <158755785322.28353.1027174524920122867.tip-bot2@tip-bot2>
+Message-ID: <158755784901.28353.11635773468936681149.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -74,74 +80,191 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     cea7d0d4a59b4efd0e1fe067130b4c06ab4d412f
-Gitweb:        https://git.kernel.org/tip/cea7d0d4a59b4efd0e1fe067130b4c06ab4d412f
-Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate:    Thu, 02 Apr 2020 11:51:21 +03:00
+Commit-ID:     aecce63e2b98f28606b063949cca06facf215d6c
+Gitweb:        https://git.kernel.org/tip/aecce63e2b98f28606b063949cca06facf215d6c
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Thu, 02 Apr 2020 02:03:34 +05:30
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 16 Apr 2020 12:19:09 -03:00
+CommitterDate: Thu, 16 Apr 2020 12:19:13 -03:00
 
-drivers/perf: Open access for CAP_PERFMON privileged process
+perf expr: Add expr_ prefix for parse_ctx and parse_id
 
-Open access to monitoring for CAP_PERFMON privileged process.  Providing
-the access under CAP_PERFMON capability singly, without the rest of
-CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials
-and makes operation more secure.
+Adding expr_ prefix for parse_ctx and parse_id, to straighten out the
+expr* namespace.
 
-CAP_PERFMON implements the principle of least privilege for performance
-monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
-principle of least privilege: A security design principle that states
-that a process or program be granted only those privileges (e.g.,
-capabilities) necessary to accomplish its legitimate function, and only
-for the time that such privileges are actually required)
+There's no functional change.
 
-For backward compatibility reasons access to the monitoring remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
-secure monitoring is discouraged with respect to CAP_PERFMON capability.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-Acked-by: Will Deacon <will@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Joe Mario <jmario@redhat.com>
+Cc: Kajol Jain <kjain@linux.ibm.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paul Mackerras <paulus@ozlabs.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-man@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: selinux@vger.kernel.org
-Link: http://lore.kernel.org/lkml/4ec1d6f7-548c-8d1c-f84a-cebeb9674e4e@linux.intel.com
+Cc: linuxppc-dev@lists.ozlabs.org
+Link: http://lore.kernel.org/lkml/20200401203340.31402-2-kjain@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/perf/arm_spe_pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/tests/expr.c       |  4 ++--
+ tools/perf/util/expr.c        | 10 +++++-----
+ tools/perf/util/expr.h        | 12 ++++++------
+ tools/perf/util/expr.y        |  6 +++---
+ tools/perf/util/stat-shadow.c |  2 +-
+ 5 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index b72c048..0e0961a 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -274,7 +274,7 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
- 	if (!attr->exclude_kernel)
- 		reg |= BIT(SYS_PMSCR_EL1_E1SPE_SHIFT);
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 28313e5..ea10fc4 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -6,7 +6,7 @@
+ #include <string.h>
+ #include <linux/zalloc.h>
  
--	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && capable(CAP_SYS_ADMIN))
-+	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
- 		reg |= BIT(SYS_PMSCR_EL1_CX_SHIFT);
+-static int test(struct parse_ctx *ctx, const char *e, double val2)
++static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
+ {
+ 	double val;
  
- 	return reg;
-@@ -700,7 +700,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 		return -EOPNOTSUPP;
+@@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	const char **other;
+ 	double val;
+ 	int i, ret;
+-	struct parse_ctx ctx;
++	struct expr_parse_ctx ctx;
+ 	int num_other;
  
- 	reg = arm_spe_event_to_pmscr(event);
--	if (!capable(CAP_SYS_ADMIN) &&
-+	if (!perfmon_capable() &&
- 	    (reg & (BIT(SYS_PMSCR_EL1_PA_SHIFT) |
- 		    BIT(SYS_PMSCR_EL1_CX_SHIFT) |
- 		    BIT(SYS_PMSCR_EL1_PCT_SHIFT))))
+ 	expr__ctx_init(&ctx);
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index fd192dd..c8ccc54 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -11,7 +11,7 @@ extern int expr_debug;
+ #endif
+ 
+ /* Caller must make sure id is allocated */
+-void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
++void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
+ {
+ 	int idx;
+ 
+@@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+ 	ctx->ids[idx].val = val;
+ }
+ 
+-void expr__ctx_init(struct parse_ctx *ctx)
++void expr__ctx_init(struct expr_parse_ctx *ctx)
+ {
+ 	ctx->num_ids = 0;
+ }
+ 
+ static int
+-__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
++__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+ 	      int start)
+ {
+ 	YY_BUFFER_STATE buffer;
+@@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+ 	return ret;
+ }
+ 
+-int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
++int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
+ {
+ 	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
+ }
+@@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
+ 		     int *num_other)
+ {
+ 	int err, i = 0, j = 0;
+-	struct parse_ctx ctx;
++	struct expr_parse_ctx ctx;
+ 
+ 	expr__ctx_init(&ctx);
+ 	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 9377538..b9e53f2 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -5,19 +5,19 @@
+ #define EXPR_MAX_OTHER 20
+ #define MAX_PARSE_ID EXPR_MAX_OTHER
+ 
+-struct parse_id {
++struct expr_parse_id {
+ 	const char *name;
+ 	double val;
+ };
+ 
+-struct parse_ctx {
++struct expr_parse_ctx {
+ 	int num_ids;
+-	struct parse_id ids[MAX_PARSE_ID];
++	struct expr_parse_id ids[MAX_PARSE_ID];
+ };
+ 
+-void expr__ctx_init(struct parse_ctx *ctx);
+-void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+-int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
++void expr__ctx_init(struct expr_parse_ctx *ctx);
++void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
++int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
+ int expr__find_other(const char *expr, const char *one, const char ***other,
+ 		int *num_other);
+ 
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 4720cbe..cd17486 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -15,7 +15,7 @@
+ %define api.pure full
+ 
+ %parse-param { double *final_val }
+-%parse-param { struct parse_ctx *ctx }
++%parse-param { struct expr_parse_ctx *ctx }
+ %parse-param {void *scanner}
+ %lex-param {void* scanner}
+ 
+@@ -39,14 +39,14 @@
+ 
+ %{
+ static void expr_error(double *final_val __maybe_unused,
+-		       struct parse_ctx *ctx __maybe_unused,
++		       struct expr_parse_ctx *ctx __maybe_unused,
+ 		       void *scanner,
+ 		       const char *s)
+ {
+ 	pr_debug("%s\n", s);
+ }
+ 
+-static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
++static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
+ {
+ 	int i;
+ 
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 03ecb8c..1ad5c5b 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 			   struct runtime_stat *st)
+ {
+ 	print_metric_t print_metric = out->print_metric;
+-	struct parse_ctx pctx;
++	struct expr_parse_ctx pctx;
+ 	double ratio, scale;
+ 	int i;
+ 	void *ctxp = out->ctx;
