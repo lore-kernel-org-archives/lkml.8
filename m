@@ -2,256 +2,237 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9250BC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D747C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 641E020882
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JEGM+3SW"
+	by mail.kernel.org (Postfix) with ESMTP id 334FD20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587586412;
+	bh=K+GwvNqtPIj2LewkDBhiV1A/aYbBwgrGWX6IRuIs40w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BxESQJ/S/1RsrPIvecrF4cG+Gne03CfFA5aLXjUYmmLHDi6WuuUG2Cuhf8M1voo7X
+	 J6VeKayB/HXOMFRJRZaibD3Ee4P9B1Y+8HNNL2ryu6YZBlcYVzRQpjpbbTwbxfSzmq
+	 1PYLxo7/Ovs+q3/emPSyf37GGDGWX0XIwVMCDQTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgDVUNZ (ORCPT
+        id S1726834AbgDVUNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:13:25 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46196 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgDVUNY (ORCPT
+        Wed, 22 Apr 2020 16:13:30 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43457 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgDVUN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:13:24 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03MKDHSU067814;
-        Wed, 22 Apr 2020 15:13:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587586397;
-        bh=agWItc8JofcjHPo/+950nEtdLQioZkt6XS5Sk3vvuS4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JEGM+3SW1yIhrNIAjgCaYAbZRNRw0oc2y3HL9xlNIvF32srFc6yIMxS861Gijyntg
-         dYy5yjDSJKJYA2tkORLQhk7IZeyOEXemh4pJ+8FoecrdjTSEm2DRPmsNYD/ofy09o5
-         kcQxROiOaJY2xzOJCgAtCSh00hogTAOcYsGgF4gM=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03MKDHHw085596;
-        Wed, 22 Apr 2020 15:13:17 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Apr 2020 15:13:16 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Apr 2020 15:13:16 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03MKDFEq105147;
-        Wed, 22 Apr 2020 15:13:16 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v4 02/10] net: ethernet: ti: cpts: separate hw counter read from timecounter
-Date:   Wed, 22 Apr 2020 23:12:46 +0300
-Message-ID: <20200422201254.15232-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200422201254.15232-1-grygorii.strashko@ti.com>
-References: <20200422201254.15232-1-grygorii.strashko@ti.com>
+        Wed, 22 Apr 2020 16:13:28 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g14so3342847otg.10;
+        Wed, 22 Apr 2020 13:13:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FU28JBKGEW/8GQtu1EPA/t3igT0iC4W0GHS/U/6pah4=;
+        b=V7dCPC0ZpML8QoKAXcbyONXtvrMqpCN04mbrUtoPRrodX9gVxpT9KvhBHXGFH+3EH0
+         cGFrrvMOb0JRp8uKr78fX3M17qw/bI8C4i9qvc5vvXd/tUnvVIZ2m7n8FeV5IO2dIvcl
+         srgSBOQQPD+FGlYTAaVLX3PTspygSYz+PRRBHLkIC+s5vYM2lyghUTN7euBMs2aV9Hem
+         hg7aD36o2PpmhxjbmbTkpa8zVXZX+ni4yBAQIzTM+s9pf1f0cL/Z3oo13OjgoUyaMNCr
+         7Jk9ZEEXDBMhrvID86ZeIDcVZHRiPC3/06iM2M2I6HE7jADrm6zObIY0xJKamoVUdHNv
+         Pfjg==
+X-Gm-Message-State: AGi0PubZ7hK3Aw6jekBoOzXxRQz0lZjpnb/FTJqYW7GNTd7pVk82ZOlF
+        PDnM72NbSqzM3FnGVfUejyZ3S68=
+X-Google-Smtp-Source: APiQypLq1juXk3wkyAmmhugjQWskZwTMMSVHNWayyrQVPc7tVA60BLU67e9v/cwDx0dAkBMdlJyA5A==
+X-Received: by 2002:a9d:6b11:: with SMTP id g17mr712345otp.264.1587586407497;
+        Wed, 22 Apr 2020 13:13:27 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t26sm33325otl.71.2020.04.22.13.13.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 13:13:26 -0700 (PDT)
+Received: (nullmailer pid 20547 invoked by uid 1000);
+        Wed, 22 Apr 2020 20:13:25 -0000
+Date:   Wed, 22 Apr 2020 15:13:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au
+Subject: Re: [PATCH v10 1/7] dt-bindings: soc: Add Aspeed XDMA Engine
+Message-ID: <20200422201325.GA12023@bogus>
+References: <20200420202611.17776-1-eajames@linux.ibm.com>
+ <20200420202611.17776-2-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420202611.17776-2-eajames@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now CPTS HW time reading code is implemented in timecounter->cyclecounter
-.read() callback and performs following operations:
-timecounter_read() ->cc.read() -> cpts_systim_read()
- - request current CPTS HW time CPTS_TS_PUSH.TS_PUSH = 1
- - poll CPTS FIFO for CPTS_EV_PUSH event with current HW timestamp
+On Mon, Apr 20, 2020 at 03:26:05PM -0500, Eddie James wrote:
+> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  .../devicetree/bindings/soc/aspeed/xdma.yaml  | 108 ++++++++++++++++++
+>  MAINTAINERS                                   |   6 +
+>  2 files changed, 114 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml b/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+> new file mode 100644
+> index 000000000000..428a575da1be
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+> @@ -0,0 +1,108 @@
+> +# SPDX-License-Identifier: (GPL-2.0-or-later)
 
-This approach need to be changed for the future switch to PTP PHC
-.gettimex64() callback, which require to separate requesting current CPTS
-HW time and processing CPTS FIFO. And for the follow up patch, which
-improves .adjfreq() implementation.
+Dual license new bindings please:
 
-This patch moves code accessing CPTS HW out of timecounter code as
-following:
-- convert HW timestamp of every CPTS event to PTP time (us) and store it as
-part struct cpts_event;
-- add CPTS context field to store current CPTS HW time (counter) value and
-update it on CPTS_EV_PUSH reception;
-- move code accessing CPTS HW out of timecounter code and use current CPTS
-HW time (counter) from CPTS context instead;
-- ensure timecounter->cycle_last is updated on CPTS_EV_PUSH reception.
+(GPL-2.0-only OR BSD-2-Clause)
 
-After this change CPTS timecounter will only perform timekeeper role
-without actually accessing CPTS HW.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/aspeed/xdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Aspeed AST25XX and AST26XX XDMA Engine
+> +
+> +maintainers:
+> + - Eddie James <eajames@linux.ibm.com>
+> +
+> +description: |
+> +  This binding describes the XDMA Engine embedded in the AST2500 and AST2600
+> +  SOCs. The XDMA engine can perform automatic DMA operations over PCI between
+> +  the SOC (acting as a BMC) and a host processor.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2500-xdma
+> +      - aspeed,ast2600-xdma
+> +
+> +  reg:
+> +    items:
+> +      - description: engine register space
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
----
- drivers/net/ethernet/ti/cpts.c | 53 +++++++++++++++++-----------------
- drivers/net/ethernet/ti/cpts.h |  2 ++
- 2 files changed, 29 insertions(+), 26 deletions(-)
+That's all 'reg' properties. You don't need a description for a 
+single entry. Just:
 
-diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index 445f445185df..f40a864d8c36 100644
---- a/drivers/net/ethernet/ti/cpts.c
-+++ b/drivers/net/ethernet/ti/cpts.c
-@@ -112,10 +112,8 @@ static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
- 					(struct cpts_skb_cb_data *)skb->cb;
- 
- 		if (cpts_match(skb, class, seqid, mtype)) {
--			u64 ns = timecounter_cyc2time(&cpts->tc, event->low);
--
- 			memset(&ssh, 0, sizeof(ssh));
--			ssh.hwtstamp = ns_to_ktime(ns);
-+			ssh.hwtstamp = ns_to_ktime(event->timestamp);
- 			skb_tstamp_tx(skb, &ssh);
- 			found = true;
- 			__skb_unlink(skb, &cpts->txq);
-@@ -158,8 +156,16 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 		event->tmo = jiffies + 2;
- 		event->high = hi;
- 		event->low = lo;
-+		event->timestamp = timecounter_cyc2time(&cpts->tc, event->low);
- 		type = event_type(event);
-+
-+		dev_dbg(cpts->dev, "CPTS_EV: %d high:%08X low:%08x\n",
-+			type, event->high, event->low);
- 		switch (type) {
-+		case CPTS_EV_PUSH:
-+			WRITE_ONCE(cpts->cur_timestamp, lo);
-+			timecounter_read(&cpts->tc);
-+			break;
- 		case CPTS_EV_TX:
- 			if (cpts_match_tx_ts(cpts, event)) {
- 				/* if the new event matches an existing skb,
-@@ -168,7 +174,6 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 				break;
- 			}
- 			/* fall through */
--		case CPTS_EV_PUSH:
- 		case CPTS_EV_RX:
- 			list_del_init(&event->list);
- 			list_add_tail(&event->list, &cpts->events);
-@@ -189,26 +194,17 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 
- static u64 cpts_systim_read(const struct cyclecounter *cc)
- {
--	u64 val = 0;
--	struct cpts_event *event;
--	struct list_head *this, *next;
- 	struct cpts *cpts = container_of(cc, struct cpts, cc);
- 
--	cpts_write32(cpts, TS_PUSH, ts_push);
--	if (cpts_fifo_read(cpts, CPTS_EV_PUSH))
--		dev_err(cpts->dev, "cpts: unable to obtain a time stamp\n");
-+	return READ_ONCE(cpts->cur_timestamp);
-+}
- 
--	list_for_each_safe(this, next, &cpts->events) {
--		event = list_entry(this, struct cpts_event, list);
--		if (event_type(event) == CPTS_EV_PUSH) {
--			list_del_init(&event->list);
--			list_add(&event->list, &cpts->pool);
--			val = event->low;
--			break;
--		}
--	}
-+static void cpts_update_cur_time(struct cpts *cpts, int match)
-+{
-+	cpts_write32(cpts, TS_PUSH, ts_push);
- 
--	return val;
-+	if (cpts_fifo_read(cpts, match) && match != -1)
-+		dev_err(cpts->dev, "cpts: unable to obtain a time stamp\n");
- }
- 
- /* PTP clock operations */
-@@ -232,7 +228,7 @@ static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
- 
- 	spin_lock_irqsave(&cpts->lock, flags);
- 
--	timecounter_read(&cpts->tc);
-+	cpts_update_cur_time(cpts, CPTS_EV_PUSH);
- 
- 	cpts->cc.mult = neg_adj ? mult - diff : mult + diff;
- 
-@@ -260,6 +256,9 @@ static int cpts_ptp_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
- 
- 	spin_lock_irqsave(&cpts->lock, flags);
-+
-+	cpts_update_cur_time(cpts, CPTS_EV_PUSH);
-+
- 	ns = timecounter_read(&cpts->tc);
- 	spin_unlock_irqrestore(&cpts->lock, flags);
- 
-@@ -294,11 +293,14 @@ static long cpts_overflow_check(struct ptp_clock_info *ptp)
- {
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
- 	unsigned long delay = cpts->ov_check_period;
--	struct timespec64 ts;
- 	unsigned long flags;
-+	u64 ns;
- 
- 	spin_lock_irqsave(&cpts->lock, flags);
--	ts = ns_to_timespec64(timecounter_read(&cpts->tc));
-+
-+	cpts_update_cur_time(cpts, -1);
-+
-+	ns = timecounter_read(&cpts->tc);
- 
- 	if (!skb_queue_empty(&cpts->txq)) {
- 		cpts_purge_txq(cpts);
-@@ -307,8 +309,7 @@ static long cpts_overflow_check(struct ptp_clock_info *ptp)
- 	}
- 	spin_unlock_irqrestore(&cpts->lock, flags);
- 
--	dev_dbg(cpts->dev, "cpts overflow check at %lld.%09ld\n",
--		(long long)ts.tv_sec, ts.tv_nsec);
-+	dev_dbg(cpts->dev, "cpts overflow check at %lld\n", ns);
- 	return (long)delay;
- }
- 
-@@ -390,7 +391,7 @@ static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb, int ev_type)
- 		seqid = (event->high >> SEQUENCE_ID_SHIFT) & SEQUENCE_ID_MASK;
- 		if (ev_type == event_type(event) &&
- 		    cpts_match(skb, class, seqid, mtype)) {
--			ns = timecounter_cyc2time(&cpts->tc, event->low);
-+			ns = event->timestamp;
- 			list_del_init(&event->list);
- 			list_add(&event->list, &cpts->pool);
- 			break;
-diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
-index bb997c11ee15..32ecd1ce4d3b 100644
---- a/drivers/net/ethernet/ti/cpts.h
-+++ b/drivers/net/ethernet/ti/cpts.h
-@@ -94,6 +94,7 @@ struct cpts_event {
- 	unsigned long tmo;
- 	u32 high;
- 	u32 low;
-+	u64 timestamp;
- };
- 
- struct cpts {
-@@ -114,6 +115,7 @@ struct cpts {
- 	struct cpts_event pool_data[CPTS_MAX_EVENTS];
- 	unsigned long ov_check_period;
- 	struct sk_buff_head txq;
-+	u64 cur_timestamp;
- };
- 
- void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
--- 
-2.17.1
+reg:
+  maxItems: 1
 
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  reset-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: device
+> +      - const: root-complex
+> +
+> +  interrupts-extended:
+
+Just use 'interrupts'. The tools fix things up so both work.
+
+> +    maxItems: 2
+> +    items:
+> +      - description: global interrupt for the XDMA engine
+> +      - description: PCI-E reset or PERST interrupt
+> +
+> +  aspeed,scu:
+> +    description: a reference to the System Control Unit node of the Aspeed SOC.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  aspeed,pcie-device:
+> +    description: describes which PCI-E device the XDMA engine should use
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/string
+> +      - oneOf:
+> +        - items:
+> +          - const: bmc
+> +        - items:
+> +          - const: vga
+
+The oneOf (inclusive) can be just:
+
+enum: [ bmc, vga ]
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - interrupts-extended
+> +  - aspeed,scu
+> +  - memory-region
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: aspeed,ast2600-xdma
+> +then:
+> +  required:
+> +    - reset-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/ast2600-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/aspeed-scu-ic.h>
+> +    syscon: syscon@1e6e2000 {
+> +        reg = <0x1e6e2000 0x1000>;
+> +        ranges = <0 0x1e6e2000 0x1000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        #clock-cells = <1>;
+> +        #reset-cells = <1>;
+> +        scu_ic0: interrupt-controller@560 {
+> +            reg = <0x560 0x4>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <1>;
+> +        };
+> +    };
+> +    xdma@1e6e7000 {
+> +        compatible = "aspeed,ast2600-xdma";
+> +        reg = <0x1e6e7000 0x100>;
+> +        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
+> +        resets = <&syscon ASPEED_RESET_DEV_XDMA>, <&syscon ASPEED_RESET_RC_XDMA>;
+> +        reset-names = "device", "root-complex";
+> +        interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +                              <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
+> +        aspeed,scu = <&syscon>;
+> +        aspeed,pcie-device = "bmc";
+> +        memory-region = <&vga_memory>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ecd7def6ff4b..b1963e01a75e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2774,6 +2774,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/media/aspeed-video.txt
+>  F:	drivers/media/platform/aspeed-video.c
+>  
+> +ASPEED XDMA ENGINE DRIVER
+> +M:	Eddie James <eajames@linux.ibm.com>
+> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/soc/aspeed/xdma.yaml
+> +
+>  ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+>  M:	Corentin Chary <corentin.chary@gmail.com>
+>  L:	acpi4asus-user@lists.sourceforge.net
+> -- 
+> 2.24.0
+> 
