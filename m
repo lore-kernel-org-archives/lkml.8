@@ -2,166 +2,147 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CB0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA75C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1E862071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4443920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p9vwGiUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDVA5D (ORCPT
+        id S1726399AbgDVA5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:57:03 -0400
-Received: from m176150.mail.qiye.163.com ([59.111.176.150]:19703 "EHLO
-        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgDVA5C (ORCPT
+        Tue, 21 Apr 2020 20:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726012AbgDVA5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:57:02 -0400
-Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
-        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 373021A1513;
-        Wed, 22 Apr 2020 08:56:27 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AKoA0wCVCNOygUrJso2wM4qv.3.1587516987209.Hmail.bernard@vivo.com>
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        Ori Messinger <Ori.Messinger@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gYW1kZ3B1OiBmaXhlcyBtZW1sZWFrIGlzc3VlIHdoZW4gaW5pdCBmYWlsZWQ=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <7fdc9db9-f259-e0de-646f-863e438d68ed@amd.com>
+        Tue, 21 Apr 2020 20:57:07 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBF1C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:57:06 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id p25so184054pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:57:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gXQ0ZKU9rPACm1NpC5IpEEgnJ67XgjPS3brhHlbPLjM=;
+        b=p9vwGiUuSpsVhM1Y+a097TYl/ukBeFkhuEwwf+3Jq0gA4gZv4VS0+xejL+med599lx
+         bxrZ209gl+eKh4FVuewcX7Iw7bALgT9IIOTFdrQcxUh2NFHDH2pKAQjRzIaWanFbGZo9
+         HI73+YSyNwZZ09iUztxdn5ZTNrxPd0KYxIqMD0po6YcoC5IMSiZGduiMA8T8E2cWH3xH
+         endqfwJ7clFJVmmeAca75o9whMufeY/FgpaswFHamUKg6sNH6u2nbMvObXZMbbezI87f
+         o9Z8wLbkXxqFlqhyQ0Oj1ZT11k8xdKaAmhv2oVOm2mOc2DeKjzshAyO3XI7/436lEIe5
+         NgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gXQ0ZKU9rPACm1NpC5IpEEgnJ67XgjPS3brhHlbPLjM=;
+        b=K7FVSdBi0dOjXe3o+2CUGoGnvQIZvVejhTqngRdaRAWlSYaLuBITafD5IbiOe3f84E
+         2/+Zo0OzpxZT0+8Y0TYiiSYkfBgThwHFU6P9i0k8x3nBQY7ZbKmh1/t8H+k6tXEXIbiC
+         xh2s5icnSFGb7lQPznQrCVZ/LLlZpA3aWEjXItXBmLQgn7JBx6GvqRAdOi3iSQj8Ppbb
+         s/iL0Itrs/bDU1brz0WYlYe/V0VO8keMfPPiVfVk9Ql32t0sKzt3sFTHAmhyD1pfmFI7
+         MryHWvskvKKIpGxLlSyp5S+LlujoYgRVEOv7sW0cW3ycsr7/PMV1oBjTMKSyVZQZh5Iv
+         d6Cg==
+X-Gm-Message-State: AGi0PuYtmHsFPFw0J3rifjnH+5lguwzHYd3KQcnin/WVtg9rjcQZAjAZ
+        2WVx2ieYqdW5Rj/6cBhcDJUEGA==
+X-Google-Smtp-Source: APiQypLVZE7gp3NghRmYgGoZzrOFnRuX6zY8nsorx9deNubq9GtAB4XwaMmp1KjuurtkClIknMsMjQ==
+X-Received: by 2002:a62:5209:: with SMTP id g9mr18641149pfb.220.1587517025116;
+        Tue, 21 Apr 2020 17:57:05 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id x23sm3330352pgf.32.2020.04.21.17.57.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 17:57:04 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 17:56:58 -0700
+From:   Benson Leung <bleung@google.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH] platform/chrome: typec: Fix ret value check error
+Message-ID: <20200422005658.GA208993@google.com>
+References: <20200422004151.116323-1-pmalani@chromium.org>
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 22 Apr 2020 08:56:27 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
-Date:   Wed, 22 Apr 2020 08:56:27 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVNQk9LS0tJT09KT0tNSVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE9OQ0NCTUpKN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6MBQ6Sww4LTg1NAIcLgkxCBRJDDZPCg1VSFVKTkNMTkpNQkNMSE9CVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBSktDTEo3Bg++
-X-HM-Tid: 0a719f62d76b93b4kuws373021a1513
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
+In-Reply-To: <20200422004151.116323-1-pmalani@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CuWPkeS7tuS6uu+8miJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29t
-Pgrlj5HpgIHml6XmnJ/vvJoyMDIwLTA0LTIxIDIyOjUzOjQ3CuaUtuS7tuS6uu+8miLotbXlhpvl
-pY4iIDxiZXJuYXJkQHZpdm8uY29tPgrmioTpgIHkurrvvJpBbGV4IERldWNoZXIgPGFsZXhhbmRl
-ci5kZXVjaGVyQGFtZC5jb20+LCJEYXZpZCAoQ2h1bk1pbmcpIFpob3UiIDxEYXZpZDEuWmhvdUBh
-bWQuY29tPixEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+LERhbmllbCBWZXR0ZXIgPGRh
-bmllbEBmZndsbC5jaD4sVG9tIFN0IERlbmlzIDx0b20uc3RkZW5pc0BhbWQuY29tPixPcmkgTWVz
-c2luZ2VyIDxPcmkuTWVzc2luZ2VyQGFtZC5jb20+LFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3Jn
-Lm9yZz4sYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLG9wZW5zb3VyY2Uua2VybmVs
-QHZpdm8uY29tCuS4u+mimO+8mlJlOiBbUEFUQ0hdIGFtZGdwdTogZml4ZXMgbWVtbGVhayBpc3N1
-ZSB3aGVuIGluaXQgZmFpbGVkPkFtIDIxLjA0LjIwIHVtIDE1OjM5IHNjaHJpZWIg6LW15Yab5aWO
-Ogo+PiDlj5Hku7bkurrvvJoiQ2hyaXN0aWFuIEvDtm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1k
-LmNvbT4KPj4g5Y+R6YCB5pel5pyf77yaMjAyMC0wNC0yMSAyMTowMjoyNwo+PiDmlLbku7bkurrv
-vJoi6LW15Yab5aWOIiA8YmVybmFyZEB2aXZvLmNvbT4KPj4g5oqE6YCB5Lq677yaQWxleCBEZXVj
-aGVyIDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPiwiRGF2aWQgKENodW5NaW5nKSBaaG91IiA8
-RGF2aWQxLlpob3VAYW1kLmNvbT4sRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPixEYW5p
-ZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+LFRvbSBTdCBEZW5pcyA8dG9tLnN0ZGVuaXNAYW1k
-LmNvbT4sT3JpIE1lc3NpbmdlciA8T3JpLk1lc3NpbmdlckBhbWQuY29tPixTYW0gUmF2bmJvcmcg
-PHNhbUByYXZuYm9yZy5vcmc+LGFtZC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3JnLGRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcsbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyxvcGVu
-c291cmNlLmtlcm5lbEB2aXZvLmNvbQo+PiDkuLvpopjvvJpSZTogW1BBVENIXSBhbWRncHU6IGZp
-eGVzIG1lbWxlYWsgaXNzdWUgd2hlbiBpbml0IGZhaWxlZD5BbSAyMS4wNC4yMCB1bSAxNDowOSBz
-Y2hyaWViIOi1teWGm+WljjoKPj4+PiBGcm9tOiAiQ2hyaXN0aWFuIEvDtm5pZyIgPGNocmlzdGlh
-bi5rb2VuaWdAYW1kLmNvbT4KPj4+PiBEYXRlOiAyMDIwLTA0LTIxIDE5OjIyOjQ5Cj4+Pj4gVG86
-ICBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+LEFsZXggRGV1Y2hlciA8YWxleGFuZGVy
-LmRldWNoZXJAYW1kLmNvbT4sIkRhdmlkIChDaHVuTWluZykgWmhvdSIgPERhdmlkMS5aaG91QGFt
-ZC5jb20+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4sRGFuaWVsIFZldHRlciA8ZGFu
-aWVsQGZmd2xsLmNoPixUb20gU3QgRGVuaXMgPHRvbS5zdGRlbmlzQGFtZC5jb20+LE9yaSBNZXNz
-aW5nZXIgPE9yaS5NZXNzaW5nZXJAYW1kLmNvbT4sU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcu
-b3JnPixhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZyxkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcKPj4+PiBDYzogIG9wZW5zb3Vy
-Y2Uua2VybmVsQHZpdm8uY29tCj4+Pj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYW1kZ3B1OiBmaXhl
-cyBtZW1sZWFrIGlzc3VlIHdoZW4gaW5pdCBmYWlsZWQ+QW0gMjEuMDQuMjAgdW0gMTM6MTcgc2No
-cmllYiBCZXJuYXJkIFpoYW86Cj4+Pj4+PiBWUkFNIG1hbmFnZXIgYW5kIERSTSBNTSB3aGVuIGlu
-aXQgZmFpbGVkLCB0aGVyZSBpcyBubyBvcGVyYWN0aW9uCj4+Pj4+PiB0byBmcmVlIGt6YWxsb2Mg
-bWVtb3J5ICYgcmVtb3ZlIGRldmljZSBmaWxlLgo+Pj4+Pj4gVGhpcyB3aWxsIGxlYWQgdG8gbWVt
-bGVhayAmIGNhdXNlIHN0YWJpbGl0eSBpc3N1ZS4KPj4+Pj4gTkFLLCBmYWlsdXJlIHRvIGNyZWF0
-ZSBzeXNmcyBub2RlcyBhcmUgbm90IGNyaXRpY2FsLgo+Pj4+Pgo+Pj4+PiBDaHJpc3RpYW4uCj4+
-Pj4+Cj4+Pj4gT0ssIGdldCBpdC4KPj4+PiBCeSB0aGUgd2F5LCBzaG91bGQgaSBtb2RpZnkgdGhp
-cyBwYXRjaCB0byBqdXN0IGhhbmRsZSA8a2ZyZWUobWdyKT4gaW4gZXJyb3IgYnJhbmNoLCBvciB0
-aGF0IGl0IGlzIGFsc28gdW5uZWNlc3Nhcnk/Cj4+PiBXaGF0IHlvdSBjYW4gZG8gaXMgdG8gZHJv
-cCB0aGUgInJldHVybiByZXQiIGlmIGFueXRoaW5nIHdpdGggdGhlIHN5c2ZzCj4+PiBub2RlcyBn
-b2VzIHdyb25nIGFuZCBpbnN0ZWFkIHByaW50IHRoZSBlcnJvciBjb2RlLgo+PiBFbW1tLCBmb3Ig
-dGhpcyBwYXJ0LCBpIGFtIG5vdCBzdXJlLCBteSBtb2RpZnkgZmlyc3QgcHJpbnQgdGhlIGVycm9y
-LCBzZWNvbmUgcmVsZWFzZSBub3QgZnJlZSBtZW1vcnksCj4+IGFuZCBsYXN0IHJldHVybiBlcnJv
-ciwgbWFrZSBldmVyeXRoaW5nIGNsZWFyIHRvIHRoZSBzeXN0ZW0uCj4+IEkgdGhpbmsgaXRgcyB0
-aGUgc2FtZSB3aXRoIHdoYXQgeW91IG1lbnRpb25lZCwgaXMgdGhlcmUgc29tZXRoaW5nIHRoYXQg
-SSBtaXN1bmRlcnN0b29kPwo+Cj5ZZXMsIG1heWJlIGFuIGV4YW1wbGUgbWFrZXMgaXQgbW9yZSBj
-bGVhciB3aGF0IHRvIGRvIGhlcmUuIEN1cnJlbnRseSB3ZSAKPnByaW50IGFuZCBlcnJvciBhbmQg
-cmV0dXJuIHdoZW4gc29tZXRoaW5nIHdpdGggdGhlIHN5c2ZzIGZpbGVzIGdvZXMgd3Jvbmc6Cj4K
-PmlmIChyZXQpIHsKPiDCoMKgwqAgRFJNX0VSUk9SKCJGYWlsZWQgdG8gY3JlYXRlIGRldmljZSBm
-aWxlIG1lbV9pbmZvX3ZyYW1fdG90YWxcbiIpOwo+IMKgwqDCoCByZXR1cm4gcmV0Owo+fQo+Cj5C
-dXQgd2hhdCB3ZSBzaG91bGQgZG8gaW5zdGVhZCBpcyBqdXN0IHRvIHByaW50IGFuIGVycm9yIGFu
-ZCBjb250aW51ZSBhbmQgCj5pbiB0aGUgZW5kIHJldHVybiBzdWNjZXNzIHN0YXR1czoKPgo+aWYg
-KHJldCkKPiDCoMKgwqAgRFJNX0VSUk9SKCJGYWlsZWQgdG8gY3JlYXRlIGRldmljZSBmaWxlIG1l
-bV9pbmZvX3ZyYW1fdG90YWwgCj4oJWQpXG4iLCByKTsKPgo+Li4uCj5yZXR1cm4gMDsKPgo+UmVn
-YXJkcywKPkNocmlzdGlhbi4KPgoKRW1tbSwgIGkgYW0gc3RpbGwgY29uZnVzZWQgYWJvdXQgdHdv
-IHBvaW50czoKMSBEb2VzIHRoYXQgbWVhbiB0aGVyZSBpcyBubyBmYWlsZWQgY2FzZSBpbiB0aGlz
-IGZ1bmN0aW9uPwoyIFRoZXJlIGlzIG5vIG5lZWQgdG8gZnJlZSB0aGUga3ptYWxsb2Mgc3BhY2Uo
-bm8gcG9zc2liaWxpdHkgb2YgbWVtb3J5IGxlYWsgKT8KClJlZ2FyZHMsCkJlcm5hcmQKCj4+Cj4+
-PiBJdCdzIHJlYWxseSBhbm5veWluZyB0aGF0IGxvYWRpbmcsIHVubG9hZGluZyBhbmQgbG9hZGlu
-ZyB0aGUgZHJpdmVyCj4+PiBhZ2FpbiBzb21ldGltZXMgZmFpbHMgYmVjYXVzZSB3ZSBoYXZlIGEg
-YnVnIGluIHRoZSBzeXNmcyBmaWxlcyBjbGVhbnVwLgo+Pj4KPj4+IFdlIGNlcnRhaW5seSBzaG91
-bGQgZml4IHRob3NlIGJ1Z3MgYXMgd2VsbCwgYnV0IHRoZXkgYXJlIGp1c3Qgbm90Cj4+PiBjcml0
-aWNhbCBmb3IgY29ycmVjdCBkcml2ZXIgZnVuY3Rpb25hbGl0eS4KPj4+Cj4+PiBSZWdhcmRzLAo+
-Pj4gQ2hyaXN0aWFuLgo+Pgo+Pj4+IFJlZ2FyZHMsCj4+Pj4gQmVybmFyZAo+Pj4+Cj4+Pj4+PiBT
-aWduZWQtb2ZmLWJ5OiBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+Cj4+Pj4+PiAtLS0K
-Pj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdnJhbV9tZ3IuYyB8
-IDI0ICsrKysrKysrKysrKysrKystLS0tCj4+Pj4+PiAgICAgMSBmaWxlIGNoYW5nZWQsIDE5IGlu
-c2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCj4+Pj4+Pgo+Pj4+Pj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV92cmFtX21nci5jIGIvZHJpdmVycy9ncHUv
-ZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMKPj4+Pj4+IGluZGV4IDgyYTMyOTllNTNj
-MC4uNGM1ZmIxNTNlNmI0IDEwMDY0NAo+Pj4+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9h
-bWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMKPj4+Pj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQv
-YW1kZ3B1L2FtZGdwdV92cmFtX21nci5jCj4+Pj4+PiBAQCAtMTc1LDMwICsxNzUsNDQgQEAgc3Rh
-dGljIGludCBhbWRncHVfdnJhbV9tZ3JfaW5pdChzdHJ1Y3QgdHRtX21lbV90eXBlX21hbmFnZXIg
-Km1hbiwKPj4+Pj4+ICAgICAJcmV0ID0gZGV2aWNlX2NyZWF0ZV9maWxlKGFkZXYtPmRldiwgJmRl
-dl9hdHRyX21lbV9pbmZvX3ZyYW1fdG90YWwpOwo+Pj4+Pj4gICAgIAlpZiAocmV0KSB7Cj4+Pj4+
-PiAgICAgCQlEUk1fRVJST1IoIkZhaWxlZCB0byBjcmVhdGUgZGV2aWNlIGZpbGUgbWVtX2luZm9f
-dnJhbV90b3RhbFxuIik7Cj4+Pj4+PiAtCQlyZXR1cm4gcmV0Owo+Pj4+Pj4gKwkJZ290byBWUkFN
-X1RPVEFMX0ZBSUw7Cj4+Pj4+PiAgICAgCX0KPj4+Pj4+ICAgICAJcmV0ID0gZGV2aWNlX2NyZWF0
-ZV9maWxlKGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3Zpc192cmFtX3RvdGFsKTsKPj4+
-Pj4+ICAgICAJaWYgKHJldCkgewo+Pj4+Pj4gICAgIAkJRFJNX0VSUk9SKCJGYWlsZWQgdG8gY3Jl
-YXRlIGRldmljZSBmaWxlIG1lbV9pbmZvX3Zpc192cmFtX3RvdGFsXG4iKTsKPj4+Pj4+IC0JCXJl
-dHVybiByZXQ7Cj4+Pj4+PiArCQlnb3RvIFZJU19WUkFNX1RPVEFfRkFJTDsKPj4+Pj4+ICAgICAJ
-fQo+Pj4+Pj4gICAgIAlyZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0
-dHJfbWVtX2luZm9fdnJhbV91c2VkKTsKPj4+Pj4+ICAgICAJaWYgKHJldCkgewo+Pj4+Pj4gICAg
-IAkJRFJNX0VSUk9SKCJGYWlsZWQgdG8gY3JlYXRlIGRldmljZSBmaWxlIG1lbV9pbmZvX3ZyYW1f
-dXNlZFxuIik7Cj4+Pj4+PiAtCQlyZXR1cm4gcmV0Owo+Pj4+Pj4gKwkJZ290byBWUkFNX1VTRURf
-RkFJTDsKPj4+Pj4+ICAgICAJfQo+Pj4+Pj4gICAgIAlyZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUo
-YWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1fdXNlZCk7Cj4+Pj4+PiAgICAg
-CWlmIChyZXQpIHsKPj4+Pj4+ICAgICAJCURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZp
-Y2UgZmlsZSBtZW1faW5mb192aXNfdnJhbV91c2VkXG4iKTsKPj4+Pj4+IC0JCXJldHVybiByZXQ7
-Cj4+Pj4+PiArCQlnb3RvIFZJU19WUkFNX1VTRURfRkFJTDsKPj4+Pj4+ICAgICAJfQo+Pj4+Pj4g
-ICAgIAlyZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2lu
-Zm9fdnJhbV92ZW5kb3IpOwo+Pj4+Pj4gICAgIAlpZiAocmV0KSB7Cj4+Pj4+PiAgICAgCQlEUk1f
-RVJST1IoIkZhaWxlZCB0byBjcmVhdGUgZGV2aWNlIGZpbGUgbWVtX2luZm9fdnJhbV92ZW5kb3Jc
-biIpOwo+Pj4+Pj4gLQkJcmV0dXJuIHJldDsKPj4+Pj4+ICsJCWdvdG8gVlJBTV9WRVJET1JfRkFJ
-TDsKPj4+Pj4+ICAgICAJfQo+Pj4+Pj4gICAgIAo+Pj4+Pj4gICAgIAlyZXR1cm4gMDsKPj4+Pj4+
-ICsKPj4+Pj4+ICtWUkFNX1ZFUkRPUl9GQUlMOgo+Pj4+Pj4gKwlkZXZpY2VfcmVtb3ZlX2ZpbGUo
-YWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1fdXNlZCk7Cj4+Pj4+PiArVklT
-X1ZSQU1fVVNFRF9GQUlMOgo+Pj4+Pj4gKwlkZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAm
-ZGV2X2F0dHJfbWVtX2luZm9fdnJhbV91c2VkKTsKPj4+Pj4+ICtSVkFNX1VTRURfRkFJTDoKPj4+
-Pj4+ICsJZGV2aWNlX3JlbW92ZV9maWxlKGFkZXYtPmRldiwgJmRldl9hdHRyX21lbV9pbmZvX3Zp
-c192cmFtX3RvdGFsKTsKPj4+Pj4+ICtWSVNfVlJBTV9UT1RBX0ZBSUw6Cj4+Pj4+PiArCWRldmlj
-ZV9yZW1vdmVfZmlsZShhZGV2LT5kZXYsICZkZXZfYXR0cl9tZW1faW5mb192cmFtX3RvdGFsKTsK
-Pj4+Pj4+ICtWUkFNX1RPVEFMX0ZBSUw6Cj4+Pj4+PiArCWtmcmVlKG1ncik7Cj4+Pj4+PiArCW1h
-bi0+cHJpdiA9IE5VTEw7Cj4+Pj4+PiArCj4+Pj4+PiArCXJldHVybiByZXQ7Cj4+Pj4+PiAgICAg
-fQo+Pj4+Pj4gICAgIAo+Pj4+Pj4gICAgIC8qKgo+Pgo+Cg0KDQo=
+
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Prashant,
+
+On Tue, Apr 21, 2020 at 05:41:51PM -0700, Prashant Malani wrote:
+> cros_typec_add_partner() returns 0 on success, so check for "ret"
+> instead of "!ret" as an error.
+>=20
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Fixes: 9d33ea331032 ("platform/chrome: cros_ec_typec: Register port partn=
+er")
+
+Thanks. Applied for 5.8.
+
+origin/for-kernelci updated.
+
+Thanks,
+Benson
+
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/c=
+hrome/cros_ec_typec.c
+> index eda57db26f8d..66b8d21092af 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -263,7 +263,7 @@ static void cros_typec_set_port_params_v1(struct cros=
+_typec_data *typec,
+> =20
+>  		pd_en =3D resp->enabled & PD_CTRL_RESP_ENABLED_PD_CAPABLE;
+>  		ret =3D cros_typec_add_partner(typec, port_num, pd_en);
+> -		if (!ret)
+> +		if (ret)
+>  			dev_warn(typec->dev,
+>  				 "Failed to register partner on port: %d\n",
+>  				 port_num);
+> --=20
+> 2.26.1.301.g55bc3eb7cb9-goog
+>=20
+
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXp+WWgAKCRBzbaomhzOw
+whqjAP9vj3ehlrgYTfe7GbbIZvZJPN5fPnDJFqIiF6HgovzcPQD6As22716OzrWi
+bIJXqW53SM3cskd9BB2jF1cO//7LaAM=
+=ptXK
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
