@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C68C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C509C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA6E42070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2522070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550615;
-	bh=C3QXVJ3wHWNATX9TqffseAz8FuEROFtYiGFY/x2B9C4=;
+	s=default; t=1587550621;
+	bh=rN77u9di2Y6qyoYMJ8b4n4AnqILjg7jKJJKhKYC1iLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q1wgdAEUIx8Pcd8onNlrSbTyE4DEc00Byb7NC6qPCi5J29yifcjP3MKEQ+S9BdH4p
-	 6fOh1kuytox2g+1GUWkPM2CsbvKEbhc/V5ejyGN2CkBEeqSz0c6pALLYdAXqZg0i0s
-	 xJckJbeDVQOt1zpj1hapfixfbfu++XYCzvvD26YQ=
+	b=sF4dUuqQbLS0v2rYFEywmp6FfMbQfK54qyD3Nqx/VB66dWrEciuUl6Z2IOChG0FCk
+	 TXi1khLM0WYdevpxFqvtGlnHq3r5+A53wH9v7W8R8l5vr7x/H/+IdfjgAJOKimp1iH
+	 k50s/L2HWWuKgGIw2LYdnJ3YteHtGgOGSIdy3+Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgDVKQy (ORCPT
+        id S1729795AbgDVKQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:16:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729743AbgDVKQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:01 -0400
+        id S1728991AbgDVKQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2D7720575;
-        Wed, 22 Apr 2020 10:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 522BB2076B;
+        Wed, 22 Apr 2020 10:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550561;
-        bh=C3QXVJ3wHWNATX9TqffseAz8FuEROFtYiGFY/x2B9C4=;
+        s=default; t=1587550563;
+        bh=rN77u9di2Y6qyoYMJ8b4n4AnqILjg7jKJJKhKYC1iLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qajPmFitmi7LtFuKpJID6hQZDKJBd+cSBBsGwqKTn2qYInvs3+d3yl2P7qEIjsNcI
-         yZgK4PGISjrNRWMgiGL9dxJr8dBil7TCprRvbdLlPMyihqHEKOe3qinayf1qBmlKef
-         PUO5XXrsNhaDq5HXooVMy3gpo7PQqwCb4qNAAAkk=
+        b=2rn+xSbYk4pWcp8KtlQ4gibHETiMDBR0YyXzCZgpefy9Sy1SVg7Pv1RNujQDCCGUL
+         0OVPrXo/BVvS0RGJhM/GguKa2Qpm+yn2UPtfGsm3h5nKVkRsUbwueCGiRGnBpOYR2K
+         mvTDFDqrNMHWKqqB4mQXwt99T0jZy0MnG/9/hhIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.19 59/64] locktorture: Print ratio of acquisitions, not failures
-Date:   Wed, 22 Apr 2020 11:57:43 +0200
-Message-Id: <20200422095023.747486193@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.19 60/64] mtd: spinand: Explicitly use MTD_OPS_RAW to write the bad block marker to OOB
+Date:   Wed, 22 Apr 2020 11:57:44 +0200
+Message-Id: <20200422095024.043028142@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -62,50 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-commit 80c503e0e68fbe271680ab48f0fe29bc034b01b7 upstream.
+commit 621a7b780bd8b7054647d53d5071961f2c9e0873 upstream.
 
-The __torture_print_stats() function in locktorture.c carefully
-initializes local variable "min" to statp[0].n_lock_acquired, but
-then compares it to statp[i].n_lock_fail.  Given that the .n_lock_fail
-field should normally be zero, and given the initialization, it seems
-reasonable to display the maximum and minimum number acquisitions
-instead of miscomputing the maximum and minimum number of failures.
-This commit therefore switches from failures to acquisitions.
+When writing the bad block marker to the OOB area the access mode
+should be set to MTD_OPS_RAW as it is done for reading the marker.
+Currently this only works because req.mode is initialized to
+MTD_OPS_PLACE_OOB (0) and spinand_write_to_cache_op() checks for
+req.mode != MTD_OPS_AUTO_OOB.
 
-And this turns out to be not only a day-zero bug, but entirely my
-own fault.  I hate it when that happens!
+Fix this by explicitly setting req.mode to MTD_OPS_RAW.
 
-Fixes: 0af3fe1efa53 ("locktorture: Add a lock-torture kernel module")
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Will Deacon <will@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-3-frieder.schrempf@kontron.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/locking/locktorture.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/mtd/nand/spi/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/locking/locktorture.c
-+++ b/kernel/locking/locktorture.c
-@@ -710,10 +710,10 @@ static void __torture_print_stats(char *
- 		if (statp[i].n_lock_fail)
- 			fail = true;
- 		sum += statp[i].n_lock_acquired;
--		if (max < statp[i].n_lock_fail)
--			max = statp[i].n_lock_fail;
--		if (min > statp[i].n_lock_fail)
--			min = statp[i].n_lock_fail;
-+		if (max < statp[i].n_lock_acquired)
-+			max = statp[i].n_lock_acquired;
-+		if (min > statp[i].n_lock_acquired)
-+			min = statp[i].n_lock_acquired;
- 	}
- 	page += sprintf(page,
- 			"%s:  Total: %lld  Max/Min: %ld/%ld %s  Fail: %d %s\n",
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -670,6 +670,7 @@ static int spinand_markbad(struct nand_d
+ 		.ooboffs = 0,
+ 		.ooblen = sizeof(marker),
+ 		.oobbuf.out = marker,
++		.mode = MTD_OPS_RAW,
+ 	};
+ 	int ret;
+ 
 
 
