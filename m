@@ -2,53 +2,54 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754F4C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7D0C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 501BE2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E144D2075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552089;
-	bh=ZvNMqtxUubPqeUhvAc90/5pdocr+OX5tEhA7GA3JOzM=;
+	s=default; t=1587552092;
+	bh=SbJ/jaCJ3OrrVtjET4HQ68htaBYLYMg22O0Pj/OIO/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oF1Sa0wn3Wa5nEFSyJWmVlOErKlJwM37yCLFOHCbOcEviTfaL+ML4UfHqpEdTJla0
-	 357zwgyaQCmoGcccOP+8FAx7yZAApaAudj7NXRTckr4ZKvdRbWTrPHZASFxRsPSWPQ
-	 V2J/Ql7uytGNuPmo44EeHBvfmGn+o9H4IkZzYsBw=
+	b=vwnuYujQYjPGOlRj8wFP02gjLpn3r0b82UpwrxBFRPBYYdjzGFeIA2Yhc/AOU5cac
+	 IRvizMer/53KrF4jHkCfp4TnynnmWtm+AyjylzsT88JhJHJQ2Deb6N4jFzeHsiWTnx
+	 8bLjjtpaI5Pwbzb1Oc4+BuACp3HRUhEMxP1qxbDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731647AbgDVKl2 (ORCPT
+        id S1731654AbgDVKlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57098 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbgDVKUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:20 -0400
+        id S1730077AbgDVKUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92FF420780;
-        Wed, 22 Apr 2020 10:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A85520776;
+        Wed, 22 Apr 2020 10:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550820;
-        bh=ZvNMqtxUubPqeUhvAc90/5pdocr+OX5tEhA7GA3JOzM=;
+        s=default; t=1587550817;
+        bh=SbJ/jaCJ3OrrVtjET4HQ68htaBYLYMg22O0Pj/OIO/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4q6ewE9k8UIOsJcghNhBcOBbjUGD7HvGReI29h7B2HyB4Ri2w78tgUf0B2pa0Qkm
-         bGBzRnVinWvtT0fBS0p9wTxwhTckKVkTZWjazJ+Z47kKJmndaSiZ3Snw0h2enxlUG4
-         7CaYRM0TzTf9snSEUPbESJE1vxPg1zqGSi7Uvj/M=
+        b=osnQ7d8PCEuFmesOWVbEQBTbyMf0/yZrOevpk1qMDKAFifEM6UxvIktk3YE3fp40/
+         n7a7MHKZrfIBpIdIlAz7fyfHUBybPbKFDiEfyfyaLsZJKY3DA9kIfV302vKIwEho3w
+         /7Brw20kx8F/jSCa2AfeoerGko5YyM29VZGg3zLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.4 106/118] fbmem: Adjust indentation in fb_prepare_logo and fb_blank
-Date:   Wed, 22 Apr 2020 11:57:47 +0200
-Message-Id: <20200422095048.497983297@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Goyette <simon.goyette@gmail.com>,
+        =?UTF-8?q?Maxime=20Roussin-B=C3=A9langer?= 
+        <maxime.roussinbelanger@gmail.com>,
+        Guillaume Champagne <champagne.guillaume.c@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 105/118] iio: si1133: read 24-bit signed integer for measurement
+Date:   Wed, 22 Apr 2020 11:57:46 +0200
+Message-Id: <20200422095048.371118698@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -61,108 +62,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
 
-commit 93166f5f2e4dc593cff8ca77ef828ac6f148b0f3 upstream.
+commit 328b50e9a0ad1fe8accdf8c19923deebab5e0c01 upstream.
 
-Clang warns:
+The chip is configured in 24 bit mode. The values read from
+it must always be treated as is. This fixes the issue by
+replacing the previous 16 bits value by a 24 bits buffer.
 
-../drivers/video/fbdev/core/fbmem.c:665:3: warning: misleading
-indentation; statement is not part of the previous 'else'
-[-Wmisleading-indentation]
-        if (fb_logo.depth > 4 && depth > 4) {
-        ^
-../drivers/video/fbdev/core/fbmem.c:661:2: note: previous statement is
-here
-        else
-        ^
-../drivers/video/fbdev/core/fbmem.c:1075:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        return ret;
-        ^
-../drivers/video/fbdev/core/fbmem.c:1072:2: note: previous statement is
-here
-        if (!ret)
-        ^
-2 warnings generated.
+This changes affects the value output by previous version of
+the driver, since the least significant byte was missing.
+The upper half of 16 bit values previously output are now
+the upper half of a 24 bit value.
 
-This warning occurs because there are spaces before the tabs on these
-lines. Normalize the indentation in these functions so that it is
-consistent with the Linux kernel coding style and clang no longer warns.
+Fixes: e01e7eaf37d8 ("iio: light: introduce si1133")
 
-Fixes: 1692b37c99d5 ("fbdev: Fix logo if logo depth is less than framebuffer depth")
-Link: https://github.com/ClangBuiltLinux/linux/issues/825
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191218030025.10064-1-natechancellor@gmail.com
+Reported-by: Simon Goyette <simon.goyette@gmail.com>
+Co-authored-by: Guillaume Champagne <champagne.guillaume.c@gmail.com>
+Signed-off-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
+Signed-off-by: Guillaume Champagne <champagne.guillaume.c@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/core/fbmem.c |   36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ drivers/iio/light/si1133.c |   37 ++++++++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
 
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -662,20 +662,20 @@ int fb_prepare_logo(struct fb_info *info
- 		fb_logo.depth = 1;
+--- a/drivers/iio/light/si1133.c
++++ b/drivers/iio/light/si1133.c
+@@ -102,6 +102,9 @@
+ #define SI1133_INPUT_FRACTION_LOW	15
+ #define SI1133_LUX_OUTPUT_FRACTION	12
+ #define SI1133_LUX_BUFFER_SIZE		9
++#define SI1133_MEASURE_BUFFER_SIZE	3
++
++#define SI1133_SIGN_BIT_INDEX 23
  
+ static const int si1133_scale_available[] = {
+ 	1, 2, 4, 8, 16, 32, 64, 128};
+@@ -234,13 +237,13 @@ static const struct si1133_lux_coeff lux
+ 	}
+ };
  
-- 	if (fb_logo.depth > 4 && depth > 4) {
-- 		switch (info->fix.visual) {
-- 		case FB_VISUAL_TRUECOLOR:
-- 			fb_logo.needs_truepalette = 1;
-- 			break;
-- 		case FB_VISUAL_DIRECTCOLOR:
-- 			fb_logo.needs_directpalette = 1;
-- 			fb_logo.needs_cmapreset = 1;
-- 			break;
-- 		case FB_VISUAL_PSEUDOCOLOR:
-- 			fb_logo.needs_cmapreset = 1;
-- 			break;
-- 		}
-- 	}
-+	if (fb_logo.depth > 4 && depth > 4) {
-+		switch (info->fix.visual) {
-+		case FB_VISUAL_TRUECOLOR:
-+			fb_logo.needs_truepalette = 1;
-+			break;
-+		case FB_VISUAL_DIRECTCOLOR:
-+			fb_logo.needs_directpalette = 1;
-+			fb_logo.needs_cmapreset = 1;
-+			break;
-+		case FB_VISUAL_PSEUDOCOLOR:
-+			fb_logo.needs_cmapreset = 1;
-+			break;
-+		}
-+	}
- 
- 	height = fb_logo.logo->height;
- 	if (fb_center_logo)
-@@ -1060,19 +1060,19 @@ fb_blank(struct fb_info *info, int blank
- 	struct fb_event event;
- 	int ret = -EINVAL;
- 
-- 	if (blank > FB_BLANK_POWERDOWN)
-- 		blank = FB_BLANK_POWERDOWN;
-+	if (blank > FB_BLANK_POWERDOWN)
-+		blank = FB_BLANK_POWERDOWN;
- 
- 	event.info = info;
- 	event.data = &blank;
- 
- 	if (info->fbops->fb_blank)
-- 		ret = info->fbops->fb_blank(blank, info);
-+		ret = info->fbops->fb_blank(blank, info);
- 
- 	if (!ret)
- 		fb_notifier_call_chain(FB_EVENT_BLANK, &event);
- 
-- 	return ret;
-+	return ret;
+-static int si1133_calculate_polynomial_inner(u32 input, u8 fraction, u16 mag,
++static int si1133_calculate_polynomial_inner(s32 input, u8 fraction, u16 mag,
+ 					     s8 shift)
+ {
+ 	return ((input << fraction) / mag) << shift;
  }
- EXPORT_SYMBOL(fb_blank);
  
+-static int si1133_calculate_output(u32 x, u32 y, u8 x_order, u8 y_order,
++static int si1133_calculate_output(s32 x, s32 y, u8 x_order, u8 y_order,
+ 				   u8 input_fraction, s8 sign,
+ 				   const struct si1133_coeff *coeffs)
+ {
+@@ -276,7 +279,7 @@ static int si1133_calculate_output(u32 x
+  * The algorithm is from:
+  * https://siliconlabs.github.io/Gecko_SDK_Doc/efm32zg/html/si1133_8c_source.html#l00716
+  */
+-static int si1133_calc_polynomial(u32 x, u32 y, u8 input_fraction, u8 num_coeff,
++static int si1133_calc_polynomial(s32 x, s32 y, u8 input_fraction, u8 num_coeff,
+ 				  const struct si1133_coeff *coeffs)
+ {
+ 	u8 x_order, y_order;
+@@ -614,7 +617,7 @@ static int si1133_measure(struct si1133_
+ {
+ 	int err;
+ 
+-	__be16 resp;
++	u8 buffer[SI1133_MEASURE_BUFFER_SIZE];
+ 
+ 	err = si1133_set_adcmux(data, 0, chan->channel);
+ 	if (err)
+@@ -625,12 +628,13 @@ static int si1133_measure(struct si1133_
+ 	if (err)
+ 		return err;
+ 
+-	err = si1133_bulk_read(data, SI1133_REG_HOSTOUT(0), sizeof(resp),
+-			       (u8 *)&resp);
++	err = si1133_bulk_read(data, SI1133_REG_HOSTOUT(0), sizeof(buffer),
++			       buffer);
+ 	if (err)
+ 		return err;
+ 
+-	*val = be16_to_cpu(resp);
++	*val = sign_extend32((buffer[0] << 16) | (buffer[1] << 8) | buffer[2],
++			     SI1133_SIGN_BIT_INDEX);
+ 
+ 	return err;
+ }
+@@ -704,9 +708,9 @@ static int si1133_get_lux(struct si1133_
+ {
+ 	int err;
+ 	int lux;
+-	u32 high_vis;
+-	u32 low_vis;
+-	u32 ir;
++	s32 high_vis;
++	s32 low_vis;
++	s32 ir;
+ 	u8 buffer[SI1133_LUX_BUFFER_SIZE];
+ 
+ 	/* Activate lux channels */
+@@ -719,9 +723,16 @@ static int si1133_get_lux(struct si1133_
+ 	if (err)
+ 		return err;
+ 
+-	high_vis = (buffer[0] << 16) | (buffer[1] << 8) | buffer[2];
+-	low_vis = (buffer[3] << 16) | (buffer[4] << 8) | buffer[5];
+-	ir = (buffer[6] << 16) | (buffer[7] << 8) | buffer[8];
++	high_vis =
++		sign_extend32((buffer[0] << 16) | (buffer[1] << 8) | buffer[2],
++			      SI1133_SIGN_BIT_INDEX);
++
++	low_vis =
++		sign_extend32((buffer[3] << 16) | (buffer[4] << 8) | buffer[5],
++			      SI1133_SIGN_BIT_INDEX);
++
++	ir = sign_extend32((buffer[6] << 16) | (buffer[7] << 8) | buffer[8],
++			   SI1133_SIGN_BIT_INDEX);
+ 
+ 	if (high_vis > SI1133_ADC_THRESHOLD || ir > SI1133_ADC_THRESHOLD)
+ 		lux = si1133_calc_polynomial(high_vis, ir,
 
 
