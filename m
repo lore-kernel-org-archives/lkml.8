@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE2DC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164F2C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 839842077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43D62075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550036;
-	bh=OifP4P5hXxTkzT+ICeJO7lVltwiShd+rSRZd7Y6s+aI=;
+	s=default; t=1587550042;
+	bh=uKXv3sNvVy46P0r1i0/Dj6wNaleBNcC/QD5M1GPVccs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0V+IqlzkXuiXBuG8ewZC+LvO6qTwHUwOStj42QpBf3X1CSqf9npyZOfrLBS7Id+pg
-	 GXzRQ3q3+NWXDGY356wdc1m9FN0FyTqgABMsHiSOlSskS1U9KfujlBwYw7mRPBtL5e
-	 JjuvCvZoisQOXj/KvDBPVybbHcsSypA+OHj3ycmI=
+	b=YbxXRVsalOQmKc6TlKEV7XrYo8J7tMUds8q7fmnbI+FTGlae5Dg6OkFzxooWqO0FY
+	 5PFrfXnzfQ4zjbByAr6zXymtkHEYTjoto4sh8Ojm4/lQ0osZehReAUHTGeasDhX+5X
+	 K7FIDEbGCUteD+eqIYsqo+mo5VVc0TCy0q7YQGQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgDVKHP (ORCPT
+        id S1728524AbgDVKHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59566 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgDVKHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:07:11 -0400
+        id S1728508AbgDVKHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 139D820774;
-        Wed, 22 Apr 2020 10:07:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AA902076C;
+        Wed, 22 Apr 2020 10:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550030;
-        bh=OifP4P5hXxTkzT+ICeJO7lVltwiShd+rSRZd7Y6s+aI=;
+        s=default; t=1587550037;
+        bh=uKXv3sNvVy46P0r1i0/Dj6wNaleBNcC/QD5M1GPVccs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tKrpPvh6xTwD9fhM+f/rdCiRvrWW/gwQFxY/U+OZWBEycr3epoEHldbETvS9kiSjm
-         4WVh3S/nO5UEM5eSCBEJgdh2qrF3z/WloL9pO3j1imjRIAouk5Jh2POMJ9KQze5Lzi
-         ZwBDZLD3OqWMSVqOe4CCafMK5lsHNcK4hX3R0HUA=
+        b=j+XpvOKFzq1xADRbW8ZOyujsCQU1/EXmqLk9s4m4+3vK/8LNOypQuWjwL8YKvB1hC
+         yHuU4+OH8JoLBPn9cFa5MgwwnLQRuHGiDeND/omze7LH0bEUEba3vk+T4iZ+x85caV
+         TTFHF5sf4qMW322v7VkD6zEkLreqrLHzwf2ooWio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 107/125] s390/cpuinfo: fix wrong output when CPU0 is offline
-Date:   Wed, 22 Apr 2020 11:57:04 +0200
-Message-Id: <20200422095050.149825962@linuxfoundation.org>
+Subject: [PATCH 4.9 110/125] percpu_counter: fix a data race at vm_committed_as
+Date:   Wed, 22 Apr 2020 11:57:07 +0200
+Message-Id: <20200422095050.524913120@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,47 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
+[ Upstream commit 7e2345200262e4a6056580f0231cccdaffc825f3 ]
 
-/proc/cpuinfo should not print information about CPU 0 when it is offline.
+"vm_committed_as.count" could be accessed concurrently as reported by
+KCSAN,
 
-Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-[heiko.carstens@de.ibm.com: shortened commit message]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+ BUG: KCSAN: data-race in __vm_enough_memory / percpu_counter_add_batch
+
+ write to 0xffffffff9451c538 of 8 bytes by task 65879 on cpu 35:
+  percpu_counter_add_batch+0x83/0xd0
+  percpu_counter_add_batch at lib/percpu_counter.c:91
+  __vm_enough_memory+0xb9/0x260
+  dup_mm+0x3a4/0x8f0
+  copy_process+0x2458/0x3240
+  _do_fork+0xaa/0x9f0
+  __do_sys_clone+0x125/0x160
+  __x64_sys_clone+0x70/0x90
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ read to 0xffffffff9451c538 of 8 bytes by task 66773 on cpu 19:
+  __vm_enough_memory+0x199/0x260
+  percpu_counter_read_positive at include/linux/percpu_counter.h:81
+  (inlined by) __vm_enough_memory at mm/util.c:839
+  mmap_region+0x1b2/0xa10
+  do_mmap+0x45c/0x700
+  vm_mmap_pgoff+0xc0/0x130
+  ksys_mmap_pgoff+0x6e/0x300
+  __x64_sys_mmap+0x33/0x40
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The read is outside percpu_counter::lock critical section which results in
+a data race.  Fix it by adding a READ_ONCE() in
+percpu_counter_read_positive() which could also service as the existing
+compiler memory barrier.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Marco Elver <elver@google.com>
+Link: http://lkml.kernel.org/r/1582302724-2804-1-git-send-email-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/processor.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/percpu_counter.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
-index d856263fd7687..737e22cf09728 100644
---- a/arch/s390/kernel/processor.c
-+++ b/arch/s390/kernel/processor.c
-@@ -139,8 +139,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
- static int show_cpuinfo(struct seq_file *m, void *v)
+diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+index 84a1094496100..b6332cb761a4c 100644
+--- a/include/linux/percpu_counter.h
++++ b/include/linux/percpu_counter.h
+@@ -76,9 +76,9 @@ static inline s64 percpu_counter_read(struct percpu_counter *fbc)
+  */
+ static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
  {
- 	unsigned long n = (unsigned long) v - 1;
-+	unsigned long first = cpumask_first(cpu_online_mask);
+-	s64 ret = fbc->count;
++	/* Prevent reloads of fbc->count */
++	s64 ret = READ_ONCE(fbc->count);
  
--	if (!n)
-+	if (n == first)
- 		show_cpu_summary(m, v);
- 	if (!machine_has_cpu_mhz)
- 		return 0;
-@@ -153,6 +154,8 @@ static inline void *c_update(loff_t *pos)
- {
- 	if (*pos)
- 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
-+	else
-+		*pos = cpumask_first(cpu_online_mask);
- 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
- }
- 
+-	barrier();		/* Prevent reloads of fbc->count */
+ 	if (ret >= 0)
+ 		return ret;
+ 	return 0;
 -- 
 2.20.1
 
