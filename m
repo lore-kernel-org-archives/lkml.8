@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFB4C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB01FC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE09920656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C9620656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551971;
-	bh=NAnVbASWnjgs7XmskmVMUUmV+KLJ3N68NxMBDVxbZLM=;
+	s=default; t=1587551974;
+	bh=WL3PbyBJMFw8o4KxrC8xipxehGC7bO8H7IF894iaawA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=snsPKtZK+7ox3LPnqtgPYPIZa7aayJDmJjfsCCLFN6xBFg3Yl+CLjg94MOIDzYpM/
-	 HV8mtmxd6HZ/kq7du8WWBRknwTwaAa3geBOyM967JhwpF7azoysMeTZ8alx0cB/BF0
-	 8riS9rToiv66/1LnNIvFwAXJGNyCk/LTBtL8rYoU=
+	b=ljcm/qGROj+2og6tweIgHJo+Jig5PMIlBYC65KGt5X1CP9zc8yfTkLknsmWvdAf1t
+	 oRqoBKKhk1a3FCVioV+1UF8kjVEO/61cURZTNs+BA/P4pLY6t3pqHurCy83p+8sDXT
+	 J2mAqW0L7jqwPCQlXol5ecZJDJGZ7gddRvaB1frw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbgDVKja (ORCPT
+        id S1731544AbgDVKjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57874 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:39:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728100AbgDVKVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:24 -0400
+        id S1730195AbgDVKVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ADA72076E;
-        Wed, 22 Apr 2020 10:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A09B620775;
+        Wed, 22 Apr 2020 10:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550884;
-        bh=NAnVbASWnjgs7XmskmVMUUmV+KLJ3N68NxMBDVxbZLM=;
+        s=default; t=1587550879;
+        bh=WL3PbyBJMFw8o4KxrC8xipxehGC7bO8H7IF894iaawA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiULXAxMJVgzhuY/jxFZnJ17466E2GuVO4Wt+z9TO+vMb2AQSCBVzUdYi14VEch65
-         XGkFucNxzwB5lDljqiSDuGeZstQRyCMeMLfnlhAjARxjbsu48ldZz2KxOdaGQdz9ZF
-         kI2ZMm2ft3zcqfArGd1G1DYCs+0RonZnOGbTSI+Q=
+        b=0YVG0KyDL6NkGc83XWZVPJ3EKrMf1qhFSzI2wNh8Rz4SaKNCNXB0QQcLyTZrbcvDo
+         DlNXS+uBMMo381S7QnA/szUPBRlnn/wH/6OB1JPxYziN8tUCUiHdJmM+MLKBFdyIF/
+         PAOEMQYPeELrIvzhoeuVHLX+cD0riSNlvlmBHYsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.6 014/166] netfilter: nf_tables: report EOPNOTSUPP on unsupported flags/object type
-Date:   Wed, 22 Apr 2020 11:55:41 +0200
-Message-Id: <20200422095049.851270478@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 012/166] ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on LAN.
+Date:   Wed, 22 Apr 2020 11:55:39 +0200
+Message-Id: <20200422095049.576856427@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -58,41 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Martin Fuzzey <martin.fuzzey@flowbird.group>
 
-commit d9583cdf2f38d0f526d9a8c8564dd2e35e649bc7 upstream.
+commit 4141f1a40fc0789f6fd4330e171e1edf155426aa upstream.
 
-EINVAL should be used for malformed netlink messages. New userspace
-utility and old kernels might easily result in EINVAL when exercising
-new set features, which is misleading.
+In order to wake from suspend by ethernet magic packets the GPC
+must be used as intc does not have wakeup functionality.
 
-Fixes: 8aeff920dcc9 ("netfilter: nf_tables: add stateful object reference to set elements")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+But the FEC DT node currently uses interrupt-extended,
+specificying intc, thus breaking WoL.
+
+This problem is probably fallout from the stacked domain conversion
+as intc used to chain to GPC.
+
+So replace "interrupts-extended" by "interrupts" to use the default
+parent which is GPC.
+
+Fixes: b923ff6af0d5 ("ARM: imx6: convert GPC to stacked domains")
+
+Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_tables_api.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6qdl.dtsi |    5 ++---
+ arch/arm/boot/dts/imx6qp.dtsi  |    1 -
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3950,7 +3950,7 @@ static int nf_tables_newset(struct net *
- 			      NFT_SET_INTERVAL | NFT_SET_TIMEOUT |
- 			      NFT_SET_MAP | NFT_SET_EVAL |
- 			      NFT_SET_OBJECT))
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 		/* Only one of these operations is supported */
- 		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
- 			     (NFT_SET_MAP | NFT_SET_OBJECT))
-@@ -3988,7 +3988,7 @@ static int nf_tables_newset(struct net *
- 		objtype = ntohl(nla_get_be32(nla[NFTA_SET_OBJ_TYPE]));
- 		if (objtype == NFT_OBJECT_UNSPEC ||
- 		    objtype > NFT_OBJECT_MAX)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	} else if (flags & NFT_SET_OBJECT)
- 		return -EINVAL;
- 	else
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1039,9 +1039,8 @@
+ 				compatible = "fsl,imx6q-fec";
+ 				reg = <0x02188000 0x4000>;
+ 				interrupt-names = "int0", "pps";
+-				interrupts-extended =
+-					<&intc 0 118 IRQ_TYPE_LEVEL_HIGH>,
+-					<&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
++					     <0 119 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_ENET>,
+ 					 <&clks IMX6QDL_CLK_ENET>,
+ 					 <&clks IMX6QDL_CLK_ENET_REF>;
+--- a/arch/arm/boot/dts/imx6qp.dtsi
++++ b/arch/arm/boot/dts/imx6qp.dtsi
+@@ -77,7 +77,6 @@
+ };
+ 
+ &fec {
+-	/delete-property/interrupts-extended;
+ 	interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
+ 		     <0 119 IRQ_TYPE_LEVEL_HIGH>;
+ };
 
 
