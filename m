@@ -2,102 +2,232 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2286C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BAFC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA9D206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18815206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRyeQPoU"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="piq02+4L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgDVICR (ORCPT
+        id S1726110AbgDVIGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41874 "EHLO
+        Wed, 22 Apr 2020 04:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725810AbgDVICQ (ORCPT
+        by vger.kernel.org with ESMTP id S1725968AbgDVIGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:02:16 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41202C03C1A6;
-        Wed, 22 Apr 2020 01:02:16 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id t63so1175044wmt.3;
-        Wed, 22 Apr 2020 01:02:16 -0700 (PDT)
+        Wed, 22 Apr 2020 04:06:30 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E226C03C1A7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 01:06:30 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 198so870222lfo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 01:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=276h72KTtylrnULr9OGp8Ofnvi/+2QUze7tpHtVgUYc=;
-        b=NRyeQPoUxhqd6VJaDmPOxUvzPKFp5UVW+KAXnh0USrkJDLUSI5z0xUCrR19/VNs66q
-         ha/QKAWGlTTRrOikeQBb5UwzTTqvcURrzdkEL3jciUpeEATZ2jTPA7CfZWoC5U7GENiL
-         3aCRzlXmFoVsfv7DSo9chTp1x/C7HK6V/z17Uek3vbB2/cTvDVcFo2OU2LKh2SQ2TSiO
-         KEkSIYTUyW14UckA1ONlpt+rUTExOjiKyHi5oEw0lTeyAzRsSUb2Qf5FXilEGAQmeyLu
-         /nZk/zSsPg+20W+WseUIl8zuUTfjwsbitxeBmd3V23Ih67ThPj486UKKKeiOpvDOENRg
-         a9wQ==
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bEZIDpjrA4Byv+o6rKG8EfK4lArv5Q0+XiEhKNnlXLI=;
+        b=piq02+4Lm8IkqtgEdUddp51ekLNm+Y2LSTs2iaye5o4u20Cm4LJenW0fh57JJ7IPvi
+         OT0qKEHpycmOhF8l0+4uvWdZxkiMhoZBbVCLaUjyqpC0OmXl4F7fulUNEZv5xIEh3aAn
+         4FWZbcEOSC0PXhztBHogogh5KDUMCJSCFN8tkaejkz35S2jmHltntmfmTbZMKSHzWsC0
+         cFIQ5zt6rVjyNZVnAp2chW2f1i58dfNNHEPZsaVEkNybzdZ6KIh8yprOPUCzKtTxePau
+         82XNuO9RngO9J8lndLNccDoIlra7pzZwhTkOOnZ7SCOYcNq6hylCoe8lU4KrdaHKRQ1h
+         wVfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=276h72KTtylrnULr9OGp8Ofnvi/+2QUze7tpHtVgUYc=;
-        b=pugg+379XImwfirT65jYpM07X3uDgEFV9qTr5oDdMHLCFi7g88nUXhwVH7TgDWHbtN
-         kO/Zu6qFEVvFxpTXOz5EZowmqAKVnk7j6F16n/T0iRWUm4eG6ugm9XwEOmhriJtsnHak
-         cRHhC/DHD6G/qsORebhz7gqBEUWlSV94sNvxfsDWtUWUes7h/pti2H9sWRkAl+XRXp60
-         rYbmDcG8U2lxk1NyL/Ks8cO70f2BcyWtgY4Kz1hbB6NRZ2WvUsJbiMzGmWGCu7pTXxa/
-         kErsIGgSRbODZ0S/ZuHq2JXqLilvBb4ssPKLOcf5LRQdousqm+nqmgjCqTJXnvJBnyTM
-         eG4g==
-X-Gm-Message-State: AGi0PuaBXtFG0Me6Es5pEeoF3onpA0Cns8zfU4OiTzs8fcBCb6lz6Wbp
-        Gt1WcBCSPsJ8IREx6V6eQ0NR5dhu+fM=
-X-Google-Smtp-Source: APiQypLUIvMLQElpQ0YeDX4LXgi+d6EVLy+A09/FAG1IA0q7WkePThaGskKab/Prr5WYqQs9OXVMnA==
-X-Received: by 2002:a1c:e903:: with SMTP id q3mr8830283wmc.76.1587542534579;
-        Wed, 22 Apr 2020 01:02:14 -0700 (PDT)
-Received: from meru ([2a01:cb18:832e:5f00:1d35:d245:4470:8434])
-        by smtp.gmail.com with ESMTPSA id t16sm8175157wrb.8.2020.04.22.01.02.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 01:02:13 -0700 (PDT)
-From:   Mathieu Othacehe <m.othacehe@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/4] iio: vcnl4000: Add event support for VCNL4010/20.
-References: <20200421075532.19192-1-m.othacehe@gmail.com>
-        <20200421075532.19192-3-m.othacehe@gmail.com>
-        <CAHp75Veqp=tb0Z9h2cey5DE_KpNBp3Jdmh2gLzSoo-N5CsGpvw@mail.gmail.com>
-Date:   Wed, 22 Apr 2020 10:02:11 +0200
-In-Reply-To: <CAHp75Veqp=tb0Z9h2cey5DE_KpNBp3Jdmh2gLzSoo-N5CsGpvw@mail.gmail.com>
-        (Andy Shevchenko's message of "Tue, 21 Apr 2020 14:24:30 +0300")
-Message-ID: <87y2qoosn0.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bEZIDpjrA4Byv+o6rKG8EfK4lArv5Q0+XiEhKNnlXLI=;
+        b=SGeSUCOKIanYrYG5xTrqXCQ/vXrN+V0NN8WM/2xico+PLzH7ddqOAWlPcsy2qs/kPg
+         ZE/4VCePuTETZAPr9ElYc4zTYmdpFBdrY2U5BsWxx3AhrOrpNyFbbNRnyH+Zp1CPKkOb
+         K1BHr4VMi3g4RxDCin3As0gpv7iNslzUAS4/Hsz+vBIojbM+VuUlD1SZTGZgJK9RD6EH
+         wzqMo7twsbgr6EHi0MidDgbdOEnbWVCQEaCvnHQz7z9ZWSgu0GWUTkoj4D0ahks/FupM
+         8HRNg6bWLW3cDg7xGY14LM8lyi9uNNXpbDuWNu6QUXujpPOrtP4UWXm7KfgruOlmFGmN
+         383A==
+X-Gm-Message-State: AGi0Puao0ccCNKQ7JtdF7lgJk18g/7uYlV+fx3Rg64/1nwhSja1obIIj
+        g8uw58wlW0goz5etVaao+J8Jv52HBbzmKsf5wuGICQ==
+X-Google-Smtp-Source: APiQypL0HFsogpEBuECdthW7Q4KmhEMNxg+4kGdsqP7hqJi9hEpSTaBjeEL0m5d/vfh2zAv50vtVSIhWI6T9R7wQi9Q=
+X-Received: by 2002:ac2:58d7:: with SMTP id u23mr16482250lfo.182.1587542788616;
+ Wed, 22 Apr 2020 01:06:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200420080409.111693-1-maco@android.com> <20200420080409.111693-5-maco@android.com>
+ <20200422061919.GA22819@lst.de>
+In-Reply-To: <20200422061919.GA22819@lst.de>
+From:   Martijn Coenen <maco@android.com>
+Date:   Wed, 22 Apr 2020 10:06:17 +0200
+Message-ID: <CAB0TPYHCHytLouWSpwKvi3qpZCzAYhuEot9y+ssnE8vDGgtQpg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] loop: Add LOOP_SET_FD_AND_STATUS ioctl.
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hello Andy,
-
->> +               ret = devm_request_threaded_irq(&client->dev, client->irq,
->> +                                               NULL, vcnl4010_irq_thread,
->> +                                               IRQF_TRIGGER_FALLING |
+On Wed, Apr 22, 2020 at 8:19 AM Christoph Hellwig <hch@lst.de> wrote:
 >
->> +                                               IRQF_ONESHOT,
+> On Mon, Apr 20, 2020 at 10:04:09AM +0200, Martijn Coenen wrote:
+> > This allows userspace to completely setup a loop device with a single
+> > ioctl, removing the in-between state where the device can be partially
+> > configured - eg the loop device has a backing file associated with it,
+> > but is reading from the wrong offset.
+> >
+> > Besides removing the intermediate state, another big benefit of this
+> > ioctl is that LOOP_SET_STATUS can be slow; the main reason for this
+> > slowness is that LOOP_SET_STATUS(64) calls blk_mq_freeze_queue() to
+> > freeze the associated queue; this requires waiting for RCU
+> > synchronization, which I've measured can take about 15-20ms on this
+> > device on average.
+> >
+> > Here's setting up ~70 regular loop devices with an offset on an x86
+> > Android device, using LOOP_SET_FD and LOOP_SET_STATUS:
+> >
+> > vsoc_x86:/system/apex # time for i in `seq 30 100`;
+> > do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
+> >     0m03.40s real     0m00.02s user     0m00.03s system
+> >
+> > Here's configuring ~70 devices in the same way, but using a modified
+> > losetup that uses the new LOOP_SET_FD_AND_STATUS ioctl:
+> >
+> > vsoc_x86:/system/apex # time for i in `seq 30 100`;
+> > do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
+> >     0m01.94s real     0m00.01s user     0m00.01s system
+> >
+> > Signed-off-by: Martijn Coenen <maco@android.com>
+> > ---
+> >  drivers/block/loop.c      | 47 ++++++++++++++++++++++++++++++---------
+> >  include/uapi/linux/loop.h |  6 +++++
+> >  2 files changed, 42 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> > index 6e656390b285..e1dbd70d6d6e 100644
+> > --- a/drivers/block/loop.c
+> > +++ b/drivers/block/loop.c
+> > @@ -1065,8 +1065,9 @@ loop_set_from_status(struct loop_device *lo, const struct loop_info64 *info)
+> >       return 0;
+> >  }
+> >
+> > -static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+> > -                    struct block_device *bdev, unsigned int arg)
+> > +static int loop_set_fd_and_status(struct loop_device *lo, fmode_t mode,
+> > +                               struct block_device *bdev, unsigned int fd,
+> > +                               const struct loop_info64 *info)
+> >  {
+> >       struct file     *file;
+> >       struct inode    *inode;
+> > @@ -1081,7 +1082,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+> >       __module_get(THIS_MODULE);
+> >
+> >       error = -EBADF;
+> > -     file = fget(arg);
+> > +     file = fget(fd);
+> >       if (!file)
+> >               goto out;
+> >
+> > @@ -1090,7 +1091,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+> >        * here to avoid changing device under exclusive owner.
+> >        */
+> >       if (!(mode & FMODE_EXCL)) {
+> > -             claimed_bdev = bd_start_claiming(bdev, loop_set_fd);
+> > +             claimed_bdev = bd_start_claiming(bdev, loop_set_fd_and_status);
+> >               if (IS_ERR(claimed_bdev)) {
+> >                       error = PTR_ERR(claimed_bdev);
+> >                       goto out_putf;
+> > @@ -1117,9 +1118,24 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+> >               lo_flags |= LO_FLAGS_READ_ONLY;
+> >
+> >       error = -EFBIG;
+> > -     size = get_loop_size(lo, file);
+> > +     if (info)
+> > +             size = get_size(info->lo_offset, info->lo_sizelimit,
+> > +                             file);
+> > +     else
+> > +             size = get_loop_size(lo, file);
+> >       if ((loff_t)(sector_t)size != size)
+> >               goto out_unlock;
+> > +
+> > +     if (info) {
+> > +             error = loop_set_from_status(lo, info);
+> > +             if (error)
+> > +                     goto out_unlock;
+> > +     } else {
+> > +             lo->transfer = NULL;
+> > +             lo->ioctl = NULL;
+> > +             lo->lo_sizelimit = 0;
+> > +             lo->lo_offset = 0;
+> > +     }
 >
-> Isn't it by default when threaded IRQ is asked with NULL for hw handler?
+> Just curious:  Can't we just pass in an on-stack info for the legacy
+> case and avoid all these conditionals?
 
-No, and it fails with this error message if IRQF_ONESHOT is not set:
+Yeah, that is actually much nicer. I will rework it to that.
 
-pr_err("Threaded irq requested with handler=NULL and !ONESHOT for %s (irq %d)\n",
+> Can you throw in another prep patch that adds a:
+>
+>         void __user *argp = (void __user *)arg;
+>
+> line at the top of lo_compat_ioctl, and switches the LOOP_SET_STATUS
+> and LOOP_GET_STATUS case to it?
 
-Thanks,
+Did you mean in regular lo_ioctl()? eg something like this:
 
-Mathieu
+@@ -1671,6 +1671,7 @@ static int lo_ioctl(struct block_device *bdev,
+fmode_t mode,
+        unsigned int cmd, unsigned long arg)
+ {
+        struct loop_device *lo = bdev->bd_disk->private_data;
++       void __user *argp = (void __user *) arg;
+        int err;
+
+        switch (cmd) {
+@@ -1694,21 +1695,19 @@ static int lo_ioctl(struct block_device *bdev,
+fmode_t mode,
+        case LOOP_SET_STATUS:
+                err = -EPERM;
+                if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
+-                       err = loop_set_status_old(lo,
+-                                       (struct loop_info __user *)arg);
++                       err = loop_set_status_old(lo, argp);
+                }
+                break;
+        case LOOP_GET_STATUS:
+-               return loop_get_status_old(lo, (struct loop_info __user *) arg);
++               return loop_get_status_old(lo, argp);
+        case LOOP_SET_STATUS64:
+                err = -EPERM;
+                if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
+-                       err = loop_set_status64(lo,
+-                                       (struct loop_info64 __user *) arg);
++                       err = loop_set_status64(lo, argp);
+                }
+                break;
+        case LOOP_GET_STATUS64:
+-               return loop_get_status64(lo, (struct loop_info64 __user *) arg);
++               return loop_get_status64(lo, argp);
+
+
+> > +struct loop_fd_and_status {
+> > +     struct loop_info64      info;
+> > +     __u32                   fd;
+>
+> This should grow a
+>
+>         __u32   __pad;
+>
+> to avoid different struct sizes on x86-32 vs x86-64.
+
+will do, thanks!
