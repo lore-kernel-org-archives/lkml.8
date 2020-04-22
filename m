@@ -2,113 +2,132 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868D5C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAEEC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6052082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA81A2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b5QyaoAh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hiKywaJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgDVLkr (ORCPT
+        id S1727027AbgDVLli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:40:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbgDVLkq (ORCPT
+        Wed, 22 Apr 2020 07:41:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55169 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725961AbgDVLlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:40:46 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC3DC03C1A8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 04:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FMnNnD/g5k61t/UJVaLjWLk7lqOWCoUUvUZPwgeC4zI=; b=b5QyaoAhKw9dLQtOhIkFBippwO
-        ii9AFrlgzCqp3ycOgyREkrZdoZhL+40vlAgzyNwsd8lC2nuitaPrw5xF8icyyx/CR5AuVAHPlCPin
-        JABZZykr0nnT1/U1J+mFhWj0wE/pepgsfB0AxLv0tlcMSoKT1oe34v111Q5G//IZjlGMA685Kujzr
-        of6ciJX2NC4TQ8udJogzxzqw5Bh0dNb26Ky/+xSDnaLWhsmLCFS4HubOtmRjyAsM5SbDt0mG/zd2w
-        9jDZhknxlTk7QODtO8M5F4usKWLsQ3QUu1/Kh6IJDX/C+QYk2NDB/c7wKFw+zfCpE915DqOzoQDvz
-        C3rBOJcw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRDjd-00075p-DO; Wed, 22 Apr 2020 11:40:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03655300739;
-        Wed, 22 Apr 2020 13:40:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E4EA2203AA838; Wed, 22 Apr 2020 13:40:07 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 13:40:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200422114007.GC20730@hirez.programming.kicks-ass.net>
-References: <20200417080726.GS2424@tucnak>
- <20200417084224.GB7322@zn.tnic>
- <20200417085859.GU2424@tucnak>
- <20200417090909.GC7322@zn.tnic>
- <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
- <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
- <20200417190607.GY2424@tucnak>
- <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
- <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
- <20200422102309.GA26846@zn.tnic>
+        Wed, 22 Apr 2020 07:41:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587555696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=an4GqdMcPxXVQzFDku1airXJ7n+SdoQGwHtPe0RDm3k=;
+        b=hiKywaJKoQ00JimyUuyTYS3bRrslx+WNUDKk5CM4mLSIJYRzfEHw0ZmIHuO2yAJOZ5xUXp
+        PcjJW8zibPs3M8uPcdZU93ZlmVHiiM0Q5XOD7BXmGHXwSE8RxX5/7X8Z63go1OyVV/woOw
+        tNI1MjaE6C+fdb+enY6ZBBRFFBLlvDU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-ISRUNEiqPdS2sQXWa87y5A-1; Wed, 22 Apr 2020 07:41:32 -0400
+X-MC-Unique: ISRUNEiqPdS2sQXWa87y5A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8AE0107ACCD;
+        Wed, 22 Apr 2020 11:41:29 +0000 (UTC)
+Received: from krava (unknown [10.40.196.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BBC528988;
+        Wed, 22 Apr 2020 11:41:25 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 13:41:22 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
+        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
+        qiangqing.zhang@nxp.com, irogers@google.com, robin.murphy@arm.com,
+        zhangshaokun@hisilicon.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v2 07/13] perf pmu: Add pmu_id()
+Message-ID: <20200422114122.GG962614@krava>
+References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
+ <1587120084-18990-8-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422102309.GA26846@zn.tnic>
+In-Reply-To: <1587120084-18990-8-git-send-email-john.garry@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:23:09PM +0200, Borislav Petkov wrote:
-> Ok,
+On Fri, Apr 17, 2020 at 06:41:18PM +0800, John Garry wrote:
+> Add a function to read the PMU id sysfs entry. We only do it for uncore
+> PMUs where this would be relevant.
 > 
-> let's try the simple and clean fix first. Nick, would that work on LLVM
-> too?
-> 
-> And I hope this will remain working and the compiler won't jump over an
-> inline asm and go nuts.
-> 
-> Thx.
-> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
 > ---
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 3b9bf8c7e29d..06d2e16bedbb 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -266,6 +266,13 @@ static void notrace start_secondary(void *unused)
+>  tools/perf/util/pmu.c | 36 ++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/pmu.h |  1 +
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index ef6a63f3d386..6a67c6a28d08 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -594,6 +594,7 @@ static struct perf_cpu_map *__pmu_cpumask(const char *path)
+>   * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
+>   * may have a "cpus" file.
+>   */
+> +#define CPUS_TEMPLATE_ID	"%s/bus/event_source/devices/%s/identifier"
+>  #define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
+>  #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
 >  
->  	wmb();
->  	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-> +
-> +	/*
-> +	 * Prevent tail call to cpu_startup_entry() because the stack protector
-> +	 * guard has been changed in the middle of this function and must not be
-> +	 * checked before tail calling another function.
-> +	 */
-> +        asm ("");
+> @@ -632,6 +633,39 @@ static bool pmu_is_uncore(const char *name)
+>  	return file_available(path);
 >  }
+>  
+> +static char *pmu_id(const char *name)
+> +{
+> +	char path[PATH_MAX], *id;
+> +	const char *sysfs;
+> +	FILE *file;
+> +	int n;
+> +
+> +	sysfs = sysfs__mountpoint();
+> +	snprintf(path, PATH_MAX, CPUS_TEMPLATE_ID, sysfs, name);
+> +
+> +	id = malloc(PATH_MAX);
+> +	if (!id)
+> +		return NULL;
+> +
+> +	file = fopen(path, "r");
+> +	if (!file) {
+> +		free(id);
+> +		return NULL;
+> +	}
+> +
+> +	n = fscanf(file, "%s", id);
+> +
+> +	fclose(file);
+> +
+> +	if (!n) {
+> +		free(id);
+> +		return NULL;
+> +	}
+> +
+> +	return id;
+> +}
 
-You haz a whitespace issue there.
+I still need to go through this patchset in more detail,
+but just quick note, that we have sysfs__read_str that you
+could use in here
 
-Also, can we get this in writing, signed in blood, from the various
-compiler teams ;-)
+jirka
+
