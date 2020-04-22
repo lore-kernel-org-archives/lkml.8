@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7EEC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA03C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C03E2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C9B2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551527;
-	bh=WNjl3YMguWAoEvZRF+md9N2/nSrx4fqcpqzIGbtCVDw=;
+	s=default; t=1587551528;
+	bh=2e/h/Ew2FT6YxkhcyqA5l/vscu6FfJBLw5RMx7TCaoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WjyHO6+n2IebzZKoKoB30Lanej2W6pyGQiiUuCqyUHvjyzclG5nSKzCtqi5S3WQWe
-	 Lgh5AOgXs19+hFwWlxW/bHE5PpH4UZcYK2JVdSaaYgYxnUDrel7z/JGsaRcRQWA46f
-	 +19anr0Zg4xJZzayK8I5b66/VjpFgBTgpweKOPcI=
+	b=QkN9r+i8KTvJGOsFzTf7sW5xzUfVqGivEg3VIipa9jjbZ3Mr3I6Gjl4y3I7/5WzMb
+	 NaNKkHuUAgqM3ul4I0KX7mUZr9m+GOfEjSqOKgfEIGcvY02qB7q9ADJbDnR2taHd22
+	 akRQyGTu7ea/e/Y+Ms7uGomEI8QdAq+fmV+xFdEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbgDVKcF (ORCPT
+        id S1731102AbgDVKcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:32:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:32:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730569AbgDVKZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:25:26 -0400
+        id S1730579AbgDVKZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:25:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F652075A;
-        Wed, 22 Apr 2020 10:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573F82075A;
+        Wed, 22 Apr 2020 10:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551125;
-        bh=WNjl3YMguWAoEvZRF+md9N2/nSrx4fqcpqzIGbtCVDw=;
+        s=default; t=1587551130;
+        bh=2e/h/Ew2FT6YxkhcyqA5l/vscu6FfJBLw5RMx7TCaoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mG0kLSgahXQnNMdEB5nOZOxEQU30ZFzAauQid/vJdGC+633axLrKTO5o/fqA4JgfQ
-         Xnhio1f6XNSpGVv1wOH8xCLc2GyAw16mEt+IY+zt59kV6qHnGOqdNdGMtJFxA8lf2b
-         B7MH26f7UVmAl5iXxGtHtLUO0cTCLnq9aWZ6WJpw=
+        b=gnHQ6Ul/DXGUzOV5Wod/tnuZo1LT02/flz8GXygWgZIW/FdiXwO8oyQaEw3QOFnGi
+         y3HWCcUB9iHQNeTt4tD9rILZ9l1IX43EIK1UGRHvm9jjgpjg5abqyhGY7ETSliMo1p
+         QdtNNQRevaSJHT8iH2OsYZO4i5x4nJpO47B6bMLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 109/166] leds: core: Fix warning message when init_data
-Date:   Wed, 22 Apr 2020 11:57:16 +0200
-Message-Id: <20200422095100.491642637@linuxfoundation.org>
+        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 111/166] csky: Fixup cpu speculative execution to IO area
+Date:   Wed, 22 Apr 2020 11:57:18 +0200
+Message-Id: <20200422095100.665900125@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -61,37 +59,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 64ed6588c2ea618d3f9ca9d8b365ae4c19f76225 ]
+[ Upstream commit aefd9461d34a1b0a2acad0750c43216c1c27b9d4 ]
 
-The warning message when a led is renamed due to name collition can fail
-to show proper original name if init_data is used. Eg:
+For the memory size ( > 512MB, < 1GB), the MSA setting is:
 
-[    9.073996] leds-gpio a0040000.leds_0: Led (null) renamed to red_led_1 due to name collision
+ - SSEG0: PHY_START        , PHY_START + 512MB
+ - SSEG1: PHY_START + 512MB, PHY_START + 1GB
 
-Fixes: bb4e9af0348d ("leds: core: Add support for composing LED class device names")
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+But the real memory is no more than 1GB, there is a gap between the
+end size of memory and border of 1GB. CPU could speculatively
+execute to that gap and if the gap of the bus couldn't respond to
+the CPU request, then the crash will happen.
+
+Now make the setting with:
+
+ - SSEG0: PHY_START        , PHY_START + 512MB (no change)
+ - SSEG1: Disabled (We use highmem to use the memory of 512MB~1GB)
+
+We also deprecated zhole_szie[] settings, it's only used by arm
+style CPUs. All memory gap should use Reserved setting of dts in
+csky system.
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/led-class.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/csky/abiv1/inc/abi/entry.h |  5 +--
+ arch/csky/abiv2/inc/abi/entry.h |  7 ++--
+ arch/csky/kernel/head.S         |  5 +++
+ arch/csky/kernel/setup.c        | 63 ++++++++-------------------------
+ arch/csky/kernel/smp.c          |  3 ++
+ 5 files changed, 25 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 1fc40e8af75eb..3363a6551a708 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -376,7 +376,7 @@ int led_classdev_register_ext(struct device *parent,
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index f35a9f3315ee6..5056ebb902d18 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -172,10 +172,7 @@
+ 	addi	r6, 0xe
+ 	cpwcr	r6, cpcr30
  
- 	if (ret)
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
--				led_cdev->name, dev_name(led_cdev->dev));
-+				proposed_name, dev_name(led_cdev->dev));
+-	lsri	r6, 28
+-	addi	r6, 2
+-	lsli	r6, 28
+-	addi	r6, 0xe
++	movi	r6, 0
+ 	cpwcr	r6, cpcr31
+ .endm
  
- 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
- 		ret = led_add_brightness_hw_changed(led_cdev);
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 94a7a58765dff..111973c6c713f 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -230,11 +230,8 @@
+ 	addi	r6, 0x1ce
+ 	mtcr	r6, cr<30, 15> /* Set MSA0 */
+ 
+-	lsri	r6, 28
+-	addi	r6, 2
+-	lsli	r6, 28
+-	addi	r6, 0x1ce
+-	mtcr	r6, cr<31, 15> /* Set MSA1 */
++	movi    r6, 0
++	mtcr	r6, cr<31, 15> /* Clr MSA1 */
+ 
+ 	/* enable MMU */
+ 	mfcr    r6, cr18
+diff --git a/arch/csky/kernel/head.S b/arch/csky/kernel/head.S
+index 61989f9241c02..17ed9d2504807 100644
+--- a/arch/csky/kernel/head.S
++++ b/arch/csky/kernel/head.S
+@@ -21,6 +21,11 @@ END(_start)
+ ENTRY(_start_smp_secondary)
+ 	SETUP_MMU
+ 
++	/* copy msa1 from CPU0 */
++	lrw     r6, secondary_msa1
++	ld.w	r6, (r6, 0)
++	mtcr	r6, cr<31, 15>
++
+ 	/* set stack point */
+ 	lrw     r6, secondary_stack
+ 	ld.w	r6, (r6, 0)
+diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
+index 3821e55742f46..819a9a7bf786d 100644
+--- a/arch/csky/kernel/setup.c
++++ b/arch/csky/kernel/setup.c
+@@ -24,26 +24,9 @@ struct screen_info screen_info = {
+ };
+ #endif
+ 
+-phys_addr_t __init_memblock memblock_end_of_REG0(void)
+-{
+-	return (memblock.memory.regions[0].base +
+-		memblock.memory.regions[0].size);
+-}
+-
+-phys_addr_t __init_memblock memblock_start_of_REG1(void)
+-{
+-	return memblock.memory.regions[1].base;
+-}
+-
+-size_t __init_memblock memblock_size_of_REG1(void)
+-{
+-	return memblock.memory.regions[1].size;
+-}
+-
+ static void __init csky_memblock_init(void)
+ {
+ 	unsigned long zone_size[MAX_NR_ZONES];
+-	unsigned long zhole_size[MAX_NR_ZONES];
+ 	signed long size;
+ 
+ 	memblock_reserve(__pa(_stext), _end - _stext);
+@@ -54,54 +37,36 @@ static void __init csky_memblock_init(void)
+ 	memblock_dump_all();
+ 
+ 	memset(zone_size, 0, sizeof(zone_size));
+-	memset(zhole_size, 0, sizeof(zhole_size));
+ 
+ 	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
+-	max_pfn	    = PFN_DOWN(memblock_end_of_DRAM());
+-
+-	max_low_pfn = PFN_UP(memblock_end_of_REG0());
+-	if (max_low_pfn == 0)
+-		max_low_pfn = max_pfn;
++	max_low_pfn = max_pfn = PFN_DOWN(memblock_end_of_DRAM());
+ 
+ 	size = max_pfn - min_low_pfn;
+ 
+-	if (memblock.memory.cnt > 1) {
+-		zone_size[ZONE_NORMAL]  =
+-			PFN_DOWN(memblock_start_of_REG1()) - min_low_pfn;
+-		zhole_size[ZONE_NORMAL] =
+-			PFN_DOWN(memblock_start_of_REG1()) - max_low_pfn;
++	if (size <= PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET))
++		zone_size[ZONE_NORMAL] = size;
++	else if (size < PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET)) {
++		zone_size[ZONE_NORMAL] =
++				PFN_DOWN(SSEG_SIZE - PHYS_OFFSET_OFFSET);
++		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
+ 	} else {
+-		if (size <= PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET))
+-			zone_size[ZONE_NORMAL] = max_pfn - min_low_pfn;
+-		else {
+-			zone_size[ZONE_NORMAL] =
++		zone_size[ZONE_NORMAL] =
+ 				PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-			max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
+-		}
++		max_low_pfn = min_low_pfn + zone_size[ZONE_NORMAL];
++		write_mmu_msa1(read_mmu_msa0() + SSEG_SIZE);
+ 	}
+ 
+ #ifdef CONFIG_HIGHMEM
+-	size = 0;
+-	if (memblock.memory.cnt > 1) {
+-		size = PFN_DOWN(memblock_size_of_REG1());
+-		highstart_pfn = PFN_DOWN(memblock_start_of_REG1());
+-	} else {
+-		size = max_pfn - min_low_pfn -
+-			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-		highstart_pfn =  min_low_pfn +
+-			PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET_OFFSET);
+-	}
+-
+-	if (size > 0)
+-		zone_size[ZONE_HIGHMEM] = size;
++	zone_size[ZONE_HIGHMEM] = max_pfn - max_low_pfn;
+ 
+-	highend_pfn = max_pfn;
++	highstart_pfn = max_low_pfn;
++	highend_pfn   = max_pfn;
+ #endif
+ 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
+ 
+ 	dma_contiguous_reserve(0);
+ 
+-	free_area_init_node(0, zone_size, min_low_pfn, zhole_size);
++	free_area_init_node(0, zone_size, min_low_pfn, NULL);
+ }
+ 
+ void __init setup_arch(char **cmdline_p)
+diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+index 0bb0954d55709..de61feb4b6df2 100644
+--- a/arch/csky/kernel/smp.c
++++ b/arch/csky/kernel/smp.c
+@@ -156,6 +156,8 @@ volatile unsigned int secondary_hint;
+ volatile unsigned int secondary_ccr;
+ volatile unsigned int secondary_stack;
+ 
++unsigned long secondary_msa1;
++
+ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+ {
+ 	unsigned long mask = 1 << cpu;
+@@ -164,6 +166,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+ 		(unsigned int) task_stack_page(tidle) + THREAD_SIZE - 8;
+ 	secondary_hint = mfcr("cr31");
+ 	secondary_ccr  = mfcr("cr18");
++	secondary_msa1 = read_mmu_msa1();
+ 
+ 	/*
+ 	 * Because other CPUs are in reset status, we must flush data
 -- 
 2.20.1
 
