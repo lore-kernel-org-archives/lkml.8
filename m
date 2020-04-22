@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCA1C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8845AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28AFA20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C9C20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549813;
-	bh=nVOpzHyiyppnNvj1+1Etp1vvzi0VnZVACvXG8DhwaHo=;
+	s=default; t=1587549815;
+	bh=4V+pdImMJKKhv+28HU9qos5i0TFHEE3J2VqwjNls3s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeIqSqgKzZsGR513LawyBnDE/ZYbYmjVibWzynQQaDroj+CFExzDzY9fQoWCZICkb
-	 f6rht27V+j3oyzlLaEHdMvsQ1Qm8zOwMiYDgyt0Gk80vVvK1hI3pPzVJO0BE+JuO41
-	 FaV5dxPLvrt6ha23fyRQLS7ym9eJL7WzXGvB84sw=
+	b=cy3B9v3hW8buUPTWE+O7wM4oE2028t32r4UCsbsAn2JsD2TSY4PPdZkRqE4OTbySJ
+	 g7IOPCoGhgPRKLrJpcJ8h65n51KlwNe5EwWsqxNOTmpD0p2wmeWHLypaKUanzgKOjX
+	 L+R6xHjZ7Ji2zesYxOkOvsTk3Dr64V3m0kiRN2I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgDVKDc (ORCPT
+        id S1727841AbgDVKDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:03:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53160 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:03:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgDVKD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:26 -0400
+        id S1727824AbgDVKDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8262082E;
-        Wed, 22 Apr 2020 10:03:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9338F2082E;
+        Wed, 22 Apr 2020 10:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549805;
-        bh=nVOpzHyiyppnNvj1+1Etp1vvzi0VnZVACvXG8DhwaHo=;
+        s=default; t=1587549810;
+        bh=4V+pdImMJKKhv+28HU9qos5i0TFHEE3J2VqwjNls3s0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J96e6GnIsDNExEgXwNApYMjx/o4kje7WBTXI1RP4Ery47V78qeX584VEm9Bccf0pZ
-         G/65B+ANcFooebmsN6bUSgq6ccMR01o7zOS63tWbM33raVCZuhxmiTfzDAw4QkA04l
-         fnD/N/XSX7fvb0daT+6kO+1y9/LQ3d53kB+grbNg=
+        b=N9TfYBXKUuxf8zaPmFcZ8Xl0KGwn6N9ci16xDZEHFii2GfFacX5UPo+VOT2BE85T9
+         EJyMebJERrDAyUyDxC5ng0PyAtqdeLT8zTTTdYZ7DUssu9B1/THvm3tnxXpL/hnZiW
+         jDWWAYc+5/WAdxZ6dFkllPq7gBpeG8O1iAfH6KeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Michael Wang <yun.wang@linux.alibaba.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 006/125] sched: Avoid scale real weight down to zero
-Date:   Wed, 22 Apr 2020 11:55:23 +0200
-Message-Id: <20200422095033.973891297@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 008/125] libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
+Date:   Wed, 22 Apr 2020 11:55:25 +0200
+Message-Id: <20200422095034.291619711@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,80 +59,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wang <yun.wang@linux.alibaba.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
+[ Upstream commit 1d72f7aec3595249dbb83291ccac041a2d676c57 ]
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
+If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
+then we may get use-after-free KASAN warns:
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+==================================================================
+BUG: KASAN: use-after-free in kobject_put+0x24/0x180
+Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
+CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
+Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
+Call trace:
+dump_backtrace+0x0/0x298
+show_stack+0x14/0x20
+dump_stack+0x118/0x190
+print_address_description.isra.9+0x6c/0x3b8
+__kasan_report+0x134/0x23c
+kasan_report+0xc/0x18
+__asan_load1+0x5c/0x68
+kobject_put+0x24/0x180
+put_device+0x10/0x20
+scsi_host_put+0x10/0x18
+ata_devres_release+0x74/0xb0
+release_nodes+0x2d0/0x470
+devres_release_all+0x50/0x78
+really_probe+0x2d4/0x560
+driver_probe_device+0x7c/0x148
+device_driver_attach+0x94/0xa0
+__driver_attach+0xa8/0x110
+bus_for_each_dev+0xe8/0x158
+driver_attach+0x30/0x40
+bus_add_driver+0x220/0x2e0
+driver_register+0xbc/0x1d0
+__pci_register_driver+0xbc/0xd0
+ahci_pci_driver_init+0x20/0x28
+do_one_initcall+0xf0/0x608
+kernel_init_freeable+0x31c/0x384
+kernel_init+0x10/0x118
+ret_from_fork+0x10/0x18
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+Allocated by task 5:
+save_stack+0x28/0xc8
+__kasan_kmalloc.isra.8+0xbc/0xd8
+kasan_kmalloc+0xc/0x18
+__kmalloc+0x1a8/0x280
+scsi_host_alloc+0x44/0x678
+ata_scsi_add_hosts+0x74/0x268
+ata_host_register+0x228/0x488
+ahci_host_activate+0x1c4/0x2a8
+ahci_init_one+0xd18/0x1298
+local_pci_probe+0x74/0xf0
+work_for_cpu_fn+0x2c/0x48
+process_one_work+0x488/0xc08
+worker_thread+0x330/0x5d0
+kthread+0x1c8/0x1d0
+ret_from_fork+0x10/0x18
 
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
+Freed by task 5:
+save_stack+0x28/0xc8
+__kasan_slab_free+0x118/0x180
+kasan_slab_free+0x10/0x18
+slab_free_freelist_hook+0xa4/0x1a0
+kfree+0xd4/0x3a0
+scsi_host_dev_release+0x100/0x148
+device_release+0x7c/0xe0
+kobject_put+0xb0/0x180
+put_device+0x10/0x20
+scsi_host_put+0x10/0x18
+ata_scsi_add_hosts+0x210/0x268
+ata_host_register+0x228/0x488
+ahci_host_activate+0x1c4/0x2a8
+ahci_init_one+0xd18/0x1298
+local_pci_probe+0x74/0xf0
+work_for_cpu_fn+0x2c/0x48
+process_one_work+0x488/0xc08
+worker_thread+0x330/0x5d0
+kthread+0x1c8/0x1d0
+ret_from_fork+0x10/0x18
 
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
+There is also refcount issue, as well:
+WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
 
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
+The issue is that we make an erroneous extra call to scsi_host_put()
+for that host:
 
-And in calc_group_shares() we calculate shares as:
+So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
+a device release method - ata_devres_release() - which intends to release
+the SCSI hosts:
 
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
+static void ata_devres_release(struct device *gendev, void *res)
+{
+	...
+	for (i = 0; i < host->n_ports; i++) {
+		struct ata_port *ap = host->ports[i];
 
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
+		if (!ap)
+			continue;
 
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
+		if (ap->scsi_host)
+			scsi_host_put(ap->scsi_host);
 
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
+	}
+	...
+}
 
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
+However in the ata_scsi_add_hosts() error path, we also call
+scsi_host_put() for the SCSI hosts.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
+Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
+leave this to ata_devres_release().
+
+Fixes: f31871951b38 ("libata: separate out ata_host_alloc() and ata_host_register()")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/ata/libata-scsi.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 15c08752926b0..819bd5fb02647 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -73,7 +73,13 @@ static inline void update_idle_core(struct rq *rq) { }
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index f5eb102a2cf76..c4f2b563c9f03 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -4444,22 +4444,19 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
+ 		 */
+ 		shost->max_host_blocked = 1;
+ 
+-		rc = scsi_add_host_with_dma(ap->scsi_host,
+-						&ap->tdev, ap->host->dev);
++		rc = scsi_add_host_with_dma(shost, &ap->tdev, ap->host->dev);
+ 		if (rc)
+-			goto err_add;
++			goto err_alloc;
+ 	}
+ 
+ 	return 0;
+ 
+- err_add:
+-	scsi_host_put(host->ports[i]->scsi_host);
+  err_alloc:
+ 	while (--i >= 0) {
+ 		struct Scsi_Host *shost = host->ports[i]->scsi_host;
+ 
++		/* scsi_host_put() is in ata_devres_release() */
+ 		scsi_remove_host(shost);
+-		scsi_host_put(shost);
+ 	}
+ 	return rc;
+ }
 -- 
 2.20.1
 
