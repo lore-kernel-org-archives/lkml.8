@@ -2,107 +2,151 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D70C55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1DBC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4823E2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dR5dyy9y"
+	by mail.kernel.org (Postfix) with ESMTP id E8AFB20747
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgDVGBS (ORCPT
+        id S1726500AbgDVGBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:01:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:45657 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgDVGBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:01:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 496VDT05CDz9sSh;
-        Wed, 22 Apr 2020 16:01:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587535274;
-        bh=BD838gVtavOEQyFzLC6EmshuBpJjmuEPd4cFV1Fai4U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dR5dyy9ytSgBXwcKnSd69BxQpoSTRj3PV8q6gIABfBow0WMCO2vzBkY1tRL/45tic
-         aULRPe925sTytPnHBrGlLVK43Qvh7uu0eh09RGJPcVp4JivnI/5BTC/KgK3WpPSzTr
-         IfFI8Eq+cc9l2lzKX1BTvbbufuOH2hZc+rnRipDmaCBKBkRDmK+klj2x72VxEP2tA6
-         87wHKLJbJyUX/YwmTZ5fdjzWgD0muVc72xxyvgu1j/RRXsljtyqNRRZnGbdz6HdcXB
-         BZZ2ans1+LvQGQDGtr7tMIjeFrrlktC1BiJqZHpe/YYVkLi97kYC16HkfJUUgDizym
-         dpZ9b4mqIu8PQ==
-Date:   Wed, 22 Apr 2020 16:01:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ricardo =?UTF-8?B?Q2HDsXVl?= =?UTF-8?B?bG8=?= 
-        <ricardo.canuelo@collabora.com>, Orson Zhai <orson.zhai@unisoc.com>
-Subject: linux-next: manual merge of the akpm-current tree with the jc_docs
- tree
-Message-ID: <20200422160111.7ae3f532@canb.auug.org.au>
+        Wed, 22 Apr 2020 02:01:34 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:29025 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgDVGBd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 02:01:33 -0400
+Received: from [10.28.39.241] (10.28.39.241) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 22 Apr 2020
+ 14:02:22 +0800
+Subject: Re: [PATCH v2 2/2] watchdog: Add new arm_smc_wdt watchdog driver
+To:     Evan Benn <evanbenn@chromium.org>,
+        Julius Werner <jwerner@chromium.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <20200421110520.197930-1-evanbenn@chromium.org>
+ <20200421210403.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
+ <CAODwPW9MtDLSL_up9W0TO1PcjyA_9cUtNo3No7XXusiwqKBLDw@mail.gmail.com>
+ <CAKz_xw3-tvYoCDs07xEUBBMf024aezGMoZ35LsTN+_dXT9nC2Q@mail.gmail.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <bbd8f97b-8479-c38e-011f-b52e2cf34403@amlogic.com>
+Date:   Wed, 22 Apr 2020 14:02:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/j8x8N/diik/CMBZ9J=Fp2_s";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAKz_xw3-tvYoCDs07xEUBBMf024aezGMoZ35LsTN+_dXT9nC2Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.241]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/j8x8N/diik/CMBZ9J=Fp2_s
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,Evan
 
-Hi all,
+On 2020/4/22 9:39, Evan Benn wrote:
+> On Wed, Apr 22, 2020 at 6:31 AM Julius Werner <jwerner@chromium.org> wrote:
+>>
+>>> +static int smcwd_call(unsigned long smc_func_id, enum smcwd_call call,
+>>> +                     unsigned long arg, struct arm_smccc_res *res)
+>>
+>> I think you should just take a struct watchdog_device* here and do the
+>> drvdata unpacking inside the function.
+> 
+> That makes sense, I avoided it because smcwd_call's are made during
+> 'probe', ~while
+> we are 'constructing' the wdd. But this is C, so I think I have
+> permission to do this!
+> 
+>>> +static int smcwd_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct watchdog_device *wdd;
+>>> +       int err;
+>>> +       struct arm_smccc_res res;
+>>> +       u32 *smc_func_id;
+>>> +
+>>> +       smc_func_id =
+>>> +               devm_kzalloc(&pdev->dev, sizeof(*smc_func_id), GFP_KERNEL);
+>>> +       if (!smc_func_id)
+>>> +               return -ENOMEM;
+>>
+>> nit: Could save the allocation by just casting the value itself to a
+>> pointer? Or is that considered too hacky?
+> 
+> I am not yet used to what hacks are allowed in the kernel.
+> Where I learned C that would not be allowed.
+> I assumed the kernel allocator has fast paths for tiny sizes though.
+> 
+>>> +static const struct of_device_id smcwd_dt_ids[] = {
+>>> +       { .compatible = "mediatek,mt8173-smc-wdt" },
+>>> +       {}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, smcwd_dt_ids);
+>>
+>> So I'm a bit confused about this... I thought the plan was to either
+>> use arm,smc-id and then there'll be no reason to put platform-specific
+>> quirks into the driver, so we can just use a generic "arm,smc-wdt"
+>> compatible string on all platforms; or we put individual compatible
+>> strings for each platform and use them to hardcode platform-specific
+>> differences (like the SMC ID) in the driver. But now you're kinda
+>> doing both by making the driver code platform-independent but still
+>> using a platform-specific compatible string, that doesn't seem to fit
+>> together. (If the driver can be platform independent, I think it's
+>> nicer to have a generic compatible string so that future platforms
+>> which support the same interface don't have to land code changes in
+>> order to just use the driver.)
+> 
+> Yes I think you are correct. I got some reviews about the compatible name,
+> but I think I misinterpreted those, and arm,smc-wdt would work. I did wonder
+> if Xingyu from amlogic needed to modify the driver more, EG with different
+> SMCWD_enum values for the amlogic chip, he could then just add an
+> amlogic compatible
+> and keep our devices running with the other compatible. Although of
+> course it would be nicer if
+> the amlogic firmware could copy the values here.
+Using DTS property(arm,smc-id) or vendor's compatible to specify the 
+Function ID is available for the meson-A1.The generic "arm, smc-wdt" 
+looks nicer for MTK and Amlogic sec wdt, but the driver may not cover 
+the other vendor's platform-specific differences in the future, so the 
+platform-specific compatible string may be introduced eventually.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+But again, I can accept the two methods above.
 
-  include/linux/printk.h
-
-between commit:
-
-  90c165f0de3a ("docs: pr_*() kerneldocs and basic printk docs")
-
-from the jc_docs tree and commit:
-
-  2023be154f91 ("dynamic_debug: add an option to enable dynamic debug for m=
-odules only")
-
-from the akpm-current tree.
-
-I fixed it up (I just used the latter version - though the comment
-for pr_debug now probably wants expanding) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/j8x8N/diik/CMBZ9J=Fp2_s
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6f3acACgkQAVBC80lX
-0GzCYwf+P/us2iCzd3hh5m5CXbDkHGn9WCKp2Uwx4jWcde/D1sDVyWcQaYQfuc1k
-eRhB5fSE2u38SmhmZQvL3cokX9LIKFNZiaQ841HDsN2jgdTVZYVMd/5fB+K3ez5S
-++/dUAOBEeOQeSTHF1zTsgsfbt1aL8Tr8UvNG9bJvKPfZopO3FrgWeZ6WzdkCSk4
-brTIEaPz9RSELus5Kke6bG0nGmKTW+kGlp8otczAM4HeK83DfUrog3GQ8EP9DjdO
-GHL+oBxyeqyim4IveRkzdmaEQGYb+UR4W4U0iEh87fnrTb/VuxD+yYtJbm5BcW8n
-5gRQaUlbArnT9TzV+fFpJChBvwyqdg==
-=aO3n
------END PGP SIGNATURE-----
-
---Sig_/j8x8N/diik/CMBZ9J=Fp2_s--
+Thanks
+> 
+> Thanks
+> 
+> Evan
+> 
+> .
+> 
