@@ -2,184 +2,135 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64309C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A31C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B44D20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:50:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ahOUpgrF"
+	by mail.kernel.org (Postfix) with ESMTP id 4732D20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgDVLu1 (ORCPT
+        id S1726924AbgDVLzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:50:27 -0400
-Received: from mail-vi1eur05on2087.outbound.protection.outlook.com ([40.107.21.87]:30048
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Wed, 22 Apr 2020 07:55:32 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2079 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726043AbgDVLu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:50:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DZGYrnXj0/HRw20mrWUORIUyWru3UC6xn7kZkebNbd3MNHAwERHhJs9+WNdV1GplVMlI2gvjbPWM2ru2mfLeykIcLGhG8hHb7bEJeFPHMDKsdC/kU7/IQQpW7NrtIRKPTaRdK4w0EOmZRV3YlWXCJAT0/sMjyhr2cbE89RhXQmR2wcr3Nm8JGyg0i9p404xVD/i/6iDI31PZKOy9NDM1FFNaJgTTmmO2Ai8qGj9JIT2nVGDIeRP6/9nxRKY0NSBjmdpMJ95XRni7sRucveDF5LI+oRKmPeJwHq1Zgdc93emKON3YFqMDgQnXquvr4sfjfugagk9jQZpuPQsdnHAzXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZiHdXJZxGaInGlyTvej0EWR4G9fxBg/5DXDTQYIkFAE=;
- b=T3jN40IN1+d6dvizvnCSSyCamGmwQD6znJGY7cQsBBTkTV0qXyqDkKwu7kAqbo1bz9C561nYSXJQpRWGh43gBiXXe30fpmdtEh1HaL2ynkq7wSkyINN5HwYYJRF/do76PRxrKfSpJBYhKEjb7eSEAHSYzpjt6qgsRSiuTVBD0hhD3AQXZ9FddwvUECkEsCGYRVp7VVT0v4m4H1rtzWMdmfmtDUbSDI4EK0rk0NwD9kRa4Gw8p7NEVQc8vEEq/lPGzueYYKY6InJtYbsO8PgBJSHdHcT6PlYhlMZ1KMsQkbdYyeLQhde45IubIc64l794CtfHu3Lh1e/t85jxnVmmUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZiHdXJZxGaInGlyTvej0EWR4G9fxBg/5DXDTQYIkFAE=;
- b=ahOUpgrFMc0K8skWLDg/6RFm1AgTW8sBlFCAnm9Vr1h6An53igVeYH60AEFYLooUR/4T1TERAsmLRytVFKfII0rB9a30YyGf325g8tVAJl9wo4et2jAcq8dyF0S6gqJAv+z2qqAGXFRG8MZddB4sF+9EBFTDop4oQCwYvILfaxs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB6144.eurprd05.prod.outlook.com (2603:10a6:803:e8::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Wed, 22 Apr
- 2020 11:50:21 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Wed, 22 Apr 2020
- 11:50:21 +0000
-Date:   Wed, 22 Apr 2020 08:50:17 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200422115017.GQ11945@mellanox.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR15CA0004.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::17) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        id S1726043AbgDVLzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:55:32 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 7DBD82D1E6F71322D1FA;
+        Wed, 22 Apr 2020 12:55:30 +0100 (IST)
+Received: from [127.0.0.1] (10.47.10.232) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 22 Apr
+ 2020 12:55:29 +0100
+Subject: Re: [RFC PATCH v2 07/13] perf pmu: Add pmu_id()
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
+        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <qiangqing.zhang@nxp.com>, <irogers@google.com>,
+        <robin.murphy@arm.com>, <zhangshaokun@hisilicon.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
+ <1587120084-18990-8-git-send-email-john.garry@huawei.com>
+ <20200422114122.GG962614@krava>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <1b2c2b91-173b-2656-597c-551aac750784@huawei.com>
+Date:   Wed, 22 Apr 2020 12:54:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR15CA0004.namprd15.prod.outlook.com (2603:10b6:208:1b4::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Wed, 22 Apr 2020 11:50:20 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRDtR-0005Jl-6J; Wed, 22 Apr 2020 08:50:17 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b8f61273-44a1-436e-ec98-08d7e6b355c4
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6144:|VI1PR05MB6144:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB61441FF49D2E8F59F8C8BA25CFD20@VI1PR05MB6144.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 03818C953D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(52116002)(9746002)(186003)(9786002)(26005)(8936002)(81156014)(8676002)(478600001)(36756003)(7416002)(2906002)(54906003)(316002)(6916009)(2616005)(66556008)(66476007)(1076003)(66946007)(4326008)(33656002)(86362001)(5660300002)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: g2hhWJZx18CpRfjbS+Oh6BWXZ22hlU53I+inlXjFWSch6Xb/aVxhnw51PvCg5FE7NeKaY4+WFrIaoYx0Qo/rsGStrYHgAVlwtIOV21pbHTud4cse00qnagorPOv/X+NmbQg0wkn2eStUlxBFSr9sbXZLpxJQOF7M8aS3JofDenM2r//jLXo4vJMrJKgqRuJDVdfmWeU9ZWg1la/mJFqk3kTOp6TboglgVprnKhOWz9JhJNVEKQdmLgpt3mCKePLUEoyllVGeiQkJCRs3orMoAkNjBB5AdDl0v8xrGHRdPeu6daodmwuhekyUGuI5btQ1r1SrzW8eZVPr3uPoLYb7qMR4fcnbz04GxfIgoNoXbPrZJuEaGCPEDZVf4Zv7XptqdZOqelew/5pomVIwukW85FamdTckyFnFzJ2JFtfnZzl9rYLvLhZsbaL3Yb3IBIxzVzIg7LM/ZR1lTB1HQuH/MotdkCuEyQhS9cTO07W8RboCZ1YMInBBvqS3+O8SgtM4
-X-MS-Exchange-AntiSpam-MessageData: stkA1MXK4zOck7r69UNwJBGhBKDT+RMVW+XVmhpgnd60BceiJBlscBQY3/fb6i7RR5Z6n+jXEUaUjF0uJfCAojoivYwFI7n67HcSSqIhl9ofEOhj28i8xZjYTYyf9MedmTuoMlbZhvbbD+XO0HbrQw==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8f61273-44a1-436e-ec98-08d7e6b355c4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2020 11:50:21.4944
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xu5DnnwejPSswsnrh77OfwllhVrst09R4Fed5uZfCW4CqvD1NTjk0F4no1lnUzWgfTNqNGrFtJF6uR0+1V5k2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6144
+In-Reply-To: <20200422114122.GG962614@krava>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.10.232]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:53:25AM +0000, Tian, Kevin wrote:
-> > From: Jason Gunthorpe
-> > Sent: Wednesday, April 22, 2020 7:55 AM
-> > 
-> > On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
-> > > The actual code is independent of the stage 2 driver code submission that
-> > adds
-> > > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code
-> > series will
-> > > support dedicated workqueue on a guest with no vIOMMU.
-> > >
-> > > A new device type "mdev" is introduced for the idxd driver. This allows the
-> > wq
-> > > to be dedicated to the usage of a VFIO mediated device (mdev). Once the
-> > work
-> > > queue (wq) is enabled, an uuid generated by the user can be added to the
-> > wq
-> > > through the uuid sysfs attribute for the wq.  After the association, a mdev
-> > can
-> > > be created using this UUID. The mdev driver code will associate the uuid
-> > and
-> > > setup the mdev on the driver side. When the create operation is successful,
-> > the
-> > > uuid can be passed to qemu. When the guest boots up, it should discover a
-> > DSA
-> > > device when doing PCI discovery.
-> > 
-> > I'm feeling really skeptical that adding all this PCI config space and
-> > MMIO BAR emulation to the kernel just to cram this into a VFIO
-> > interface is a good idea, that kind of stuff is much safer in
-> > userspace.
-> > 
-> > Particularly since vfio is not really needed once a driver is using
-> > the PASID stuff. We already have general code for drivers to use to
-> > attach a PASID to a mm_struct - and using vfio while disabling all the
-> > DMA/iommu config really seems like an abuse.
+  Wi
+On 22/04/2020 12:41, Jiri Olsa wrote:
+> On Fri, Apr 17, 2020 at 06:41:18PM +0800, John Garry wrote:
+>> Add a function to read the PMU id sysfs entry. We only do it for uncore
+>> PMUs where this would be relevant.
+>>
+>> Signed-off-by: John Garry <john.garry@huawei.com>
+>> ---
+>>   tools/perf/util/pmu.c | 36 ++++++++++++++++++++++++++++++++++++
+>>   tools/perf/util/pmu.h |  1 +
+>>   2 files changed, 37 insertions(+)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index ef6a63f3d386..6a67c6a28d08 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -594,6 +594,7 @@ static struct perf_cpu_map *__pmu_cpumask(const char *path)
+>>    * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
+>>    * may have a "cpus" file.
+>>    */
+>> +#define CPUS_TEMPLATE_ID	"%s/bus/event_source/devices/%s/identifier"
+>>   #define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
+>>   #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
+>>   
+>> @@ -632,6 +633,39 @@ static bool pmu_is_uncore(const char *name)
+>>   	return file_available(path);
+>>   }
+>>   
+>> +static char *pmu_id(const char *name)
+>> +{
+>> +	char path[PATH_MAX], *id;
+>> +	const char *sysfs;
+>> +	FILE *file;
+>> +	int n;
+>> +
+>> +	sysfs = sysfs__mountpoint();
+>> +	snprintf(path, PATH_MAX, CPUS_TEMPLATE_ID, sysfs, name);
+>> +
+>> +	id = malloc(PATH_MAX);
+>> +	if (!id)
+>> +		return NULL;
+>> +
+>> +	file = fopen(path, "r");
+>> +	if (!file) {
+>> +		free(id);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	n = fscanf(file, "%s", id);
+>> +
+>> +	fclose(file);
+>> +
+>> +	if (!n) {
+>> +		free(id);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	return id;
+>> +}
 > 
-> Well, this series is for virtualizing idxd device to VMs, instead of
-> supporting SVA for bare metal processes. idxd implements a
-> hardware-assisted mediated device technique called Intel Scalable
-> I/O Virtualization,
+> I still need to go through this patchset in more detail,
 
-I'm familiar with the intel naming scheme.
+ok, great.
 
-> which allows each Assignable Device Interface (ADI, e.g. a work
-> queue) tagged with an unique PASID to ensure fine-grained DMA
-> isolation when those ADIs are assigned to different VMs. For this
-> purpose idxd utilizes the VFIO mdev framework and IOMMU aux-domain
-> extension. Bare metal SVA will be enabled for idxd later by using
-> the general SVA code that you mentioned.  Both paths will co-exist
-> in the end so there is no such case of disabling DMA/iommu config.
- 
-Again, if you will have a normal SVA interface, there is no need for a
-VFIO version, just use normal SVA for both.
+But, could you check patch #1 also, as this *may* be fixing something 
+broken in mainline? Not sure. Without it, we get a spew of warnings for 
+metrics.
 
-PCI emulation should try to be in userspace, not the kernel, for
-security.
+> but just quick note, that we have sysfs__read_str that you
+> could use in here
+> 
 
-Jason
+ok, there may be more functions in current pmu.c then which can use 
+this. I can check.
+
+Cheers,
+John
