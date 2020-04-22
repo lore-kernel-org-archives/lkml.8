@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE38BC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC6C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 957D72076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA79220787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552453;
-	bh=qwP/aml+68At3JuRWA+ve+n6C4x2vOF43l2/Fj5sHlY=;
+	s=default; t=1587552458;
+	bh=g+/DlI/neXXLGTI4GaNTz0Xd8LaLWlzfFIRyTD5ifOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WU538vRFo/c00O44/mJAz7fh8APrs0mFf+K0KJgqkeDU8W/PhocX3w6kAG5NDFZdM
-	 Ebu8PZDJqxeoyOjUbZYl7FomYaigEev3Z5fwHhxruJFfwGKi9X58UeSv2zNAcWz1ss
-	 uEYq/iKF/4UrFP+9yjKIxRuxvrkCi5zYU/rEwYlM=
+	b=FqhtXoH5StzXKyG/w14e6/H9SLkNTTH5ATwMD+ZG4gYshek6JHsfbGWwO6yIJ9kqt
+	 GwEdUk0bnNtQhZpO7jdvNK4RLbVtRFEBeJ6DltzjgG7VDHJxsndEHUJC6ROirIu1SZ
+	 EDXc8cr74pY/uKmpg9yffMcGmAHd4weUseQaLLYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732012AbgDVKrc (ORCPT
+        id S1732026AbgDVKri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:47:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51322 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbgDVKPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:47 -0400
+        id S1729722AbgDVKPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD8D20575;
-        Wed, 22 Apr 2020 10:15:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25CF420575;
+        Wed, 22 Apr 2020 10:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550546;
-        bh=qwP/aml+68At3JuRWA+ve+n6C4x2vOF43l2/Fj5sHlY=;
+        s=default; t=1587550531;
+        bh=g+/DlI/neXXLGTI4GaNTz0Xd8LaLWlzfFIRyTD5ifOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xcdm4nxiDsZ3nAOw3opN+2wRqvyQBYXwXgtJQXGBXUVK3V9WYR8NrM2QX+G+mtftK
-         L0y2ruE6QYZn4tKTzLeJoVhJDZ1bxFlL0c9TXrnWn9Dqjgrrt1azMluIm2bE9UQv9z
-         BBUMPm9MFKKtDxn+SwNR0pTHcZx0/DY/9Ox0PESU=
+        b=V2Mw3+Y2ZeYao8fNUfnCW8NWDPYC+wR9dUdmU12jxBQmvtPL6mlI6oTik7pgHARhc
+         eJMdGsiZl8tcUU/zqpo6FAEy7bT7xVmF8Tw+MVVxB6i5K/GSgg0+rDpADGCK5z6vI3
+         +/c+5+/klIaITjkkaoP/LIg7Pkar/Sf+Bf2ULId8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 18/64] rbd: avoid a deadlock on header_rwsem when flushing notifies
-Date:   Wed, 22 Apr 2020 11:57:02 +0200
-Message-Id: <20200422095016.290485975@linuxfoundation.org>
+Subject: [PATCH 4.19 52/64] libnvdimm: Out of bounds read in __nd_ioctl()
+Date:   Wed, 22 Apr 2020 11:57:36 +0200
+Message-Id: <20200422095022.163163904@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,86 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0e4e1de5b63fa423b13593337a27fd2d2b0bcf77 ]
+[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
 
-rbd_unregister_watch() flushes notifies and therefore cannot be called
-under header_rwsem because a header update notify takes header_rwsem to
-synchronize with "rbd map".  If mapping an image fails after the watch
-is established and a header update notify sneaks in, we deadlock when
-erroring out from rbd_dev_image_probe().
+The "cmd" comes from the user and it can be up to 255.  It it's more
+than the number of bits in long, it results out of bounds read when we
+check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
+ND_CMD_CALL (10) so I added a compare against that.
 
-Move watch registration and unregistration out of the critical section.
-The only reason they were put there was to make header_rwsem management
-slightly more obvious.
-
-Fixes: 811c66887746 ("rbd: fix rbd map vs notify races")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jason Dillaman <dillaman@redhat.com>
+Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/nvdimm/bus.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index d3ad1b8c133e6..8e2df524494cb 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -3427,6 +3427,10 @@ static void cancel_tasks_sync(struct rbd_device *rbd_dev)
- 	cancel_work_sync(&rbd_dev->unlock_work);
- }
- 
-+/*
-+ * header_rwsem must not be held to avoid a deadlock with
-+ * rbd_dev_refresh() when flushing notifies.
-+ */
- static void rbd_unregister_watch(struct rbd_device *rbd_dev)
- {
- 	WARN_ON(waitqueue_active(&rbd_dev->lock_waitq));
-@@ -5732,6 +5736,9 @@ static void rbd_dev_image_release(struct rbd_device *rbd_dev)
-  * device.  If this image is the one being mapped (i.e., not a
-  * parent), initiate a watch on its header object before using that
-  * object to get detailed information about the rbd image.
-+ *
-+ * On success, returns with header_rwsem held for write if called
-+ * with @depth == 0.
-  */
- static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- {
-@@ -5764,6 +5771,9 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- 		}
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index 54a633e8cb5d2..48a070a37ea9b 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -984,8 +984,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 			return -EFAULT;
  	}
  
-+	if (!depth)
-+		down_write(&rbd_dev->header_rwsem);
-+
- 	ret = rbd_dev_header_info(rbd_dev);
- 	if (ret)
- 		goto err_out_watch;
-@@ -5814,6 +5824,8 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- err_out_probe:
- 	rbd_dev_unprobe(rbd_dev);
- err_out_watch:
-+	if (!depth)
-+		up_write(&rbd_dev->header_rwsem);
- 	if (!depth)
- 		rbd_unregister_watch(rbd_dev);
- err_out_format:
-@@ -5872,12 +5884,9 @@ static ssize_t do_rbd_add(struct bus_type *bus,
- 		goto err_out_rbd_dev;
- 	}
+-	if (!desc || (desc->out_num + desc->in_num == 0) ||
+-			!test_bit(cmd, &cmd_mask))
++	if (!desc ||
++	    (desc->out_num + desc->in_num == 0) ||
++	    cmd > ND_CMD_CALL ||
++	    !test_bit(cmd, &cmd_mask))
+ 		return -ENOTTY;
  
--	down_write(&rbd_dev->header_rwsem);
- 	rc = rbd_dev_image_probe(rbd_dev, 0);
--	if (rc < 0) {
--		up_write(&rbd_dev->header_rwsem);
-+	if (rc < 0)
- 		goto err_out_rbd_dev;
--	}
- 
- 	/* If we are mapping a snapshot it must be marked read-only */
- 	if (rbd_dev->spec->snap_id != CEPH_NOSNAP)
+ 	/* fail write commands (when read-only) */
 -- 
 2.20.1
 
