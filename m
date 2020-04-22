@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74EBC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0CFC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBDB12071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B0E2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551215;
-	bh=+e9qoTMeeUTLIN6LPfEmAaCFBw1h2Jg68LOFaxYeyAU=;
+	s=default; t=1587551221;
+	bh=a+GnE5fjJanhytnMSWobgz08WY8xeM5hUkfKKeBAIG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jkN/ltjZ31Plp0zwP7Y6rwRu5tkFItavrgfGQxwUVF2TWuTcceD7Xan0tYR3tgXRq
-	 BWADXYe5qUXofW9et5TyVmDGFqohLeOi6u7Zl8yMTbh39ZCx0bzv5ouJR8H1mggR9K
-	 bmgdETEP25K21sMtG+Ak5hvqiqkprwN3DSsoZrx4=
+	b=QxsFTC6qMqeALTeCDfKtkcihxP9iTOcf5DXBQiud6EpReVBSnNwkSo2egt9prRkze
+	 NZPkKJZ3xN/9y+yIm/eCI0QNcPp0gTgSsTQpTdNQr5t+JxonMaKy1G/SCf2o52yCIo
+	 kzx5F8tdPpDtVV3/D+5L6JD50FJC8xjfsowV7nBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbgDVK0z (ORCPT
+        id S1730811AbgDVK1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35452 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730740AbgDVK0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:26:33 -0400
+        id S1729880AbgDVK0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:26:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 220272075A;
-        Wed, 22 Apr 2020 10:26:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FCE32076B;
+        Wed, 22 Apr 2020 10:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551192;
-        bh=+e9qoTMeeUTLIN6LPfEmAaCFBw1h2Jg68LOFaxYeyAU=;
+        s=default; t=1587551209;
+        bh=a+GnE5fjJanhytnMSWobgz08WY8xeM5hUkfKKeBAIG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MHkwqTg7oIHb1jNR+P85ayQhWfnM5fZ1bZDmwePI1cu23e4BAYFS3z6rWyTjh9T1r
-         ZoV6sWdrwnEFEhHIZ1LQGSCuQX9sfgSllwDHi1sO8GOl8tV4eSCW65MOmHjaxKBNAt
-         s5lxWxyEgu16vOMYxa1YacQFV/jrFouaR+hvdlgo=
+        b=OVjwZ+Ts6BsPqSwfAR10Ck9x3QH813dAe1VUj7b0JLq2CkPOS+mtCMx6eQo5rdeuC
+         /BlpcVB8yiwn7a4aCkQWJjBksPHRfJhOQ/eHRH/N2yKttEc8xISjlTFQWA18AdyhSw
+         LTabVQh0X39Xr3ZKwd4QOSWqnyxHPI/syOCr1FYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 138/166] thermal: qoriq: Fix a compiling issue
-Date:   Wed, 22 Apr 2020 11:57:45 +0200
-Message-Id: <20200422095103.413730565@linuxfoundation.org>
+Subject: [PATCH 5.6 144/166] f2fs: fix to wait all node page writeback
+Date:   Wed, 22 Apr 2020 11:57:51 +0200
+Message-Id: <20200422095104.077814993@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,36 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit cbe259fd80b7b02fba0dad79d8fdda8b70a8b963 ]
+[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
 
-Qoriq thermal driver is used by both PowerPC and ARM architecture.
-When built for PowerPC architecture, it reports error:
-undefined reference to `.__devm_regmap_init_mmio_clk'
-To fix it, select config REGMAP_MMIO.
+There is a race condition that we may miss to wait for all node pages
+writeback, fix it.
 
-Fixes: 4316237bd627 (thermal: qoriq: Convert driver to use regmap API)
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200303084641.35687-1-andy.tang@nxp.com
+- fsync()				- shrink
+ - f2fs_do_sync_file
+					 - __write_node_page
+					  - set_page_writeback(page#0)
+					  : remove DIRTY/TOWRITE flag
+  - f2fs_fsync_node_pages
+  : won't find page #0 as TOWRITE flag was removeD
+  - f2fs_wait_on_node_pages_writeback
+  : wont' wait page #0 writeback as it was not in fsync_node_list list.
+					   - f2fs_add_fsync_node_entry
+
+Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/node.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 5a05db5438d60..5a0df0e54ce3e 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -265,6 +265,7 @@ config QORIQ_THERMAL
- 	tristate "QorIQ Thermal Monitoring Unit"
- 	depends on THERMAL_OF
- 	depends on HAS_IOMEM
-+	select REGMAP_MMIO
- 	help
- 	  Support for Thermal Monitoring Unit (TMU) found on QorIQ platforms.
- 	  It supports one critical trip point and one passive trip point. The
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 9d02cdcdbb073..e58c4c6288346 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1562,15 +1562,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+ 	if (atomic && !test_opt(sbi, NOBARRIER))
+ 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+ 
+-	set_page_writeback(page);
+-	ClearPageError(page);
+-
++	/* should add to global list before clearing PAGECACHE status */
+ 	if (f2fs_in_warm_node_list(sbi, page)) {
+ 		seq = f2fs_add_fsync_node_entry(sbi, page);
+ 		if (seq_id)
+ 			*seq_id = seq;
+ 	}
+ 
++	set_page_writeback(page);
++	ClearPageError(page);
++
+ 	fio.old_blkaddr = ni.blk_addr;
+ 	f2fs_do_write_node_page(nid, &fio);
+ 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
 -- 
 2.20.1
 
