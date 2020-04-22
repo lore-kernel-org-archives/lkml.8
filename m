@@ -2,114 +2,82 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84268C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFDEC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 611BA206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CtPbMAnP"
+	by mail.kernel.org (Postfix) with ESMTP id BF046205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgDVIKn (ORCPT
+        id S1726412AbgDVIOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:10:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725842AbgDVIKn (ORCPT
+        Wed, 22 Apr 2020 04:14:24 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2390 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgDVIOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:10:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBDBC03C1A6;
-        Wed, 22 Apr 2020 01:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=67WpxxlCgmhP33pDM7+RRLK1Dw/Wlqp6Mzgtcg8F0+s=; b=CtPbMAnP7cpzodaISmc1Wdoj00
-        2ojUWAmmpSmN1TFTleYUebzjMSwlh8pw1C4LDZAM7BI/5vd44YDklxmJGVq33vu9939PUzqZyCvSM
-        d3oLyz2n+XFctDKmW2cRhZnPLLmeIRyCo9PbvCS2f5JSPTkzIYZ/GAsz2B9DPfMLMESpafZ3A37dM
-        kuhv7SZXlnMBRrRAvj+1fOi1E/OR1UPt1f9i9rVjYc68381u9Azn83v/CsMlUFKvIlL4c6lkbXozV
-        5szWgtf/8d4UdKL5e1bw8b/kuiQgqNaz/6uGaAr1YIWwxEHuLfgoct85LnxSNG7vuO/HwE5XvTsQe
-        ydyoqRfQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRASR-000054-Eh; Wed, 22 Apr 2020 08:10:11 +0000
-Date:   Wed, 22 Apr 2020 01:10:11 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
-Message-ID: <20200422081011.GA22409@infradead.org>
-References: <20200419194529.4872-1-mcgrof@kernel.org>
- <20200419194529.4872-4-mcgrof@kernel.org>
- <20200422072715.GC19116@infradead.org>
- <20200422074802.GS11244@42.do-not-panic.com>
+        Wed, 22 Apr 2020 04:14:23 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e9ffcc0d7f-02096; Wed, 22 Apr 2020 16:13:53 +0800 (CST)
+X-RM-TRANSID: 2eea5e9ffcc0d7f-02096
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15e9ffcbef88-bc4f9;
+        Wed, 22 Apr 2020 16:13:53 +0800 (CST)
+X-RM-TRANSID: 2ee15e9ffcbef88-bc4f9
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH] net: phy: Use IS_ERR() to check and simplify code
+Date:   Wed, 22 Apr 2020 16:15:42 +0800
+Message-Id: <20200422081542.8344-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422074802.GS11244@42.do-not-panic.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 07:48:02AM +0000, Luis Chamberlain wrote:
-> > I don't see why we need this check.  If it is valueable enough we
-> > should have a debugfs_create_dir_exclusive or so that retunrns an error
-> > for an exsting directory, instead of reimplementing it in the caller in
-> > a racy way.  But I'm not really sure we need it to start with.
-> 
-> In short races, and even with synchronous request_queue removal I'm
-> seeing the race is still possible, but that's due to some other races
-> I'm going to chase down now.
-> 
-> The easier solution really is to just have a debugfs dir created for
-> each partition if debugfs is enabled, this way the directory will
-> always be there, and the lookups are gone.
+Use IS_ERR() and PTR_ERR() instead of PTR_ZRR_OR_ZERO()
+to simplify code, avoid redundant paramenter definitions
+and judgements.
 
-That sounds like the best plan to me.
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ drivers/net/phy/mdio_bus.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-> 
-> > > +
-> > > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > > +					    blk_debugfs_root);
-> > > +	if (!q->debugfs_dir)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +void blk_queue_debugfs_unregister(struct request_queue *q)
-> > > +{
-> > > +	debugfs_remove_recursive(q->debugfs_dir);
-> > > +	q->debugfs_dir = NULL;
-> > > +}
-> > 
-> > Which to me suggests we can just fold these two into the callers,
-> > with an IS_ENABLED for the creation case given that we check for errors
-> > and the stub will always return an error.
-> 
-> Sorry not sure I follow this.
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 9bb9f37f2..b1114f204 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -42,14 +42,11 @@
+ 
+ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
+ {
+-	int error;
+-
+ 	/* Deassert the optional reset signal */
+ 	mdiodev->reset_gpio = gpiod_get_optional(&mdiodev->dev,
+ 						 "reset", GPIOD_OUT_LOW);
+-	error = PTR_ERR_OR_ZERO(mdiodev->reset_gpio);
+-	if (error)
+-		return error;
++	if (IS_ERR(mdiodev->reset_gpio))
++		return PTR_ERR(mdiodev->reset_gpio);
+ 
+ 	if (mdiodev->reset_gpio)
+ 		gpiod_set_consumer_name(mdiodev->reset_gpio, "PHY reset");
+-- 
+2.20.1.windows.1
 
-Don't both with the two above functions and just open code them in
-the callers.  IFF you still want to check for errors after the
-discussion with Greg, wrap the call in a
 
-	if (IS_ENABLED(CONFIG_DEBUG_FS))
 
-to ensure that you don't fail queue creation in the !DEBUG_FS
-case.
