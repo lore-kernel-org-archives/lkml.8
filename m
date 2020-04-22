@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A14C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AE5C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 963442076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BB82076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552305;
-	bh=9pA80RXAeQaWY+lyLFsKyR/D7ioBH6TG8ZHD81mhMwU=;
+	s=default; t=1587552308;
+	bh=PXaOv0pa7SYg7uqpUX7Vx5OsF7uktHKosvPTWaBldIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ru+d3uBoGiicsT2bY8iKjsIkvcSWLmrWm10DQ8KVEXhDiUkXn1aDUktp8KIp20HuM
-	 RjkaMUkXl/oje7IKr2Da+1wXHulvr+g3h8KFqQwV3co/T+kXCe1G3Q1BZ5dmqCFIkl
-	 t5h0Ri0PyYfpeF7yfy2wNU/RDQaEYIsinrzkpjp4=
+	b=FEZlypM5LGt02s1O9NAxYGpGmi6eeIWERuKnR7x3dVcd+WfK1wXNViRlp5wyOd76Q
+	 oNQYzsYJKTYXzUuqjZXxdGjCHr3pXf4wQH+bQ4/tyqnhA0oru1i9nqmRUl8/3C78qm
+	 8lC/WgRq034BWn3Ql9t7vhQ0h4GdHGqb9ThXPEU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgDVKSX (ORCPT
+        id S1731865AbgDVKpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:18:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53530 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:45:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbgDVKRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:23 -0400
+        id S1729947AbgDVKSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C8362076B;
-        Wed, 22 Apr 2020 10:17:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF7312076E;
+        Wed, 22 Apr 2020 10:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550642;
-        bh=9pA80RXAeQaWY+lyLFsKyR/D7ioBH6TG8ZHD81mhMwU=;
+        s=default; t=1587550702;
+        bh=PXaOv0pa7SYg7uqpUX7Vx5OsF7uktHKosvPTWaBldIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOHO3IqnH7F585Y+5mjTi+Zy/S6OIldge+sTD96eHmRkBaMML2dngZ7TmvR5dVaFm
-         Am2ExXtESgcaUIR6zNflCdm2URzu2BsZQ0JcPn53ysTtmUKXdM2YgyKuvN6LX3Juyw
-         olLPmPuXe7P89HJU3aTgHM+SJ90up48yvP6xFg9c=
+        b=lJL6Wmi8xFplCZg9tQU95CjVFgAxpWCmzQuoYbWccP1qfEV+BJ0ZFTwWZVrr/Mibw
+         wMlrJ9Xs+yleuBJ3bp9yGrPjhHD6fXddQHT1KI71U1H/n3ak5/Xl32G/tZlEdl1C22
+         0YzfjzVuMFGb7TyG8tkov1dk0Gx7LIq8nIfMxdOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>,
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/118] rbd: call rbd_dev_unprobe() after unwatching and flushing notifies
-Date:   Wed, 22 Apr 2020 11:56:34 +0200
-Message-Id: <20200422095037.317196101@linuxfoundation.org>
+Subject: [PATCH 5.4 058/118] f2fs: Fix mount failure due to SPO after a successful online resize FS
+Date:   Wed, 22 Apr 2020 11:56:59 +0200
+Message-Id: <20200422095041.558399894@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,79 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit 952c48b0ed18919bff7528501e9a3fff8a24f8cd ]
+[ Upstream commit 682756827501dc52593bf490f2d437c65ec9efcb ]
 
-rbd_dev_unprobe() is supposed to undo most of rbd_dev_image_probe(),
-including rbd_dev_header_info(), which means that rbd_dev_header_info()
-isn't supposed to be called after rbd_dev_unprobe().
+Even though online resize is successfully done, a SPO immediately
+after resize, still causes below error in the next mount.
 
-However, rbd_dev_image_release() calls rbd_dev_unprobe() before
-rbd_unregister_watch().  This is racy because a header update notify
-can sneak in:
+[   11.294650] F2FS-fs (sda8): Wrong user_block_count: 2233856
+[   11.300272] F2FS-fs (sda8): Failed to get valid F2FS checkpoint
 
-  "rbd unmap" thread                   ceph-watch-notify worker
+This is because after FS metadata is updated in update_fs_metadata()
+if the SBI_IS_DIRTY is not dirty, then CP will not be done to reflect
+the new user_block_count.
 
-  rbd_dev_image_release()
-    rbd_dev_unprobe()
-      free and zero out header
-                                       rbd_watch_cb()
-                                         rbd_dev_refresh()
-                                           rbd_dev_header_info()
-                                             read in header
-
-The same goes for "rbd map" because rbd_dev_image_probe() calls
-rbd_dev_unprobe() on errors.  In both cases this results in a memory
-leak.
-
-Fixes: fd22aef8b47c ("rbd: move rbd_unregister_watch() call into rbd_dev_image_release()")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jason Dillaman <dillaman@redhat.com>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/f2fs/gc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index bab9c546ba334..274beda31c356 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -6933,9 +6933,10 @@ static int rbd_dev_header_name(struct rbd_device *rbd_dev)
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 5877bd7296896..e611d768efde3 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1532,11 +1532,17 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 		goto out;
+ 	}
  
- static void rbd_dev_image_release(struct rbd_device *rbd_dev)
- {
--	rbd_dev_unprobe(rbd_dev);
- 	if (rbd_dev->opts)
- 		rbd_unregister_watch(rbd_dev);
++	mutex_lock(&sbi->cp_mutex);
+ 	update_fs_metadata(sbi, -secs);
+ 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
++	set_sbi_flag(sbi, SBI_IS_DIRTY);
++	mutex_unlock(&sbi->cp_mutex);
 +
-+	rbd_dev_unprobe(rbd_dev);
- 	rbd_dev->image_format = 0;
- 	kfree(rbd_dev->spec->image_id);
- 	rbd_dev->spec->image_id = NULL;
-@@ -6986,7 +6987,7 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- 
- 	ret = rbd_dev_header_info(rbd_dev);
- 	if (ret)
--		goto err_out_watch;
-+		goto err_out_probe;
- 
- 	/*
- 	 * If this image is the one being mapped, we have pool name and
-@@ -7035,12 +7036,11 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- 	return 0;
- 
- err_out_probe:
--	rbd_dev_unprobe(rbd_dev);
--err_out_watch:
- 	if (!depth)
- 		up_write(&rbd_dev->header_rwsem);
- 	if (!depth)
- 		rbd_unregister_watch(rbd_dev);
-+	rbd_dev_unprobe(rbd_dev);
- err_out_format:
- 	rbd_dev->image_format = 0;
- 	kfree(rbd_dev->spec->image_id);
+ 	err = f2fs_sync_fs(sbi->sb, 1);
+ 	if (err) {
++		mutex_lock(&sbi->cp_mutex);
+ 		update_fs_metadata(sbi, secs);
++		mutex_unlock(&sbi->cp_mutex);
+ 		update_sb_metadata(sbi, secs);
+ 		f2fs_commit_super(sbi, false);
+ 	}
 -- 
 2.20.1
 
