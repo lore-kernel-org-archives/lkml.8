@@ -2,186 +2,98 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F332FC38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76FCC38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA33C206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C8F2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:34:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WizpsYYr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2VzN4hL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgDVGY4 (ORCPT
+        id S1726154AbgDVGeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:24:56 -0400
-Received: from mail-eopbgr1320138.outbound.protection.outlook.com ([40.107.132.138]:30976
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725308AbgDVGYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:24:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Os2Cm14jNAZwlMIRY/WMSgm50EBtIVvxe6lFp9JzFybUYO0lBw8DkDtDXAmchbj09r0tijtriRTpeC/JHMFdcBBDa2EeeDvO059OIwYgIgqN017fO8s58d/q2fm+Kat4gxHAvn1EKDXQVJWsYDve0HpSN1TdCvKVIochRaxyHLn8xEmaKvPXJBKSiDRKAXF/LfyHtSZnJXZNg9XryaCR2DR0GecC/pqMWALF2V4neBey4J6Pzrr0vknyxZknUGLEZlIxR99gChhO+/e4CrTwCDs5J3rgv3gMsc9Apji9lXsZFSZNdwFRg/HejIH2iVOWg3qcPqMJx60DPjMCjAN15A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CnUupzNRTsDxrT2bqR/fpkK44UyZiOqGoT2Hx1yB0r4=;
- b=Cl79goi9N7h4vl4BavL10NPNUym3jhMMTd55MYSpZyFG2xv85iMOSAZgP4Oh4sBLhaR1gVSEH/B4R8gTWlk2T2waAPKOmFhwCS97om5SWJrLGQ5l6C8BZtsfs9xrEzRhqU5Ot2lCeDwVJLP/DjRdjz99OAJU/OOOMmAVy3YQIt8mjjE5XZsKfWwNIgtI3lK06BRqcG7jssO5fcJgCypiK8NWQdYVSggWrtSHjmnPBrC1NRDzxFC+BWUU1dm4pCAK2GQZrhUodPCa6dVM6dMUP1e7uROUKkf9ghxU82RDJ8E17GTvB8yVOefLlkJSsiHmKeHPFLhjfR5QZs7sgAhWLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CnUupzNRTsDxrT2bqR/fpkK44UyZiOqGoT2Hx1yB0r4=;
- b=WizpsYYrVw6QK7kJhCfHd3HNtM7cA53o/sVdEUwVAYMOTLNAD6XEvSgNcTwoDFy04HsuYNGGXWHzDXUq7cRlykKfh82sL66pVCDBYZN5d8BMzUZJOsdvt2YTL0Z+1BCd3jEnDkdDLl9nD2ix3J9YPBukULfRuLVXrkWmj+yXdBg=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b2::12)
- by HK0P153MB0337.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.2; Wed, 22 Apr
- 2020 06:24:43 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2958.006; Wed, 22 Apr 2020
- 06:24:43 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>, "hare@suse.de" <hare@suse.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Balsundar P <Balsundar.P@microchip.com>,
-        Christoph Hellwig <hch@lst.de>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: RE: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
-Thread-Topic: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
-Thread-Index: AQHWGGMw6DFeJK2tFE2eFTHRpRyDH6iElrSg
-Date:   Wed, 22 Apr 2020 06:24:43 +0000
-Message-ID: <HK0P153MB027395755C14233F09A8F352BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
- <1b6de3b0-4e0c-4b46-df1a-db531bd2c888@acm.org>
-In-Reply-To: <1b6de3b0-4e0c-4b46-df1a-db531bd2c888@acm.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-22T06:24:41.0740757Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1da1867c-6dad-48c0-b806-a2196b5a7ff0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:a0d3:b235:bb01:7ca2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d63f8fc4-b54b-49cf-0980-08d7e685d8d2
-x-ms-traffictypediagnostic: HK0P153MB0337:|HK0P153MB0337:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB03373973A41F94418EE582F5BFD20@HK0P153MB0337.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03818C953D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(316002)(2906002)(7416002)(54906003)(86362001)(110136005)(4326008)(478600001)(10290500003)(82950400001)(82960400001)(8936002)(81156014)(8676002)(71200400001)(6506007)(5660300002)(53546011)(7696005)(8990500004)(55016002)(186003)(9686003)(66946007)(66446008)(76116006)(33656002)(64756008)(66556008)(52536014)(107886003)(66476007)(921003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JaH3HegtktYxQso8gbrrUEi6Szbq7nZGGsJKo8kc+jiqsGRP6/6HpRhuBDcP02tE1SvXddd9Ea8i02HN+syvAO8YEsKPuc84fWVsWsCn7z/vwDq8nfR423K+dp57p30/5c84HCEDmzwATCAD9jhpu4hdrol6DA8kHZMZiIBmNK56ZIjSIAKllV0/vdxs0BaNrfYD7DOSgQNXUq6lYe+sSFsX1QvoHlF1NrMF4aHiPT5o2bUwqySqfIQ1Aa23gqay8ckgxIfvFBEZtBVS2G4Y6T+pb30dA4/hzO0K1MOUw8zoQfFNuhc270QMdz/NcvQH2eS8ENHiVjDg/0yMA6lMM3VOiXoX2kHv+eewd3pGR3gmYYrSGV3IJcjIYaUQrq/4eihZAZ/ucXkSL3lmtvDcRkQU2TN9o+nyZq7dLcLzbUK8PsIVg85SeqCyyWuMoTUIVSghMbINWLGpWgyhqwvJIBQch3X5APlQjUtNB27/yWs=
-x-ms-exchange-antispam-messagedata: W9uLZ7g5AYirXzRi5jhW8jq9FX6oafViqj2al6PJOXW0eDsb8beUyJa9gJOupNM9x8Invicd1NECLdlJutS/IkrbT7rWuys1m9hsN/1bloBN+hnwrzggAq1WdgmPbpzAy0y0cXkLqR9HhB48IP3nmpVnon0wB5yTGrcaZWNX3nsLaHh9LrrKoZ7jvR6RTXbTW1hg5Pv2enCBzfsE/WmVJBIK0slpkKgJ7iRMNFXykhncbp/EX5mMqm9SqXjDqlam4Sxg6z1s795m66zsNmItrzPg5/YAMa7nbt8yq4bNbkc363nuzPdFsXV5MEXIEAKrNIzrut9ZTcEHOyTr00BHArAOJ9Uf2bfczuWudR5ySDL1zuMEnvirZjvEL4jaTBBY6AgatNC+aWNsQhbUyjFxoatB8mjhQQVjV06AQauWOOG4dw6u/JwhQat3vSwY5l7rAdZdvXjq+5CnhJr9Haun64tyZTloR7FifjBzxZqDmwUJfNiamnTSlIjJxLVMyJRXmsdNR/30ZD6m8QRBqh/HZTlnyFgJZsD9kkCLKDdTrKcraMZrOgIGOm9/vech//6y7dM4A/B/bGoDtFe1AOQwCb3+NONk+oh/gKvUdzoOYgqFpm+OhZTajq+uLwPNK3qQ3ZnPiQSoFoI5sZWBsQZNZngvJd3u/pJRd3IzzgXmmhGwjlmjTH6+S5BmrnnpdC+ByeMqmbScgTFeWc/jUILg8af7yvbSuZWSxPszp36Xr+4o+uqglCS/j3eS+LPMptAJMoHIgx7JXfEWqYRAK4tum2U8L5PWPCbkYsby2gkzQejpMSuWPIZdyx917wryhodqnOTtEura8MS9NzyfoeVTCVn+mREBG/6C/8VAT9Y+7eM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 22 Apr 2020 02:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgDVGeW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 02:34:22 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF4FC03C1A6;
+        Tue, 21 Apr 2020 23:34:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b8so573795pfp.8;
+        Tue, 21 Apr 2020 23:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cNPk7dyrNsunZ6orqrkHd3dWM4T8VDBKi6CmTIj2FrI=;
+        b=M2VzN4hLhiH0xZ3XfNmNlGsb5z71UEM7bOyLibiJrUfqzWnsr7Mnho6vtHE/m4Si0v
+         lnCn+vZHkutsNSoFUaoObLyQiQSLmg2E532x3z54L9M827P0YXucnSwhA9qoFbPgLZYo
+         6Pnn7OD2T+2mft6/ZrVBqjr0Z8Ia+jWOrzp/UEJQUDs5z096V3X2fOD5cVO1szM/Osar
+         MC4rKQaH88JrQvya16KDxQlKEJnatD7NZPCiq5AMNNXi5TrKQHsT+Y2049Noj50KK5GE
+         xNN6BnnrnU38ST/mJuA5+lzdnq8CaNQK5ozCSe1BGa4cBaHzURGRTJKAOhW/d2ZL/Ba4
+         lD2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cNPk7dyrNsunZ6orqrkHd3dWM4T8VDBKi6CmTIj2FrI=;
+        b=FYwqDUEXRdKR+PlJP2TlcoJKQHtLvjDHkebc7d7maI8S8A6IGgd+eWKxEsbmAwdquu
+         t9amFRtJbh/pnneCn/IQJUo0/nMUXVTlVU7QjJWChBxoYwzsEv2E4XYo0Io81nNdi7wE
+         tNa8Ykhe2fNuq+RlUOLTCAegj1yThfHQFa8GZxl1/GXQVC9thMCI5CRpcJ7TziqYBOwZ
+         sZLCTrPr/pH5W4VTC/UtYEDSjZXC1uU+7VOTgYBtmBLWMaHZPdudM9MBydzZoSStsiqg
+         4SnA2e3tC4IlMddMl6kyy8JZ+RVb/Cgapa4hqwJzg2CSluOOjHpePUo3iFtVZ+qe+RgT
+         CrJg==
+X-Gm-Message-State: AGi0PuYPJxDtn6O2av7GMLXsM1Q39tjh46hrsLJZYqymj6VGJ5DCZmMV
+        tN39aYRErWN9C//UoJicpYA=
+X-Google-Smtp-Source: APiQypJP4b55YW0Xr4yN/i1f5EJtGYDB6MWrsPNzg/jfdpNKfoNyvy6w6+Inzdjw2v98RvW4I4Yapw==
+X-Received: by 2002:aa7:850f:: with SMTP id v15mr24807543pfn.204.1587537260883;
+        Tue, 21 Apr 2020 23:34:20 -0700 (PDT)
+Received: from js1304-desktop ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id j7sm4417821pjy.9.2020.04.21.23.34.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Apr 2020 23:34:20 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 15:34:11 +0900
+From:   Joonsoo Kim <js1304@gmail.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 01/18] mm: fix NUMA node file count error in
+ replace_page_cache()
+Message-ID: <20200422063357.GA6780@js1304-desktop>
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-2-hannes@cmpxchg.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d63f8fc4-b54b-49cf-0980-08d7e685d8d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 06:24:43.4539
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UB8CzpESfsLi1Jpu6GEW8B1gYHD9+vhgimTa426TBw3JsWTqPDCjZWQwcR1q2RBb0V0wrbFlUgjL7Kj4gug85A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0337
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420221126.341272-2-hannes@cmpxchg.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBCYXJ0IFZhbiBBc3NjaGUgPGJ2YW5hc3NjaGVAYWNtLm9yZz4NCj4gU2VudDogVHVl
-c2RheSwgQXByaWwgMjEsIDIwMjAgMTA6MDIgUE0NCj4gT24gNC8yMS8yMCA1OjE3IFBNLCBEZXh1
-YW4gQ3VpIHdyb3RlOg0KPiA+IER1cmluZyBoaWJlcm5hdGlvbiwgdGhlIHNkZXZzIGFyZSBzdXNw
-ZW5kZWQgYXV0b21hdGljYWxseSBpbg0KPiA+IGRyaXZlcnMvc2NzaS9zY3NpX3BtLmMgYmVmb3Jl
-IHN0b3J2c2Nfc3VzcGVuZCgpLCBzbyBhZnRlcg0KPiA+IHN0b3J2c2Nfc3VzcGVuZCgpLCB0aGVy
-ZSBpcyBubyBkaXNrIEkvTyBmcm9tIHRoZSBmaWxlIHN5c3RlbXMsIGJ1dCB0aGVyZQ0KPiA+IGNh
-biBzdGlsbCBiZSBkaXNrIEkvTyBmcm9tIHRoZSBrZXJuZWwgc3BhY2UsIGUuZy4gZGlza19jaGVj
-a19ldmVudHMoKSAtPg0KPiA+IHNyX2Jsb2NrX2NoZWNrX2V2ZW50cygpIC0+IGNkcm9tX2NoZWNr
-X2V2ZW50cygpIGNhbiBzdGlsbCBzdWJtaXQgSS9PDQo+ID4gdG8gdGhlIHN0b3J2c2MgZHJpdmVy
-LCB3aGljaCBjYXVzZXMgYSBwYW5pYyBvZiBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UsDQo+ID4g
-c2luY2Ugc3RvcnZzYyBoYXMgY2xvc2VkIHRoZSB2bWJ1cyBjaGFubmVsIGluIHN0b3J2c2Nfc3Vz
-cGVuZCgpOiByZWZlcg0KPiA+IHRvIHRoZSBiZWxvdyBsaW5rcyBmb3IgbW9yZSBpbmZvOg0KPiA+
-IC4uLg0KPiA+IEZpeCB0aGUgcGFuaWMgYnkgYmxvY2tpbmcvdW5ibG9ja2luZyBhbGwgdGhlIEkv
-TyBxdWV1ZXMgcHJvcGVybHkuDQo+ID4NCj4gPiBOb3RlOiB0aGlzIHBhdGNoIGRlcGVuZHMgb24g
-YW5vdGhlciBwYXRjaCAic2NzaTogY29yZTogQWxsb3cgdGhlIHN0YXRlDQo+ID4gY2hhbmdlIGZy
-b20gU0RFVl9RVUlFU0NFIHRvIFNERVZfQkxPQ0siIChyZWZlciB0byB0aGUgc2Vjb25kIGxpbmsN
-Cj4gYWJvdmUpLg0KPiANCj4gSSBkb24ndCBsaWtlIHRoaXMgcGF0Y2guIEl0IG1ha2VzIHRoZSBi
-ZWhhdmlvciBvZiB0aGUgc3RvcnN2YyBkcml2ZXINCj4gZGlmZmVyZW50IGZyb20gZXZlcnkgb3Ro
-ZXIgU0NTSSBMTEQuIE90aGVyIFNDU0kgTExEcyBkb24ndCBuZWVkIHRoaXMNCj4gY2hhbmdlIGJl
-Y2F1c2UgdGhlc2UgZG9uJ3QgZGVzdHJveSBJL08gcXVldWVzIHVwb24gc3VzcGVuZC4NCj4gDQo+
-IEJhcnQuDQoNClVwb24gc3VzcGVuZCwgSSBzdXBwb3NlIHRoZSBvdGhlciBMTERzIGNhbiBub3Qg
-YWNjZXB0IEkvTyBlaXRoZXIsIHRoZW4NCndoYXQgZG8gdGhleSBkbyB3aGVuIHNvbWUga2VybmVs
-IHRocmVhZCBzdGlsbCB0cmllcyB0byBzdWJtaXQgSS9PPyBEbyANCnRoZXkgImJsb2NrIiB0aGUg
-SS9PIHVudGlsIHJlc3VtZSwgb3IganVzdCByZXR1cm4gYW4gZXJyb3IgaW1tZWRpYXRlbHk/DQoN
-CkkgaGFkIGEgbG9vayBhdCBkcml2ZXJzL3Njc2kveGVuLXNjc2lmcm9udC5jLiBJdCBsb29rcyB0
-aGlzIExMRCBpbXBsZW1lbnRzDQphIG1lY2hhbmlzbSBvZiBtYXJraW5nIHRoZSBkZXZpY2UgYnVz
-eSB1cG9uIHN1c3BlbmQsIHNvIGFueSBJL08gd2lsbA0KaW1tZWRpYXRlbHkgZ2V0IGFuIGVycm9y
-IFNDU0lfTUxRVUVVRV9IT1NUX0JVU1kuIElNTyB0aGUNCmRpc2FkdmFudGFnZSBpczogdGhlIG1l
-Y2hhbmlzbSBvZiBtYXJraW5nIHRoZSBkZXZpY2UgYnVzeSBsb29rcw0KY29tcGxleCwgYW5kIHRo
-ZSBob3QgcGF0aCAucXVldWVjb21tYW5kKCkgaGFzIHRvIHRha2UgdGhlDQpzcGlubG9jayBzaG9z
-dC0+aG9zdF9sb2NrLCB3aGljaCBzaG91bGQgYWZmZWN0IHRoZSBwZXJmb3JtYW5jZS4NCg0KSXQg
-bG9va3MgZHJpdmVycy9zY3NpL25zcDMyLmM6IG5zcDMyX3N1c3BlbmQoKSBhbmQgDQpkcml2ZXJz
-L3Njc2kvM3ctOXh4eC5jOiB0d2Ffc3VzcGVuZCgpIGRvIG5vdGhpbmcgdG8gaGFuZGxlIG5ldyBJ
-L08gDQphZnRlciBzdXNwZW5kLiBJIGRvdWJ0IHRoaXMgaXMgY29ycmVjdC4NCg0KSXQgbG9va3Mg
-ZHJpdmVycy9zY3NpL2hpc2lfc2FzL2hpc2lfc2FzX3YzX2h3LmM6IGhpc2lfc2FzX3YzX3N1c3Bl
-bmQoKQ0KdHJpZXMgdG8gdXNlIHNjc2lfYmxvY2tfcmVxdWVzdHMoKSBhcyBhIG1lYW5zIG9mIGJs
-b2NraW5nIG5ldyBJL08sIGJ1dA0KSSBkb3VidCBpdCBjYW4gd29yazogc2NzaV9ibG9ja19yZXF1
-ZXN0cygpIG9ubHkgc2V0cyBhIHZhcmlhYmxlIC0tDQpob3cgY291bGQgdGhpcyBwcmV2ZW50IGFu
-b3RoZXIgY29uY3VycmVudCBrZXJuZWwgdGhyZWFkIHRvIHN1Ym1pdCBuZXcNCkkvTyB3aXRob3V0
-IGEgcmFjZSBjb25kaXRpb24gaXNzdWU/DQoNClNvIGl0IGxvb2tzIHRvIG1lIHRoZXJlIGlzIG5v
-IHNpbXBsZSBtZWNoYW5pc20gdG8gaGFuZGxlIHRoZSBzY2VuYXJpbw0KaGVyZSwgYW5kIEkgZ3Vl
-c3MgdGhhdCdzIHdoeSB0aGUgc2NzaV9ob3N0X2Jsb2NrL3VuYmxvY2sgQVBJcyBhcmUNCmludHJv
-ZHVjZWQsIGFuZCBhY3R1YWxseSB0aGVyZSBpcyBhbHJlYWR5IGFuIHVzZXIgb2YgdGhlIEFQSXM6
-DQozZDNjYTUzYjE2MzkgKCJzY3NpOiBhYWNyYWlkOiB1c2Ugc2NzaV9ob3N0XyhibG9jayx1bmJs
-b2NrKSB0byBibG9jayBJL08iKS4NCg0KVGhlIGFhY3JhaWQgcGF0Y2ggc2F5czogIlRoaXMgaGFz
-IHRoZSBhZHZhbnRhZ2UgdGhhdCB0aGUgYmxvY2sgbGF5ZXIgd2lsbCANCnN0b3Agc2VuZGluZyBJ
-L08gdG8gdGhlIGFkYXB0ZXIgaW5zdGVhZCBvZiBoYXZpbmcgdGhlIFNDU0kgbWlkbGF5ZXINCnJl
-cXVldWVpbmcgSS9PIGludGVybmFsbHkiLiBJdCBsb29rcyB0aGlzIG1heSBpbXBseSB0aGF0IHVz
-aW5nIHRoZSBuZXcgDQpBUElzIGlzIGVuY291cmFnZWQ/DQoNClNvcnJ5IGZvciBteSBsYWNrIG9m
-IGtub3dsZWRnZSBpbiBMaW51eCBTQ1NJIHN5c3RlbSwgYnV0IElNSE8gdGhlIG5ldw0KQVBJcyBh
-cmUgc2ltcGxlIGFuZCBlZmZlY3RpdmUsIGFuZCB0aGV5IHJlYWxseSBsb29rIGxpa2UgYSBnb29k
-IGZpdCBmb3IgdGhlDQpoaWJlcm5hdGlvbiBzY2VuYXJpby4gQlRXLCBzdG9ydnNjX3N1c3BlbmQo
-KSBpcyBub3QgYSBob3QgcGF0aCBoZXJlLA0Kc28gSU1PIEkgZG9uJ3QgaGF2ZSBhbnkgcGVyZm9y
-bWFuY2UgY29uY2Vybi4NCg0KUFMsIGhlcmUgc3RvcnZzYyBoYXMgdG8gZGVzdHJveSBhbmQgcmUt
-Y29uc3RydWN0IHRoZSBJL08gcXVldWVzOiB0aGUNCkkvTyBxdWV1ZXMgYXJlIHNoYXJlZCBtZW1v
-cnkgcmluZ2J1ZmVycyBiZXR3ZWVuIHRoZSBndWVzdCBhbmQgdGhlDQpob3N0OyBpbiB0aGUgcmVz
-dW1lIHBhdGggb2YgdGhlIGhpYmVybmF0aW9uIHByb2NlZHVyZSwgdGhlIG1lbW9yeSANCnBhZ2Vz
-IGFsbG9jYXRlZCBieSB0aGUgJ25ldycga2VybmVsIGlzIGRpZmZlcmVudCBmcm9tIHRoYXQgYWxs
-b2NhdGVkIGJ5DQp0aGUgJ29sZCcga2VybmVsLCBzbyBiZWZvcmUganVtcGluZyB0byB0aGUgJ29s
-ZCcga2VybmVsLCB0aGUgJ25ldycga2VybmVsDQptdXN0IGRlc3Ryb3kgdGhlIG1hcHBpbmcgb2Yg
-dGhlIHBhZ2VzLCBhbmQgbGF0ZXIgYWZ0ZXIgd2UganVtcCB0byANCnRoZSAnb2xkJyBrZXJuZWws
-IHdlJ2xsIHJlLWNyZWF0ZSB0aGUgbWFwcGluZyB1c2luZyB0aGUgcGFnZXMgYWxsb2NhdGVkIA0K
-YnkgdGhlICdvbGQnIGtlcm5lbC4gSGVyZSAiY3JlYXRlIHRoZSBtYXBwaW5nIiBtZWFucyB0aGUg
-Z3Vlc3QgdGVsbHMNCnRoZSBob3N0IGFib3V0IHRoZSBwaHlzaWNhbCBhZGRyZXNzZXMgb2YgdGhl
-IHBhZ2VzLg0KDQpUaGFua3MsDQotLSBEZXh1YW4NCg==
+On Mon, Apr 20, 2020 at 06:11:09PM -0400, Johannes Weiner wrote:
+> When replacing one page with another one in the cache, we have to
+> decrease the file count of the old page's NUMA node and increase the
+> one of the new NUMA node, otherwise the old node leaks the count and
+> the new node eventually underflows its counter.
+> 
+> Fixes: 74d609585d8b ("page cache: Add and replace pages using the XArray")
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+
+Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+
+Thanks.
