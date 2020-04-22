@@ -2,252 +2,254 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17806C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8800CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3B302076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D122076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="drRAX8U8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyS+ynH7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDVUEN (ORCPT
+        id S1726478AbgDVUF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:04:13 -0400
-Received: from mail-eopbgr770101.outbound.protection.outlook.com ([40.107.77.101]:32069
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726079AbgDVUEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:04:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HsMOuL5MpDBG6taisXtqkTvqSLwZTEcxPmucCqm1bHZljQUg0mp9pT9NsQwesQ6vAhogoGAgfJBtydIu5edNIYFLvednt/9amMP5fV3HlifdyKR5nWcERraC5Tw1DrqWFEaq6JrpYz8ZpYL7K/Vsr6i8fYmZ6+SJ9XIlmJzeXpmF+ZlKvECRpTkmXVIfX1IRmxccQOylBGE8C9EUZDUM29ZfAPXAjNx3S5CZoa4K4geWa4GrMGvP3cjveo+7zbwQihIc/R/DzQruXNSFp/SgxGYrimJCQXqf3rVDLkff61NGPkgC2icVQhiGKd+y8OMBQ48ssrgvaGbo3lj+vELujQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X4bM1n8YUkawzCbiNzSwLFoeYs+T9anpLVtHg6M7Emw=;
- b=f2HNvaRD3RgqHppocrNW5f0kn4+ySu6hKuWIoVSShkJ+y8++HMBzD0f+0VHEmrhsdEInuHlWy4c2SjTpKpa6YuKCaGj0Uo1p6l+wp9HxvUIkZTM9KQOGHXomI5L0os5qZ+8DdUzJRimzehB60YAKFLhQw6a6ZSNyDq0i8q3vh8pPyS0SBzV/rDqobGvQGNMfRNBXC4BcQc7OgidVnH2k0dbd6Oi+5cHJWok/gYftQo0EKbLFVANUawwb+Y8LALXe9IJI6tQ6a5/CWRoPqiY0hbiroic+WFFTUvRpxZVkGJhUyy7MXLUQwYDN7sZzmWR0hsDTQjQIFzPn6BHuca/aFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X4bM1n8YUkawzCbiNzSwLFoeYs+T9anpLVtHg6M7Emw=;
- b=drRAX8U8XpfVIpxSPzJ89Q/eqLnRIGgW/v7nJAGVSiUK9txz0/LxFqViTw34ZTYrSc8eu9FpNhtJNDd1W/2OC+DGUUL0c2Z+AG9kI4nGm8ni49b9tA/yb2lodH1jvm2vVnc3bDi+TaqAqvupXDlQeX/8RKPb3y7g5WCgN85tLH8=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1130.namprd21.prod.outlook.com (2603:10b6:302:4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.3; Wed, 22 Apr
- 2020 20:04:08 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2958.001; Wed, 22 Apr 2020
- 20:04:08 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH 4/4] asm-generic/hyperv: Add definitions for
- Get/SetVpRegister hypercalls
-Thread-Topic: [PATCH 4/4] asm-generic/hyperv: Add definitions for
- Get/SetVpRegister hypercalls
-Thread-Index: AQHWFzqo2MJXKNqRb0OpB2C/Ixhrm6iDi9EAgAAtKyCAAdnBAA==
-Date:   Wed, 22 Apr 2020 20:04:08 +0000
-Message-ID: <MW2PR2101MB10522065BF1835CE5D2B233AD7D20@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200420173838.24672-1-mikelley@microsoft.com>
- <20200420173838.24672-5-mikelley@microsoft.com>
- <87y2qpq9e7.fsf@vitty.brq.redhat.com>
- <MW2PR2101MB1052EF4972CDCF9BF2B0356AD7D50@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB1052EF4972CDCF9BF2B0356AD7D50@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-21T15:50:10.7293324Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=12920825-1c00-49d2-bb48-99a21bd11be8;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 87f15622-a183-454e-c5d0-08d7e6f85160
-x-ms-traffictypediagnostic: MW2PR2101MB1130:|MW2PR2101MB1130:|MW2PR2101MB1130:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB11307F0FA27DB2493AFE4C1BD7D20@MW2PR2101MB1130.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2733;
-x-forefront-prvs: 03818C953D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(366004)(66556008)(498600001)(82960400001)(55016002)(82950400001)(7416002)(10290500003)(76116006)(4326008)(71200400001)(66446008)(8676002)(6916009)(8936002)(33656002)(66946007)(52536014)(186003)(7696005)(54906003)(5660300002)(8990500004)(9686003)(2906002)(86362001)(26005)(81156014)(6506007)(66476007)(64756008)(41533002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i+KYUP9fD4QECsbg87W50voiFiDmErOO+vLO9XIkcmkVyxJRg15DRh6yX+N5miP09MwK88YEUrrt/W9MIBUNkL/fpmMOgn8wuuSrgo+PNUmxvFXYkzGtBOjxXlFvBkApqAMVyZo5cWjrui7St3lGrv/nR9skp5HvBA/ER1Z3oRtBOLO7++gJ9QWTHOujnZeFaOFuIHbVKJX8qoCbvuafKz+clICOsiL9CdEobA6cs/NLDVPBj0sRD6KzbkvYhIlmrRlzcRanRMu0pxWLe5fW2KP1qK9EJs8+f/zQX+oPuDIvbshV2SmUgkJh4mNHSbfZEIb+S47OSUQxJOWTMRRniMwJTYK3QmpyLE5k3WJMzWNhsgjPBn1PiFc+P2bTyjIkmu+O6UhGoYpyDtYUFi9JfOVRbcViHHvH946KVEFrPKf8ioJy8WFq4Rs/SG1Tn6FN4TyLo2Ea0/ngREkwh4MOawi76Uj4QaGfZvKpRgfSq1HTPiK5kH4eHSCPyK5hu9Vo
-x-ms-exchange-antispam-messagedata: IsRHgblF6lc5+U0ziWmZJ1Dzb/QruKfPXKPozKUIOkr5toCbGXLS4RQji2O/7Q3hw5kp9d/J9heV7I6Y8USt9OEI800E6DAhm9HsM1nS0M+5nJYix4qjO41u7nbLI5shwgZPdDkxkGUy1ShEkT2/zXKHwziD+RM8rQF2onBD50yjzWSXjW6UZvNQ7woFPCj7lZFf+Ig0fq/v86N9PssZK4THiBTRvv4yHzXkCFInI/UoO2F+JVakAthAonHpzfK/rRJNkaXl8Ppdf7x/dol1L422SYxeIPAp9RIEGzZA5hDsQ/Nwx7Uly6S7/OkDO72WM5xT0/6zQbcfHArn3MIJktAdpqvApOPIIWgdKZ1ad2nK1gCPRyLVRSjw+RAfc3Npw3MPrPW2OF37ONxlM689CNSTDdRS5Rg/MEyzUrUjTsNkBvClwE+xlBeADFR2428TbpeJXG7fZIP9UYwarsbZ0RafqEq8rtVCZf2cPDoSm5JxdmFM0WAlIr316dwbUkZf/JBY9OnGy4Nrgg/PpefYkkDe7tajtvZsdFWWnH4ln5XK5ZXXEd8woDDX/3mFy5ErYFhCRTDyV9T9czqeamn58sqMqDvKG56G9AHjgXiHeC+bI25d2O9+FQw6+ytfCwsQA8SIjnLs8mRoxR4MoX1mdJjyi8CCP8IHq3ftme+3/OAeF0UfiRYsnXnaZCDiH6vArvTB17JIKDB0pJ9t+SrXn0DtVl59x7BIGVkawcNBCxmNxWuj9B3cSnnrA4aG7Bc0lGDW4sjjsJ49H35f/HbfxKnix/vZRSgz8L9Pw5norfw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 Apr 2020 16:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725779AbgDVUF5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:05:57 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF40C03C1A9;
+        Wed, 22 Apr 2020 13:05:57 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id f82so3244268ilh.8;
+        Wed, 22 Apr 2020 13:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Xw3SluUqEV6Dcus+DaT8e6xQrR+AQO/E/D6ih0GzeD0=;
+        b=CyS+ynH71ki+YJPjlxz1hBv+LXYl4ILW6jmkRbKWgiAZdKXtGWDYIXr9uZidi9SlmW
+         WsWRL2XpgsOHt5e4k75kW4R7K96kNriryVBN6zl3TmPHeU/DOwm+48c5E/3dq50f/SI+
+         G7K0fdjPR/LOwmbBWjyDVxsY9Zcz0rVAjqhJtLFEaYN4Kpbizt0HvfkfRUmme40j9OP+
+         LTB6J+CbesvBXuHz+Y2YDoihlayzLyhwjpOEINvwOE9XF05xmm+HZwiE3RQVP/oqT0kS
+         +jCjlCfB27rx6vtAGjWHpMApvN/6PgTTwigN8npgFPHBwgUt1k/WWZygSC0AQJaToRlY
+         7pZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Xw3SluUqEV6Dcus+DaT8e6xQrR+AQO/E/D6ih0GzeD0=;
+        b=jZSKPQiAqqzi/Nvlu55+N4+7gvcgwE2UXvWC4Xz9t8zZ0p9X5RXNd18MeRt43qvPZP
+         tfuC7BarMxrA2gKGypXZTQ3hv2NljHPmeUeCQl33vkQQrltcrVzg8+6jLrEYo8NUiox0
+         4h+yryrWqRKG4dsjwJXtmzblQisi1uXPqwzVb2iLONXhAyme0eCP1vI1818xLhhrFZXU
+         0htBy1XA8kYZqUynZrmzUmF7DSDuf9jUwtetmAKd5tQk3SGCzs2FOUIpqXH4ZP9FLzrO
+         Pg7JCh965o0XigBpjloH3FfS+F4GvnSTKmiM/U7DOSgyoh1UPyn8bGYVcU8vJDpR6zb8
+         wLiw==
+X-Gm-Message-State: AGi0PuadjsEwjqT1DSCRVcIavPTBJb83O5+h2WcmgzlCRtRr20pQDbqO
+        WdApmnU3jvPm+jTE0olWw9IRrp4SkldvibSh72w=
+X-Google-Smtp-Source: APiQypLA6rfyq5iysKbMF3E/bLPKjBS2o/ZGybhQgd+qAuG5aybxGINyfc3iCOabGaQC8z+V6zkaG0zXNpEVwyRHGYY=
+X-Received: by 2002:a92:dc0d:: with SMTP id t13mr93915iln.287.1587585957053;
+ Wed, 22 Apr 2020 13:05:57 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87f15622-a183-454e-c5d0-08d7e6f85160
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 20:04:08.6399
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5w3F3rvPeVmxLB6shhGJAnnJeBUFIBpTtfCAnq6j93PKA0ehmyeUPTTrJaXlb0VwkIPjO1xLPT9DJoNRdPoa8nVR5IeT5+iq7cq76oYJ1gU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1130
+References: <20200418011211.31725-5-Po.Liu@nxp.com> <20200422024852.23224-1-Po.Liu@nxp.com>
+ <20200422024852.23224-2-Po.Liu@nxp.com> <20200422191910.gacjlviegrjriwcx@ws.localdomain>
+ <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
+In-Reply-To: <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
+From:   Dave Taht <dave.taht@gmail.com>
+Date:   Wed, 22 Apr 2020 13:05:45 -0700
+Message-ID: <CAA93jw6fAyKHCLGD8vsXXz1yGPwXk5tOzWXDMbbn3z3Kw5P8PA@mail.gmail.com>
+Subject: Re: [v3,net-next 1/4] net: qos: introduce a gate control flow action
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Po Liu <Po.Liu@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        michael.chan@broadcom.com, vishal@chelsio.com,
+        Saeed Mahameed <saeedm@mellanox.com>, leon@kernel.org,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        simon.horman@netronome.com,
+        Pablo Neira Ayuso <pablo@netfilter.org>, moshe@mellanox.com,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Andre Guedes <andre.guedes@linux.intel.com>,
+        Stephen Hemminger <stephen@networkplumber.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kelley Sent: Tuesday, April 21, 2020 8:50 AM
->=20
-> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Tuesday, April 21, 202=
-0 6:03 AM
+On Wed, Apr 22, 2020 at 12:31 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> Hi Allan,
+>
+> On Wed, 22 Apr 2020 at 22:20, Allan W. Nielsen
+> <allan.nielsen@microchip.com> wrote:
 > >
-> > Michael Kelley <mikelley@microsoft.com> writes:
+> > Hi Po,
 > >
-> > > Add definitions for GetVpRegister and SetVpRegister hypercalls, which
-> > > are implemented for both x86 and ARM64.
+> > Nice to see even more work on the TSN standards in the upstream kernel.
+> >
+> > On 22.04.2020 10:48, Po Liu wrote:
+> > >EXTERNAL EMAIL: Do not click links or open attachments unless you know=
+ the content is safe
 > > >
-> > > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > > ---
-> > >  include/asm-generic/hyperv-tlfs.h | 28 ++++++++++++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
+> > >Introduce a ingress frame gate control flow action.
+> > >Tc gate action does the work like this:
+> > >Assume there is a gate allow specified ingress frames can be passed at
+> > >specific time slot, and be dropped at specific time slot. Tc filter
+> > >chooses the ingress frames, and tc gate action would specify what slot
+> > >does these frames can be passed to device and what time slot would be
+> > >dropped.
+> > >Tc gate action would provide an entry list to tell how much time gate
+> > >keep open and how much time gate keep state close. Gate action also
+> > >assign a start time to tell when the entry list start. Then driver wou=
+ld
+> > >repeat the gate entry list cyclically.
+> > >For the software simulation, gate action requires the user assign a ti=
+me
+> > >clock type.
 > > >
-> > > diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/=
-hyperv-tlfs.h
-> > > index 1f92ef92eb56..29b60f5b6323 100644
-> > > --- a/include/asm-generic/hyperv-tlfs.h
-> > > +++ b/include/asm-generic/hyperv-tlfs.h
-> > > @@ -141,6 +141,8 @@ struct ms_hyperv_tsc_page {
-> > >  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
-> > >  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
-> > >  #define HVCALL_SEND_IPI_EX			0x0015
-> > > +#define HVCALL_GET_VP_REGISTERS			0x0050
-> > > +#define HVCALL_SET_VP_REGISTERS			0x0051
-> > >  #define HVCALL_POST_MESSAGE			0x005c
-> > >  #define HVCALL_SIGNAL_EVENT			0x005d
-> > >  #define HVCALL_RETARGET_INTERRUPT		0x007e
-> > > @@ -439,4 +441,30 @@ struct hv_retarget_device_interrupt {
-> > >  	struct hv_device_interrupt_target int_target;
-> > >  } __packed __aligned(8);
+> > >Below is the setting example in user space. Tc filter a stream source =
+ip
+> > >address is 192.168.0.20 and gate action own two time slots. One is las=
+t
+> > >200ms gate open let frame pass another is last 100ms gate close let
+> > >frames dropped. When the frames have passed total frames over 8000000
+> > >bytes, frames will be dropped in one 200000000ns time slot.
 > > >
-> > > +
-> > > +/* HvGetVPRegister hypercall */
+> > >> tc qdisc add dev eth0 ingress
+> > >
+> > >> tc filter add dev eth0 parent ffff: protocol ip \
+> > >           flower src_ip 192.168.0.20 \
+> > >           action gate index 2 clockid CLOCK_TAI \
+> > >           sched-entry open 200000000 -1 8000000 \
+> > >           sched-entry close 100000000 -1 -1
 > >
-> > Nit: 'HvGetVpRegisters' in TLFS
+> > First of all, it is a long time since I read the 802.1Qci and when I di=
+d
+> > it, it was a draft. So please let me know if I'm completly off here.
 > >
-> > > +struct hv_get_vp_register_input {
+> > I know you are focusing on the gate control in this patch serie, but I
+> > assume that you later will want to do the policing and flow-meter as
+> > well. And it could make sense to consider how all of this work
+> > toghether.
 > >
-> > Nit: I would also to name it 'hv_get_vp_registers_input' (plural, like
-> > the hypercall).
+> > A common use-case for the policing is to have multiple rules pointing a=
+t
+> > the same policing instance. Maybe you want the sum of the traffic on 2
+> > ports to be limited to 100mbit. If you specify such action on the
+> > individual rule (like done with the gate), then you can not have two
+> > rules pointing at the same policer instance.
 > >
-> > > +	u64 partitionid;
-> > > +	u32 vpindex;
-> > > +	u8  inputvtl;
-> > > +	u8  padding[3];
-> > > +	u32 name0;
-> > > +	u32 name1;
-> > > +} __packed;
+> > Long storry short, have you considered if it would be better to do
+> > something like:
 > >
-> > Isn't it a REP hypercall where we can we can pass a list? In that case
-> > this should look like
+> >    tc filter add dev eth0 parent ffff: protocol ip \
+> >             flower src_ip 192.168.0.20 \
+> >             action psfp-id 42
 > >
-> > struct hv_get_vp_registers_input {
-> > 	struct {
-> > 		u64 partitionid;
-> > 		u32 vpindex;
-> > 		u8  inputvtl;
-> > 		u8  padding[3];
-> >         } header;
-> > 	struct {
-> > 		u32 name0;
-> > 		u32 name1;
-> >         } elem[];
-> > } __packed;
+> > And then have some other function to configure the properties of psfp-i=
+d
+> > 42?
 > >
-> > > +
-> > > +struct hv_get_vp_register_output {
 > >
-> > Ditto.
+> > /Allan
+> >
+>
+> It is very good that you brought it up though, since in my opinion too
+> it is a rather important aspect, and it seems that the fact this
+> feature is already designed-in was a bit too subtle.
+>
+> "psfp-id" is actually his "index" argument.
+>
+> You can actually do this:
+> tc filter add dev eth0 ingress \
+>         flower skip_hw dst_mac 01:80:c2:00:00:0e \
+>         action gate index 1 clockid CLOCK_TAI \
+>         base-time 200000000000 \
+>         sched-entry OPEN 200000000 -1 -1 \
+>         sched-entry CLOSE 100000000 -1 -1
+> tc filter add dev eth0 ingress \
+>         flower skip_hw dst_mac 01:80:c2:00:00:0f \
+>         action gate index 1
+>
+> Then 2 filters get created with the same action:
+>
+> tc -s filter show dev swp2 ingress
+> filter protocol all pref 49151 flower chain 0
+> filter protocol all pref 49151 flower chain 0 handle 0x1
+>   dst_mac 01:80:c2:00:00:0f
+>   skip_hw
+>   not_in_hw
+>         action order 1:
+>         priority wildcard       clockid TAI     flags 0x6404f
+>         base-time 200000000000                  cycle-time 300000000
+>          cycle-time-ext 0
+>          number    0    gate-state open         interval 200000000
+>          ipv wildcard    max-octets wildcard
+>          number    1    gate-state close        interval 100000000
+>          ipv wildcard    max-octets wildcard
+>         pipe
+>          index 2 ref 2 bind 2 installed 168 sec used 168 sec
+>         Action statistics:
+>         Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
+>         backlog 0b 0p requeues 0
+>
+> filter protocol all pref 49152 flower chain 0
+> filter protocol all pref 49152 flower chain 0 handle 0x1
+>   dst_mac 01:80:c2:00:00:0e
+>   skip_hw
+>   not_in_hw
+>         action order 1:
+>         priority wildcard       clockid TAI     flags 0x6404f
+>         base-time 200000000000                  cycle-time 300000000
+>          cycle-time-ext 0
+>          number    0    gate-state open         interval 200000000
+>          ipv wildcard    max-octets wildcard
+>          number    1    gate-state close        interval 100000000
+>          ipv wildcard    max-octets wildcard
+>         pipe
+>          index 2 ref 2 bind 2 installed 168 sec used 168 sec
+>         Action statistics:
+>         Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
+>         backlog 0b 0p requeues 0
+>
+> Actually my only concern is that maybe this mechanism should (?) have
+> been more generic. At the moment, this patch series implements it via
+> a TCA_GATE_ENTRY_INDEX netlink attribute, so every action which wants
+> to be shared across filters needs to reinvent this wheel.
+>
+> Thoughts, everyone?
 
-I've sent out a new version, but didn't change
-hv_get_vp_register_output except to make
-it hv_get_vp_registers_output.   The C compiler
-wont' let me put a  variable size array as the
-only field in the struct.
+I don't have anything valuable to add, aside from commenting this
+whole thing makes my brain hurt.
 
-> >
-> > > +	union {
-> > > +		struct {
-> > > +			u32 a;
-> > > +			u32 b;
-> >  > +			u32 c;
-> > > +			u32 d;
-> > > +		} as32 __packed;
-> > > +		struct {
-> > > +			u64 low;
-> > > +			u64 high;
-> > > +		} as64 __packed;
-> > > +	};
-> > > +};
-> >
-> > I'm wondering why you define both
-> > HVCALL_GET_VP_REGISTERS/HVCALL_SET_VP_REGISTERS but only add 'struct
-> > hv_get_vp_register_input' and not 'struct hv_set_vp_register_input'.
-> >
-> > The later should look similar, AFAIU it is:
-> >
-> > struct hv_set_vp_registers_input {
-> > 	struct {
-> > 		u64 partitionid;
-> > 		u32 vpindex;
-> > 		u8  inputvtl;
-> > 		u8  padding[3];
-> >         } header;
-> > 	struct {
-> > 		u32 name;
-> > 		u32 padding1;
-> > 		u64 padding2; //not sure this is not a mistake in TLFS
+> Thanks,
+> -Vladimir
 
-The additional padding is not a mistake.  Hyper-V wants
-the register value to be aligned to 128 bits even though
-it is described in the TLFS document as two 64 bit fields.
 
-> >             	u64 regvallow;
-> >             	u64 regvalhigh;
-> > 	} elem[];
-> > } __packed;
-> >
-> > > +
-> > >  #endif
-> >
 
-Michael
+--=20
+Make Music, Not War
+
+Dave T=C3=A4ht
+CTO, TekLibre, LLC
+http://www.teklibre.com
+Tel: 1-831-435-0729
