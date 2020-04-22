@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE50C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F9CC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791B42070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9DD20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550494;
-	bh=VKvRnzrhE79l30fPjNatQ8L377zR5ldGkynql46Qu7k=;
+	s=default; t=1587550498;
+	bh=g5K/VIFnX6n9H7X4MvMACtPUJaoWu7dijJCBbR+xAGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X4JhhEhqgZOEw3ocntr72RKYtIYSLYQvA4cl+844g5iV9Z2OwA03j4eprL5y93OQr
-	 RGI/Uz+Erca0GXXmtr/fTgcd8E9p/VsdxPQc7Di+TrVFKweewn/qNRLSPspUNfv3df
-	 uh2DpU/P3vEqZaKdRLFkSyQD0098uYTR7Y+sXhvs=
+	b=CKNHf98LlhQYgkZ7l2ZgvSDqs7CbCg1FuSbnfdus6EmxSFKo3tNVxUGS9hEZirBpV
+	 br4YAISxuV9IeZxmRRFAjc+VQjcu2YdvWAzEcBxBjUYDDA6AmaW/AyL/7cwPGos/gr
+	 19uTQM2fP1jjHJNEuRP4Evng3g5j5jXdEk/Bk1Mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgDVKOx (ORCPT
+        id S1729223AbgDVKO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729577AbgDVKOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:45 -0400
+        id S1729584AbgDVKOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DEB920776;
-        Wed, 22 Apr 2020 10:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D227A20575;
+        Wed, 22 Apr 2020 10:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550484;
-        bh=VKvRnzrhE79l30fPjNatQ8L377zR5ldGkynql46Qu7k=;
+        s=default; t=1587550487;
+        bh=g5K/VIFnX6n9H7X4MvMACtPUJaoWu7dijJCBbR+xAGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LTkvZ0poKx9A2RHXaqXaEdCUYyyq1leyuUB5d20lsxg6JbUJKSroXKxopXvHr45gM
-         vTyKd8yAEREipUKpUZ+RR92FAYiwHX+GSuQrMlkMQ7Tv/D6O/YLslSUWLZFnC7x+jX
-         kq/6gX3pQ26pK4Uha4B3dHhQAW+o8wQMyw4+lwG0=
+        b=dDddXJ4u6QJu/EE3KH3NZRtLwmjKVoYC0/aT1sSABud5qjHniYS908ejQNVKVekzV
+         ISrj52ZkOt3sXTvWhTQVi3gfjAmwg6ELvANQFE9SGfIJLkRmHNEcbpJnvgSTy6IdqO
+         nHTiEuCBhsIIwUuXMQ2Kefx+l6cbn/t5xTjBRy2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/64] s390/cpum_sf: Fix wrong page count in error message
-Date:   Wed, 22 Apr 2020 11:57:19 +0200
-Message-Id: <20200422095019.152022733@linuxfoundation.org>
+        stable@vger.kernel.org, Ritesh Harjani <riteshh@linux.ibm.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 36/64] ext4: do not commit super on read-only bdev
+Date:   Wed, 22 Apr 2020 11:57:20 +0200
+Message-Id: <20200422095019.367269935@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,52 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Eric Sandeen <sandeen@redhat.com>
 
-[ Upstream commit 4141b6a5e9f171325effc36a22eb92bf961e7a5c ]
+[ Upstream commit c96e2b8564adfb8ac14469ebc51ddc1bfecb3ae2 ]
 
-When perf record -e SF_CYCLES_BASIC_DIAG runs with very high
-frequency, the samples arrive faster than the perf process can
-save them to file. Eventually, for longer running processes, this
-leads to the siutation where the trace buffers allocated by perf
-slowly fills up. At one point the auxiliary trace buffer is full
-and  the CPU Measurement sampling facility is turned off. Furthermore
-a warning is printed to the kernel log buffer:
+Under some circumstances we may encounter a filesystem error on a
+read-only block device, and if we try to save the error info to the
+superblock and commit it, we'll wind up with a noisy error and
+backtrace, i.e.:
 
-cpum_sf: The AUX buffer with 0 pages for the diagnostic-sampling
-	mode is full
+[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
+------------[ cut here ]------------
+generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
+WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
+...
 
-The number of allocated pages for the auxiliary trace buffer is shown
-as zero pages. That is wrong.
+To avoid this, commit the error info in the superblock only if the
+block device is writable.
 
-Fix this by saving the number of allocated pages before entering the
-work loop in the interrupt handler. When the interrupt handler processes
-the samples, it may detect the buffer full condition and stop sampling,
-reducing the buffer size to zero.
-Print the correct value in the error message:
-
-cpum_sf: The AUX buffer with 256 pages for the diagnostic-sampling
-	mode is full
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Link: https://lore.kernel.org/r/4b6e774d-cc00-3469-7abb-108eb151071a@sandeen.net
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 5bfb1ce129f4b..74a296cea21cc 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1537,6 +1537,7 @@ static void hw_collect_aux(struct cpu_hw_sf *cpuhw)
- 	perf_aux_output_end(handle, size);
- 	num_sdb = aux->sfb.num_sdb;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index cc8c738480e8a..bf949fcc970ab 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -388,7 +388,8 @@ static void save_error_info(struct super_block *sb, const char *func,
+ 			    unsigned int line)
+ {
+ 	__save_error_info(sb, func, line);
+-	ext4_commit_super(sb, 1);
++	if (!bdev_read_only(sb->s_bdev))
++		ext4_commit_super(sb, 1);
+ }
  
-+	num_sdb = aux->sfb.num_sdb;
- 	while (!done) {
- 		/* Get an output handle */
- 		aux = perf_aux_output_begin(handle, cpuhw->event);
+ /*
 -- 
 2.20.1
 
