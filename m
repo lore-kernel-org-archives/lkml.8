@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E559DC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEC6C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C56562082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78D720738
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgDVPDv (ORCPT
+        id S1728324AbgDVPD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:03:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58096 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 11:03:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58116 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbgDVPDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726853AbgDVPDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 11:03:08 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9AC64AEE1;
+        by mx2.suse.de (Postfix) with ESMTP id 86AFBAE68;
         Wed, 22 Apr 2020 15:03:03 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id B14CB1E0E83; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
+        id 89B5F1E0E61; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 21/23] testing: Introduce xa_erase_order() and use it
-Date:   Wed, 22 Apr 2020 17:02:54 +0200
-Message-Id: <20200422150256.23473-22-jack@suse.cz>
+Subject: [PATCH 12/23] mm: Use xas_erase() in collapse_file()
+Date:   Wed, 22 Apr 2020 17:02:45 +0200
+Message-Id: <20200422150256.23473-13-jack@suse.cz>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200422150256.23473-1-jack@suse.cz>
 References: <20200422150256.23473-1-jack@suse.cz>
@@ -40,53 +40,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce helper xa_erase_order() and call it from places that want to
-erase entries from xarray instead of using xa_store_order(). This also
-explicitely takes care of clearing possibly existing xarray marks
-(although no current test seems to need it).
+When undoing failed collapse of ordinary pages into a huge page, use
+xas_erase() to explicitly clear any xarray marks that may have been
+added to entries.
 
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- lib/test_xarray.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ mm/khugepaged.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index 2cf3ef5d5014..fc16eac1cbb9 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -83,6 +83,16 @@ static void *xa_store_order(struct xarray *xa, unsigned long index,
- 	return curr;
- }
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 99d77ffb79c2..8da820c02de7 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1819,7 +1819,7 @@ static void collapse_file(struct mm_struct *mm,
+ 					break;
+ 				nr_none--;
+ 				/* Put holes back where they were */
+-				xas_store(&xas, NULL);
++				xas_erase(&xas);
+ 				continue;
+ 			}
  
-+static void xa_erase_order(struct xarray *xa, unsigned long index,
-+		unsigned order)
-+{
-+	XA_STATE_ORDER(xas, xa, index, order);
-+
-+	xas_lock(&xas);
-+	xas_erase(&xas);
-+	xas_unlock(&xas);
-+}
-+
- static noinline void check_xa_err(struct xarray *xa)
- {
- 	XA_BUG_ON(xa, xa_err(xa_store_index(xa, 0, GFP_NOWAIT)) != 0);
-@@ -608,13 +618,13 @@ static noinline void check_multi_store(struct xarray *xa)
- 	rcu_read_unlock();
- 
- 	/* We can erase multiple values with a single store */
--	xa_store_order(xa, 0, BITS_PER_LONG - 1, NULL, GFP_KERNEL);
-+	xa_erase_order(xa, 0, BITS_PER_LONG - 1);
- 	XA_BUG_ON(xa, !xa_empty(xa));
- 
- 	/* Even when the first slot is empty but the others aren't */
- 	xa_store_index(xa, 1, GFP_KERNEL);
- 	xa_store_index(xa, 2, GFP_KERNEL);
--	xa_store_order(xa, 0, 2, NULL, GFP_KERNEL);
-+	xa_erase_order(xa, 0, 2);
- 	XA_BUG_ON(xa, !xa_empty(xa));
- 
- 	for (i = 0; i < max_order; i++) {
 -- 
 2.16.4
 
