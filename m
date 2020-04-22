@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63819C55189
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A130C55185
 	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6A021655
+	by mail.kernel.org (Postfix) with ESMTP id 220D32084D
 	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ayF+6gIs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U78TwxqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgDVWFC (ORCPT
+        id S1726596AbgDVWFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
+        Wed, 22 Apr 2020 18:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbgDVWE7 (ORCPT
+        with ESMTP id S1726520AbgDVWEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:04:59 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 013D7C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:59 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id i9so2946952pjs.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:58 -0700 (PDT)
+        Wed, 22 Apr 2020 18:04:54 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A45C03C1AA
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:54 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id v4so3393252pfe.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=8jb1TKGtNOzFJaH+zGkIw1wrutaG9liyHI83TX/6kqM=;
-        b=ayF+6gIswEMHPNht9DRwjemw9VXGHQmmH+WQZwyrxUEVDiQGMQTxhFqqbQL3CAJ3hS
-         g8b6n8lWjMwG0kvdSZWrlldhI5uIHsWQ33Be8do2mBbMYsLMkpeuboO6xdkybJBJGgWE
-         rLlW6aW2sMA/ORzubO35PxvarD4+HB2KvIe8+2QsPRJ4tAKWjX5mvP1jx7gxlGdtbzaF
-         Fwx7nsHtDNTaSNH+iNDDEc933apf+WIeexxAT1KDtoauG9SSpgNCi62GDxS95xL2tAIz
-         ghtuSFBu4ih4TbQS0590sbxvwdINGt7Pvk32Wj3Vms6m6ZcYk+D8J2+5d/QDj6nQlrAo
-         r0tA==
+        bh=G2xrre78+ftU1oJoCW/exxUkKUD8kGPaWluZ1hoDbqU=;
+        b=U78TwxqNsHI89Ogk7zPRBRxNrrZz7s6GoxqFdwDnh16Y8AyV1ozBFeJ9cNqawXYVqy
+         HtyzesSibD4jes0LTTZq8QlvN2eEeqizvhPvApwefxRFSikoWndvs74ANf9DgfN5OcVh
+         ZTZgglfpAmBQLRFpmjyVN3FgIMQVcwl+oZRAMEARbEjLL8x9rBLZtlPzbLmpjYZ/yIAz
+         JnoXq9QcHkfHdwFpYMfOhSaxXRvZxDAU+siByyaZjCzyCjYsX9MFotuu+UpV5CiecgCG
+         BpBzYNt2iCoqkTQZvb+8RigFr9SAIXn11UmDcrCBu8PhABd9I6pA1ycf8sAbCSLcUT48
+         M+7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=8jb1TKGtNOzFJaH+zGkIw1wrutaG9liyHI83TX/6kqM=;
-        b=lZuJ0VD6B7clALstQkzKhdh/J/ckqBUkQW/8kmNHW2tSjA3z+GPw9kaYHCQZeuTmWK
-         fHdbNsbR9nwJP1rHA8Wv54nfP//A+zcK78QthKYoqnqaRydaG9GBXxwxQDFFkckHwND0
-         gEjdArn41ajD4hlIJXKHf0ZzQIMhVPJ1ihl6ewtNrweMOiROEHDARclJ5DyboE6To5Wt
-         H3OUvLMWTUTB+yhw+FzXzzF6I6DqbXiYkzIJdZXogmU1P8XD3ANf71iZemjd5pQ+mbVW
-         B2TJ4SMaHYVU0oC9nDp2Q9TzevvTahhnBfByuo8HkQUQa2losqUg+2SdlQQLdvj6pSj9
-         oRYQ==
-X-Gm-Message-State: AGi0Pua2twMk2TlnDxoWUFJXxZ5WIyzauIoFSukQSXnsnQQBxS41RWaN
-        8C2+BQGUZ3WBCslDizKCbHNUxakG5QyI
-X-Google-Smtp-Source: APiQypIcRniLx2dAK6np1iyd92nSVT7y5C8wddV7Z01zuWs3KW+xK/j6SSGfKeLeZegOBRgqZMDZ77vd28P8
-X-Received: by 2002:a17:90a:2f64:: with SMTP id s91mr973455pjd.30.1587593098406;
- Wed, 22 Apr 2020 15:04:58 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:04:29 -0700
+        bh=G2xrre78+ftU1oJoCW/exxUkKUD8kGPaWluZ1hoDbqU=;
+        b=PhijNW94tLIoO9/hPRDfNQ0tcLAXzOlPaUAJNoJyYNfBMcmEljyxrIKudQvbq1gdhJ
+         +AUrOTWZ9V+1iDez7+4YgZUnGO/GHTJBQUia9OgR3FJ2PpGw7kJR8rmddkVt+kq/Dq+r
+         OZsufM0VqSAPxCTjiWh9k4PmL5Zh7ICoj4euCAROtCLchnKnORyliTn6FokmXP+kIX1Q
+         TXtwdQBk6VuWartw4jc4fyEY3RSosnRB8I/nwnkhk2/NfbihpAyp3WkKWuyEEbHaSwwE
+         r1UUBtWDgyGJnlm7+zbkvUVPS/AMOZvV0noauw9P72ZXB+JT+SD1ki3UAIMMUiwIZc41
+         jQ3w==
+X-Gm-Message-State: AGi0PuZdJc5xGOU3zzjwEwZAjNMn2ldFAMqYDzHCRPgl2pxzAHjuc7D8
+        XBEA6GaYvARyela2Q2qxgUf6ZwWDowy1
+X-Google-Smtp-Source: APiQypJ+ojiFc3cdqxEICVUXBxwHbxliEw5QkVoAkgZBMTuy2F8/4YaPRqhR7LgprYZub+2dZ5bjNfypMoJh
+X-Received: by 2002:a63:43c3:: with SMTP id q186mr1047417pga.411.1587593093688;
+ Wed, 22 Apr 2020 15:04:53 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 15:04:27 -0700
 In-Reply-To: <20200422220430.254014-1-irogers@google.com>
-Message-Id: <20200422220430.254014-11-irogers@google.com>
+Message-Id: <20200422220430.254014-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20200422220430.254014-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v2 10/11] perf expr: print a debug message for division by zero
+Subject: [PATCH v2 08/11] perf metrics: fix parse errors in power8 metrics
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -89,40 +89,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an expression yields 0 and is then divided-by/modulus-by then the
-parsing aborts. Add a debug error message to better enable debugging
-when this happens.
+Mismatched parentheses.
 
+Fixes: dd81eafacc52 (perf vendor events power8: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ tools/perf/pmu-events/arch/powerpc/power8/metrics.json | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 54260094b947..21e82a1e11a2 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -103,8 +103,18 @@ expr:	  NUMBER
- 	| expr '+' expr		{ $$ = $1 + $3; }
- 	| expr '-' expr		{ $$ = $1 - $3; }
- 	| expr '*' expr		{ $$ = $1 * $3; }
--	| expr '/' expr		{ if ($3 == 0) YYABORT; $$ = $1 / $3; }
--	| expr '%' expr		{ if ((long)$3 == 0) YYABORT; $$ = (long)$1 % (long)$3; }
-+	| expr '/' expr		{ if ($3 == 0) {
-+					pr_debug("division by zero\n");
-+					YYABORT;
-+				  }
-+				  $$ = $1 / $3;
-+	                        }
-+	| expr '%' expr		{ if ((long)$3 == 0) {
-+					pr_debug("division by zero\n");
-+					YYABORT;
-+				  }
-+				  $$ = (long)$1 % (long)$3;
-+	                        }
- 	| '-' expr %prec NEG	{ $$ = -$2; }
- 	| '(' if_expr ')'	{ $$ = $2; }
- 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
+diff --git a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+index bffb2d4a6420..ad71486a38e3 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
++++ b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+@@ -169,7 +169,7 @@
+     },
+     {
+         "BriefDescription": "Cycles GCT empty where dispatch was held",
+-        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL)",
++        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL",
+         "MetricGroup": "cpi_breakdown",
+         "MetricName": "gct_empty_disp_held_cpi"
+     },
+@@ -886,7 +886,7 @@
+     },
+     {
+         "BriefDescription": "GCT slot utilization (11 to 14) as a % of cycles this thread had atleast 1 slot valid",
+-        "MetricExpr": "PM_GCT_UTIL_11_14_ENTRIES / ( PM_RUN_CYC - PM_GCT_NOSLOT_CYC) * 100",
++        "MetricExpr": "PM_GCT_UTIL_11_14_ENTRIES / ( PM_RUN_CYC - PM_GCT_NOSLOT_CYC ) * 100",
+         "MetricGroup": "general",
+         "MetricName": "gct_util_11to14_slots_percent"
+     },
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
