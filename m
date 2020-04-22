@@ -2,98 +2,215 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63F6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D189C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C252077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2815D2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="a0cqNtVT"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="KIbKWhAb";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="dSk4dlZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgDVVNE (ORCPT
+        id S1726613AbgDVVNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgDVVNE (ORCPT
+        Wed, 22 Apr 2020 17:13:21 -0400
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:63763 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgDVVNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:13:04 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F0BC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:13:02 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id n17so2995166ejh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X1ihfPfQEm2aQwNzlV21Qu7y5TOw2uGbX6A635/ijcM=;
-        b=a0cqNtVTTV+nhgMWLbfLbZJ1KDdwX/sQv0li7sAMa4YncTjRvmpf42R5qaJyoSk7xZ
-         4fjblaEI1rkZU5E11tn1LivEd4rKY+iP0xqgwcoj0sWC79s6mY+p/Wvg8DMbuKUojeTk
-         MKvLPlLE6a4MGwQsxRn1mzMVhI0UyQVxYWDBcIZ3BdQSMJNEk4GkWdo7ixo7B+9pTKz8
-         nIvQM2yHiwbKRGcLES7cQFiaBaxGH+dI2un2gH0az0StWT7pBtvNwrPqdLF9J7wspqE2
-         /Yj6lBV3bIcU57XdmeaokjOO+H7H9cVnl7HnZ0rrrD6/ox6h0Oh+VCg+zp2ZPVeBLn8m
-         od5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X1ihfPfQEm2aQwNzlV21Qu7y5TOw2uGbX6A635/ijcM=;
-        b=lZCgPOL7yQtyQjB9LJjleBDEuBW4J7qAqG9UTOjWazw9toeI0eRPjmjOwh7A2k5CtM
-         cHEG75ab5hVyPodJU+QvPCon1tF55c3f+vkf6rxes8x13oQP0CUEfPpA60QtdvxRZS/b
-         pfIKs5kgpcWtBPWwQCleCBhg7CwIPgT6DlM8zF2CsdoF2BGIn8J/vm2E95uRUgHyX2D1
-         inIhfbXVgkGFX6y1mkH/Af0q+Z/BoYKwMGPAOBK9iHU92hoMyvmMUtbjIHPrzVrylhzX
-         0F/iYmrMeTROaBq//lU4WvYk4HQ2PbFzcf2UK6CXkAKuU/2PYoHUbQyR8Gmic3IT419+
-         q28Q==
-X-Gm-Message-State: AGi0PuZxs/4RNoE7f+MX9sJk5uAhCPadCTH2ghVsOmnpWSdzJw5US/Pv
-        rjai67SuO2QSHjjpbtyQyojCVCL7z7Z7WM4hJ4Y=
-X-Google-Smtp-Source: APiQypJFSh3bXWuJ7x6+DbhV4xicuxImfcUvi6SvtUeplKK7p+MxUJ6HoV3iLTo8/qjdhHIAUdqX4A3BxnHAJhLGxbQ=
-X-Received: by 2002:a17:906:1199:: with SMTP id n25mr287851eja.30.1587589981187;
- Wed, 22 Apr 2020 14:13:01 -0700 (PDT)
+        Wed, 22 Apr 2020 17:13:20 -0400
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id B53CDC1DDB;
+        Wed, 22 Apr 2020 17:13:14 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=KCqFDkcnN7N1Y7R0KRCvFAr8MLI=; b=KIbKWh
+        AbdIWaBaebAgLwoh2ThPlltYCc2foyVfx3t5RGx23zPbfk5ZygFMQ6V+xFMTq1kE
+        9293hckV2hM9HE8YnviV92teAo25sN5Pn1+gMhJAW8tmTdxqo874AP+U+IHEAe1v
+        Jb3C1C3k7xq53FLrbl57aYbe547PHqFcI8j8o=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 9F526C1DDA;
+        Wed, 22 Apr 2020 17:13:14 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=nfzC0aNp5HVyqlWKusrH+9gqQGBzO85jDBBTE4zv1kI=; b=dSk4dlZT9yKZv4bLmdcgCoTwO5y1setDry4GEaS+RjW57zBXRzcW7Lw2o6AV/+F/HGYODms0BJU7IykvnTc2LG84CJToIzhXgGVw9UPFmhaiBrWUb/nGnT5E+1aAaIeVtyzTKAkQZguQLF20DzrON2J7R3/wvmDwZ9szXZb53ME=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 5AD9CC1DD9;
+        Wed, 22 Apr 2020 17:13:11 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 6C2822DA0D31;
+        Wed, 22 Apr 2020 17:13:09 -0400 (EDT)
+Date:   Wed, 22 Apr 2020 17:13:09 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+In-Reply-To: <871rofdhtg.fsf@intel.com>
+Message-ID: <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr>
+References: <20200417011146.83973-1-saeedm@mellanox.com> <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com> <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr> <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
+ <87v9lu1ra6.fsf@intel.com> <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com> <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr> <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com> <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr>
+ <871rofdhtg.fsf@intel.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200421134410.30603-1-narmstrong@baylibre.com>
-In-Reply-To: <20200421134410.30603-1-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 22 Apr 2020 23:12:50 +0200
-Message-ID: <CAFBinCAGP7ZE-OksaE=6E54r2e0VJk2wMTEwKU65qAoR4dQvxw@mail.gmail.com>
-Subject: Re: [PATCH] drm/meson: add mode selection limits against specific SoC revisions
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 125CCF72-84DE-11EA-B4E7-8D86F504CC47-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Wed, 22 Apr 2020, Jani Nikula wrote:
 
-On Tue, Apr 21, 2020 at 3:44 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> index e8c94915a4fc..dc3d5122475a 100644
-> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> @@ -695,6 +695,13 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
->         dev_dbg(connector->dev->dev, "%s: vclk:%d phy=%d venc=%d hdmi=%d\n",
->                 __func__, phy_freq, vclk_freq, venc_freq, hdmi_freq);
->
-> +       /* Check against soc revision/package limits */
-> +       if (priv->limits) {
-> +               if (priv->limits->max_hdmi_phy_freq &&
-> +                   phy_freq > priv->limits->max_hdmi_phy_freq)
-> +                       return MODE_CLOCK_HIGH;
-> +       }
-I think that this will also be useful for the 32-bit SoCs as well.
-is there a chance you can move it to meson_vclk_vic_supported_freq
-(called right below), where all the existing frequency limit checks
-are already?
+> On Tue, 21 Apr 2020, Nicolas Pitre <nico@fluxnic.net> wrote:
+> > This is really a conditional dependency. That's all this is about.
+> > So why not simply making it so rather than fooling ourselves? All that 
+> > is required is an extension that would allow:
+> >
+> > 	depends on (expression) if (expression)
+> >
+> > This construct should be obvious even without reading the doc, is 
+> > already used extensively for other things already, and is flexible 
+> > enough to cover all sort of cases in addition to this particular one.
+> 
+> Okay, you convinced me. Now you only need to convince whoever is doing
+> the actual work of implementing this stuff. ;)
 
+What about this:
 
-Thank you!
-Martin
+----- >8
+Subject: [PATCH] kconfig: allow for conditional dependencies
+
+This might appear to be a strange concept, but sometimes we want
+a dependency to be conditionally applied. One such case is currently
+expressed with:
+
+	depends on FOO || !FOO
+
+This pattern is strange enough to give one's pause. Given that it is
+also frequent, let's make the intent more obvious with some syntaxic 
+sugar by effectively making dependencies optionally conditional.
+This also makes the kconfig language more uniform.
+
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index d0111dd264..0f841e0037 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -114,7 +114,7 @@ applicable everywhere (see syntax).
+   This is a shorthand notation for a type definition plus a value.
+   Optionally dependencies for this default value can be added with "if".
+ 
+-- dependencies: "depends on" <expr>
++- dependencies: "depends on" <expr> ["if" <expr>]
+ 
+   This defines a dependency for this menu entry. If multiple
+   dependencies are defined, they are connected with '&&'. Dependencies
+@@ -130,6 +130,16 @@ applicable everywhere (see syntax).
+ 	bool "foo"
+ 	default y
+ 
++  The dependency definition itself may be conditional by appending "if"
++  followed by an expression. If such expression is false (n) then this
++  dependency is ignored. One possible use case is:
++
++    config FOO
++	tristate
++	depends on BAZ if BAZ != n
++
++  meaning that FOO is constrained by the value of BAZ only when it is set.
++
+ - reverse dependencies: "select" <symbol> ["if" <expr>]
+ 
+   While normal dependencies reduce the upper limit of a symbol (see
+diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
+index d4ca829736..1a9337d1b9 100644
+--- a/scripts/kconfig/lkc.h
++++ b/scripts/kconfig/lkc.h
+@@ -72,7 +72,7 @@ void menu_warn(struct menu *menu, const char *fmt, ...);
+ struct menu *menu_add_menu(void);
+ void menu_end_menu(void);
+ void menu_add_entry(struct symbol *sym);
+-void menu_add_dep(struct expr *dep);
++void menu_add_dep(struct expr *dep, struct expr *cond);
+ void menu_add_visibility(struct expr *dep);
+ struct property *menu_add_prompt(enum prop_type type, char *prompt, struct expr *dep);
+ void menu_add_expr(enum prop_type type, struct expr *expr, struct expr *dep);
+diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
+index e436ba44c9..e6b204225e 100644
+--- a/scripts/kconfig/menu.c
++++ b/scripts/kconfig/menu.c
+@@ -103,8 +103,22 @@ static struct expr *rewrite_m(struct expr *e)
+ 	return e;
+ }
+ 
+-void menu_add_dep(struct expr *dep)
++void menu_add_dep(struct expr *dep, struct expr *cond)
+ {
++	if (cond) {
++		struct expr *cond2, *left, *right;
++		/*
++		 * We have "depends on X if Y" and we want:
++		 *	Y != n --> X
++		 *	Y == n --> y
++		 * Meaning: ((Y != n) && X) || (Y == n)
++		 */
++		cond2 = expr_copy(cond);
++		left = expr_trans_compare(cond2, E_UNEQUAL, &symbol_no);
++		left = expr_alloc_and(dep, left);
++		right = expr_trans_compare(cond, E_EQUAL, &symbol_no);
++		dep = expr_alloc_or(left, right);
++	}
+ 	current_entry->dep = expr_alloc_and(current_entry->dep, dep);
+ }
+ 
+diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
+index 708b6c4b13..4161207da2 100644
+--- a/scripts/kconfig/parser.y
++++ b/scripts/kconfig/parser.y
+@@ -316,7 +316,7 @@ if_entry: T_IF expr T_EOL
+ {
+ 	printd(DEBUG_PARSE, "%s:%d:if\n", zconf_curname(), zconf_lineno());
+ 	menu_add_entry(NULL);
+-	menu_add_dep($2);
++	menu_add_dep($2, NULL);
+ 	$$ = menu_add_menu();
+ };
+ 
+@@ -412,9 +412,9 @@ help: help_start T_HELPTEXT
+ 
+ /* depends option */
+ 
+-depends: T_DEPENDS T_ON expr T_EOL
++depends: T_DEPENDS T_ON expr if_expr T_EOL
+ {
+-	menu_add_dep($3);
++	menu_add_dep($3, $4);
+ 	printd(DEBUG_PARSE, "%s:%d:depends on\n", zconf_curname(), zconf_lineno());
+ };
+ 
