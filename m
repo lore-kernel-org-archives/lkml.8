@@ -2,103 +2,69 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C8EC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AD3C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 200B0206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA7420738
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDVHSO (ORCPT
+        id S1726415AbgDVHSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:18:14 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34930 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgDVHSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:18:14 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 03M7HuOx016837;
-        Wed, 22 Apr 2020 09:17:56 +0200
-Date:   Wed, 22 Apr 2020 09:17:56 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Denis Efremov <efremov@linux.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] floppy: suppress UBSAN warning in setup_rw_floppy()
-Message-ID: <20200422071756.GA16814@1wt.eu>
-References: <20200421125722.58959-1-efremov@linux.com>
- <20200421125722.58959-4-efremov@linux.com>
- <20200422070921.GA19116@infradead.org>
+        Wed, 22 Apr 2020 03:18:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59522 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725786AbgDVHSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:18:40 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DA23056838887462EB84;
+        Wed, 22 Apr 2020 15:18:37 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Apr 2020
+ 15:18:27 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <zohar@linux.ibm.com>, <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] ima: return false in is_ima_appraise_enabled()
+Date:   Wed, 22 Apr 2020 15:17:54 +0800
+Message-ID: <20200422071754.48672-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422070921.GA19116@infradead.org>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:09:21AM -0700, Christoph Hellwig wrote:
-> On Tue, Apr 21, 2020 at 03:57:22PM +0300, Denis Efremov wrote:
-> > UBSAN: array-index-out-of-bounds in drivers/block/floppy.c:1521:45
-> > index 16 is out of range for type 'unsigned char [16]'
-> > Call Trace:
-> > ...
-> >  setup_rw_floppy+0x5c3/0x7f0
-> >  floppy_ready+0x2be/0x13b0
-> >  process_one_work+0x2c1/0x5d0
-> >  worker_thread+0x56/0x5e0
-> >  kthread+0x122/0x170
-> >  ret_from_fork+0x35/0x40
-> > 
-> > >From include/uapi/linux/fd.h:
-> > struct floppy_raw_cmd {
-> > 	...
-> > 	unsigned char cmd_count;
-> > 	unsigned char cmd[16];
-> > 	unsigned char reply_count;
-> > 	unsigned char reply[16];
-> > 	...
-> > }
-> > 
-> > This out-of-bounds access is intentional. The command in struct
-> > floppy_raw_cmd may take up the space initially intended for the reply
-> > and the reply count. It is needed for long 82078 commands such as
-> > RESTORE, which takes 17 command bytes. Initial cmd size is not enough
-> > and since struct setup_rw_floppy is a part of uapi we check that
-> > cmd_count is in [0:16+1+16] in raw_cmd_copyin().
-> > 
-> > The patch replaces array subscript with pointer arithetic to suppress
-> > UBSAN warning.
-> 
-> Urghh.  I think the better way would be to use a union that creates
-> a larger cmd field, or something like:
-> 
-> struct floppy_raw_cmd {
-> 	...
-> 	u8 buf[34];
-> 
-> #define BUF_CMD_COUNT	0
-> #define BUF_CMD		1
-> #define BUF_REPLY_COUNT	17
-> #define BUF_REPLY	18
-> 
-> and use addressing based on that.
+Fix the following coccicheck warning:
 
-But isn't it a problem if struct floppy_raw_cmd is exposed to uapi ?
-That said I remember a discussion with Linus who said that most if not
-all of the floppy parts leaking to uapi were more of a side effect of
-the include files reordering than a deliberate decision to expose it.
-So maybe that could remain the best solution indeed.
+include/linux/ima.h:132:8-9: WARNING: return of 0/1 in function
+'is_ima_appraise_enabled' with return type bool
 
-I must say I don't feel very comfortable either with replacing p[i]
-with *(p+i) given that they are all supposed to be interchangeable and
-equivalent (as well as i[p] as strange as it can look). So we're not
-really protected against a later mechanical change or cleanup that
-reintroduces it :-/
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ include/linux/ima.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Willy
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index aefe758f4466..4cb28550fcbc 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -129,7 +129,7 @@ extern int ima_inode_removexattr(struct dentry *dentry, const char *xattr_name);
+ #else
+ static inline bool is_ima_appraise_enabled(void)
+ {
+-	return 0;
++	return false;
+ }
+ 
+ static inline void ima_inode_post_setattr(struct dentry *dentry)
+-- 
+2.21.1
+
