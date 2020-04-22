@@ -2,120 +2,161 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3536C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863DBC5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B681820706
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6561020706
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NZV5+Dl7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YaknBObi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgDVQxl (ORCPT
+        id S1726681AbgDVQya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:53:41 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47074 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDVQxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:53:40 -0400
-Received: from zn.tnic (p200300EC2F0DC10099981D244BC6B235.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c100:9998:1d24:4bc6:b235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4D8651EC0D4E;
-        Wed, 22 Apr 2020 18:53:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587574419;
+        Wed, 22 Apr 2020 12:54:30 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36276 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726337AbgDVQy3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:54:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587574468;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AVKnR0QOloA4aew99lOCASo2crQf98GdsdZcG1lVtB8=;
-        b=NZV5+Dl7EGPIw4/KYqCmncuiKXzr+/gOLUTmaT8wOqxBvX8e+PWKV1dAcT6trRB/UeHZog
-        KN/sfzwnFChYC14r48VTkq18iy3W+iymCDt9wAGMDyR22A0A7Xgs7/Nrnl39oWMyfUTKY2
-        +RerxXb8IfTmBm4AVFmg1+zCt9jBEOE=
-Date:   Wed, 22 Apr 2020 18:53:39 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
-Cc:     Jakub Jelinek <jakub@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200422165339.GE26846@zn.tnic>
-References: <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
- <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
- <20200417190607.GY2424@tucnak>
- <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
- <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
- <20200422102309.GA26846@zn.tnic>
- <20200422114007.GC20730@hirez.programming.kicks-ass.net>
- <20200422134924.GB26846@zn.tnic>
- <20200422135531.GM2424@tucnak>
- <20a91f2e-0f25-8dba-e441-3233cc1ef398@suse.cz>
+        bh=BqXrTpX3oy5nBKz0NvKqThQ4hDPxT3MyqKs03+N19io=;
+        b=YaknBObiI9i4/j6qDF5DhZVh7wUl2YxDAoJPsC7JUCTikzQsoE12adscuKF6kS16CCea7x
+        2N7WJfpUBea3fEuTbPoqffOw+yORD25OA7jKm4vOdciSHV7nWcEKKz4EnkCVXV5azUF11u
+        16iuBIO5HhBNIet/dYxj8w/mJA1oVJw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-D27f3_n-M_6jsSUZlNKFjQ-1; Wed, 22 Apr 2020 12:54:24 -0400
+X-MC-Unique: D27f3_n-M_6jsSUZlNKFjQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E6861800D6B;
+        Wed, 22 Apr 2020 16:54:22 +0000 (UTC)
+Received: from localhost (ovpn-113-71.ams2.redhat.com [10.36.113.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 91DBA60C87;
+        Wed, 22 Apr 2020 16:54:21 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 17:54:20 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@gmail.com>, davem@davemloft.net,
+        Gerard Garcia <ggarcia@abra.uab.cat>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH net] vsock/virtio: postpone packet delivery to monitoring
+ devices
+Message-ID: <20200422165420.GL47385@stefanha-x1.localdomain>
+References: <20200421092527.41651-1-sgarzare@redhat.com>
+ <20200421154246.GA47385@stefanha-x1.localdomain>
+ <20200421161724.c3pnecltfz4jajww@steredhat>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200421161724.c3pnecltfz4jajww@steredhat>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="FnOKg9Ah4tDwTfQS"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20a91f2e-0f25-8dba-e441-3233cc1ef398@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:16:53PM +0200, Martin Liška wrote:
-> And as I talked to Boris, I would recommend to come up with a "configure" check
-> that a compiler does not optimize the key code sequence:
-> 
-> $ cat asm-detect.c
-> int foo(int a);
-> int bar(int a)
-> {
->   int r = foo(a);
->   asm ("");
->   return r;
-> }
-> 
-> $ gcc -O2 -c asm-detect.c -S -o/dev/stdout | grep jmp
-> [no output]
+--FnOKg9Ah4tDwTfQS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That is a good test to run at the beginning of the compilation I guess.
+On Tue, Apr 21, 2020 at 06:17:24PM +0200, Stefano Garzarella wrote:
+> On Tue, Apr 21, 2020 at 04:42:46PM +0100, Stefan Hajnoczi wrote:
+> > On Tue, Apr 21, 2020 at 11:25:27AM +0200, Stefano Garzarella wrote:
+> > > We delivering packets to monitoring devices, before to check if
+> > > the virtqueue has enough space.
+> >=20
+> > "We [are] delivering packets" and "before to check" -> "before
+> > checking".  Perhaps it can be rewritten as:
+> >=20
+> >   Packets are delivered to monitoring devices before checking if the
+> >   virtqueue has enough space.
+> >=20
+>=20
+> Yeah, it is better :-)
+>=20
+> > >=20
+> > > If the virtqueue is full, the transmitting packet is queued up
+> > > and it will be sent in the next iteration. This causes the same
+> > > packet to be delivered multiple times to monitoring devices.
+> > >=20
+> > > This patch fixes this issue, postponing the packet delivery
+> > > to monitoring devices, only when it is properly queued in the
+> >=20
+> > s/,//
+> >=20
+> > > virqueue.
+> >=20
+> > s/virqueue/virtqueue/
+> >=20
+>=20
+> Thanks, I'll fix in the v2!
+>=20
+> > > @@ -137,6 +135,11 @@ virtio_transport_send_pkt_work(struct work_struc=
+t *work)
+> > >  =09=09=09break;
+> > >  =09=09}
+> > > =20
+> > > +=09=09/* Deliver to monitoring devices all correctly transmitted
+> > > +=09=09 * packets.
+> > > +=09=09 */
+> > > +=09=09virtio_transport_deliver_tap_pkt(pkt);
+> > > +
+> >=20
+> > The device may see the tx packet and therefore receive a reply to it
+> > before we can call virtio_transport_deliver_tap_pkt().  Does this mean
+> > that replies can now appear in the packet capture before the transmitte=
+d
+> > packet?
+>=20
+> hmm, you are right!
+>=20
+> And the same thing can already happen in vhost-vsock where we call
+> virtio_transport_deliver_tap_pkt() after the vhost_add_used(), right?
+>=20
+> The vhost-vsock case can be fixed in a simple way, but here do you think
+> we should serialize them? (e.g. mutex, spinlock)
+>=20
+> In this case I'm worried about performance.
+>=20
+> Or is there some virtqueue API to check availability?
 
-Without the asm("") it produces:
+Let's stick to the same semantics as Ethernet netdevs.  That way there
+are no surprises to anyone who is familiar with Linux packet captures.
+I don't know what those semantics are though, you'd need to check the
+code :).
 
-bar:
-.LFB0:
-	.cfi_startproc
-	jmp	foo@PLT
-	.cfi_endproc
+Stefan
 
-I'd like for LLVM folks to confirm that this is a good test for LLVM too
-Trying that here with clang gives:
+--FnOKg9Ah4tDwTfQS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-bar:                                    # @bar
-        .cfi_startproc
-# %bb.0:
-        jmp     foo                     # TAILCALL
-.Lfunc_end0:
+-----BEGIN PGP SIGNATURE-----
 
-so this *looks* like it would work with LLVM too but I might be missing
-something...
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl6gdrwACgkQnKSrs4Gr
+c8ge/AgAr4BzzDJ/myfhWhgsvMu3TdicuwspJcKD1cHy36+ZKBVo2LAGNjaM14PE
+LfCBpZxLe0al85XyUlQfyhc2yWGnLhNBatu6d9IXH+PiwWgI6LAsE0Wt0GSFgo2Q
+8camx09TTHHx3zKvM5IyGHhJJNgQkOLjCGCRGGBclVjPZymt6KqH38T2YSvzcZlm
+SlGJwX3YlAxmaDxLnenVfdDW76tVkcpg8Ik91Fpa6RHsD+Y4zxF07/qGPIzOB4Ay
+fYQUeCAJV1Vf/au5LOy7KoH6LMdqlOKH8MzCkPXV41REHUYEOXNYWFy13HMkEj+1
+QBkWbRsN/zAS6nmFJWAAYwFz+lNDog==
+=uwp0
+-----END PGP SIGNATURE-----
 
-Thx.
+--FnOKg9Ah4tDwTfQS--
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
