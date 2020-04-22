@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E470C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC21C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB552073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33BC2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552550;
-	bh=LXPWYG4z5+vvrhoERwmekrRYM9JEuLFtWYJbqt8j26E=;
+	s=default; t=1587552556;
+	bh=3HJTmXXcWce+2vY31PeSWp7yk0edXQda+IjiXehcJhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=piPBkVIvdhqlpbnZzlSCgoihcidRaBVR9jMPo86du7ljLD+uBCplZy4QQpuLLzhGq
-	 6z3HpI5W7IvqLc3AI1WzljXT6fgX2GBBkQ6qm4607u95XDjuMW2nhNuJMMW/xVCaHT
-	 BUlDf5UufrN/COAJAIZzozD7gHlSUn3OEBlyzpe0=
+	b=i7llrptgz/ftmNhaL3/Obgris7HhCmaCpG1vYmJggGor9OTITBwHwczxRbhoaRvfG
+	 I6RDvyCOEIuj47afAfcgTrzukTfe47Ztb6p5DnvshWUPtaiS+QqlFS1U9/J4NhVUV1
+	 6qeX0U6HtT9PpSo4a7T4EVeng/oB4nUPXMkoa7ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgDVKtF (ORCPT
+        id S1732089AbgDVKtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48026 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729442AbgDVKNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:51 -0400
+        id S1728407AbgDVKNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DAE92071E;
-        Wed, 22 Apr 2020 10:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 743922070B;
+        Wed, 22 Apr 2020 10:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550430;
-        bh=LXPWYG4z5+vvrhoERwmekrRYM9JEuLFtWYJbqt8j26E=;
+        s=default; t=1587550420;
+        bh=3HJTmXXcWce+2vY31PeSWp7yk0edXQda+IjiXehcJhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjjKUA1V5I64t8yLb/fcs5uSpUQRJiati7mY8XF/9LnBbWVl30a+vy2rlCz4+wjp0
-         nKlC/E29h7YoUqVHciK2v42+jNAy/XnvnMPo1z719hZEsp24sxlZGwuMtKWSd/5tXq
-         HTNEF5nHbkhV8dNwjogeZ4rXZu/KUCQ6+Q5W8+cI=
+        b=VRxvi3SXehnSM31KB6PJIkkZ9Mt4RyfxHIqZRQYqzUTKNFBzgapB+n7LzL9kiRAEt
+         sn2rfpSp1E1vp7Pi4DkJzHwJbp/g9MAUflBrb4L26+2ZWdJznNW8B0/TFssc2wontm
+         N5rDfhPDPWrWtj0H9IAh0d3ScL0w8JVjXICwpoiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 4.19 05/64] watchdog: sp805: fix restart handler
-Date:   Wed, 22 Apr 2020 11:56:49 +0200
-Message-Id: <20200422095013.224193329@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 10/64] ALSA: hda: Dont release card at firmware loading error
+Date:   Wed, 22 Apr 2020 11:56:54 +0200
+Message-Id: <20200422095014.483066597@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,44 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit ea104a9e4d3e9ebc26fb78dac35585b142ee288b upstream.
+commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 upstream.
 
-The restart handler is missing two things, first, the registers
-has to be unlocked and second there is no synchronization for the
-write_relaxed() calls.
+At the error path of the firmware loading error, the driver tries to
+release the card object and set NULL to drvdata.  This may be referred
+badly at the possible PM action, as the driver itself is still bound
+and the PM callbacks read the card object.
 
-This was tested on a custom board with the NXP LS1028A SoC.
+Instead, we continue the probing as if it were no option set.  This is
+often a better choice than the forced abort, too.
 
-Fixes: 6c5c0d48b686c ("watchdog: sp805: add restart handler")
-Signed-off-by: Michael Walle <michael@walle.cc>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200327162450.28506-1-michael@walle.cc
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/sp805_wdt.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/hda/hda_intel.c |   19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
---- a/drivers/watchdog/sp805_wdt.c
-+++ b/drivers/watchdog/sp805_wdt.c
-@@ -137,10 +137,14 @@ wdt_restart(struct watchdog_device *wdd,
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2076,24 +2076,15 @@ static void azx_firmware_cb(const struct
  {
- 	struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);
+ 	struct snd_card *card = context;
+ 	struct azx *chip = card->private_data;
+-	struct pci_dev *pci = chip->pci;
  
-+	writel_relaxed(UNLOCK, wdt->base + WDTLOCK);
- 	writel_relaxed(0, wdt->base + WDTCONTROL);
- 	writel_relaxed(0, wdt->base + WDTLOAD);
- 	writel_relaxed(INT_ENABLE | RESET_ENABLE, wdt->base + WDTCONTROL);
- 
-+	/* Flush posted writes. */
-+	readl_relaxed(wdt->base + WDTLOCK);
-+
- 	return 0;
+-	if (!fw) {
+-		dev_err(card->dev, "Cannot load firmware, aborting\n");
+-		goto error;
+-	}
+-
+-	chip->fw = fw;
++	if (fw)
++		chip->fw = fw;
++	else
++		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
+ 	if (!chip->disabled) {
+ 		/* continue probing */
+-		if (azx_probe_continue(chip))
+-			goto error;
++		azx_probe_continue(chip);
+ 	}
+-	return; /* OK */
+-
+- error:
+-	snd_card_free(card);
+-	pci_set_drvdata(pci, NULL);
  }
+ #endif
  
 
 
