@@ -2,52 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEFEC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E28C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9936A2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FFB20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549792;
-	bh=fCbnyq0035wIDV3foIDFdpOQFjmvL8wKvS4WwdKxTAE=;
+	s=default; t=1587549797;
+	bh=j4AQH5rvNz6DRK8i9x9rJX+agLWx9idbtMpnE/p1QUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jXWwEGUzT0IwvMpbmRJ19PR0mjIWTrxtzy+3oadxIDtzR/G2MjEOH0tyWxGAd3kgM
-	 AT3xLO9+5XW0xSzye6s05PIK93kknkEdSQ7csv92MY0eBwGN93hcLUPJS5oiazpcqe
-	 iF16626BW5brUTBPntFV+js1ef8htQKIjrWkj0kk=
+	b=OG2bqR3q54DS1eFOTM89y4SI5f0ngMyz7TmgnLFyuwgdc3ySfslOanUnoTvD9nsv1
+	 iciztUu+BOYcYUMalTiEHz/se6/+nRBQU+60iTpLO1Zafr/+nRMXnZ5xK6XKYOpnKv
+	 zK32i+mhjV2zkpYlIrlDqwu0FKQw7sgdx8as9u38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgDVKDL (ORCPT
+        id S1726588AbgDVKDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52570 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:03:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgDVKDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:06 -0400
+        id S1726640AbgDVKDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4668120774;
-        Wed, 22 Apr 2020 10:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EFF120784;
+        Wed, 22 Apr 2020 10:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549785;
-        bh=fCbnyq0035wIDV3foIDFdpOQFjmvL8wKvS4WwdKxTAE=;
+        s=default; t=1587549790;
+        bh=j4AQH5rvNz6DRK8i9x9rJX+agLWx9idbtMpnE/p1QUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLR/o+Nx4vlNXlMDjZp5rfpAJzECwWDtqFMRHMgrVhzgSM4pVao7dnk+u/Jejefq3
-         jzXAjTBpe7rmmyDHYisxI1j1fu83Gab+2ExWc5kjOL3sn9yaVeieID2p2RTNX+yfO2
-         MPPCzU5IJkHD/wHzNuMooXP19B3jXzg9SZSigLEM=
+        b=MesT86zC/v6FajqCis2lrnPp1vGQsRi+aj4b0PHfV1N7cS/nDJIyCtTtli9/b5cw4
+         f4k9nW9WRhdMQkGaX2aHqiAI6u1s+EYdjEjbsJetirZ3T6aI+07YCm4JayNIDpYk9g
+         gK98/lQBbwULQIDP18w4mMUBQjRoyuVcx6i4qRKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 067/100] dm flakey: check for null arg_name in parse_features()
-Date:   Wed, 22 Apr 2020 11:56:37 +0200
-Message-Id: <20200422095035.128693758@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.4 059/100] jbd2: improve comments about freeing data buffers whose page mapping is NULL
+Date:   Wed, 22 Apr 2020 11:56:29 +0200
+Message-Id: <20200422095033.685771979@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -60,41 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Goldwyn Rodrigues <rgoldwyn@suse.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 7690e25302dc7d0cd42b349e746fe44b44a94f2b ]
+commit 780f66e59231fcf882f36c63f287252ee47cc75a upstream.
 
-One can crash dm-flakey by specifying more feature arguments than the
-number of features supplied.  Checking for null in arg_name avoids
-this.
+Improve comments in jbd2_journal_commit_transaction() to describe why
+we don't need to clear the buffer_mapped bit for freeing file mapping
+buffers whose page mapping is NULL.
 
-dmsetup create flakey-test --table "0 66076080 flakey /dev/sdb9 0 0 180 2 drop_writes"
+Link: https://lore.kernel.org/r/20200217112706.20085-1-yi.zhang@huawei.com
+Fixes: c96dceeabf76 ("jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer")
+Suggested-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-flakey.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/jbd2/commit.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-index 78f403b45ab3e..bf82e4ccb5847 100644
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -69,6 +69,11 @@ static int parse_features(struct dm_arg_set *as, struct flakey_c *fc,
- 		arg_name = dm_shift_arg(as);
- 		argc--;
- 
-+		if (!arg_name) {
-+			ti->error = "Insufficient feature arguments";
-+			return -EINVAL;
-+		}
-+
- 		/*
- 		 * drop_writes
- 		 */
--- 
-2.20.1
-
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -1008,9 +1008,10 @@ restart_loop:
+ 			 * journalled data) we need to unmap buffer and clear
+ 			 * more bits. We also need to be careful about the check
+ 			 * because the data page mapping can get cleared under
+-			 * out hands, which alse need not to clear more bits
+-			 * because the page and buffers will be freed and can
+-			 * never be reused once we are done with them.
++			 * our hands. Note that if mapping == NULL, we don't
++			 * need to make buffer unmapped because the page is
++			 * already detached from the mapping and buffers cannot
++			 * get reused.
+ 			 */
+ 			mapping = READ_ONCE(bh->b_page->mapping);
+ 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
 
 
