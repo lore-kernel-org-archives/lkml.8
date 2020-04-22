@@ -2,51 +2,54 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88972C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F6CC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65E4D2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FBC2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550424;
-	bh=qaL4iYj7C80HTLE18s9gZmgPRTetzxaDAONH7zHUwiM=;
+	s=default; t=1587550428;
+	bh=Oif0qUeXDeEDFaVTAP0jQaj1zg1uJCGeVivjc+F1Zp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w10UcFX+AoFRmL3n83FE9+PxaOPIXRP1DmzQmX2Y/7eWU1zoHq4NBtCD7nH3p/F4j
-	 ObfYB7SrMLdlq4ospU4V4qmIXGZTo+C29BH73kupqMWLXdGH6hlQDxUkKuCmnamRZz
-	 nYVpkuP/Et4XICiFr33L4004JFwd6EqZWA72mAlc=
+	b=pq3O2mMUMhKCtsDDyG4Qw43QoKLee6j+V7NSCo2s+fcpLO4yyVQIrBfNrMbsrLjwG
+	 CyarQrlOod1R3hkBjeOzO49B+YbbmH6yJUBeP7iVATgRmpfHO06Fv/tyHickE4Mg9a
+	 I3WNhbQRzt04XBuEtd+HRgi4gMn2YWRsnTWVct7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgDVKNm (ORCPT
+        id S1726421AbgDVKNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:13:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47496 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:13:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgDVKNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:32 -0400
+        id S1726240AbgDVKNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 601362071E;
-        Wed, 22 Apr 2020 10:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60D9E20781;
+        Wed, 22 Apr 2020 10:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550410;
-        bh=qaL4iYj7C80HTLE18s9gZmgPRTetzxaDAONH7zHUwiM=;
+        s=default; t=1587550415;
+        bh=Oif0qUeXDeEDFaVTAP0jQaj1zg1uJCGeVivjc+F1Zp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqQFISBtprNxXu8lqDccoH6bE1pP+M8f/6EbSRFvs+JP8UeV1B8UkFVHLZaG+fSqN
-         cgpECSGcUD5eq02JsgU/yuRBVcotWP164cx/8+evQwdCLQboOp8PTxsvCv5cVSe8X9
-         aUsIC2NHzPVJrnan+dEnbVkm4n/UJcqF5Kf9rYoI=
+        b=OmAUQN/QGv5BMSxrLER4/M0/v1VoEEEXIKRH3arrf6B9BHg6zbMmp41X/mnZ4tKAp
+         hxY1tJY0DWFiqB/le3QfL2rmGhA9Tvxi6sO0vvuQqSPBAgInzx/3bXfNsp81KRKKX9
+         bOfhPetcL8nV9Ndb1Te7XrLfdR4QNZB21qvWKnYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 107/199] hsr: check protocol version in hsr_newlink()
-Date:   Wed, 22 Apr 2020 11:57:13 +0200
-Message-Id: <20200422095108.457604759@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Wayne Lin <Wayne.Lin@amd.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Lyude Paul <lyude@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 099/199] drm/dp_mst: Fix clearing payload state on topology disable
+Date:   Wed, 22 Apr 2020 11:57:05 +0200
+Message-Id: <20200422095107.842999382@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -59,53 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit 4faab8c446def7667adf1f722456c2f4c304069c ]
+[ Upstream commit 8732fe46b20c951493bfc4dba0ad08efdf41de81 ]
 
-In the current hsr code, only 0 and 1 protocol versions are valid.
-But current hsr code doesn't check the version, which is received by
-userspace.
+The issues caused by:
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add dummy1 type dummy
-    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1 version 4
+commit 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology
+mgr")
 
-In the test commands, version 4 is invalid.
-So, the command should be failed.
+Prompted me to take a closer look at how we clear the payload state in
+general when disabling the topology, and it turns out there's actually
+two subtle issues here.
 
-After this patch, following error will occur.
-"Error: hsr: Only versions 0..1 are supported."
+The first is that we're not grabbing &mgr.payload_lock when clearing the
+payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
+lock order is &mgr.payload_lock -> &mgr.lock (because we always want
+&mgr.lock to be the inner-most lock so topology validation always
+works), this makes perfect sense. It also means that -technically- there
+could be racing between someone calling
+drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
+modeset occurring that's modifying the payload state at the same time.
 
-Fixes: ee1c27977284 ("net/hsr: Added support for HSR v1")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The second is the more obvious issue that Wayne Lin discovered, that
+we're not clearing proposed_payloads when disabling the topology.
+
+I actually can't see any obvious places where the racing caused by the
+first issue would break something, and it could be that some of our
+higher-level locks already prevent this by happenstance, but better safe
+then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
+first grabs &mgr.payload_lock followed by &mgr.lock so that we never
+race when modifying the payload state. Then, we also clear
+proposed_payloads to fix the original issue of enabling a new topology
+with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
+structures, but those are getting destroyed along with the ports anyway.
+
+Changes since v1:
+* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
+  vsyrjala
+
+Cc: Sean Paul <sean@poorly.run>
+Cc: Wayne Lin <Wayne.Lin@amd.com>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200122194321.14953-1-lyude@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/hsr/hsr_netlink.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/net/hsr/hsr_netlink.c
-+++ b/net/hsr/hsr_netlink.c
-@@ -64,10 +64,16 @@ static int hsr_newlink(struct net *src_n
- 	else
- 		multicast_spec = nla_get_u8(data[IFLA_HSR_MULTICAST_SPEC]);
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index f0d819fc16cd7..db0e9ce57e29a 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2038,6 +2038,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 	int ret = 0;
+ 	struct drm_dp_mst_branch *mstb = NULL;
  
--	if (!data[IFLA_HSR_VERSION])
-+	if (!data[IFLA_HSR_VERSION]) {
- 		hsr_version = 0;
--	else
-+	} else {
- 		hsr_version = nla_get_u8(data[IFLA_HSR_VERSION]);
-+		if (hsr_version > 1) {
-+			NL_SET_ERR_MSG_MOD(extack,
-+					   "Only versions 0..1 are supported");
-+			return -EINVAL;
-+		}
-+	}
++	mutex_lock(&mgr->payload_lock);
+ 	mutex_lock(&mgr->lock);
+ 	if (mst_state == mgr->mst_state)
+ 		goto out_unlock;
+@@ -2096,7 +2097,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 		/* this can fail if the device is gone */
+ 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
+ 		ret = 0;
+-		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
++		memset(mgr->payloads, 0,
++		       mgr->max_payloads * sizeof(mgr->payloads[0]));
++		memset(mgr->proposed_vcpis, 0,
++		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
+ 		mgr->payload_mask = 0;
+ 		set_bit(0, &mgr->payload_mask);
+ 		mgr->vcpi_mask = 0;
+@@ -2104,6 +2108,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
  
- 	return hsr_dev_finalize(dev, link, multicast_spec, hsr_version);
- }
+ out_unlock:
+ 	mutex_unlock(&mgr->lock);
++	mutex_unlock(&mgr->payload_lock);
+ 	if (mstb)
+ 		drm_dp_put_mst_branch_device(mstb);
+ 	return ret;
+-- 
+2.20.1
+
 
 
