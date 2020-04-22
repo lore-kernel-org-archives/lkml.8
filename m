@@ -2,52 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0CFC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24D8C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B0E2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3FA20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551221;
-	bh=a+GnE5fjJanhytnMSWobgz08WY8xeM5hUkfKKeBAIG8=;
+	s=default; t=1587551225;
+	bh=Fiy/C+hMDSiklLTNMwKsro5YSZ51P2tQcXoshYJOGXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QxsFTC6qMqeALTeCDfKtkcihxP9iTOcf5DXBQiud6EpReVBSnNwkSo2egt9prRkze
-	 NZPkKJZ3xN/9y+yIm/eCI0QNcPp0gTgSsTQpTdNQr5t+JxonMaKy1G/SCf2o52yCIo
-	 kzx5F8tdPpDtVV3/D+5L6JD50FJC8xjfsowV7nBc=
+	b=EVqHXxZ9qcEvYem5JJ4S5Lo7Rk5FtaAwlZnd0YKSmHbYJKBCCwYuM6mPeDzR8Rboi
+	 GH6mjXX/uufH/VUVNSVeysn4AKGrFYJzwweVGGlVuiuI8VTNpfiscjNvHrK8iBqhuJ
+	 wLxisT31ChtOg/mbKrAlVfs1iNjhBHJfXUyAypA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730811AbgDVK1A (ORCPT
+        id S1730820AbgDVK1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:27:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729880AbgDVK0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:26:50 -0400
+        id S1730805AbgDVK1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:27:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FCE32076B;
-        Wed, 22 Apr 2020 10:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32CF32075A;
+        Wed, 22 Apr 2020 10:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551209;
-        bh=a+GnE5fjJanhytnMSWobgz08WY8xeM5hUkfKKeBAIG8=;
+        s=default; t=1587551219;
+        bh=Fiy/C+hMDSiklLTNMwKsro5YSZ51P2tQcXoshYJOGXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVjwZ+Ts6BsPqSwfAR10Ck9x3QH813dAe1VUj7b0JLq2CkPOS+mtCMx6eQo5rdeuC
-         /BlpcVB8yiwn7a4aCkQWJjBksPHRfJhOQ/eHRH/N2yKttEc8xISjlTFQWA18AdyhSw
-         LTabVQh0X39Xr3ZKwd4QOSWqnyxHPI/syOCr1FYg=
+        b=2CcMe7nD2cvWrKoOdXFftA4YRZ1uFd+zu1tKh+b6e8pcceQq0nKL3J/e5npqgfSn1
+         PzJ2meu9337p86HM/2VTaMduoT3Xg5LC9GgFif5sIT3lPdvsv+SmgRkdyF/1EzwltX
+         bgw/SIeCRfqbB4of2fhncc5lk53Kzs+Ifb4tDdiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 144/166] f2fs: fix to wait all node page writeback
-Date:   Wed, 22 Apr 2020 11:57:51 +0200
-Message-Id: <20200422095104.077814993@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 5.6 148/166] cifs: ignore cached share root handle closing errors
+Date:   Wed, 22 Apr 2020 11:57:55 +0200
+Message-Id: <20200422095104.463905753@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,58 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Aurelien Aptel <aaptel@suse.com>
 
-[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
+commit e79b0332ae06b4895dcecddf4bbc5d3917e9383c upstream.
 
-There is a race condition that we may miss to wait for all node pages
-writeback, fix it.
+Fix tcon use-after-free and NULL ptr deref.
 
-- fsync()				- shrink
- - f2fs_do_sync_file
-					 - __write_node_page
-					  - set_page_writeback(page#0)
-					  : remove DIRTY/TOWRITE flag
-  - f2fs_fsync_node_pages
-  : won't find page #0 as TOWRITE flag was removeD
-  - f2fs_wait_on_node_pages_writeback
-  : wont' wait page #0 writeback as it was not in fsync_node_list list.
-					   - f2fs_add_fsync_node_entry
+Customer system crashes with the following kernel log:
 
-Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[462233.169868] CIFS VFS: Cancelling wait for mid 4894753 cmd: 14       => a QUERY DIR
+[462233.228045] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
+[462233.305922] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
+[462233.306205] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
+[462233.347060] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
+[462233.347107] CIFS VFS: Close unmatched open
+[462233.347113] BUG: unable to handle kernel NULL pointer dereference at 0000000000000038
+...
+    [exception RIP: cifs_put_tcon+0xa0] (this is doing tcon->ses->server)
+ #6 [...] smb2_cancelled_close_fid at ... [cifs]
+ #7 [...] process_one_work at ...
+ #8 [...] worker_thread at ...
+ #9 [...] kthread at ...
+
+The most likely explanation we have is:
+
+* When we put the last reference of a tcon (refcount=0), we close the
+  cached share root handle.
+* If closing a handle is interrupted, SMB2_close() will
+  queue a SMB2_close() in a work thread.
+* The queued object keeps a tcon ref so we bump the tcon
+  refcount, jumping from 0 to 1.
+* We reach the end of cifs_put_tcon(), we free the tcon object despite
+  it now having a refcount of 1.
+* The queued work now runs, but the tcon, ses & server was freed in
+  the meantime resulting in a crash.
+
+THREAD 1
+========
+cifs_put_tcon                 => tcon refcount reach 0
+  SMB2_tdis
+   close_shroot_lease
+    close_shroot_lease_locked => if cached root has lease && refcount = 0
+     smb2_close_cached_fid    => if cached root valid
+      SMB2_close              => retry close in a thread if interrupted
+       smb2_handle_cancelled_close
+        __smb2_handle_cancelled_close    => !! tcon refcount bump 0 => 1 !!
+         INIT_WORK(&cancelled->work, smb2_cancelled_close_fid);
+         queue_work(cifsiod_wq, &cancelled->work) => queue work
+ tconInfoFree(tcon);    ==> freed!
+ cifs_put_smb_ses(ses); ==> freed!
+
+THREAD 2 (workqueue)
+========
+smb2_cancelled_close_fid
+  SMB2_close(0, cancelled->tcon, ...); => use-after-free of tcon
+  cifs_put_tcon(cancelled->tcon);      => tcon refcount reach 0 second time
+  *CRASH*
+
+Fixes: d9191319358d ("CIFS: Close cached root handle only if it has a lease")
+Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/node.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/cifs/smb2misc.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 9d02cdcdbb073..e58c4c6288346 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1562,15 +1562,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 	if (atomic && !test_opt(sbi, NOBARRIER))
- 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -766,6 +766,20 @@ smb2_handle_cancelled_close(struct cifs_
  
--	set_page_writeback(page);
--	ClearPageError(page);
--
-+	/* should add to global list before clearing PAGECACHE status */
- 	if (f2fs_in_warm_node_list(sbi, page)) {
- 		seq = f2fs_add_fsync_node_entry(sbi, page);
- 		if (seq_id)
- 			*seq_id = seq;
- 	}
- 
-+	set_page_writeback(page);
-+	ClearPageError(page);
+ 	cifs_dbg(FYI, "%s: tc_count=%d\n", __func__, tcon->tc_count);
+ 	spin_lock(&cifs_tcp_ses_lock);
++	if (tcon->tc_count <= 0) {
++		struct TCP_Server_Info *server = NULL;
 +
- 	fio.old_blkaddr = ni.blk_addr;
- 	f2fs_do_write_node_page(nid, &fio);
- 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
--- 
-2.20.1
-
++		WARN_ONCE(tcon->tc_count < 0, "tcon refcount is negative");
++		spin_unlock(&cifs_tcp_ses_lock);
++
++		if (tcon->ses)
++			server = tcon->ses->server;
++
++		cifs_server_dbg(FYI, "tid=%u: tcon is closing, skipping async close retry of fid %llu %llu\n",
++				tcon->tid, persistent_fid, volatile_fid);
++
++		return 0;
++	}
+ 	tcon->tc_count++;
+ 	spin_unlock(&cifs_tcp_ses_lock);
+ 
 
 
