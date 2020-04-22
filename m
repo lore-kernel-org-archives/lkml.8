@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735BEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36651C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D902222B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0F720781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgDVWZS (ORCPT
+        id S1726841AbgDVWZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35066 "EHLO
+        Wed, 22 Apr 2020 18:25:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726754AbgDVWZK (ORCPT
+        by vger.kernel.org with ESMTP id S1726798AbgDVWZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:25:10 -0400
+        Wed, 22 Apr 2020 18:25:16 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB0FCC03C1AA;
-        Wed, 22 Apr 2020 15:25:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8798C03C1A9;
+        Wed, 22 Apr 2020 15:25:15 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRNnZ-0001Tl-OO; Thu, 23 Apr 2020 00:24:55 +0200
+        id 1jRNnY-0001SV-Aa; Thu, 23 Apr 2020 00:24:52 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D65A41C0493;
-        Thu, 23 Apr 2020 00:24:48 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 22:24:48 -0000
-From:   "tip-bot2 for Raphael Gault" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E85FE1C0809;
+        Thu, 23 Apr 2020 00:24:46 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 22:24:46 -0000
+From:   "tip-bot2 for Nick Desaulniers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Add abstraction for destination offsets
-Cc:     Raphael Gault <raphael.gault@arm.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
+Subject: [tip: objtool/core] objtool: Documentation: document UACCESS warnings
+Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Matt Helsley <mhelsley@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158759428821.28353.9131050862154620704.tip-bot2@tip-bot2>
+Message-ID: <158759428639.28353.1773597974900820915.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,138 +61,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     e491242d03109dd911ab3b74bd4782ea35e4e75e
-Gitweb:        https://git.kernel.org/tip/e491242d03109dd911ab3b74bd4782ea35e4e75e
-Author:        Raphael Gault <raphael.gault@arm.com>
-AuthorDate:    Fri, 27 Mar 2020 15:28:45 
+Commit-ID:     dc18ab3b7b48aff9c41808af4a830636b3499578
+Gitweb:        https://git.kernel.org/tip/dc18ab3b7b48aff9c41808af4a830636b3499578
+Author:        Nick Desaulniers <ndesaulniers@google.com>
+AuthorDate:    Thu, 26 Mar 2020 11:37:06 -07:00
 Committer:     Josh Poimboeuf <jpoimboe@redhat.com>
 CommitterDate: Tue, 14 Apr 2020 10:39:25 -05:00
 
-objtool: Add abstraction for destination offsets
+objtool: Documentation: document UACCESS warnings
 
-The jump and call destination relocation offsets are x86-specific.
-Abstract them by calling arch-specific implementations.
+Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
 
-[ jthierry: Remove superfluous comment; replace other addend offsets
-      	    with arch_dest_rela_offset() ]
+  call to memset() with UACCESS enabled
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Document how to fix these for future travelers.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/876
+Suggested-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Suggested-by: Matt Helsley <mhelsley@vmware.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/arch.h            |  6 ++++++
- tools/objtool/arch/x86/decode.c | 11 +++++++++++
- tools/objtool/check.c           | 18 ++++++++++--------
- 3 files changed, 27 insertions(+), 8 deletions(-)
+ tools/objtool/Documentation/stack-validation.txt | 26 +++++++++++++++-
+ 1 file changed, 26 insertions(+)
 
-diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index ced3765..a9a50a2 100644
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -66,6 +66,8 @@ struct stack_op {
- 	struct op_src src;
- };
+diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
+index de09467..faa47c3 100644
+--- a/tools/objtool/Documentation/stack-validation.txt
++++ b/tools/objtool/Documentation/stack-validation.txt
+@@ -289,6 +289,32 @@ they mean, and suggestions for how to fix them.
+       might be corrupt due to a gcc bug.  For more details, see:
+       https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70646
  
-+struct instruction;
++9. file.o: warning: objtool: funcA() call to funcB() with UACCESS enabled
 +
- void arch_initial_func_cfi_state(struct cfi_state *state);
- 
- int arch_decode_instruction(struct elf *elf, struct section *sec,
-@@ -75,4 +77,8 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- 
- bool arch_callee_saved_reg(unsigned char reg);
- 
-+unsigned long arch_jump_destination(struct instruction *insn);
++   This means that an unexpected call to a non-whitelisted function exists
++   outside of arch-specific guards.
++   X86: SMAP (stac/clac): __uaccess_begin()/__uaccess_end()
++   ARM: PAN: uaccess_enable()/uaccess_disable()
 +
-+unsigned long arch_dest_rela_offset(int addend);
++   These functions should be called to denote a minimal critical section around
++   access to __user variables. See also: https://lwn.net/Articles/517475/
 +
- #endif /* _ARCH_H */
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index a62e032..7ce8650 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -11,6 +11,7 @@
- #include "../../../arch/x86/lib/inat.c"
- #include "../../../arch/x86/lib/insn.c"
- 
-+#include "../../check.h"
- #include "../../elf.h"
- #include "../../arch.h"
- #include "../../warn.h"
-@@ -66,6 +67,16 @@ bool arch_callee_saved_reg(unsigned char reg)
- 	}
- }
- 
-+unsigned long arch_dest_rela_offset(int addend)
-+{
-+	return addend + 4;
-+}
++   The intention of the warning is to prevent calls to funcB() from eventually
++   calling schedule(), potentially leaking the AC flags state, and not
++   restoring them correctly.
 +
-+unsigned long arch_jump_destination(struct instruction *insn)
-+{
-+	return insn->offset + insn->len + insn->immediate;
-+}
++   It also helps verify that there are no unexpected calls to funcB() which may
++   access user space pages with protections against doing so disabled.
 +
- int arch_decode_instruction(struct elf *elf, struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, enum insn_type *type,
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5044f4c..10fbfb3 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -592,13 +592,14 @@ static int add_jump_destinations(struct objtool_file *file)
- 					       insn->offset, insn->len);
- 		if (!rela) {
- 			dest_sec = insn->sec;
--			dest_off = insn->offset + insn->len + insn->immediate;
-+			dest_off = arch_jump_destination(insn);
- 		} else if (rela->sym->type == STT_SECTION) {
- 			dest_sec = rela->sym->sec;
--			dest_off = rela->addend + 4;
-+			dest_off = arch_dest_rela_offset(rela->addend);
- 		} else if (rela->sym->sec->idx) {
- 			dest_sec = rela->sym->sec;
--			dest_off = rela->sym->sym.st_value + rela->addend + 4;
-+			dest_off = rela->sym->sym.st_value +
-+				   arch_dest_rela_offset(rela->addend);
- 		} else if (strstr(rela->sym->name, "_indirect_thunk_")) {
- 			/*
- 			 * Retpoline jumps are really dynamic jumps in
-@@ -688,7 +689,7 @@ static int add_call_destinations(struct objtool_file *file)
- 		rela = find_rela_by_dest_range(file->elf, insn->sec,
- 					       insn->offset, insn->len);
- 		if (!rela) {
--			dest_off = insn->offset + insn->len + insn->immediate;
-+			dest_off = arch_jump_destination(insn);
- 			insn->call_dest = find_func_by_offset(insn->sec, dest_off);
- 			if (!insn->call_dest)
- 				insn->call_dest = find_symbol_by_offset(insn->sec, dest_off);
-@@ -711,13 +712,14 @@ static int add_call_destinations(struct objtool_file *file)
- 			}
++   To fix, either:
++   1) remove explicit calls to funcB() from funcA().
++   2) add the correct guards before and after calls to low level functions like
++      __get_user_size()/__put_user_size().
++   3) add funcB to uaccess_safe_builtin whitelist in tools/objtool/check.c, if
++      funcB obviously does not call schedule(), and is marked notrace (since
++      function tracing inserts additional calls, which is not obvious from the
++      sources).
++
  
- 		} else if (rela->sym->type == STT_SECTION) {
-+			dest_off = arch_dest_rela_offset(rela->addend);
- 			insn->call_dest = find_func_by_offset(rela->sym->sec,
--							      rela->addend+4);
-+							      dest_off);
- 			if (!insn->call_dest) {
--				WARN_FUNC("can't find call dest symbol at %s+0x%x",
-+				WARN_FUNC("can't find call dest symbol at %s+0x%lx",
- 					  insn->sec, insn->offset,
- 					  rela->sym->sec->name,
--					  rela->addend + 4);
-+					  dest_off);
- 				return -1;
- 			}
- 		} else
-@@ -828,7 +830,7 @@ static int handle_group_alt(struct objtool_file *file,
- 		if (!insn->immediate)
- 			continue;
- 
--		dest_off = insn->offset + insn->len + insn->immediate;
-+		dest_off = arch_jump_destination(insn);
- 		if (dest_off == special_alt->new_off + special_alt->new_len) {
- 			if (!fake_jump) {
- 				WARN("%s: alternative jump to end of section",
+ If the error doesn't seem to make sense, it could be a bug in objtool.
+ Feel free to ask the objtool maintainer for help.
