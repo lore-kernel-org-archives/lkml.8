@@ -7,95 +7,113 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FACEC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B24C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB3A20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E2820776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="grccDY5g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jgw7Bqaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726158AbgDVWyr (ORCPT
+        id S1726117AbgDVW5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:54:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39602 "EHLO
+        Wed, 22 Apr 2020 18:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbgDVWyq (ORCPT
+        by vger.kernel.org with ESMTP id S1725839AbgDVW5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:54:46 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7E8C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:54:46 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id i16so2100126ybq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:54:46 -0700 (PDT)
+        Wed, 22 Apr 2020 18:57:48 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83861C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:57:48 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id fu13so1037466pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:57:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1hkThsyt9bGtB9j8NC1A75L5tYk+krUsD870wYCpjgo=;
-        b=grccDY5gsDJ5hIEWCdBAC3aLQKWnBAH9o+1yZqpLA7oE0WwwyFQbq8mPDFLPXItXaE
-         O3tD1g/qkiIqUkY1o/8lANVEHsCexzPsfHg5zuJRE1uYzzdvHVr8lPyOkcU7A7uYUH6Y
-         50bz25QJG/pr4eVVPeIA0fZCsNK47MTFZVPTiWkozxgiz+tSDOypKiVtaT8pmG9Z5o+2
-         i/NSLKKbOLjtzaAwHC3OGBFOHg2eqr+UaS3QgwDP6whVswYMpMRi7Q+8Q3WjXtM4O8mG
-         G/zRGqyTMP6vT1RwK8qv4vs4Hcr/abLrFTt3ZFJ9rc0tA0ImMDoZz1age+oO++Z7bLe6
-         en7g==
+        bh=VPEl3Y+Ybg1crmwtPQDknu/xwFvAPuHK+btv4xjSltE=;
+        b=Jgw7Bqajg28NhTDdElXhQ7wa0XifQzEGQs+Td/iiyLGb2RxJZmKCXGVqkj44gkWYzY
+         qWhgjmyYsGNxNHifARjGb9wW7OHGi50vEtanIdUufMuItUZ3I2jWQdv4zjVdSrw1RSrq
+         WQZwlwbhAcI5zQCyfOIIaVxF6pw95ONDzCr8GvgODnuI6TA5P/uMOb02/X4lJdR3YgMv
+         xWUdrmZaQ1XR+jnCGJPhD/F8Zl+xgaiP8ezlQ1UvjFPieOji3hMKMTZ2QSRXEBSRmToD
+         CR30ELb7eKMor5x8w/YiK8h0yBIYuzeHY4UcOKX7d2yS4qQUUqZnrzHsjFZ+KUwwagA9
+         4Hig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1hkThsyt9bGtB9j8NC1A75L5tYk+krUsD870wYCpjgo=;
-        b=YUMc1tTnX41hIwsedun3hebJasgdI5NpPcy1J0pjqzzh1SRUFq3URBNJ6iFxlC7+Ku
-         UMne773POXAQ74aKR6ZoxXNr4FoK+pGJBvB/EeFJ2FJQnYYajaw0ago3aHc3DNtP+X6F
-         eS1A9tTAUxCHJjfo52y7EnMjglNl951Pab14agmvsJg6iz3rSkd2MLSJFT8Hz3Lmtg6y
-         dNYc33MOeZi56FgCiL0lxVZJ94IJ/c3Q3+C0maKGmwjuK8mRj8lgBIlKzfG9nRbyU2UD
-         uRbIvzdmjHYqfxDmnczvE1D87P8RiRk0cVRkqC8YMhO+adM1Pn2jISYg18aRA+GA2s4h
-         WXBg==
-X-Gm-Message-State: AGi0Pub3i6nmK2c76Y1uOVGLUVLAJ71/yFKkSsUb11VVc5Wrb/wSsJcP
-        InRsz1grovIZWPBmqbNR7/1Onfeh4vMuhGlw5ohtsiCoX/s=
-X-Google-Smtp-Source: APiQypKSA3iG8RJ4S9ABuuHBi5v+zPHefh7pQMT1p5WEIRRe2JN/cU34UXFN5xqaBgolc6AC5fz3XpktcZtm8dVfsD0=
-X-Received: by 2002:a25:4c07:: with SMTP id z7mr1966878yba.298.1587596085501;
- Wed, 22 Apr 2020 15:54:45 -0700 (PDT)
+        bh=VPEl3Y+Ybg1crmwtPQDknu/xwFvAPuHK+btv4xjSltE=;
+        b=ii+vjbkiQu67sdDtcchRf3chUSN+Q+LsPUbYLXwZDCsVdgYPH7szC+bPwRAxyCOnX8
+         O4xlSdyae/KDrk8oqczcghH5NYJeoM8c0qcL88+cULobSixnsgchRk8w2mNswGcdbI+t
+         MZcVSJsR4OF72NrfOcX7L720TamhaCsip6EhEL+mtnEJrg8IBNa9LaR6LBGIY1SXfJ6R
+         e2AQTiDeZgg4xxBWOxwkM+GYQI5hok03ryU/A8Zg2yRc9lJfTgbvpPk837xwzRA9DFoS
+         9q4ObgFm1PH6S6YoaKlvGo4QkM85qQXHXtyIyj3E4toumfIFPCOTmcP3pGG1pMPitAnD
+         ZURw==
+X-Gm-Message-State: AGi0PubjVeoLyQ7uz7HrHHV8P/xVUQxbelMblcPeZ9x7IY2ChdCre6yt
+        LbRgD4zy0upUZK4bgrAnW9bNosMKJmKvwWk/ey/j4A==
+X-Google-Smtp-Source: APiQypJf7meqiWPxS0hJxeoVT1P8BUfJIkWWIhwbSz+a2LTnV7lN1yEAkKiTpcBEQr0vr4iGsaqkqKZyNu90vphRzJM=
+X-Received: by 2002:a17:90a:266c:: with SMTP id l99mr980349pje.186.1587596267562;
+ Wed, 22 Apr 2020 15:57:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200422001422.232330-1-walken@google.com> <20200422001422.232330-11-walken@google.com>
- <20200422015829.GR5820@bombadil.infradead.org>
-In-Reply-To: <20200422015829.GR5820@bombadil.infradead.org>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Wed, 22 Apr 2020 15:54:32 -0700
-Message-ID: <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
-Subject: Re: [PATCH v5 10/10] mmap locking API: rename mmap_sem to mmap_lock
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
+References: <20200417090909.GC7322@zn.tnic> <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
+ <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
+ <20200417190607.GY2424@tucnak> <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+ <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de> <20200422102309.GA26846@zn.tnic>
+ <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
+ <20200422192113.GG26846@zn.tnic> <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
+ <20200422212605.GI26846@zn.tnic>
+In-Reply-To: <20200422212605.GI26846@zn.tnic>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 22 Apr 2020 15:57:34 -0700
+Message-ID: <CAKwvOd=exxhfb8N6=1Q=wBUaYcRDEq3L1+TiHDLz+pxWg8OuwQ@mail.gmail.com>
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
         LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 6:58 PM Matthew Wilcox <willy@infradead.org> wrote:
+On Wed, Apr 22, 2020 at 2:26 PM Borislav Petkov <bp@alien8.de> wrote:
 >
-> On Tue, Apr 21, 2020 at 05:14:22PM -0700, Michel Lespinasse wrote:
-> > Rename the mmap_sem field to mmap_lock. Any new uses of this lock
+> On Wed, Apr 22, 2020 at 02:05:13PM -0700, Nick Desaulniers wrote:
+> > s/functions/statements/
+> > or
+> > s/functions/function calls/
+> >
+> > Sorry to be pedantic and bikeshed a comment! *ducks*
 >
-> Shouldn't some of these be folded into the previous patch?
+> Yeah, you better duck! :-P
 
-So, I didn't do it because previous patch only handled rwsem_is_locked
-call sites. I leaned towards adding as few new API functions as
-possible until we figure out exactly what is required.
+*gunshots ring out, across the ghetto that is LKML, reminding you that
+you've reposted in the wrong text formatting*
 
-That said, I agree it seems reasonable to split mmap_assert_locked()
-into mmap_assert_read_locked() and mmap_assert_write_locked(), and
-convert the lockdep asserts to use these instead.
-I'm not sure we need to do it right away though; we are at least not
-losing any test coverage with the existing version of the patchset...
+> Btw lore.kernel.org has this cool mbox.gz feature:
+>
+> https://lore.kernel.org/lkml/20200316180303.GR2156@tucnak/t.mbox.gz
+>
+> This way, you can grep the whole thread, open it with a proper mail
+> program etc. Very useful for catching up on threads.
+
+Ah, neat, I see the "mbox.gz" link near the top of a thread near
+"Thread overview".
+
+Would be helpful if I actually took the time to RTFM; just dealing
+with a lot of constant nonsense regressions lately.  One day, I'll be
+able to sip margaritas one the roof without anyone noticing I'm not
+working...one day.
+-- 
+Thanks,
+~Nick Desaulniers
