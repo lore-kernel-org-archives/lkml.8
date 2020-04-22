@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FFBC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE755C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD06A2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949952076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553272;
-	bh=8H8u6hTqwGmn5z1Om6Z7kpMBmTSpROkiyjdq6uJkSnM=;
+	s=default; t=1587553278;
+	bh=/3LBLbFaskxzFJjgyhptmFt7VqVQH1RAEmwmXCB/9dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hfen3bhBbAp5LUuO7GUMvB35p4+OVGsjSVDdItUl0mVd6ipyMWUasKpDicqYU5HY+
-	 fhCJromp45T+bF2e7hK2Saz7hXDzT9pbh1d/SeNfNjZkCLnqDa1Mv67bMGjCDj4Z8q
-	 u1pxe/4ggDxwrVa5z+LyHNk7fWCI8I1Vl4i5bBFM=
+	b=NAiKRf7JboJw85dTwhXA02u3mUr3BdFxzKHj4qnOJu7/Is8uVQR9nJfwyhNil6RqK
+	 3b43KN4IHInq+w3Fo77i/P7Vw05znSKHhl1nueBboZQ1kXhhr6cLouzqC1oP/QBt3g
+	 f7A3AuwZArdCrJXjc+BvgXAJ5MQrrlZvtTPpUf5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgDVLBL (ORCPT
+        id S1729365AbgDVLBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:01:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgDVKBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:32 -0400
+        id S1726801AbgDVKBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 310C32077D;
-        Wed, 22 Apr 2020 10:01:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79EB92076C;
+        Wed, 22 Apr 2020 10:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549691;
-        bh=8H8u6hTqwGmn5z1Om6Z7kpMBmTSpROkiyjdq6uJkSnM=;
+        s=default; t=1587549681;
+        bh=/3LBLbFaskxzFJjgyhptmFt7VqVQH1RAEmwmXCB/9dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+kh52VhBWLQSCNZ1mkJ0yuaELo6zxllUm66JFlGpsbBXUZLRUXacB06CdL8HtLAd
-         QbFHN+X32hxIkqtqxA8KdGK4mE11qSCiX2xkeX/HnsLSWzcDmpHSmLQhdQGVC3esQl
-         5ifP6hpNtz3OKEEAQmFCZANI8VXdK1mxpP0WBxpw=
+        b=RyULcM7umYbVo+UputciKW3darAvMwzr2tYvFfWRJeIKDUwdjj6rqSF7X2VgsYCKI
+         2Yv12Hjm0uF4KyP1k27cZIPcs0ltCca/E3sWGneU6yvfQOddnGE1tvOk/5kl+Fq0JL
+         HfEyDH3W07PEVmqqEiLVnMLMOsWjlkwOsCn8+PL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.4 060/100] ext4: fix incorrect group count in ext4_fill_super error message
-Date:   Wed, 22 Apr 2020 11:56:30 +0200
-Message-Id: <20200422095033.905142426@linuxfoundation.org>
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 022/100] ALSA: hda: Fix potential access overflow in beep helper
+Date:   Wed, 22 Apr 2020 11:55:52 +0200
+Message-Id: <20200422095026.825310678@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -59,39 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit df41460a21b06a76437af040d90ccee03888e8e5 upstream.
+commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a upstream.
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+The beep control helper function blindly stores the values in two
+stereo channels no matter whether the actual control is mono or
+stereo.  This is practically harmless, but it annoys the recently
+introduced sanity check, resulting in an error when the checker is
+enabled.
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
-Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This patch corrects the behavior to store only on the defined array
+member.
+
+Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/hda_beep.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3791,9 +3791,9 @@ static int ext4_fill_super(struct super_
- 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
- 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
--		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
-+		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
+--- a/sound/pci/hda/hda_beep.c
++++ b/sound/pci/hda/hda_beep.c
+@@ -310,8 +310,12 @@ int snd_hda_mixer_amp_switch_get_beep(st
+ {
+ 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
+ 	struct hda_beep *beep = codec->beep;
++	int chs = get_amp_channels(kcontrol);
++
+ 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
+-		ucontrol->value.integer.value[0] =
++		if (chs & 1)
++			ucontrol->value.integer.value[0] = beep->enabled;
++		if (chs & 2)
+ 			ucontrol->value.integer.value[1] = beep->enabled;
+ 		return 0;
+ 	}
 
 
