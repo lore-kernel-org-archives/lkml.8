@@ -2,164 +2,112 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCABEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93672C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A59F42070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1812070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRepC3bJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XXLAHVjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDVAtF (ORCPT
+        id S1726407AbgDVAtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59932 "EHLO
+        Tue, 21 Apr 2020 20:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726012AbgDVAtF (ORCPT
+        by vger.kernel.org with ESMTP id S1726387AbgDVAtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:49:05 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26640C0610D5;
-        Tue, 21 Apr 2020 17:49:05 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id t199so447505oif.7;
-        Tue, 21 Apr 2020 17:49:05 -0700 (PDT)
+        Tue, 21 Apr 2020 20:49:17 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E35FC0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:49:17 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id fb4so122561qvb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fyWIvNsFDIbDhj5AHIg5Xemvwg92lR3Mt2pRS9IX/eY=;
-        b=ZRepC3bJo7TngfHSxmUTuuwFth5NE423gQHfzhrwqKOW/rG5flMB9dP4weA4JGtEHy
-         UOBQ4Lf1S1PdyWACh3vfJi+ahA2GTwmdqRTMkpI2odZ1aVL0cmeI4P3R+JuMjM6MgytQ
-         BBqEyteRb5uhGwjNUkbcjf0X/8GMIgRTWOgHzd70a+ST/Ejez9ptO9rYQk/v71Xf42Yw
-         5YsUN63ngS+fYMnpRva8OJhT/fudkSJYWu0RBS6xqRLaXVBKgoYt48ip6j8vFF82b0c1
-         kVJaUDUc9DIjdq5gzUf2jw/IG4Fcq1OEV6pL8Zt6C2WhiSUTp0gE5zargeJiJLOLexqp
-         F8ww==
+        bh=DXWORpjRxTkR+i2fu0N9aGTa6+ZQqTZNmK158+3pxDo=;
+        b=XXLAHVjCxmQ0g6P2WSs/mW+8skAgEVSeb5nc/EBOC+NLqjYIAm5C09vy+AXo9NYmfF
+         NuHUkcuMDH0a1DRZzGjmt54BElkiJlno6nBpxUT0EPKcmqSA4/bYO2WbY7dzaNrsqOn5
+         cyDQd1ZAV0QjIHtu5L4OU2ziPMQrf7AdumzEU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fyWIvNsFDIbDhj5AHIg5Xemvwg92lR3Mt2pRS9IX/eY=;
-        b=gwQakFJCVVSkmXm8oGpNBnINI2anJVUX5YPDcId0V15c/pmqZ31LOHBCHbFhYfliek
-         wgkezHM8fvUyEZXLfT0YN48D6YZ09iyf6dn5nsSqpWMMrjjUqih2UHV1p6V1XH4lrZDs
-         kUU8HmI60nSHGpvg1CdAh1zbvmf91/sPe2WDtX7g1fh+SZmt3JDeXcua0Rh+6dUocdLr
-         vTDviTJHdBU+JqFcnodDj3nZd2BdnkEwy/nP419ER8hGyG2HnoLabCVmCX+GJUB2AUgQ
-         KdipwNXEcsIlWIrVN96HfQJWHipE/b85dAHIp1hTnO/eiYJ6MDNbaeVJujB4woZj+Em3
-         JENg==
-X-Gm-Message-State: AGi0Pub4UlEXzEZa4xixzgiXi0GShIUZR7K+kROMdt5J+cV9763+HSnd
-        zpEtsFqg13p3PzYZWUlbC86FtmOgJBzSqdxBBWU=
-X-Google-Smtp-Source: APiQypLD9AwSNYzuxvfQfpcQ099bZV8Nz8y3kuAYm1wHcLyTZkfVBsJCzZstjc+PvCkJN1SfCN9lsgMQMrz02HpXq8w=
-X-Received: by 2002:aca:2801:: with SMTP id 1mr4840905oix.141.1587516544513;
- Tue, 21 Apr 2020 17:49:04 -0700 (PDT)
+        bh=DXWORpjRxTkR+i2fu0N9aGTa6+ZQqTZNmK158+3pxDo=;
+        b=QT3HVDvF5dU2RYvWkTmr7n55mBbwT6dFtLL27DZB3g1rnKTY6imPNk4QOzbEUoUok7
+         4ohiwC2NF1pmRf+a3ZOl+2PP+Ih/pkxpUo6pjGnoV6MU+NSa8HQSwjokUrrn/lUk6IHE
+         uXFemkxtXNgOdZjx/8da5LXBL68VlBog4qq3h5mX0EPUUdT0KsC7ZZFDolP+pb8RUOO0
+         1YsS6KJ7q12DPRL5fLXruJ6RFiKojfqQNASz4OdBhdLkfmnTwPHT6Gj6G14GAvLDCu8l
+         lWRJbpzM2Y/GyQJ/BzR4288NwrYKbPZM6musH1uwOvAABV0pfs0bMWIfx2arCJ0/qq6v
+         JiHg==
+X-Gm-Message-State: AGi0PubPvIt8T8LmVK4b4apal3CIocST4ZCtVuYhuIWYWZT8Ku3wz9ZH
+        WQqLBM5+UK0m4fvkfhKI9aO4lWzE5TM=
+X-Google-Smtp-Source: APiQypIMhp7JY0W4gwQZKnCtTSbtRigeRBOH8mIizZ81Igo0bb+2DddE6rIniYJ6VPwP2HYeBRn1pw==
+X-Received: by 2002:a0c:a8e5:: with SMTP id h37mr2182035qvc.69.1587516556307;
+        Tue, 21 Apr 2020 17:49:16 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id q32sm3028626qta.13.2020.04.21.17.49.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Apr 2020 17:49:16 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id i2so315501ybk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:49:15 -0700 (PDT)
+X-Received: by 2002:ab0:592c:: with SMTP id n41mr14287181uad.73.1587516064329;
+ Tue, 21 Apr 2020 17:41:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587468026-15753-1-git-send-email-wanpengli@tencent.com>
- <1587468026-15753-2-git-send-email-wanpengli@tencent.com> <ed968729-5d2a-a318-1d8f-db39e6ee72cb@redhat.com>
-In-Reply-To: <ed968729-5d2a-a318-1d8f-db39e6ee72cb@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 22 Apr 2020 08:48:53 +0800
-Message-ID: <CANRm+CxzROx=eawemmzh==2Mz-DxKSyYFSxHqLxUiGFFnWkAYw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] KVM: X86: TSCDEADLINE MSR emulation fastpath
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
+References: <20200421110520.197930-1-evanbenn@chromium.org> <e81737bc-9461-0fdb-245f-d88bdde8f0ee@roeck-us.net>
+In-Reply-To: <e81737bc-9461-0fdb-245f-d88bdde8f0ee@roeck-us.net>
+From:   Evan Benn <evanbenn@chromium.org>
+Date:   Wed, 22 Apr 2020 10:40:37 +1000
+X-Gmail-Original-Message-ID: <CAKz_xw0wAN4rG8xF1Y7amshoECJAjiWNDFQ5GQHPAbCfXi1bDg@mail.gmail.com>
+Message-ID: <CAKz_xw0wAN4rG8xF1Y7amshoECJAjiWNDFQ5GQHPAbCfXi1bDg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+To:     Guenter Roeck <linux@roeck-us.net>, Simon Glass <sjg@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Julius Werner <jwerner@chromium.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 at 19:37, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> Subject says v2. This is confusing, at the very least.
 >
-> On 21/04/20 13:20, Wanpeng Li wrote:
-> > +     case MSR_IA32_TSCDEADLINE:
-> > +             if (!kvm_x86_ops.event_needs_reinjection(vcpu)) {
-> > +                     data = kvm_read_edx_eax(vcpu);
-> > +                     if (!handle_fastpath_set_tscdeadline(vcpu, data))
-> > +                             ret = EXIT_FASTPATH_CONT_RUN;
-> > +             }
-> >               break;
->
-> Can you explain the event_needs_reinjection case?  Also, does this break
+> Guenter
 
-This is used to catch the case vmexit occurred while another event was
-being delivered to guest software, I move the
-vmx_exit_handlers_fastpath() call after vmx_complete_interrupts()
-which will decode such event and make kvm_event_needs_reinjection
-return true.
+Apologies! I am using the patman script, it threw this message that I
+did not understand: 'Change log for unknown version v3'.
+And I did not spot the issue in the emails before send. Not sure why
+patman worked for v2 and v3 but not v4... I will take a look.
 
-> AMD which does not implement the callback?
-
-Now I add the tscdeadline msr emulation and vmx-preemption timer
-fastpath pair for Intel platform.
-
->
-> > +
-> > +     reg = kvm_lapic_get_reg(apic, APIC_LVTT);
-> > +     if (kvm_apic_hw_enabled(apic) && !(reg & APIC_LVT_MASKED)) {
-> > +             vector = reg & APIC_VECTOR_MASK;
-> > +             kvm_lapic_clear_vector(vector, apic->regs + APIC_TMR);
-> > +
-> > +             if (vcpu->arch.apicv_active) {
-> > +                     if (pi_test_and_set_pir(vector, &vmx->pi_desc))
-> > +                             return;
-> > +
-> > +                     if (pi_test_and_set_on(&vmx->pi_desc))
-> > +                             return;
-> > +
-> > +                     vmx_sync_pir_to_irr(vcpu);
-> > +             } else {
-> > +                     kvm_lapic_set_irr(vector, apic);
-> > +                     kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu), false);
-> > +                     vmx_inject_irq(vcpu);
-> > +             }
-> > +     }
->
-> This is mostly a copy of
->
->                if (kvm_x86_ops.deliver_posted_interrupt(vcpu, vector)) {
->                         kvm_lapic_set_irr(vector, apic);
->                         kvm_make_request(KVM_REQ_EVENT, vcpu);
->                         kvm_vcpu_kick(vcpu);
->                 }
->                 break;
->
-> (is it required to do vmx_sync_pir_to_irr?).  So you should not special
-
-I observe send notification vector as in
-kvm_x86_ops.deliver_posted_interrupt() is ~900 cycles worse than
-vmx_sync_pir_to_irr in my case. It needs to wait guest vmentry, then
-the physical cpu ack the notification vector, read posted-interrupt
-desciptor etc. For the non-APICv part, original copy needs to wait
-inject_pending_event to do these stuff.
-
-> case LVTT and move this code to lapic.c instead.  But even before that...
->
-> >
-> > +
-> > +     if (kvm_start_hv_timer(apic)) {
-> > +             if (kvm_check_request(KVM_REQ_PENDING_TIMER, vcpu)) {
-> > +                     if (kvm_x86_ops.interrupt_allowed(vcpu)) {
-> > +                             kvm_clear_request(KVM_REQ_PENDING_TIMER, vcpu);
-> > +                             kvm_x86_ops.fast_deliver_interrupt(vcpu);
-> > +                             atomic_set(&apic->lapic_timer.pending, 0);
-> > +                             apic->lapic_timer.tscdeadline = 0;
-> > +                             return 0;
-> > +                     }
-> > +                     return 1;
->
->
-> Is it actually common that the timer is set back in time and therefore
-> this code is executed?
-
-It is used to handle the already-expired timer.
-
-    Wanpeng
+Evan
