@@ -2,154 +2,104 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80364C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2372C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6847F20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8808D20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgDVLNj (ORCPT
+        id S1726543AbgDVLOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:13:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55962 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgDVLNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:13:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6DE4AAE6D;
-        Wed, 22 Apr 2020 11:13:36 +0000 (UTC)
-Subject: Re: ppc64 early slub caches have zero random value
-To:     Nicolai Stange <nstange@suse.de>
-Cc:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Kees Cook <keescook@chromium.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-References: <20200417165304.GF25468@kitsune.suse.cz>
- <8c93960b-587e-a576-91b8-666f106f8b60@suse.cz> <871rohz0zk.fsf@suse.de>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <ec2e236a-0b9d-b4dd-10d4-1585efdcc515@suse.cz>
-Date:   Wed, 22 Apr 2020 13:13:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 07:14:18 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44682 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgDVLOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:14:18 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id B6A062A1A8F
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
+        Johan Jonker <jbx6244@gmail.com>
+Subject: [PATCH] media: MAINTAINERS: Fix Hantro, Rga and Rkvdec entries
+Date:   Wed, 22 Apr 2020 08:14:03 -0300
+Message-Id: <20200422111403.19114-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-In-Reply-To: <871rohz0zk.fsf@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/21/20 10:39 AM, Nicolai Stange wrote:
-> Hi
-> 
-> [adding some drivers/char/random folks + LKML to CC]
-> 
-> Vlastimil Babka <vbabka@suse.cz> writes:
-> 
->> On 4/17/20 6:53 PM, Michal Suchánek wrote:
->>> Hello,
->>
->> Hi, thanks for reproducing on latest upstream!
->>
->>> instrumenting the kernel with the following patch
->>> 
->>> ---
->>>  mm/slub.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>> 
->>> diff --git a/mm/slub.c b/mm/slub.c
->>> index d6787bbe0248..d40995d5f8ff 100644
->>> --- a/mm/slub.c
->>> +++ b/mm/slub.c
->>> @@ -3633,6 +3633,7 @@ static int kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
->>>  	s->flags = kmem_cache_flags(s->size, flags, s->name, s->ctor);
->>>  #ifdef CONFIG_SLAB_FREELIST_HARDENED
->>>  	s->random = get_random_long();
->>> +	pr_notice("Creating cache %s with s->random=%ld\n", s->name, s->random);
->>>  #endif
->>>  
->>>  	if (!calculate_sizes(s, -1))
->>> 
->>> I get:
->>> 
->>> [    0.000000] random: get_random_u64 called from kmem_cache_open+0x3c/0x5b0
->> with crng_init=0
->>> [    0.000000] Creating cache kmem_cache_node with s->random=0
->>> [    0.000000] Creating cache kmem_cache with s->random=0
->>> [    0.000000] Creating cache kmalloc-8 with s->random=0
->>> [    0.000000] Creating cache kmalloc-16 with s->random=0
->>> [    0.000000] Creating cache kmalloc-32 with s->random=0
->>> [    0.000000] Creating cache kmalloc-64 with s->random=0
->>> [    0.000000] Creating cache kmalloc-96 with s->random=0
->>> [    0.000000] Creating cache kmalloc-128 with s->random=0
->>> [    0.000000] Creating cache kmalloc-192 with s->random=-682532147323126958
->>> 
->>> The earliest caches created invariably end up with s->random of zero.
+It seems recent merges introduced a couple issues
+here, so let's fix them all. Also, reorder Rockchip
+video decoder as per parse-maintainers.pl script
+and add linux-rockchip mailing list.
 
-I have also realized that the rest of the early created caches is initialized
-with albeit non-zero, but in fact deterministically same same sequence values.
+Reported-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ MAINTAINERS | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
->> It seems that reliably it's the first 8 calls get_random_u64(), which sounds
->> more like some off-by-X bug than a genuine lack entropy that would become fixed
->> in the meanwhile?
->>
->>> This is a problem for crash which does not recognize these as randomized
->>> and fails to read them. While this can be addressed in crash is it
->>> intended to create caches with zero random value in the kernel?
->>
->> Definitely not. The question is more likely what guarantees we have with
->> crng_init=0. Probably we can't expect cryptographically strong randomness, but
->> zeroes still do look like a bug to me?
->>
->>> This is broken at least in the 5.4~5.7 range but it is not clear if this
->>> ever worked. All examples of earlier kernels I have at hand use slab mm.
->>> 
->>> Thanks
->>> 
->>> Michal
->>>
-> 
-> FWIW, I've seen something similar in a slightly different context,
-> c.f. [1].
-> 
-> Basically, the issue is that on anything but x86_64 (and perhaps arm64
-> IIRC), arch_get_random_long() is unavailable and thus, get_random_u64()
-> falls through to that batched extract_crng() extraction. That is, it
-> extracts eight random longs from the chacha20 based RNG at once and
-> batches them up for consumption by the current and subsequent
-> get_random_u64() invocations. Which is in line with your observation
-> that get_random_u64() returned zero exactly eight times in a row.
-> 
-> The fact that extract_crng() actually extracted eight successive zero
-> values surprised me though. But from looking at chacha20_block(), called
-> from _extract_crng() with the primary_crng instance's state buffer as
-> input, it seems like a zeroed state buffer gets identity transformed and
-> that all this fancy shifting and rolling and whatnot in chacha_permute()
-> would have no effect at all. So I suppose that the primary_crng's state
-> buffer is still zeroed out at that point during boot.
-
-Looks so, thanks for explanation. So there's simply no entropy and the kmalloc-X
-caches have deterministic s->random. Zeroes are just more obvious and may fail
-e.g. to prevent detection for random corruptions (so we should still fix
-those?), while for an attacker anything predictable is bad, and I don't know
-what to do about it. If we were to e.g. reseed the early created kmalloc caches
-later where crng is fully inited, we would have to basically "stop the world"
-and rewrite existing freelists.
-
-> Thanks,
-> 
-> Nicolai
-> 
-> [1] https://lkml.kernel.org/r/87d08rbbg9.fsf@suse.de
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 09e0137df61d..4d5b06c6fe0f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7460,7 +7460,7 @@ L:	linux-media@vger.kernel.org
+ L:	linux-rockchip@lists.infradead.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+-F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
++F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+ F:	drivers/staging/media/hantro/
+ 
+ HARD DRIVE ACTIVE PROTECTION SYSTEM (HDAPS) DRIVER
+@@ -14465,13 +14465,6 @@ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
+ F:	drivers/hid/hid-roccat*
+ F:	include/linux/hid-roccat*
+ 
+-ROCKCHIP VIDEO DECODER DRIVER
+-M:	Ezequiel Garcia <ezequiel@collabora.com>
+-L:	linux-media@vger.kernel.org
+-S:	Maintained
+-F:	drivers/staging/media/rkvdec/
+-F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+-
+ ROCKCHIP ISP V1 DRIVER
+ M:	Helen Koike <helen.koike@collabora.com>
+ L:	linux-media@vger.kernel.org
+@@ -14483,12 +14476,19 @@ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+ M:	Jacob Chen <jacob-chen@iotwrt.com>
+ M:	Ezequiel Garcia <ezequiel@collabora.com>
+ L:	linux-media@vger.kernel.org
++L:	linux-rockchip@lists.infradead.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+ F:	Documentation/devicetree/bindings/media/rockchip-rga.yaml
+-F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+ F:	drivers/media/platform/rockchip/rga/
+ 
++ROCKCHIP VIDEO DECODER DRIVER
++M:	Ezequiel Garcia <ezequiel@collabora.com>
++L:	linux-media@vger.kernel.org
++L:	linux-rockchip@lists.infradead.org
++S:	Maintained
++F:	drivers/staging/media/rkvdec/
++F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
++
+ ROCKER DRIVER
+ M:	Jiri Pirko <jiri@resnulli.us>
+ L:	netdev@vger.kernel.org
+-- 
+2.26.0.rc2
 
