@@ -2,129 +2,213 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C69AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54F8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153EC2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6292077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587561097;
-	bh=Tu2PhKwHoYwGdCMbzyqBBm0RFMgjXtqVtWkHT7kOUgs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N1J6ajv/AiIKjhtLfRYJ+QrAUIjeV9N9u43wVG/BEglEB/5faQORrUHTSVsVFN9ME
-	 +Cs5EVZLRS1s7jK9DUmJOj0cxRH1cHyx+L9Ewkrfe7Iycz3cIPicGwJMDQwfoxS788
-	 raRNJG0yDWRrvPXK72HidYj/Z76WMHesm3rALjh4=
+	s=default; t=1587561101;
+	bh=JAXMeuxnrQkhQtQmdC45f1lA4ZgBPcOGJxU8xOeQp9I=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=zCFZEdbZzZLsN9QoIS4qr2qo3a5erndTIzTRZgY0r2Z6ObCPMN63p1TUqLRFboCb/
+	 nMhsmuOc3N30lpchGA+ocndhjnx9QKoZRnFi9Iq2biXS2D9CjuxAWj8OLJK0YBCFP1
+	 M7mF60s1/tpT51pIPVaXfieGrVuadQlvqLKL16ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDVNLg (ORCPT
+        id S1726712AbgDVNLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49440 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 09:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgDVNLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:11:35 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1725968AbgDVNLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 09:11:39 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6185206EC;
-        Wed, 22 Apr 2020 13:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1210206EC;
+        Wed, 22 Apr 2020 13:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587561095;
-        bh=Tu2PhKwHoYwGdCMbzyqBBm0RFMgjXtqVtWkHT7kOUgs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v6jRO1wqjLWNb15qOHzZPEh06O5wuzuJ6stgN9cO44T8aCtBV74dCkm9xQU3/jxmh
-         ZfyIYbNNNjpeqEBnsZjgmGaQYC9+8QKkkvWMyjOFORT6GUk2ocvRg1btJSjKFB36Hk
-         NuonA+CD6aDAtMRoDAs3KegQJoCcz74fIi3x3wdk=
-Date:   Wed, 22 Apr 2020 14:11:29 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@android.com, Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v4 08/11] READ_ONCE: Drop pointer qualifiers when reading
- from scalar types
-Message-ID: <20200422131129.GC676@willie-the-truck>
-References: <20200421151537.19241-1-will@kernel.org>
- <20200421151537.19241-9-will@kernel.org>
- <6cbc8ae1-8eb1-a5a0-a584-2081fca1c4aa@rasmusvillemoes.dk>
- <20200422114807.GW26902@gate.crashing.org>
+        s=default; t=1587561098;
+        bh=JAXMeuxnrQkhQtQmdC45f1lA4ZgBPcOGJxU8xOeQp9I=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=SPS+Y8+YhfwxyXJkV87limWqo0uLjkQ1ajLP1usvBGo/6Uarq/cSg3Eb8eHogO/nM
+         xiNWoVB5JX1AW6XVh84O5JVP8Abp+eUIvQIh7mz49HSMERGr9/dLDAMxf+SztwxDWV
+         U5RPBkx1/crqWdTjcHUCcNlF3RMZvuVMe67kHeko=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 78AD035227B0; Wed, 22 Apr 2020 06:11:38 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 06:11:38 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        rostedt@goodmis.org, qais.yousef@arm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, airlied@redhat.com,
+        alexander.deucher@amd.com, awalls@md.metrocast.net,
+        axboe@kernel.dk, broonie@kernel.org, daniel.lezcano@linaro.org,
+        gregkh@linuxfoundation.org, hannes@cmpxchg.org,
+        herbert@gondor.apana.org.au, hverkuil@xs4all.nl,
+        john.stultz@linaro.org, nico@fluxnic.net,
+        rafael.j.wysocki@intel.com, rmk+kernel@arm.linux.org.uk,
+        sudeep.holla@arm.com, ulf.hansson@linaro.org,
+        wim@linux-watchdog.org
+Subject: Re: [PATCH 01/23] sched: Provide sched_set_fifo()
+Message-ID: <20200422131138.GL17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200422112719.826676174@infradead.org>
+ <20200422112831.266499893@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422114807.GW26902@gate.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422112831.266499893@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 06:48:07AM -0500, Segher Boessenkool wrote:
-> On Wed, Apr 22, 2020 at 12:25:03PM +0200, Rasmus Villemoes wrote:
-> > On 21/04/2020 17.15, Will Deacon wrote:
-> > > Unfortunately, dropping pointer qualifiers inside the macro poses quite
-> > > a challenge, especially since the pointed-to type is permitted to be an
-> > > aggregate, and this is relied upon by mm/ code accessing things like
-> > > 'pmd_t'. Based on numerous hacks and discussions on the mailing list,
-> > > this is the best I've managed to come up with.
-> > 
-> > Hm, maybe this can be brought to work, only very lightly tested. It
-> > basically abuses what -Wignored-qualifiers points out:
-> > 
-> >   warning: type qualifiers ignored on function return type
-> > 
-> > Example showing the idea:
-> > 
-> > const int c(void);
-> > volatile int v(void);
-> > 
-> > int hack(int x, int y)
-> > {
-> > 	typeof(c()) a = x;
-> > 	typeof(v()) b = y;
-> > 
-> > 	a += b;
-> > 	b += a;
-> > 	a += b;
-> > 	return a;
-> > }
+On Wed, Apr 22, 2020 at 01:27:20PM +0200, Peter Zijlstra wrote:
+> SCHED_FIFO (or any static priority scheduler) is a broken scheduler
+> model; it is fundamentally incapable of resource management, the one
+> thing an OS is actually supposed to do.
 > 
-> Nasty.  I like it :-)
+> It is impossible to compose static priority workloads. One cannot take
+> two well designed and functional static priority workloads and mash
+> them together and still expect them to work.
 > 
-> > Since that compiles, a cannot be const-qualified, and the generated code
-> > certainly suggests that b is not volatile-qualified. So something like
-> > 
-> > #define unqual_type(x) _unqual_type(x, unique_id_dance)
-> > #define _unqual_type(x, id) typeof( ({
-> >   typeof(x) id(void);
-> >   id();
-> > }) )
-> > 
-> > and perhaps some _Pragma("GCC diagnostic push")/_Pragma("GCC diagnostic
-> > ignored -Wignored-qualifiers")/_Pragma("GCC diagnostic pop") could
-> > prevent the warning (which is in -Wextra, so I don't think it would
-> > appear in a normal build anyway).
-> > 
-> > No idea how well any of this would work across gcc versions or with clang.
+> Therefore it doesn't make sense to expose the priority field; the
+> kernel is fundamentally incapable of setting a sensible value, it
+> needs systems knowledge that it doesn't have.
 > 
-> https://gcc.gnu.org/legacy-ml/gcc-patches/2016-05/msg01054.html
+> Take away sched_setschedule() / sched_setattr() from modules and
+> replace them with:
 > 
-> This is defined to work this way in ISO C since C11.
+>   - sched_set_fifo(p); create a FIFO task (at prio 50)
+>   - sched_set_fifo_low(p); create a task higher than NORMAL,
+> 	which ends up being a FIFO task at prio 1.
+>   - sched_set_normal(p, nice); (re)set the task to normal
 > 
-> But, it doesn't work with GCC before GCC 7 :-(
+> This stops the proliferation of randomly chosen, and irrelevant, FIFO
+> priorities that dont't really mean anything anyway.
+> 
+> The system administrator/integrator, whoever has insight into the
+> actual system design and requirements (userspace) can set-up
+> appropriate priorities if and when needed.
 
-Damn, that's quite a cool hack! Maybe we'll be able to implement it in a
-few years time ;)
+The sched_setscheduler_nocheck() calls in rcu_spawn_gp_kthread(),
+rcu_cpu_kthread_setup(), and rcu_spawn_one_boost_kthread() all stay as
+is because they all use the rcutree.kthread_prio boot parameter, which is
+set at boot time by the system administrator (or {who,what}ever, correct?
 
-WIll
+Or did my email reader eat a patch or two?
+
+							Thanx, Paul
+
+> Cc: airlied@redhat.com
+> Cc: alexander.deucher@amd.com
+> Cc: awalls@md.metrocast.net
+> Cc: axboe@kernel.dk
+> Cc: broonie@kernel.org
+> Cc: daniel.lezcano@linaro.org
+> Cc: gregkh@linuxfoundation.org
+> Cc: hannes@cmpxchg.org
+> Cc: herbert@gondor.apana.org.au
+> Cc: hverkuil@xs4all.nl
+> Cc: john.stultz@linaro.org
+> Cc: nico@fluxnic.net
+> Cc: paulmck@kernel.org
+> Cc: rafael.j.wysocki@intel.com
+> Cc: rmk+kernel@arm.linux.org.uk
+> Cc: sudeep.holla@arm.com
+> Cc: tglx@linutronix.de
+> Cc: ulf.hansson@linaro.org
+> Cc: wim@linux-watchdog.org
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  include/linux/sched.h |    3 +++
+>  kernel/sched/core.c   |   47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+> 
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1631,6 +1631,9 @@ extern int idle_cpu(int cpu);
+>  extern int available_idle_cpu(int cpu);
+>  extern int sched_setscheduler(struct task_struct *, int, const struct sched_param *);
+>  extern int sched_setscheduler_nocheck(struct task_struct *, int, const struct sched_param *);
+> +extern int sched_set_fifo(struct task_struct *p);
+> +extern int sched_set_fifo_low(struct task_struct *p);
+> +extern int sched_set_normal(struct task_struct *p, int nice);
+>  extern int sched_setattr(struct task_struct *, const struct sched_attr *);
+>  extern int sched_setattr_nocheck(struct task_struct *, const struct sched_attr *);
+>  extern struct task_struct *idle_task(int cpu);
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5055,6 +5055,8 @@ static int _sched_setscheduler(struct ta
+>   * @policy: new policy.
+>   * @param: structure containing the new RT priority.
+>   *
+> + * Use sched_set_fifo(), read its comment.
+> + *
+>   * Return: 0 on success. An error code otherwise.
+>   *
+>   * NOTE that the task may be already dead.
+> @@ -5097,6 +5099,51 @@ int sched_setscheduler_nocheck(struct ta
+>  }
+>  EXPORT_SYMBOL_GPL(sched_setscheduler_nocheck);
+>  
+> +/*
+> + * SCHED_FIFO is a broken scheduler model; that is, it is fundamentally
+> + * incapable of resource management, which is the one thing an OS really should
+> + * be doing.
+> + *
+> + * This is of course the reason it is limited to privileged users only.
+> + *
+> + * Worse still; it is fundamentally impossible to compose static priority
+> + * workloads. You cannot take two correctly working static prio workloads
+> + * and smash them together and still expect them to work.
+> + *
+> + * For this reason 'all' FIFO tasks the kernel creates are basically at:
+> + *
+> + *   MAX_RT_PRIO / 2
+> + *
+> + * The administrator _MUST_ configure the system, the kernel simply doesn't
+> + * know enough information to make a sensible choice.
+> + */
+> +int sched_set_fifo(struct task_struct *p)
+> +{
+> +	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 };
+> +	return sched_setscheduler_nocheck(p, SCHED_FIFO, &sp);
+> +}
+> +EXPORT_SYMBOL_GPL(sched_set_fifo);
+> +
+> +/*
+> + * For when you don't much care about FIFO, but want to be above SCHED_NORMAL.
+> + */
+> +int sched_set_fifo_low(struct task_struct *p)
+> +{
+> +	struct sched_param sp = { .sched_priority = 1 };
+> +	return sched_setscheduler_nocheck(p, SCHED_FIFO, &sp);
+> +}
+> +EXPORT_SYMBOL_GPL(sched_set_fifo_low);
+> +
+> +int sched_set_normal(struct task_struct *p, int nice)
+> +{
+> +	struct sched_attr attr = {
+> +		.sched_policy = SCHED_NORMAL,
+> +		.sched_nice = nice,
+> +	};
+> +	return sched_setattr_nocheck(p, &attr);
+> +}
+> +EXPORT_SYMBOL_GPL(sched_set_normal);
+> +
+>  static int
+>  do_sched_setscheduler(pid_t pid, int policy, struct sched_param __user *param)
+>  {
+> 
+> 
