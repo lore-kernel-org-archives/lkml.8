@@ -2,100 +2,93 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5682C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232CDC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9412073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551613;
-	bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c3gpPwf8AIVGJ000I1p0+8k85vOCfkzNJJNk7OWenc5lsR+e/rRIwoSfBNZ6+HKFl
-	 m7r2M69hxX/n57dqGSiawevCdLPw1nfm7+zkaN3yalI9vOkKWWWUuZ6K9BNz4VVmYL
-	 VoGOAUgZm76jsdQY3/wQaHqcpNNOVT8Dbtj+njUE=
+	by mail.kernel.org (Postfix) with ESMTP id 012852075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OroIEo2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbgDVKdc (ORCPT
+        id S1731208AbgDVKdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:33:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbgDVKYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98FFC2071E;
-        Wed, 22 Apr 2020 10:24:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551084;
-        bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TqmckDZnBb5HqJyK1UZZjpYRuq7sl+eS9AFBg+0Z0qstK2C7Br7avAGDjb6n3k2oI
-         UZn8tNt/0GHgicgNK/GvP2FvXAkLHItLL+se8OxermbjXgEVrrTtVZWsvojDKu5jVn
-         /bVcZBUgRuYi3CjYB6XiIdSWGcNFmJ+tuhalPTkU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martyn Welch <martyn.welch@collabora.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 094/166] um: ubd: Prevent buffer overrun on command completion
-Date:   Wed, 22 Apr 2020 11:57:01 +0200
-Message-Id: <20200422095059.094275557@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
-References: <20200422095047.669225321@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Apr 2020 06:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730722AbgDVKd3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:33:29 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C59EC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:33:29 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id z6so756770plk.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=3XIGZouvYh+rdqKpGPlhY0A3zplshUQshCiuW1z0Fm0=;
+        b=OroIEo2pxba4gr0tsT1jLqWC23fjBzJTimQwB9Axn7lbyljR3+UTYxvbK+bg/jfvoj
+         zpmsjYAiOtOpvNZJ5YM3mvg129qQ8O6ScLc4x+BupjaEn0Vj2DGRsxZXKhEmj1a3eLYe
+         e5DWBvgnCMfhF2tj6u+bWxLeRaIl8bGpgvFLk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=3XIGZouvYh+rdqKpGPlhY0A3zplshUQshCiuW1z0Fm0=;
+        b=Ivc+gDqLChEyExIX0vwu+w8J7d6q+e0Z6ggEudbuJ868rOkkuMDmILHCVLISWEY/95
+         UGpWasq5caCYWSi72w3HC3QqJqwfhoqeZP8O8FgQ0+irKh/222TaQOZkZbGOKX/G8GLa
+         l58AmPMTjrltjia6lGPaWGcZ6DLifyujQeTYrrmPFZuoYxJa19uSgY894DC5IoYv+kSx
+         B5kifPB6fQa6wblHnfqv1NGjIEMhFXeMvqCV4j915GiH0esxdqvvCnAKVb9rbiVt7Gre
+         inVv711iuFiMSrOJrM8lNHlEjuDDpC2jDCena3mHVgWeZysW903W5xvXMEp1FbsieKnY
+         9aMw==
+X-Gm-Message-State: AGi0PuY2ZKBTokKK7W7qX+n6HmscTfGIaFS3GyONyrPcrgivqlqnLgeg
+        KFLuaqNyib4faCY2LCG1dwzGfw==
+X-Google-Smtp-Source: APiQypLMsLCwNYw2W3WRKMiDhv7mlWTPpb3vt1ZnWuWcCzDQuh+O3OakzilAgwJ3En97vlFAATzJWA==
+X-Received: by 2002:a17:902:ba86:: with SMTP id k6mr26705713pls.47.1587551608817;
+        Wed, 22 Apr 2020 03:33:28 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 71sm4959579pfw.111.2020.04.22.03.33.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 03:33:28 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200421102745.v3.3.I295cb72bc5334a2af80313cbe97cb5c9dcb1442c@changeid>
+References: <20200421102745.v3.1.I2d44fc0053d019f239527a4e5829416714b7e299@changeid> <20200421102745.v3.3.I295cb72bc5334a2af80313cbe97cb5c9dcb1442c@changeid>
+Subject: Re: [PATCH v3 3/3] soc: qcom: rpmh-rsc: Remove the pm_lock
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     mkshah@codeaurora.org, mka@chromium.org, evgreen@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rafael.j.wysocki@intel.com
+Date:   Wed, 22 Apr 2020 03:33:27 -0700
+Message-ID: <158755160722.163502.9129728895530548942@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+Quoting Douglas Anderson (2020-04-21 10:29:08)
+>         case CPU_PM_ENTER_FAILED:
+>         case CPU_PM_EXIT:
+> -               cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_=
+pm);
+> -               goto exit;
+> +               atomic_dec(&drv->cpus_in_pm);
+> +               return NOTIFY_OK;
+> +       default:
+> +               return NOTIFY_DONE;
 
-[ Upstream commit 6e682d53fc1ef73a169e2a5300326cb23abb32ee ]
-
-On the hypervisor side, when completing commands and the pipe is full,
-we retry writing only the entries that failed, by offsetting
-io_req_buffer, but we don't reduce the number of bytes written, which
-can cause a buffer overrun of io_req_buffer, and write garbage to the
-pipe.
-
-Cc: Martyn Welch <martyn.welch@collabora.com>
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/um/drivers/ubd_kern.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
-index 247f95da057b5..eca45ad2166c9 100644
---- a/arch/um/drivers/ubd_kern.c
-+++ b/arch/um/drivers/ubd_kern.c
-@@ -1607,7 +1607,9 @@ int io_thread(void *arg)
- 		written = 0;
- 
- 		do {
--			res = os_write_file(kernel_fd, ((char *) io_req_buffer) + written, n);
-+			res = os_write_file(kernel_fd,
-+					    ((char *) io_req_buffer) + written,
-+					    n - written);
- 			if (res >= 0) {
- 				written += res;
- 			}
--- 
-2.20.1
-
-
-
+Can this be split out and merged now? It's a bugfix for code that is in
+-next.
