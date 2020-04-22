@@ -2,152 +2,119 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAA6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3633C5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A1220776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C129B2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PW0y382o"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="hyEkT/gF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2i41h+vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgDVPOH (ORCPT
+        id S1726110AbgDVPQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:14:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgDVPOG (ORCPT
+        Wed, 22 Apr 2020 11:16:22 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:37477 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725924AbgDVPQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:14:06 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A9EC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:14:06 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j2so2827315wrs.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=mKRg0t/XVvzZRZvxdCba8JTVT+Vu4PrV36ELCiNsVPA=;
-        b=PW0y382owp8KdhdvJsq2R4FP4vJ8DIh5QcyP6WQXy2jIs4JKkR6ZJYUqvkzO2q746F
-         zKJPkRJSQ7ulCXaq2VrK5/5RrDwme0t25rNDlel9p5ZciJwVhTfTQNcFG85F2ESX0uZI
-         EONpAehtR0m3W6Y27mrXOWDwDUKKPDsOKhTVrPLhNxh71c3or2SVIl2EojZ5fPbHogV7
-         gi8T7gToDzxGkTJ9D8VhZt+W5THoSWJxgyXhAmuQmytjRJf0ZIDcBWh5aX4DHoR5G3cZ
-         Woe72OVkUDwfNDOuaYYiq/qa4Tdc4UWS1IPIy6QiXaC82V45fiorp49OPQq1HtBskUyY
-         jgAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mKRg0t/XVvzZRZvxdCba8JTVT+Vu4PrV36ELCiNsVPA=;
-        b=gjZgKQgRVKVsI42swjhc1+MYRQz/MZ4WN8eqHygT0Abhq7daJz9yv/4kiQ8ZAKfd08
-         G9WBv12pfIX7ANiOxeeaV+QhosM9KfzU0vL7XbJgi5DPprB1uQSNneFmNAWYXjpus4CK
-         7dNSSdl/9Y+8RhF8Y/mE/nkgDLWc7PeUtBcfX/QNnNXxvi0IpRYhBjFhwHyu0TIBNjTX
-         JcaZTaHnEF+pCPQ7t7vvRS5vi+zGEsil1nvnX/AKLsdu5TEUEj1rz7SlJK0YgFRKfoBF
-         uuUzBkG4R7tqyFVrapwKNo/do2sFQk0T9rjEriOfkid88XFARKk5+W3XYVYEnhBXvYaJ
-         h3Aw==
-X-Gm-Message-State: AGi0PubCt4u8Ebj1k+fOsHG+g/qCLPn8OQ1fezM8tJ32QLUPyw+CQ+03
-        pou7XbY4RHKsTWueviqryBLkcNb2ipI=
-X-Google-Smtp-Source: APiQypLjn15sn+7UTJpsVf9Hs8irRVj7LLlkoZoWoztWP2yLU1O66vbQic4346zttzT/DeytpUM91A==
-X-Received: by 2002:adf:ce0a:: with SMTP id p10mr29291581wrn.89.1587568445225;
-        Wed, 22 Apr 2020 08:14:05 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:54f7:b326:db86:b83a])
-        by smtp.gmail.com with ESMTPSA id n7sm8137687wmd.11.2020.04.22.08.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 08:14:04 -0700 (PDT)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH] sched/pelt: sync util/runnable_sum with PELT window when propagating
-Date:   Wed, 22 Apr 2020 17:14:01 +0200
-Message-Id: <20200422151401.9147-1-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 22 Apr 2020 11:16:21 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 0F9FB588;
+        Wed, 22 Apr 2020 11:16:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 22 Apr 2020 11:16:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=K3JL55BKy3pQriQom4+MtaW7jsP
+        YmntwUFT5KMhRuQs=; b=hyEkT/gFMRGAocalMZuIhxxhTxJa1ifUBbBQJEJtCdI
+        7PtJsPzqx+NL1/c9YyN847yCVhtON3L7BQAOzuiVqZEZHAfxyFsl7GZzng21IWe8
+        njPwtoEr1hShmhrMqBGLR4lm7QUJz86dExH+gQ0b/IABAk4XZGWWwW/SzFAcszca
+        kIA6ZWQ2xMOwQaes9flt620h0PAJxjHRoQvUoCrTWG55UxUIeGv3GPrYzLg1cP+r
+        iYup3w949OPpghONUSixYQhF/AcLfV69j+gOSkXuDRCXRUgy/T82cW67cgRf2dfC
+        ti+Y2abj1bxycK4uOy5RGj6Y7ijPEoHE7ChgOc+gpww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=K3JL55
+        BKy3pQriQom4+MtaW7jsPYmntwUFT5KMhRuQs=; b=2i41h+vlKhAVbJqFM96Rz5
+        aKddvLmyd3OwjemDWWjv2v/OflBoS1ncGhyHBF0lrg+EQ09p8nRrrk3+PmpAYTVK
+        lJqGGwmpKVLSERyyBJrSJGBay6Umi6+Ltt0IYPGpEeFoTQzXF9kSiEpYnR1Emci8
+        p/vL+mtAz2qIc8HhrPsqMlIE9r9ZVt33m/0tiLA6m+OcO7JE12LUQKMCewFOFdNc
+        oCYy9NJZek3jvkoRNwokmlxcT1EsyrmxPkJvaSyci69/isNCg+zj24MbX7WEUb/n
+        6C6zlvZm5LTKizLc2b5BrUMGrT5RokHORsoyqGptyoSBQ8jbKvko+WtV6APMI+Ng
+        ==
+X-ME-Sender: <xms:wl-gXkhZZc3YsQwHryhpO1rIpVJ-_XbOtXd6UgA4eqYJpzkAlP2Exg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeejgdejlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:wl-gXpWgaAIz4dtia8XW8vRjbcfoGZ-YQUjvxWqY3huvPJ-ePsD2FQ>
+    <xmx:wl-gXu1GLVU4recSgbJsaQMu7-GvMpBTdviC9zvcckUf4kuwjgPZEg>
+    <xmx:wl-gXnHAD7OAK22eC_7Lt0LBbnIvrsYL4qVUDmWWnem2UiCAQjD9Lg>
+    <xmx:w1-gXkgiDvGXmzyJ-8qPPpHZuGzHrZJh2hDHrsMJJDFv2WxAFQLUKA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 106493280069;
+        Wed, 22 Apr 2020 11:16:17 -0400 (EDT)
+Date:   Wed, 22 Apr 2020 17:16:16 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Disable SPDIF by default
+Message-ID: <20200422151616.httmhmo2tbd4m4eu@gilmour.lan>
+References: <20200422041502.7497-1-samuel@sholland.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rqslophvmxvu46lr"
+Content-Disposition: inline
+In-Reply-To: <20200422041502.7497-1-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-update_tg_cfs_util/runnable() propagate the impact of the attach/detach of
-an entity down into the cfs_rq hierarchy which must keep the sync with
-the current pelt window.
 
-Even if we can't sync child rq and its group se, we can sync the group se
-and parent cfs_rq with current PELT window. In fact, we must keep them sync
-in order to stay also synced with others se and group se that are already
-attached to the cfs_rq.
+--rqslophvmxvu46lr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/fair.c | 26 ++++++--------------------
- 1 file changed, 6 insertions(+), 20 deletions(-)
+Hi,
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 02f323b85b6d..ca6aa89c88f2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3441,52 +3441,38 @@ static inline void
- update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
- {
- 	long delta = gcfs_rq->avg.util_avg - se->avg.util_avg;
-+	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
- 
- 	/* Nothing to update */
- 	if (!delta)
- 		return;
- 
--	/*
--	 * The relation between sum and avg is:
--	 *
--	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib
--	 *
--	 * however, the PELT windows are not aligned between grq and gse.
--	 */
--
- 	/* Set new sched_entity's utilization */
- 	se->avg.util_avg = gcfs_rq->avg.util_avg;
--	se->avg.util_sum = se->avg.util_avg * LOAD_AVG_MAX;
-+	se->avg.util_sum = se->avg.util_avg * divider;
- 
- 	/* Update parent cfs_rq utilization */
- 	add_positive(&cfs_rq->avg.util_avg, delta);
--	cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * LOAD_AVG_MAX;
-+	cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * divider;
- }
- 
- static inline void
- update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
- {
- 	long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
-+	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
- 
- 	/* Nothing to update */
- 	if (!delta)
- 		return;
- 
--	/*
--	 * The relation between sum and avg is:
--	 *
--	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib
--	 *
--	 * however, the PELT windows are not aligned between grq and gse.
--	 */
--
- 	/* Set new sched_entity's runnable */
- 	se->avg.runnable_avg = gcfs_rq->avg.runnable_avg;
--	se->avg.runnable_sum = se->avg.runnable_avg * LOAD_AVG_MAX;
-+	se->avg.runnable_sum = se->avg.runnable_avg * divider;
- 
- 	/* Update parent cfs_rq runnable */
- 	add_positive(&cfs_rq->avg.runnable_avg, delta);
--	cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * LOAD_AVG_MAX;
-+	cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * divider;
- }
- 
- static inline void
--- 
-2.17.1
+On Tue, Apr 21, 2020 at 11:15:02PM -0500, Samuel Holland wrote:
+> As of v5.7-rc2, Linux now prints the following message at boot:
+>=20
+>   [   33.848525] platform sound_spdif: deferred probe pending
+>=20
+> This is because &sound_spdif is waiting on its DAI link component
+> &spdif to probe, but &spdif is disabled in the DTS. Disable the
+> audio card as well to match.
+>=20
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
+The patch looks good, but don't we have some boards with SPDIF enabled that
+should be modified accordingly?
+
+Maxime
+
+--rqslophvmxvu46lr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqBfwAAKCRDj7w1vZxhR
+xX+ZAP4levrp2LGRrm2REbub/4kkmFLtqMUooUPXTR9I0VEcUwEA/JrFpuWGRqmc
+jpVGK8i/K0xogp3yuhFWU605yt7xwAs=
+=uyxK
+-----END PGP SIGNATURE-----
+
+--rqslophvmxvu46lr--
