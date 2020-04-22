@@ -2,52 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B474CC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6D5C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93EF520784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9032076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550697;
-	bh=+ikwfPbm7c6KxTJD0BmB89GFJ0B4TtDtOz7to9+x0x0=;
+	s=default; t=1587550700;
+	bh=20LqGUbpu9uV7aO8fe3tVxSx3iJIER0RsqWKu+XbUFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5nMyohB8X2LFa12H3rXyuSSWeUOnXhMAX0i/p6kSAFX6raLiJ6zcIUkLrrOcGCp2
-	 aX2qo+SVBXw2xUeWZuZXpv8NGGXhVfv2O947i+RxjKYbg050DlrLLS2mrlry+9FrLo
-	 gfgDrGUnF0udzTeVcXhERHc58+x0DYuuDmFcK5HE=
+	b=S/TnKyte0EB226e81OmuKH1ffStafK/k+RznC3bRquoSzAqSmpIpepqQc2AiwFT4Q
+	 oDpZVlsiJzH4k6xyFiVZQlkD8NuiMszFM6f1baQ4yPeuT6sqU0jkf0TWmuNTiLRB5K
+	 B5p64Xv6pslbQCK4PZUEissnAeyHIvMYmkPKchLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgDVKSQ (ORCPT
+        id S1729941AbgDVKST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:18:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53452 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729309AbgDVKRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:20 -0400
+        id S1729281AbgDVKRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D18E02075A;
-        Wed, 22 Apr 2020 10:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BE4C2076B;
+        Wed, 22 Apr 2020 10:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550640;
-        bh=+ikwfPbm7c6KxTJD0BmB89GFJ0B4TtDtOz7to9+x0x0=;
+        s=default; t=1587550637;
+        bh=20LqGUbpu9uV7aO8fe3tVxSx3iJIER0RsqWKu+XbUFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WLaP5fGTtujjMCWDcqVijEObMZZjO+D7j55Jii095M9REucI8MLXPWpxVf0FGos16
-         dNLEf8nqyZt+YN9HJ5CB1PwSDUAqoyn58qlW9CI5j5Tgt8v33J5hQD9a3qiY4ptzm4
-         E9KTPq6uwLjwlClTTgXJhv7IXl/3Eb3JAIprsVhs=
+        b=pS6tZUz41HWo875noCi2CSS4ghBkAJ3vOuIFgR2rDu/iivLV4qWqwX7Z6FPIXoEaL
+         oUioWvO+Yu4WCHT3kM4d5tL+v3Ut84fJNWbeIX5/4Fa9vB9x6n3AeQ2VU2LmCcyQoO
+         XBvTQ+Fnp0GxuISLrzhL8yN+NXZjxBahg7RIBPH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/118] rbd: avoid a deadlock on header_rwsem when flushing notifies
-Date:   Wed, 22 Apr 2020 11:56:33 +0200
-Message-Id: <20200422095037.117674327@linuxfoundation.org>
+        stable@vger.kernel.org, cki-project@redhat.com,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 031/118] block, bfq: invoke flush_idle_tree after reparent_active_queues in pd_offline
+Date:   Wed, 22 Apr 2020 11:56:32 +0200
+Message-Id: <20200422095036.940892995@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,88 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 0e4e1de5b63fa423b13593337a27fd2d2b0bcf77 ]
+commit 4d38a87fbb77fb9ff2ff4e914162a8ae6453eff5 upstream.
 
-rbd_unregister_watch() flushes notifies and therefore cannot be called
-under header_rwsem because a header update notify takes header_rwsem to
-synchronize with "rbd map".  If mapping an image fails after the watch
-is established and a header update notify sneaks in, we deadlock when
-erroring out from rbd_dev_image_probe().
+In bfq_pd_offline(), the function bfq_flush_idle_tree() is invoked to
+flush the rb tree that contains all idle entities belonging to the pd
+(cgroup) being destroyed. In particular, bfq_flush_idle_tree() is
+invoked before bfq_reparent_active_queues(). Yet the latter may happen
+to add some entities to the idle tree. It happens if, in some of the
+calls to bfq_bfqq_move() performed by bfq_reparent_active_queues(),
+the queue to move is empty and gets expired.
 
-Move watch registration and unregistration out of the critical section.
-The only reason they were put there was to make header_rwsem management
-slightly more obvious.
+This commit simply reverses the invocation order between
+bfq_flush_idle_tree() and bfq_reparent_active_queues().
 
-Fixes: 811c66887746 ("rbd: fix rbd map vs notify races")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jason Dillaman <dillaman@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: cki-project@redhat.com
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/rbd.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ block/bfq-cgroup.c |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index a67315786db47..bab9c546ba334 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -4636,6 +4636,10 @@ static void cancel_tasks_sync(struct rbd_device *rbd_dev)
- 	cancel_work_sync(&rbd_dev->unlock_work);
- }
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -877,13 +877,6 @@ static void bfq_pd_offline(struct blkg_p
+ 		st = bfqg->sched_data.service_tree + i;
  
-+/*
-+ * header_rwsem must not be held to avoid a deadlock with
-+ * rbd_dev_refresh() when flushing notifies.
-+ */
- static void rbd_unregister_watch(struct rbd_device *rbd_dev)
- {
- 	cancel_tasks_sync(rbd_dev);
-@@ -6942,6 +6946,9 @@ static void rbd_dev_image_release(struct rbd_device *rbd_dev)
-  * device.  If this image is the one being mapped (i.e., not a
-  * parent), initiate a watch on its header object before using that
-  * object to get detailed information about the rbd image.
-+ *
-+ * On success, returns with header_rwsem held for write if called
-+ * with @depth == 0.
-  */
- static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- {
-@@ -6974,6 +6981,9 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- 		}
- 	}
- 
-+	if (!depth)
-+		down_write(&rbd_dev->header_rwsem);
+ 		/*
+-		 * The idle tree may still contain bfq_queues belonging
+-		 * to exited task because they never migrated to a different
+-		 * cgroup from the one being destroyed now.
+-		 */
+-		bfq_flush_idle_tree(st);
+-
+-		/*
+ 		 * It may happen that some queues are still active
+ 		 * (busy) upon group destruction (if the corresponding
+ 		 * processes have been forced to terminate). We move
+@@ -896,6 +889,19 @@ static void bfq_pd_offline(struct blkg_p
+ 		 * scheduler has taken no reference.
+ 		 */
+ 		bfq_reparent_active_queues(bfqd, bfqg, st, i);
 +
- 	ret = rbd_dev_header_info(rbd_dev);
- 	if (ret)
- 		goto err_out_watch;
-@@ -7027,6 +7037,8 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- err_out_probe:
- 	rbd_dev_unprobe(rbd_dev);
- err_out_watch:
-+	if (!depth)
-+		up_write(&rbd_dev->header_rwsem);
- 	if (!depth)
- 		rbd_unregister_watch(rbd_dev);
- err_out_format:
-@@ -7085,12 +7097,9 @@ static ssize_t do_rbd_add(struct bus_type *bus,
- 		goto err_out_rbd_dev;
++		/*
++		 * The idle tree may still contain bfq_queues
++		 * belonging to exited task because they never
++		 * migrated to a different cgroup from the one being
++		 * destroyed now. In addition, even
++		 * bfq_reparent_active_queues() may happen to add some
++		 * entities to the idle tree. It happens if, in some
++		 * of the calls to bfq_bfqq_move() performed by
++		 * bfq_reparent_active_queues(), the queue to move is
++		 * empty and gets expired.
++		 */
++		bfq_flush_idle_tree(st);
  	}
  
--	down_write(&rbd_dev->header_rwsem);
- 	rc = rbd_dev_image_probe(rbd_dev, 0);
--	if (rc < 0) {
--		up_write(&rbd_dev->header_rwsem);
-+	if (rc < 0)
- 		goto err_out_rbd_dev;
--	}
- 
- 	/* If we are mapping a snapshot it must be marked read-only */
- 	if (rbd_dev->spec->snap_id != CEPH_NOSNAP)
--- 
-2.20.1
-
+ 	__bfq_deactivate_entity(entity, false);
 
 
