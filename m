@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3B4C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7566DC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B29A2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529432070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tK59ZXOF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N7XDNZPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDVHsj (ORCPT
+        id S1726588AbgDVHse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:48:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39762 "EHLO
+        Wed, 22 Apr 2020 03:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726601AbgDVHsf (ORCPT
+        by vger.kernel.org with ESMTP id S1726543AbgDVHs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:48:35 -0400
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683B9C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:34 -0700 (PDT)
-Received: by mail-pj1-x1049.google.com with SMTP id o103so1041180pjb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:34 -0700 (PDT)
+        Wed, 22 Apr 2020 03:48:29 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FA0C03C1A7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:29 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id m2so1289123pls.20
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=794UeF8W+at79LCC9i7BwnlKAALsYEgJqYQvE4+BBD4=;
-        b=tK59ZXOFVCNvqBueajde6oI1B0sVXcmEKjZ0J6mvGxMQFQa0q4thkcUDal7X9ssBlS
-         3sWuR0aME9xK1drbc/Ztbl6jHg5pGBFrxTei/rB9C/kt9OQNIlrhKZDJRZuDmGxiEwhZ
-         bJkJw6dDr3CHuy8NKkFA1idScBmTVwg8f9Ri1tl9yb3zH6BrOZa6eSYsyPVOqK2GRcUW
-         ZjCZ5NqSJtayLgzJjCGfd2qX3V+bXBRLXUNWJ0AOzIVE2LSaD6wS6Qb/quTG5FX8Jh+D
-         py7LyFgTubjPE/LFzn0Lb5Y98VK1SHf0SJSAZ1jwGS7+pthMbtklQ4JvkMCGzqvDHP7n
-         nVfQ==
+        bh=9v/SqbpPNd1vIjcwX2QJUR1yjeQPBkaJciMvLWYLL8Q=;
+        b=N7XDNZPhdsdEwyU0vzOcl7tqswM6/F96CeW5rWLFd8PJ2pGRriXzxQ4P5D5hUNnCLi
+         Wkxurn0ainfOjMX3Yfd9j5mT/NDrfM3uSfbl4MIwacfbKj4q0oZ7bvuBw20IB9WmeltV
+         BccwCq/J/XTgMURhICnVja+lEcQ2X3cyZAlEsfFVJIBDLFYgDFVNWxSQA+korr1df4yR
+         cG15Nu3O6rPPB/tBltaGgVdCcU09ZPw7J/KawMUQsMCtvAPk9k2JuJHOopWbrWgRDF1z
+         axTtqMvDoDD68E19FSn0DU2w6+ytHwu0e2clpzQJYB5NYC3aMo3CgsTBKg7M4dhBLirA
+         pZJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=794UeF8W+at79LCC9i7BwnlKAALsYEgJqYQvE4+BBD4=;
-        b=AnfGW6xWo8lk56JoVdP/GcP0Lp8WtpgDXFAW9eZafXB5tYGqB7lyFVMBhq5Mix5USh
-         RsRQD6ksUJezlN9TzK4g6KMLOyN4hgqmWgmJEa2BGfF9RnWVXWxC6dSsKtD7qhkGgCKh
-         UoH+BYt1jJw92a+tJKdkb/1sAQZTbZ6Qsft1s87RYZMCCendATAUIK42TGLxLMWOWrUd
-         zx8DWAIHDfcCniDwjZ0DNgYMo5JibpnGFcEn+HQsg3gkCk9aEPICi7YIl9eJxFC512Np
-         faTVbd5ILm3idw5p/tRkmdHFtXXbMaEQEUhHq9c6eKIUx9uI2brj1hrxGJ/UFnyeUp1H
-         /SOg==
-X-Gm-Message-State: AGi0PuZYwvY4bsbSzUTnqLVBWBwazrzdlXJPsC8xALoiE2XrXiu+qrv8
-        n1c8UBG9NSdfFl6ah3MmQq5PcZqKdIq8
-X-Google-Smtp-Source: APiQypKK2/FUCgMLVD+//6q/2vuAXLiR2pEpy9lCDmybC/An8vw1vvLkm/EA9FMmmtbdpoObm91oGte+pTu3
-X-Received: by 2002:a17:90a:252f:: with SMTP id j44mr10214236pje.9.1587541713855;
- Wed, 22 Apr 2020 00:48:33 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 00:48:09 -0700
+        bh=9v/SqbpPNd1vIjcwX2QJUR1yjeQPBkaJciMvLWYLL8Q=;
+        b=SpmxXo9kGFFzBr/HNS2c0fJv0Ur36M9jagzU7kK8KW0rCEsP6/KklrzJL+5QkoQMPj
+         IY9cef6pi1klX59IGqHFPfcZmXTOj+famY2l/YXiUScZG6XXeXLwTkaTOZqdfgeuwTnM
+         +KPLcGEmdkEe0okaC4tFIkb0/MeLAIxEvcf7OjGApcislIXd0kgKotK09i1wFnAoXBEh
+         L+3isyFgwI3yUUfvKpnLKtB/NkDz326pd6f04eRkb7cV5rr1SPcr01M2+kDwEWRseyeY
+         AHipY8DmBgNoC5i7oLTPOet7hLVTpdPieS0aEH6f3dOeLuzBCjWI16+mZaNzMMWOP5K3
+         UxyQ==
+X-Gm-Message-State: AGi0PuYPaYWCktqTUFH2w8L8OAB3C7ysiF1MtVRPjl2Tx1WdFYZndyTb
+        kGdfABTEGP2C3WCU2X42d1rgewcXFJ75
+X-Google-Smtp-Source: APiQypIJvMaeUybTX7ACLvTZPwFUYcx9IQhuL2RnqwGJFXXWPOkTmsSQFeIsVs0cjleh72eyggYSmyuFdDt5
+X-Received: by 2002:a17:90a:2401:: with SMTP id h1mr10520336pje.1.1587541709004;
+ Wed, 22 Apr 2020 00:48:29 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 00:48:07 -0700
 In-Reply-To: <20200422074809.160248-1-irogers@google.com>
-Message-Id: <20200422074809.160248-9-irogers@google.com>
+Message-Id: <20200422074809.160248-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20200422074809.160248-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 8/8] perf test: add expr test for pmu metrics
+Subject: [PATCH 6/8] perf expr: parse numbers as doubles
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -87,168 +87,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic floating point number test.
-Verify that all pmu metrics parse.
+This is expected in expr.y and metrics use floating point values such as
+x86 broadwell IFetch_Line_Utilization.
 
+Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c |  5 ++
- tools/perf/tests/expr.c         | 91 ++++++++++++++++++++++++++++++++-
- tools/perf/tests/tests.h        |  2 +
- 3 files changed, 97 insertions(+), 1 deletion(-)
+ tools/perf/util/expr.l | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index b6322eb0f423..28d547951f6b 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -63,6 +63,11 @@ static struct test generic_tests[] = {
- 	{
- 		.desc = "Simple expression parser",
- 		.func = test__expr,
-+		.subtest = {
-+			.get_nr		= test__expr_subtest_get_nr,
-+			.get_desc	= test__expr_subtest_get_desc,
-+		},
-+
- 	},
- 	{
- 		.desc = "PERF_RECORD_* events & perf_sample fields",
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index ea10fc4412c4..125f9b040e20 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -1,9 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "pmu-events/pmu-events.h"
- #include "util/debug.h"
- #include "util/expr.h"
- #include "tests.h"
- #include <stdlib.h>
- #include <string.h>
-+#include <linux/kernel.h>
- #include <linux/zalloc.h>
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index 95bcf3629edf..0efda2ce2766 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -10,12 +10,12 @@
+ char *expr_get_text(yyscan_t yyscanner);
+ YYSTYPE *expr_get_lval(yyscan_t yyscanner);
  
- static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
-@@ -16,7 +18,7 @@ static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
- 	return 0;
- }
- 
--int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
-+static int parse_tests(void)
+-static int __value(YYSTYPE *yylval, char *str, int base, int token)
++static double __value(YYSTYPE *yylval, char *str, int token)
  {
- 	const char *p;
- 	const char **other;
-@@ -39,6 +41,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	ret |= test(&ctx, "min(1,2) + 1", 2);
- 	ret |= test(&ctx, "max(1,2) + 1", 3);
- 	ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
-+	ret |= test(&ctx, "1.1 + 2.1", 3.2);
+-	u64 num;
++	double num;
  
- 	if (ret)
- 		return ret;
-@@ -65,3 +68,89 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	errno = 0;
+-	num = strtoull(str, NULL, base);
++	num = strtod(str, NULL);
+ 	if (errno)
+ 		return EXPR_ERROR;
  
- 	return 0;
+@@ -23,12 +23,12 @@ static int __value(YYSTYPE *yylval, char *str, int base, int token)
+ 	return token;
  }
-+
-+static int pmu_tests(void)
-+{
-+	struct pmu_events_map *map;
-+	struct pmu_event *pe;
-+	int i, j, k;
-+	const char **ids;
-+	int idnum;
-+	int ret = 0;
-+	struct expr_parse_ctx ctx;
-+	double result;
-+
-+	i = 0;
-+	for (;;) {
-+		map = &pmu_events_map[i++];
-+		if (!map->table) {
-+			map = NULL;
-+			break;
-+		}
-+		j = 0;
-+		for (;;) {
-+			pe = &map->table[j++];
-+			if (!pe->name && !pe->metric_group && !pe->metric_name)
-+				break;
-+			if (!pe->metric_expr)
-+				continue;
-+			if (expr__find_other(pe->metric_expr, NULL,
-+						&ids, &idnum) < 0) {
-+				pr_debug("Parse other failed for map %s %s %s\n",
-+					map->cpuid, map->version, map->type);
-+				pr_debug("On metric %s\n", pe->metric_name);
-+				pr_debug("On expression %s\n", pe->metric_expr);
-+				ret++;
-+				continue;
-+			}
-+			expr__ctx_init(&ctx);
-+			for (k = 0; k < idnum; k++)
-+				expr__add_id(&ctx, ids[k], 1);
-+
-+			if (expr__parse(&result, &ctx, pe->metric_expr)) {
-+				pr_debug("Parse failed for map %s %s %s\n",
-+					map->cpuid, map->version, map->type);
-+				pr_debug("On metric %s\n", pe->metric_name);
-+				pr_debug("On expression %s\n", pe->metric_expr);
-+				ret++;
-+			}
-+			for (k = 0; k < idnum; k++)
-+				zfree(&ids[k]);
-+			free(ids);
-+		}
-+	}
-+	return ret;
-+}
-+
-+static const struct {
-+	int (*func)(void);
-+	const char *desc;
-+} expr_testcase_table[] = {
-+	{
-+		.func = parse_tests,
-+		.desc = "Basic expressions",
-+	},
-+	{
-+		.func = pmu_tests,
-+		.desc = "Parsing of pmu metrics",
-+	},
-+};
-+
-+const char *test__expr_subtest_get_desc(int i)
-+{
-+	if (i < 0 || i >= (int)ARRAY_SIZE(expr_testcase_table))
-+		return NULL;
-+	return expr_testcase_table[i].desc;
-+}
-+
-+int test__expr_subtest_get_nr(void)
-+{
-+	return (int)ARRAY_SIZE(expr_testcase_table);
-+}
-+
-+int test__expr(struct test *test __maybe_unused, int i __maybe_unused)
-+{
-+	if (i < 0 || i >= (int)ARRAY_SIZE(expr_testcase_table))
-+		return TEST_FAIL;
-+	return expr_testcase_table[i].func();
-+}
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 61a1ab032080..315d64ffd14c 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -72,6 +72,8 @@ int test__keep_tracking(struct test *test, int subtest);
- int test__parse_no_sample_id_all(struct test *test, int subtest);
- int test__dwarf_unwind(struct test *test, int subtest);
- int test__expr(struct test *test, int subtest);
-+const char *test__expr_subtest_get_desc(int subtest);
-+int test__expr_subtest_get_nr(void);
- int test__hists_filter(struct test *test, int subtest);
- int test__mmap_thread_lookup(struct test *test, int subtest);
- int test__thread_maps_share(struct test *test, int subtest);
+ 
+-static int value(yyscan_t scanner, int base)
++static int value(yyscan_t scanner)
+ {
+ 	YYSTYPE *yylval = expr_get_lval(scanner);
+ 	char *text = expr_get_text(scanner);
+ 
+-	return __value(yylval, text, base, NUMBER);
++	return __value(yylval, text, NUMBER);
+ }
+ 
+ /*
+@@ -68,7 +68,7 @@ static int str(yyscan_t scanner, int token)
+ }
+ %}
+ 
+-number		[0-9]+
++number		[0-9]*\.?[0-9]+
+ 
+ sch		[-,=]
+ spec		\\{sch}
+@@ -92,7 +92,7 @@ min		{ return MIN; }
+ if		{ return IF; }
+ else		{ return ELSE; }
+ #smt_on		{ return SMT_ON; }
+-{number}	{ return value(yyscanner, 10); }
++{number}	{ return value(yyscanner); }
+ {symbol}	{ return str(yyscanner, ID); }
+ "|"		{ return '|'; }
+ "^"		{ return '^'; }
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
