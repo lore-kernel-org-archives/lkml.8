@@ -2,59 +2,57 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB8AC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FE1C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA8620774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B572076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553159;
-	bh=xCCyQH1bUvTAbMsd/r4PqNmTcZ9TF90HvmyWc/+6wI4=;
+	s=default; t=1587553167;
+	bh=bjvnJTPPAmrWn7sTp40MNKJPn2kc6bhnn19g0wsb8I0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/2ZT/TXDYeLCDAvDx5pkza/ksyVp/2g3HVGl365jHLbY2GOliw5zLJ19T9xakZNn
-	 iZAM/L0+HIPUx7shUY4HwuMCI7JoNMO1jW8C6ZrAUAJVpWuuiY84Skj4Q1dxKUryp3
-	 uUeiNvhPHhTc4WJIYqtQZhdrp6PchGiymNsveUuE=
+	b=lAKAVHZh7CmaA/KM6+WbFfXb/TMEMIXXN6sh/mgWvU8G2T4mlyLNyOwt3Vqf+b62u
+	 T9nEko4oYDBeLSsCPIDJzrOzFXzB9rP1+fR4PAOGxQCe9GcYMzyG7MnJsVfJUyPvPi
+	 xY6pMaOYV/Ll+1xzy/wIg4e18rIsZcfbrDQEFBx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732303AbgDVK7S (ORCPT
+        id S1732310AbgDVK71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:59:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52808 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgDVKDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:13 -0400
+        id S1727076AbgDVKC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:02:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2F2820857;
-        Wed, 22 Apr 2020 10:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33F920774;
+        Wed, 22 Apr 2020 10:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549793;
-        bh=xCCyQH1bUvTAbMsd/r4PqNmTcZ9TF90HvmyWc/+6wI4=;
+        s=default; t=1587549776;
+        bh=bjvnJTPPAmrWn7sTp40MNKJPn2kc6bhnn19g0wsb8I0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cdial85OqlKKaXa2WFtsFzrSoYdLNzWg7w4hY1SS2ZizTPte6dcFcfevDXcB971G9
-         R0rDeLQUvtLEv3rxZRvVGH0OO2onsS0KCAmUcx/dDtYlQTHhw3K9FRrmLLkcB7EFq9
-         GiD8gJTzMIRYsn146LJteAHNy/8as7ErWxzGoqLo=
+        b=16ycsSAgHz9vFCdBDZ36wYFRFrVQsDMiVqwrcyuzKHfbBLIfQhDvV0vNCSTlUsVGl
+         jsNLdZ/PZFfoYsmpb6h2aXRLItls05ZyHFfyRa3qmdU2vGzS7llomTmvUCjFZuYb9Z
+         hoCvzFcW+b92HtCqLhPuRheN2o5RFHn1m60l3soM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 001/125] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
-Date:   Wed, 22 Apr 2020 11:55:18 +0200
-Message-Id: <20200422095033.212272779@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Neves <sneves@dei.uc.pt>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Nobuhiro Iwamatsu (CIP)" <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.4 100/100] x86/vdso: Fix lsl operand order
+Date:   Wed, 22 Apr 2020 11:57:10 +0200
+Message-Id: <20200422095040.834180030@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
-References: <20200422095032.909124119@linuxfoundation.org>
+In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
+References: <20200422095022.476101261@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,64 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Samuel Neves <sneves@dei.uc.pt>
 
-[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
+commit e78e5a91456fcecaa2efbb3706572fe043766f4d upstream.
 
-When doing a 16-bit read that returns data in the MSB byte, the
-RSB_DATA register will keep the MSB byte unchanged when doing
-the following 8-bit read. sunxi_rsb_read() will then return
-a result that contains high byte from 16-bit read mixed with
-the 8-bit result.
+In the __getcpu function, lsl is using the wrong target and destination
+registers. Luckily, the compiler tends to choose %eax for both variables,
+so it has been working so far.
 
-The consequence is that after this happens the PMIC's regmap will
-look like this: (0x33 is the high byte from the 16-bit read)
+Fixes: a582c540ac1b ("x86/vdso: Use RDPID in preference to LSL when available")
+Signed-off-by: Samuel Neves <sneves@dei.uc.pt>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20180901201452.27828-1-sneves@dei.uc.pt
+Signed-off-by: Nobuhiro Iwamatsu (CIP) <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-00: 33
-01: 33
-02: 33
-03: 33
-04: 33
-05: 33
-06: 33
-07: 33
-08: 33
-09: 33
-0a: 33
-0b: 33
-0c: 33
-0d: 33
-0e: 33
-[snip]
-
-Fix this by masking the result of the read with the correct mask
-based on the size of the read. There are no 16-bit users in the
-mainline kernel, so this doesn't need to get into the stable tree.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/sunxi-rsb.c | 2 +-
+ arch/x86/include/asm/vgtod.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 2051d926e3037..4f3d988210b0a 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
- 	if (ret)
- 		goto unlock;
- 
--	*buf = readl(rsb->regs + RSB_DATA);
-+	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
- 
- unlock:
- 	mutex_unlock(&rsb->lock);
--- 
-2.20.1
-
+--- a/arch/x86/include/asm/vgtod.h
++++ b/arch/x86/include/asm/vgtod.h
+@@ -86,7 +86,7 @@ static inline unsigned int __getcpu(void
+ 	 *
+ 	 * If RDPID is available, use it.
+ 	 */
+-	alternative_io ("lsl %[p],%[seg]",
++	alternative_io ("lsl %[seg],%[p]",
+ 			".byte 0xf3,0x0f,0xc7,0xf8", /* RDPID %eax/rax */
+ 			X86_FEATURE_RDPID,
+ 			[p] "=a" (p), [seg] "r" (__PER_CPU_SEG));
 
 
