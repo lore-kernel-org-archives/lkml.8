@@ -2,127 +2,106 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1164C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB01C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4232071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:47:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BSbkpzms"
+	by mail.kernel.org (Postfix) with ESMTP id 071D42071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgDVWqr (ORCPT
+        id S1726384AbgDVWsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725779AbgDVWqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:46:46 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED0EC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:46:46 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a5so1572829pjh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pLTuQArcwiFXcG9uc7P3/tOH2806IqFHASRaBcIcsEY=;
-        b=BSbkpzmsMrB61iVPWzBuW/+ZEnOUMyG61Cjfz/vz3GFTkoJosnfewYwwNytlJSg/r5
-         7urIvRN84RRm0goUbfxHHzHPdDP8mVksMX8xC3NIi85jZ0dxMD54ig+wXJWmGJ+PTddQ
-         Y/1YKuKZgP6vEwWbBfuWIfhMmf8ZfOiwR0UJs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pLTuQArcwiFXcG9uc7P3/tOH2806IqFHASRaBcIcsEY=;
-        b=QBJJ0H2PRqys7PFgk/jozAQ1QuLxUK6wz7nxnGWtXiuEC6V30Zc44UcHQZRoOCiton
-         8/vPW6N1/ISxIRCghrShCJXO9nuUP24QyqFBgCHQVthcJOt8grO3OWmqMxohdTnLyMmm
-         Zw28fnQ+qQ2x34RdOX/khxj+Fgz30dwq1AI2cjtvykJbGcNTijyhtosTpq5qUuPY9wyn
-         TQ3shu/XJ5Xw4L6/f/zwtuM0/OFHjB1R4QBk8rvjPcNaOIRTJ03OpitKsbhtOn974KzJ
-         W0J95vXjU3jIZx22hoijOOUA+a5f7kF0RQkDUPBifjMId/CGQYfC2264rEBu45Qgbm8v
-         LkCQ==
-X-Gm-Message-State: AGi0PuYb/vEHwN8z2EyPa54DHFErzH9IwJV+10nLwpJS4Lu8oPTHWX0U
-        H4vfn+VIP8TwlFhXiW8wwJwYvA==
-X-Google-Smtp-Source: APiQypKhDC0baxY/PgdACBGve8Req9KLYTUEXXH0x/85yLzgvD2k0uCeWYCvvSYzzEadi+NZNpZcBw==
-X-Received: by 2002:a17:90a:5aa7:: with SMTP id n36mr1056873pji.45.1587595606121;
-        Wed, 22 Apr 2020 15:46:46 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h11sm539650pfo.120.2020.04.22.15.46.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 15:46:45 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:46:43 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Yong Mao <yong.mao@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH 3/3] mmc: core: fix mmc_sdio_reinit_card fail issue
-Message-ID: <20200422224643.GI199755@google.com>
-References: <1586835611-13857-1-git-send-email-yong.mao@mediatek.com>
- <1586835611-13857-4-git-send-email-yong.mao@mediatek.com>
+        Wed, 22 Apr 2020 18:48:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:33718 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgDVWsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 18:48:22 -0400
+IronPort-SDR: y4AolHYq8+DUQm3BB6l0lH59Ysjf862Gv8UUO2gavOQL1zsjzrd7yBfM3XN88O7s4I9X0bMp/g
+ F+gbokUxdjZA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 15:48:22 -0700
+IronPort-SDR: r1IRe2VEuk6z3Z+5U9T7+yFyaDUSRmDToYCZuPClUDlClUJxNkhYfikEQRPuLvaO0Fm633aFfk
+ BBSE3g+q1+aA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="259230942"
+Received: from crschrol-desk22.amr.corp.intel.com (HELO [10.254.73.197]) ([10.254.73.197])
+  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 15:48:20 -0700
+Subject: Re: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use AER
+To:     Jon Derrick <jonathan.derrick@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Rajat Jain <rajatja@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
+ <1587418630-13562-2-git-send-email-jonathan.derrick@intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <9f8c2a62-e67d-2869-db11-4644b69815f4@linux.intel.com>
+Date:   Wed, 22 Apr 2020 15:48:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1586835611-13857-4-git-send-email-yong.mao@mediatek.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1587418630-13562-2-git-send-email-jonathan.derrick@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yong,
 
-On Tue, Apr 14, 2020 at 11:40:11AM +0800, Yong Mao wrote:
-> From: yong mao <yong.mao@mediatek.com>
+
+On 4/20/20 2:37 PM, Jon Derrick wrote:
+> Some platforms have a mix of ports whose capabilities can be negotiated
+> by _OSC, and some ports which are not described by ACPI and instead
+> managed by Native drivers. The existing Firmware-First HEST model can
+> incorrectly tag these Native, Non-ACPI ports as Firmware-First managed
+> ports by advertising the HEST Global Flag and matching the type and
+> class of the port (aer_hest_parse).
+Is there a real use case for mixed mode (one host bridge in FF mode and
+another in native)?
 > 
-> If SDIO device is initialized by UHS mode, it will run with 1.8v power.
-> In this mode, mmc_go_idle may not make SDIO device go idle successfully
-> in some special SDIO device. And then it can't be re-initialized
-> successfully.
-> According to the logic in sdio_reset_comm and mmc_sdio_sw_reset,
-> invoking mmc_set_clock(host, host->f_min) before mmc_send_io_op_cond
-> can make this SDIO device back to right state.
->
-
-The commit message isn't very concise. Suggestion for a better
-structure:
-
-mmc: core: reset clock to minimum speed during card reinit
-
-Some buggy (?) SDIO devices don't (consistently?) enter idle mode
-through mmc_go_idle() when running in UHS mode. [add rationale why
-setting the clock to minimum speed fixes this]
-
-
-Also the function sdio_reset_comm() mentioned in the commit message
-doesn't exist in recent kernels. And mmc_sdio_sw_reset() does not invoke
-mmc_send_io_op_cond(), as the commit message appears to claim.
-
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+> If the port requests Native AER through the Host Bridge's capability
+> settings, the AER driver should honor those settings and allow the port
+> to bind. This patch changes the definition of Firmware-First to exclude
+> ports whose Host Bridges request Native AER.
+> 
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
 > ---
->  drivers/mmc/core/sdio.c | 1 +
->  1 file changed, 1 insertion(+)
+>   drivers/pci/pcie/aer.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-> index f173cad..dc4dc63 100644
-> --- a/drivers/mmc/core/sdio.c
-> +++ b/drivers/mmc/core/sdio.c
-> @@ -850,6 +850,7 @@ static int mmc_sdio_reinit_card(struct mmc_host *host)
->  
->  	sdio_reset(host);
->  	mmc_go_idle(host);
-> +	mmc_set_clock(host, host->f_min);
-
-mmc_sdio_sw_reset() - which is mentioned as reference in the commit
-message - sets the clock speed before sdio_reset(). Should this order
-be followed here too?
-
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f4274d3..30fbd1f 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -314,6 +314,9 @@ int pcie_aer_get_firmware_first(struct pci_dev *dev)
+>   	if (pcie_ports_native)
+>   		return 0;
+>   
+> +	if (pci_find_host_bridge(dev->bus)->native_aer)
+> +		return 0;
+> +
+>   	if (!dev->__aer_firmware_first_valid)
+>   		aer_set_firmware_first(dev);
+>   	return dev->__aer_firmware_first;
+> 
