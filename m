@@ -2,171 +2,130 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7B0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E369BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF93E206B9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9860206B9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=national.shitposting.agency header.i=@national.shitposting.agency header.b="L3R/XOhc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPF42GEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgDVBAb (ORCPT
+        id S1726405AbgDVBCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 21:00:31 -0400
-Received: from mail.cock.li ([37.120.193.124]:52764 "EHLO mail.cock.li"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgDVBAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 21:00:30 -0400
-X-Greylist: delayed 382 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Apr 2020 21:00:28 EDT
-Date:   Wed, 22 Apr 2020 02:53:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=national.shitposting.agency; s=mail; t=1587516844;
-        bh=p2IreHcoWDUmk7izJSdGsrX30OxvefkCnAAQ1gbHOYA=;
-        h=Date:From:Cc:Subject:From;
-        b=L3R/XOhczy0Eflp52Z/rcUwoG5+NRi3Kx5edmp4VGQtvyRDtjRX7Y804A/LcjYfLG
-         KqSyKzX4FMKc5dgL3W0eXehX37kUrk1vybqWMHia8/EYjNBDyBwWY5jNwy7mpl0el4
-         KM0tfZ/GkShoplvpfTPZIb1Oj6iXFgQtjWEJvetr8H8pNc1nSq+et8qUkE/3m7odxI
-         SipDmUSd7DXOqdd9isMCE+rofLdYvK3ertZlGNpn+E2lu2EKCy/QPqA2sJ3doIBsv7
-         vGBgrX3YRqMLUQaE3N6Xd3mpGhOnmdSduEy3X5O50SQvDHZgmK8m2OMckZgVytfuH4
-         AIfkDgYA6JglQ==
-From:   zsugabubus <zsugabubus@national.shitposting.agency>
-Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ia64: fix word quoting in shell scripts
-Message-ID: <20200422005359.c6vh2jblrevznjml@localhost>
+        Tue, 21 Apr 2020 21:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726055AbgDVBCE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 21:02:04 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B08DC0610D5;
+        Tue, 21 Apr 2020 18:02:04 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id a2so447954oia.11;
+        Tue, 21 Apr 2020 18:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JwVDsnKQEhm1jAKmC3TdxNUyFpBPqvMfGNXwJrkzeOk=;
+        b=GPF42GEk0RargHC4CRBaeWdJMXVEj99sHY6Ia+uZjQfmnnnHP1NWRqo2dY6I8g0L2i
+         jk9zOY1Y3LO0iFGZXUbF3rkoGnDQlcN2SK2y7vocOIrn+X9bmAfjPc/fqLPgoWeXiw2/
+         sTWwIJPXPgQclVK19R3XVA1RrnVFHvv6j/XqTYBVpk3GBe2HWdXMN/L9TeRPSh+C+1tn
+         XZtJcnSzFWqTRIlBdGqo0/rPkgdLl2ZCMMgpo+jwQFh7mlvsxpCDkvxjiQ8y7lJ72WDh
+         znpRwf7MftRjr6ml0DtfY69cOhqHHrLQ98a9AbJq3yUKTNx50TIq1PK6HhprIuyAgYKy
+         8r2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JwVDsnKQEhm1jAKmC3TdxNUyFpBPqvMfGNXwJrkzeOk=;
+        b=dkHHgBTSMH3B1fqONRKmWdcVhVK2wmcBydGG/d9JsF/ANbrAXcya8M4VyrWLIX1fWV
+         SbSs4Db50jZ/U+cDgSyNEUIGqoin6HjPaxVL1q03yVJNuyrsJKtIxPNZq0j2oah48eE4
+         s3ZpBYnKHhnACrG/bIWTum82D3Gm6O3iPyIWOSHxN+giwgeNXIrtgUWGoNsq2t0rKTMv
+         /Wa9fvxHAAqZ0Xlew0wWFJ7lNEkeXBxWi6OGJiS0n2Q+YfG5e3S5t8meBZFIxlq3X/xD
+         12x8fl2Z8uZX/+nqTwpTpDIn6oiqEHVeLH3nzxom7bVYsyETVLUiuTCGaLxle0TzPZAS
+         Sd7A==
+X-Gm-Message-State: AGi0PuZbUvYasMh0i3Dg9o3/jl5xNmS1fJ4NhWtnSYBgtAXhwMEvAvon
+        XKwi6pVb7eTSn0R+6kTDVN4ws28CTF/JckJXDrM=
+X-Google-Smtp-Source: APiQypLjVzrsl0Anz94XprXcwDt3fBjesJAs6pymEAtm5P7X7L2JfxiWhw73gsMrLIp/3Qq2SpkINTQzTjOfxSPeUgg=
+X-Received: by 2002:aca:2801:: with SMTP id 1mr4869738oix.141.1587517323684;
+ Tue, 21 Apr 2020 18:02:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-To:     unlisted-recipients:; (no To-header on input)
+References: <1587468026-15753-1-git-send-email-wanpengli@tencent.com>
+ <1587468026-15753-3-git-send-email-wanpengli@tencent.com> <68eb0e46-4c2a-0292-3dfa-db2ae2b2b13d@redhat.com>
+In-Reply-To: <68eb0e46-4c2a-0292-3dfa-db2ae2b2b13d@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 22 Apr 2020 09:01:52 +0800
+Message-ID: <CANRm+CwXhe+TdB8JpQ78qR-sO6FB_cMjqHxj5fSyKEMPkMVm8g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] KVM: VMX: Handle preemption timer fastpath
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previous implementation did not quote some variables that could be
-potentially empty, for example due to a failed compilation. It made
-test(1) failing but desired error action was not taken.
+On Tue, 21 Apr 2020 at 19:40, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 21/04/20 13:20, Wanpeng Li wrote:
+> > +
+> > +     if (!vmx->req_immediate_exit &&
+> > +             !unlikely(vmx->loaded_vmcs->hv_timer_soft_disabled)) {
+> > +             if (!vmx_interrupt_allowed(vcpu) ||
 
-Cleaning of temporary files is also been made a bit more robust.
----
- arch/ia64/scripts/check-gas       | 25 ++++++++--------
- arch/ia64/scripts/toolchain-flags | 50 ++++++++++++++-----------------
- 2 files changed, 36 insertions(+), 39 deletions(-)
+For non-APICv case, we need to request interrupt-window.
 
-diff --git a/arch/ia64/scripts/check-gas b/arch/ia64/scripts/check-gas
-index 787cf9b6b..7210522e6 100755
---- a/arch/ia64/scripts/check-gas
-+++ b/arch/ia64/scripts/check-gas
-@@ -1,16 +1,17 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
--dir=$(dirname $0)
- CC=$1
- OBJDUMP=$2
--tmp=${TMPDIR:-/tmp}
--out=$tmp/out$$.o
--$CC -c $dir/check-gas-asm.S -o $out
--res=$($OBJDUMP -r --section .data $out | fgrep 00004 | tr -s ' ' |cut -f3 -d' ')
--rm -f $out
--if [ $res != ".text" ]; then
--	echo buggy
--else
--	echo good
--fi
--exit 0
-+
-+cd "$(dirname $0)"
-+
-+tmp=${TMPDIR:-/tmp}/check-gas-$$.o
-+trap 'rm -f "$tmp"' INT TERM EXIT
-+
-+$CC -c check-gas-asm.S -o "$tmp" &&
-+$OBJDUMP -r --section .data "$tmp" \
-+| fgrep 00004 | tr -s ' ' | cut -f3 -d' ' \
-+| {
-+  read -r section
-+  [ "$section" = .text ] && echo good
-+} || echo buggy
-diff --git a/arch/ia64/scripts/toolchain-flags b/arch/ia64/scripts/toolchain-flags
-index 12dff5c98..4bfa4d6d6 100755
---- a/arch/ia64/scripts/toolchain-flags
-+++ b/arch/ia64/scripts/toolchain-flags
-@@ -7,48 +7,44 @@ CPPFLAGS=""
- CC=$1
- OBJDUMP=$2
- READELF=$3
--dir=$(dirname $0)
--tmp=${TMPDIR:-/tmp}
--out=$tmp/out$$
-+
-+cd "$(dirname $0)"
-+
-+tmp=${TMPDIR:-/tmp}/toolchain-flags-$$
-+trap 'rm -f "$tmp"' INT TERM EXIT
- 
- # Check whether cross-segment segment-relative relocs work fine.  We need
- # that for building the gate DSO:
--
--$CC -nostdlib -static -Wl,-T$dir/check-segrel.lds $dir/check-segrel.S -o $out
--res=$($OBJDUMP --full --section .rodata $out | fgrep 000 | cut -f3 -d' ')
--rm -f $out
--if [ $res != 00000a00 ]; then
--    CPPFLAGS="$CPPFLAGS -DHAVE_BUGGY_SEGREL"
--    cat >&2 <<EOF
-+$CC -nostdlib -static -Wl,-Tcheck-segrel.lds check-segrel.S -o "$tmp" &&
-+$OBJDUMP --full --section .rodata "$tmp" | fgrep 000 | cut -f3 -d' ' \
-+| {
-+  read -r addr
-+  [ "$addr" = 00000a00 ]
-+} || {
-+  CPPFLAGS="$CPPFLAGS -DHAVE_BUGGY_SEGREL"
-+  cat >&2 <<EOF
- warning: your linker cannot handle cross-segment segment-relative relocations.
-          please upgrade to a newer version (it is safe to use this linker, but
-          the kernel will be bigger than strictly necessary).
- EOF
--fi
-+}
- 
- # Check whether .align inside a function works as expected.
--
--$CC -c $dir/check-text-align.S -o $out
--$READELF -u $out | fgrep -q 'prologue(rlen=12)'
--res=$?
--rm -f $out
--if [ $res -eq 0 ]; then
--    CPPFLAGS="$CPPFLAGS -DHAVE_WORKING_TEXT_ALIGN"
-+if $CC -c check-text-align.S -o "$tmp" && \
-+   $READELF -u "$tmp" | fgrep -q 'prologue(rlen=12)'
-+then
-+  CPPFLAGS="$CPPFLAGS -DHAVE_WORKING_TEXT_ALIGN"
- fi
- 
--if ! $CC -c $dir/check-model.c -o $out 2>&1 | grep  __model__ | grep -q attrib
-+if ! $CC -c check-model.c -o "$tmp" 2>&1 | grep  __model__ | grep -q attrib
- then
--    CPPFLAGS="$CPPFLAGS -DHAVE_MODEL_SMALL_ATTRIBUTE"
-+  CPPFLAGS="$CPPFLAGS -DHAVE_MODEL_SMALL_ATTRIBUTE"
- fi
--rm -f $out
- 
- # Check whether assembler supports .serialize.{data,instruction} directive.
--
--$CC -c $dir/check-serialize.S -o $out 2>/dev/null
--res=$?
--rm -f $out
--if [ $res -eq 0 ]; then
--    CPPFLAGS="$CPPFLAGS -DHAVE_SERIALIZE_DIRECTIVE"
-+if $CC -c check-serialize.S -o "$tmp" 2>/dev/null
-+then
-+  CPPFLAGS="$CPPFLAGS -DHAVE_SERIALIZE_DIRECTIVE"
- fi
- 
- echo $CPPFLAGS
--- 
-2.26.1
+> > +                     !apic_lvtt_tscdeadline(apic) ||
 
+Now just add fastpath for tscdeadline mode.
+
+> > +                     vmx->rmode.vm86_active ||
+> > +                     is_smm(vcpu) ||
+> > +                     !kvm_apic_hw_enabled(apic))
+
+These stuff can be removed, kvm_apic_hw_enable() is check in
+vmx_fast_deliver_interrupt().
+
+> > +                     return EXIT_FASTPATH_NONE;
+> > +
+> > +             if (!apic->lapic_timer.hv_timer_in_use)
+> > +                     return EXIT_FASTPATH_CONT_RUN;
+> > +
+> > +             WARN_ON(swait_active(&vcpu->wq));
+> > +             vmx_cancel_hv_timer(vcpu);
+> > +             apic->lapic_timer.hv_timer_in_use = false;
+> > +
+> > +             if (atomic_read(&apic->lapic_timer.pending))
+> > +                     return EXIT_FASTPATH_CONT_RUN;
+
+Other two checks are the same in kvm_lapic_expired_hv_timer().
+
+    Wanpeng
+
+> > +
+> > +             ktimer->expired_tscdeadline = ktimer->tscdeadline;
+> > +             vmx_fast_deliver_interrupt(vcpu);
+> > +             ktimer->tscdeadline = 0;
+> > +             return EXIT_FASTPATH_CONT_RUN;
+> > +     }
+> > +
+>
+> Can you explain all the checks you have here, and why you need something
+> more complex than apic_timer_expired (possibly by adding some
+> optimizations to kvm_apic_local_deliver)?  This code is impossible to
+> maintain.
+>
+> Paolo
+>
