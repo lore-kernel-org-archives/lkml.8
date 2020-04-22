@@ -2,299 +2,139 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3929C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AEEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0D1206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7745C206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:28:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="l+ynLYuf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/ZfrFgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgDVBT1 (ORCPT
+        id S1726362AbgDVB2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 21:19:27 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52814 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgDVBT1 (ORCPT
+        Tue, 21 Apr 2020 21:28:39 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45477 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726228AbgDVB2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 21:19:27 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9C654528;
-        Wed, 22 Apr 2020 03:19:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587518363;
-        bh=aQO8hkVW8AJTCkqFbuUp2DC5MDJLF/Iapewa2JgbC14=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l+ynLYufNvpR4APTfTo+rsAjA5Q3vWXC/0gkTghRxNOkHvNnyUeAr6+rnMWAAOMs8
-         btnasNQsjHHGD8qsRE8gRmVQ/see5aInyonQC8nfKDc9kevLsbSRcbGEnvmEQHkJqe
-         pdoD50nOtIpGvJUM80xwkIFb6LoH6XNXq3GXMVyk=
-Date:   Wed, 22 Apr 2020 04:19:10 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH] drm: imx: Unify encoder creation
-Message-ID: <20200422011910.GO5983@pendragon.ideasonboard.com>
-References: <20200420100222.1308898-1-adrian.ratiu@collabora.com>
+        Tue, 21 Apr 2020 21:28:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587518917;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4ZNdcG+TmbSTCG4vzT43nnQ/z4sik6/PtNUHfENZbww=;
+        b=E/ZfrFgga2yMGaMdqh22JUqS080raUX/OAOY/sxBEf2i5amCNa0dS7jcOAwTkr1Z6fpdNk
+        Vb9EUiw0KfXiXYuKpnR3Q47tiku1m+x6ggKpN5bgiiQtvU3MK+TTq4AAtajyi3/yamYSCl
+        M/a2faC4OBeQz3BAfCUvRQMh1VW2mvs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-457-j52Xm2bOMByNiHx8lGjYwg-1; Tue, 21 Apr 2020 21:28:32 -0400
+X-MC-Unique: j52Xm2bOMByNiHx8lGjYwg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15EF2800D5B;
+        Wed, 22 Apr 2020 01:28:30 +0000 (UTC)
+Received: from T590 (ovpn-8-28.pek2.redhat.com [10.72.8.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4818EB3A7E;
+        Wed, 22 Apr 2020 01:28:19 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 09:28:14 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, bvanassche@acm.org, hare@suse.de,
+        mikelley@microsoft.com, longli@microsoft.com,
+        linux-hyperv@vger.kernel.org, wei.liu@kernel.org,
+        sthemmin@microsoft.com, haiyangz@microsoft.com, kys@microsoft.com
+Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+Message-ID: <20200422012814.GB299948@T590>
+References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200420100222.1308898-1-adrian.ratiu@collabora.com>
+In-Reply-To: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
-
-Thank you for the patch.
-
-On Mon, Apr 20, 2020 at 01:02:22PM +0300, Adrian Ratiu wrote:
-> imx drivers don't require drm encoders and they all had empty/no-op
-> implementations which got converted to simple objects to pacify the
-> drm core which still requires something to be defined.
+On Tue, Apr 21, 2020 at 05:17:24PM -0700, Dexuan Cui wrote:
+> During hibernation, the sdevs are suspended automatically in
+> drivers/scsi/scsi_pm.c before storvsc_suspend(), so after
+> storvsc_suspend(), there is no disk I/O from the file systems, but there
+> can still be disk I/O from the kernel space, e.g. disk_check_events() ->
+> sr_block_check_events() -> cdrom_check_events() can still submit I/O
+> to the storvsc driver, which causes a paic of NULL pointer dereference,
+> since storvsc has closed the vmbus channel in storvsc_suspend(): refer
+> to the below links for more info:
+>   https://lkml.org/lkml/2020/4/10/47
+>   https://lkml.org/lkml/2020/4/17/1103
 > 
-> The problem now is that each driver duplicates the same encoder
-> initialization logic and I'm working on adding yet-another driver
-> (for imx6 mipi-dsi), so instead of copy-pasting the initialization
-> let's move it from the drivers to a shared function in imx-drm-core.
-
-This is one step in the right direction, but only a first small step:
-what really needs to be done is to move the calls to
-imx_drm_create_encoder() into the i.MX display controller driver core.
-This requires turning the ldb, tve and hdmi encoders into drm_bridges.
-Parallel display is already architectured in the right way, you can have
-a look at it to see how to proceed. I recommend addressing ldb and tve
-first, what you need to remove from them through conversion to
-drm_bridge is the drm_encoder_helper_funcs.
-
-> The imx_drm_encoder_parse_of() logic is made part of the newly added
-> imx_drm_create_encoder() which was its only caller after the move to
-> imx-drm-core.
+> Fix the panic by blocking/unblocking all the I/O queues properly.
 > 
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Suggested-by: Enric Balletbo Serra <eballetbo@gmail.com>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> Note: this patch depends on another patch "scsi: core: Allow the state
+> change from SDEV_QUIESCE to SDEV_BLOCK" (refer to the second link above).
+> 
+> Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 > ---
->  drivers/gpu/drm/imx/dw_hdmi-imx.c      | 18 ++++++------------
->  drivers/gpu/drm/imx/imx-drm-core.c     | 13 ++++++++++---
->  drivers/gpu/drm/imx/imx-drm.h          |  2 +-
->  drivers/gpu/drm/imx/imx-ldb.c          |  8 ++++----
->  drivers/gpu/drm/imx/imx-tve.c          |  8 ++++----
->  drivers/gpu/drm/imx/parallel-display.c | 11 +++++------
->  6 files changed, 30 insertions(+), 30 deletions(-)
+>  drivers/scsi/storvsc_drv.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/imx/dw_hdmi-imx.c b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-> index ba4ca17fd4d8..a710e3d576b4 100644
-> --- a/drivers/gpu/drm/imx/dw_hdmi-imx.c
-> +++ b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-> @@ -18,7 +18,6 @@
->  #include <drm/drm_edid.h>
->  #include <drm/drm_encoder.h>
->  #include <drm/drm_of.h>
-> -#include <drm/drm_simple_kms_helper.h>
->  
->  #include "imx-drm.h"
->  
-> @@ -218,22 +217,17 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
->  	hdmi->dev = &pdev->dev;
->  	encoder = &hdmi->encoder;
->  
-> -	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-> -	/*
-> -	 * If we failed to find the CRTC(s) which this encoder is
-> -	 * supposed to be connected to, it's because the CRTC has
-> -	 * not been registered yet.  Defer probing, and hope that
-> -	 * the required CRTC is added later.
-> -	 */
-> -	if (encoder->possible_crtcs == 0)
-> -		return -EPROBE_DEFER;
-> -
->  	ret = dw_hdmi_imx_parse_dt(hdmi);
->  	if (ret < 0)
->  		return ret;
->  
-> +	ret = imx_drm_create_encoder(drm, encoder, dev->of_node);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to create drm encoder\n");
-> +		return ret;
-> +	}
-> +
->  	drm_encoder_helper_add(encoder, &dw_hdmi_imx_encoder_helper_funcs);
-> -	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
->  
->  	platform_set_drvdata(pdev, hdmi);
->  
-> diff --git a/drivers/gpu/drm/imx/imx-drm-core.c b/drivers/gpu/drm/imx/imx-drm-core.c
-> index 2e38f1a5cf8d..eaf087ed354f 100644
-> --- a/drivers/gpu/drm/imx/imx-drm-core.c
-> +++ b/drivers/gpu/drm/imx/imx-drm-core.c
-> @@ -23,6 +23,7 @@
->  #include <drm/drm_of.h>
->  #include <drm/drm_plane_helper.h>
->  #include <drm/drm_probe_helper.h>
-> +#include <drm/drm_simple_kms_helper.h>
->  #include <drm/drm_vblank.h>
->  
->  #include "imx-drm.h"
-> @@ -116,11 +117,11 @@ static const struct drm_mode_config_helper_funcs imx_drm_mode_config_helpers = {
->  	.atomic_commit_tail = imx_drm_atomic_commit_tail,
->  };
->  
-> -
-> -int imx_drm_encoder_parse_of(struct drm_device *drm,
-> +int imx_drm_create_encoder(struct drm_device *drm,
->  	struct drm_encoder *encoder, struct device_node *np)
->  {
->  	uint32_t crtc_mask = drm_of_find_possible_crtcs(drm, np);
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index fb41636519ee..fd51d2f03778 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -1948,6 +1948,11 @@ static int storvsc_suspend(struct hv_device *hv_dev)
+>  	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
+>  	struct Scsi_Host *host = stor_device->host;
+>  	struct hv_host_device *host_dev = shost_priv(host);
 > +	int ret;
->  
->  	/*
->  	 * If we failed to find the CRTC(s) which this encoder is
-> @@ -136,9 +137,15 @@ int imx_drm_encoder_parse_of(struct drm_device *drm,
->  	/* FIXME: cloning support not clear, disable it all for now */
->  	encoder->possible_clones = 0;
->  
-> +	ret = drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_NONE);
-> +	if (ret) {
-> +		DRM_ERROR("Failed to initialize simple drm encoder\n");
-> +		return ret;
-> +	}
 > +
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(imx_drm_encoder_parse_of);
-> +EXPORT_SYMBOL_GPL(imx_drm_create_encoder);
->  
->  static const struct drm_ioctl_desc imx_drm_ioctls[] = {
->  	/* none so far */
-> diff --git a/drivers/gpu/drm/imx/imx-drm.h b/drivers/gpu/drm/imx/imx-drm.h
-> index c3e1a3f14d30..8573a668a5f5 100644
-> --- a/drivers/gpu/drm/imx/imx-drm.h
-> +++ b/drivers/gpu/drm/imx/imx-drm.h
-> @@ -34,7 +34,7 @@ void imx_drm_mode_config_init(struct drm_device *drm);
->  
->  struct drm_gem_cma_object *imx_drm_fb_get_obj(struct drm_framebuffer *fb);
->  
-> -int imx_drm_encoder_parse_of(struct drm_device *drm,
-> +int imx_drm_create_encoder(struct drm_device *drm,
->  	struct drm_encoder *encoder, struct device_node *np);
->  
->  void imx_drm_connector_destroy(struct drm_connector *connector);
-> diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
-> index 66ea68e8da87..a37fa325a8c3 100644
-> --- a/drivers/gpu/drm/imx/imx-ldb.c
-> +++ b/drivers/gpu/drm/imx/imx-ldb.c
-> @@ -26,7 +26,6 @@
->  #include <drm/drm_panel.h>
->  #include <drm/drm_print.h>
->  #include <drm/drm_probe_helper.h>
-> -#include <drm/drm_simple_kms_helper.h>
->  
->  #include "imx-drm.h"
->  
-> @@ -423,9 +422,11 @@ static int imx_ldb_register(struct drm_device *drm,
->  	struct drm_encoder *encoder = &imx_ldb_ch->encoder;
->  	int ret;
->  
-> -	ret = imx_drm_encoder_parse_of(drm, encoder, imx_ldb_ch->child);
-> -	if (ret)
-> +	ret = imx_drm_create_encoder(drm, encoder, imx_ldb_ch->child);
-> +	if (ret) {
-> +		dev_err(ldb->dev, "Failed to create drm encoder\n");
->  		return ret;
-> +	}
->  
->  	ret = imx_ldb_get_clk(ldb, imx_ldb_ch->chno);
->  	if (ret)
-> @@ -438,7 +439,6 @@ static int imx_ldb_register(struct drm_device *drm,
->  	}
->  
->  	drm_encoder_helper_add(encoder, &imx_ldb_encoder_helper_funcs);
-> -	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_LVDS);
->  
->  	if (imx_ldb_ch->bridge) {
->  		ret = drm_bridge_attach(&imx_ldb_ch->encoder,
-> diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
-> index ee63782c77e9..2d88aca0f7e7 100644
-> --- a/drivers/gpu/drm/imx/imx-tve.c
-> +++ b/drivers/gpu/drm/imx/imx-tve.c
-> @@ -21,7 +21,6 @@
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_fb_helper.h>
->  #include <drm/drm_probe_helper.h>
-> -#include <drm/drm_simple_kms_helper.h>
->  
->  #include "imx-drm.h"
->  
-> @@ -471,12 +470,13 @@ static int imx_tve_register(struct drm_device *drm, struct imx_tve *tve)
->  	encoder_type = tve->mode == TVE_MODE_VGA ?
->  				DRM_MODE_ENCODER_DAC : DRM_MODE_ENCODER_TVDAC;
->  
-> -	ret = imx_drm_encoder_parse_of(drm, &tve->encoder, tve->dev->of_node);
-> -	if (ret)
-> +	ret = imx_drm_create_encoder(drm, &tve->encoder, tve->dev->of_node);
-> +	if (ret) {
-> +		dev_err(tve->dev, "failed to create drm encoder\n");
->  		return ret;
-> +	}
->  
->  	drm_encoder_helper_add(&tve->encoder, &imx_tve_encoder_helper_funcs);
-> -	drm_simple_encoder_init(drm, &tve->encoder, encoder_type);
->  
->  	drm_connector_helper_add(&tve->connector,
->  			&imx_tve_connector_helper_funcs);
-> diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
-> index 4465e9c602f8..321accb4ca7c 100644
-> --- a/drivers/gpu/drm/imx/parallel-display.c
-> +++ b/drivers/gpu/drm/imx/parallel-display.c
-> @@ -18,7 +18,6 @@
->  #include <drm/drm_of.h>
->  #include <drm/drm_panel.h>
->  #include <drm/drm_probe_helper.h>
-> -#include <drm/drm_simple_kms_helper.h>
->  
->  #include "imx-drm.h"
->  
-> @@ -274,10 +273,6 @@ static int imx_pd_register(struct drm_device *drm,
->  	struct drm_encoder *encoder = &imxpd->encoder;
->  	int ret;
->  
-> -	ret = imx_drm_encoder_parse_of(drm, encoder, imxpd->dev->of_node);
-> -	if (ret)
-> -		return ret;
-> -
->  	/* set the connector's dpms to OFF so that
->  	 * drm_helper_connector_dpms() won't return
->  	 * immediately since the current state is ON
-> @@ -285,7 +280,11 @@ static int imx_pd_register(struct drm_device *drm,
->  	 */
->  	imxpd->connector.dpms = DRM_MODE_DPMS_OFF;
->  
-> -	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_NONE);
-> +	ret = imx_drm_create_encoder(drm, encoder, imxpd->dev->of_node);
-> +	if (ret) {
-> +		dev_err(imxpd->dev, "failed to create drm encoder\n");
+> +	ret = scsi_host_block(host);
+> +	if (ret)
 > +		return ret;
-> +	}
 >  
->  	imxpd->bridge.funcs = &imx_pd_bridge_funcs;
->  	drm_bridge_attach(encoder, &imxpd->bridge, NULL, 0);
+>  	storvsc_wait_to_drain(stor_device);
+>  
+> @@ -1968,10 +1973,15 @@ static int storvsc_suspend(struct hv_device *hv_dev)
+>  
+>  static int storvsc_resume(struct hv_device *hv_dev)
+>  {
+> +	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
+> +	struct Scsi_Host *host = stor_device->host;
+>  	int ret;
+>  
+>  	ret = storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
+>  				     hv_dev_is_fc(hv_dev));
+> +	if (!ret)
+> +		ret = scsi_host_unblock(host, SDEV_RUNNING);
+> +
+>  	return ret;
+>  }
 
--- 
-Regards,
+scsi_host_block() is actually too heavy for just avoiding
+scsi internal command, which can be done simply by one atomic
+variable.
 
-Laurent Pinchart
+Not mention scsi_host_block() is implemented too clumsy because
+nr_luns * synchronize_rcu() are required in scsi_host_block(),
+which should have been optimized to just one.
+
+Also scsi_device_quiesce() is heavy too, still takes 2
+synchronize_rcu() for one LUN.
+
+That is said SCSI suspend may take (3 * nr_luns) sysnchronize_rcu() in
+case that the HBA's suspend handler needs scsi_host_block().
+
+Thanks,
+Ming
+
