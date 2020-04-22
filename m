@@ -2,87 +2,102 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F00FC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C73AC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B02206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:32:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="XgO2ynLV"
+	by mail.kernel.org (Postfix) with ESMTP id 6A74E206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587540892;
+	bh=ZJ3LnVNeUd8TjGzB3gxTQsGRsV+WnJqj8S4ZhM+URXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RKkbVIU6nnCMa6i+D6FOvqim2Hab8BXCXqqXsQ7GmDMIfM4fVG2edWETvWDw4OE3N
+	 4sT6dkb41M/lrdKDyKGo8KpP+shO7g98fP2XKac9B2uj3gChvVp1lbheXGkKunmY7v
+	 Rfz1eGnfm4fZ/yW1uk3IYaSVHPd0vRBw76w4SoQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgDVHcr (ORCPT
+        id S1726110AbgDVHev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:32:47 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:45093 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgDVHcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:32:47 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 37916823;
-        Wed, 22 Apr 2020 07:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=HtEBqmnfU1w2LdS6v9LHbppmOJ0=; b=XgO2yn
-        LVXAM5e/KoTuTKiRiXzANPY+GuIkh1P8P/9li5KpgUrSXO8weDb+jHtiHjY6CI1v
-        y0FDLJhiHv01Z5+ehnGdTeE/RkrFN/hb02Up781Z4839KcC+F/KR3aC4WJJ+gHIc
-        034yiYyEwZ/7+aGFqBo8p6wmP7gTPL+rJaafmm/nPxNfJ467xYSs5afmE3n+y7bJ
-        f8MFSjkzbe9jb4Zu1hlZrTafpvQauihAEn2eM4LIgwlE+irRldFk72JjgR34GNcP
-        sazuknFarjO6jn+nXo1emK2UhcX52tx96aTUliqPcSYyOhJ6XwWYWcLCh3h7k5sE
-        7K5BV5gX+UXOFcBQ==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id fe767e4e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 22 Apr 2020 07:21:55 +0000 (UTC)
-Received: by mail-io1-f50.google.com with SMTP id i19so1267969ioh.12;
-        Wed, 22 Apr 2020 00:32:45 -0700 (PDT)
-X-Gm-Message-State: AGi0PubIV8xiCRT5FeRXXp51ADZuoE/i+EgAqDoRz9LaUuSAbC7UDK7b
-        bpZmhq0dHasEv0eFjeT3bDQC6Xp4zbehbQifwMk=
-X-Google-Smtp-Source: APiQypKSHM1wFrVmucwCB0xnkocR4Y9qBsk20ipyD+/uvm3y3k7K4TRcTifVEIgKJhZZ/TiFbttLKE3sJmBUlMbvOts=
-X-Received: by 2002:a5d:9c02:: with SMTP id 2mr24375333ioe.67.1587540764605;
- Wed, 22 Apr 2020 00:32:44 -0700 (PDT)
+        Wed, 22 Apr 2020 03:34:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43031 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgDVHev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:34:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v63so640460pfb.10;
+        Wed, 22 Apr 2020 00:34:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xv3CClgNM59iAjDs4jAyjCmiyK+zMtMkYtDjchx4A/4=;
+        b=dDk/SQA0IzXPjgeu0yIb59yzu/kuKns0rKQq87n8XIcrAxHumqcENxj2+eAuhKxk0F
+         40kJJi6H0DZqd+/XcpiIfK/Me0m2Jg1sgIfBZvN3paYjvzankAcdd0fU/tBoChoXVfz0
+         CZ9UAwJB5OpgSp5qpOxqbSPkO/ddOAOcfl1Jn/cqE8SKOVABaHIIUM5GFthJGqGu/uIr
+         eNfapxl8h67kdmsfrly9dbu52f4+309RhXfGrczpIpybsKKTDiBseDH3yERmAKah5AVL
+         e7f0bV8HOPu9GfgbOXFJ57el2+gDCMJhZVUxwoDVoWO08grmVYKQiW28lRsTVz9zw9sI
+         Jezg==
+X-Gm-Message-State: AGi0PuZ1hUFIINEytbqdOfWCFYu7fwRBmqjSEYHwAC8v8uytqioCF9Fr
+        LocQD90YJ41IktoIBMcOzNA=
+X-Google-Smtp-Source: APiQypIMihueeTQ943/uTYtrvog7ersMvpf7K7XYY8myv59EdZuGEtFE1ttqG91Zu2F3zNVNy168tQ==
+X-Received: by 2002:a62:1bd0:: with SMTP id b199mr25631509pfb.283.1587540890239;
+        Wed, 22 Apr 2020 00:34:50 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id a13sm4534042pjq.0.2020.04.22.00.34.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 00:34:49 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 64CC1402A1; Wed, 22 Apr 2020 07:34:48 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 07:34:48 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bvanassche@acm.org, rostedt@goodmis.org,
+        mingo@redhat.com, jack@suse.cz, ming.lei@redhat.com,
+        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
+        yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
+Message-ID: <20200422073448.GR11244@42.do-not-panic.com>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-4-mcgrof@kernel.org>
+ <20200420201615.GC302402@kroah.com>
+ <20200420204156.GO11244@42.do-not-panic.com>
+ <20200422072942.GD19116@infradead.org>
 MIME-Version: 1.0
-References: <20200420075711.2385190-1-Jason@zx2c4.com> <20200422040415.GA2881@sol.localdomain>
-In-Reply-To: <20200422040415.GA2881@sol.localdomain>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 22 Apr 2020 01:32:33 -0600
-X-Gmail-Original-Message-ID: <CAHmME9q=hMRjBG=SBX8gCC3qx-t1wdEwMOYx952m9HkByjiofA@mail.gmail.com>
-Message-ID: <CAHmME9q=hMRjBG=SBX8gCC3qx-t1wdEwMOYx952m9HkByjiofA@mail.gmail.com>
-Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
- PAGE_SIZE chunks
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422072942.GD19116@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 10:04 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> Seems this should just be a 'while' loop?
->
->         while (bytes) {
->                 unsigned int todo = min_t(unsigned int, PAGE_SIZE, bytes);
->
->                 kernel_neon_begin();
->                 chacha_doneon(state, dst, src, todo, nrounds);
->                 kernel_neon_end();
->
->                 bytes -= todo;
->                 src += todo;
->                 dst += todo;
->         }
+On Wed, Apr 22, 2020 at 12:29:42AM -0700, Christoph Hellwig wrote:
+> On Mon, Apr 20, 2020 at 08:41:56PM +0000, Luis Chamberlain wrote:
+> > Its already there. And yes, after my changes it is technically possible
+> > to just re-use it directly. But this is complicated by a few things. One
+> > is that at this point in time, asynchronous request_queue removal is
+> > still possible, and so a race was exposed where a requeust_queue may be
+> > lingering but its old device is gone. That race is fixed by reverting us
+> > back to synchronous request_queue removal, therefore ensuring that the
+> > debugfs dir exists so long as the device does.
+> > 
+> > I can remove the debugfs_lookup() *after* we revert to synchronous
+> > request_queue removal, or we just re-order the patches so that the
+> > revert happens first. That should simplify this patch.
+> 
+> Yes, please move the synchronous removal first instead of working around
+> the current problems.
 
-The for(;;) is how it's done elsewhere in the kernel (that this patch
-doesn't touch), because then we can break out of the loop before
-having to increment src and dst unnecessarily. Likely a pointless
-optimization as probably the compiler can figure out how to avoid
-that. But maybe it can't. If you have a strong preference, I can
-reactor everything to use `while (bytes)`, but if you don't care,
-let's keep this as-is. Opinion?
+Sounds good. At first it was questionable, now its understood we need it.
 
-Jason
+  Luis
