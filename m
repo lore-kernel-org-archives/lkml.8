@@ -2,145 +2,136 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F748C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA95CC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 373DC20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw93AsTX"
+	by mail.kernel.org (Postfix) with ESMTP id A2EB52071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgDVVNi (ORCPT
+        id S1726690AbgDVVOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:13:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgDVVNg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:13:36 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC273C03C1A9;
-        Wed, 22 Apr 2020 14:13:36 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d24so1432559pll.8;
-        Wed, 22 Apr 2020 14:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fixRxJ6fU1zb5iKNn2T+pA04ZuYBb0t9f+U1RUIbv2A=;
-        b=Rw93AsTXDGj9lS/6gFbgXJTJ5+HgxYGocMJ+9qUd/CRUbZEQaxGAu3Ramu/WOl+m2y
-         ttmGhOvPwqWwX0OeKH8WsuIDNCwohdx/F2no/VwtuMfMhCKpucczQqClFUj30N+ycXSh
-         HZONV2vnBY6CTuFdWlNkMqDQ9iCiqsBTotOkikjD8uSLMj2FD7hvq2qqbXkMCdwf264Z
-         jH16IEaunNoNJwHjOqeZgwSERTzRKlw+RwwpXNrCgluHGbGvDgjuq0z/eNYvOZ8szT86
-         +x5/XcVdiW8SHqjUynL0e+YV8tTXTcJotKlWUn4GjarNFNhoIIDMaAeXZWVj5lOCFc/1
-         3qfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fixRxJ6fU1zb5iKNn2T+pA04ZuYBb0t9f+U1RUIbv2A=;
-        b=oC7OLBAnR+hNB2p1rIQSivXtKZyDYOp4+qBFleNt8h7bQh87At/cyNEDeWtYB8liw3
-         sVmewUsyS6tKIXZmZkh5wvUh2CnjVUnGmeg8awJGS/6EAPloO9VC8FmCVMnZHDm793dy
-         xQ0GzX3B+nINBEGdj8S0WvKD+N0f3d7BWDLdzel0hcuSy9WQ8E+REUjEqgcgE4wc4bJn
-         PKT9oGHDzcLik3KYkYu8omu8QsGiQICY1th8TCSQZzIOuxJ2j8Ae8uP3Iw+C5/W2Pn9s
-         NygsIw2fO7ADUhpE5TvaOIQj25fDhzebLRA/S1f0mxlRdFj0VLQiMwgVvCF4PzV09ngm
-         AW2g==
-X-Gm-Message-State: AGi0PuaUXjx8Ik0PMITYQr/UhxyETOfxcKiwb1uCsMmgAKI8enYQvZnR
-        zKV2rLevh2ohF5NeZX6SBb8=
-X-Google-Smtp-Source: APiQypLB3ZbzOoPxbh2y95mT4/1+kvo8XBOEUxWmzrWokQzJY9a+V24VOVmECS0b8eNl85q151rPZg==
-X-Received: by 2002:a17:90a:2023:: with SMTP id n32mr741941pjc.150.1587590015909;
-        Wed, 22 Apr 2020 14:13:35 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id d12sm197155pfq.36.2020.04.22.14.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 14:13:35 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 14:13:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Cameron Gutman <aicommander@gmail.com>
-Cc:     LuK1337 <priv.luk@gmail.com>, stable@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: xpad - Add custom init packet for Xbox One S
- controllers
-Message-ID: <20200422211333.GG125362@dtor-ws>
-References: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
- <20200422075206.18229-1-priv.luk@gmail.com>
- <8015c173-79e5-4627-c955-0b87e17f3034@gmail.com>
+        Wed, 22 Apr 2020 17:14:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52565 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgDVVOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:14:38 -0400
+IronPort-SDR: tR+PDkjBU/ier9SbbhN4ntD/CyWhcZBTUXplhOn4uWSNn0KtF1rrX/qqK+gg35cRxSb2YPJVMR
+ vybaviIeEr5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:14:37 -0700
+IronPort-SDR: 8vCw1V311yc1l9jGv5DHjLy8mjDMw8yJKPOo/IUX+/10QcFObB1zlI1It2yH/GrtMrLkWUtZui
+ fmoNWkImtY8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="274020861"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga002.jf.intel.com with ESMTP; 22 Apr 2020 14:14:36 -0700
+Date:   Wed, 22 Apr 2020 14:14:36 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200422211436.GA103345@otc-nc-03>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+ <20200422115017.GQ11945@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8015c173-79e5-4627-c955-0b87e17f3034@gmail.com>
+In-Reply-To: <20200422115017.GQ11945@mellanox.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:20:08AM -0700, Cameron Gutman wrote:
-> On 4/22/20 12:52 AM, LuK1337 wrote:
-> > From: Łukasz Patron <priv.luk@gmail.com>
-> > 
-> > Sending [ 0x05, 0x20, 0x00, 0x0f, 0x06 ] packet for
-> > Xbox One S controllers fixes an issue where controller
-> > is stuck in Bluetooth mode and not sending any inputs.
-> > 
-> > Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
-> > Cc: stable@vger.kernel.org
-> 
-> LGTM. Tested working on both of my Xbox One S gamepads:
-> - idVendor=045e, idProduct=02ea, bcdDevice= 3.01
-> - idVendor=045e, idProduct=02ea, bcdDevice= 4.08
-> 
-> Reviewed-by: Cameron Gutman <aicommander@gmail.com>
+Hi Jason
 
-Applied, thank you.
-
-> 
-> > ---
-> >  drivers/input/joystick/xpad.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
+> > > 
+> > > I'm feeling really skeptical that adding all this PCI config space and
+> > > MMIO BAR emulation to the kernel just to cram this into a VFIO
+> > > interface is a good idea, that kind of stuff is much safer in
+> > > userspace.
+> > > 
+> > > Particularly since vfio is not really needed once a driver is using
+> > > the PASID stuff. We already have general code for drivers to use to
+> > > attach a PASID to a mm_struct - and using vfio while disabling all the
+> > > DMA/iommu config really seems like an abuse.
 > > 
-> > diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-> > index 6b40a1c68f9f..c77cdb3b62b5 100644
-> > --- a/drivers/input/joystick/xpad.c
-> > +++ b/drivers/input/joystick/xpad.c
-> > @@ -458,6 +458,16 @@ static const u8 xboxone_fw2015_init[] = {
-> >  	0x05, 0x20, 0x00, 0x01, 0x00
-> >  };
-> >  
-> > +/*
-> > + * This packet is required for Xbox One S (0x045e:0x02ea)
-> > + * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
-> > + * initialize the controller that was previously used in
-> > + * Bluetooth mode.
-> > + */
-> > +static const u8 xboxone_s_init[] = {
-> > +	0x05, 0x20, 0x00, 0x0f, 0x06
-> > +};
-> > +
-> >  /*
-> >   * This packet is required for the Titanfall 2 Xbox One pads
-> >   * (0x0e6f:0x0165) to finish initialization and for Hori pads
-> > @@ -516,6 +526,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
-> >  	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
-> >  	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
-> >  	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
-> > +	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
-> > +	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
-> >  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
-> >  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
-> >  	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
-> > 
+> > Well, this series is for virtualizing idxd device to VMs, instead of
+> > supporting SVA for bare metal processes. idxd implements a
+> > hardware-assisted mediated device technique called Intel Scalable
+> > I/O Virtualization,
 > 
+> I'm familiar with the intel naming scheme.
+> 
+> > which allows each Assignable Device Interface (ADI, e.g. a work
+> > queue) tagged with an unique PASID to ensure fine-grained DMA
+> > isolation when those ADIs are assigned to different VMs. For this
+> > purpose idxd utilizes the VFIO mdev framework and IOMMU aux-domain
+> > extension. Bare metal SVA will be enabled for idxd later by using
+> > the general SVA code that you mentioned.  Both paths will co-exist
+> > in the end so there is no such case of disabling DMA/iommu config.
+>  
+> Again, if you will have a normal SVA interface, there is no need for a
+> VFIO version, just use normal SVA for both.
+> 
+> PCI emulation should try to be in userspace, not the kernel, for
+> security.
 
--- 
-Dmitry
+Not sure we completely understand your proposal. Mediated devices
+are software constructed and they have protected resources like
+interrupts and stuff and VFIO already provids abstractions to export
+to user space.
+
+Native SVA is simply passing the process CR3 handle to IOMMU so
+IOMMU knows how to walk process page tables, kernel handles things
+like page-faults, doing device tlb invalidations and such.
+
+That by itself doesn't translate to what a guest typically does
+with a VDEV. There are other control paths that need to be serviced
+from the kernel code via VFIO. For speed path operations like
+ringing doorbells and such they are directly managed from guest.
+
+How do you propose to use the existing SVA api's  to also provide 
+full device emulation as opposed to using an existing infrastructure 
+that's already in place?
+
+Perhaps Alex can ease Jason's concerns?
+
+Cheers,
+Ashok
+
