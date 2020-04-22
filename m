@@ -6,55 +6,60 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18F7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9287CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A395B20706
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788E720706
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDVSni (ORCPT
+        id S1726729AbgDVSnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57038 "EHLO
+        Wed, 22 Apr 2020 14:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDVSni (ORCPT
+        with ESMTP id S1726522AbgDVSnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:43:38 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73899C03C1A9;
-        Wed, 22 Apr 2020 11:43:38 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jRKLP-0006iR-64; Wed, 22 Apr 2020 20:43:35 +0200
-Date:   Wed, 22 Apr 2020 20:43:35 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Daniel Wagner <wagi@monom.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.6.4-rt3
-Message-ID: <20200422184335.pdqtv6643wntpxcy@linutronix.de>
-References: <20200416164510.kbrklqahdng5uhij@linutronix.de>
- <20200422173359.inlikfugjzsjyyp6@beryllium.lan>
- <20200422181232.a33sfm6udmy2zcvy@linutronix.de>
- <20200422183112.nfbxob7gv33fsqgp@beryllium.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200422183112.nfbxob7gv33fsqgp@beryllium.lan>
+        Wed, 22 Apr 2020 14:43:47 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B629C03C1A9;
+        Wed, 22 Apr 2020 11:43:47 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7D3ED120ED563;
+        Wed, 22 Apr 2020 11:43:46 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 11:43:45 -0700 (PDT)
+Message-Id: <20200422.114345.1554399485217894854.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 0/3] dt-bindings: net: mdio.yaml fixes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200420180723.27936-1-f.fainelli@gmail.com>
+References: <20200420180723.27936-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Apr 2020 11:43:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-22 20:31:12 [+0200], Daniel Wagner wrote:
-> Correct, all tests pass and from a quick glance there are no backtraces in the
-> logs. IIRC, lava detects warnings and backtraces in the logs and marks them as
-> error.
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Mon, 20 Apr 2020 11:07:20 -0700
+
+> This patch series documents some common MDIO devices properties such as
+> resets (and delays) and broken-turn-around. The second patch also
+> rephrases some descriptions to be more general towards MDIO devices and
+> not specific towards Ethernet PHYs.
 > 
-> v5.6.4-rt seems to be in a good shape as far my quick tests tell me.
+> Changes in v3:
+> 
+> - corrected wording of 'broken-turn-around' in ethernet-phy.yaml and
+>   mdio.yaml, add Andrew's R-b tag to patch #3
 
-Oki, thanks.
-
-Sebastian
+Series applied, thanks Florian.
