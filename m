@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224E1C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A28C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0168E2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04A22076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552315;
-	bh=L0c94b19MVAUqN2/oWXuSNcZrhQ1Dm0Nd6V1dgiWk8s=;
+	s=default; t=1587552320;
+	bh=5SeT3hiRI9bcQ3mKwLYKdi/OeOWo9IX8PWvS3M83jsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m23iK2/QqKea4ZyqTX7UETQ9lEsEZ8C1hVA2BflCdV0iH/ut69j+1IrP11nY2HFt6
-	 tS0Bp+ImfU9B0sdyeV5lkUVBxm31gQaJ7oKByRESa4/rG12IHZI8z84rvxNJrdYR5v
-	 U2qNos5Uu8JdC8JZUD/O7N0gTtaHwkozjEKgBrV8=
+	b=EGfIuIIpbTXJUB4oOW7YcbGBKXXuZQRBP0oGS9FIjK/TQkxCjzMN3YfWoIKPA+Sir
+	 BZXU85tc4FR0rBAtFRFunNftuINtc9iC8dxCjquoATrIaddBqJHpXEzSYo659EM4Jn
+	 awAeIjT95LqECnyTXVn+D9SJY4TNcw4XDZEuNQpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbgDVKpJ (ORCPT
+        id S1731883AbgDVKpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:45:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729943AbgDVKSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:20 -0400
+        id S1729933AbgDVKSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614612075A;
-        Wed, 22 Apr 2020 10:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DC092070B;
+        Wed, 22 Apr 2020 10:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550699;
-        bh=L0c94b19MVAUqN2/oWXuSNcZrhQ1Dm0Nd6V1dgiWk8s=;
+        s=default; t=1587550695;
+        bh=5SeT3hiRI9bcQ3mKwLYKdi/OeOWo9IX8PWvS3M83jsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/yBfzAGEPffrkNz9mEZAglxDVaAFzzniurrXmJtuzTxPZ0btLj2urSoELG8cAlNl
-         bxQv56GYmcZ4Z27WY6Stpd9lQqjzcm3rzu1yqmzYod9Umq6JCu3QDssCExTcVVuwQL
-         qEI7lnQPRv8f8UEdlqR50FTFns8BIHY5wAx0j5a8=
+        b=mFiufMcJf3SDP2Cb8+YrLHKoAJMaAXj8DNlv65cPi7bfmKmOTn56CP5ks1awpmvxg
+         2FEtZA6kJPzs4jfCB3kgnh9be9Yn7IKLe3NF1QLE3kHQkgfS0lktjnNTZ+qX1M+bca
+         5s6hTunfnw8kO3nWIKmekoWX7mLHkEoIjGinKNIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 057/118] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
-Date:   Wed, 22 Apr 2020 11:56:58 +0200
-Message-Id: <20200422095041.394003543@linuxfoundation.org>
+Subject: [PATCH 5.4 055/118] f2fs: fix to show norecovery mount option
+Date:   Wed, 22 Apr 2020 11:56:56 +0200
+Message-Id: <20200422095041.064784796@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -61,48 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
+[ Upstream commit a9117eca1de6b738e713d2142126db2cfbf6fb36 ]
 
-When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
-initialized to 2. Therefore we need to call nfs_direct_req_release()
-twice to release the allocated dreq. Usually it is called in
-nfs_file_direct_{read, write}() and nfs_direct_complete().
+Previously, 'norecovery' mount option will be shown as
+'disable_roll_forward', fix to show original option name correctly.
 
-However, current code only calls nfs_direct_req_relese() once if
-nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
-So, that case would result in memory leak.
-
-Fix this by adding the missing call.
-
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/f2fs/f2fs.h  | 1 +
+ fs/f2fs/super.c | 7 +++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 29f00da8a0b7f..6b0bf4ebd8124 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -571,6 +571,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 1a8b68ceaa62f..3edde3d6d089d 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -100,6 +100,7 @@ extern const char *f2fs_fault_name[FAULT_MAX];
+ #define F2FS_MOUNT_INLINE_XATTR_SIZE	0x00800000
+ #define F2FS_MOUNT_RESERVE_ROOT		0x01000000
+ #define F2FS_MOUNT_DISABLE_CHECKPOINT	0x02000000
++#define F2FS_MOUNT_NORECOVERY		0x04000000
+ 
+ #define F2FS_OPTION(sbi)	((sbi)->mount_opt)
+ #define clear_opt(sbi, option)	(F2FS_OPTION(sbi).opt &= ~F2FS_MOUNT_##option)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 28441f4971b8d..94caf26901e0b 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -439,7 +439,7 @@ static int parse_options(struct super_block *sb, char *options)
+ 			break;
+ 		case Opt_norecovery:
+ 			/* this option mounts f2fs with ro */
+-			set_opt(sbi, DISABLE_ROLL_FORWARD);
++			set_opt(sbi, NORECOVERY);
+ 			if (!f2fs_readonly(sb))
+ 				return -EINVAL;
+ 			break;
+@@ -1348,6 +1348,8 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
  	}
- 	dreq->l_ctx = l_ctx;
-@@ -989,6 +990,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
+ 	if (test_opt(sbi, DISABLE_ROLL_FORWARD))
+ 		seq_puts(seq, ",disable_roll_forward");
++	if (test_opt(sbi, NORECOVERY))
++		seq_puts(seq, ",norecovery");
+ 	if (test_opt(sbi, DISCARD))
+ 		seq_puts(seq, ",discard");
+ 	else
+@@ -3488,7 +3490,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto reset_checkpoint;
+ 
+ 	/* recover fsynced data */
+-	if (!test_opt(sbi, DISABLE_ROLL_FORWARD)) {
++	if (!test_opt(sbi, DISABLE_ROLL_FORWARD) &&
++			!test_opt(sbi, NORECOVERY)) {
+ 		/*
+ 		 * mount should be failed, when device has readonly mode, and
+ 		 * previous checkpoint was not done by clean system shutdown.
 -- 
 2.20.1
 
