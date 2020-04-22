@@ -2,281 +2,131 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3BFC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5113C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB71206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A168C206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1SlTt7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgDVHVp (ORCPT
+        id S1726363AbgDVHWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725786AbgDVHVo (ORCPT
+        Wed, 22 Apr 2020 03:22:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27523 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725786AbgDVHWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:21:44 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E681C03C1A6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:21:44 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jR9hU-0001Fo-KC; Wed, 22 Apr 2020 09:21:40 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jR9hS-0002Ef-Jn; Wed, 22 Apr 2020 09:21:38 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH net-next v3] net: phy: micrel: add phy-mode support for the KSZ9031 PHY
-Date:   Wed, 22 Apr 2020 09:21:37 +0200
-Message-Id: <20200422072137.8517-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.1
+        Wed, 22 Apr 2020 03:22:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587540157;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3QU8gwHkCUYXbkdafNMuU8FRFr0WYwJmJfr+Lfeo6IY=;
+        b=g1SlTt7Q1bl3EWqYwqWrygk3qxCqGwuegTTyDImjZUL9xLCRpVT/O20rdiN3h3NvfXRJKc
+        kgv9i7czVFXGVTmBvg1uXcrX/IAOpJh0pCb11Gzqp9vrnTDokKjPfgn5HZqyAqx0Bro4BA
+        rzLTaBjsYHhsH+LXR7ubDF0Ib25u8Y8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-Xb1nON28P2ykE-cM_uB3LA-1; Wed, 22 Apr 2020 03:22:36 -0400
+X-MC-Unique: Xb1nON28P2ykE-cM_uB3LA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75BDC8017F3;
+        Wed, 22 Apr 2020 07:22:34 +0000 (UTC)
+Received: from krava (unknown [10.40.196.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F036176E9D;
+        Wed, 22 Apr 2020 07:22:31 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 09:22:23 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2] perf stat: Improve runtime stat for interval mode
+Message-ID: <20200422072223.GC962614@krava>
+References: <20200420145417.6864-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420145417.6864-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid, rgmii-rxid.
+On Mon, Apr 20, 2020 at 10:54:17PM +0800, Jin Yao wrote:
+> For interval mode, the metric is printed after # if it exists. But
+> it's not calculated by the counts generated in this interval. See
+> following examples,
+> 
+>  root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000422803            764,809      inst_retired.any          #      2.9 CPI
+>       1.000422803          2,234,932      cycles
+>       2.001464585          1,960,061      inst_retired.any          #      1.6 CPI
+>       2.001464585          4,022,591      cycles
+> 
+> The second CPI should not be 1.6 (4,022,591/1,960,061 is 2.1)
+> 
+>  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000429493          2,869,311      cycles
+>       1.000429493            816,875      instructions              #    0.28  insn per cycle
+>       2.001516426          9,260,973      cycles
+>       2.001516426          5,250,634      instructions              #    0.87  insn per cycle
+> 
+> The second 'insn per cycle' should not be 0.87 (5,250,634/9,260,973 is 0.57).
+> 
+> The current code uses a global variable rt_stat for tracking and
+> updating the std dev of runtime stat. Unlike the counts, rt_stat is
+> not reset for interval. While the counts are reset for interval.
+> 
+> perf_stat_process_counter()
+> {
+>         if (config->interval)
+>                 init_stats(ps->res_stats);
+> }
+> 
+> So for interval, the rt_stat should be reset either.
+> 
+> This patch resets rt_stat before read_counters, so the runtime
+> stat is only calculated by the counts generated in this interval.
+> 
+> With this patch,
+> 
+>  root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000420924          2,408,818      inst_retired.any          #      2.1 CPI
+>       1.000420924          5,010,111      cycles
+>       2.001448579          2,798,407      inst_retired.any          #      1.6 CPI
+>       2.001448579          4,599,861      cycles
+> 
+>  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>  #           time             counts unit events
+>       1.000428555          2,769,714      cycles
+>       1.000428555            774,462      instructions              #    0.28  insn per cycle
+>       2.001471562          3,595,904      cycles
+>       2.001471562          1,243,703      instructions              #    0.35  insn per cycle
+> 
+> Now the second 'insn per cycle' and CPI are calculated by the counts
+> generated in this interval.
+> 
+>  v2:
+>  ---
+>  Use just existing perf_stat__reset_shadow_per_stat(&rt_stat).
+>  We don't need to define new function perf_stat__reset_rt_stat.
 
-This PHY has an internal RX delay of 1.2ns and no delay for TX.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-The pad skew registers allow to set the total TX delay to max 1.38ns and
-the total RX delay to max of 2.58ns (configurable 1.38ns + build in
-1.2ns) and a minimal delay of 0ns.
-
-According to the RGMII v1.3 specification the delay provided by PCB traces
-should be between 1.5ns and 2.0ns. The RGMII v2.0 allows to provide this
-delay by MAC or PHY. So, we configure this PHY to the best values we can
-get by this HW: TX delay to 1.38ns (max supported value) and RX delay to
-1.80ns (best calculated delay)
-
-The phy-modes can still be fine tuned/overwritten by *-skew-ps
-device tree properties described in:
-Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v3:
-- change delay on RX line to 1.80ns
-- add warning if *-skew-ps properties are used together with not rgmii
-  mode. 
-
-changes v2:
-- change RX_ID value from 0x1a to 0xa. The overflow bit was detected by
-  FIELD_PREP() build check.
-  Reported-by: kbuild test robot <lkp@intel.com>
-
- drivers/net/phy/micrel.c | 128 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 123 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 05d20343b8161..045783eb4bc70 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -19,6 +19,7 @@
-  *			 ksz9477
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/phy.h>
-@@ -490,9 +491,50 @@ static int ksz9021_config_init(struct phy_device *phydev)
- 
- /* MMD Address 0x2 */
- #define MII_KSZ9031RN_CONTROL_PAD_SKEW	4
-+#define MII_KSZ9031RN_RX_CTL_M		GENMASK(7, 4)
-+#define MII_KSZ9031RN_TX_CTL_M		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_RX_DATA_PAD_SKEW	5
-+#define MII_KSZ9031RN_RXD3		GENMASK(15, 12)
-+#define MII_KSZ9031RN_RXD2		GENMASK(11, 8)
-+#define MII_KSZ9031RN_RXD1		GENMASK(7, 4)
-+#define MII_KSZ9031RN_RXD0		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_TX_DATA_PAD_SKEW	6
-+#define MII_KSZ9031RN_TXD3		GENMASK(15, 12)
-+#define MII_KSZ9031RN_TXD2		GENMASK(11, 8)
-+#define MII_KSZ9031RN_TXD1		GENMASK(7, 4)
-+#define MII_KSZ9031RN_TXD0		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_CLK_PAD_SKEW	8
-+#define MII_KSZ9031RN_GTX_CLK		GENMASK(9, 5)
-+#define MII_KSZ9031RN_RX_CLK		GENMASK(4, 0)
-+
-+/* KSZ9031 has internal RGMII_IDRX = 1.2ns and RGMII_IDTX = 0ns. To
-+ * provide different RGMII options we need to configure delay offset
-+ * for each pad relative to build in delay.
-+ */
-+/* keep rx as "No delay adjustment" and set rx_clk to +0.60ns to get delays of
-+ * 1.80ns
-+ */
-+#define RX_ID				0x7
-+#define RX_CLK_ID			0x19
-+
-+/* set rx to +0.30ns and rx_clk to -0.90ns to compensate the
-+ * internal 1.2ns delay.
-+ */
-+#define RX_ND				0xc
-+#define RX_CLK_ND			0x0
-+
-+/* set tx to -0.42ns and tx_clk to +0.96ns to get 1.38ns delay */
-+#define TX_ID				0x0
-+#define TX_CLK_ID			0x1f
-+
-+/* set tx and tx_clk to "No delay adjustment" to keep 0ns
-+ * dealy
-+ */
-+#define TX_ND				0x7
-+#define TX_CLK_ND			0xf
- 
- /* MMD Address 0x1C */
- #define MII_KSZ9031RN_EDPD		0x23
-@@ -501,7 +543,8 @@ static int ksz9021_config_init(struct phy_device *phydev)
- static int ksz9031_of_load_skew_values(struct phy_device *phydev,
- 				       const struct device_node *of_node,
- 				       u16 reg, size_t field_sz,
--				       const char *field[], u8 numfields)
-+				       const char *field[], u8 numfields,
-+				       bool *update)
- {
- 	int val[4] = {-1, -2, -3, -4};
- 	int matches = 0;
-@@ -517,6 +560,8 @@ static int ksz9031_of_load_skew_values(struct phy_device *phydev,
- 	if (!matches)
- 		return 0;
- 
-+	*update |= true;
-+
- 	if (matches < numfields)
- 		newval = phy_read_mmd(phydev, 2, reg);
- 	else
-@@ -565,6 +610,67 @@ static int ksz9031_enable_edpd(struct phy_device *phydev)
- 			     reg | MII_KSZ9031RN_EDPD_ENABLE);
- }
- 
-+static int ksz9031_config_rgmii_delay(struct phy_device *phydev)
-+{
-+	u16 rx, tx, rx_clk, tx_clk;
-+	int ret;
-+
-+	switch (phydev->interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+		tx = TX_ND;
-+		tx_clk = TX_CLK_ND;
-+		rx = RX_ND;
-+		rx_clk = RX_CLK_ND;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+		tx = TX_ID;
-+		tx_clk = TX_CLK_ID;
-+		rx = RX_ID;
-+		rx_clk = RX_CLK_ID;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+		tx = TX_ND;
-+		tx_clk = TX_CLK_ND;
-+		rx = RX_ID;
-+		rx_clk = RX_CLK_ID;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		tx = TX_ID;
-+		tx_clk = TX_CLK_ID;
-+		rx = RX_ND;
-+		rx_clk = RX_CLK_ND;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_CONTROL_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_RX_CTL_M, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TX_CTL_M, tx));
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_RX_DATA_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_RXD3, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD2, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD1, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD0, rx));
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_TX_DATA_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_TXD3, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD2, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD1, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD0, tx));
-+	if (ret < 0)
-+		return ret;
-+
-+	return phy_write_mmd(phydev, 2, MII_KSZ9031RN_CLK_PAD_SKEW,
-+			     FIELD_PREP(MII_KSZ9031RN_GTX_CLK, tx_clk) |
-+			     FIELD_PREP(MII_KSZ9031RN_RX_CLK, rx_clk));
-+}
-+
- static int ksz9031_config_init(struct phy_device *phydev)
- {
- 	const struct device *dev = &phydev->mdio.dev;
-@@ -597,21 +703,33 @@ static int ksz9031_config_init(struct phy_device *phydev)
- 	} while (!of_node && dev_walker);
- 
- 	if (of_node) {
-+		bool update = false;
-+
-+		if (phy_interface_is_rgmii(phydev)) {
-+			result = ksz9031_config_rgmii_delay(phydev);
-+			if (result < 0)
-+				return result;
-+		}
-+
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_CLK_PAD_SKEW, 5,
--				clk_skews, 2);
-+				clk_skews, 2, &update);
- 
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_CONTROL_PAD_SKEW, 4,
--				control_skews, 2);
-+				control_skews, 2, &update);
- 
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_RX_DATA_PAD_SKEW, 4,
--				rx_data_skews, 4);
-+				rx_data_skews, 4, &update);
- 
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
--				tx_data_skews, 4);
-+				tx_data_skews, 4, &update);
-+
-+		if (update && phydev->interface != PHY_INTERFACE_MODE_RGMII)
-+			phydev_warn(phydev,
-+				    "*-skew-ps values should be used only with phy-mode = \"rgmii\"\n");
- 
- 		/* Silicon Errata Sheet (DS80000691D or DS80000692D):
- 		 * When the device links in the 1000BASE-T slave mode only,
--- 
-2.26.0.rc2
+thanks,
+jirka
 
