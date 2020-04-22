@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9A5C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB6EC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A752075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4CD2075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550709;
-	bh=txSi6p/kX7rnICuGexhOWNu8Z2hFqfXzAhrFRv0goes=;
+	s=default; t=1587550714;
+	bh=M6ptCejwI31FoxbckhDkOLx2nSehW9/IaJ0HcvrgiMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mLWB95z9zj83EPV8z4FRTWdt9mZJRAmSdTfDHp6lSYT/bk/W29GjaFCWcVB7GgkE4
-	 8pncNnCgfrAr05nZZI2kW62blF4BUdoovgqbMgLg7uHzZlVNrN3xmXdW66AwwVcF2n
-	 el/0plM4oYObzGpFGl/OjmBv0W6sLxqQ7QXEy7uA=
+	b=1ouGwdF9Rbe9/w2Tel9JZBuVG7a5jhPptcropA7/u7QbPrbYVDTdAttc2utmmuxq+
+	 PHjVxGyJtUSTup2wPFtOs3p9z6pyKb72I5N5IU3DYIJN2uK4k/JotoEa1almmhR31q
+	 9DudbS+G/sLQBXNMujjl0WZa5JZ+KINXs+QXrLEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgDVKS2 (ORCPT
+        id S1729981AbgDVKSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729840AbgDVKRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:31 -0400
+        id S1729862AbgDVKRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAC8A2076B;
-        Wed, 22 Apr 2020 10:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8941220776;
+        Wed, 22 Apr 2020 10:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550650;
-        bh=txSi6p/kX7rnICuGexhOWNu8Z2hFqfXzAhrFRv0goes=;
+        s=default; t=1587550658;
+        bh=M6ptCejwI31FoxbckhDkOLx2nSehW9/IaJ0HcvrgiMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xwDk6y84LhHYU+nb25iy8w4svdtCEKeVnazPC05mMfGGW0SWpkLuJq6b8b4A2xtTL
-         8Vi7TUA63cyUEidX06GpCkvKX+NQpB8sb1wpPtu3tzV5b55ItHR45CLgSEHL4wP6vY
-         LBktwAHRpPo+UU6de9DYAx3r8tFa1ZG9dj5IQyJA=
+        b=URu+o84rE5OeWDfFzthA9TdJGBK8JxP71OvSn13SApg1vOi3YVOUvjikP0A8kfLI4
+         oHQmLG4KZbnM1jRSmb51OWru/nbpRvSAobi3DK8PgjDMAjzk9l9aOt16sUpyM0KNUI
+         auDvjN5tr784YVP9lyo73Mk6A02oniuf0CMMMlSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.4 005/118] arm, bpf: Fix offset overflow for BPF_MEM BPF_DW
-Date:   Wed, 22 Apr 2020 11:56:06 +0200
-Message-Id: <20200422095032.433118157@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 008/118] ALSA: hda: Honor PM disablement in PM freeze and thaw_noirq ops
+Date:   Wed, 22 Apr 2020 11:56:09 +0200
+Message-Id: <20200422095032.889229251@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,109 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 4178417cc5359c329790a4a8f4a6604612338cca upstream.
+commit 10db5bccc390e8e4bd9fcd1fbd4f1b23f271a405 upstream.
 
-This patch fixes an incorrect check in how immediate memory offsets are
-computed for BPF_DW on arm.
+freeze_noirq and thaw_noirq need to check the PM availability like
+other PM ops.  There are cases where the device got disabled due to
+the error, and the PM operation should be ignored for that.
 
-For BPF_LDX/ST/STX + BPF_DW, the 32-bit arm JIT breaks down an 8-byte
-access into two separate 4-byte accesses using off+0 and off+4. If off
-fits in imm12, the JIT emits a ldr/str instruction with the immediate
-and avoids the use of a temporary register. While the current check off
-<= 0xfff ensures that the first immediate off+0 doesn't overflow imm12,
-it's not sufficient for the second immediate off+4, which may cause the
-second access of BPF_DW to read/write the wrong address.
-
-This patch fixes the problem by changing the check to
-off <= 0xfff - 4 for BPF_DW, ensuring off+4 will never overflow.
-
-A side effect of simplifying the check is that it now allows using
-negative immediate offsets in ldr/str. This means that small negative
-offsets can also avoid the use of a temporary register.
-
-This patch introduces no new failures in test_verifier or test_bpf.c.
-
-Fixes: c5eae692571d6 ("ARM: net: bpf: improve 64-bit store implementation")
-Fixes: ec19e02b343db ("ARM: net: bpf: fix LDX instructions")
-Co-developed-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200409221752.28448-1-luke.r.nels@gmail.com
+Fixes: 3e6db33aaf1d ("ALSA: hda - Set SKL+ hda controller power at freeze() and thaw()")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Link: https://lore.kernel.org/r/20200413082034.25166-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/net/bpf_jit_32.c |   40 ++++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ sound/pci/hda/hda_intel.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm/net/bpf_jit_32.c
-+++ b/arch/arm/net/bpf_jit_32.c
-@@ -1000,21 +1000,35 @@ static inline void emit_a32_mul_r64(cons
- 	arm_bpf_put_reg32(dst_hi, rd[0], ctx);
- }
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1068,6 +1068,8 @@ static int azx_freeze_noirq(struct devic
+ 	struct azx *chip = card->private_data;
+ 	struct pci_dev *pci = to_pci_dev(dev);
  
-+static bool is_ldst_imm(s16 off, const u8 size)
-+{
-+	s16 off_max = 0;
-+
-+	switch (size) {
-+	case BPF_B:
-+	case BPF_W:
-+		off_max = 0xfff;
-+		break;
-+	case BPF_H:
-+		off_max = 0xff;
-+		break;
-+	case BPF_DW:
-+		/* Need to make sure off+4 does not overflow. */
-+		off_max = 0xfff - 4;
-+		break;
-+	}
-+	return -off_max <= off && off <= off_max;
-+}
-+
- /* *(size *)(dst + off) = src */
- static inline void emit_str_r(const s8 dst, const s8 src[],
--			      s32 off, struct jit_ctx *ctx, const u8 sz){
-+			      s16 off, struct jit_ctx *ctx, const u8 sz){
- 	const s8 *tmp = bpf2a32[TMP_REG_1];
--	s32 off_max;
- 	s8 rd;
++	if (!azx_is_pm_ready(card))
++		return 0;
+ 	if (chip->driver_type == AZX_DRIVER_SKL)
+ 		pci_set_power_state(pci, PCI_D3hot);
  
- 	rd = arm_bpf_get_reg32(dst, tmp[1], ctx);
+@@ -1080,6 +1082,8 @@ static int azx_thaw_noirq(struct device
+ 	struct azx *chip = card->private_data;
+ 	struct pci_dev *pci = to_pci_dev(dev);
  
--	if (sz == BPF_H)
--		off_max = 0xff;
--	else
--		off_max = 0xfff;
--
--	if (off < 0 || off > off_max) {
-+	if (!is_ldst_imm(off, sz)) {
- 		emit_a32_mov_i(tmp[0], off, ctx);
- 		emit(ARM_ADD_R(tmp[0], tmp[0], rd), ctx);
- 		rd = tmp[0];
-@@ -1043,18 +1057,12 @@ static inline void emit_str_r(const s8 d
++	if (!azx_is_pm_ready(card))
++		return 0;
+ 	if (chip->driver_type == AZX_DRIVER_SKL)
+ 		pci_set_power_state(pci, PCI_D0);
  
- /* dst = *(size*)(src + off) */
- static inline void emit_ldx_r(const s8 dst[], const s8 src,
--			      s32 off, struct jit_ctx *ctx, const u8 sz){
-+			      s16 off, struct jit_ctx *ctx, const u8 sz){
- 	const s8 *tmp = bpf2a32[TMP_REG_1];
- 	const s8 *rd = is_stacked(dst_lo) ? tmp : dst;
- 	s8 rm = src;
--	s32 off_max;
--
--	if (sz == BPF_H)
--		off_max = 0xff;
--	else
--		off_max = 0xfff;
- 
--	if (off < 0 || off > off_max) {
-+	if (!is_ldst_imm(off, sz)) {
- 		emit_a32_mov_i(tmp[0], off, ctx);
- 		emit(ARM_ADD_R(tmp[0], tmp[0], src), ctx);
- 		rm = tmp[0];
 
 
