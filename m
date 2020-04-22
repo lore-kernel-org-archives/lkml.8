@@ -8,80 +8,82 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	TVD_RCVD_SPACE_BRACKET,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B7AC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA881C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71C4520781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B737420781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="VM1ta8AO"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="ZcRHjcUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgDVLXG (ORCPT
+        id S1726970AbgDVLXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:23:06 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:35348 "EHLO
+        Wed, 22 Apr 2020 07:23:15 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:40226 "EHLO
         mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726832AbgDVLXF (ORCPT
+        by vger.kernel.org with ESMTP id S1726904AbgDVLXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:23:14 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBMBGZ018085;
         Wed, 22 Apr 2020 07:23:05 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBGatH012772;
-        Wed, 22 Apr 2020 07:23:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id; s=smtpout1;
- bh=s97OSsLXQUhCG7bmdYIO7vydAXKR5mkYhWfuSshshXw=;
- b=VM1ta8AOoJujK5QNirW6Fc8+trcQh48eZRhkZL09Lm7tug9Av7uAO1CwaLaGYeoQ5cO0
- qBVaQYvaHLo0Pj9CpBnvR4i3wO1UTu4IevKJGGHHUUae6HAOGsZpsBp9fqktU/8ScO+M
- MIitYLEuQubCUlJPRh7mHTeQkuzrFsVVrbiNsmexOraRBb2E4nKjyYe87kym00KsRmdz
- +bS2fGOguuzKLwxm1Tc48/QuAepZfXz9bAuA69KM6cOeNYCgCkSwgGMsQhNkL4HC2vhp
- 4NfdXNw1p0c9Sf/CKZEv7ynz56rYaS6UmQB/G2Y7IZHAS7fodbCZuQBEGxTqD4HP34VM RQ== 
-Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 30fvm3excn-1
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=vk6WIRJbGY1Rn41lMJfqEpm0LjdRgFhX8K8ILvUyRG4=;
+ b=ZcRHjcUy1ZQR7pU+RgMKHF+yIxEks/tFdUf6+UtixrxO8RFEyp/LUNJLQ9aRT/OaE9Bw
+ uCyP2mbcwcY9hcq2hmISeyrS1iGyQLVdp6ygMD8404IL0GTLxgNHxuwgravesLpnv1C1
+ hYWlhChqQBjIITovTAel2eq7Ak37AVgzIoIkv4i9dy8tOSUAx1QphT9J+XGYqdqPxcEX
+ kd9mULOXc4Kiie4Sbdz/I4cx4l7ZB3v36QivMzj3SD9KMKqZc/MeUMPEXXHH7XoPaaG7
+ GvjHPXJC24z5nT3dIB6H+5A40/04MgvoNWcTrSmrPriSi5qttKDs4pnTr89bqgYkok9h VA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 30fvpwenyc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 07:23:00 -0400
-Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBEoSM110724;
-        Wed, 22 Apr 2020 07:22:59 -0400
-Received: from mailuogwhop.emc.com (mailuogwhop-nat.lss.emc.com [168.159.213.141] (may be forged))
-        by mx0b-00154901.pphosted.com with ESMTP id 30jhh8d9bp-1
+        Wed, 22 Apr 2020 07:23:05 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBF6WC025053;
+        Wed, 22 Apr 2020 07:23:05 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0a-00154901.pphosted.com with ESMTP id 30jfxm4u1g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Apr 2020 07:22:59 -0400
+        Wed, 22 Apr 2020 07:23:05 -0400
 Received: from emc.com (localhost [127.0.0.1])
-        by mailuogwprd04.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBMwso020033;
-        Wed, 22 Apr 2020 07:22:58 -0400
-Received: from mailsyshubprd56.lss.emc.com ([mailsyshubprd56.lss.emc.com [10.106.48.138]]) by mailuogwprd04.lss.emc.com with ESMTP id 03MBMOwE019596 ;
-          Wed, 22 Apr 2020 07:22:25 -0400
+        by mailuogwprd54.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBN4e7021409;
+        Wed, 22 Apr 2020 07:23:04 -0400
+Received: from mailsyshubprd56.lss.emc.com ([mailsyshubprd56.lss.emc.com [10.106.48.138]]) by mailuogwprd54.lss.emc.com with ESMTP id 03MBMcwh021212 ;
+          Wed, 22 Apr 2020 07:22:39 -0400
 Received: from vd-leonidr.xiolab.lab.emc.com (vd-leonidr.xiolab.lab.emc.com [10.76.212.243])
-        by mailsyshubprd56.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBMK2a011459;
-        Wed, 22 Apr 2020 07:22:21 -0400
+        by mailsyshubprd56.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBMK2c011459;
+        Wed, 22 Apr 2020 07:22:36 -0400
 From:   leonid.ravich@dell.com
 To:     dmaengine@vger.kernel.org
 Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
-        Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Dave Jiang <dave.jiang@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
         Alexios Zavras <alexios.zavras@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dmaengine: ioat: removing duplicate code from timeout handler
-Date:   Wed, 22 Apr 2020 14:22:05 +0300
-Message-Id: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
+Subject: [PATCH 3/3] dmaengine: ioat: adding missed issue_pending to timeout handler
+Date:   Wed, 22 Apr 2020 14:22:07 +0300
+Message-Id: <1587554529-29839-3-git-send-email-leonid.ravich@dell.com>
 X-Mailer: git-send-email 1.9.3
-X-Sentrion-Hostname: mailuogwprd04.lss.emc.com
+In-Reply-To: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
+References: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
+X-Sentrion-Hostname: mailuogwprd54.lss.emc.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-22_03:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=606 adultscore=0 priorityscore=1501 malwarescore=0 spamscore=0
- bulkscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 suspectscore=13
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220090
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=672 priorityscore=1501
- phishscore=0 spamscore=0 adultscore=0 bulkscore=0 malwarescore=0
- clxscore=1015 suspectscore=13 mlxscore=0 lowpriorityscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 priorityscore=1501 spamscore=0 suspectscore=13
+ lowpriorityscore=0 phishscore=0 mlxlogscore=756 clxscore=1015
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004220090
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
+ suspectscore=13 mlxlogscore=814 impostorscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,84 +91,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-moving duplicate code from timeout error handling to common
-function.
+completion timeout might trigger unnesesery DMA engine hw reboot
+in case of missed issue_pending() .
 
 Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
 ---
- drivers/dma/ioat/dma.c | 45 +++++++++++++++++++--------------------------
- 1 file changed, 19 insertions(+), 26 deletions(-)
+ drivers/dma/ioat/dma.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 1e0e6c1..da59b28 100644
+index 55a8cf1..2ab07a3 100644
 --- a/drivers/dma/ioat/dma.c
 +++ b/drivers/dma/ioat/dma.c
-@@ -869,6 +869,23 @@ static void check_active(struct ioatdma_chan *ioat_chan)
- 		mod_timer(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
- }
+@@ -955,6 +955,13 @@ void ioat_timer_event(struct timer_list *t)
+ 		goto unlock_out;
+ 	}
  
-+static void ioat_reboot_chan(struct ioatdma_chan *ioat_chan)
-+{
-+	spin_lock_bh(&ioat_chan->prep_lock);
-+	set_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
-+	spin_unlock_bh(&ioat_chan->prep_lock);
++	/* handle missed issue pending case */
++	if (ioat_ring_pending(ioat_chan)) {
++		spin_lock_bh(&ioat_chan->prep_lock);
++		__ioat_issue_pending(ioat_chan);
++		spin_unlock_bh(&ioat_chan->prep_lock);
++	}
 +
-+	ioat_abort_descs(ioat_chan);
-+	dev_warn(to_dev(ioat_chan), "Reset channel...\n");
-+	ioat_reset_hw(ioat_chan);
-+	dev_warn(to_dev(ioat_chan), "Restart channel...\n");
-+	ioat_restart_channel(ioat_chan);
-+
-+	spin_lock_bh(&ioat_chan->prep_lock);
-+	clear_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
-+	spin_unlock_bh(&ioat_chan->prep_lock);
-+}
-+
- void ioat_timer_event(struct timer_list *t)
- {
- 	struct ioatdma_chan *ioat_chan = from_timer(ioat_chan, t, timer);
-@@ -891,19 +908,7 @@ void ioat_timer_event(struct timer_list *t)
- 
- 		if (test_bit(IOAT_RUN, &ioat_chan->state)) {
- 			spin_lock_bh(&ioat_chan->cleanup_lock);
--			spin_lock_bh(&ioat_chan->prep_lock);
--			set_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
--			spin_unlock_bh(&ioat_chan->prep_lock);
--
--			ioat_abort_descs(ioat_chan);
--			dev_warn(to_dev(ioat_chan), "Reset channel...\n");
--			ioat_reset_hw(ioat_chan);
--			dev_warn(to_dev(ioat_chan), "Restart channel...\n");
--			ioat_restart_channel(ioat_chan);
--
--			spin_lock_bh(&ioat_chan->prep_lock);
--			clear_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
--			spin_unlock_bh(&ioat_chan->prep_lock);
-+			ioat_reboot_chan(ioat_chan);
- 			spin_unlock_bh(&ioat_chan->cleanup_lock);
- 		}
- 
-@@ -939,19 +944,7 @@ void ioat_timer_event(struct timer_list *t)
- 		dev_dbg(to_dev(ioat_chan), "Active descriptors: %d\n",
- 			ioat_ring_active(ioat_chan));
- 
--		spin_lock_bh(&ioat_chan->prep_lock);
--		set_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
--		spin_unlock_bh(&ioat_chan->prep_lock);
--
--		ioat_abort_descs(ioat_chan);
--		dev_warn(to_dev(ioat_chan), "Resetting channel...\n");
--		ioat_reset_hw(ioat_chan);
--		dev_warn(to_dev(ioat_chan), "Restarting channel...\n");
--		ioat_restart_channel(ioat_chan);
--
--		spin_lock_bh(&ioat_chan->prep_lock);
--		clear_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
--		spin_unlock_bh(&ioat_chan->prep_lock);
-+		ioat_reboot_chan(ioat_chan);
- 		spin_unlock_bh(&ioat_chan->cleanup_lock);
- 		return;
- 	} else
+ 	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
+ 	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
+ unlock_out:
 -- 
 1.9.3
 
