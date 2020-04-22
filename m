@@ -2,117 +2,199 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFBDC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D7DC5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 920182077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71EF2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:12:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e2qv8zer"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="f8/p86/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVVMX (ORCPT
+        id S1726500AbgDVVM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:12:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
+        Wed, 22 Apr 2020 17:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgDVVMX (ORCPT
+        with ESMTP id S1726421AbgDVVMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:12:23 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D107C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:12:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a7so1522521pju.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=XDPcP3tbzlYKPYQTKxlpDEEO5QOa9GV0Amha8h89AsA=;
-        b=e2qv8zerN73zMA5kW/Ta2fN1O8dVIK6jdFNxVtrJdjtMXUttRjJYvnccM0b/J1yciZ
-         lzbNuem24E3qhUXCCDGrhc2xgjM6SrUupLu6OxsIqZDgHOnnSZ5flr/7F/DAhDRki5P4
-         qLllKpWEIlToWVvAZA0E5oKaNXV4MQmK5onWY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=XDPcP3tbzlYKPYQTKxlpDEEO5QOa9GV0Amha8h89AsA=;
-        b=WR29baF6y2npys45n/BiBKOrOWkdFivysb5wlpFrwTGofL6pgaTh2qVfyWIqf1bXtM
-         lblrnSUBkuus49C2EwzLiCPGvFxe9LhBfEMhD51plga5cgYSbOY4HVk3FuUKKcFFA/YK
-         or2yI8sxJMln+oNG5aI681mzXnfetZoTEhRdhgUrZfJ/G3eeYCt41sp1WS4O3ZtrAaAi
-         QOr+nVy0myjUSplmS+yVaO91rb2HWjbPNWJvXqhOm/ssWL8rTJurLRgTf5pF2Q1zsS2Y
-         F/HZQM7jGmQomQTUSJR3CFe5kO2kiVpq1fURWh2RVz51RwHBXj5SORabki3oJ9X65eR8
-         dkwg==
-X-Gm-Message-State: AGi0Pubd6S1MzqhfQLV7YaIf32XHaKTCEmj9JwhdTF/JaRE3+pjqGuFe
-        fKN+1iDtuIskXmZLP3hFQcOLxQ==
-X-Google-Smtp-Source: APiQypL5oBKdc6NVB1E/uXQs9airhXye2LtpOV4841Lu7hi+EjVHEnGsUW8WDXrjg92l2+Vpp882FA==
-X-Received: by 2002:a17:902:6b86:: with SMTP id p6mr639876plk.150.1587589942545;
-        Wed, 22 Apr 2020 14:12:22 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id o40sm164208pjb.18.2020.04.22.14.12.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 14:12:21 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Wed, 22 Apr 2020 17:12:25 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E6B7C03C1A9;
+        Wed, 22 Apr 2020 14:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587589941;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=bQAgadQgOVbS4DuKshH2v+YQnNnb7kL7V3XzA7l6NS4=;
+        b=f8/p86/psnan71ptAKB8sm6uDtakdvSg5Msf2w8C3R5RBmfvw7iGAlAjdhUyC79Qyh
+        Qx93IvYlkAzddb24UjuiINUrQGECHHOYzM2fsFVq+ws5VDBVarEJOvigz/WdBF8NkNCK
+        63VKyvpQ9FNIRCJR8dNsOL9kCbtrH/69nAPzGDXwdk4ZdZjAQbLAZPRScCrCOmiEkbAy
+        9Y2gSeS5sWpkQiY6DtNNWkb8OyTfH1AyDp5chFZh2p9sBaApes/L9G7ixJwoq1asU6AK
+        BJGKcwgPoSpIIHvJPaZFtMkUhX9KOIHAtG80Cw5nUhYBMus8feGDwvKf7xj4oYLMaOu5
+        LixQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMiw43tskc="
+X-RZG-CLASS-ID: mo00
+Received: from mbp-13-nikolaus.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw3MLCI3zq
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 22 Apr 2020 23:12:18 +0200 (CEST)
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200422193328.GD37466@atomide.com>
+Date:   Wed, 22 Apr 2020 23:12:26 +0200
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200420220458.v2.3.I53fed5b501a31e7a7fa13268ebcdd6b77bd0cadd@changeid>
-References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.3.I53fed5b501a31e7a7fa13268ebcdd6b77bd0cadd@changeid>
-Subject: Re: [PATCH v2 3/6] drm/panel-simple: Support hpd-gpios for delaying prepare()
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        jernej.skrabec@siol.net, bjorn.andersson@linaro.org,
-        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>,
-        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
-        airlied@linux.ie, bgolaszewski@baylibre.com, daniel@ffwll.ch,
-        linus.walleij@linaro.org, narmstrong@baylibre.com,
-        robh+dt@kernel.org, spanda@codeaurora.org
-Date:   Wed, 22 Apr 2020 14:12:20 -0700
-Message-ID: <158758994028.230545.10042873479857418029@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Message-Id: <266D5048-8339-433F-B66D-CAAB1C2CB1A2@goldelico.com>
+References: <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan> <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com> <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan> <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com> <MC879Q.XY9S0U9R35681@crapouillou.net> <D90A610B-1F26-4AD4-843A-60EB4E410377@goldelico.com> <a1fd55a3-23dd-aa0c-35dd-6956ff4baa1c@gmail.com> <20200422193328.GD37466@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>,
+        Philipp Rossak <embed3d@gmail.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-04-20 22:06:19)
-> People use panel-simple when they have panels that are builtin to
-> their device.  In these cases the HPD (Hot Plug Detect) signal isn't
-> really used for hotplugging devices but instead is used for power
-> sequencing.  Panel timing diagrams (especially for eDP panels) usually
-> have the HPD signal in them and it acts as an indicator that the panel
-> is ready for us to talk to it.
->=20
-> Sometimes the HPD signal is hooked up to a normal GPIO on a system.
-> In this case we need to poll it in the correct place to know that the
-> panel is ready for us.  In some system designs the right place for
-> this is panel-simple.
->=20
-> When adding this support, we'll account for the case that there might
-> be a circular dependency between panel-simple and the provider of the
-> GPIO.  The case this was designed for was for the "ti-sn65dsi86"
-> bridge chip.  If HPD is hooked up to one of the GPIOs provided by the
-> bridge chip then in our probe function we'll always get back
-> -EPROBE_DEFER.  Let's handle this by allowing this GPIO to show up
-> late if we saw -EPROBE_DEFER during probe.
+Hi Tony and Philip,
 
-May be worth mentioning that if there isn't an hpd-gpios property then
-we only try once during probe and then after that the prepare callback
-doesn't try again because the gpio_get_optional() APIs are used. I had
-to think about that for a minute.
+> Am 22.04.2020 um 21:33 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * Philipp Rossak <embed3d@gmail.com> [200422 19:05]:
+>> A few years back, I did a big research on the PowerVR GPUs. Back then =
+I
+>> found an interesting TI datasheet. I forgot about this till I have =
+seen the
+>> right buzz words. Sorry that I remembered it that late.
+>>=20
+>> Back then I came to the conclusion that all PowerVR GPU's have in =
+general 3
+>> Clocks.
+>>=20
+>> A system clock, a memory clock and a core clock. [1].
+
+Great!  This is an excerpt of the am335x TRM.
+I may have seen this information in the past but also forgot about it.
+
+Indeed, it seems to change a lot of our thinking.
 
 >=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+> Hmm I'm not sure if those names are sgx or SoC specific.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+It depends. Here is some quick research:
+
+the am335x lists:
+  THALIAIRQ, SYSCLK & MEMCLK (connected in parallel), CORECLK
+
+The omap3530 TRM has different information. It names them
+  SGX_FCLK, SGX_ICLK, SGX_RST and SGX_IRQ
+  but this is likely a TI nomenclature defined by the PRCM wrapper.
+
+DM3730 and OMAP4 and TRM tells the same.
+
+The OMAP5 TRM is interestingly different. It has:
+  GPU_ICLK, GPU_FCLK1, GPU_FCLK2, GPU_RST and GPU_IRQ.
+  Really surprising is that the PRCM outputs are called
+    GPU_L3_GICLK, GPU_CORE_GCLK and GPU_HYS_GCLK.
+
+  I.e. the same "HYD" as we have seen in the A31. It seems to
+  be a feature of the sgx544 to have two functional clocks and
+  one being called "HYD".
+
+Now I know why it didn't play a role so far. Because the omap5
+wrapper hides this detail from the sgx implementation.
+
+Next I checked the AM572x TRM:
+ it has also a hyd_clk, a core_clk, sys_clk, some reset and a gpu_irq
+
+The DRA7xx TRM does the same as AM57xx.
+
+So the "hyd" clock seems to be a second functional clock
+with unknown function in some SGX variants. It seems to be
+something different from the "memclock" of the am335x but may
+be the same.
+
+>=20
+> Anyways, the sgx clocks for omap variants are already handled
+> by the ti-sysc module as "fck" and "ick" so nothing to do there.
+
+Which brings back the question if this complexity and not well
+defined clocks of the SGX core should really be part of the bindings
+any why we have to care about...
+
+What is the benefit of modeling at this level of pretend accuracy?
+
+>=20
+>> The hyd_clk at sunxi devices seems to be the system clock.
+>>=20
+>> With those additional information it should be very easy to get a =
+proper
+>> binding.
+>=20
+> It would be best to find the clock(s) name used in the sgx docs
+> to avoid using SoC specific naming :)
+
+If there were specific SGX docs describing the VHDL signal names :)
+
+>=20
+> But yeah "sysclk" "memclk" and "coreclk" seem just fine for
+> me for the optional clocks if that works for other SoCs.
+
+Well, if the other SoC would follow the PRCM/sysc approach
+the omap uses, all these clocks would be part of the wrapper
+and can be named and numbered as it best fits to the SoC
+data sheet and clock control registers.
+
+>=20
+> Regards,
+>=20
+> Tony
+>=20
+>> [1]: =
+https://github.com/embed-3d/PVRSGX_hwdoc/blob/master/sources/pdfs/Spruh73c=
+_chapter_SGX_Graphics_Accelerator.pdf
+
+So a compromise could be to
+
+* define
+
+  clock-names:
+    items:
+      - const: core
+      - const: mem
+      - const: sys
+      - const: hyd
+
+* make clocks optional (for omap or others wanting to use a wrapper =
+driver)
+* DTs can request the same clock providers for core and hyd or mem if =
+that fits best
+* the driver must enable all 4 clocks if they exists
+
+BR and thanks,
+Nikolaus
+
