@@ -4,68 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E07C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6092C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB7220747
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C039320722
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgDVB2u (ORCPT
+        id S1726363AbgDVBqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 21:28:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38096 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726228AbgDVB2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 21:28:50 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8CF947FF075052E8B1B1;
-        Wed, 22 Apr 2020 09:28:46 +0800 (CST)
-Received: from DESKTOP-C3MD9UG.china.huawei.com (10.166.215.55) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 22 Apr 2020 09:28:40 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/1] brd: remove a redundant check
-Date:   Wed, 22 Apr 2020 09:28:11 +0800
-Message-ID: <20200422012811.1606-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        Tue, 21 Apr 2020 21:46:32 -0400
+Received: from m176115.mail.qiye.163.com ([59.111.176.115]:4702 "EHLO
+        m176115.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgDVBqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 21:46:32 -0400
+Received: from ubuntu.localdomain (unknown [157.0.31.122])
+        by m176115.mail.qiye.163.com (Hmail) with ESMTPA id 30EAF6633BC;
+        Wed, 22 Apr 2020 09:46:26 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
+Subject: [PATCH v5] drm/amdgpu: cleanup coding style in amdkfd a bit
+Date:   Tue, 21 Apr 2020 18:46:18 -0700
+Message-Id: <20200422014618.4020-1-bernard@vivo.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.166.215.55]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTlVIQkpCQkJMSUpOSUxKWVdZKFlBSE
+        83V1ktWUFJV1kJDhceCFlBWTU0KTY6NyQpLjc#WQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pj46NRw4TDg4KAINLUMYET4e
+        K04KC0JVSlVKTkNMTkpCQkNCTktJVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSUlZV1kIAVlBSEhLSTcG
+X-HM-Tid: 0a719f909ad89373kuws30eaf6633bc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because pages[i] can't be NULL, otherwise "pos = pages[i]->index;" will
-panic. So when "ret" is NULL, it can't be equal to pages[i].
+Make the code a bit more readable by using a common
+error handling pattern.
+With that done the patch is Reviewed-by: Christian König
+<christian.koenig@amd.com>.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+
+Changes since V1:
+*commit message improve
+*code style refactoring
+
+Changes since V2:
+*code style adjust
+
+Changes since V3:
+*find the best way to merge unnecessary if/else check branch
+
+Changes since V4:
+*Improve the subject line and commit message
+
+Link for V1:
+*https://lore.kernel.org/patchwork/patch/1226587/
 ---
- drivers/block/brd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  | 20 +++++++++----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index 2fb25c348d53..59fec4a8ac93 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -147,7 +147,7 @@ static void brd_free_pages(struct brd_device *brd)
- 			BUG_ON(pages[i]->index < pos);
- 			pos = pages[i]->index;
- 			ret = radix_tree_delete(&brd->brd_pages, pos);
--			BUG_ON(!ret || ret != pages[i]);
-+			BUG_ON(ret != pages[i]);
- 			__free_page(pages[i]);
- 		}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index 9dff792c9290..acb612c53b9c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -660,15 +660,15 @@ static int reserve_bo_and_vm(struct kgd_mem *mem,
  
+ 	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
+ 				     false, &ctx->duplicates);
+-	if (!ret)
+-		ctx->reserved = true;
+-	else {
+-		pr_err("Failed to reserve buffers in ttm\n");
++	if (ret) {
++		pr_err("Failed to reserve buffers in ttm.\n");
+ 		kfree(ctx->vm_pd);
+ 		ctx->vm_pd = NULL;
++		return ret;
+ 	}
+ 
+-	return ret;
++	ctx->reserved = true;
++	return 0;
+ }
+ 
+ /**
+@@ -733,17 +733,15 @@ static int reserve_bo_and_cond_vms(struct kgd_mem *mem,
+ 
+ 	ret = ttm_eu_reserve_buffers(&ctx->ticket, &ctx->list,
+ 				     false, &ctx->duplicates);
+-	if (!ret)
+-		ctx->reserved = true;
+-	else
+-		pr_err("Failed to reserve buffers in ttm.\n");
+-
+ 	if (ret) {
++		pr_err("Failed to reserve buffers in ttm.\n");
+ 		kfree(ctx->vm_pd);
+ 		ctx->vm_pd = NULL;
++		return ret;
+ 	}
+ 
+-	return ret;
++	ctx->reserved = true;
++	return 0;
+ }
+ 
+ /**
 -- 
-2.26.0.106.g9fadedd
-
+2.26.2
 
