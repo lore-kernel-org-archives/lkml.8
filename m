@@ -2,136 +2,119 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA95CC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59867C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2EB52071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2453F2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgDVVOi (ORCPT
+        id S1726303AbgDVVUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:14:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:52565 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgDVVOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:14:38 -0400
-IronPort-SDR: tR+PDkjBU/ier9SbbhN4ntD/CyWhcZBTUXplhOn4uWSNn0KtF1rrX/qqK+gg35cRxSb2YPJVMR
- vybaviIeEr5A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:14:37 -0700
-IronPort-SDR: 8vCw1V311yc1l9jGv5DHjLy8mjDMw8yJKPOo/IUX+/10QcFObB1zlI1It2yH/GrtMrLkWUtZui
- fmoNWkImtY8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="274020861"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga002.jf.intel.com with ESMTP; 22 Apr 2020 14:14:36 -0700
-Date:   Wed, 22 Apr 2020 14:14:36 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200422211436.GA103345@otc-nc-03>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
- <20200422115017.GQ11945@mellanox.com>
+        Wed, 22 Apr 2020 17:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgDVVUv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:20:51 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17ABC03C1A9;
+        Wed, 22 Apr 2020 14:20:51 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jRMnX-0000Ni-E1; Wed, 22 Apr 2020 23:20:47 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0CA381C02FC;
+        Wed, 22 Apr 2020 23:20:47 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 21:20:46 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/core: fix parent pid/tid in task exit events
+Cc:     KP Singh <kpsingh@google.com>, Ian Rogers <irogers@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200417182842.12522-1-irogers@google.com>
+References: <20200417182842.12522-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422115017.GQ11945@mellanox.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Message-ID: <158759044657.28353.11787754973675408420.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason
+The following commit has been merged into the perf/urgent branch of tip:
 
-> > > 
-> > > I'm feeling really skeptical that adding all this PCI config space and
-> > > MMIO BAR emulation to the kernel just to cram this into a VFIO
-> > > interface is a good idea, that kind of stuff is much safer in
-> > > userspace.
-> > > 
-> > > Particularly since vfio is not really needed once a driver is using
-> > > the PASID stuff. We already have general code for drivers to use to
-> > > attach a PASID to a mm_struct - and using vfio while disabling all the
-> > > DMA/iommu config really seems like an abuse.
-> > 
-> > Well, this series is for virtualizing idxd device to VMs, instead of
-> > supporting SVA for bare metal processes. idxd implements a
-> > hardware-assisted mediated device technique called Intel Scalable
-> > I/O Virtualization,
-> 
-> I'm familiar with the intel naming scheme.
-> 
-> > which allows each Assignable Device Interface (ADI, e.g. a work
-> > queue) tagged with an unique PASID to ensure fine-grained DMA
-> > isolation when those ADIs are assigned to different VMs. For this
-> > purpose idxd utilizes the VFIO mdev framework and IOMMU aux-domain
-> > extension. Bare metal SVA will be enabled for idxd later by using
-> > the general SVA code that you mentioned.  Both paths will co-exist
-> > in the end so there is no such case of disabling DMA/iommu config.
->  
-> Again, if you will have a normal SVA interface, there is no need for a
-> VFIO version, just use normal SVA for both.
-> 
-> PCI emulation should try to be in userspace, not the kernel, for
-> security.
+Commit-ID:     f3bed55e850926614b9898fe982f66d2541a36a5
+Gitweb:        https://git.kernel.org/tip/f3bed55e850926614b9898fe982f66d2541a36a5
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Fri, 17 Apr 2020 11:28:42 -07:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 22 Apr 2020 23:10:14 +02:00
 
-Not sure we completely understand your proposal. Mediated devices
-are software constructed and they have protected resources like
-interrupts and stuff and VFIO already provids abstractions to export
-to user space.
+perf/core: fix parent pid/tid in task exit events
 
-Native SVA is simply passing the process CR3 handle to IOMMU so
-IOMMU knows how to walk process page tables, kernel handles things
-like page-faults, doing device tlb invalidations and such.
+Current logic yields the child task as the parent.
 
-That by itself doesn't translate to what a guest typically does
-with a VDEV. There are other control paths that need to be serviced
-from the kernel code via VFIO. For speed path operations like
-ringing doorbells and such they are directly managed from guest.
+Before:
+$ perf record bash -c "perf list > /dev/null"
+$ perf script -D |grep 'FORK\|EXIT'
+4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
+4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
+4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
+                                                   ^
+  Note the repeated values here -------------------/
 
-How do you propose to use the existing SVA api's  to also provide 
-full device emulation as opposed to using an existing infrastructure 
-that's already in place?
+After:
+383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
+383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
+383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
 
-Perhaps Alex can ease Jason's concerns?
+Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
+Reported-by: KP Singh <kpsingh@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
+---
+ kernel/events/core.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-Cheers,
-Ashok
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bc9b98a..633b4ae 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7491,10 +7491,17 @@ static void perf_event_task_output(struct perf_event *event,
+ 		goto out;
+ 
+ 	task_event->event_id.pid = perf_event_pid(event, task);
+-	task_event->event_id.ppid = perf_event_pid(event, current);
+-
+ 	task_event->event_id.tid = perf_event_tid(event, task);
+-	task_event->event_id.ptid = perf_event_tid(event, current);
++
++	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
++		task_event->event_id.ppid = perf_event_pid(event,
++							task->real_parent);
++		task_event->event_id.ptid = perf_event_pid(event,
++							task->real_parent);
++	} else {  /* PERF_RECORD_FORK */
++		task_event->event_id.ppid = perf_event_pid(event, current);
++		task_event->event_id.ptid = perf_event_tid(event, current);
++	}
+ 
+ 	task_event->event_id.time = perf_event_clock(event);
+ 
