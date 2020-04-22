@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F5C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A58C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A57DC20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED4C20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553107;
-	bh=WALJuTDvlNBCj6twB6HtYszOz40olVvACI1e0Rm4CsU=;
+	s=default; t=1587553113;
+	bh=DEhdbPHZQqfPYtJM5It5za6INTguDrtlMdRmDCnIdgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Otc54nbk7QII/bc61jU/XHIOn+w3m3kY1x8bCYtixqzsWk0ugiIDpvt18cPr/gji/
-	 9AiYiuf7SyYo1Unkma2MnWVQxIhuZ2JwWMuVZ+4YTJC3rHk47SQIFMT/mQ+bsZwGWM
-	 G3PHJCEfWN8sLlPRLprUZY82uKoZmZTic42RP0iI=
+	b=rkgZc5hTZZoP2cry45X4J6IP4e7ZdQ4IOz+YNDnHd7H0m3CaBT6YvhDdzp4BQp6Jt
+	 F3mm/4myzq8oIqt9RjOkWJwNBUlcrPIB6FxGNra3wjqhDv9O7oqMa7UatkQp/N2lBD
+	 K3wo9b6XkEYM/jViGRu0/JGs3vsHEdJwfkWaPkJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgDVKEI (ORCPT
+        id S1727888AbgDVKDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54214 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:03:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgDVKEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:04 -0400
+        id S1726442AbgDVKDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53DB72076C;
-        Wed, 22 Apr 2020 10:04:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED33C20774;
+        Wed, 22 Apr 2020 10:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549843;
-        bh=WALJuTDvlNBCj6twB6HtYszOz40olVvACI1e0Rm4CsU=;
+        s=default; t=1587549824;
+        bh=DEhdbPHZQqfPYtJM5It5za6INTguDrtlMdRmDCnIdgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h7YIokuiyCncw+727ApSNTbvrja4wrn7SdEc0oYGTHjiIApA9q7PrJIDC0oQlxVWj
-         6LmcGbLBJqHhqQ8/xigMzSE0Cqam2shBJrx4+HEUkw6Gxg+f6rOHtiOObNKJAWILFv
-         sXT3Q+q/48sySHdxH53Bo8i89J7tCwnhujGOEyz8=
+        b=DmOvUa+1e2fQZPwlEYw3CUTwrl4Tr8h87ayAAP5wcfmM799sqDNjN38g5I1lNREXm
+         aCb/nwWAgQAr6dmItKGhMcyyCeZKavwKcSzs2SW49A3t3FjJFg6un/srSA8yS5p5Cw
+         P6ISIjd9udpUQF8X1zQNz8hxcd7fBQNNhId9EttI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 4.9 029/125] KEYS: reaching the keys quotas correctly
-Date:   Wed, 22 Apr 2020 11:55:46 +0200
-Message-Id: <20200422095038.056684890@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 022/125] ALSA: hda: Add driver blacklist
+Date:   Wed, 22 Apr 2020 11:55:39 +0200
+Message-Id: <20200422095036.870434379@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,67 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 2e356101e72ab1361821b3af024d64877d9a798d upstream.
+commit 3c6fd1f07ed03a04debbb9a9d782205f1ef5e2ab upstream.
 
-Currently, when we add a new user key, the calltrace as below:
+The recent AMD platform exposes an HD-audio bus but without any actual
+codecs, which is internally tied with a USB-audio device, supposedly.
+It results in "no codecs" error of HD-audio bus driver, and it's
+nothing but a waste of resources.
 
-add_key()
-  key_create_or_update()
-    key_alloc()
-    __key_instantiate_and_link
-      generic_key_instantiate
-        key_payload_reserve
-          ......
+This patch introduces a static blacklist table for skipping such a
+known bogus PCI SSID entry.  As of writing this patch, the known SSIDs
+are:
+* 1043:874f - ASUS ROG Zenith II / Strix
+* 1462:cb59 - MSI TRX40 Creator
+* 1462:cb60 - MSI TRX40
 
-Since commit a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly"),
-we can reach max bytes/keys in key_alloc, but we forget to remove this
-limit when we reserver space for payload in key_payload_reserve. So we
-can only reach max keys but not max bytes when having delta between plen
-and type->def_datalen. Remove this limit when instantiating the key, so we
-can keep consistent with key_alloc.
-
-Also, fix the similar problem in keyctl_chown_key().
-
-Fixes: 0b77f5bfb45c ("keys: make the keyring quotas controllable through /proc/sys")
-Fixes: a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly")
-Cc: stable@vger.kernel.org # 5.0.x
-Cc: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200408140449.22319-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/keys/key.c    |    2 +-
- security/keys/keyctl.c |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ sound/pci/hda/hda_intel.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -382,7 +382,7 @@ int key_payload_reserve(struct key *key,
- 		spin_lock(&key->user->lock);
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1971,6 +1971,17 @@ static const struct hdac_io_ops pci_hda_
+ 	.dma_free_pages = dma_free_pages,
+ };
  
- 		if (delta > 0 &&
--		    (key->user->qnbytes + delta >= maxbytes ||
-+		    (key->user->qnbytes + delta > maxbytes ||
- 		     key->user->qnbytes + delta < key->user->qnbytes)) {
- 			ret = -EDQUOT;
- 		}
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -881,8 +881,8 @@ long keyctl_chown_key(key_serial_t id, u
- 				key_quota_root_maxbytes : key_quota_maxbytes;
++/* Blacklist for skipping the whole probe:
++ * some HD-audio PCI entries are exposed without any codecs, and such devices
++ * should be ignored from the beginning.
++ */
++static const struct snd_pci_quirk driver_blacklist[] = {
++	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
++	{}
++};
++
+ static const struct hda_controller_ops pci_hda_ops = {
+ 	.disable_msi_reset_irq = disable_msi_reset_irq,
+ 	.substream_alloc_pages = substream_alloc_pages,
+@@ -1990,6 +2001,11 @@ static int azx_probe(struct pci_dev *pci
+ 	bool schedule_probe;
+ 	int err;
  
- 			spin_lock(&newowner->lock);
--			if (newowner->qnkeys + 1 >= maxkeys ||
--			    newowner->qnbytes + key->quotalen >= maxbytes ||
-+			if (newowner->qnkeys + 1 > maxkeys ||
-+			    newowner->qnbytes + key->quotalen > maxbytes ||
- 			    newowner->qnbytes + key->quotalen <
- 			    newowner->qnbytes)
- 				goto quota_overrun;
++	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++		dev_info(&pci->dev, "Skipping the blacklisted device\n");
++		return -ENODEV;
++	}
++
+ 	if (dev >= SNDRV_CARDS)
+ 		return -ENODEV;
+ 	if (!enable[dev]) {
 
 
