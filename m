@@ -2,112 +2,93 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF7BC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC77BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46A4320767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E4BDeNe/"
+	by mail.kernel.org (Postfix) with ESMTP id CA3992075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587541717;
+	bh=x0I5KBP+qlSUlWGHWiOS+dhq5f4tvAcCb77tNKlbUpY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yi9t4ZTtZkWPDA+u+hhcqASkNgqbPU0N8Rk3uS8gFSs7T5dY3DzJQVsJoO45pf0YY
+	 R7lsMHeP4kOfS3BmQLPBqTVtGB+MttkYB2pmBxaJNurkzyeApAgnjldL3wq11CKGVC
+	 frPdg/QF72SF2sMRQfOwWx6u/FFhPOfGzqIiAvK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgDVHsa (ORCPT
+        id S1726605AbgDVHsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:48:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726524AbgDVHs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:48:27 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2888EC03C1A6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:27 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id w3so1305703plz.15
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=YbCEU+/XsZxx/Rjj0tjknUqMeudJ748gHpjse82lZTo=;
-        b=E4BDeNe/FN965SuuyiCmlWsJ6CcW1p6ZwXf7V6gPISkBiSkBrjQP6Z8UED+oDS5rZV
-         QFmQVtI8oXELCrKzpG+OQzWd5ov5j5nOCaRgCkmeBYysKNgueLFxMoptHfEicaHal6mY
-         /eBeLBU0bInMUJvPCKTltYBUdRIinLmY3tuZFLVTcUXvJJiA1PuYQ1f89g8K77mn/EcV
-         O2CZDic1jaxYJyQ00qqEG/NPkw1pI8M03aolEFQBfh+YGLxARNNuDLxTpp2e7oEliCc7
-         XpKcj46heKfDiyHRYOAvWsjspW0bbqCtWMUamELWLSI1ExZcqawTRK0MgroKo+QhL3oA
-         czeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=YbCEU+/XsZxx/Rjj0tjknUqMeudJ748gHpjse82lZTo=;
-        b=aHxWZNICq+NrS7xt1M+eNGpEo14nqRUVzAksISY8/iUGJcV5FA0PK5XZ1e2+COK1HU
-         yj+N4oUPc5s5pD2bqvjg7LttriFVPiBAk/GDFU1jCi3xRmaptxVGeXTo3BnaJLAxjKfD
-         JYZuuuesZFEKVuFfkqfo9drGOaBTKNWh5Z2EocBU4uSBPXBuAgciejPhto6rzHlUPjzj
-         Uy9hSPPAVHWQsWseGGS3E7gzEoCsa7raG+IJW+49yGjRODXhPSAENEPeBe27Gj9GYkPv
-         /vujoyCCQjhbmwriijf2iyl7I4umVxXB2s3A6iFySKw3MSPMHgwiQZ1QsSQCsYmJEq/l
-         IAlw==
-X-Gm-Message-State: AGi0PuagFJyz8aawckrK/n6PjPj8aeYcRDOuIi4Z287wNUtjJKsb8jwS
-        FwyQPVfYEiTDuHIhi9doYMnvE6e2xmHx
-X-Google-Smtp-Source: APiQypK5KXEyVnBJu4U/W3MnkjQIxEsv0a+GJ/hGx35lK8GgwVuRWZTMeNKb0LInOapi0w5F/WwZdlj7220b
-X-Received: by 2002:a17:90b:3110:: with SMTP id gc16mr10110413pjb.155.1587541706701;
- Wed, 22 Apr 2020 00:48:26 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 00:48:06 -0700
-In-Reply-To: <20200422074809.160248-1-irogers@google.com>
-Message-Id: <20200422074809.160248-6-irogers@google.com>
-Mime-Version: 1.0
-References: <20200422074809.160248-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 5/8] perf expr: increase max other
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 22 Apr 2020 03:48:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbgDVHsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:48:31 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A0C42070B;
+        Wed, 22 Apr 2020 07:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587541711;
+        bh=x0I5KBP+qlSUlWGHWiOS+dhq5f4tvAcCb77tNKlbUpY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lrbDGLprKUz7+PbtWm8nGsMr6BUeX2BfPzkAfdqQfAWhmzxh2xFl9UA/IHyUmHs3f
+         R4d/LOWJopZft9FF6fQUyu4JaEnTQ+fbkumkjWOXpUMCKYOdTigYOEIgMWWTcZdfvE
+         V/EhgdOu+agzOkCfUPGnC6r0esFeGU19+cOKdaVc=
+Date:   Wed, 22 Apr 2020 08:48:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: linux-next: Fixes tags needs some work in the sound-asoc tree
+Message-ID: <20200422074828.GA4898@sirena.org.uk>
+References: <20200416094111.3f37623f@canb.auug.org.au>
+ <CAEnQRZDb9N3jiVgHGpvv8Vn5z9LaFEymMqRCMzPUSrz8R3CXhQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Disposition: inline
+In-Reply-To: <CAEnQRZDb9N3jiVgHGpvv8Vn5z9LaFEymMqRCMzPUSrz8R3CXhQ@mail.gmail.com>
+X-Cookie: A stitch in time saves nine.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Large metrics such as Branch_Misprediction_Cost_SMT on x86 broadwell
-need more space.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/expr.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index 0938ad166ece..4938bfc608b7 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -2,7 +2,7 @@
- #ifndef PARSE_CTX_H
- #define PARSE_CTX_H 1
- 
--#define EXPR_MAX_OTHER 20
-+#define EXPR_MAX_OTHER 64
- #define MAX_PARSE_ID EXPR_MAX_OTHER
- 
- struct expr_parse_id {
--- 
-2.26.2.303.gf8c07b1a785-goog
+On Wed, Apr 22, 2020 at 10:27:47AM +0300, Daniel Baluta wrote:
 
+> Mark, how should I fix this. Should I resend the entire series?
+
+Don't worry about this series, just try to avoid similar issues in
+future.
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6f9skACgkQJNaLcl1U
+h9ABTAf+IdWeF9UpvC3rMkwSWyLfDg1af5BBcGhSqEBuigBfVYWOHwG9K+baGooj
+4K0JhFCDpEATME5d4q15gm1FkP1K1RBxIdpRvQrnzBoDPT6u8b4/Tdlb+APygt75
+nWgB5nU4id6siJQ2+ZJEbGHQ6o8gqSZGhIqv8LYjaXCZDr4zlK3J9xSNawBfxZVK
+LUCz+BHAa2VqDBoJsnhhh74wriz2BRS9JnYAXfV2Ww8Wu2WoObSj+zSV3HjsXN4w
+j9iRQobc1SFG8F2KzBZ6Xdu0cPi6Ut2TSmxRNgcmmVTkykxsy3aJHVz6q3Sb6edL
+N9fx5QdlvzCL4La0v8Q/fX6vDZIzkQ==
+=sHKE
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
