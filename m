@@ -2,131 +2,106 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848D7C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DCAC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB122076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB6F2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gv89tcQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgDVXEY (ORCPT
+        id S1726151AbgDVXIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:04:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:7109 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbgDVXEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:04:24 -0400
-IronPort-SDR: 3uHv/mNBS2PuxZxmApi10iGniE4BDbo7a1FVY6YBZxfcuULMNbvrESa4GCrBdBmTmCrSKD8lnI
- LSbwpX6W44QQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 16:04:23 -0700
-IronPort-SDR: 49PSRAP6HZ2kkUOmviJXbjwvhozsbej9LWy1KbXoOSWlD9Itl37uJJ9lcmtRvzpTqNciu0IzD/
- O+hF9jv9BXmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="247589890"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.254.185.101]) ([10.254.185.101])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2020 16:04:20 -0700
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
-        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
-Date:   Wed, 22 Apr 2020 16:04:20 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 19:08:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725846AbgDVXIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 19:08:09 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439A4C03C1AB
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:08:08 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g2so1563003plo.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=ArROpAk6/OFm/ez5Uo9l28XbbULD17tF98w60ra2Vi8=;
+        b=gv89tcQPRXlNJNGrQiV+m2G9DKOjCc262kmlFxBszHuzeoiWhdWG4OCqmk/sedBKcg
+         JTzVVOWZbOaY8bT/G6OnfXSvcLYKs5A3bSrZ/AdqRQVLB/LOnnBIMWr8lFLF4T6+Xtn8
+         RxSEPKqBtxIHv8OLiqZ4JGP93yBKqwHslN7EUMUL9ee1a3ouosAeGCBYGi+t13BqJUaW
+         Si7dSAssE4mf94jaXp1Pe30gfv3zqOYXQOOlRd3DwPdS41y6/FfEyEaJWMA2Mih253m8
+         yR0JNTQN+r7PazhMj+GKXwXKXTrC5pG68j/Oqd7B4Ka2PxD5eDDoBDJ7MffPGVvK1nNf
+         THug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=ArROpAk6/OFm/ez5Uo9l28XbbULD17tF98w60ra2Vi8=;
+        b=hxomXDYWDYIH6o07MEtg+5vfqRxHJkRBPavzzPOAhakPAgIJE5aOME5GJUIFWe7POi
+         xYJX0mk5t0rNdaL1FK40o+cV3XKt7BMw8s/+iNl9uX+ZmkFuguit4MnMOAMWiW2aWlZA
+         FDEdCdAEwTQGEt7ha1HyLfknrF75ngRN/wuhocYOjWuCLwEdrZBWstDrmkR1jkvGxuFw
+         Xf3G4aa+I8ldhtgCAAQzclqotdXlzEw8OP/xvQRGcfPuGP3dpkktSc6U4lOPu4giIfsH
+         5M6BnUqrVmXZJuUUTfKUk7UNf789a8PR+pJnfJeCt77Z5os0jmQ1G0JvKFL1WcbUYJ+y
+         BBSw==
+X-Gm-Message-State: AGi0PuYpKMV6Bfw/Z8P1vNMWjT8TdSHbRisVMZaFUo70DNnRDTKjFzqC
+        xdxCayN3jFq6RzniJ7enQVmtJw==
+X-Google-Smtp-Source: APiQypKdavy8VuGj9OPbA1SloQuWUfYm9s+txwLnuKWP2L4onHGFPWc6YXuPxnjY8GMYtNzb9G3Gqw==
+X-Received: by 2002:a17:902:784c:: with SMTP id e12mr984699pln.191.1587596887624;
+        Wed, 22 Apr 2020 16:08:07 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p62sm554472pfb.93.2020.04.22.16.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 16:08:06 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 16:08:33 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [GIT PULL] remoteproc fixes for v5.7
+Message-ID: <20200422230833.GA2112870@builder.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200421235442.GO11945@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-On 4/21/2020 4:54 PM, Jason Gunthorpe wrote:
-> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
->> The actual code is independent of the stage 2 driver code submission that adds
->> support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
->> support dedicated workqueue on a guest with no vIOMMU.
->>    
->> A new device type "mdev" is introduced for the idxd driver. This allows the wq
->> to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
->> queue (wq) is enabled, an uuid generated by the user can be added to the wq
->> through the uuid sysfs attribute for the wq.  After the association, a mdev can
->> be created using this UUID. The mdev driver code will associate the uuid and
->> setup the mdev on the driver side. When the create operation is successful, the
->> uuid can be passed to qemu. When the guest boots up, it should discover a DSA
->> device when doing PCI discovery.
-> 
-> I'm feeling really skeptical that adding all this PCI config space and
-> MMIO BAR emulation to the kernel just to cram this into a VFIO
-> interface is a good idea, that kind of stuff is much safer in
-> userspace.
-> 
-> Particularly since vfio is not really needed once a driver is using
-> the PASID stuff. We already have general code for drivers to use to
-> attach a PASID to a mm_struct - and using vfio while disabling all the
-> DMA/iommu config really seems like an abuse.
-> 
-> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
-> seems a lot simpler and saner kernel wise.
-> 
->> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
->> interrupts for the guest. This preserves MSIX for host usages and also allows a
->> significantly larger number of interrupt vectors for guest usage.
-> 
-> I never did get a reply to my earlier remarks on the IMS patches.
-> 
-> The concept of a device specific addr/data table format for MSI is not
-> Intel specific. This should be general code. We have a device that can
-> use this kind of kernel capability today.
-> 
+are available in the Git repository at:
 
-<resending to the mailing list, I had incorrect email options set>
+  https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rproc-v5.7-fixes
 
-Hi Jason,
+for you to fetch changes up to c2781e4d9bc6d925dfc1ff833dfdaf12b69679de:
 
-I am sorry if I did not address your comments earlier.
+  remoteproc: mtk_scp: use dma_addr_t for DMA API (2020-04-16 15:53:15 -0700)
 
-The present IMS code is quite generic, most of the code is in the 
-drivers/ folder. We basically introduce 2 APIS: allocate and free IMS 
-interrupts and a IMS IRQ domain to allocate these interrupts from. These 
-APIs are architecture agnostic.
+----------------------------------------------------------------
+remoteproc fixes for v5.7
 
-We also introduce a new IMS IRQ domain which is architecture specific. 
-This is because IMS generates interrupts only in the remappable format, 
-hence interrupt remapping should be enabled for IMS. Currently, the 
-interrupt remapping code is only available for Intel and AMD and I don’t 
-see anything for ARM.
+This fixes a regression in the probe error path of the Qualcomm modem
+remoteproc driver and a mix up of phy_addr_t and dma_addr_t in the
+Mediatek SCP control driver.
 
-If a new architecture would want to use IMS, they must simply introduce 
-a new IMS IRQ domain. I am not sure if there is any other way around 
-this. If you have any ideas, please let me know.
+----------------------------------------------------------------
+Alex Elder (2):
+      remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
+      remoteproc: qcom_q6v5_mss: fix q6v5_probe() error paths
 
-Also, could you give more details on the device that could use IMS? Do 
-you have some driver code already? We could then see if and how the 
-current IMS code could be made more generic.
+Arnd Bergmann (1):
+      remoteproc: mtk_scp: use dma_addr_t for DMA API
 
-> Jason
-> 
+ drivers/remoteproc/mtk_common.h    |  2 +-
+ drivers/remoteproc/mtk_scp.c       |  6 +++---
+ drivers/remoteproc/qcom_q6v5_mss.c | 33 ++++++++++++++++++++-------------
+ 3 files changed, 24 insertions(+), 17 deletions(-)
