@@ -2,199 +2,223 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4C4C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C25C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B72F2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C346C20735
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587546264;
+	bh=iodvWiMvLvn6GaULtni3VC0AD9QWqgVNJaaTAKMQ/7o=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=CTNVi6yrGkhx2gqpMdbM+feqgHcfLE8yDrlhggpo1xc+cDxLw1YMWtBsI/2f/+TxT
+	 Zhx4TM/rHx3Wa26ZcE3a6D8N3jqp0jzC9PCNTAEpGX4EsogfKdgu6ZDPmeoKbmncfF
+	 7DpjCfgiEdPs1OghOUrbyJtajntzmIEEqnGiDNaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbgDVJCe (ORCPT
+        id S1726562AbgDVJEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:02:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54334 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 05:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbgDVJCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:02:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 19549ADE3;
-        Wed, 22 Apr 2020 09:02:31 +0000 (UTC)
-Message-ID: <1587546150.9537.84.camel@suse.cz>
-Subject: Re: [BISECTED]: Kernel panic (was: Linux 5.7-rc2)
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Harald Arnesen <harald@skogtun.org>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 22 Apr 2020 11:02:30 +0200
-In-Reply-To: <20200421212347.GV2483@worktop.programming.kicks-ass.net>
-References: <CAHk-=wiQsJu-ZFjt7+c9FVD5R40khtZiihrT+7O3UaVvHYz=HQ@mail.gmail.com>
-         <428bac87-b6dd-0867-c8f8-622cd606de3e@skogtun.org>
-         <CAHk-=wiX+NT2yxtdPszH9U_S96MCNQA56GJFXY45mZc47yG5KQ@mail.gmail.com>
-         <20200421212347.GV2483@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726082AbgDVJEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:04:23 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF41320735;
+        Wed, 22 Apr 2020 09:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587546262;
+        bh=iodvWiMvLvn6GaULtni3VC0AD9QWqgVNJaaTAKMQ/7o=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=uh4uMrz8n6WGjDIRlgafWrfd3QKM+e52dJPUqvDFl/atI44pOlVJkjYxYtiETc6Pw
+         dDbHLBfkJ7NZwpXlOgx9irih1UdxvpgbBr1KhsaObMO0Yw+L0loR3Gd22YsGWHTz1t
+         drCCAeTI0CAyPs5wYXls8aDp+7eW4OYbqw6XQFMM=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1586832922-29191-6-git-send-email-sivaprak@codeaurora.org>
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org> <1586832922-29191-6-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH V3 5/8] clk: qcom: Add ipq apss clock controller
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Date:   Wed, 22 Apr 2020 02:04:22 -0700
+Message-ID: <158754626202.132238.18279860573775399302@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus, Peter:
+Quoting Sivaprakash Murugesan (2020-04-13 19:55:19)
+> The CPU on Qualcomm's IPQ platform devices are clocked primarily by a
+> PLL and xo which are connected to a mux and enable block, This patch adds
 
-the panic seen by Harald Arnesen (and Dave Kleikamp) is unrelated to
-virtualization, and happens on all machines that have a CPU with less than 4
-physical cores. It's a very serious (and very stupid) bug in the original
-version of my code and is fixed by patch 2/4 "x86, sched: Account for CPUs
-with less than 4 cores in freq. invariance" in the series 
+The comma should be a period? Don't write "This patch" in commit text.
 
-https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz
+> support for the mux and the enable.
+>=20
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  drivers/clk/qcom/Kconfig    |  10 +++++
+>  drivers/clk/qcom/Makefile   |   1 +
+>  drivers/clk/qcom/apss-ipq.c | 107 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 118 insertions(+)
+>  create mode 100644 drivers/clk/qcom/apss-ipq.c
+>=20
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 15cdcdc..8573f2e 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -89,6 +89,16 @@ config APQ_MMCC_8084
+>           Say Y if you want to support multimedia devices such as display,
+>           graphics, video encode/decode, camera, etc.
+> =20
+> +config IPQ_APSS
+> +       tristate "IPQ APSS Clock Controller"
+> +       default N
 
-Harald, Dave:
+Drop this, it's already the default.
 
-for peace of mind, can you please share the output of
+> +       help
+> +         Support for APSS clock controller on ipq platform devices. The
 
-  turbostat --interval 1 sleep 0
+Maybe say "IPQ platforms" and drop the devices part?
 
-from your machines? This should print a long list of power management-related
-information, including your CPU model and the content of MSR_TURBO_RATIO_LIMIT.
-In all likelihood that MSR says that the "4 cores turbo frequency" of your CPU
-is zero, and the buggy code divides by that value.
+> +         APSS clock controller manages the Mux and enable block that fee=
+ds the
+> +         CPUs.
+> +         Say Y if you want to support CPU frequency scaling on
+> +         ipq based devices.
+> +
+>  config IPQ_GCC_4019
+>         tristate "IPQ4019 Global Clock Controller"
+>         help
+> diff --git a/drivers/clk/qcom/apss-ipq.c b/drivers/clk/qcom/apss-ipq.c
+> new file mode 100644
+> index 0000000..a37cd98
+> --- /dev/null
+> +++ b/drivers/clk/qcom/apss-ipq.c
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/regmap.h>
+> +#include <linux/module.h>
+> +
+> +#include <dt-bindings/clock/qcom,apss-ipq.h>
+> +
+> +#include "common.h"
+> +#include "clk-regmap.h"
+> +#include "clk-branch.h"
+> +#include "clk-alpha-pll.h"
+> +#include "clk-regmap-mux.h"
+> +
+> +enum {
+> +       P_XO,
+> +       P_APSS_PLL_EARLY,
+> +};
+> +
+> +static const struct clk_parent_data parents_apcs_alias0_clk_src[] =3D {
+> +       { .fw_name =3D "xo" },
+> +       { .fw_name =3D "pll" },
+> +};
+> +
+> +static const struct parent_map parents_apcs_alias0_clk_src_map[] =3D {
+> +       { P_XO, 0 },
+> +       { P_APSS_PLL_EARLY, 5 },
+> +};
+> +
+> +static struct clk_regmap_mux apcs_alias0_clk_src =3D {
+> +       .reg =3D 0x0050,
+> +       .width =3D 3,
+> +       .shift =3D 7,
+> +       .parent_map =3D parents_apcs_alias0_clk_src_map,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "apcs_alias0_clk_src",
+> +               .parent_data =3D parents_apcs_alias0_clk_src,
+> +               .num_parents =3D 2,
+> +               .ops =3D &clk_regmap_mux_closest_ops,
+> +               .flags =3D CLK_SET_RATE_PARENT,
+> +       },
+> +};
+> +
+> +/*required for cpufreq*/
 
-Harald:
+This comment doesn't help in understanding.
 
-I'll echo Linus' request of testing that the patch series linked above fixes
-the problem on your machine. Since you're testing -rc kernels and bisecting
-bugs I assume you're comfortable with patching and compiling kernels, but if
-that is not the case I am more than happy to assist by providing either an RPM
-or a DEB package, depending on the distribution you're running. Let me know.
+> +static struct clk_branch apcs_alias0_core_clk =3D {
+> +       .halt_reg =3D 0x0058,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x0058,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "apcs_alias0_core_clk",
+> +                       .parent_hws =3D (const struct clk_hw *[]){
+> +                               &apcs_alias0_clk_src.clkr.hw },
+> +                       .num_parents =3D 1,
+> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
 
-More comments below.
+Please comment why the clk is critical.
 
-On Tue, 2020-04-21 at 23:23 +0200, Peter Zijlstra wrote:
-> On Tue, Apr 21, 2020 at 12:03:10PM -0700, Linus Torvalds wrote:
-> > On Mon, Apr 20, 2020 at 1:52 AM Harald Arnesen <harald@skogtun.org> wrote:
-> > > 
-> > > Neither rc1 nor rc2 will boot on my laptop. The attached picture is all
-> > > I have been able to capture.
-> > 
-> > I know you saw the reply about this probably being fixed by
-> > 
-> >   https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz/
-> > 
-> > but it would be lovely if you could actually verify that that series
-> > of four patches does indeed fix it for you.
-> 
-> (not seeing the original report in the archives or my list copy)
-> 
-> I'm assuming it's some sort of dodgy virt setup, actual real proper
-> hardware should never get here like that.
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static const struct regmap_config apss_ipq_regmap_config =3D {
+> +       .reg_bits       =3D 32,
+> +       .reg_stride     =3D 4,
+> +       .val_bits       =3D 32,
+> +       .max_register   =3D 0x1000,
+> +       .fast_io        =3D true,
+> +};
+> +
+> +static struct clk_regmap *apss_ipq_clks[] =3D {
+> +       [APCS_ALIAS0_CLK_SRC] =3D &apcs_alias0_clk_src.clkr,
+> +       [APCS_ALIAS0_CORE_CLK] =3D &apcs_alias0_core_clk.clkr,
+> +};
+> +
+> +static const struct qcom_cc_desc apss_ipq_desc =3D {
+> +       .config =3D &apss_ipq_regmap_config,
+> +       .clks =3D apss_ipq_clks,
+> +       .num_clks =3D ARRAY_SIZE(apss_ipq_clks),
+> +};
+> +
+> +static int apss_ipq_probe(struct platform_device *pdev)
+> +{
+> +       struct regmap *regmap;
+> +
+> +       regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> +       if (IS_ERR(regmap))
+> +               return PTR_ERR(regmap);
+> +
+> +       return qcom_cc_really_probe(pdev, &apss_ipq_desc, regmap);
 
-I think Peter is mentioning virtualization because in another patch of my
-bugfix series I address a separate issue, indeed arising in hypervisors:
-patch 1/4 "x86, sched: Bail out of frequency invariance if base frequency is
-unknown".
+What is this a child of?
 
-The thing is that my original code does two divisions (just grep for "div" in
-the patch 1567c3e3467c "x86, sched: Add support for frequency invariance").
-One of them divides by zero when num_cpus < 4, the other divides by zero on
-some hypervisors (basically).
-
-Here are the incriminated statements (file arch/x86/kernel/smpboot.c):
-
-  (1)  arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
-                                       base_freq);
-       /* ... stuff ... */
-       
-       mcnt *= arch_max_freq_ratio;
-  (2)  freq_scale = div64_u64(acnt, mcnt);
-
-Hypervisors:
-If base_freq is zero, division (1) fails. This is addressed by patch 1/4 in the
-bugfix series linked above. base_freq is read from MSR_PLATFORM_INFO (no BIOS
-involved, it's straight from the CPU) and is the max CPU clock frequency
-without counting turbo. The Intel SDM specifies this MSR's content, none of the
-machines I tested said "my base clock frequency is zero", but I didn't think
-of hypervisors.
-
-Small machines:
-If turbo_freq is zero, division (2) fails. This is addressed by patch 2/4
-"x86, sched: Account for CPUs with less than 4 cores in freq. invariance".
-I read turbo_freq from MSR_TURBO_RATIO_LIMIT (again: no BIOS involved), at a
-specific offset where it should contain the clock frequency sustainable by 4
-cores simultaneously. If the machines has less than for cores, this data is
-rightfully zero and thus the panic that Harald Arnesen and Dave Kleikamp
-observed. It's an embarrassing mistake I made, I tested on several machines
-including a consumer-level Atom Airmont (Dell Wyse thin client) but all had at
-least 4 cores so I didn't see it.
-
-For the records: there is a report for the "small machines" div-by-zero bug
-from a 24 core Atom P-Series (new product line from 2020), but the fix works
-on that machine, see
-https://lore.kernel.org/lkml/bf43772d-48e5-01d4-dd03-330110e487fa@linux.intel.com/
-
-> 
-> > Your oops is on that divide instruction:
-> > 
-> >         freq_scale = div64_u64(acnt, mcnt);
-> > 
-> > and while we had a check for mcnt not being zero earlier, we did
-> > 
-> >         mcnt *= arch_max_freq_ratio;
-> > 
-> > after that check. I could see it becoming zero either due to an
-> > overflow, or due to arch_max_freq_ratio being 0.
-> 
-> Right, so that's not supposed to happen, as you say, we should not
-> enable this code if the ratio is 0, and we should not overflow mcnt due
-> to reading that reg once per tick.
-> 
-> But yeha, virt, anything can happen :/
-> 
-> > I think the first commit in that series is supposed to fix that
-> > arch_max_freq_ratio being 0 case, but it still feels like the code
-> > that does the divide is checking for zero in the wrong place...
-> 
-> Yeah, we can certainly modify that. As is, real actual hardware should
-> never even hit that case either. So we might as well move that check and
-> then also make it disable all this frequency scaling stuff if we ever do
-> hit it.
-
-I'm going to send the following patch. There are a number of reasons why mcnt
-overflowing and landing exactly at zero is unlikely (we read MPERF once every
-tick, and arch_max_freq_ratio is a small number) but it's still a real problem
-(eg. tickless kernels) and the zero check is 4 lines above where it should be,
-it just needs to move down.
-
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 8c89e4d9ad28..fb71395cbcad 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -2055,14 +2055,14 @@ void arch_scale_freq_tick(void)
- 
-        acnt = aperf - this_cpu_read(arch_prev_aperf);
-        mcnt = mperf - this_cpu_read(arch_prev_mperf);
--       if (!mcnt)
--               return;
- 
-        this_cpu_write(arch_prev_aperf, aperf);
-        this_cpu_write(arch_prev_mperf, mperf);
- 
-        acnt <<= 2*SCHED_CAPACITY_SHIFT;
-        mcnt *= arch_max_freq_ratio;
-+       if (!mcnt)
-+               return;
- 
-        freq_scale = div64_u64(acnt, mcnt);
-
-
-
-Giovanni
+> +}
+> +
+> +static struct platform_driver apss_ipq_driver =3D {
+> +       .probe =3D apss_ipq_probe,
+> +       .driver =3D {
+> +               .name   =3D "qcom,apss-ipq-clk",
+> +       },
+> +};
