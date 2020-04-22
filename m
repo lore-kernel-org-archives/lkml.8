@@ -2,111 +2,129 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76338C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B9FC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 474FD20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="piV1LTan"
+	by mail.kernel.org (Postfix) with ESMTP id E53E22070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587541745;
+	bh=Ukxttx4AhV/zn7a60uC4aTwvTrGOtjh/OZY1M5vynZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mDLGetg6e1ttny5mjuyM+CedbresxGc9Pmpc4a6ferOIi7uekOy+mRjtagZUOQCig
+	 VTsl+CheLdnrXYJ4eZYxOyOFLtbr/vxg8XzYmer74quo47o2gJvR19Lk2FJoWTVBOO
+	 zwXGU5a6UaBamllVH/Pb9nuisOsMoy0joQ34IyIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgDVHsu (ORCPT
+        id S1726660AbgDVHtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726363AbgDVHsY (ORCPT
+        Wed, 22 Apr 2020 03:49:05 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43728 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgDVHtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:48:24 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C67C03C1A6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:24 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id 189so993713pgb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=OXZleKkWZzKKnBm05g6e7Gyf0CCs6T7oZwd1F3IVZx4=;
-        b=piV1LTanFc70NR+r9jRoJBIka9YA42dJ3uR84Dp/LxbBUlrzb66Fc4Yzc8yYFrlar3
-         YkGX1+iVNc7KnurONdqfiVL/sXfRPahOocQMNUyafUP9TdWwYjukCQI/XV2E6SQKQOR9
-         /Hsfr90B8Gqo+SI7LR/Z0CtEZZLLWVvGrXSh9GwT7UUZ/jFrXhui5FG4b4lxIADgAgJ8
-         hAq6C3rjvo+Q/CWWzeotjcy0WuiXNKvsvodBsL0zI5G2I5PDizFg1uvnEt8RHZbhcKFt
-         an2HCk+dgm4YYEZs3RW/m58/UhphNvnZzGYEwXgYkltwVGvwSy1Rn8F8RSLy251w9skU
-         hCfA==
+        Wed, 22 Apr 2020 03:49:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l19so1196734lje.10;
+        Wed, 22 Apr 2020 00:49:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=OXZleKkWZzKKnBm05g6e7Gyf0CCs6T7oZwd1F3IVZx4=;
-        b=LhzPyf3CIQy+I9g8XONCi1XmUQCsv8DC2BtySn4jSbpQEcEc7gkwzLx9a8xnbMoyE5
-         Kq8N5T6X1TBXcR6SkLo0EiYBjkhqUHvxM0T8CpOh+wMDyOfD/4mDjg9UWSWRwNWDruhr
-         6WEBsOyf1gE79f35AUc7jpUdhSk8gpWbv8fC7dZpmNFAECo0LuPWm5iAzpCJNQ3WSkCR
-         wuzIR9lRNIgFn8/pR2/bkcok364iAbvphEH3ETsS71tFlaP+zZ4j8XykT5yyeRVni58c
-         Oxm9kejxwj2hsSW0SoWH4buVv2rWyy5FDRxUj6B73BA3OwVqvAq525KZc/DjBYAQGtQX
-         yJeA==
-X-Gm-Message-State: AGi0PuZwlU5RfcWgY2ntVS6Ur5KJX2PW8J23/9Dg9ubWJ7aOrAp8gK7o
-        Fs3amCcEA92tmAIaR7A1R54+3R1mXcRL
-X-Google-Smtp-Source: APiQypIyJTHGfpp6A4QQxTBiZ3b+h8XXcgNpuiTC0F/FXhrotj5YSMwZWq0PznA+cS86xqsFG6U/aY+SWXQ/
-X-Received: by 2002:a17:90a:de0e:: with SMTP id m14mr10282958pjv.54.1587541703261;
- Wed, 22 Apr 2020 00:48:23 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 00:48:05 -0700
-In-Reply-To: <20200422074809.160248-1-irogers@google.com>
-Message-Id: <20200422074809.160248-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20200422074809.160248-1-irogers@google.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 4/8] perf expr: allow ',' to be an other token
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=epLkk574xfUuwBYwyvkq3l716pcv348uQ4qJKUQHi4U=;
+        b=QQmRpP8qUwwXXpYQHOlJPCrw9P+RsiQtId6ba1aS5qRY7JJhXBvtwxOiY3/hywH4/n
+         J6dWHLnEGTtgKn4d7N49qpZq0kQYqsO05tcRzFXF2RPfIWvIYL6CwL+hZ9IxnnnnoqIS
+         5u4LkHiMvy5CZDtoS+qSYrMbCh5B9YIUWhUCcMH4YZX6nd1RscYOgP6Rr8piB58B4UKL
+         ECKt8xAFK38PsgCdcexqCJzIfKCyliD3wYlSa9Lgr01bGxVrO7zIq0CjP4NYzuQOvSHr
+         sFGopWDZGs3VDU3q0NPwla/apvDKDLzvhIdckB+v95CiUfyI2QMG+ZQZsHj0xiBp3VdQ
+         62rg==
+X-Gm-Message-State: AGi0PuaMdhVCGB/Et0pBCiTS1qz3OF+GMhAHOFPw5I+ZXpmuXaAZ1zxW
+        VS5dR9czyin5TQza9xFPXrOPghaT
+X-Google-Smtp-Source: APiQypIiUoAOJBfWMzQsrwByW5AXVw1jusi/WALzJ+lUAL5lDZ8V+Sd50eIz7PgI1BH+IjrTkUeSpQ==
+X-Received: by 2002:a2e:b53b:: with SMTP id z27mr11767732ljm.114.1587541741978;
+        Wed, 22 Apr 2020 00:49:01 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id u13sm3872384lji.27.2020.04.22.00.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 00:49:01 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jRA84-0006dZ-5Z; Wed, 22 Apr 2020 09:49:08 +0200
+Date:   Wed, 22 Apr 2020 09:49:08 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: garmin_gps: remove some defined but not
+ used variables
+Message-ID: <20200422074908.GJ18608@localhost>
+References: <20200409085143.46078-1-yanaijie@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200409085143.46078-1-yanaijie@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Corrects parse errors in expr__find_other of expressions with min.
+On Thu, Apr 09, 2020 at 04:51:43PM +0800, Jason Yan wrote:
+> Fix the following gcc warning:
+> 
+> drivers/usb/serial/garmin_gps.c:192:28: warning: ‘PRIVATE_REQ’ defined
+> but not used [-Wunused-const-variable=]
+>  static unsigned char const PRIVATE_REQ[]
+>                             ^~~~~~~~~~~
+> drivers/usb/serial/garmin_gps.c:186:28: warning: ‘GARMIN_STOP_PVT_REQ’
+> defined but not used [-Wunused-const-variable=]
+>  static unsigned char const GARMIN_STOP_PVT_REQ[]
+>                             ^~~~~~~~~~~~~~~~~~~
+> drivers/usb/serial/garmin_gps.c:184:28: warning: ‘GARMIN_START_PVT_REQ’
+> defined but not used [-Wunused-const-variable=]
+>  static unsigned char const GARMIN_START_PVT_REQ[]
+>                             ^~~~~~~~~~~~~~~~~~~~
+> drivers/usb/serial/garmin_gps.c:182:28: warning:
+> ‘GARMIN_APP_LAYER_REPLY’ defined but not used [-Wunused-const-variable=]
+>  static unsigned char const GARMIN_APP_LAYER_REPLY[]
+>                             ^~~~~~~~~~~~~~~~~~~~~~
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/expr.y | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You should mention that this is a W=1 one warning which isn't enabled
+by default.
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index cd17486c1c5d..54260094b947 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -80,7 +80,7 @@ other: ID
- 	ctx->ids[ctx->num_ids++].name = $1;
- }
- |
--MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')'
-+MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
- 
- 
- all_expr: if_expr			{ *final_val = $1; }
--- 
-2.26.2.303.gf8c07b1a785-goog
+> ---
+>  drivers/usb/serial/garmin_gps.c | 9 ---------
+>  1 file changed, 9 deletions(-)
+> 
+> diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
+> index ffd984142171..3b39d1e39fbf 100644
+> --- a/drivers/usb/serial/garmin_gps.c
+> +++ b/drivers/usb/serial/garmin_gps.c
+> @@ -179,19 +179,10 @@ static unsigned char const GARMIN_START_SESSION_REPLY[]
+>  	= { 0, 0, 0, 0,  6, 0, 0, 0, 4, 0, 0, 0 };
+>  static unsigned char const GARMIN_BULK_IN_AVAIL_REPLY[]
+>  	= { 0, 0, 0, 0,  2, 0, 0, 0, 0, 0, 0, 0 };
+> -static unsigned char const GARMIN_APP_LAYER_REPLY[]
+> -	= { 0x14, 0, 0, 0 };
+> -static unsigned char const GARMIN_START_PVT_REQ[]
+> -	= { 20, 0, 0, 0,  10, 0, 0, 0, 2, 0, 0, 0, 49, 0 };
+> -static unsigned char const GARMIN_STOP_PVT_REQ[]
+> -	= { 20, 0, 0, 0,  10, 0, 0, 0, 2, 0, 0, 0, 50, 0 };
+>  static unsigned char const GARMIN_STOP_TRANSFER_REQ[]
+>  	= { 20, 0, 0, 0,  10, 0, 0, 0, 2, 0, 0, 0, 0, 0 };
+>  static unsigned char const GARMIN_STOP_TRANSFER_REQ_V2[]
+>  	= { 20, 0, 0, 0,  10, 0, 0, 0, 1, 0, 0, 0, 0 };
+> -static unsigned char const PRIVATE_REQ[]
+> -	=    { 0x4B, 0x6E, 0x10, 0x01,  0xFF, 0, 0, 0, 0xFF, 0, 0, 0 };
+> -
 
+I'm reluctant to simply remove these as they document the protocol
+without any real downsides besides the W=1 warning.
+
+Johan
