@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436E9C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89A6C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5602076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEBC20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553413;
-	bh=wM3LJ0wa+yf3/wyfk7WPwpnk96PUqDGpDpM9BiOype4=;
+	s=default; t=1587553419;
+	bh=Obv2RGH5YaGvCgQQFtLrRO8YWKPExsVOknJMAtx0uhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aOap+ACTKBh0kYcSZF0nnGPl+F0SRLQ+xSr2WbmaK4MDDmTs/LEOlB42tRixGANR8
-	 +l0vXmlEPBWOLGzaw5BclHvoLT+2ZdTRyglCq71975kXQ7gK+DhDa5Rq+urlDeLS1G
-	 WvzwwwGtuNCYbS2Et2tvRulkGyihuKKJzm3XI5xY=
+	b=KG9WdtuvMEojRqiHc/IMqV96B/gkqxv2eeFEkqpCC6Xf6JlAzuNT+WU4oxVxJ0/0c
+	 bjMRnblf5wX3b01NruIwFlaRDgoUWmtljfouTkKrfxRtSUQg9nVOlB8a+fHGpPrDGj
+	 PaBjoWQujOupvpsoOvtExDmO9Ydt0rjI4tjGKR4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732479AbgDVLDc (ORCPT
+        id S1732490AbgDVLDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:03:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:03:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgDVJ7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:59:52 -0400
+        id S1725961AbgDVJ7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:59:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D41C42077D;
-        Wed, 22 Apr 2020 09:59:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C15820776;
+        Wed, 22 Apr 2020 09:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549592;
-        bh=wM3LJ0wa+yf3/wyfk7WPwpnk96PUqDGpDpM9BiOype4=;
+        s=default; t=1587549589;
+        bh=Obv2RGH5YaGvCgQQFtLrRO8YWKPExsVOknJMAtx0uhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d0wIfv48ZU6a2e69H43YUr3hk8PaaIVTmEIyTqoBZzFubyRFj6AuK2rHuJqKgk/Z1
-         6DfbpgdVzqGfiJxpKcegdmxWhFKI/hUjIGJiIx1vBf2tWVD1T0FeXy7d7b28umlEPx
-         vFXSTYh9YYPRch1Gjwp8KYFZAXlf8n/3u6hD4He0=
+        b=Aa/qydBOaK0jQLvzixequzbexnxjOWpo0+cqTvuS+mMmnlT4jcB4s4Zf/EVyxTG87
+         nljGBGzvKzTKy0OH1l5nlFEBi9toZwRymmTsC8b1OP2Y+0ClTfAt9Th6Bbfh90gzpy
+         9n1BeNL//EkYQxJCYHfD8QbfoLDnY3qBCgNLldlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 4.4 027/100] KEYS: reaching the keys quotas correctly
-Date:   Wed, 22 Apr 2020 11:55:57 +0200
-Message-Id: <20200422095027.750789793@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 4.4 026/100] thermal: devfreq_cooling: inline all stubs for CONFIG_DEVFREQ_THERMAL=n
+Date:   Wed, 22 Apr 2020 11:55:56 +0200
+Message-Id: <20200422095027.507589459@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -60,67 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit 2e356101e72ab1361821b3af024d64877d9a798d upstream.
+commit 3f5b9959041e0db6dacbea80bb833bff5900999f upstream.
 
-Currently, when we add a new user key, the calltrace as below:
+When CONFIG_DEVFREQ_THERMAL is disabled all functions except
+of_devfreq_cooling_register_power() were already inlined. Also inline
+the last function to avoid compile errors when multiple drivers call
+of_devfreq_cooling_register_power() when CONFIG_DEVFREQ_THERMAL is not
+set. Compilation failed with the following message:
+  multiple definition of `of_devfreq_cooling_register_power'
+(which then lists all usages of of_devfreq_cooling_register_power())
 
-add_key()
-  key_create_or_update()
-    key_alloc()
-    __key_instantiate_and_link
-      generic_key_instantiate
-        key_payload_reserve
-          ......
+Thomas Zimmermann reported this problem [0] on a kernel config with
+CONFIG_DRM_LIMA={m,y}, CONFIG_DRM_PANFROST={m,y} and
+CONFIG_DEVFREQ_THERMAL=n after both, the lima and panfrost drivers
+gained devfreq cooling support.
 
-Since commit a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly"),
-we can reach max bytes/keys in key_alloc, but we forget to remove this
-limit when we reserver space for payload in key_payload_reserve. So we
-can only reach max keys but not max bytes when having delta between plen
-and type->def_datalen. Remove this limit when instantiating the key, so we
-can keep consistent with key_alloc.
+[0] https://www.spinics.net/lists/dri-devel/msg252825.html
 
-Also, fix the similar problem in keyctl_chown_key().
-
-Fixes: 0b77f5bfb45c ("keys: make the keyring quotas controllable through /proc/sys")
-Fixes: a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly")
-Cc: stable@vger.kernel.org # 5.0.x
-Cc: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Fixes: a76caf55e5b356 ("thermal: Add devfreq cooling")
+Cc: stable@vger.kernel.org
+Reported-by: Thomas Zimmermann <tzimmermann@suse.de>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200403205133.1101808-1-martin.blumenstingl@googlemail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/keys/key.c    |    2 +-
- security/keys/keyctl.c |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/linux/devfreq_cooling.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -376,7 +376,7 @@ int key_payload_reserve(struct key *key,
- 		spin_lock(&key->user->lock);
+--- a/include/linux/devfreq_cooling.h
++++ b/include/linux/devfreq_cooling.h
+@@ -53,7 +53,7 @@ void devfreq_cooling_unregister(struct t
  
- 		if (delta > 0 &&
--		    (key->user->qnbytes + delta >= maxbytes ||
-+		    (key->user->qnbytes + delta > maxbytes ||
- 		     key->user->qnbytes + delta < key->user->qnbytes)) {
- 			ret = -EDQUOT;
- 		}
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -853,8 +853,8 @@ long keyctl_chown_key(key_serial_t id, u
- 				key_quota_root_maxbytes : key_quota_maxbytes;
+ #else /* !CONFIG_DEVFREQ_THERMAL */
  
- 			spin_lock(&newowner->lock);
--			if (newowner->qnkeys + 1 >= maxkeys ||
--			    newowner->qnbytes + key->quotalen >= maxbytes ||
-+			if (newowner->qnkeys + 1 > maxkeys ||
-+			    newowner->qnbytes + key->quotalen > maxbytes ||
- 			    newowner->qnbytes + key->quotalen <
- 			    newowner->qnbytes)
- 				goto quota_overrun;
+-struct thermal_cooling_device *
++static inline struct thermal_cooling_device *
+ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 				  struct devfreq_cooling_power *dfc_power)
+ {
 
 
