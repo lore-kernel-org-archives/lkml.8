@@ -2,181 +2,83 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5C6C55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D537C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 882D620722
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B4B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgDVC6G (ORCPT
+        id S1726437AbgDVC6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:58:06 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:9490 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726377AbgDVC53 (ORCPT
+        Tue, 21 Apr 2020 22:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726321AbgDVC6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:57:29 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 21 Apr 2020 19:57:27 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 21 Apr 2020 19:57:26 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id DF00E4C78; Tue, 21 Apr 2020 19:57:26 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v13 06/11] pwm: imx27: Use 64-bit division macro and function
-Date:   Tue, 21 Apr 2020 19:57:18 -0700
-Message-Id: <ddf684d4cc5e7d609f0cd861eb34c98533441bf9.1587523702.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1587523702.git.gurus@codeaurora.org>
-References: <cover.1587523702.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1587523702.git.gurus@codeaurora.org>
-References: <cover.1587523702.git.gurus@codeaurora.org>
+        Tue, 21 Apr 2020 22:58:48 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2EE9C0610D6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 19:58:47 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jR5ay-0081rv-85; Wed, 22 Apr 2020 02:58:40 +0000
+Date:   Wed, 22 Apr 2020 03:58:40 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     davem@davemloft.net, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ide: Use memdup_user() as a cleanup
+Message-ID: <20200422025840.GJ23230@ZenIV.linux.org.uk>
+References: <1587524381-120136-1-git-send-email-zou_wei@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587524381-120136-1-git-send-email-zou_wei@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's
-datatype to u64, prepare for this transition by using
-DIV_ROUND_UP_ULL to handle a 64-bit dividend, and div64_u64 to handle a
-64-bit divisor.
+On Wed, Apr 22, 2020 at 10:59:41AM +0800, Zou Wei wrote:
 
-Also handle a possible overflow in the calculation of period_cycles when
-both clk_rate and period are large numbers. This logic was unit-tested
-out by calculating period_cycles using both the existing logic and the
-proposed one, and the results are as below.
+>  	if (taskout) {
+>  		int outtotal = tasksize;
+> -		outbuf = kzalloc(taskout, GFP_KERNEL);
+> -		if (outbuf == NULL) {
+> -			err = -ENOMEM;
+> -			goto abort;
+> -		}
+> -		if (copy_from_user(outbuf, buf + outtotal, taskout)) {
+> -			err = -EFAULT;
+> -			goto abort;
+> -		}
+> +		outbuf = memdup_user(buf + outtotal, taskout);
+> +		if (IS_ERR(outbuf))
+> +			return PTR_ERR(outbuf);
+>  	}
+>  
+>  	if (taskin) {
+>  		int intotal = tasksize + taskout;
+> -		inbuf = kzalloc(taskin, GFP_KERNEL);
+> -		if (inbuf == NULL) {
+> -			err = -ENOMEM;
+> -			goto abort;
+> -		}
+> -		if (copy_from_user(inbuf, buf + intotal, taskin)) {
+> -			err = -EFAULT;
+> -			goto abort;
+> -		}
+> +		inbuf = memdup_user(buf + intotal, taskin);
+> +		if (IS_ERR(inbuf))
+> +			return PTR_ERR(inbuf);
 
-----------------------------------------------------------------------------
- clk_rate            period           existing            proposed
-----------------------------------------------------------------------------
-1000000000   18446744073709551615    18446744072    18446744073000000000
-                   (U64_MAX)
-----------------------------------------------------------------------------
-1000000000        4294967291         4294967291         4294967291
-----------------------------------------------------------------------------
-
-Overflow occurs in the first case with the existing logic, whereas the
-proposed logic handles it better, sacrificing some precision in a best-effort
-attempt to handle overflow. As for the second case where there are
-more typical values of period, the proposed logic handles that correctly
-too.
-
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: David Collins <collinsd@codeaurora.org>
-
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
- drivers/pwm/pwm-imx27.c | 53 +++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 45 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index a6e40d4..164cb65 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -203,7 +203,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
- 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
--		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
-+		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
- 		msleep(period_ms);
- 
-@@ -213,6 +213,45 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 	}
- }
- 
-+static int pwm_imx27_calc_period_cycles(const struct pwm_state *state,
-+					unsigned long clk_rate,
-+					unsigned long *period_cycles)
-+{
-+	u64 c = 0, c1, c2;
-+
-+	c1 = clk_rate;
-+	c2 = state->period;
-+	if (c2 > c1) {
-+		c2 = c1;
-+		c1 = state->period;
-+	}
-+
-+	if (!c1 || !c2) {
-+		pr_err("clk rate and period should be nonzero\n");
-+		return -EINVAL;
-+	}
-+
-+	if (c2 <= div64_u64(U64_MAX, c1)) {
-+		c = c1 * c2;
-+		do_div(c, 1000000000);
-+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000))) {
-+		do_div(c1, 1000);
-+		c = c1 * c2;
-+		do_div(c, 1000000);
-+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000))) {
-+		do_div(c1, 1000000);
-+		c = c1 * c2;
-+		do_div(c, 1000);
-+	} else if (c2 <= div64_u64(U64_MAX, div64_u64(c1, 1000000000))) {
-+		do_div(c1, 1000000000);
-+		c = c1 * c2;
-+	}
-+
-+	*period_cycles = c;
-+
-+	return 0;
-+}
-+
- static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   const struct pwm_state *state)
- {
-@@ -225,18 +264,16 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	pwm_get_state(pwm, &cstate);
- 
--	c = clk_get_rate(imx->clk_per);
--	c *= state->period;
--
--	do_div(c, 1000000000);
--	period_cycles = c;
-+	ret = pwm_imx27_calc_period_cycles(state, clk_get_rate(imx->clk_per),
-+					   &period_cycles);
-+	if (ret)
-+		return ret;
- 
- 	prescale = period_cycles / 0x10000 + 1;
- 
- 	period_cycles /= prescale;
- 	c = (unsigned long long)period_cycles * state->duty_cycle;
--	do_div(c, state->period);
--	duty_cycles = c;
-+	duty_cycles = div64_u64(c, state->period);
- 
- 	/*
- 	 * according to imx pwm RM, the real period value should be PERIOD
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+That smells like a leak - what happens if both taskin and taskout are
+non-zero at the same time?  <looks>  actually, both parts are leaking -
+there's
+        req_task = memdup_user(buf, tasksize);
+        if (IS_ERR(req_task))
+                return PTR_ERR(req_task);
+shortly prior to that, so both of your failure exits are leaking.
