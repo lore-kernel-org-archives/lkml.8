@@ -2,131 +2,223 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FB6C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926E8C5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1316206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uiq4AiFs"
+	by mail.kernel.org (Postfix) with ESMTP id 71A2A2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587541687;
+	bh=fgxsqBViMwAsci9ncSjKQiPsgSaITu+JNEbMX6/R8QA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KNNC1N84gpF9pc2pMXPrwrP2JJcbhofqM6CMMnYvcdnmGkkGqPef1l0xki8pJc0p3
+	 wu4YBesCW4rdRM9vr3XtN97uwcnDLADVAs4pV2FSRTbCaMcdMTY+gqWNlFnQq9DCfh
+	 CazdrJnm7tHim/QXaRTCTBv0jEHWF2CxKFkFF6aU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgDVHqt (ORCPT
+        id S1726495AbgDVHsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725907AbgDVHqt (ORCPT
+        Wed, 22 Apr 2020 03:48:07 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36660 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgDVHsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:46:49 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1EBFC03C1A6;
-        Wed, 22 Apr 2020 00:46:48 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g4so1235895ljl.2;
-        Wed, 22 Apr 2020 00:46:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7SXxu2vf3SSgVcaedvI6jG4d6yjlJE+FjFpfJQ4jnEw=;
-        b=Uiq4AiFsLfTfDqahAyC38SQf4LZ9ewifZ4YN8XMGKiOpWXnn60eoh2ES+Khfx3DDqg
-         tzIBhQXx2HaS1nRNBy5vweYDuoYV0/rC9yOFLp3rsLxlwDyR52jBF3EiKZ+58/Y4Fwt0
-         FOjr6LgdiucnzUN5KV3Zamft6d5xHXNTEwXJU31X7tN8+FBY+20PObfeO0tvAFSAe6Ut
-         VIfl9Q211/HitXhnA906GqCn3GwbIF+duEz3LLg223cxo+AVg0e1MeYJjKi4LtrMroHH
-         gj7ep0UPKcr0IsMwl92Ni8b4kTctakpGIhs4y3MjZGLydMuMjwzJa2Q4vKIQ/hd4cIyA
-         FxWA==
+        Wed, 22 Apr 2020 03:48:06 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g30so671510pfr.3;
+        Wed, 22 Apr 2020 00:48:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7SXxu2vf3SSgVcaedvI6jG4d6yjlJE+FjFpfJQ4jnEw=;
-        b=SeEwVg31VY0uvsQMA+A2xP+mJBM7PZmCkIRXGWtfP0FB+GzxJSPIqqpm1rr6U5cVpk
-         Vo8IigoaBlMYMCQjCKvqAldySbDCNzcIqjvsLua0m6u8Uh+sdOULftQYNjCn/eGXzZGZ
-         P9EaEDteMlRIdNHN2oiZ2QjuR5eBFbrR/74l1f77xF7BfmKaHWpgDCSV5hv8J3mE8rSW
-         R7cZyprqFQKibldPoIvaNREviyADZqrbvcxwNBElMeteP0o7horisrSe7cn7t+GTT5lV
-         DqrirWOvA8tvbnTvRpf7z0EpmhczOJVlZuhhlD+LqnReHMOjyZLCIkd71d1uc4XhSX8c
-         BVXg==
-X-Gm-Message-State: AGi0PubCR9GI1I3GYHLgUZ5wq9QkdN4zorIBeP6RgXR5esmMjMWg7L35
-        aGQDGO4Gz+jLlzvZ5KcjFX8=
-X-Google-Smtp-Source: APiQypJmSxI80bak8V4LpFM6NnEw/JYrdLaHdXGosrwksyhWtydwWX4UxaU5VQPUCWbMLCaGCeHJpg==
-X-Received: by 2002:a2e:9048:: with SMTP id n8mr4527444ljg.122.1587541607251;
-        Wed, 22 Apr 2020 00:46:47 -0700 (PDT)
-Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
-        by smtp.googlemail.com with ESMTPSA id t12sm4051345lfq.71.2020.04.22.00.46.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+SMYq/4vJ74M0LfJtwun4BRKxfhWvtLo+wkfl9OYurc=;
+        b=aXiZj2rZEHQUVuS1IPtOwokWeWWRiskWQUgYfqeeF8bakjcUajCkH6RwRIMzjzFNXw
+         AvIfkFtHxgV3KLWzr0cXx0+U+o7atpgw40kGNFLCjqNWROrQdXM4sIBf/BHwdsT2Ymun
+         Cuk+K5FxNxnHVAHfN2nvI4uHAt6H5dUjzpsrJjW2ByTvpm1UDx5ZR3F1IIemSQH5S2mr
+         swCCIOAY3dkJhKdVxwL+0LC4KehjL4LmlAOyssagovXZ6gWA5xUN0pKxvHqoYunFFd7l
+         4DzHLjeYD02OB4YiG+pnROz01vkanXtGYUKf3B9r2ovAdO/4WFSv+/6Ci7R+4pqB++3y
+         JsmA==
+X-Gm-Message-State: AGi0PubOvXnSfmfOnPltDzmoH8XPU5yiK502xUeQeErw7pkL0d6wBozu
+        ilpbappA6Ru6AImLcSapfLA=
+X-Google-Smtp-Source: APiQypLRQPdTJrBV6I/vZtyxwxFN1GzQ0y7RzxhSMbXI2z5hooPeifS431qso2u8rbsgVBHwKEY4Bw==
+X-Received: by 2002:a63:6f07:: with SMTP id k7mr26600891pgc.274.1587541684638;
+        Wed, 22 Apr 2020 00:48:04 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id fh18sm16882435pjb.0.2020.04.22.00.48.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 00:46:46 -0700 (PDT)
-From:   LuK1337 <priv.luk@gmail.com>
-Cc:     Cameron Gutman <aicommander@gmail.com>,
-        =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: xpad - Add custom init packet for Xbox One S controllers
-Date:   Wed, 22 Apr 2020 09:46:39 +0200
-Message-Id: <20200422074641.15839-1-priv.luk@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
-References: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
+        Wed, 22 Apr 2020 00:48:03 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D50C1402A1; Wed, 22 Apr 2020 07:48:02 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 07:48:02 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2 03/10] blktrace: fix debugfs use after free
+Message-ID: <20200422074802.GS11244@42.do-not-panic.com>
+References: <20200419194529.4872-1-mcgrof@kernel.org>
+ <20200419194529.4872-4-mcgrof@kernel.org>
+ <20200422072715.GC19116@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422072715.GC19116@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Łukasz Patron <priv.luk@gmail.com>
+On Wed, Apr 22, 2020 at 12:27:15AM -0700, Christoph Hellwig wrote:
+> On Sun, Apr 19, 2020 at 07:45:22PM +0000, Luis Chamberlain wrote:
+> > +{
+> > +	struct dentry *dir = NULL;
+> > +
+> > +	/* This can happen if we have a bug in the lower layers */
+> > +	dir = debugfs_lookup(kobject_name(q->kobj.parent), blk_debugfs_root);
+> > +	if (dir) {
+> > +		pr_warn("%s: registering request_queue debugfs directory twice is not allowed\n",
+> > +			kobject_name(q->kobj.parent));
+> > +		dput(dir);
+> > +		return -EALREADY;
+> > +	}
+> 
+> I don't see why we need this check.  If it is valueable enough we
+> should have a debugfs_create_dir_exclusive or so that retunrns an error
+> for an exsting directory, instead of reimplementing it in the caller in
+> a racy way.  But I'm not really sure we need it to start with.
 
-Sending [ 0x05, 0x20, 0x02, 0x0f, 0x06 ] packet for
-Xbox One S controllers fixes an issue where controller
-is stuck in Bluetooth mode and not sending any inputs.
+In short races, and even with synchronous request_queue removal I'm
+seeing the race is still possible, but that's due to some other races
+I'm going to chase down now.
 
-Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
-Cc: stable@vger.kernel.org
----
- drivers/input/joystick/xpad.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The easier solution really is to just have a debugfs dir created for
+each partition if debugfs is enabled, this way the directory will
+always be there, and the lookups are gone.
 
-diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-index 6b40a1c68f9f..c77cdb3b62b5 100644
---- a/drivers/input/joystick/xpad.c
-+++ b/drivers/input/joystick/xpad.c
-@@ -458,6 +458,16 @@ static const u8 xboxone_fw2015_init[] = {
- 	0x05, 0x20, 0x00, 0x01, 0x00
- };
- 
-+/*
-+ * This packet is required for Xbox One S (0x045e:0x02ea)
-+ * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
-+ * initialize the controller that was previously used in
-+ * Bluetooth mode.
-+ */
-+static const u8 xboxone_s_init[] = {
-+	0x05, 0x20, 0x00, 0x0f, 0x06
-+};
-+
- /*
-  * This packet is required for the Titanfall 2 Xbox One pads
-  * (0x0e6f:0x0165) to finish initialization and for Hori pads
-@@ -516,6 +526,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
- 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
--- 
-2.26.0
+> > +
+> > +	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> > +					    blk_debugfs_root);
+> > +	if (!q->debugfs_dir)
+> > +		return -ENOMEM;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +void blk_queue_debugfs_unregister(struct request_queue *q)
+> > +{
+> > +	debugfs_remove_recursive(q->debugfs_dir);
+> > +	q->debugfs_dir = NULL;
+> > +}
+> 
+> Which to me suggests we can just fold these two into the callers,
+> with an IS_ENABLED for the creation case given that we check for errors
+> and the stub will always return an error.
 
+Sorry not sure I follow this.
+
+> >  	debugfs_create_files(q->debugfs_dir, q, blk_mq_debugfs_queue_attrs);
+> >  
+> >  	/*
+> > @@ -856,9 +853,7 @@ void blk_mq_debugfs_register(struct request_queue *q)
+> >  
+> >  void blk_mq_debugfs_unregister(struct request_queue *q)
+> >  {
+> > -	debugfs_remove_recursive(q->debugfs_dir);
+> >  	q->sched_debugfs_dir = NULL;
+> > -	q->debugfs_dir = NULL;
+> >  }
+> 
+> This function is weird - the sched dir gets removed by the
+> debugfs_remove_recursive, so just leaving a function that clears
+> a pointer is rather odd.  In fact I don't think we need to clear
+> either sched_debugfs_dir or debugfs_dir anywhere.
+
+Indeed. Will clean it up.
+
+> > @@ -975,6 +976,14 @@ int blk_register_queue(struct gendisk *disk)
+> >  		goto unlock;
+> >  	}
+> >  
+> > +	ret = blk_queue_debugfs_register(q);
+> > +	if (ret) {
+> > +		blk_trace_remove_sysfs(dev);
+> > +		kobject_del(&q->kobj);
+> > +		kobject_put(&dev->kobj);
+> > +		goto unlock;
+> > +	}
+> > +
+> 
+> Please use a goto label to consolidate the common cleanup code.
+
+Sure.
+
+> Also I think these generic debugfs changes probably should be separate
+> to the blktrace changes.
+
+I'll try to do that.
+
+> >  static struct dentry *blk_trace_debugfs_dir(struct blk_user_trace_setup *buts,
+> > +					    struct request_queue *q,
+> >  					    struct blk_trace *bt)
+> >  {
+> >  	struct dentry *dir = NULL;
+> >  
+> > +	/* This can only happen if we have a bug on our lower layers */
+> > +	if (!q->kobj.parent) {
+> > +		pr_warn("%s: request_queue parent is gone\n", buts->name);
+> > +		return NULL;
+> > +	}
+> 
+> Why is this not simply a WARN_ON_ONCE()?
+
+I'll actually remove it and instead fix the race where it happens.
+
+> > +	if (blk_trace_target_disk(buts->name, kobject_name(q->kobj.parent))) {
+> > +		if (!q->debugfs_dir) {
+> > +			pr_warn("%s: expected request_queue debugfs_dir is not set\n",
+> > +				buts->name);
+> > +			return NULL;
+> > +		}
+> > +		/*
+> > +		 * debugfs_lookup() is used to ensure the directory is not
+> > +		 * taken from underneath us. We must dput() it later once
+> > +		 * done with it within blktrace.
+> > +		 */
+> > +		dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> > +		if (!dir) {
+> > +			pr_warn("%s: expected request_queue debugfs_dir dentry is gone\n",
+> > +				buts->name);
+> > +			return NULL;
+> > +		}
+> > +		 /*
+> > +		 * This is a reaffirmation that debugfs_lookup() shall always
+> > +		 * return the same dentry if it was already set.
+> > +		 */
+> > +		if (dir != q->debugfs_dir) {
+> > +			dput(dir);
+> > +			pr_warn("%s: expected dentry dir != q->debugfs_dir\n",
+> > +				buts->name);
+> > +			return NULL;
+> > +		}
+> > +		bt->backing_dir = q->debugfs_dir;
+> > +		return bt->backing_dir;
+> > +	}
+> 
+> Even with the gigantic commit log I don't get the point of this
+> code.  It looks rather sketchy and I can't find a rationale for it.
+
+Yeah I think this is going to be much easier on the eyes with the
+revert to synchronous request_queue removal first.
+
+  Luis
