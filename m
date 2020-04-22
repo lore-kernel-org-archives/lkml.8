@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1920C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C6DC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9060920780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312CA2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550385;
-	bh=6FOR2zsEhJsNHgTc8D9F4CP+7uChdEDp9K6YjoSstNE=;
+	s=default; t=1587550390;
+	bh=cNrBRcbbb935JBFxASk4tMSY3/ssx73m65BupJ79jDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPhOg9iecW8WMbOn6GHbiYxqFYuYffhpsIAF13OoEEHULYlFMcr2xm8dWd3+AaFXv
-	 hTama/SZpfaI+u4vU4g6RKL9YaRyqUFOp0449Drr9bHSLpaDMkpTsoJOJqpdkYnCx3
-	 hCmFiIo+pGC2EHN1YARNUyA37xQUZwky+Y6/Iq78=
+	b=j63pffebAILRjFyM+3cTY6foaCDQYicJiPjmXpsAddTxE54NV2TeH9T4hecm2dO/a
+	 +gpzd2IB9ddQeWTBaHsIiN5TxFmic44a47hRkLcmBZxn3ozX5CuZUy+ksSSmX9hGuN
+	 gCPKNAoXyBgEZ9PMkFhFKY1gt6XmxcV3SUmhTMU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgDVKNE (ORCPT
+        id S1729433AbgDVKNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:13:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46186 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbgDVKMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:49 -0400
+        id S1728880AbgDVKM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598B820575;
-        Wed, 22 Apr 2020 10:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4863D2076E;
+        Wed, 22 Apr 2020 10:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550368;
-        bh=6FOR2zsEhJsNHgTc8D9F4CP+7uChdEDp9K6YjoSstNE=;
+        s=default; t=1587550378;
+        bh=cNrBRcbbb935JBFxASk4tMSY3/ssx73m65BupJ79jDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mm1B3xwVpwVPbhuk5oOso12vOQyOc3DIW+y5XVGJVQ/5SWKDJt5S2dmJjXKDK21du
-         DC5r3tmbz3Yhz8oncUPrwU2w2lRpY94g97OqESenqWBZQkIm+Z7EB1uvvWGQmQ2lcW
-         dYTyqPqMjKuoGJUI9OjxP7q2jHOB9uP0cCSyVcYc=
+        b=OD4Zug0hM6TuD70bQ2Gy/iio/mgD3CzRNd74Ws1mv6a1NYiojyDWZguvJk/+477KW
+         7IqerLlOvfvVaWnxMpoed2WZh+zlTipbHiGFscZYyMwXYexEAZNtG07sAK+mZfAMII
+         rwo0cwmgQiRL8/R9Or5aAic5jM6AQQSHBE/zy9to=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taeung Song <treeze.taeung@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/199] ftrace/kprobe: Show the maxactive number on kprobe_events
-Date:   Wed, 22 Apr 2020 11:57:07 +0200
-Message-Id: <20200422095107.998120837@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 122/199] btrfs: check commit root generation in should_ignore_root
+Date:   Wed, 22 Apr 2020 11:57:28 +0200
+Message-Id: <20200422095109.746774152@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,42 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 6a13a0d7b4d1171ef9b80ad69abc37e1daa941b3 ]
+commit 4d4225fc228e46948486d8b8207955f0c031b92e upstream.
 
-Show maxactive parameter on kprobe_events.
-This allows user to save the current configuration and
-restore it without losing maxactive parameter.
+Previously we would set the reloc root's last snapshot to transid - 1.
+However there was a problem with doing this, and we changed it to
+setting the last snapshot to the generation of the commit node of the fs
+root.
 
-Link: http://lkml.kernel.org/r/4762764a-6df7-bc93-ed60-e336146dce1f@gmail.com
-Link: http://lkml.kernel.org/r/158503528846.22706.5549974121212526020.stgit@devnote2
+This however broke should_ignore_root().  The assumption is that if we
+are in a generation newer than when the reloc root was created, then we
+would find the reloc root through normal backref lookups, and thus can
+ignore any fs roots we find with an old enough reloc root.
 
-Cc: stable@vger.kernel.org
-Fixes: 696ced4fb1d76 ("tracing/kprobes: expose maxactive for kretprobe in kprobe_events")
-Reported-by: Taeung Song <treeze.taeung@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Now that the last snapshot could be considerably further in the past
+than before, we'd end up incorrectly ignoring an fs root.  Thus we'd
+find no nodes for the bytenr we were searching for, and we'd fail to
+relocate anything.  We'd loop through the relocate code again and see
+that there were still used space in that block group, attempt to
+relocate those bytenr's again, fail in the same way, and just loop like
+this forever.  This is tricky in that we have to not modify the fs root
+at all during this time, so we need to have a block group that has data
+in this fs root that is not shared by any other root, which is why this
+has been difficult to reproduce.
+
+Fixes: 054570a1dc94 ("Btrfs: fix relocation incorrectly dropping data references")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/trace/trace_kprobe.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/relocation.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index ea20274a105ae..d66aed6e9c75f 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -877,6 +877,8 @@ static int probes_seq_show(struct seq_file *m, void *v)
- 	int i;
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -538,8 +538,8 @@ static int should_ignore_root(struct btr
+ 	if (!reloc_root)
+ 		return 0;
  
- 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
-+	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
-+		seq_printf(m, "%d", tk->rp.maxactive);
- 	seq_printf(m, ":%s/%s", tk->tp.call.class->system,
- 			trace_event_name(&tk->tp.call));
- 
--- 
-2.20.1
-
+-	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
+-	    root->fs_info->running_transaction->transid - 1)
++	if (btrfs_header_generation(reloc_root->commit_root) ==
++	    root->fs_info->running_transaction->transid)
+ 		return 0;
+ 	/*
+ 	 * if there is reloc tree and it was created in previous
 
 
