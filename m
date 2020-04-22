@@ -2,67 +2,96 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC68C38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7750FC54FCC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5DC8206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA0520774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:54:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uA+B5OdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgDVGwt (ORCPT
+        id S1726294AbgDVGyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:52:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2865 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725786AbgDVGwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:52:49 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EA34F1F8295A51C6F2A2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:52:43 +0800 (CST)
-Received: from huawei.com (10.175.105.27) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Apr 2020
- 14:52:36 +0800
-From:   Wu Bo <wubo40@huawei.com>
-To:     <mikulas@artax.karlin.mff.cuni.cz>
-CC:     <linux-kernel@vger.kernel.org>, <liuzhiqiang26@huawei.com>,
-        <linfeilong@huawei.com>, <wubo40@huawei.com>
-Subject: [PATCH] fs:hpfs:remove unneeded semicolon in buffer.c
-Date:   Wed, 22 Apr 2020 14:51:53 +0800
-Message-ID: <1587538313-409999-1-git-send-email-wubo40@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 22 Apr 2020 02:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgDVGyP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 02:54:15 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C985C03C1A6;
+        Tue, 21 Apr 2020 23:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PPZ4h2g1T5oHvKPAYnNLCJiwA+6mBi/YDgQyauKaszE=; b=uA+B5OdCZI47BRrAhfT/13mIKQ
+        tcepQX5mWIn1Y1cEAeGW+MeiXS3dc/+mQmnvDGpF3/MtB7lTDahF03J4+v1e9QCo5UVk+EVRbTw3S
+        xsQkC2wUOAwqKEQn+LF3rYpjdi8CqpQ22CdGp28zJGe3BfiCAisIDCL9+eVulZmyXhH7ffc+xRREo
+        wBdn5UWxKVS3lxdoTU+ggRZWXetaZZVUUBDGgOVan9WZ9hAR3GAk6Q+3PI275OtXqRSZJgbfUy2Q4
+        RhwdqKFLaI7rXULSE49yznfQH6iMjawCrlWwO3LHXhh+V9ln/XQyWZ6FLmViomNojEt+YuDPJUfDq
+        cLPnmVfw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jR9Gw-0004PS-1b; Wed, 22 Apr 2020 06:54:14 +0000
+Date:   Tue, 21 Apr 2020 23:54:14 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, krzk@kernel.org, avri.altman@wdc.com,
+        martin.petersen@oracle.com, kwmad.kim@samsung.com,
+        stanley.chu@mediatek.com, cang@codeaurora.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 04/10] scsi: ufs: introduce
+ UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
+Message-ID: <20200422065414.GK20318@infradead.org>
+References: <20200417175944.47189-1-alim.akhtar@samsung.com>
+ <CGME20200417181014epcas5p1343bc81fb246133cc332d3fc7a394c15@epcas5p1.samsung.com>
+ <20200417175944.47189-5-alim.akhtar@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417175944.47189-5-alim.akhtar@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccicheck warning:
-fs/hpfs/buffer.c:56:2-3: Unneeded semicolon
+On Fri, Apr 17, 2020 at 11:29:38PM +0530, Alim Akhtar wrote:
+> Some UFS host controllers may think granularities of PRDT length and
+> offset as bytes, not double words.
+> 
+> Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 30 +++++++++++++++++++++++-------
+>  drivers/scsi/ufs/ufshcd.h |  6 ++++++
+>  2 files changed, 29 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index ee30ed6cc805..b32fcedcdcb9 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -2151,8 +2151,14 @@ static int ufshcd_map_sg(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+>  		return sg_segments;
+>  
+>  	if (sg_segments) {
+> -		lrbp->utr_descriptor_ptr->prd_table_length =
+> -			cpu_to_le16((u16)sg_segments);
+> +
+> +		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN)
+> +			lrbp->utr_descriptor_ptr->prd_table_length =
+> +				cpu_to_le16((u16)(sg_segments *
+> +					sizeof(struct ufshcd_sg_entry)));
+> +		else
+> +			lrbp->utr_descriptor_ptr->prd_table_length =
+> +				cpu_to_le16((u16) (sg_segments));
 
-Signed-off-by: Wu Bo <wubo40@huawei.com>
----
- fs/hpfs/buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/hpfs/buffer.c b/fs/hpfs/buffer.c
-index e285d6b..d392468 100644
---- a/fs/hpfs/buffer.c
-+++ b/fs/hpfs/buffer.c
-@@ -53,7 +53,7 @@ void hpfs_prefetch_sectors(struct super_block *s, unsigned secno, int n)
- 			return;
- 		}
- 		brelse(bh);
--	};
-+	}
- 
- 	blk_start_plug(&plug);
- 	while (n > 0) {
--- 
-1.8.3.1
-
+No double words here.  "Normal" UFS uses the actual segment count,
+while Samsumg uses bytes.  Also no need fo the u16 count in
+either the old or new version.
