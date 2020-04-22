@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3ACC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1426FC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAAA2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84E42073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552597;
-	bh=c85CGpP7cfzhhX9b7oR7I9LDFO5HgAAJ4/uX9JDnpQQ=;
+	s=default; t=1587552601;
+	bh=Yq/4dSBQMcLbsy7yk8jjhK3ecu2E/bi+KFr3L6FhotQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JCtsglyVkw536RPBZPK5Mk3q1nlLd8OMBzYRV9JUbGYS8Z7Zmrxqwot4euuT+DSvv
-	 zt9goB2Z+bAn0z27NeLkCZC7IWLZOdshzeDXuRckXZ/kZwImvRi2ZIm5GHkMxDjV4q
-	 AcoLZhJWHKtL1Ro64fYS2zX+4CJABHtL0CuoXOGk=
+	b=rHgfJQVEwI5IRDtXA/RIuq2/H7lhunKEbgkQdS0KKqS0d5hFId3JmGq9oBu/lWKbu
+	 1sUk4FYgzV6DOQHjFeiic/g1qM2LGSnJKXXFgso6/oIh2HU/N6aNJAtOoIWpND6FxY
+	 GBDUrCk6rR084pPkaXEyHn2bFNmuFJSn8bAfGQP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgDVKM7 (ORCPT
+        id S1732122AbgDVKuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:50:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728528AbgDVKMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:44 -0400
+        id S1729040AbgDVKM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E19920575;
-        Wed, 22 Apr 2020 10:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C54702070B;
+        Wed, 22 Apr 2020 10:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550363;
-        bh=c85CGpP7cfzhhX9b7oR7I9LDFO5HgAAJ4/uX9JDnpQQ=;
+        s=default; t=1587550376;
+        bh=Yq/4dSBQMcLbsy7yk8jjhK3ecu2E/bi+KFr3L6FhotQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+WvSGB23Hcaoj5+NGcf0jS5gBY5zANRrvyvKOLk3G49E6ByT04Zqx5e5XZQUXV7W
-         Epwp+6L/fVTuZJnPKvCntD526K2697dCVh8JoHddQazYsraeEiKDVVrpPgKG9OeTia
-         yWpVa+w4EdKAfghkvxPBBf1ddAcA/PoPR55phqnw=
+        b=CHhIhVxLQ6xytfkxj9g7bHeba/3TcxI8LE4eoBncGEgcgs8rdel4YoYmFmCrOfjKP
+         mlE7zATKMqYdbENfO/QN9JYlxXw4qt2CQYiCMFqlzRulHAtJDVfIm/WDIeIW33BU7T
+         kMwINjW4sm3n4udVd8tjyDKiUO6k9004eNKqFnNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 117/199] ext4: fix incorrect inodes per group in error message
-Date:   Wed, 22 Apr 2020 11:57:23 +0200
-Message-Id: <20200422095109.346227713@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 121/199] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
+Date:   Wed, 22 Apr 2020 11:57:27 +0200
+Message-Id: <20200422095109.673056616@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,35 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Xiao Yang <yangx.jy@cn.fujitsu.com>
 
-commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb upstream.
+commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
 
-If ext4_fill_super detects an invalid number of inodes per group, the
-resulting error message printed the number of blocks per group, rather
-than the number of inodes per group. Fix it to print the correct value.
+Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
+or snapshot_count_trigger()) when register_snapshot_trigger() has completed
+registration but doesn't allocate buffer for 'snapshot' event trigger.  In
+the rare case, 'snapshot' operation always detects the lack of allocated
+buffer so make register_snapshot_trigger() allocate buffer first.
 
-Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
-Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
+-----------------------------------------------------------
+cat trace
+...
+ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
+     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
+     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
+-----------------------------------------------------------
+
+Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
+
+Cc: stable@vger.kernel.org
+Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
+Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_trigger.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3969,7 +3969,7 @@ static int ext4_fill_super(struct super_
- 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
- 	    sbi->s_inodes_per_group > blocksize * 8) {
- 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
--			 sbi->s_blocks_per_group);
-+			 sbi->s_inodes_per_group);
- 		goto failed_mount;
- 	}
- 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -1075,14 +1075,10 @@ register_snapshot_trigger(char *glob, st
+ 			  struct event_trigger_data *data,
+ 			  struct trace_event_file *file)
+ {
+-	int ret = register_trigger(glob, ops, data, file);
++	if (tracing_alloc_snapshot_instance(file->tr) != 0)
++		return 0;
+ 
+-	if (ret > 0 && tracing_alloc_snapshot_instance(file->tr) != 0) {
+-		unregister_trigger(glob, ops, data, file);
+-		ret = 0;
+-	}
+-
+-	return ret;
++	return register_trigger(glob, ops, data, file);
+ }
+ 
+ static int
 
 
