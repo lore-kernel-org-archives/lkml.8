@@ -2,127 +2,89 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4885CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6D8C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26203214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YToNmTSo"
+	by mail.kernel.org (Postfix) with ESMTP id 6B5D121473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587573297;
+	bh=w4JN5T5oaZgQeBhYVqmXSSTzkWYLzuJOyQMklh0w+mc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TDz6jCUCNKcCxZ0YVXE2yjzWwDG41fGeL5XG+6krdCavKt4sqijfjsg44MBRsxsYb
+	 DdngbBnt5mjzVbqpru0rTGOsSaXxaTTpoS4utR7JDCn6e0VmcGDuK//0p+5deeOSH4
+	 ZqjwOF+JW3dFVpPlrpaqszXa9URBqN0KkkzKF+HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgDVQdm (ORCPT
+        id S1726809AbgDVQe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:33:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgDVQdh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:33:37 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC09CC03C1A9;
-        Wed, 22 Apr 2020 09:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=GhxXNkwIWL9QIK8tOJiZor+ArOGr/Ec9kz1wNtkTM0E=; b=YToNmTSoYuisnSyd35L7v7LRu0
-        A5ulwNzUkiUyT5V//tSQCKg2khb7bPmuUMiqHb9bvvdLhK74se9wL6GGnHREUs6ZxdcacCc/Jt5cZ
-        3TyV7N5ONiHlxAvsJAsIqc1u6QsqyNpK0Egy780p7nPsvnVUfYtVgG1j8QTN3EwIgoc98IDrjqgwU
-        0ru98OLbqxg6ReXMLvBZSL88XcJXoPvSH/LhVCa8WQw3BPjOQcj+cLFfeHv7HvBjjJuuHf3NlDXKV
-        5KXeivtJD1owtsgk0UiPbzAYMiL3vbmy+Nzq3hN3PaTeHRDWzU3OLI3KIKuVXNoooAki3uQon1big
-        X6OVO1/g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRIJa-0000D2-4q; Wed, 22 Apr 2020 16:33:34 +0000
-Subject: Re: [PATCH] mmc: sdhci-of-at91: make MMC_SDHCI_OF_AT91 depend on
- HAVE_CLK
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Takao Orito <orito.takao@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org
-References: <20200422153401.7913-1-yamada.masahiro@socionext.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <38b856aa-47a1-7957-ba96-32272aa404c0@infradead.org>
-Date:   Wed, 22 Apr 2020 09:33:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 12:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbgDVQez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:34:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC2C42082E;
+        Wed, 22 Apr 2020 16:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587573295;
+        bh=w4JN5T5oaZgQeBhYVqmXSSTzkWYLzuJOyQMklh0w+mc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aZf1+a1hml5uJnZaaGENlJlwC+gD2DiStpvw9MbJN79Of1MS4pCvEtSRkFH8HgEAs
+         7fOVd35T+0Gzr+lcs/fPBzcOfZwgU1mtNIXUpTpq/zVTT1FP1lqMBaln4BIhmCMnnX
+         BYRK3509URKr1fwMf23OLyAXB9dtNLLPLUEV5wns=
+Date:   Wed, 22 Apr 2020 18:34:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-api@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        Steve Barber <smbarber@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Filipe Brandenburger <filbranden@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Benjamin Elder <bentheelder@google.com>,
+        Akihiro Suda <suda.kyoto@gmail.com>
+Subject: Re: [PATCH v2 1/7] kobject_uevent: remove unneeded netlink_ns check
+Message-ID: <20200422163453.GA3438121@kroah.com>
+References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
+ <20200422145437.176057-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422153401.7913-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422145437.176057-2-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 8:34 AM, Masahiro Yamada wrote:
-> If sdhci-of-at91.c is compiled without CONFIG_HAVE_CLK, the line
+On Wed, Apr 22, 2020 at 04:54:31PM +0200, Christian Brauner wrote:
+> Back when I rewrote large chunks of uevent sending I should have removed
+> the .netlink_ns method completely after having removed it's last user in
+> [1]. Let's remove it now and also remove the helper associated with it
+> that is unused too.
 > 
->   caps1 |= FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
-> 
-> ... emits "FIELD_PREP: value too large for the field" warning.
-> 
-> The compiler seems to decide clk_mul is constant (unsigned int)-1,
-> because clk_get_rate() returns 0 when CONFIG_HAVE_CLK is disabled.
-> 
-> Add HAVE_CLK to the depenency since this driver does not work without
-> the clock APIs anyway.
-> 
-> Link: https://lkml.org/lkml/2020/4/17/613
-> Fixes: linux-next ("mmc: sdhci: use FIELD_GET/PREP for capabilities bit masks")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Fixes: a3498436b3a0 ("netns: restrict uevents") /* No backport needed. */
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Thanks.
-
-> ---
-> 
-> Ulf,
-> 
-> I do not know how to fill the Fixes tag.
-> It is currently 8da1ff4f68a2 in linux-next, but I am not sure it is
-> stable. I just added 'linux-next'.
-> 
-> If you have a preferred way, please modify it.
-> 
-> 
-> 
-> 
-> 
->  drivers/mmc/host/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 462b5352fea7..2aee844722d6 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -171,7 +171,7 @@ config MMC_SDHCI_OF_ASPEED
->  config MMC_SDHCI_OF_AT91
->  	tristate "SDHCI OF support for the Atmel SDMMC controller"
->  	depends on MMC_SDHCI_PLTFM
-> -	depends on OF
-> +	depends on OF && HAVE_CLK
->  	help
->  	  This selects the Atmel SDMMC driver
->  
-> 
-
-
--- 
-~Randy
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
