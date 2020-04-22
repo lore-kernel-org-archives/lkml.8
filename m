@@ -2,154 +2,99 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98043C5518E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A305C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A2B2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3765E20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587554362;
+	bh=hPyeEWJ1hSOQS0OmoMPXcbl0oGIAJWeVZfJx5MYkO5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kRZ0RnxEyfGwm3BQAZZpWv5j7qKzuFN8w6Cnr49mjIKqjvRGWQr2tNENi54KHxMdu
+	 DmZNt8InUz2NHQBMPZfpU3QYCA5o8xfUx6sBws7ko1f0uWzkuqWpxrP9r7StAujtxq
+	 a4dtrqYjJraXHoVR9924/PDeujRvOCkiLo4ObTDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDVLSW (ORCPT
+        id S1726693AbgDVLTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:18:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:52488 "EHLO mga18.intel.com"
+        Wed, 22 Apr 2020 07:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgDVLSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:18:21 -0400
-IronPort-SDR: FgWiHvAOJHLpkGbni7gqeEFkbkE1Ui8NlDlyFMNMbz925qYByMqIvG5OgQUYheD+xn/IZLyvrR
- woo3hef3GJMg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 04:18:18 -0700
-IronPort-SDR: yjDUmLnrAp3nPM++rWGbhbiP+fk2ZZXzCpYbitG0voHooB4HcwejvvPP1Xn+E70WMzCRqlrpwA
- VCXcjkYUFh6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
-   d="scan'208";a="290800598"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Apr 2020 04:18:14 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jRDOP-0004yW-Jf; Wed, 22 Apr 2020 19:18:13 +0800
-Date:   Wed, 22 Apr 2020 19:17:34 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>
-Cc:     kbuild-all@lists.01.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Dan Carpenter <error27@gmail.com>
-Subject: Re: [PATCH v3 6/7] misc: bcm-vk: add Broadcom VK driver
-Message-ID: <202004221945.LY6x0DQD%lkp@intel.com>
-References: <20200420162809.17529-7-scott.branden@broadcom.com>
+        id S1725787AbgDVLTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:19:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4507020781;
+        Wed, 22 Apr 2020 11:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587554360;
+        bh=hPyeEWJ1hSOQS0OmoMPXcbl0oGIAJWeVZfJx5MYkO5M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=urRs7yZjuISUMaA8YqNgAU/546T4w18pj4Ire2ZOKdB1LV3g4mIHUgcUP8xlJH+vh
+         4/U83sOnlybwCuwidWd2kPlgzTMs4XZ+YcU6oQTBywyuWXxUDYmb+ZkZo1mOqtrpqB
+         1HMtwUVDXAMiFIdwMBXM6oByukkWrbJ3YA6/B5yw=
+Date:   Wed, 22 Apr 2020 12:19:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Karol Trzcinski <karolx.trzcinski@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: linux-next: build failure after merge of the sound-asoc tree
+Message-ID: <20200422111918.GD4898@sirena.org.uk>
+References: <20200421121130.44423958@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PHCdUe6m4AxPMzOu"
 Content-Disposition: inline
-In-Reply-To: <20200420162809.17529-7-scott.branden@broadcom.com>
+In-Reply-To: <20200421121130.44423958@canb.auug.org.au>
+X-Cookie: A stitch in time saves nine.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
 
-I love your patch! Perhaps something to improve:
+--PHCdUe6m4AxPMzOu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[auto build test WARNING on driver-core/driver-core-testing]
-[also build test WARNING on next-20200421]
-[cannot apply to char-misc/char-misc-testing kselftest/next linus/master v5.7-rc2]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+On Tue, Apr 21, 2020 at 12:11:30PM +1000, Stephen Rothwell wrote:
 
-url:    https://github.com/0day-ci/linux/commits/Scott-Branden/firmware-add-partial-read-support-in-request_firmware_into_buf/20200422-114528
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 55623260bb33e2ab849af76edf2253bc04cb241f
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-191-gc51a0382-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> In file included from <command-line>:32:
+> ./usr/include/sound/sof/ext_manifest.h:20:10: fatal error: sound/sof/info.h: No such file or directory
+>    20 | #include <sound/sof/info.h>
+>       |          ^~~~~~~~~~~~~~~~~~
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+> Caused by commit
 
+>   9e72f13ee541 ("ASoC: SOF: ext_manifest: parse windows")
 
-sparse warnings: (new ones prefixed by >>)
+> I have used the sound-asoc tree from next-20200414 again today.
 
->> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse: sparse: incorrect type in assignment (different address spaces) @@    expected struct bcm_vk_peer_log *p_ctl @@    got struct bcm_vk_peer_log *p_ctl @@
->> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse:    expected struct bcm_vk_peer_log *p_ctl
->> drivers/misc/bcm-vk/bcm_vk_dev.c:189:15: sparse:    got void [noderef] <asn:2> *
->> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const [noderef] <asn:1> *from @@    got oderef] <asn:1> *from @@
->> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse:    expected void const [noderef] <asn:1> *from
->> drivers/misc/bcm-vk/bcm_vk_dev.c:685:36: sparse:    got struct vk_image *arg
-   drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const [noderef] <asn:1> *from @@    got oderef] <asn:1> *from @@
-   drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse:    expected void const [noderef] <asn:1> *from
->> drivers/misc/bcm-vk/bcm_vk_dev.c:780:36: sparse:    got struct vk_reset *arg
->> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected struct vk_image *arg @@    got void [nstruct vk_image *arg @@
->> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse:    expected struct vk_image *arg
->> drivers/misc/bcm-vk/bcm_vk_dev.c:858:45: sparse:    got void [noderef] <asn:1> *argp
->> drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected struct vk_reset *arg @@    got void [nstruct vk_reset *arg @@
->> drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse:    expected struct vk_reset *arg
-   drivers/misc/bcm-vk/bcm_vk_dev.c:862:40: sparse:    got void [noderef] <asn:1> *argp
---
->> drivers/misc/bcm-vk/bcm_vk_msg.c:507:17: sparse: sparse: cast removes address space '<asn:2>' of expression
-   drivers/misc/bcm-vk/bcm_vk_msg.c:707:15: sparse: sparse: cast removes address space '<asn:2>' of expression
-   drivers/misc/bcm-vk/bcm_vk_msg.c:715:23: sparse: sparse: cast removes address space '<asn:2>' of expression
-   drivers/misc/bcm-vk/bcm_vk_msg.c:871:31: sparse: sparse: cast removes address space '<asn:2>' of expression
-   drivers/misc/bcm-vk/bcm_vk_msg.c:899:47: sparse: sparse: cast removes address space '<asn:2>' of expression
+Thanks for the report, I'm in the process of reverting that and a bunch
+of other commits to fix this.
 
-vim +189 drivers/misc/bcm-vk/bcm_vk_dev.c
+--PHCdUe6m4AxPMzOu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-   180	
-   181	static void bcm_vk_dump_peer_log(struct bcm_vk *vk)
-   182	{
-   183		struct bcm_vk_peer_log log, *p_ctl;
-   184		char loc_buf[BCM_VK_PEER_LOG_LINE_MAX];
-   185		int cnt;
-   186		struct device *dev = &vk->pdev->dev;
-   187		uint data_offset;
-   188	
- > 189		p_ctl = vk->bar[BAR_2] + vk->peerlog_off;
-   190		log = *p_ctl;
-   191		/* do a rmb() to make sure log is updated */
-   192		rmb();
-   193	
-   194		dev_dbg(dev, "Peer PANIC: Size 0x%x(0x%x), [Rd Wr] = [%d %d]\n",
-   195			log.buf_size, log.mask, log.rd_idx, log.wr_idx);
-   196	
-   197		cnt = 0;
-   198		data_offset = vk->peerlog_off + sizeof(struct bcm_vk_peer_log);
-   199		while (log.rd_idx != log.wr_idx) {
-   200			loc_buf[cnt] = vkread8(vk, BAR_2, data_offset + log.rd_idx);
-   201	
-   202			if ((loc_buf[cnt] == '\0') ||
-   203			    (cnt == (BCM_VK_PEER_LOG_LINE_MAX - 1))) {
-   204				dev_err(dev, "%s", loc_buf);
-   205				cnt = 0;
-   206			} else {
-   207				cnt++;
-   208			}
-   209			log.rd_idx = (log.rd_idx + 1) & log.mask;
-   210		}
-   211		/* update rd idx at the end */
-   212		vkwrite32(vk, log.rd_idx, BAR_2, vk->peerlog_off);
-   213	}
-   214	
+-----BEGIN PGP SIGNATURE-----
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6gKDUACgkQJNaLcl1U
+h9CTKQf+JcMSIU3aaXkHJ+5+keCc1TZZHMTBC3+Ka0YjjadM40jiPjHGciTQfFe8
++SO20Sxma+O3LYXvSdEYBkLobd5i+jZL9pv4Dv5ifuM3OjLJFpzvpezoYJK3iG5s
+aGW6klKqE8yTBFDHkK+LlLq+lzCkHC1Fjqv4NlBvQP0sQeewu3RN9u5XFmoNPVqi
+PymCm0t9F9d+SEoX9YlozvZcR9J9u3vWBOXVzA9TMsWgE//3NpTySkluXytz4iET
+eEr7tAHnDffF3SX4qq5tiSOS4zryW4oyjJPspNQtRiRTU4nmUVvY28+Z4zWLgtmH
+KlRPpugTtPGX+KFdk+IuO5BSUhYQmQ==
+=Y01Q
+-----END PGP SIGNATURE-----
+
+--PHCdUe6m4AxPMzOu--
