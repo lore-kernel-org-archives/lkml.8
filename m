@@ -2,123 +2,143 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B891FC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6718C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90ECD206B9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12C820735
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGQfkGih"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nj229JH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgDVJOv (ORCPT
+        id S1726527AbgDVJP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726451AbgDVJOt (ORCPT
+        Wed, 22 Apr 2020 05:15:59 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35122 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgDVJP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:14:49 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6353C03C1A6;
-        Wed, 22 Apr 2020 02:14:49 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id x2so1128545ilp.13;
-        Wed, 22 Apr 2020 02:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oaJM9sd2m84/FAwe9eHXBdDTeN4F6hldhFPypOmqL3Q=;
-        b=jGQfkGihgBMNImvVI1vDjbTMJYi4SZvE6tNyfOBPfYZn3bEQovCvH1li4tFOnBg7fN
-         r1llf1CFsb7aH6vcC+/NKP4yVp6s2e4I7u5HGLZsPcFatNeJRVdxva6/3QL4W8WqQfC2
-         qmBqysSH7tFf9sqMVyiQ+y5qd/aqh5np9llWiSlUKC/jJxTZC+Qd6fSeDpd5Vjuf7IZw
-         ifICZdXQnAY5SLCt3lppPQP39RgdI/MZCu3yisTVdM7A4ZqG/+XZQuVehH4mksjkJI6q
-         zq5X7UtSuhSV9Zhx8iLy5BXRRGBvbbMOg64ZmIOlg5dwZVl1tUtGySS+NQukSvEvCaLd
-         5MIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oaJM9sd2m84/FAwe9eHXBdDTeN4F6hldhFPypOmqL3Q=;
-        b=SIcZqXsr0RvDM8QisbPenUy822uh7k4sjqNcBmIps9g8G4XIycvQpD7nDev+HecRJR
-         mbICFkraSuNLdw1bKIRkbV2Us+vwofqBAO/qMRILIZMryvzsTk96uh32vcT9q1Cb8eVb
-         T7iqQsfC7rMb5cRvreIj/2aaQLJ/B3aapfC28K43W3PxmF3Zv8OkdPuv5ABLeHd0RhUs
-         kXim3odMbIY8u5xB4CBMY2LcJDYTPV+5cAhVWOSc/UOj5HCzm+ydm9aZLzBtCMYgyotT
-         9I5+RSeQyONuyQPlPdKgyBz6Ks3gHw8ZASK3+evJs0T8230Flb+zwOeYdo1BrPlSxVi2
-         SJqA==
-X-Gm-Message-State: AGi0PuaIgmC8uuAtEjWvyF/rGsjpZOC/8OZuQPZHbeiRv6UBc9nODQLG
-        71pdD/v4r6+TT/0xFuynpcJnmYnWQfH7hn2hdfoEDKkG
-X-Google-Smtp-Source: APiQypLDScpVfwL23HgjzpuY5CTZczukDxHa953XA1W3RlAHDModV6xcrO7EPTKgCdpI82cL6pUD8bhum7pmZHLY2zA=
-X-Received: by 2002:a05:6e02:111:: with SMTP id t17mr13850416ilm.59.1587546888224;
- Wed, 22 Apr 2020 02:14:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422041502.7497-1-samuel@sholland.org>
-In-Reply-To: <20200422041502.7497-1-samuel@sholland.org>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Wed, 22 Apr 2020 11:14:36 +0200
-Message-ID: <CAJiuCceWffc7O+MMK4wiGJEQ-m-4misCpq8w35_esdHVkwkkfA@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] arm64: dts: allwinner: a64: Disable SPDIF
- by default
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Wed, 22 Apr 2020 05:15:59 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03M9Fsj0039617;
+        Wed, 22 Apr 2020 04:15:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587546954;
+        bh=2nTyf4kIFJt1q2fpNAVmctL88e8DgCyZPbnv1uC0QKM=;
+        h=From:To:CC:Subject:Date;
+        b=nj229JH9/FDtiZuz7PZXz7If5DBlo+jc6hxxvbwhgxefBo7wLffKX+qx0vao8s1iI
+         KTAx8uFazigzlP4Yx0Ui6vcSUNPeQPk+VL7obaTpkp9wpsCCdL2QIoyNAT09HBdRsq
+         2mvkvlEDOsI7QF/gTLQqSAIjfM1SsDQLEQ3lxVok=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03M9FsSU057556
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Apr 2020 04:15:54 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Apr 2020 04:15:53 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Apr 2020 04:15:53 -0500
+Received: from deskari.lan (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03M9FpLK050948;
+        Wed, 22 Apr 2020 04:15:52 -0500
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>
+CC:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH 1/3] arm64: dts: ti: am654: Add DSS node
+Date:   Wed, 22 Apr 2020 12:15:10 +0300
+Message-ID: <20200422091512.950-1-tomi.valkeinen@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel,
+From: Jyri Sarha <jsarha@ti.com>
 
-On Wed, 22 Apr 2020 at 06:11, Samuel Holland <samuel@sholland.org> wrote:
->
-> As of v5.7-rc2, Linux now prints the following message at boot:
->
->   [   33.848525] platform sound_spdif: deferred probe pending
->
-> This is because &sound_spdif is waiting on its DAI link component
-> &spdif to probe, but &spdif is disabled in the DTS. Disable the
-> audio card as well to match.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 6f8c30d89b9b..6c233ff031c6 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -169,6 +169,7 @@ link0_codec: codec {
->         sound_spdif {
->                 compatible = "simple-audio-card";
->                 simple-audio-card,name = "On-board SPDIF";
-> +               status = "disabled";
->
->                 simple-audio-card,cpu {
->                         sound-dai = <&spdif>;
+Add DSS node to k3-am65-main.dtsi with labels for board specific
+support and syscon node for oldi-io-ctrl.
 
-This "On-board SPDIF" node is board specific and should be moved to
-each board instead of be disabled here.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 44 ++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-Maybe drop the node, and people who need it whould reintroduce it properly?
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 11887c72f23a..7d1bc991708e 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -287,6 +287,11 @@
+ 			mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
+ 					<0x4090 0x3>; /* SERDES1 lane select */
+ 		};
++
++		dss_oldi_io_ctrl: dss_oldi_io_ctrl@41E0 {
++			compatible = "syscon";
++			reg = <0x0000041E0 0x14>;
++		};
+ 	};
+ 
+ 	dwc3_0: dwc3@4000000 {
+@@ -746,4 +751,43 @@
+ 			};
+ 		};
+ 	};
++
++	dss: dss@04a00000 {
++		compatible = "ti,am65x-dss";
++		reg =	<0x0 0x04a00000 0x0 0x1000>, /* common */
++			<0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
++			<0x0 0x04a06000 0x0 0x1000>, /* vid */
++			<0x0 0x04a07000 0x0 0x1000>, /* ovr1 */
++			<0x0 0x04a08000 0x0 0x1000>, /* ovr2 */
++			<0x0 0x04a0a000 0x0 0x1000>, /* vp1 */
++			<0x0 0x04a0b000 0x0 0x1000>; /* vp2 */
++		reg-names = "common", "vidl1", "vid",
++			"ovr1", "ovr2", "vp1", "vp2";
++
++		ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
++
++		power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
++
++		clocks =	<&k3_clks 67 1>,
++				<&k3_clks 216 1>,
++				<&k3_clks 67 2>;
++		clock-names = "fck", "vp1", "vp2";
++
++		/*
++		 * Set vp2 clk (DPI_1_IN_CLK) mux to PLL4 via
++		 * DIV1. See "Figure 12-3365. DSS Integration"
++		 * in AM65x TRM for details.
++		 */
++		assigned-clocks = <&k3_clks 67 2>;
++		assigned-clock-parents = <&k3_clks 67 5>;
++
++		interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
++
++		status = "disabled";
++
++		dss_ports: ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
+ };
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-Regards,
-Clement
-
-
-> --
-> 2.24.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200422041502.7497-1-samuel%40sholland.org.
