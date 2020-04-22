@@ -2,122 +2,80 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58305C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6F5C5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 315BD2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4302720767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgDVQ2B (ORCPT
+        id S1726710AbgDVQaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42652 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 12:30:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:52434 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgDVQ1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:27:52 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84D1E20776;
-        Wed, 22 Apr 2020 16:27:51 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jRIE2-000O4K-FH; Wed, 22 Apr 2020 12:27:50 -0400
-Message-Id: <20200422162750.350373278@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Wed, 22 Apr 2020 12:25:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        jpoimboe@redhat.com, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, jthierry@redhat.com, alexandre.chartre@oracle.com
-Subject: [PATCH 1/3] x86/ftrace: Make non direct case the default in ftrace_regs_caller
-References: <20200422162539.808362933@goodmis.org>
+        id S1726245AbgDVQaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:30:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B68DA30E;
+        Wed, 22 Apr 2020 09:29:59 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 932143F68F;
+        Wed, 22 Apr 2020 09:29:56 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 17:29:54 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v10 00/13] arm64: Branch Target Identification support
+Message-ID: <20200422162954.GF3585@gaia>
+References: <20200316165055.31179-1-broonie@kernel.org>
+ <20200422154436.GJ4898@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422154436.GJ4898@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Wed, Apr 22, 2020 at 04:44:36PM +0100, Mark Brown wrote:
+> On Mon, Mar 16, 2020 at 04:50:42PM +0000, Mark Brown wrote:
+> > This patch series implements support for ARMv8.5-A Branch Target
+> > Identification (BTI), which is a control flow integrity protection
+> > feature introduced as part of the ARMv8.5-A extensions.
+> 
+> I've not resent this since the branch is still sitting in the arm64 tree
+> but it's also not in -next at the minute - is there anything you're
+> waiting for from my end here?
 
-If a direct function is hooked along with one of the ftrace registered
-functions, then the ftrace_regs_caller is attached to the function that
-shares the direct hook as well as the ftrace hook. The ftrace_regs_caller
-will call ftrace_ops_list_func() that iterates through all the registered
-ftrace callbacks, and if there's a direct callback attached to that
-function, the direct ftrace_ops callback is called to notify that
-ftrace_regs_caller to return to the direct caller instead of going back to
-the function that called it.
+It's up to Will whether he wants a new series posted. The for-next/bti
+branch is complete AFAICT, only that normally we start queueing stuff
+(and push to -next) around -rc3.
 
-But this is a very uncommon case. Currently, the code has it as the default
-case. Modify ftrace_regs_caller to make the default case (the non jump) to
-just return normally, and have the jump to the handling of the direct
-caller.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- arch/x86/kernel/ftrace_64.S | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 9738ed23964e..c93ee7195af0 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -241,22 +241,9 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	 */
- 	movq ORIG_RAX(%rsp), %rax
- 	testq	%rax, %rax
--	jz	1f
-+	jnz	1f
- 
--	/* Swap the flags with orig_rax */
--	movq MCOUNT_REG_SIZE(%rsp), %rdi
--	movq %rdi, MCOUNT_REG_SIZE-8(%rsp)
--	movq %rax, MCOUNT_REG_SIZE(%rsp)
--
--	restore_mcount_regs 8
--	/* Restore flags */
--	popfq
--
--SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
--	UNWIND_HINT_RET_OFFSET
--	jmp	ftrace_epilogue
--
--1:	restore_mcount_regs
-+	restore_mcount_regs
- 	/* Restore flags */
- 	popfq
- 
-@@ -266,9 +253,21 @@ SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
- 	 * The trampoline will add the code to jump
- 	 * to the return.
- 	 */
--SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
-+SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL)
- 	jmp ftrace_epilogue
- 
-+	/* Swap the flags with orig_rax */
-+1:	movq MCOUNT_REG_SIZE(%rsp), %rdi
-+	movq %rdi, MCOUNT_REG_SIZE-8(%rsp)
-+	movq %rax, MCOUNT_REG_SIZE(%rsp)
-+
-+	restore_mcount_regs 8
-+	/* Restore flags */
-+	popfq
-+SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
-+	UNWIND_HINT_RET_OFFSET
-+	jmp	ftrace_epilogue
-+
- SYM_FUNC_END(ftrace_regs_caller)
- 
- 
 -- 
-2.26.1
-
-
+Catalin
