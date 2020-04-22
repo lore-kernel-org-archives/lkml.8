@@ -2,166 +2,107 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CC5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83424C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3048520724
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0AE2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ObH0SMRv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MCnsp+oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDVCGs (ORCPT
+        id S1726421AbgDVCKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:06:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27917 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726294AbgDVCGr (ORCPT
+        Tue, 21 Apr 2020 22:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgDVCKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:06:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587521206;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=o5mZ9zdvVkLzXY5CfBsci5sqeOqS3/3iD+lA0IRj/2o=;
-        b=ObH0SMRvNvKH/r+6cm384tl+POrIifCzbSoUG7J18vG1gE+3x4fBdt/8cqq9q2xURvdwo+
-        6bhkSrgC4uHvrMJWd4vlb4rJvkYPK2gUw39C20Zu6lwGIvket051obz7bAUR9sG7g1bRgt
-        fn41sLHN786Pv9p0anx8htcGmy96wbQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-uK28SCOCNgy8aHnax1t1AA-1; Tue, 21 Apr 2020 22:06:43 -0400
-X-MC-Unique: uK28SCOCNgy8aHnax1t1AA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE5E018C43C1;
-        Wed, 22 Apr 2020 02:06:41 +0000 (UTC)
-Received: from T590 (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C797A58;
-        Wed, 22 Apr 2020 02:06:31 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 10:06:25 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "hare@suse.de" <hare@suse.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
-Message-ID: <20200422020625.GD299948@T590>
-References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
- <20200422012814.GB299948@T590>
- <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+        Tue, 21 Apr 2020 22:10:53 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F208C0610D6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 19:10:53 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id g6so366632ybh.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 19:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2tQbdOPCxIE/K09Rk6AnWK5NVIGzgtGeQWhwa+aoWFg=;
+        b=MCnsp+oim3XYeA5xLQ0O6mol7X2v17gfJ2/fvRp34u7NVtVAxV09gtDg/l4k2L4ROb
+         riYMlKo5ay/ZMVbUJ7+bGwuQAGc78MaGRhc06tX5zCpyfaRmxOcEvTc+Mq96S2b0/0HN
+         USL1HSbIGfPZHn5upNxuILkVltbfhf7jrmzj7ffY02kvdrfZHoVYJCb5uaXQ3Uv6XB+Q
+         vUtcqm5soQpR51voh0kDtg80SiATM/wNgo1Hau5MNTSsxyawm42OIQow2Ee6qhG+V8WF
+         cA7dAeRdOhYxaJv1/iSVFliUQWgtqmw6ALomBDlH6cA8BF/IcmjsO6rxCWTDHMoiBHY6
+         xwoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2tQbdOPCxIE/K09Rk6AnWK5NVIGzgtGeQWhwa+aoWFg=;
+        b=X8GAgHY3AueU8imnHWn2Loo/Q9DTvlFsWNXU/N4QwjXnH4vD16ZnHfQOva5KUQoUMM
+         UH6e3Gvz/XbiM/TcD4hJCn/MaWcq8IuPYAMo62rr6OnOkmxRzBB5KEFXf5J2xsR9Dj/H
+         JauTAvtLc/eO77L5BNQJIQxp8+LjRi4V5qSwMQpf48JK21CawTA2THHZY4tjm4KpkzNe
+         P4X/eYQEf0Hyz8V0ASu7kgM8uNyYsr2SlZkyumsXRN7b1nGXZB+9yX4fdad2KMrMwb08
+         yio0DTMzMCEZPGZ74P224N0vkkdRcMLwxLspkz0ZYt3snIi2jb4HY+a9irmlO2d6VA58
+         IU/w==
+X-Gm-Message-State: AGi0PuawMAeyndhW0NRJfZrNM97q2rFl9iHhN149PxiC695pshO1XJLB
+        kXyFNIfEZxpi0sUEWLatKRPQ7sVX2CoMI4oNzosqpg==
+X-Google-Smtp-Source: APiQypJWt0jllq8PUpBD1WeSTR4j+afUjLDp5+ewhll1TBEqJx7nHX779bPW4eO07cAv45lmeAP5M8CBx5DfsZYBD1w=
+X-Received: by 2002:a5b:383:: with SMTP id k3mr32955292ybp.332.1587521452409;
+ Tue, 21 Apr 2020 19:10:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200422001422.232330-1-walken@google.com> <20200422001422.232330-10-walken@google.com>
+In-Reply-To: <20200422001422.232330-10-walken@google.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Tue, 21 Apr 2020 19:10:39 -0700
+Message-ID: <CANN689FQf3gMTTXr7vwYujvuoVNDHdRFWWwaBQAdhifeE=zBbg@mail.gmail.com>
+Subject: Re: [PATCH v5 09/10] mmap locking API: add mmap_assert_locked
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:48:25AM +0000, Dexuan Cui wrote:
-> > From: Ming Lei <ming.lei@redhat.com>
-> > Sent: Tuesday, April 21, 2020 6:28 PM
-> > To: Dexuan Cui <decui@microsoft.com>
-> > 
-> > On Tue, Apr 21, 2020 at 05:17:24PM -0700, Dexuan Cui wrote:
-> > > During hibernation, the sdevs are suspended automatically in
-> > > drivers/scsi/scsi_pm.c before storvsc_suspend(), so after
-> > > storvsc_suspend(), there is no disk I/O from the file systems, but there
-> > > can still be disk I/O from the kernel space, e.g. disk_check_events() ->
-> > > sr_block_check_events() -> cdrom_check_events() can still submit I/O
-> > > to the storvsc driver, which causes a paic of NULL pointer dereference,
-> > > since storvsc has closed the vmbus channel in storvsc_suspend(): refer
-> > > to the below links for more info:
-> > >
-> > > Fix the panic by blocking/unblocking all the I/O queues properly.
-> > >
-> > > Note: this patch depends on another patch "scsi: core: Allow the state
-> > > change from SDEV_QUIESCE to SDEV_BLOCK" (refer to the second link
-> > above).
-> > >
-> > > Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
-> > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > > ---
-> > >  drivers/scsi/storvsc_drv.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> > > index fb41636519ee..fd51d2f03778 100644
-> > > --- a/drivers/scsi/storvsc_drv.c
-> > > +++ b/drivers/scsi/storvsc_drv.c
-> > > @@ -1948,6 +1948,11 @@ static int storvsc_suspend(struct hv_device
-> > *hv_dev)
-> > >  	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
-> > >  	struct Scsi_Host *host = stor_device->host;
-> > >  	struct hv_host_device *host_dev = shost_priv(host);
-> > > +	int ret;
-> > > +
-> > > +	ret = scsi_host_block(host);
-> > > +	if (ret)
-> > > +		return ret;
-> > >
-> > >  	storvsc_wait_to_drain(stor_device);
-> > >
-> > > @@ -1968,10 +1973,15 @@ static int storvsc_suspend(struct hv_device
-> > *hv_dev)
-> > >
-> > >  static int storvsc_resume(struct hv_device *hv_dev)
-> > >  {
-> > > +	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
-> > > +	struct Scsi_Host *host = stor_device->host;
-> > >  	int ret;
-> > >
-> > >  	ret = storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
-> > >  				     hv_dev_is_fc(hv_dev));
-> > > +	if (!ret)
-> > > +		ret = scsi_host_unblock(host, SDEV_RUNNING);
-> > > +
-> > >  	return ret;
-> > >  }
-> > 
-> > scsi_host_block() is actually too heavy for just avoiding
-> > scsi internal command, which can be done simply by one atomic
-> > variable.
-> > 
-> > Not mention scsi_host_block() is implemented too clumsy because
-> > nr_luns * synchronize_rcu() are required in scsi_host_block(),
-> > which should have been optimized to just one.
-> > 
-> > Also scsi_device_quiesce() is heavy too, still takes 2
-> > synchronize_rcu() for one LUN.
-> > 
-> > That is said SCSI suspend may take (3 * nr_luns) sysnchronize_rcu() in
-> > case that the HBA's suspend handler needs scsi_host_block().
-> > 
-> > Thanks,
-> > Ming
-> 
-> When we're in storvsc_suspend(), all the userspace processes have been
-> frozen and all the file systems have been flushed, and there should not
-> be too much I/O from the kernel space, so IMO scsi_host_block() should be
-> pretty fast here. 
+On Tue, Apr 21, 2020 at 5:14 PM Michel Lespinasse <walken@google.com> wrote:
+> +static inline void mmap_assert_locked(struct mm_struct *mm)
+> +{
+> +       if (IS_ENABLED(CONFIG_LOCKDEP) && debug_locks)
+> +               VM_BUG_ON_MM(!lockdep_is_held(&mm->mmap_sem), mm);
+> +       else
+> +               VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
+> +}
 
-Forget to mention, I guess that storvsc_suspend() may be called from runtime
-PM path, at that time, the whole system is running, and RCU can't be quick.
+Turns out this function definition does not work for !CONFIG_LOCKDEP
+as lockdep_is_held is not defined in that case.
 
-Thanks, 
-Ming
+The following should work instead:
 
+static inline void mmap_assert_locked(struct mm_struct *mm)
+{
+#ifdef CONFIG_LOCKDEP
+        if (debug_locks) {
+                VM_BUG_ON_MM(!lockdep_is_held(&mm->mmap_lock), mm);
+                return;
+        }
+#endif
+        VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_lock), mm);
+}
