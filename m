@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AA2C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B25C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C16120776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2473D20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549976;
-	bh=idgshFs3pJ4wddZ6Cds1FGvsSASdv3dtQQDtPhm/v8E=;
+	s=default; t=1587549980;
+	bh=2XHUo8+4G3547rDlENORxdha9oPPIhaqymLoQuKuIJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/8AbkBgnZjSC/hODVJYhKs286GTuEdiTbB1GHKiT/QKzkexY05Mx8lPrKa4BX+hj
-	 kWX6ex7Fipn9+yIe2ppX+a3qTzhjMdeHnrmgyC7U8pOEXx1WJE9t3tTE4l5gVDazfS
-	 riwHzHs7wFTkSzrDoJKTHSFLZGQtrQeuYS5HGsgs=
+	b=O9CX2meEOCjvFP0aRJHaiTI2J9hs9pvoP7U2xezFnyPOVi/SU9nluoA/qw3FA1hng
+	 Do3wndFG7/0xQcSYTclKfD9QLFSbVyGGfe0hwqY4mbI2iPPOogjioYQSHul+bgWq9b
+	 hHhZrye62jik82AXzcgm0DM1inH7xCNv2Dru8/PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgDVKGP (ORCPT
+        id S1728332AbgDVKGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728317AbgDVKGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:12 -0400
+        id S1728323AbgDVKGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 790712075A;
-        Wed, 22 Apr 2020 10:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD55820774;
+        Wed, 22 Apr 2020 10:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549971;
-        bh=idgshFs3pJ4wddZ6Cds1FGvsSASdv3dtQQDtPhm/v8E=;
+        s=default; t=1587549974;
+        bh=2XHUo8+4G3547rDlENORxdha9oPPIhaqymLoQuKuIJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/eI5zgEj/E0PEuxqN3sSpPuUICoS1PSdLjZiKLZX4+Gz0omzKdi0uQyvOXOvkqbC
-         yW2TKwJqFxspFC6DiMp5xtkviD56obCT4dwMqdn/o2TJSOGukuz46tj6bnLs2yAEgI
-         uIX2hr6zIYhHE8/iPrAPcc+ZiiBcdr3GQhnUQDvQ=
+        b=B9305ehlTBJ/TQ5pPxjC+5p20Nq0Zu/e1p+yXYqD9UnPEV2f05HBY7A2dDxMAxePG
+         av/14qTDwBNzxpt/HBUzd6I0yKjMXcQ0WFKUcF7IiRXloUWkPlH6dfm4f//SeZdo4f
+         2J/Q4fmrzd/tD8L10IkyR5A2Wte0GB/a9KfAeI1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Jacob Xu <jacobhxu@google.com>,
-        Peter Shier <pshier@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Maurizio Lombardi <mlombard@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 081/125] kvm: x86: Host feature SSBD doesnt imply guest feature SPEC_CTRL_SSBD
-Date:   Wed, 22 Apr 2020 11:56:38 +0200
-Message-Id: <20200422095046.158101353@linuxfoundation.org>
+Subject: [PATCH 4.9 082/125] scsi: target: remove boilerplate code
+Date:   Wed, 22 Apr 2020 11:56:39 +0200
+Message-Id: <20200422095046.321475823@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -64,50 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Maurizio Lombardi <mlombard@redhat.com>
 
-commit 396d2e878f92ec108e4293f1c77ea3bc90b414ff upstream.
+[ Upstream commit e49a7d994379278d3353d7ffc7994672752fb0ad ]
 
-The host reports support for the synthetic feature X86_FEATURE_SSBD
-when any of the three following hardware features are set:
-  CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31]
-  CPUID.80000008H:EBX.AMD_SSBD[bit 24]
-  CPUID.80000008H:EBX.VIRT_SSBD[bit 25]
+iscsit_free_session() is equivalent to iscsit_stop_session() followed by a
+call to iscsit_close_session().
 
-Either of the first two hardware features implies the existence of the
-IA32_SPEC_CTRL MSR, but CPUID.80000008H:EBX.VIRT_SSBD[bit 25] does
-not. Therefore, CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31] should only be
-set in the guest if CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31] or
-CPUID.80000008H:EBX.AMD_SSBD[bit 24] is set on the host.
-
-Fixes: 0c54914d0c52a ("KVM: x86: use Intel speculation bugs and features as derived in generic x86 code")
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Jacob Xu <jacobhxu@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 4.x: adjust indentation]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Link: https://lore.kernel.org/r/20200313170656.9716-2-mlombard@redhat.com
+Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/cpuid.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/target/iscsi/iscsi_target.c | 46 ++---------------------------
+ drivers/target/iscsi/iscsi_target.h |  1 -
+ 2 files changed, 2 insertions(+), 45 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index c57dab0884fed..63c3ff9e74d42 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -479,7 +479,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 				entry->edx |= F(SPEC_CTRL);
- 			if (boot_cpu_has(X86_FEATURE_STIBP))
- 				entry->edx |= F(INTEL_STIBP);
--			if (boot_cpu_has(X86_FEATURE_SSBD))
-+			if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
-+			    boot_cpu_has(X86_FEATURE_AMD_SSBD))
- 				entry->edx |= F(SPEC_CTRL_SSBD);
- 			/*
- 			 * We emulate ARCH_CAPABILITIES in software even
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index b6c4f55f79e7a..9134ea8fc0878 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4590,49 +4590,6 @@ void iscsit_fail_session(struct iscsi_session *sess)
+ 	sess->session_state = TARG_SESS_STATE_FAILED;
+ }
+ 
+-int iscsit_free_session(struct iscsi_session *sess)
+-{
+-	u16 conn_count = atomic_read(&sess->nconn);
+-	struct iscsi_conn *conn, *conn_tmp = NULL;
+-	int is_last;
+-
+-	spin_lock_bh(&sess->conn_lock);
+-	atomic_set(&sess->sleep_on_sess_wait_comp, 1);
+-
+-	list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
+-			conn_list) {
+-		if (conn_count == 0)
+-			break;
+-
+-		if (list_is_last(&conn->conn_list, &sess->sess_conn_list)) {
+-			is_last = 1;
+-		} else {
+-			iscsit_inc_conn_usage_count(conn_tmp);
+-			is_last = 0;
+-		}
+-		iscsit_inc_conn_usage_count(conn);
+-
+-		spin_unlock_bh(&sess->conn_lock);
+-		iscsit_cause_connection_reinstatement(conn, 1);
+-		spin_lock_bh(&sess->conn_lock);
+-
+-		iscsit_dec_conn_usage_count(conn);
+-		if (is_last == 0)
+-			iscsit_dec_conn_usage_count(conn_tmp);
+-
+-		conn_count--;
+-	}
+-
+-	if (atomic_read(&sess->nconn)) {
+-		spin_unlock_bh(&sess->conn_lock);
+-		wait_for_completion(&sess->session_wait_comp);
+-	} else
+-		spin_unlock_bh(&sess->conn_lock);
+-
+-	iscsit_close_session(sess);
+-	return 0;
+-}
+-
+ void iscsit_stop_session(
+ 	struct iscsi_session *sess,
+ 	int session_sleep,
+@@ -4717,7 +4674,8 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
+ 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
+ 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
+ 
+-		iscsit_free_session(sess);
++		iscsit_stop_session(sess, 1, 1);
++		iscsit_close_session(sess);
+ 		session_count++;
+ 	}
+ 
+diff --git a/drivers/target/iscsi/iscsi_target.h b/drivers/target/iscsi/iscsi_target.h
+index 4cf2c0f2ba2f9..cfe87b629a8bd 100644
+--- a/drivers/target/iscsi/iscsi_target.h
++++ b/drivers/target/iscsi/iscsi_target.h
+@@ -30,7 +30,6 @@ extern int iscsi_target_rx_thread(void *);
+ extern int iscsit_close_connection(struct iscsi_conn *);
+ extern int iscsit_close_session(struct iscsi_session *);
+ extern void iscsit_fail_session(struct iscsi_session *);
+-extern int iscsit_free_session(struct iscsi_session *);
+ extern void iscsit_stop_session(struct iscsi_session *, int, int);
+ extern int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *, int);
+ 
 -- 
 2.20.1
 
