@@ -2,179 +2,177 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B58C55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0559C38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5D92070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04F7206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QNlTAEp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgDVGTZ (ORCPT
+        id S1726569AbgDVGTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:19:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:50389 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgDVGTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:19:22 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3DDF768C4E; Wed, 22 Apr 2020 08:19:19 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 08:19:19 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Martijn Coenen <maco@android.com>
-Cc:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com,
-        narayan@google.com, zezeozue@google.com, kernel-team@android.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com
-Subject: Re: [PATCH 4/4] loop: Add LOOP_SET_FD_AND_STATUS ioctl.
-Message-ID: <20200422061919.GA22819@lst.de>
-References: <20200420080409.111693-1-maco@android.com> <20200420080409.111693-5-maco@android.com>
+        Wed, 22 Apr 2020 02:19:23 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3230 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgDVGTJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 02:19:09 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9fe19e0000>; Tue, 21 Apr 2020 23:18:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 21 Apr 2020 23:19:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 21 Apr 2020 23:19:08 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
+ 2020 06:19:07 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 22 Apr 2020 06:19:07 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.49]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e9fe1db0000>; Tue, 21 Apr 2020 23:19:07 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH v9 9/9] arm64: tegra: Add Tegra VI CSI support in device tree
+Date:   Tue, 21 Apr 2020 23:18:59 -0700
+Message-ID: <1587536339-4030-10-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420080409.111693-5-maco@android.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587536286; bh=yB3b29VbNFtTvMcPZCMVxLppaVECoZp9WEY70dWiuUY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=QNlTAEp6ohcDjC5k0KD/J/hXrcs7VuaaV3nvkoUeok25KgnDFsoRZvLllwQji88dJ
+         AnsDd/1kM57H+790vGmelviyT1+VNOamkMMeh+7uzxlCRzxTfDs7z2S4sQvj2hUH2K
+         SZqYSGJD+eYB76Hy/4yQ78qt/WlvobCiaFtkgZ7rHnLt8on0jRWIQSFzEY7HNZG+n6
+         l/HRGbYjShLtdlv/9QgugE2gnxgyWm1ZvaOdrJqEXioRe/+QnwEwzBrmzMTpI/23W8
+         s8VQLMrn0zR2S/+Y26qpXSXrgoUsbncQJQs+ttL//KKtbgiDBrnZ6n8cjsPqAOKLbF
+         vT0Z5CWWty6ZQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 10:04:09AM +0200, Martijn Coenen wrote:
-> This allows userspace to completely setup a loop device with a single
-> ioctl, removing the in-between state where the device can be partially
-> configured - eg the loop device has a backing file associated with it,
-> but is reading from the wrong offset.
-> 
-> Besides removing the intermediate state, another big benefit of this
-> ioctl is that LOOP_SET_STATUS can be slow; the main reason for this
-> slowness is that LOOP_SET_STATUS(64) calls blk_mq_freeze_queue() to
-> freeze the associated queue; this requires waiting for RCU
-> synchronization, which I've measured can take about 15-20ms on this
-> device on average.
-> 
-> Here's setting up ~70 regular loop devices with an offset on an x86
-> Android device, using LOOP_SET_FD and LOOP_SET_STATUS:
-> 
-> vsoc_x86:/system/apex # time for i in `seq 30 100`;
-> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
->     0m03.40s real     0m00.02s user     0m00.03s system
-> 
-> Here's configuring ~70 devices in the same way, but using a modified
-> losetup that uses the new LOOP_SET_FD_AND_STATUS ioctl:
-> 
-> vsoc_x86:/system/apex # time for i in `seq 30 100`;
-> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
->     0m01.94s real     0m00.01s user     0m00.01s system
-> 
-> Signed-off-by: Martijn Coenen <maco@android.com>
-> ---
->  drivers/block/loop.c      | 47 ++++++++++++++++++++++++++++++---------
->  include/uapi/linux/loop.h |  6 +++++
->  2 files changed, 42 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 6e656390b285..e1dbd70d6d6e 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -1065,8 +1065,9 @@ loop_set_from_status(struct loop_device *lo, const struct loop_info64 *info)
->  	return 0;
->  }
->  
-> -static int loop_set_fd(struct loop_device *lo, fmode_t mode,
-> -		       struct block_device *bdev, unsigned int arg)
-> +static int loop_set_fd_and_status(struct loop_device *lo, fmode_t mode,
-> +				  struct block_device *bdev, unsigned int fd,
-> +				  const struct loop_info64 *info)
->  {
->  	struct file	*file;
->  	struct inode	*inode;
-> @@ -1081,7 +1082,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->  	__module_get(THIS_MODULE);
->  
->  	error = -EBADF;
-> -	file = fget(arg);
-> +	file = fget(fd);
->  	if (!file)
->  		goto out;
->  
-> @@ -1090,7 +1091,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->  	 * here to avoid changing device under exclusive owner.
->  	 */
->  	if (!(mode & FMODE_EXCL)) {
-> -		claimed_bdev = bd_start_claiming(bdev, loop_set_fd);
-> +		claimed_bdev = bd_start_claiming(bdev, loop_set_fd_and_status);
->  		if (IS_ERR(claimed_bdev)) {
->  			error = PTR_ERR(claimed_bdev);
->  			goto out_putf;
-> @@ -1117,9 +1118,24 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->  		lo_flags |= LO_FLAGS_READ_ONLY;
->  
->  	error = -EFBIG;
-> -	size = get_loop_size(lo, file);
-> +	if (info)
-> +		size = get_size(info->lo_offset, info->lo_sizelimit,
-> +				file);
-> +	else
-> +		size = get_loop_size(lo, file);
->  	if ((loff_t)(sector_t)size != size)
->  		goto out_unlock;
-> +
-> +	if (info) {
-> +		error = loop_set_from_status(lo, info);
-> +		if (error)
-> +			goto out_unlock;
-> +	} else {
-> +		lo->transfer = NULL;
-> +		lo->ioctl = NULL;
-> +		lo->lo_sizelimit = 0;
-> +		lo->lo_offset = 0;
-> +	}
+Tegra210 contains VI controller for video input capture from MIPI
+CSI camera sensors and also supports built-in test pattern generator.
 
-Just curious:  Can't we just pass in an on-stack info for the legacy
-case and avoid all these conditionals?
+CSI ports can be one-to-one mapped to VI channels for capturing from
+an external sensor or from built-in test pattern generator.
 
->  out:
-> @@ -1653,7 +1666,18 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
->  
->  	switch (cmd) {
->  	case LOOP_SET_FD:
-> -		return loop_set_fd(lo, mode, bdev, arg);
-> +		return loop_set_fd_and_status(lo, mode, bdev, arg, NULL);
-> +	case LOOP_SET_FD_AND_STATUS: {
-> +		struct loop_fd_and_status fds;
-> +
-> +		if (copy_from_user(&fds,
-> +				   (struct loop_fd_and_status __user *) arg,
-> +				   sizeof(fds)))
-> +			return -EFAULT;
-> +
-> +		return loop_set_fd_and_status(lo, mode, bdev, fds.fd,
-> +					      &fds.info);
-> +	}
+This patch adds support for VI and CSI and enables them in Tegra210
+device tree.
 
-Can you throw in another prep patch that adds a:
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 10 ++++++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi       | 46 +++++++++++++++++++++++++-
+ 2 files changed, 55 insertions(+), 1 deletion(-)
 
-	void __user *argp = (void __user *)arg;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index 313a4c2..b57d837 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -14,6 +14,16 @@
+ 			status = "okay";
+ 		};
+ 
++		vi@54080000 {
++			status = "okay";
++
++			avdd-dsi-csi-supply = <&vdd_dsi_csi>;
++
++			csi@838 {
++				status = "okay";
++			};
++		};
++
+ 		sor@54580000 {
+ 			status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 5b1dfd8..cad42a7 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -137,9 +137,44 @@
+ 
+ 		vi@54080000 {
+ 			compatible = "nvidia,tegra210-vi";
+-			reg = <0x0 0x54080000 0x0 0x00040000>;
++			reg = <0x0 0x54080000 0x0 0x700>;
+ 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
++			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
++			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
++
++			clocks = <&tegra_car TEGRA210_CLK_VI>;
++			power-domains = <&pd_venc>;
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ranges = <0x0 0x0 0x54080000 0x2000>;
++
++			csi@838 {
++				compatible = "nvidia,tegra210-csi";
++				reg = <0x838 0x1300>;
++				status = "disabled";
++				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
++						  <&tegra_car TEGRA210_CLK_CILCD>,
++						  <&tegra_car TEGRA210_CLK_CILE>,
++						  <&tegra_car TEGRA210_CLK_CSI_TPG>;
++				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
++							 <&tegra_car TEGRA210_CLK_PLL_P>,
++							 <&tegra_car TEGRA210_CLK_PLL_P>;
++				assigned-clock-rates = <102000000>,
++						       <102000000>,
++						       <102000000>,
++						       <972000000>;
++
++				clocks = <&tegra_car TEGRA210_CLK_CSI>,
++					 <&tegra_car TEGRA210_CLK_CILAB>,
++					 <&tegra_car TEGRA210_CLK_CILCD>,
++					 <&tegra_car TEGRA210_CLK_CILE>,
++					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
++				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
++				power-domains = <&pd_sor>;
++			};
+ 		};
+ 
+ 		tsec@54100000 {
+@@ -839,6 +874,15 @@
+ 				reset-names = "vic";
+ 				#power-domain-cells = <0>;
+ 			};
++
++			pd_venc: venc {
++				clocks = <&tegra_car TEGRA210_CLK_VI>,
++					 <&tegra_car TEGRA210_CLK_CSI>;
++				resets = <&mc TEGRA210_MC_RESET_VI>,
++					 <&tegra_car TEGRA210_RST_VI>,
++					 <&tegra_car TEGRA210_CLK_CSI>;
++				#power-domain-cells = <0>;
++			};
+ 		};
+ 
+ 		sdmmc1_3v3: sdmmc1-3v3 {
+-- 
+2.7.4
 
-line at the top of lo_compat_ioctl, and switches the LOOP_SET_STATUS
-and LOOP_GET_STATUS case to it?
-
-The nhere you can just do:
-
-		if (copy_from_user(&p, argp, sizeof(fds)))
-			return -EFAULT;
-		return loop_set_fd_and_status(lo, mode, bdev, p.fd, &p.info);
-
-and be done.
-
-> +struct loop_fd_and_status {
-> +	struct loop_info64	info;
-> +	__u32			fd;
-
-This should grow a
-
-	__u32	__pad;
-
-to avoid different struct sizes on x86-32 vs x86-64.
