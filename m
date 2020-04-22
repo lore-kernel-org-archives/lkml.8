@@ -2,213 +2,152 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5AEC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAA6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A64820776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A1220776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="tbwhr2e9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bse4Moqz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PW0y382o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgDVPNj (ORCPT
+        id S1726323AbgDVPOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:13:39 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40675 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725779AbgDVPNi (ORCPT
+        Wed, 22 Apr 2020 11:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgDVPOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:13:38 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 91DD65800DD;
-        Wed, 22 Apr 2020 11:13:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 22 Apr 2020 11:13:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=/ftWw9tHlitciumaaug4a1Czrh7
-        36GE3jEJuWgmD3SY=; b=tbwhr2e9IectRyCHdVrQk9XLSpGKO6zc9jdte3x5eKI
-        sy8rt00KrKw5fVcnWrZz6/Vg/BfNuEhQyZwrlAXZNp/4BLSPEhyHMJrev0eiWq9T
-        PGDheS8Aj9EaKjnj2Rj8abBAktYTjqE3jI+E+JPO0Ef3HjnK+qarV8do007cCviK
-        AqBIbW/exkVD7DfQbAmUZAeH+dHfZgRYLkLddFp+1tNhexzgvILBhSpzgQYUxJMp
-        i0Pk5VGK42WWdThariqK+N3mhnRLknIwjhTWzGNdmp+onIo4tAD/2B0i6IE4tW17
-        r4eTEIpARnksJO0lhIrwzomO8Zq/VLJ8MGTkYFE7DGw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/ftWw9
-        tHlitciumaaug4a1Czrh736GE3jEJuWgmD3SY=; b=bse4Moqzfl9bRZmpeMKwID
-        +adLbBq6TvV7yZkdrsx4H5E6vrYt6vRuT4wmbdHsIwgoZJ2/49MLuCpgJNu7OegP
-        JF6KaANRzn80w0ye3onNFi2jElrQmMu14F3UcUdoBI8XMWWup4zdqsqLAKYLDOGr
-        34YnDDLkzz6s6/rmKzgk1NbXHNjCiQwN8CJa0zZW30Vixn7wiV31o7eH4AbM5mQi
-        3RI1mPho3FdOAqAE2JCqcLcX41rPEbvQrYAX68V9w2kdHmZI2Fy0xC3gvWip6DjT
-        27HC/zTnnYCvHO7L4XCH+Pc0IqmRdinX3cFmc9K1UZUCxEZiE2cmbP5E9hsXjf6A
-        ==
-X-ME-Sender: <xms:Gl-gXghEoq-o-n5nwsG1IKrj0JWzudlgpH6yLlXPty2TyAoB68C_8g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeejgdejlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:Gl-gXsQHg22AOERE85yCpjhFXTKZXMp9oVSpayV_m_ygC_0sXGwKfA>
-    <xmx:Gl-gXutctsLbbOSAuoWkag-wuB64l7CIOa8b_-hySmQE9JfsQIgtgg>
-    <xmx:Gl-gXkn1vTZZxkYuwLgB-85wA1D7KCrx7wMTwtD3jCFuYHOUaWUVyg>
-    <xmx:IF-gXggCCQFHcUcvNnWqcdFSVFP7l3urmIa4aTlNEv39JTfX-8TrxQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E8B423280068;
-        Wed, 22 Apr 2020 11:13:29 -0400 (EDT)
-Date:   Wed, 22 Apr 2020 17:13:28 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Message-ID: <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
-References: <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
- <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
- <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
- <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
- <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
- <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
- <20200421141543.GU37466@atomide.com>
- <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
- <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
- <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rleqzgonq2kd6jcq"
-Content-Disposition: inline
-In-Reply-To: <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
+        Wed, 22 Apr 2020 11:14:06 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A9EC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:14:06 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j2so2827315wrs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=mKRg0t/XVvzZRZvxdCba8JTVT+Vu4PrV36ELCiNsVPA=;
+        b=PW0y382owp8KdhdvJsq2R4FP4vJ8DIh5QcyP6WQXy2jIs4JKkR6ZJYUqvkzO2q746F
+         zKJPkRJSQ7ulCXaq2VrK5/5RrDwme0t25rNDlel9p5ZciJwVhTfTQNcFG85F2ESX0uZI
+         EONpAehtR0m3W6Y27mrXOWDwDUKKPDsOKhTVrPLhNxh71c3or2SVIl2EojZ5fPbHogV7
+         gi8T7gToDzxGkTJ9D8VhZt+W5THoSWJxgyXhAmuQmytjRJf0ZIDcBWh5aX4DHoR5G3cZ
+         Woe72OVkUDwfNDOuaYYiq/qa4Tdc4UWS1IPIy6QiXaC82V45fiorp49OPQq1HtBskUyY
+         jgAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mKRg0t/XVvzZRZvxdCba8JTVT+Vu4PrV36ELCiNsVPA=;
+        b=gjZgKQgRVKVsI42swjhc1+MYRQz/MZ4WN8eqHygT0Abhq7daJz9yv/4kiQ8ZAKfd08
+         G9WBv12pfIX7ANiOxeeaV+QhosM9KfzU0vL7XbJgi5DPprB1uQSNneFmNAWYXjpus4CK
+         7dNSSdl/9Y+8RhF8Y/mE/nkgDLWc7PeUtBcfX/QNnNXxvi0IpRYhBjFhwHyu0TIBNjTX
+         JcaZTaHnEF+pCPQ7t7vvRS5vi+zGEsil1nvnX/AKLsdu5TEUEj1rz7SlJK0YgFRKfoBF
+         uuUzBkG4R7tqyFVrapwKNo/do2sFQk0T9rjEriOfkid88XFARKk5+W3XYVYEnhBXvYaJ
+         h3Aw==
+X-Gm-Message-State: AGi0PubCt4u8Ebj1k+fOsHG+g/qCLPn8OQ1fezM8tJ32QLUPyw+CQ+03
+        pou7XbY4RHKsTWueviqryBLkcNb2ipI=
+X-Google-Smtp-Source: APiQypLjn15sn+7UTJpsVf9Hs8irRVj7LLlkoZoWoztWP2yLU1O66vbQic4346zttzT/DeytpUM91A==
+X-Received: by 2002:adf:ce0a:: with SMTP id p10mr29291581wrn.89.1587568445225;
+        Wed, 22 Apr 2020 08:14:05 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:54f7:b326:db86:b83a])
+        by smtp.gmail.com with ESMTPSA id n7sm8137687wmd.11.2020.04.22.08.14.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 08:14:04 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/pelt: sync util/runnable_sum with PELT window when propagating
+Date:   Wed, 22 Apr 2020 17:14:01 +0200
+Message-Id: <20200422151401.9147-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+update_tg_cfs_util/runnable() propagate the impact of the attach/detach of
+an entity down into the cfs_rq hierarchy which must keep the sync with
+the current pelt window.
 
---rleqzgonq2kd6jcq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Even if we can't sync child rq and its group se, we can sync the group se
+and parent cfs_rq with current PELT window. In fact, we must keep them sync
+in order to stay also synced with others se and group se that are already
+attached to the cfs_rq.
 
-On Wed, Apr 22, 2020 at 09:10:57AM +0200, H. Nikolaus Schaller wrote:
-> > Am 22.04.2020 um 08:58 schrieb Maxime Ripard <maxime@cerno.tech>:
-> >=20
-> > On Tue, Apr 21, 2020 at 07:29:32PM +0200, H. Nikolaus Schaller wrote:
-> >>=20
-> >>> Am 21.04.2020 um 16:15 schrieb Tony Lindgren <tony@atomide.com>:
-> >>>=20
-> >>> * Maxime Ripard <maxime@cerno.tech> [200421 11:22]:
-> >>>> On Tue, Apr 21, 2020 at 11:57:33AM +0200, Philipp Rossak wrote:
-> >>>>> I had a look on genpd and I'm not really sure if that fits.
-> >>>>>=20
-> >>>>> It is basically some bit that verify that the clocks should be enab=
-led or
-> >>>>> disabled.
-> >>>>=20
-> >>>> No, it can do much more than that. It's a framework to control the S=
-oCs power
-> >>>> domains, so clocks might be a part of it, but most of the time it's =
-going to be
-> >>>> about powering up a particular device.
-> >>>=20
-> >>> Note that on omaps there are actually SoC module specific registers.
-> >>=20
-> >> Ah, I see. This is of course a difference that the TI glue logic has
-> >> its own registers in the same address range as the sgx and this can't
-> >> be easily handled by a common sgx driver.
-> >>=20
-> >> This indeed seems to be unique with omap.
-> >>=20
-> >>> And there can be multiple devices within a single target module on
-> >>> omaps. So the extra dts node and device is justified there.
-> >>>=20
-> >>> For other SoCs, the SGX clocks are probably best handled directly
-> >>> in pvr-drv.c PM runtime functions unless a custom hardware wrapper
-> >>> with SoC specific registers exists.
-> >>=20
-> >> That is why we need to evaluate what the better strategy is.
-> >>=20
-> >> So we have
-> >> a) omap which has a custom wrapper around the sgx
-> >> b) others without, i.e. an empty (or pass-through) wrapper
-> >>=20
-> >> Which one do we make the "standard" and which one the "exception"?
-> >> What are good reasons for either one?
-> >>=20
-> >>=20
-> >> I am currently in strong favour of a) being standard because it
-> >> makes the pvr-drv.c simpler and really generic (independent of
-> >> wrapping into any SoC).
-> >>=20
-> >> This will likely avoid problems if we find more SoC with yet another
-> >> scheme how the SGX clocks are wrapped.
-> >>=20
-> >> It also allows to handle different number of clocks (A31 seems to
-> >> need 4, Samsung, A83 and JZ4780 one) without changing the sgx bindings
-> >> or making big lists of conditionals. This variance would be handled
-> >> outside the sgx core bindings and driver.
-> >=20
-> > I disagree. Every other GPU binding and driver is handling that just fi=
-ne, and
-> > the SGX is not special in any case here.
->=20
-> Can you please better explain this? With example or a description
-> or a proposal?
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/fair.c | 26 ++++++--------------------
+ 1 file changed, 6 insertions(+), 20 deletions(-)
 
-I can't, I don't have any knowledge about this GPU.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b85b6d..ca6aa89c88f2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3441,52 +3441,38 @@ static inline void
+ update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+ {
+ 	long delta = gcfs_rq->avg.util_avg - se->avg.util_avg;
++	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
+ 
+ 	/* Nothing to update */
+ 	if (!delta)
+ 		return;
+ 
+-	/*
+-	 * The relation between sum and avg is:
+-	 *
+-	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib
+-	 *
+-	 * however, the PELT windows are not aligned between grq and gse.
+-	 */
+-
+ 	/* Set new sched_entity's utilization */
+ 	se->avg.util_avg = gcfs_rq->avg.util_avg;
+-	se->avg.util_sum = se->avg.util_avg * LOAD_AVG_MAX;
++	se->avg.util_sum = se->avg.util_avg * divider;
+ 
+ 	/* Update parent cfs_rq utilization */
+ 	add_positive(&cfs_rq->avg.util_avg, delta);
+-	cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * LOAD_AVG_MAX;
++	cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * divider;
+ }
+ 
+ static inline void
+ update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+ {
+ 	long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
++	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
+ 
+ 	/* Nothing to update */
+ 	if (!delta)
+ 		return;
+ 
+-	/*
+-	 * The relation between sum and avg is:
+-	 *
+-	 *   LOAD_AVG_MAX - 1024 + sa->period_contrib
+-	 *
+-	 * however, the PELT windows are not aligned between grq and gse.
+-	 */
+-
+ 	/* Set new sched_entity's runnable */
+ 	se->avg.runnable_avg = gcfs_rq->avg.runnable_avg;
+-	se->avg.runnable_sum = se->avg.runnable_avg * LOAD_AVG_MAX;
++	se->avg.runnable_sum = se->avg.runnable_avg * divider;
+ 
+ 	/* Update parent cfs_rq runnable */
+ 	add_positive(&cfs_rq->avg.runnable_avg, delta);
+-	cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * LOAD_AVG_MAX;
++	cfs_rq->avg.runnable_sum = cfs_rq->avg.runnable_avg * divider;
+ }
+ 
+ static inline void
+-- 
+2.17.1
 
-> I simply do not have your experience with "every other GPU" as you have.
-> And I admit that I can't read from your statement what we should do
-> to bring this topic forward.
->=20
-> So please make a proposal how it should be in your view.
-
-If you need some inspiration, I guess you could look at the mali and vivante
-bindings once you have an idea of what the GPU needs across the SoCs it's
-integrated in.
-
-Maxime
-
---rleqzgonq2kd6jcq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqBfGAAKCRDj7w1vZxhR
-xVRsAPYpkPvaPx/Gv4bZtD3Q7LlR8I4ICX5CAiGURBKX85mvAQCaSeZMVEC2ANUR
-ZQ5hvxKQcP4oYw7VwmIsM46WtpHQDg==
-=lYBS
------END PGP SIGNATURE-----
-
---rleqzgonq2kd6jcq--
