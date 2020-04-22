@@ -2,128 +2,107 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FAEC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1466EC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9862076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:34:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qiniz0pQ"
+	by mail.kernel.org (Postfix) with ESMTP id F0E782076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgDVJeD (ORCPT
+        id S1726077AbgDVJgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:34:03 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37204 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgDVJeD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:34:03 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M9IX1p021651;
-        Wed, 22 Apr 2020 09:33:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=VrW0SlucwGVpYtW5sBjiy8D6cWqoWtrecyVysdPVPfc=;
- b=Qiniz0pQM5d+f+eZyV8ra2XvsnEmEFwSnsxMQJIh46V64XuHy5JSMXQKzsP2yxK4l5TY
- gaZeC18nBJDc28EkbzzumHE0M3BtYEqlolnTFSiTH06M7txVqsN7RhgXQzwNuu6Nh68f
- TPbO+jcWK4i57lnreoEHPG22+Mjw2PnWV9f7hOjqSTE85SDTa6MXQH1kO4BsMpO1KZ6B
- 1bsd8R+9nMOYGEXEoapjVJEzgK3ONwh0HRM2ZxTz2l2vF9XlvkN66aY0MG90wxaTLsVb
- 87fbRyKb9XwwHd+LusSInDIJA000Za0NUQebrQAhk5bC67JsWS21J+NWk2CaY7wUwgRL Yg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30fsgm1q8g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 09:33:41 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M9XT8F167083;
-        Wed, 22 Apr 2020 09:33:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30gb9275m8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 09:33:40 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03M9Xcc1012562;
-        Wed, 22 Apr 2020 09:33:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Apr 2020 02:33:38 -0700
-Date:   Wed, 22 Apr 2020 12:33:29 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH bpf-next 1/2] bpf: Change error code when ops is NULL
-Message-ID: <20200422093329.GI2659@kadam>
-References: <20200422083010.28000-1-maowenan@huawei.com>
- <20200422083010.28000-2-maowenan@huawei.com>
+        Wed, 22 Apr 2020 05:36:48 -0400
+Received: from sauhun.de ([88.99.104.3]:45202 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgDVJgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:36:47 -0400
+Received: from localhost (p5486CD65.dip0.t-ipconnect.de [84.134.205.101])
+        by pokefinder.org (Postfix) with ESMTPSA id 5DEDB2C1F8B;
+        Wed, 22 Apr 2020 11:36:45 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 11:36:42 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bjorn Ardo <bjorn.ardo@axis.com>
+Cc:     Patrick Williams <patrick@stwcx.xyz>,
+        =?utf-8?B?QmrDtnJuIEFyZMO2?= <bjornar@axis.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
+Message-ID: <20200422093642.GA1245@ninjato>
+References: <20191001164009.21610-1-alpawi@amazon.com>
+ <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
+ <20200420164349.GD3721@ninjato>
+ <20200420203146.GC95151@heinlein.lan.stwcx.xyz>
+ <20200420205325.GA1693@ninjato>
+ <adb03545-88db-689c-dbf7-9f746236adb4@axis.com>
+ <20200421121659.GE1241@ninjato>
+ <47891236-f1df-c130-0bce-d114523880cb@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
 Content-Disposition: inline
-In-Reply-To: <20200422083010.28000-2-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220076
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220075
+In-Reply-To: <47891236-f1df-c130-0bce-d114523880cb@axis.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:30:09PM +0800, Mao Wenan wrote:
-> There is one error printed when use type
-> BPF_MAP_TYPE_SOCKMAP to create map:
-> libbpf: failed to create map (name: 'sock_map'): Invalid argument(-22)
-> 
-> This is because CONFIG_BPF_STREAM_PARSER is not set, and
-> bpf_map_types[type] return invalid ops. It is not clear
-> to show the cause of config missing with return code -EINVAL,
-> so add pr_warn() and change error code to describe the reason.
 
-Since you're going to have to redo the commit any way, maybe you should
-put the line breaks at 72 characters.  I think you're using 65 character
-line breaks, but that's only for the Subject.
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  kernel/bpf/syscall.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index d85f37239540..f67bc063bf75 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -112,9 +112,11 @@ static struct bpf_map *find_and_alloc_map(union bpf_attr *attr)
->  		return ERR_PTR(-EINVAL);
->  	type = array_index_nospec(type, ARRAY_SIZE(bpf_map_types));
->  	ops = bpf_map_types[type];
-> -	if (!ops)
-> -		return ERR_PTR(-EINVAL);
-> -
-> +	if (!ops) {
-> +		pr_warn("map type %d not supported or
-> +			 kernel config not opened\n", type);
 
-This pr_warn() will be badly formatted in dmesg because of the new line
-and the tabs.  I tried to add a checkpatch.pl warning for this but maybe
-it only works with -f?...
+> I did like this now: If device_property_read_string() returns a firmware
+> name, I use that, otherwise init to 0xFF. But if it returns a firmware na=
+me,
+> and for some reason I get an error when trying to load that firmware I wi=
+ll
+> not default to 0xFF, but rather fail the probe. The logic in that is that=
+ if
+> you actively supply a firmware name, you should not silently get 0xFF in
+> your eeprom. Does that sound good?
 
-regards,
-dan carpenter
+Sounds perfect to me.
 
+> > Yes, that is my idea. You also need to replace checking for an of_node
+> > with some equivalent for device properties maybe, but that should be
+> > easy to find out.
+>=20
+> It appears to me that those kind of checks are done inside
+> device_property_read_string() so I can just remove them and only look at =
+the
+> return value of that function.
+
+Even better!
+
+> I have a patch now working on 4.14, will run some tests on it and then try
+> to forward-port to latest kernel och see if it works there as well.
+
+Looking forward to it. I will look at it right away then!
+
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6gECcACgkQFA3kzBSg
+KbaO7BAAkprmKCeDTpWumgvr++hxiBy8n6EaGLoCdbstru5jztnA/eZZ2EvEpezF
+dGqIT0FWgVeGLNTedXxSTDLyW/068hFfLSMhYacSBakHe1WsSnf7vteIq61fgxuZ
+g2NamfOadsE8zlZjVTpd2WQvb8QkCLji9HvBfYSd1qV5EGmUsMelRbjeL6BNEleK
+h5/b6yIbHhCZWnmlke60cxWV9BTd3xu6iuwyQqW14I+QTKLd5A2wg062T62moocu
+QoBvLfH3/BoD6mjAb+9Q9F9n5A3pDh90pCWwWvFx/Xvsn4rihPGumjw5Mu7mfdCs
+OcNgMdxXxbuQ17aEAuFSdv/K3Ve+TKFaksc9JriAFcxVZ1w5m8D4QpA4dk0mE7qs
+XJURvjoSEBhQboadPZYn8DSjr+YJ26W1rqkhBfMIh1ODhnU1H9Mz+WESt8xFSV4c
+fEuUQJxgJGSLqzbPhkwgqdU8dK0EZi2ETW9cClbzswzb7JJVqlSpIRAtC4AaJN2y
+1yutxyIa+Me52tl9zR5MSqJgL6ylBIlWM1iXg7aaer5lT/74eGimTn7Tk1eHZPm8
+Dj9iJ4jFqPhB1g3tHgwYYFVriDIP6X82ft89aGIHq9SPX2P0AfnbMpcEh7CMPGDD
+acWjoHmq4uMmD96Md8ZmS0iPAgre14MQgHBbdLUoFaTjs3V0gGs=
+=Pfci
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
