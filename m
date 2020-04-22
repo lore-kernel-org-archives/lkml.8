@@ -2,102 +2,69 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CA8C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE43C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D799620767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j8p0p6IW"
+	by mail.kernel.org (Postfix) with ESMTP id AF6812082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgDVQdI (ORCPT
+        id S1726883AbgDVQdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:33:08 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19921 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgDVQdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:33:03 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea071800005>; Wed, 22 Apr 2020 09:32:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 22 Apr 2020 09:33:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 22 Apr 2020 09:33:03 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
- 2020 16:33:03 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 22 Apr 2020 16:33:02 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.49]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ea071be0001>; Wed, 22 Apr 2020 09:33:02 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <baolin.wang@linaro.org>, <kstewart@linuxfoundation.org>,
-        <tglx@linutronix.de>, <bradleybolen@gmail.com>,
-        <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <skomatineni@nvidia.com>
-CC:     <anrao@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-Subject: [PATCH 5.5.18 2/2] sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
-Date:   Wed, 22 Apr 2020 09:32:58 -0700
-Message-ID: <1587573178-30326-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587573178-30326-1-git-send-email-skomatineni@nvidia.com>
-References: <1587573178-30326-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 22 Apr 2020 12:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgDVQdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:33:35 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7A7820656;
+        Wed, 22 Apr 2020 16:33:32 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 12:33:31 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        qais.yousef@arm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, airlied@redhat.com,
+        alexander.deucher@amd.com, awalls@md.metrocast.net,
+        axboe@kernel.dk, broonie@kernel.org, daniel.lezcano@linaro.org,
+        gregkh@linuxfoundation.org, hannes@cmpxchg.org,
+        herbert@gondor.apana.org.au, hverkuil@xs4all.nl,
+        john.stultz@linaro.org, nico@fluxnic.net,
+        rafael.j.wysocki@intel.com, rmk+kernel@arm.linux.org.uk,
+        sudeep.holla@arm.com, ulf.hansson@linaro.org,
+        wim@linux-watchdog.org
+Subject: Re: [PATCH 01/23] sched: Provide sched_set_fifo()
+Message-ID: <20200422123331.30b00018@gandalf.local.home>
+In-Reply-To: <20200422155006.GR17661@paulmck-ThinkPad-P72>
+References: <20200422112719.826676174@infradead.org>
+        <20200422112831.266499893@infradead.org>
+        <20200422131138.GL17661@paulmck-ThinkPad-P72>
+        <20200422132648.GJ20730@hirez.programming.kicks-ass.net>
+        <20200422155006.GR17661@paulmck-ThinkPad-P72>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587573121; bh=AI2k/GeOJka+x5ydpwPpmWF5ssDecgtebTTmy/odja0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=j8p0p6IW/XPOMnBnbZ20nxLQkB6pUxACULqpi+M4rWjBEM+TZm0ubcs4tf1V00THZ
-         /NemiVT+WRd2tzDUHTJiCMOubQuD68bNKMWaLLW0PTDyrFSGNkb3bNkwBG2HqcFfIU
-         D/1dxl/qXI1lTKHTSA0N/Ixenao4CYiaTtUSakXgZlMZvTlYmgv16B37BFmVXU93sU
-         +rG/8mVXTbTa4+qz98aERkSBnP9NSXxc1H++TZKJsynmvyL9EYJ2UT02a49y8u4Rmb
-         B71w2JiWyBwgmC6MjCUC0F2sUx9uditXt6RMUPHV7O59UhWgMkFEjFj66MCEEr8Td8
-         GCMk1e7DwKyCA==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit ff124c31ccd7
-("sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability")
+On Wed, 22 Apr 2020 08:50:06 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Tegra sdhci host supports HW busy detection of the device busy
-signaling over data0 lane.
+> Indeed, an extreme form of insanity would be required to try to make core
+> RCU be a module.  Not that such a form of insanity is a bad thing in and
+> of itself, but it might best be directed towards less futile ventures.  ;-)
 
-So, this patch enables host capability MMC_CAP_wAIT_WHILE_BUSY.
+That's like making the core of mutexes a module. How would that ever work
+(without becoming a microkernel).
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/mmc/host/sdhci-tegra.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index fa8f6a4..1c381f8 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1580,6 +1580,8 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
- 	if (rc)
- 		goto err_parse_dt;
- 
-+	host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
-+
- 	if (tegra_host->soc_data->nvquirks & NVQUIRK_ENABLE_DDR50)
- 		host->mmc->caps |= MMC_CAP_1_8V_DDR;
- 
--- 
-2.7.4
-
+-- Steve
