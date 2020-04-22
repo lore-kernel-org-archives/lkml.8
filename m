@@ -2,189 +2,108 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEE5C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF1CC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDFA9206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F11206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="lSXlU6VN"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="RlvCeVPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbgDVJab (ORCPT
+        id S1726117AbgDVJak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:30:31 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:44798 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgDVJaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:30:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 43C6E27E077B;
-        Wed, 22 Apr 2020 11:30:29 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id z96kb9nd-C_x; Wed, 22 Apr 2020 11:30:28 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id BBDE027E0D15;
-        Wed, 22 Apr 2020 11:30:28 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu BBDE027E0D15
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1587547828;
-        bh=2gt8HJBzXeg55yVyCzThSQUVTL5BQLX2DcsHeo5owWc=;
-        h=From:To:Date:Message-Id;
-        b=lSXlU6VNWNw0jqforv/DKZlz99CYGmDEtG7Wbuo8brWU9hrFSlWFgzZSd93pW7k0C
-         kCpogp+dK1woDF7ocBVvBn5lh7BqHPMCRItEwQJRkWAFnploQ+mRoxv7e5sh5rB4Rx
-         zjiU0OUn6R5tBzJf9zCMYp4bVB/Alnt5K3VyUcS4=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lD32-pm9U2hN; Wed, 22 Apr 2020 11:30:28 +0200 (CEST)
-Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 9ABC527E077B;
-        Wed, 22 Apr 2020 11:30:28 +0200 (CEST)
-From:   Clement Leger <cleger@kalray.eu>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Clement Leger <cleger@kalray.eu>
-Subject: [PATCH v3] remoteproc: remove rproc_elf32_sanity_check
-Date:   Wed, 22 Apr 2020 11:30:17 +0200
-Message-Id: <20200422093017.10985-1-cleger@kalray.eu>
-X-Mailer: git-send-email 2.17.1
+        Wed, 22 Apr 2020 05:30:40 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:34101 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgDVJak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:30:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1423; q=dns/txt; s=axis-central1;
+  t=1587547839; x=1619083839;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=I6ypXndlL2Ny0cYStbrWZowkeVytwB13UfAFvtcKaEE=;
+  b=RlvCeVPoFrnAgSEqyJRIhKKDtL2Ti0dBCUXybziuVV5MwLuZ55gmv905
+   bbjtF1+ZBxE9cJuPYiNIAKGO9dTxy20He9EW9MKLnDPCFz23uhDnxC2lk
+   fEHgK1Vjeact5ycICzv2C1fq56faeNRhwEYr5rQFLi0FZgOsDB2ay4k6h
+   7wRRVZ22+L4v/0isuNLimkUvmVWthjaF15ih2o/hWwVh2XJePbpFVsLEI
+   QNi9c80QDg0Dtp1nQrqusPwISMWmdLMQa3TyZBcO3iN9TEvgHpKLa9bNQ
+   Jr8iOwxUH+lyLT2Qllelf+a1rnMXqZmUr2y+HM6uNFdVJjYwigVvLz+VY
+   g==;
+IronPort-SDR: cmYbvcbITUEDft6GZ/WvlPWHGSfQAlAUFPDJy78eARbr2GfSjaquOAO20Aich5sqQo6zdAOrv9
+ wBtHoVf4e7CRG8tlAUm5jfLVK8hUYSc2CZsB4l4Rujgh2qAMyuCIU0ZY8JssMnmGXbEJozZr70
+ ZejGtNfdLkIOtTFi9VorXpU/fgdeJW2fWyyPqUmla83HXZWAIFeLTc7Cr3owfT93brwbOX0eGA
+ MkJ6SwTr+c4A0PGV4+e7AtHIPrfrKeVhVbKRDVfw5ZiI+oChAlatd8VrnuSLTr57/DN2eqRmzH
+ dNM=
+X-IronPort-AV: E=Sophos;i="5.72,413,1580770800"; 
+   d="scan'208";a="7691811"
+Subject: Re: [PATCH 1/2] i2c: slave-eeprom: initialize empty eeprom properly
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Patrick Williams <patrick@stwcx.xyz>,
+        =?UTF-8?B?QmrDtnJuIEFyZMO2?= <bjornar@axis.com>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191001164009.21610-1-alpawi@amazon.com>
+ <150599be-9125-4ab9-e2a6-e792b41910e6@axis.com>
+ <20200420164349.GD3721@ninjato>
+ <20200420203146.GC95151@heinlein.lan.stwcx.xyz>
+ <20200420205325.GA1693@ninjato>
+ <adb03545-88db-689c-dbf7-9f746236adb4@axis.com>
+ <20200421121659.GE1241@ninjato>
+From:   Bjorn Ardo <bjorn.ardo@axis.com>
+Message-ID: <47891236-f1df-c130-0bce-d114523880cb@axis.com>
+Date:   Wed, 22 Apr 2020 11:30:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200421121659.GE1241@ninjato>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX03.axis.com (10.0.5.17) To XBOX02.axis.com (10.0.5.16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since checks are present in the remoteproc elf loader before calling
-da_to_va, loading a elf64 will work on 32bits flavors of kernel.
-Indeed, if a segment size is larger than what size_t can hold, the
-loader will return an error so the functionality is equivalent to
-what exists today.
+On 4/21/20 2:16 PM, Wolfram Sang wrote:
+>>> Yes, it might be easiest if he merges your patch (with attribution) into
+>>> the else branch of his fw-load patch.
+>>>
+>> OK, so to summarize, I should update my patch to use
+>> device_property_read_string() instead and also init the memory to 0XFF if no
+>> file is present. And change name of the function to
+> Or something else went wrong.
 
-Signed-off-by: Clement Leger <cleger@kalray.eu>
----
-Changes from v2 -> v3:
- - Rebase on rproc-next branch
+I did like this now: If device_property_read_string() returns a firmware 
+name, I use that, otherwise init to 0xFF. But if it returns a firmware 
+name, and for some reason I get an error when trying to load that 
+firmware I will not default to 0xFF, but rather fail the probe. The 
+logic in that is that if you actively supply a firmware name, you should 
+not silently get 0xFF in your eeprom. Does that sound good?
 
-Changes from v1 -> v2:
- - Remove possibity to override sanity_check operation
 
- drivers/remoteproc/remoteproc_core.c       |  3 +--
- drivers/remoteproc/remoteproc_elf_loader.c | 21 ---------------------
- drivers/remoteproc/remoteproc_internal.h   |  1 -
- drivers/remoteproc/st_remoteproc.c         |  2 +-
- drivers/remoteproc/st_slim_rproc.c         |  2 +-
- drivers/remoteproc/stm32_rproc.c           |  2 +-
- 6 files changed, 4 insertions(+), 27 deletions(-)
+>> i2c_slave_init_eeprom_data.
+> Yes, that is my idea. You also need to replace checking for an of_node
+> with some equivalent for device properties maybe, but that should be
+> easy to find out.
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 448262470fc7..206363723071 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2069,8 +2069,7 @@ static int rproc_alloc_ops(struct rproc *rproc, const struct rproc_ops *ops)
- 	rproc->ops->load = rproc_elf_load_segments;
- 	rproc->ops->parse_fw = rproc_elf_load_rsc_table;
- 	rproc->ops->find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table;
--	if (!rproc->ops->sanity_check)
--		rproc->ops->sanity_check = rproc_elf32_sanity_check;
-+	rproc->ops->sanity_check = rproc_elf_sanity_check;
- 	rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
- 
- 	return 0;
-diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-index 4869fb7d8fe4..df68d87752e4 100644
---- a/drivers/remoteproc/remoteproc_elf_loader.c
-+++ b/drivers/remoteproc/remoteproc_elf_loader.c
-@@ -112,27 +112,6 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
- }
- EXPORT_SYMBOL(rproc_elf_sanity_check);
- 
--/**
-- * rproc_elf_sanity_check() - Sanity Check ELF32 firmware image
-- * @rproc: the remote processor handle
-- * @fw: the ELF32 firmware image
-- *
-- * Make sure this fw image is sane.
-- */
--int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw)
--{
--	int ret = rproc_elf_sanity_check(rproc, fw);
--
--	if (ret)
--		return ret;
--
--	if (fw_elf_get_class(fw) == ELFCLASS32)
--		return 0;
--
--	return -EINVAL;
--}
--EXPORT_SYMBOL(rproc_elf32_sanity_check);
--
- /**
-  * rproc_elf_get_boot_addr() - Get rproc's boot address.
-  * @rproc: the remote processor handle
-diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-index b389dc79da81..31994715fd43 100644
---- a/drivers/remoteproc/remoteproc_internal.h
-+++ b/drivers/remoteproc/remoteproc_internal.h
-@@ -54,7 +54,6 @@ void *rproc_da_to_va(struct rproc *rproc, u64 da, size_t len);
- phys_addr_t rproc_va_to_pa(void *cpu_addr);
- int rproc_trigger_recovery(struct rproc *rproc);
- 
--int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw);
- int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
- u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
- int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
-diff --git a/drivers/remoteproc/st_remoteproc.c b/drivers/remoteproc/st_remoteproc.c
-index a6cbfa452764..a3268d95a50e 100644
---- a/drivers/remoteproc/st_remoteproc.c
-+++ b/drivers/remoteproc/st_remoteproc.c
-@@ -233,7 +233,7 @@ static const struct rproc_ops st_rproc_ops = {
- 	.parse_fw		= st_rproc_parse_fw,
- 	.load			= rproc_elf_load_segments,
- 	.find_loaded_rsc_table	= rproc_elf_find_loaded_rsc_table,
--	.sanity_check		= rproc_elf32_sanity_check,
-+	.sanity_check		= rproc_elf_sanity_check,
- 	.get_boot_addr		= rproc_elf_get_boot_addr,
- };
- 
-diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-index 3cca8b65a8db..09bcb4d8b9e0 100644
---- a/drivers/remoteproc/st_slim_rproc.c
-+++ b/drivers/remoteproc/st_slim_rproc.c
-@@ -203,7 +203,7 @@ static const struct rproc_ops slim_rproc_ops = {
- 	.da_to_va       = slim_rproc_da_to_va,
- 	.get_boot_addr	= rproc_elf_get_boot_addr,
- 	.load		= rproc_elf_load_segments,
--	.sanity_check	= rproc_elf32_sanity_check,
-+	.sanity_check	= rproc_elf_sanity_check,
- };
- 
- /**
-diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-index 0f9d02ca4f5a..f45b8d597da0 100644
---- a/drivers/remoteproc/stm32_rproc.c
-+++ b/drivers/remoteproc/stm32_rproc.c
-@@ -505,7 +505,7 @@ static struct rproc_ops st_rproc_ops = {
- 	.load		= rproc_elf_load_segments,
- 	.parse_fw	= stm32_rproc_parse_fw,
- 	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
--	.sanity_check	= rproc_elf32_sanity_check,
-+	.sanity_check	= rproc_elf_sanity_check,
- 	.get_boot_addr	= rproc_elf_get_boot_addr,
- };
- 
--- 
-2.17.1
+It appears to me that those kind of checks are done inside 
+device_property_read_string() so I can just remove them and only look at 
+the return value of that function.
+
+
+>> I will look into that and let you know once I'm done.
+> Thank you!
+>
+
+I have a patch now working on 4.14, will run some tests on it and then 
+try to forward-port to latest kernel och see if it works there as well.
+
+
+/BA
 
