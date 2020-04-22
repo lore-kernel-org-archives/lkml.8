@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A30C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E248FC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA15F2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0FB20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550009;
-	bh=1E9u5VFOzgJ/cOij6J0Pk+XqwsuH2wpFjhlyOy2JwUg=;
+	s=default; t=1587550017;
+	bh=aduk6n1i/K9ugGri0wivd5UdqpnQ1CSzRXLqmPF38Hw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZSkjMon7/m2a638ftYM8PLR2z2AVXRIWWIeher/McU9OxjYgdV5aiLoGtNbrI0jU
-	 DGP9HDX53efhzxLsGDVCCASb5Ng//lyFoR5N2dSMUW7hq+2Bvhj/GxEPicgKJ8bQCu
-	 IhRHNXzAKBd1MUerXk5py1GXzHfjCAK81SLjNb3c=
+	b=KWDNIdCAu38eU/LjNLlzNxXjyW5qqGatU6vifTusO5ZVm9LSbkPThrv30UQ1TvWAr
+	 DjTHz6QsaKcTKyh6U9J1chh8I51eVly3c34c1UCnwYRONokQBO3dEBAwpg/AvrBtzj
+	 sOx6d8/IuMe2zaK2/5yN5eXM2LtF7MYoSnnhiRfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgDVKGs (ORCPT
+        id S1728440AbgDVKG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58738 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:06:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgDVKGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:41 -0400
+        id S1728390AbgDVKGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAAC820575;
-        Wed, 22 Apr 2020 10:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FC9520575;
+        Wed, 22 Apr 2020 10:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550001;
-        bh=1E9u5VFOzgJ/cOij6J0Pk+XqwsuH2wpFjhlyOy2JwUg=;
+        s=default; t=1587550003;
+        bh=aduk6n1i/K9ugGri0wivd5UdqpnQ1CSzRXLqmPF38Hw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FoCLsmFOt7cMtIDYy1QsF7wUMCnL/hY091ZjjOJBLgyha361IlKrssGPHptv6qHs9
-         wWNnJddv9V3hO6xMBTyA0BX/lQ15j96/g36/9cReXLGhcYr5OHRf9oDVAjNffn6dxo
-         6Rh4bPGlh1Rz45PWhRsYy+I9bavdDMITbV6ck3EU=
+        b=GAkK5ZXe/hgR3wRZHmg9JiDdAXXY1+iBTmKnvxnkvC6lZzaELnn7lu6K8J1z/1kfK
+         Sqxzu1rmMdG/UujNhFs8aQQQMB3NswrFKI7+JEkJw1LkA6zG3LLeJNV23kObDiWYuW
+         bEKtpPAKYnuwIUrWst9Dw2HvcYnwSfNGvfcYjmkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hamad Kadmany <hkadmany@codeaurora.org>,
+        Dedy Lansky <dlansky@codeaurora.org>,
         Maya Erez <merez@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 092/125] wil6210: increase firmware ready timeout
-Date:   Wed, 22 Apr 2020 11:56:49 +0200
-Message-Id: <20200422095048.145149324@linuxfoundation.org>
+Subject: [PATCH 4.9 093/125] wil6210: fix temperature debugfs
+Date:   Wed, 22 Apr 2020 11:56:50 +0200
+Message-Id: <20200422095048.265685753@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,36 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hamad Kadmany <hkadmany@codeaurora.org>
+From: Dedy Lansky <dlansky@codeaurora.org>
 
-[ Upstream commit 6ccae584014ef7074359eb4151086beef66ecfa9 ]
+[ Upstream commit 6d9eb7ebae3d7e951bc0999235ae7028eb4cae4f ]
 
-Firmware ready event may take longer than
-current timeout in some scenarios, for example
-with multiple RFs connected where each
-requires an initial calibration.
+For negative temperatures, "temp" debugfs is showing wrong values.
+Use signed types so proper calculations is done for sub zero
+temperatures.
 
-Increase the timeout to support these scenarios.
-
-Signed-off-by: Hamad Kadmany <hkadmany@codeaurora.org>
+Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
 Signed-off-by: Maya Erez <merez@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/ath/wil6210/main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/wil6210/debugfs.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/ath/wil6210/main.c
-+++ b/drivers/net/wireless/ath/wil6210/main.c
-@@ -803,7 +803,7 @@ static void wil_bl_crash_info(struct wil
+--- a/drivers/net/wireless/ath/wil6210/debugfs.c
++++ b/drivers/net/wireless/ath/wil6210/debugfs.c
+@@ -1091,7 +1091,7 @@ static const struct file_operations fops
+ };
  
- static int wil_wait_for_fw_ready(struct wil6210_priv *wil)
+ /*---------temp------------*/
+-static void print_temp(struct seq_file *s, const char *prefix, u32 t)
++static void print_temp(struct seq_file *s, const char *prefix, s32 t)
  {
--	ulong to = msecs_to_jiffies(1000);
-+	ulong to = msecs_to_jiffies(2000);
- 	ulong left = wait_for_completion_timeout(&wil->wmi_ready, to);
+ 	switch (t) {
+ 	case 0:
+@@ -1099,7 +1099,8 @@ static void print_temp(struct seq_file *
+ 		seq_printf(s, "%s N/A\n", prefix);
+ 	break;
+ 	default:
+-		seq_printf(s, "%s %d.%03d\n", prefix, t / 1000, t % 1000);
++		seq_printf(s, "%s %s%d.%03d\n", prefix, (t < 0 ? "-" : ""),
++			   abs(t / 1000), abs(t % 1000));
+ 		break;
+ 	}
+ }
+@@ -1107,7 +1108,7 @@ static void print_temp(struct seq_file *
+ static int wil_temp_debugfs_show(struct seq_file *s, void *data)
+ {
+ 	struct wil6210_priv *wil = s->private;
+-	u32 t_m, t_r;
++	s32 t_m, t_r;
+ 	int rc = wmi_get_temperature(wil, &t_m, &t_r);
  
- 	if (0 == left) {
+ 	if (rc) {
 
 
