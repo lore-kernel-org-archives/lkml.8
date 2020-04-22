@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FC9C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CB3C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B93206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E096720738
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgDVPDG (ORCPT
+        id S1728188AbgDVPDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:03:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57982 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 11:03:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58108 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgDVPDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:03:05 -0400
+        id S1728067AbgDVPDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:03:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 225EEAD7C;
+        by mx2.suse.de (Postfix) with ESMTP id 5B6DEADC2;
         Wed, 22 Apr 2020 15:03:03 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 5F6931E0E72; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
+        id 7CD441E0E89; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 03/23] xarray: Use xas_store_noinit() in __xa_store, __xa_insert, __xa_alloc
-Date:   Wed, 22 Apr 2020 17:02:36 +0200
-Message-Id: <20200422150256.23473-4-jack@suse.cz>
+Subject: [PATCH 09/23] dax: Use dax_store_noinit() in grab_mapping_entry()
+Date:   Wed, 22 Apr 2020 17:02:42 +0200
+Message-Id: <20200422150256.23473-10-jack@suse.cz>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200422150256.23473-1-jack@suse.cz>
 References: <20200422150256.23473-1-jack@suse.cz>
@@ -40,63 +40,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These three functions never store NULL in the array so xas_store() is
-equivalent to xas_store_noinit(). Replace it.
+Although we store NULL here, there aren't any marks set on the entry
+so use xas_store_noinit() to save some time when trying to reinitialize
+marks. Furthermore we actually overwrite the entry shortly afterwards
+with new PTE entry anyway.
 
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- lib/xarray.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/dax.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/lib/xarray.c b/lib/xarray.c
-index ed98fc152b17..2eb634e8bf15 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -1079,7 +1079,7 @@ EXPORT_SYMBOL_GPL(__xas_next);
-  *
-  * If no entry is found and the array is smaller than @max, the iterator
-  * is set to the smallest index not yet in the array.  This allows @xas
-- * to be immediately passed to xas_store().
-+ * to be immediately passed to xas_store_noinit().
-  *
-  * Return: The entry, if found, otherwise %NULL.
-  */
-@@ -1145,7 +1145,7 @@ EXPORT_SYMBOL_GPL(xas_find);
-  * If no marked entry is found and the array is smaller than @max, @xas is
-  * set to the bounds state and xas->xa_index is set to the smallest index
-  * not yet in the array.  This allows @xas to be immediately passed to
-- * xas_store().
-+ * xas_store_noinit().
-  *
-  * If no entry is found before @max is reached, @xas is set to the restart
-  * state.
-@@ -1412,7 +1412,7 @@ void *__xa_store(struct xarray *xa, unsigned long index, void *entry, gfp_t gfp)
- 		entry = XA_ZERO_ENTRY;
+diff --git a/fs/dax.c b/fs/dax.c
+index f8358928549c..03c6ca693f3c 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -523,7 +523,11 @@ static void *grab_mapping_entry(struct xa_state *xas,
+ 		}
  
- 	do {
--		curr = xas_store(&xas, entry);
-+		curr = xas_store_noinit(&xas, entry);
- 		if (xa_track_free(xa))
- 			xas_clear_mark(&xas, XA_FREE_MARK);
- 	} while (__xas_nomem(&xas, gfp));
-@@ -1517,7 +1517,7 @@ int __xa_insert(struct xarray *xa, unsigned long index, void *entry, gfp_t gfp)
- 	do {
- 		curr = xas_load(&xas);
- 		if (!curr) {
--			xas_store(&xas, entry);
-+			xas_store_noinit(&xas, entry);
- 			if (xa_track_free(xa))
- 				xas_clear_mark(&xas, XA_FREE_MARK);
- 		} else {
-@@ -1653,7 +1653,7 @@ int __xa_alloc(struct xarray *xa, u32 *id, void *entry,
- 			xas_set_err(&xas, -EBUSY);
- 		else
- 			*id = xas.xa_index;
--		xas_store(&xas, entry);
-+		xas_store_noinit(&xas, entry);
- 		xas_clear_mark(&xas, XA_FREE_MARK);
- 	} while (__xas_nomem(&xas, gfp));
- 
+ 		dax_disassociate_entry(entry, mapping, false);
+-		xas_store(xas, NULL);	/* undo the PMD join */
++		/*
++		 * Remove PMD entry. There should be no marks set for the entry
++ 		 * so don't bother reinitializing them with xas_erase().
++		 */
++		xas_store_noinit(xas, NULL);
+ 		dax_wake_entry(xas, entry, true);
+ 		mapping->nrexceptional--;
+ 		entry = NULL;
 -- 
 2.16.4
 
