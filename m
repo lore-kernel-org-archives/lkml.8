@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E0AC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4240C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 699C32073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8336D2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552610;
-	bh=+SrwVG1wkcsfrVwkbz4KAAKDbgLeN74p2Cc+qM20LlY=;
+	s=default; t=1587552611;
+	bh=1247amiGWYj46GQXVS7haaALg3Qs/29K8ODPpL1H2dI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wo+R1rQcs4WGh08CDhUfwFhxrGfMY9z8quaQ0qiTpyFenyfShSI6dQF142DBhLd9u
-	 NCdpBU82pE/UiYc6SAHjYGIN5Yl2Gc89SdrXGunIF6VgQoTxyaQDpctsr/7kZFuuTk
-	 oZzPmfYSsnKUyW4465VB30RXPmUVyhyn5fIc0TLA=
+	b=P8QdiZ00cUeLUWsf+dSX9E210zWA2TDg0EZ/Hl35iI04BJXtphSzH1zwNrNeaO5qR
+	 qW7jUe+K3a1IxUIOEq5op2v3uPvZB5orey1cBmYRAFTwBxpIt/D1T8mvX5jLx1rWhl
+	 Gw3gW8YRrqcwBJmXsxFiiB2qx9rVOiIVtFdd2vIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgDVKMt (ORCPT
+        id S1729359AbgDVKMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbgDVKMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:34 -0400
+        id S1729340AbgDVKM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98EC920575;
-        Wed, 22 Apr 2020 10:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0AD620575;
+        Wed, 22 Apr 2020 10:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550354;
-        bh=+SrwVG1wkcsfrVwkbz4KAAKDbgLeN74p2Cc+qM20LlY=;
+        s=default; t=1587550349;
+        bh=1247amiGWYj46GQXVS7haaALg3Qs/29K8ODPpL1H2dI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7ujgR5POl3x7EgGWVGDs12FjtwdWUi+WDGYivKJ36FNspu4sfgO7msb5+cGQdg0O
-         I/dMw+i/8LZAVX2ofCsONkuzpEsD8FHcREy0xb59UAzDikWT2fnfAfa0iKyLboduI+
-         s7JBVINHM4EUtoRxlZIrjnZk8hiKTW20T6+BO/LA=
+        b=SydP2LD5GweYO0582ewFHQqD2n2U0ImlKOZjjPnEkQOzixB41g2/FLK+tOIogKXXP
+         YZN7zeKsQcZiKi7KUHsioFYpw8TX56yvwDbf4jtkJwMF/ZoixIbfYyg5Vk6i83A3QU
+         6sR7TN+pZ3el9rW1IRs6EMa2/BDdxq7h2Sr0u9iA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 113/199] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
-Date:   Wed, 22 Apr 2020 11:57:19 +0200
-Message-Id: <20200422095108.968120627@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Yakunin <zeil@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 111/199] net: revert default NAPI poll timeout to 2 jiffies
+Date:   Wed, 22 Apr 2020 11:57:17 +0200
+Message-Id: <20200422095108.781018091@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -63,43 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
+[ Upstream commit a4837980fd9fa4c70a821d11831698901baef56b ]
 
-The async version of ufshcd_hold(async == true), which is only called in
-queuecommand path as for now, is expected to work in atomic context, thus
-it should not sleep or schedule out. When it runs into the condition that
-clocks are ON but link is still in hibern8 state, it should bail out
-without flushing the clock ungate work.
+For HZ < 1000 timeout 2000us rounds up to 1 jiffy but expires randomly
+because next timer interrupt could come shortly after starting softirq.
 
-Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
-Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+For commonly used CONFIG_HZ=1000 nothing changes.
+
+Fixes: 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs to enable softirq tuning")
+Reported-by: Dmitry Yakunin <zeil@yandex-team.ru>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/ufs/ufshcd.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ net/core/dev.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1448,6 +1448,11 @@ start:
- 		 */
- 		if (ufshcd_can_hibern8_during_gating(hba) &&
- 		    ufshcd_is_link_hibern8(hba)) {
-+			if (async) {
-+				rc = -EAGAIN;
-+				hba->clk_gating.active_reqs--;
-+				break;
-+			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
- 			flush_work(&hba->clk_gating.ungate_work);
- 			spin_lock_irqsave(hba->host->host_lock, flags);
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3575,7 +3575,8 @@ EXPORT_SYMBOL(netdev_max_backlog);
+ 
+ int netdev_tstamp_prequeue __read_mostly = 1;
+ int netdev_budget __read_mostly = 300;
+-unsigned int __read_mostly netdev_budget_usecs = 2000;
++/* Must be at least 2 jiffes to guarantee 1 jiffy timeout */
++unsigned int __read_mostly netdev_budget_usecs = 2 * USEC_PER_SEC / HZ;
+ int weight_p __read_mostly = 64;           /* old backlog weight */
+ int dev_weight_rx_bias __read_mostly = 1;  /* bias for backlog weight */
+ int dev_weight_tx_bias __read_mostly = 1;  /* bias for output_queue quota */
 
 
