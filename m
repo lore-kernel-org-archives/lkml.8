@@ -2,118 +2,140 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F68AC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C421C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFEA2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27FDE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="K/lTPU4i";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FFBV6YEE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b1xFmE2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgDVXu7 (ORCPT
+        id S1726161AbgDVXvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:50:59 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52027 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725846AbgDVXu6 (ORCPT
+        Wed, 22 Apr 2020 19:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgDVXvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:50:58 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 672565C024C;
-        Wed, 22 Apr 2020 19:50:57 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 22 Apr 2020 19:50:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=v
-        ZGbnC8RdlpxgKLz2nXfyLccHHit/zhrLhFtuEcHKTc=; b=K/lTPU4iiQf6FH5rw
-        0zf9PwVrEUeYd37vwn0BW7dSg81WiTB9rQG3DlWhbrai7UvMaIE2vv+glKdGHUgH
-        Kgw250BFWps6RmrMnkd/qf9ivkitUxm7Ef2FOmusU2QrRuvxZ660c776xDQgt2Ih
-        c0S2zPl8JM3tmbYTjWS49vf+C60UQ8jaAWd3oO1TG2KBMSsRdLx6v5dm65+18KxK
-        lKcuGrCQfitpYqvyZjhlFdEtMxo/9iOKMagPcPgb/e2CNB4DTFj/fh6HjwR+nkd3
-        /7XSrBXpJ69IzHBMbVE7tedAnXfJ3m9gyoMD6eQRJiD5gbB8qdQcq5wlwMjjjmez
-        E9eBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=vZGbnC8RdlpxgKLz2nXfyLccHHit/zhrLhFtuEcHK
-        Tc=; b=FFBV6YEE06fvGorfmJ+6zAncPHAXA+6LE+QoMK1qUv8MYOPhoFJHgp6z8
-        ei/NzXteugeW7ZOyzjkw+lykJYRWeBz9NKiUm5BSPZpCO4dTqx4HYnQTdDU+Ie96
-        r7EIjvGc0Uj3bBnnJdw2R/ehtg6Q0p6vuDTcIAzjajW/cYkwOAKCi6NRrltjVxro
-        1BquSDZcjyqJ8bNXCSq2sfXamazkNbIXC5T3hLmVp/b1OILwA9+AoUzN//+CrhWx
-        aXpcE8hHC0FA2cQP19WJZutpRmoCglBmGA3RY7MC+OvNv47NWV1VbRflZ6wSDjZN
-        K//MOl+yvwehsxTu4fkGhOjKvN7lg==
-X-ME-Sender: <xms:YNigXu2IquSGcQPJpUfESJf0wxsif3Xeghy6QJa3A3GEQ9LKJKkgMw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeekgddvgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:YNigXrXYWA6_dxSXpXeRQovQ0O2ptgPTobJoFV97fswf3McTyqSC1w>
-    <xmx:YNigXoqxZJj3dTZf3NK6-xPLPTlmXwmMZ0JRmfnxLXuziEjHiFG01w>
-    <xmx:YNigXkbZv5yWWb2Q4fAUt7WxoWYC0Yo3IPqlIG0jjMRTfHNfWRzomA>
-    <xmx:YdigXp0nXKljZYZIzOMW5y_t1v-x59e_T-speuINAiwbz_7FUjdUUQ>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BC5863065CF7;
-        Wed, 22 Apr 2020 19:50:55 -0400 (EDT)
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Disable SPDIF by default
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-References: <20200422041502.7497-1-samuel@sholland.org>
- <20200422151616.httmhmo2tbd4m4eu@gilmour.lan>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <b554ea70-16da-1637-d349-db51dddcf95b@sholland.org>
-Date:   Wed, 22 Apr 2020 18:50:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 22 Apr 2020 19:51:42 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A5AC03C1AA
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:51:42 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id f8so1603625plt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:51:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QgMVZz3XwLkExErntao4WLiI0VS/DsZOFmHjZC/Mbow=;
+        b=b1xFmE2sV5VW4aIlU/whxS/awWX9vekQ0Ico8eQgciMKy7zuNVk5XtOpg39bOTWcKs
+         gmE9IbR9W35bFsypZV4vL3HSs5YmoSf5fN8616fkMWbslDLfiUYdepcmXnGAGCT9UBow
+         tcegupNB12V2vId+LwrLQi0D9fZMOT/3eaM73mrtZdPpGBHCbmDq0L+M54abVOxMotXA
+         LxFAdJGBFIgJQJDG8i+fcobu58I88gq4sWg+B8YpHYN1E99k4GEnsYVLt9Kz7c/v8YvO
+         1Ag5ItZ7vliNh16MSWpcpImUWRG2bw/nM3eiMhbI7Z3GgjX0L1CaNHTEcHJUd8nG/PfW
+         SEpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QgMVZz3XwLkExErntao4WLiI0VS/DsZOFmHjZC/Mbow=;
+        b=rr1dh8VOwKuhVZxgR3LuxAQc9qUiw0q17zZHlzjt0MmAOdcSMH61feImw/I6YNrtjc
+         2YlhhheZgyUDYT0P2gvjiGaj+SVtNd6iRo1AbmydG0mydmPxRvP633fgHYEcfQsxDcBB
+         D8PmX0BqRBdl7xttoyL55Xq6kh3wV5kfvrkBLkMxELvq6xt1e8DWdRKXK7rdDiyU/Fsc
+         n0+8NLBv1Lhi6YI4XH4lCvnzLv8I092O+okO67NLhx2dpK0TJgPKkONgWuury2mDmsOj
+         uSUmtEQDOa+Awmk5gt0V0Ozdk9aFrgVAOTuwpyedL8vWw7UxEuzH+7DZBkEJ026KeI7F
+         RpJA==
+X-Gm-Message-State: AGi0PuZTd5ujIPhOtUGTGAZyiCMZpGZlmpIKKlZcLGBvz426yTZUw0pK
+        B31xcxZz774rEnfb0CUYVY4Jlw==
+X-Google-Smtp-Source: APiQypKd8hMC33L8Wj5RKdsZ70cGbYI15nshdaNSvjex+B8eCij/WOOT64Lb2ePxq5TYoHX5bEGXjw==
+X-Received: by 2002:a17:902:b097:: with SMTP id p23mr1161570plr.195.1587599501845;
+        Wed, 22 Apr 2020 16:51:41 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id h11sm621261pfo.120.2020.04.22.16.51.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 16:51:40 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 16:51:34 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 01/12] add support for Clang's Shadow Call Stack (SCS)
+Message-ID: <20200422235134.GA211149@google.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200416161245.148813-1-samitolvanen@google.com>
+ <20200416161245.148813-2-samitolvanen@google.com>
+ <20200420171727.GB24386@willie-the-truck>
+ <20200420211830.GA5081@google.com>
+ <20200422173938.GA3069@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200422151616.httmhmo2tbd4m4eu@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422173938.GA3069@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime,
-
-On 4/22/20 10:16 AM, Maxime Ripard wrote:
-> On Tue, Apr 21, 2020 at 11:15:02PM -0500, Samuel Holland wrote:
->> As of v5.7-rc2, Linux now prints the following message at boot:
->>
->>   [   33.848525] platform sound_spdif: deferred probe pending
->>
->> This is because &sound_spdif is waiting on its DAI link component
->> &spdif to probe, but &spdif is disabled in the DTS. Disable the
->> audio card as well to match.
->>
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
+On Wed, Apr 22, 2020 at 06:39:47PM +0100, Will Deacon wrote:
+> On Mon, Apr 20, 2020 at 02:18:30PM -0700, Sami Tolvanen wrote:
+> > On Mon, Apr 20, 2020 at 06:17:28PM +0100, Will Deacon wrote:
+> > > > +	 * The shadow call stack is aligned to SCS_SIZE, and grows
+> > > > +	 * upwards, so we can mask out the low bits to extract the base
+> > > > +	 * when the task is not running.
+> > > > +	 */
+> > > > +	return (void *)((unsigned long)task_scs(tsk) & ~(SCS_SIZE - 1));
+> > > 
+> > > Could we avoid forcing this alignment it we stored the SCS pointer as a
+> > > (base,offset) pair instead? That might be friendlier on the allocations
+> > > later on.
+> > 
+> > The idea is to avoid storing the current task's shadow stack address in
+> > memory, which is why I would rather not store the base address either.
 > 
-> The patch looks good, but don't we have some boards with SPDIF enabled that
-> should be modified accordingly?
+> What I mean is that, instead of storing the current shadow stack pointer,
+> we instead store a base and an offset. We can still clear the base, as you
+> do with the pointer today, and I don't see that the offset is useful to
+> an attacker on its own.
 
-I don't see any in-tree. The only A64 DTS that references &spdif at all is
-sun50i-a64-pine64.dts, which explicitly disables it:
+I see what you mean. However, even if we store the base address +
+the offset, we still need aligned allocation if we want to clear
+the address. This would basically just move __scs_base() logic to
+cpu_switch_to() / scs_save().
 
-	/* On Euler connector */
-	&spdif {
-  		status = "disabled";
-	};
+> But more generally, is it really worthwhile to do this clearing at all? Can
+> you (or Kees?) provide some justification for it, please? We don't do it
+> for anything else, e.g. the pointer authentication keys, so something
+> feels amiss here.
 
-I'm leaning toward agreeing with Clement that the sound_spdif node (and also
-spdif_out) should be removed altogether from the A64 DTSI.
+Like Kees pointed out, this makes it slightly harder to locate the
+current task's shadow stack pointer. I realize there are other useful
+targets in thread_info, but we would rather not make this any easier
+than necessary. Is your primary concern here the cost of doing this,
+or just that it doesn't sufficiently improve security?
 
-Regards,
-Samuel
+Sami
