@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9346BC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB12C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0A421582
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2204220787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgDVVU4 (ORCPT
+        id S1726619AbgDVVVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
+        Wed, 22 Apr 2020 17:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgDVVUz (ORCPT
+        with ESMTP id S1726534AbgDVVU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:20:55 -0400
+        Wed, 22 Apr 2020 17:20:57 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8128DC03C1A9;
-        Wed, 22 Apr 2020 14:20:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AA4C03C1AA;
+        Wed, 22 Apr 2020 14:20:57 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRMnZ-0000Ol-VY; Wed, 22 Apr 2020 23:20:50 +0200
+        id 1jRMnZ-0000Oh-DF; Wed, 22 Apr 2020 23:20:49 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7A1641C0450;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 088811C02FC;
         Wed, 22 Apr 2020 23:20:49 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 21:20:49 -0000
+Date:   Wed, 22 Apr 2020 21:20:48 -0000
 From:   "tip-bot2 for Giovanni Gherdovich" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] x86, sched: Bail out of frequency invariance if
- base frequency is unknown
-Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+Subject: [tip: sched/urgent] x86, sched: Account for CPUs with less than 4
+ cores in freq. invariance
+Cc:     Like Xu <like.xu@linux.intel.com>,
+        Neil Rickert <nwr10cst-oslnx@yahoo.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416054745.740-2-ggherdovich@suse.cz>
-References: <20200416054745.740-2-ggherdovich@suse.cz>
+        Dave Kleikamp <dave.kleikamp@oracle.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200416054745.740-3-ggherdovich@suse.cz>
+References: <20200416054745.740-3-ggherdovich@suse.cz>
 MIME-Version: 1.0
-Message-ID: <158759044911.28353.2414263048020355766.tip-bot2@tip-bot2>
+Message-ID: <158759044865.28353.8160614260085686915.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,55 +64,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     9a6c2c3c7a73ce315c57c1b002caad6fcc858d0f
-Gitweb:        https://git.kernel.org/tip/9a6c2c3c7a73ce315c57c1b002caad6fcc858d0f
+Commit-ID:     23ccee22e834eca236b9a20989caf6905bd6954a
+Gitweb:        https://git.kernel.org/tip/23ccee22e834eca236b9a20989caf6905bd6954a
 Author:        Giovanni Gherdovich <ggherdovich@suse.cz>
-AuthorDate:    Thu, 16 Apr 2020 07:47:42 +02:00
+AuthorDate:    Thu, 16 Apr 2020 07:47:43 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 22 Apr 2020 23:10:13 +02:00
 
-x86, sched: Bail out of frequency invariance if base frequency is unknown
+x86, sched: Account for CPUs with less than 4 cores in freq. invariance
 
-Some hypervisors such as VMWare ESXi 5.5 advertise support for
-X86_FEATURE_APERFMPERF but then fill all MSR's with zeroes. In particular,
-MSR_PLATFORM_INFO set to zero tricks the code that wants to know the base
-clock frequency of the CPU (highest non-turbo frequency), producing a
-division by zero when computing the ratio turbo_freq/base_freq necessary
-for frequency invariant accounting.
-
-It is to be noted that even if MSR_PLATFORM_INFO contained the appropriate
-data, APERF and MPERF are constantly zero on ESXi 5.5, thus freq-invariance
-couldn't be done in principle (not that it would make a lot of sense in a
-VM anyway). The real problem is advertising X86_FEATURE_APERFMPERF. This
-appears to be fixed in more recent versions: ESXi 6.7 doesn't advertise
-that feature.
+If a CPU has less than 4 physical cores, MSR_TURBO_RATIO_LIMIT will
+rightfully report that the 4C turbo ratio is zero. In such cases, use the
+1C turbo ratio instead for frequency invariance calculations.
 
 Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Reported-by: Like Xu <like.xu@linux.intel.com>
+Reported-by: Neil Rickert <nwr10cst-oslnx@yahoo.com>
 Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lkml.kernel.org/r/20200416054745.740-2-ggherdovich@suse.cz
+Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+Link: https://lkml.kernel.org/r/20200416054745.740-3-ggherdovich@suse.cz
 ---
- arch/x86/kernel/smpboot.c |  9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/kernel/smpboot.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index fe3ab96..3a318ec 100644
+index 3a318ec..5d346b7 100644
 --- a/arch/x86/kernel/smpboot.c
 +++ b/arch/x86/kernel/smpboot.c
-@@ -1985,6 +1985,15 @@ static bool intel_set_max_freq_ratio(void)
- 	return false;
+@@ -1945,18 +1945,23 @@ static bool skx_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq, int size)
  
- out:
-+	/*
-+	 * Some hypervisors advertise X86_FEATURE_APERFMPERF
-+	 * but then fill all MSR's with zeroes.
-+	 */
-+	if (!base_freq) {
-+		pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
-+		return false;
-+	}
+ static bool core_set_max_freq_ratio(u64 *base_freq, u64 *turbo_freq)
+ {
++	u64 msr;
+ 	int err;
+ 
+ 	err = rdmsrl_safe(MSR_PLATFORM_INFO, base_freq);
+ 	if (err)
+ 		return false;
+ 
+-	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, turbo_freq);
++	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &msr);
+ 	if (err)
+ 		return false;
+ 
+-	*base_freq = (*base_freq >> 8) & 0xFF;      /* max P state */
+-	*turbo_freq = (*turbo_freq >> 24) & 0xFF;   /* 4C turbo    */
++	*base_freq = (*base_freq >> 8) & 0xFF;    /* max P state */
++	*turbo_freq = (msr >> 24) & 0xFF;         /* 4C turbo    */
 +
- 	arch_turbo_freq_ratio = div_u64(turbo_freq * SCHED_CAPACITY_SCALE,
- 					base_freq);
- 	arch_set_max_freq_ratio(turbo_disabled());
++	/* The CPU may have less than 4 cores */
++	if (!*turbo_freq)
++		*turbo_freq = msr & 0xFF;         /* 1C turbo    */
+ 
+ 	return true;
+ }
