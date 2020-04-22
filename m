@@ -7,43 +7,46 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E430C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07907C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5206020857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B3520857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgDVWZ6 (ORCPT
+        id S1726938AbgDVW0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35038 "EHLO
+        Wed, 22 Apr 2020 18:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726724AbgDVWZF (ORCPT
+        by vger.kernel.org with ESMTP id S1726701AbgDVWZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:25:05 -0400
+        Wed, 22 Apr 2020 18:25:03 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED9FC03C1AA;
-        Wed, 22 Apr 2020 15:25:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFCBC03C1A9;
+        Wed, 22 Apr 2020 15:25:03 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRNnZ-0001TH-D1; Thu, 23 Apr 2020 00:24:54 +0200
+        id 1jRNnK-0001Nd-Bj; Thu, 23 Apr 2020 00:24:39 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D3FA41C047B;
-        Thu, 23 Apr 2020 00:24:47 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 22:24:47 -0000
-From:   "tip-bot2 for Julien Thierry" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CF1631C04D1;
+        Thu, 23 Apr 2020 00:24:36 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 22:24:36 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Split out arch-specific CFI definitions
-Cc:     Julien Thierry <jthierry@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: objtool/core] x86,ftrace: Shrink ftrace_regs_caller() by one byte
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200416115118.867411350@infradead.org>
+References: <20200416115118.867411350@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158759428722.28353.11322555821987321171.tip-bot2@tip-bot2>
+Message-ID: <158759427624.28353.12057979900259706863.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,109 +62,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     f04f7d856a6d8de36a7ccf70e652565991db1b25
-Gitweb:        https://git.kernel.org/tip/f04f7d856a6d8de36a7ccf70e652565991db1b25
-Author:        Julien Thierry <jthierry@redhat.com>
-AuthorDate:    Fri, 27 Mar 2020 15:28:46 
-Committer:     Josh Poimboeuf <jpoimboe@redhat.com>
-CommitterDate: Tue, 14 Apr 2020 10:39:25 -05:00
+Commit-ID:     fdf6101cab968605564f211ab03f396dde67785b
+Gitweb:        https://git.kernel.org/tip/fdf6101cab968605564f211ab03f396dde67785b
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 01 Apr 2020 16:51:11 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 22 Apr 2020 23:10:06 +02:00
 
-objtool: Split out arch-specific CFI definitions
+x86,ftrace: Shrink ftrace_regs_caller() by one byte
 
-Some CFI definitions used by generic objtool code have no reason to vary
-from one architecture to another.  Keep those definitions in generic
-code and move the arch-specific ones to a new arch-specific header.
+'Optimize' ftrace_regs_caller. Instead of comparing against an
+immediate, the more natural way to test for zero on x86 is: 'test
+%r,%r'.
 
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+  48 83 f8 00             cmp    $0x0,%rax
+  74 49                   je     226 <ftrace_regs_call+0xa3>
+
+  48 85 c0                test   %rax,%rax
+  74 49                   je     225 <ftrace_regs_call+0xa2>
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20200416115118.867411350@infradead.org
 ---
- tools/objtool/Makefile                    |  3 ++-
- tools/objtool/arch/x86/include/cfi_regs.h | 25 ++++++++++++++++++++++-
- tools/objtool/cfi.h                       | 21 +-----------------
- 3 files changed, 29 insertions(+), 20 deletions(-)
- create mode 100644 tools/objtool/arch/x86/include/cfi_regs.h
+ arch/x86/kernel/ftrace_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index d1ab0cc..6b91388 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -35,7 +35,8 @@ all: $(OBJTOOL)
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index be9aff2..9738ed2 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -240,8 +240,8 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
+ 	 * See arch_ftrace_set_direct_caller().
+ 	 */
+ 	movq ORIG_RAX(%rsp), %rax
+-	cmpq	$0, %rax
+-	je	1f
++	testq	%rax, %rax
++	jz	1f
  
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
--	    -I$(srctree)/tools/arch/$(SRCARCH)/include
-+	    -I$(srctree)/tools/arch/$(SRCARCH)/include	\
-+	    -I$(srctree)/tools/objtool/arch/$(SRCARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
- CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
-diff --git a/tools/objtool/arch/x86/include/cfi_regs.h b/tools/objtool/arch/x86/include/cfi_regs.h
-new file mode 100644
-index 0000000..79bc517
---- /dev/null
-+++ b/tools/objtool/arch/x86/include/cfi_regs.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+#ifndef _OBJTOOL_CFI_REGS_H
-+#define _OBJTOOL_CFI_REGS_H
-+
-+#define CFI_AX			0
-+#define CFI_DX			1
-+#define CFI_CX			2
-+#define CFI_BX			3
-+#define CFI_SI			4
-+#define CFI_DI			5
-+#define CFI_BP			6
-+#define CFI_SP			7
-+#define CFI_R8			8
-+#define CFI_R9			9
-+#define CFI_R10			10
-+#define CFI_R11			11
-+#define CFI_R12			12
-+#define CFI_R13			13
-+#define CFI_R14			14
-+#define CFI_R15			15
-+#define CFI_RA			16
-+#define CFI_NUM_REGS		17
-+
-+#endif /* _OBJTOOL_CFI_REGS_H */
-diff --git a/tools/objtool/cfi.h b/tools/objtool/cfi.h
-index 4427bf8..1a3e7b8 100644
---- a/tools/objtool/cfi.h
-+++ b/tools/objtool/cfi.h
-@@ -6,30 +6,13 @@
- #ifndef _OBJTOOL_CFI_H
- #define _OBJTOOL_CFI_H
- 
-+#include "cfi_regs.h"
-+
- #define CFI_UNDEFINED		-1
- #define CFI_CFA			-2
- #define CFI_SP_INDIRECT		-3
- #define CFI_BP_INDIRECT		-4
- 
--#define CFI_AX			0
--#define CFI_DX			1
--#define CFI_CX			2
--#define CFI_BX			3
--#define CFI_SI			4
--#define CFI_DI			5
--#define CFI_BP			6
--#define CFI_SP			7
--#define CFI_R8			8
--#define CFI_R9			9
--#define CFI_R10			10
--#define CFI_R11			11
--#define CFI_R12			12
--#define CFI_R13			13
--#define CFI_R14			14
--#define CFI_R15			15
--#define CFI_RA			16
--#define CFI_NUM_REGS		17
--
- struct cfi_reg {
- 	int base;
- 	int offset;
+ 	/* Swap the flags with orig_rax */
+ 	movq MCOUNT_REG_SIZE(%rsp), %rdi
