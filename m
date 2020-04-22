@@ -2,91 +2,139 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94220C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E0C5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 662C02082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:35:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="JbAJCGJM"
+	by mail.kernel.org (Postfix) with ESMTP id 65DB92082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587573571;
+	bh=2rmDWww6rHau1JQr0OtwOsytcBhyKnLhZgMaxwDb5pk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ev1lUK1bhbtpPzVp3Lp1bWzHwgqREa8gJTZipEDkoboOfUcfwv5bXklxCjWcaZ3is
+	 NtgYaS6VdOVFeXzRr6GxdAcax01SvieqY/9HO/8lJkKwpM+yadUwriHYjahuu6rECd
+	 IOmnTjfSzAFgKN5dmilb0PBh9Vai4fYky7du/84k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgDVQfM (ORCPT
+        id S1726403AbgDVQja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:35:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgDVQfM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:35:12 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30C0C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:35:11 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id m67so2987787qke.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=DqTx+R+JV6vymEcgZ+pw6C27qjNlWqJpkbsx1i9Y7eY=;
-        b=JbAJCGJMhGu88bPCsY7coswwKtqVoO+QQiV1fZdl6ErPz9dHJqZeWPGnzxvQ1zeL7F
-         5gGlSkjuYxwAkgjXDV4/IyjCXZ2l7CtolGQ/DLGxATIg02NiWkQVGPzt7Mgpo7O+sE1f
-         5/U8xisyFAzBGOrm79KMQY4mmTDzeR+ZJZeSgZf7OfdU6jnWXirXdglQuC6Qjxm8L2wb
-         5ewxwmddE7Dzh3e92I6qvePV9MQ2OpAwIyJI5kd93dL15L8gryo0QhxdO6h0P/cFV3Mv
-         wFJVS8Yk51coyJoGrINcIM1kpGxPvbhTzEJRr2I/5VaixcLArGBh+tDIiu6wzPpn6Gj8
-         cn8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=DqTx+R+JV6vymEcgZ+pw6C27qjNlWqJpkbsx1i9Y7eY=;
-        b=jGP5D5vMS7Skck3NGqPgOaLrpQax4d5yBZEGYw053ygJ6sher3uDrZzmOFFh5GaTkt
-         RfyyulmVNbHCKLlI/NAiDvrWFCL+pjWI42QbkQErO06pwvrncXxeV6JJTw569z+GYi6i
-         XvKyiNFWfCDt3vE+osvFWFLk/uKMuOrBcq3SYpd9Cr7fPLbcidwT4d6NpUrmpmWcfsGr
-         a9GnQg97hFClUkzcP/j4eRl3ZTmU7yhkz4qauxA4VVFYt09w/+lVB8r/iqXNlxxmdQm9
-         c63EcS4HLIiJp3Skh+9TWFARaZRk+Qrvg1gAs984LXwoSpP4RPJM2vZkKwz/8usamB+O
-         s4QQ==
-X-Gm-Message-State: AGi0PubnF+dGP14j0ce6pYyx4VfLofPimhJ0+hVpYqjkB08C3IEo+WuM
-        K2UkzMPOj4JJnf6LCivLaOrPSw==
-X-Google-Smtp-Source: APiQypKZehf5rRPMT55k+qjxOkJxOGmhAhEj6nXZhHKApHPnIxrSlYi+tmd2g2gTnL7FsTdjkBhtqQ==
-X-Received: by 2002:a37:a090:: with SMTP id j138mr28112903qke.168.1587573310995;
-        Wed, 22 Apr 2020 09:35:10 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d17sm4408130qtb.74.2020.04.22.09.35.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 09:35:10 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: AMD boot woe due to "x86/mm: Cleanup pgprot_4k_2_large() and pgprot_large_2_4k()"
-Date:   Wed, 22 Apr 2020 12:35:08 -0400
-Message-Id: <59604C7F-696A-45A3-BF4F-C8913E09DD4C@lca.pw>
-References: <20200422161757.GC26846@zn.tnic>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-In-Reply-To: <20200422161757.GC26846@zn.tnic>
-To:     Borislav Petkov <bp@alien8.de>
-X-Mailer: iPhone Mail (17D50)
+        Wed, 22 Apr 2020 12:39:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbgDVQja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:39:30 -0400
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37F3721473;
+        Wed, 22 Apr 2020 16:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587573569;
+        bh=2rmDWww6rHau1JQr0OtwOsytcBhyKnLhZgMaxwDb5pk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IDdy+xsDxWGQDq0yE5KuRWhZLri9WYXQm5wMtacNPEfeTJVbqvsyJa4Z6tIQpURno
+         LEQLMMHaMdO9C85oQhOYCV1F+Rj4+wBrIp4m6jtOLH+0ivmx/Qk19CUqc3QXZ2N649
+         QA19N8U8TVbIdywAO21NstaMQ1l7XYQj8hKFMJDo=
+Received: by mail-il1-f178.google.com with SMTP id q10so2579104ile.0;
+        Wed, 22 Apr 2020 09:39:29 -0700 (PDT)
+X-Gm-Message-State: AGi0PuY9facAuOQkNzrp1akIl0roEFnbGLQpvR0hGo0JqM6CAoSwpYMV
+        H+P+yXoHDCuvxedRnHjDGDRl2fHnENLtuhIRvYE=
+X-Google-Smtp-Source: APiQypKyqgCn3vKrlX0X8msYPbgz4jhNTQCAHufT+5l+uzBP2FrPCjFC+hPYuzn8+fMuaBgej1tcbMGsnUpTH2pprh0=
+X-Received: by 2002:a92:aa0f:: with SMTP id j15mr27302801ili.211.1587573568568;
+ Wed, 22 Apr 2020 09:39:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAMj1kXEXTq8RhD-AM4i3ZmXRcLDTW8waNDbWNa0V8V1nz4zb_A@mail.gmail.com>
+ <mhng-2320bbe6-c880-40f4-914e-a6209d0f2f95@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-2320bbe6-c880-40f4-914e-a6209d0f2f95@palmerdabbelt-glaptop1>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 22 Apr 2020 18:39:17 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG6KG7L5kopUMyY-DCkURfRZYDvOVU9+U=+eiktXfhrvg@mail.gmail.com>
+Message-ID: <CAMj1kXG6KG7L5kopUMyY-DCkURfRZYDvOVU9+U=+eiktXfhrvg@mail.gmail.com>
+Subject: Re: [v4 PATCH 0/3] Add UEFI support for RISC-V
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 Apr 2020 at 22:59, Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Tue, 21 Apr 2020 00:24:04 PDT (-0700), ardb@kernel.org wrote:
+> > On Tue, 21 Apr 2020 at 05:34, Atish Patra <atish.patra@wdc.com> wrote:
+> >>
+> >> This series adds UEFI support for RISC-V. Currently, only boot time
+> >> services have been added. Runtime services will be added in a separate
+> >> series. This series depends on some core EFI patches
+> >> present in current in efi-next and following other patches.
+> >>
+> >> U-Boot: Adds the boot hartid under chosen node.
+> >> https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
+> >>
+> >> Linux kernel: 5.7-rc1
+> >>
+> >> OpenSBI: master
+> >>
+> >> Patch 1 just moves arm-stub code to a generic code so that it can be used
+> >> across different architecture.
+> >>
+> >> Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
+> >> have create separate config to enable boot time services.
+> >> As runtime services are not enabled at this time, full generic early ioremap
+> >> support is also not added in this series.
+> >>
+> >> Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
+> >> respectively.
+> >>
+> >> The patches can also be found in following git repo.
+> >>
+> >> https://github.com/atishp04/linux/tree/wip_uefi_riscv_v4
+> >>
+> >> The patches have been verified on Qemu using bootefi command in U-Boot.
+> >>
+> >> Changes from v3->v4:
+> >> 1. Rebased on top of efi-next.
+> >> 2. Dropped patch 1 & 2 from this series as it is already queued in efi-next.
+> >> Changes from v2->v3:
+> >> 3. Improved handle_kernel_image() for RISC-V.
+> >>
+> >
+> > Thanks Atish. This looks nice and simple now.
+> >
+> > I will need an ack from the RISC-V maintainers on these, and it is up
+> > to them to consider whether the changes to core kconfigs and makefiles
+> > are likely to cause trouble or not. If so, I am happy to work out a
+> > way to merge this via a shared stable branch.
+>
+> Sorry it took me a while to get around to these, but they're essentially good
+> with me.  There's some comments about needing ISA_C/c.li, but that's pretty
+> trivial.  In terms of mechanics: I don't really ever understand how to do these
+> multi-tree merges.  In an ideal world I'd like to have the arch/riscv/ stuff
+> stay in riscv/for-next, both because I don't want to deal with merge conflicts
+> and because that's where the RISC-V autobuilders look.
+>
+> The best I can come up with is to split #3 up such that drivers/firmware/efi/
+> is its own patch and then send that up along with the PE header definitions
+> into an RC.  It'd be unused code at that point, but at least it'd break the
+> dependency between the trees and it'll be getting tested in riscv/for-next so
+> it won't rot.  We can ARMSTUB->GENERIC_STUB by just having the RISC-V support
+> select woth ARMSTUB and GENERIC_STUB, with a cleanup going in after everything
+> is merged.
+>
+> That said, I'm happy if there's a better way to do this...
+>
 
-
-> On Apr 22, 2020, at 12:18 PM, Borislav Petkov <bp@alien8.de> wrote:
->=20
-> What is the special thing about this config? You have KASAN enabled and?
-> Anything else?
->=20
-> I need to know what are the relevant switches you've enabled so that I
-> can enable them on my box too and try to reproduce.
-
-The config has a few extra memory debugging options enabled like KASAN, debu=
-g_pagealloc, debug_vm etc. The affected machines are NUMA AMD servers.=
+I'll reshuffle the code a bit, and send out an updated series. If we
+are all happy with that, I will stick the first 2 patches on a shared
+tag that you can pull into your branch, and you can apply the
+remaining 4 patches on top of that. Are you ok with a tag based on
+v5.7-rc2?
