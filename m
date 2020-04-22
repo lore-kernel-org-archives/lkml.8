@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6806C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25112C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7DC2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042092084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UI46sCky"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qf0tl6o9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgDVL3w (ORCPT
+        id S1727897AbgDVLaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45778 "EHLO
+        Wed, 22 Apr 2020 07:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726517AbgDVL3Z (ORCPT
+        by vger.kernel.org with ESMTP id S1727105AbgDVL3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:29:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FCFC03C1AF
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 04:29:25 -0700 (PDT)
+        Wed, 22 Apr 2020 07:29:48 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9349FC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 04:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=yT7zCXasH20UC6NIVxkpNndV6tvyX4o1l6S+JN7w94s=; b=UI46sCkyYaicIu3j/fS/4FtUZa
-        QliP64YDd+4nGIGS4JeRra+YtVSnCq48I39wmOafhnFEpTJ6mrPEUf8CP+jm5tGCEqkO4KNb9YXQ2
-        XkMS+KzqR4IbygalSm1+GUnmKyvj6RQIbnQkXkyHmlbfbxPzIVHxY8JPWwHFQ/hwQAYCJBnvkYFbz
-        0MjiDyw1s8qBVCN/+zg1aUnTqY65rb124ACBcCwnjR2XkvGlYacp5U1pC96thQwDw6Sbur9Pjqk/W
-        LdXZHLHFyYq4FlJbgVt/6STAPIJpd8dWJjMWfKmaRFm0obXBr3GmHEcj4bNfRORvlRvligxSl7XeS
-        dX5SWNOw==;
+        bh=F/2M+3uCcIIYBaEgbSMCa+xIQ9jhjFLQi2y3VV4uMS0=; b=qf0tl6o9j0mZYhS0+GjDLY08lr
+        wc+TwAHba2lEy+bVkg8aPqQ1dCf9/5FDhxCZQ+k4kDP+/DV7B/bA3wamXLCa+amu0Y1gENMavxXlX
+        NDWvGCsT/D7V+P2ABd+1asv4wtaK47GR4n82wc5FjNgfbecKGduQXdCvaYYnSDL+T2V9EmvEJ3isy
+        L+NycOsQ4plcJv+kKYS+b8jAU3PfUG4HKEwWbkbbcI/iYm19IR01PpDe4nFMjigcKdlMOuRSKs85W
+        xIv8STA5SdVkFHHfh35kzDpt+VvjDpVoWdmbx+muKCVXzLiPELczx+25MFepKlTqyNcf79LsmDbqX
+        7aqm09/A==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRDYy-0003bS-MF; Wed, 22 Apr 2020 11:29:08 +0000
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRDYy-0006rF-D2; Wed, 22 Apr 2020 11:29:08 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 58564307981;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5043230796F;
         Wed, 22 Apr 2020 13:29:03 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 163E022B99F0A; Wed, 22 Apr 2020 13:29:03 +0200 (CEST)
-Message-Id: <20200422112832.403795265@infradead.org>
+        id E87E322B9588C; Wed, 22 Apr 2020 13:29:02 +0200 (CEST)
+Message-Id: <20200422112832.046704918@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 22 Apr 2020 13:27:39 +0200
+Date:   Wed, 22 Apr 2020 13:27:33 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, rostedt@goodmis.org, qais.yousef@arm.com,
         juri.lelli@redhat.com, vincent.guittot@linaro.org,
         dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        peterz@infradead.org, paulmck@kernel.org
-Subject: [PATCH 20/23] sched,rcutorture: Convert to sched_set_fifo_low()
+        peterz@infradead.org, rafael.j.wysocki@intel.com
+Subject: [PATCH 14/23] sched,powerclamp: Convert to sched_set_fifo()
 References: <20200422112719.826676174@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -69,29 +69,33 @@ informed decision.
 
 Effectively no change.
 
-Cc: paulmck@kernel.org
+Cc: rafael.j.wysocki@intel.com
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/rcu/rcutorture.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/thermal/intel/intel_powerclamp.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -802,13 +802,11 @@ static int rcu_torture_boost(void *arg)
- 	unsigned long endtime;
- 	unsigned long oldstarttime;
- 	struct rcu_boost_inflight rbi = { .inflight = 0 };
--	struct sched_param sp;
+--- a/drivers/thermal/intel/intel_powerclamp.c
++++ b/drivers/thermal/intel/intel_powerclamp.c
+@@ -70,9 +70,6 @@ static unsigned int control_cpu; /* The
+ 				  */
+ static bool clamping;
  
- 	VERBOSE_TOROUT_STRING("rcu_torture_boost started");
- 
- 	/* Set real-time priority. */
--	sp.sched_priority = 1;
--	if (sched_setscheduler(current, SCHED_FIFO, &sp) < 0) {
-+	if (sched_set_fifo_low(current) < 0) {
- 		VERBOSE_TOROUT_STRING("rcu_torture_boost RT prio failed!");
- 		n_rcu_torture_boost_rterror++;
- 	}
+-static const struct sched_param sparam = {
+-	.sched_priority = MAX_USER_RT_PRIO / 2,
+-};
+ struct powerclamp_worker_data {
+ 	struct kthread_worker *worker;
+ 	struct kthread_work balancing_work;
+@@ -488,7 +485,7 @@ static void start_power_clamp_worker(uns
+ 	w_data->cpu = cpu;
+ 	w_data->clamping = true;
+ 	set_bit(cpu, cpu_clamping_mask);
+-	sched_setscheduler(worker->task, SCHED_FIFO, &sparam);
++	sched_set_fifo(worker->task);
+ 	kthread_init_work(&w_data->balancing_work, clamp_balancing_func);
+ 	kthread_init_delayed_work(&w_data->idle_injection_work,
+ 				  clamp_idle_injection_func);
 
 
