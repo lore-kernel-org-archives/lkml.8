@@ -2,52 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94595C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B87C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C5B2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7895F20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551037;
-	bh=iXMXhubN516VSHJjbodtOZrbU9W45/hHHrxQFuVpNxU=;
+	s=default; t=1587551064;
+	bh=LEL33VKBAyGDpQqhvfb57O55DGVCVVNGlkrbacc127E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=InO52d0TGuB5znBJT/7u9FDJSpwruSLZlHpITiQlJbOYN+w3aLxRsdfAhw/gd2LWG
-	 GjrDBRi3Ah21ypitvorbzyP9K1FppfH+c1PpjvrMZbzOVqJDZmc7wNYB9BFkjApUR9
-	 osvab3gTkSlN1PQ4RI8s9Zd2JqsXL0V0UXSEnVtg=
+	b=F2E5GohebHX1hgp/K9V3/07H87jDa4k/CKRKR1dT/U3sc81Qv3dORg1/C91UF3I9D
+	 tcA4uGRLNu3t7crV4v9v0dFQkkKdDamptU7Gzih3rNg4I/Lkcw9BYRlVD3cXfC8PEs
+	 qbKWdcZeV43hxf9ScoObyo1ShYCANSrn3e2BR178=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgDVKXv (ORCPT
+        id S1730404AbgDVKYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59828 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730327AbgDVKXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:22 -0400
+        id S1729604AbgDVKX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F41342076B;
-        Wed, 22 Apr 2020 10:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E91862076E;
+        Wed, 22 Apr 2020 10:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551002;
-        bh=iXMXhubN516VSHJjbodtOZrbU9W45/hHHrxQFuVpNxU=;
+        s=default; t=1587551007;
+        bh=LEL33VKBAyGDpQqhvfb57O55DGVCVVNGlkrbacc127E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zpM2kXltrfRT2ZvWUaeUB+LtBhsZF9peA41BDUObe1ROVrSFMy1RqpLYkwsjQXghj
-         A9mBHVk7zECrupVdQ+ALNxHrllj+dvggaYMu93P+RWv0+igO4KuItj2nhhDEtauVX+
-         C75ZAVlpKhHU4HNQj194Od6XBwGJB3KUa0t/Ydz4=
+        b=h0tOtwTaPm2eWidqA1nNFBy2lG9UCMuzwlajeb1cae6F4p5XuOMfhqPzZUTIqOLQ5
+         YfqV0J7L/bpM+qINr92G+PeHgHCdmu4YGdfSvLzo1YSFkkl1Y/6NzFwhBNjeOYy8tt
+         9Eil90MMc6vKx+6k28Of9YFipuO9/hnxPMESE2BM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.6 024/166] of: overlay: kmemleak in dup_and_fixup_symbol_prop()
-Date:   Wed, 22 Apr 2020 11:55:51 +0200
-Message-Id: <20200422095051.167628110@linuxfoundation.org>
+        stable@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 061/166] arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+Date:   Wed, 22 Apr 2020 11:56:28 +0200
+Message-Id: <20200422095055.379909923@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,35 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-commit 478ff649b1c8eb2409b1a54fb75eb46f7c29f140 upstream.
+[ Upstream commit 0c988b731e6430f0081991fdb4f63f7fc837df9a ]
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 4 of 5.
+Add endpoint mode controllers nodes for the dual mode PCIe controllers
+present in Tegra194 SoC.
 
-target_path was not freed in the non-error path.
-
-Fixes: e0a58f3e08d4 ("of: overlay: remove a dependency on device node full_name")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/overlay.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 99 ++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -261,6 +261,8 @@ static struct property *dup_and_fixup_sy
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index ccac43be12acc..844e7fac30c58 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1481,6 +1481,105 @@
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
  
- 	of_property_set_flag(new_prop, OF_DYNAMIC);
- 
-+	kfree(target_path);
++	pcie_ep@14160000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
++		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x36080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x14 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
 +
- 	return new_prop;
- 
- err_free_new_prop:
++		status = "disabled";
++
++		num-lanes = <4>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 4>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@14180000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
++		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x38080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x18 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 0>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@141a0000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
++		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
++			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 5>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
+ 	sysram@40000000 {
+ 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
+ 		reg = <0x0 0x40000000 0x0 0x50000>;
+-- 
+2.20.1
+
 
 
