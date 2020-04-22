@@ -2,52 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40B3C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A014C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97A1920774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DD820774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553060;
-	bh=PkqY5os02qCbo/HNGnzajYh6FNoNP4kntucX+B0/Sm0=;
+	s=default; t=1587553066;
+	bh=XlQgfUFUJP4k8L2WBx4a9KrW5lNWt6JVS5ikBhX0mIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IiSIrEcCsNuNkMz/7UQPooreJslXOvSNAbu7ZBQ4ujTOWQG4al1MlMS09DSKQI5Ds
-	 opfiDmnyDWZu7+els7jsYtUkPJbaJmR6ugq7w0//f+1ay5MRPU6cAzUbsjoVJPWolo
-	 /qyl1lH/Iv5u/svbLNHFuECTKKGrbjCKeBTU/gwQ=
+	b=Of/S0K6OBd0p63c7RmS1s54bQLHp2EZOo74VR/TraoN/tMwfHJLf18pdE2kIJwU29
+	 16ndKaGxqFW0G+axuzN1ode0i3b4HGjKYne/6C2T6c1qpyeYYdL8NU3dIxGaO7D4hJ
+	 s05AcT/7oI9YREeMLxTfiLImPVQq7iKgaFpmDdrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731363AbgDVK5j (ORCPT
+        id S1732259AbgDVK5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55752 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:57:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbgDVKE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:57 -0400
+        id S1726870AbgDVKEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863562077D;
-        Wed, 22 Apr 2020 10:04:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98D3E2077D;
+        Wed, 22 Apr 2020 10:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549897;
-        bh=PkqY5os02qCbo/HNGnzajYh6FNoNP4kntucX+B0/Sm0=;
+        s=default; t=1587549892;
+        bh=XlQgfUFUJP4k8L2WBx4a9KrW5lNWt6JVS5ikBhX0mIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sRaLGGyqhY99cIdvjF2TEfU2Is97iFFp+gEcCSiUiW/hyg4mvh76V2495TqDX5PJa
-         h1tmXf3lgRQqygIHqs6cKPNYfbXA92t1SGPRn/eSQO1wTo6EKs2CE1bAeZR8VkqhMh
-         KH6vqLpQFXD7N+acOV16CtRCnLMTs3kJtXjNaGZ8=
+        b=egt+OXNKoac6y593hMVzterulLkoLNXcZpAtjTp2Fm/AwmpRubWa1hnwPh1nUVN10
+         2yxyKoqJLDr1ztNES+4veIJrO0NAts0ZBDa2QPDPOhvJsYtPtE48a5n2h+nYTa9eXk
+         YaC8mH1HmG37Dit00wsOobhhVdUtWdl7zp/fWfgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.9 049/125] rtc: omap: Use define directive for PIN_CONFIG_ACTIVE_HIGH
-Date:   Wed, 22 Apr 2020 11:56:06 +0200
-Message-Id: <20200422095041.465091661@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 047/125] scsi: zfcp: fix missing erp_lock in port recovery trigger for point-to-point
+Date:   Wed, 22 Apr 2020 11:56:04 +0200
+Message-Id: <20200422095041.127010670@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,55 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit c50156526a2f7176b50134e3e5fb108ba09791b2 upstream.
+commit 819732be9fea728623e1ed84eba28def7384ad1f upstream.
 
-Clang warns when one enumerated type is implicitly converted to another:
+v2.6.27 commit cc8c282963bd ("[SCSI] zfcp: Automatically attach remote
+ports") introduced zfcp automatic port scan.
 
-drivers/rtc/rtc-omap.c:574:21: warning: implicit conversion from
-enumeration type 'enum rtc_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        {"ti,active-high", PIN_CONFIG_ACTIVE_HIGH, 0},
-        ~                  ^~~~~~~~~~~~~~~~~~~~~~
-drivers/rtc/rtc-omap.c:579:12: warning: implicit conversion from
-enumeration type 'enum rtc_pin_config_param' to different enumeration
-type 'enum pin_config_param' [-Wenum-conversion]
-        PCONFDUMP(PIN_CONFIG_ACTIVE_HIGH, "input active high", NULL, false),
-        ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/pinctrl/pinconf-generic.h:163:11: note: expanded from
-macro 'PCONFDUMP'
-        .param = a, .display = b, .format = c, .has_arg = d     \
-                 ^
-2 warnings generated.
+Before that, the user had to use the sysfs attribute "port_add" of an FCP
+device (adapter) to add and open remote (target) ports, even for the remote
+peer port in point-to-point topology. That code path did a proper port open
+recovery trigger taking the erp_lock.
 
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
+Since above commit, a new helper function zfcp_erp_open_ptp_port()
+performed an UNlocked port open recovery trigger. This can race with other
+parallel recovery triggers. In zfcp_erp_action_enqueue() this could corrupt
+e.g. adapter->erp_total_count or adapter->erp_ready_head.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/144
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+As already found for fabric topology in v4.17 commit fa89adba1941 ("scsi:
+zfcp: fix infinite iteration on ERP ready list"), there was an endless loop
+during tracing of rport (un)block.  A subsequent v4.18 commit 9e156c54ace3
+("scsi: zfcp: assert that the ERP lock is held when tracing a recovery
+trigger") introduced a lockdep assertion for that case.
+
+As a side effect, that lockdep assertion now uncovered the unlocked code
+path for PtP. It is from within an adapter ERP action:
+
+zfcp_erp_strategy[1479]  intentionally DROPs erp lock around
+                         zfcp_erp_strategy_do_action()
+zfcp_erp_strategy_do_action[1441]      NO erp lock
+zfcp_erp_adapter_strategy[876]         NO erp lock
+zfcp_erp_adapter_strategy_open[855]    NO erp lock
+zfcp_erp_adapter_strategy_open_fsf[806]NO erp lock
+zfcp_erp_adapter_strat_fsf_xconf[772]  erp lock only around
+                                       zfcp_erp_action_to_running(),
+                                       BUT *_not_* around
+                                       zfcp_erp_enqueue_ptp_port()
+zfcp_erp_enqueue_ptp_port[728]         BUG: *_not_* taking erp lock
+_zfcp_erp_port_reopen[432]             assumes to be called with erp lock
+zfcp_erp_action_enqueue[314]           assumes to be called with erp lock
+zfcp_dbf_rec_trig[288]                 _checks_ to be called with erp lock:
+	lockdep_assert_held(&adapter->erp_lock);
+
+It causes the following lockdep warning:
+
+WARNING: CPU: 2 PID: 775 at drivers/s390/scsi/zfcp_dbf.c:288
+                            zfcp_dbf_rec_trig+0x16a/0x188
+no locks held by zfcperp0.0.17c0/775.
+
+Fix this by using the proper locked recovery trigger helper function.
+
+Link: https://lore.kernel.org/r/20200312174505.51294-2-maier@linux.ibm.com
+Fixes: cc8c282963bd ("[SCSI] zfcp: Automatically attach remote ports")
+Cc: <stable@vger.kernel.org> #v2.6.27+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-omap.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/rtc/rtc-omap.c
-+++ b/drivers/rtc/rtc-omap.c
-@@ -559,9 +559,7 @@ static const struct pinctrl_ops rtc_pinc
- 	.dt_free_map = pinconf_generic_dt_free_map,
- };
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -747,7 +747,7 @@ static void zfcp_erp_enqueue_ptp_port(st
+ 				 adapter->peer_d_id);
+ 	if (IS_ERR(port)) /* error or port already attached */
+ 		return;
+-	_zfcp_erp_port_reopen(port, 0, "ereptp1");
++	zfcp_erp_port_reopen(port, 0, "ereptp1");
+ }
  
--enum rtc_pin_config_param {
--	PIN_CONFIG_ACTIVE_HIGH = PIN_CONFIG_END + 1,
--};
-+#define PIN_CONFIG_ACTIVE_HIGH		(PIN_CONFIG_END + 1)
- 
- static const struct pinconf_generic_params rtc_params[] = {
- 	{"ti,active-high", PIN_CONFIG_ACTIVE_HIGH, 0},
+ static int zfcp_erp_adapter_strat_fsf_xconf(struct zfcp_erp_action *erp_action)
 
 
