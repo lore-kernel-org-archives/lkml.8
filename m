@@ -2,50 +2,54 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB6EC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E09C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4CD2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E1120784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550714;
-	bh=M6ptCejwI31FoxbckhDkOLx2nSehW9/IaJ0HcvrgiMU=;
+	s=default; t=1587550721;
+	bh=75thLSJ4zjswmdRdpBYB2fBlkoCC/ZCTS41RhNUtlg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ouGwdF9Rbe9/w2Tel9JZBuVG7a5jhPptcropA7/u7QbPrbYVDTdAttc2utmmuxq+
-	 PHjVxGyJtUSTup2wPFtOs3p9z6pyKb72I5N5IU3DYIJN2uK4k/JotoEa1almmhR31q
-	 9DudbS+G/sLQBXNMujjl0WZa5JZ+KINXs+QXrLEo=
+	b=spBpBigwb96kHsvmyDhCkOQfTMoFhk3vN0H5BwHD5ANmDHUWZJ0UWrgONt+hlgRes
+	 Vq1VUonUhCxEDutpAdX2jBoYmQLbnD6N2Q0QvRwinksfHtg7nH/sBJnMCY6mp516lZ
+	 1sH9PsSP3NhwQ9bpew8JXEpfihRcNSAfJRx1C8yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgDVKSd (ORCPT
+        id S1729998AbgDVKSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbgDVKRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:38 -0400
+        id S1729874AbgDVKRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8941220776;
-        Wed, 22 Apr 2020 10:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF2512075A;
+        Wed, 22 Apr 2020 10:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550658;
-        bh=M6ptCejwI31FoxbckhDkOLx2nSehW9/IaJ0HcvrgiMU=;
+        s=default; t=1587550665;
+        bh=75thLSJ4zjswmdRdpBYB2fBlkoCC/ZCTS41RhNUtlg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URu+o84rE5OeWDfFzthA9TdJGBK8JxP71OvSn13SApg1vOi3YVOUvjikP0A8kfLI4
-         oHQmLG4KZbnM1jRSmb51OWru/nbpRvSAobi3DK8PgjDMAjzk9l9aOt16sUpyM0KNUI
-         auDvjN5tr784YVP9lyo73Mk6A02oniuf0CMMMlSU=
+        b=X0mp8lyukHPymKcGlEK2aySuo/tFsaIyOwuZ10UBGKzhaMfbJ/fnVywN5n1x/KzNi
+         9RH1wO4tYj/LePtM3SmRLfQEa6DKhHPpLLbTRXYybJ/8WcAe3NvUPUZssbi1BemZz/
+         DaW0WxCNm5zTYOD49zDRfghY1eqLdCNtsvHR6qc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 008/118] ALSA: hda: Honor PM disablement in PM freeze and thaw_noirq ops
-Date:   Wed, 22 Apr 2020 11:56:09 +0200
-Message-Id: <20200422095032.889229251@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 036/118] clk: Dont cache errors from clk_ops::get_phase()
+Date:   Wed, 22 Apr 2020 11:56:37 +0200
+Message-Id: <20200422095037.828695876@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -58,43 +62,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Stephen Boyd <sboyd@kernel.org>
 
-commit 10db5bccc390e8e4bd9fcd1fbd4f1b23f271a405 upstream.
+[ Upstream commit f21cf9c77ee82ef8adfeb2143adfacf21ec1d5cc ]
 
-freeze_noirq and thaw_noirq need to check the PM availability like
-other PM ops.  There are cases where the device got disabled due to
-the error, and the PM operation should be ignored for that.
+We don't check for errors from clk_ops::get_phase() before storing away
+the result into the clk_core::phase member. This can lead to some fairly
+confusing debugfs information if these ops do return an error. Let's
+skip the store when this op fails to fix this. While we're here, move
+the locking outside of clk_core_get_phase() to simplify callers from
+the debugfs side.
 
-Fixes: 3e6db33aaf1d ("ALSA: hda - Set SKL+ hda controller power at freeze() and thaw()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20200205232802.29184-2-sboyd@kernel.org
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/clk.c | 48 +++++++++++++++++++++++++++++++----------------
+ 1 file changed, 32 insertions(+), 16 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1068,6 +1068,8 @@ static int azx_freeze_noirq(struct devic
- 	struct azx *chip = card->private_data;
- 	struct pci_dev *pci = to_pci_dev(dev);
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 62d0fc486d3a2..80b029713722b 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2642,12 +2642,14 @@ static int clk_core_get_phase(struct clk_core *core)
+ {
+ 	int ret;
  
-+	if (!azx_is_pm_ready(card))
+-	clk_prepare_lock();
++	lockdep_assert_held(&prepare_lock);
++	if (!core->ops->get_phase)
 +		return 0;
- 	if (chip->driver_type == AZX_DRIVER_SKL)
- 		pci_set_power_state(pci, PCI_D3hot);
++
+ 	/* Always try to update cached phase if possible */
+-	if (core->ops->get_phase)
+-		core->phase = core->ops->get_phase(core->hw);
+-	ret = core->phase;
+-	clk_prepare_unlock();
++	ret = core->ops->get_phase(core->hw);
++	if (ret >= 0)
++		core->phase = ret;
  
-@@ -1080,6 +1082,8 @@ static int azx_thaw_noirq(struct device
- 	struct azx *chip = card->private_data;
- 	struct pci_dev *pci = to_pci_dev(dev);
+ 	return ret;
+ }
+@@ -2661,10 +2663,16 @@ static int clk_core_get_phase(struct clk_core *core)
+  */
+ int clk_get_phase(struct clk *clk)
+ {
++	int ret;
++
+ 	if (!clk)
+ 		return 0;
  
-+	if (!azx_is_pm_ready(card))
-+		return 0;
- 	if (chip->driver_type == AZX_DRIVER_SKL)
- 		pci_set_power_state(pci, PCI_D0);
+-	return clk_core_get_phase(clk->core);
++	clk_prepare_lock();
++	ret = clk_core_get_phase(clk->core);
++	clk_prepare_unlock();
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(clk_get_phase);
  
+@@ -2878,13 +2886,21 @@ static struct hlist_head *orphan_list[] = {
+ static void clk_summary_show_one(struct seq_file *s, struct clk_core *c,
+ 				 int level)
+ {
+-	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu %5d %6d\n",
++	int phase;
++
++	seq_printf(s, "%*s%-*s %7d %8d %8d %11lu %10lu ",
+ 		   level * 3 + 1, "",
+ 		   30 - level * 3, c->name,
+ 		   c->enable_count, c->prepare_count, c->protect_count,
+-		   clk_core_get_rate(c), clk_core_get_accuracy(c),
+-		   clk_core_get_phase(c),
+-		   clk_core_get_scaled_duty_cycle(c, 100000));
++		   clk_core_get_rate(c), clk_core_get_accuracy(c));
++
++	phase = clk_core_get_phase(c);
++	if (phase >= 0)
++		seq_printf(s, "%5d", phase);
++	else
++		seq_puts(s, "-----");
++
++	seq_printf(s, " %6d\n", clk_core_get_scaled_duty_cycle(c, 100000));
+ }
+ 
+ static void clk_summary_show_subtree(struct seq_file *s, struct clk_core *c,
+@@ -2921,6 +2937,7 @@ DEFINE_SHOW_ATTRIBUTE(clk_summary);
+ 
+ static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
+ {
++	int phase;
+ 	unsigned long min_rate, max_rate;
+ 
+ 	clk_core_get_boundaries(c, &min_rate, &max_rate);
+@@ -2934,7 +2951,9 @@ static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
+ 	seq_printf(s, "\"min_rate\": %lu,", min_rate);
+ 	seq_printf(s, "\"max_rate\": %lu,", max_rate);
+ 	seq_printf(s, "\"accuracy\": %lu,", clk_core_get_accuracy(c));
+-	seq_printf(s, "\"phase\": %d,", clk_core_get_phase(c));
++	phase = clk_core_get_phase(c);
++	if (phase >= 0)
++		seq_printf(s, "\"phase\": %d,", phase);
+ 	seq_printf(s, "\"duty_cycle\": %u",
+ 		   clk_core_get_scaled_duty_cycle(c, 100000));
+ }
+@@ -3375,14 +3394,11 @@ static int __clk_core_init(struct clk_core *core)
+ 		core->accuracy = 0;
+ 
+ 	/*
+-	 * Set clk's phase.
++	 * Set clk's phase by clk_core_get_phase() caching the phase.
+ 	 * Since a phase is by definition relative to its parent, just
+ 	 * query the current clock phase, or just assume it's in phase.
+ 	 */
+-	if (core->ops->get_phase)
+-		core->phase = core->ops->get_phase(core->hw);
+-	else
+-		core->phase = 0;
++	clk_core_get_phase(core);
+ 
+ 	/*
+ 	 * Set clk's duty cycle.
+-- 
+2.20.1
+
 
 
