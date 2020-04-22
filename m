@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940E4C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6E6C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3542076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16FDE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552653;
-	bh=K+uM9txe6RidWvLhVcS9tv/Lh4YLAQQ5NMzlaOE6ScA=;
+	s=default; t=1587552658;
+	bh=A4cY8BzDtOLzMKBw6kmvPW8FlQ3SJ8qUoYCg7hQonGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YBi+RR8GCWgQMLXtuENiBqqv8PctY54m8QKwcFaSNSwklVXAxlh1Oi8hZbQW65r+4
-	 wa5KswrqGLFgiw8WJq63+T0OTxu3meF9abHywpkmd7mzJJS5TG+J/ZR4m7WWmXKhj+
-	 z+9al1q26oTR2BnioSqXaSxaKZO3gYu8XaEgWUYM=
+	b=PykDcWSnWLXGSj0MPgPfYyOYAYrT7flvRjUB7CCweQevu4aq/mQdQP79dnKpCBjxg
+	 MOJVlUMS7MBS/5fuo5UJa4Qb5qmoyrk3GuNwg5QeJ5/KlKmycTI+PYEq0m/V0YEAg4
+	 PfwtD5sahjcOnK3X466p+G1jpNt59Sq1I+7G+lrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbgDVKuw (ORCPT
+        id S1732149AbgDVKu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44366 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729249AbgDVKLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:50 -0400
+        id S1726848AbgDVKLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:11:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A4E20575;
-        Wed, 22 Apr 2020 10:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C07F20784;
+        Wed, 22 Apr 2020 10:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550310;
-        bh=K+uM9txe6RidWvLhVcS9tv/Lh4YLAQQ5NMzlaOE6ScA=;
+        s=default; t=1587550305;
+        bh=A4cY8BzDtOLzMKBw6kmvPW8FlQ3SJ8qUoYCg7hQonGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQ8fAOJg6QvB6URFijN+bAzNmBbL5gXxqRsXhE32CHuwIjVNwahFCDw/apWYsxpIj
-         iAVrmQDGGLWibJXqM8+fx40N8/sO5za+0HwqWmiJUC6P50xdTVTV7QAGnqqYa0778E
-         glcov3ToddPTntd5L2F92+rWaw75Awd8t1nNfFhM=
+        b=uwOFhuThfnkKw/ranOd1lCARcoFxtVvy8TgCyngnWhIUTAwoBj8643lwO5XTE/Dp+
+         9nTDCVeNSjj3EnECEPqGCci12sCSpHYNf9CoDrdA7zWJSvfcgrGfteup1EPBUqNVGY
+         hzbz+3p4D3F5zqg4Z4KXpMiJoI5zVocRn/7FxK0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 4.14 093/199] powerpc: Add attributes for setjmp/longjmp
-Date:   Wed, 22 Apr 2020 11:56:59 +0200
-Message-Id: <20200422095107.377311816@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 091/199] powerpc/kprobes: Ignore traps that happened in real mode
+Date:   Wed, 22 Apr 2020 11:56:57 +0200
+Message-Id: <20200422095107.179032828@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,41 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Segher Boessenkool <segher@kernel.crashing.org>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit aa497d4352414aad22e792b35d0aaaa12bbc37c5 upstream.
+commit 21f8b2fa3ca5b01f7a2b51b89ce97a3705a15aa0 upstream.
 
-The setjmp function should be declared as "returns_twice", or bad
-things can happen[1]. This does not actually change generated code in
-my testing.
+When a program check exception happens while MMU translation is
+disabled, following Oops happens in kprobe_handler() in the following
+code:
 
-The longjmp function should be declared as "noreturn", so that the
-compiler can optimise calls to it better. This makes the generated
-code a little shorter.
+	} else if (*addr != BREAKPOINT_INSTRUCTION) {
 
-1: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-returns_005ftwice-function-attribute
+  BUG: Unable to handle kernel data access on read at 0x0000e268
+  Faulting instruction address: 0xc000ec34
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  BE PAGE_SIZE=16K PREEMPT CMPC885
+  Modules linked in:
+  CPU: 0 PID: 429 Comm: cat Not tainted 5.6.0-rc1-s3k-dev-00824-g84195dc6c58a #3267
+  NIP:  c000ec34 LR: c000ecd8 CTR: c019cab8
+  REGS: ca4d3b58 TRAP: 0300   Not tainted  (5.6.0-rc1-s3k-dev-00824-g84195dc6c58a)
+  MSR:  00001032 <ME,IR,DR,RI>  CR: 2a4d3c52  XER: 00000000
+  DAR: 0000e268 DSISR: c0000000
+  GPR00: c000b09c ca4d3c10 c66d0620 00000000 ca4d3c60 00000000 00009032 00000000
+  GPR08: 00020000 00000000 c087de44 c000afe0 c66d0ad0 100d3dd6 fffffff3 00000000
+  GPR16: 00000000 00000041 00000000 ca4d3d70 00000000 00000000 0000416d 00000000
+  GPR24: 00000004 c53b6128 00000000 0000e268 00000000 c07c0000 c07bb6fc ca4d3c60
+  NIP [c000ec34] kprobe_handler+0x128/0x290
+  LR [c000ecd8] kprobe_handler+0x1cc/0x290
+  Call Trace:
+  [ca4d3c30] [c000b09c] program_check_exception+0xbc/0x6fc
+  [ca4d3c50] [c000e43c] ret_from_except_full+0x0/0x4
+  --- interrupt: 700 at 0xe268
+  Instruction dump:
+  913e0008 81220000 38600001 3929ffff 91220000 80010024 bb410008 7c0803a6
+  38210020 4e800020 38600000 4e800020 <813b0000> 6d2a7fe0 2f8a0008 419e0154
+  ---[ end trace 5b9152d4cdadd06d ]---
 
-Signed-off-by: Segher Boessenkool <segher@kernel.crashing.org>
+kprobe is not prepared to handle events in real mode and functions
+running in real mode should have been blacklisted, so kprobe_handler()
+can safely bail out telling 'this trap is not mine' for any trap that
+happened while in real-mode.
+
+If the trap happened with MSR_IR or MSR_DR cleared, return 0
+immediately.
+
+Reported-by: Larry Finger <Larry.Finger@lwfinger.net>
+Fixes: 6cc89bad60a6 ("powerpc/kprobes: Invoke handlers directly")
+Cc: stable@vger.kernel.org # v4.10+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/c02ce4a573f3bac907e2c70957a2d1275f910013.1567605586.git.segher@kernel.crashing.org
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/424331e2006e7291a1bfe40e7f3fa58825f565e1.1582054578.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/setjmp.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/kprobes.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/powerpc/include/asm/setjmp.h
-+++ b/arch/powerpc/include/asm/setjmp.h
-@@ -12,7 +12,7 @@
+--- a/arch/powerpc/kernel/kprobes.c
++++ b/arch/powerpc/kernel/kprobes.c
+@@ -279,6 +279,9 @@ int kprobe_handler(struct pt_regs *regs)
+ 	if (user_mode(regs))
+ 		return 0;
  
- #define JMP_BUF_LEN    23
- 
--extern long setjmp(long *);
--extern void longjmp(long *, long);
-+extern long setjmp(long *) __attribute__((returns_twice));
-+extern void longjmp(long *, long) __attribute__((noreturn));
- 
- #endif /* _ASM_POWERPC_SETJMP_H */
++	if (!(regs->msr & MSR_IR) || !(regs->msr & MSR_DR))
++		return 0;
++
+ 	/*
+ 	 * We don't want to be preempted for the entire
+ 	 * duration of kprobe processing
 
 
