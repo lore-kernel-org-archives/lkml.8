@@ -2,57 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF33C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6853C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48EFF2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849B42073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552789;
-	bh=SNp5Cfh7breCq57LI8vZEAzmEX05Q+IiYdGzMs2VsjE=;
+	s=default; t=1587552802;
+	bh=fGa1F75DEYELh4aoD7E6/3JJRIt6E7i/qM4gmszt1Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4AxbYFeK6GcM2Md4aAk+6NRJrRl9XF0B1zIw6ePDho5THfcW6ncyGjuk2EWoZu/a
-	 stZV3zWzeqOMbqWmSDqiYWIfT1BGEbjus2m57T/ackZfN4N6qtcOfjL/1t57faqkXS
-	 uHzQfxcMK26dSkDvlgOLzvvhzndPvSA+xZFN0fEY=
+	b=T1WgZYUay5h1ScOWR7F4Vkpce/oBAXJD02jyOxw85AGON5yMAEVqhwFieTKjIKJT0
+	 aRZAxdd74ocIRGNpNF3NfapOmLBLK1xK1W3hQf5r/dYhxvowIGD0Bejbzbxf5PGp01
+	 K0S6u23LWSnoRW+KTddiy26FH1YXnLSnrIQYEMy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732246AbgDVKxH (ORCPT
+        id S1732253AbgDVKxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbgDVKJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:16 -0400
+        id S1728793AbgDVKI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:08:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12CE2166E;
-        Wed, 22 Apr 2020 10:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8A592071E;
+        Wed, 22 Apr 2020 10:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550155;
-        bh=SNp5Cfh7breCq57LI8vZEAzmEX05Q+IiYdGzMs2VsjE=;
+        s=default; t=1587550138;
+        bh=fGa1F75DEYELh4aoD7E6/3JJRIt6E7i/qM4gmszt1Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozs3bRKde9n5OJRtvrzGbgY9kgLkYcF8QUYEmGSdh7g45LTxcE0GOdI4l/OZb24I6
-         vM1umhgW7PzAZbYWdqBUeiM2G0owM4KeFnSBEMdf9PUs0g0pW3dHNP45NzSIt3Txww
-         sjOrhXC1T/5/EQcXP3mAKxgrxrtDfO2JwETWdMcE=
+        b=06Q4gYZdZFUe3SuOdrE4iHQMgf2RwexS24GbbyunOIbM7CROk4Iercz5Hrz2TZ2nH
+         rCNqQJnKpgBrSOPqn6cNDk9U6+ZrA6kKgoBR7V51aNWp+2nQ4ZkZf7DcMAY6/j5/wv
+         W5Amm3F4ON4XKDT+MVR0731EGFsjikzeblmgsG3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 031/199] slub: improve bit diffusion for freelist ptr obfuscation
-Date:   Wed, 22 Apr 2020 11:55:57 +0200
-Message-Id: <20200422095101.178110516@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 025/199] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
+Date:   Wed, 22 Apr 2020 11:55:51 +0200
+Message-Id: <20200422095100.652361278@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -65,71 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-commit 1ad53d9fa3f6168ebcf48a50e08b170432da2257 upstream.
+[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
 
-Under CONFIG_SLAB_FREELIST_HARDENED=y, the obfuscation was relatively weak
-in that the ptr and ptr address were usually so close that the first XOR
-would result in an almost entirely 0-byte value[1], leaving most of the
-"secret" number ultimately being stored after the third XOR.  A single
-blind memory content exposure of the freelist was generally sufficient to
-learn the secret.
+Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
+triggered a warning:
 
-Add a swab() call to mix bits a little more.  This is a cheap way (1
-cycle) to make attacks need more than a single exposure to learn the
-secret (or to know _where_ the exposure is in memory).
+  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+  ...
+  [ ] Call Trace:
+  [ ]  lock_is_held_type+0x5d/0x150
+  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+  [ ]  rcu_read_lock_any_held+0xac/0x100
+  [ ]  ? rcu_read_lock_held+0xc0/0xc0
+  [ ]  ? __slab_free+0x421/0x540
+  [ ]  ? kasan_kmalloc+0x9/0x10
+  [ ]  ? __kmalloc_node+0x1d7/0x320
+  [ ]  ? kvmalloc_node+0x6f/0x80
+  [ ]  __bfs+0x28a/0x3c0
+  [ ]  ? class_equal+0x30/0x30
+  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
 
-kmalloc-32 freelist walk, before:
+The warning got triggered because lockdep_count_forward_deps() call
+__bfs() without current->lockdep_recursion being set, as a result
+a lockdep internal function (__bfs()) is checked by lockdep, which is
+unexpected, and the inconsistency between the irq-off state and the
+state traced by lockdep caused the warning.
 
-ptr              ptr_addr            stored value      secret
-ffff90c22e019020@ffff90c22e019000 is 86528eb656b3b5bd (86528eb656b3b59d)
-ffff90c22e019040@ffff90c22e019020 is 86528eb656b3b5fd (86528eb656b3b59d)
-ffff90c22e019060@ffff90c22e019040 is 86528eb656b3b5bd (86528eb656b3b59d)
-ffff90c22e019080@ffff90c22e019060 is 86528eb656b3b57d (86528eb656b3b59d)
-ffff90c22e0190a0@ffff90c22e019080 is 86528eb656b3b5bd (86528eb656b3b59d)
-...
+Apart from this warning, lockdep internal functions like __bfs() should
+always be protected by current->lockdep_recursion to avoid potential
+deadlocks and data inconsistency, therefore add the
+current->lockdep_recursion on-and-off section to protect __bfs() in both
+lockdep_count_forward_deps() and lockdep_count_backward_deps()
 
-after:
-
-ptr              ptr_addr            stored value      secret
-ffff9eed6e019020@ffff9eed6e019000 is 793d1135d52cda42 (86528eb656b3b59d)
-ffff9eed6e019040@ffff9eed6e019020 is 593d1135d52cda22 (86528eb656b3b59d)
-ffff9eed6e019060@ffff9eed6e019040 is 393d1135d52cda02 (86528eb656b3b59d)
-ffff9eed6e019080@ffff9eed6e019060 is 193d1135d52cdae2 (86528eb656b3b59d)
-ffff9eed6e0190a0@ffff9eed6e019080 is f93d1135d52cdac2 (86528eb656b3b59d)
-
-[1] https://blog.infosectcbr.com.au/2020/03/weaknesses-in-linux-kernel-heap.html
-
-Fixes: 2482ddec670f ("mm: add SLUB free list pointer obfuscation")
-Reported-by: Silvio Cesare <silvio.cesare@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/202003051623.AF4F8CB@keescook
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[kees: Backport to v4.19 which doesn't call kasan_reset_untag()]
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -248,7 +248,7 @@ static inline void *freelist_ptr(const s
- 				 unsigned long ptr_addr)
- {
- #ifdef CONFIG_SLAB_FREELIST_HARDENED
--	return (void *)((unsigned long)ptr ^ s->random ^ ptr_addr);
-+	return (void *)((unsigned long)ptr ^ s->random ^ swab(ptr_addr));
- #else
- 	return ptr;
- #endif
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 90a3469a7a888..03e3ab61a2edd 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1297,9 +1297,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+ 	this.class = class;
+ 
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
+@@ -1324,9 +1326,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	this.class = class;
+ 
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
+-- 
+2.20.1
+
 
 
