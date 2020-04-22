@@ -2,67 +2,170 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03846C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA29C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D21162077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48D92077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:07:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPjsmnfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgDVOG6 (ORCPT
+        id S1727022AbgDVOHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:06:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:50436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVOG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:06:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EB9D30E;
-        Wed, 22 Apr 2020 07:06:58 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.118])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F2583F68F;
-        Wed, 22 Apr 2020 07:06:56 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:06:53 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, qais.yousef@arm.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, daniel.lezcano@linaro.org
-Subject: Re: [PATCH 06/23] sched,psci: Convert to sched_set_fifo*()
-Message-ID: <20200422140653.GG24150@bogus>
-References: <20200422112719.826676174@infradead.org>
- <20200422112831.574539982@infradead.org>
+        Wed, 22 Apr 2020 10:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgDVOHc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:07:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A6FC03C1A9;
+        Wed, 22 Apr 2020 07:07:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f18so2379182lja.13;
+        Wed, 22 Apr 2020 07:07:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sGFsUbHKcZdDejmr78iBjwIpQAyRNSoI/t3r9/k3A3A=;
+        b=rPjsmnfI0GJwWjNcs6Rpr3ZBKQl32nRgHSOSMlhg/qNHEu0aCQmCXVRKzV2BpbnY29
+         VN2W/sxMEpsQU7Cyb3Iq7CuS4xRhobmyj289o686dJt2/TLKo5/d/hlhg64aQyWnwvZX
+         s8irlUQRkAjHjg5ZDKTg9vjpmG4PtUp5wftQdU045JEZVH4UCkzOm7oLn2HvuHDkaUOT
+         BWVO+ARGLNgo+E1RUcs6nU2S9t2/cvg+/P6s+OQPk+lAwipVRvbAIRoFFcbkfFirD0NG
+         w4hDVnQ/sYmVl9L26HpTKP4wjHVvLuiLd+7YlkcmWXks+WNp5+3GfHspjCdYzE1QWPbr
+         +jcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sGFsUbHKcZdDejmr78iBjwIpQAyRNSoI/t3r9/k3A3A=;
+        b=DK/gt9KgNDZTFV4Ta9DF6styz57Babx1Knfx6XOtL771Zp8W9IZWiigWHwyqJHJukm
+         endHB8zVhsl6vepDA4p1No8Qz6e3/Duon/nIQ+SXNe1511z3gLNgFHOccLtjKIsqDc2/
+         ElWPNxv4X+HqoOFX094s2njWVmdWKTaVk0tbQX3AUebdcM7WA9d3UDFEwwT2jI45WkHt
+         3hnyfDc9WqK0GKtAXNngHExdRMdYCSNFauMF/XoKeYbJLoVsI8a73CSRXCPZbDRh8N78
+         DgMpqsiKZ5yqC+zWTp4/rPawgIlm7j9TjFAoCjjATQK6ykqO+w5yoDEgDhmbxz/fQdpF
+         OOkA==
+X-Gm-Message-State: AGi0PuYiaQpp6QUlK+f1/g6IPG1hm7x/esNNnwhjd/8DVfLpu88B9nFa
+        lxwdgiyvsa+c1T2WOkB1ZQDd3prk
+X-Google-Smtp-Source: APiQypI9yRUvS3Meb2Cbw5syBXnTe9EEJglLSIP4ty1U07mF2D7n0RENW98m4VhcK4w9eSEJRQ1t8w==
+X-Received: by 2002:a2e:87d9:: with SMTP id v25mr11704447ljj.241.1587564448475;
+        Wed, 22 Apr 2020 07:07:28 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id a26sm4773980lfl.66.2020.04.22.07.07.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 07:07:27 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
+ <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
+ <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
+ <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
+ <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+Date:   Wed, 22 Apr 2020 17:07:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422112831.574539982@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:27:25PM +0200, Peter Zijlstra wrote:
-> Because SCHED_FIFO is a broken scheduler model (see previous patches)
-> take away the priority field, the kernel can't possibly make an
-> informed decision.
+22.04.2020 16:59, Jon Hunter пишет:
 > 
-> Effectively changes prio from 99 to 50.
+> On 22/04/2020 14:40, Dmitry Osipenko wrote:
+>> 21.04.2020 22:42, Jon Hunter пишет:
+>>>
+>>> On 21/04/2020 16:08, Dmitry Osipenko wrote:
+>>>> 21.04.2020 17:40, Jon Hunter пишет:
+>>>>>
+>>>>> On 21/04/2020 14:25, Dmitry Osipenko wrote:
+>>>>>> 21.04.2020 12:49, Jon Hunter пишет:
+>>>>>> ...
+>>>>>>> I can try the above, but I agree it would be best to avoid messing with
+>>>>>>> the suspend levels if possible.
+>>>>>>
+>>>>>> Will be awesome if you could try it and report back the result.
+>>>>>>
+>>>>>
+>>>>> I gave it a try but suspend still fails.
+>>>>
+>>>> Perhaps the RPM's -EACCES is returned from here:
+>>>>
+>>>> https://elixir.free-electrons.com/linux/v5.7-rc2/source/drivers/base/power/runtime.c#L723
+>>>>
+>>>> Which suggests that I2C is accessed after being suspended. I guess the
+>>>> PCIe driver suspends after the I2C and somehow my change affected the
+>>>> suspension order, although not sure how.
+>>>>
+>>>> Jon, could you please try to enable PM logging and post the log? Please
+>>>> also post log of the working kernel version, so that we could compare
+>>>> the PM sequence.
+>>>>
+>>>> Something like this should enable the logging: "echo 1 >
+>>>> /sys/power/pm_trace" + there is RPM tracing.
+>>>
+>>> Unfortunately, after enabling that I don't any output and so no help there.
+>>
+>> 1. I now tried to check the pm_trace myself and found that it's
+>> available only on X86, my bad.
+>>
+>> 2. Jon, could you please clarify what exactly you were trying to test?
+>>
+>> 3. Is it only the Cardhu board that is affected by this problem?
+>>
+>> 4. Could you please try to add this to the kernel's cmdline and post the
+>> logs:
+>>
+>> tp_printk
+>> trace_event=rpm_suspend,rpm_resume,rpm_usage,rpm_idle,rpm_return_int
 > 
-> XXX this thing is horrific, it basically open-codes a stop-machine and
-> idle.
 > 
-> Cc: daniel.lezcano@linaro.org
-> Cc: sudeep.holla@arm.com
+> So I think that part of the problem already existed prior to these
+> patches. Without your patches I see ...
+> 
+> [   59.543528] tegra-i2c 7000d000.i2c: i2c transfer timed out
 
-Tested the PSCI checker pulling the entire series. Continues to work :)
+Does this I2C timeout happen with my patches? Could you please post full
+logs of an older and the recent kernel versions?
 
-Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+> [   59.549036] vdd_sata,avdd_plle: failed to disable
+> 
+> [   59.553778] Failed to disable avdd-plle: -110
+> 
+> [   59.558150] tegra-pcie 3000.pcie: failed to disable regulators: -110
+> 
+> 
+> However, now with your patches the i2c is failing to resume and this
+> breaks system suspend completely for Tegra30. So far this is the only
+> board that appears to break.
+> 
+> So the above issue needs to be fixed and I will chat to Thierry about this.
 
--- 
-Regards,
-Sudeep
+Okay
