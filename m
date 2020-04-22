@@ -2,95 +2,145 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EE9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4488BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391F82072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15460206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 01:16:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TBCmMaM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgDVBMn (ORCPT
+        id S1726328AbgDVBQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 21:12:43 -0400
-Received: from m176150.mail.qiye.163.com ([59.111.176.150]:46533 "EHLO
-        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgDVBMn (ORCPT
+        Tue, 21 Apr 2020 21:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726024AbgDVBQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 21:12:43 -0400
-Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
-        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 6C6231A151B;
-        Wed, 22 Apr 2020 09:12:07 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AJ6AOADeCMOyb*91QJCWH4rn.3.1587517927424.Hmail.bernard@vivo.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFJlOiBbUEFUQ0ggVjJdIGttYWxsb2NfaW5kZXggb3B0aW1pemF0aW9uKGNvZGUgc2l6ZSAmIHJ1bnRpbWUgc3RhYmxlKQ==?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <20200421143609.GM5820@bombadil.infradead.org>
+        Tue, 21 Apr 2020 21:16:46 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD3CC061BD3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 18:16:45 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id b13so735909oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 18:16:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6ZAB7lOGfupOo4knhmJHwegkG6G2R+Ivec9h4JrnPCY=;
+        b=TBCmMaM4nW1BKdzeRNHxyhsxN7yHhlFd+e3vnicrWjkCfrdVwe56nyBewfNqYv51hD
+         zy0qJLA6SzEhUAWAfa/QwRO5kUXJA7G9q6BlkVdMqU8xGLXwUKql6DzwtadxE0W6JxGG
+         3MFKuQSAfouttoL5apcl/QzbuMG44XGeJWvpYK+90ozMgxBEMDjVe0Bbu1yXWwGW6eCo
+         HOInPnB8UsZpi67xElpb1e7lCOtrBSMGoR2ld2cq8DxROVmcPh8u/zPoauE3uIDgHvQE
+         fAol/uCIZm0f8TpjBO1EcVnELCbSBeDWXcTa5uhsNPkx4kWMyIUHksxPgfRVBctqWHaK
+         b42A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6ZAB7lOGfupOo4knhmJHwegkG6G2R+Ivec9h4JrnPCY=;
+        b=sTufCroM1zfaZWFxBSJVgy+5BP4ja67kZrZJPESrD24Wk6IsOS9OiO2VitgaNV+bxZ
+         Swf6dM1VL9rkhaAoxEovqoYZnZ8Od8pXgc22gA7Oe2pH4qemWDybSzCsYoj23T10WGUC
+         c/sTxfuLWtGrFv2asLJa0wuF4umBG5hHSOnGsHXs7SkAHLSZ8j4JJ3bdhtMogpYckEVP
+         2QZIb7VPGSkdYoAKIGElj5MdTIyigxWq1P7GMyMzuixzE8XZwcJfFfYFwG7EowGmHNHg
+         uJhfVzcd1NChmRbwyok2fFf6ItnrB3YLNtJFvthszevs7HJafXESJe8MBlqvc1mAszmo
+         onMQ==
+X-Gm-Message-State: AGi0PubtAVG1sRTjLBEyy1OkHvfii2gWE/CG54tSUupW8ug2HW7nt7IL
+        Lx78BGhPY7Xk7KlYcNAR8Wbe46ExIUcAlPxL3GBjxg==
+X-Google-Smtp-Source: APiQypIzDPILAHh9p+2DyPNQ/95jPeU/YiMoZZ68Ru0vZToWV9S8nIGlpBgVkOZhkoTziFYp8meUCUyRS6+Zk8j7m9o=
+X-Received: by 2002:a05:6830:1589:: with SMTP id i9mr16604890otr.102.1587518203493;
+ Tue, 21 Apr 2020 18:16:43 -0700 (PDT)
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 22 Apr 2020 09:12:07 +0800 (GMT+08:00)
-From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
-Date:   Wed, 22 Apr 2020 09:12:07 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVDS0xLS0tKTUtJSkxJQllXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE9OTE9MTExCN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6MU06NDo*Hjg2NAIZUUJKKjE4LDNPCRVVSFVKTkNMTkpMQklCTklKVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTkhPSDcG
-X-HM-Tid: 0a719f71301e93b4kuws6c6231a151b
+References: <20200225050828.56458-1-john.stultz@linaro.org> <20200421235836.GA8319@lxhi-065.adit-jv.com>
+In-Reply-To: <20200421235836.GA8319@lxhi-065.adit-jv.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 21 Apr 2020 18:16:31 -0700
+Message-ID: <CALAqxLXX455P0V0o11scc3-1MHvecnvcUoT=XBcwB+ma7Kyjqg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] driver core: Improve and cleanup driver_deferred_probe_check_state()
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cgrlj5Hku7bkurrvvJpNYXR0aGV3IFdpbGNveCA8d2lsbHlAaW5mcmFkZWFkLm9yZz4K5Y+R6YCB
-5pel5pyf77yaMjAyMC0wNC0yMSAyMjozNjowOQrmlLbku7bkurrvvJoi6LW15Yab5aWOIiA8YmVy
-bmFyZEB2aXZvLmNvbT4K5oqE6YCB5Lq677yaQ2hyaXN0b3BoIExhbWV0ZXIgPGNsQGxpbnV4LmNv
-bT4sUGVra2EgRW5iZXJnIDxwZW5iZXJnQGtlcm5lbC5vcmc+LERhdmlkIFJpZW50amVzIDxyaWVu
-dGplc0Bnb29nbGUuY29tPixKb29uc29vIEtpbSA8aWFtam9vbnNvby5raW1AbGdlLmNvbT4sQW5k
-cmV3IE1vcnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4sbGludXgtbW1Aa3ZhY2sub3Jn
-LGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsb3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20K
-5Li76aKY77yaUmU6IFJlOiBbUEFUQ0ggVjJdIGttYWxsb2NfaW5kZXggb3B0aW1pemF0aW9uKGNv
-ZGUgc2l6ZSAmIHJ1bnRpbWUgc3RhYmxlKT5PbiBUdWUsIEFwciAyMSwgMjAyMCBhdCAwNzo1NTow
-M1BNICswODAwLCDotbXlhpvlpY4gd3JvdGU6Cj4+IFN1cmUsIGkganVzdCByZWNlaXZlZCBzb21l
-IGtidWlsZCBjb21waWxlciBlcnJvciBtYWlscyBhbmQgcHJvbXB0IG1lIHRvIGRvIHNvbWV0aGlu
-Zz8gCj4+IEkgZG9uYHQga25vdyB3aHkgdGhpcyBoYXBwZW5lZCwgc28gaSB1cGRhdGUgdGhlIHBh
-dGNoIGFnYWluLgo+Cj5Eb24ndC4gIFRoZSBwYXRjaCBoYXMgYmVlbiBOQUNLZWQsIHNvIHRoZXJl
-J3Mgbm8gbmVlZCB0byBwb3N0IGEgdjIuCj4KPklmIHlvdSB3YW50IHRvIGRvIHNvbWV0aGluZyB1
-c2VmdWwsIGhvdyBhYm91dCBsb29raW5nIGF0IHRoZSBlZmZlY3QKPm9mIGFkZGluZyBkaWZmZXJl
-bnQgc2xhYiBzaXplcz8gIFRoZXJlJ3MgYSBmYWlybHkgY29tbW9uIHBhdHRlcm4gb2YKPmFsbG9j
-YXRpbmcgdGhpbmdzIHdoaWNoIGFyZSBhIHBvd2VyIG9mIHR3byArIGEgaGVhZGVyLiAgU28gaXQg
-bWF5IG1ha2UKPnNlbnNlIHRvIGhhdmUga21hbGxvYyBjYWNoZXMgb2YgMzIwICgyNTYgKyA2NCks
-IDU3NiAoNTEyICsgNjQpIGFuZCAxMDg4Cj4oMTAyNCArIDY0KS4gIEkgdXNlIDY0IGhlcmUgYXMg
-dGhhdCdzIHRoZSBzaXplIG9mIGEgY2FjaGVsaW5lLCBzbyB3ZQo+d29uJ3QgZ2V0IGZhbHNlIHNo
-YXJpbmcgYmV0d2VlbiB1c2Vycy4KPgo+VGhpcyBjb3VsZCBzYXZlIGEgZmFpciBxdWFudGl0eSBv
-ZiBtZW1vcnk7IHRvZGF5IGlmIHlvdSBhbGxvY2F0ZSA1MTIgKwo+OCBieXRlcywgaXQgd2lsbCBy
-b3VuZCB1cCB0byAxMDI0LiAgU28gd2UnbGwgZ2V0IDQgYWxsb2NhdGlvbnMgcGVyIDRrQgo+cGFn
-ZSwgYnV0IHdpdGggYSA1NzYtYnl0ZSBzbGFiLCB3ZSdkIGdldCA3IGFsbG9jYXRpb25zIHBlciA0
-a0IgcGFnZS4KPk9mIGNvdXJzZSwgaWYgdGhlcmUgYXJlbid0IGEgbG90IG9mIHVzZXJzIHdoaWNo
-IGFsbG9jYXRlIG1lbW9yeSBpbiB0aGlzCj5yYW5nZSwgdGhlbiBpdCdsbCBiZSBhIHdhc3RlIG9m
-IG1lbW9yeS4gIE9uIG15IGxhcHRvcCwgaXQgc2VlbXMgbGlrZQo+dGhlcmUgbWlnaHQgYmUgYSBk
-ZWNlbnQgYW1vdW50IG9mIGFsbG9jYXRpb25zIGluIHRoZSByaWdodCByYW5nZToKPgo+a21hbGxv
-Yy0yayAgICAgICAgICAzODgxICAgNDM4NCAgIDIwNDggICAxNiAgICA4IDogdHVuYWJsZXMgICAg
-MCAgICAwICAgIDAgOiBzbGEKPmJkYXRhICAgIDI3NCAgICAyNzQgICAgICAwCj5rbWFsbG9jLTFr
-ICAgICAgICAgIDY0ODggICA3MDU2ICAgMTAyNCAgIDE2ICAgIDQgOiB0dW5hYmxlcyAgICAwICAg
-IDAgICAgMCA6IHNsYWJkYXRhICAgIDQ0MSAgICA0NDEgICAgICAwCj5rbWFsbG9jLTUxMiAgICAg
-ICAgIDc3MDAgICA4MjU2ICAgIDUxMiAgIDE2ICAgIDIgOiB0dW5hYmxlcyAgICAwICAgIDAgICAg
-MCA6IHNsYWJkYXRhICAgIDUxNiAgICA1MTYgICAgICAwCj4KPk5vdywgbWF5YmUgNTc2IGlzbid0
-IHF1aXRlIHRoZSByaWdodCBzaXplLiAgTmVlZCB0byB0cnkgaXQgb24gYSB2YXJpZXR5Cj5vZiBj
-b25maWd1cmF0aW9ucyBhbmQgZmluZCBvdXQuICBXYW50IHRvIGludmVzdGlnYXRlIHRoaXM/CgpU
-aGlzIGxvb2tzIGxpa2UgYSBncmVhdCBpZGVhIQpNYXliZSBJIGNhbiBkbyBzb21lIHJlc2VhcmNo
-IG9uIG91ciBtb2JpbGUgcGhvbmUgcHJvZHVjdHPvvIwKYW5kIHNlZSBob3cgdGhlIG9yaWdpbmFs
-IHNpemUgb2Yga21hbGxvYyBpcyBkaXN0cmlidXRlZC4KVGhpcyBtYXkgYmUgdXNlZnVsIGFzIGEg
-cmVmZXJlbmNlIHRvIHByb3ZpZGUgYSBmbGV4aWJsZSBjb25maWd1cmF0aW9uIG1ldGhvZC4KVGhh
-bmsgeW91IHZlcnkgbXVjaCBmb3IgeW91ciBzaGFyaW5nLgoKUmVnYXJkcywKQmVybmFyZAoNCg0K
+On Tue, Apr 21, 2020 at 4:59 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+>
+> Hi John,
+> Cc: linux-renesas-soc
+>
+> On Tue, Feb 25, 2020 at 05:08:22AM +0000, John Stultz wrote:
+> > This series goal is to improve and cleanup the
+> > driver_deferred_probe_check_state() code in the driver core.
+> >
+> > This series is useful for being able to support modules
+> > dependencies which may be loaded by userland, far after
+> > late_initcall is done. For instance, this series allows us to
+> > successfully use various clk drivers as modules on the db845c
+> > board. And without it, those drivers have to be statically built
+> > in to work.
+> >
+> > Since I first sent out this patch, Saravana suggested an
+> > alternative approach which also works for our needs, and is a
+> > bit simpler:
+> >  https://lore.kernel.org/lkml/20200220055250.196456-1-saravanak@google.com/T/#u
+> >
+> > However, while that patch provides the functionality we need,
+> > I still suspect the driver_deferred_probe_check_state() code
+> > could benefit from the cleanup in this patch, as the existing
+> > logic is somewhat muddy.
+> >
+> > New in v5:
+> > * Reworked the driver_deferred_probe_check_state() logic as
+> >   suggested by Saravana to tie the initcall_done checking with
+> >   modules being enabled.
+> > * Cleanup some comment wording as suggested by Rafael
+> > * Try to slightly simplify the regulator logic as suggested by
+> >   Bjorn
+> >
+> > Thanks so much to Bjorn, Saravana and Rafael for their reviews
+> > and suggestions! Additional review and feedback is always greatly
+> > appreciated!
+>
+> Building a recent [0] kernel using vanilla arm64 defconfig
+> and booting it on H3ULCB, I get buried into backtraces [1].
+>
+> After reverting this series, up to and including its first commit,
+> booting goes back to normal [2].
+>
+> Any chance to get a fix or at least some hints where to dig into?
+
+Yea. There's two patch sets I have for this. The first quiets down the
+warnings(we don't need stack dumps for these):
+  https://lore.kernel.org/lkml/20200330202715.86609-1-john.stultz@linaro.org/
+
+The second reverts the default timeout back to 0:
+  https://lore.kernel.org/lkml/20200413204253.84991-1-john.stultz@linaro.org/
+
+
+Let me know if those work for you, or if you're still having trouble
+afterwards.  I need to resubmit the set as I'm guessing they've been
+overlooked.
+
+thanks
+-john
