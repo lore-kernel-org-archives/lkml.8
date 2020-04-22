@@ -2,53 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C2BC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C186C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 279BF2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8392077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549893;
-	bh=0dPGmjd2jh6xDBgorKvf7hp53M2x11EAT+PoPEYgNJE=;
+	s=default; t=1587549896;
+	bh=2ysPOcU4eG5VZaaWZplLGws6Gl0xgfw0JPR9mog2OUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JFUoYkI/ntbaYoG3B+c4sJPxoRycl3BnJUfI8+UpEtfODaH4Es9TTR/aweboV8G+e
-	 gZUy4t31jCFG6oknVtfDyXCn4MKNQ6nLylXWtg21kDHtBIbxxmq5RAh21Zoew3egiC
-	 JqQUTr5mJb8SYOQd8/jVIpXAOeAz0OYBehnr39pI=
+	b=zitW+uMoj60YKkmAuZRjYLInCtGsGqLtOtdUe4qlSza4Gn2UN86ni/9w9h3NE+HFA
+	 GWWW1KC/0BOEiKl2tOazRVigXv0YnG9KaVwhrEcLLCE4ziOCPNOqYxbjTcr+10psgQ
+	 PAZpvj9KBZrVtptzQqYVzCjiW4DD/0/zfgTsbt8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgDVKEv (ORCPT
+        id S1728098AbgDVKEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:04:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgDVKEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:45 -0400
+        id S1728083AbgDVKEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B0C520575;
-        Wed, 22 Apr 2020 10:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36EC82078C;
+        Wed, 22 Apr 2020 10:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549884;
-        bh=0dPGmjd2jh6xDBgorKvf7hp53M2x11EAT+PoPEYgNJE=;
+        s=default; t=1587549889;
+        bh=2ysPOcU4eG5VZaaWZplLGws6Gl0xgfw0JPR9mog2OUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DQgVv7D7151MVxB8dCUaqqluEwjbkqDF4BP/RZnfYueDwa3V9x5cyb5IcWaEMkQ/b
-         x+LZl3GWuDC5kbSRbidoCan6/ilKuHYeE5inukpk+EDsmraPfRZn6B08KZA6MlwCBJ
-         un7+97pb+NHHJ2rHDcj3azPgDF61y37tFTo+QOw8=
+        b=2CDNd4xopGF6JYZxrjyjPWkydquaKhLLkyu5lbauu7qlZ4WzDc9e26OkSWs8XYkYe
+         c+bCb7tRSbs4uV3Nfj7FsHzK1PCEPpKaLm4rvNx5sykOLL1mO3WOnlI5GrMnmMSWZM
+         3WfRyENTgzBAgnofQK8dnXMMtdoAQLgc1o1qlhRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 045/125] mm: Use fixed constant in page_frag_alloc instead of size + 1
-Date:   Wed, 22 Apr 2020 11:56:02 +0200
-Message-Id: <20200422095040.793672396@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 011/125] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
+Date:   Wed, 22 Apr 2020 11:55:28 +0200
+Message-Id: <20200422095034.817854633@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,57 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-commit 8644772637deb121f7ac2df690cbf83fa63d3b70 upstream.
+[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
 
-This patch replaces the size + 1 value introduced with the recent fix for 1
-byte allocs with a constant value.
+Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
+triggered a warning:
 
-The idea here is to reduce code overhead as the previous logic would have
-to read size into a register, then increment it, and write it back to
-whatever field was being used. By using a constant we can avoid those
-memory reads and arithmetic operations in favor of just encoding the
-maximum value into the operation itself.
+  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+  ...
+  [ ] Call Trace:
+  [ ]  lock_is_held_type+0x5d/0x150
+  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+  [ ]  rcu_read_lock_any_held+0xac/0x100
+  [ ]  ? rcu_read_lock_held+0xc0/0xc0
+  [ ]  ? __slab_free+0x421/0x540
+  [ ]  ? kasan_kmalloc+0x9/0x10
+  [ ]  ? __kmalloc_node+0x1d7/0x320
+  [ ]  ? kvmalloc_node+0x6f/0x80
+  [ ]  __bfs+0x28a/0x3c0
+  [ ]  ? class_equal+0x30/0x30
+  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
 
-Fixes: 2c2ade81741c ("mm: page_alloc: fix ref bias in page_frag_alloc() for 1-byte allocs")
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The warning got triggered because lockdep_count_forward_deps() call
+__bfs() without current->lockdep_recursion being set, as a result
+a lockdep internal function (__bfs()) is checked by lockdep, which is
+unexpected, and the inconsistency between the irq-off state and the
+state traced by lockdep caused the warning.
 
+Apart from this warning, lockdep internal functions like __bfs() should
+always be protected by current->lockdep_recursion to avoid potential
+deadlocks and data inconsistency, therefore add the
+current->lockdep_recursion on-and-off section to protect __bfs() in both
+lockdep_count_forward_deps() and lockdep_count_backward_deps()
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/locking/lockdep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3955,11 +3955,11 @@ refill:
- 		/* Even if we own the page, we do not use atomic_set().
- 		 * This would break get_page_unless_zero() users.
- 		 */
--		page_ref_add(page, size);
-+		page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index d7f425698a4a1..9f56e3fac795a 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1241,9 +1241,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+ 	this.class = class;
  
- 		/* reset page count bias and offset to start of new frag */
- 		nc->pfmemalloc = page_is_pfmemalloc(page);
--		nc->pagecnt_bias = size + 1;
-+		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
- 		nc->offset = size;
- 	}
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
-@@ -3975,10 +3975,10 @@ refill:
- 		size = nc->size;
- #endif
- 		/* OK, page count is 0, we can safely set it */
--		set_page_count(page, size + 1);
-+		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+ 	return ret;
+@@ -1268,9 +1270,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	this.class = class;
  
- 		/* reset page count bias and offset to start of new frag */
--		nc->pagecnt_bias = size + 1;
-+		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
- 		offset = size - fragsz;
- 	}
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
+ 	return ret;
+-- 
+2.20.1
+
 
 
