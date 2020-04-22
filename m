@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AA2C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9A5C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1802075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A752075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550706;
-	bh=nW6ZITNHnrJvpwoENRnTK7zuEUJpfMTYYeAfMuYD/hY=;
+	s=default; t=1587550709;
+	bh=txSi6p/kX7rnICuGexhOWNu8Z2hFqfXzAhrFRv0goes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b8BmUor4UrHL47ik+26p4g7pa4uEp/GrCSHdNd2GIwAznHO+qDfMU775IZIC5LjF2
-	 IUbevpKexwxuwpdhBHyjs9rrULPMXoI6ocI6q7HGJJUtMRilAeXYmcZAk7bbPUlNQF
-	 bAF/m4XOW3ujHcOfJnevK3GzNJeob0H40ytNYyu0=
+	b=mLWB95z9zj83EPV8z4FRTWdt9mZJRAmSdTfDHp6lSYT/bk/W29GjaFCWcVB7GgkE4
+	 8pncNnCgfrAr05nZZI2kW62blF4BUdoovgqbMgLg7uHzZlVNrN3xmXdW66AwwVcF2n
+	 el/0plM4oYObzGpFGl/OjmBv0W6sLxqQ7QXEy7uA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgDVKSZ (ORCPT
+        id S1729663AbgDVKS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:18:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgDVKR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:28 -0400
+        id S1729840AbgDVKRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA002075A;
-        Wed, 22 Apr 2020 10:17:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAC8A2076B;
+        Wed, 22 Apr 2020 10:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550647;
-        bh=nW6ZITNHnrJvpwoENRnTK7zuEUJpfMTYYeAfMuYD/hY=;
+        s=default; t=1587550650;
+        bh=txSi6p/kX7rnICuGexhOWNu8Z2hFqfXzAhrFRv0goes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJdRyjxPLz110FwcvJ9kHlQc1LtN8rpu+JxksB8C2U/fYRVypnQuX1QNTwKR3e+7z
-         UlFBhPwlHfkiJZ0oi8iP521tlgMjZ8pGv0zB50ByQR2Op9kBhxMFpTnu+LOtzX7sVA
-         zkeVRpRLYhJGuKaZFQ0yt0YhRKFn/iMtUbNMNlB8=
+        b=xwDk6y84LhHYU+nb25iy8w4svdtCEKeVnazPC05mMfGGW0SWpkLuJq6b8b4A2xtTL
+         8Vi7TUA63cyUEidX06GpCkvKX+NQpB8sb1wpPtu3tzV5b55ItHR45CLgSEHL4wP6vY
+         LBktwAHRpPo+UU6de9DYAx3r8tFa1ZG9dj5IQyJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
         Luke Nelson <luke.r.nels@gmail.com>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.4 004/118] arm, bpf: Fix bugs with ALU64 {RSH, ARSH} BPF_K shift by 0
-Date:   Wed, 22 Apr 2020 11:56:05 +0200
-Message-Id: <20200422095032.287562787@linuxfoundation.org>
+Subject: [PATCH 5.4 005/118] arm, bpf: Fix offset overflow for BPF_MEM BPF_DW
+Date:   Wed, 22 Apr 2020 11:56:06 +0200
+Message-Id: <20200422095032.433118157@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -62,61 +62,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Luke Nelson <lukenels@cs.washington.edu>
 
-commit bb9562cf5c67813034c96afb50bd21130a504441 upstream.
+commit 4178417cc5359c329790a4a8f4a6604612338cca upstream.
 
-The current arm BPF JIT does not correctly compile RSH or ARSH when the
-immediate shift amount is 0. This causes the "rsh64 by 0 imm" and "arsh64
-by 0 imm" BPF selftests to hang the kernel by reaching an instruction
-the verifier determines to be unreachable.
+This patch fixes an incorrect check in how immediate memory offsets are
+computed for BPF_DW on arm.
 
-The root cause is in how immediate right shifts are encoded on arm.
-For LSR and ASR (logical and arithmetic right shift), a bit-pattern
-of 00000 in the immediate encodes a shift amount of 32. When the BPF
-immediate is 0, the generated code shifts by 32 instead of the expected
-behavior (a no-op).
+For BPF_LDX/ST/STX + BPF_DW, the 32-bit arm JIT breaks down an 8-byte
+access into two separate 4-byte accesses using off+0 and off+4. If off
+fits in imm12, the JIT emits a ldr/str instruction with the immediate
+and avoids the use of a temporary register. While the current check off
+<= 0xfff ensures that the first immediate off+0 doesn't overflow imm12,
+it's not sufficient for the second immediate off+4, which may cause the
+second access of BPF_DW to read/write the wrong address.
 
-This patch fixes the bugs by adding an additional check if the BPF
-immediate is 0. After the change, the above mentioned BPF selftests pass.
+This patch fixes the problem by changing the check to
+off <= 0xfff - 4 for BPF_DW, ensuring off+4 will never overflow.
 
-Fixes: 39c13c204bb11 ("arm: eBPF JIT compiler")
+A side effect of simplifying the check is that it now allows using
+negative immediate offsets in ldr/str. This means that small negative
+offsets can also avoid the use of a temporary register.
+
+This patch introduces no new failures in test_verifier or test_bpf.c.
+
+Fixes: c5eae692571d6 ("ARM: net: bpf: improve 64-bit store implementation")
+Fixes: ec19e02b343db ("ARM: net: bpf: fix LDX instructions")
 Co-developed-by: Xi Wang <xi.wang@gmail.com>
 Signed-off-by: Xi Wang <xi.wang@gmail.com>
 Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200408181229.10909-1-luke.r.nels@gmail.com
+Link: https://lore.kernel.org/bpf/20200409221752.28448-1-luke.r.nels@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/net/bpf_jit_32.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/arm/net/bpf_jit_32.c |   40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
 --- a/arch/arm/net/bpf_jit_32.c
 +++ b/arch/arm/net/bpf_jit_32.c
-@@ -929,7 +929,11 @@ static inline void emit_a32_rsh_i64(cons
- 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
+@@ -1000,21 +1000,35 @@ static inline void emit_a32_mul_r64(cons
+ 	arm_bpf_put_reg32(dst_hi, rd[0], ctx);
+ }
  
- 	/* Do LSR operation */
--	if (val < 32) {
-+	if (val == 0) {
-+		/* An immediate value of 0 encodes a shift amount of 32
-+		 * for LSR. To shift by 0, don't do anything.
-+		 */
-+	} else if (val < 32) {
- 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
- 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
- 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_LSR, val), ctx);
-@@ -955,7 +959,11 @@ static inline void emit_a32_arsh_i64(con
- 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
++static bool is_ldst_imm(s16 off, const u8 size)
++{
++	s16 off_max = 0;
++
++	switch (size) {
++	case BPF_B:
++	case BPF_W:
++		off_max = 0xfff;
++		break;
++	case BPF_H:
++		off_max = 0xff;
++		break;
++	case BPF_DW:
++		/* Need to make sure off+4 does not overflow. */
++		off_max = 0xfff - 4;
++		break;
++	}
++	return -off_max <= off && off <= off_max;
++}
++
+ /* *(size *)(dst + off) = src */
+ static inline void emit_str_r(const s8 dst, const s8 src[],
+-			      s32 off, struct jit_ctx *ctx, const u8 sz){
++			      s16 off, struct jit_ctx *ctx, const u8 sz){
+ 	const s8 *tmp = bpf2a32[TMP_REG_1];
+-	s32 off_max;
+ 	s8 rd;
  
- 	/* Do ARSH operation */
--	if (val < 32) {
-+	if (val == 0) {
-+		/* An immediate value of 0 encodes a shift amount of 32
-+		 * for ASR. To shift by 0, don't do anything.
-+		 */
-+	} else if (val < 32) {
- 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
- 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
- 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_ASR, val), ctx);
+ 	rd = arm_bpf_get_reg32(dst, tmp[1], ctx);
+ 
+-	if (sz == BPF_H)
+-		off_max = 0xff;
+-	else
+-		off_max = 0xfff;
+-
+-	if (off < 0 || off > off_max) {
++	if (!is_ldst_imm(off, sz)) {
+ 		emit_a32_mov_i(tmp[0], off, ctx);
+ 		emit(ARM_ADD_R(tmp[0], tmp[0], rd), ctx);
+ 		rd = tmp[0];
+@@ -1043,18 +1057,12 @@ static inline void emit_str_r(const s8 d
+ 
+ /* dst = *(size*)(src + off) */
+ static inline void emit_ldx_r(const s8 dst[], const s8 src,
+-			      s32 off, struct jit_ctx *ctx, const u8 sz){
++			      s16 off, struct jit_ctx *ctx, const u8 sz){
+ 	const s8 *tmp = bpf2a32[TMP_REG_1];
+ 	const s8 *rd = is_stacked(dst_lo) ? tmp : dst;
+ 	s8 rm = src;
+-	s32 off_max;
+-
+-	if (sz == BPF_H)
+-		off_max = 0xff;
+-	else
+-		off_max = 0xfff;
+ 
+-	if (off < 0 || off > off_max) {
++	if (!is_ldst_imm(off, sz)) {
+ 		emit_a32_mov_i(tmp[0], off, ctx);
+ 		emit(ARM_ADD_R(tmp[0], tmp[0], src), ctx);
+ 		rm = tmp[0];
 
 
