@@ -2,207 +2,121 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34316C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C433C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B6120857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020182074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:16:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IRp3NZ5+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DPI+Myoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgDVUON (ORCPT
+        id S1726413AbgDVUQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:14:13 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45442 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgDVUOK (ORCPT
+        Wed, 22 Apr 2020 16:16:08 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25421 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726090AbgDVUQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:14:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03MKE5EA066948;
-        Wed, 22 Apr 2020 15:14:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587586445;
-        bh=EobPuUYa4yhwwo8CjMb08fT7mp5vL7a+KqjjG21JZv8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=IRp3NZ5+soBtdUCaSUkKdBesLmH2lRAZJskPU4fVuVfwwWyg/6DTslcsLXHLE5rGd
-         i9PqidSta1KWUav/kGg7mfIav7pTUrd6xxlewU1gO+OMzNjIhqEBu2iFuqIxOAzyvB
-         +4zLNKtVHi4cTdXsXLDohDMCMcfISgQo7NWAWHVg=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03MKE53M086527;
-        Wed, 22 Apr 2020 15:14:05 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Apr 2020 15:14:05 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Apr 2020 15:14:05 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03MKE4jj062851;
-        Wed, 22 Apr 2020 15:14:05 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v4 10/10] net: ethernet: ti: cpsw: enable cpts irq
-Date:   Wed, 22 Apr 2020 23:12:54 +0300
-Message-ID: <20200422201254.15232-11-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200422201254.15232-1-grygorii.strashko@ti.com>
-References: <20200422201254.15232-1-grygorii.strashko@ti.com>
+        Wed, 22 Apr 2020 16:16:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587586567; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=vnAn4LSCPJ/CxwUPiIM88+jEzBLRDw5k0xtLf/1X3mQ=; b=DPI+MyohdT4r1iw7lPmlWU0eVwN6ZLbUZZ15KlC1J7LTZcggkSWBiEUPfoVjDmBUuY98Javh
+ ICjMNEieG9bPIA0uMepfwiYYuHPhb6TafgdPxJdgRJkwNnGrMHXCBG1k1Qi0rlpKB0mKQf2Z
+ ZHnYgALXGystBF0fR+azc2tQ1RU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea0a605.7fb521bcced8-smtp-out-n03;
+ Wed, 22 Apr 2020 20:16:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F02C8C433BA; Wed, 22 Apr 2020 20:16:04 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28AA3C433D2;
+        Wed, 22 Apr 2020 20:16:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28AA3C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v2 1/5] bus: mhi: core: Handle syserr during power_up
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bhaumik Vasav Bhatt <bbhatt@codeaurora.org>,
+        Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+ <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
+ <1768ba6e-12c2-7b4f-0f17-44fecc6473b9@codeaurora.org>
+ <11d9f35b-b911-7985-8846-0a45904ceed1@codeaurora.org>
+ <5c4efe13-42a4-e802-4070-5d9d30b8cac2@codeaurora.org>
+ <79feeb0b-0837-c5b6-087d-856c3e238c67@codeaurora.org>
+ <20200413133447.GA19124@Mani-XPS-13-9360>
+ <ee51ae8f-5826-5402-9178-3f2fba1358f8@codeaurora.org>
+ <20200421060835.GD4327@Mani-XPS-13-9360>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <6a1c95f1-d7f5-2073-9262-415473986633@codeaurora.org>
+Date:   Wed, 22 Apr 2020 14:16:02 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200421060835.GD4327@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPSW misc IRQ need be enabled for CPTS event_pend IRQs processing. This
-patch adds corresponding support to CPSW driver.
+On 4/21/2020 12:08 AM, Manivannan Sadhasivam wrote:
+> On Mon, Apr 13, 2020 at 08:01:36AM -0600, Jeffrey Hugo wrote:
+>> On 4/13/2020 7:34 AM, Manivannan Sadhasivam wrote:
+>>> On Fri, Apr 10, 2020 at 03:39:57PM -0600, Jeffrey Hugo wrote:
+>>>> On 4/10/2020 2:37 PM, Bhaumik Vasav Bhatt wrote:
+>>>>> Hi Jeff,
+>>>>>
+>>>>> We will always have the mhi_intvec_handler registered and trigger your
+>>>>> wake_up state event when you write MHI RESET. BHI INTVEC IRQ using
+>>>>> mhi_cntrl->irq[0] is _not_ unregistered once you enter AMSS EE.
+>>>>
+>>>> I understand it is not unregistered.  However mhi_cntrl->irq[0] may be
+>>>> reserved for BHI, and thus only exercised by PBL EE.  Where as,
+>>>> mhi_cntrl->irq[1..N] may be only exercised by AMSS EE. mhi_intvec_handler is
+>>>> not called in response to mhi_cntrl->irq[1..N].
+>>>>
+>>>> Additionally, I re-reviewed the MHI spec, and I don't see where the spec
+>>>> requires the device to issue an interrupt upon completion of the RESET
+>>>> request.
+>>>>
+>>>> Under section 3.5, step 11 states -
+>>>>
+>>>> "The host must poll for the value of the RESET bit to detect the completion
+>>>> of the reset procedure by the device (RESET is set to 0)."
+>>>>
+>>>
+>>> If this is the scenario then we need to change all of the wait_event_timeout()
+>>> implementation for MHI RESET in current stack to polling.
+>>>
+>>> Or the interrupt generation is not defined in spec (sheet) but part of the
+>>> existing implementation?
+>>
+>> It probably could be considered part of the existing implementation, but I'd
+>> like to hear from Hemant/Bhaumik.  Wherever we end up, I'd like to have the
+>> spec match.
+> 
+> Hemant/Bhaumik, can you please share your thoughts?
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
----
- drivers/net/ethernet/ti/cpsw.c      | 21 +++++++++++++++++++++
- drivers/net/ethernet/ti/cpsw_new.c  | 20 ++++++++++++++++++++
- drivers/net/ethernet/ti/cpsw_priv.c | 12 ++++++++++++
- drivers/net/ethernet/ti/cpsw_priv.h |  2 ++
- 4 files changed, 55 insertions(+)
+Sorry.  Hemant, Bhaumik, and I have had a few calls discussing this.  We 
+are trying to come to a consensus on the expectation of the device 
+behavior, so that we can propose the best solution.  Probably a few more 
+days yet while we await for a bit of clarification.
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index c2c5bf87da01..09f98fa2fb4e 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1569,6 +1569,12 @@ static int cpsw_probe(struct platform_device *pdev)
- 		return irq;
- 	cpsw->irqs_table[1] = irq;
- 
-+	/* get misc irq*/
-+	irq = platform_get_irq(pdev, 3);
-+	if (irq <= 0)
-+		return irq;
-+	cpsw->misc_irq = irq;
-+
- 	/*
- 	 * This may be required here for child devices.
- 	 */
-@@ -1703,6 +1709,21 @@ static int cpsw_probe(struct platform_device *pdev)
- 		goto clean_unregister_netdev_ret;
- 	}
- 
-+	if (!cpsw->cpts)
-+		goto skip_cpts;
-+
-+	ret = devm_request_irq(&pdev->dev, cpsw->misc_irq, cpsw_misc_interrupt,
-+			       0, dev_name(&pdev->dev), cpsw);
-+	if (ret < 0) {
-+		dev_err(dev, "error attaching misc irq (%d)\n", ret);
-+		goto clean_unregister_netdev_ret;
-+	}
-+
-+	/* Enable misc CPTS evnt_pend IRQ */
-+	cpts_set_irqpoll(cpsw->cpts, false);
-+	writel(0x10, &cpsw->wr_regs->misc_en);
-+
-+skip_cpts:
- 	cpsw_notice(priv, probe,
- 		    "initialized device (regs %pa, irq %d, pool size %d)\n",
- 		    &ss_res->start, cpsw->irqs_table[0], descs_pool_size);
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 9209e613257d..33c8dd686206 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -1896,6 +1896,11 @@ static int cpsw_probe(struct platform_device *pdev)
- 		return irq;
- 	cpsw->irqs_table[1] = irq;
- 
-+	irq = platform_get_irq_byname(pdev, "misc");
-+	if (irq <= 0)
-+		return irq;
-+	cpsw->misc_irq = irq;
-+
- 	platform_set_drvdata(pdev, cpsw);
- 	/* This may be required here for child devices. */
- 	pm_runtime_enable(dev);
-@@ -1975,6 +1980,21 @@ static int cpsw_probe(struct platform_device *pdev)
- 		goto clean_unregister_netdev;
- 	}
- 
-+	if (!cpsw->cpts)
-+		goto skip_cpts;
-+
-+	ret = devm_request_irq(dev, cpsw->misc_irq, cpsw_misc_interrupt,
-+			       0, dev_name(&pdev->dev), cpsw);
-+	if (ret < 0) {
-+		dev_err(dev, "error attaching misc irq (%d)\n", ret);
-+		goto clean_unregister_netdev;
-+	}
-+
-+	/* Enable misc CPTS evnt_pend IRQ */
-+	cpts_set_irqpoll(cpsw->cpts, false);
-+	writel(0x10, &cpsw->wr_regs->misc_en);
-+
-+skip_cpts:
- 	ret = cpsw_register_notifiers(cpsw);
- 	if (ret)
- 		goto clean_unregister_netdev;
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
-index 099208927400..9d098c802c6d 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.c
-+++ b/drivers/net/ethernet/ti/cpsw_priv.c
-@@ -114,6 +114,18 @@ irqreturn_t cpsw_rx_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+irqreturn_t cpsw_misc_interrupt(int irq, void *dev_id)
-+{
-+	struct cpsw_common *cpsw = dev_id;
-+
-+	writel(0, &cpsw->wr_regs->misc_en);
-+	cpdma_ctlr_eoi(cpsw->dma, CPDMA_EOI_MISC);
-+	cpts_misc_interrupt(cpsw->cpts);
-+	writel(0x10, &cpsw->wr_regs->misc_en);
-+
-+	return IRQ_HANDLED;
-+}
-+
- int cpsw_tx_mq_poll(struct napi_struct *napi_tx, int budget)
- {
- 	struct cpsw_common	*cpsw = napi_to_cpsw(napi_tx);
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
-index b8d7b924ee3d..bf4e179b4ca4 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.h
-+++ b/drivers/net/ethernet/ti/cpsw_priv.h
-@@ -350,6 +350,7 @@ struct cpsw_common {
- 	bool				rx_irq_disabled;
- 	bool				tx_irq_disabled;
- 	u32 irqs_table[IRQ_NUM];
-+	int misc_irq;
- 	struct cpts			*cpts;
- 	struct devlink *devlink;
- 	int				rx_ch_num, tx_ch_num;
-@@ -442,6 +443,7 @@ int cpsw_run_xdp(struct cpsw_priv *priv, int ch, struct xdp_buff *xdp,
- 		 struct page *page, int port);
- irqreturn_t cpsw_tx_interrupt(int irq, void *dev_id);
- irqreturn_t cpsw_rx_interrupt(int irq, void *dev_id);
-+irqreturn_t cpsw_misc_interrupt(int irq, void *dev_id);
- int cpsw_tx_mq_poll(struct napi_struct *napi_tx, int budget);
- int cpsw_tx_poll(struct napi_struct *napi_tx, int budget);
- int cpsw_rx_mq_poll(struct napi_struct *napi_rx, int budget);
 -- 
-2.17.1
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
