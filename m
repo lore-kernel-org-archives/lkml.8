@@ -2,89 +2,91 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6D8C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94220C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5D121473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587573297;
-	bh=w4JN5T5oaZgQeBhYVqmXSSTzkWYLzuJOyQMklh0w+mc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TDz6jCUCNKcCxZ0YVXE2yjzWwDG41fGeL5XG+6krdCavKt4sqijfjsg44MBRsxsYb
-	 DdngbBnt5mjzVbqpru0rTGOsSaXxaTTpoS4utR7JDCn6e0VmcGDuK//0p+5deeOSH4
-	 ZqjwOF+JW3dFVpPlrpaqszXa9URBqN0KkkzKF+HY=
+	by mail.kernel.org (Postfix) with ESMTP id 662C02082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="JbAJCGJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgDVQe4 (ORCPT
+        id S1726948AbgDVQfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:34:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbgDVQez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:34:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC2C42082E;
-        Wed, 22 Apr 2020 16:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587573295;
-        bh=w4JN5T5oaZgQeBhYVqmXSSTzkWYLzuJOyQMklh0w+mc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aZf1+a1hml5uJnZaaGENlJlwC+gD2DiStpvw9MbJN79Of1MS4pCvEtSRkFH8HgEAs
-         7fOVd35T+0Gzr+lcs/fPBzcOfZwgU1mtNIXUpTpq/zVTT1FP1lqMBaln4BIhmCMnnX
-         BYRK3509URKr1fwMf23OLyAXB9dtNLLPLUEV5wns=
-Date:   Wed, 22 Apr 2020 18:34:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-api@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: Re: [PATCH v2 1/7] kobject_uevent: remove unneeded netlink_ns check
-Message-ID: <20200422163453.GA3438121@kroah.com>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
- <20200422145437.176057-2-christian.brauner@ubuntu.com>
-MIME-Version: 1.0
+        Wed, 22 Apr 2020 12:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbgDVQfM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:35:12 -0400
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30C0C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:35:11 -0700 (PDT)
+Received: by mail-qk1-x736.google.com with SMTP id m67so2987787qke.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=DqTx+R+JV6vymEcgZ+pw6C27qjNlWqJpkbsx1i9Y7eY=;
+        b=JbAJCGJMhGu88bPCsY7coswwKtqVoO+QQiV1fZdl6ErPz9dHJqZeWPGnzxvQ1zeL7F
+         5gGlSkjuYxwAkgjXDV4/IyjCXZ2l7CtolGQ/DLGxATIg02NiWkQVGPzt7Mgpo7O+sE1f
+         5/U8xisyFAzBGOrm79KMQY4mmTDzeR+ZJZeSgZf7OfdU6jnWXirXdglQuC6Qjxm8L2wb
+         5ewxwmddE7Dzh3e92I6qvePV9MQ2OpAwIyJI5kd93dL15L8gryo0QhxdO6h0P/cFV3Mv
+         wFJVS8Yk51coyJoGrINcIM1kpGxPvbhTzEJRr2I/5VaixcLArGBh+tDIiu6wzPpn6Gj8
+         cn8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=DqTx+R+JV6vymEcgZ+pw6C27qjNlWqJpkbsx1i9Y7eY=;
+        b=jGP5D5vMS7Skck3NGqPgOaLrpQax4d5yBZEGYw053ygJ6sher3uDrZzmOFFh5GaTkt
+         RfyyulmVNbHCKLlI/NAiDvrWFCL+pjWI42QbkQErO06pwvrncXxeV6JJTw569z+GYi6i
+         XvKyiNFWfCDt3vE+osvFWFLk/uKMuOrBcq3SYpd9Cr7fPLbcidwT4d6NpUrmpmWcfsGr
+         a9GnQg97hFClUkzcP/j4eRl3ZTmU7yhkz4qauxA4VVFYt09w/+lVB8r/iqXNlxxmdQm9
+         c63EcS4HLIiJp3Skh+9TWFARaZRk+Qrvg1gAs984LXwoSpP4RPJM2vZkKwz/8usamB+O
+         s4QQ==
+X-Gm-Message-State: AGi0PubnF+dGP14j0ce6pYyx4VfLofPimhJ0+hVpYqjkB08C3IEo+WuM
+        K2UkzMPOj4JJnf6LCivLaOrPSw==
+X-Google-Smtp-Source: APiQypKZehf5rRPMT55k+qjxOkJxOGmhAhEj6nXZhHKApHPnIxrSlYi+tmd2g2gTnL7FsTdjkBhtqQ==
+X-Received: by 2002:a37:a090:: with SMTP id j138mr28112903qke.168.1587573310995;
+        Wed, 22 Apr 2020 09:35:10 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d17sm4408130qtb.74.2020.04.22.09.35.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 09:35:10 -0700 (PDT)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422145437.176057-2-christian.brauner@ubuntu.com>
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: AMD boot woe due to "x86/mm: Cleanup pgprot_4k_2_large() and pgprot_large_2_4k()"
+Date:   Wed, 22 Apr 2020 12:35:08 -0400
+Message-Id: <59604C7F-696A-45A3-BF4F-C8913E09DD4C@lca.pw>
+References: <20200422161757.GC26846@zn.tnic>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+In-Reply-To: <20200422161757.GC26846@zn.tnic>
+To:     Borislav Petkov <bp@alien8.de>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:54:31PM +0200, Christian Brauner wrote:
-> Back when I rewrote large chunks of uevent sending I should have removed
-> the .netlink_ns method completely after having removed it's last user in
-> [1]. Let's remove it now and also remove the helper associated with it
-> that is unused too.
-> 
-> Fixes: a3498436b3a0 ("netns: restrict uevents") /* No backport needed. */
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+> On Apr 22, 2020, at 12:18 PM, Borislav Petkov <bp@alien8.de> wrote:
+>=20
+> What is the special thing about this config? You have KASAN enabled and?
+> Anything else?
+>=20
+> I need to know what are the relevant switches you've enabled so that I
+> can enable them on my box too and try to reproduce.
+
+The config has a few extra memory debugging options enabled like KASAN, debu=
+g_pagealloc, debug_vm etc. The affected machines are NUMA AMD servers.=
