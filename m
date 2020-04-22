@@ -2,365 +2,176 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88783C5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14166C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61C4120706
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587574655;
-	bh=BXeDzE//3sY3wKOZSvsBf09h95Md+KdH+rHt3xsLmbA=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=lD8jqAo9APVwgseTjPbQw2TasFp7a0IOHsSw6u/Jh3DVnk6aR2FeXq8nPZgWZKdGW
-	 9JJgJzYoqmZFU51tol7xlNLUzPcSHYSy1KwuSexgwl1UgB+I2hCEiDg2oABr38sDld
-	 4qKEHBbPTIRiFH14kkH9qgErLG5DroaGJDsWKvIM=
+	by mail.kernel.org (Postfix) with ESMTP id E78B720706
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:57:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MYqyVkvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgDVQ5e (ORCPT
+        id S1726926AbgDVQ5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgDVQ5d (ORCPT
+        Wed, 22 Apr 2020 12:57:48 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41474 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgDVQ5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:57:33 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85654C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:57:33 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id w4so3146670ioc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=MrTLB042d8ow8cXeAt38M16cngvyRktM3oRMp1lzHpY=;
-        b=IVHSLCOkvWTBPnq2OLacMnkRmhRZKTnMtoYkAU9OzJ5OnSnUq/etB6/zhQXdYd6I/w
-         GhZ5KNeHMHfBvokJua/SZVRehakp1n+FcUx6mXiXb829lMRRRQSkdaFVSCW4TzmPMYVX
-         I3t7jwzfAfD7pKSPwOiUobJbxZU71A2o4XPGk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=MrTLB042d8ow8cXeAt38M16cngvyRktM3oRMp1lzHpY=;
-        b=JGzBF6fyDgsIpRzpAU+OKwThQAf2G8/s8R6dv1SHuBvnYKgL95aV73I9lZ0GJ19rvl
-         r+d6NEs/v7oo6VVcdUjMT7djRELGVeDWDej+bOoHx5xvC2pQOt0d6p2/RjUi8SoXuy5r
-         PVZC9TRIXVcyqCdMJKfSO+9ee7VInh89oi2RjOpMROtnYymHGFDUw6RCN0jPny0lSDVT
-         AOGHyVfBx/DNtz4i93+jANCFE7k9b6fXWVcVfWJUCscIMqamfBNnVlDS90XXdTeInEOS
-         795qOna6GJLImezqv77YpjwIAj4GpYSSOzM0UX7CPF8gpORCKlL+j47eFV1dNmUUQTlO
-         DAbg==
-X-Gm-Message-State: AGi0PuZYtdm5W2FXNeZMTsyQMxp444j4a314jBvDtK0ekNu3b+5W0O+s
-        uvQGYjP4X5BixaWEP2Fd5tUgPg==
-X-Google-Smtp-Source: APiQypKcQE0Pv0sf0RsJOPcH3h8muNJdDT7xF2ZZfMQPqBb/GeXyV2Xjy2xa1INywnFU0M1GNmSoTQ==
-X-Received: by 2002:a02:415:: with SMTP id 21mr26748637jab.126.1587574652803;
-        Wed, 22 Apr 2020 09:57:32 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id k18sm2218329ili.77.2020.04.22.09.57.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 09:57:32 -0700 (PDT)
-To:     torvalds@linux-foundation.org
-Cc:     skhan@linuxfoundation.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kselftest update for Linux 5.7-rc3
-Message-ID: <853c91e8-83ba-3d37-7601-803485dbc8ed@linuxfoundation.org>
-Date:   Wed, 22 Apr 2020 10:57:31 -0600
+        Wed, 22 Apr 2020 12:57:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MGmbre004744;
+        Wed, 22 Apr 2020 16:56:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=LFL7+e4rirW/BkUxDvX7Q/JJpL0GDaD2BXrkYZ/Jcqw=;
+ b=MYqyVkvMM2l3bcO0sT1OP4Def5zhIfw/QdGlifi1bpsPSISeIps2HlN6swempAZOHxXU
+ Xuwr7UsHf04EjB4t+Bx9Iryi2BwAf30Z4vB0a0cmU9iZJLT2BhOnDAlxqqp8uH5BLXmm
+ yLz0SYoMr3BnkdKC1onkAb1OOYCfyVsD6yoveKI8U5apJsHviWgi1LC2od6TwBZfhW1s
+ 8mVD64RprsPOCCsEabcXnkybmZn0gbNZlHNE3QhzDHsievUxgYz9ZV/pJVdke7G4VMta
+ Pr6NAwDyxeSmgA9PCwLd2+I+VrpMva1Va6GkzI8Go+hHrYfD6lzFVPuAQgtNlWxdAUD9 1w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30grpgrh3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 16:56:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MGmInv111640;
+        Wed, 22 Apr 2020 16:56:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30gb1jxhcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 16:56:24 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03MGu7au024097;
+        Wed, 22 Apr 2020 16:56:07 GMT
+Received: from [192.168.2.157] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Apr 2020 09:56:07 -0700
+Subject: Re: [PATCH v3 3/4] hugetlbfs: remove hugetlb_add_hstate() warning for
+ existing hstate
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+ <20200417185049.275845-4-mike.kravetz@oracle.com>
+ <87blnj4x9p.fsf@linux.ibm.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <d39a33da-6095-c616-6bff-6af8795922d1@oracle.com>
+Date:   Wed, 22 Apr 2020 09:56:03 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------49CF7118CB8C27F8EA3839BE"
+In-Reply-To: <87blnj4x9p.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------49CF7118CB8C27F8EA3839BE
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+On 4/22/20 3:42 AM, Aneesh Kumar K.V wrote:
+> Mike Kravetz <mike.kravetz@oracle.com> writes:
+> 
+>> The routine hugetlb_add_hstate prints a warning if the hstate already
+>> exists.  This was originally done as part of kernel command line
+>> parsing.  If 'hugepagesz=' was specified more than once, the warning
+>> 	pr_warn("hugepagesz= specified twice, ignoring\n");
+>> would be printed.
+>>
+>> Some architectures want to enable all huge page sizes.  They would
+>> call hugetlb_add_hstate for all supported sizes.  However, this was
+>> done after command line processing and as a result hstates could have
+>> already been created for some sizes.  To make sure no warning were
+>> printed, there would often be code like:
+>> 	if (!size_to_hstate(size)
+>> 		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT)
+>>
+>> The only time we want to print the warning is as the result of command
+>> line processing.
+> 
+> Does this patch break hugepages=x command line? I haven't tested this
+> yet. But one of the details w.r.t. skipping that hugetlb_add_hstate is
+> to make sure we can configure the max_huge_pages. 
+> 
 
-Hi Linus,
+Are you asking about hugepages=x being the only option on the command line?
+If so, then the behavior is not changed.  This will result in x pages of
+default huge page size being allocated.  Where default huge page size is of
+course architecture dependent.  On an x86 VM,
 
-Please pull the following Kselftest update for Linux 5.7-rc3.
+[    0.040474] Kernel command line: BOOT_IMAGE=/vmlinuz-5.6.0-mm1+ root=/dev/mapper/fedora_new--host-root ro rd.lvm.lv=fedora_new-host/root rd.lvm.lv=fedora_new-host/swap console=tty0 console=ttyS0,115200 audit=0 transparent_hugepage=always hugepages=128
+[    0.332618] HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.333245] HugeTLB registered 2.00 MiB page size, pre-allocated 128 pages
 
-This kselftest update for Linux 5.7-rc3 consists of fixes to runner
-scripts and individual test run-time bugs. Includes fixes to tpm2
-and memfd test run-time regressions.
+BTW - Here are the command line options I tested on x86 with this series.
 
-diff is attached.
+No errors or warnings
+---------------------
+hugepages=128
+hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepages=128
+hugepages=128 default_hugepagesz=2M
+hugepagesz=1G hugepages=2
+hugepages=2 default_hugepagesz=1G
+default_hugepagesz=1G hugepages=2
+hugepages=128 hugepagesz=1G hugepages=2
+hugepagesz=1G hugepages=2 hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepages=128 hugepagesz=1G hugepages=2
+hugepages=128 default_hugepagesz=2M hugepagesz=1G hugepages=2
+hugepages=2 default_hugepagesz=1G hugepagesz=2M hugepages=128
+default_hugepagesz=1G hugepages=2 hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepagesz=1G hugepages=2 hugepagesz=2M hugepages=128
 
-thanks,
--- Shuah
+Error or warning
+----------------
+hugepages=128 hugepagesz=2M hugepages=256
+hugepagesz=2M hugepages=128 hugepagesz=2M hugepages=256
+default_hugepagesz=2M hugepages=128 hugepagesz=2M hugepages=256
+hugepages=128 hugepages=256
+hugepagesz=2M hugepages=128 hugepages=2 default_hugepagesz=1G
 
-----------------------------------------------------------------
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
-
-   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-5.7-rc3
-
-for you to fetch changes up to b87080eab4c1377706c113fc9c0157f19ea8fed1:
-
-   selftests/ipc: Fix test failure seen after initial test run 
-(2020-04-14 10:24:28 -0600)
-
-----------------------------------------------------------------
-linux-kselftest-5.7-rc3
-
-This kselftest update for Linux 5.7-rc3 consists of fixes to runner
-scripts and individual test run-time bugs. Includes fixes to tpm2
-and memfd test run-time regressions.
-
-----------------------------------------------------------------
-Andrea Righi (1):
-       kselftest/runner: allow to properly deliver signals to tests
-
-Colin Ian King (1):
-       selftests/harness: fix spelling mistake "SIGARLM" -> "SIGALRM"
-
-Jarkko Sakkinen (1):
-       Revert "Kernel selftests: tpm2: check for tpm support"
-
-Sandipan Das (2):
-       selftests: vm: Do not override definition of ARCH
-       selftests: vm: Fix 64-bit test builds for powerpc64le
-
-Shuah Khan (1):
-       selftests: Fix memfd test run-time regression
-
-Thadeu Lima de Souza Cascardo (1):
-       selftests/seccomp: allow clock_nanosleep instead of nanosleep
-
-Tyler Hicks (1):
-       selftests/ipc: Fix test failure seen after initial test run
-
-Xiao Yang (1):
-       selftests/ftrace: Add CONFIG_SAMPLE_FTRACE_DIRECT=m kconfig
-
-  tools/testing/selftests/ftrace/config         |  1 +
-  tools/testing/selftests/ipc/msgque.c          |  2 +-
-  tools/testing/selftests/kselftest/runner.sh   |  2 +-
-  tools/testing/selftests/kselftest_harness.h   |  6 +++---
-  tools/testing/selftests/memfd/Makefile        |  3 ++-
-  tools/testing/selftests/seccomp/seccomp_bpf.c | 14 ++++++++------
-  tools/testing/selftests/tpm2/test_smoke.sh    | 13 ++-----------
-  tools/testing/selftests/tpm2/test_space.sh    |  9 +--------
-  tools/testing/selftests/vm/Makefile           |  4 ++--
-  tools/testing/selftests/vm/run_vmtests        |  2 +-
-  10 files changed, 22 insertions(+), 34 deletions(-)
-
-----------------------------------------------------------------
-
---------------49CF7118CB8C27F8EA3839BE
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux-kselftest-5.7-rc3.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-kselftest-5.7-rc3.diff"
-
-diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index c2c8de4fafff..e59d985eeff0 100644
---- a/tools/testing/selftests/ftrace/config
-+++ b/tools/testing/selftests/ftrace/config
-@@ -11,5 +11,6 @@ CONFIG_PREEMPTIRQ_DELAY_TEST=m
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_SAMPLES=y
-+CONFIG_SAMPLE_FTRACE_DIRECT=m
- CONFIG_SAMPLE_TRACE_PRINTK=m
- CONFIG_KALLSYMS_ALL=y
-diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
-index 4c156aeab6b8..5ec4d9e18806 100644
---- a/tools/testing/selftests/ipc/msgque.c
-+++ b/tools/testing/selftests/ipc/msgque.c
-@@ -137,7 +137,7 @@ int dump_queue(struct msgque_data *msgque)
- 	for (kern_id = 0; kern_id < 256; kern_id++) {
- 		ret = msgctl(kern_id, MSG_STAT, &ds);
- 		if (ret < 0) {
--			if (errno == -EINVAL)
-+			if (errno == EINVAL)
- 				continue;
- 			printf("Failed to get stats for IPC queue with id %d\n",
- 					kern_id);
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index e84d901f8567..676b3a8b114d 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -33,7 +33,7 @@ tap_timeout()
- {
- 	# Make sure tests will time out if utility is available.
- 	if [ -x /usr/bin/timeout ] ; then
--		/usr/bin/timeout "$kselftest_timeout" "$1"
-+		/usr/bin/timeout --foreground "$kselftest_timeout" "$1"
- 	else
- 		"$1"
- 	fi
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 2902f6a78f8a..2bb8c81fc0b4 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -705,7 +705,7 @@ static void __timeout_handler(int sig, siginfo_t *info, void *ucontext)
- 	/* Sanity check handler execution environment. */
- 	if (!t) {
- 		fprintf(TH_LOG_STREAM,
--			"no active test in SIGARLM handler!?\n");
-+			"no active test in SIGALRM handler!?\n");
- 		abort();
- 	}
- 	if (sig != SIGALRM || sig != info->si_signo) {
-@@ -731,7 +731,7 @@ void __wait_for_test(struct __test_metadata *t)
- 	if (sigaction(SIGALRM, &action, &saved_action)) {
- 		t->passed = 0;
- 		fprintf(TH_LOG_STREAM,
--			"%s: unable to install SIGARLM handler\n",
-+			"%s: unable to install SIGALRM handler\n",
- 			t->name);
- 		return;
- 	}
-@@ -743,7 +743,7 @@ void __wait_for_test(struct __test_metadata *t)
- 	if (sigaction(SIGALRM, &saved_action, NULL)) {
- 		t->passed = 0;
- 		fprintf(TH_LOG_STREAM,
--			"%s: unable to uninstall SIGARLM handler\n",
-+			"%s: unable to uninstall SIGALRM handler\n",
- 			t->name);
- 		return;
- 	}
-diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
-index 0a15f9e23431..187b14cad00c 100644
---- a/tools/testing/selftests/memfd/Makefile
-+++ b/tools/testing/selftests/memfd/Makefile
-@@ -4,8 +4,9 @@ CFLAGS += -I../../../../include/uapi/
- CFLAGS += -I../../../../include/
- CFLAGS += -I../../../../usr/include/
- 
--TEST_GEN_PROGS := memfd_test fuse_test fuse_mnt
-+TEST_GEN_PROGS := memfd_test
- TEST_PROGS := run_fuse_test.sh run_hugetlbfs_test.sh
-+TEST_GEN_FILES := fuse_test fuse_mnt
- 
- fuse_mnt.o: CFLAGS += $(shell pkg-config fuse --cflags)
- 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 89fb3e0b552e..c0aa46ce14f6 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -2803,12 +2803,13 @@ TEST(syscall_restart)
- 			 offsetof(struct seccomp_data, nr)),
- 
- #ifdef __NR_sigreturn
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_sigreturn, 6, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_sigreturn, 7, 0),
- #endif
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_read, 5, 0),
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit, 4, 0),
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_rt_sigreturn, 3, 0),
--		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_nanosleep, 4, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_read, 6, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_exit, 5, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_rt_sigreturn, 4, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_nanosleep, 5, 0),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_clock_nanosleep, 4, 0),
- 		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_restart_syscall, 4, 0),
- 
- 		/* Allow __NR_write for easy logging. */
-@@ -2895,7 +2896,8 @@ TEST(syscall_restart)
- 	ASSERT_EQ(PTRACE_EVENT_SECCOMP, (status >> 16));
- 	ASSERT_EQ(0, ptrace(PTRACE_GETEVENTMSG, child_pid, NULL, &msg));
- 	ASSERT_EQ(0x100, msg);
--	EXPECT_EQ(__NR_nanosleep, get_syscall(_metadata, child_pid));
-+	ret = get_syscall(_metadata, child_pid);
-+	EXPECT_TRUE(ret == __NR_nanosleep || ret == __NR_clock_nanosleep);
- 
- 	/* Might as well check siginfo for sanity while we're here. */
- 	ASSERT_EQ(0, ptrace(PTRACE_GETSIGINFO, child_pid, NULL, &info));
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index b630c7b5950a..8155c2ea7ccb 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -1,17 +1,8 @@
- #!/bin/bash
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
--self.flags = flags
- 
--# Kselftest framework requirement - SKIP code is 4.
--ksft_skip=4
--
--
--if [ -f /dev/tpm0 ] ; then
--	python -m unittest -v tpm2_tests.SmokeTest
--	python -m unittest -v tpm2_tests.AsyncTest
--else
--	exit $ksft_skip
--fi
-+python -m unittest -v tpm2_tests.SmokeTest
-+python -m unittest -v tpm2_tests.AsyncTest
- 
- CLEAR_CMD=$(which tpm2_clear)
- if [ -n $CLEAR_CMD ]; then
-diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
-index 180b469c53b4..a6f5e346635e 100755
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -1,11 +1,4 @@
- #!/bin/bash
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
--# Kselftest framework requirement - SKIP code is 4.
--ksft_skip=4
--
--if [ -f /dev/tpmrm0 ] ; then
--	python -m unittest -v tpm2_tests.SpaceTest
--else
--	exit $ksft_skip
--fi
-+python -m unittest -v tpm2_tests.SpaceTest
-diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
-index d31db052dff6..6998877f707e 100644
---- a/tools/testing/selftests/vm/Makefile
-+++ b/tools/testing/selftests/vm/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for vm selftests
- uname_M := $(shell uname -m 2>/dev/null || echo not)
--ARCH ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
-+MACHINE ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
- 
- CFLAGS = -Wall -I ../../../../usr/include $(EXTRA_CFLAGS)
- LDLIBS = -lrt
-@@ -20,7 +20,7 @@ TEST_GEN_FILES += thuge-gen
- TEST_GEN_FILES += transhuge-stress
- TEST_GEN_FILES += userfaultfd
- 
--ifneq (,$(filter $(ARCH),arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64))
-+ifneq (,$(filter $(MACHINE),arm64 ia64 mips64 parisc64 ppc64 ppc64le riscv64 s390x sh64 sparc64 x86_64))
- TEST_GEN_FILES += va_128TBswitch
- TEST_GEN_FILES += virtual_address_range
- TEST_GEN_FILES += write_to_hugetlbfs
-diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftests/vm/run_vmtests
-index 665009ebfba4..76ca5e7a3951 100755
---- a/tools/testing/selftests/vm/run_vmtests
-+++ b/tools/testing/selftests/vm/run_vmtests
-@@ -59,7 +59,7 @@ else
- fi
- 
- #filter 64bit architectures
--ARCH64STR="arm64 ia64 mips64 parisc64 ppc64 riscv64 s390x sh64 sparc64 x86_64"
-+ARCH64STR="arm64 ia64 mips64 parisc64 ppc64 ppc64le riscv64 s390x sh64 sparc64 x86_64"
- if [ -z $ARCH ]; then
-   ARCH=`uname -m 2>/dev/null | sed -e 's/aarch64.*/arm64/'`
- fi
-
---------------49CF7118CB8C27F8EA3839BE--
+-- 
+Mike Kravetz
