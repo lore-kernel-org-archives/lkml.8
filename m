@@ -2,52 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E17C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8235AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 323F520774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593062070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550108;
-	bh=JmlwPFJCgtHQ5q2BAaJ+MbNuBQYZUDzspX3nzoSpbdU=;
+	s=default; t=1587550111;
+	bh=ayGMqr2YAgREXgmNx7uslr0j0P7JHAp6o6CM/Bz+Luw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ShQTgJfEl0nEZqJJeq8U6CyNrZ1pFezKeSRMPJh33DqEefVvuBEbY5UTh8cJqbnBo
-	 D1A11Gepeyy6ej9pEYX5P/rR7AJWpo+64ZNTDQQ2ZEep3vs1ji79Q5MOTvYKhH8Y3N
-	 DodQ0Cx5XBkcJNKZ4/R/S5VavVsTBfh4B44IFbKw=
+	b=XBnp3DNIKsu+Nq9Fr8Cl9V/uKI/N+SyKSzUrIBFpiXRTPfl4zQRj0kxpihcVmqiDM
+	 dg7fN5df9oqaFuPi8ivxGiHI8IKMNBvQrl5pRRYj5Tm897d8nB56aBL7UNnODb2H4F
+	 ERGuBXG64dqaOlP+sU9yDwNTYQwg+ZxXXfqCiIlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgDVKI0 (ORCPT
+        id S1728710AbgDVKIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbgDVKIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:08:22 -0400
+        id S1728694AbgDVKIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:08:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92D82076C;
-        Wed, 22 Apr 2020 10:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C0402075A;
+        Wed, 22 Apr 2020 10:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550101;
-        bh=JmlwPFJCgtHQ5q2BAaJ+MbNuBQYZUDzspX3nzoSpbdU=;
+        s=default; t=1587550103;
+        bh=ayGMqr2YAgREXgmNx7uslr0j0P7JHAp6o6CM/Bz+Luw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VHA8OcDIqH1v0VqyqX/JwLmUXIkqaNFoklyKONzrdqc7tJQrbkztdLZl4fCK0NVYZ
-         IGq/RNv8tUv14akJdOwySj3EptXQp437lT+1PUfYCoHxx/aQgpCXkGXpwt8J75K8Xz
-         RZfz0UdQSo28TpOVQa1jPPlnNitnoUp5ZIZgJMNk=
+        b=q2l+YcfExGaqKbd0JIC3DFpWGyShqu2ScKek16KFeM4WHWEZ5QfFN/E9/lRCw4zhB
+         5w6SmaCiF76K6P2Kt8hRZkOhK+ZP2G+jd7Eczqx+lPKa4mbYtlAftpKnFxkl/9n8B2
+         61jf7KgvHozgwUyhUaUc/TKYov1KtlNO0OwD+eeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zheng Wei <wei.zheng@vivo.com>,
+        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 002/199] net: vxge: fix wrong __VA_ARGS__ usage
-Date:   Wed, 22 Apr 2020 11:55:28 +0200
-Message-Id: <20200422095058.079130235@linuxfoundation.org>
+Subject: [PATCH 4.14 003/199] hinic: fix a bug of waitting for IO stopped
+Date:   Wed, 22 Apr 2020 11:55:29 +0200
+Message-Id: <20200422095058.180700450@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,96 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Wei <wei.zheng@vivo.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit b317538c47943f9903860d83cc0060409e12d2ff ]
+[ Upstream commit 96758117dc528e6d84bd23d205e8cf7f31eda029 ]
 
-printk in macro vxge_debug_ll uses __VA_ARGS__ without "##" prefix,
-it causes a build error when there is no variable
-arguments(e.g. only fmt is specified.).
+it's unreliable for fw to check whether IO is stopped, so driver
+wait for enough time to ensure IO process is done in hw before
+freeing resources
 
-Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
+Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/neterion/vxge/vxge-config.h |  2 +-
- drivers/net/ethernet/neterion/vxge/vxge-main.h   | 14 +++++++-------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
+ 1 file changed, 2 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.h b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-index cfa970417f818..fe4a4315d20d4 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-@@ -2065,7 +2065,7 @@ vxge_hw_vpath_strip_fcs_check(struct __vxge_hw_device *hldev, u64 vpath_mask);
- 	if ((level >= VXGE_ERR && VXGE_COMPONENT_LL & VXGE_DEBUG_ERR_MASK) ||  \
- 	    (level >= VXGE_TRACE && VXGE_COMPONENT_LL & VXGE_DEBUG_TRACE_MASK))\
- 		if ((mask & VXGE_DEBUG_MASK) == mask)			       \
--			printk(fmt "\n", __VA_ARGS__);			       \
-+			printk(fmt "\n", ##__VA_ARGS__);		       \
- } while (0)
- #else
- #define vxge_debug_ll(level, mask, fmt, ...)
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.h b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-index 3a79d93b84453..5b535aa10d23e 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-main.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-@@ -454,49 +454,49 @@ int vxge_fw_upgrade(struct vxgedev *vdev, char *fw_name, int override);
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 46aba02b8672b..5763e333a9afe 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -373,50 +373,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
+ 	return -EFAULT;
+ }
  
- #if (VXGE_DEBUG_LL_CONFIG & VXGE_DEBUG_MASK)
- #define vxge_debug_ll_config(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_ll_config(level, fmt, ...)
- #endif
+-static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
+-{
+-	struct hinic_cmd_io_status cmd_io_status;
+-	struct hinic_hwif *hwif = hwdev->hwif;
+-	struct pci_dev *pdev = hwif->pdev;
+-	struct hinic_pfhwdev *pfhwdev;
+-	unsigned long end;
+-	u16 out_size;
+-	int err;
+-
+-	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
+-		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
+-		return -EINVAL;
+-	}
+-
+-	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
+-
+-	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+-
+-	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
+-	do {
+-		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
+-					HINIC_COMM_CMD_IO_STATUS_GET,
+-					&cmd_io_status, sizeof(cmd_io_status),
+-					&cmd_io_status, &out_size,
+-					HINIC_MGMT_MSG_SYNC);
+-		if ((err) || (out_size != sizeof(cmd_io_status))) {
+-			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
+-				err);
+-			return err;
+-		}
+-
+-		if (cmd_io_status.status == IO_STOPPED) {
+-			dev_info(&pdev->dev, "IO stopped\n");
+-			return 0;
+-		}
+-
+-		msleep(20);
+-	} while (time_before(jiffies, end));
+-
+-	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
+-	return -ETIMEDOUT;
+-}
+-
+ /**
+  * clear_io_resource - set the IO resources as not active in the NIC
+  * @hwdev: the NIC HW device
+@@ -436,11 +392,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
+ 		return -EINVAL;
+ 	}
  
- #if (VXGE_DEBUG_INIT & VXGE_DEBUG_MASK)
- #define vxge_debug_init(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_init(level, fmt, ...)
- #endif
+-	err = wait_for_io_stopped(hwdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "IO has not stopped yet\n");
+-		return err;
+-	}
++	/* sleep 100ms to wait for firmware stopping I/O */
++	msleep(100);
  
- #if (VXGE_DEBUG_TX & VXGE_DEBUG_MASK)
- #define vxge_debug_tx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_tx(level, fmt, ...)
- #endif
+ 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
  
- #if (VXGE_DEBUG_RX & VXGE_DEBUG_MASK)
- #define vxge_debug_rx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_rx(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_MEM & VXGE_DEBUG_MASK)
- #define vxge_debug_mem(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_mem(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_ENTRYEXIT & VXGE_DEBUG_MASK)
- #define vxge_debug_entryexit(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_entryexit(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_INTR & VXGE_DEBUG_MASK)
- #define vxge_debug_intr(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_intr(level, fmt, ...)
- #endif
 -- 
 2.20.1
 
