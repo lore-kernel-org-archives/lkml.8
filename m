@@ -2,104 +2,88 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B751C54FCC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EBFC38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63D57206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9BE20706
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:43:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GR52RWOy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JH1Gipnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgDVGmk (ORCPT
+        id S1726590AbgDVGnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:42:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgDVGmk (ORCPT
+        Wed, 22 Apr 2020 02:43:25 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26618 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgDVGnZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:42:40 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2075BC03C1A6;
-        Tue, 21 Apr 2020 23:42:40 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w20so557984pll.4;
-        Tue, 21 Apr 2020 23:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=S4cmeJAIuJsYF1bOsD5QwAHBqMKC5f7P2yKTwX1eing=;
-        b=GR52RWOyldaSx357kZpZdrxC4uXtpKfxWUcbhWtyoaAp4JIHvfVF5VJQGQwTjuY4GJ
-         u+8Qyb9dA5RWz+ubh4UOpwTgoATfhFJmsw5LqmO+ImgXEYmEHFrJMQyuVC9iJ0/ubdq2
-         fO0XZ6N/s1AnByjQyF33SGwwJPI7z96k4FpKJAHW9ZVME99CzXeXftQkDnzmzmmAHbbY
-         iPVZrYtO1srOpH4Xn/Kqn4S1TfKxuCQIT/dKY0BDFM9jy4aAW8C2y0/Eqo5uhVVQ9VPE
-         9cPEQKyDpRNvgzu3oGG5oJ7l0/KXEOdFpyoTC+hvoKVdiLiZxAcZVA2T0DLEeRljdTHk
-         okPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S4cmeJAIuJsYF1bOsD5QwAHBqMKC5f7P2yKTwX1eing=;
-        b=VKTwkAAAg2/Bze/lpkcI34IssBgimLzVTinRNzdBD637XGDIq3YyO4Y+5ftdNp2rt5
-         lP0gSzZK/XWvky/5odjEhNfqou/fczBNYXo89nXEcXrQtsib/TPEBiyUIkWPrTO5jZgL
-         uGUVuI/mraztKGp3zOSPMyX0LF6qo2RKidQlYJvnbVJWS1If5uSBNjWI5xDr+vl9INJg
-         FZ+vmuPP1sUHaXM7cUUK6Uf11Xt/km8wjOGj1ltq6n3qam1IPljboB+46Rf+GXFAdO5A
-         fWMYQ7YJSeZAtiMXBKfmVSLHfPHV+5Fam0AZm/g0iv5Gvovjw62fuyliQsbjhCyFHPTZ
-         kvig==
-X-Gm-Message-State: AGi0PubUsb1h2pdwZcJV+fzzkadAOR/HFtpWsipQRCDuW5XJXpvJvFTP
-        n6obXfvMxkP5vFYNZrh3Dmc=
-X-Google-Smtp-Source: APiQypJv/sDcb8i798JjJTM4g48OpHyrU1KCVVws9P1AhaEYCMG4dLSkTwe4v887cgshTzrpTowVcQ==
-X-Received: by 2002:a17:90a:a78f:: with SMTP id f15mr10323985pjq.120.1587537759679;
-        Tue, 21 Apr 2020 23:42:39 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id j13sm4378632pje.1.2020.04.21.23.42.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Apr 2020 23:42:39 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:42:34 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 09/18] mm: memcontrol: switch to native NR_FILE_PAGES and
- NR_SHMEM counters
-Message-ID: <20200422064233.GI6780@js1304-desktop>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-10-hannes@cmpxchg.org>
+        Wed, 22 Apr 2020 02:43:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587537804; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=MhadrjD6wrcZES5GZ8r8n4iG7AMqQlccgK3i8GcHrT0=;
+ b=JH1Gipnwz/RsI+MJaZiw9qT3yq6p0yhxRIHZvbzDSPlfJJ/FFOROeTQFWGbtZevny/AsMEoW
+ KxFs9aZxHbVNCsvwNpSSILn2NyhWgssLTwjxiffb9qQ244EplHRMccut9kL1VGrsWrS16+Fa
+ eLV7UHoTZqs/m4GTNy4bIJTdnVw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9fe779.7fe1d876e7d8-smtp-out-n04;
+ Wed, 22 Apr 2020 06:43:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D7659C433F2; Wed, 22 Apr 2020 06:43:04 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35B2FC433D2;
+        Wed, 22 Apr 2020 06:43:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35B2FC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420221126.341272-10-hannes@cmpxchg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath11k: remove conversion to bool in
+ ath11k_debug_fw_stats_process()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200420123745.4159-1-yanaijie@huawei.com>
+References: <20200420123745.4159-1-yanaijie@huawei.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <davem@davemloft.net>, <colin.king@canonical.com>,
+        <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jason Yan <yanaijie@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200422064304.D7659C433F2@smtp.codeaurora.org>
+Date:   Wed, 22 Apr 2020 06:43:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:11:17PM -0400, Johannes Weiner wrote:
-> Memcg maintains private MEMCG_CACHE and NR_SHMEM counters. This
-> divergence from the generic VM accounting means unnecessary code
-> overhead, and creates a dependency for memcg that page->mapping is set
-> up at the time of charging, so that page types can be told apart.
-> 
-> Convert the generic accounting sites to mod_lruvec_page_state and
-> friends to maintain the per-cgroup vmstat counters of NR_FILE_PAGES
-> and NR_SHMEM. The page is already locked in these places, so
-> page->mem_cgroup is stable; we only need minimal tweaks of two
-> mem_cgroup_migrate() calls to ensure it's set up in time.
-> 
-> Then replace MEMCG_CACHE with NR_FILE_PAGES and delete the private
-> NR_SHMEM accounting sites.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Jason Yan <yanaijie@huawei.com> wrote:
 
-Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> The '==' expression itself is bool, no need to convert it to bool again.
+> This fixes the following coccicheck warning:
+> 
+> drivers/net/wireless/ath/ath11k/debug.c:198:57-62: WARNING: conversion
+> to bool not needed here
+> drivers/net/wireless/ath/ath11k/debug.c:218:58-63: WARNING: conversion
+> to bool not needed here
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+
+Patch applied to ath-next branch of ath.git, thanks.
+
+d81709346cea ath11k: remove conversion to bool in ath11k_debug_fw_stats_process()
+
+-- 
+https://patchwork.kernel.org/patch/11498785/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
