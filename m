@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A6DC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6624EC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3E32073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0842073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552133;
-	bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
+	s=default; t=1587552136;
+	bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LpfDqgU9SITAUK/uISZAOGM6R0pGm3wNcULt0sQ88dHz0O4k22lEHqA5RU0xyrLn
-	 mHWp3SFBaUuYDlKG8/ywoXaTH4JVi/ua3rES9TgrYXZq1fJgs5R0nXO6/CudhadhMG
-	 qNOL8dXZSola/uaHA3JrcIEBj0J/E5YyeaUY2m/Y=
+	b=11YzJnbnZHlEj+Vb0Y0/Q5seeAuKNjW/SiDJpkT6mfE9uGgwY7O7Cnuf7N+5heZgG
+	 QiLciNLNJlFF2HgBiiweGZavFe9069BaUEilAONgM6p4xvxRjEgsoq22BNgBi3u3ZG
+	 qD55kNnGyBHgQ++DvzLrEmQUUeCN2m9/bkj2ufVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731719AbgDVKmM (ORCPT
+        id S1731726AbgDVKmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56730 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbgDVKUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:09 -0400
+        id S1729678AbgDVKTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:19:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2092075A;
-        Wed, 22 Apr 2020 10:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 353102084D;
+        Wed, 22 Apr 2020 10:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550795;
-        bh=wR40GoeRsbCaeLZmg7iG6efpBw+ES/ZLLE2S/S1kbak=;
+        s=default; t=1587550790;
+        bh=14d0vipBRsRPlRsQS2dkebED6wLV/m2MRXuuwhWQ9Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMf4OB0XNHE7Ju6b3L7RgHvXSP29TWnLl97i1OtFilfAAq++Gq7yrGCeYQrjIttJ8
-         HfDh8nioncSjjMECr6Q8Tt3F1MnYN0tPOt8BRllOc/rNA+jYK9KwwQTjsPFHsxr1tX
-         qP47ST4JXwn85zfQYl7NQqmts6nQq00ThG1CHsOc=
+        b=EajzXHM8/hQebrC49fxtBlM6kygd1shpGN/bjD+9KBTfe32q2D111N2yV3BrQBMjg
+         qdrDjoRzciMkDMDLZgADHUMZzl3pIve7pk4anqYqt1XDVhB3NOQYpyfuqolUtDcOoL
+         HNNVCNccdPg41bd6PgDtnByj4Mrft9pfS+Mj7dUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 097/118] libnvdimm: Out of bounds read in __nd_ioctl()
-Date:   Wed, 22 Apr 2020 11:57:38 +0200
-Message-Id: <20200422095047.181414523@linuxfoundation.org>
+Subject: [PATCH 5.4 095/118] csky: Fixup init_fpu compile warning with __init
+Date:   Wed, 22 Apr 2020 11:57:36 +0200
+Message-Id: <20200422095046.907549132@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,41 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit f84afbdd3a9e5e10633695677b95422572f920dc ]
+[ Upstream commit 12879bda3c2a974b7e4fe199a9c21f0c5f6bca04 ]
 
-The "cmd" comes from the user and it can be up to 255.  It it's more
-than the number of bits in long, it results out of bounds read when we
-check test_bit(cmd, &cmd_mask).  The highest valid value for "cmd" is
-ND_CMD_CALL (10) so I added a compare against that.
+WARNING: vmlinux.o(.text+0x2366): Section mismatch in reference from the
+function csky_start_secondary() to the function .init.text:init_fpu()
 
-Fixes: 62232e45f4a2 ("libnvdimm: control (ioctl) messages for nvdimm_bus and nvdimm devices")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200225162055.amtosfy7m35aivxg@kili.mountain
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+The function csky_start_secondary() references
+the function __init init_fpu().
+This is often because csky_start_secondary lacks a __init
+annotation or the annotation of init_fpu is wrong.
+
+Reported-by: Lu Chongzhi <chongzhi.lcz@alibaba-inc.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/bus.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/csky/abiv2/fpu.c         | 5 -----
+ arch/csky/abiv2/inc/abi/fpu.h | 3 ++-
+ arch/csky/kernel/smp.c        | 3 +++
+ 3 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index d47412dcdf38d..5e5c6aafc070b 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -1010,8 +1010,10 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 			return -EFAULT;
- 	}
+diff --git a/arch/csky/abiv2/fpu.c b/arch/csky/abiv2/fpu.c
+index 86d187d4e5af1..5acc5c2e544e1 100644
+--- a/arch/csky/abiv2/fpu.c
++++ b/arch/csky/abiv2/fpu.c
+@@ -10,11 +10,6 @@
+ #define MTCR_DIST	0xC0006420
+ #define MFCR_DIST	0xC0006020
  
--	if (!desc || (desc->out_num + desc->in_num == 0) ||
--			!test_bit(cmd, &cmd_mask))
-+	if (!desc ||
-+	    (desc->out_num + desc->in_num == 0) ||
-+	    cmd > ND_CMD_CALL ||
-+	    !test_bit(cmd, &cmd_mask))
- 		return -ENOTTY;
+-void __init init_fpu(void)
+-{
+-	mtcr("cr<1, 2>", 0);
+-}
+-
+ /*
+  * fpu_libc_helper() is to help libc to excute:
+  *  - mfcr %a, cr<1, 2>
+diff --git a/arch/csky/abiv2/inc/abi/fpu.h b/arch/csky/abiv2/inc/abi/fpu.h
+index 22ca3cf2794a1..09e2700a36936 100644
+--- a/arch/csky/abiv2/inc/abi/fpu.h
++++ b/arch/csky/abiv2/inc/abi/fpu.h
+@@ -9,7 +9,8 @@
  
- 	/* fail write commands (when read-only) */
+ int fpu_libc_helper(struct pt_regs *regs);
+ void fpu_fpe(struct pt_regs *regs);
+-void __init init_fpu(void);
++
++static inline void init_fpu(void) { mtcr("cr<1, 2>", 0); }
+ 
+ void save_to_user_fp(struct user_fp *user_fp);
+ void restore_from_user_fp(struct user_fp *user_fp);
+diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
+index de61feb4b6df2..b5c5bc3afeb5c 100644
+--- a/arch/csky/kernel/smp.c
++++ b/arch/csky/kernel/smp.c
+@@ -22,6 +22,9 @@
+ #include <asm/sections.h>
+ #include <asm/mmu_context.h>
+ #include <asm/pgalloc.h>
++#ifdef CONFIG_CPU_HAS_FPU
++#include <abi/fpu.h>
++#endif
+ 
+ struct ipi_data_struct {
+ 	unsigned long bits ____cacheline_aligned;
 -- 
 2.20.1
 
