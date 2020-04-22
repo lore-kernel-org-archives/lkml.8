@@ -2,51 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E17BC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0B5C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 479EA2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD3C2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552750;
-	bh=aGquuusWEy//4Cijg3ojUT8EFZej4syeVu8388MiEp8=;
+	s=default; t=1587552754;
+	bh=b4IWSodilP/n6yol7fL8g/RGKl2d0kiQs1kpArRe4r0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fxW5t+N8KX3QVhAHjwupcP5wF14MXnEFB7CRxiaKkjJX5y860nTa/0wtlVcTpXMLu
-	 wB+Bu/Viluihadck2rYamAx2GRDZE84wXkOhSbyeqVq02EcB+69vePP13lY0UJpTsJ
-	 VzmNDcutgALozOpKC5PK7s9AsU3x5MC5yWesrv1Y=
+	b=HMa1tmCcZK2fmzQ04/A5Ew+TFClv7870d/Ma/QCmolF9a6FjdSLhpmplLEVk0xkR8
+	 +xWRBIbKzrQwCiKcShO9QMICk3gbXX1mobI/VSv9w1zAc5Z2OFxBGECt0Hp1LelmzJ
+	 TMbG7X/QcmnF1Gfhhjvv/6Q04r0It8iAlFhgOoY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732235AbgDVKw3 (ORCPT
+        id S1726189AbgDVKwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38562 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728947AbgDVKKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:08 -0400
+        id S1726819AbgDVKKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9888020775;
-        Wed, 22 Apr 2020 10:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2622070B;
+        Wed, 22 Apr 2020 10:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550207;
-        bh=aGquuusWEy//4Cijg3ojUT8EFZej4syeVu8388MiEp8=;
+        s=default; t=1587550204;
+        bh=b4IWSodilP/n6yol7fL8g/RGKl2d0kiQs1kpArRe4r0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIA8bzobJSeocmwKnZv0psD+I6F6FkWpOCFH9Dv0qGWOeb7jDpoLhzcJ7/rpCu3yE
-         92DFBTZ3sRG7rQjiPJp5zLl39lNyqhI6pTPKvBPZDrCgRlDo/XxH1JBmsYJB6rzdmK
-         oaCvrkgGjkG8tSE27upk9whXU9QH2z75Mf1c27wI=
+        b=zdLD8sTeckPR/B0tcgiAZmchWJMWdl5VlsihsKYMmRguqSCm5Mrvm10CkuIB6uZ0f
+         hxEWG6kF0RQdkAm9sDAAGRLVD0pt8DelDU4msmoJiuFyY6S0kq8htOpm+hDNVf+sAH
+         PxiZy4KiD+lyyaOU780wwAzeZy5oCVgaEkb9aNDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 4.14 050/199] PCI: endpoint: Fix for concurrent memory allocation in OB address region
-Date:   Wed, 22 Apr 2020 11:56:16 +0200
-Message-Id: <20200422095103.177403649@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Michael Wang <yun.wang@linux.alibaba.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 014/199] sched: Avoid scale real weight down to zero
+Date:   Wed, 22 Apr 2020 11:55:40 +0200
+Message-Id: <20200422095059.621982077@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -59,95 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Michael Wang <yun.wang@linux.alibaba.com>
 
-commit 04e046ca57ebed3943422dee10eec9e73aec081e upstream.
+[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
 
-pci-epc-mem uses a bitmap to manage the Endpoint outbound (OB) address
-region. This address region will be shared by multiple endpoint
-functions (in the case of multi function endpoint) and it has to be
-protected from concurrent access to avoid updating an inconsistent state.
+During our testing, we found a case that shares no longer
+working correctly, the cgroup topology is like:
 
-Use a mutex to protect bitmap updates to prevent the memory
-allocation API from returning incorrect addresses.
+  /sys/fs/cgroup/cpu/A		(shares=102400)
+  /sys/fs/cgroup/cpu/A/B	(shares=2)
+  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  /sys/fs/cgroup/cpu/D		(shares=1024)
+  /sys/fs/cgroup/cpu/D/E	(shares=1024)
+  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
 
+The same benchmark is running in group C & F, no other tasks are
+running, the benchmark is capable to consumed all the CPUs.
+
+We suppose the group C will win more CPU resources since it could
+enjoy all the shares of group A, but it's F who wins much more.
+
+The reason is because we have group B with shares as 2, since
+A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
+so A->cfs_rq.load.weight become very small.
+
+And in calc_group_shares() we calculate shares as:
+
+  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+  shares = (tg_shares * load) / tg_weight;
+
+Since the 'cfs_rq->load.weight' is too small, the load become 0
+after scale down, although 'tg_shares' is 102400, shares of the se
+which stand for group A on root cfs_rq become 2.
+
+While the se of D on root cfs_rq is far more bigger than 2, so it
+wins the battle.
+
+Thus when scale_load_down() scale real weight down to 0, it's no
+longer telling the real story, the caller will have the wrong
+information and the calculation will be buggy.
+
+This patch add check in scale_load_down(), so the real weight will
+be >= MIN_SHARES after scale, after applied the group C wins as
+expected.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/pci-epc-mem.c |   10 ++++++++--
- include/linux/pci-epc.h            |    3 +++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ kernel/sched/sched.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/endpoint/pci-epc-mem.c
-+++ b/drivers/pci/endpoint/pci-epc-mem.c
-@@ -90,6 +90,7 @@ int __pci_epc_mem_init(struct pci_epc *e
- 	mem->page_size = page_size;
- 	mem->pages = pages;
- 	mem->size = size;
-+	mutex_init(&mem->lock);
- 
- 	epc->mem = mem;
- 
-@@ -133,7 +134,7 @@ void __iomem *pci_epc_mem_alloc_addr(str
- 				     phys_addr_t *phys_addr, size_t size)
- {
- 	int pageno;
--	void __iomem *virt_addr;
-+	void __iomem *virt_addr = NULL;
- 	struct pci_epc_mem *mem = epc->mem;
- 	unsigned int page_shift = ilog2(mem->page_size);
- 	int order;
-@@ -141,15 +142,18 @@ void __iomem *pci_epc_mem_alloc_addr(str
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
- 
-+	mutex_lock(&mem->lock);
- 	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
- 	if (pageno < 0)
--		return NULL;
-+		goto ret;
- 
- 	*phys_addr = mem->phys_base + (pageno << page_shift);
- 	virt_addr = ioremap(*phys_addr, size);
- 	if (!virt_addr)
- 		bitmap_release_region(mem->bitmap, pageno, order);
- 
-+ret:
-+	mutex_unlock(&mem->lock);
- 	return virt_addr;
- }
- EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-@@ -175,7 +179,9 @@ void pci_epc_mem_free_addr(struct pci_ep
- 	pageno = (phys_addr - mem->phys_base) >> page_shift;
- 	size = ALIGN(size, mem->page_size);
- 	order = pci_epc_mem_get_order(mem, size);
-+	mutex_lock(&mem->lock);
- 	bitmap_release_region(mem->bitmap, pageno, order);
-+	mutex_unlock(&mem->lock);
- }
- EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
- 
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -63,6 +63,7 @@ struct pci_epc_ops {
-  * @bitmap: bitmap to manage the PCI address space
-  * @pages: number of bits representing the address region
-  * @page_size: size of each page
-+ * @lock: mutex to protect bitmap
-  */
- struct pci_epc_mem {
- 	phys_addr_t	phys_base;
-@@ -70,6 +71,8 @@ struct pci_epc_mem {
- 	unsigned long	*bitmap;
- 	size_t		page_size;
- 	int		pages;
-+	/* mutex to protect against concurrent access for memory allocation*/
-+	struct mutex	lock;
- };
- 
- /**
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 268f560ec9986..391d73a12ad72 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -89,7 +89,13 @@ static inline void cpu_load_update_active(struct rq *this_rq) { }
+ #ifdef CONFIG_64BIT
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
+-# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
++# define scale_load_down(w) \
++({ \
++	unsigned long __w = (w); \
++	if (__w) \
++		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
++	__w; \
++})
+ #else
+ # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
+ # define scale_load(w)		(w)
+-- 
+2.20.1
+
 
 
