@@ -2,163 +2,198 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7C3C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E15FC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 693ED20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:52:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dbza2RIf";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="MwJ260r3"
+	by mail.kernel.org (Postfix) with ESMTP id 10787206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgDVIv7 (ORCPT
+        id S1726396AbgDVIzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:51:59 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:46703 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbgDVIv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:51:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1587545518; x=1619081518;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DVDukrs2kf6ItNIQMjd00Z/cOVOcw6iD5rzv6En0g/0=;
-  b=dbza2RIfYC7UctK0LCGSmX96/zqSCbz2j9oTJQ0yI17zFJSKpLzN1PCX
-   po9RnZxlMBOLOlqYfARsukZLXUn/5FEJaMuX6ddvjpQK8a4DIo7lp0XTT
-   ttImU5MwXgXjxi5oxli5lJNcTVo2sQYAN+MA7ijfgfd9god6F6yEbl30m
-   9SCHKxwVuXuMAAAZxCkO7DBbToklH+H1zfw2VtUto+VA1hRRzZb2nnqbC
-   JzWuq5XYCStUEKXEhuguMmwLf1lNt4I+1pD8xVElzido2qqrHXGCiJYA3
-   CVweHV7pZoGYz1MU9VsSlXlREQHqXTQmpM9D0PFXmE7OxHlaP9xoq8eDy
-   A==;
-IronPort-SDR: odtx96rlXjZtqyOJ++hiKr5JZ8uUR9Jk0GUW1gdd7+c2dE3HEXnY//D+Cv15FSPVt9JdOmEr8Z
- xEPCDZJG2184jVd5De3hS6M071p1mjR+eow63fzHpul4ZxDzXPiRRn92Qs9DDx3+qUODcvb57e
- oLsm/YMpHwHz0X8qS8fGCCz3nSNKe4ZUXBvRnnP682puo6jhQM9LAQhAy+FjzawaVJMqVDbe6l
- R3f0Q77aFWVDTgxnZ8C0FDhhGi4HX7LnH/jhhLMtShyg4b1me2gmzrBc3XOK9N0t7r+LWfZgkt
- DhM=
-X-IronPort-AV: E=Sophos;i="5.72,413,1580745600"; 
-   d="scan'208";a="135865812"
-Received: from mail-bn7nam10lp2105.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.105])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Apr 2020 16:51:56 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IkdFvhSlgvDWhMifGIfMi72hjXVoblNeWiLXK50Uw05yjdPo2Okdc3Qry9tR46yt+8N02El707uaCsi9+cT50EBcq3cA8hbjACB/3g1xoTFZhjogGxhJ4Z20JYPzSC8C1Q096IcClGjGkiMEXe5rdfRqY3dgp4U2xnKcQysHITIdLaZ2/yeObHglM+Q5vXUByE7AFCzXa3SH1ZyXX5Awq51Sv9GDDasY12pGlxDFFHv/yRrdqYZ/KSoRrSjPrxXqDpyzSZHEV92jpAyiMBss7syjC5Ickal4sC1TBYiCs9TsvhwkYv1WmDJRwTFLVR2pZRhX4z8FlV/R53pyPE/gqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EqJ8zWtcOM5z3bZKpelxrgsY6XBpQ40xW0Nkanwf89g=;
- b=L3/VHQxInIcNKbdFDt1SNv658xjgPQp22z0RK8+JzwrszhIULFiu2nvM51OJE8Xi9+e3zId/8tEAij1+xcUTKJHoBtj8EXFQN8cV3dAXuU4i8Qzh4Cs0IfLkrXNBisqRjn6aSk6+l5W7z6Ic9LuAEpC2bMIiX/0JSt6LIZHN89PtA6L3YiIPm1d0/sGV4ASpkPR3qSUezoRlCIwWc0eZSzWyovAOs8TyP4w/5OdmVQFTJe0oW9gDH/G7VzARS/db8rRy35Kaf7c5cDo/EBTLM1FNKwldQ9/eBA4Kd0skZT/6MDVB36FYLiJqwxEwXr6IEFeaaeqKZRywtAu4+AlMqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EqJ8zWtcOM5z3bZKpelxrgsY6XBpQ40xW0Nkanwf89g=;
- b=MwJ260r3msb2w62ExGo7RMXofIfhJ2rtFJs8HDbyMAM/XypDPbVumQVj79NhdRSm5BIPbdKMnwW/n+VV6Sa3Z6GhPBIAnW80DLjXrnE/o/AxLJhvl2Xqg6pq3XSc8VmRI0PGbjP8aVyoa2XkkBXYHuJVo08rfuF/29Vx5erKnBU=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB3950.namprd04.prod.outlook.com (2603:10b6:805:48::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Wed, 22 Apr
- 2020 08:51:56 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2937.012; Wed, 22 Apr 2020
- 08:51:56 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Asutosh Das <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 3/3] ufs-qcom: scsi: configure write booster type
-Thread-Topic: [PATCH v2 3/3] ufs-qcom: scsi: configure write booster type
-Thread-Index: AQHWGC/bc78fgk3F5UizGNPlurPhxaiE1aAA
-Date:   Wed, 22 Apr 2020 08:51:55 +0000
-Message-ID: <SN6PR04MB46405270EB2E9FEF579F1115FCD20@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <6519cd576299d5881129b0e48870a53a0afc7835.1587509578.git.asutoshd@codeaurora.org>
- <90ee50d5123e7ef4f04fba2ba281bb2e2e9ce1e5.1587509578.git.asutoshd@codeaurora.org>
-In-Reply-To: <90ee50d5123e7ef4f04fba2ba281bb2e2e9ce1e5.1587509578.git.asutoshd@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d6131f73-331d-4a48-8352-08d7e69a693e
-x-ms-traffictypediagnostic: SN6PR04MB3950:
-x-microsoft-antispam-prvs: <SN6PR04MB39509D6E01E2F7B081023759FCD20@SN6PR04MB3950.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 03818C953D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(376002)(366004)(396003)(39860400002)(346002)(66476007)(26005)(5660300002)(110136005)(66446008)(66556008)(316002)(76116006)(54906003)(478600001)(7416002)(186003)(86362001)(52536014)(2906002)(7696005)(4326008)(64756008)(33656002)(9686003)(71200400001)(8676002)(81156014)(8936002)(55016002)(66946007)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mrEJtFr7mqwcFbuEnlVXLlGUAxWUn4ZaZli2F1a0/Y5XjIol2t/zgX4umD38JRL30dygeqiRCLRjqucihYVrhsh5PIO9pZw8uGFS5bfsLTelnnqiYxgayR4NRWRqg/QoQFgS1PyCM93geyuu3BE68ePQFXmLg1u+GQ+jkrCWJU0dmbJQh3GEJFQ7hwSXZvlGbiGcrcJmAeQ9Z5OvxVpAgm3z1sGKsp/o6AfZz40uqKdQ2IMF8I+Dk4Uxvjb61nkyeZFekIUCVBYDvS/f6p8+fuoYhAmXXDtiKivvHNFReClMKD1m79RJWe51DukWSjnM/0nt1qKEeIfyJTrEhkp5OrOKML/+Y/i5bUXDWEyjZ0clArUTAE5TL5CTR42gR1VuWujCzkNAiD36Mfk3aXUKK/c0wb3VpSkQfFzK9MOfT9245+ZZa3EE7yifm5SYcu2g
-x-ms-exchange-antispam-messagedata: LU0UNxvBPY2NHE/CN8eMHLiEc20K9fHVA0jmJ9GVmJnVuGLa9fDRKkxvQ/I7lJWPHV9JgR0azWnhxEjFNCXZp1sOgF2Y3WpL7oHmWtS+tA3CVT6ahBOrxzRVFVgYz6Lc+XTY1fn3fSRmO8+sm0/d2A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 Apr 2020 04:55:49 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55280 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725786AbgDVIzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:55:48 -0400
+Received: from [10.130.0.79] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz9uGBqBeCtIqAA--.31S3;
+        Wed, 22 Apr 2020 16:55:35 +0800 (CST)
+Subject: Re: [PATCH v3 3/4] kmod: Return directly if module name is empty in
+ request_module()
+To:     Jessica Yu <jeyu@kernel.org>
+References: <1587386035-5188-1-git-send-email-yangtiezhu@loongson.cn>
+ <1587386035-5188-4-git-send-email-yangtiezhu@loongson.cn>
+ <20200420181931.GJ11244@42.do-not-panic.com>
+ <675147f7-2762-c574-4c3d-de6b25a5a44a@loongson.cn>
+ <20200421144931.GA20103@linux-8ccs>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Al Viro <viro@zeniv.linux.org.uk>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <13aeb92d-047f-29a4-4d18-dcbd0519a218@loongson.cn>
+Date:   Wed, 22 Apr 2020 16:55:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6131f73-331d-4a48-8352-08d7e69a693e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 08:51:55.9742
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nHoy4qCeG4dqnKRPuVXMSIePB75jwskoh2oeS6NwthEEQnTjY40KGGEni9ptKaiQumpxGhlGQ2IhIQK57fh9Lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3950
+In-Reply-To: <20200421144931.GA20103@linux-8ccs>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxz9uGBqBeCtIqAA--.31S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw4xuw1DGrW7XFWUtF15twb_yoWrAw15pa
+        y5Ga1FyF4Dtw4UAan2qw47W3WSyw48XFW5Xr1DWr1fCFZ0gFnrAr13G3yY9FZrur4UKr1j
+        vr48tay7uayDA37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+        bIxvr21lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
+        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+        73UjIFyTuYvjfU8Z2-UUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
->=20
-> Configure the WriteBooster type to preserve user-space mode.
-> This would ensure that no user-space capacity is reduced
-> when write booster is enabled.
-The above does no longer apply - leftover from previous patch?
+On 04/21/2020 10:49 PM, Jessica Yu wrote:
+> +++ Tiezhu Yang [21/04/20 11:07 +0800]:
+>> On 04/21/2020 02:19 AM, Luis Chamberlain wrote:
+>>> On Mon, Apr 20, 2020 at 08:33:54PM +0800, Tiezhu Yang wrote:
+>>>> If module name is empty, it is better to return directly at the 
+>>>> beginning
+>>>> of request_module() without doing the needless call_modprobe() 
+>>>> operation.
+>>>>
+>>>> Call trace:
+>>>>
+>>>> request_module()
+>>>>       |
+>>>>       |
+>>>> __request_module()
+>>>>       |
+>>>>       |
+>>>> call_modprobe()
+>>>>       |
+>>>>       |
+>>>> call_usermodehelper_exec() -- retval = sub_info->retval;
+>>>>       |
+>>>>       |
+>>>> call_usermodehelper_exec_work()
+>>>>       |
+>>>>       |
+>>>> call_usermodehelper_exec_sync() -- sub_info->retval = ret;
+>>>>       |
+>>>>       | --> call_usermodehelper_exec_async() --> do_execve()
+>>>>       |
+>>>> kernel_wait4(pid, (int __user *)&ret, 0, NULL);
+>>>>
+>>>> sub_info->retval is 256 after call kernel_wait4(), the function
+>>>> call_usermodehelper_exec() returns sub_info->retval which is 256,
+>>>> then call_modprobe() and __request_module() returns 256.
+>>>>
+>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> Thanks for looking into this. I still cannot find where
+>>> userspace it returns 256. Can you? If I run modprobe without
+>>> an argument I see 1 returned.
+>>>
+>>> At least kmod [0] has a series of cmd helper structs, the one for 
+>>> modprobe
+>>> seems to be kmod_cmd_compat_modprobe, and I can see -1 returned which
+>>> can be converted to 255. It can also return EXIT_FAILURE or 
+>>> EXIT_SUCCESS
+>>> and /usr/include/stdlib.h defines these as 1 and 0 respectively.
+>
+> I'm also seeing modprobe return 1 as exit status when I run it without
+> arguments. I don't think the 256 value is coming from modprobe though,
+> see below -
+>
+>>> https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git/
+>>>
+>>>   Luis
+>>
+>> Here is my understanding:
+>>
+>> When build and execute the following application, we can see the exit 
+>> status is 256.
+>>
+>> $ ./system
+>> modprobe: FATAL: Module  not found in directory 
+>> /lib/modules/4.18.0-147.5.1.el8_1.x86_64
+>> exit status = 256
+>>
+>> $ ./execl
+>> modprobe: FATAL: Module  not found in directory 
+>> /lib/modules/4.18.0-147.5.1.el8_1.x86_64
+>> exit status = 256
+>
+> I am going to guess this has something to do with how system() and
+> waitpid() (and the wait family of syscalls in general) encode the exit
+> status in their return values. According to their man pages, you need
+> to use the appropriate WIF* macros to get the actual exit code of the
+> child process.
+>
+> From system(3):
+>
+>    the return value is a "wait status" that can be examined using the
+>    macros described in waitpid(2).  (i.e., WIFEXITED(),
+>    WEXITSTATUS(), and so on)
+>
+> From waitpid(2):
+>
+>     If  wstatus  is  not  NULL,  wait()  and  waitpid() store status
+>     information in the int to which it points.  This integer can be
+>     inspected with the following macros (which take the integer
+>     itself as an argument, not a pointer to it, as is done in wait()
+>     and waitpid()!):
+>
+>       WEXITSTATUS(wstatus)
+>              returns the exit status of the child.  This consists of
+>              the least significant 8 bits of the status argument that
+>              the child specified in a call to exit(3) or _exit(2) or
+>              as the argument for a return statement in main(). This
+>              macro should be employed only if WIFEXITED returned
+>              true.
+>
+> In your test code, you are reading &status directly. To obtain the
+> exit status, you need to use WEXITSTATUS(status), or right shift the
+> value by 8 bits. That gives you 1, which was the original exit code
+> given by modprobe. That's why you see an exit code of 1 when running
+> modprobe directly and you see 256 when using system() and waitpid()
+> and don't use the WIF* macros.
+>
+> As for why __request_module() returns 256, I am guessing this would
+> come from kernel_wait4(), but I did not dive into the call path to
+> verify this yet.
 
-Thanks,
-Avri
++Cc Al Viro <viro@zeniv.linux.org.uk>
 
-> Enable WB for Qualcomm platform.
->=20
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufs-qcom.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 19aa5c4..6e4000d 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -1071,6 +1071,7 @@ static void ufs_qcom_set_caps(struct ufs_hba
-> *hba)
->         hba->caps |=3D UFSHCD_CAP_CLK_GATING |
-> UFSHCD_CAP_HIBERN8_WITH_CLK_GATING;
->         hba->caps |=3D UFSHCD_CAP_CLK_SCALING;
->         hba->caps |=3D UFSHCD_CAP_AUTO_BKOPS_SUSPEND;
-> +       hba->caps |=3D UFSHCD_CAP_WB_EN;
->=20
->         if (host->hw_ver.major >=3D 0x2) {
->                 host->caps =3D UFS_QCOM_CAP_QUNIPRO |
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
-> Linux Foundation Collaborative Project.
+Hi Al,
+
+When module name is empty, __request_module() returns 256.
+What do you think about this case and patch?
+Thank you very much for your attention.
+
+patch v3:
+https://lore.kernel.org/patchwork/patch/1227274/
+
+patch v4 (update the commit message):
+https://lore.kernel.org/patchwork/patch/1227981/
+
+>
+> Jessica
 
