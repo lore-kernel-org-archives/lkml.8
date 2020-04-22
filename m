@@ -5,49 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D454C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B6DC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D60D02076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534942075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551123;
-	bh=N7LuhKTX+VkNhecOFLMEu4r6U60EoVLmEHzq4lL3Zqk=;
+	s=default; t=1587551128;
+	bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mLXLcwW03fLw1DExjLWEW3MRZSNqv+3/zXz7a4fwR63xxpAPlLVJ3Pm9EgEvVMon+
-	 63zUGEdDnCXpxHE1WS8sHj1del8+LVKvmkocJcAxuDKLbAN7EDVRGLUbBFjr7FxLFg
-	 PHPHAx/GczB1jNC4UlA8Qs36cnB0iAJSwSG3eiNA=
+	b=Pn8MQaJUw4SIWCwxyAuu+r+U6Z6CAvUvB3tq5g/exyO2YSo2B18mDzUm7c3y0ICyP
+	 WypCeW4SEqU3DAZUqnO/V9O4i/p2e6bFScZram+V52eTNhzoxY5AuT8kbx7rju7zoJ
+	 W59rEDOA8nMhjny1aLwBxW4a88fBi685jsgG1gYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730542AbgDVKZW (ORCPT
+        id S1730570AbgDVKZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:25:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33706 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730500AbgDVKZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:25:09 -0400
+        id S1729646AbgDVKZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:25:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C9E120776;
-        Wed, 22 Apr 2020 10:25:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C852075A;
+        Wed, 22 Apr 2020 10:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551108;
-        bh=N7LuhKTX+VkNhecOFLMEu4r6U60EoVLmEHzq4lL3Zqk=;
+        s=default; t=1587551111;
+        bh=9NXEEyNPle9buOD5PAzi2advwivMFIPGG4uNAn1qRVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYElkOU2muXU9xBUN7BBEWJWPd0Oa/dk/YtuEkvotiKKAJOmnkl9NxjzCvf4LLLCE
-         tUF2N7j86JOjvUNkWvx8DBvyBCNqA6X2aEZfrEr+iv2jv+xDJYcnvr93rahV51xz2n
-         rhIKEaJPCulPea0EAHA0zzpCfeaWkYZ5480TbJpE=
+        b=su9okt1vo5fYcgCBzP17QoXRiF4SRY4QMWd1iRpfWLxYORZpxJwLyG2jDNRSHq5vX
+         tryaJ0pF18jcwa2gXIYnAt1lfpNeJE7v1bgkXtUyN+qS3KkNAzeINnHCgHud0ZWdin
+         yFi3SRqdPClWE10sKLyLeaL93EZkcgtJmwRjBf7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Steven Price <steven.price@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 103/166] drm/nouveau/svm: fix vma range check for migration
-Date:   Wed, 22 Apr 2020 11:57:10 +0200
-Message-Id: <20200422095059.953220566@linuxfoundation.org>
+Subject: [PATCH 5.6 104/166] include/linux/swapops.h: correct guards for non_swap_entry()
+Date:   Wed, 22 Apr 2020 11:57:11 +0200
+Message-Id: <20200422095100.041447044@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,38 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit b92103b559c77abc5f8b7bec269230a219c880b7 ]
+[ Upstream commit 3f3673d7d324d872d9d8ddb73b3e5e47fbf12e0d ]
 
-find_vma_intersection(mm, start, end) only guarantees that end is greater
-than or equal to vma->vm_start but doesn't guarantee that start is
-greater than or equal to vma->vm_start. The calculation for the
-intersecting range in nouveau_svmm_bind() isn't accounting for this and
-can call migrate_vma_setup() with a starting address less than
-vma->vm_start. This results in migrate_vma_setup() returning -EINVAL for
-the range instead of nouveau skipping that part of the range and migrating
-the rest.
+If CONFIG_DEVICE_PRIVATE is defined, but neither CONFIG_MEMORY_FAILURE nor
+CONFIG_MIGRATION, then non_swap_entry() will return 0, meaning that the
+condition (non_swap_entry(entry) && is_device_private_entry(entry)) in
+zap_pte_range() will never be true even if the entry is a device private
+one.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Equally any other code depending on non_swap_entry() will not function as
+expected.
+
+I originally spotted this just by looking at the code, I haven't actually
+observed any problems.
+
+Looking a bit more closely it appears that actually this situation
+(currently at least) cannot occur:
+
+DEVICE_PRIVATE depends on ZONE_DEVICE
+ZONE_DEVICE depends on MEMORY_HOTREMOVE
+MEMORY_HOTREMOVE depends on MIGRATION
+
+Fixes: 5042db43cc26 ("mm/ZONE_DEVICE: new type of ZONE_DEVICE for unaddressable memory")
+Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Link: http://lkml.kernel.org/r/20200305130550.22693-1-steven.price@arm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_svm.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/swapops.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index 3ec5da025bea7..c567526b75b83 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -184,6 +184,7 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
- 		if (!vma)
- 			break;
+diff --git a/include/linux/swapops.h b/include/linux/swapops.h
+index 877fd239b6fff..3208a520d0be3 100644
+--- a/include/linux/swapops.h
++++ b/include/linux/swapops.h
+@@ -348,7 +348,8 @@ static inline void num_poisoned_pages_inc(void)
+ }
+ #endif
  
-+		addr = max(addr, vma->vm_start);
- 		next = min(vma->vm_end, end);
- 		/* This is a best effort so we ignore errors */
- 		nouveau_dmem_migrate_vma(cli->drm, vma, addr, next);
+-#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION)
++#if defined(CONFIG_MEMORY_FAILURE) || defined(CONFIG_MIGRATION) || \
++    defined(CONFIG_DEVICE_PRIVATE)
+ static inline int non_swap_entry(swp_entry_t entry)
+ {
+ 	return swp_type(entry) >= MAX_SWAPFILES;
 -- 
 2.20.1
 
