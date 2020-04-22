@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70292C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB948C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9A52076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5D22071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550547;
-	bh=0ouXlNHJWvjkfuC2gmYfU3a8nAoZ49GTebh8z7Xu9Vw=;
+	s=default; t=1587550568;
+	bh=EZbrKX1EsilYJ37ASjFlx/jbs5C55Og1fqhF5UYxPaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBEsIULecrd2DdwSfhR60omaKZCRXlb1l6bbdNqDDWtq35KAq5zjvNmmRInti+QtN
-	 sq2o6gyIo0UM/tQc0kE9ewX/j08hsCDym6rcjOdeTP/J9zEIT4hv78gs1JJVKu0V1A
-	 nCz9FOd8DuSzICcPxougayQMmWIZv7PK48+dFvLk=
+	b=04vltz+MNop5arKSx7Q89ctduWG9HCDeFK7p1sV01YTYau3gcThRHv47WIantX9Wl
+	 LiVtE0mbA3SgQmo18zdcIJun/b5LGJeHSqB/iyEbWLEv42QHlpC8PrrBmsQpkUuD2O
+	 P/0m6xzriIWdt2ek1AtGYvLo4EEXvyQ/UGxeuOqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgDVKPq (ORCPT
+        id S1729231AbgDVKQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:15:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbgDVKPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:43 -0400
+        id S1729304AbgDVKPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17DC120575;
-        Wed, 22 Apr 2020 10:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925202075A;
+        Wed, 22 Apr 2020 10:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550541;
-        bh=0ouXlNHJWvjkfuC2gmYfU3a8nAoZ49GTebh8z7Xu9Vw=;
+        s=default; t=1587550544;
+        bh=EZbrKX1EsilYJ37ASjFlx/jbs5C55Og1fqhF5UYxPaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wQNfYVxu4RYggsU00ZeNBvaFzXCrJ4hubyJ3wzpWJoCF8ZUhhNPVMj5x6Y2kVRZ4m
-         W+IFmNIk3l/PizGvTAEkwjOUUhO3gSdlfAf+On2W5dg2JnarKaN39vIYcrLPX0Ogop
-         OEsNgrzynvlv0UrnSYpVLypKshLMRUMdWt3ggcqM=
+        b=EqIkbCQ5LIPlEMet97mY6SeV7amJbHOlR/f+F4RHL8W8yJuZ7LgQBSAFyr0gmp1F6
+         eHaqSZ/9+O4GR2R7JOnLVeqeT29MGwawM41NvjwAN/bG/Dv2221qo1/eBDGa2lZmRX
+         +assGc6VJm2L0AjnYOLD2rlHaO+cM+zve6ojl5kU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.19 16/64] lib/raid6: use vdupq_n_u8 to avoid endianness warnings
-Date:   Wed, 22 Apr 2020 11:57:00 +0200
-Message-Id: <20200422095015.766450493@linuxfoundation.org>
+        Thomas Winischhofer <thomas@winischhofer.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.19 17/64] video: fbdev: sis: Remove unnecessary parentheses and commented code
+Date:   Wed, 22 Apr 2020 11:57:01 +0200
+Message-Id: <20200422095015.933393475@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -62,90 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ndesaulniers@google.com <ndesaulniers@google.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 1ad3935b39da78a403e7df7a3813f866c731bc64 upstream.
+commit 864eb1afc60cb43e7df879b97f8ca0d719bbb735 upstream.
 
-Clang warns: vector initializers are not compatible with NEON intrinsics
-in big endian mode [-Wnonportable-vector-initialization]
+Clang warns when multiple pairs of parentheses are used for a single
+conditional statement.
 
-While this is usually the case, it's not an issue for this case since
-we're initializing the uint8x16_t (16x uint8_t's) with the same value.
+drivers/video/fbdev/sis/init301.c:851:42: warning: equality comparison
+with extraneous parentheses [-Wparentheses-equality]
+      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+                 ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+drivers/video/fbdev/sis/init301.c:851:42: note: remove extraneous
+parentheses around the comparison to silence this warning
+      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+                ~                        ^   ~
+drivers/video/fbdev/sis/init301.c:851:42: note: use '=' to turn this
+equality comparison into an assignment
+      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+                                         ^~
+                                         =
+1 warning generated.
 
-Instead, use vdupq_n_u8 which both compilers lower into a single movi
-instruction: https://godbolt.org/z/vBrgzt
+Remove the parentheses and while we're at it, clean up the commented
+code, which has been here since the beginning of git history.
 
-This avoids the static storage for a constant value.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/214
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/118
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Thomas Winischhofer <thomas@winischhofer.net>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/raid6/neon.uc            |    5 ++---
- lib/raid6/recov_neon_inner.c |    7 ++-----
- 2 files changed, 4 insertions(+), 8 deletions(-)
+ drivers/video/fbdev/sis/init301.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/lib/raid6/neon.uc
-+++ b/lib/raid6/neon.uc
-@@ -28,7 +28,6 @@
+--- a/drivers/video/fbdev/sis/init301.c
++++ b/drivers/video/fbdev/sis/init301.c
+@@ -848,9 +848,7 @@ SiS_PanelDelay(struct SiS_Private *SiS_P
+ 	    SiS_DDC2Delay(SiS_Pr, 0x4000);
+ 	 }
  
- typedef uint8x16_t unative_t;
+-      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
+-	 (SiS_Pr->SiS_CustomT == CUT_COMPAQ1280) ||
+-	 (SiS_Pr->SiS_CustomT == CUT_CLEVO1400) */ ) {			/* 315 series, LVDS; Special */
++      } else if (SiS_Pr->SiS_IF_DEF_LVDS == 1) {			/* 315 series, LVDS; Special */
  
--#define NBYTES(x) ((unative_t){x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x})
- #define NSIZE	sizeof(unative_t)
- 
- /*
-@@ -61,7 +60,7 @@ void raid6_neon$#_gen_syndrome_real(int
- 	int d, z, z0;
- 
- 	register unative_t wd$$, wq$$, wp$$, w1$$, w2$$;
--	const unative_t x1d = NBYTES(0x1d);
-+	const unative_t x1d = vdupq_n_u8(0x1d);
- 
- 	z0 = disks - 3;		/* Highest data disk */
- 	p = dptr[z0+1];		/* XOR parity */
-@@ -92,7 +91,7 @@ void raid6_neon$#_xor_syndrome_real(int
- 	int d, z, z0;
- 
- 	register unative_t wd$$, wq$$, wp$$, w1$$, w2$$;
--	const unative_t x1d = NBYTES(0x1d);
-+	const unative_t x1d = vdupq_n_u8(0x1d);
- 
- 	z0 = stop;		/* P/Q right side optimization */
- 	p = dptr[disks-2];	/* XOR parity */
---- a/lib/raid6/recov_neon_inner.c
-+++ b/lib/raid6/recov_neon_inner.c
-@@ -10,11 +10,6 @@
- 
- #include <arm_neon.h>
- 
--static const uint8x16_t x0f = {
--	0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f,
--	0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f,
--};
--
- #ifdef CONFIG_ARM
- /*
-  * AArch32 does not provide this intrinsic natively because it does not
-@@ -41,6 +36,7 @@ void __raid6_2data_recov_neon(int bytes,
- 	uint8x16_t pm1 = vld1q_u8(pbmul + 16);
- 	uint8x16_t qm0 = vld1q_u8(qmul);
- 	uint8x16_t qm1 = vld1q_u8(qmul + 16);
-+	uint8x16_t x0f = vdupq_n_u8(0x0f);
- 
- 	/*
- 	 * while ( bytes-- ) {
-@@ -87,6 +83,7 @@ void __raid6_datap_recov_neon(int bytes,
- {
- 	uint8x16_t qm0 = vld1q_u8(qmul);
- 	uint8x16_t qm1 = vld1q_u8(qmul + 16);
-+	uint8x16_t x0f = vdupq_n_u8(0x0f);
- 
- 	/*
- 	 * while (bytes--) {
+ 	 if(SiS_Pr->SiS_IF_DEF_CH70xx == 0) {
+ 	    PanelID = SiS_GetReg(SiS_Pr->SiS_P3d4,0x36);
 
 
