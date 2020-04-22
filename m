@@ -5,56 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB56C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73A6C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 086082076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926F220775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549549;
-	bh=eSKBnDUxZ9V7jiJVKTGVAU7pRMub9uPonVW5GejxE2g=;
+	s=default; t=1587549552;
+	bh=PZA3Vw1JHUk8Sy3E3cFgr+3sTMuxx5oWNx1mnU7ajYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T850ElI3NgeE6nEZvsLpENKnP8dYpgoQNw9io0sjx42Rn4lWM7YCG1p5lDkbevPBD
-	 QBODstzUNIXzvLnlQxz60B9+b2FgW6iNlClurZEo/udZxHbOEppbyo332zxEdYgHDL
-	 K8qRktyESzQ53TcjUUF8FKvE6OyVqMpWP+LDd24A=
+	b=aKDt41HeZLe7J+WRmZ7YQ/EPEn5CX40J68OIkkDLDFKxq9adL+mdAZ5S3b5TyQLxo
+	 WZB/VfkR9I46mEyqqoAIW17c64T9Qd/LMhjnbzaEP0stvhJ16A9aUEb4Ij86zhfkY0
+	 BtJd2+niys0FzqO0dvlMmwYdfSplnYtVG16PAQtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDVJ7I (ORCPT
+        id S1726284AbgDVJ7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:59:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 05:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgDVJ7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:59:07 -0400
+        id S1726023AbgDVJ7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:59:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E290D2073A;
-        Wed, 22 Apr 2020 09:59:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 754B12076C;
+        Wed, 22 Apr 2020 09:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549547;
-        bh=eSKBnDUxZ9V7jiJVKTGVAU7pRMub9uPonVW5GejxE2g=;
+        s=default; t=1587549549;
+        bh=PZA3Vw1JHUk8Sy3E3cFgr+3sTMuxx5oWNx1mnU7ajYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zo/l58aF2R5+7tMOPKSwSo0jiSMc21QdafskVS93Etprd6S9P8+QqbEizSFEaDhqm
-         GZnC228UmxHpKDH+7WuZ8dVopLGZZzCOHufUSBaxNthBsztQPC8nOusvHSJUf7irat
-         v6HJoCNAIEKMDN1RnRWlJzwXS9ruBUNyKvAcb9tQ=
+        b=XWV+1123JBaB+TMXsq0hu9zNN4frCxQeX4togqxLFyDx0jfT88owdrLnQKGiSdDYC
+         NeeqFGXitTvTAR65iO/vhZjgL0FtHQRl3Q/JmWP8Z6KMKN0si3CVHw+/O+iHyK99zP
+         yYF8KDBLRroU6yhuzjac2g8JsVxKzx+rcqHYlNL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 001/100] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
-Date:   Wed, 22 Apr 2020 11:55:31 +0200
-Message-Id: <20200422095022.673268391@linuxfoundation.org>
+Subject: [PATCH 4.4 010/100] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
+Date:   Wed, 22 Apr 2020 11:55:40 +0200
+Message-Id: <20200422095024.837041098@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,62 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
+[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
 
-When doing a 16-bit read that returns data in the MSB byte, the
-RSB_DATA register will keep the MSB byte unchanged when doing
-the following 8-bit read. sunxi_rsb_read() will then return
-a result that contains high byte from 16-bit read mixed with
-the 8-bit result.
+Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
+triggered a warning:
 
-The consequence is that after this happens the PMIC's regmap will
-look like this: (0x33 is the high byte from the 16-bit read)
+  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+  ...
+  [ ] Call Trace:
+  [ ]  lock_is_held_type+0x5d/0x150
+  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
+  [ ]  rcu_read_lock_any_held+0xac/0x100
+  [ ]  ? rcu_read_lock_held+0xc0/0xc0
+  [ ]  ? __slab_free+0x421/0x540
+  [ ]  ? kasan_kmalloc+0x9/0x10
+  [ ]  ? __kmalloc_node+0x1d7/0x320
+  [ ]  ? kvmalloc_node+0x6f/0x80
+  [ ]  __bfs+0x28a/0x3c0
+  [ ]  ? class_equal+0x30/0x30
+  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
 
-% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-00: 33
-01: 33
-02: 33
-03: 33
-04: 33
-05: 33
-06: 33
-07: 33
-08: 33
-09: 33
-0a: 33
-0b: 33
-0c: 33
-0d: 33
-0e: 33
-[snip]
+The warning got triggered because lockdep_count_forward_deps() call
+__bfs() without current->lockdep_recursion being set, as a result
+a lockdep internal function (__bfs()) is checked by lockdep, which is
+unexpected, and the inconsistency between the irq-off state and the
+state traced by lockdep caused the warning.
 
-Fix this by masking the result of the read with the correct mask
-based on the size of the read. There are no 16-bit users in the
-mainline kernel, so this doesn't need to get into the stable tree.
+Apart from this warning, lockdep internal functions like __bfs() should
+always be protected by current->lockdep_recursion to avoid potential
+deadlocks and data inconsistency, therefore add the
+current->lockdep_recursion on-and-off section to protect __bfs() in both
+lockdep_count_forward_deps() and lockdep_count_backward_deps()
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/sunxi-rsb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 0ffb247b42d65..d45f48de42a0c 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
- 	if (ret)
- 		goto unlock;
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index a419696709a1a..0a00720d3cccb 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1265,9 +1265,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
+ 	this.class = class;
  
--	*buf = readl(rsb->regs + RSB_DATA);
-+	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_forward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
  
- unlock:
- 	mutex_unlock(&rsb->lock);
+ 	return ret;
+@@ -1292,9 +1294,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	this.class = class;
+ 
+ 	raw_local_irq_save(flags);
++	current->lockdep_recursion = 1;
+ 	arch_spin_lock(&lockdep_lock);
+ 	ret = __lockdep_count_backward_deps(&this);
+ 	arch_spin_unlock(&lockdep_lock);
++	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
+ 
+ 	return ret;
 -- 
 2.20.1
 
