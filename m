@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E28C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D150C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15FFB20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EC12076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549797;
-	bh=j4AQH5rvNz6DRK8i9x9rJX+agLWx9idbtMpnE/p1QUo=;
+	s=default; t=1587549799;
+	bh=uSarPIu+wtGY/EnBzRrSvJNm0wKshIEFk4uUGaoiy8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OG2bqR3q54DS1eFOTM89y4SI5f0ngMyz7TmgnLFyuwgdc3ySfslOanUnoTvD9nsv1
-	 iciztUu+BOYcYUMalTiEHz/se6/+nRBQU+60iTpLO1Zafr/+nRMXnZ5xK6XKYOpnKv
-	 zK32i+mhjV2zkpYlIrlDqwu0FKQw7sgdx8as9u38=
+	b=QSI6Ln5Efl5swFnJkw5Fuuh22GKlN1vLv9BZEtSkc4hii0s+YdkmIwCgEDdYct1sZ
+	 GZo6OVU4ut74ciZi6aqL4b5dYrQohjpJ6ngsR3guZXNJ+WJa622r7pHHBKjmvL5Eye
+	 4Q1Q6ZM8sTWbRdp4pGLL6jZWPX78iYttme2vaTAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgDVKDQ (ORCPT
+        id S1727779AbgDVKDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbgDVKDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:11 -0400
+        id S1727119AbgDVKDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFF120784;
-        Wed, 22 Apr 2020 10:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B733B2076C;
+        Wed, 22 Apr 2020 10:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549790;
-        bh=j4AQH5rvNz6DRK8i9x9rJX+agLWx9idbtMpnE/p1QUo=;
+        s=default; t=1587549788;
+        bh=uSarPIu+wtGY/EnBzRrSvJNm0wKshIEFk4uUGaoiy8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MesT86zC/v6FajqCis2lrnPp1vGQsRi+aj4b0PHfV1N7cS/nDJIyCtTtli9/b5cw4
-         f4k9nW9WRhdMQkGaX2aHqiAI6u1s+EYdjEjbsJetirZ3T6aI+07YCm4JayNIDpYk9g
-         gK98/lQBbwULQIDP18w4mMUBQjRoyuVcx6i4qRKQ=
+        b=gw4Td+c2dVuztPwWpaNd5NAuO48s4fSEXzqrkofU10w8Pmxn1zUjT1vku/36nlewb
+         NczmC7llXN6fULxvbAH1slC1hbRCztf1ljq7LRBdb5KtHzgBY2phGvSCttxrvHqrTT
+         n5A4F+RdcPkRwoOIoLO9LU1cytnnqFMJM7Air/rM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.4 059/100] jbd2: improve comments about freeing data buffers whose page mapping is NULL
-Date:   Wed, 22 Apr 2020 11:56:29 +0200
-Message-Id: <20200422095033.685771979@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Jacob Xu <jacobhxu@google.com>,
+        Peter Shier <pshier@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 068/100] kvm: x86: Host feature SSBD doesnt imply guest feature SPEC_CTRL_SSBD
+Date:   Wed, 22 Apr 2020 11:56:38 +0200
+Message-Id: <20200422095035.327933320@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -59,41 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Jim Mattson <jmattson@google.com>
 
-commit 780f66e59231fcf882f36c63f287252ee47cc75a upstream.
+commit 396d2e878f92ec108e4293f1c77ea3bc90b414ff upstream.
 
-Improve comments in jbd2_journal_commit_transaction() to describe why
-we don't need to clear the buffer_mapped bit for freeing file mapping
-buffers whose page mapping is NULL.
+The host reports support for the synthetic feature X86_FEATURE_SSBD
+when any of the three following hardware features are set:
+  CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31]
+  CPUID.80000008H:EBX.AMD_SSBD[bit 24]
+  CPUID.80000008H:EBX.VIRT_SSBD[bit 25]
 
-Link: https://lore.kernel.org/r/20200217112706.20085-1-yi.zhang@huawei.com
-Fixes: c96dceeabf76 ("jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer")
-Suggested-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Either of the first two hardware features implies the existence of the
+IA32_SPEC_CTRL MSR, but CPUID.80000008H:EBX.VIRT_SSBD[bit 25] does
+not. Therefore, CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31] should only be
+set in the guest if CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31] or
+CPUID.80000008H:EBX.AMD_SSBD[bit 24] is set on the host.
 
+Fixes: 0c54914d0c52a ("KVM: x86: use Intel speculation bugs and features as derived in generic x86 code")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Jacob Xu <jacobhxu@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 4.x: adjust indentation]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kvm/cpuid.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -1008,9 +1008,10 @@ restart_loop:
- 			 * journalled data) we need to unmap buffer and clear
- 			 * more bits. We also need to be careful about the check
- 			 * because the data page mapping can get cleared under
--			 * out hands, which alse need not to clear more bits
--			 * because the page and buffers will be freed and can
--			 * never be reused once we are done with them.
-+			 * our hands. Note that if mapping == NULL, we don't
-+			 * need to make buffer unmapped because the page is
-+			 * already detached from the mapping and buffers cannot
-+			 * get reused.
- 			 */
- 			mapping = READ_ONCE(bh->b_page->mapping);
- 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -457,7 +457,8 @@ static inline int __do_cpuid_ent(struct
+ 				entry->edx |= F(SPEC_CTRL);
+ 			if (boot_cpu_has(X86_FEATURE_STIBP))
+ 				entry->edx |= F(INTEL_STIBP);
+-			if (boot_cpu_has(X86_FEATURE_SSBD))
++			if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
++			    boot_cpu_has(X86_FEATURE_AMD_SSBD))
+ 				entry->edx |= F(SPEC_CTRL_SSBD);
+ 			/*
+ 			 * We emulate ARCH_CAPABILITIES in software even
 
 
