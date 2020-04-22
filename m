@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C509C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE03C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2522070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E962070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550621;
-	bh=rN77u9di2Y6qyoYMJ8b4n4AnqILjg7jKJJKhKYC1iLk=;
+	s=default; t=1587550626;
+	bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sF4dUuqQbLS0v2rYFEywmp6FfMbQfK54qyD3Nqx/VB66dWrEciuUl6Z2IOChG0FCk
-	 TXi1khLM0WYdevpxFqvtGlnHq3r5+A53wH9v7W8R8l5vr7x/H/+IdfjgAJOKimp1iH
-	 k50s/L2HWWuKgGIw2LYdnJ3YteHtGgOGSIdy3+Rg=
+	b=aE57X2TKhTnr/3naNAyO40aV3e8XjepI06ejg1xY78IwnTdOvHZjp2Rg9uWsLu1nD
+	 /KAlzy86ykE9I1yfbUmbfmFNcR7Wt+Ala5pmhOcTq99VeJjXDZDhZyjTIbhNXob6LD
+	 jd/HhBQmUXSb0VWsFwXVye4HXOLtDd+2CIHvN+mM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbgDVKQ7 (ORCPT
+        id S1729797AbgDVKRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:17:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgDVKQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:04 -0400
+        id S1729653AbgDVKPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 522BB2076B;
-        Wed, 22 Apr 2020 10:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB902075A;
+        Wed, 22 Apr 2020 10:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550563;
-        bh=rN77u9di2Y6qyoYMJ8b4n4AnqILjg7jKJJKhKYC1iLk=;
+        s=default; t=1587550519;
+        bh=QeP+z2py5zehTf5cGkwbpGZ5Yi83zG6RPJpUo8i2+no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2rn+xSbYk4pWcp8KtlQ4gibHETiMDBR0YyXzCZgpefy9Sy1SVg7Pv1RNujQDCCGUL
-         0OVPrXo/BVvS0RGJhM/GguKa2Qpm+yn2UPtfGsm3h5nKVkRsUbwueCGiRGnBpOYR2K
-         mvTDFDqrNMHWKqqB4mQXwt99T0jZy0MnG/9/hhIE=
+        b=kKb96tcpOcPEmPh1al3oOIgCVPbeuiZZZEw4szs7zCeckX/zNzsb+P37rx7QkEza1
+         gE4UdcglqzbzryM/dLqtCpC8S+KQwVcT9du+tGI4rSvZge81uQJaX9gMKcbJLrVocV
+         NLYh0P2eL72/V0lMSGoO6VcV2Kehf14dTGabxwXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 60/64] mtd: spinand: Explicitly use MTD_OPS_RAW to write the bad block marker to OOB
-Date:   Wed, 22 Apr 2020 11:57:44 +0200
-Message-Id: <20200422095024.043028142@linuxfoundation.org>
+        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 48/64] iommu/vt-d: Fix mm reference leak
+Date:   Wed, 22 Apr 2020 11:57:32 +0200
+Message-Id: <20200422095021.497253732@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -61,38 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-commit 621a7b780bd8b7054647d53d5071961f2c9e0873 upstream.
+[ Upstream commit 902baf61adf6b187f0a6b789e70d788ea71ff5bc ]
 
-When writing the bad block marker to the OOB area the access mode
-should be set to MTD_OPS_RAW as it is done for reading the marker.
-Currently this only works because req.mode is initialized to
-MTD_OPS_PLACE_OOB (0) and spinand_write_to_cache_op() checks for
-req.mode != MTD_OPS_AUTO_OOB.
+Move canonical address check before mmget_not_zero() to avoid mm
+reference leak.
 
-Fix this by explicitly setting req.mode to MTD_OPS_RAW.
-
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-3-frieder.schrempf@kontron.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 9d8c3af31607 ("iommu/vt-d: IOMMU Page Request needs to check if address is canonical.")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/spi/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/intel-svm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -670,6 +670,7 @@ static int spinand_markbad(struct nand_d
- 		.ooboffs = 0,
- 		.ooblen = sizeof(marker),
- 		.oobbuf.out = marker,
-+		.mode = MTD_OPS_RAW,
- 	};
- 	int ret;
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 5944d3b4dca37..ef3aadec980ee 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -620,14 +620,15 @@ static irqreturn_t prq_event_thread(int irq, void *d)
+ 		 * any faults on kernel addresses. */
+ 		if (!svm->mm)
+ 			goto bad_req;
+-		/* If the mm is already defunct, don't handle faults. */
+-		if (!mmget_not_zero(svm->mm))
+-			goto bad_req;
  
+ 		/* If address is not canonical, return invalid response */
+ 		if (!is_canonical_address(address))
+ 			goto bad_req;
+ 
++		/* If the mm is already defunct, don't handle faults. */
++		if (!mmget_not_zero(svm->mm))
++			goto bad_req;
++
+ 		down_read(&svm->mm->mmap_sem);
+ 		vma = find_extend_vma(svm->mm, address);
+ 		if (!vma || address < vma->vm_start)
+-- 
+2.20.1
+
 
 
