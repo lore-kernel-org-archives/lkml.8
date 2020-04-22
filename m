@@ -4,123 +4,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221AEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B93C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E7721473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A7821473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgDVU4h (ORCPT
+        id S1726499AbgDVU5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:56:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64460 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726158AbgDVU4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:56:36 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MKXhqR134953
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:56:36 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmv196jm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:56:36 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 22 Apr 2020 21:56:28 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Apr 2020 21:56:24 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03MKtL5c52822330
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 20:55:21 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 21CEEA405F;
-        Wed, 22 Apr 2020 20:56:29 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 336BFA4054;
-        Wed, 22 Apr 2020 20:56:28 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.162.195])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Apr 2020 20:56:28 +0000 (GMT)
-Subject: Re: [PATCH 3/5] ima: Fix ima digest hash table key calculation
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, krzysztof.struczynski@huawei.com,
-        silviu.vlasceanu@huawei.com, stable@vger.kernel.org
-Date:   Wed, 22 Apr 2020 16:56:27 -0400
-In-Reply-To: <20200325161116.7082-3-roberto.sassu@huawei.com>
-References: <20200325161116.7082-1-roberto.sassu@huawei.com>
-         <20200325161116.7082-3-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042220-0028-0000-0000-000003FD2B3B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042220-0029-0000-0000-000024C2F3C3
-Message-Id: <1587588987.5165.20.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_07:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
- suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220156
+        Wed, 22 Apr 2020 16:57:25 -0400
+Received: from mail.hallyn.com ([178.63.66.53]:45876 "EHLO mail.hallyn.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbgDVU5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:57:25 -0400
+X-Greylist: delayed 391 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 16:57:22 EDT
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id 2555C9A3; Wed, 22 Apr 2020 15:50:51 -0500 (CDT)
+Date:   Wed, 22 Apr 2020 15:50:51 -0500
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        Steve Barber <smbarber@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Filipe Brandenburger <filbranden@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Benjamin Elder <bentheelder@google.com>,
+        Akihiro Suda <suda.kyoto@gmail.com>
+Subject: Re: [PATCH v2 3/7] loop: use ns_capable for some loop operations
+Message-ID: <20200422205051.GA31944@mail.hallyn.com>
+References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
+ <20200422145437.176057-4-christian.brauner@ubuntu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422145437.176057-4-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roberto, Krsysztof,
-
-On Wed, 2020-03-25 at 17:11 +0100, Roberto Sassu wrote:
-> From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+On Wed, Apr 22, 2020 at 04:54:33PM +0200, Christian Brauner wrote:
+> The following  LOOP_GET_STATUS, LOOP_SET_STATUS, and LOOP_SET_BLOCK_SIZE
+> operations are now allowed in non-initial namespaces. Most other
+> operations were already possible before.
 > 
-> Function hash_long() accepts unsigned long, while currently only one byte
-> is passed from ima_hash_key(), which calculates a key for ima_htable. Use
-> more bytes to avoid frequent collisions.
-> 
-> Length of the buffer is not explicitly passed as a function parameter,
-> because this function expects a digest whose length is greater than the
-> size of unsigned long.
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Seth Forshee <seth.forshee@canonical.com>
+> Cc: Tom Gundersen <teg@jklm.no>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Christian Kellner <ckellner@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: David Rheinsberg <david.rheinsberg@gmail.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Somehow I missed the original report of this problem https://lore.kern
-el.org/patchwork/patch/674684/.  This patch is definitely better, but
-how many unique keys are actually being used?  Is it anywhere near
-IMA_MEASURE_HTABLE_SIZE(512)?
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
 
-Do we need a new securityfs entry to display the number used?
-
-Mimi
-
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
-> Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 > ---
->  security/integrity/ima/ima.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> /* v2 */
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - Adapated loop_capable() based on changes in the loopfs
+>     implementation patchset. Otherwise it is functionally equivalent to
+>     the v1 version.
+> ---
+>  drivers/block/loop.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
 > 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 64317d95363e..cf0022c2bc14 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -177,7 +177,7 @@ extern struct ima_h_table ima_htable;
->  
->  static inline unsigned long ima_hash_key(u8 *digest)
->  {
-> -	return hash_long(*digest, IMA_HASH_BITS);
-> +	return hash_long(*((unsigned long *)digest), IMA_HASH_BITS);
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 52f7583dd17d..8e21d4b33e01 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -1352,6 +1352,16 @@ void loopfs_evict_locked(struct loop_device *lo)
+>  	}
+>  	mutex_unlock(&loop_ctl_mutex);
 >  }
+> +
+> +static bool loop_capable(const struct loop_device *lo, int cap)
+> +{
+> +	return ns_capable(loopfs_ns(lo), cap);
+> +}
+> +#else /* !CONFIG_BLK_DEV_LOOPFS */
+> +static inline bool loop_capable(const struct loop_device *lo, int cap)
+> +{
+> +	return capable(cap);
+> +}
+>  #endif /* CONFIG_BLK_DEV_LOOPFS */
 >  
->  #define __ima_hooks(hook)		\
-
+>  static int
+> @@ -1368,7 +1378,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  		return err;
+>  	if (lo->lo_encrypt_key_size &&
+>  	    !uid_eq(lo->lo_key_owner, uid) &&
+> -	    !capable(CAP_SYS_ADMIN)) {
+> +	    !loop_capable(lo, CAP_SYS_ADMIN)) {
+>  		err = -EPERM;
+>  		goto out_unlock;
+>  	}
+> @@ -1499,7 +1509,7 @@ loop_get_status(struct loop_device *lo, struct loop_info64 *info)
+>  	memcpy(info->lo_crypt_name, lo->lo_crypt_name, LO_NAME_SIZE);
+>  	info->lo_encrypt_type =
+>  		lo->lo_encryption ? lo->lo_encryption->number : 0;
+> -	if (lo->lo_encrypt_key_size && capable(CAP_SYS_ADMIN)) {
+> +	if (lo->lo_encrypt_key_size && loop_capable(lo, CAP_SYS_ADMIN)) {
+>  		info->lo_encrypt_key_size = lo->lo_encrypt_key_size;
+>  		memcpy(info->lo_encrypt_key, lo->lo_encrypt_key,
+>  		       lo->lo_encrypt_key_size);
+> @@ -1723,7 +1733,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+>  		return loop_clr_fd(lo);
+>  	case LOOP_SET_STATUS:
+>  		err = -EPERM;
+> -		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
+> +		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
+>  			err = loop_set_status_old(lo,
+>  					(struct loop_info __user *)arg);
+>  		}
+> @@ -1732,7 +1742,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+>  		return loop_get_status_old(lo, (struct loop_info __user *) arg);
+>  	case LOOP_SET_STATUS64:
+>  		err = -EPERM;
+> -		if ((mode & FMODE_WRITE) || capable(CAP_SYS_ADMIN)) {
+> +		if ((mode & FMODE_WRITE) || loop_capable(lo, CAP_SYS_ADMIN)) {
+>  			err = loop_set_status64(lo,
+>  					(struct loop_info64 __user *) arg);
+>  		}
+> @@ -1742,7 +1752,7 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+>  	case LOOP_SET_CAPACITY:
+>  	case LOOP_SET_DIRECT_IO:
+>  	case LOOP_SET_BLOCK_SIZE:
+> -		if (!(mode & FMODE_WRITE) && !capable(CAP_SYS_ADMIN))
+> +		if (!(mode & FMODE_WRITE) && !loop_capable(lo, CAP_SYS_ADMIN))
+>  			return -EPERM;
+>  		/* Fall through */
+>  	default:
+> -- 
+> 2.26.1
