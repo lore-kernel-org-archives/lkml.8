@@ -2,91 +2,87 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B66C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35D9C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015FF2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nCoWE6HZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7321F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgDVHvy (ORCPT
+        id S1726500AbgDVHwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:51:54 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49126 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgDVHvv (ORCPT
+        Wed, 22 Apr 2020 03:52:09 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:37629 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726154AbgDVHwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:51:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03M7pfor015094;
-        Wed, 22 Apr 2020 02:51:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587541901;
-        bh=0qzb9XgHtudnkz7lbBkw74ucY2oykHyzy4LTQbWvHpo=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=nCoWE6HZ8H6O8qQSDyrOT5zJ43L9Tou4oaazp47n6Ijl1WMWmLKQkThw4ZGe6hmrz
-         JONjFjKyNkmERBzhWLAlHwhztGs5vQQbpSP7ClZpH561dv1OQJerSC/JZKewr1gubZ
-         /QyT7Ym9vY1W7HPuYye+f1ZCqhA+fK19NHquAsMY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03M7pfAU086881;
-        Wed, 22 Apr 2020 02:51:41 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Apr 2020 02:51:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Apr 2020 02:51:40 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03M7pcH4025597;
-        Wed, 22 Apr 2020 02:51:38 -0500
-Subject: Re: [PATCH] omapfb/dss: fix comparison to bool warning
-To:     Jason Yan <yanaijie@huawei.com>, <b.zolnierkie@samsung.com>,
-        <afd@ti.com>, <linux-omap@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200422071903.637-1-yanaijie@huawei.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <fecc5f43-d1a2-f29f-da3a-79c297bff462@ti.com>
-Date:   Wed, 22 Apr 2020 10:51:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 03:52:08 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TwIs7uZ_1587541925;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TwIs7uZ_1587541925)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 22 Apr 2020 15:52:05 +0800
+Subject: Re: [PATCH] fs:ocfs2:remove unneeded variable 'o2dlm_flags'
+To:     Wu Bo <wubo40@huawei.com>, mark@fasheh.com, jlbec@evilplan.org
+Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        liuzhiqiang26@huawei.com, linfeilong@huawei.com
+References: <1587539521-461177-1-git-send-email-wubo40@huawei.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <7214599d-3bd2-96b7-59f9-d731bb27f744@linux.alibaba.com>
+Date:   Wed, 22 Apr 2020 15:52:05 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200422071903.637-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1587539521-461177-1-git-send-email-wubo40@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2020 10:19, Jason Yan wrote:
+
+
+On 2020/4/22 15:12, Wu Bo wrote:
 > Fix the following coccicheck warning:
+> fs/ocfs2/stack_o2cb.c:69:5-16: Unneeded variable: "o2dlm_flags". 
+> Return "0" on line 84
 > 
-> drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:461:15-32: WARNING:
-> Comparison to bool
-> drivers/video/fbdev/omap2/omapfb/dss/dispc.c:891:5-35: WARNING:
-> Comparison of 0/1 to bool variable
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Umm... This is not right, NAK.
+Something tricky is in map_flag() so that coccicheck doesn't recognize.
+
+Thanks,
+Joseph
+
+> Signed-off-by: Wu Bo <wubo40@huawei.com>
 > ---
->   drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 2 +-
->   drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 4 +---
->   2 files changed, 2 insertions(+), 4 deletions(-)
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>  fs/ocfs2/stack_o2cb.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/ocfs2/stack_o2cb.c b/fs/ocfs2/stack_o2cb.c
+> index dbf8b57..2da9633 100644
+> --- a/fs/ocfs2/stack_o2cb.c
+> +++ b/fs/ocfs2/stack_o2cb.c
+> @@ -66,8 +66,6 @@ static inline int mode_to_o2dlm(int mode)
+>  	}
+>  static int flags_to_o2dlm(u32 flags)
+>  {
+> -	int o2dlm_flags = 0;
+> -
+>  	map_flag(DLM_LKF_NOQUEUE, LKM_NOQUEUE);
+>  	map_flag(DLM_LKF_CANCEL, LKM_CANCEL);
+>  	map_flag(DLM_LKF_CONVERT, LKM_CONVERT);
+> @@ -81,7 +79,7 @@ static int flags_to_o2dlm(u32 flags)
+>  	/* map_flag() should have cleared every flag passed in */
+>  	BUG_ON(flags != 0);
+>  
+> -	return o2dlm_flags;
+> +	return 0;
+>  }
+>  #undef map_flag
+>  
+> 
