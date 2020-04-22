@@ -7,47 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24D8C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7FFC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3FA20784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606342084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551225;
-	bh=Fiy/C+hMDSiklLTNMwKsro5YSZ51P2tQcXoshYJOGXM=;
+	s=default; t=1587551228;
+	bh=7hvtoSzxmi+cP8AANifV0v8cp0KWUwU7mn9hHs/Izno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVqHXxZ9qcEvYem5JJ4S5Lo7Rk5FtaAwlZnd0YKSmHbYJKBCCwYuM6mPeDzR8Rboi
-	 GH6mjXX/uufH/VUVNSVeysn4AKGrFYJzwweVGGlVuiuI8VTNpfiscjNvHrK8iBqhuJ
-	 wLxisT31ChtOg/mbKrAlVfs1iNjhBHJfXUyAypA8=
+	b=WKs5YkHLzakyAhQHlvLHFO5eSoGQ9+EWz0GOEOF9PCKOTxdpQ9jnxkrExFn4YITCp
+	 j+/2Ic5EJ6mZANbJs0kUYs7qOvCgOUMclcghBJrgP0++/tfxjhs5Ua5a24Z0joHl5u
+	 COt3jFiUj3Om9CK7e+U6oHlWy0Mj+7SUvG8D16qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbgDVK1E (ORCPT
+        id S1730830AbgDVK1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:27:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbgDVK1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:27:00 -0400
+        id S1730805AbgDVK1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:27:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32CF32075A;
-        Wed, 22 Apr 2020 10:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F15AB20781;
+        Wed, 22 Apr 2020 10:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551219;
-        bh=Fiy/C+hMDSiklLTNMwKsro5YSZ51P2tQcXoshYJOGXM=;
+        s=default; t=1587551224;
+        bh=7hvtoSzxmi+cP8AANifV0v8cp0KWUwU7mn9hHs/Izno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2CcMe7nD2cvWrKoOdXFftA4YRZ1uFd+zu1tKh+b6e8pcceQq0nKL3J/e5npqgfSn1
-         PzJ2meu9337p86HM/2VTaMduoT3Xg5LC9GgFif5sIT3lPdvsv+SmgRkdyF/1EzwltX
-         bgw/SIeCRfqbB4of2fhncc5lk53Kzs+Ifb4tDdiE=
+        b=WGbETPv9eIQCndTnPQd9JXlY+08qu93pudt46qJo6fB+1tSrccEccMI54aDjajvC7
+         xpctACUTTaYHLYpPmPnSqXCxyVpUsLmmFjUS7+RW0EKLT8xumLSx92VgWhqhaXZB7s
+         MyKEpVVZ3ahrT/Dv0KPv9V62xDDskJbTc07LUPL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.6 148/166] cifs: ignore cached share root handle closing errors
-Date:   Wed, 22 Apr 2020 11:57:55 +0200
-Message-Id: <20200422095104.463905753@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Peter Rosin <peda@axentia.se>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.6 150/166] fbdev: potential information leak in do_fb_ioctl()
+Date:   Wed, 22 Apr 2020 11:57:57 +0200
+Message-Id: <20200422095104.660409122@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,95 +70,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Aptel <aaptel@suse.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit e79b0332ae06b4895dcecddf4bbc5d3917e9383c upstream.
+commit d3d19d6fc5736a798b118971935ce274f7deaa82 upstream.
 
-Fix tcon use-after-free and NULL ptr deref.
+The "fix" struct has a 2 byte hole after ->ywrapstep and the
+"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
+on the compiler.  The solution is just to replace the assignment with an
+memcpy().
 
-Customer system crashes with the following kernel log:
-
-[462233.169868] CIFS VFS: Cancelling wait for mid 4894753 cmd: 14       => a QUERY DIR
-[462233.228045] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
-[462233.305922] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
-[462233.306205] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
-[462233.347060] CIFS VFS: cifs_put_smb_ses: Session Logoff failure rc=-4
-[462233.347107] CIFS VFS: Close unmatched open
-[462233.347113] BUG: unable to handle kernel NULL pointer dereference at 0000000000000038
-...
-    [exception RIP: cifs_put_tcon+0xa0] (this is doing tcon->ses->server)
- #6 [...] smb2_cancelled_close_fid at ... [cifs]
- #7 [...] process_one_work at ...
- #8 [...] worker_thread at ...
- #9 [...] kthread at ...
-
-The most likely explanation we have is:
-
-* When we put the last reference of a tcon (refcount=0), we close the
-  cached share root handle.
-* If closing a handle is interrupted, SMB2_close() will
-  queue a SMB2_close() in a work thread.
-* The queued object keeps a tcon ref so we bump the tcon
-  refcount, jumping from 0 to 1.
-* We reach the end of cifs_put_tcon(), we free the tcon object despite
-  it now having a refcount of 1.
-* The queued work now runs, but the tcon, ses & server was freed in
-  the meantime resulting in a crash.
-
-THREAD 1
-========
-cifs_put_tcon                 => tcon refcount reach 0
-  SMB2_tdis
-   close_shroot_lease
-    close_shroot_lease_locked => if cached root has lease && refcount = 0
-     smb2_close_cached_fid    => if cached root valid
-      SMB2_close              => retry close in a thread if interrupted
-       smb2_handle_cancelled_close
-        __smb2_handle_cancelled_close    => !! tcon refcount bump 0 => 1 !!
-         INIT_WORK(&cancelled->work, smb2_cancelled_close_fid);
-         queue_work(cifsiod_wq, &cancelled->work) => queue work
- tconInfoFree(tcon);    ==> freed!
- cifs_put_smb_ses(ses); ==> freed!
-
-THREAD 2 (workqueue)
-========
-smb2_cancelled_close_fid
-  SMB2_close(0, cancelled->tcon, ...); => use-after-free of tcon
-  cifs_put_tcon(cancelled->tcon);      => tcon refcount reach 0 second time
-  *CRASH*
-
-Fixes: d9191319358d ("CIFS: Close cached root handle only if it has a lease")
-Signed-off-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrea Righi <righi.andrea@gmail.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200113100132.ixpaymordi24n3av@kili.mountain
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2misc.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/video/fbdev/core/fbmem.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -766,6 +766,20 @@ smb2_handle_cancelled_close(struct cifs_
- 
- 	cifs_dbg(FYI, "%s: tc_count=%d\n", __func__, tcon->tc_count);
- 	spin_lock(&cifs_tcp_ses_lock);
-+	if (tcon->tc_count <= 0) {
-+		struct TCP_Server_Info *server = NULL;
-+
-+		WARN_ONCE(tcon->tc_count < 0, "tcon refcount is negative");
-+		spin_unlock(&cifs_tcp_ses_lock);
-+
-+		if (tcon->ses)
-+			server = tcon->ses->server;
-+
-+		cifs_server_dbg(FYI, "tid=%u: tcon is closing, skipping async close retry of fid %llu %llu\n",
-+				tcon->tid, persistent_fid, volatile_fid);
-+
-+		return 0;
-+	}
- 	tcon->tc_count++;
- 	spin_unlock(&cifs_tcp_ses_lock);
- 
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -1115,7 +1115,7 @@ static long do_fb_ioctl(struct fb_info *
+ 		break;
+ 	case FBIOGET_FSCREENINFO:
+ 		lock_fb_info(info);
+-		fix = info->fix;
++		memcpy(&fix, &info->fix, sizeof(fix));
+ 		if (info->flags & FBINFO_HIDE_SMEM_START)
+ 			fix.smem_start = 0;
+ 		unlock_fb_info(info);
 
 
