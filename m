@@ -2,193 +2,148 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119E9C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2405C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA8F12076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7812076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:52:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SEYTsukH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgDVSvX (ORCPT
+        id S1726810AbgDVSwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:51:23 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46413 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVSvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:51:22 -0400
-IronPort-SDR: qA3ucP6gC5+IQx3Xsjgf+YjHMnYXASXGXj6l7UCQyGwuaPg3FYQqVJyb2uuzftZAqoG7yqgKRM
- 0s/PzybHF6Ag==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:51:21 -0700
-IronPort-SDR: qqIquuGL482KeAk9Fi2fpLDL6RgzKTQLdO3ZrjDmL6Yf3xRhccswmwkjvWiLXWUe5Hc3zejhOa
- XdCI2ppN3jtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="290931747"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Apr 2020 11:51:21 -0700
-Date:   Wed, 22 Apr 2020 11:51:21 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V9 03/11] fs/stat: Define DAX statx attribute
-Message-ID: <20200422185121.GL3372712@iweiny-DESK2.sc.intel.com>
-References: <20200421191754.3372370-1-ira.weiny@intel.com>
- <20200421191754.3372370-4-ira.weiny@intel.com>
- <20200422162951.GE6733@magnolia>
+        Wed, 22 Apr 2020 14:52:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44680 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726343AbgDVSwD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:52:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587581521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=trPq/Y5FosLGaXOvjfTLOLDEExV7IW7COeIEuuhVB14=;
+        b=SEYTsukHzoIyQNtvTxHjTfxqn+gjrFWRzhaRBmfIgwhG3rRX+5lEhDlyxiYX01UHjIprcK
+        QMxjBXGmVadhRkk+nEfgDghBS6BROOtGnqUWVt+TE8kg7Bh2ZoxBdDe7XGkwc0xno5oqK2
+        e/ildCD65gbbeUsdaJmD7k0DVz6CEBo=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-457-mhlrGyjuMdiJomeC-GFmFQ-1; Wed, 22 Apr 2020 14:51:59 -0400
+X-MC-Unique: mhlrGyjuMdiJomeC-GFmFQ-1
+Received: by mail-qt1-f197.google.com with SMTP id x7so3785596qtv.23
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:51:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=trPq/Y5FosLGaXOvjfTLOLDEExV7IW7COeIEuuhVB14=;
+        b=Dt8ET8KL5WKtsbsvUe/zEA8Lp30bQe0af7vqxxsqYILAN9DAEK66ZwxSFirnJq8kRF
+         aQr2fl+cgoDXdcNGDobMW9HXuTlftIbgwybl3UmTSLBEoTvsOhJQ2VgpzFk+rjDrfuKF
+         zu46YR8St2nGDe2eo7E7jjhgVNH9ssyRFWoj++9ZbcWGZNXXkyDvD/r6Tw3HsxZZhYF0
+         OJUc4Ge27QLsvT5QvOrsW/h7RoPH/L+Z4xyyb7Qfs64BtycC27DcRf7h8ZzyCZlfSskk
+         feMyIXYbL/0R8nps//h1a0jqGafksOrsIsqboTB3VWahd3ZoLxfOu0kCUHrxera42g2l
+         mJkQ==
+X-Gm-Message-State: AGi0PuZ6tGEZj4cEIzSLbfYYDLrG8Ia+qjHtZ50qDdhWZhFKjSmcYvs8
+        C1YRl0+SB6pW7klJYgM6JnoycYPGl8Mj5CJWNp16NvcP0XyHf3roNNmLcLG195w4TFjLcXTupJ7
+        vDL4oT4ckZDEd8o66EYHpkoKx
+X-Received: by 2002:a37:b15:: with SMTP id 21mr28563945qkl.104.1587581518148;
+        Wed, 22 Apr 2020 11:51:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLLzkmnDYGbbOkIaC8yISYdS2vxaekStNwPP8eyf0MeRUT+hbOr8YWc7KYSWKcge0VUFezzCA==
+X-Received: by 2002:a37:b15:: with SMTP id 21mr28563901qkl.104.1587581517797;
+        Wed, 22 Apr 2020 11:51:57 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id w10sm14397qka.19.2020.04.22.11.51.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 11:51:56 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 14:51:55 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Kevin Tian <kevin.tian@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v8 00/14] KVM: Dirty ring interface
+Message-ID: <20200422185155.GA3596@xz-x1>
+References: <20200331190000.659614-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200422162951.GE6733@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200331190000.659614-1-peterx@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 09:29:51AM -0700, Darrick J. Wong wrote:
-> On Tue, Apr 21, 2020 at 12:17:45PM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > In order for users to determine if a file is currently operating in DAX
-> > state (effective DAX).  Define a statx attribute value and set that
-> > attribute if the effective DAX flag is set.
-> > 
-> > To go along with this we propose the following addition to the statx man
-> > page:
-> > 
-> > STATX_ATTR_DAX
-> > 
-> > 	The file is in the DAX (cpu direct access) state.  DAX state
-> > 	attempts to minimize software cache effects for both I/O and
-> > 	memory mappings of this file.  It requires a file system which
-> > 	has been configured to support DAX.
-> > 
-> > 	DAX generally assumes all accesses are via cpu load / store
-> > 	instructions which can minimize overhead for small accesses, but
-> > 	may adversely affect cpu utilization for large transfers.
-> > 
-> > 	File I/O is done directly to/from user-space buffers and memory
-> > 	mapped I/O may be performed with direct memory mappings that
-> > 	bypass kernel page cache.
-> > 
-> > 	While the DAX property tends to result in data being transferred
-> > 	synchronously, it does not give the same guarantees of O_SYNC
-> > 	where data and the necessary metadata are transferred together.
-> > 
-> > 	A DAX file may support being mapped with the MAP_SYNC flag,
-> > 	which enables a program to use CPU cache flush instructions to
-> > 	persist CPU store operations without an explicit fsync(2).  See
-> > 	mmap(2) for more information.
-> 
-> One thing I hadn't noticed before -- this is a change to userspace API,
-> so please cc this series to linux-api@vger.kernel.org when you send V10.
+Hi,
 
-Right!  Glad you caught me on this because I was just preparing to send V10.
+TL;DR: I'm thinking whether we should record pure GPA/GFN instead of (slot_id,
+slot_offset) tuple for dirty pages in kvm dirty ring to unbind kvm_dirty_gfn
+with memslots.
 
-Is there someone I could directly mail who needs to look at this?  I guess I
-thought we had the important FS people involved for this type of API change.
-:-/
+(A slightly longer version starts...)
 
-> 
-> Also, I've started to think about commit order sequencing for actually
-> landing this series.  Usually I try to put vfs and documentation things
-> before xfs stuff, which means I came up with:
-> 
-> vfs       xfs          I_DONTCACHE
-> 2 3 11    1 4 5 6 7    8 9 10
-> 
-> Note that I separated the DONTCACHE part because it touches VFS
-> internals, which implies a higher standard of review (aka Al) and I do
-> not wish to hold up the 2-3-11-1-4-5-6-7 patches if the dontcache part
-> becomes contentious.
-> 
-> What do you think of that ordering?
+The problem is that binding dirty tracking operations to KVM memslots is a
+restriction that needs synchronization to memslot changes, which further needs
+synchronization across all the vcpus because they're the consumers of memslots.
+E.g., when we remove a memory slot, we need to flush all the dirty bits
+correctly before we do the removal of the memslot.  That's actually an known
+defect for QEMU/KVM [1] (I bet it could be a defect for many other
+hypervisors...) right now with current dirty logging.  Meanwhile, even if we
+fix it, that procedure is not scale at all, and error prone to dead locks.
 
-I think 1 stands on it's own separate from this series...  so I would keep it
-first.  Moving Documentation up is easy.
+Here memory removal is really an (still corner-cased but relatively) important
+scenario to think about for dirty logging comparing to memory additions &
+movings.  Because memory addition will always have no initial dirty page, and
+we don't really move RAM a lot (or do we ever?!) for a general VM use case.
 
-I've changed to this order...
+Then I went a step back to think about why we need these dirty bit information
+after all if the memslot is going to be removed?
 
-prelim   vfs       xfs        I_DONTCACHE
-1        2 3 11    4 5 6 7    8 9 10
+There're two cases:
 
-Which is pretty much the same now that I look at it!  ;-)
+  - When the memslot is going to be removed forever, then the dirty information
+    is indeed meaningless and can be dropped, and,
 
-> 
-> (Heck, maybe I'll just put patch 1 in the queue for 5.8 right now...)
+  - When the memslot is going to be removed but quickly added back with changed
+    size, then we need to keep those dirty bits because it's just a commmon way
+    to e.g. punch an MMIO hole in an existing RAM region (here I'd confess I
+    feel like using "slot_id" to identify memslot is really unfriendly syscall
+    design for things like "hole punchings" in the RAM address space...
+    However such "punch hold" operation is really needed even for a common
+    guest for either system reboots or device hotplugs, etc.).
 
-IMHO, I think 1 and 2 can go.
+The real scenario we want to cover for dirty tracking is the 2nd one.
 
-While patch 2 is in the VFS layer it is very much a DAX thing.  Jan and
-Christoph approved it.  I think even Dave approved the version before I
-removed io_is_direct() but I don't recall now.
+If we can track dirty using raw GPA, the 2nd scenario is solved itself.
+Because we know we'll add those memslots back (though it might be with a
+different slot ID), then the GPA value will still make sense, which means we
+should be able to avoid any kind of synchronization for things like memory
+removals, as long as the userspace is aware of that.
 
-Dan and I also discussed it internally when I first found the issue.  So I'm
-very confident in it!  :-D
+With that, when we fetch the dirty bits, we lookup the memslot dynamically,
+drop bits if the memslot does not exist on that address (e.g., permanent
+removals), and use whatever memslot is there for that guest physical address.
+Though we for sure still need to handle memory move, that the userspace needs
+to still take care of dirty bit flushing and sync for a memory move, however
+that's merely not happening so nothing to take care about either.
 
-Unfortunately, 3 and 10 are the critical pieces to the feature.  So we could
-move 3 out later after 8 and 9 are approved.  But I don't think it buys us
-much to have the tri-state go in without the rest.
+Does this makes sense?  Comments greatly welcomed..
 
-Ira
+Thanks,
 
-> 
-> --D
-> 
-> > Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> > Reviewed-by: Jan Kara <jack@suse.cz>
-> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
-> > Changes from V2:
-> > 	Update man page text with comments from Darrick, Jan, Dan, and
-> > 	Dave.
-> > ---
-> >  fs/stat.c                 | 3 +++
-> >  include/uapi/linux/stat.h | 1 +
-> >  2 files changed, 4 insertions(+)
-> > 
-> > diff --git a/fs/stat.c b/fs/stat.c
-> > index 030008796479..894699c74dde 100644
-> > --- a/fs/stat.c
-> > +++ b/fs/stat.c
-> > @@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
-> >  	if (IS_AUTOMOUNT(inode))
-> >  		stat->attributes |= STATX_ATTR_AUTOMOUNT;
-> >  
-> > +	if (IS_DAX(inode))
-> > +		stat->attributes |= STATX_ATTR_DAX;
-> > +
-> >  	if (inode->i_op->getattr)
-> >  		return inode->i_op->getattr(path, stat, request_mask,
-> >  					    query_flags);
-> > diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> > index ad80a5c885d5..e5f9d5517f6b 100644
-> > --- a/include/uapi/linux/stat.h
-> > +++ b/include/uapi/linux/stat.h
-> > @@ -169,6 +169,7 @@ struct statx {
-> >  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
-> >  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
-> >  #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
-> > +#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
-> >  
-> >  
-> >  #endif /* _UAPI_LINUX_STAT_H */
-> > -- 
-> > 2.25.1
-> > 
+[1] https://lists.gnu.org/archive/html/qemu-devel/2020-03/msg08361.html
+
+-- 
+Peter Xu
+
