@@ -2,175 +2,129 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD11AC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E296EC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D01C2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2838215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g6YAWj8R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDo/4WF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDVXbl (ORCPT
+        id S1726112AbgDVXjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
+        Wed, 22 Apr 2020 19:39:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgDVXbl (ORCPT
+        with ESMTP id S1725846AbgDVXjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:31:41 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E0DC03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:31:39 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id z12so3758356ilb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:31:39 -0700 (PDT)
+        Wed, 22 Apr 2020 19:39:32 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615CCC03C1AA;
+        Wed, 22 Apr 2020 16:39:32 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id c23so2834066qtp.11;
+        Wed, 22 Apr 2020 16:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B8O4jZZ0F/lKKEmFhigDjMargZ9Oe/sGTpY3jxbERg0=;
-        b=g6YAWj8Rl4wNYrHXCFnvgpS/qKcZ6sNQqPWJC59bEGMOh6CTaKDsZsSYquknIynQKx
-         9kR7v1Fl1Ww0KgiTWTQA3W8eDSyvsifBsdu4Bswt92/dhZWFT1+nIy0NiP9pBWsPb2jV
-         ttnFfVqNh3pNxDE3IHIwvyTx06E+ADiSx+gF4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=E1PBrkT1LoNCkirZimCNKHoVPu32mXxSCEKcm1zSQdY=;
+        b=oDo/4WF/ApXIvPS+YZM/b4AuPq4KMtNUrAx4kPRyrKcfDY/7N/wACbuVSV9Bv/+yzf
+         fsnHPe6JvdEzXhWLh9tQ6LLzYjBZVEjddVBn1gtQAALZMkA67fSSmIEs97PND8XNvZYp
+         /CLble/z+CslEMET1pTe/sVN52S4rwol8nho+e70U31cQydk8ItNbaD2Aun5iR9YbF6y
+         S2gA8LYXgnTxOjCa8ODOggGJVmTiCJMrAfqWMBASVIq+rkmiTUfucLWHgc1v7UxPm/SA
+         KXTVxF1f1yGF6eVCicEPf0DvQnww0cq8E9wKeCSoC9OtuV2k7GYnhhDWSC8guN4M4SP1
+         qKPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B8O4jZZ0F/lKKEmFhigDjMargZ9Oe/sGTpY3jxbERg0=;
-        b=fzbDeR071nn4pMs5oUfcQGX7fKdawMdi1AlMdt22M6r2CA80+q06WfWb5BidcBzDkr
-         LKM9rRPzY6lX23wYxE102jmk761FiB+0AD++FkbxL7rgCOx3DAXfhFMGKQtgM3CScvp+
-         SKhyAUehwSCnXmsaXqrMBA0i2YogclSV8cjYCJHH9wSScB5e7ZWe5DkYbh3a0ngObBTD
-         y2vjkxf1UXd8Pt1SrYTA2Jao+wftrle/nOwq0o8fbcVfrG9o3oLioJNmbN31VPCDjmOz
-         omyePmYkxVx7Q0fsj9a2tXvd6h5P4ONrtG5XqyeCceRM0BG5xzyS8RAD8smppuJYmDbY
-         Zwzw==
-X-Gm-Message-State: AGi0Pua++KSapaoxYanwUr8FIzCgcuWSM5L5hAcj1CqS9EBRFvcAH6ya
-        ikPL9YaKWoLiendWnmbF/VHP5mUuRwc=
-X-Google-Smtp-Source: APiQypLPNnv723+8shbTpOI6PiL0fxumhUJcFJ69iRBbB9gT5CrzHdn6Vo7tAdCYngg6x4gNVsfqxw==
-X-Received: by 2002:a92:8350:: with SMTP id f77mr837339ild.257.1587598298619;
-        Wed, 22 Apr 2020 16:31:38 -0700 (PDT)
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
-        by smtp.gmail.com with ESMTPSA id q29sm253452ill.65.2020.04.22.16.31.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 16:31:36 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id k6so4452429iob.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:31:36 -0700 (PDT)
-X-Received: by 2002:a6b:2b91:: with SMTP id r139mr1178830ior.61.1587598296099;
- Wed, 22 Apr 2020 16:31:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=E1PBrkT1LoNCkirZimCNKHoVPu32mXxSCEKcm1zSQdY=;
+        b=o3iyGTgInp+JDbK3ZKu1V8KCVnFcy5Swx8zmg3Gi7K+NT3Rvx4qniorndN+yaKVsn2
+         SejvSGlhYTwCkGMipEu+4FbdOEmIPK0D/9RvL5UpzqV9OrJdOvU9ePxgmBjQsNSdgdII
+         jV0ceMr9XLgzQKUSZdiybHjGOdyPZktOlc3ODFwW2j8LtXlI8LrdFAR4TnuE1sJE91py
+         oLZwpagFVTxzBmirBvuOidhJPP6EvJr4GBuLI/LsASESp2NXDped6TxuRaksRbw/9vF/
+         L3olmqhOKUKcvPmipIxEAecihYVOZwu8F6bQqdPKk1tu8DNMIVDfJwxAuHGWSxFA0WGs
+         wdvg==
+X-Gm-Message-State: AGi0PuaLDmC1JDCp7KtFfwHP+xUdA4XumqsOfzi5PtxVlb6GL3d5qF7X
+        rOLFEfIScTJCbF54vSNzdoU=
+X-Google-Smtp-Source: APiQypIx5CG1YBGE7PM0vaWxnGyfc8b17Jq+bNco8g/8Tp6x3Az3BOQ4nLnVYoI1NU6hWc+y49zG8Q==
+X-Received: by 2002:ac8:1090:: with SMTP id a16mr1262025qtj.181.1587598771607;
+        Wed, 22 Apr 2020 16:39:31 -0700 (PDT)
+Received: from imac (dhcp-108-168-12-59.cable.user.start.ca. [108.168.12.59])
+        by smtp.gmail.com with ESMTPSA id i6sm475709qkk.123.2020.04.22.16.39.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Apr 2020 16:39:31 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 19:39:28 -0400
+From:   Tim Lewis <elatllat@gmail.com>
+To:     elatllat@gmail.com
+Cc:     narmstrong@baylibre.com, khilman@baylibre.com,
+        christianshewitt@gmail.com, joy.cho@hardkernel.com,
+        tobetter@gmail.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: [PATCH v3] arm64: dts: meson: S922X: extend cpu opp-points
+Message-ID: <20200422233928.GA2816@imac>
 MIME-Version: 1.0
-References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
- <158755100643.159702.17904334834962681759@swboyd.mtv.corp.google.com>
- <CAD=FV=WJONhm4ukwZa2vGtozrz_SmLuTCLxVimnGba7wRPPzgQ@mail.gmail.com> <158758963395.230545.16210525372433383386@swboyd.mtv.corp.google.com>
-In-Reply-To: <158758963395.230545.16210525372433383386@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 22 Apr 2020 16:31:24 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UeZS94rgmjBDUfgt3B5f9WkAy-7jrLAcNCe-v4nZB_fg@mail.gmail.com>
-Message-ID: <CAD=FV=UeZS94rgmjBDUfgt3B5f9WkAy-7jrLAcNCe-v4nZB_fg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>, bgolaszewski@baylibre.com,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LinusW <linus.walleij@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_linux?=
-         =?UTF-8?Q?=2Darm=2Dmsm_=3Clinux=2Darm=2Dmsm=40vger=2Ekernel=2Eorg=3E=2C_dri=2Ddevel_=3Cdri=2Ddev?=
-         =?UTF-8?Q?el=40lists=2Efreedesktop=2Eorg=3E=2C_open_list=3AOPEN_FIRMWARE_AND_FLATT?=
-         =?UTF-8?Q?ENED_DEVICE_TREE_BINDINGS_=3Cdevicetree=40vger=2Ekernel=2Eorg=3E=2C_Jern?=
-         =?UTF-8?Q?ej_Skrabec_=3Cjernej=2Eskrabec=40siol=2Enet=3E=2C_Bjorn_Andersson_=3Cbjorn?=
-         =?UTF-8?Q?=2Eandersson=40linaro=2Eorg=3E=2C_Rob_Clark_=3Crobdclark=40chromium=2Eorg=3E=2C_?=
-         =?UTF-8?Q?LKML?= <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+HardKernel supports overclock through the addition to extra opp points
+in their official kernel sources for odroid-n2 [1]. Christian tested
+on other S922X devices with "no obvious issues". Neil thinks dvfs and
+thermal managementis can keep other S922X devices safe.
 
-On Wed, Apr 22, 2020 at 2:07 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Doug Anderson (2020-04-22 09:09:17)
-> > Hi,
-> >
-> > On Wed, Apr 22, 2020 at 3:23 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Douglas Anderson (2020-04-20 22:06:17)
-> > >
-> > > > Changes in v2:
-> > > > - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
-> > > >
-> > > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 165 ++++++++++++++++++++++++++
-> > > >  1 file changed, 165 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > index 6ad688b320ae..d04c2b83d699 100644
-> > > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > @@ -874,6 +886,153 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn_bridge *pdata)
-> > > >         return 0;
-> > > >  }
-> > > >
-> > > > +static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
-> > > > +{
-> > > > +       return container_of(chip, struct ti_sn_bridge, gchip);
-> > > > +}
-> > > > +
-> > > > +static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
-> > > > +                                          unsigned int offset)
-> > > > +{
-> > > > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-> > > > +
-> > > > +       return (atomic_read(&pdata->gchip_output) & BIT(offset)) ?
-> > >
-> > > Any reason this isn't a bitmap?
-> >
-> > Don't bitmaps need an external lock to protect against concurrent
-> > access?
->
-> Bitmaps are sometimes atomic. See Documentation/atomic_bitops.txt for
-> more info. From what I see here it looks like we can have a bitmap for
-> this and then use set_bit(), test_and_set_bit(), etc. and it will be the
-> same and easier to read.
+[1] https://github.com/hardkernel/linux/commit/f86cd9487c7483b2a05f448b9ebacf6bd5a2ad2f
+Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Tim Lewis <elatllat@gmail.com>
 
-Hrm.  Somehow I found the wrong place when trying to search for this
-previously.  Thanks for pointing me in the right directions.  Much
-nicer.
+---
+ arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi | 15 +++++++++++++++
+ 1 files changed, 15 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+index 046cc332d..1e5d0ee5d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+@@ -65,6 +65,11 @@
+ 			opp-hz = /bits/ 64 <1896000000>;
+ 			opp-microvolt = <981000>;
+ 		};
++
++		opp-1992000000 {
++			opp-hz = /bits/ 64 <1992000000>;
++			opp-microvolt = <1001000>;
++		};
+ 	};
+ 
+ 	cpub_opp_table_1: opp-table-1 {
+@@ -120,5 +125,15 @@
+ 			opp-hz = /bits/ 64 <1704000000>;
+ 			opp-microvolt = <891000>;
+ 		};
++
++		opp-1800000000 {
++			opp-hz = /bits/ 64 <1800000000>;
++			opp-microvolt = <981000>;
++		};
++
++		opp-1908000000 {
++			opp-hz = /bits/ 64 <1908000000>;
++			opp-microvolt = <1022000>;
++		};
+ 	};
+ };
+-- 
+2.17.1
 
-> > When I looked I wasn't convinced that the GPIO subsystem
-> > prevented two callers from changing two GPIOs at the same time.  See
-> > below for a bigger discussion.
-> >
-> >
-> > > > +               GPIOF_DIR_OUT : GPIOF_DIR_IN;
-> > >
-> > > And why can't we read the hardware to figure out if it's in output or
-> > > input mode?
-> >
-> [...]
-> >
-> > In the next version of the patch I'll plan to add a kerneldoc comment
-> > to "struct ti_sn_bridge" and add a summary of the above for
-> > "gchip_output".
->
-> Yeah it deserves a comment in the code indicating why it doesn't read
-> the hardware.
-
-OK, added a whole bunch more comments.
-
-Barring something coming up, I'll plan to send v3 tomorrow morning
-with all your feedback addressed.  If anyone wants me to wait because
-they think I need some more major change, please yell.
-
-
--Doug
