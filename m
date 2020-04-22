@@ -2,53 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30009C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4804C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DC22075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81EA2075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551327;
-	bh=z8g8OdfadhKw32Sk4wBRsKxWdO7/BnY8Qy81U8Uxue4=;
+	s=default; t=1587551331;
+	bh=QUlpFG8yJZa3ujRSfNw1N03+/gvdFbrBuGnKvKz1CFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PTNzGcRT8gDAml6OLsZllg1mJ8iwCNxV7OUIRD53XTZ5Ybwy9NCGWfIeqHBaGlNDQ
-	 yzBxgyBNxDSDr9kmx3LaewzpbbI2mP+n1lsbWSqs/pa05kQG1tQS7v+7gcF3jGQMa4
-	 sJo8YSNriLXkx0PcSllqg+B0vuK/KeVZCUknRLB4=
+	b=Oj0uvpJ4hF/+P+cETuhxkg3h+Owmh/AIBtk+pXw5c3XzFvLXaOC1mdjE1zbby9ucR
+	 vtOV+UB5GYOf+Ni0pW9M1Swi9PswEUz837Nond7q2P6lCFWw2LmD6wZ/8i9oLpE6gZ
+	 zD48t1dGIxqcZ3dr3L3sYADFEI2GdXizKeJ1oBIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbgDVK2n (ORCPT
+        id S1731023AbgDVK2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36806 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:28:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730456AbgDVK1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:27:39 -0400
+        id S1730901AbgDVK1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:27:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C66A2071E;
-        Wed, 22 Apr 2020 10:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABCFD2071E;
+        Wed, 22 Apr 2020 10:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551259;
-        bh=z8g8OdfadhKw32Sk4wBRsKxWdO7/BnY8Qy81U8Uxue4=;
+        s=default; t=1587551254;
+        bh=QUlpFG8yJZa3ujRSfNw1N03+/gvdFbrBuGnKvKz1CFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEQ7+2p2ETXBY7zdvAyarxhNGiFHeLAtQG6rkbkFlwJdNX/xwXHm9jaRx774AalP0
-         7NTX4FFFDPs4m+WJ8y08gHqK64Nz2Kl84/vnfEatjhSQVoz66D7PDJU+Ah/A7U/lO/
-         NFbnDS126CHRbGvjUPiZ5Lx0SvHKrPo6EjZTynlI=
+        b=0g+WxwYDy3vVpqxPBOR4h6/vIPCg3TNRWD61W0qCwIcExR1lwhlvsbhdWZwsHC7TQ
+         tE8by70nSm6EzPNe5m7wzi6GjXnm5PySIC4/Mvpy2i3CzTNsHhBbTQX1ZUWTzBsBdd
+         h91cIERkV5mVXwdGLmS25QKmZs2/3z1P9tuMqhuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.6 158/166] mtd: spinand: Explicitly use MTD_OPS_RAW to write the bad block marker to OOB
-Date:   Wed, 22 Apr 2020 11:58:05 +0200
-Message-Id: <20200422095105.394799716@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 121/166] ACPICA: Fixes for acpiExec namespace init file
+Date:   Wed, 22 Apr 2020 11:57:28 +0200
+Message-Id: <20200422095101.581886499@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -61,38 +61,299 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Bob Moore <robert.moore@intel.com>
 
-commit 621a7b780bd8b7054647d53d5071961f2c9e0873 upstream.
+[ Upstream commit 9a1ae80412dcaa67a29eecf19de44f32b5f1c357 ]
 
-When writing the bad block marker to the OOB area the access mode
-should be set to MTD_OPS_RAW as it is done for reading the marker.
-Currently this only works because req.mode is initialized to
-MTD_OPS_PLACE_OOB (0) and spinand_write_to_cache_op() checks for
-req.mode != MTD_OPS_AUTO_OOB.
+This is the result of squashing the following ACPICA commit ID's:
+6803997e5b4f3635cea6610b51ff69e29d251de3
+f31cdf8bfda22fe265c1a176d0e33d311c82a7f7
 
-Fix this by explicitly setting req.mode to MTD_OPS_RAW.
+This change fixes several problems with the support for the
+acpi_exec namespace init file (-fi option). Specifically, it
+fixes AE_ALREADY_EXISTS errors, as well as various seg faults.
 
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200218100432.32433-3-frieder.schrempf@kontron.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://github.com/acpica/acpica/commit/f31cdf8b
+Link: https://github.com/acpica/acpica/commit/6803997e
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/spi/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/acpica/acnamesp.h |  2 ++
+ drivers/acpi/acpica/dbinput.c  | 16 +++++++---------
+ drivers/acpi/acpica/dswexec.c  | 33 ++++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/dswload.c  |  2 --
+ drivers/acpi/acpica/dswload2.c | 35 ++++++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/nsnames.c  |  6 +-----
+ drivers/acpi/acpica/utdelete.c |  9 +++++----
+ 7 files changed, 83 insertions(+), 20 deletions(-)
 
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -609,6 +609,7 @@ static int spinand_markbad(struct nand_d
- 		.ooboffs = 0,
- 		.ooblen = sizeof(marker),
- 		.oobbuf.out = marker,
-+		.mode = MTD_OPS_RAW,
- 	};
- 	int ret;
+diff --git a/drivers/acpi/acpica/acnamesp.h b/drivers/acpi/acpica/acnamesp.h
+index e618ddfab2fd1..40f6a3c33a150 100644
+--- a/drivers/acpi/acpica/acnamesp.h
++++ b/drivers/acpi/acpica/acnamesp.h
+@@ -256,6 +256,8 @@ u32
+ acpi_ns_build_normalized_path(struct acpi_namespace_node *node,
+ 			      char *full_path, u32 path_size, u8 no_trailing);
  
++void acpi_ns_normalize_pathname(char *original_path);
++
+ char *acpi_ns_get_normalized_pathname(struct acpi_namespace_node *node,
+ 				      u8 no_trailing);
+ 
+diff --git a/drivers/acpi/acpica/dbinput.c b/drivers/acpi/acpica/dbinput.c
+index aa71f65395d25..ee6a1b77af3f1 100644
+--- a/drivers/acpi/acpica/dbinput.c
++++ b/drivers/acpi/acpica/dbinput.c
+@@ -468,16 +468,14 @@ char *acpi_db_get_next_token(char *string,
+ 		return (NULL);
+ 	}
+ 
+-	/* Remove any spaces at the beginning */
++	/* Remove any spaces at the beginning, ignore blank lines */
+ 
+-	if (*string == ' ') {
+-		while (*string && (*string == ' ')) {
+-			string++;
+-		}
++	while (*string && isspace(*string)) {
++		string++;
++	}
+ 
+-		if (!(*string)) {
+-			return (NULL);
+-		}
++	if (!(*string)) {
++		return (NULL);
+ 	}
+ 
+ 	switch (*string) {
+@@ -570,7 +568,7 @@ char *acpi_db_get_next_token(char *string,
+ 
+ 		/* Find end of token */
+ 
+-		while (*string && (*string != ' ')) {
++		while (*string && !isspace(*string)) {
+ 			string++;
+ 		}
+ 		break;
+diff --git a/drivers/acpi/acpica/dswexec.c b/drivers/acpi/acpica/dswexec.c
+index 5e81a1ae44cff..1d4f8c81028c2 100644
+--- a/drivers/acpi/acpica/dswexec.c
++++ b/drivers/acpi/acpica/dswexec.c
+@@ -16,6 +16,9 @@
+ #include "acinterp.h"
+ #include "acnamesp.h"
+ #include "acdebug.h"
++#ifdef ACPI_EXEC_APP
++#include "aecommon.h"
++#endif
+ 
+ #define _COMPONENT          ACPI_DISPATCHER
+ ACPI_MODULE_NAME("dswexec")
+@@ -329,6 +332,10 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
+ 	u32 op_class;
+ 	union acpi_parse_object *next_op;
+ 	union acpi_parse_object *first_arg;
++#ifdef ACPI_EXEC_APP
++	char *namepath;
++	union acpi_operand_object *obj_desc;
++#endif
+ 
+ 	ACPI_FUNCTION_TRACE_PTR(ds_exec_end_op, walk_state);
+ 
+@@ -537,6 +544,32 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
+ 
+ 			status =
+ 			    acpi_ds_eval_buffer_field_operands(walk_state, op);
++			if (ACPI_FAILURE(status)) {
++				break;
++			}
++#ifdef ACPI_EXEC_APP
++			/*
++			 * acpi_exec support for namespace initialization file (initialize
++			 * buffer_fields in this code.)
++			 */
++			namepath =
++			    acpi_ns_get_external_pathname(op->common.node);
++			status = ae_lookup_init_file_entry(namepath, &obj_desc);
++			if (ACPI_SUCCESS(status)) {
++				status =
++				    acpi_ex_write_data_to_field(obj_desc,
++								op->common.
++								node->object,
++								NULL);
++				if ACPI_FAILURE
++					(status) {
++					ACPI_EXCEPTION((AE_INFO, status,
++							"While writing to buffer field"));
++					}
++			}
++			ACPI_FREE(namepath);
++			status = AE_OK;
++#endif
+ 			break;
+ 
+ 		case AML_TYPE_CREATE_OBJECT:
+diff --git a/drivers/acpi/acpica/dswload.c b/drivers/acpi/acpica/dswload.c
+index 697974e37edfb..27069325b6de0 100644
+--- a/drivers/acpi/acpica/dswload.c
++++ b/drivers/acpi/acpica/dswload.c
+@@ -14,7 +14,6 @@
+ #include "acdispat.h"
+ #include "acinterp.h"
+ #include "acnamesp.h"
+-
+ #ifdef ACPI_ASL_COMPILER
+ #include "acdisasm.h"
+ #endif
+@@ -399,7 +398,6 @@ acpi_status acpi_ds_load1_end_op(struct acpi_walk_state *walk_state)
+ 	union acpi_parse_object *op;
+ 	acpi_object_type object_type;
+ 	acpi_status status = AE_OK;
+-
+ #ifdef ACPI_ASL_COMPILER
+ 	u8 param_count;
+ #endif
+diff --git a/drivers/acpi/acpica/dswload2.c b/drivers/acpi/acpica/dswload2.c
+index b31457ca926cc..edadbe1465069 100644
+--- a/drivers/acpi/acpica/dswload2.c
++++ b/drivers/acpi/acpica/dswload2.c
+@@ -15,6 +15,9 @@
+ #include "acinterp.h"
+ #include "acnamesp.h"
+ #include "acevents.h"
++#ifdef ACPI_EXEC_APP
++#include "aecommon.h"
++#endif
+ 
+ #define _COMPONENT          ACPI_DISPATCHER
+ ACPI_MODULE_NAME("dswload2")
+@@ -373,6 +376,10 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 	struct acpi_namespace_node *new_node;
+ 	u32 i;
+ 	u8 region_space;
++#ifdef ACPI_EXEC_APP
++	union acpi_operand_object *obj_desc;
++	char *namepath;
++#endif
+ 
+ 	ACPI_FUNCTION_TRACE(ds_load2_end_op);
+ 
+@@ -466,6 +473,11 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 		 * be evaluated later during the execution phase
+ 		 */
+ 		status = acpi_ds_create_buffer_field(op, walk_state);
++		if (ACPI_FAILURE(status)) {
++			ACPI_EXCEPTION((AE_INFO, status,
++					"CreateBufferField failure"));
++			goto cleanup;
++			}
+ 		break;
+ 
+ 	case AML_TYPE_NAMED_FIELD:
+@@ -604,6 +616,29 @@ acpi_status acpi_ds_load2_end_op(struct acpi_walk_state *walk_state)
+ 		case AML_NAME_OP:
+ 
+ 			status = acpi_ds_create_node(walk_state, node, op);
++			if (ACPI_FAILURE(status)) {
++				goto cleanup;
++			}
++#ifdef ACPI_EXEC_APP
++			/*
++			 * acpi_exec support for namespace initialization file (initialize
++			 * Name opcodes in this code.)
++			 */
++			namepath = acpi_ns_get_external_pathname(node);
++			status = ae_lookup_init_file_entry(namepath, &obj_desc);
++			if (ACPI_SUCCESS(status)) {
++
++				/* Detach any existing object, attach new object */
++
++				if (node->object) {
++					acpi_ns_detach_object(node);
++				}
++				acpi_ns_attach_object(node, obj_desc,
++						      obj_desc->common.type);
++			}
++			ACPI_FREE(namepath);
++			status = AE_OK;
++#endif
+ 			break;
+ 
+ 		case AML_METHOD_OP:
+diff --git a/drivers/acpi/acpica/nsnames.c b/drivers/acpi/acpica/nsnames.c
+index 370bbc8677453..c717fff7d9b57 100644
+--- a/drivers/acpi/acpica/nsnames.c
++++ b/drivers/acpi/acpica/nsnames.c
+@@ -13,9 +13,6 @@
+ #define _COMPONENT          ACPI_NAMESPACE
+ ACPI_MODULE_NAME("nsnames")
+ 
+-/* Local Prototypes */
+-static void acpi_ns_normalize_pathname(char *original_path);
+-
+ /*******************************************************************************
+  *
+  * FUNCTION:    acpi_ns_get_external_pathname
+@@ -30,7 +27,6 @@ static void acpi_ns_normalize_pathname(char *original_path);
+  *              for error and debug statements.
+  *
+  ******************************************************************************/
+-
+ char *acpi_ns_get_external_pathname(struct acpi_namespace_node *node)
+ {
+ 	char *name_buffer;
+@@ -411,7 +407,7 @@ char *acpi_ns_build_prefixed_pathname(union acpi_generic_state *prefix_scope,
+  *
+  ******************************************************************************/
+ 
+-static void acpi_ns_normalize_pathname(char *original_path)
++void acpi_ns_normalize_pathname(char *original_path)
+ {
+ 	char *input_path = original_path;
+ 	char *new_path_buffer;
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index eee263cb7beb0..c365faf4e6cd4 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -452,13 +452,13 @@ acpi_ut_update_ref_count(union acpi_operand_object *object, u32 action)
+  *
+  * FUNCTION:    acpi_ut_update_object_reference
+  *
+- * PARAMETERS:  object              - Increment ref count for this object
+- *                                    and all sub-objects
++ * PARAMETERS:  object              - Increment or decrement the ref count for
++ *                                    this object and all sub-objects
+  *              action              - Either REF_INCREMENT or REF_DECREMENT
+  *
+  * RETURN:      Status
+  *
+- * DESCRIPTION: Increment the object reference count
++ * DESCRIPTION: Increment or decrement the object reference count
+  *
+  * Object references are incremented when:
+  * 1) An object is attached to a Node (namespace object)
+@@ -492,7 +492,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 		}
+ 
+ 		/*
+-		 * All sub-objects must have their reference count incremented
++		 * All sub-objects must have their reference count updated
+ 		 * also. Different object types have different subobjects.
+ 		 */
+ 		switch (object->common.type) {
+@@ -559,6 +559,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 					break;
+ 				}
+ 			}
++
+ 			next_object = NULL;
+ 			break;
+ 
+-- 
+2.20.1
+
 
 
