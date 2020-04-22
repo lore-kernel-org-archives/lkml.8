@@ -2,133 +2,126 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC1C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C797EC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAC1F206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE13206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBRXr4j4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgDVOkq (ORCPT
+        id S1726751AbgDVOlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:40:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10630 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725934AbgDVOkp (ORCPT
+        Wed, 22 Apr 2020 10:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgDVOlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:40:45 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MEWIna017222
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 10:40:45 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmv0x94x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 10:40:45 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Wed, 22 Apr 2020 15:39:49 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Apr 2020 15:39:46 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03MEedH659375906
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 14:40:39 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 574CF11C058;
-        Wed, 22 Apr 2020 14:40:39 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0847111C05E;
-        Wed, 22 Apr 2020 14:40:39 +0000 (GMT)
-Received: from thinkpad (unknown [9.145.91.245])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Apr 2020 14:40:38 +0000 (GMT)
-Date:   Wed, 22 Apr 2020 16:40:37 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-In-Reply-To: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
-        <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 22 Apr 2020 10:41:00 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EE8C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 07:40:58 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p8so1186913pgi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 07:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QD4gvoO62U8g5ke55m5+fi2BWTvN1Nc+EFebE6YyQOw=;
+        b=kBRXr4j4qq3NXWS/pXf/1+3fcHvwMlFDdQUdNXX8Wu7dcmXSWvGvQIGl1GSeXcszn9
+         TWs5J+JwWja8Evmpng7eCALs5Y8vur5RbDbdVdchoUgUl+MLfPl+POJlopFg6bfp7YwI
+         T/2dJTikefM8Is4MK8e4SbGDLkDqdDMEp+Y0xDXJjL3f5/jV2m5uzvEwGs0g5feG3TPp
+         718JbvYPONmKPMcWHAhJtbZ4L5j7qLNnoLdJCu2yrR8SEb7b3wZqIDFRSojAydH0D4b/
+         KPeCh+QvkEvXxu5Cj+p5EBZhEZKtuvbQGNYw6SISkzcBo7M86NBCM2/gLAVY+uwQqmDI
+         lT7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QD4gvoO62U8g5ke55m5+fi2BWTvN1Nc+EFebE6YyQOw=;
+        b=aGkYhemG665mAm7kET/tQcY49N9XyPU0KIY56GX5M5Y4tJUcPMTmUkaqoHf19MEajp
+         FuA+5cqNGKqiA9jNBJjxpBO4mLm7r0Uy7k7TKZErZ4xz4nmSFOnTOuqmVNcrrHxgsVdK
+         TKxWJAlVKymDgQcPjgj38/VgKMMDZM6fM9fiXj/ihuHfm2HfKJ50c5FKXoF1cVnpdGOa
+         BrBMWYEyHtf0NvrkdD7R2QRygE+uzjGvUocj6MpPTiCzu6UUIyR0mbewq8j1nQ7bUxgi
+         E1lybu2BsthleeIAc+LrnCTJXBX091U3rcWO3zAoXSZdhfwdv9hktSdzlNfFoBZ6a8XX
+         ENlw==
+X-Gm-Message-State: AGi0PuYmU2GL8JUOtb0Q56niqB6VunyYj3DE4bhv5J82b1g98ihIWMCP
+        auH0J7NTcPG0gfQNAGd5BVrX8is0a15cQiCT27c=
+X-Google-Smtp-Source: APiQypLalIxaytZo4bcWW/4fbstSP2AlbGVR5eg6nB09MxoKZVT8wAEJIrtspvA3WhXKsbt/27U45IisFwsyi4PqiHE=
+X-Received: by 2002:a63:5511:: with SMTP id j17mr25966905pgb.4.1587566458280;
+ Wed, 22 Apr 2020 07:40:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042214-0020-0000-0000-000003CC96C8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042214-0021-0000-0000-000022259353
-Message-Id: <20200422164037.7edd21ea@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_06:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
- suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220112
+References: <20200421164543.16605-1-zhengdejin5@gmail.com> <CAHp75Ve4JwkM+=WHHF73jwNwRS39E-xPDrcn77zCUTpVkj8buA@mail.gmail.com>
+ <20200422135215.GA25950@nuc8i5>
+In-Reply-To: <20200422135215.GA25950@nuc8i5>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Apr 2020 17:40:51 +0300
+Message-ID: <CAHp75Vf2j-QraBxKofgyhtAxpHXnik3DP9kefPhA_d3BuSjfvw@mail.gmail.com>
+Subject: Re: [PATCH v1] drm/bochs: fix an issue of ioremap() leak
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     kraxel@redhat.com, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Apr 2020 09:04:31 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Wed, Apr 22, 2020 at 4:52 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+>
+> On Tue, Apr 21, 2020 at 08:24:24PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 21, 2020 at 7:45 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+> > >
+> > > It forgot to call bochs_hw_fini() to release related resources when
+> > > bochs_pci_probe() fail. eg: io virtual address get by ioremap().
+> >
+> > Good start, although I think the best is to switch this driver to use
+> > pcim_*() functions and drop tons of legacy code.
+> >
+> Andy, thanks for your encouragement, I think we might be able to fix this
+> issue first, after that, drop tons of legacy code by pcim_*() functions.
+> Do you think it is ok?
 
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> Because of late module patching, a livepatch module needs to be able to
-> apply some of its relocations well after it has been loaded.  Instead of
-> playing games with module_{dis,en}able_ro(), use existing text poking
-> mechanisms to apply relocations after module loading.
-> 
-> So far only x86, s390 and Power have HAVE_LIVEPATCH but only the first
-> two also have STRICT_MODULE_RWX.
-> 
-> This will allow removal of the last module_disable_ro() usage in
-> livepatch.  The ultimate goal is to completely disallow making
-> executable mappings writable.
-> 
-> Also, for the late patching case, use text_mutex, which is supposed to
-> be held for all runtime text patching operations.
-> 
-> [ jpoimboe: Split up patches.  Use mod state to determine whether
-> 	    memcpy() can be used.  Add text_mutex.  Make it build. ]
-> 
-> Cc: linux-s390@vger.kernel.org
-> Cc: heiko.carstens@de.ibm.com
-> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
->  arch/s390/kernel/module.c | 125 ++++++++++++++++++++++++--------------
->  1 file changed, 79 insertions(+), 46 deletions(-)
+It's really up to maintainer. I'm not the one here.
 
-Sorry, just noticed this. Heiko will return next month, and I'm not
-really familiar with s390 livepatching. Adding Vasily, he might
-have some more insight.
+> > > Fixes: 81da8c3b8d3df6 ("drm/bochs: add drm_driver.release callback.")
+> > > CC: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/bochs/bochs_drv.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
+> > > index addb0568c1af..210a60135c8a 100644
+> > > --- a/drivers/gpu/drm/bochs/bochs_drv.c
+> > > +++ b/drivers/gpu/drm/bochs/bochs_drv.c
+> > > @@ -138,6 +138,7 @@ static int bochs_pci_probe(struct pci_dev *pdev,
+> > >         return ret;
+> > >
+> > >  err_unload:
+> > > +       bochs_hw_fini(dev);
+> > >         bochs_unload(dev);
+> > >  err_free_dev:
+> > >         drm_dev_put(dev);
+> > > --
+> > > 2.25.0
+> > >
+> >
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
 
-So, I might be completely wrong here, but using s390_kernel_write()
-for writing to anything other than 1:1 mapped kernel, should go
-horribly wrong, as that runs w/o DAT. It would allow to bypass
-DAT write protection, which I assume is why you want to use it,
-but it should not work on module text section, as that would be
-in vmalloc space and not 1:1 mapped kernel memory.
 
-Not quite sure how to test / trigger this, did this really work for
-you on s390?
 
-Regards,
-Gerald
-
+-- 
+With Best Regards,
+Andy Shevchenko
