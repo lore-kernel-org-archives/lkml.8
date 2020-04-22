@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8EDC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5CCC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C518D2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D56B2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549945;
-	bh=A2UMnMA1ZND4qAGm1dxuSMBHu5SS4sAQGoBYRUZdWV0=;
+	s=default; t=1587549949;
+	bh=ipGa19nKKTFXIKRlrk5uJWMpFfYkR2QvtOVETI2Td8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAaJHYhwXXvETksXBT8UFGzw74IPp1IX+DQjkgYmNYoXfQd6kZ7M47/uPeY1UxDaI
-	 LFhlV4MI97ox+tSPNUVSFWvRNiNYgehBV9/jwauAa68vPuTjjmQtrswzEKS+nyrjmg
-	 9IHGgts+Tdk0zbE42OB/xaX13OlcVgytHSEsE7HM=
+	b=SJ9MgTsAuDS12LZ1LRxShfvh6UO6BV3h5CCVyduPXpQuMPqjwNnASE/T4vv2V4xYh
+	 +sbD85DSMcog+nC2O9kc8SPBZeE5Ajzepxod9JDIQlWMR5A4KjavAfRVxuyVrFz8+E
+	 NjcXNU+JF0MlHrEchYH1KgKTJrvTcY5vob5iSFvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgDVKFp (ORCPT
+        id S1728231AbgDVKFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:05:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728206AbgDVKFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:40 -0400
+        id S1726997AbgDVKFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0611820575;
-        Wed, 22 Apr 2020 10:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82FA220781;
+        Wed, 22 Apr 2020 10:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549940;
-        bh=A2UMnMA1ZND4qAGm1dxuSMBHu5SS4sAQGoBYRUZdWV0=;
+        s=default; t=1587549943;
+        bh=ipGa19nKKTFXIKRlrk5uJWMpFfYkR2QvtOVETI2Td8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujhdazpmTuRHFd4r/8bQDGUCNIN1FBln58n56/esmTK9ND6m9dakKQ0mjXc/ZVtAu
-         1bu7l7VqVavLGsYuisbmLSaQu1L6QJ8I3WllDw8qXDoLSGjjVBsd7hzs5lOO+mJy2X
-         jUKOiko1YbVVoZMVdhpS40Z7p61bWxmcrM1y29Rk=
+        b=nSfU+F8miE+Xdi28WazhQa69lnLHohN5VOQbPxgONprZDYxEfZGofqmEMii/JE/+U
+         BlLSU+Tp3+5HoOTr/8wSER27z1k/zu9c8hLFk0ep1fTYDYhegatWLifox80melMkgk
+         /Wv9V39gWOtljfKoxSvX3awRRuMMcz2kqftMor5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 070/125] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
-Date:   Wed, 22 Apr 2020 11:56:27 +0200
-Message-Id: <20200422095044.605451973@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.9 053/125] Input: i8042 - add Acer Aspire 5738z to nomux list
+Date:   Wed, 22 Apr 2020 11:56:10 +0200
+Message-Id: <20200422095042.103805039@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -63,43 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
+commit ebc68cedec4aead47d8d11623d013cca9bf8e825 upstream.
 
-The async version of ufshcd_hold(async == true), which is only called in
-queuecommand path as for now, is expected to work in atomic context, thus
-it should not sleep or schedule out. When it runs into the condition that
-clocks are ON but link is still in hibern8 state, it should bail out
-without flushing the clock ungate work.
+The Acer Aspire 5738z has a button to disable (and re-enable) the
+touchpad next to the touchpad.
 
-Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
-Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+When this button is pressed a LED underneath indicates that the touchpad
+is disabled (and an event is send to userspace and GNOME shows its
+touchpad enabled / disable OSD thingie).
+
+So far so good, but after re-enabling the touchpad it no longer works.
+
+The laptop does not have an external ps2 port, so mux mode is not needed
+and disabling mux mode fixes the touchpad no longer working after toggling
+it off and back on again, so lets add this laptop model to the nomux list.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200331123947.318908-1-hdegoede@redhat.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/input/serio/i8042-x86ia64io.h |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -682,6 +682,11 @@ start:
- 		 */
- 		if (ufshcd_can_hibern8_during_gating(hba) &&
- 		    ufshcd_is_link_hibern8(hba)) {
-+			if (async) {
-+				rc = -EAGAIN;
-+				hba->clk_gating.active_reqs--;
-+				break;
-+			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
- 			flush_work(&hba->clk_gating.ungate_work);
- 			spin_lock_irqsave(hba->host->host_lock, flags);
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -534,6 +534,17 @@ static const struct dmi_system_id __init
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo LaVie Z"),
+ 		},
+ 	},
++	{
++		/*
++		 * Acer Aspire 5738z
++		 * Touchpad stops working in mux mode when dis- + re-enabled
++		 * with the touchpad enable/disable toggle hotkey
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
++		},
++	},
+ 	{ }
+ };
+ 
 
 
