@@ -2,83 +2,180 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D537C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D886C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B4B206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D39320722
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587524890;
+	bh=00kZ49s3t3bAlBmeWs2Vc0CxVHkvA4fbM6GiSen4rQQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=XlC0/B6Wp9YxMipi8NgpTl+sJuR6rU9+dT5C9sIg+OLR4uhmTgyiseee1c/e4l5W2
+	 gs4zcK607bAO9hRDLf0+coa+PdCEhK1MxBLZFiBX3u9pKR42bUcKgoAWZH2EGdl02y
+	 aAgGPH963QLJ3l2+ea+brAEEkB7cODAtRwHM62aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDVC6s (ORCPT
+        id S1726396AbgDVDIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726321AbgDVC6s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:58:48 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2EE9C0610D6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 19:58:47 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jR5ay-0081rv-85; Wed, 22 Apr 2020 02:58:40 +0000
-Date:   Wed, 22 Apr 2020 03:58:40 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     davem@davemloft.net, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] ide: Use memdup_user() as a cleanup
-Message-ID: <20200422025840.GJ23230@ZenIV.linux.org.uk>
-References: <1587524381-120136-1-git-send-email-zou_wei@huawei.com>
+        Tue, 21 Apr 2020 23:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbgDVDIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 23:08:09 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D89E2070B;
+        Wed, 22 Apr 2020 03:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587524888;
+        bh=00kZ49s3t3bAlBmeWs2Vc0CxVHkvA4fbM6GiSen4rQQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wfdApLvE/3xwrwCtPcMQr1rL34+cx7YSXiAQccBXOmD97IxVPg3SHSlvcCwDOWfZk
+         ZTrE+akF4LIqOg7mcI7UOXl/+wNfTSzxk0aqcnnRvo677IluDAh759XEb3Baz0um7u
+         fOmSCBtBUImQw/YC+HStUtsAapP4pnoE5LDuh45o=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id F3BCE35226E4; Tue, 21 Apr 2020 20:08:07 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 20:08:07 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "hare@suse.de" <hare@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+Message-ID: <20200422030807.GK17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+ <20200422012814.GB299948@T590>
+ <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+ <20200422020134.GC299948@T590>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587524381-120136-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <20200422020134.GC299948@T590>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:59:41AM +0800, Zou Wei wrote:
+On Wed, Apr 22, 2020 at 10:01:34AM +0800, Ming Lei wrote:
+> On Wed, Apr 22, 2020 at 01:48:25AM +0000, Dexuan Cui wrote:
+> > > From: Ming Lei <ming.lei@redhat.com>
+> > > Sent: Tuesday, April 21, 2020 6:28 PM
+> > > To: Dexuan Cui <decui@microsoft.com>
+> > > 
+> > > On Tue, Apr 21, 2020 at 05:17:24PM -0700, Dexuan Cui wrote:
+> > > > During hibernation, the sdevs are suspended automatically in
+> > > > drivers/scsi/scsi_pm.c before storvsc_suspend(), so after
+> > > > storvsc_suspend(), there is no disk I/O from the file systems, but there
+> > > > can still be disk I/O from the kernel space, e.g. disk_check_events() ->
+> > > > sr_block_check_events() -> cdrom_check_events() can still submit I/O
+> > > > to the storvsc driver, which causes a paic of NULL pointer dereference,
+> > > > since storvsc has closed the vmbus channel in storvsc_suspend(): refer
+> > > > to the below links for more info:
+> > > >
+> > > > Fix the panic by blocking/unblocking all the I/O queues properly.
+> > > >
+> > > > Note: this patch depends on another patch "scsi: core: Allow the state
+> > > > change from SDEV_QUIESCE to SDEV_BLOCK" (refer to the second link
+> > > above).
+> > > >
+> > > > Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
+> > > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > > > ---
+> > > >  drivers/scsi/storvsc_drv.c | 10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > >
+> > > > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> > > > index fb41636519ee..fd51d2f03778 100644
+> > > > --- a/drivers/scsi/storvsc_drv.c
+> > > > +++ b/drivers/scsi/storvsc_drv.c
+> > > > @@ -1948,6 +1948,11 @@ static int storvsc_suspend(struct hv_device
+> > > *hv_dev)
+> > > >  	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
+> > > >  	struct Scsi_Host *host = stor_device->host;
+> > > >  	struct hv_host_device *host_dev = shost_priv(host);
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = scsi_host_block(host);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > >
+> > > >  	storvsc_wait_to_drain(stor_device);
+> > > >
+> > > > @@ -1968,10 +1973,15 @@ static int storvsc_suspend(struct hv_device
+> > > *hv_dev)
+> > > >
+> > > >  static int storvsc_resume(struct hv_device *hv_dev)
+> > > >  {
+> > > > +	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
+> > > > +	struct Scsi_Host *host = stor_device->host;
+> > > >  	int ret;
+> > > >
+> > > >  	ret = storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
+> > > >  				     hv_dev_is_fc(hv_dev));
+> > > > +	if (!ret)
+> > > > +		ret = scsi_host_unblock(host, SDEV_RUNNING);
+> > > > +
+> > > >  	return ret;
+> > > >  }
+> > > 
+> > > scsi_host_block() is actually too heavy for just avoiding
+> > > scsi internal command, which can be done simply by one atomic
+> > > variable.
+> > > 
+> > > Not mention scsi_host_block() is implemented too clumsy because
+> > > nr_luns * synchronize_rcu() are required in scsi_host_block(),
+> > > which should have been optimized to just one.
+> > > 
+> > > Also scsi_device_quiesce() is heavy too, still takes 2
+> > > synchronize_rcu() for one LUN.
+> > > 
+> > > That is said SCSI suspend may take (3 * nr_luns) sysnchronize_rcu() in
+> > > case that the HBA's suspend handler needs scsi_host_block().
+> > > 
+> > > Thanks,
+> > > Ming
+> > 
+> > When we're in storvsc_suspend(), all the userspace processes have been
+> > frozen and all the file systems have been flushed, and there should not
+> > be too much I/O from the kernel space, so IMO scsi_host_block() should be
+> > pretty fast here. 
+> 
+> I guess it depends on RCU's implementation, so CC RCU guys.
+> 
+> Hello Paul & Josh,
+> 
+> Could you clarify that if sysnchronize_rcu becomes quickly during
+> system suspend?
 
->  	if (taskout) {
->  		int outtotal = tasksize;
-> -		outbuf = kzalloc(taskout, GFP_KERNEL);
-> -		if (outbuf == NULL) {
-> -			err = -ENOMEM;
-> -			goto abort;
-> -		}
-> -		if (copy_from_user(outbuf, buf + outtotal, taskout)) {
-> -			err = -EFAULT;
-> -			goto abort;
-> -		}
-> +		outbuf = memdup_user(buf + outtotal, taskout);
-> +		if (IS_ERR(outbuf))
-> +			return PTR_ERR(outbuf);
->  	}
->  
->  	if (taskin) {
->  		int intotal = tasksize + taskout;
-> -		inbuf = kzalloc(taskin, GFP_KERNEL);
-> -		if (inbuf == NULL) {
-> -			err = -ENOMEM;
-> -			goto abort;
-> -		}
-> -		if (copy_from_user(inbuf, buf + intotal, taskin)) {
-> -			err = -EFAULT;
-> -			goto abort;
-> -		}
-> +		inbuf = memdup_user(buf + intotal, taskin);
-> +		if (IS_ERR(inbuf))
-> +			return PTR_ERR(inbuf);
+Once you have all but one CPU offlined, it becomes extremely fast, as
+in roughly a no-op (which is an idea of Josh's from back in the day).
+But if there is more than one CPU online, then synchronize_rcu() still
+takes on the order of several to several tens of jiffies.
 
-That smells like a leak - what happens if both taskin and taskout are
-non-zero at the same time?  <looks>  actually, both parts are leaking -
-there's
-        req_task = memdup_user(buf, tasksize);
-        if (IS_ERR(req_task))
-                return PTR_ERR(req_task);
-shortly prior to that, so both of your failure exits are leaking.
+So, yes, in some portions of system suspend, synchronize_rcu() becomes
+very fast indeed.
+
+							Thanx, Paul
