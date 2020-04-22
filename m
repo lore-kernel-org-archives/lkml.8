@@ -7,42 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D9FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA97C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83DCA20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A2D20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgDVTNe (ORCPT
+        id S1726572AbgDVTNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 22 Apr 2020 15:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33418 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726444AbgDVTNe (ORCPT
+        by vger.kernel.org with ESMTP id S1725913AbgDVTNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:13:34 -0400
+        Wed, 22 Apr 2020 15:13:33 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7E0C03C1AA;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C293BC03C1A9;
         Wed, 22 Apr 2020 12:13:33 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRKoK-00073W-HF; Wed, 22 Apr 2020 21:13:28 +0200
+        id 1jRKoK-00073V-6C; Wed, 22 Apr 2020 21:13:28 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 074B41C0450;
-        Wed, 22 Apr 2020 21:13:28 +0200 (CEST)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 87BF11C02FC;
+        Wed, 22 Apr 2020 21:13:27 +0200 (CEST)
 Date:   Wed, 22 Apr 2020 19:13:27 -0000
-From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Jimmy Assarsson" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/mm/mmap: Fix -Wmissing-prototypes warnings
-Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
+Subject: [tip: x86/cleanups] mm: Remove MPX leftovers
+Cc:     Jimmy Assarsson <jimmyassarsson@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200402124307.10857-1-b.thiel@posteo.de>
-References: <20200402124307.10857-1-b.thiel@posteo.de>
+In-Reply-To: <20200402172507.2786-1-jimmyassarsson@gmail.com>
+References: <20200402172507.2786-1-jimmyassarsson@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158758280764.28353.1786440205959432306.tip-bot2@tip-bot2>
+Message-ID: <158758280709.28353.11814672256767435249.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,37 +60,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cleanups branch of tip:
 
-Commit-ID:     60abfd08e88b2b41366dcdb1e586614770c791fa
-Gitweb:        https://git.kernel.org/tip/60abfd08e88b2b41366dcdb1e586614770c791fa
-Author:        Benjamin Thiel <b.thiel@posteo.de>
-AuthorDate:    Thu, 02 Apr 2020 14:43:07 +02:00
+Commit-ID:     66648766ef38d8d6c48ded2f59cf98420aec2cdb
+Gitweb:        https://git.kernel.org/tip/66648766ef38d8d6c48ded2f59cf98420aec2cdb
+Author:        Jimmy Assarsson <jimmyassarsson@gmail.com>
+AuthorDate:    Thu, 02 Apr 2020 19:25:07 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 22 Apr 2020 20:19:48 +02:00
+CommitterDate: Wed, 22 Apr 2020 21:02:35 +02:00
 
-x86/mm/mmap: Fix -Wmissing-prototypes warnings
+mm: Remove MPX leftovers
 
-Add includes for the prototypes of valid_phys_addr_range(),
-arch_mmap_rnd() and valid_mmap_phys_addr_range() in order to fix
--Wmissing-prototypes warnings.
+Remove MPX leftovers in generic code.
 
-Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+Fixes: 45fc24e89b7c ("x86/mpx: remove MPX from arch/x86")
+Signed-off-by: Jimmy Assarsson <jimmyassarsson@gmail.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200402124307.10857-1-b.thiel@posteo.de
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200402172507.2786-1-jimmyassarsson@gmail.com
 ---
- arch/x86/mm/mmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/proc/task_mmu.c | 3 ---
+ include/linux/mm.h | 7 -------
+ 2 files changed, 10 deletions(-)
 
-diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
-index cb91ecc..c90c209 100644
---- a/arch/x86/mm/mmap.c
-+++ b/arch/x86/mm/mmap.c
-@@ -18,7 +18,9 @@
- #include <linux/sched/signal.h>
- #include <linux/sched/mm.h>
- #include <linux/compat.h>
-+#include <linux/elf-randomize.h>
- #include <asm/elf.h>
-+#include <asm/io.h>
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 8d382d4..e12ad2e 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -622,9 +622,6 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+ 		[ilog2(VM_GROWSDOWN)]	= "gd",
+ 		[ilog2(VM_PFNMAP)]	= "pf",
+ 		[ilog2(VM_DENYWRITE)]	= "dw",
+-#ifdef CONFIG_X86_INTEL_MPX
+-		[ilog2(VM_MPX)]		= "mp",
+-#endif
+ 		[ilog2(VM_LOCKED)]	= "lo",
+ 		[ilog2(VM_IO)]		= "io",
+ 		[ilog2(VM_SEQ_READ)]	= "sr",
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5a32342..e1882ee 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -329,13 +329,6 @@ extern unsigned int kobjsize(const void *objp);
+ # define VM_MAPPED_COPY	VM_ARCH_1	/* T if mapped copy of data (nommu mmap) */
+ #endif
  
- #include "physaddr.h"
- 
+-#if defined(CONFIG_X86_INTEL_MPX)
+-/* MPX specific bounds table or bounds directory */
+-# define VM_MPX		VM_HIGH_ARCH_4
+-#else
+-# define VM_MPX		VM_NONE
+-#endif
+-
+ #ifndef VM_GROWSUP
+ # define VM_GROWSUP	VM_NONE
+ #endif
