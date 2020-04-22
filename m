@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03A7C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F0BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C882073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F25F2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552620;
-	bh=zqEIafLdABW1ykFZi1ROD4+wSZHXs3eWhQzSHPhb3iE=;
+	s=default; t=1587552629;
+	bh=ku/WBQgDgTsASdjlbTI9Gz4PTwRb7TBqXG5/TcklQrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQibgPVYVCXoIeuDLVaWzw86bGL89z1yuvv6KlzS7Hu+so1p4x4Q1DCYBpC3X9vg+
-	 JLMYw5IVfeboBMeuBsrDEw0CvyHDNOf+7uEBhqSokyCwHxzPpi4cHBXoEG7enQEP3h
-	 eat8ChUg7wl+1sHIm8TYqJP55KmRP++2x95xFTV8=
+	b=YMdoBbvibs45I4021lDoyRJxUa+A45DqUfXgdDFikG4jxXKL9l8mNTCtGpzF+T/Ls
+	 PfRQrqZelR7SdqrsVoP5WXltU5FBNgQZvk3ofUjicY9jafC0AoHgMmf09EKkryExAH
+	 Ha5BLBYt8Rg4i/8VHLVk6HHLGfjVoBdUErLWb+f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbgDVKuT (ORCPT
+        id S1732176AbgDVKu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgDVKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:32 -0400
+        id S1728376AbgDVKMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3374C2070B;
-        Wed, 22 Apr 2020 10:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 909072071E;
+        Wed, 22 Apr 2020 10:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550351;
-        bh=zqEIafLdABW1ykFZi1ROD4+wSZHXs3eWhQzSHPhb3iE=;
+        s=default; t=1587550336;
+        bh=ku/WBQgDgTsASdjlbTI9Gz4PTwRb7TBqXG5/TcklQrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aeJ42B0RbxEvxe+QFVAYfr9FY5o9cCVBoHoM9NmtR43IQEpasULG4L1cH/4oHHIJJ
-         aEwkxECqiYrf55qczvbx8aiPeni83PqwmMMfGJoQVxes6Rf/9YeSjsGoVHFGXxBtn2
-         VlQpZ35tfkKsyNtVdBdowa5K5cY79lw7fis4wn1g=
+        b=gcN5eoz0WQNg+F05ayrYhOk+gARoLyRSsyK/HMfYeHoxpKB0/8s1NE1tEQI/o3BbO
+         yTeO5F6E3Msct+WITdda49Yvk4KW5BWsmj0/LGno1ve4NY91+li3hUZe/ihZ6+52Yn
+         XHeX/lMl1LXvvXIgaIMPxYDLmDqXMoLlux4cBgLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 112/199] net: stmmac: dwmac-sunxi: Provide TX and RX fifo sizes
-Date:   Wed, 22 Apr 2020 11:57:18 +0200
-Message-Id: <20200422095108.876080084@linuxfoundation.org>
+        stable@vger.kernel.org, Yilu Lin <linyilu@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 4.14 063/199] CIFS: Fix bug which the return value by asynchronous read is error
+Date:   Wed, 22 Apr 2020 11:56:29 +0200
+Message-Id: <20200422095104.559673854@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,42 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Yilu Lin <linyilu@huawei.com>
 
-[ Upstream commit 806fd188ce2a4f8b587e83e73c478e6484fbfa55 ]
+commit 97adda8b3ab703de8e4c8d27646ddd54fe22879c upstream.
 
-After commit bfcb813203e619a8960a819bf533ad2a108d8105 ("net: dsa:
-configure the MTU for switch ports") my Lamobo R1 platform which uses
-an allwinner,sun7i-a20-gmac compatible Ethernet MAC started to fail
-by rejecting a MTU of 1536. The reason for that is that the DMA
-capabilities are not readable on this version of the IP, and there
-is also no 'tx-fifo-depth' property being provided in Device Tree. The
-property is documented as optional, and is not provided.
+This patch is used to fix the bug in collect_uncached_read_data()
+that rc is automatically converted from a signed number to an
+unsigned number when the CIFS asynchronous read fails.
+It will cause ctx->rc is error.
 
-Chen-Yu indicated that the FIFO sizes are 4KB for TX and 16KB for RX, so
-provide these values through platform data as an immediate fix until
-various Device Tree sources get updated accordingly.
+Example:
+Share a directory and create a file on the Windows OS.
+Mount the directory to the Linux OS using CIFS.
+On the CIFS client of the Linux OS, invoke the pread interface to
+deliver the read request.
 
-Fixes: eaf4fac47807 ("net: stmmac: Do not accept invalid MTU values")
-Suggested-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The size of the read length plus offset of the read request is greater
+than the maximum file size.
+
+In this case, the CIFS server on the Windows OS returns a failure
+message (for example, the return value of
+smb2.nt_status is STATUS_INVALID_PARAMETER).
+
+After receiving the response message, the CIFS client parses
+smb2.nt_status to STATUS_INVALID_PARAMETER
+and converts it to the Linux error code (rdata->result=-22).
+
+Then the CIFS client invokes the collect_uncached_read_data function to
+assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
+
+The type of the ctx->total_len variable is unsigned integer,
+the type of the rc variable is integer, and the type of
+the ctx->rc variable is ssize_t.
+
+Therefore, during the ternary operation, the value of rc is
+automatically converted to an unsigned number. The final result is
+ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
+
+Signed-off-by: Yilu Lin <linyilu@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
-@@ -155,6 +155,8 @@ static int sun7i_gmac_probe(struct platf
- 	plat_dat->init = sun7i_gmac_init;
- 	plat_dat->exit = sun7i_gmac_exit;
- 	plat_dat->fix_mac_speed = sun7i_fix_speed;
-+	plat_dat->tx_fifo_size = 4096;
-+	plat_dat->rx_fifo_size = 16384;
+---
+ fs/cifs/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3303,7 +3303,7 @@ again:
+ 	if (rc == -ENODATA)
+ 		rc = 0;
  
- 	ret = sun7i_gmac_init(pdev, plat_dat->bsp_priv);
- 	if (ret)
+-	ctx->rc = (rc == 0) ? ctx->total_len : rc;
++	ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
+ 
+ 	mutex_unlock(&ctx->aio_mutex);
+ 
 
 
