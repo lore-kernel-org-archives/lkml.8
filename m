@@ -2,52 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2C8C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754F4C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E742075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501BE2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552083;
-	bh=gBGl2Mpr3gMecv69cjvXn7IuOzZ3+xBLzvfmu0V5t70=;
+	s=default; t=1587552089;
+	bh=ZvNMqtxUubPqeUhvAc90/5pdocr+OX5tEhA7GA3JOzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BWPPYtrYNJ65Px4xgOtiqCFJDN0+gi9y1Bi0MDcM6YN/LMHdoTA0DHyWhqCmva9me
-	 6Xg87EbABxv3Gk4cEz6zpZ/g4OncX2fOeCnxvr68PD66NSPwJDyGauqdtuf72rFh4y
-	 sFk6A7aNJSAwPYBfG/Rf/JZtdBBfrvBvSABMqT/U=
+	b=oF1Sa0wn3Wa5nEFSyJWmVlOErKlJwM37yCLFOHCbOcEviTfaL+ML4UfHqpEdTJla0
+	 357zwgyaQCmoGcccOP+8FAx7yZAApaAudj7NXRTckr4ZKvdRbWTrPHZASFxRsPSWPQ
+	 V2J/Ql7uytGNuPmo44EeHBvfmGn+o9H4IkZzYsBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbgDVKlW (ORCPT
+        id S1731647AbgDVKl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57128 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:41:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729772AbgDVKUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:23 -0400
+        id S1729737AbgDVKUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EE0B20781;
-        Wed, 22 Apr 2020 10:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92FF420780;
+        Wed, 22 Apr 2020 10:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550822;
-        bh=gBGl2Mpr3gMecv69cjvXn7IuOzZ3+xBLzvfmu0V5t70=;
+        s=default; t=1587550820;
+        bh=ZvNMqtxUubPqeUhvAc90/5pdocr+OX5tEhA7GA3JOzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPClpXMrD7UndcSPywj7+1H12+kyQoBiXEVS197dLy+lJCJcYvJbgK6F2I+GWSmF7
-         1U2rdkIygIFebtYjzHmxNUrzejySvUr5QbV9iz1GaOhOqhb91YNsf2DS7z8jTSe7bE
-         7KCrzngQFh455/ZDrwuKaM/C+Y6KXGBkB6STqX20=
+        b=U4q6ewE9k8UIOsJcghNhBcOBbjUGD7HvGReI29h7B2HyB4Ri2w78tgUf0B2pa0Qkm
+         bGBzRnVinWvtT0fBS0p9wTxwhTckKVkTZWjazJ+Z47kKJmndaSiZ3Snw0h2enxlUG4
+         7CaYRM0TzTf9snSEUPbESJE1vxPg1zqGSi7Uvj/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 107/118] tty: evh_bytechan: Fix out of bounds accesses
-Date:   Wed, 22 Apr 2020 11:57:48 +0200
-Message-Id: <20200422095048.618761876@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.4 106/118] fbmem: Adjust indentation in fb_prepare_logo and fb_blank
+Date:   Wed, 22 Apr 2020 11:57:47 +0200
+Message-Id: <20200422095048.497983297@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,108 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 3670664b5da555a2a481449b3baafff113b0ac35 upstream.
+commit 93166f5f2e4dc593cff8ca77ef828ac6f148b0f3 upstream.
 
-ev_byte_channel_send() assumes that its third argument is a 16 byte
-array. Some places where it is called it may not be (or we can't
-easily tell if it is). Newer compilers have started producing warnings
-about this, so make sure we actually pass a 16 byte array.
+Clang warns:
 
-There may be more elegant solutions to this, but the driver is quite
-old and hasn't been updated in many years.
+../drivers/video/fbdev/core/fbmem.c:665:3: warning: misleading
+indentation; statement is not part of the previous 'else'
+[-Wmisleading-indentation]
+        if (fb_logo.depth > 4 && depth > 4) {
+        ^
+../drivers/video/fbdev/core/fbmem.c:661:2: note: previous statement is
+here
+        else
+        ^
+../drivers/video/fbdev/core/fbmem.c:1075:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        return ret;
+        ^
+../drivers/video/fbdev/core/fbmem.c:1072:2: note: previous statement is
+here
+        if (!ret)
+        ^
+2 warnings generated.
 
-The warnings (from a powerpc allyesconfig build) are:
+This warning occurs because there are spaces before the tabs on these
+lines. Normalize the indentation in these functions so that it is
+consistent with the Linux kernel coding style and clang no longer warns.
 
-  In file included from include/linux/byteorder/big_endian.h:5,
-                   from arch/powerpc/include/uapi/asm/byteorder.h:14,
-                   from include/asm-generic/bitops/le.h:6,
-                   from arch/powerpc/include/asm/bitops.h:250,
-                   from include/linux/bitops.h:29,
-                   from include/linux/kernel.h:12,
-                   from include/asm-generic/bug.h:19,
-                   from arch/powerpc/include/asm/bug.h:109,
-                   from include/linux/bug.h:5,
-                   from include/linux/mmdebug.h:5,
-                   from include/linux/gfp.h:5,
-                   from include/linux/slab.h:15,
-                   from drivers/tty/ehv_bytechan.c:24:
-  drivers/tty/ehv_bytechan.c: In function ‘ehv_bc_udbg_putc’:
-  arch/powerpc/include/asm/epapr_hcalls.h:298:20: warning: array subscript 1 is outside array bounds of ‘const char[1]’ [-Warray-bounds]
-    298 |  r6 = be32_to_cpu(p[1]);
-  include/uapi/linux/byteorder/big_endian.h:40:51: note: in definition of macro ‘__be32_to_cpu’
-     40 | #define __be32_to_cpu(x) ((__force __u32)(__be32)(x))
-        |                                                   ^
-  arch/powerpc/include/asm/epapr_hcalls.h:298:7: note: in expansion of macro ‘be32_to_cpu’
-    298 |  r6 = be32_to_cpu(p[1]);
-        |       ^~~~~~~~~~~
-  drivers/tty/ehv_bytechan.c:166:13: note: while referencing ‘data’
-    166 | static void ehv_bc_udbg_putc(char c)
-        |             ^~~~~~~~~~~~~~~~
-
-Fixes: dcd83aaff1c8 ("tty/powerpc: introduce the ePAPR embedded hypervisor byte channel driver")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Tested-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-[mpe: Trim warnings from change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200109183912.5fcb52aa@canb.auug.org.au
+Fixes: 1692b37c99d5 ("fbdev: Fix logo if logo depth is less than framebuffer depth")
+Link: https://github.com/ClangBuiltLinux/linux/issues/825
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191218030025.10064-1-natechancellor@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/ehv_bytechan.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/core/fbmem.c |   36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
---- a/drivers/tty/ehv_bytechan.c
-+++ b/drivers/tty/ehv_bytechan.c
-@@ -136,6 +136,21 @@ static int find_console_handle(void)
- 	return 1;
- }
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -662,20 +662,20 @@ int fb_prepare_logo(struct fb_info *info
+ 		fb_logo.depth = 1;
  
-+static unsigned int local_ev_byte_channel_send(unsigned int handle,
-+					       unsigned int *count,
-+					       const char *p)
-+{
-+	char buffer[EV_BYTE_CHANNEL_MAX_BYTES];
-+	unsigned int c = *count;
-+
-+	if (c < sizeof(buffer)) {
-+		memcpy(buffer, p, c);
-+		memset(&buffer[c], 0, sizeof(buffer) - c);
-+		p = buffer;
+ 
+- 	if (fb_logo.depth > 4 && depth > 4) {
+- 		switch (info->fix.visual) {
+- 		case FB_VISUAL_TRUECOLOR:
+- 			fb_logo.needs_truepalette = 1;
+- 			break;
+- 		case FB_VISUAL_DIRECTCOLOR:
+- 			fb_logo.needs_directpalette = 1;
+- 			fb_logo.needs_cmapreset = 1;
+- 			break;
+- 		case FB_VISUAL_PSEUDOCOLOR:
+- 			fb_logo.needs_cmapreset = 1;
+- 			break;
+- 		}
+- 	}
++	if (fb_logo.depth > 4 && depth > 4) {
++		switch (info->fix.visual) {
++		case FB_VISUAL_TRUECOLOR:
++			fb_logo.needs_truepalette = 1;
++			break;
++		case FB_VISUAL_DIRECTCOLOR:
++			fb_logo.needs_directpalette = 1;
++			fb_logo.needs_cmapreset = 1;
++			break;
++		case FB_VISUAL_PSEUDOCOLOR:
++			fb_logo.needs_cmapreset = 1;
++			break;
++		}
 +	}
-+	return ev_byte_channel_send(handle, count, p);
-+}
-+
- /*************************** EARLY CONSOLE DRIVER ***************************/
  
- #ifdef CONFIG_PPC_EARLY_DEBUG_EHV_BC
-@@ -154,7 +169,7 @@ static void byte_channel_spin_send(const
+ 	height = fb_logo.logo->height;
+ 	if (fb_center_logo)
+@@ -1060,19 +1060,19 @@ fb_blank(struct fb_info *info, int blank
+ 	struct fb_event event;
+ 	int ret = -EINVAL;
  
- 	do {
- 		count = 1;
--		ret = ev_byte_channel_send(CONFIG_PPC_EARLY_DEBUG_EHV_BC_HANDLE,
-+		ret = local_ev_byte_channel_send(CONFIG_PPC_EARLY_DEBUG_EHV_BC_HANDLE,
- 					   &count, &data);
- 	} while (ret == EV_EAGAIN);
+- 	if (blank > FB_BLANK_POWERDOWN)
+- 		blank = FB_BLANK_POWERDOWN;
++	if (blank > FB_BLANK_POWERDOWN)
++		blank = FB_BLANK_POWERDOWN;
+ 
+ 	event.info = info;
+ 	event.data = &blank;
+ 
+ 	if (info->fbops->fb_blank)
+- 		ret = info->fbops->fb_blank(blank, info);
++		ret = info->fbops->fb_blank(blank, info);
+ 
+ 	if (!ret)
+ 		fb_notifier_call_chain(FB_EVENT_BLANK, &event);
+ 
+- 	return ret;
++	return ret;
  }
-@@ -221,7 +236,7 @@ static int ehv_bc_console_byte_channel_s
- 	while (count) {
- 		len = min_t(unsigned int, count, EV_BYTE_CHANNEL_MAX_BYTES);
- 		do {
--			ret = ev_byte_channel_send(handle, &len, s);
-+			ret = local_ev_byte_channel_send(handle, &len, s);
- 		} while (ret == EV_EAGAIN);
- 		count -= len;
- 		s += len;
-@@ -401,7 +416,7 @@ static void ehv_bc_tx_dequeue(struct ehv
- 			    CIRC_CNT_TO_END(bc->head, bc->tail, BUF_SIZE),
- 			    EV_BYTE_CHANNEL_MAX_BYTES);
+ EXPORT_SYMBOL(fb_blank);
  
--		ret = ev_byte_channel_send(bc->handle, &len, bc->buf + bc->tail);
-+		ret = local_ev_byte_channel_send(bc->handle, &len, bc->buf + bc->tail);
- 
- 		/* 'len' is valid only if the return code is 0 or EV_EAGAIN */
- 		if (!ret || (ret == EV_EAGAIN))
 
 
