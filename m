@@ -2,52 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED417C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1F6C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B9A2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6D520656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552175;
-	bh=aLEexzmvFjZs+xrFTUh+Epi0eEaW4BXGZTMzypmLQtI=;
+	s=default; t=1587552197;
+	bh=TX443VW0wwGHwsW3eKFenSBCRAXdimDJM+ENiJ/1qn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wu12eE4yrzQZfa6YpTF8FKfkF6eeJyQh5VYDhBGJQum2OZ8nZAXrXhSnw1Cirdl0N
-	 RLDnTmT0CaxAhf2twk3r9GJaDGAqTsBJbg7M3NfyefR0kTQQbr6NGmuCvMt81Gjmjo
-	 6vKT3yyZwjAEkiiQETMhsKPDuEalJk8WIPm9mvns=
+	b=MNzA9T0p0s+zFmk++3PdfxQlljNXK4Nm0Ms2Tqsp6TnQpRCUz1kLQvpNHjAYJ6Ehv
+	 4C2SjZI/uDb6uPgqQr06firqVli0uCOIxa27xs1p/8krbMUTdH0UtAtqmGDnBUiopV
+	 ZamDAqgbhl5t2t5LlqtlAS+xANvMIxDIBcgOi4oE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbgDVKmf (ORCPT
+        id S1731744AbgDVKnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57456 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730126AbgDVKUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:52 -0400
+        id S1729523AbgDVKTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:19:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8853021556;
-        Wed, 22 Apr 2020 10:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A8020775;
+        Wed, 22 Apr 2020 10:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550852;
-        bh=aLEexzmvFjZs+xrFTUh+Epi0eEaW4BXGZTMzypmLQtI=;
+        s=default; t=1587550780;
+        bh=TX443VW0wwGHwsW3eKFenSBCRAXdimDJM+ENiJ/1qn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NMu55Mn4mdK6nwBw0PA7A5PobSNgX2kmI+sXPCcWnq87tcwxRDT2n+rKMGG2iaVJ3
-         nDewPXKvA0yK97Bz7WbytoPuDknxJGQRGUThsL9rh0vk0QQvf5z9WFbJnBCJwtxz8j
-         ATHUQgNBjnsBBA1V3weZi85NxijAMTRNrHT+X7lI=
+        b=bRVs4AHRDIh91PI6zEHdawUWHLvladc13ijuYkurvcjUVvgBy9IdjDze/7rqROfY2
+         kgAntolM9OtC7GIqrk8O1OwyW5wj+8WfwZ33sRYjvyKb5pscjA2toNl9gujIGjh2Tl
+         QkSZRBdx5rPVmwmEoN4W2Kfx7kMkq02MHIhRZt50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: [PATCH 5.4 118/118] bpf, test_verifier: switch bpf_get_stacks 0 s> r8 test
-Date:   Wed, 22 Apr 2020 11:57:59 +0200
-Message-Id: <20200422095050.095274128@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 091/118] iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
+Date:   Wed, 22 Apr 2020 11:57:32 +0200
+Message-Id: <20200422095046.283048366@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,62 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Qian Cai <cai@lca.pw>
 
-[ no upstream commit ]
+[ Upstream commit c6f4ebdeba4cff590594df931ff1ee610c426431 ]
 
-Switch the comparison, so that is_branch_taken() will recognize that below
-branch is never taken:
+dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
+side critical section but with dmar_global_lock held. Silence this
+false positive.
 
-  [...]
-  17: [...] R1_w=inv0 [...] R8_w=inv(id=0,smin_value=-2147483648,smax_value=-1,umin_value=18446744071562067968,var_off=(0xffffffff80000000; 0x7fffffff)) [...]
-  17: (67) r8 <<= 32
-  18: [...] R8_w=inv(id=0,smax_value=-4294967296,umin_value=9223372036854775808,umax_value=18446744069414584320,var_off=(0x8000000000000000; 0x7fffffff00000000)) [...]
-  18: (c7) r8 s>>= 32
-  19: [...] R8_w=inv(id=0,smin_value=-2147483648,smax_value=-1,umin_value=18446744071562067968,var_off=(0xffffffff80000000; 0x7fffffff)) [...]
-  19: (6d) if r1 s> r8 goto pc+16
-  [...] R1_w=inv0 [...] R8_w=inv(id=0,smin_value=-2147483648,smax_value=-1,umin_value=18446744071562067968,var_off=(0xffffffff80000000; 0x7fffffff)) [...]
-  [...]
+ drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+ #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
 
-Currently we check for is_branch_taken() only if either K is source, or source
-is a scalar value that is const. For upstream it would be good to extend this
-properly to check whether dst is const and src not.
+ Call Trace:
+  dump_stack+0xa4/0xfe
+  lockdep_rcu_suspicious+0xeb/0xf5
+  dmar_find_atsr+0x1ab/0x1c0
+  dmar_parse_one_atsr+0x64/0x220
+  dmar_walk_remapping_entries+0x130/0x380
+  dmar_table_init+0x166/0x243
+  intel_iommu_init+0x1ab/0xe19
+  pci_iommu_init+0x1a/0x44
+  do_one_initcall+0xae/0x4d0
+  kernel_init_freeable+0x412/0x4c5
+  kernel_init+0x19/0x193
 
-For the sake of the test_verifier, it is probably not needed here:
-
-  # ./test_verifier 101
-  #101/p bpf_get_stack return R0 within range OK
-  Summary: 1 PASSED, 0 SKIPPED, 0 FAILED
-
-I haven't seen this issue in test_progs* though, they are passing fine:
-
-  # ./test_progs-no_alu32 -t get_stack
-  Switching to flavor 'no_alu32' subdirectory...
-  #20 get_stack_raw_tp:OK
-  Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-
-  # ./test_progs -t get_stack
-  #20 get_stack_raw_tp:OK
-  Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/verifier/bpf_get_stack.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/tools/testing/selftests/bpf/verifier/bpf_get_stack.c
-+++ b/tools/testing/selftests/bpf/verifier/bpf_get_stack.c
-@@ -19,7 +19,7 @@
- 	BPF_MOV64_REG(BPF_REG_8, BPF_REG_0),
- 	BPF_ALU64_IMM(BPF_LSH, BPF_REG_8, 32),
- 	BPF_ALU64_IMM(BPF_ARSH, BPF_REG_8, 32),
--	BPF_JMP_REG(BPF_JSGT, BPF_REG_1, BPF_REG_8, 16),
-+	BPF_JMP_REG(BPF_JSLT, BPF_REG_8, BPF_REG_1, 16),
- 	BPF_ALU64_REG(BPF_SUB, BPF_REG_9, BPF_REG_8),
- 	BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
- 	BPF_ALU64_REG(BPF_ADD, BPF_REG_2, BPF_REG_8),
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 0d922eeae3579..773ac2b0d6068 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4335,7 +4335,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
+ 	struct dmar_atsr_unit *atsru;
+ 	struct acpi_dmar_atsr *tmp;
+ 
+-	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
++	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
++				dmar_rcu_check()) {
+ 		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
+ 		if (atsr->segment != tmp->segment)
+ 			continue;
+-- 
+2.20.1
+
 
 
