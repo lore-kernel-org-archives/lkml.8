@@ -2,131 +2,124 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729EBC55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6A1C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4812070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587535382;
-	bh=RyobVlYLDlwPdEUHFbysd50nKsdxrBAn3YN9DXUsA+c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=aP71HEzLeUgYkqS0+PmixXN0LQ5H97mQ5bY58m0NuRs4yTUQCFmlBODySv6WHOrHI
-	 MylEeBGIIBI/HJJiXOnsX31Z8bSP2ZyicHEGCEGGKfXec7Fin0jgzPPB6n7uZbV1EO
-	 3N7/pWfBgZX03GlYEEI7LDeAhDEvMSDLSGyvVDfg=
+	by mail.kernel.org (Postfix) with ESMTP id E9F7C206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbgDVGDB (ORCPT
+        id S1726465AbgDVGDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgDVGDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:03:01 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DC2C03C1A6;
-        Tue, 21 Apr 2020 23:03:00 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u15so974227ljd.3;
-        Tue, 21 Apr 2020 23:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:acked-by
-         :signed-off-by:date:message-id:mime-version;
-        bh=RyobVlYLDlwPdEUHFbysd50nKsdxrBAn3YN9DXUsA+c=;
-        b=CuEqA7g+zZ54dw9bCjayhgv9A2u9MTQNCyt6TyWzFiFMsGJTNLVLxPxjfv8uHI7dQo
-         MC32G8uIM4f5rC1H5sgtFomew636iL82jvLXqaEF1Mn6oSVKztw1QsOEAPPrMKZ9jFGT
-         1wGb16v8CYMvHlnWKfl+sXm5JvhTxP2qfzeYdNUQJdTXsb7uZjoEeL+wg32naJhmfrrk
-         +yhgeue6gQFbxbcm2X8FYAXR+xbgTRsFnEhq2dapuvkCuUTAjd1qoAUrX8cKrVQhino/
-         WB/nHYjmLrpXDhTnnBxrfxXVrB5pdKhJa7AT6hMVN3vafe8XnX2hut2D90jo0gUWJRjd
-         H30w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :acked-by:signed-off-by:date:message-id:mime-version;
-        bh=RyobVlYLDlwPdEUHFbysd50nKsdxrBAn3YN9DXUsA+c=;
-        b=o8GXDqzKhb/YS+LQ8MbzZbE5CYg6gWOG+4tv2Gd1OzSNyJ++P2VsVA7gbRZcOljhcz
-         Lo9k3tZTT29fjw/5MJRjvSZ6MujfNT6B7vYszxJqfnI9CNyQOwqrFS9VN9hxLuYLbK1N
-         HgbQ0zYQkSWBONUrwlfS0LTT1EDGMNF21zXTZDIb38wydooxTfj9oQFzQPvJhuYwfNtZ
-         K85MtI2RE867RfBfuaE5GoJ3+cZGcPTyXAZpMZCnEh0JFjTshqCTU/XOd8nxrxZmGnHT
-         LPjSgL1tWUycgAzSAzZulPBWtWC4NKjI6kgKNTgh2mIrtUZdLXL02J4aleNIHbwzfdFP
-         awOg==
-X-Gm-Message-State: AGi0PuZkhS15Re4MNWFIK0jwgOJr/DVEZbAoQpzf3Av4WKAdrL6dos5o
-        Vlv8dNyH1Xsz/k50ySWI8f0R5Bb7
-X-Google-Smtp-Source: APiQypIjRjgsVPUBcXDJnEvR6tt9J8AMqa4ttQtiCcbriCsZnqyDtDIspQZuvw1zQ4lSotKOpPbzYA==
-X-Received: by 2002:a05:651c:385:: with SMTP id e5mr15448868ljp.208.1587535378749;
-        Tue, 21 Apr 2020 23:02:58 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id k11sm3811034lfe.44.2020.04.21.23.02.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Apr 2020 23:02:58 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to ReST
-In-Reply-To: <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
-References: <cover.1587487612.git.mchehab+huawei@kernel.org> <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Date:   Wed, 22 Apr 2020 09:02:53 +0300
-Message-ID: <878siocb1u.fsf@kernel.org>
+        Wed, 22 Apr 2020 02:03:34 -0400
+Received: from verein.lst.de ([213.95.11.211]:50309 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbgDVGDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 02:03:33 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F3FEA68C7B; Wed, 22 Apr 2020 08:03:29 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 08:03:29 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        intel-gfx@lists.freedesktop.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH hmm 5/5] mm/hmm: remove the customizable pfn format
+ from hmm_range_fault
+Message-ID: <20200422060329.GD22366@lst.de>
+References: <0-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com> <5-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-> - Add a SPDX header;
-> - Adjust document and section titles;
-> - Use copyright symbol;
-> - Some whitespace fixes and new line breaks;
-> - Mark literal blocks as such;
-> - Add it to filesystems/index.rst.
->
-> Also, as this file is alone on its own dir, and it doesn't
-> seem too likely that other documents will follow it, let's
-> move it to the filesystems/ root documentation dir.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On Tue, Apr 21, 2020 at 09:21:46PM -0300, Jason Gunthorpe wrote:
+> +void nouveau_hmm_convert_pfn(struct nouveau_drm *drm, struct hmm_range *range,
+> +			     u64 *ioctl_addr)
+>  {
+>  	unsigned long i, npages;
+>  
+> +	/*
+> +	 * The ioctl_addr prepared here is passed through nvif_object_ioctl()
+> +	 * to an eventual DMA map on some call chain like:
+> +	 *    nouveau_svm_fault():
+> +	 *      args.i.m.method = NVIF_VMM_V0_PFNMAP
+> +	 *      nouveau_range_fault()
+> +	 *       nvif_object_ioctl()
+> +	 *        client->driver->ioctl()
+> +	 *           struct nvif_driver nvif_driver_nvkm:
+> +	 *             .ioctl = nvkm_client_ioctl
+> +	 *            nvkm_ioctl()
+> +	 *             nvkm_ioctl_path()
+> +	 *               nvkm_ioctl_v0[type].func(..)
+> +	 *               nvkm_ioctl_mthd()
+> +	 *                nvkm_object_mthd()
+> +	 *                   struct nvkm_object_func nvkm_uvmm:
+> +	 *                     .mthd = nvkm_uvmm_mthd
+> +	 *                    nvkm_uvmm_mthd()
+> +	 *                     nvkm_uvmm_mthd_pfnmap()
+> +	 *                      nvkm_vmm_pfn_map()
+> +	 *                       nvkm_vmm_ptes_get_map()
+> +	 *                        func == gp100_vmm_pgt_pfn
+> +	 *                         struct nvkm_vmm_desc_func gp100_vmm_desc_spt:
+> +	 *                           .pfn = gp100_vmm_pgt_pfn
+> +	 *                          nvkm_vmm_iter()
+> +	 *                           REF_PTES == func == gp100_vmm_pgt_pfn()
+> +	 *			      dma_map_page()
+> +	 *
+> +	 * This is all just encoding the internal hmm reprensetation into a
+> +	 * different nouveau internal representation.
+> +	 */
 
-Acked-By: Felipe Balbi <balbi@kernel.org>
+Nice callchain from hell..  Unfortunately such "code listings" tend to
+get out of date very quickly, so I'm not sure it is worth keeping in
+the code.  What would be really worthile is consolidating the two
+different sets of defines (NVIF_VMM_PFNMAP_V0_ vs NVKM_VMM_PFN_)
+to make the code a little easier to follow.
 
-=2D-=20
-balbi
+>  	npages = (range->end - range->start) >> PAGE_SHIFT;
+>  	for (i = 0; i < npages; ++i) {
+>  		struct page *page;
+>  
+> +		if (!(range->hmm_pfns[i] & HMM_PFN_VALID)) {
+> +			ioctl_addr[i] = 0;
+>  			continue;
+> +		}
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Can't we rely on the caller pre-zeroing the array?
 
------BEGIN PGP SIGNATURE-----
+> +		page = hmm_pfn_to_page(range->hmm_pfns[i]);
+> +		if (is_device_private_page(page))
+> +			ioctl_addr[i] = nouveau_dmem_page_addr(page) |
+> +					NVIF_VMM_PFNMAP_V0_V |
+> +					NVIF_VMM_PFNMAP_V0_VRAM;
+> +		else
+> +			ioctl_addr[i] = page_to_phys(page) |
+> +					NVIF_VMM_PFNMAP_V0_V |
+> +					NVIF_VMM_PFNMAP_V0_HOST;
+> +		if (range->hmm_pfns[i] & HMM_PFN_WRITE)
+> +			ioctl_addr[i] |= NVIF_VMM_PFNMAP_V0_W;
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6f3g0ACgkQzL64meEa
-mQba5A//XsmnQn1aCllE6lC0hRPpOiiZ3kYrkvIcFHatDymDaMfr9EcQ70+t3Ams
-a7EWUKsvLYdVuTku2d5lzBP604QHRfiWDJaHnVI4op6TGXFRVMP1WdLosAOT/W+Y
-xoiEGvbdCPP6gBmni2ov1KANJ190i8xjN8uFJshYp+PVsZAQczUg4M6hX7dq06Rq
-raYGesTSqco821bNK2lxn2Jl2jJ11ExVbuXg4KXGSgwIRFjC6zIleLh531KExYeI
-fOYGnB0vogidsLJPrl4Z67EXY/n60aIX3R8QI/uV/tnqs7feiddEQ761VYzk2r3w
-M4MxxJ2JTnITSdWKW10DevQv/uu8ET/6MLjf8S8NKiwRl9i+cg4zW3TSfLUd8TZ7
-AW9wG1ZZPjVdPSoqFr41unFVZs/35VAAduGuGU1vHoN+FL7nO7Ds+04hT7By/r7I
-joiHLfQTnchumHMaWeCWvM4XUHJgWdbukoguaIKMuvimo7+QD8psnAKgJujIv/zj
-WGt+xkJyQmiv2OHIvpXj3B5G+dF3jvE3qTRJk/Kn/1NBGMnPAYYyBGWawIpusoNB
-CYkKdCUnS4TrEnRODyXP9eJOayq2DFnpqr4TId/B7oaEUVFNIMLSKxnZqAUnJPRM
-/oL6oHjGj9x1Gkqy/9onKjO+sBbY0yiRy4AL4YkR2IlkYb3qC8k=
-=sHvv
------END PGP SIGNATURE-----
---=-=-=--
+Now that this routine isn't really device memory specific any more, I
+wonder if it should move to nouveau_svm.c.
