@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631E4C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F1DC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9F02082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2404C2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549627;
-	bh=wRvSAt//1Dl7jXusj8IViGumHNtyt3coDpWgMy+UbOI=;
+	s=default; t=1587549652;
+	bh=U7Sc4UcTpVDfD4AYm+6C7inxC7cWRxuNaqsEtdpjJLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sStN9DX4vEmf/E0pPH5c4NVaiKDV1KHUzptl7pNswFzF7etSMXKpViarv+vjNKP4z
-	 2o1bLXt8NMLasmKeukVz3kvidMV0i8mX83oGgbY60a7SkK7GL5OE/ptCzAHjS95TC5
-	 6duXETfmfPim+YL9BdTTr+22Vkx08E3ujx3wm1Lo=
+	b=YdLMWcyq62b9gJFcWqxQgFxksyaaSs+KWyTOg0JuEKdf1+VmP2Hn9A7jeaa7o+1+R
+	 V95L670gDr71/rIuZnGfbtCpp8VVNiGUKw1BPW9Hny0Qs4fKLNuwV/SE4yTpgsFFZi
+	 FvHBUXtf1RRW9lVWRTs+AWEH6nqYJff5Z/mw3Px8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgDVKAY (ORCPT
+        id S1726668AbgDVKAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbgDVKAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:15 -0400
+        id S1726628AbgDVKAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:00:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BD62077D;
-        Wed, 22 Apr 2020 10:00:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9251420CC7;
+        Wed, 22 Apr 2020 10:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549614;
-        bh=wRvSAt//1Dl7jXusj8IViGumHNtyt3coDpWgMy+UbOI=;
+        s=default; t=1587549624;
+        bh=U7Sc4UcTpVDfD4AYm+6C7inxC7cWRxuNaqsEtdpjJLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gxwCDm2Va/bC/GJ2GTXgvBX3vcdC2gCakg1uS+rPk8qy/8LD4QFQamVZ0RPReDJ5N
-         FfJA2VTB/SlurIFbrZ35hDw+Jl0Yd+TWAMj8XaSPdz1tSLqyhl1hWQ1RbIbPMAI22/
-         +Wl/33VQVUeX1urYB59SVqvg/eR8XSr20ZLL28UE=
+        b=oVVOzdwJmpVjp5k6JO4zoHDr4xcu+mWONUMA6eBGFMZwdH9noiZgFzAIlQcqjfXja
+         FYEYcv579At765qTLROJ8ODRy0JSw0KDHeyG37RciYhZwKzIPOdgkc0fT/JKNgsGks
+         8LmM6p2XumzMGBl7D12VIWpI++5a+CmwJyzQnLJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Alex Vesker <valex@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 035/100] futex: futex_wake_op, do not fail on invalid op
-Date:   Wed, 22 Apr 2020 11:56:05 +0200
-Message-Id: <20200422095028.981138893@linuxfoundation.org>
+Subject: [PATCH 4.4 039/100] IB/ipoib: Fix lockdep issue found on ipoib_ib_dev_heavy_flush
+Date:   Wed, 22 Apr 2020 11:56:09 +0200
+Message-Id: <20200422095029.531359213@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -63,87 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Alex Vesker <valex@mellanox.com>
 
-commit e78c38f6bdd900b2ad9ac9df8eff58b745dc5b3c upstream.
+commit 1f80bd6a6cc8358b81194e1f5fc16449947396ec upstream.
 
-In commit 30d6e0a4190d ("futex: Remove duplicated code and fix undefined
-behaviour"), I let FUTEX_WAKE_OP to fail on invalid op.  Namely when op
-should be considered as shift and the shift is out of range (< 0 or > 31).
+The locking order of vlan_rwsem (LOCK A) and then rtnl (LOCK B),
+contradicts other flows such as ipoib_open possibly causing a deadlock.
+To prevent this deadlock heavy flush is called with RTNL locked and
+only then tries to acquire vlan_rwsem.
+This deadlock is possible only when there are child interfaces.
 
-But strace's test suite does this madness:
+[  140.941758] ======================================================
+[  140.946276] WARNING: possible circular locking dependency detected
+[  140.950950] 4.15.0-rc1+ #9 Tainted: G           O
+[  140.954797] ------------------------------------------------------
+[  140.959424] kworker/u32:1/146 is trying to acquire lock:
+[  140.963450]  (rtnl_mutex){+.+.}, at: [<ffffffffc083516a>] __ipoib_ib_dev_flush+0x2da/0x4e0 [ib_ipoib]
+[  140.970006]
+but task is already holding lock:
+[  140.975141]  (&priv->vlan_rwsem){++++}, at: [<ffffffffc0834ee1>] __ipoib_ib_dev_flush+0x51/0x4e0 [ib_ipoib]
+[  140.982105]
+which lock already depends on the new lock.
+[  140.990023]
+the existing dependency chain (in reverse order) is:
+[  140.998650]
+-> #1 (&priv->vlan_rwsem){++++}:
+[  141.005276]        down_read+0x4d/0xb0
+[  141.009560]        ipoib_open+0xad/0x120 [ib_ipoib]
+[  141.014400]        __dev_open+0xcb/0x140
+[  141.017919]        __dev_change_flags+0x1a4/0x1e0
+[  141.022133]        dev_change_flags+0x23/0x60
+[  141.025695]        devinet_ioctl+0x704/0x7d0
+[  141.029156]        sock_do_ioctl+0x20/0x50
+[  141.032526]        sock_ioctl+0x221/0x300
+[  141.036079]        do_vfs_ioctl+0xa6/0x6d0
+[  141.039656]        SyS_ioctl+0x74/0x80
+[  141.042811]        entry_SYSCALL_64_fastpath+0x1f/0x96
+[  141.046891]
+-> #0 (rtnl_mutex){+.+.}:
+[  141.051701]        lock_acquire+0xd4/0x220
+[  141.055212]        __mutex_lock+0x88/0x970
+[  141.058631]        __ipoib_ib_dev_flush+0x2da/0x4e0 [ib_ipoib]
+[  141.063160]        __ipoib_ib_dev_flush+0x71/0x4e0 [ib_ipoib]
+[  141.067648]        process_one_work+0x1f5/0x610
+[  141.071429]        worker_thread+0x4a/0x3f0
+[  141.074890]        kthread+0x141/0x180
+[  141.078085]        ret_from_fork+0x24/0x30
+[  141.081559]
 
-  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xa0caffee);
-  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xbadfaced);
-  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xffffffff);
+other info that might help us debug this:
+[  141.088967]  Possible unsafe locking scenario:
+[  141.094280]        CPU0                    CPU1
+[  141.097953]        ----                    ----
+[  141.101640]   lock(&priv->vlan_rwsem);
+[  141.104771]                                lock(rtnl_mutex);
+[  141.109207]                                lock(&priv->vlan_rwsem);
+[  141.114032]   lock(rtnl_mutex);
+[  141.116800]
+ *** DEADLOCK ***
 
-When I pick the first 0xa0caffee, it decodes as:
-
-  0x80000000 & 0xa0caffee: oparg is shift
-  0x70000000 & 0xa0caffee: op is FUTEX_OP_OR
-  0x0f000000 & 0xa0caffee: cmp is FUTEX_OP_CMP_EQ
-  0x00fff000 & 0xa0caffee: oparg is sign-extended 0xcaf = -849
-  0x00000fff & 0xa0caffee: cmparg is sign-extended 0xfee = -18
-
-That means the op tries to do this:
-
-  (futex |= (1 << (-849))) == -18
-
-which is completely bogus. The new check of op in the code is:
-
-        if (encoded_op & (FUTEX_OP_OPARG_SHIFT << 28)) {
-                if (oparg < 0 || oparg > 31)
-                        return -EINVAL;
-                oparg = 1 << oparg;
-        }
-
-which results obviously in the "Invalid argument" errno:
-
-  FAIL: futex
-  ===========
-
-  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xa0caffee) = -1: Invalid argument
-  futex.test: failed test: ../futex failed with code 1
-
-So let us soften the failure to print only a (ratelimited) message, crop
-the value and continue as if it were right.  When userspace keeps up, we
-can switch this to return -EINVAL again.
-
-[v2] Do not return 0 immediatelly, proceed with the cropped value.
-
-Fixes: 30d6e0a4190d ("futex: Remove duplicated code and fix undefined behaviour")
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: b4b678b06f6e ("IB/ipoib: Grab rtnl lock on heavy flush when calling ndo_open/stop")
+Signed-off-by: Alex Vesker <valex@mellanox.com>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/futex.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/ipoib/ipoib_ib.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -1479,8 +1479,16 @@ static int futex_atomic_op_inuser(unsign
- 	int oldval, ret;
+--- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
+@@ -1057,13 +1057,10 @@ static void __ipoib_ib_dev_flush(struct
+ 		ipoib_ib_dev_down(dev);
  
- 	if (encoded_op & (FUTEX_OP_OPARG_SHIFT << 28)) {
--		if (oparg < 0 || oparg > 31)
--			return -EINVAL;
-+		if (oparg < 0 || oparg > 31) {
-+			char comm[sizeof(current->comm)];
-+			/*
-+			 * kill this print and return -EINVAL when userspace
-+			 * is sane again
-+			 */
-+			pr_info_ratelimited("futex_wake_op: %s tries to shift op by %d; fix this program\n",
-+					get_task_comm(comm, current), oparg);
-+			oparg &= 31;
-+		}
- 		oparg = 1 << oparg;
- 	}
+ 	if (level == IPOIB_FLUSH_HEAVY) {
+-		rtnl_lock();
+ 		if (test_bit(IPOIB_FLAG_INITIALIZED, &priv->flags))
+ 			ipoib_ib_dev_stop(dev);
  
+-		result = ipoib_ib_dev_open(dev);
+-		rtnl_unlock();
+-		if (result)
++		if (ipoib_ib_dev_open(dev))
+ 			return;
+ 
+ 		if (netif_queue_stopped(dev))
+@@ -1102,7 +1099,9 @@ void ipoib_ib_dev_flush_heavy(struct wor
+ 	struct ipoib_dev_priv *priv =
+ 		container_of(work, struct ipoib_dev_priv, flush_heavy);
+ 
++	rtnl_lock();
+ 	__ipoib_ib_dev_flush(priv, IPOIB_FLUSH_HEAVY, 0);
++	rtnl_unlock();
+ }
+ 
+ void ipoib_ib_dev_cleanup(struct net_device *dev)
 
 
