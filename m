@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC7DC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14CDC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 399FE20735
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C3720787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549757;
-	bh=aS6rCUp0LQwVhHJsV5uUa9qCEMgITqc2OzijRDMUb+0=;
+	s=default; t=1587549754;
+	bh=UumA21lU9T2cM3PJ+RxWCkO1Rk/std/qt+SozyD2f4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YsrJvlodvEYboiW8dF8wajMua4N1CKS5D8V2n0t/qX11j8zv6Zn4t4EXAineoUcdi
-	 l27E1p6qDOWcgYWu5WcdnlwyqrW+no2Zxe1pU5SZOo3BZ9xBno0LdtQLELEQ2Lwnjx
-	 10rHcuC/TqLTemyHsHnkImTHwBo2nYORm3oI8Xug=
+	b=QsBtriwK0u+dGu09Bnm/fwiqflBjL3sY723RWbzmAj530iaRqvh2EbiKCQezrCACW
+	 hToF4MrKru3w6afp/EgGB+guaCL4V7RQnz2GdUmJ/CGJrdzWABD9tu2PZp81wsqtuG
+	 uiFkfSL5K80xcV3Md7wAqPYlFjW1OdJAyEIEcgtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgDVKCg (ORCPT
+        id S1727011AbgDVKCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:02:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51510 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbgDVKC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:02:27 -0400
+        id S1726994AbgDVKC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:02:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD98820735;
-        Wed, 22 Apr 2020 10:02:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25FB72076C;
+        Wed, 22 Apr 2020 10:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549747;
-        bh=aS6rCUp0LQwVhHJsV5uUa9qCEMgITqc2OzijRDMUb+0=;
+        s=default; t=1587549749;
+        bh=UumA21lU9T2cM3PJ+RxWCkO1Rk/std/qt+SozyD2f4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AL7TBk1NbBo081jAlILAgVrA9CaKCJlKcQjuUqFGdDx2eA3v5TiT/lF2TVjqdCpwt
-         xfbw5UUNOBDJXkHlHIg2Yon8rx2Xt2cNm+3FPa2qOcuqtBtmyalzJMWNPiS0Hnj4El
-         gWvDYeweegsQrQuszMSJBymGA4SHOkdsMSQS/0EA=
+        b=xK52kKqYvFy1DpFNL1CtU/2syUX2Piezr1oxJwgh2GkHLDjxYk0iOiviV0Zy7tMjW
+         AjlH2478YxwHFEmeF2Nr98llL4D7eG2VUKBA++bsJt8KSfH8R3aTpgNuh355NcAJER
+         r/B9dq9Ev0zjSNzigIUvkxR/Oe3I/3I8y8SqrORA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vegard Nossum <vegard.nossum@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ian Abbott <abbotti@mev.co.uk>, Joe Perches <joe@perches.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 089/100] compiler.h: fix error in BUILD_BUG_ON() reporting
-Date:   Wed, 22 Apr 2020 11:56:59 +0200
-Message-Id: <20200422095039.026259456@linuxfoundation.org>
+Subject: [PATCH 4.4 090/100] NFS: Fix memory leaks in nfs_pageio_stop_mirroring()
+Date:   Wed, 22 Apr 2020 11:57:00 +0200
+Message-Id: <20200422095039.204367531@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -65,68 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vegard Nossum <vegard.nossum@oracle.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit af9c5d2e3b355854ff0e4acfbfbfadcd5198a349 ]
+[ Upstream commit 862f35c94730c9270833f3ad05bd758a29f204ed ]
 
-compiletime_assert() uses __LINE__ to create a unique function name.  This
-means that if you have more than one BUILD_BUG_ON() in the same source
-line (which can happen if they appear e.g.  in a macro), then the error
-message from the compiler might output the wrong condition.
+If we just set the mirror count to 1 without first clearing out
+the mirrors, we can leak queued up requests.
 
-For this source file:
-
-	#include <linux/build_bug.h>
-
-	#define macro() \
-		BUILD_BUG_ON(1); \
-		BUILD_BUG_ON(0);
-
-	void foo()
-	{
-		macro();
-	}
-
-gcc would output:
-
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_9' declared with attribute error: BUILD_BUG_ON failed: 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-
-However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
-instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
-each BUILD_BUG_ON() gets a different function name and the correct
-condition is printed:
-
-./include/linux/compiler.h:350:38: error: call to `__compiletime_assert_0' declared with attribute error: BUILD_BUG_ON failed: 1
-  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Daniel Santos <daniel.santos@pobox.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Ian Abbott <abbotti@mev.co.uk>
-Cc: Joe Perches <joe@perches.com>
-Link: http://lkml.kernel.org/r/20200331112637.25047-1-vegard.nossum@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/compiler.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/pagelist.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 5508011cc0c79..5f8749440c6af 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -502,7 +502,7 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
-  * compiler has support to do so.
-  */
- #define compiletime_assert(condition, msg) \
--	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-+	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index af1bb7353792c..f5de58c5773f6 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -886,15 +886,6 @@ static int nfs_pageio_setup_mirroring(struct nfs_pageio_descriptor *pgio,
+ 	return 0;
+ }
  
- #define compiletime_assert_atomic_type(t)				\
- 	compiletime_assert(__native_word(t),				\
+-/*
+- * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
+- */
+-void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
+-{
+-	pgio->pg_mirror_count = 1;
+-	pgio->pg_mirror_idx = 0;
+-}
+-
+ static void nfs_pageio_cleanup_mirroring(struct nfs_pageio_descriptor *pgio)
+ {
+ 	pgio->pg_mirror_count = 1;
+@@ -1287,6 +1278,14 @@ void nfs_pageio_cond_complete(struct nfs_pageio_descriptor *desc, pgoff_t index)
+ 	}
+ }
+ 
++/*
++ * nfs_pageio_stop_mirroring - stop using mirroring (set mirror count to 1)
++ */
++void nfs_pageio_stop_mirroring(struct nfs_pageio_descriptor *pgio)
++{
++	nfs_pageio_complete(pgio);
++}
++
+ int __init nfs_init_nfspagecache(void)
+ {
+ 	nfs_page_cachep = kmem_cache_create("nfs_page",
 -- 
 2.20.1
 
