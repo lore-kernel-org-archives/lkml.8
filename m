@@ -2,158 +2,80 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9F6C5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AF3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B66C2074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:37:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SGBWRKZD"
+	by mail.kernel.org (Postfix) with ESMTP id AA76E206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgDVOh2 (ORCPT
+        id S1726200AbgDVOil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:37:28 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:54090 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgDVOhY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:37:24 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 03MEaaEO012204;
-        Wed, 22 Apr 2020 23:36:37 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 03MEaaEO012204
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587566198;
-        bh=Bznt0cL8BIH1py8BFs9AtQCl/NitEIeYc3BeOYY2PNY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SGBWRKZDHwt+YDrs9Qp7PDjDXkJtfJ45kaCh74pm7CQtbhguLhJsnI0tmJ3zfHwCR
-         PkkALjzHdrXiZ8ygG1z6BDkjKsCz7gBD6N18BMNhhcX12ft1L6ET0/plZBBmWP0hCW
-         Xd7uQF0FoXR09CyytL5Votq8JF8MBFv/oD6TQef6IAyEGm5tooQRptxAMYEXPT/SKS
-         pqSipA1aN98IGX8BlgM3x3MJ8IlNHxPGd2CNg9a+omLm5Olk/iugxgXKpi2A28N9tB
-         spzOaEEsZ4UmxqHhs0U50MnHxoVkYOnWdsjgBdqNegXEUcXP2RpQ970/TYQdM1id7e
-         yLBPDHGNCND2Q==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: uniphier: add #address-cells and #size-cells to SPI nodes
-Date:   Wed, 22 Apr 2020 23:36:33 +0900
-Message-Id: <20200422143633.1972154-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200422143633.1972154-1-yamada.masahiro@socionext.com>
-References: <20200422143633.1972154-1-yamada.masahiro@socionext.com>
+        Wed, 22 Apr 2020 10:38:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24155 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbgDVOik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:38:40 -0400
+IronPort-SDR: M0ff1S6lzAn0NKw939+TuIVhoikW3vPWbVmw16vel+aEsq5GKlPy5sBkznGQpen4J5Yns8UIzp
+ DdMIawgO4c1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 07:38:40 -0700
+IronPort-SDR: N1APEwHTnT18ajiIph6Dp451Pq+/HFeago4+E1KDsDOHQbPIYVQ+DwLgO0X2goDYXFbGuezuSP
+ BLZc/EIBFXQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
+   d="scan'208";a="245990894"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Apr 2020 07:38:40 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 1A1663019B5; Wed, 22 Apr 2020 07:38:40 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 07:38:40 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake
+ metrics
+Message-ID: <20200422143840.GJ608746@tassilo.jf.intel.com>
+References: <20200422074809.160248-1-irogers@google.com>
+ <20200422074809.160248-3-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422074809.160248-3-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation/devicetree/bindings/spi/spi-uniphier.txt requires
-#address-cells and #size-cells, but they are missing in actual DT files.
+On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
+> Remove over escaping with \\.
+> Remove extraneous if 1 if 0 == 1 else 0 else 0.
 
-Due to this, 'make ARCH=arm64 dtbs_check' is super-noisy.
+So where do these parse errors happen exactly? Some earlier 
+patches introduced them as regressions?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+The original metrics worked without parse errors as far as I know.
 
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 4 ++++
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 8 ++++++++
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 4 ++++
- 3 files changed, 16 insertions(+)
+If it fixes something earlier it would need Fixes: tags.
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index 60ff9b4f9126..15dcfc259854 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -129,6 +129,8 @@ spi0: spi@54006000 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 39 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi0>;
-@@ -140,6 +142,8 @@ spi1: spi@54006100 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006100 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 216 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi1>;
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index afa90b762ea9..f4a56b208837 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -234,6 +234,8 @@ spi0: spi@54006000 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 39 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi0>;
-@@ -245,6 +247,8 @@ spi1: spi@54006100 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006100 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 216 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi1>;
-@@ -256,6 +260,8 @@ spi2: spi@54006200 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006200 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 229 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi2>;
-@@ -267,6 +273,8 @@ spi3: spi@54006300 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006300 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 230 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi3>;
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-index ba18a9661ca2..72f16881cf53 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-@@ -193,6 +193,8 @@ spi0: spi@54006000 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 39 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi0>;
-@@ -204,6 +206,8 @@ spi1: spi@54006100 {
- 			compatible = "socionext,uniphier-scssi";
- 			status = "disabled";
- 			reg = <0x54006100 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			interrupts = <0 216 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spi1>;
--- 
-2.25.1
-
+-Andi
