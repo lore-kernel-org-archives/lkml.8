@@ -2,183 +2,95 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DBCC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DEFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFEB2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="I4EUWzd0"
+	by mail.kernel.org (Postfix) with ESMTP id 223D421569
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587573632;
+	bh=a2zbWjxgVMa4iTxFb1SLUG61ZNNgjj/Et8+PzaCsSe0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=doaM05beJkj9Tr9w1IAvdm1GfxqJYNOsIyhw8KunBYlx0+C83cm+pvCF9iycfW5b7
+	 EkvjRE8sH6cpxwprKDzqL+Flbko5qjrPrGHBh6cxXVgqlsByDHBYwiqvdUQek5D2nY
+	 YfgJHwuuiRiTla9xTUhEZ9VFuo2XntrD5qjbkcFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgDVQkT (ORCPT
+        id S1726582AbgDVQkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:40:19 -0400
-Received: from ns.pmeerw.net ([84.19.176.117]:56404 "EHLO ns.pmeerw.net"
+        Wed, 22 Apr 2020 12:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgDVQkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:40:18 -0400
-Received: by ns.pmeerw.net (Postfix, from userid 1000)
-        id 3F478E01CB; Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
-        t=1587573617; bh=McsTMxwzAFpLpU1JXIxR7mSymPut3YX7nBAYc8yLJBw=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=I4EUWzd0zUhHuWZGbheNH6bJICyGifB/ISIONWZiCSVzEJCyoEtuHKBeNqUy9htv9
-         +7bJf/ONQTjhUoFi39a5WF9hh+xzYg8aHqhJdT88XzGmKxP6hkCzTtpklFhKOVl8j4
-         JhA5ThSvY0rsJ/i0kbuqbNc0hE+wmOeCAQ4vXs+8=
-Received: from localhost (localhost [127.0.0.1])
-        by ns.pmeerw.net (Postfix) with ESMTP id 2C28CE01A3;
-        Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
-From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org
-Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
- attributes
-In-Reply-To: <20200422141135.86419-5-tomasz.duszynski@octakon.com>
-Message-ID: <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-5-tomasz.duszynski@octakon.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S1726469AbgDVQka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:40:30 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89AA42082E;
+        Wed, 22 Apr 2020 16:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587573630;
+        bh=a2zbWjxgVMa4iTxFb1SLUG61ZNNgjj/Et8+PzaCsSe0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=qfaF0NviQu//KdrHWbbYtmKA8beHJ70ZQGHIYEquUvYd6hQkY6FTrk0iUh/mM3oeT
+         2PvLSWWBJvCrwI+DlnTiCqpmD54umubrpwVY4eCI3LwFwZhg5DnoTksCj5yrlNy+qg
+         5f7oybvXKD9SZxaHBXubWjY7cK3HgD/HXuGxJ1MU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6378C3520480; Wed, 22 Apr 2020 09:40:30 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 09:40:30 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        qais.yousef@arm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, airlied@redhat.com,
+        alexander.deucher@amd.com, awalls@md.metrocast.net,
+        axboe@kernel.dk, broonie@kernel.org, daniel.lezcano@linaro.org,
+        gregkh@linuxfoundation.org, hannes@cmpxchg.org,
+        herbert@gondor.apana.org.au, hverkuil@xs4all.nl,
+        john.stultz@linaro.org, nico@fluxnic.net,
+        rafael.j.wysocki@intel.com, rmk+kernel@arm.linux.org.uk,
+        sudeep.holla@arm.com, ulf.hansson@linaro.org,
+        wim@linux-watchdog.org
+Subject: Re: [PATCH 01/23] sched: Provide sched_set_fifo()
+Message-ID: <20200422164030.GA17661@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200422112719.826676174@infradead.org>
+ <20200422112831.266499893@infradead.org>
+ <20200422131138.GL17661@paulmck-ThinkPad-P72>
+ <20200422132648.GJ20730@hirez.programming.kicks-ass.net>
+ <20200422155006.GR17661@paulmck-ThinkPad-P72>
+ <20200422123331.30b00018@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422123331.30b00018@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
-
-> Add documentation for sensor specific iio attributes.
-
-minor comments below
- 
-> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+On Wed, Apr 22, 2020 at 12:33:31PM -0400, Steven Rostedt wrote:
+> On Wed, 22 Apr 2020 08:50:06 -0700
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> new file mode 100644
-> index 000000000000..0431a718447d
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> @@ -0,0 +1,97 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Given that sensor's CO2 measurement chamber has fixed volume
-> +		pressure changes will affect concentration readings. Writing
-> +		current ambient pressure here will allow senor to make necessary
-
-sensor
-
-> +		adjustments. Upon reading previously set value is returned.
-> +		Units are millibars.
-
-unit for pressure in IIO is kilopascal (e.g. 
-/sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
-
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in millibars represented as the
-> +		minimum value, the step and the maximum value, all enclosed in
-> +		square brackets.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
-> +Date:		January 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Amount of time between subsequent measurements. Writing this
-> +		attribute will change measurement interval. Upon reading
-> +		current measurement interval is returned. Units are seconds.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in seconds represented as the
-> +		minimum value, the step and the maximum value, all enclosed in
-> +		square brackets.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/asc
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Writing 1 or 0 to this attribute will respectively activate or
-> +		deactivate automatic self calibration procedure. Upon reading 1
-
-deactivate automatic self calibration (asc) procedure
-
-> +		is returned if asc is ongoing, 0 otherwise.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/frc
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Forced recalibration is used to compensate for sensor drifts
-> +		when a reference value of CO2 concentration in close proximity
-> +		to the sensor is available. Writing attribute will set frc
-> +		value. Upon reading current frc is returned. Units are
-> +		millibars.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in millibars represented as the
-> +		minimum value, the step and the maximum value, all enclosed in
-> +		square brackets.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Sensor readings may be affected by ambient temperature.
-> +		Writing temperature offset will compensate for unwanted changes.
-> +		Note that written offset gets multiplied by a factor of 100
-> +		by a sensor internally.
-> +
-> +		For example, writing 10 here will correspond to 0.1 degree
-> +		Celsius.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in degrees Celsius represented as
-> +		the minimum value, the step and the maximum value, all enclosed
-> +		in square brackets.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/reset
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Software reset mechanism forces sensor into the same state
-> +		as after powering up without the need for removing power supply.
-> +		Writing any value will reset sensor.
+> > Indeed, an extreme form of insanity would be required to try to make core
+> > RCU be a module.  Not that such a form of insanity is a bad thing in and
+> > of itself, but it might best be directed towards less futile ventures.  ;-)
 > 
+> That's like making the core of mutexes a module. How would that ever work
+> (without becoming a microkernel).
 
--- 
+Someone somewhere has probably done it.  Perhaps you really could make
+mutexes be a module within the Linux kernel using kpatch or similar.
+Sort of, anyway.
 
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+Not saying it is not insane, mind you!  ;-)
+
+							Thanx, Paul
