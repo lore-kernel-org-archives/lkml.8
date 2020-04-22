@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA2AC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC827C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0162073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDDD2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552267;
-	bh=EmooAh3QNBEGdyK8oG4A8fdn5lpHulsc2cu+K0KzJrc=;
+	s=default; t=1587552277;
+	bh=4fFNesi2B7U4ghqft/t2nI+a1ZdnPbr9W+VFIRsKftg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGfWvqjXohgW9yZqG3vMT/kvHS+GyIQCvoG3WxKKQRh0N6z0i1jZnFunSTU9jydxc
-	 F/D9sDY1Wk6j8hBWk1r/C5fMLAuB8NpRvaBrWijuDvmlDqAK8dwdF+7Bjtq2FjxTLs
-	 RnrLsOwCL4dup9P4kn4vV8aUZ6DUFJjeJ+Cun5wo=
+	b=VKzTIBT1jmB9t1pSipZ9fiT+d1GvZM3GYPfJwhD4Vuv9ngMn/J8mw64y0zuLcOjP3
+	 Yp+jgr51x8SkFZokAPyVLom81jA2n5y/pgojUjbklMweQQ46JTbJMXVmwr28U3qFQO
+	 nlbAZlae7DcIhvRFyMBLlFLqm4MijYZRhuMN1VJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731376AbgDVKoZ (ORCPT
+        id S1731838AbgDVKog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730046AbgDVKTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:19:09 -0400
+        id S1730023AbgDVKSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FFFB2075A;
-        Wed, 22 Apr 2020 10:19:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25A9120780;
+        Wed, 22 Apr 2020 10:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550748;
-        bh=EmooAh3QNBEGdyK8oG4A8fdn5lpHulsc2cu+K0KzJrc=;
+        s=default; t=1587550731;
+        bh=4fFNesi2B7U4ghqft/t2nI+a1ZdnPbr9W+VFIRsKftg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mu1LTowQk3wR3gfpdbSG65KQzCnjhZhG7JCpvP+mJB74pcmVo0arbd+OPjh239pID
-         K7G418g/njdW34uAp67ccRb6HEYIsYNAZIfJjoMmhXwF/z8JvJI2oB2p14PS3lDYug
-         USBE+QVNYxtHlk3/o+hLQsCelwpkuPPiM5qjrWoA=
+        b=y9HWymyG8jkaBLAWctgaAxdOgQyaBUxgNCnIrN9+OW3NLP/k/NCI7iFaUoISPjuPx
+         gV/eViuX79ucdf6bIN8edofg8qWsvaNFSJklFQQ+lu9284nzAljyibmqvlvyvrDR2T
+         GMHOKRpJ6T8yzYe6ybIw6ePhrXwdmw3/jznMMDjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Baoquan He <bhe@redhat.com>,
+        Nishanth Aravamudan <nacc@us.ibm.com>,
+        Nick Piggin <npiggin@suse.de>, Adam Litke <agl@us.ibm.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 075/118] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Wed, 22 Apr 2020 11:57:16 +0200
-Message-Id: <20200422095044.009700138@linuxfoundation.org>
+Subject: [PATCH 5.4 069/118] mm/hugetlb: fix build failure with HUGETLB_PAGE but not HUGEBTLBFS
+Date:   Wed, 22 Apr 2020 11:57:10 +0200
+Message-Id: <20200422095043.174015180@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -61,50 +67,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+[ Upstream commit bb297bb2de517e41199185021f043bbc5d75b377 ]
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+When CONFIG_HUGETLB_PAGE is set but not CONFIG_HUGETLBFS, the following
+build failure is encoutered:
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
+  In file included from arch/powerpc/mm/fault.c:33:0:
+  include/linux/hugetlb.h: In function 'hstate_inode':
+  include/linux/hugetlb.h:477:9: error: implicit declaration of function 'HUGETLBFS_SB' [-Werror=implicit-function-declaration]
+    return HUGETLBFS_SB(i->i_sb)->hstate;
+           ^
+  include/linux/hugetlb.h:477:30: error: invalid type argument of '->' (have 'int')
+    return HUGETLBFS_SB(i->i_sb)->hstate;
+                                ^
 
-Identified by manual code inspection. I don't think this classifies as
-stable material.
+Gate hstate_inode() with CONFIG_HUGETLBFS instead of CONFIG_HUGETLB_PAGE.
 
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Fixes: a137e1cc6d6e ("hugetlbfs: per mount huge page sizes")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Nishanth Aravamudan <nacc@us.ibm.com>
+Cc: Nick Piggin <npiggin@suse.de>
+Cc: Adam Litke <agl@us.ibm.com>
+Cc: Andi Kleen <ak@suse.de>
+Link: http://lkml.kernel.org/r/7e8c3a3c9a587b9cd8a2f146df32a421b961f3a2.1584432148.git.christophe.leroy@c-s.fr
+Link: https://patchwork.ozlabs.org/patch/1255548/#2386036
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/hugetlb.h | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 9d9ab77d02dd3..364e3a89c0969 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1844,6 +1844,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 53fc34f930d08..8a03f392f3680 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -298,7 +298,10 @@ static inline bool is_file_hugepages(struct file *file)
+ 	return is_file_shm_hugepages(file);
+ }
+ 
+-
++static inline struct hstate *hstate_inode(struct inode *i)
++{
++	return HUGETLBFS_SB(i->i_sb)->hstate;
++}
+ #else /* !CONFIG_HUGETLBFS */
+ 
+ #define is_file_hugepages(file)			false
+@@ -310,6 +313,10 @@ hugetlb_file_setup(const char *name, size_t size, vm_flags_t acctflag,
+ 	return ERR_PTR(-ENOSYS);
+ }
+ 
++static inline struct hstate *hstate_inode(struct inode *i)
++{
++	return NULL;
++}
+ #endif /* !CONFIG_HUGETLBFS */
+ 
+ #ifdef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
+@@ -379,11 +386,6 @@ extern unsigned int default_hstate_idx;
+ 
+ #define default_hstate (hstates[default_hstate_idx])
+ 
+-static inline struct hstate *hstate_inode(struct inode *i)
+-{
+-	return HUGETLBFS_SB(i->i_sb)->hstate;
+-}
+-
+ static inline struct hstate *hstate_file(struct file *f)
+ {
+ 	return hstate_inode(file_inode(f));
+@@ -636,11 +638,6 @@ static inline struct hstate *hstate_vma(struct vm_area_struct *vma)
+ 	return NULL;
+ }
+ 
+-static inline struct hstate *hstate_inode(struct inode *i)
+-{
+-	return NULL;
+-}
+-
+ static inline struct hstate *page_hstate(struct page *page)
+ {
+ 	return NULL;
 -- 
 2.20.1
 
