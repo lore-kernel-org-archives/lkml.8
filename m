@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C186C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42563C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8392077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148D12075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549896;
-	bh=2ysPOcU4eG5VZaaWZplLGws6Gl0xgfw0JPR9mog2OUs=;
+	s=default; t=1587549901;
+	bh=g3+HMXdOfkbjdJRbK4JBkgvPXh1NE7LVKh9RtaPuKEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zitW+uMoj60YKkmAuZRjYLInCtGsGqLtOtdUe4qlSza4Gn2UN86ni/9w9h3NE+HFA
-	 GWWW1KC/0BOEiKl2tOazRVigXv0YnG9KaVwhrEcLLCE4ziOCPNOqYxbjTcr+10psgQ
-	 PAZpvj9KBZrVtptzQqYVzCjiW4DD/0/zfgTsbt8E=
+	b=iK904wOZ/S+T6BmVqNhQGG3gd6o9OmJq2W45m1heTnsKL5l1kmAfNAJUt+f4nNFP3
+	 I0myNEFUYIE/uLhJa198tRVrcRZqpykf9A2chsxfpAoeiKGYgo4G+pD/SbDnjx3/8K
+	 sTbocYQ5jIToZN29QS4vfjMP/eImg3iN+Jq5jwjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgDVKEz (ORCPT
+        id S1728105AbgDVKE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55538 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:04:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbgDVKEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:51 -0400
+        id S1728095AbgDVKEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36EC82078C;
-        Wed, 22 Apr 2020 10:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 105F42084D;
+        Wed, 22 Apr 2020 10:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549889;
-        bh=2ysPOcU4eG5VZaaWZplLGws6Gl0xgfw0JPR9mog2OUs=;
+        s=default; t=1587549894;
+        bh=g3+HMXdOfkbjdJRbK4JBkgvPXh1NE7LVKh9RtaPuKEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2CDNd4xopGF6JYZxrjyjPWkydquaKhLLkyu5lbauu7qlZ4WzDc9e26OkSWs8XYkYe
-         c+bCb7tRSbs4uV3Nfj7FsHzK1PCEPpKaLm4rvNx5sykOLL1mO3WOnlI5GrMnmMSWZM
-         3WfRyENTgzBAgnofQK8dnXMMtdoAQLgc1o1qlhRI=
+        b=YdjdGCcMNMfBUiu9bnktfSHDgVH1TB03qfqnfcpdHm9lCqoboIvAZOTpJOqWhPMcq
+         R7D+yvW5A++xVulrmaqQhd8Uwvrz5KXrt7nDTNZKUM8fsLyzirPXtOsW7pqSvspjg6
+         fYFX4U06xbfxiyA7Ceh31jMYJadTBIMr4f+Jsniw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 011/125] locking/lockdep: Avoid recursion in lockdep_count_{for,back}ward_deps()
-Date:   Wed, 22 Apr 2020 11:55:28 +0200
-Message-Id: <20200422095034.817854633@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fredrik Strupe <fredrik@strupe.net>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.9 048/125] arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
+Date:   Wed, 22 Apr 2020 11:56:05 +0200
+Message-Id: <20200422095041.292862000@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,79 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com>
+From: Fredrik Strupe <fredrik@strupe.net>
 
-[ Upstream commit 25016bd7f4caf5fc983bbab7403d08e64cba3004 ]
+commit fc2266011accd5aeb8ebc335c381991f20e26e33 upstream.
 
-Qian Cai reported a bug when PROVE_RCU_LIST=y, and read on /proc/lockdep
-triggered a warning:
+For thumb instructions, call_undef_hook() in traps.c first reads a u16,
+and if the u16 indicates a T32 instruction (u16 >= 0xe800), a second
+u16 is read, which then makes up the the lower half-word of a T32
+instruction. For T16 instructions, the second u16 is not read,
+which makes the resulting u32 opcode always have the upper half set to
+0.
 
-  [ ] DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
-  ...
-  [ ] Call Trace:
-  [ ]  lock_is_held_type+0x5d/0x150
-  [ ]  ? rcu_lockdep_current_cpu_online+0x64/0x80
-  [ ]  rcu_read_lock_any_held+0xac/0x100
-  [ ]  ? rcu_read_lock_held+0xc0/0xc0
-  [ ]  ? __slab_free+0x421/0x540
-  [ ]  ? kasan_kmalloc+0x9/0x10
-  [ ]  ? __kmalloc_node+0x1d7/0x320
-  [ ]  ? kvmalloc_node+0x6f/0x80
-  [ ]  __bfs+0x28a/0x3c0
-  [ ]  ? class_equal+0x30/0x30
-  [ ]  lockdep_count_forward_deps+0x11a/0x1a0
+However, having the upper half of instr_mask in the undef_hook set to 0
+masks out the upper half of all thumb instructions - both T16 and T32.
+This results in trapped T32 instructions with the lower half-word equal
+to the T16 encoding of setend (b650) being matched, even though the upper
+half-word is not 0000 and thus indicates a T32 opcode.
 
-The warning got triggered because lockdep_count_forward_deps() call
-__bfs() without current->lockdep_recursion being set, as a result
-a lockdep internal function (__bfs()) is checked by lockdep, which is
-unexpected, and the inconsistency between the irq-off state and the
-state traced by lockdep caused the warning.
+An example of such a T32 instruction is eaa0b650, which should raise a
+SIGILL since T32 instructions with an eaa prefix are unallocated as per
+Arm ARM, but instead works as a SETEND because the second half-word is set
+to b650.
 
-Apart from this warning, lockdep internal functions like __bfs() should
-always be protected by current->lockdep_recursion to avoid potential
-deadlocks and data inconsistency, therefore add the
-current->lockdep_recursion on-and-off section to protect __bfs() in both
-lockdep_count_forward_deps() and lockdep_count_backward_deps()
+This patch fixes the issue by extending instr_mask to include the
+upper u32 half, which will still match T16 instructions where the upper
+half is 0, but not T32 instructions.
 
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200312151258.128036-1-boqun.feng@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 2d888f48e056 ("arm64: Emulate SETEND for AArch32 tasks")
+Cc: <stable@vger.kernel.org> # 4.0.x-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/locking/lockdep.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/kernel/armv8_deprecated.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index d7f425698a4a1..9f56e3fac795a 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1241,9 +1241,11 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
- 	this.class = class;
- 
- 	raw_local_irq_save(flags);
-+	current->lockdep_recursion = 1;
- 	arch_spin_lock(&lockdep_lock);
- 	ret = __lockdep_count_forward_deps(&this);
- 	arch_spin_unlock(&lockdep_lock);
-+	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
- 
- 	return ret;
-@@ -1268,9 +1270,11 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
- 	this.class = class;
- 
- 	raw_local_irq_save(flags);
-+	current->lockdep_recursion = 1;
- 	arch_spin_lock(&lockdep_lock);
- 	ret = __lockdep_count_backward_deps(&this);
- 	arch_spin_unlock(&lockdep_lock);
-+	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
- 
- 	return ret;
--- 
-2.20.1
-
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -604,7 +604,7 @@ static struct undef_hook setend_hooks[]
+ 	},
+ 	{
+ 		/* Thumb mode */
+-		.instr_mask	= 0x0000fff7,
++		.instr_mask	= 0xfffffff7,
+ 		.instr_val	= 0x0000b650,
+ 		.pstate_mask	= (COMPAT_PSR_T_BIT | COMPAT_PSR_MODE_MASK),
+ 		.pstate_val	= (COMPAT_PSR_T_BIT | COMPAT_PSR_MODE_USR),
 
 
