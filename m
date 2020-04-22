@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97573C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA34C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8CF20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BBB2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549721;
-	bh=rrmnOmOsnTMK7HOIQLxfsYxR7IdNREV8GXUA269AL/k=;
+	s=default; t=1587549724;
+	bh=Y07dWYO98iUZfxjOHtGujQUrOwo0N8XhAI1Ws17TqzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixaukmmzBI8yMkDd17qDK2VlEpuEbJ0pAq7BwkSp9bzN4Vi5/02QcyuHueNTfKdxK
-	 GmM3Q4Itu/GwdA9m72lVdCj0BaZZ0eSqjBNPZBkJ66XI1msskpzQZhbRurxStFkkwM
-	 fTc1k0DcVc7kwN+0C02o+hntCjTLwpumKFUkY8y0=
+	b=fEQhQcRtQAOtmZWLSP5xJTAEyCjRuKl2yGXhKQ7X9qJdGTxitKM5AEH4tRwiu+tAw
+	 E4BKUGP7hcS24f6qJAOw10MwJesJPXcaFxKfKY+2GGyG9MUxqVcuG2Fk+5DC2fdQXE
+	 cqm79caDxmOXnQv/Y2HqBteJEpJClc4mboTuPhAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgDVKCA (ORCPT
+        id S1726435AbgDVKCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:02:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgDVKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:58 -0400
+        id S1726921AbgDVKCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:02:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B735D20735;
-        Wed, 22 Apr 2020 10:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3300820774;
+        Wed, 22 Apr 2020 10:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549718;
-        bh=rrmnOmOsnTMK7HOIQLxfsYxR7IdNREV8GXUA269AL/k=;
+        s=default; t=1587549720;
+        bh=Y07dWYO98iUZfxjOHtGujQUrOwo0N8XhAI1Ws17TqzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C34qLx9S8mreB/viOxniADnELUGMxRmMGZKZJK/m99EY90+vB0k0Okiyx19qggdeG
-         OkhLxCrZO/6zKWzQAcZtebsAE8sRe172vmwODU3NzHkTIFKj1DwpXZgeFzIlFOTgky
-         4Q/naLGI90u1e9XBy9YwhqWD1ZPRMweDhJakMdyc=
+        b=zLafFKRIohwIKcnP3Eq7AXZhKvQayk+7DFlvQSpU373VgKwhNQQesbT88XAWX3E7L
+         dtFrIJhRCDcIBlwftkMUieBnLlTcpJSQHmcfFdNLA4I7UduG/G0/YYuQJYb20iHxMf
+         cAQdBVgUJ/D/X1Dt7rG/NOtgr6JZslCM4hOw+uL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.4 061/100] ext4: fix incorrect inodes per group in error message
-Date:   Wed, 22 Apr 2020 11:56:31 +0200
-Message-Id: <20200422095034.054617285@linuxfoundation.org>
+        Dedy Lansky <dlansky@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.4 079/100] wil6210: rate limit wil_rx_refill error
+Date:   Wed, 22 Apr 2020 11:56:49 +0200
+Message-Id: <20200422095037.271139369@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -60,35 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Dedy Lansky <dlansky@codeaurora.org>
 
-commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb upstream.
+[ Upstream commit 3d6b72729cc2933906de8d2c602ae05e920b2122 ]
 
-If ext4_fill_super detects an invalid number of inodes per group, the
-resulting error message printed the number of blocks per group, rather
-than the number of inodes per group. Fix it to print the correct value.
+wil_err inside wil_rx_refill can flood the log buffer.
+Replace it with wil_err_ratelimited.
 
-Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
-Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/ext4/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/wil6210/txrx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3660,7 +3660,7 @@ static int ext4_fill_super(struct super_
- 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
- 	    sbi->s_inodes_per_group > blocksize * 8) {
- 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
--			 sbi->s_blocks_per_group);
-+			 sbi->s_inodes_per_group);
- 		goto failed_mount;
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -538,8 +538,8 @@ static int wil_rx_refill(struct wil6210_
+ 			v->swtail = next_tail) {
+ 		rc = wil_vring_alloc_skb(wil, v, v->swtail, headroom);
+ 		if (unlikely(rc)) {
+-			wil_err(wil, "Error %d in wil_rx_refill[%d]\n",
+-				rc, v->swtail);
++			wil_err_ratelimited(wil, "Error %d in rx refill[%d]\n",
++					    rc, v->swtail);
+ 			break;
+ 		}
  	}
- 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 
 
