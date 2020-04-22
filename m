@@ -2,52 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97233C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023D3C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6811920775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC4220775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553116;
-	bh=69OB8wXKOxwKkXELlIwaMk0gi4EzRqKoBvI16VoEw8s=;
+	s=default; t=1587553122;
+	bh=/3LBLbFaskxzFJjgyhptmFt7VqVQH1RAEmwmXCB/9dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dIRNFFGUPCwAus9DFeMg1Zb9Ro6QdtA5UHTPX5CrSInrPQ+RlzRDxX8GkVcrrnaM
-	 1ZWH3MHRvt9XWmRD0bOABemcD5LOMQLmmSbxVzCPhnIunmYKCmUx1wSxnW9x/hhhhr
-	 B93rjBSNdsiQUM8QI7XztZKAGObMre4BjDcv1V8k=
+	b=cyyT+4kTGHylmOJIlyNsk2wvWiPw7pQEwlejyPWvbvltM3bNKQKyt0mbhLm0KCHHx
+	 EnVwKEZ2PjNXRyjxSh+JUvjzL8Uj6r27EGicEIjJSG9csz9SmWuYyeScCxThA9bv6V
+	 XjtMn8PaSh5ecKrlJt+fZ8ZXdSZUXkVMv84YRJeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732279AbgDVK6f (ORCPT
+        id S1732302AbgDVK6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:58:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgDVKD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:57 -0400
+        id S1726838AbgDVKDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A46120784;
-        Wed, 22 Apr 2020 10:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61F7B20774;
+        Wed, 22 Apr 2020 10:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549836;
-        bh=69OB8wXKOxwKkXELlIwaMk0gi4EzRqKoBvI16VoEw8s=;
+        s=default; t=1587549826;
+        bh=/3LBLbFaskxzFJjgyhptmFt7VqVQH1RAEmwmXCB/9dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrzKVCLNaW72WGqdY5OwNqNBZ67uYDTsy7/fkGrpcKvLDQGbAZ2zGLWYh3wp/H8hH
-         oDmny2orozccCWDHKYAF8PjgXA3GRHHhif0hFN3yuCGxhc1Vx773sHrAvZdOV9oeqb
-         AHv+BtrArl/4eVwrKe2h4BIaOWrvYpg8EGAdm2Bs=
+        b=A5Uptc3ct/5DLvNAN4N9jLba04cD9074GMmdHVCXiqUDF65/2mgXPufhbrBzrEuJP
+         W25rR8HnlCMcl8vPg8q+J7KlGwiD2YKWMO3PklkV+wPopGD08rc+YknamqCXebktaE
+         0w9jHbWcoPVBrKTuDyGRr1skquEIEEOsW0GaNU94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 009/125] gfs2: Dont demote a glock until its revokes are written
-Date:   Wed, 22 Apr 2020 11:55:26 +0200
-Message-Id: <20200422095034.472542332@linuxfoundation.org>
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 023/125] ALSA: hda: Fix potential access overflow in beep helper
+Date:   Wed, 22 Apr 2020 11:55:40 +0200
+Message-Id: <20200422095037.011489035@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,46 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
+commit 0ad3f0b384d58f3bd1f4fb87d0af5b8f6866f41a upstream.
 
-Before this patch, run_queue would demote glocks based on whether
-there are any more holders. But if the glock has pending revokes that
-haven't been written to the media, giving up the glock might end in
-file system corruption if the revokes never get written due to
-io errors, node crashes and fences, etc. In that case, another node
-will replay the metadata blocks associated with the glock, but
-because the revoke was never written, it could replay that block
-even though the glock had since been granted to another node who
-might have made changes.
+The beep control helper function blindly stores the values in two
+stereo channels no matter whether the actual control is mono or
+stereo.  This is practically harmless, but it annoys the recently
+introduced sanity check, resulting in an error when the checker is
+enabled.
 
-This patch changes the logic in run_queue so that it never demotes
-a glock until its count of pending revokes reaches zero.
+This patch corrects the behavior to store only on the defined array
+member.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 0401e8548eac ("ALSA: hda - Move beep helper functions to hda_beep.c")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207139
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200407084402.25589-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/gfs2/glock.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/hda_beep.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index efd44d5645d83..adc1a97cfe96d 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -548,6 +548,9 @@ __acquires(&gl->gl_lockref.lock)
- 			goto out_unlock;
- 		if (nonblock)
- 			goto out_sched;
-+		smp_mb();
-+		if (atomic_read(&gl->gl_revokes) != 0)
-+			goto out_sched;
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
--- 
-2.20.1
-
+--- a/sound/pci/hda/hda_beep.c
++++ b/sound/pci/hda/hda_beep.c
+@@ -310,8 +310,12 @@ int snd_hda_mixer_amp_switch_get_beep(st
+ {
+ 	struct hda_codec *codec = snd_kcontrol_chip(kcontrol);
+ 	struct hda_beep *beep = codec->beep;
++	int chs = get_amp_channels(kcontrol);
++
+ 	if (beep && (!beep->enabled || !ctl_has_mute(kcontrol))) {
+-		ucontrol->value.integer.value[0] =
++		if (chs & 1)
++			ucontrol->value.integer.value[0] = beep->enabled;
++		if (chs & 2)
+ 			ucontrol->value.integer.value[1] = beep->enabled;
+ 		return 0;
+ 	}
 
 
