@@ -2,50 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B74C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E83DC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CD32071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F06F20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550179;
-	bh=I2tQbsYyygkptZpEjVSX438TBxfy4L/ZN8/YbUXSsKQ=;
+	s=default; t=1587550184;
+	bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXks0h5LvW3OhNJOQd93YMnksFvb+Ot6gQHq9qCyd1TXSOzCvRePtEW3rECqvYVhm
-	 9hh3DynfqNIpPUSMlHn7IzWE7+wRGCbSe8SvwvN73g5wOP4MUxss0n+oZ2DUVYwq8b
-	 fn1f30YU8CQbX7JO+Z1/laBEw21Hjxn4WKM/Wtxk=
+	b=a+EQDUevshH9fM4OHHSWDKE2AbHEBsroZjDUV4ZJUQUT5VXUGS7dHEQzNvPwzey1n
+	 L4TMLUbcd/MMl4dIVHvgOy9W3VmqDJFvwNai3WIlbFXcwzJzGzJd9BowRWfFXKS6Tt
+	 LY7Z4JIC8NXEebNV0KFNpDS2R5gQ7wP3dtqSkC1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgDVKJi (ORCPT
+        id S1728896AbgDVKJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:09:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbgDVKJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:33 -0400
+        id S1728885AbgDVKJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 200A620575;
-        Wed, 22 Apr 2020 10:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 133E320575;
+        Wed, 22 Apr 2020 10:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550172;
-        bh=I2tQbsYyygkptZpEjVSX438TBxfy4L/ZN8/YbUXSsKQ=;
+        s=default; t=1587550177;
+        bh=7RdBcKbcSA8txvE3ou1/hXYhwhq2DHXO8rive13W17M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ihDn1jlDsUqg1XtsJqqKuVRKXjY8v753bu3HbvwSysos4ElXDiM2wH/nY1fw0GiPh
-         9CKszJ+pIEX6urIkceCW3v5qHsNlrm+lhB/qzrvN9ujuD4tIGHRplZ/WcTbdNkP1/u
-         17y0FxuhG7A0KLBS7kHRomNJoBGzudGBd8707kgU=
+        b=oK1f6JC2kqIA5wawAxXF3X8dwl4zUvhx6M0putIgZmYcZLhHfezYbOaT82Y3iOaS+
+         b35ADu8+YZVJMTvycyuupHGQiGjFLqFAZhbqgyM+n9wLTKlpSFb/euv9wkMR/+DLIj
+         2MNUlzlUJkxovsSlikAJw3ov1IK/Xo1P0n7c1tpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 038/199] ALSA: usb-audio: Add mixer workaround for TRX40 and co
-Date:   Wed, 22 Apr 2020 11:56:04 +0200
-Message-Id: <20200422095101.818265943@linuxfoundation.org>
+        stable@vger.kernel.org, Sungbo Eo <mans0n@gorani.run>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 013/199] irqchip/versatile-fpga: Handle chained IRQs properly
+Date:   Wed, 22 Apr 2020 11:55:39 +0200
+Message-Id: <20200422095059.536162828@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -58,77 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sungbo Eo <mans0n@gorani.run>
 
-commit 2a48218f8e23d47bd3e23cfdfb8aa9066f7dc3e6 upstream.
+[ Upstream commit 486562da598c59e9f835b551d7cf19507de2d681 ]
 
-Some recent boards (supposedly with a new AMD platform) contain the
-USB audio class 2 device that is often tied with HD-audio.  The device
-exposes an Input Gain Pad control (id=19, control=12) but this node
-doesn't behave correctly, returning an error for each inquiry of
-GET_MIN and GET_MAX that should have been mandatory.
+Enclose the chained handler with chained_irq_{enter,exit}(), so that the
+muxed interrupts get properly acked.
 
-As a workaround, simply ignore this node by adding a usbmix_name_map
-table entry.  The currently known devices are:
-* 0414:a002 - Gigabyte TRX40 Aorus Pro WiFi
-* 0b05:1916 - ASUS ROG Zenith II
-* 0b05:1917 - ASUS ROG Strix
-* 0db0:0d64 - MSI TRX40 Creator
-* 0db0:543d - MSI TRX40
+This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
+interrupt is never acked. The kernel waits a clock tick forever in
+calibrate_delay_converge(), which leads to a boot hang.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408140449.22319-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200319023448.1479701-1-mans0n@gorani.run
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer_maps.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -363,6 +363,14 @@ static const struct usbmix_name_map dell
- 	{ 0 }
- };
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 928858dada756..70e2cfff8175f 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -6,6 +6,7 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqchip/versatile-fpga.h>
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
  
-+/* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
-+ * response for Input Gain Pad (id=19, control=12).  Skip it.
-+ */
-+static const struct usbmix_name_map asus_rog_map[] = {
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
-+	{}
-+};
+ static void fpga_irq_handle(struct irq_desc *desc)
+ {
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+-	u32 status = readl(f->base + IRQ_STATUS);
++	u32 status;
 +
- /*
-  * Control map entries
-  */
-@@ -482,6 +490,26 @@ static struct usbmix_ctl_map usbmix_ctl_
- 		.id = USB_ID(0x05a7, 0x1020),
- 		.map = bose_companion5_map,
- 	},
-+	{	/* Gigabyte TRX40 Aorus Pro WiFi */
-+		.id = USB_ID(0x0414, 0xa002),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Zenith II */
-+		.id = USB_ID(0x0b05, 0x1916),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Strix */
-+		.id = USB_ID(0x0b05, 0x1917),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 Creator */
-+		.id = USB_ID(0x0db0, 0x0d64),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 */
-+		.id = USB_ID(0x0db0, 0x543d),
-+		.map = asus_rog_map,
-+	},
- 	{ 0 } /* terminator */
- };
++	chained_irq_enter(chip, desc);
  
++	status = readl(f->base + IRQ_STATUS);
+ 	if (status == 0) {
+ 		do_bad_IRQ(desc);
+-		return;
++		goto out;
+ 	}
+ 
+ 	do {
+@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+ 		status &= ~(1 << irq);
+ 		generic_handle_irq(irq_find_mapping(f->domain, irq));
+ 	} while (status);
++
++out:
++	chained_irq_exit(chip, desc);
+ }
+ 
+ /*
+-- 
+2.20.1
+
 
 
