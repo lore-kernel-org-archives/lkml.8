@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB948C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE9BC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF5D22071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044292076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550568;
-	bh=EZbrKX1EsilYJ37ASjFlx/jbs5C55Og1fqhF5UYxPaY=;
+	s=default; t=1587550582;
+	bh=gijuMuXAk82YOcDVXOKELxZqLlkkMSKbpQf1l7DG7WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04vltz+MNop5arKSx7Q89ctduWG9HCDeFK7p1sV01YTYau3gcThRHv47WIantX9Wl
-	 LiVtE0mbA3SgQmo18zdcIJun/b5LGJeHSqB/iyEbWLEv42QHlpC8PrrBmsQpkUuD2O
-	 P/0m6xzriIWdt2ek1AtGYvLo4EEXvyQ/UGxeuOqs=
+	b=wVm6YsiQyoxrHA+wRNv4oc1twUPoYg5ZlHmBY4t78j3Qqs7EYK++HQK+wFhv90Rku
+	 ibMZD8rJoOjKIk10h6sKjfvrYm/2OwM8Pmq33b31TBAuG8LknxTrUwP5jlTVrg2h3C
+	 oErZq3cpasfmt9fLbkCl9F+qo1MazFQLPOrCLDnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgDVKQG (ORCPT
+        id S1729400AbgDVKQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729304AbgDVKPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:44 -0400
+        id S1729735AbgDVKPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 925202075A;
-        Wed, 22 Apr 2020 10:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D6920575;
+        Wed, 22 Apr 2020 10:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550544;
-        bh=EZbrKX1EsilYJ37ASjFlx/jbs5C55Og1fqhF5UYxPaY=;
+        s=default; t=1587550536;
+        bh=gijuMuXAk82YOcDVXOKELxZqLlkkMSKbpQf1l7DG7WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqIkbCQ5LIPlEMet97mY6SeV7amJbHOlR/f+F4RHL8W8yJuZ7LgQBSAFyr0gmp1F6
-         eHaqSZ/9+O4GR2R7JOnLVeqeT29MGwawM41NvjwAN/bG/Dv2221qo1/eBDGa2lZmRX
-         +assGc6VJm2L0AjnYOLD2rlHaO+cM+zve6ojl5kU=
+        b=IZouQJCVp9kcQMUXJvqurlqq9jX8VobbGdk38Leg1tRFtJ2xX9Sm1ue8TbRhiUm21
+         vog3pQcqyy/cZGeoczY3KeqozfHDJsPA7e2MWNhWsJslDg6DkrQGeOWAwcoZciIa+i
+         vpmmn75kbmfYmsRuVWhoYTCYjPrfJGFe0JdntbPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Winischhofer <thomas@winischhofer.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.19 17/64] video: fbdev: sis: Remove unnecessary parentheses and commented code
-Date:   Wed, 22 Apr 2020 11:57:01 +0200
-Message-Id: <20200422095015.933393475@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 54/64] f2fs: fix to wait all node page writeback
+Date:   Wed, 22 Apr 2020 11:57:38 +0200
+Message-Id: <20200422095022.632428642@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -61,53 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 864eb1afc60cb43e7df879b97f8ca0d719bbb735 upstream.
+[ Upstream commit dc5a941223edd803f476a153abd950cc3a83c3e1 ]
 
-Clang warns when multiple pairs of parentheses are used for a single
-conditional statement.
+There is a race condition that we may miss to wait for all node pages
+writeback, fix it.
 
-drivers/video/fbdev/sis/init301.c:851:42: warning: equality comparison
-with extraneous parentheses [-Wparentheses-equality]
-      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
-                 ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-drivers/video/fbdev/sis/init301.c:851:42: note: remove extraneous
-parentheses around the comparison to silence this warning
-      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
-                ~                        ^   ~
-drivers/video/fbdev/sis/init301.c:851:42: note: use '=' to turn this
-equality comparison into an assignment
-      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
-                                         ^~
-                                         =
-1 warning generated.
+- fsync()				- shrink
+ - f2fs_do_sync_file
+					 - __write_node_page
+					  - set_page_writeback(page#0)
+					  : remove DIRTY/TOWRITE flag
+  - f2fs_fsync_node_pages
+  : won't find page #0 as TOWRITE flag was removeD
+  - f2fs_wait_on_node_pages_writeback
+  : wont' wait page #0 writeback as it was not in fsync_node_list list.
+					   - f2fs_add_fsync_node_entry
 
-Remove the parentheses and while we're at it, clean up the commented
-code, which has been here since the beginning of git history.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/118
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: Thomas Winischhofer <thomas@winischhofer.net>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 50fa53eccf9f ("f2fs: fix to avoid broken of dnode block list")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sis/init301.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/f2fs/node.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/video/fbdev/sis/init301.c
-+++ b/drivers/video/fbdev/sis/init301.c
-@@ -848,9 +848,7 @@ SiS_PanelDelay(struct SiS_Private *SiS_P
- 	    SiS_DDC2Delay(SiS_Pr, 0x4000);
- 	 }
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index e5d474681471c..f0714c1258c79 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1559,15 +1559,16 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+ 	if (atomic && !test_opt(sbi, NOBARRIER))
+ 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
  
--      } else if((SiS_Pr->SiS_IF_DEF_LVDS == 1) /* ||
--	 (SiS_Pr->SiS_CustomT == CUT_COMPAQ1280) ||
--	 (SiS_Pr->SiS_CustomT == CUT_CLEVO1400) */ ) {			/* 315 series, LVDS; Special */
-+      } else if (SiS_Pr->SiS_IF_DEF_LVDS == 1) {			/* 315 series, LVDS; Special */
+-	set_page_writeback(page);
+-	ClearPageError(page);
+-
++	/* should add to global list before clearing PAGECACHE status */
+ 	if (f2fs_in_warm_node_list(sbi, page)) {
+ 		seq = f2fs_add_fsync_node_entry(sbi, page);
+ 		if (seq_id)
+ 			*seq_id = seq;
+ 	}
  
- 	 if(SiS_Pr->SiS_IF_DEF_CH70xx == 0) {
- 	    PanelID = SiS_GetReg(SiS_Pr->SiS_P3d4,0x36);
++	set_page_writeback(page);
++	ClearPageError(page);
++
+ 	fio.old_blkaddr = ni.blk_addr;
+ 	f2fs_do_write_node_page(nid, &fio);
+ 	set_node_addr(sbi, &ni, fio.new_blkaddr, is_fsync_dnode(page));
+-- 
+2.20.1
+
 
 
