@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4B7C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DE8C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D362220882
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117E52076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550145;
-	bh=QF9c6+MH0YbWaRTKCfrPPHbam1WjjKd6j69dKZVjBWQ=;
+	s=default; t=1587550152;
+	bh=GI1A56xH4jtV1mwRDVoGAjyG1Z0mT8Hvjl9lGEaovbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gg7Ao/PXli9N2sl9J4c3cq3mbXfLZzTlawhneTY32/v2cKu3lrtODJAgzrrVU6d/M
-	 rn0qyOthGBsly5kTUVhqQjmhcYVPFrSlN/JazUOrJXBerQBythRGLeJY4GVgu4WPAF
-	 SKn3OeoqY/DBN+o9fUQAIRn4D6KpZPdSNcS9VkxI=
+	b=TEzZXAv6zXN05dkBchZFVIkdBc/yd7/VE6cq03qjCrw8nhmoRNb2gbSHntTKG6q8X
+	 03E/gvcvm6h2WgYm+/AL5jNhk08aicfnydW/EfmKjq/OmPUZ5/VcnUYwCnDfx/i0lj
+	 FeKZXRrf6ATEkzitSG4m/Xt79Oq4K7MzYJobHkWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgDVKJF (ORCPT
+        id S1728825AbgDVKJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728801AbgDVKJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:01 -0400
+        id S1728779AbgDVKJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E75F20776;
-        Wed, 22 Apr 2020 10:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D6E20575;
+        Wed, 22 Apr 2020 10:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550140;
-        bh=QF9c6+MH0YbWaRTKCfrPPHbam1WjjKd6j69dKZVjBWQ=;
+        s=default; t=1587550143;
+        bh=GI1A56xH4jtV1mwRDVoGAjyG1Z0mT8Hvjl9lGEaovbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ab5X57utfPKuT82L4aRHzhR4IJge4w1eX10PkQplI1DxDuM8yZ8BXs7mwqH/CjZd4
-         rk0dF2LxFZnq3OPc4ethJxs6OfpkL9tGgcG70gUe/+AryqxooJSP00QjPQHLZENIof
-         8ajYcIKaZAaITpl/ew5npWKalVNlooP1DMt84T3E=
+        b=eWhshX/QMjFgPlhoh0vVftVa/edy7GcAIj4h3UKuNG57lrBU13bi2VCDZf+cRUpJ+
+         ej4tc5y058Ro8VA0C/OCRnsweUkaYOtvCjI6upUWNfAQehA00gY9F6EvKK79ehzrtS
+         qIjknJAVjnI4e4Ita3O3lrJzo3G9LOxxh91WLOE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>,
-        Wang Wang <wangwang2@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 026/199] block, bfq: fix use-after-free in bfq_idle_slice_timer_body
-Date:   Wed, 22 Apr 2020 11:55:52 +0200
-Message-Id: <20200422095100.739224150@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 027/199] btrfs: remove a BUG_ON() from merge_reloc_roots()
+Date:   Wed, 22 Apr 2020 11:55:53 +0200
+Message-Id: <20200422095100.822614077@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -62,176 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 2f95fa5c955d0a9987ffdc3a095e2f4e62c5f2a9 ]
+[ Upstream commit 7b7b74315b24dc064bc1c683659061c3d48f8668 ]
 
-In bfq_idle_slice_timer func, bfqq = bfqd->in_service_queue is
-not in bfqd-lock critical section. The bfqq, which is not
-equal to NULL in bfq_idle_slice_timer, may be freed after passing
-to bfq_idle_slice_timer_body. So we will access the freed memory.
+This was pretty subtle, we default to reloc roots having 0 root refs, so
+if we crash in the middle of the relocation they can just be deleted.
+If we successfully complete the relocation operations we'll set our root
+refs to 1 in prepare_to_merge() and then go on to merge_reloc_roots().
 
-In addition, considering the bfqq may be in race, we should
-firstly check whether bfqq is in service before doing something
-on it in bfq_idle_slice_timer_body func. If the bfqq in race is
-not in service, it means the bfqq has been expired through
-__bfq_bfqq_expire func, and wait_request flags has been cleared in
-__bfq_bfqd_reset_in_service func. So we do not need to re-clear the
-wait_request of bfqq which is not in service.
+At prepare_to_merge() time if any of the reloc roots have a 0 reference
+still, we will remove that reloc root from our reloc root rb tree, and
+then clean it up later.
 
-KASAN log is given as follows:
-[13058.354613] ==================================================================
-[13058.354640] BUG: KASAN: use-after-free in bfq_idle_slice_timer+0xac/0x290
-[13058.354644] Read of size 8 at addr ffffa02cf3e63f78 by task fork13/19767
-[13058.354646]
-[13058.354655] CPU: 96 PID: 19767 Comm: fork13
-[13058.354661] Call trace:
-[13058.354667]  dump_backtrace+0x0/0x310
-[13058.354672]  show_stack+0x28/0x38
-[13058.354681]  dump_stack+0xd8/0x108
-[13058.354687]  print_address_description+0x68/0x2d0
-[13058.354690]  kasan_report+0x124/0x2e0
-[13058.354697]  __asan_load8+0x88/0xb0
-[13058.354702]  bfq_idle_slice_timer+0xac/0x290
-[13058.354707]  __hrtimer_run_queues+0x298/0x8b8
-[13058.354710]  hrtimer_interrupt+0x1b8/0x678
-[13058.354716]  arch_timer_handler_phys+0x4c/0x78
-[13058.354722]  handle_percpu_devid_irq+0xf0/0x558
-[13058.354731]  generic_handle_irq+0x50/0x70
-[13058.354735]  __handle_domain_irq+0x94/0x110
-[13058.354739]  gic_handle_irq+0x8c/0x1b0
-[13058.354742]  el1_irq+0xb8/0x140
-[13058.354748]  do_wp_page+0x260/0xe28
-[13058.354752]  __handle_mm_fault+0x8ec/0x9b0
-[13058.354756]  handle_mm_fault+0x280/0x460
-[13058.354762]  do_page_fault+0x3ec/0x890
-[13058.354765]  do_mem_abort+0xc0/0x1b0
-[13058.354768]  el0_da+0x24/0x28
-[13058.354770]
-[13058.354773] Allocated by task 19731:
-[13058.354780]  kasan_kmalloc+0xe0/0x190
-[13058.354784]  kasan_slab_alloc+0x14/0x20
-[13058.354788]  kmem_cache_alloc_node+0x130/0x440
-[13058.354793]  bfq_get_queue+0x138/0x858
-[13058.354797]  bfq_get_bfqq_handle_split+0xd4/0x328
-[13058.354801]  bfq_init_rq+0x1f4/0x1180
-[13058.354806]  bfq_insert_requests+0x264/0x1c98
-[13058.354811]  blk_mq_sched_insert_requests+0x1c4/0x488
-[13058.354818]  blk_mq_flush_plug_list+0x2d4/0x6e0
-[13058.354826]  blk_flush_plug_list+0x230/0x548
-[13058.354830]  blk_finish_plug+0x60/0x80
-[13058.354838]  read_pages+0xec/0x2c0
-[13058.354842]  __do_page_cache_readahead+0x374/0x438
-[13058.354846]  ondemand_readahead+0x24c/0x6b0
-[13058.354851]  page_cache_sync_readahead+0x17c/0x2f8
-[13058.354858]  generic_file_buffered_read+0x588/0xc58
-[13058.354862]  generic_file_read_iter+0x1b4/0x278
-[13058.354965]  ext4_file_read_iter+0xa8/0x1d8 [ext4]
-[13058.354972]  __vfs_read+0x238/0x320
-[13058.354976]  vfs_read+0xbc/0x1c0
-[13058.354980]  ksys_read+0xdc/0x1b8
-[13058.354984]  __arm64_sys_read+0x50/0x60
-[13058.354990]  el0_svc_common+0xb4/0x1d8
-[13058.354994]  el0_svc_handler+0x50/0xa8
-[13058.354998]  el0_svc+0x8/0xc
-[13058.354999]
-[13058.355001] Freed by task 19731:
-[13058.355007]  __kasan_slab_free+0x120/0x228
-[13058.355010]  kasan_slab_free+0x10/0x18
-[13058.355014]  kmem_cache_free+0x288/0x3f0
-[13058.355018]  bfq_put_queue+0x134/0x208
-[13058.355022]  bfq_exit_icq_bfqq+0x164/0x348
-[13058.355026]  bfq_exit_icq+0x28/0x40
-[13058.355030]  ioc_exit_icq+0xa0/0x150
-[13058.355035]  put_io_context_active+0x250/0x438
-[13058.355038]  exit_io_context+0xd0/0x138
-[13058.355045]  do_exit+0x734/0xc58
-[13058.355050]  do_group_exit+0x78/0x220
-[13058.355054]  __wake_up_parent+0x0/0x50
-[13058.355058]  el0_svc_common+0xb4/0x1d8
-[13058.355062]  el0_svc_handler+0x50/0xa8
-[13058.355066]  el0_svc+0x8/0xc
-[13058.355067]
-[13058.355071] The buggy address belongs to the object at ffffa02cf3e63e70#012 which belongs to the cache bfq_queue of size 464
-[13058.355075] The buggy address is located 264 bytes inside of#012 464-byte region [ffffa02cf3e63e70, ffffa02cf3e64040)
-[13058.355077] The buggy address belongs to the page:
-[13058.355083] page:ffff7e80b3cf9800 count:1 mapcount:0 mapping:ffff802db5c90780 index:0xffffa02cf3e606f0 compound_mapcount: 0
-[13058.366175] flags: 0x2ffffe0000008100(slab|head)
-[13058.370781] raw: 2ffffe0000008100 ffff7e80b53b1408 ffffa02d730c1c90 ffff802db5c90780
-[13058.370787] raw: ffffa02cf3e606f0 0000000000370023 00000001ffffffff 0000000000000000
-[13058.370789] page dumped because: kasan: bad access detected
-[13058.370791]
-[13058.370792] Memory state around the buggy address:
-[13058.370797]  ffffa02cf3e63e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fb fb
-[13058.370801]  ffffa02cf3e63e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370805] >ffffa02cf3e63f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370808]                                                                 ^
-[13058.370811]  ffffa02cf3e63f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370815]  ffffa02cf3e64000: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-[13058.370817] ==================================================================
-[13058.370820] Disabling lock debugging due to kernel taint
+However this only happens if we successfully start a transaction.  If
+we've aborted previously we will skip this step completely, and only
+have reloc roots with a reference count of 0, but were never properly
+removed from the reloc control's rb tree.
 
-Here, we directly pass the bfqd to bfq_idle_slice_timer_body func.
---
-V2->V3: rewrite the comment as suggested by Paolo Valente
-V1->V2: add one comment, and add Fixes and Reported-by tag.
+This isn't a problem per-se, our references are held by the list the
+reloc roots are on, and by the original root the reloc root belongs to.
+If we end up in this situation all the reloc roots will be added to the
+dirty_reloc_list, and then properly dropped at that point.  The reloc
+control will be free'd and the rb tree is no longer used.
 
-Fixes: aee69d78d ("block, bfq: introduce the BFQ-v0 I/O scheduler as an extra scheduler")
-Acked-by: Paolo Valente <paolo.valente@linaro.org>
-Reported-by: Wang Wang <wangwang2@huawei.com>
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Feilong Lin <linfeilong@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+There were two options when fixing this, one was to remove the BUG_ON(),
+the other was to make prepare_to_merge() handle the case where we
+couldn't start a trans handle.
+
+IMO this is the cleaner solution.  I started with handling the error in
+prepare_to_merge(), but it turned out super ugly.  And in the end this
+BUG_ON() simply doesn't matter, the cleanup was happening properly, we
+were just panicing because this BUG_ON() only matters in the success
+case.  So I've opted to just remove it and add a comment where it was.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ fs/btrfs/relocation.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 93863c6173e66..959bee9fa9118 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4541,20 +4541,28 @@ static void bfq_prepare_request(struct request *rq, struct bio *bio)
- 	spin_unlock_irq(&bfqd->lock);
- }
- 
--static void bfq_idle_slice_timer_body(struct bfq_queue *bfqq)
-+static void
-+bfq_idle_slice_timer_body(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- {
--	struct bfq_data *bfqd = bfqq->bfqd;
- 	enum bfqq_expiration reason;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&bfqd->lock, flags);
--	bfq_clear_bfqq_wait_request(bfqq);
- 
-+	/*
-+	 * Considering that bfqq may be in race, we should firstly check
-+	 * whether bfqq is in service before doing something on it. If
-+	 * the bfqq in race is not in service, it has already been expired
-+	 * through __bfq_bfqq_expire func and its wait_request flags has
-+	 * been cleared in __bfq_bfqd_reset_in_service func.
-+	 */
- 	if (bfqq != bfqd->in_service_queue) {
- 		spin_unlock_irqrestore(&bfqd->lock, flags);
- 		return;
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index d4c00edd16d2b..42f388ed0796b 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -2480,7 +2480,21 @@ out:
+ 			free_reloc_roots(&reloc_roots);
  	}
  
-+	bfq_clear_bfqq_wait_request(bfqq);
-+
- 	if (bfq_bfqq_budget_timeout(bfqq))
- 		/*
- 		 * Also here the queue can be safely expired
-@@ -4599,7 +4607,7 @@ static enum hrtimer_restart bfq_idle_slice_timer(struct hrtimer *timer)
- 	 * early.
- 	 */
- 	if (bfqq)
--		bfq_idle_slice_timer_body(bfqq);
-+		bfq_idle_slice_timer_body(bfqd, bfqq);
- 
- 	return HRTIMER_NORESTART;
+-	BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	/*
++	 * We used to have
++	 *
++	 * BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
++	 *
++	 * here, but it's wrong.  If we fail to start the transaction in
++	 * prepare_to_merge() we will have only 0 ref reloc roots, none of which
++	 * have actually been removed from the reloc_root_tree rb tree.  This is
++	 * fine because we're bailing here, and we hold a reference on the root
++	 * for the list that holds it, so these roots will be cleaned up when we
++	 * do the reloc_dirty_list afterwards.  Meanwhile the root->reloc_root
++	 * will be cleaned up on unmount.
++	 *
++	 * The remaining nodes will be cleaned up by free_reloc_control.
++	 */
  }
+ 
+ static void free_block_list(struct rb_root *blocks)
 -- 
 2.20.1
 
