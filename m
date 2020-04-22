@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EE7C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B551CC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022622076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907B720774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552514;
-	bh=I2uUxjHtJ2Bl5V9iG8w5PAC575AFfnuGItHBb/Skifc=;
+	s=default; t=1587552517;
+	bh=PB4GcZ126GmyWWayUQIsGkLrexLF2d6Uee3Qe8PvmyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dcwU3BYSpkdM76UJlGZ5PYy2ZN/svD857n06FR1d+Gtob0nnopugrvbt7Wxx8W5qq
-	 CsToBE50ifgDauEbrPAGO+Ob1Tp2YykipbOAvW+rWEY3QkNIOmTM2beCkcL6XORMwP
-	 2MLg0UCHfz2LE3LvVfxKlxVt2IP1HbgGI5DAycDo=
+	b=0uA7EUVMCj/9P2EXis0CR0PZaweJGcK5t7Scdm1dlL30hln5byMnB5h7NK1wbSJSW
+	 rPB/929H879xj2xpoBt+HHzbXy8qRsCtxAaTPeoHbn1E8OT26zGXMHzPenmoxeIjlE
+	 45TBoHkxF3P+ZHBtPomkECOXqG/IxYGB8B3rVkZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbgDVKsa (ORCPT
+        id S1729518AbgDVKOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:48:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbgDVKOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:30 -0400
+        id S1729499AbgDVKOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C2E2070B;
-        Wed, 22 Apr 2020 10:14:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5106520575;
+        Wed, 22 Apr 2020 10:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550470;
-        bh=I2uUxjHtJ2Bl5V9iG8w5PAC575AFfnuGItHBb/Skifc=;
+        s=default; t=1587550457;
+        bh=PB4GcZ126GmyWWayUQIsGkLrexLF2d6Uee3Qe8PvmyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LhxnLAN0gXAyW6akHRUfHsMwiEfMQdKJsrDyvqkIwBXxsM13l2kgrLsr0FyMNEDNJ
-         r65yz7SNVRL6FNVpIEh0Xc4lsNmdrsszD9sj33aogol/mR1Gk5qZAIDM0y/zItmaIu
-         v6p4CLId79BT9FHLIghA8/PY9Zn9ubD1Jy9WEZ1M=
+        b=UpRGE5BC7EG1eLPtrZgSag9IhEFhV0osuAuATj0kd7FNvpbXSNOnyKjd0bjM25K2U
+         iaAJeLUn8dRAc/6pbCQP4uUFwv3Q+w+7CXABGJOs5IDYXVPpKJ2tTgUPjlxI03tukz
+         GXCmj7N/7qmoJQiPNJmtifA7nSVpL79lWsFK5V+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/64] rtc: 88pm860x: fix possible race condition
-Date:   Wed, 22 Apr 2020 11:57:14 +0200
-Message-Id: <20200422095018.322238837@linuxfoundation.org>
+        stable@vger.kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 25/64] x86/Hyper-V: Report crash data in die() when panic_on_oops is set
+Date:   Wed, 22 Apr 2020 11:57:09 +0200
+Message-Id: <20200422095017.502624781@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,60 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-[ Upstream commit 9cf4789e6e4673d0b2c96fa6bb0c35e81b43111a ]
+[ Upstream commit f3a99e761efa616028b255b4de58e9b5b87c5545 ]
 
-The RTC IRQ is requested before the struct rtc_device is allocated,
-this may lead to a NULL pointer dereference in the IRQ handler.
+When oops happens with panic_on_oops unset, the oops
+thread is killed by die() and system continues to run.
+In such case, guest should not report crash register
+data to host since system still runs. Check panic_on_oops
+and return directly in hyperv_report_panic() when the function
+is called in the die() and panic_on_oops is unset. Fix it.
 
-To fix this issue, allocating the rtc_device struct before requesting
-the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
-to register the RTC device.
-
-Also remove the unnecessary error message as the core already prints the
-info.
-
-Link: https://lore.kernel.org/r/20200311223956.51352-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Link: https://lore.kernel.org/r/20200406155331.2105-7-Tianyu.Lan@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/x86/hyperv/hv_init.c       | 6 +++++-
+ arch/x86/include/asm/mshyperv.h | 2 +-
+ drivers/hv/vmbus_drv.c          | 5 +++--
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 73697e4b18a9d..9d4a59aa29a1a 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -341,6 +341,10 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 	info->dev = &pdev->dev;
- 	dev_set_drvdata(&pdev->dev, info);
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 8a9cff1f129dc..1663ad84778ba 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -30,6 +30,7 @@
+ #include <linux/clockchips.h>
+ #include <linux/hyperv.h>
+ #include <linux/slab.h>
++#include <linux/kernel.h>
+ #include <linux/cpuhotplug.h>
  
-+	info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(info->rtc_dev))
-+		return PTR_ERR(info->rtc_dev);
+ #ifdef CONFIG_HYPERV_TSCPAGE
+@@ -427,11 +428,14 @@ void hyperv_cleanup(void)
+ }
+ EXPORT_SYMBOL_GPL(hyperv_cleanup);
+ 
+-void hyperv_report_panic(struct pt_regs *regs, long err)
++void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die)
+ {
+ 	static bool panic_reported;
+ 	u64 guest_id;
+ 
++	if (in_die && !panic_on_oops)
++		return;
 +
- 	ret = devm_request_threaded_irq(&pdev->dev, info->irq, NULL,
- 					rtc_update_handler, IRQF_ONESHOT, "rtc",
- 					info);
-@@ -382,13 +386,11 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	info->rtc_dev = devm_rtc_device_register(&pdev->dev, "88pm860x-rtc",
--					    &pm860x_rtc_ops, THIS_MODULE);
--	ret = PTR_ERR(info->rtc_dev);
--	if (IS_ERR(info->rtc_dev)) {
--		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
-+	info->rtc_dev->ops = &pm860x_rtc_ops;
-+
-+	ret = rtc_register_device(info->rtc_dev);
-+	if (ret)
- 		return ret;
--	}
- 
  	/*
- 	 * enable internal XO instead of internal 3.25MHz clock since it can
+ 	 * We prefer to report panic on 'die' chain as we have proper
+ 	 * registers to report, but if we miss it (e.g. on BUG()) we need
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index f37704497d8f3..5b58a6cf487ff 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -338,7 +338,7 @@ static inline int cpumask_to_vpset(struct hv_vpset *vpset,
+ 
+ void __init hyperv_init(void);
+ void hyperv_setup_mmu_ops(void);
+-void hyperv_report_panic(struct pt_regs *regs, long err);
++void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
+ void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
+ bool hv_is_hyperv_initialized(void);
+ void hyperv_cleanup(void);
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index eacfe7933c4dd..fb22b72fd535a 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -43,6 +43,7 @@
+ #include <linux/kdebug.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
++#include <linux/kernel.h>
+ #include "hyperv_vmbus.h"
+ 
+ struct vmbus_dynid {
+@@ -85,7 +86,7 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+ 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+ 	    && hyperv_report_reg()) {
+ 		regs = current_pt_regs();
+-		hyperv_report_panic(regs, val);
++		hyperv_report_panic(regs, val, false);
+ 	}
+ 	return NOTIFY_DONE;
+ }
+@@ -102,7 +103,7 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+ 	 * the notification here.
+ 	 */
+ 	if (hyperv_report_reg())
+-		hyperv_report_panic(regs, val);
++		hyperv_report_panic(regs, val, true);
+ 	return NOTIFY_DONE;
+ }
+ 
 -- 
 2.20.1
 
