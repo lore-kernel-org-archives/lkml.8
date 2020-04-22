@@ -7,39 +7,38 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0BFC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E6EC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1A422206
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268E221D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgDVMWm (ORCPT
+        id S1726982AbgDVMWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53326 "EHLO
+        Wed, 22 Apr 2020 08:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728482AbgDVMRc (ORCPT
+        by vger.kernel.org with ESMTP id S1728349AbgDVMRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:17:32 -0400
+        Wed, 22 Apr 2020 08:17:30 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DC8C03C1AD;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FD1C03C1AB;
         Wed, 22 Apr 2020 05:17:30 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJT-0007YQ-Cn; Wed, 22 Apr 2020 14:17:11 +0200
+        id 1jREJW-0007dP-SF; Wed, 22 Apr 2020 14:17:15 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E6EF41C02FC;
-        Wed, 22 Apr 2020 14:17:10 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:10 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 71CC21C0450;
+        Wed, 22 Apr 2020 14:17:14 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:14 -0000
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf top: Add option to enable the LBR stitching approach
+Subject: [tip: perf/core] perf machine: Factor out lbr_callchain_add_lbr_ip()
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Alexey Budankov <alexey.budankov@linux.intel.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -50,11 +49,12 @@ Cc:     Kan Liang <kan.liang@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Stephane Eranian <eranian@google.com>,
         Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200319202517.23423-16-kan.liang@linux.intel.com>
-References: <20200319202517.23423-16-kan.liang@linux.intel.com>
+In-Reply-To: <20200319202517.23423-9-kan.liang@linux.intel.com>
+References: <20200319202517.23423-9-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158755783050.28353.14034885809740386409.tip-bot2@tip-bot2>
+Message-ID: <158755783407.28353.15360366037839486817.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,28 +70,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     13e0c844fa097f657bd8204fd574477c34f47a0c
-Gitweb:        https://git.kernel.org/tip/13e0c844fa097f657bd8204fd574477c34f47a0c
+Commit-ID:     e2b23483eb1d851b4c48935a995f79b2de41c3ed
+Gitweb:        https://git.kernel.org/tip/e2b23483eb1d851b4c48935a995f79b2de41c3ed
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 19 Mar 2020 13:25:15 -07:00
+AuthorDate:    Thu, 19 Mar 2020 13:25:08 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Sat, 18 Apr 2020 09:05:01 -03:00
 
-perf top: Add option to enable the LBR stitching approach
+perf machine: Factor out lbr_callchain_add_lbr_ip()
 
-With the LBR stitching approach, the reconstructed LBR call stack
-can break the HW limitation. However, it may reconstruct invalid call
-stacks in some cases, e.g. exception handing such as setjmp/longjmp.
-Also, it may impact the processing time especially when the number of
-samples with stitched LBRs are huge.
-
-Add an option to enable the approach.
-The option must be used with --call-graph lbr.
+Both caller and callee needs to add ip from LBR to callchain.
+Factor out lbr_callchain_add_lbr_ip() to improve code readability.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -102,86 +95,188 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
-Link: http://lore.kernel.org/lkml/20200319202517.23423-16-kan.liang@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200319202517.23423-9-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-top.txt |  9 +++++++++
- tools/perf/builtin-top.c              | 11 +++++++++++
- tools/perf/util/top.h                 |  1 +
- 3 files changed, 21 insertions(+)
+ tools/perf/util/machine.c | 143 ++++++++++++++++++-------------------
+ 1 file changed, 73 insertions(+), 70 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index 487737a..20227da 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -319,6 +319,15 @@ Default is to monitor all CPUS.
- 	go straight to the histogram browser, just like 'perf top' with no events
- 	explicitely specified does.
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index a7f75fd..f9d69fc 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2224,6 +2224,74 @@ static int lbr_callchain_add_kernel_ip(struct thread *thread,
+ 	return 0;
+ }
  
-+--stitch-lbr::
-+	Show callgraph with stitched LBRs, which may have more complete
-+	callgraph. The option must be used with --call-graph lbr recording.
-+	Disabled by default. In common cases with call stack overflows,
-+	it can recreate better call stacks than the default lbr call stack
-+	output. But this approach is not full proof. There can be cases
-+	where it creates incorrect call stacks from incorrect matches.
-+	The known limitations include exception handing such as
-+	setjmp/longjmp will have calls/returns not match.
- 
- INTERACTIVE PROMPTING KEYS
- --------------------------
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 289cf83..6b067a5 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -33,6 +33,7 @@
- #include "util/map.h"
- #include "util/mmap.h"
- #include "util/session.h"
-+#include "util/thread.h"
- #include "util/symbol.h"
- #include "util/synthetic-events.h"
- #include "util/top.h"
-@@ -775,6 +776,9 @@ static void perf_event__process_sample(struct perf_tool *tool,
- 	if (machine__resolve(machine, &al, sample) < 0)
- 		return;
- 
-+	if (top->stitch_lbr)
-+		al.thread->lbr_stitch_enable = true;
++static int lbr_callchain_add_lbr_ip(struct thread *thread,
++				    struct callchain_cursor *cursor,
++				    struct perf_sample *sample,
++				    struct symbol **parent,
++				    struct addr_location *root_al,
++				    u64 *branch_from,
++				    bool callee)
++{
++	struct branch_stack *lbr_stack = sample->branch_stack;
++	struct branch_entry *entries = perf_sample__branch_entries(sample);
++	u8 cpumode = PERF_RECORD_MISC_USER;
++	int lbr_nr = lbr_stack->nr;
++	struct branch_flags *flags;
++	int err, i;
++	u64 ip;
 +
- 	if (!machine->kptr_restrict_warned &&
- 	    symbol_conf.kptr_restrict &&
- 	    al.cpumode == PERF_RECORD_MISC_KERNEL) {
-@@ -1571,6 +1575,8 @@ int cmd_top(int argc, const char **argv)
- 		    "Sort the output by the event at the index n in group. "
- 		    "If n is invalid, sort by the first event. "
- 		    "WARNING: should be used on grouped events."),
-+	OPT_BOOLEAN(0, "stitch-lbr", &top.stitch_lbr,
-+		    "Enable LBR callgraph stitching approach"),
- 	OPTS_EVSWITCH(&top.evswitch),
- 	OPT_END()
- 	};
-@@ -1640,6 +1646,11 @@ int cmd_top(int argc, const char **argv)
- 		}
- 	}
- 
-+	if (top.stitch_lbr && !(callchain_param.record_mode == CALLCHAIN_LBR)) {
-+		pr_err("Error: --stitch-lbr must be used with --call-graph lbr\n");
-+		goto out_delete_evlist;
++	if (callee) {
++		/* Add LBR ip from first entries.to */
++		ip = entries[0].to;
++		flags = &entries[0].flags;
++		*branch_from = entries[0].from;
++		err = add_callchain_ip(thread, cursor, parent,
++				       root_al, &cpumode, ip,
++				       true, flags, NULL,
++				       *branch_from);
++		if (err)
++			return err;
++
++		/* Add LBR ip from entries.from one by one. */
++		for (i = 0; i < lbr_nr; i++) {
++			ip = entries[i].from;
++			flags = &entries[i].flags;
++			err = add_callchain_ip(thread, cursor, parent,
++					       root_al, &cpumode, ip,
++					       true, flags, NULL,
++					       *branch_from);
++			if (err)
++				return err;
++		}
++		return 0;
 +	}
 +
- 	if (opts->branch_stack && callchain_param.enabled)
- 		symbol_conf.show_branchflag_count = true;
++	/* Add LBR ip from entries.from one by one. */
++	for (i = lbr_nr - 1; i >= 0; i--) {
++		ip = entries[i].from;
++		flags = &entries[i].flags;
++		err = add_callchain_ip(thread, cursor, parent,
++				       root_al, &cpumode, ip,
++				       true, flags, NULL,
++				       *branch_from);
++		if (err)
++			return err;
++	}
++
++	/* Add LBR ip from first entries.to */
++	ip = entries[0].to;
++	flags = &entries[0].flags;
++	*branch_from = entries[0].from;
++	err = add_callchain_ip(thread, cursor, parent,
++			       root_al, &cpumode, ip,
++			       true, flags, NULL,
++			       *branch_from);
++	if (err)
++		return err;
++
++	return 0;
++}
++
+ /*
+  * Recolve LBR callstack chain sample
+  * Return:
+@@ -2240,14 +2308,7 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ {
+ 	struct ip_callchain *chain = sample->callchain;
+ 	int chain_nr = min(max_stack, (int)chain->nr), i;
+-	u8 cpumode = PERF_RECORD_MISC_USER;
+-	u64 ip, branch_from = 0;
+-	struct branch_stack *lbr_stack;
+-	struct branch_entry *entries;
+-	int lbr_nr, j, k;
+-	bool branch;
+-	struct branch_flags *flags;
+-	int mix_chain_nr;
++	u64 branch_from = 0;
+ 	int err;
  
-diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
-index f117d4f..45dc84d 100644
---- a/tools/perf/util/top.h
-+++ b/tools/perf/util/top.h
-@@ -36,6 +36,7 @@ struct perf_top {
- 	bool		   use_tui, use_stdio;
- 	bool		   vmlinux_warned;
- 	bool		   dump_symtab;
-+	bool		   stitch_lbr;
- 	struct hist_entry  *sym_filter_entry;
- 	struct evsel 	   *sym_evsel;
- 	struct perf_session *session;
+ 	for (i = 0; i < chain_nr; i++) {
+@@ -2259,21 +2320,6 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 	if (i == chain_nr)
+ 		return 0;
+ 
+-	lbr_stack = sample->branch_stack;
+-	entries = perf_sample__branch_entries(sample);
+-	lbr_nr = lbr_stack->nr;
+-	/*
+-	 * LBR callstack can only get user call chain.
+-	 * The mix_chain_nr is kernel call chain
+-	 * number plus LBR user call chain number.
+-	 * i is kernel call chain number,
+-	 * 1 is PERF_CONTEXT_USER,
+-	 * lbr_nr + 1 is the user call chain number.
+-	 * For details, please refer to the comments
+-	 * in callchain__printf
+-	 */
+-	mix_chain_nr = i + 1 + lbr_nr + 1;
+-
+ 	if (callchain_param.order == ORDER_CALLEE) {
+ 		/* Add kernel ip */
+ 		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
+@@ -2282,57 +2328,14 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 		if (err)
+ 			goto error;
+ 
+-		/* Add LBR ip from first entries.to */
+-		ip = entries[0].to;
+-		branch = true;
+-		flags = &entries[0].flags;
+-		branch_from = entries[0].from;
+-		err = add_callchain_ip(thread, cursor, parent,
+-				       root_al, &cpumode, ip,
+-				       branch, flags, NULL,
+-				       branch_from);
++		err = lbr_callchain_add_lbr_ip(thread, cursor, sample, parent,
++					       root_al, &branch_from, true);
+ 		if (err)
+ 			goto error;
+ 
+-		/* Add LBR ip from entries.from one by one. */
+-		for (j = i + 2; j < mix_chain_nr; j++) {
+-			k = j - i - 2;
+-			ip = entries[k].from;
+-			branch = true;
+-			flags = &entries[k].flags;
+-
+-			err = add_callchain_ip(thread, cursor, parent,
+-					       root_al, &cpumode, ip,
+-					       branch, flags, NULL,
+-					       branch_from);
+-			if (err)
+-				goto error;
+-		}
+ 	} else {
+-		/* Add LBR ip from entries.from one by one. */
+-		for (j = 0; j < lbr_nr; j++) {
+-			k = lbr_nr - j - 1;
+-			ip = entries[k].from;
+-			branch = true;
+-			flags = &entries[k].flags;
+-
+-			err = add_callchain_ip(thread, cursor, parent,
+-					       root_al, &cpumode, ip,
+-					       branch, flags, NULL,
+-					       branch_from);
+-			if (err)
+-				goto error;
+-		}
+-
+-		/* Add LBR ip from first entries.to */
+-		ip = entries[0].to;
+-		branch = true;
+-		flags = &entries[0].flags;
+-		branch_from = entries[0].from;
+-		err = add_callchain_ip(thread, cursor, parent,
+-				       root_al, &cpumode, ip,
+-				       branch, flags, NULL,
+-				       branch_from);
++		err = lbr_callchain_add_lbr_ip(thread, cursor, sample, parent,
++					       root_al, &branch_from, false);
+ 		if (err)
+ 			goto error;
+ 
