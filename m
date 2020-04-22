@@ -2,52 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F1BC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3A5C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1562073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96122073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552583;
-	bh=A8in5giTD5Iwl6EN+gPYLRg5+rVKYjzLzHAkpHGIlws=;
+	s=default; t=1587552588;
+	bh=3kan2kXNwNgWSR0WNCKeiC0pVJHBLgCdxgTsDOO0Txc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bAocm2Zawmoxr+ZwaTIXjb9xSZXkBb+i3Nt7ZrAtXqforV7ISBAckzUUJ3lIfxHxs
-	 JbhfZWp+WdOp2zd5T7404MXavwWXxKDukZAmVoWNFxtVzGPA1XjXTVE6o08Dfoz4tc
-	 HqpUfDkzdVCIE0DdvknPfJWXK6q0FHoUHxqV7RCc=
+	b=LH/pPG8zpIptaA1Wl1RzH7PvFgPYPDVQuF8c49SNK/782pIdqY4o+kU8yic9GVdSl
+	 23IugK+2ish0hrtoJKyZv+AxKYTcck6e9f0lRpFNOcS+/GlKSxn+D21QK8eD//jE+C
+	 LaJ0FWY5vjTTPakC/C3T4AET3Wf4ldOdN45+MXTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732118AbgDVKtm (ORCPT
+        id S1732126AbgDVKtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46710 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:49:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729420AbgDVKNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:06 -0400
+        id S1729414AbgDVKNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACE462087E;
-        Wed, 22 Apr 2020 10:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C32C2076E;
+        Wed, 22 Apr 2020 10:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550386;
-        bh=A8in5giTD5Iwl6EN+gPYLRg5+rVKYjzLzHAkpHGIlws=;
+        s=default; t=1587550383;
+        bh=3kan2kXNwNgWSR0WNCKeiC0pVJHBLgCdxgTsDOO0Txc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y28fYNXtTLvdUcC63f7CWWsQBcxNlUaxzO4QP66c2hC9xCAEqnWhgPtCqEpA1MUtB
-         rACa9EafLS3VUQg8/RmudBmjMwVD3v01kQpwanE8WO6hyaUM+iycuU9MrEek8hwxyY
-         xEc171rXjiPoejfEVDfuTxqVDcfMKX7Qbk9YEesA=
+        b=A3EAbIvXcqLxxUcpqDu/hht/cDgm3MBE8XB/GWLHw6j82Sz4CFBQue6GWB4c9NRpS
+         lCbt+Z12Iq20Y3Ss15n39edJ/jeHFGuddrg1tffmqULG8XypSFyYBhFU+ls8b7kS+z
+         wdyHMFdN5T4hfcC5eLbom3skU8G2EiPhiyI0BdH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 125/199] dm flakey: check for null arg_name in parse_features()
-Date:   Wed, 22 Apr 2020 11:57:31 +0200
-Message-Id: <20200422095109.965957078@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.14 124/199] ext4: do not zeroout extents beyond i_disksize
+Date:   Wed, 22 Apr 2020 11:57:30 +0200
+Message-Id: <20200422095109.895327373@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,41 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Goldwyn Rodrigues <rgoldwyn@suse.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 7690e25302dc7d0cd42b349e746fe44b44a94f2b ]
+commit 801674f34ecfed033b062a0f217506b93c8d5e8a upstream.
 
-One can crash dm-flakey by specifying more feature arguments than the
-number of features supplied.  Checking for null in arg_name avoids
-this.
+We do not want to create initialized extents beyond end of file because
+for e2fsck it is impossible to distinguish them from a case of corrupted
+file size / extent tree and so it complains like:
 
-dmsetup create flakey-test --table "0 66076080 flakey /dev/sdb9 0 0 180 2 drop_writes"
+Inode 12, i_size is 147456, should be 163840.  Fix? no
 
-Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Code in ext4_ext_convert_to_initialized() and
+ext4_split_convert_extents() try to make sure it does not create
+initialized extents beyond inode size however they check against
+inode->i_size which is wrong. They should instead check against
+EXT4_I(inode)->i_disksize which is the current inode size on disk.
+That's what e2fsck is going to see in case of crash before all dirty
+data is written. This bug manifests as generic/456 test failure (with
+recent enough fstests where fsx got fixed to properly pass
+FALLOC_KEEP_SIZE_FL flags to the kernel) when run with dioread_lock
+mount option.
+
+CC: stable@vger.kernel.org
+Fixes: 21ca087a3891 ("ext4: Do not zero out uninitialized extents beyond i_size")
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200331105016.8674-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/dm-flakey.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ext4/extents.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-index b1b68e01b889c..53cd31199f212 100644
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -70,6 +70,11 @@ static int parse_features(struct dm_arg_set *as, struct flakey_c *fc,
- 		arg_name = dm_shift_arg(as);
- 		argc--;
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -3446,8 +3446,8 @@ static int ext4_ext_convert_to_initializ
+ 		(unsigned long long)map->m_lblk, map_len);
  
-+		if (!arg_name) {
-+			ti->error = "Insufficient feature arguments";
-+			return -EINVAL;
-+		}
-+
- 		/*
- 		 * drop_writes
- 		 */
--- 
-2.20.1
-
+ 	sbi = EXT4_SB(inode->i_sb);
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map_len)
+ 		eof_block = map->m_lblk + map_len;
+ 
+@@ -3702,8 +3702,8 @@ static int ext4_split_convert_extents(ha
+ 		  __func__, inode->i_ino,
+ 		  (unsigned long long)map->m_lblk, map->m_len);
+ 
+-	eof_block = (inode->i_size + inode->i_sb->s_blocksize - 1) >>
+-		inode->i_sb->s_blocksize_bits;
++	eof_block = (EXT4_I(inode)->i_disksize + inode->i_sb->s_blocksize - 1)
++			>> inode->i_sb->s_blocksize_bits;
+ 	if (eof_block < map->m_lblk + map->m_len)
+ 		eof_block = map->m_lblk + map->m_len;
+ 	/*
 
 
