@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1648C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC0C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E74C2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D472073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552541;
-	bh=tjM+Gu6dhZqW2oK0pWrJ6jwHx7kK3RIuVIcVvonX61g=;
+	s=default; t=1587552549;
+	bh=6SjgJX5uXF6l/fbulEwoIwAxqi/rr0lTgQYrB8uQ+Qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gEPIwkIL4GrZawSaf66IETxskQ96GcqQ/PurqmU99vX42b9tv2y9gHhsIjkaYW24R
-	 N+BE+kbsKoycNFT9dtE8cw8IBCvT59NTacdZvkloCvkJU8G2dSfPq1EV/KSDNksPjs
-	 5hkE4DdVZ2Acm4UIwTd8iha47OWkZqKKEUNVbUVY=
+	b=hFXR9iTADGik1PYzZcPzWNCtOY61M39ThWZxuLd/KG70itzQQpueYCTJQxqI1Kr95
+	 RfBXT6mrhUlLAwLwH7b8WDsKLgpo8RHextIKNsZpWLk5pL4/sfrLxULIN9g7/UI3uf
+	 uAYxW+BZxinizYhgO6QJn44IHRLYKnBwJBfyZoyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732074AbgDVKtA (ORCPT
+        id S1732087AbgDVKtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48226 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbgDVKN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:58 -0400
+        id S1728973AbgDVKNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71B442076E;
-        Wed, 22 Apr 2020 10:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D225D2070B;
+        Wed, 22 Apr 2020 10:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550437;
-        bh=tjM+Gu6dhZqW2oK0pWrJ6jwHx7kK3RIuVIcVvonX61g=;
+        s=default; t=1587550428;
+        bh=6SjgJX5uXF6l/fbulEwoIwAxqi/rr0lTgQYrB8uQ+Qo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FY9xkYxWCReaDsWGeH5BwiVDzUhi25iXwTXrYoe+FinqjIn5MT+SVcLm9Zrs/Cdos
-         TKRG0+GR7ffLJmNB+9EOK3GXwYUAU/U+eZv6oteybSJxzXcm6cTDB5HkK4ex+25zXS
-         k+tC1CznPshdAwFWc4N6dTjUe+2MisbwaKDaK2GY=
+        b=WV2tFQ4ZYds5qbBbI0KP9uzzamRgHtyljbzn0i18fM9iZooDfIRtFnUiJanen+Ln0
+         WWtB/qa0pAJtPsQIBxi0dX3dbY35XjmljLxMhBIw+x7OG24ygIFfRHFsX9sNK1Pqr9
+         dSGQC/JhM8NTbstKlKlG04fW/1zUb4j1JlnmMtHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 08/64] netfilter: nf_tables: report EOPNOTSUPP on unsupported flags/object type
-Date:   Wed, 22 Apr 2020 11:56:52 +0200
-Message-Id: <20200422095014.024164240@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Roman Gushchin <guro@fb.com>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.19 04/64] ext4: use non-movable memory for superblock readahead
+Date:   Wed, 22 Apr 2020 11:56:48 +0200
+Message-Id: <20200422095013.021182139@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -58,41 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Roman Gushchin <guro@fb.com>
 
-commit d9583cdf2f38d0f526d9a8c8564dd2e35e649bc7 upstream.
+commit d87f639258a6a5980183f11876c884931ad93da2 upstream.
 
-EINVAL should be used for malformed netlink messages. New userspace
-utility and old kernels might easily result in EINVAL when exercising
-new set features, which is misleading.
+Since commit a8ac900b8163 ("ext4: use non-movable memory for the
+superblock") buffers for ext4 superblock were allocated using
+the sb_bread_unmovable() helper which allocated buffer heads
+out of non-movable memory blocks. It was necessarily to not block
+page migrations and do not cause cma allocation failures.
 
-Fixes: 8aeff920dcc9 ("netfilter: nf_tables: add stateful object reference to set elements")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+However commit 85c8f176a611 ("ext4: preload block group descriptors")
+broke this by introducing pre-reading of the ext4 superblock.
+The problem is that __breadahead() is using __getblk() underneath,
+which allocates buffer heads out of movable memory.
+
+It resulted in page migration failures I've seen on a machine
+with an ext4 partition and a preallocated cma area.
+
+Fix this by introducing sb_breadahead_unmovable() and
+__breadahead_gfp() helpers which use non-movable memory for buffer
+head allocations and use them for the ext4 superblock readahead.
+
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Link: https://lore.kernel.org/r/20200229001411.128010-1-guro@fb.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_tables_api.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/buffer.c                 |   11 +++++++++++
+ fs/ext4/inode.c             |    2 +-
+ fs/ext4/super.c             |    2 +-
+ include/linux/buffer_head.h |    8 ++++++++
+ 4 files changed, 21 insertions(+), 2 deletions(-)
 
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3450,7 +3450,7 @@ static int nf_tables_newset(struct net *
- 			      NFT_SET_INTERVAL | NFT_SET_TIMEOUT |
- 			      NFT_SET_MAP | NFT_SET_EVAL |
- 			      NFT_SET_OBJECT))
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 		/* Only one of these operations is supported */
- 		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
- 			     (NFT_SET_MAP | NFT_SET_OBJECT))
-@@ -3488,7 +3488,7 @@ static int nf_tables_newset(struct net *
- 		objtype = ntohl(nla_get_be32(nla[NFTA_SET_OBJ_TYPE]));
- 		if (objtype == NFT_OBJECT_UNSPEC ||
- 		    objtype > NFT_OBJECT_MAX)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	} else if (flags & NFT_SET_OBJECT)
- 		return -EINVAL;
- 	else
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1336,6 +1336,17 @@ void __breadahead(struct block_device *b
+ }
+ EXPORT_SYMBOL(__breadahead);
+ 
++void __breadahead_gfp(struct block_device *bdev, sector_t block, unsigned size,
++		      gfp_t gfp)
++{
++	struct buffer_head *bh = __getblk_gfp(bdev, block, size, gfp);
++	if (likely(bh)) {
++		ll_rw_block(REQ_OP_READ, REQ_RAHEAD, 1, &bh);
++		brelse(bh);
++	}
++}
++EXPORT_SYMBOL(__breadahead_gfp);
++
+ /**
+  *  __bread_gfp() - reads a specified block and returns the bh
+  *  @bdev: the block_device to read from
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4690,7 +4690,7 @@ make_io:
+ 			if (end > table)
+ 				end = table;
+ 			while (b <= end)
+-				sb_breadahead(sb, b++);
++				sb_breadahead_unmovable(sb, b++);
+ 		}
+ 
+ 		/*
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4207,7 +4207,7 @@ static int ext4_fill_super(struct super_
+ 	/* Pre-read the descriptors into the buffer cache */
+ 	for (i = 0; i < db_count; i++) {
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sb_breadahead(sb, block);
++		sb_breadahead_unmovable(sb, block);
+ 	}
+ 
+ 	for (i = 0; i < db_count; i++) {
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -189,6 +189,8 @@ struct buffer_head *__getblk_gfp(struct
+ void __brelse(struct buffer_head *);
+ void __bforget(struct buffer_head *);
+ void __breadahead(struct block_device *, sector_t block, unsigned int size);
++void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
++		  gfp_t gfp);
+ struct buffer_head *__bread_gfp(struct block_device *,
+ 				sector_t block, unsigned size, gfp_t gfp);
+ void invalidate_bh_lrus(void);
+@@ -319,6 +321,12 @@ sb_breadahead(struct super_block *sb, se
+ 	__breadahead(sb->s_bdev, block, sb->s_blocksize);
+ }
+ 
++static inline void
++sb_breadahead_unmovable(struct super_block *sb, sector_t block)
++{
++	__breadahead_gfp(sb->s_bdev, block, sb->s_blocksize, 0);
++}
++
+ static inline struct buffer_head *
+ sb_getblk(struct super_block *sb, sector_t block)
+ {
 
 
