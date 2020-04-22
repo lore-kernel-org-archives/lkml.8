@@ -2,201 +2,126 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83293C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E75C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5456820787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F332076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ryTWe4zY"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BC0xXelZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgDVNaG (ORCPT
+        id S1726794AbgDVNa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:30:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgDVNaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:30:06 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B69C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:30:04 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l78so2293602qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:30:04 -0700 (PDT)
+        Wed, 22 Apr 2020 09:30:26 -0400
+Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:37875
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726328AbgDVNaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 09:30:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KciQNjJBWlfka1S+OGOxGSraTHZfR53DjCY8j+SW2Jz3p2+PN2YqiC6ZPLvOxUDg/PskEJngGjEBwrpI2/CdJaG2hjEt0Ao49Po3scQZ2h70faMGs/Yrj2SYwWigEm2axUXgcNVvsz9B4gvx3TYL8v+EbRz9dYMi0fVjj3BbI9jnubdi/yT63QBoDByffwhVA2qNWL+gnLutnHrcjQV0Ud6kKwF4tkNYexdMfGqmUoDCW25e7oGXS3mXBiquvsuJik1lyxxFCOPMzbWNiG7HKtgHtebw4w/FBbG1JX5IYSzG4Q0AXu1PAITxTP375KMb+xa4JShL7Cw+nC84bhffNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V31GxiFPWZsqN79XtI09jbj6RG9h2k1H0HTVVbq1ZpU=;
+ b=lH/6jRiMoKWWZOAXMs56vGig3TT5dkkBLZ1actR2/Kdlsh1FHBC6xO+f5kzaj+IezftMzVJRXdADf9fB08ekBvfDF5gUz1cc6J2sQG4act/wJzFOpv+qswAVcRwPifn7c4Smmz4fQEnrcchWYLJrvP3INRmOEpK0nOpgfVZic1Bq0bwm+IlV+fWQRKWFjswiPx3mZcpn7IkXMu1YlEB3vKHXD+dyw6e89dNAvfRX4GUbNefrkIFu1XRQjKzWSeKSNO4Rbm0Fj0FtL73pf39LjFm4gRw7vo8Ho8I1fbKOjClOnsODn8DWUXNbRi9gsV+8PpVTWfg3vgaX5LtUajfkyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=chsAA4zyl1YPFqGtfiwU7PFfqVuSOELGokqTvQTOwpY=;
-        b=ryTWe4zYa0wqpywa20hGmZ5UhE9d4qB5vX4YCnD9vlJUAHekQcP/Xs5IuyWY64vmU3
-         06wbWvSe7zfL8eU/19YZb/9DoD4Ndak8N3S8q7hkMLbR7LjpsSb78dlwwwGIocC5+WXx
-         lalqwQ/GXib655ulKpereqvWthxeYlSjFV7icp27njo9mdQQE7IVz3FHVjFy65MkeeMW
-         z9XwtQA2u9/g/te+NNkiFqdJx1oqOrIo1xstSpKZNFj319mN2AEGDyzeSBqSb6TltMrb
-         C6ZZov9OETmmP7E83EE/KvMRWox8jtvqAx5kczuJgJ3mB4Fg/3mObRbzQZ8jl0r7OjmK
-         16gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=chsAA4zyl1YPFqGtfiwU7PFfqVuSOELGokqTvQTOwpY=;
-        b=qqiBRFmBhlCBbArQZpElkoeZ5iOYwj6Mj9ky9SskFqZWCDGwi/py+EIAjElCy5p8VP
-         5FBA5OPpSEbvjBeikBfP6PY8VjZympPmZhPVi5qxMMJh1Z7x7+D2wrcSKsv/5oLZwQJC
-         STZFEFliPHCOFumFII7qcn+xO3lyDdokFatNwjVENyJvN7n8C7K2L6fm7U8zKcOptbsr
-         j/9hlzsJkwf5w2zRrWKwqPXzpvhJYqt0SG9VcPL/pzQueSXoEY/I5wQ1uDMyU9ia/U3V
-         vD/vFXk1hXk2SK6h4L5SbDHlenN12uP2SoPJxwUbZcRh/iF3KkANuW5TGoz5gAkkVHxz
-         JIIw==
-X-Gm-Message-State: AGi0PuZOe+Zj3blNuXf5NICypm9oUgpas6+0CSEhMTVazyUgNgOpksaV
-        2VyI9o2E9PVZePdx7uwcTwtUUw==
-X-Google-Smtp-Source: APiQypI4kp0L3z8pDWk+9x1LtnDU2mTdSq+yx2OdUQxc128HJ1nrp+9d2uMLw60RNbH06M/X/I78zQ==
-X-Received: by 2002:a37:b445:: with SMTP id d66mr1768848qkf.474.1587562203624;
-        Wed, 22 Apr 2020 06:30:03 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::921])
-        by smtp.gmail.com with ESMTPSA id g63sm3818215qkb.89.2020.04.22.06.30.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 06:30:02 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 09:30:01 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Joonsoo Kim <js1304@gmail.com>, Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 15/18] mm: memcontrol: make swap tracking an integral
- part of memory control
-Message-ID: <20200422133001.GE358439@cmpxchg.org>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-16-hannes@cmpxchg.org>
- <e9d58c82-d746-dcd0-d9e3-6322014a3b03@linux.alibaba.com>
- <20200421143923.GC341682@cmpxchg.org>
- <2721c508-9b32-d0e7-454d-386129bfda1b@linux.alibaba.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V31GxiFPWZsqN79XtI09jbj6RG9h2k1H0HTVVbq1ZpU=;
+ b=BC0xXelZXhDkEfL6rsbpH7wfOLeRilee5mgYkbAWq5oPkKmDZk8pvbMmqqqAE3II10VXbIOEHqFc5VV3KS8MfYhcV1nBEs36oXcWy/PRBfTqd1B2tYk23B9DKE+LsLx2hnSzO2fu4HwGRrIPNsGxJ3sOiY/rwTF6kt7pq8csgfA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
+ DM5PR12MB2485.namprd12.prod.outlook.com (2603:10b6:4:bb::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.29; Wed, 22 Apr 2020 13:30:20 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2921.030; Wed, 22 Apr 2020
+ 13:30:20 +0000
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     joro@8bytes.org, jon.grimm@amd.com,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: [PATCH] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
+Date:   Wed, 22 Apr 2020 08:30:02 -0500
+Message-Id: <1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: SN6PR2101CA0013.namprd21.prod.outlook.com
+ (2603:10b6:805:106::23) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2721c508-9b32-d0e7-454d-386129bfda1b@linux.alibaba.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ssuthiku-rhel7-ssp.amd.com (165.204.78.2) by SN6PR2101CA0013.namprd21.prod.outlook.com (2603:10b6:805:106::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.3 via Frontend Transport; Wed, 22 Apr 2020 13:30:19 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 19b3f61e-84cb-4f42-8cb8-08d7e6c14dba
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2485:|DM5PR12MB2485:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB2485DE1C40DA1B667D8BCAE3F3D20@DM5PR12MB2485.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 03818C953D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(186003)(4326008)(66476007)(66946007)(2616005)(956004)(66556008)(6486002)(2906002)(26005)(5660300002)(316002)(478600001)(8936002)(81156014)(44832011)(86362001)(8676002)(36756003)(6666004)(7696005)(52116002)(16526019);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fSSy2BvDFOUDinS8LPL6wKrZj6JLjaAQLsKQ3eEIhrdVRgIqYabP8U3wdgTV2G77GidVXVQ/CkAXDGalRuGWmp3CSvXdP9Kp6aciFQfkDNVYcR4G6lDbJnQ6ArfDeelBBdJrqmQh6TieIww38eI7xxZL2aSzsMe0yxTG3SQncJ03BUPDDAYNL2lSH+sXi9fYatQ5jvOO9+scVgm+k94jDLHEWu9GX278IUk90isKojtzUO1IWngrT3gfWaZtIGIoNPnZ7RP/O+5KQQEe3BO9i1uR1dI9JYAMZNE1hsM+YTn/w91nkeSzBDkslbLEkwOPEkwW9jrmrmCtrimlDIR/9nj1WV0r3D2eh2oYdGSdFmfx+mhqD5dfaoElEltsJ7URqJ9V+nq3xvNOTU0v/F1fwE3jdhWBN8DBv/vRblFPY02ZpmoW9bdB8YifYUe+RNhM
+X-MS-Exchange-AntiSpam-MessageData: gmN6ocTJtJUvKn1Eh6BSeW7/2e34rU5UKc/Nsq8xGVNIcmVlKGpLyTxIDTxLUBpjhhuJ1w8Gu0KXaG3UUULYHfnS0RwnQzb36UBZTOmSVty7V+ZM3LiDyzQSh0LHEPqN36d8QJ+Bi5eAln8PuAYJng==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19b3f61e-84cb-4f42-8cb8-08d7e6c14dba
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2020 13:30:20.6581
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IDrQGklYE6NyHIzx7XEnjEjMveA8kPe73M38bWqhjxzSSrQqCl1WhUe+UEg6ijsWHcXJgDFF1CEuGIJUj/RuQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2485
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 11:14:40AM +0800, Alex Shi wrote:
-> 
-> 
-> 在 2020/4/21 下午10:39, Johannes Weiner 写道:
-> > Hi Alex,
-> > 
-> > thanks for your quick review so far, I'll add the tags to the patches.
-> > 
-> > On Tue, Apr 21, 2020 at 05:27:30PM +0800, Alex Shi wrote:
-> >>
-> >>
-> >> 在 2020/4/21 上午6:11, Johannes Weiner 写道:
-> >>> The swapaccount=0 boot option will continue to exist, and it will
-> >>> eliminate the page_counter overhead and hide the swap control files,
-> >>> but it won't disable swap slot ownership tracking.
-> >>
-> >> May we add extra explanation for this change to user? and the default
-> >> memsw limitations?
-> > 
-> > Can you elaborate what you think is missing and where you would like
-> > to see it documented?
-> > 
-> Maybe the following doc change is better after whole patchset? 
-> Guess users would would happy to know details of this change.
+Currently, system fails to boot because the legacy interrupt remapping
+mode does not enable 128-bit IRTE (GA), which is required for x2APIC
+support.
 
-Thanks, I stole your patch and extended/tweaked it a little. Would you
-mind providing your Signed-off-by:?
+Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
+kernel option amd_iommu_intr=legacy instead. The initialization
+logic will check GASup and automatically fallback to using
+AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
 
-From 589d3c1b505e6671b4a9b424436c9eda88a0b08c Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Wed, 22 Apr 2020 11:14:40 +0800
-Subject: [PATCH] mm: memcontrol: document the new swap control behavior
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 ---
- .../admin-guide/cgroup-v1/memory.rst          | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/cgroup-v1/memory.rst b/Documentation/admin-guide/cgroup-v1/memory.rst
-index 0ae4f564c2d6..12757e63b26c 100644
---- a/Documentation/admin-guide/cgroup-v1/memory.rst
-+++ b/Documentation/admin-guide/cgroup-v1/memory.rst
-@@ -199,11 +199,11 @@ An RSS page is unaccounted when it's fully unmapped. A PageCache page is
- unaccounted when it's removed from radix-tree. Even if RSS pages are fully
- unmapped (by kswapd), they may exist as SwapCache in the system until they
- are really freed. Such SwapCaches are also accounted.
--A swapped-in page is not accounted until it's mapped.
-+A swapped-in page is accounted after adding into swapcache.
- 
- Note: The kernel does swapin-readahead and reads multiple swaps at once.
--This means swapped-in pages may contain pages for other tasks than a task
--causing page fault. So, we avoid accounting at swap-in I/O.
-+Since page's memcg recorded into swap whatever memsw enabled, the page will
-+be accounted after swapin.
- 
- At page migration, accounting information is kept.
- 
-@@ -222,18 +222,13 @@ the cgroup that brought it in -- this will happen on memory pressure).
- But see section 8.2: when moving a task to another cgroup, its pages may
- be recharged to the new cgroup, if move_charge_at_immigrate has been chosen.
- 
--Exception: If CONFIG_MEMCG_SWAP is not used.
--When you do swapoff and make swapped-out pages of shmem(tmpfs) to
--be backed into memory in force, charges for pages are accounted against the
--caller of swapoff rather than the users of shmem.
--
--2.4 Swap Extension (CONFIG_MEMCG_SWAP)
-+2.4 Swap Extension
- --------------------------------------
- 
--Swap Extension allows you to record charge for swap. A swapped-in page is
--charged back to original page allocator if possible.
-+Swap usage is always recorded for each of cgroup. Swap Extension allows you to
-+read and limit it.
- 
--When swap is accounted, following files are added.
-+When CONFIG_SWAP is enabled, following files are added.
- 
-  - memory.memsw.usage_in_bytes.
-  - memory.memsw.limit_in_bytes.
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 6be3853..2b9a67e 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -2936,7 +2936,7 @@ static int __init parse_amd_iommu_intr(char *str)
+ {
+ 	for (; *str; ++str) {
+ 		if (strncmp(str, "legacy", 6) == 0) {
+-			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
++			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
+ 			break;
+ 		}
+ 		if (strncmp(str, "vapic", 5) == 0) {
 -- 
+1.8.3.1
 
-
-
-> Also as to the RSS account name change, I don't know if it's good to polish
-> them in docs.
-
-I didn't actually change anything user-visible, just the internal name
-of the counters:
-
-static const unsigned int memcg1_stats[] = {
-	NR_FILE_PAGES,		/* was MEMCG_CACHE */
-	NR_ANON_MAPPED,		/* was MEMCG_RSS */
-	NR_ANON_THPS,		/* was MEMCG_RSS_HUGE */
-	NR_SHMEM,
-	NR_FILE_MAPPED,
-	NR_FILE_DIRTY,
-	NR_WRITEBACK,
-	MEMCG_SWAP,
-};
-
-static const char *const memcg1_stat_names[] = {
-	"cache",
-	"rss",
-	"rss_huge",
-	"shmem",
-	"mapped_file",
-	"dirty",
-	"writeback",
-	"swap",
-};
-
-Or did you refer to something else?
