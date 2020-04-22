@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D555DC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D876AC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A737320575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4BF220776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549984;
-	bh=KiFsFr2EzdVONAVMzvEkRR/zXd7M6X6aoyMeRIbSy6w=;
+	s=default; t=1587549993;
+	bh=CgiWHZVCcyQWUaKc5iQgvL1E3E25p2lVHzwXT1qcaJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SnRD4EnQTklMXgr1GPX2uHJsz5AgViVjThf8UExf0sNVCfAQp9XjQdz10zs639vqV
-	 qKpGk9Q0jkg92mE75GRXIbNfbFuzgBTO5qekZRKe3VlRFuPUh5IgJmeLNXWaPLce0K
-	 RLxUq8ycb/+woRYFpK147p9w7bUm9S48XsYBDNzY=
+	b=ieVk1Y+rfzJ5DWRgTTc0vNLMmCx+fLOllxKvCKc/wVg5EJ6k1SO8YDURjZ+yzwNly
+	 vHtGZ8DyGULE5/uGNs4VMRJjBqp5kBoLgK1ZIQK2+QLUcnoUPQLtXcVS7ya0Z95ILm
+	 ib5i6CyC6fIHhWj+UdmTLsa95ehoP25zgNwTvOzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgDVKGY (ORCPT
+        id S1728366AbgDVKGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:06:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58200 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:06:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbgDVKGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:19 -0400
+        id S1728354AbgDVKG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C28012075A;
-        Wed, 22 Apr 2020 10:06:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FE6620575;
+        Wed, 22 Apr 2020 10:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549979;
-        bh=KiFsFr2EzdVONAVMzvEkRR/zXd7M6X6aoyMeRIbSy6w=;
+        s=default; t=1587549986;
+        bh=CgiWHZVCcyQWUaKc5iQgvL1E3E25p2lVHzwXT1qcaJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PBgrccVsNUevwLmeu9ApwnymRABY+ZBq+u264gfPpbswAW4/hz6yCqNsL0eISOTM5
-         IE512mngmHsP2sY3EFPEr1inbOlBi6+y/akRDu3fELjzefuq3ao8d8wCjFDt6ZB8bw
-         uAG1mRnQLnpaWxLJFU+T2Y+zN1hsM6+sT+ugdz/U=
+        b=sIoI7C5MFDYFT4OXSUpktqCTMtJ5MNurW/SXws/SX2fS1IvKHMFKwBr2YHy2uB1dr
+         7trPA9DmlHnLmodA9qVEB5Pkp0rK3o+6zKVJfqsDZ3OCOfiSag+PHD9Q6bIE6EkCdl
+         dzexswCM/JHsvYP5KKdbNPlNsHuyyvjvUWPbfXIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.9 084/125] tracing: Fix the race between registering snapshot event trigger and triggering snapshot operation
-Date:   Wed, 22 Apr 2020 11:56:41 +0200
-Message-Id: <20200422095046.631782623@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 087/125] ALSA: hda: Dont release card at firmware loading error
+Date:   Wed, 22 Apr 2020 11:56:44 +0200
+Message-Id: <20200422095047.068983960@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -59,56 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 0bbe7f719985efd9adb3454679ecef0984cb6800 upstream.
+commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 upstream.
 
-Traced event can trigger 'snapshot' operation(i.e. calls snapshot_trigger()
-or snapshot_count_trigger()) when register_snapshot_trigger() has completed
-registration but doesn't allocate buffer for 'snapshot' event trigger.  In
-the rare case, 'snapshot' operation always detects the lack of allocated
-buffer so make register_snapshot_trigger() allocate buffer first.
+At the error path of the firmware loading error, the driver tries to
+release the card object and set NULL to drvdata.  This may be referred
+badly at the possible PM action, as the driver itself is still bound
+and the PM callbacks read the card object.
 
-trigger-snapshot.tc in kselftest reproduces the issue on slow vm:
------------------------------------------------------------
-cat trace
-...
-ftracetest-3028  [002] ....   236.784290: sched_process_fork: comm=ftracetest pid=3028 child_comm=ftracetest child_pid=3036
-     <...>-2875  [003] ....   240.460335: tracing_snapshot_instance_cond: *** SNAPSHOT NOT ALLOCATED ***
-     <...>-2875  [003] ....   240.460338: tracing_snapshot_instance_cond: *** stopping trace here!   ***
------------------------------------------------------------
+Instead, we continue the probing as if it were no option set.  This is
+often a better choice than the forced abort, too.
 
-Link: http://lkml.kernel.org/r/20200414015145.66236-1-yangx.jy@cn.fujitsu.com
-
-Cc: stable@vger.kernel.org
-Fixes: 93e31ffbf417a ("tracing: Add 'snapshot' event trigger command")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_events_trigger.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ sound/pci/hda/hda_intel.c |   19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1068,14 +1068,10 @@ register_snapshot_trigger(char *glob, st
- 			  struct event_trigger_data *data,
- 			  struct trace_event_file *file)
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1828,24 +1828,15 @@ static void azx_firmware_cb(const struct
  {
--	int ret = register_trigger(glob, ops, data, file);
-+	if (tracing_alloc_snapshot() != 0)
-+		return 0;
+ 	struct snd_card *card = context;
+ 	struct azx *chip = card->private_data;
+-	struct pci_dev *pci = chip->pci;
  
--	if (ret > 0 && tracing_alloc_snapshot() != 0) {
--		unregister_trigger(glob, ops, data, file);
--		ret = 0;
+-	if (!fw) {
+-		dev_err(card->dev, "Cannot load firmware, aborting\n");
+-		goto error;
 -	}
 -
--	return ret;
-+	return register_trigger(glob, ops, data, file);
+-	chip->fw = fw;
++	if (fw)
++		chip->fw = fw;
++	else
++		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
+ 	if (!chip->disabled) {
+ 		/* continue probing */
+-		if (azx_probe_continue(chip))
+-			goto error;
++		azx_probe_continue(chip);
+ 	}
+-	return; /* OK */
+-
+- error:
+-	snd_card_free(card);
+-	pci_set_drvdata(pci, NULL);
  }
+ #endif
  
- static int
 
 
