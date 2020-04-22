@@ -2,97 +2,110 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0E8C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1760C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B854206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587543526;
-	bh=qKTrX6IeQOH1sN4dcsG+sIFtqX60IcAtKde3714EdwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zX6VWpFALdjn8g/mCu23MFjt2jZ0r89KOvgiP6zf3hoHnHsVGP4NBI+n8RNzoxtdP
-	 7nYndSX6khS4EcxXWiV2ioWShv2tkffe5E1Gr99ZDakODFCUpMMPXHwhez45AJfKpW
-	 rrgq1mapCeryXtXEOA522maVK/XiX/ndn0/5Ndew=
+	by mail.kernel.org (Postfix) with ESMTP id 7EE0E2076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:19:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCwO0eD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgDVISp (ORCPT
+        id S1726494AbgDVITH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbgDVISp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:18:45 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF6520663;
-        Wed, 22 Apr 2020 08:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587543524;
-        bh=qKTrX6IeQOH1sN4dcsG+sIFtqX60IcAtKde3714EdwE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SaFBd0qQpVm6Jz+PKjXp3tXRmYe3vNQMbpxXwl94dli2KhSzDDIWFkb2yiwF+Pcif
-         gXDFjAp5nat471/4iBV5/Ji5nHJOabF8YlLAEgeMzkkdf5mLTFf5mWiwWLwAWGou3o
-         VM0U3QCNmoHn9DZ3+DLlysj7QbFJf/Tdy9vW2Pg0=
-Date:   Wed, 22 Apr 2020 09:18:39 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
-Message-ID: <20200422081838.GA29541@willie-the-truck>
-References: <20200421151537.19241-1-will@kernel.org>
- <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
+        Wed, 22 Apr 2020 04:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725899AbgDVITH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:19:07 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E50C03C1A7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 01:19:07 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id o15so729832pgi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 01:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EekerngQJFduX7Ew7inUaoXZRPxCiQxtmSV8TYCHEcQ=;
+        b=qCwO0eD1AZwXFk3sb5mQcCFCpRtFPUmfPK9zYT8T5Ve+YHt9i6UnQMPkY3Aadh6wob
+         XGRRa6+gg8IaXAsm9QPZkT+LepaJgJRjo5m5uuFz0bBQHvHetp/ZmOuZq0ki4nLKOjlK
+         evfriyWh7Ywq7Z2uJyjSDiE/vazm725b6xVIn4la+5cjFTLEch4ecIdzk21SYMZxDcXu
+         d4Z/PMxNMUnCBwYwcdTNIq9u2iv+TX15szgevkd8sk/UR9cVZtrsJaRcY3/0chKgS7A+
+         kCgrMjqcvXsuSLrk7kRrm6AmBK4OWWLfwQe8uQvM/4DYYjDH3fIJl8h2uPCrBrqFXjAm
+         UZjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EekerngQJFduX7Ew7inUaoXZRPxCiQxtmSV8TYCHEcQ=;
+        b=nG2VS1PG+zo3ppCqRAP+f5rKE8XN5kqyUhUH3gx21vwoGaGsPBtrdSoCOg1hT2nfvy
+         qoYnQTyskhdRmz1pKeEAqwJYJXN9wl/wljx4jAaigU6Gg2TnueI52C8zQJ/oMHNJ3jPN
+         0sc5XY4e2xHjVKNszC+L+xFCHG2/w3EV0cpqXGF6260Qf7tf0jEui8sTelHcqqFsiWsm
+         goqpxK2Im4N581NIomlVaWWim+XBkjBqmqwAmuUzvKxIEm+qm0KtTKsGYRrsjAdgTNdn
+         j8hUuT245070aiy7MhfJ831pkATKU+z5qd1O07kwaB8fBLxR+d9lInL9Pfzie40JyigL
+         Aq0Q==
+X-Gm-Message-State: AGi0PuazOjAYxikcCUHV2CxOOy50rGB1rxeq03gtdTWxEc49TjxV+nGi
+        NDY7r7hCNnwCk+MjeLoAYJ4OcQ==
+X-Google-Smtp-Source: APiQypKPAF045iErsq2ppQZYUssCS2doi5whkj5j7xoi1bp1IpONf49w0ItUKHzbG5D/VjfivgnGcQ==
+X-Received: by 2002:a62:1ccb:: with SMTP id c194mr14373983pfc.325.1587543546649;
+        Wed, 22 Apr 2020 01:19:06 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id c14sm4335274pgi.54.2020.04.22.01.19.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Apr 2020 01:19:05 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 13:49:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     peng.fan@nxp.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, rjw@rjwysocki.net,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] cpufreq: add i.MX7ULP support
+Message-ID: <20200422081904.ls6z5yjrcjvow3x4@vireshk-i7>
+References: <1587369314-23452-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1587369314-23452-1-git-send-email-peng.fan@nxp.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:42:56AM -0700, Linus Torvalds wrote:
-> On Tue, Apr 21, 2020 at 8:15 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > It's me again. This is version four of the READ_ONCE() codegen improvement
-> > patches [...]
+On 20-04-20, 15:55, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Let's just plan on biting the bullet and do this for 5.8. I'm assuming
-> that I'll juet get a pull request from you?
-
-Sure thing, thanks. I'll get it into -next along with the arm64 bits for
-5.8, but I'll send it as a separate pull when the time comes. I'll also
-include the sparc32 changes because otherwise the build falls apart and
-we'll get an army of angry robots yelling at us (they seem to form the
-majority of the active sparc32 user base afaict).
-
-> > (I'm interpreting the silence as monumental joy)
+> This is a splited patchset from https://patchwork.kernel.org/cover/11390589/
+> patch 11/14 and patch 12/14 posted 2 months ago.
 > 
-> By now I think we can take that for granted.
+> This is to use cpufreq dt driver target_intermediate to implement
+> cpufreq for i.MX7ULP, because i.MX7ULP has some specific requirements
+> for core clk changing.
 > 
-> Because "monumental joy" is certainly exactly what I felt re-reading
-> that "unqualified scalar type" macro.
+> To make cpufreq on i.MX7ULP full function, there still more patches
+> required:
+> https://patchwork.kernel.org/cover/11491149/
+> https://patchwork.kernel.org/patch/11390559/
 > 
-> Or maybe it was just my breakfast trying to say "Hi!".
+> However with this current patchset applied, it not break anything,
+> because the cpufreq device has not been registered, and opp table
+> not added.
+> 
+> Peng Fan (2):
+>   cpufreq: Add i.MX7ULP to cpufreq-dt-platdev blacklist
+>   cpufreq: imx-cpufreq-dt: support i.MX7ULP
+> 
+>  drivers/cpufreq/cpufreq-dt-platdev.c |  1 +
+>  drivers/cpufreq/imx-cpufreq-dt.c     | 84 +++++++++++++++++++++++++++++++++++-
+>  2 files changed, 83 insertions(+), 2 deletions(-)
 
-Haha! It's definitely best viewed on an empty stomach, but the comment
-does give you ample warning.
+Applied. Thanks.
 
-Will
+-- 
+viresh
