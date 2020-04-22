@@ -2,131 +2,118 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F77C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CA4C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536C021569
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OQ+MfXN3"
+	by mail.kernel.org (Postfix) with ESMTP id 9F44E21569
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587595168;
+	bh=B1OMz7UfF+OAm1f+P6P94nyMDSYUzhidt60KZJsSkwY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HjWnHqAr+orCi+sIlyHpnzosoeXkJ42fWlS9JEjOD1wXhJzq9/Nxd7QZbs3FDMzl9
+	 zT7pKsKzgzZ/5t3OllE4LPEFISY6w7xSREDTvzj+2mOeaHMWDVFB+C4fikDHh57tLV
+	 YxZBOKDf3KAUovB8o9LUq2TlWnWuZWy4qJ2bKLXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgDVWh7 (ORCPT
+        id S1726392AbgDVWj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbgDVWh6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:37:58 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3DEC03C1A9;
-        Wed, 22 Apr 2020 15:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=ELd+lIpZ+BIBbyIuMMJ83qOUII9r2nADeB7F0SdSefg=; b=OQ+MfXN35zU6e5S6hx3UDK1fNd
-        AbGEikLauA3ZzUIWgzWIcF1QMYUQIiQGBKU9qFF4Koqbfs/0xpyW7/89rTV7uz4hE9ydxCThN1IjY
-        Ts3m4IvWhRGbrtFaSYLxb04gVitsS3cUBQm2SWvSZIHgXYf5UogCVAxq8kc/RjL4D74n04wOO/BRF
-        1HKdHip21kghxOcnlMY85hA6YxKVOfSyPBTqq6/hOc/cXohgWkcYJyXrnKq0IY8DGSahwaBt+mEaQ
-        trZTjhJfyaDgnY7x3nbXo6L2y0BRILykhpf0UHJlqRACs9A1u9r3ddoEYqo9hpTyS2mLA2E5K5+17
-        C+e9gxyg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRO05-0005n5-Og; Wed, 22 Apr 2020 22:37:49 +0000
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-To:     Nicolas Pitre <nico@fluxnic.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "leon@kernel.org" <leon@kernel.org>
-References: <20200417011146.83973-1-saeedm@mellanox.com>
- <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com>
- <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr>
- <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
- <87v9lu1ra6.fsf@intel.com>
- <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com>
- <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr>
- <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
- <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr> <871rofdhtg.fsf@intel.com>
- <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org>
-Date:   Wed, 22 Apr 2020 15:37:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 18:39:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725968AbgDVWj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 18:39:27 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE0B2074B;
+        Wed, 22 Apr 2020 22:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587595166;
+        bh=B1OMz7UfF+OAm1f+P6P94nyMDSYUzhidt60KZJsSkwY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2ej6Ofj79uPkck7o02D/ClisI64VURrJUQ7lx87XI4EuhjurRaq88cM8IwT+JQ6Mf
+         t0YGDNMsLjXX1JjKnIpjkz5gFz0fELWKOOLN9JNrtsTWzKT3Xl6zYwXcYUfAeVaN2n
+         sriGlQW9SGPIrH1Lmwc+4Nkfqbovrf7e/hy8hzuw=
+Date:   Wed, 22 Apr 2020 15:39:25 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH crypto-stable v2] crypto: arch - limit simd usage to 4k
+ chunks
+Message-ID: <20200422223925.GA96474@gmail.com>
+References: <20200420075711.2385190-1-Jason@zx2c4.com>
+ <20200422200344.239462-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-In-Reply-To: <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422200344.239462-1-Jason@zx2c4.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 2:13 PM, Nicolas Pitre wrote:
-> On Wed, 22 Apr 2020, Jani Nikula wrote:
+On Wed, Apr 22, 2020 at 02:03:44PM -0600, Jason A. Donenfeld wrote:
+> The initial Zinc patchset, after some mailing list discussion, contained
+> code to ensure that kernel_fpu_enable would not be kept on for more than
+> a 4k chunk, since it disables preemption. The choice of 4k isn't totally
+> scientific, but it's not a bad guess either, and it's what's used in
+> both the x86 poly1305, blake2s, and nhpoly1305 code already (in the form
+> of PAGE_SIZE, which this commit corrects to be explicitly 4k).
 > 
->> On Tue, 21 Apr 2020, Nicolas Pitre <nico@fluxnic.net> wrote:
->>> This is really a conditional dependency. That's all this is about.
->>> So why not simply making it so rather than fooling ourselves? All that 
->>> is required is an extension that would allow:
->>>
->>> 	depends on (expression) if (expression)
->>>
->>> This construct should be obvious even without reading the doc, is 
->>> already used extensively for other things already, and is flexible 
->>> enough to cover all sort of cases in addition to this particular one.
->>
->> Okay, you convinced me. Now you only need to convince whoever is doing
->> the actual work of implementing this stuff. ;)
+> Ard did some back of the envelope calculations and found that
+> at 5 cycles/byte (overestimate) on a 1ghz processor (pretty slow), 4k
+> means we have a maximum preemption disabling of 20us, which Sebastian
+> confirmed was probably a good limit.
 > 
-> What about this:
+> Unfortunately the chunking appears to have been left out of the final
+> patchset that added the glue code. So, this commit adds it back in.
 > 
-> ----- >8
-> Subject: [PATCH] kconfig: allow for conditional dependencies
+> Fixes: 84e03fa39fbe ("crypto: x86/chacha - expose SIMD ChaCha routine as library function")
+> Fixes: b3aad5bad26a ("crypto: arm64/chacha - expose arm64 ChaCha routine as library function")
+> Fixes: a44a3430d71b ("crypto: arm/chacha - expose ARM ChaCha routine as library function")
+> Fixes: d7d7b8535662 ("crypto: x86/poly1305 - wire up faster implementations for kernel")
+> Fixes: f569ca164751 ("crypto: arm64/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
+> Fixes: a6b803b3ddc7 ("crypto: arm/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
+> Fixes: 0f961f9f670e ("crypto: x86/nhpoly1305 - add AVX2 accelerated NHPoly1305")
+> Fixes: 012c82388c03 ("crypto: x86/nhpoly1305 - add SSE2 accelerated NHPoly1305")
+> Fixes: a00fa0c88774 ("crypto: arm64/nhpoly1305 - add NEON-accelerated NHPoly1305")
+> Fixes: 16aae3595a9d ("crypto: arm/nhpoly1305 - add NEON-accelerated NHPoly1305")
+> Fixes: ed0356eda153 ("crypto: blake2s - x86_64 SIMD implementation")
+> Cc: Eric Biggers <ebiggers@google.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> ---
+> Changes v1->v2:
+>  - [Ard] Use explicit 4k chunks instead of PAGE_SIZE.
+>  - [Eric] Prefer do-while over for (;;).
 > 
-> This might appear to be a strange concept, but sometimes we want
-> a dependency to be conditionally applied. One such case is currently
-> expressed with:
-> 
-> 	depends on FOO || !FOO
-> 
-> This pattern is strange enough to give one's pause. Given that it is
-> also frequent, let's make the intent more obvious with some syntaxic 
-> sugar by effectively making dependencies optionally conditional.
-> This also makes the kconfig language more uniform.
-> 
-> Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+>  arch/arm/crypto/chacha-glue.c            | 14 +++++++++++---
+>  arch/arm/crypto/nhpoly1305-neon-glue.c   |  2 +-
+>  arch/arm/crypto/poly1305-glue.c          | 15 +++++++++++----
+>  arch/arm64/crypto/chacha-neon-glue.c     | 14 +++++++++++---
+>  arch/arm64/crypto/nhpoly1305-neon-glue.c |  2 +-
+>  arch/arm64/crypto/poly1305-glue.c        | 15 +++++++++++----
+>  arch/x86/crypto/blake2s-glue.c           | 10 ++++------
+>  arch/x86/crypto/chacha_glue.c            | 14 +++++++++++---
+>  arch/x86/crypto/nhpoly1305-avx2-glue.c   |  2 +-
+>  arch/x86/crypto/nhpoly1305-sse2-glue.c   |  2 +-
+>  arch/x86/crypto/poly1305_glue.c          | 13 ++++++-------
+>  11 files changed, 69 insertions(+), 34 deletions(-)
 
-Hi,
+Can you split the nhpoly1305 changes into a separate patch?  They're a bit
+different from the rest of this patch, which is fixing up the crypto library
+interface that's new in v5.5.  The nhpoly1305 changes apply to v5.0 and don't
+have anything to do with the crypto library interface, and they're also a bit
+different since they replace PAGE_SIZE with 4K rather than unlimited with 4K.
 
-If we must do something here, I prefer this one.
-
-Nicolas, would you do another example, specifically for
-CRAMFS_MTD in fs/cramfs/Kconfig, please?
-
-thanks.
--- 
-~Randy
-
+- Eric
