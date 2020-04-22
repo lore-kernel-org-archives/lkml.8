@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E408C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19B0C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC872073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE662073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552281;
-	bh=a/twTVAZhF/E7sHtdNA6v3T9Ge2KDG0CvO3W+bKgwlc=;
+	s=default; t=1587552289;
+	bh=WL3PbyBJMFw8o4KxrC8xipxehGC7bO8H7IF894iaawA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x3PP3mZeyXu3uZYCZBUe0KLYWWPJkUp86SAUhi25AYa5so8n113Kde9UdNrr8THwW
-	 cK/CyuezCTH+ZaLbNvXCVSM9cA1gB3FJwDpAwkrDc9jJUnf2irsvQCs6CHJbHMnFuF
-	 E5o7gf6D4Rr44mgcxu/75SakKGOI1IreiEHF5CMc=
+	b=o8EFPDG+bY8fDUuEyHi9BiMo9262JFQwBeguwt2o7mDKtQtAV9NmNAmB5j78l0HvH
+	 rRZvw8dkDT9SgKFR8qqTBZB5F1V/LLCZR3E8hW2EkD3rQU6/4+W7WV884/z24XJKWI
+	 9ZXq6NiH4LxtLSHX/XFm5ADB6U6TDu5mX5GqxrEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbgDVKok (ORCPT
+        id S1729628AbgDVKSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:44:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55312 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730012AbgDVKSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:45 -0400
+        id S1729865AbgDVKRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F302520784;
-        Wed, 22 Apr 2020 10:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10EE02070B;
+        Wed, 22 Apr 2020 10:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550724;
-        bh=a/twTVAZhF/E7sHtdNA6v3T9Ge2KDG0CvO3W+bKgwlc=;
+        s=default; t=1587550660;
+        bh=WL3PbyBJMFw8o4KxrC8xipxehGC7bO8H7IF894iaawA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMShdm367an/uljmGfuOm+55/fLTvMyt3X6FVoG9C4UroH79e2gnd1gQlKxFJwcoB
-         QmOk9zO9evgxDiE3H7NS4v0xZEHuJIxP2roXFovmUbnV3cxOMHJnVlqWj53o9azUuv
-         3qWDXV4QndQgZLw5QncYNlxQPKdS3ks2Klfm96yA=
+        b=qHzUKosN6ZFx7mTa0W+o2AxnHu/h9muVV+2QxbHjflTrKUxS28Do94zokUcqNTH1w
+         U0MWnLqqRELOdbEmsfGdi761awUBNSOljbV6KYvMf2VV7lWxZJeVa7nKl7rf6ZbHwU
+         V8P7jeEOkqPSbxCmp/lcI4TocG4pDoTwKXc8UyD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ritesh Harjani <riteshh@linux.ibm.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/118] ext4: do not commit super on read-only bdev
-Date:   Wed, 22 Apr 2020 11:57:07 +0200
-Message-Id: <20200422095042.744616705@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 009/118] ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on LAN.
+Date:   Wed, 22 Apr 2020 11:56:10 +0200
+Message-Id: <20200422095033.067534688@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -61,50 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Martin Fuzzey <martin.fuzzey@flowbird.group>
 
-[ Upstream commit c96e2b8564adfb8ac14469ebc51ddc1bfecb3ae2 ]
+commit 4141f1a40fc0789f6fd4330e171e1edf155426aa upstream.
 
-Under some circumstances we may encounter a filesystem error on a
-read-only block device, and if we try to save the error info to the
-superblock and commit it, we'll wind up with a noisy error and
-backtrace, i.e.:
+In order to wake from suspend by ethernet magic packets the GPC
+must be used as intc does not have wakeup functionality.
 
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-...
+But the FEC DT node currently uses interrupt-extended,
+specificying intc, thus breaking WoL.
 
-To avoid this, commit the error info in the superblock only if the
-block device is writable.
+This problem is probably fallout from the stacked domain conversion
+as intc used to chain to GPC.
 
-Reported-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Link: https://lore.kernel.org/r/4b6e774d-cc00-3469-7abb-108eb151071a@sandeen.net
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So replace "interrupts-extended" by "interrupts" to use the default
+parent which is GPC.
+
+Fixes: b923ff6af0d5 ("ARM: imx6: convert GPC to stacked domains")
+
+Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl.dtsi |    5 ++---
+ arch/arm/boot/dts/imx6qp.dtsi  |    1 -
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 8f7a46d3abffb..53d4c67a20df9 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -389,7 +389,8 @@ static void save_error_info(struct super_block *sb, const char *func,
- 			    unsigned int line)
- {
- 	__save_error_info(sb, func, line);
--	ext4_commit_super(sb, 1);
-+	if (!bdev_read_only(sb->s_bdev))
-+		ext4_commit_super(sb, 1);
- }
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1039,9 +1039,8 @@
+ 				compatible = "fsl,imx6q-fec";
+ 				reg = <0x02188000 0x4000>;
+ 				interrupt-names = "int0", "pps";
+-				interrupts-extended =
+-					<&intc 0 118 IRQ_TYPE_LEVEL_HIGH>,
+-					<&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
++					     <0 119 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_ENET>,
+ 					 <&clks IMX6QDL_CLK_ENET>,
+ 					 <&clks IMX6QDL_CLK_ENET_REF>;
+--- a/arch/arm/boot/dts/imx6qp.dtsi
++++ b/arch/arm/boot/dts/imx6qp.dtsi
+@@ -77,7 +77,6 @@
+ };
  
- /*
--- 
-2.20.1
-
+ &fec {
+-	/delete-property/interrupts-extended;
+ 	interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
+ 		     <0 119 IRQ_TYPE_LEVEL_HIGH>;
+ };
 
 
