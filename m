@@ -2,91 +2,91 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E44C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18086C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA1E22077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06E12077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QSaSRN8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgDVVqL (ORCPT
+        id S1726447AbgDVVr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:46:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52728 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgDVVqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:46:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 294B0AA55;
-        Wed, 22 Apr 2020 21:46:09 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 9B082DA704; Wed, 22 Apr 2020 23:45:26 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 23:45:26 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     wu000273@umn.edu
-Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kjlu@umn.edu
-Subject: Re: [PATCH] btrfs: fix a potential racy
-Message-ID: <20200422214526.GT18421@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, wu000273@umn.edu, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kjlu@umn.edu
-References: <20200419015907.15503-1-wu000273@umn.edu>
+        Wed, 22 Apr 2020 17:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgDVVr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:47:57 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697ECC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:47:57 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F0DC10034799E0EEF8349F9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c100:3479:9e0e:ef83:49f9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E71891EC0D40;
+        Wed, 22 Apr 2020 23:47:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587592076;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LhNefsMKhteFQFie49WXS2AmS61Op0pGlnLmbupfJJ8=;
+        b=QSaSRN8rX7KkmL1wecb9nxvktZ+1ru2jjo8Pa+3uJgBgss1sqyzBW1M0BoRcRv+mdPkVKx
+        BzheaUwQ2CXiMF5j0tchnAcj5rUZfcP4gNGZPsOp4ynVnrZAODzRvdCasLg+29JyrWmAo+
+        +qbks4+kyrpGoQ7wUXr+GTrqsM/uanM=
+Date:   Wed, 22 Apr 2020 23:47:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: AMD boot woe due to "x86/mm: Cleanup pgprot_4k_2_large() and
+ pgprot_large_2_4k()"
+Message-ID: <20200422214751.GJ26846@zn.tnic>
+References: <1ED37D02-125F-4919-861A-371981581D9E@lca.pw>
+ <20200422170116.GA28345@lst.de>
+ <2568586B-B1F7-47F9-8B6F-6A4C0E5280A8@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200419015907.15503-1-wu000273@umn.edu>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <2568586B-B1F7-47F9-8B6F-6A4C0E5280A8@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 08:59:07PM -0500, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
+On Wed, Apr 22, 2020 at 05:32:00PM -0400, Qian Cai wrote:
+> This fixed the sucker,
 > 
-> In function reada_find_extent and reada_extent_put, kref_get(&zone->refcnt)
-> are not called in a lock context. Potential racy may happen. It's possible
-> that thread1 decreases the kref to 0, and thread2 increases the kref to 1,
-> then thread1 releases the pointer.
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index edf9cea4871f..c54d1d0a8e3b 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -708,7 +708,7 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
+>  
+>         set_pte((pte_t *)pud, pfn_pte(
+>                 (u64)addr >> PAGE_SHIFT,
+> -               __pgprot(protval_4k_2_large(pgprot_val(prot) | _PAGE_PSE))));
+> +               __pgprot(protval_4k_2_large(pgprot_val(prot)) | _PAGE_PSE)));
+>  
 
-There are several things I don't see or understand why they woudl be a
-problem.
+Very good catch - that's one nasty wrongly placed closing bracket!
+pmd_set_huge() has it correct.
 
-kref_get does not need to be take under locks in case it's not the first
-reference or if it's clear that eg. the caller has taken a reference and
-it'll never go to 0.
+Mind sending a proper patch?
 
-The references are supposed to be lightweight so taking the locks per
-kref_get does not follow a good pattern.
+Thx.
 
-The kref type is a wrapper around refcount_t, that detects if there's an
-increment from 0->1, similar to what you suggest that could happen. It
-might be tricky to actually hit that case so I'm not saying that it's
-all ok, just that we haven't seen that so far.
+-- 
+Regards/Gruss,
+    Boris.
 
-Your description of the race needs to be expanded as it's too terse,
-where exactly the increments could happen, how would be the calls in the
-two cpus interleaved, like
-
-cpu1				cpu2
-
-				reada_find_extent()
-				   kref_get
-				   ...
-reada_find_extent()
-   				   kref_put (last put, refs == 0)
-   kref_get (inc from zero)
-   ...
-
-Then it's easer to reason about the actual races and the context where
-it could happen. Eg. btrfs_reada_add adds one reference from the
-beginning, so the final put does not happen in the middle of
-reada_find_extent unless something would be seriously broken and that
-would manifest very clearly.
+https://people.kernel.org/tglx/notes-about-netiquette
