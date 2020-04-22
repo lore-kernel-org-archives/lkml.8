@@ -2,141 +2,105 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77565C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B945C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5318720784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F3320784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:46:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwar++eK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vBNjvxlE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgDVLpQ (ORCPT
+        id S1727896AbgDVLqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726426AbgDVLpP (ORCPT
+        Wed, 22 Apr 2020 07:46:30 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33498 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbgDVLqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:45:15 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66974C03C1A8;
-        Wed, 22 Apr 2020 04:45:15 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l19so1894422lje.10;
-        Wed, 22 Apr 2020 04:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tJg8AbjlH1I4fIrHvIylqzy5rYC5XErFrt9tt5uOmOk=;
-        b=lwar++eKXn7OMIQp5L2Bc1jMD711rhfBC629H9jcISA6sdQnkk+JWi+53cosyPrvn6
-         npkbP2eo+xpXVl0ViF+QzEFdCz5f1S4Lkxq1HuvRrpYI2xf799w/6C3Z53TaUnHd4aOX
-         uxO94GuGFAfqHycx/gcm3RClgLGlGQ6zKsFlAA7+c3nWgpp2qtawmIbLaenoKODO4l+Y
-         PFMDDhzOv+sCPO1hHOS4EUJ6UOb7vL7KTD655ylqk//6zrOL46O6qJndXPWLt2V9BfaO
-         j9n6dptn34aDT9P1Zc4QL3Q/CsP+NeUYGugFpPcx/UNd61xo/3r7xbo/mc8AThudE971
-         Kckw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tJg8AbjlH1I4fIrHvIylqzy5rYC5XErFrt9tt5uOmOk=;
-        b=haARF/kbnP6WBWC3WVdjrJTtczz+CKdPbJwS/GnJf/N1r7BwtLtq1KvDlpSAjaZJI1
-         JMcZxZf3wBQ4wI4tCfXX9+rI6csvRFlQc1laFYciN82W+FknjwDVP/JmxE/tTCba1ZYp
-         1LT10X3qQ7bIXFBIuzfQ/womvcYQxRcHjgJBC13SawMSF6PhGcG9kzxdic0TphIVZHLh
-         axRLhamhtCmlwZ9RNtNFtpLzirC2oxA/tAHheaEByvzedUOcAIOrbt1FkGF8QYD/WzJd
-         urh3fHjPHrhHWLPO7wym+07RuDslusVIqGM6zvV/3adgZWC4ek5cJ0RA5vVNYJdX7SB8
-         7Azw==
-X-Gm-Message-State: AGi0PuZyBJr68bOuE/oCQnFwVA96o7CgPe0nsVCme4+v/dbQYQ7hdQVI
-        4OPwIFLeYyut7auCbXTHnbM=
-X-Google-Smtp-Source: APiQypIVw3Rp00qV6+NXOadN+4qa01IwMXlqZJAAYgBk67ir1srjw5x4rxpJ9qrh49Ej1zKEuDUKvg==
-X-Received: by 2002:a2e:140e:: with SMTP id u14mr15621002ljd.252.1587555913815;
-        Wed, 22 Apr 2020 04:45:13 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id h14sm4499416lfm.60.2020.04.22.04.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 04:45:13 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 22 Apr 2020 13:45:06 +0200
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH rcu/dev -fixes 2/4] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200422114506.GA17108@pc636>
-References: <20200420153837.194532-1-joel@joelfernandes.org>
- <20200420153837.194532-3-joel@joelfernandes.org>
- <20200422103536.GA16263@pc636>
+        Wed, 22 Apr 2020 07:46:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBgSpP068303;
+        Wed, 22 Apr 2020 11:45:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=iXHNVaJY3ekqt8rrsqzyayGiIuYPuZ10JP8uzOTtyBM=;
+ b=vBNjvxlES5ioi7aQXEXoJ8OYSuZOF6cDwtNh8kpa9OAcTffTDn5fCmfrLmtipCy76zRW
+ nvmhgyoJbyRTjXGaSSGE1o0V7OKkD34F9dt+GFXAf69s3JCf8QFHBiGAxQxkIM+NC+cw
+ cFSQv5kRrjEZfx1mt5gIiDDyUps1yeVniTIcLsId9ep2WpL53VqypIqYHHsYK8tCHmeD
+ uhkdLkcC3ImCBOO5D7nPEwmoIEkeztne43bgIY6ME47ye0Los+4iLHDSx3xNsM6T/kUg
+ JL+ho3msLiI3KkSE0niDAx/Hnat3v3G4syLIVpbVDI1YMjMb7qvX4o/EZwk/LnaO64R9 JA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 30fsgm29gy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 11:45:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBgXiv118837;
+        Wed, 22 Apr 2020 11:45:35 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30gbbgps60-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 11:45:35 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03MBjWgC022078;
+        Wed, 22 Apr 2020 11:45:32 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Apr 2020 04:45:31 -0700
+Date:   Wed, 22 Apr 2020 14:45:22 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: SOF: ensure all fields in header are zero'd before
+ copying back to userspace
+Message-ID: <20200422114522.GK2659@kadam>
+References: <20200422112417.208843-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422103536.GA16263@pc636>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422112417.208843-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=856 adultscore=0 mlxscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=908 malwarescore=0 clxscore=1011
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:35:36PM +0200, Uladzislau Rezki wrote:
-> On Mon, Apr 20, 2020 at 11:38:35AM -0400, Joel Fernandes (Google) wrote:
-> > To keep kfree_rcu() path working on raw non-preemptible sections,
-> > prevent the optional entry into the allocator as it uses sleeping locks.
-> > In fact, even if the caller of kfree_rcu() is preemptible, this path
-> > still is not, as krcp->lock is a raw spinlock as done in previous
-> > patches. With additional page pre-allocation in the works, hitting this
-> > return is going to be much less likely soon so just prevent it for now
-> > so that PREEMPT_RT does not break. Note that page allocation here is an
-> > optimization and skipping it still makes kfree_rcu() work.
-> > 
-> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
-> > Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  kernel/rcu/tree.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index cf68d3d9f5b81..cd61649e1b001 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -3092,6 +3092,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
-> >  		if (!bnode) {
-> >  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
-> >  
-> > +			/*
-> > +			 * To keep this path working on raw non-preemptible
-> > +			 * sections, prevent the optional entry into the
-> > +			 * allocator as it uses sleeping locks. In fact, even
-> > +			 * if the caller of kfree_rcu() is preemptible, this
-> > +			 * path still is not, as krcp->lock is a raw spinlock.
-> > +			 * With additional page pre-allocation in the works,
-> > +			 * hitting this return is going to be much less likely.
-> > +			 */
-> > +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> > +				return false;
-> > +
-> >  			bnode = (struct kfree_rcu_bulk_data *)
-> >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> >  		}
-> This will not be correctly working by just reverting everything to the
-> "rcu_head path" for CONFIG_PREEMPT_RT kernel. We need to preallocate at
-> least once. I can add caching on top of this series to address it.
+On Wed, Apr 22, 2020 at 12:24:17PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-Forgot to add: Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> Field header.tlv is uninitialized and being copied back to userspace
+        ^^^^^^^^^^
+header.tlv is a zero element array so it doens't have any stack data.
 
-Caching should be added as separate patch.
+> and hence leaking data from the stack to userspace.  Fix this by
+> ensuring the header structure is zero'd.
 
---
-Vlad Rezki
+regards,
+dan carpenter
+
+
