@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA86C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68BDC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B709D20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A70E2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551543;
-	bh=A3svjOj7D3H3IiGI9YKvWCaCdJBRHSi/l3T8j/muOJA=;
+	s=default; t=1587551548;
+	bh=0rcL6w+U3QxTPUxJYsUdrnHmbxHPVlcjvRNL/c8lbPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FBHkdEdq8ccToovagFt5BBhRxAsLQIIDUz9EeiqZv2kP6pzh8iKWt+zzTGH73UaQI
-	 TRsDCvvGxs6FIEB7k8ToYCHIcbN+2GDYvltcWOGkRjLGT9FHCkmdKLsY9DisxPBZ3X
-	 FHwTCoAR9ZKnFpRFkerE1UspC6miSv1Zk2Zrzwic=
+	b=lKuZLy5Di87X6wxvUb1y7FByvOAaGoeOJK4/BRQksHgUM7SsapQPz+V/Lrp7vf4PL
+	 D3stj/Vb36ZDF0MOcGpDVlgZao86K/KIZOkOJvEHYL3ffM4/9SClVmmLZQjG9gzAjo
+	 CLr2U0yX6ibol/tcz8Wty0xNkQgTuLxmaInSz0PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbgDVKZP (ORCPT
+        id S1731126AbgDVKc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:25:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbgDVKZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:25:02 -0400
+        id S1730526AbgDVKZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:25:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD2E42075A;
-        Wed, 22 Apr 2020 10:25:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D64C42075A;
+        Wed, 22 Apr 2020 10:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551101;
-        bh=A3svjOj7D3H3IiGI9YKvWCaCdJBRHSi/l3T8j/muOJA=;
+        s=default; t=1587551116;
+        bh=0rcL6w+U3QxTPUxJYsUdrnHmbxHPVlcjvRNL/c8lbPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rrxx2X0M7WsbCJ6RTgJfmgwv5UUT+ioxKnIBZfbI2jq7aL4Gm8E2sbIqSJroKdIhU
-         QN942omToPbdLFJ7na8dO4vN9Z0fefyQh62xcUJ2ZiMg5PjMXVxAb0vE6dlnKJKPk/
-         WqySRfyBnF+uEEWIVI7Zin3owM581mOxCfucrB0s=
+        b=cpbIX5TeeQpXd1Pyr/G5PCWjOCJ1JtSQ0/tGqrpwQ7lB34MiguAqg0K3p+l26S4Iv
+         82MdMf88zoMihpEMK/N8ual1H5bfWZd9fUnyP5YSY3p3GFg5VD1rdgerp5qcDUZYOX
+         C6yQxREfRqxJc3DlH9BwHxfH1ZlEOzM34reTXgb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Baoquan He <bhe@redhat.com>,
-        Nishanth Aravamudan <nacc@us.ibm.com>,
-        Nick Piggin <npiggin@suse.de>, Adam Litke <agl@us.ibm.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 100/166] mm/hugetlb: fix build failure with HUGETLB_PAGE but not HUGEBTLBFS
-Date:   Wed, 22 Apr 2020 11:57:07 +0200
-Message-Id: <20200422095059.665480863@linuxfoundation.org>
+Subject: [PATCH 5.6 070/166] rtc: 88pm860x: fix possible race condition
+Date:   Wed, 22 Apr 2020 11:56:37 +0200
+Message-Id: <20200422095056.412533753@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -67,93 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit bb297bb2de517e41199185021f043bbc5d75b377 ]
+[ Upstream commit 9cf4789e6e4673d0b2c96fa6bb0c35e81b43111a ]
 
-When CONFIG_HUGETLB_PAGE is set but not CONFIG_HUGETLBFS, the following
-build failure is encoutered:
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in the IRQ handler.
 
-  In file included from arch/powerpc/mm/fault.c:33:0:
-  include/linux/hugetlb.h: In function 'hstate_inode':
-  include/linux/hugetlb.h:477:9: error: implicit declaration of function 'HUGETLBFS_SB' [-Werror=implicit-function-declaration]
-    return HUGETLBFS_SB(i->i_sb)->hstate;
-           ^
-  include/linux/hugetlb.h:477:30: error: invalid type argument of '->' (have 'int')
-    return HUGETLBFS_SB(i->i_sb)->hstate;
-                                ^
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
 
-Gate hstate_inode() with CONFIG_HUGETLBFS instead of CONFIG_HUGETLB_PAGE.
+Also remove the unnecessary error message as the core already prints the
+info.
 
-Fixes: a137e1cc6d6e ("hugetlbfs: per mount huge page sizes")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Nishanth Aravamudan <nacc@us.ibm.com>
-Cc: Nick Piggin <npiggin@suse.de>
-Cc: Adam Litke <agl@us.ibm.com>
-Cc: Andi Kleen <ak@suse.de>
-Link: http://lkml.kernel.org/r/7e8c3a3c9a587b9cd8a2f146df32a421b961f3a2.1584432148.git.christophe.leroy@c-s.fr
-Link: https://patchwork.ozlabs.org/patch/1255548/#2386036
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20200311223956.51352-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/hugetlb.h | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/rtc/rtc-88pm860x.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 1e897e4168ac1..dafb3d70ff819 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -390,7 +390,10 @@ static inline bool is_file_hugepages(struct file *file)
- 	return is_file_shm_hugepages(file);
- }
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index 4743b16a8d849..1526402e126b2 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -336,6 +336,10 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 	info->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, info);
  
--
-+static inline struct hstate *hstate_inode(struct inode *i)
-+{
-+	return HUGETLBFS_SB(i->i_sb)->hstate;
-+}
- #else /* !CONFIG_HUGETLBFS */
++	info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(info->rtc_dev))
++		return PTR_ERR(info->rtc_dev);
++
+ 	ret = devm_request_threaded_irq(&pdev->dev, info->irq, NULL,
+ 					rtc_update_handler, IRQF_ONESHOT, "rtc",
+ 					info);
+@@ -377,13 +381,11 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
- #define is_file_hugepages(file)			false
-@@ -402,6 +405,10 @@ hugetlb_file_setup(const char *name, size_t size, vm_flags_t acctflag,
- 	return ERR_PTR(-ENOSYS);
- }
+-	info->rtc_dev = devm_rtc_device_register(&pdev->dev, "88pm860x-rtc",
+-					    &pm860x_rtc_ops, THIS_MODULE);
+-	ret = PTR_ERR(info->rtc_dev);
+-	if (IS_ERR(info->rtc_dev)) {
+-		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
++	info->rtc_dev->ops = &pm860x_rtc_ops;
++
++	ret = rtc_register_device(info->rtc_dev);
++	if (ret)
+ 		return ret;
+-	}
  
-+static inline struct hstate *hstate_inode(struct inode *i)
-+{
-+	return NULL;
-+}
- #endif /* !CONFIG_HUGETLBFS */
- 
- #ifdef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
-@@ -472,11 +479,6 @@ extern unsigned int default_hstate_idx;
- 
- #define default_hstate (hstates[default_hstate_idx])
- 
--static inline struct hstate *hstate_inode(struct inode *i)
--{
--	return HUGETLBFS_SB(i->i_sb)->hstate;
--}
--
- static inline struct hstate *hstate_file(struct file *f)
- {
- 	return hstate_inode(file_inode(f));
-@@ -729,11 +731,6 @@ static inline struct hstate *hstate_vma(struct vm_area_struct *vma)
- 	return NULL;
- }
- 
--static inline struct hstate *hstate_inode(struct inode *i)
--{
--	return NULL;
--}
--
- static inline struct hstate *page_hstate(struct page *page)
- {
- 	return NULL;
+ 	/*
+ 	 * enable internal XO instead of internal 3.25MHz clock since it can
 -- 
 2.20.1
 
