@@ -2,143 +2,231 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFA8C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121DCC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32992073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61FB20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jGXtLpkb";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="FFqSxCdv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2u4L54U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731343AbgDVKfi (ORCPT
+        id S1731138AbgDVKfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:35:38 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:2815 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731381AbgDVKfc (ORCPT
+        Wed, 22 Apr 2020 06:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730343AbgDVKX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:35:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1587551732; x=1619087732;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=MdrS2JP0e0emC0iygxoUjItHdbhZL0AN0RAyFpbOMIo=;
-  b=jGXtLpkbQsa9oZwx2TlCglccH4eLx1bysv5AKLfsx1FnBCb16pRBdlIO
-   mAtr+Mu6HrmY73RaO8ZJumCR+R7GgFB+Z5q7nSNMCXqwh7laJJ27QdGjY
-   gNxIYjmzA1uvksGgh4d21C+Kr8T1xNkWGghkUQS1GIISP1tGIxZBe7/VV
-   UrEyKFEvpBIx1dPg8uaZzTJaBLxDwh/RgcQXikVjysQDWIgRuT+0SlDIn
-   +qib5beCTm2RIB3pQ3cJW0bsD9E8+TWZQAMwtjjH3kVsKUx2hKGq9SMEB
-   Q5tzN13VkxtQezs0809txMbviOy7VnxbCMQkT055TZUxEGUFqicIXlm56
-   A==;
-IronPort-SDR: CV3UUf1sWeOfwluMsbMlr/xFgtEozRMtmoSmenfK/hhYIPVuHX5+bVaLTp8hIepz9WsJAAFvyV
- moulelecz0j2zZg0te11F+TGwEbg2tnUiomaENO2HJbXwNDJHJNoMeO3OfjTbe3QutbkHGaV6u
- JSvZ0Pq5gxbhsj3uDKr8Xxy78xiCBUpaSfApfxMbmuyYDUKMyK864z1h0hUWPHwoWUXNW4JkLI
- wD6lEAN8deV/Ef9G9C1+RExkAsDRnJcMotUITns2CTF+ewt6tdOXVUht9w2ioXLqyJewoK+mvC
- ZG0=
-X-IronPort-AV: E=Sophos;i="5.72,413,1580745600"; 
-   d="scan'208";a="137300294"
-Received: from mail-cys01nam02lp2059.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.59])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Apr 2020 18:35:31 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mrLqFrunRvFSEbXo0iwzPLwZYmZnSNpNr89kUDib1MAfqYe1piBv34nibaip0QcfBUdC+AQogRSMHRol/zJgP+/eEfEop/n9Fd4YwKkA4PaBD1T0KwWYoC8qgPqx1/lj3OxpxjH7Es6ljAMesZwWgBaLUVm1hSDY0nkqnEUaQ454xKm1WOx6+liRHrBWdb9u+Izfdml6M/3uYlZnnBVrEr+r5PKIiJgmuthn4kDXkCmcnqyffcXV3quAygDyFO1TN3BJC0o/KeKHFCIMYGpS5PmNHf3L8rYYaCf90coh05ysJpL+onRRWR9qOqxdbd8PL5nJzuUZ+Xann7npeOgUng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bQHKrUYqInIdoHSn5IvHnZwZu6R8f2ANu7K/ZctM1rI=;
- b=Txq52ZmWyIW9sCNj/QodSYa+z276/qK6Sioq8tUKBhWF7jFIiGXajL8v8WLF5ZZqdHG48Q1NkUcf6kMY4YcQQ6RoA2JCM6xjZUqntBr3Cx0rO5iDqC1uaSCFwsn088u9RJyIPxnR4JCSU5tTNSIladJ2jbB8Nr+5ygLFm11WhyOqUZ30lu5PwFO07oZhG+otddWNCUaXcHyM82oVJBQOOGLTdQfa/XfEKhctW+75iBG8aY2RmR1ySG/s1ZE5DR/MELhcGCQUTIZQ5MGEjoq2Kc9QX7p1yYe4xePB4ji1Jd+OZwBzAvLfNrwHfJ9LwAibXJR5IPinXaywVOzKEMT1hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 22 Apr 2020 06:23:29 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC029C03C1AA
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:23:28 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d24so749833pll.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:23:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bQHKrUYqInIdoHSn5IvHnZwZu6R8f2ANu7K/ZctM1rI=;
- b=FFqSxCdvOI7x3mOwjGQVgiHZqwSBb9tz7IWzvFyZMTxdxGa4FImW7BqZxw2DFwYE6X2uua7cZ6sRg7JuF+3rfxO3F1Ajfm6xwZObOwjyRcj92S1dQ9mQXTq5kmsbQu6aUz4sAoeSQLc754ns982ZerduHADEdaW8rNsaYNuUNWg=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB3839.namprd04.prod.outlook.com (2603:10b6:805:3f::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Wed, 22 Apr
- 2020 10:35:29 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2937.012; Wed, 22 Apr 2020
- 10:35:29 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Asutosh Das <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/3] scsi: ufs: add write booster feature support
-Thread-Topic: [PATCH v2 1/3] scsi: ufs: add write booster feature support
-Thread-Index: AQHWGC/ZP5mEb4mHQU6B/JvojeGq46iE8eUA
-Date:   Wed, 22 Apr 2020 10:35:29 +0000
-Message-ID: <SN6PR04MB4640895F87719D8B04D0F74EFCD20@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <cover.1586374414.git.asutoshd@codeaurora.org>
- <6519cd576299d5881129b0e48870a53a0afc7835.1587509578.git.asutoshd@codeaurora.org>
-In-Reply-To: <6519cd576299d5881129b0e48870a53a0afc7835.1587509578.git.asutoshd@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dee2446c-0967-4f6a-9c4c-08d7e6a8e0b5
-x-ms-traffictypediagnostic: SN6PR04MB3839:
-x-microsoft-antispam-prvs: <SN6PR04MB38393317710B3147EC98C2E2FCD20@SN6PR04MB3839.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 03818C953D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(66446008)(64756008)(81156014)(8936002)(55016002)(316002)(7696005)(110136005)(6506007)(26005)(4744005)(54906003)(8676002)(52536014)(2906002)(66556008)(71200400001)(186003)(4326008)(5660300002)(86362001)(478600001)(9686003)(66946007)(76116006)(33656002)(66476007)(7416002);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YqvxcmwJ0X67fQfqAK52bKSyRcPmOYAt56XzqTWcfS8Xv3TJKAZA0PAwaMLQkrCTykHvtOEIIy7lyqVQSJKXTYBzO0ca92d5Thcwy2MzmWshAWZZRfq7NZwJRbDdnqQOPhA77Dd1ffRROpOD5WTgGDC+koCN93id9xqvCGbS4QmRSzGkAIyB63Uf590PA74La0Noat6ROuMRAz4bsnCLx7uHBYyWXqtP94gmLDUzvd6EqG6T04FbV1xcZjPmy1M5Piuw8psvdPcT84TJZRfEu5cDwpkoMvY5cYPEUNj/zzirZONAgrpjJ//kF5sRTmcWbblDACO1nyoCEsGIVjApbd7Vu6cnmH6MHA5wGqwHapGTrjGnvFyS4F6Xa7nazFh0sugDnNTteYIVgJ4wc2A7pr/rwuVx7qxZkAzN43iYNWOJqQKa3gFmDe83aBpbNaJd
-x-ms-exchange-antispam-messagedata: vocKJWG7JMIcLmlSE+shZlqIvxxNhTPXM/xBqdUOMd8xERfE36UOMbC0nt7q4tViybIg6R00QzlkD1XWK+G6vXxLdyXuwrK/YRFzzF54hSxac+97fwqRWBj8ksU1+k8bvNc50ywJQy+0mQCqWZHrHw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=WRRFLMP1BZKaT01S2NP0T7yJMR9Vv9XgNrqlamOXvlk=;
+        b=h2u4L54UOBk5bt6yv8RXgBBHJazXRBpDVcwKdGjQh8rJdtnaRazSV/jGVNL229gKug
+         KO4ju7yXSfaW2KATsjEEa2gdlizp+eNdhoRtNbGfw/i16Vie+HMSKHFQhAPxa0WVwMz3
+         dTtWlPOFZBnGd6uMIQ6/7SRFss6P5y7pOQPzc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=WRRFLMP1BZKaT01S2NP0T7yJMR9Vv9XgNrqlamOXvlk=;
+        b=ZA0tvUAFk24vBTlf+jHWKlgmYvMrJFZU9WFzeRUfNNwZYdooD5bKqIDZXRsc3adRAO
+         FSG4aZMQVItiSCEdHLbCEats4Ccja4x6YjlTrOSd5pjMcKrCd0iHZIqUNK2Jl8rylSha
+         D8hLJo12BPod3d6R3SqoL9HyW1gisNS5KSFQfBqq/Gy9pLtt7HMnXnuf3hNJqfAJntbF
+         qsHRQNazmLXAI/hprP+sxLbCqWNs29vsm7a9S+yD9/umbGI3FiEPPBJkrEb1oWarbePY
+         E/vUiBGoWq+i9zz4DuzEqYSk//7VHFgbkzvSasBPsGtGhN4Fm9kSAobsUTUosT3NK69e
+         wlAA==
+X-Gm-Message-State: AGi0PuZ7kcfRZF1VToPzhWo9RRpSvocB3lpEOmUJVayMuweAfNoIzo6u
+        Zeod7zS1PlnVs3ZK4s8DUV8QPg==
+X-Google-Smtp-Source: APiQypIlibtTzWoHaOZSF9q8way5d7W2yJSRS6zaspDWYgGUnJV4TbKw4SlxZxjRNZrPc7P2cqeBag==
+X-Received: by 2002:a17:90a:b10f:: with SMTP id z15mr9879288pjq.188.1587551008343;
+        Wed, 22 Apr 2020 03:23:28 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x12sm4998977pfq.209.2020.04.22.03.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 03:23:27 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dee2446c-0967-4f6a-9c4c-08d7e6a8e0b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 10:35:29.3847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +v7hzeZIhnqfljXX7Y1Qn2llxJ8A5RMNAquaPX7ue/amETBjzwJRF3ajc3hWlBTv/e1FsEq82qvcZbnYhgBlCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3839
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
+References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
+Subject: Re: [PATCH v2 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        jernej.skrabec@siol.net, bjorn.andersson@linaro.org,
+        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>,
+        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
+        airlied@linux.ie, bgolaszewski@baylibre.com, daniel@ffwll.ch,
+        linus.walleij@linaro.org, narmstrong@baylibre.com,
+        robh+dt@kernel.org, spanda@codeaurora.org
+Date:   Wed, 22 Apr 2020 03:23:26 -0700
+Message-ID: <158755100643.159702.17904334834962681759@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +       /* Enable Write Booster if we have scaled up else disable it */
-> +       if (!ret) {
-> +               up_write(&hba->clk_scaling_lock);
-> +               ufshcd_wb_ctrl(hba, scale_up);
-> +               down_write(&hba->clk_scaling_lock);
+Quoting Douglas Anderson (2020-04-20 22:06:17)
+> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
+> be used as GPIOs in a system.  Each pin can be configured as input,
+> output, or a special function for the bridge chip.  These are:
+> - GPIO1: SUSPEND Input
+> - GPIO2: DSIA VSYNC
+> - GPIO3: DSIA HSYNC or VSYNC
+> - GPIO4: PWM
+>=20
+> Let's expose these pins as GPIOs.  A few notes:
+> - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
+> - These pins can't be configured for IRQ.
+> - There are no programmable pulls or other fancy features.
+> - Keeping the bridge chip powered might be expensive.  The driver is
+>   setup such that if all used GPIOs are only inputs we'll power the
+>   bridge chip on just long enough to read the GPIO and then power it
+>   off again.  Setting a GPIO as output will keep the bridge powered.
+> - If someone releases a GPIO we'll implicitly switch it to an input so
+>   we no longer need to keep the bridge powered for it.
+>=20
+> Becaue of all of the above limitations we just need to implement a
+
+Because
+
+> bare-bones GPIO driver.  The device tree bindings already account for
+> this device being a GPIO controller so we only need the driver changes
+> for it.
+>=20
+> NOTE: Despite the fact that these pins are nominally muxable I don't
+> believe it makes sense to expose them through the pinctrl interface as
+> well as the GPIO interface.  The special functions are things that the
+> bridge chip driver itself would care about and it can just configure
+> the pins as needed.
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>=20
+
+Cool patch.
+
+> Changes in v2:
+> - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
+>=20
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 165 ++++++++++++++++++++++++++
+>  1 file changed, 165 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
+ge/ti-sn65dsi86.c
+> index 6ad688b320ae..d04c2b83d699 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -874,6 +886,153 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn=
+_bridge *pdata)
+>         return 0;
+>  }
+> =20
+> +static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
+> +{
+> +       return container_of(chip, struct ti_sn_bridge, gchip);
+> +}
+> +
+> +static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
+> +                                          unsigned int offset)
+> +{
+> +       struct ti_sn_bridge *pdata =3D gchip_to_pdata(chip);
+> +
+> +       return (atomic_read(&pdata->gchip_output) & BIT(offset)) ?
+
+Any reason this isn't a bitmap?
+
+> +               GPIOF_DIR_OUT : GPIOF_DIR_IN;
+
+And why can't we read the hardware to figure out if it's in output or
+input mode?
+
+> +}
+> +
+[...]
+> +static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
+> +                                             unsigned int offset, int va=
+l)
+> +{
+> +       struct ti_sn_bridge *pdata =3D gchip_to_pdata(chip);
+> +       int shift =3D offset * 2;
+> +       int old_gchip_output;
+> +       int ret;
+> +
+> +       old_gchip_output =3D atomic_fetch_or(BIT(offset), &pdata->gchip_o=
+utput);
+
+I presume gpiolib is already preventing a gpio from being modified twice
+at the same time. So is this atomic stuff really necessary?
+
+> +       if (old_gchip_output & BIT(offset))
+> +               return 0;
+> +
+> +       pm_runtime_get_sync(pdata->dev);
+> +
+> +       /* Set value first to avoid glitching */
+> +       ti_sn_bridge_gpio_set(chip, offset, val);
+> +
+> +       /* Set direction */
+> +       ret =3D regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
+> +                                0x3 << shift, SN_GPIO_MUX_OUTPUT << shif=
+t);
+> +       if (ret) {
+> +               atomic_andnot(BIT(offset), &pdata->gchip_output);
+> +               pm_runtime_put(pdata->dev);
 > +       }
-Maybe add "goto out_unprepare" if ufshcd_scale_gear() in the clause above,
-Instead of checking !ret, to follow the function flow.
+> +
+> +       return ret;
+> +}
+> +
+> +static void ti_sn_bridge_gpio_free(struct gpio_chip *chip, unsigned int =
+offset)
+> +{
+> +       /* We won't keep pm_runtime if we're input, so switch there on fr=
+ee */
+> +       ti_sn_bridge_gpio_direction_input(chip, offset);
+> +}
+> +
+> +static const char * const ti_sn_bridge_gpio_names[] =3D {
+> +       "GPIO1", "GPIO2", "GPIO3", "GPIO4"
+> +};
+> +
+> +static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
+> +{
+[...]
+> +       pdata->gchip.names =3D ti_sn_bridge_gpio_names;
+> +       pdata->gchip.ngpio =3D ARRAY_SIZE(ti_sn_bridge_gpio_names);
+> +       ret =3D devm_gpiochip_add_data(pdata->dev, &pdata->gchip, pdata);
+> +       if (ret) {
+> +               dev_err(pdata->dev, "can't add gpio chip\n");
+> +               return ret;
+> +       }
+> +
+> +       return 0;
 
-Thanks,
-Avri
+return ret?
 
+> +}
+> +
+>  static int ti_sn_bridge_probe(struct i2c_client *client,
+>                               const struct i2c_device_id *id)
+>  {
