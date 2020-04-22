@@ -2,115 +2,131 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4240EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9596C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16FD12071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58842071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:37:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rNRNe/m5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgDVAgF (ORCPT
+        id S1726414AbgDVAhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:36:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:35556 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgDVAgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:36:04 -0400
-IronPort-SDR: 6BH7mnelbJkIdiacr+fsCTfDW4L3aWqFsN+8I3ogpgmjpbZY+C1uH2I91OEvwr86pYL08yjdOb
- LtYPNs0OF0Pg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 17:36:04 -0700
-IronPort-SDR: VK+prjcz24F4zDfuPl/MNTubRPj3dw6PxJaaHisBS9GDnCGNh5MVUwe8moasHTK/IVvQaFv3aM
- rc32sl7Glnzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
-   d="scan'208";a="456303528"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Apr 2020 17:36:02 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <tim.c.chen@linux.intel.com>
-Subject: Re: [Patch v2 1/3] mm/swapfile.c: found_free could be represented by (tmp < max)
-References: <20200421213824.8099-1-richard.weiyang@gmail.com>
-Date:   Wed, 22 Apr 2020 08:36:01 +0800
-In-Reply-To: <20200421213824.8099-1-richard.weiyang@gmail.com> (Wei Yang's
-        message of "Tue, 21 Apr 2020 21:38:22 +0000")
-Message-ID: <87r1wgqrv2.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 21 Apr 2020 20:37:48 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:13972 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgDVAhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:37:45 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200422003742epoutp0475dae599bf87ce99d23f87472c56098e~H-UQGWOS21811318113epoutp04H
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:37:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200422003742epoutp0475dae599bf87ce99d23f87472c56098e~H-UQGWOS21811318113epoutp04H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587515862;
+        bh=JUtWdBk4gEp4wIEtsm8HRAKasmYjOYdmUVp75RUzDvs=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=rNRNe/m5Sg/l6Ykw3VmMreLHbqkLP9zL0BPIdQ++Rofk2X2QPd2jTPGauyIqFj9pj
+         SXNNNJeDV6j92maGSR1VDZ6jS24SemXBSCcXQ1tdd3aV9XOHuVm4wfvhPT8dkyhFy1
+         o1SzOKDBdO0oNoaMJ85fPz6Fpm6Q4o26/aMPgMqk=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200422003741epcas1p3159e7cc2d563c0dbcf78f81244ee5e14~H-UPOQYNn1897218972epcas1p3a;
+        Wed, 22 Apr 2020 00:37:41 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 496M376s5lzMqYkn; Wed, 22 Apr
+        2020 00:37:39 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6D.C7.04744.3D19F9E5; Wed, 22 Apr 2020 09:37:39 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200422003739epcas1p29eac770a848e04a6721a9af12d29269b~H-UNdqANN2453324533epcas1p2v;
+        Wed, 22 Apr 2020 00:37:39 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200422003739epsmtrp2d1b08f3d923e26ffde3da3f09521c285~H-UNc0e9S1288012880epsmtrp2-;
+        Wed, 22 Apr 2020 00:37:39 +0000 (GMT)
+X-AuditID: b6c32a38-26bff70000001288-da-5e9f91d343c8
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A9.4A.04158.3D19F9E5; Wed, 22 Apr 2020 09:37:39 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200422003739epsmtip1f4cc1988430140dba15a645018a1db74~H-UNQ5r072988729887epsmtip1c;
+        Wed, 22 Apr 2020 00:37:39 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>, <kohada88@hotmail.com>
+Cc:     <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200421015432.14563-1-kohada.t2@gmail.com>
+Subject: RE: [PATCH-v4] exfat: replace 'time_ms' with 'time_cs'
+Date:   Wed, 22 Apr 2020 09:37:38 +0900
+Message-ID: <000001d6183e$39ea6570$adbf3050$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKV2PrI7Vjbk6C65/gyW3xtSSMLUwInVY0LpvOJoFA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTNY6bTQqyOteINJlIn8QMM0FKKA4JLEFMjiUQTPoyhTugIaLfM
+        FEXUaNRUqIhFcKugxChBjAIVhRIQRQyBqEgx7poo4r4g7lHRaadG/s6979xz7nnvyTBFPREh
+        y7fYWc7CmCgiDL9wJUodM1h+LFt99nIS/b36AU7f77tJ0O0dvTg92FZF0IN/RnG69nMFTjeP
+        dUsWSPWfq3qkekfFmFTvdT+S6odKrxH6suZ6pP/kmZFJrDSl5LGMkeVUrCXHasy35KZSS1cY
+        0gy6RLUmRpNEz6FUFsbMplKLMjJjFuebhF0o1XrGVCC0Mhmep+LmpXDWAjuryrPy9lSKtRlN
+        No3aFsszZr7AkhubYzUna9TqeJ3AXG3Ke3xqe4itFCvcff4gvg1dDXGiUBmQCXCvyUc4UZhM
+        QbYi+FU2IBGLUQQnh2+FiMVXBAPXWyT/Rhp8j4IjHQi6dvzBxeIVgmfnuqV+FkHGwNivTsKP
+        leRi2OMZQX4SRvYjcLnGMP9BKJkEo5eeBmSnkPNhT58X92OcnAUPanYHhuUC50OlTyriydB7
+        +FmAg5GR0PKuChNXUsGP4VpBRyaYJYOzqUikKOFIiQPz+wL5k4BOV1sw9SL4Ud4XjDMFXvc0
+        S0UcAZ/edxB+HSA3wcfOoHwxgpffUkWshXsNjQErjIyChrY4sT0TvD+rkWg7Ed5/KZWIKnIo
+        dihEyiwo810JLjAdnLtGpC5Eucflco/L5R4XwP3frAbh9SictfHmXJbX2BLGP7YHBf5pNN2K
+        2m9kdCFShqgJ8rv9R7MVEmY9v9HchUCGUUp54xOhJTcyG4tYzmrgCkws34V0wrWXYxFTc6zC
+        r7fYDRpdvFarpRMS5yTqtNQ0+f47pmwFmcvY2XUsa2O5f3MhstCIbShtX9ETXUlDeuXtuPSF
+        OjNdnFhzmsqsW/1SO3Qo7UzY3BO9U194U5aePuQsXa6eNJCu2JD1XM+9uV2xuUnp+F071zn0
+        0NEd+WbNmZmxd8hVaz9cXLYlGrYWVvYcOL6hLvKAzxNWsmTE0Ph2dnht/F75zqzqC1kOV4vy
+        PJdh9aiTK6MonM9jNNEYxzN/AVw9+t69AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsWy7bCSnO7lifPjDDrviln8mHubxeLWqQts
+        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7rFz1l12j8c9Z9g8+ras
+        YvT4vEkugC2KyyYlNSezLLVI3y6BK+Peyiamgh7miu6t01kaGI8ydTFyckgImEisv3SXrYuR
+        i0NIYDejxPbuJhaIhLTEsRNnmLsYOYBsYYnDh4shap4zSkw9uZgdpIZNQFfi35/9bCC2iICH
+        RNeNTkaQImaBi4wS/8+tg5raxShxcPknZpAqTgFLiU8HHrGC2MIC9hK9p3aCbWMRUJW4vaAb
+        bBIvUM37KZfYIWxBiZMzn7CAXMEsoCfRtpERJMwsIC+x/e0cZohDFSR+Pl3GClIiImAl0bWx
+        CqJERGJ2ZxvzBEbhWUgGzUIYNAvJoFlIOhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dL
+        zs/dxAiOKi2tHYwnTsQfYhTgYFTi4b1xfl6cEGtiWXFl7iFGCQ5mJRHeDQ+BQrwpiZVVqUX5
+        8UWlOanFhxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZODilGhjnv/+58ySf2Vpt4X3in4of
+        LrCpSZtfVMseXe526Kji8sY7auuX2OjInJ1/bvlO4ZeuWjz/Un7d3cf4Mf1iQVZw4X+dznbF
+        WT9cvZcvKjPmeWP7wumB2e2TCZv2xL69GRi0Zq6tnN4v7Z/f/d3OFNRu/HksM2DK5evcHxZc
+        f6t/zHz1zV31HWr7lFiKMxINtZiLihMBxklXwqYCAAA=
+X-CMS-MailID: 20200422003739epcas1p29eac770a848e04a6721a9af12d29269b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200421015505epcas1p36d86cad3b1214442eac42685694f26da
+References: <CGME20200421015505epcas1p36d86cad3b1214442eac42685694f26da@epcas1p3.samsung.com>
+        <20200421015432.14563-1-kohada.t2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wei Yang <richard.weiyang@gmail.com> writes:
+> Replace "time_ms"  with "time_cs" in the file directory entry structure
+> and related functions.
+> 
+> The unit of create_time_ms/modify_time_ms in File Directory Entry are not
+> 'milli-second', but 'centi-second'.
+> The exfat specification uses the term '10ms', but instead use 'cs' as in
+> "msdos_fs.h".
+> 
+> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+Applied.
+Thanks!
 
-> This is not necessary to use the variable found_free to record the
-> status. Just check tmp and max is enough.
->
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-
-All 3 patches looks good to me.  Thanks!
-
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-
-Best Regards,
-Huang, Ying
-
-> ---
->  mm/swapfile.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 469ab417ed43..d203cdc6750a 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -601,7 +601,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
->  {
->  	struct percpu_cluster *cluster;
->  	struct swap_cluster_info *ci;
-> -	bool found_free;
->  	unsigned long tmp, max;
->  
->  new_cluster:
-> @@ -623,8 +622,6 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
->  			return false;
->  	}
->  
-> -	found_free = false;
-> -
->  	/*
->  	 * Other CPUs can use our cluster if they can't find a free cluster,
->  	 * check if there is still free entry in the cluster
-> @@ -638,21 +635,19 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
->  	}
->  	ci = lock_cluster(si, tmp);
->  	while (tmp < max) {
-> -		if (!si->swap_map[tmp]) {
-> -			found_free = true;
-> +		if (!si->swap_map[tmp])
->  			break;
-> -		}
->  		tmp++;
->  	}
->  	unlock_cluster(ci);
-> -	if (!found_free) {
-> +	if (tmp >= max) {
->  		cluster_set_null(&cluster->index);
->  		goto new_cluster;
->  	}
->  	cluster->next = tmp + 1;
->  	*offset = tmp;
->  	*scan_base = tmp;
-> -	return found_free;
-> +	return tmp < max;
->  }
->  
->  static void __del_from_avail_list(struct swap_info_struct *p)
