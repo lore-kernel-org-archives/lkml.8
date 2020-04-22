@@ -2,83 +2,91 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9874BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E26C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4B020706
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608322071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgDVTxm (ORCPT
+        id S1726545AbgDVTyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39614 "EHLO
+        Wed, 22 Apr 2020 15:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725779AbgDVTxm (ORCPT
+        by vger.kernel.org with ESMTP id S1725779AbgDVTyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:53:42 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D9CC03C1A9;
-        Wed, 22 Apr 2020 12:53:42 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EE047120ED563;
-        Wed, 22 Apr 2020 12:53:40 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 12:53:40 -0700 (PDT)
-Message-Id: <20200422.125340.55926071085123839.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
-        linux-kernel@vger.kernel.org, kuba@kernel.org
-Subject: Re: [PATCH net v2 0/5] net: dsa: b53: Various ARL fixes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200421032655.5537-1-f.fainelli@gmail.com>
-References: <20200421032655.5537-1-f.fainelli@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 22 Apr 2020 15:54:22 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0055BC03C1A9;
+        Wed, 22 Apr 2020 12:54:21 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jRLRm-0007aD-O3; Wed, 22 Apr 2020 21:54:14 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 355771C02FC;
+        Wed, 22 Apr 2020 21:54:14 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 19:54:13 -0000
+From:   "tip-bot2 for Harry Pan" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/cstate: Add Jasper Lake CPU support
+Cc:     Harry Pan <harry.pan@intel.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200402190658.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid>
+References: <20200402190658.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid>
+MIME-Version: 1.0
+Message-ID: <158758525378.28353.13945235876360246667.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Apr 2020 12:53:41 -0700 (PDT)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Mon, 20 Apr 2020 20:26:50 -0700
+The following commit has been merged into the perf/urgent branch of tip:
 
-> Hi David, Andrew, Vivien, Jakub,
-> 
-> This patch series fixes a number of short comings in the existing b53
-> driver ARL management logic in particular:
-> 
-> - we were not looking up the {MAC,VID} tuples against their VID, despite
->   having VLANs enabled
-> 
-> - the MDB entries (multicast) would lose their validity as soon as a
->   single port in the vector would leave the entry
-> 
-> - the ARL was currently under utilized because we would always place new
->   entries in bin index #1, instead of using all possible bins available,
->   thus reducing the ARL effective size by 50% or 75% depending on the
->   switch generation
-> 
-> - it was possible to overwrite the ARL entries because no proper space
->   verification was done
-> 
-> This patch series addresses all of these issues.
-> 
-> Changes in v2:
-> - added a new patch to correctly flip invidual VLAN learning vs. shared
->   VLAN learning depending on the global VLAN state
-> 
-> - added Andrew's R-b tags for patches which did not change
-> 
-> - corrected some verbosity and minor issues in patch #4 to match caller
->   expectations, also avoid a variable length DECLARE_BITMAP() call
+Commit-ID:     5b16ef2e43ffa1be596652d992235b1cbb244935
+Gitweb:        https://git.kernel.org/tip/5b16ef2e43ffa1be596652d992235b1cbb244935
+Author:        Harry Pan <harry.pan@intel.com>
+AuthorDate:    Thu, 02 Apr 2020 19:07:09 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 22 Apr 2020 21:43:12 +02:00
 
-Series applied and queued up for -stable, thanks.
+perf/x86/cstate: Add Jasper Lake CPU support
+
+The Jasper Lake processor is Tremont microarchitecture, reuse the
+glm_cstates table of Goldmont and Goldmont Plus to enable the C-states
+residency profiling.
+
+Signed-off-by: Harry Pan <harry.pan@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200402190658.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid
+---
+ arch/x86/events/intel/cstate.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index e4aa20c..442e1ed 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -643,6 +643,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&glm_cstates),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&glm_cstates),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&glm_cstates),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&glm_cstates),
+ 
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_cstates),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&icl_cstates),
