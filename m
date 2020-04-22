@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984E6C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77188C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786BC20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C5221473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550410;
-	bh=RvU73F7tLB9ZFjTmEy3uFpOJCsNs03yV0YlJ8KnNps0=;
+	s=default; t=1587550418;
+	bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pw4Qu0s1uJLJJT6d+iEM3p11psLwdCVp8LkvIPfP2NXO+iYtwOtKpNMD7h/MjZLX2
-	 DsulthP2CM46dEJZyYSK8sPiM9ZMY+mLocT5G0ug5bM7ZnIPfVsyqTCSqTLJ8ABpVj
-	 CV/EaRDdT2ByzYILI9wgKU/SmU2WaEbCfoFFLzBA=
+	b=dtEg9I5xx/M4Im0VtxvyCTab4ixt+PhJRTlbNfC0I/VAsDPAo7ksSTWdzu9EhzS7U
+	 vPraBPUo80Nk3v88KxkVKsk9fEZVJ37PmMxVm0ysgnhn3TTNY+aPTmcwLuGX9oe0ly
+	 6uljRjy4gqVOHgZMV3ISVBPm6kzWdAXV+xgyE2o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgDVKN3 (ORCPT
+        id S1726110AbgDVKNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47246 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgDVKNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:23 -0400
+        id S1728407AbgDVKN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F061320776;
-        Wed, 22 Apr 2020 10:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70E2620575;
+        Wed, 22 Apr 2020 10:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550403;
-        bh=RvU73F7tLB9ZFjTmEy3uFpOJCsNs03yV0YlJ8KnNps0=;
+        s=default; t=1587550405;
+        bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/+s1WED1leKjVVLq+fiKNqF5+tj4SWAHMSdRs7qEyaxkigpRQOT1/AFKkKNv8dKU
-         1+7jxkrXXiFPgHbgs3jgPyBiJIjhfO8PEkEovYPOyCM4SmQPTWutpTEvstNsnjVazb
-         YOn6ON2pxknXC8aPQQ3LDtiWx3drl2Y7dsFCSjVQ=
+        b=ThVXLNxHrx9WIuxySWQY1W4srmY0RMDG35s4YSLN04gdYtAO/RPPIn9mnrh3iaEw2
+         yHLXI5Km18sznrXExjIEGbtgBPbnD2R1kN9Wsqh/4slLEX+3o4ppUdBVFafwuKyE+w
+         8d/zMwXnT4lC2XYHva3+Atle0wl80SGw47T1Y+8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/199] misc: echo: Remove unnecessary parentheses and simplify check for zero
-Date:   Wed, 22 Apr 2020 11:57:10 +0200
-Message-Id: <20200422095108.228345182@linuxfoundation.org>
+Subject: [PATCH 4.14 105/199] mfd: dln2: Fix sanity checking for endpoints
+Date:   Wed, 22 Apr 2020 11:57:11 +0200
+Message-Id: <20200422095108.300701436@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,53 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 85dc2c65e6c975baaf36ea30f2ccc0a36a8c8add ]
+[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
 
-Clang warns when multiple pairs of parentheses are used for a single
-conditional statement.
+While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+tries to harden the sanity checks it made at the same time a regression,
+i.e.  mixed in and out endpoints. Obviously it should have been not tested on
+real hardware at that time, but unluckily it didn't happen.
 
-drivers/misc/echo/echo.c:384:27: warning: equality comparison with
-extraneous parentheses [-Wparentheses-equality]
-        if ((ec->nonupdate_dwell == 0)) {
-             ~~~~~~~~~~~~~~~~~~~~^~~~
-drivers/misc/echo/echo.c:384:27: note: remove extraneous parentheses
-around the comparison to silence this warning
-        if ((ec->nonupdate_dwell == 0)) {
-            ~                    ^   ~
-drivers/misc/echo/echo.c:384:27: note: use '=' to turn this equality
-comparison into an assignment
-        if ((ec->nonupdate_dwell == 0)) {
-                                 ^~
-                                 =
-1 warning generated.
+So, fix above mentioned typo and make device being enumerated again.
 
-Remove them and while we're at it, simplify the zero check as '!var' is
-used more than 'var == 0'.
+While here, introduce an enumerator for magic values to prevent similar issue
+to happen in the future.
 
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/echo/echo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/dln2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/echo/echo.c b/drivers/misc/echo/echo.c
-index 9597e9523cac4..fff13176f9b8b 100644
---- a/drivers/misc/echo/echo.c
-+++ b/drivers/misc/echo/echo.c
-@@ -454,7 +454,7 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
- 	 */
- 	ec->factor = 0;
- 	ec->shift = 0;
--	if ((ec->nonupdate_dwell == 0)) {
-+	if (!ec->nonupdate_dwell) {
- 		int p, logp, shift;
+diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
+index 95d0f2df0ad42..672831d5ee32e 100644
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -93,6 +93,11 @@ struct dln2_mod_rx_slots {
+ 	spinlock_t lock;
+ };
  
- 		/* Determine:
++enum dln2_endpoint {
++	DLN2_EP_OUT	= 0,
++	DLN2_EP_IN	= 1,
++};
++
+ struct dln2_dev {
+ 	struct usb_device *usb_dev;
+ 	struct usb_interface *interface;
+@@ -740,10 +745,10 @@ static int dln2_probe(struct usb_interface *interface,
+ 	    hostif->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
+ 
+-	epin = &hostif->endpoint[0].desc;
+-	epout = &hostif->endpoint[1].desc;
++	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
+ 	if (!usb_endpoint_is_bulk_out(epout))
+ 		return -ENODEV;
++	epin = &hostif->endpoint[DLN2_EP_IN].desc;
+ 	if (!usb_endpoint_is_bulk_in(epin))
+ 		return -ENODEV;
+ 
 -- 
 2.20.1
 
