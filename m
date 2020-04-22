@@ -2,136 +2,209 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043F2C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585F9C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D66E2206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="grApRieN"
+	by mail.kernel.org (Postfix) with ESMTP id 40B7E20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgDVJYR (ORCPT
+        id S1726392AbgDVJZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:24:17 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20545 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726224AbgDVJYQ (ORCPT
+        Wed, 22 Apr 2020 05:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726046AbgDVJZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587547454;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DMhA18q5o54p19fFpaLKF4OTjlHgtCkpRiehNkdmtk0=;
-        b=grApRieNK+OmW+Ph9h2tR9zU0uKExcWmmISzc/RrgOUdVjDeysh8DaWsu+FczjWWILTAPj
-        WIzMeEmSv0ZlCUw1vFqJ3GxVNUuoG4yjZ7fkrmNMYqjutoOIvIUTxPBxLB0L7SPmoT9jIe
-        BuntuwErSvNNbVZzI/ZjHmqtDlZ+J5g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-bYl2gzczORKSGHhwjavuQw-1; Wed, 22 Apr 2020 05:24:10 -0400
-X-MC-Unique: bYl2gzczORKSGHhwjavuQw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1503B8017FC;
-        Wed, 22 Apr 2020 09:24:08 +0000 (UTC)
-Received: from T590 (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B2FFB3A8F;
-        Wed, 22 Apr 2020 09:23:56 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 17:23:51 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "hare@suse.de" <hare@suse.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
-Message-ID: <20200422092351.GF299948@T590>
-References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
- <20200422012814.GB299948@T590>
- <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
- <20200422020134.GC299948@T590>
- <20200422030807.GK17661@paulmck-ThinkPad-P72>
- <20200422041629.GE299948@T590>
- <HK0P153MB0273CF2901E193C03C934A47BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+        Wed, 22 Apr 2020 05:25:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2ACC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 02:25:07 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jRBcr-0007Rj-37; Wed, 22 Apr 2020 11:25:01 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jRBco-0006LC-Qu; Wed, 22 Apr 2020 11:24:58 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: [PATCH net-next v5 3/4] net: mdio: of: export part of of_mdiobus_register_phy()
+Date:   Wed, 22 Apr 2020 11:24:55 +0200
+Message-Id: <20200422092456.24281-4-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200422092456.24281-1-o.rempel@pengutronix.de>
+References: <20200422092456.24281-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HK0P153MB0273CF2901E193C03C934A47BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:58:14AM +0000, Dexuan Cui wrote:
-> > From: Ming Lei <ming.lei@redhat.com>
-> > Sent: Tuesday, April 21, 2020 9:16 PM
-> > ...
-> > > > > When we're in storvsc_suspend(), all the userspace processes have been
-> > > > > frozen and all the file systems have been flushed, and there should not
-> > > > > be too much I/O from the kernel space, so IMO scsi_host_block() should
-> > be
-> > > > > pretty fast here.
-> > > >
-> > > > I guess it depends on RCU's implementation, so CC RCU guys.
-> > > >
-> > > > Hello Paul & Josh,
-> > > >
-> > > > Could you clarify that if sysnchronize_rcu becomes quickly during
-> > > > system suspend?
-> > >
-> > > Once you have all but one CPU offlined, it becomes extremely fast, as
-> > > in roughly a no-op (which is an idea of Josh's from back in the day).
-> > > But if there is more than one CPU online, then synchronize_rcu() still
-> > > takes on the order of several to several tens of jiffies.
-> > >
-> > > So, yes, in some portions of system suspend, synchronize_rcu() becomes
-> > > very fast indeed.
-> > 
-> > Hi Paul,
-> > 
-> > Thanks for your clarification.
-> > 
-> > In system suspend path, device is suspended before
-> > suspend_disable_secondary_cpus(),
-> > so I guess synchronize_rcu() is not quick enough even though user space
-> > processes and some kernel threads are frozen.
-> > 
-> > Thanks,
-> > Ming
-> 
-> storvsc_suspend() -> scsi_host_block() is only called in the hibernation
-> path, which is not a hot path at all, so IMHO we don't really care if it
-> takes 10ms or 100ms or even 1s. :-)  BTW, in my test, typically the
+This function will be needed in tja11xx driver for secondary PHY
+support.
 
-Are you sure the 'we' can cover all users?
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/of/of_mdio.c    | 73 ++++++++++++++++++++++++-----------------
+ include/linux/of_mdio.h | 11 ++++++-
+ 2 files changed, 52 insertions(+), 32 deletions(-)
 
-> scsi_host_block() here takes about 3ms in my 40-vCPU VM.
-
-If more LUNs are added, the time should be increased proportionallly,
-that is why I think scsi_host_block() is bad.
-
-
-Thanks,
-Ming
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 9f982c0627a0d..a04afe79529ca 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -60,39 +60,15 @@ static struct mii_timestamper *of_find_mii_timestamper(struct device_node *node)
+ 	return register_mii_timestamper(arg.np, arg.args[0]);
+ }
+ 
+-static int of_mdiobus_register_phy(struct mii_bus *mdio,
+-				    struct device_node *child, u32 addr)
++int of_mdiobus_phy_device_register(struct mii_bus *mdio, struct phy_device *phy,
++			      struct device_node *child, u32 addr)
+ {
+-	struct mii_timestamper *mii_ts;
+-	struct phy_device *phy;
+-	bool is_c45;
+ 	int rc;
+-	u32 phy_id;
+-
+-	mii_ts = of_find_mii_timestamper(child);
+-	if (IS_ERR(mii_ts))
+-		return PTR_ERR(mii_ts);
+-
+-	is_c45 = of_device_is_compatible(child,
+-					 "ethernet-phy-ieee802.3-c45");
+-
+-	if (!is_c45 && !of_get_phy_id(child, &phy_id))
+-		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
+-	else
+-		phy = get_phy_device(mdio, addr, is_c45);
+-	if (IS_ERR(phy)) {
+-		if (mii_ts)
+-			unregister_mii_timestamper(mii_ts);
+-		return PTR_ERR(phy);
+-	}
+ 
+ 	rc = of_irq_get(child, 0);
+-	if (rc == -EPROBE_DEFER) {
+-		if (mii_ts)
+-			unregister_mii_timestamper(mii_ts);
+-		phy_device_free(phy);
++	if (rc == -EPROBE_DEFER)
+ 		return rc;
+-	}
++
+ 	if (rc > 0) {
+ 		phy->irq = rc;
+ 		mdio->irq[addr] = rc;
+@@ -117,11 +93,48 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+ 	/* All data is now stored in the phy struct;
+ 	 * register it */
+ 	rc = phy_device_register(phy);
++	if (rc) {
++		of_node_put(child);
++		return rc;
++	}
++
++	dev_dbg(&mdio->dev, "registered phy %pOFn at address %i\n",
++		child, addr);
++	return 0;
++}
++EXPORT_SYMBOL(of_mdiobus_phy_device_register);
++
++static int of_mdiobus_register_phy(struct mii_bus *mdio,
++				    struct device_node *child, u32 addr)
++{
++	struct mii_timestamper *mii_ts;
++	struct phy_device *phy;
++	bool is_c45;
++	int rc;
++	u32 phy_id;
++
++	mii_ts = of_find_mii_timestamper(child);
++	if (IS_ERR(mii_ts))
++		return PTR_ERR(mii_ts);
++
++	is_c45 = of_device_is_compatible(child,
++					 "ethernet-phy-ieee802.3-c45");
++
++	if (!is_c45 && !of_get_phy_id(child, &phy_id))
++		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
++	else
++		phy = get_phy_device(mdio, addr, is_c45);
++	if (IS_ERR(phy)) {
++		if (mii_ts)
++			unregister_mii_timestamper(mii_ts);
++		return PTR_ERR(phy);
++	}
++
++	rc = of_mdiobus_phy_device_register(mdio, phy, child, addr);
+ 	if (rc) {
+ 		if (mii_ts)
+ 			unregister_mii_timestamper(mii_ts);
+ 		phy_device_free(phy);
+-		of_node_put(child);
+ 		return rc;
+ 	}
+ 
+@@ -132,8 +145,6 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+ 	if (mii_ts)
+ 		phy->mii_ts = mii_ts;
+ 
+-	dev_dbg(&mdio->dev, "registered phy %pOFn at address %i\n",
+-		child, addr);
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index 491a2b7e77c1e..0f61a4ac6bcfb 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -30,7 +30,9 @@ extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+ extern int of_phy_register_fixed_link(struct device_node *np);
+ extern void of_phy_deregister_fixed_link(struct device_node *np);
+ extern bool of_phy_is_fixed_link(struct device_node *np);
+-
++extern int of_mdiobus_phy_device_register(struct mii_bus *mdio,
++				     struct phy_device *phy,
++				     struct device_node *child, u32 addr);
+ 
+ static inline int of_mdio_parse_addr(struct device *dev,
+ 				     const struct device_node *np)
+@@ -118,6 +120,13 @@ static inline bool of_phy_is_fixed_link(struct device_node *np)
+ {
+ 	return false;
+ }
++
++static inline int of_mdiobus_phy_device_register(struct mii_bus *mdio,
++					    struct phy_device *phy,
++					    struct device_node *child, u32 addr)
++{
++	return -ENOSYS;
++}
+ #endif
+ 
+ 
+-- 
+2.26.1
 
