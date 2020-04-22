@@ -2,185 +2,191 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219A9C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C4EC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4DEB2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B15D20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="u8k5H/L1"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hBw8mqtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgDVMi2 (ORCPT
+        id S1726623AbgDVMjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:38:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56682 "EHLO
+        Wed, 22 Apr 2020 08:39:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbgDVMi1 (ORCPT
+        by vger.kernel.org with ESMTP id S1725839AbgDVMjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:38:27 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3EDFC03C1A8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s3e/ImNCbheG0gCPqmXlxXQLvDBT5TzvXq/PHODmRsE=; b=u8k5H/L1ZmB7X7Z0TwRQmmncU
-        gjOVYAybqT27s1vpVgKPKzqKI+s1hhA1ciP3GhCbDFatI/J04eb1M96uR9kB6Lj6y5p4am+9WzZWR
-        s+U/3KmKz/UUH6jR5/+9BTLW1fe3GMRaGSSK1Cu72DTlPfq10gfaIrEfoL+i+jO1mMcqEgsr2S6QV
-        RJchU/knLRtBtz85KrlUsqLHPuF0RB65IsFlhpn58TwDq1A+eA61BOfPGYCKdC5xRV9QFfFAZS0aT
-        cunygnQmQVm/296yppRUwScRoRVs99rUnwmTuWUsvzeWVbKqgbfbPUv8MLUzNLLi9IXqrq/PH35XU
-        et7+7NqJA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:49598)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jREdr-0008CC-SK; Wed, 22 Apr 2020 13:38:20 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jREdl-00089l-R0; Wed, 22 Apr 2020 13:38:09 +0100
-Date:   Wed, 22 Apr 2020 13:38:09 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v4] ARM: decompressor: simplify libfdt builds
-Message-ID: <20200422123809.GO25745@shell.armlinux.org.uk>
-References: <20200419191958.208600-1-masahiroy@kernel.org>
- <CAMuHMdXmJ3gfYzubQRbN6Bx0A=p8TodidmoeaZkJVtYjhDcQnw@mail.gmail.com>
- <CAK7LNAQ+3Jgf9sNUju3gTJvvRxUn6bM1r1A6j9HCTNmeOWXFzQ@mail.gmail.com>
+        Wed, 22 Apr 2020 08:39:15 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAADC03C1A8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:39:14 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id bu9so701249qvb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iT2l1J0Dw3okJWfIDfIHP+VXyr+NSCzlVVz/2ADc/qE=;
+        b=hBw8mqtc970Us/4260DEmO5MG0Tj4jDDe+CnrIkEvmuKjPVcisES4Kj6cv7V/PtYyo
+         BQZJBqZNrw6i83kgXfUd2A0y+l3J/16xM0HkrF3HFtBL5L5eFJyMyp8UuKHp/ZnnDVQu
+         eDlemguK6yvwN5yYMtqTKPheoXcwmj63LFQk/q7ZKQtKxUrh6epwY1R19VAJvTuEWxrk
+         s64aJkzIA3d2LMWYlHLnqlwjwLRen5ZjtVVniFagjFWCRlWf8wj/SWJo8FZQHs42NZ7r
+         da3CC+XYYJgdMgLe9zp5sD8kRMzKEy5gsmJ77mCRj7xOaNDoy6bTvhUscJoDUawILgvh
+         QmTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iT2l1J0Dw3okJWfIDfIHP+VXyr+NSCzlVVz/2ADc/qE=;
+        b=qcZQkaEYZqT64p66f6xx04DjGs7y7oSruB+iiZtApeSKZl9r/u8EyGljVQ1LS5zoVc
+         qShrqGyGl9msaa/CCvGpCm+c9ewVFi0Au7vrH9/l5lQS3ac1ki6vJiuiA3Z3AHE8eFyP
+         aIv7uHBpqpXnYzEwHzvzH3in3pMyS09my+l3vxuuJH6FV1NERq6eeVYPEssedcLePP8B
+         dSn+kmLfGqLiAo6Z4zWfuFJHSU0d+fvuYbTRyBNaMp0pD2f7r706fYG6I4fjKWgb0H9i
+         8qPzosnsOmoo93TedrvSVbpyzegSQ2gUCzw8z4qpRWAh56O+P+3Eijt62dJvUIQXfO6r
+         aMJA==
+X-Gm-Message-State: AGi0PuYgpodnlfaX8wqT1MDH/9ato9DF3ZeH7kc3o5tUauMwb6C6Gt9C
+        KetitHg/CRaqprJfSNWYfglBUQ==
+X-Google-Smtp-Source: APiQypIQwpWEBc+W8O45Mbgt1/Nc3xO9DTWMuz03GmoYUsF1958LKHcE8AUKRxmOkkqb+5DrbeZ/zg==
+X-Received: by 2002:a0c:da87:: with SMTP id z7mr24708949qvj.141.1587559152840;
+        Wed, 22 Apr 2020 05:39:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id i5sm3692472qki.42.2020.04.22.05.39.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Apr 2020 05:39:11 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jREel-00064v-7W; Wed, 22 Apr 2020 09:39:11 -0300
+Date:   Wed, 22 Apr 2020 09:39:11 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        intel-gfx@lists.freedesktop.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH hmm 5/5] mm/hmm: remove the customizable pfn format from
+ hmm_range_fault
+Message-ID: <20200422123911.GV26002@ziepe.ca>
+References: <0-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com>
+ <5-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com>
+ <20200422060329.GD22366@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAQ+3Jgf9sNUju3gTJvvRxUn6bM1r1A6j9HCTNmeOWXFzQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422060329.GD22366@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 09:30:58PM +0900, Masahiro Yamada wrote:
-> On Wed, Apr 22, 2020 at 4:44 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > Hi Yamada-san, Kees, Russell,
-> >
-> > -CC RMK's patch system
-> > +CC lakml
-> >
-> > On Sun, Apr 19, 2020 at 9:26 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > Copying source files during the build time may not end up with
-> > > as clean code as expected.
-> > >
-> > > lib/fdt*.c simply wrap scripts/dtc/libfdt/fdt*.c, and it works
-> > > nicely. Let's follow this approach for the arm decompressor, too.
-> > >
-> > > Add four wrappers, arch/arm/boot/compressed/fdt*.c and remove
-> > > the Makefile messes. Another nice thing is we no longer need to
-> > > maintain the own libfdt_env.h because the decompressor can include
-> > > <linux/libfdt_env.h>.
-> > >
-> > > There is a subtle problem when generated files are turned into
-> > > check-in files.
-> > >
-> > > When you are doing a rebuild of an existing object tree with O=
-> > > option, there exists stale "shipped" copies that the old Makefile
-> > > implementation created. The build system ends up with compiling the
-> > > stale generated files because Make searches for prerequisites in the
-> > > current directory, i.e. $(objtree) first, and then the directory
-> > > listed in VPATH, i.e. $(srctree).
-> > >
-> > > To mend this issue, I added the following code:
-> > >
-> > >   ifdef building_out_of_srctree
-> > >   $(shell rm -f $(addprefix $(obj)/, fdt_rw.c fdt_ro.c fdt_wip.c fdt.c))
-> > >   endif
-> > >
-> > > This will need to stay for a while because "git bisect" crossing this
-> > > commit, otherwise, would result in a build error.
-> > >
-> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> >
-> > This is now commit 365a6327cd643eed ("ARM: 8968/1: decompressor:
-> > simplify libfdt builds") in arm/for-next.
-> >
-> > In light of reworking "[PATCH v5] ARM: boot: Obtain start of physical
-> > memory from DTB"[1] on top of this, which would conditionally add
-> > another source file to libfdt_objs, I have a few questions.
-> >
-> > > --- a/arch/arm/boot/compressed/Makefile
-> > > +++ b/arch/arm/boot/compressed/Makefile
-> > > @@ -76,29 +76,31 @@ compress-$(CONFIG_KERNEL_LZMA) = lzma
-> > >  compress-$(CONFIG_KERNEL_XZ)   = xzkern
-> > >  compress-$(CONFIG_KERNEL_LZ4)  = lz4
-> > >
-> > > -# Borrowed libfdt files for the ATAG compatibility mode
-> > > -
-> > > -libfdt         := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c
-> > > -libfdt_hdrs    := fdt.h libfdt.h libfdt_internal.h
-> > > -
-> > > -libfdt_objs    := $(addsuffix .o, $(basename $(libfdt)))
-> > > +ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
-> > > +libfdt_objs = fdt_rw.o fdt_ro.o fdt_wip.o fdt.o atags_to_fdt.o
-> > >
-> >
-> > I guess the code below can be moved out of the ifeq block, as it doesn't
-> > really do anything if CONFIG_ARM_ATAG_DTB_COMPAT=n, and $(libfdt_objs)
-> > becomes empty?
-> > If not, I think I'll have to add a new Kconfig symbol ARM_BOOT_LIBFDT,
-> > to be selected by ARM_ATAG_DTB_COMPAT and USE_OF.
+On Wed, Apr 22, 2020 at 08:03:29AM +0200, Christoph Hellwig wrote:
 > 
 > 
+> On Tue, Apr 21, 2020 at 09:21:46PM -0300, Jason Gunthorpe wrote:
+> > +void nouveau_hmm_convert_pfn(struct nouveau_drm *drm, struct hmm_range *range,
+> > +			     u64 *ioctl_addr)
+> >  {
+> >  	unsigned long i, npages;
+> >  
+> > +	/*
+> > +	 * The ioctl_addr prepared here is passed through nvif_object_ioctl()
+> > +	 * to an eventual DMA map on some call chain like:
+> > +	 *    nouveau_svm_fault():
+> > +	 *      args.i.m.method = NVIF_VMM_V0_PFNMAP
+> > +	 *      nouveau_range_fault()
+> > +	 *       nvif_object_ioctl()
+> > +	 *        client->driver->ioctl()
+> > +	 *           struct nvif_driver nvif_driver_nvkm:
+> > +	 *             .ioctl = nvkm_client_ioctl
+> > +	 *            nvkm_ioctl()
+> > +	 *             nvkm_ioctl_path()
+> > +	 *               nvkm_ioctl_v0[type].func(..)
+> > +	 *               nvkm_ioctl_mthd()
+> > +	 *                nvkm_object_mthd()
+> > +	 *                   struct nvkm_object_func nvkm_uvmm:
+> > +	 *                     .mthd = nvkm_uvmm_mthd
+> > +	 *                    nvkm_uvmm_mthd()
+> > +	 *                     nvkm_uvmm_mthd_pfnmap()
+> > +	 *                      nvkm_vmm_pfn_map()
+> > +	 *                       nvkm_vmm_ptes_get_map()
+> > +	 *                        func == gp100_vmm_pgt_pfn
+> > +	 *                         struct nvkm_vmm_desc_func gp100_vmm_desc_spt:
+> > +	 *                           .pfn = gp100_vmm_pgt_pfn
+> > +	 *                          nvkm_vmm_iter()
+> > +	 *                           REF_PTES == func == gp100_vmm_pgt_pfn()
+> > +	 *			      dma_map_page()
+> > +	 *
+> > +	 * This is all just encoding the internal hmm reprensetation into a
+> > +	 * different nouveau internal representation.
+> > +	 */
 > 
-> Right. We can narrow the ifeq block.
-> I did not know your on-going work.
-> 
-> 
-> If I had known your work adding one more file here,
-> I would have written this part as follows:
-> 
-> 
-> ------------------------------>8----------------------------------
-> libfdt_objs := fdt_rw.o fdt_ro.o fdt_wip.o fdt.o
-> 
-> ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
-> OBJS += $(libfdt_objs) atags_to_fdt.o
-> endif
-> 
-> # -fstack-protector-strong triggers protection checks in this code,
-> # but it is being used too early to link to meaningful stack_chk logic.
-> nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-> $(foreach o, $(libfdt_objs) atags_to_fdt.o, \
-> $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt $(nossp-flags-y)))
-> 
-> # These were previously generated C files. When you are building the kernel
-> # with O=, make sure to remove the stale files in the output tree. Otherwise,
-> # the build system wrongly compiles the stale ones.
-> ifdef building_out_of_srctree
-> $(shell rm -f $(addprefix $(obj)/, fdt_rw.c fdt_ro.c fdt_wip.c fdt.c))
-> endif
-> -------------------------------------->8-----------------------------
-> 
-> 
-> 
-> 
-> So, how shall we move forward?
-> 
-> Leave the necessary Makefile change to Geert?
-> 
-> If Geert and Russell want to replace my patch,
-> I can send v5 with the code above.
+> Nice callchain from hell..  Unfortunately such "code listings" tend to
+> get out of date very quickly, so I'm not sure it is worth keeping in
+> the code.  What would be really worthile is consolidating the two
+> different sets of defines (NVIF_VMM_PFNMAP_V0_ vs NVKM_VMM_PFN_)
+> to make the code a little easier to follow.
 
-I've no problem with replacing your patch...
+I was mainly concerned that this function is using hmm properly,
+becuase it sure looks like it is just forming the CPU physical address
+into a HW specific data. But it turns out it is just an internal data
+for some other code and the dma_map is impossibly far away
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+It took forever to find, I figured I'd leave a hint for the next poor
+soul that has to look at this.. 
+
+Also, I think it shows there is no 'performance' argument here, if
+this path needs more performance the above should be cleaned
+before we abuse hmm_range_fault.
+
+Put it in the commit message instead?
+
+> >  	npages = (range->end - range->start) >> PAGE_SHIFT;
+> >  	for (i = 0; i < npages; ++i) {
+> >  		struct page *page;
+> >  
+> > +		if (!(range->hmm_pfns[i] & HMM_PFN_VALID)) {
+> > +			ioctl_addr[i] = 0;
+> >  			continue;
+> > +		}
+> 
+> Can't we rely on the caller pre-zeroing the array?
+
+This ends up as args.phys in nouveau_svm_fault - I didn't see a
+zeroing?
+
+I think it makes sense that this routine fully sets the output array
+and does not assume pre-initialize
+
+> > +		page = hmm_pfn_to_page(range->hmm_pfns[i]);
+> > +		if (is_device_private_page(page))
+> > +			ioctl_addr[i] = nouveau_dmem_page_addr(page) |
+> > +					NVIF_VMM_PFNMAP_V0_V |
+> > +					NVIF_VMM_PFNMAP_V0_VRAM;
+> > +		else
+> > +			ioctl_addr[i] = page_to_phys(page) |
+> > +					NVIF_VMM_PFNMAP_V0_V |
+> > +					NVIF_VMM_PFNMAP_V0_HOST;
+> > +		if (range->hmm_pfns[i] & HMM_PFN_WRITE)
+> > +			ioctl_addr[i] |= NVIF_VMM_PFNMAP_V0_W;
+> 
+> Now that this routine isn't really device memory specific any more, I
+> wonder if it should move to nouveau_svm.c.
+
+Yes, if we expose nouveau_dmem_page_addr(), I will try it
+
+Thanks,
+Jason
