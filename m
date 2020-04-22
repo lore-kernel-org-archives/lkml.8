@@ -2,131 +2,113 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC50C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ED4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 648F520781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NdOunxgY"
+	by mail.kernel.org (Postfix) with ESMTP id 7764E20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgDVVcF (ORCPT
+        id S1726437AbgDVVde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgDVVcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:32:04 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEB5C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:32:03 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id t3so4195539qkg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+WYIg4RAMlWM7Kf2aYaI6IHSuB8btJKPWzUnEhkHm4Y=;
-        b=NdOunxgYBVAoc59q9VgeWd76PGFtMQcwOs4ul9C8PcoLGV8am3yrxBpSEBL4XGYCVE
-         WOX11uH1cmX2e5VPgB3U/cmwikvHNpSpboh6qd82m2xlaQus59tccoLJ6ESovohjwYPV
-         /t4m9MhXdZ3O8DmNgTzg7CaZFD8VWBpDdP2x8aLHiu8A6O3FztvSL8WJqBtBB2YRmUf1
-         nXmrFWKg9bLs4KaDPCVIU9KABkVfzmA5M3+zj10yazmoN4RpuhR7gq7bmRrYyh3RYPPU
-         WHmjtxcpl7A0kXvI63CFQqjGMlqqparMLZ0rycI9OBafn/P83tIenmV8NfdoxKkpPPbF
-         V/yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+WYIg4RAMlWM7Kf2aYaI6IHSuB8btJKPWzUnEhkHm4Y=;
-        b=OWjvMvaCnfFBaQpbGgllSiiDdNYDa5UXmosyl+bi4t8Trj+SGSmwSImOZbaIyn7nfN
-         Hmmg0grYDUwomnJuaRWeDHtI6EO1i4B8zTFRlFt5wIoTdztz2SaiPZbaw5tsDfA6ORCk
-         gNiFwCqFSx6CSzvyBAFt8YyD6ZpmkuUUw2561kNxvAj9RKnzqW1/rwNBnJfTRj2hKBBd
-         w50TxRKwbCyVnqPK7uEpjb8URPaSks3Jrv7KpnJi5zqz0fm7KSvZMM5YC28EKQCvc4qh
-         4Q4StSSDt1qF/6fkycX93gBTPuYvO4kf4MZnfYAoRUs5PlgLqqHccFpCKlxv/Kj4c9Gr
-         2txQ==
-X-Gm-Message-State: AGi0PubU6VBQqrlOuwR9bbStWzd8c4WuzJdh13fi6z6AuwQKgM/Wccmt
-        e/vrVuopkbvgBJgF3Ky+1HW5tw==
-X-Google-Smtp-Source: APiQypILa2U97Y/gU88kX5KS8gFWKZMZ2UPxxDl29LseCwfEixTbGseUfJRdvuxdHsQJmv+i9tryTQ==
-X-Received: by 2002:a37:6754:: with SMTP id b81mr343164qkc.129.1587591122484;
-        Wed, 22 Apr 2020 14:32:02 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l13sm362769qtj.17.2020.04.22.14.32.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Apr 2020 14:32:01 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: AMD boot woe due to "x86/mm: Cleanup pgprot_4k_2_large() and
- pgprot_large_2_4k()"
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200422170116.GA28345@lst.de>
-Date:   Wed, 22 Apr 2020 17:32:00 -0400
-Cc:     Borislav Petkov <bp@suse.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2568586B-B1F7-47F9-8B6F-6A4C0E5280A8@lca.pw>
-References: <1ED37D02-125F-4919-861A-371981581D9E@lca.pw>
- <20200422170116.GA28345@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 22 Apr 2020 17:33:34 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52807 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgDVVde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:33:34 -0400
+IronPort-SDR: AlEo/8IX9tR6MT85NhsZB7oK+ak5dVH6ssaJFMoRkfVee4wBaTXt4GvokTDSAq+QKsyx+HERTf
+ 27OgY9Etvtkg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:33:32 -0700
+IronPort-SDR: fx8/G3TFQoZ3nr8G0Vq3Pe3qg7wxlfg2R3xGHK9hTuRd8fjb4LZ1VcQYtjhGMqagNDJLKq2WQv
+ tLLhU1v0EfqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="430075957"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by orsmga005.jf.intel.com with ESMTP; 22 Apr 2020 14:33:32 -0700
+Subject: Re: [PATCH] firmware: stratix10-svc: Drop unnecessary checking for
+ and populating /firmware/ node
+To:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org
+References: <20200421173256.34897-1-sudeep.holla@arm.com>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <8ca3666f-8ff1-3c3c-d40b-81c024b37bdd@linux.intel.com>
+Date:   Wed, 22 Apr 2020 16:50:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200421173256.34897-1-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sudeep,
 
+I tried and couldn't load stratix10-svc driver with your patch on kernel 
+5.6.
 
-> On Apr 22, 2020, at 1:01 PM, Christoph Hellwig <hch@lst.de> wrote:
->=20
-> On Wed, Apr 22, 2020 at 11:55:54AM -0400, Qian Cai wrote:
->> Reverted the linux-next commit and its dependency,
->>=20
->> a85573f7e741 ("x86/mm: Unexport __cachemode2pte_tbl=E2=80=9D)
->> 9e294786c89a (=E2=80=9Cx86/mm: Cleanup pgprot_4k_2_large() and =
-pgprot_large_2_4k()=E2=80=9D)
->>=20
->> fixed crashes or hard reset on AMD machines during boot that have =
-been flagged by
->> KASAN in different forms indicating some sort of memory corruption =
-with this config,
->=20
-> Interesting.  Your config seems to boot fine in my VM until the point
-> where the lack of virtio-blk support stops it from mounting the root
-> file system.
->=20
-> Looking at the patch I found one bug, although that should not affect
-> your config (it should use the pgprotval_t type), and one difference
-> that could affect code generation, although I prefer the new version
-> (use of __pgprot vs a local variable + pgprot_val()).
->=20
-> Two patches attached, can you try them?
-> =
-<0001-x86-Use-pgprotval_t-in-protval_4k_2_large-and-pgprot.patch><0002-foo=
-.patch>
+Regards,
+Richard
 
-This fixed the sucker,
-
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index edf9cea4871f..c54d1d0a8e3b 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -708,7 +708,7 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, =
-pgprot_t prot)
-=20
-        set_pte((pte_t *)pud, pfn_pte(
-                (u64)addr >> PAGE_SHIFT,
--               __pgprot(protval_4k_2_large(pgprot_val(prot) | =
-_PAGE_PSE))));
-+               __pgprot(protval_4k_2_large(pgprot_val(prot)) | =
-_PAGE_PSE)));
-=20
-        return 1;
- }=
+On 4/21/20 12:32 PM, Sudeep Holla wrote:
+> Commit 3aa0582fdb82 ("of: platform: populate /firmware/ node from
+> of_platform_default_populate_init()") changed the core-code to generate
+> the platform devices, meaning there is no need for the driver to check
+> the firmware node and populate it again here.
+> 
+> Let us just drop the unnecessary extra check done here as the core takes
+> care of it.
+> 
+> Cc: Richard Gong <richard.gong@linux.intel.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>   drivers/firmware/stratix10-svc.c | 17 -----------------
+>   1 file changed, 17 deletions(-)
+> 
+> Hi Richard,
+> 
+> I assume the subsys_initcall is essential here. If not we can remove the
+> whole initcalls and replace it with module_platform_driver(). Let me know.
+> Just found this by accident when grepping for something else.
+> 
+> Regards,
+> Sudeep
+> 
+> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+> index d5f0769f3761..791d70fe82c1 100644
+> --- a/drivers/firmware/stratix10-svc.c
+> +++ b/drivers/firmware/stratix10-svc.c
+> @@ -1094,23 +1094,6 @@ static struct platform_driver stratix10_svc_driver = {
+>   
+>   static int __init stratix10_svc_init(void)
+>   {
+> -	struct device_node *fw_np;
+> -	struct device_node *np;
+> -	int ret;
+> -
+> -	fw_np = of_find_node_by_name(NULL, "firmware");
+> -	if (!fw_np)
+> -		return -ENODEV;
+> -
+> -	np = of_find_matching_node(fw_np, stratix10_svc_drv_match);
+> -	if (!np)
+> -		return -ENODEV;
+> -
+> -	of_node_put(np);
+> -	ret = of_platform_populate(fw_np, stratix10_svc_drv_match, NULL, NULL);
+> -	if (ret)
+> -		return ret;
+> -
+>   	return platform_driver_register(&stratix10_svc_driver);
+>   }
+>   
+> 
