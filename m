@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D56C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78912C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26CF72071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F1820575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550327;
-	bh=JQlAhwaWJDolkGHYfLug13DpnHAwy5RBZ7yJEGbYus0=;
+	s=default; t=1587550330;
+	bh=ZMr3cobph3pHX+whIvaq3dvLnbLGICj7rLWUDrQdOC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bwRH9obsoZEVLqa3uAV/5ZWlI2jHE98Tb9dIDTrMUBBTsdTflvBwnrdxXGXdjJ0jp
-	 ICL/AZDEzS6Sz2NGPYe8yu74NZl9VkC4sTF0Uu/DZySf9wi6hg9vSJ8IYcDCUP5So/
-	 F8nSTCULc3Z6Ah7oyFmcOE37L5xZMnpARGplhCwI=
+	b=d/aa9EyVp8TGzIs1LiP+ldVL7vPB6rbq1woxg89sfZhxlrP+QDKZpJrybi6r6VLKK
+	 fO/SJofTb8N4abjW4Q2BoZ2bvB4ueh9L5mf1B+ZRkmPvjvsxDRVteHoFYEXS0o1hMY
+	 oVkAvCis1fQ/TdRWuCvnmwl1RokwPHIzoZ14kHk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgDVKMG (ORCPT
+        id S1729303AbgDVKMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44464 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbgDVKLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:53 -0400
+        id S1729267AbgDVKLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:11:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F57C2070B;
-        Wed, 22 Apr 2020 10:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5AE20575;
+        Wed, 22 Apr 2020 10:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550312;
-        bh=JQlAhwaWJDolkGHYfLug13DpnHAwy5RBZ7yJEGbYus0=;
+        s=default; t=1587550315;
+        bh=ZMr3cobph3pHX+whIvaq3dvLnbLGICj7rLWUDrQdOC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z3Kr4eAKV7yTJLloGTh0yV8Kizs0SQrVD7d5/ATpC2e01P3SsHEwcusvSuyyEUtFJ
-         84zA2/ZKJJ4r/+fxmnjxiPasMh55ybEhLuotEWY8NFjARyTAuzbcFiH3wg4USbZVQ2
-         lpCZriJ48VM+m8fb1bbjDFSBiRnoVpIY9YDptXto=
+        b=bkyqiBCzn/w/KUAgloKfAdg9DXZbvMm0PYubIceBZtyA7UkSUJQfjNKkmwn8F02af
+         zGZYgcUWr3IrJZQFM+1G5KuDgKO0+YTz3BwHisCtn47tOjNxECUavKGN+EFdCGvvNT
+         JW/jqWQHBZJXWx8qu5pLry5b+2JKQ9hyhT0MMdpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.14 058/199] KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks
-Date:   Wed, 22 Apr 2020 11:56:24 +0200
-Message-Id: <20200422095104.082711515@linuxfoundation.org>
+        stable@vger.kernel.org, Clement Courbet <courbet@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 094/199] powerpc: Make setjmp/longjmp signature standard
+Date:   Wed, 22 Apr 2020 11:57:00 +0200
+Message-Id: <20200422095107.457740465@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,56 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Clement Courbet <courbet@google.com>
 
-commit a1d032a49522cb5368e5dfb945a85899b4c74f65 upstream.
+commit c17eb4dca5a353a9dbbb8ad6934fe57af7165e91 upstream.
 
-In case we have a region 1 the following calculation
-(31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)
-results in 64. As shifts beyond the size are undefined the compiler is
-free to use instructions like sllg. sllg will only use 6 bits of the
-shift value (here 64) resulting in no shift at all. That means that ALL
-addresses will be rejected.
+Declaring setjmp()/longjmp() as taking longs makes the signature
+non-standard, and makes clang complain. In the past, this has been
+worked around by adding -ffreestanding to the compile flags.
 
-The can result in endless loops, e.g. when prefix cannot get mapped.
+The implementation looks like it only ever propagates the value
+(in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
+with integer parameters.
 
-Fixes: 4be130a08420 ("s390/mm: add shadow gmap support")
-Tested-by: Janosch Frank <frankja@linux.ibm.com>
-Reported-by: Janosch Frank <frankja@linux.ibm.com>
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-2-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-[borntraeger@de.ibm.com: fix patch description, remove WARN_ON_ONCE]
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+This allows removing -ffreestanding from the compilation flags.
+
+Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Clement Courbet <courbet@google.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200330080400.124803-1-courbet@google.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/mm/gmap.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/setjmp.h |    6 ++++--
+ arch/powerpc/kernel/Makefile      |    3 ---
+ arch/powerpc/xmon/Makefile        |    3 ---
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -762,14 +762,18 @@ static void gmap_call_notifier(struct gm
- static inline unsigned long *gmap_table_walk(struct gmap *gmap,
- 					     unsigned long gaddr, int level)
- {
-+	const int asce_type = gmap->asce & _ASCE_TYPE_MASK;
- 	unsigned long *table;
+--- a/arch/powerpc/include/asm/setjmp.h
++++ b/arch/powerpc/include/asm/setjmp.h
+@@ -12,7 +12,9 @@
  
- 	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
- 		return NULL;
- 	if (gmap_is_shadow(gmap) && gmap->removed)
- 		return NULL;
--	if (gaddr & (-1UL << (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)))
+ #define JMP_BUF_LEN    23
+ 
+-extern long setjmp(long *) __attribute__((returns_twice));
+-extern void longjmp(long *, long) __attribute__((noreturn));
++typedef long jmp_buf[JMP_BUF_LEN];
 +
-+	if (asce_type != _ASCE_TYPE_REGION1 &&
-+	    gaddr & (-1UL << (31 + (asce_type >> 2) * 11)))
- 		return NULL;
-+
- 	table = gmap->table;
- 	switch (gmap->asce & _ASCE_TYPE_MASK) {
- 	case _ASCE_TYPE_REGION1:
++extern int setjmp(jmp_buf env) __attribute__((returns_twice));
++extern void longjmp(jmp_buf env, int val) __attribute__((noreturn));
+ 
+ #endif /* _ASM_POWERPC_SETJMP_H */
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -5,9 +5,6 @@
+ 
+ CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+ 
+-# Avoid clang warnings around longjmp/setjmp declarations
+-CFLAGS_crash.o += -ffreestanding
+-
+ subdir-ccflags-$(CONFIG_PPC_WERROR) := -Werror
+ 
+ ifeq ($(CONFIG_PPC64),y)
+--- a/arch/powerpc/xmon/Makefile
++++ b/arch/powerpc/xmon/Makefile
+@@ -1,9 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for xmon
+ 
+-# Avoid clang warnings around longjmp/setjmp declarations
+-subdir-ccflags-y := -ffreestanding
+-
+ subdir-ccflags-$(CONFIG_PPC_WERROR) += -Werror
+ 
+ GCOV_PROFILE := n
 
 
