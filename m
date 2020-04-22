@@ -2,127 +2,105 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EF7C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BCFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC0620774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1523120774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSOhQROh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UDJE3Dnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgDVNqI (ORCPT
+        id S1727001AbgDVNq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:46:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40180 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726917AbgDVNqH (ORCPT
+        Wed, 22 Apr 2020 09:46:29 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49776 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbgDVNq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:46:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587563166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fbzJ2c3Jbmfs6TXG5rybp4esqbXtRerCZxsEpCUlwvY=;
-        b=KSOhQROhKcxBad/BPbNTfeMl8xRSlUic5xcNuc6F3Ok0MJHrsXqm6W18Mrtprqd7H3KwoP
-        1jbQUeluMdwyIG+zRO9sk7vitQKV6H8AM3h/84PmxKe4ZxBI9V7f2e8ZLPksannDcUaeZo
-        tgp6yOjV7kDuCMX1WCETo6LmF7BatpI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-lh4Pzp_SOlKmSyI6QDWB7Q-1; Wed, 22 Apr 2020 09:46:04 -0400
-X-MC-Unique: lh4Pzp_SOlKmSyI6QDWB7Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D47C800FC7;
-        Wed, 22 Apr 2020 13:46:00 +0000 (UTC)
-Received: from gondolin (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C266B5D706;
-        Wed, 22 Apr 2020 13:45:46 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 15:45:43 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run'
- parameters
-Message-ID: <20200422154543.2efba3dd.cohuck@redhat.com>
-In-Reply-To: <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
-        <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
-Organization: Red Hat GmbH
+        Wed, 22 Apr 2020 09:46:28 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MDiRxo083787;
+        Wed, 22 Apr 2020 13:46:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=ZXw8WRe+1+ti8NtxJ2Zt9aajNxmS/04DjrSxbrXEJSY=;
+ b=UDJE3DnjdTKCLTPXwmaquXLFx/ie8LIs87/gEGhh9Fr81ijDF4YE8tb6gd8wYWfXcDuW
+ S14UiZwraIIXAPDj/N3HTmwu7qI+SvKWsEwtg76gqaoAAtR4JYA+Dej45W/gpHdjivbI
+ iVHaLBOfY4Tm8OfvC30Yfu00VRnUDBHbqOcsYN8ltM9oXe9DkXSd3/zD2zW+X8Ci9gRF
+ JeX9HvSEpOlKqIICksED5JC1ma9u8fJMP77xtGO9fxmRJ7319YDcrotnJ3DfvEqfMCZw
+ n9uhKH6+rIFR4Sr1JkpTDSHE+B41703TAJSdoHM9be/1A5i+EavX6hU2qjmfn0+u+Com Ww== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30grpgqby8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 13:46:16 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MDfddP112936;
+        Wed, 22 Apr 2020 13:46:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 30gb3ty429-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 13:46:15 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03MDkDa9032313;
+        Wed, 22 Apr 2020 13:46:14 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Apr 2020 06:46:13 -0700
+Date:   Wed, 22 Apr 2020 09:46:35 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] padata: add separate cpuhp node for CPUHP_PADATA_DEAD
+Message-ID: <20200422134635.dk44a4zy2rz6p3d3@ca-dmjordan1.us.oracle.com>
+References: <20200421163455.2177998-1-daniel.m.jordan@oracle.com>
+ <20200422132702.DCAA7206EC@mail.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422132702.DCAA7206EC@mail.kernel.org>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 20:58:04 +0800
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+On Wed, Apr 22, 2020 at 01:27:02PM +0000, Sasha Levin wrote:
+> Hi
 
-> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> structure. Earlier than historical reasons, many kvm-related function
+Hi!
 
-s/Earlier than/For/ ?
+> v5.4.33: Failed to apply! Possible dependencies:
+>     bfcdcef8c8e3 ("padata: update documentation")
 
-> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
-> This patch does a unified cleanup of these remaining redundant parameters.
-> 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
->  1 file changed, 22 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index e335a7e5ead7..d7bb2e7a07ff 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->  	return rc;
->  }
->  
-> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
->  	struct runtime_instr_cb *riccb;
->  	struct gs_cb *gscb;
->  
-> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  		}
->  		if (vcpu->arch.gs_enabled) {
->  			current->thread.gs_cb = (struct gs_cb *)
-> -						&vcpu->run->s.regs.gscb;
-> +						&kvm_run->s.regs.gscb;
+Yes, it's a trivial conflict in the header comment for padata_instance.
 
-Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
-it. (It seems they amount to at least as much as the changes advertised
-in the patch description.)
+> How should we proceed with this patch?
 
-Other opinions?
+If mainline is ok with the change, I will send a 5.4-only version with the
+resolution.
 
->  			restore_gs_cb(current->thread.gs_cb);
->  		}
->  		preempt_enable();
+By the way, I should not have cc'd stable on the email, it was picked up from
+the Cc: line in the patch.
 
+Daniel
