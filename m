@@ -3,35 +3,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1A4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C9BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1742098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478392098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgDVS43 (ORCPT
+        id S1726909AbgDVS45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:56:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46697 "EHLO mga09.intel.com"
+        Wed, 22 Apr 2020 14:56:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53872 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgDVS43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:56:29 -0400
-IronPort-SDR: jrI8fgAVnpaUvRxpAdMa9OCHEogusbxRZVNmZ+/tsfJfbGvJMcHxIos85jRePwHegIOZWVdQUs
- EO3TeJZ4wstw==
+        id S1725895AbgDVS45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:56:57 -0400
+IronPort-SDR: kV86I8QBsq91YXjJtu0OMIoZKL7UvzGJLEq2wCfCDmYf4DZKYzGtzW+/d+hfNBFqoNwOJrL5sU
+ XytwY1klWc6g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:56:28 -0700
-IronPort-SDR: lG+qqGqpanyyW25CBM/V+WVgbbpKNjbK6di35BFt6xqwg1ABYXlBETFfOaRdJddkei2sMvTKZJ
- gmPfMINVnawA==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:56:56 -0700
+IronPort-SDR: Ohd206QPQvKGOBEarC7lrOnguj8NJ6Cmwx3Y/pTUDaQO62uQyzaU0fi1W+A7w6kxiYs1zrll5X
+ sDRu5EW+BYNw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="259171350"
+   d="scan'208";a="259171481"
 Received: from ddmurill-mobl.amr.corp.intel.com (HELO [10.255.229.247]) ([10.255.229.247])
-  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 11:56:28 -0700
+  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 11:56:56 -0700
 Subject: Re: [PATCH] x86/mpx: remove MPX leftovers
 To:     Jimmy Assarsson <jimmyassarsson@gmail.com>,
         linux-kernel@vger.kernel.org
@@ -82,8 +82,8 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-Message-ID: <ad65b457-3975-6287-f352-48c487ddd4ae@intel.com>
-Date:   Wed, 22 Apr 2020 11:56:28 -0700
+Message-ID: <20878a48-aa31-9628-2167-2ff211fecbb4@intel.com>
+Date:   Wed, 22 Apr 2020 11:56:56 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
@@ -96,9 +96,6 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/20 10:25 AM, Jimmy Assarsson wrote:
-> Remove leftovers from x86/mpx.
+Bah, fat fingers.  Forgot:
 
-Thanks for finding these!
-
-
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
