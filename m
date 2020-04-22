@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190A9C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C2BC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE6A82078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279BF2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549888;
-	bh=xfVhNM3DhhQiAXNyN86zX53Kbc4sf7pftZqBgdUJKVM=;
+	s=default; t=1587549893;
+	bh=0dPGmjd2jh6xDBgorKvf7hp53M2x11EAT+PoPEYgNJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MlJ0yXrYqoibOcNWMUK+Bzl5cKCwW8/v9vGB3yQsjiVdvDn2c3j51O5gLkNeDcKfq
-	 GBy49VReeRZtZLe0RIYtlAQzg5MudodMKq7Lxq42qc9to9RhUGvZGGk6/MRmGNzpD/
-	 SaD+fNBrY/7dFVT9UI+3b+3rdT5cKaso8HPZ5eqI=
+	b=JFUoYkI/ntbaYoG3B+c4sJPxoRycl3BnJUfI8+UpEtfODaH4Es9TTR/aweboV8G+e
+	 gZUy4t31jCFG6oknVtfDyXCn4MKNQ6nLylXWtg21kDHtBIbxxmq5RAh21Zoew3egiC
+	 JqQUTr5mJb8SYOQd8/jVIpXAOeAz0OYBehnr39pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgDVKEr (ORCPT
+        id S1728089AbgDVKEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55222 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgDVKEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:40 -0400
+        id S1728068AbgDVKEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B3FF20776;
-        Wed, 22 Apr 2020 10:04:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B0C520575;
+        Wed, 22 Apr 2020 10:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549880;
-        bh=xfVhNM3DhhQiAXNyN86zX53Kbc4sf7pftZqBgdUJKVM=;
+        s=default; t=1587549884;
+        bh=0dPGmjd2jh6xDBgorKvf7hp53M2x11EAT+PoPEYgNJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qBHXZ3w1qBkGhI/kjrSknQksPi7RS7YXTn8NnjXolejdFuR1VRawOZAOcVs8C9MdY
-         4PbCJMOfMt98wex7DaRMq8NKnrn1lTT1jBAGzGbvuv3ABYT51UppuKkp0cpf7fRdMz
-         voYWQvHP+CNPnt5/Uwtjt/UefE177i48bEUlbffk=
+        b=DQgVv7D7151MVxB8dCUaqqluEwjbkqDF4BP/RZnfYueDwa3V9x5cyb5IcWaEMkQ/b
+         x+LZl3GWuDC5kbSRbidoCan6/ilKuHYeE5inukpk+EDsmraPfRZn6B08KZA6MlwCBJ
+         un7+97pb+NHHJ2rHDcj3azPgDF61y37tFTo+QOw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>, konrad.wilk@oracle.com,
-        dwmw@amazon.co.uk, bp@suse.de, srinivas.eeda@oracle.com,
-        peterz@infradead.org, hpa@zytor.com,
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 043/125] x86/speculation: Remove redundant arch_smt_update() invocation
-Date:   Wed, 22 Apr 2020 11:56:00 +0200
-Message-Id: <20200422095040.483696912@linuxfoundation.org>
+Subject: [PATCH 4.9 045/125] mm: Use fixed constant in page_frag_alloc instead of size + 1
+Date:   Wed, 22 Apr 2020 11:56:02 +0200
+Message-Id: <20200422095040.793672396@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -62,54 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-commit 34d66caf251df91ff27b24a3a786810d29989eca upstream.
+commit 8644772637deb121f7ac2df690cbf83fa63d3b70 upstream.
 
-With commit a74cfffb03b7 ("x86/speculation: Rework SMT state change"),
-arch_smt_update() is invoked from each individual CPU hotplug function.
+This patch replaces the size + 1 value introduced with the recent fix for 1
+byte allocs with a constant value.
 
-Therefore the extra arch_smt_update() call in the sysfs SMT control is
-redundant.
+The idea here is to reduce code overhead as the previous logic would have
+to read size into a register, then increment it, and write it back to
+whatever field was being used. By using a constant we can avoid those
+memory reads and arithmetic operations in favor of just encoding the
+maximum value into the operation itself.
 
-Fixes: a74cfffb03b7 ("x86/speculation: Rework SMT state change")
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: <konrad.wilk@oracle.com>
-Cc: <dwmw@amazon.co.uk>
-Cc: <bp@suse.de>
-Cc: <srinivas.eeda@oracle.com>
-Cc: <peterz@infradead.org>
-Cc: <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/e2e064f2-e8ef-42ca-bf4f-76b612964752@default
+Fixes: 2c2ade81741c ("mm: page_alloc: fix ref bias in page_frag_alloc() for 1-byte allocs")
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cpu.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ mm/page_alloc.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2027,10 +2027,8 @@ int cpuhp_smt_disable(enum cpuhp_smt_con
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3955,11 +3955,11 @@ refill:
+ 		/* Even if we own the page, we do not use atomic_set().
+ 		 * This would break get_page_unless_zero() users.
  		 */
- 		cpuhp_offline_cpu_device(cpu);
- 	}
--	if (!ret) {
-+	if (!ret)
- 		cpu_smt_control = ctrlval;
--		arch_smt_update();
--	}
- 	cpu_maps_update_done();
- 	return ret;
- }
-@@ -2041,7 +2039,6 @@ int cpuhp_smt_enable(void)
+-		page_ref_add(page, size);
++		page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
  
- 	cpu_maps_update_begin();
- 	cpu_smt_control = CPU_SMT_ENABLED;
--	arch_smt_update();
- 	for_each_present_cpu(cpu) {
- 		/* Skip online CPUs and CPUs on offline nodes */
- 		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
+ 		/* reset page count bias and offset to start of new frag */
+ 		nc->pfmemalloc = page_is_pfmemalloc(page);
+-		nc->pagecnt_bias = size + 1;
++		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+ 		nc->offset = size;
+ 	}
+ 
+@@ -3975,10 +3975,10 @@ refill:
+ 		size = nc->size;
+ #endif
+ 		/* OK, page count is 0, we can safely set it */
+-		set_page_count(page, size + 1);
++		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+ 
+ 		/* reset page count bias and offset to start of new frag */
+-		nc->pagecnt_bias = size + 1;
++		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+ 		offset = size - fragsz;
+ 	}
+ 
 
 
