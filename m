@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4ABC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78DCC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A29B20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C2D2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551073;
-	bh=BdWMS2kMpTbgqeNC5wZ91nNso70M7SuEdSXUXsnLKoQ=;
+	s=default; t=1587551075;
+	bh=U0NUd3gy3ySqpienrLyPfpjtmoETJLPXg4P1CAUJP0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qS4b2D4nEZOxEBMPNPo4SP+clUB7RGh0i/z52+7YAZbZcxzbp+Z7oamDdQ8juwW2q
-	 d4oiT7rBDjsOCg+AH74NoDhaPUychEYfoRBOUdNsTB2jmvI16ZYyI70FQa6yblmuDp
-	 S1PLKpPPqOlbBuVnqh2c9FDd8moKLvboRm2KYhxE=
+	b=Byfk/cY5hfMY1R/mF0WyGUJ33R1+CBnPT2odJip3BlCk64P1hsD5hENZsqFC7UZrm
+	 MSP3OWBw/IGxEq7y5wSc7qdFGc9sODTEuU65EhAbQgbgOQ0gLyd7aHQTVOijUkY1qr
+	 7691e3YJcc8eIoivIwisvZmrSgv0D+W6UPMgJ8lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgDVKYc (ORCPT
+        id S1730434AbgDVKYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbgDVKXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:42 -0400
+        id S1730039AbgDVKXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C27432076B;
-        Wed, 22 Apr 2020 10:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42A9020781;
+        Wed, 22 Apr 2020 10:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551022;
-        bh=BdWMS2kMpTbgqeNC5wZ91nNso70M7SuEdSXUXsnLKoQ=;
+        s=default; t=1587551024;
+        bh=U0NUd3gy3ySqpienrLyPfpjtmoETJLPXg4P1CAUJP0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9Kndaw34RxvdpK4/DIrU/UFuAPsMLc98XHZwlxlngdU6vrRmfZfFHTm4HtbTrvAU
-         41fF0/HKRWnsy//hJOh+RKCP0nd/MqTmZDYu1d3np9u+bHJJoxohqx749Ming2VS6t
-         Spp8SbOtS8kUElq1FyIkOuW0jWLvfvQCG0Zf5R9g=
+        b=op7y0Mos8dL59c3Tp7p2lXfqmwYLI941rlKgL88+0QanSvkW2AlY2miYTOeH/QLKC
+         zUyHdkE0c41rZ8SrGG6nnh1ogGMH2LeSJv85/dZM3ra4ir/3Imzb6xO1bqKb2jYy+H
+         7pyz59zL9TDN7T3vQU/PneiKwr2eghg5tdEudXH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
         Tianyu Lan <Tianyu.Lan@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH 5.6 026/166] x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
-Date:   Wed, 22 Apr 2020 11:55:53 +0200
-Message-Id: <20200422095051.438084348@linuxfoundation.org>
+Subject: [PATCH 5.6 027/166] x86/Hyper-V: Trigger crash enlightenment only once during system crash.
+Date:   Wed, 22 Apr 2020 11:55:54 +0200
+Message-Id: <20200422095051.564017171@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -62,46 +62,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-commit 7f11a2cc10a4ae3a70e2c73361f4a9a33503539b upstream.
+commit 73f26e526f19afb3a06b76b970a76bcac2cafd05 upstream.
 
-If kmsg_dump_register() fails, hv_panic_page will not be used
-anywhere.  So free and reset it.
+When a guest VM panics, Hyper-V should be notified only once via the
+crash synthetic MSRs.  Current Linux code might write these crash MSRs
+twice during a system panic:
+1) hyperv_panic/die_event() calling hyperv_report_panic()
+2) hv_kmsg_dump() calling hyperv_report_panic_msg()
 
-Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+Fix this by not calling hyperv_report_panic() if a kmsg dump has been
+successfully registered.  The notification will happen later via
+hyperv_report_panic_msg().
+
+Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
 Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-3-Tianyu.Lan@microsoft.com
+Link: https://lore.kernel.org/r/20200406155331.2105-4-Tianyu.Lan@microsoft.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hv/vmbus_drv.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hv/vmbus_drv.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
- 			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
- 			if (hv_panic_page) {
- 				ret = kmsg_dump_register(&hv_kmsg_dumper);
--				if (ret)
-+				if (ret) {
- 					pr_err("Hyper-V: kmsg dump register "
- 						"error 0x%x\n", ret);
-+					hv_free_hyperv_page(
-+					    (unsigned long)hv_panic_page);
-+					hv_panic_page = NULL;
-+				}
- 			} else
- 				pr_err("Hyper-V: panic message page memory "
- 					"allocation failed");
-@@ -1416,7 +1420,6 @@ err_alloc:
- 	hv_remove_vmbus_irq();
+@@ -55,7 +55,13 @@ static int hyperv_panic_event(struct not
  
- 	bus_unregister(&hv_bus);
--	hv_free_hyperv_page((unsigned long)hv_panic_page);
- 	unregister_sysctl_table(hv_ctl_table_hdr);
- 	hv_ctl_table_hdr = NULL;
- 	return ret;
+ 	vmbus_initiate_unload(true);
+ 
+-	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
++	/*
++	 * Hyper-V should be notified only once about a panic.  If we will be
++	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
++	 * the notification here.
++	 */
++	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
++	    && !hv_panic_page) {
+ 		regs = current_pt_regs();
+ 		hyperv_report_panic(regs, val);
+ 	}
+@@ -68,7 +74,13 @@ static int hyperv_die_event(struct notif
+ 	struct die_args *die = (struct die_args *)args;
+ 	struct pt_regs *regs = die->regs;
+ 
+-	hyperv_report_panic(regs, val);
++	/*
++	 * Hyper-V should be notified only once about a panic.  If we will be
++	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
++	 * the notification here.
++	 */
++	if (!hv_panic_page)
++		hyperv_report_panic(regs, val);
+ 	return NOTIFY_DONE;
+ }
+ 
 
 
