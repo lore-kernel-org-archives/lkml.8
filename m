@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFF8C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088D5C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1C962073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBADE20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552145;
-	bh=teWoWnOgcSPlBj5vzx0uZY+S9BuzrPPocOvM7gkc/pk=;
+	s=default; t=1587552153;
+	bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNbgCG08L8Uwc02Xk9IDYxZ1L6xtkcIUVELkmqyqn/aEVECPmpcJmrDOiTsmdi3qI
-	 wnHRIkE5T6ju+tnaKNnedRAktjOPJtN/HKPY4RTR4afpjpmDYt4Fh+M9uw9OFWhDqk
-	 6c22eeMTj9Wv06OR2FZBdHyMaWBdK8T095eVfD9k=
+	b=gkqg4Z2JEuKu6SRANoZfB8lpa5PIqfl042bVNZQ/YTvX7jaJ1bq/zVzOf3owZIUbh
+	 CFaPQN7f2bkXqLeQoQcvEXmrSo0y2QD+JomL5KGwEKC0iF697KpQYVW0xuW586jNhh
+	 Z2aFXLzXmOxWWAyqQyI5gYd2RvlU7Efseg2sg08s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbgDVKmX (ORCPT
+        id S1731511AbgDVKma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56522 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:42:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729548AbgDVKTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:19:43 -0400
+        id S1730127AbgDVKUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30C320780;
-        Wed, 22 Apr 2020 10:19:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B2A21569;
+        Wed, 22 Apr 2020 10:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550783;
-        bh=teWoWnOgcSPlBj5vzx0uZY+S9BuzrPPocOvM7gkc/pk=;
+        s=default; t=1587550854;
+        bh=/irDkQP3S01BEZbw9nCn3Y6bK2sKx+ShTIuFgYre9FA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2GLSle0yKvM5Z+utrsYhhju1oZDlmVSH5RhoycOjiN9+ie+Z0IDLjFRQwpDrf2xP
-         cAzE3E2Tm37WppGMTrpIkY4zP4kocVuxBwAMt/cs9UUuI6l1dmbt9GWygEaLGpgAyv
-         HfG/oZw+A/367/P1XHYaBc55HL8cpQ+x/eg5IGJ0=
+        b=pEspjLrQzPo1TMhTyujyw474bAq7/khBZcXJgggtnEqIuW3gfeMNuQJZA2TrJaFwJ
+         pCp6/vpJVOt7vZdnIxAxbNfXkdBD3639RtmT0dMHbc2WIMhhRUwQNcRruvaqEo0zYR
+         otGlUE6QUQykGOqVu1XvnfMP0MKcni8JM1mQ2E9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 092/118] iommu/vt-d: Fix page request descriptor size
-Date:   Wed, 22 Apr 2020 11:57:33 +0200
-Message-Id: <20200422095046.443322368@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 085/118] um: falloc.h needs to be directly included for older libc
+Date:   Wed, 22 Apr 2020 11:57:26 +0200
+Message-Id: <20200422095045.433904775@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -61,38 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit 52355fb1919ef7ed9a38e0f3de6e928de1f57217 ]
+[ Upstream commit 35f3401317a3b26aa01fde8facfd320f2628fdcc ]
 
-Intel VT-d might support PRS (Page Reqest Support) when it's
-running in the scalable mode. Each page request descriptor
-occupies 32 bytes and is 32-bytes aligned. The page request
-descriptor offset mask should be 32-bytes aligned.
+When building UML with glibc 2.17 installed, compilation
+of arch/um/os-Linux/file.c fails due to failure to find
+FALLOC_FL_PUNCH_HOLE and FALLOC_FL_KEEP_SIZE definitions.
 
-Fixes: 5b438f4ba315d ("iommu/vt-d: Support page request in scalable mode")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+It appears that /usr/include/bits/fcntl-linux.h (indirectly
+included by /usr/include/fcntl.h) does not include falloc.h
+with an older glibc, whereas a more up-to-date version
+does.
+
+Adding the direct include to file.c resolves the issue
+and does not cause problems for more recent glibc.
+
+Fixes: 50109b5a03b4 ("um: Add support for DISCARD in the UBD Driver")
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/um/os-Linux/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 3020506180c10..1d3816cd65d57 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -502,7 +502,7 @@ struct page_req_dsc {
- 	u64 priv_data[2];
- };
- 
--#define PRQ_RING_MASK ((0x1000 << PRQ_ORDER) - 0x10)
-+#define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
- 
- static bool access_error(struct vm_area_struct *vma, struct page_req_dsc *req)
- {
+diff --git a/arch/um/os-Linux/file.c b/arch/um/os-Linux/file.c
+index 5133e3afb96f7..3996937e2c0dd 100644
+--- a/arch/um/os-Linux/file.c
++++ b/arch/um/os-Linux/file.c
+@@ -8,6 +8,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <signal.h>
++#include <linux/falloc.h>
+ #include <sys/ioctl.h>
+ #include <sys/mount.h>
+ #include <sys/socket.h>
 -- 
 2.20.1
 
