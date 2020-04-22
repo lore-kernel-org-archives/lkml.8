@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66C8C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24615C5518E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 924A0206CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEBA206CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgDVPED (ORCPT
+        id S1726173AbgDVPFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:04:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58122 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 11:05:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58096 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbgDVPDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728055AbgDVPDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 11:03:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6212DADFE;
+        by mx2.suse.de (Postfix) with ESMTP id 59AF3AD26;
         Wed, 22 Apr 2020 15:03:03 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 975771E0E72; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
+        id 7313E1E0E83; Wed, 22 Apr 2020 17:03:03 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 15/23] swap: Use xas_erase() when removing page from swap cache
-Date:   Wed, 22 Apr 2020 17:02:48 +0200
-Message-Id: <20200422150256.23473-16-jack@suse.cz>
+Subject: [PATCH 07/23] xarray: Switch __xa_cmpxchg() to use xas_store_noinit()
+Date:   Wed, 22 Apr 2020 17:02:40 +0200
+Message-Id: <20200422150256.23473-8-jack@suse.cz>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200422150256.23473-1-jack@suse.cz>
 References: <20200422150256.23473-1-jack@suse.cz>
@@ -41,27 +40,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use xas_erase() to explicitely clear xarray marks when removing swap
-cache pages from the i_mapping xarray.
+Currently there are four places that end up calling into __xa_cmpxchg().
+Two in drivers/infiniband/hw/mlx5/odp.c, one in fs/erofs/utils.c and one
+in mm/shmem.c. The xarray in the first three places do not contain any
+marks ever, the fourth place originally used radix_tree_delete_item()
+which didn't touch marks either. So we are safe to switch __xa_cmpxchg()
+to use xas_store_noinit(). Also document that __xa_cmpxchg() now does
+not touch marks at all - i.e., it has ordinary store semantics without
+specialcasing NULL value. If someone ever needs xa_cmpxchg() equivalent
+that would really cause mark clearing on storing NULL, we can create
+xa_erase_item() function.
 
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- mm/swap_state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/xarray.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 1afbf68f1724..b5c8cbdcf8f0 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -167,7 +167,7 @@ void __delete_from_swap_cache(struct page *page, swp_entry_t entry)
- 	VM_BUG_ON_PAGE(PageWriteback(page), page);
- 
- 	for (i = 0; i < nr; i++) {
--		void *entry = xas_store(&xas, NULL);
-+		void *entry = xas_erase(&xas);
- 		VM_BUG_ON_PAGE(entry != page, entry);
- 		set_page_private(page + i, 0);
- 		xas_next(&xas);
+diff --git a/lib/xarray.c b/lib/xarray.c
+index a372c59e3914..d87045d120ad 100644
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -1460,7 +1460,8 @@ EXPORT_SYMBOL(xa_store);
+  *
+  * You must already be holding the xa_lock when calling this function.
+  * It will drop the lock if needed to allocate memory, and then reacquire
+- * it afterwards.
++ * it afterwards. The call does not change any xarray marks except for
++ * XA_FREE_MARK if free tracking is enabled.
+  *
+  * Context: Any context.  Expects xa_lock to be held on entry.  May
+  * release and reacquire xa_lock if @gfp flags permit.
+@@ -1478,7 +1479,7 @@ void *__xa_cmpxchg(struct xarray *xa, unsigned long index,
+ 	do {
+ 		curr = xas_load(&xas);
+ 		if (curr == old) {
+-			xas_store(&xas, entry);
++			xas_store_noinit(&xas, entry);
+ 			if (xa_track_free(xa)) {
+ 				if (entry && !curr)
+ 					xas_clear_mark(&xas, XA_FREE_MARK);
 -- 
 2.16.4
 
