@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EECC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC98BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42E92075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B42D20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549928;
-	bh=Ah1phaatKWQi3TK8AmYCuGygrGtfYztTNYjAIJTHsNw=;
+	s=default; t=1587549931;
+	bh=HSkOTg7gCVkv4ZuzABlCeCnUs40TtDv1dq7ADREqtzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3sBS4XtRTFQ89PRNIq0YVpRJGJuMe4/GHbPL/CKwu04Lm7WrOnBOMYm2lmyMx4Pw
-	 nzJFtukaGsPtWuTTbCEy2punaGucFvRasubK524grlaNwnPDVXTKXOQZkfCjultz+1
-	 ooSleDumcd61JsSEcecYFh+/BeFw8WJ4kzBjP+kc=
+	b=G9P+PzuZtdaavuvol7F9W2OxL2NjKTdu3/qEkN0S3TYb9fzbbJotTyUTp9ghHIc7k
+	 yPHUI4G4j5P3AnLvQus5J4VV/kxqUtMxvw/5sGcdbc8KS4WG7HRFgyNghcA0iS6TBm
+	 gPPD9fYcT2Vrmh/N6FEh7puEigLD0Z7ROBPzUWrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgDVKF1 (ORCPT
+        id S1728160AbgDVKFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:05:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbgDVKFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:08 -0400
+        id S1726950AbgDVKFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BDED2075A;
-        Wed, 22 Apr 2020 10:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 941672076C;
+        Wed, 22 Apr 2020 10:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549906;
-        bh=Ah1phaatKWQi3TK8AmYCuGygrGtfYztTNYjAIJTHsNw=;
+        s=default; t=1587549921;
+        bh=HSkOTg7gCVkv4ZuzABlCeCnUs40TtDv1dq7ADREqtzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MndYbZa04PQKf0fR1uPzvqdsRMgL2lzYReS2lfGjmBsz9hvYjvREU8MGE+78trpVx
-         3BFNeA3U2svCzuZWDMzslyMMDwdiCwVeeXrS9MGXpH2qdQCpazM1ZECb9Ukj4ZhZlu
-         2VMXpt2WoekmBjR9KrHquiWmWSwyNTa+s+ayt8UI=
+        b=RromsbSRh/j4LtLC2XI75ygfJvYydYWAltGaMG70qArHwPaXp2AP7IXAr/VHWEcaz
+         U6KE2L7/S+ZDemytZAWwMjdxSS/vp0MA8HQg56mNkaSUMw9VAXCXX/d7MFfRjSO6Oz
+         S2sFWe8XB5TI7+zXMAKWluvakppQcAgmdMW/T7so=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        openipmi-developer@lists.sourceforge.net,
+        Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 014/125] misc: rtsx: set correct pcr_ops for rts522A
-Date:   Wed, 22 Apr 2020 11:55:31 +0200
-Message-Id: <20200422095035.402209458@linuxfoundation.org>
+Subject: [PATCH 4.9 062/125] ipmi: fix hung processes in __get_guid()
+Date:   Wed, 22 Apr 2020 11:56:19 +0200
+Message-Id: <20200422095043.397925547@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -59,35 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 10cea23b6aae15e8324f4101d785687f2c514fe5 ]
+[ Upstream commit 32830a0534700f86366f371b150b17f0f0d140d7 ]
 
-rts522a should use rts522a_pcr_ops, which is
-diffrent with rts5227 in phy/hw init setting.
+The wait_event() function is used to detect command completion.
+When send_guid_cmd() returns an error, smi_send() has not been
+called to send data. Therefore, wait_event() should not be used
+on the error path, otherwise it will cause the following warning:
 
-Fixes: ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200326032618.20472-1-yuehaibing@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
+[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
+[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
+[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
+[ 1361.856199] Call Trace:
+[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
+[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
+[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
+[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
+[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
+[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
+[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
+[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
+[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
+[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
+[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
+[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
+[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
+[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
+[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
+[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
+[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
+[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
+[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
+
+Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Corey Minyard <minyard@acm.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: openipmi-developer@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 2.6.17-
+Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/rts5227.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/ipmi/ipmi_msghandler.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/rts5227.c b/drivers/mfd/rts5227.c
-index ff296a4bf3d23..dc6a9432a4b65 100644
---- a/drivers/mfd/rts5227.c
-+++ b/drivers/mfd/rts5227.c
-@@ -369,6 +369,7 @@ static const struct pcr_ops rts522a_pcr_ops = {
- void rts522a_init_params(struct rtsx_pcr *pcr)
- {
- 	rts5227_init_params(pcr);
-+	pcr->ops = &rts522a_pcr_ops;
- 
- 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 5d509ccf1299c..74044b52d2c6d 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -2646,7 +2646,9 @@ get_guid(ipmi_smi_t intf)
+ 	if (rv)
+ 		/* Send failed, no GUID available. */
+ 		intf->bmc->guid_set = 0;
+-	wait_event(intf->waitq, intf->bmc->guid_set != 2);
++	else
++		wait_event(intf->waitq, intf->bmc->guid_set != 2);
++
+ 	intf->null_user_handler = NULL;
  }
+ 
 -- 
 2.20.1
 
