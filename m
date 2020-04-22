@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A436C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDE8C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37FC12075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8622075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552057;
-	bh=+xra3vEo1yIYNzhtiqLFGvu0By+bBWk/4gp6Caqkb1s=;
+	s=default; t=1587552060;
+	bh=x9o356t3GFTMdLhsII0MkSSipdwmAm2zA7xCIh92LPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8uOvPL7WNp1ZKd0IpCjBg26tp7BklP1Rl4ivii9i8RrAUV5Rl5QGg8Zf4DlyB5z2
-	 KUFKjZaYsnDH/mbSTqEm43HcODpUH547MnrsL3gKxDxn/6mxaGpwu59Ml6FCHN2JrG
-	 3QiiPVnniCyhk2LJ7+4cYsMtgwUVCJZ4TzkwcM7M=
+	b=sVBMZB8MOslOITLP5/OAw6bJBNk6HWbCOe9pipo6qh50QH6bcTOXa4sHdFss2CTGg
+	 KzM6/TR72/sSWQB5qyPFr+nIE2jVKASz4zaDDguGWNISBg4DWqY3EpcSIigiw40XUb
+	 P86la/pj15GtoUn+dGfPE/4ZhgFnq6ZpHv+/MgU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgDVKkz (ORCPT
+        id S1731232AbgDVKkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbgDVKUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:20:37 -0400
+        id S1730120AbgDVKUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:20:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA1CC2076B;
-        Wed, 22 Apr 2020 10:20:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34B1D2070B;
+        Wed, 22 Apr 2020 10:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550837;
-        bh=+xra3vEo1yIYNzhtiqLFGvu0By+bBWk/4gp6Caqkb1s=;
+        s=default; t=1587550839;
+        bh=x9o356t3GFTMdLhsII0MkSSipdwmAm2zA7xCIh92LPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P6c3kO1Dv9vZhCzfPZEqsD/Ikdc4KfjRnCCu9tZovR10dIfGL+Asvx14dvfFT+EQR
-         aWWY9btIQvMDUhb5VWzZZMsiR8vQHf5s6q/t9Z5JT//1G3L2l2PFCFQmrdu6r6rXKx
-         kyakWy6n9QqCWiukqfyBCam9brRtb0QUzaRWfbWo=
+        b=m3pAkeymaBsVnfesVEKXIX8ILiViH6psaE7mV5deUWvRk0JM1K9TKZXa4Ih3HyEZX
+         8pQbyFFyZaDYCKB8nw9cJnAYr0/6x4kH411JWi5ghesT32QaCtW7kLRLAf5REDZTju
+         +ydp7wtRx7FGplTNSFOGxe42G5O+4v2T6FL2E2f8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 112/118] mtd: lpddr: Fix a double free in probe()
-Date:   Wed, 22 Apr 2020 11:57:53 +0200
-Message-Id: <20200422095049.257744225@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Joern Engel <joern@lazybastard.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH 5.4 113/118] mtd: phram: fix a double free issue in error path
+Date:   Wed, 22 Apr 2020 11:57:54 +0200
+Message-Id: <20200422095049.379269957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -59,33 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-commit 4da0ea71ea934af18db4c63396ba2af1a679ef02 upstream.
+commit 49c64df880570034308e4a9a49c4bc95cf8cdb33 upstream.
 
-This function is only called from lpddr_probe().  We free "lpddr" both
-here and in the caller, so it's a double free.  The best place to free
-"lpddr" is in lpddr_probe() so let's delete this one.
+The variable 'name' is released multiple times in the error path,
+which may cause double free issues.
+This problem is avoided by adding a goto label to release the memory
+uniformly. And this change also makes the code a bit more cleaner.
 
-Fixes: 8dc004395d5e ("[MTD] LPDDR qinfo probing.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 4f678a58d335 ("mtd: fix memory leaks in phram_setup")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Joern Engel <joern@lazybastard.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200228092554.o57igp3nqhyvf66t@kili.mountain
+Link: https://lore.kernel.org/linux-mtd/20200318153156.25612-1-wenyang@linux.alibaba.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/lpddr/lpddr_cmds.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/mtd/devices/phram.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/mtd/lpddr/lpddr_cmds.c
-+++ b/drivers/mtd/lpddr/lpddr_cmds.c
-@@ -68,7 +68,6 @@ struct mtd_info *lpddr_cmdset(struct map
- 	shared = kmalloc_array(lpddr->numchips, sizeof(struct flchip_shared),
- 						GFP_KERNEL);
- 	if (!shared) {
--		kfree(lpddr);
- 		kfree(mtd);
- 		return NULL;
+--- a/drivers/mtd/devices/phram.c
++++ b/drivers/mtd/devices/phram.c
+@@ -243,22 +243,25 @@ static int phram_setup(const char *val)
+ 
+ 	ret = parse_num64(&start, token[1]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal start address\n");
++		goto error;
  	}
+ 
+ 	ret = parse_num64(&len, token[2]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal device length\n");
++		goto error;
+ 	}
+ 
+ 	ret = register_device(name, start, len);
+-	if (!ret)
+-		pr_info("%s device: %#llx at %#llx\n", name, len, start);
+-	else
+-		kfree(name);
++	if (ret)
++		goto error;
+ 
++	pr_info("%s device: %#llx at %#llx\n", name, len, start);
++	return 0;
++
++error:
++	kfree(name);
+ 	return ret;
+ }
+ 
 
 
