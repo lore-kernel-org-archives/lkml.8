@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DE8C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD44C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117E52076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9ABD2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550152;
-	bh=GI1A56xH4jtV1mwRDVoGAjyG1Z0mT8Hvjl9lGEaovbM=;
+	s=default; t=1587550154;
+	bh=tmiSw4QrLdNYLOt8h7We+WoCE+44hydsGgrXYbzf7Fg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TEzZXAv6zXN05dkBchZFVIkdBc/yd7/VE6cq03qjCrw8nhmoRNb2gbSHntTKG6q8X
-	 03E/gvcvm6h2WgYm+/AL5jNhk08aicfnydW/EfmKjq/OmPUZ5/VcnUYwCnDfx/i0lj
-	 FeKZXRrf6ATEkzitSG4m/Xt79Oq4K7MzYJobHkWE=
+	b=ttX++pswjvoyHQBPO4yZkiAIqjPUD385B8z2gtcaaJX2smS0CnyXczjqlTc3xht9E
+	 tDQ630rxawWNRPyqjIiqUZWInu5FFWSeP6yVVJdjnAgNeKoL4u2Gb+S7a7I8Pa5BLj
+	 LvuFPpe+fjmTp0/uw+HfFUiGpHlgXZvObIPTdOwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgDVKJK (ORCPT
+        id S1728830AbgDVKJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:09:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:09:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgDVKJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:04 -0400
+        id S1728814AbgDVKJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6D6E20575;
-        Wed, 22 Apr 2020 10:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A16E420575;
+        Wed, 22 Apr 2020 10:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550143;
-        bh=GI1A56xH4jtV1mwRDVoGAjyG1Z0mT8Hvjl9lGEaovbM=;
+        s=default; t=1587550148;
+        bh=tmiSw4QrLdNYLOt8h7We+WoCE+44hydsGgrXYbzf7Fg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eWhshX/QMjFgPlhoh0vVftVa/edy7GcAIj4h3UKuNG57lrBU13bi2VCDZf+cRUpJ+
-         ej4tc5y058Ro8VA0C/OCRnsweUkaYOtvCjI6upUWNfAQehA00gY9F6EvKK79ehzrtS
-         qIjknJAVjnI4e4Ita3O3lrJzo3G9LOxxh91WLOE4=
+        b=XU/CSONDXook00mgTeW1LR1rE9+fd+acHvQ/0nA7pYKwVpY5CtYxn/ip1KtdrgTh5
+         SBGJyPoQ/rNtirLh7x0ZZ9Gii7bR/HTVZNToMtFlOoKwJxLeAiPcjwfTk2VJ+egp6C
+         8xmuW2fbnexJSc/LTOPqgK/SElBzuvVedUsT16Mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Yury Norov <yury.norov@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Joe Perches <joe@perches.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 027/199] btrfs: remove a BUG_ON() from merge_reloc_roots()
-Date:   Wed, 22 Apr 2020 11:55:53 +0200
-Message-Id: <20200422095100.822614077@linuxfoundation.org>
+Subject: [PATCH 4.14 029/199] uapi: rename ext2_swab() to swab() and share globally in swab.h
+Date:   Wed, 22 Apr 2020 11:55:55 +0200
+Message-Id: <20200422095100.993677564@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,75 +65,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Yury Norov <yury.norov@gmail.com>
 
-[ Upstream commit 7b7b74315b24dc064bc1c683659061c3d48f8668 ]
+[ Upstream commit d5767057c9a76a29f073dad66b7fa12a90e8c748 ]
 
-This was pretty subtle, we default to reloc roots having 0 root refs, so
-if we crash in the middle of the relocation they can just be deleted.
-If we successfully complete the relocation operations we'll set our root
-refs to 1 in prepare_to_merge() and then go on to merge_reloc_roots().
+ext2_swab() is defined locally in lib/find_bit.c However it is not
+specific to ext2, neither to bitmaps.
 
-At prepare_to_merge() time if any of the reloc roots have a 0 reference
-still, we will remove that reloc root from our reloc root rb tree, and
-then clean it up later.
+There are many potential users of it, so rename it to just swab() and
+move to include/uapi/linux/swab.h
 
-However this only happens if we successfully start a transaction.  If
-we've aborted previously we will skip this step completely, and only
-have reloc roots with a reference count of 0, but were never properly
-removed from the reloc control's rb tree.
+ABI guarantees that size of unsigned long corresponds to BITS_PER_LONG,
+therefore drop unneeded cast.
 
-This isn't a problem per-se, our references are held by the list the
-reloc roots are on, and by the original root the reloc root belongs to.
-If we end up in this situation all the reloc roots will be added to the
-dirty_reloc_list, and then properly dropped at that point.  The reloc
-control will be free'd and the rb tree is no longer used.
-
-There were two options when fixing this, one was to remove the BUG_ON(),
-the other was to make prepare_to_merge() handle the case where we
-couldn't start a trans handle.
-
-IMO this is the cleaner solution.  I started with handling the error in
-prepare_to_merge(), but it turned out super ugly.  And in the end this
-BUG_ON() simply doesn't matter, the cleanup was happening properly, we
-were just panicing because this BUG_ON() only matters in the success
-case.  So I've opted to just remove it and add a comment where it was.
-
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Link: http://lkml.kernel.org/r/20200103202846.21616-1-yury.norov@gmail.com
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Joe Perches <joe@perches.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ include/linux/swab.h      |  1 +
+ include/uapi/linux/swab.h | 10 ++++++++++
+ lib/find_bit.c            | 16 ++--------------
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index d4c00edd16d2b..42f388ed0796b 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -2480,7 +2480,21 @@ out:
- 			free_reloc_roots(&reloc_roots);
+diff --git a/include/linux/swab.h b/include/linux/swab.h
+index e466fd159c857..bcff5149861a9 100644
+--- a/include/linux/swab.h
++++ b/include/linux/swab.h
+@@ -7,6 +7,7 @@
+ # define swab16 __swab16
+ # define swab32 __swab32
+ # define swab64 __swab64
++# define swab __swab
+ # define swahw32 __swahw32
+ # define swahb32 __swahb32
+ # define swab16p __swab16p
+diff --git a/include/uapi/linux/swab.h b/include/uapi/linux/swab.h
+index 23cd84868cc3b..fa7f97da5b768 100644
+--- a/include/uapi/linux/swab.h
++++ b/include/uapi/linux/swab.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/compiler.h>
++#include <asm/bitsperlong.h>
+ #include <asm/swab.h>
+ 
+ /*
+@@ -132,6 +133,15 @@ static inline __attribute_const__ __u32 __fswahb32(__u32 val)
+ 	__fswab64(x))
+ #endif
+ 
++static __always_inline unsigned long __swab(const unsigned long y)
++{
++#if BITS_PER_LONG == 64
++	return __swab64(y);
++#else /* BITS_PER_LONG == 32 */
++	return __swab32(y);
++#endif
++}
++
+ /**
+  * __swahw32 - return a word-swapped 32-bit value
+  * @x: value to wordswap
+diff --git a/lib/find_bit.c b/lib/find_bit.c
+index 6ed74f78380ce..883ef3755a1cb 100644
+--- a/lib/find_bit.c
++++ b/lib/find_bit.c
+@@ -133,18 +133,6 @@ EXPORT_SYMBOL(find_last_bit);
+ 
+ #ifdef __BIG_ENDIAN
+ 
+-/* include/linux/byteorder does not support "unsigned long" type */
+-static inline unsigned long ext2_swab(const unsigned long y)
+-{
+-#if BITS_PER_LONG == 64
+-	return (unsigned long) __swab64((u64) y);
+-#elif BITS_PER_LONG == 32
+-	return (unsigned long) __swab32((u32) y);
+-#else
+-#error BITS_PER_LONG not defined
+-#endif
+-}
+-
+ #if !defined(find_next_bit_le) || !defined(find_next_zero_bit_le)
+ static unsigned long _find_next_bit_le(const unsigned long *addr,
+ 		unsigned long nbits, unsigned long start, unsigned long invert)
+@@ -157,7 +145,7 @@ static unsigned long _find_next_bit_le(const unsigned long *addr,
+ 	tmp = addr[start / BITS_PER_LONG] ^ invert;
+ 
+ 	/* Handle 1st word. */
+-	tmp &= ext2_swab(BITMAP_FIRST_WORD_MASK(start));
++	tmp &= swab(BITMAP_FIRST_WORD_MASK(start));
+ 	start = round_down(start, BITS_PER_LONG);
+ 
+ 	while (!tmp) {
+@@ -168,7 +156,7 @@ static unsigned long _find_next_bit_le(const unsigned long *addr,
+ 		tmp = addr[start / BITS_PER_LONG] ^ invert;
  	}
  
--	BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
-+	/*
-+	 * We used to have
-+	 *
-+	 * BUG_ON(!RB_EMPTY_ROOT(&rc->reloc_root_tree.rb_root));
-+	 *
-+	 * here, but it's wrong.  If we fail to start the transaction in
-+	 * prepare_to_merge() we will have only 0 ref reloc roots, none of which
-+	 * have actually been removed from the reloc_root_tree rb tree.  This is
-+	 * fine because we're bailing here, and we hold a reference on the root
-+	 * for the list that holds it, so these roots will be cleaned up when we
-+	 * do the reloc_dirty_list afterwards.  Meanwhile the root->reloc_root
-+	 * will be cleaned up on unmount.
-+	 *
-+	 * The remaining nodes will be cleaned up by free_reloc_control.
-+	 */
+-	return min(start + __ffs(ext2_swab(tmp)), nbits);
++	return min(start + __ffs(swab(tmp)), nbits);
  }
+ #endif
  
- static void free_block_list(struct rb_root *blocks)
 -- 
 2.20.1
 
