@@ -2,159 +2,138 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74168C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0136C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5425820780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czKi7qn2"
+	by mail.kernel.org (Postfix) with ESMTP id 8466A2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgDVMBq (ORCPT
+        id S1728286AbgDVMDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727974AbgDVMBq (ORCPT
+        Wed, 22 Apr 2020 08:03:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44866 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726835AbgDVMDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:01:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED5EC03C1A8;
-        Wed, 22 Apr 2020 05:01:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d15so466135wrx.3;
-        Wed, 22 Apr 2020 05:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iOKXRpXv+gkEgofK4WVWRQKy9tlZ8yvYUK75eISMHWM=;
-        b=czKi7qn21POWgr44WAv0KdcLxI/rxgkVzrlB/1C4Xw4WEoR6ftneGr4rQ2iMCyufUz
-         pcFMo829elw+M1gPwGJq7n4Hefkg1pBL6KAzY2pV5y11GBX/Bfv5BMxdQP/CUSD3OSJ4
-         3Idb9AILqcpMVQScuFr+q0G9QEVExG4DmMAsfTAkfunYXiVH5SpQm73iGD2o7iKwx5Lt
-         9Lxv9S+u09drWbnwxBQxzneFd7z7DKPHYdYEhZDcCr1rGDPXAcfcBb7eFJczltlqofnX
-         xsmgXDx9NvO/yYeemtjZoyn8VdN9ZMIXMgIc0z8EjaUGD5MewXNrSiMiL9mg3BhyIy24
-         rT1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iOKXRpXv+gkEgofK4WVWRQKy9tlZ8yvYUK75eISMHWM=;
-        b=nsWobq/dRrfBf0Uzle5BGWmaCbk4jb85NYaL6fmFQgPm8DNRgGWfx93HOF76koWR9h
-         G+oYJcGFbtfWKWJCy2oWbkdGIpgeST+qi2yExG89e+cOrGSgqMl4LvmN/tMK3iy7ZVPI
-         2XzS6VV4hHOm1S6dqMwQ2CZzHddx05wyq6qxHmRA+z61NS4hef0f9UTzGSuOeJPaSMP9
-         +1uEHVhhLaj8XHcLNYpa0iJaNM2TGTcjj82WpKm1LzdigVeAxl6wPCZb+72sw63vX9jc
-         Uss8Aq0+jZn4jLBFg9GcUrsx1OODkgwcK3SV7pkMrOyoTARjtm8Oyi8+hl3hsDFffDXG
-         AC8Q==
-X-Gm-Message-State: AGi0PuZkmR+rBg/aAmSkaaQeqnk1Tm72TKdrXhcE0DkQTYrQPN5A1tpi
-        qo9DkO3/khwAzaYjR7Q8bMk=
-X-Google-Smtp-Source: APiQypL1hXf3hE8tEvLggJJTkHpQZJynplGAtPQGFoM6V+qOP/gFDPqiGq8QGze8PKklHkmiSsjBVQ==
-X-Received: by 2002:adf:82cf:: with SMTP id 73mr28979371wrc.411.1587556904428;
-        Wed, 22 Apr 2020 05:01:44 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id s18sm8576749wra.94.2020.04.22.05.01.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 05:01:43 -0700 (PDT)
-Subject: Re: [PATCH] media: MAINTAINERS: Fix Hantro, Rga and Rkvdec entries
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, kernel@collabora.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-References: <20200422111403.19114-1-ezequiel@collabora.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <73d3d8c1-1952-aeb1-5bc0-829503cf29bd@gmail.com>
-Date:   Wed, 22 Apr 2020 14:01:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200422111403.19114-1-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Apr 2020 08:03:32 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MC3T1c139831
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:03:31 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxr4j1t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:03:31 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 22 Apr 2020 13:02:30 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 Apr 2020 13:02:27 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03MC32sU56033566
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 12:03:02 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7758A11C054;
+        Wed, 22 Apr 2020 12:03:02 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79CA111C050;
+        Wed, 22 Apr 2020 12:03:01 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.220.15])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Apr 2020 12:03:01 +0000 (GMT)
+Subject: Re: [PATCH 1/5] ima: Set file->f_mode instead of file->f_flags in
+ ima_calc_file_hash()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, krzysztof.struczynski@huawei.com,
+        silviu.vlasceanu@huawei.com, stable@vger.kernel.org,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>
+Date:   Wed, 22 Apr 2020 08:03:01 -0400
+In-Reply-To: <20200325161116.7082-1-roberto.sassu@huawei.com>
+References: <20200325161116.7082-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042212-0008-0000-0000-0000037558B1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042212-0009-0000-0000-00004A9721D8
+Message-Id: <1587556981.5738.7.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_03:2020-04-22,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
+[CC'ing Goldwyn Rodrigues]
 
-On 4/22/20 1:14 PM, Ezequiel Garcia wrote:
-> It seems recent merges introduced a couple issues
-> here, so let's fix them all. Also, reorder Rockchip
-> video decoder as per parse-maintainers.pl script
-> and add linux-rockchip mailing list.
+Hi Roberto,
+
+On Wed, 2020-03-25 at 17:11 +0100, Roberto Sassu wrote:
+> Commit a408e4a86b36 ("ima: open a new file instance if no read
+> permissions") tries to create a new file descriptor to calculate a file
+> digest if the file has not been opened with O_RDONLY flag. However, if a
+> new file descriptor cannot be obtained, it sets the FMODE_READ flag to
+> file->f_flags instead of file->f_mode.
 > 
-> Reported-by: Johan Jonker <jbx6244@gmail.com>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> This patch fixes this issue by replacing f_flags with f_mode as it was
+> before that commit.
+> 
+> Cc: stable@vger.kernel.org # 4.20.x
+> Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 > ---
->  MAINTAINERS | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+>  security/integrity/ima/ima_crypto.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 09e0137df61d..4d5b06c6fe0f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7460,7 +7460,7 @@ L:	linux-media@vger.kernel.org
->  L:	linux-rockchip@lists.infradead.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-> -F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
-> +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
->  F:	drivers/staging/media/hantro/
+> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+> index 423c84f95a14..8ab17aa867dd 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -436,7 +436,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+>  			 */
+
+Thanks, Roberto.  The comment above here and the rest of the code
+refers to flags.  Both should be updated as well to reflect using
+f_mode.
+
+>  			pr_info_ratelimited("Unable to reopen file for reading.\n");
+>  			f = file;
+> -			f->f_flags |= FMODE_READ;
+> +			f->f_mode |= FMODE_READ;
+>  			modified_flags = true;
+
+The variable should be changed to "modified_mode".
+
+thanks,
+
+Mimi
+
+>  		} else {
+>  			new_file_instance = true;
+> @@ -456,7 +456,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+>  	if (new_file_instance)
+>  		fput(f);
+>  	else if (modified_flags)
+> -		f->f_flags &= ~FMODE_READ;
+> +		f->f_mode &= ~FMODE_READ;
+>  	return rc;
+>  }
 >  
->  HARD DRIVE ACTIVE PROTECTION SYSTEM (HDAPS) DRIVER
-> @@ -14465,13 +14465,6 @@ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
->  F:	drivers/hid/hid-roccat*
->  F:	include/linux/hid-roccat*
->  
-> -ROCKCHIP VIDEO DECODER DRIVER
-> -M:	Ezequiel Garcia <ezequiel@collabora.com>
-> -L:	linux-media@vger.kernel.org
-> -S:	Maintained
-> -F:	drivers/staging/media/rkvdec/
-> -F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
-> -
->  ROCKCHIP ISP V1 DRIVER
->  M:	Helen Koike <helen.koike@collabora.com>
->  L:	linux-media@vger.kernel.org
-
-L:	linux-rockchip@lists.infradead.org
-
-> @@ -14483,12 +14476,19 @@ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
->  M:	Jacob Chen <jacob-chen@iotwrt.com>
->  M:	Ezequiel Garcia <ezequiel@collabora.com>
->  L:	linux-media@vger.kernel.org
-> +L:	linux-rockchip@lists.infradead.org
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
->  F:	Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> -F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
->  F:	drivers/media/platform/rockchip/rga/
->  
-> +ROCKCHIP VIDEO DECODER DRIVER
-> +M:	Ezequiel Garcia <ezequiel@collabora.com>
-> +L:	linux-media@vger.kernel.org
-> +L:	linux-rockchip@lists.infradead.org
-> +S:	Maintained
-
-> +F:	drivers/staging/media/rkvdec/
-> +F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
-
-When I look at the other entries 'drivers/' is sort below 'Documentation/'.
-
-./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS
---order
-
-> +
->  ROCKER DRIVER
->  M:	Jiri Pirko <jiri@resnulli.us>
->  L:	netdev@vger.kernel.org
-> 
 
