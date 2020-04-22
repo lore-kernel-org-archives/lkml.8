@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F89C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80306C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71C062076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555D72076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553343;
-	bh=mIVHQ0uSnkMp/t2dweUoji1QdAwBFsjSYmZqiOKQEuA=;
+	s=default; t=1587553355;
+	bh=Wwmox0R4RoMH1wIvUK45KwsgmKAYgn9Af7TOQuHnS1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNe+xgOcIEx+QMHjeB0bMWSn20pUck7lrxvuytiM9aB4RIv8sDyBWPUer0C4kwlOp
-	 Nj6ALVCECSVuObXYYhaQCtrqvN6sfUImrDiVEoMhhMal6KTrlE5mqh7PgxQQ317oX2
-	 Ib4ISL+j3ArDDAFanDfxMVszmLqqq6Qgt+0IMro4=
+	b=aC3pZaugtrGMxJLxBExLkfW/BwWHP/GyYgQU/x+jLYeSfqpuBFN2StX4u4e2ze1Fw
+	 Bd1pVy2sL6Fqi6l/iS/RaTZDaOD6u73u3EDyDRJ6/YDHW8zaoxrdHDGXxXKVtb2HSA
+	 vA/uLuOa3TlkV5jlh9nJXnnS1wAv0ahYGLluW4sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732423AbgDVLCT (ORCPT
+        id S1731884AbgDVLCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgDVKAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:46 -0400
+        id S1726654AbgDVKAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:00:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 390D220784;
-        Wed, 22 Apr 2020 10:00:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E41E20735;
+        Wed, 22 Apr 2020 10:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549645;
-        bh=mIVHQ0uSnkMp/t2dweUoji1QdAwBFsjSYmZqiOKQEuA=;
+        s=default; t=1587549638;
+        bh=Wwmox0R4RoMH1wIvUK45KwsgmKAYgn9Af7TOQuHnS1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bT6NAmoZLuptkbUFZ9DXQjPdmHjlAnYMC6ZURLy+PdwsAJk9LLxtAn/3VAL6jlwa3
-         GXr73gpYKGAtMLXfA3rlTFa1NxWWkyA47ZVGk0q7Cs1Z+FCaYuMCZDs2JxKI19MEH6
-         hGsoQNiPun2ImcdlR3VuinB8o7KZ47E0mPIL5k90=
+        b=z4ZS3K2J6IcQyKsKJY1cOBU+MiQ6nxoTEHBlMuuoQNGpG4MNOnl8ar6p/g4VwgRyd
+         siTkRE2a2bmAwWIjFrZKdqgpInneA+5J3I1tJh+KVbk2iqlbbx6TK9MqfzI9MhDZrK
+         +H6INElBDIsQHqfrs+SkZoU7xS7+0MNuSnVR8oRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Gander <simon@tuxera.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 047/100] hfsplus: fix crash and filesystem corruption when deleting files
-Date:   Wed, 22 Apr 2020 11:56:17 +0200
-Message-Id: <20200422095030.902624869@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.4 018/100] usb: gadget: f_fs: Fix use after free issue as part of queue failure
+Date:   Wed, 22 Apr 2020 11:55:48 +0200
+Message-Id: <20200422095026.140789186@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -61,52 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Gander <simon@tuxera.com>
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-commit 25efb2ffdf991177e740b2f63e92b4ec7d310a92 upstream.
+commit f63ec55ff904b2f2e126884fcad93175f16ab4bb upstream.
 
-When removing files containing extended attributes, the hfsplus driver may
-remove the wrong entries from the attributes b-tree, causing major
-filesystem damage and in some cases even kernel crashes.
+In AIO case, the request is freed up if ep_queue fails.
+However, io_data->req still has the reference to this freed
+request. In the case of this failure if there is aio_cancel
+call on this io_data it will lead to an invalid dequeue
+operation and a potential use after free issue.
+Fix this by setting the io_data->req to NULL when the request
+is freed as part of queue failure.
 
-To remove a file, all its extended attributes have to be removed as well.
-The driver does this by looking up all keys in the attributes b-tree with
-the cnid of the file.  Each of these entries then gets deleted using the
-key used for searching, which doesn't contain the attribute's name when it
-should.  Since the key doesn't contain the name, the deletion routine will
-not find the correct entry and instead remove the one in front of it.  If
-parent nodes have to be modified, these become corrupt as well.  This
-causes invalid links and unsorted entries that not even macOS's fsck_hfs
-is able to fix.
-
-To fix this, modify the search key before an entry is deleted from the
-attributes b-tree by copying the found entry's key into the search key,
-therefore ensuring that the correct entry gets removed from the tree.
-
-Signed-off-by: Simon Gander <simon@tuxera.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Anton Altaparmakov <anton@tuxera.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200327155541.1521-1-simon@tuxera.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 2e4c7553cd6f ("usb: gadget: f_fs: add aio support")
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+CC: stable <stable@vger.kernel.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200326115620.12571-1-sallenki@codeaurora.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/hfsplus/attributes.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/gadget/function/f_fs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/hfsplus/attributes.c
-+++ b/fs/hfsplus/attributes.c
-@@ -291,6 +291,10 @@ static int __hfsplus_delete_attr(struct
- 		return -ENOENT;
- 	}
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -812,6 +812,7 @@ static ssize_t ffs_epfile_io(struct file
  
-+	/* Avoid btree corruption */
-+	hfs_bnode_read(fd->bnode, fd->search_key,
-+			fd->keyoffset, fd->keylength);
-+
- 	err = hfs_brec_remove(fd);
- 	if (err)
- 		return err;
+ 			ret = usb_ep_queue(ep->ep, req, GFP_ATOMIC);
+ 			if (unlikely(ret)) {
++				io_data->req = NULL;
+ 				usb_ep_free_request(ep->ep, req);
+ 				goto error_lock;
+ 			}
 
 
