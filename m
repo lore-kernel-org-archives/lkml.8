@@ -2,187 +2,162 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A1BC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08812C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF022076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552442;
-	bh=SbJ/jaCJ3OrrVtjET4HQ68htaBYLYMg22O0Pj/OIO/Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uW27KCX7QnkGRiZOY2T3wiY2sgPY50B/IfOYPAetaCV5NxfeBtdTiM8BVQRFXZQWL
-	 s7kvzG4LaEvMoXNv0fxFrPbT43BM5TJRzp/mk90G16A2t+fU5UF2SCP9efRb9icCjO
-	 XAMurGMz0cD+jheWnYGBwB+9MPifGRaYxrc5v/qg=
+	by mail.kernel.org (Postfix) with ESMTP id D82FB2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F32Qzgth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731704AbgDVKrU (ORCPT
+        id S1731596AbgDVKr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbgDVKP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE3052075A;
-        Wed, 22 Apr 2020 10:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550556;
-        bh=SbJ/jaCJ3OrrVtjET4HQ68htaBYLYMg22O0Pj/OIO/Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b0d98bbJWDe6pSD+pC0m3Hos7K4lFCTdmU4ucIT3vu+0fNg8yrbnGF/OYSOhbC5FJ
-         5p5JUjhHSwj2fCD8DEvlyo57YiCkJ6mTkWYpi0EwsODuz+UUCodL2UkT6dLS3kzhzn
-         NLByAF/Ku/vpVpyeXJV+ANx3lOBcw2puFZ4PWmRQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Goyette <simon.goyette@gmail.com>,
-        =?UTF-8?q?Maxime=20Roussin-B=C3=A9langer?= 
-        <maxime.roussinbelanger@gmail.com>,
-        Guillaume Champagne <champagne.guillaume.c@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 57/64] iio: si1133: read 24-bit signed integer for measurement
-Date:   Wed, 22 Apr 2020 11:57:41 +0200
-Message-Id: <20200422095023.323074129@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
-References: <20200422095008.799686511@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Apr 2020 06:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729738AbgDVKPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:51 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE03C03C1AA
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:15:51 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id y10so1016289uao.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ent6+GWTAd1CN2cQFL7owIeVj6EL283gNxioSTs4l5o=;
+        b=F32QzgthXD2jgAuQ+ulZ7jjKUc5cEILBetXy1JuSILGE0igdjC2J+lnu2jSNRH5O+P
+         iUF47dndUkLlazROwjFbGHDTMtiDDzdTJikSM1TF/CvtD9WvqW2VEQhu2wAO7wiglWL6
+         MMekwxK9vV8suAiRek8nAFqL0lJwXKAZSg3US0Bj/E8at5iKP/lc/QmsNULdHi2kp33H
+         l7srBJ5x4usVwd4oulnyViwGb5/3CGCvs0VwhB5f6oXkQD2pcAy+Y2XagtstUjUHbi+e
+         4bHO8GzDRl86l2mdjcRT43iujjarSg946/pa9aUENTDs7od6CaGTzGwAuHdVlQUIjgtm
+         v/yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ent6+GWTAd1CN2cQFL7owIeVj6EL283gNxioSTs4l5o=;
+        b=sey+Go+j5bRbein0JCBtuAO9N6/prJFIApMI+wDFvVU0h1PT016wXCyR2ak+KFap7Z
+         E25kbVng6RGb9FlzHNe6O1dQu1vfyR0NSgO+/0fAKblwbhv8LW0ONhXDRa0QLvT9r3pX
+         EVkU+h/yjdimcnTzd2px/CUk7zwmqrQNde4n6A1WGKW91R6ZdJiCitJohrLyNS0SEkxw
+         YgK3xtpjn3UbvVykny8n+fOHjq5XKNxPGXhlhpkn/bTmbSs01xHs1eFMMAz9FyO7XzMM
+         edoXo7VAJpBWOi6Bp1GLw4y3IwiuXHySFrI/3AC6MzzhChQTqwNW9k0/D7PxFCFew2YX
+         4Unw==
+X-Gm-Message-State: AGi0PubAChVQRHYe+IaotIhRUyma6HjV1FYhwrS1cBRdpwCus6GTsg7Y
+        p8KJ5NCEa3BpnVodLFRFxfWyRcRxylo6QyePpkAkVQ==
+X-Google-Smtp-Source: APiQypLkLgLmjx37u5zwjtD+wcJhoFaiBukTOUSNTmPHeMUtYrDFKBnEw8llvD54u+Y56sM/sAqQ1C17tA2NQVE11MY=
+X-Received: by 2002:ab0:2ea:: with SMTP id 97mr15760020uah.129.1587550548143;
+ Wed, 22 Apr 2020 03:15:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200417145017.3932443d@canb.auug.org.au> <995a958c-15a1-cb05-e276-065c7f6e57fd@infradead.org>
+ <CAPDyKFqE7zfaKSbpBoBbrSCEnx+70dOrWs+=QG_x2G-Fpt6=ng@mail.gmail.com>
+ <ce11a0b5-22a6-dd18-f858-5d30f43e1128@intel.com> <CAK7LNARCT3YQEnVE0NMCphSuqvjLoG2EXdpdcAZuoEOD_mFyEw@mail.gmail.com>
+In-Reply-To: <CAK7LNARCT3YQEnVE0NMCphSuqvjLoG2EXdpdcAZuoEOD_mFyEw@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 22 Apr 2020 12:15:12 +0200
+Message-ID: <CAPDyKFqCnUzHQ9+FKH-w_VLRNQ_UvK4nmxw+hROwXkxucjzrUw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Apr 17 (mmc/host/sdhci-of-at91.c)
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@atmel.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
+On Mon, 20 Apr 2020 at 14:28, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Mon, Apr 20, 2020 at 7:28 PM Adrian Hunter <adrian.hunter@intel.com> w=
+rote:
+> >
+> > On 20/04/20 12:12 pm, Ulf Hansson wrote:
+> > > + Masahiro Yamada, Adrian Hunter
+> > >
+> > > On Fri, 17 Apr 2020 at 16:48, Randy Dunlap <rdunlap@infradead.org> wr=
+ote:
+> > >>
+> > >> On 4/16/20 9:50 PM, Stephen Rothwell wrote:
+> > >>> Hi all,
+> > >>>
+> > >>> Changes since 20200416:
+> > >>>
+> > >>
+> > >> on i386:
+> > >>
+> > >>   CC      drivers/mmc/host/sdhci-of-at91.o
+> > >> In file included from ../include/linux/build_bug.h:5:0,
+> > >>                  from ../include/linux/bitfield.h:10,
+> > >>                  from ../drivers/mmc/host/sdhci-of-at91.c:9:
+> > >> ../drivers/mmc/host/sdhci-of-at91.c: In function =E2=80=98sdhci_at91=
+_set_clks_presets=E2=80=99:
+> > >> ../include/linux/compiler.h:394:38: error: call to =E2=80=98__compil=
+etime_assert_63=E2=80=99 declared with attribute error: FIELD_PREP: value t=
+oo large for the field
+> > >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+> > >>                                       ^
+> > >> ../include/linux/compiler.h:375:4: note: in definition of macro =E2=
+=80=98__compiletime_assert=E2=80=99
+> > >>     prefix ## suffix();    \
+> > >>     ^~~~~~
+> > >> ../include/linux/compiler.h:394:2: note: in expansion of macro =E2=
+=80=98_compiletime_assert=E2=80=99
+> > >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+> > >>   ^~~~~~~~~~~~~~~~~~~
+> > >> ../include/linux/build_bug.h:39:37: note: in expansion of macro =E2=
+=80=98compiletime_assert=E2=80=99
+> > >>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg=
+)
+> > >>                                      ^~~~~~~~~~~~~~~~~~
+> > >> ../include/linux/bitfield.h:49:3: note: in expansion of macro =E2=80=
+=98BUILD_BUG_ON_MSG=E2=80=99
+> > >>    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
+> > >>    ^~~~~~~~~~~~~~~~
+> > >> ../include/linux/bitfield.h:94:3: note: in expansion of macro =E2=80=
+=98__BF_FIELD_CHECK=E2=80=99
+> > >>    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
+> > >>    ^~~~~~~~~~~~~~~~
+> > >> ../drivers/mmc/host/sdhci-of-at91.c:185:11: note: in expansion of ma=
+cro =E2=80=98FIELD_PREP=E2=80=99
+> > >>   caps1 |=3D FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
+> >
+> > My guess is the compiler has decided clk_mul is constant (probably (uns=
+igned
+> > int)-1) because there is no CONFIG_COMMON_CLK i.e. clk_get_rate() is 0
+> >
+> > So maybe add to config MMC_SDHCI_OF_AT91
+> >
+> >         depends on COMMON_CLK
+> >
+> > >>            ^~~~~~~~~~
+>
+>
+>
+> I checked include/linux/clk.h
+>
+>
+> clk_get_rate() is guarded by CONFIG_HAVE_CLK.
+>
+> I think
+>
+>     depends on HAVE_CLK
 
-commit 328b50e9a0ad1fe8accdf8c19923deebab5e0c01 upstream.
+Do you have the possibility of sending a patch, asap. Otherwise I can
+help to do it!?
 
-The chip is configured in 24 bit mode. The values read from
-it must always be treated as is. This fixes the issue by
-replacing the previous 16 bits value by a 24 bits buffer.
-
-This changes affects the value output by previous version of
-the driver, since the least significant byte was missing.
-The upper half of 16 bit values previously output are now
-the upper half of a 24 bit value.
-
-Fixes: e01e7eaf37d8 ("iio: light: introduce si1133")
-
-Reported-by: Simon Goyette <simon.goyette@gmail.com>
-Co-authored-by: Guillaume Champagne <champagne.guillaume.c@gmail.com>
-Signed-off-by: Maxime Roussin-Bélanger <maxime.roussinbelanger@gmail.com>
-Signed-off-by: Guillaume Champagne <champagne.guillaume.c@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/iio/light/si1133.c |   37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
-
---- a/drivers/iio/light/si1133.c
-+++ b/drivers/iio/light/si1133.c
-@@ -102,6 +102,9 @@
- #define SI1133_INPUT_FRACTION_LOW	15
- #define SI1133_LUX_OUTPUT_FRACTION	12
- #define SI1133_LUX_BUFFER_SIZE		9
-+#define SI1133_MEASURE_BUFFER_SIZE	3
-+
-+#define SI1133_SIGN_BIT_INDEX 23
- 
- static const int si1133_scale_available[] = {
- 	1, 2, 4, 8, 16, 32, 64, 128};
-@@ -234,13 +237,13 @@ static const struct si1133_lux_coeff lux
- 	}
- };
- 
--static int si1133_calculate_polynomial_inner(u32 input, u8 fraction, u16 mag,
-+static int si1133_calculate_polynomial_inner(s32 input, u8 fraction, u16 mag,
- 					     s8 shift)
- {
- 	return ((input << fraction) / mag) << shift;
- }
- 
--static int si1133_calculate_output(u32 x, u32 y, u8 x_order, u8 y_order,
-+static int si1133_calculate_output(s32 x, s32 y, u8 x_order, u8 y_order,
- 				   u8 input_fraction, s8 sign,
- 				   const struct si1133_coeff *coeffs)
- {
-@@ -276,7 +279,7 @@ static int si1133_calculate_output(u32 x
-  * The algorithm is from:
-  * https://siliconlabs.github.io/Gecko_SDK_Doc/efm32zg/html/si1133_8c_source.html#l00716
-  */
--static int si1133_calc_polynomial(u32 x, u32 y, u8 input_fraction, u8 num_coeff,
-+static int si1133_calc_polynomial(s32 x, s32 y, u8 input_fraction, u8 num_coeff,
- 				  const struct si1133_coeff *coeffs)
- {
- 	u8 x_order, y_order;
-@@ -614,7 +617,7 @@ static int si1133_measure(struct si1133_
- {
- 	int err;
- 
--	__be16 resp;
-+	u8 buffer[SI1133_MEASURE_BUFFER_SIZE];
- 
- 	err = si1133_set_adcmux(data, 0, chan->channel);
- 	if (err)
-@@ -625,12 +628,13 @@ static int si1133_measure(struct si1133_
- 	if (err)
- 		return err;
- 
--	err = si1133_bulk_read(data, SI1133_REG_HOSTOUT(0), sizeof(resp),
--			       (u8 *)&resp);
-+	err = si1133_bulk_read(data, SI1133_REG_HOSTOUT(0), sizeof(buffer),
-+			       buffer);
- 	if (err)
- 		return err;
- 
--	*val = be16_to_cpu(resp);
-+	*val = sign_extend32((buffer[0] << 16) | (buffer[1] << 8) | buffer[2],
-+			     SI1133_SIGN_BIT_INDEX);
- 
- 	return err;
- }
-@@ -704,9 +708,9 @@ static int si1133_get_lux(struct si1133_
- {
- 	int err;
- 	int lux;
--	u32 high_vis;
--	u32 low_vis;
--	u32 ir;
-+	s32 high_vis;
-+	s32 low_vis;
-+	s32 ir;
- 	u8 buffer[SI1133_LUX_BUFFER_SIZE];
- 
- 	/* Activate lux channels */
-@@ -719,9 +723,16 @@ static int si1133_get_lux(struct si1133_
- 	if (err)
- 		return err;
- 
--	high_vis = (buffer[0] << 16) | (buffer[1] << 8) | buffer[2];
--	low_vis = (buffer[3] << 16) | (buffer[4] << 8) | buffer[5];
--	ir = (buffer[6] << 16) | (buffer[7] << 8) | buffer[8];
-+	high_vis =
-+		sign_extend32((buffer[0] << 16) | (buffer[1] << 8) | buffer[2],
-+			      SI1133_SIGN_BIT_INDEX);
-+
-+	low_vis =
-+		sign_extend32((buffer[3] << 16) | (buffer[4] << 8) | buffer[5],
-+			      SI1133_SIGN_BIT_INDEX);
-+
-+	ir = sign_extend32((buffer[6] << 16) | (buffer[7] << 8) | buffer[8],
-+			   SI1133_SIGN_BIT_INDEX);
- 
- 	if (high_vis > SI1133_ADC_THRESHOLD || ir > SI1133_ADC_THRESHOLD)
- 		lux = si1133_calc_polynomial(high_vis, ir,
-
-
+Kind regards
+Uffe
