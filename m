@@ -2,125 +2,225 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_RCVD_SPACE_BRACKET,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F50C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BADFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008202075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7F221707
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="btTVFEms"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP/akETD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbgDVT1R (ORCPT
+        id S1726419AbgDVT2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:27:17 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:21766 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726516AbgDVT1Q (ORCPT
+        Wed, 22 Apr 2020 15:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726056AbgDVT2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:27:16 -0400
-Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MJMBcZ031311;
-        Wed, 22 Apr 2020 15:27:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=smtpout1;
- bh=QTqlp2cS6bs33QjHn8AuEeCT/X8MXFMkK0NPUhwe/9Y=;
- b=btTVFEmsLEZFpdAP3x4pNMZxP3hurA1hkgt1mGzovuOxXSTTyJvCue/8dzC3u8VKBC5n
- R4+nVX5FFq0G4qnMKLLh70CuT6tAbGAj9TAackSuEggon1tkh1RDTSR3ZjXuBBqR5PnX
- rg05zwPHaoEZSbUngPh0AC3ypurTqKG9DxuHJBXrpfHjUBwVIE2QPqxAlJ95aE+ofAj8
- hBsId33eUj3k70SGBCe9S8moL9qSFMD+G5Hr8IDn8hwJu2rb88xWwfs51UBRVhW1+rsR
- RWTaEaWJahe9elwHZyM+lKzbh2WGLo7AQ2eGXN61OoRjY79G5yY0zqkFzRuaX/R50LT/ TA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 30fx7ng8p8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 15:27:08 -0400
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MJO8dS026423;
-        Wed, 22 Apr 2020 15:27:08 -0400
-Received: from mailuogwhop.emc.com (mailuogwhop-nat.lss.emc.com [168.159.213.141] (may be forged))
-        by mx0b-00154901.pphosted.com with ESMTP id 30haf25n0j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Apr 2020 15:27:07 -0400
-Received: from emc.com (localhost [127.0.0.1])
-        by mailuogwprd04.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MJR6lm006851;
-        Wed, 22 Apr 2020 15:27:06 -0400
-Received: from mailsyshubprd04.lss.emc.com ([mailsyshubprd04.lss.emc.com [10.253.24.26]]) by mailuogwprd04.lss.emc.com with ESMTP id 03MJQX03006694 ;
-          Wed, 22 Apr 2020 15:26:34 -0400
-Received: from vd-leonidr.xiolab.lab.emc.com (vd-leonidr.xiolab.lab.emc.com [10.76.212.243])
-        by mailsyshubprd04.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MJQKHE016271;
-        Wed, 22 Apr 2020 15:26:31 -0400
-From:   leonid.ravich@dell.com
-To:     dmaengine@vger.kernel.org
-Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] dmaengine: ioat: adding missed issue_pending to timeout handler
-Date:   Wed, 22 Apr 2020 22:25:55 +0300
-Message-Id: <1587583557-4113-3-git-send-email-leonid.ravich@dell.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <1587583557-4113-1-git-send-email-leonid.ravich@dell.com>
-References: <20200416170628.16196-2-leonid.ravich@dell.com>
- <1587583557-4113-1-git-send-email-leonid.ravich@dell.com>
-X-Sentrion-Hostname: mailuogwprd04.lss.emc.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_06:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=13 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=698 mlxscore=0
- adultscore=0 phishscore=0 clxscore=1015 impostorscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220145
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 spamscore=0
- suspectscore=13 lowpriorityscore=0 phishscore=0 mlxlogscore=756
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220146
+        Wed, 22 Apr 2020 15:28:55 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E3EC03C1A9;
+        Wed, 22 Apr 2020 12:28:54 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id k22so2429008eds.6;
+        Wed, 22 Apr 2020 12:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4eHXvH1GDSckReIfUt4f8dPPiIKiU77VF1j9+W80uRQ=;
+        b=uP/akETD4Vrnve92vVb/IdfXa33kcUNoReGjk2EFxDlRxxvgTfCx/O1XGnHkAySkQD
+         ubwoL1j/AzgcwCUeuTmwgej97lfen5MpXb+JPt8Rkmpsn2RX+GrRDF3G0E9W4gWGr3y8
+         3cFJu02+dBj6qRCc3zfQcB8E0UecHmeEpSElzx9kxOgH3FOaLiFcu+eDJVCWePf3xLxc
+         7oxq48VCBot3zepcu+jlumW5b8Xmpi2HbCw7LYlV0kGxDjqF4D2cpH911gMF4Cte9dLo
+         4eIcKINvfwUTUPDCkXpxvzcMfYcTht10ALztBX22buJ7PGCVm4FPX2kyHNQ/ERuxRQZ+
+         Uf5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4eHXvH1GDSckReIfUt4f8dPPiIKiU77VF1j9+W80uRQ=;
+        b=lgOEZH3KOkaDzY4lj67rRgxhfhsris7IVCBMTR+o4feJxA4/gtwZ0SKj1eEdMew+k+
+         ygJ94Q7k2A63kuGulF5HWBVcptNDjIVZOIh0MbqqcR6jFNlzxExtcAwnlhH+A5lza/H/
+         tu2AM7FxSk8xj+yoZEQboITdS0+A3EnVnLj2xKlKdxX9xxWL9uzpVzEYtQ1MyNkWr839
+         7Jqeqt+7UVc/Y1wv46NKlxj2M7Q1XLCjDRT1gSVaOJI4umuW4lVWYur5QHZlOE8nN9M4
+         0KC4hKaac+KJ7rMD8WFBiqPwqUwbGl1MhIbvLAi71g2nQQNUMppXeZMXtUeHBsCqt5Cx
+         Tuwg==
+X-Gm-Message-State: AGi0PuaqkDc2PyVUXDp20W8xGl260XF9sq0X4CA4xQ7x6WJK77jrucrD
+        FMrg1A+hk2yGfsuj+ctSQxaYkiV3KjcQiMUGUN8=
+X-Google-Smtp-Source: APiQypI7OeDRVTXbyCq1O3B/kdlwU1xDJ3TrABi9IgyUeSvz5pdUmQcw/lj4bMN9FStfuPpjznzaR3gi6ZQgFZa1j/c=
+X-Received: by 2002:a50:aca3:: with SMTP id x32mr154548edc.368.1587583733380;
+ Wed, 22 Apr 2020 12:28:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200418011211.31725-5-Po.Liu@nxp.com> <20200422024852.23224-1-Po.Liu@nxp.com>
+ <20200422024852.23224-2-Po.Liu@nxp.com> <20200422191910.gacjlviegrjriwcx@ws.localdomain>
+In-Reply-To: <20200422191910.gacjlviegrjriwcx@ws.localdomain>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 22 Apr 2020 22:28:42 +0300
+Message-ID: <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
+Subject: Re: [v3,net-next 1/4] net: qos: introduce a gate control flow action
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Po Liu <Po.Liu@nxp.com>, "David S. Miller" <davem@davemloft.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        michael.chan@broadcom.com, vishal@chelsio.com, saeedm@mellanox.com,
+        leon@kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        simon.horman@netronome.com, pablo@netfilter.org,
+        moshe@mellanox.com, Murali Karicheri <m-karicheri2@ti.com>,
+        Andre Guedes <andre.guedes@linux.intel.com>,
+        Stephen Hemminger <stephen@networkplumber.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonid Ravich <Leonid.Ravich@emc.com>
+Hi Allan,
 
-completion timeout might trigger unnesesery DMA engine hw reboot
-in case of missed issue_pending() .
+On Wed, 22 Apr 2020 at 22:20, Allan W. Nielsen
+<allan.nielsen@microchip.com> wrote:
+>
+> Hi Po,
+>
+> Nice to see even more work on the TSN standards in the upstream kernel.
+>
+> On 22.04.2020 10:48, Po Liu wrote:
+> >EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> >
+> >Introduce a ingress frame gate control flow action.
+> >Tc gate action does the work like this:
+> >Assume there is a gate allow specified ingress frames can be passed at
+> >specific time slot, and be dropped at specific time slot. Tc filter
+> >chooses the ingress frames, and tc gate action would specify what slot
+> >does these frames can be passed to device and what time slot would be
+> >dropped.
+> >Tc gate action would provide an entry list to tell how much time gate
+> >keep open and how much time gate keep state close. Gate action also
+> >assign a start time to tell when the entry list start. Then driver would
+> >repeat the gate entry list cyclically.
+> >For the software simulation, gate action requires the user assign a time
+> >clock type.
+> >
+> >Below is the setting example in user space. Tc filter a stream source ip
+> >address is 192.168.0.20 and gate action own two time slots. One is last
+> >200ms gate open let frame pass another is last 100ms gate close let
+> >frames dropped. When the frames have passed total frames over 8000000
+> >bytes, frames will be dropped in one 200000000ns time slot.
+> >
+> >> tc qdisc add dev eth0 ingress
+> >
+> >> tc filter add dev eth0 parent ffff: protocol ip \
+> >           flower src_ip 192.168.0.20 \
+> >           action gate index 2 clockid CLOCK_TAI \
+> >           sched-entry open 200000000 -1 8000000 \
+> >           sched-entry close 100000000 -1 -1
+>
+> First of all, it is a long time since I read the 802.1Qci and when I did
+> it, it was a draft. So please let me know if I'm completly off here.
+>
+> I know you are focusing on the gate control in this patch serie, but I
+> assume that you later will want to do the policing and flow-meter as
+> well. And it could make sense to consider how all of this work
+> toghether.
+>
+> A common use-case for the policing is to have multiple rules pointing at
+> the same policing instance. Maybe you want the sum of the traffic on 2
+> ports to be limited to 100mbit. If you specify such action on the
+> individual rule (like done with the gate), then you can not have two
+> rules pointing at the same policer instance.
+>
+> Long storry short, have you considered if it would be better to do
+> something like:
+>
+>    tc filter add dev eth0 parent ffff: protocol ip \
+>             flower src_ip 192.168.0.20 \
+>             action psfp-id 42
+>
+> And then have some other function to configure the properties of psfp-id
+> 42?
+>
+>
+> /Allan
+>
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
----
-Changing in v2
-  - add log in case of such scenario 
- drivers/dma/ioat/dma.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+It is very good that you brought it up though, since in my opinion too
+it is a rather important aspect, and it seems that the fact this
+feature is already designed-in was a bit too subtle.
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 55a8cf1..a958aaf 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -955,6 +955,14 @@ void ioat_timer_event(struct timer_list *t)
- 		goto unlock_out;
- 	}
- 
-+	/* handle missed issue pending case */
-+	if (ioat_ring_pending(ioat_chan)) {
-+		dev_dbg(to_dev(ioat_chan), "Complition timeout while pending\n")
-+		spin_lock_bh(&ioat_chan->prep_lock);
-+		__ioat_issue_pending(ioat_chan);
-+		spin_unlock_bh(&ioat_chan->prep_lock);
-+	}
-+
- 	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
- 	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
- unlock_out:
--- 
-1.9.3
+"psfp-id" is actually his "index" argument.
 
+You can actually do this:
+tc filter add dev eth0 ingress \
+        flower skip_hw dst_mac 01:80:c2:00:00:0e \
+        action gate index 1 clockid CLOCK_TAI \
+        base-time 200000000000 \
+        sched-entry OPEN 200000000 -1 -1 \
+        sched-entry CLOSE 100000000 -1 -1
+tc filter add dev eth0 ingress \
+        flower skip_hw dst_mac 01:80:c2:00:00:0f \
+        action gate index 1
+
+Then 2 filters get created with the same action:
+
+tc -s filter show dev swp2 ingress
+filter protocol all pref 49151 flower chain 0
+filter protocol all pref 49151 flower chain 0 handle 0x1
+  dst_mac 01:80:c2:00:00:0f
+  skip_hw
+  not_in_hw
+        action order 1:
+        priority wildcard       clockid TAI     flags 0x6404f
+        base-time 200000000000                  cycle-time 300000000
+         cycle-time-ext 0
+         number    0    gate-state open         interval 200000000
+         ipv wildcard    max-octets wildcard
+         number    1    gate-state close        interval 100000000
+         ipv wildcard    max-octets wildcard
+        pipe
+         index 2 ref 2 bind 2 installed 168 sec used 168 sec
+        Action statistics:
+        Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
+        backlog 0b 0p requeues 0
+
+filter protocol all pref 49152 flower chain 0
+filter protocol all pref 49152 flower chain 0 handle 0x1
+  dst_mac 01:80:c2:00:00:0e
+  skip_hw
+  not_in_hw
+        action order 1:
+        priority wildcard       clockid TAI     flags 0x6404f
+        base-time 200000000000                  cycle-time 300000000
+         cycle-time-ext 0
+         number    0    gate-state open         interval 200000000
+         ipv wildcard    max-octets wildcard
+         number    1    gate-state close        interval 100000000
+         ipv wildcard    max-octets wildcard
+        pipe
+         index 2 ref 2 bind 2 installed 168 sec used 168 sec
+        Action statistics:
+        Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
+        backlog 0b 0p requeues 0
+
+Actually my only concern is that maybe this mechanism should (?) have
+been more generic. At the moment, this patch series implements it via
+a TCA_GATE_ENTRY_INDEX netlink attribute, so every action which wants
+to be shared across filters needs to reinvent this wheel.
+
+Thoughts, everyone?
+
+Thanks,
+-Vladimir
