@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384D1C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352C3C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1041320656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070DA20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551941;
-	bh=YTEsb73itkQL/bKAHc2dPoNzxc5Vsey7cfT5do3YXzU=;
+	s=default; t=1587551953;
+	bh=Y8KrPqTYg6EyHN8+4nfG36nHZ7JfVHBBJJRUstUqWxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bq5ubzMK9dtukaM9Sx228wUBqb+FK3D7tiTxb7fPkGv+e4WkeyNrxTO3znEJsjsRx
-	 AR5XcI0pEXw2uRwcmG8P2SGxXGLSOKxqAcBQFkKXuiSC+3hxZY5KozEL1QiGDUfxqg
-	 zMYvPjlMIFXXDeSmMLVkKQobF60iWPKn4md1yheo=
+	b=JdLmUoPEaNuYfvteyelBE+LMJpB6eCLvUD556vDd6vpcFIvRxSpSlsZbsd1h0z2zT
+	 n9D8z8M3jAQiuUxqE1h6j+LktbTllNjXWbdlVndsn3JFbyxLFMpcvuobyFdzMW1T1x
+	 ZbCGkcmhiGriJKUENVwC6LR8ZtBYA3LeZCJwl0Rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbgDVKi7 (ORCPT
+        id S1730297AbgDVKjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729810AbgDVKVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:41 -0400
+        id S1729448AbgDVKVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDF022076E;
-        Wed, 22 Apr 2020 10:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49DB20882;
+        Wed, 22 Apr 2020 10:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550901;
-        bh=YTEsb73itkQL/bKAHc2dPoNzxc5Vsey7cfT5do3YXzU=;
+        s=default; t=1587550896;
+        bh=Y8KrPqTYg6EyHN8+4nfG36nHZ7JfVHBBJJRUstUqWxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oA/W6tgAy2tYmwrZqAe07gVNyTWrac5Coev7ISNWC7uak+E/+5b8qZboahFT1F5BX
-         bTNRE8ksWJtKYdnUMze4vIJO4PiId0XHPHTj7Nmb0Xj4O+Wwi2MMW0GYIdHnrAIbR8
-         mVkE0xODQxJpoaXN9HwOQwJDX015EjyFQl+Ci/Bg=
+        b=A9kYYHJfHRsKU2hcmdypXH/qB5iNk0Jutxm4ag5UCwdElHJG0UnHufkbZiWfCQbza
+         yA+HMc8he04+DuMKgIKJYnsSpOGPvCFRXGHzN6LyMNEUQoUSTsoNq2rVq+2NcDlS+C
+         Tatt6K0gVqSoMp2joSYzTKbABl1XLp8bvL1oWJlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.6 003/166] objtool: Fix switch table detection in .text.unlikely
-Date:   Wed, 22 Apr 2020 11:55:30 +0200
-Message-Id: <20200422095048.339759418@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 019/166] ALSA: hda: Dont release card at firmware loading error
+Date:   Wed, 22 Apr 2020 11:55:46 +0200
+Message-Id: <20200422095050.507371801@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,45 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit b401efc120a399dfda1f4d2858a4de365c9b08ef upstream.
+commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 upstream.
 
-If a switch jump table's indirect branch is in a ".cold" subfunction in
-.text.unlikely, objtool doesn't detect it, and instead prints a false
-warning:
+At the error path of the firmware loading error, the driver tries to
+release the card object and set NULL to drvdata.  This may be referred
+badly at the possible PM action, as the driver itself is still bound
+and the PM callbacks read the card object.
 
-  drivers/media/v4l2-core/v4l2-ioctl.o: warning: objtool: v4l_print_format.cold()+0xd6: sibling call from callable instruction with modified stack frame
-  drivers/hwmon/max6650.o: warning: objtool: max6650_probe.cold()+0xa5: sibling call from callable instruction with modified stack frame
-  drivers/media/dvb-frontends/drxk_hard.o: warning: objtool: init_drxk.cold()+0x16f: sibling call from callable instruction with modified stack frame
+Instead, we continue the probing as if it were no option set.  This is
+often a better choice than the forced abort, too.
 
-Fix it by comparing the function, instead of the section and offset.
-
-Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/157c35d42ca9b6354bbb1604fe9ad7d1153ccb21.1585761021.git.jpoimboe@redhat.com
+Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/objtool/check.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ sound/pci/hda/hda_intel.c |   19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1011,10 +1011,7 @@ static struct rela *find_jump_table(stru
- 	 * it.
- 	 */
- 	for (;
--	     &insn->list != &file->insn_list &&
--	     insn->sec == func->sec &&
--	     insn->offset >= func->offset;
--
-+	     &insn->list != &file->insn_list && insn->func && insn->func->pfunc == func;
- 	     insn = insn->first_jump_src ?: list_prev_entry(insn, list)) {
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2031,24 +2031,15 @@ static void azx_firmware_cb(const struct
+ {
+ 	struct snd_card *card = context;
+ 	struct azx *chip = card->private_data;
+-	struct pci_dev *pci = chip->pci;
  
- 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
+-	if (!fw) {
+-		dev_err(card->dev, "Cannot load firmware, aborting\n");
+-		goto error;
+-	}
+-
+-	chip->fw = fw;
++	if (fw)
++		chip->fw = fw;
++	else
++		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
+ 	if (!chip->disabled) {
+ 		/* continue probing */
+-		if (azx_probe_continue(chip))
+-			goto error;
++		azx_probe_continue(chip);
+ 	}
+-	return; /* OK */
+-
+- error:
+-	snd_card_free(card);
+-	pci_set_drvdata(pci, NULL);
+ }
+ #endif
+ 
 
 
