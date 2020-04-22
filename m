@@ -2,187 +2,179 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E282FC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247D6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E7320767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F1/kBkTB"
+	by mail.kernel.org (Postfix) with ESMTP id 0ABE720767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgDVQaK (ORCPT
+        id S1726502AbgDVQcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:30:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35070 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgDVQaJ (ORCPT
+        Wed, 22 Apr 2020 12:32:23 -0400
+Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:34583 "EHLO
+        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgDVQcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:30:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MGJ3QZ160038;
-        Wed, 22 Apr 2020 16:29:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=vL1WQGTfFoQcm8Nxga5aT5tV4G2eJXdNUImCVFUgisY=;
- b=F1/kBkTBIEp7pe5PWH7FrLOGy44SfdV5MXUL4AtMKGOEEGLmvQccPzK0XTRxwOXm881G
- mmMOrAi/gCE5t3OwoRRZNV8LK+qeGdpLjfT6U1xIO4WqRGTholFn5HIMD/i2ozJPFHhk
- 0FBWH/U605x6JynSYAAofhbzPzbBgclmNcZjyQttYJrpjN+PYoPGCkkXdA5oMKSb2PTW
- NZ3G9gPCApyhDAmdmSPOO2RuvSseUVm6+FDfnsgXVwQk0MsxipxowWUw7DuPqypu/3M7
- K92MAWj5KBXqlvDArPNr9RGjA59QctkErefyUbhuJDOdshla8atoKQJICJHgnjeOboq1 iw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30fsgm3xq8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 16:29:56 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MGBd1B051303;
-        Wed, 22 Apr 2020 16:29:55 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30gb3u63dw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 16:29:55 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03MGTrqw010298;
-        Wed, 22 Apr 2020 16:29:53 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Apr 2020 09:29:52 -0700
-Date:   Wed, 22 Apr 2020 09:29:51 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V9 03/11] fs/stat: Define DAX statx attribute
-Message-ID: <20200422162951.GE6733@magnolia>
-References: <20200421191754.3372370-1-ira.weiny@intel.com>
- <20200421191754.3372370-4-ira.weiny@intel.com>
+        Wed, 22 Apr 2020 12:32:22 -0400
+Received: from barney.sedsystems.ca (barney [198.169.180.121])
+        by sed198n136.sedsystems.ca  with ESMTP id 03MGVsjt025303
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 10:31:54 -0600 (CST)
+Received: from [192.168.233.77] (ovpn77.sedsystems.ca [192.168.233.77])
+        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id 03MGVq7S002698
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Wed, 22 Apr 2020 10:31:52 -0600
+Subject: Re: Xilinx axienet 1000BaseX support
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200110142038.2ed094ba@donnerap.cambridge.arm.com>
+ <20200110150409.GD25745@shell.armlinux.org.uk>
+ <20200110152215.GF25745@shell.armlinux.org.uk>
+ <20200110170457.GH25745@shell.armlinux.org.uk>
+ <20200118112258.GT25745@shell.armlinux.org.uk>
+ <3b28dcb4-6e52-9a48-bf9c-ddad4cf5e98a@arm.com>
+ <20200120154554.GD25745@shell.armlinux.org.uk>
+ <20200127170436.5d88ca4f@donnerap.cambridge.arm.com>
+ <20200127185344.GA25745@shell.armlinux.org.uk>
+ <bf2448d0-390c-5045-3503-885240829fbf@sedsystems.ca>
+ <20200422075124.GJ25745@shell.armlinux.org.uk>
+From:   Robert Hancock <hancock@sedsystems.ca>
+Message-ID: <21ed251b-964f-3f16-1a66-728bbeffa426@sedsystems.ca>
+Date:   Wed, 22 Apr 2020 10:31:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421191754.3372370-4-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=1 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=1 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220123
+In-Reply-To: <20200422075124.GJ25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 12:17:45PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On 2020-04-22 1:51 a.m., Russell King - ARM Linux admin wrote:
+> On Tue, Apr 21, 2020 at 07:45:47PM -0600, Robert Hancock wrote:
+>> Hi Andre/Russell,
+>>
+>> Just wondering where things got to with the changes for SGMII on Xilinx
+>> axienet that you were discussing (below)? I am looking into our Xilinx setup
+>> using 1000BaseX SFP and trying to get it working "properly" with newer
+>> kernels. My understanding is that the requirements for 1000BaseX and SGMII
+>> are somewhat similar. I gathered that SGMII was working somewhat already,
+>> but that not all link modes had been tested. However, it appears 1000BaseX
+>> is not yet working in the stock kernel.
+>>
+>> The way I had this working before with a 4.19-based kernel was basically a
+>> hack to phylink to allow the Xilinx PCS/PMA PHY to be configured
+>> sufficiently as a PHY for it to work, and mostly ignored the link status of
+>> the SFP PHY itself, even though we were using in-band signalling mode with
+>> an SFP module. That was using this patch:
+>>
+>> https://patchwork.ozlabs.org/project/netdev/patch/1559330285-30246-5-git-send-email-hancock@sedsystems.ca/
+>>
+>> Of course, that's basically just a hack which I suspect mostly worked by
+>> luck. I see that there are some helpers that were added to phylink to allow
+>> setting PHY advertisements and reading PHY status from clause 22 PHY
+>> devices, so I'm guessing that is the way to go in this case? Something like:
+>>
+>> axienet_mac_config: if using in-band mode, use
+>> phylink_mii_c22_pcs_set_advertisement to configure the Xilinx PHY.
+>>
+>> axienet_mac_pcs_get_state: use phylink_mii_c22_pcs_get_state to get the MAC
+>> PCS state from the Xilinx PHY
+>>
+>> axienet_mac_an_restart: if using in-band mode, use
+>> phylink_mii_c22_pcs_an_restart to restart autonegotiation on Xilinx PHY
+>>
+>> To use those c22 functions, we need to find the mdio_device that's
+>> referenced by the phy-handle in the device tree - I guess we can just use
+>> some of the guts of of_phy_find_device to do that?
 > 
-> In order for users to determine if a file is currently operating in DAX
-> state (effective DAX).  Define a statx attribute value and set that
-> attribute if the effective DAX flag is set.
+> Please see the code for DPAA2 - it's changed slightly since I sent a
+> copy to the netdev mailing list, and it still isn't clear whether this
+> is the final approach (DPAA2 has some fun stuff such as several
+> different PHYs at address 0.) NXP basically didn't like the approach
+> I had in the patches I sent to netdev, we had a call, they presented
+> an alternative appraoch, I implemented it, then they decided my
+> original approach was the better solution for their situation.
 > 
-> To go along with this we propose the following addition to the statx man
-> page:
+> See http://git.armlinux.org.uk/cgit/linux-arm.git/log/?h=cex7
 > 
-> STATX_ATTR_DAX
+> specifically the patches from:
 > 
-> 	The file is in the DAX (cpu direct access) state.  DAX state
-> 	attempts to minimize software cache effects for both I/O and
-> 	memory mappings of this file.  It requires a file system which
-> 	has been configured to support DAX.
+>    "dpaa2-mac: add 1000BASE-X/SGMII PCS support"
 > 
-> 	DAX generally assumes all accesses are via cpu load / store
-> 	instructions which can minimize overhead for small accesses, but
-> 	may adversely affect cpu utilization for large transfers.
+> through to:
 > 
-> 	File I/O is done directly to/from user-space buffers and memory
-> 	mapped I/O may be performed with direct memory mappings that
-> 	bypass kernel page cache.
+>    "net: phylink: add interface to configure clause 22 PCS PHY"
 > 
-> 	While the DAX property tends to result in data being transferred
-> 	synchronously, it does not give the same guarantees of O_SYNC
-> 	where data and the necessary metadata are transferred together.
+> You may also need some of the patches further down in the net-queue
+> branch:
 > 
-> 	A DAX file may support being mapped with the MAP_SYNC flag,
-> 	which enables a program to use CPU cache flush instructions to
-> 	persist CPU store operations without an explicit fsync(2).  See
-> 	mmap(2) for more information.
+>    "net: phylink: avoid mac_config calls"
+> 
+> through to:
+> 
+>    "net: phylink: rejig link state tracking"
 
-One thing I hadn't noticed before -- this is a change to userspace API,
-so please cc this series to linux-api@vger.kernel.org when you send V10.
+Thanks for the info. I've yet to decide whether or how I'm going to 
+attempt this task at the moment - it seems like there have been a lot of 
+changes to phylink and other related code lately and it appears to be a 
+bit of a task to backport them all into a released kernel version, more 
+so back to 5.4 which is the latest LTS kernel which we would ideally 
+want to use. So I might end up trying to open-code this more inside the 
+driver and eventually switching it to use the shared code when it's 
+merged, or maybe just deferring the proper fix for this until the 
+infrastructure is more in place in mainline.
 
-Also, I've started to think about commit order sequencing for actually
-landing this series.  Usually I try to put vfs and documentation things
-before xfs stuff, which means I came up with:
-
-vfs       xfs          I_DONTCACHE
-2 3 11    1 4 5 6 7    8 9 10
-
-Note that I separated the DONTCACHE part because it touches VFS
-internals, which implies a higher standard of review (aka Al) and I do
-not wish to hold up the 2-3-11-1-4-5-6-7 patches if the dontcache part
-becomes contentious.
-
-What do you think of that ordering?
-
-(Heck, maybe I'll just put patch 1 in the queue for 5.8 right now...)
-
---D
-
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> ---
-> Changes from V2:
-> 	Update man page text with comments from Darrick, Jan, Dan, and
-> 	Dave.
-> ---
->  fs/stat.c                 | 3 +++
->  include/uapi/linux/stat.h | 1 +
->  2 files changed, 4 insertions(+)
+>> One concern I have is that there may be things that the PHY subsystem would
+>> configure on the device that may need to be replicated in order to get it to
+>> actually work - things like setting auto-negotiate enable/disable, the
+>> BMCR_ISOLATE bit, etc - is that something that belongs in our mac_config or
+>> in the phylink core in phylink_mii_c22_pcs_set_advertisement etc?
 > 
-> diff --git a/fs/stat.c b/fs/stat.c
-> index 030008796479..894699c74dde 100644
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
->  	if (IS_AUTOMOUNT(inode))
->  		stat->attributes |= STATX_ATTR_AUTOMOUNT;
->  
-> +	if (IS_DAX(inode))
-> +		stat->attributes |= STATX_ATTR_DAX;
-> +
->  	if (inode->i_op->getattr)
->  		return inode->i_op->getattr(path, stat, request_mask,
->  					    query_flags);
-> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> index ad80a5c885d5..e5f9d5517f6b 100644
-> --- a/include/uapi/linux/stat.h
-> +++ b/include/uapi/linux/stat.h
-> @@ -169,6 +169,7 @@ struct statx {
->  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
->  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
->  #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
-> +#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
->  
->  
->  #endif /* _UAPI_LINUX_STAT_H */
-> -- 
-> 2.25.1
+> I think some of that is addressed in the above patches, except for
+> the isolate bit - do your PHYs come up with the isolate bit set?
+> Under what circumstances would you need to set it?
+
+I believe it does come up isolated - from the Xilinx PG047 document for 
+the PCS/PMA core:
+
+"Start-up Sequencing
+IEEE 802.3-2008 clause 22.2.4.1.6 states that by default, a PHY should 
+power up in an isolate state (electrically isolated from the GMII).
+If you are using the core with the optional management interface, it is 
+necessary to write to the PCS Configuration Register 0 to take the core 
+out of the isolate state."
+
+Also, in PG138 for the AXI Ethernet core, under Gigabit Ethernet PCS/PMA 
+Management Registers, it has this note:
+
+"When using the 1000BASE-X TEMAC core (C_TYPE = 1 and C_PHY_TYPE = 5), 
+set the isolate bit to zero (Control register 0 bit 10). The subsystem 
+is not operational until this is completed."
+
 > 
+> Let me know how you get on.
+> 
+> Thanks.
+> 
+
+-- 
+Robert Hancock
+Senior Hardware Designer
+SED Systems, a division of Calian Ltd.
+Email: hancock@sedsystems.ca
