@@ -2,58 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8A8C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE2DC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A078420776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839842077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550031;
-	bh=fkfJeNmA8af7oSzYw22zY5mDN3nDtEpq/rmKMEts3g8=;
+	s=default; t=1587550036;
+	bh=OifP4P5hXxTkzT+ICeJO7lVltwiShd+rSRZd7Y6s+aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGAVIl7yU71E86qX/KbgKsuPjZiUlPdXCnz/Kf+umiOZ05iTKJ9C0R/sWU9ThrgvZ
-	 TTSMqxORlQDGc4jAlcLfO3OyL4lZh17XRmYwOmFdHA9VDSFXfO07jj1PQVftjcidkg
-	 q9JkXKGqT2Lotn96QN+E4zCJCjHJmSVqPSxJMfOI=
+	b=0V+IqlzkXuiXBuG8ewZC+LvO6qTwHUwOStj42QpBf3X1CSqf9npyZOfrLBS7Id+pg
+	 GXzRQ3q3+NWXDGY356wdc1m9FN0FyTqgABMsHiSOlSskS1U9KfujlBwYw7mRPBtL5e
+	 JjuvCvZoisQOXj/KvDBPVybbHcsSypA+OHj3ycmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgDVKHK (ORCPT
+        id S1728493AbgDVKHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:07:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgDVKHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:07:06 -0400
+        id S1728472AbgDVKHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 254E62076C;
-        Wed, 22 Apr 2020 10:07:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 139D820774;
+        Wed, 22 Apr 2020 10:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550025;
-        bh=fkfJeNmA8af7oSzYw22zY5mDN3nDtEpq/rmKMEts3g8=;
+        s=default; t=1587550030;
+        bh=OifP4P5hXxTkzT+ICeJO7lVltwiShd+rSRZd7Y6s+aI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAanALtZWuj6RnbGlWij/uMBPyi+oO/WrygmgoF7h5dhjalvfJa2TBhBDOA3r3zW4
-         W11hLw5lt3tg7V6+lex+J2rcgWZFu+6RMJeQ/aKLLZF1aS5eR4zGsX8PS7U/odhAzx
-         cuArkPQgfxBZ09fsHkQ1Iop3HddWs0/V0fVQlyec=
+        b=tKrpPvh6xTwD9fhM+f/rdCiRvrWW/gwQFxY/U+OZWBEycr3epoEHldbETvS9kiSjm
+         4WVh3S/nO5UEM5eSCBEJgdh2qrF3z/WloL9pO3j1imjRIAouk5Jh2POMJ9KQze5Lzi
+         ZwBDZLD3OqWMSVqOe4CCafMK5lsHNcK4hX3R0HUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changwei Ge <chge@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 051/125] ocfs2: no need try to truncate file beyond i_size
-Date:   Wed, 22 Apr 2020 11:56:08 +0200
-Message-Id: <20200422095041.772870898@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 107/125] s390/cpuinfo: fix wrong output when CPU0 is offline
+Date:   Wed, 22 Apr 2020 11:57:04 +0200
+Message-Id: <20200422095050.149825962@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -66,59 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <chge@linux.alibaba.com>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-commit 783fda856e1034dee90a873f7654c418212d12d7 upstream.
+[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
 
-Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
-exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
-size.  This restriction is not necessary and violates fallocate(2)
-semantics.
+/proc/cpuinfo should not print information about CPU 0 when it is offline.
 
-If fallocate(2) offset is beyond inode size, just return success and do
-nothing further.
-
-Otherwise, ocfs2 will crash the kernel.
-
-  kernel BUG at fs/ocfs2//alloc.c:7264!
-   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
-   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
-   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
-   ocfs2_fallocate+0x83/0xa0 [ocfs2]
-   vfs_fallocate+0x148/0x230
-   SyS_fallocate+0x48/0x80
-   do_syscall_64+0x79/0x170
-
-Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+[heiko.carstens@de.ibm.com: shortened commit message]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/alloc.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/s390/kernel/processor.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/ocfs2/alloc.c
-+++ b/fs/ocfs2/alloc.c
-@@ -7246,6 +7246,10 @@ int ocfs2_truncate_inline(struct inode *
- 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
- 	struct ocfs2_inline_data *idata = &di->id2.i_data;
+diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
+index d856263fd7687..737e22cf09728 100644
+--- a/arch/s390/kernel/processor.c
++++ b/arch/s390/kernel/processor.c
+@@ -139,8 +139,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
+ static int show_cpuinfo(struct seq_file *m, void *v)
+ {
+ 	unsigned long n = (unsigned long) v - 1;
++	unsigned long first = cpumask_first(cpu_online_mask);
  
-+	/* No need to punch hole beyond i_size. */
-+	if (start >= i_size_read(inode))
-+		return 0;
-+
- 	if (end > i_size_read(inode))
- 		end = i_size_read(inode);
+-	if (!n)
++	if (n == first)
+ 		show_cpu_summary(m, v);
+ 	if (!machine_has_cpu_mhz)
+ 		return 0;
+@@ -153,6 +154,8 @@ static inline void *c_update(loff_t *pos)
+ {
+ 	if (*pos)
+ 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
++	else
++		*pos = cpumask_first(cpu_online_mask);
+ 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
+ }
  
+-- 
+2.20.1
+
 
 
