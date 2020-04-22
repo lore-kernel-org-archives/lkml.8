@@ -2,123 +2,129 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644E7C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4BEC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4F7206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587541518;
-	bh=SFuuKuCDmUz/6+YIAohRQGbnXeuDc+lBBpM/F7qNxt4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JgHRxKzr0btiSNANP/mgYm46W6lghUqIvM91aIjzi27CjAS6Cnz47vOEgRQyU9p+A
-	 Z3yUduO6ai1w6qwMI5UOR7vdy1y+PDldO4QeEoSTWZ2riy9HHoLZhpx2UrIr0o5d9g
-	 hAN/caFDQhQ+cmyAJrDXW0z4LPYL7jpYucicIvgU=
+	by mail.kernel.org (Postfix) with ESMTP id 49490206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o1SzwFR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgDVHpR (ORCPT
+        id S1726399AbgDVHqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39220 "EHLO
+        Wed, 22 Apr 2020 03:46:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725786AbgDVHpQ (ORCPT
+        by vger.kernel.org with ESMTP id S1725786AbgDVHqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:45:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D993C03C1A6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:45:16 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so1146313wml.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:45:16 -0700 (PDT)
+        Wed, 22 Apr 2020 03:46:01 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CD8C03C1A6;
+        Wed, 22 Apr 2020 00:46:01 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z26so1181617ljz.11;
+        Wed, 22 Apr 2020 00:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+uecPKpriXTCW3WPXlVyFe8EDCQwaAwVshvBb4/pq3A=;
-        b=t41i42tG2CNYqEhd7H/1TKRPoI9NT75SIs++h2epz5duRs4XGu3vGoOAayC3SoboBg
-         gqGtyiZkBBHUZHEnhp90bZM6DBEk3QnjXlVyuKaB2dEjEqQedaPTnDGJTfWDQDeK7sKf
-         oozq0PyzMhrFqG5In/8aH5FWu9r1Fs0iwyAxb0HZEZvfrdMovLjTJtIEUH8/y8KS9Fm2
-         BriOptl+mYVFJD05YG50HyaJtm79xACi4eJVGzocAxSBxmuctrjN+x2neUcNutYGRRr1
-         ZpXale1v4XIUiCpF0TakzxlQxZ9OpYSRQha8FnAp54qGrq25lfPOW8qBg2ROEX11QcE5
-         O7fQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ysk4WMk8NsMihs1evCSOYe7LHkphmnmScYSQbOC8Llc=;
+        b=o1SzwFR2bkjbNNOJOE+ecvk9bOWfpyLmOCyf88lxbsunX1mPfn4RXpmFWpKI/wKJ4+
+         3GrBxCgb8eBCPNdmnGEAsXvcBhzy5CNWepgs2qeUcBULvHwjqL/R7VIbidYmhk/oSRkd
+         RrQCn9Ther16dMsGytaq97Rrpz4iVojN2Z8IoP3JT7VNBETLZQls7yE7W/U1TwZs2BZb
+         wEN46kjfuRnh4sgQZJOUPWu1WHj6+cXeiAueKH5CUQmUoeZ9Ir8Qfxj/y1Vx+j4PKuy8
+         IOVpVgFp/k5YjV56fDk+iu4AHawH2gUKdFZMpgw/FwBCyqN6wrnvIRhDXYHj8ken4q6A
+         nHmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+uecPKpriXTCW3WPXlVyFe8EDCQwaAwVshvBb4/pq3A=;
-        b=LhWGoAmuwGLHNNjO0Qfh47TBp3w14jL6yOfynXpX5/SSg7EQ8ywGMgdXf7AsWM1lSp
-         JJNzmj604F00MnDEdJ7LRleUiCPQ7Cq/9G087M3lFOEnN+OG0XE0oE5IKmLzyqeLkJjH
-         4J0OSBm8itG1BC+Nxlno6oFE6Kw6strvvCdM5z5ofowYkcvCFrkTkKl4GPvLaj+Qjx+N
-         B5OEONVojJwC6vgnId6Alaa+3Ch9QjhHpjuX3sxqXjPwxZanYnZozach+Zjwv4QQsE5p
-         ud33ezg6szCd5J7AhwqIQAHJR9pPkdcc+ij7N+YzHP+5xDSHEevzD0nEoe8GDaLcVDFp
-         1M1A==
-X-Gm-Message-State: AGi0Puah7MWwSy5LvB2UyhEuhIVFudg7ZxunbTvIquEJIynuwWIB8hLN
-        lHPyPeOasnYYlHtUrWMS4Io=
-X-Google-Smtp-Source: APiQypKEcCslVKMHhhTGvbuD7l/G5BD7dJunTIVdgXiqTxxI5vPhiW7LhpKxZFRrLnyuEcMFzZ41rA==
-X-Received: by 2002:a1c:1dc3:: with SMTP id d186mr8948957wmd.90.1587541515304;
-        Wed, 22 Apr 2020 00:45:15 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id h2sm7288127wro.9.2020.04.22.00.45.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ysk4WMk8NsMihs1evCSOYe7LHkphmnmScYSQbOC8Llc=;
+        b=XwZ8pufyYz039lNU8kBBozVoeU4gectRexW3zaG+IflUZRjcxO0xybkSkhk9iawlSq
+         Qtb3y9HWIYufB1Z25RP0FMB+yYaypmf32EBAsp+AraRQAGSKeNDtCHrc8qTjrgJqd63K
+         Cdz4QKOK44+5w/I0u5U28CXptrOU6guWiZfUitqQlGY5GlLHlMBWGalanQcYZJhogC72
+         OYogIx5A5hONA0yPB8AGbsa2nzdasOQGo7sYN2UCj26b12+iULAC7qQS2xX6Bl/kBD7Q
+         9K/JHt8F3QTuxAlZGUa7/vr9UCVw9AtigQjFRndSvDuo37NqPY9NQng75q1p6Q12QjHT
+         KFog==
+X-Gm-Message-State: AGi0PuY/GtaZP0NLXKjfc2ogaKDKuhn9dZBJmoS+/N12Gb1hhdJNaYA2
+        5Sfj+ji9eODGkNm/JgcGFGs=
+X-Google-Smtp-Source: APiQypIUxB9mDL/04B4tBAHmaWMbUqrOKIOV9TnnpC5t2Iz3mxa2dl45kat7lf7lCzElc1tvOqJyNg==
+X-Received: by 2002:a2e:b4f1:: with SMTP id s17mr15071165ljm.283.1587541559956;
+        Wed, 22 Apr 2020 00:45:59 -0700 (PDT)
+Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
+        by smtp.googlemail.com with ESMTPSA id c4sm3968427lfg.82.2020.04.22.00.45.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 00:45:14 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 09:45:12 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Wed, 22 Apr 2020 00:45:59 -0700 (PDT)
+From:   LuK1337 <priv.luk@gmail.com>
+Cc:     Cameron Gutman <aicommander@gmail.com>,
+        =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [GIT pull] perf/urgent for 5.7-rc2
-Message-ID: <20200422074512.GA19309@gmail.com>
-References: <158730459860.31269.9496277256253823777.tglx@nanos.tec.linutronix.de>
- <158730460101.31269.5005570498545135614.tglx@nanos.tec.linutronix.de>
- <CAHk-=wjUS9b-B1n=OCBdqq3mdVTNGz0zqhGnrtMijoB5qT+96g@mail.gmail.com>
- <20200419200758.3xry3vn2a5caxapx@treble>
- <20200420074845.GA72554@gmail.com>
- <20200420082728.GA20696@hirez.programming.kicks-ass.net>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: xpad - Add custom init packet for Xbox One S controllers
+Date:   Wed, 22 Apr 2020 09:45:45 +0200
+Message-Id: <20200422074546.14993-1-priv.luk@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
+References: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420082728.GA20696@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Łukasz Patron <priv.luk@gmail.com>
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+Sending [ 0x05, 0x20, 0x02, 0x0f, 0x06 ] packet for
+Xbox One S controllers fixes an issue where controller
+is stuck in Bluetooth mode and not sending any inputs.
 
-> On Mon, Apr 20, 2020 at 09:48:45AM +0200, Ingo Molnar wrote:
-> > Fortunately, much of what objtool does against vmlinux.o can be 
-> > parallelized in a rather straightforward fashion I believe, if we build 
-> > with -ffunction-sections.
-> 
-> So that FGKASLR is going to get us -ffunction-sections, but
-> parallelizing objtool isn't going to be trivial, it's data structures
-> aren't really build for that, esp. decode_instructions() which actively
-> generates data.
-> 
-> Still, it's probably doable.
+Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
+---
+ drivers/input/joystick/xpad.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-So AFAICS in the narrow code section I identified as the main overhead, 
-only the instruction hash needs threading, i.e. this step:
+diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+index 6b40a1c68f9f..c77cdb3b62b5 100644
+--- a/drivers/input/joystick/xpad.c
++++ b/drivers/input/joystick/xpad.c
+@@ -458,6 +458,16 @@ static const u8 xboxone_fw2015_init[] = {
+ 	0x05, 0x20, 0x00, 0x01, 0x00
+ };
+ 
++/*
++ * This packet is required for Xbox One S (0x045e:0x02ea)
++ * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
++ * initialize the controller that was previously used in
++ * Bluetooth mode.
++ */
++static const u8 xboxone_s_init[] = {
++	0x05, 0x20, 0x00, 0x0f, 0x06
++};
++
+ /*
+  * This packet is required for the Titanfall 2 Xbox One pads
+  * (0x0e6f:0x0165) to finish initialization and for Hori pads
+@@ -516,6 +526,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
+ 	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
+ 	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
+ 	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
++	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
++	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
+ 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
+ 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
+ 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
+-- 
+2.26.0
 
-                        hash_add(file->insn_hash, &insn->hash, insn->offset);
-                        list_add_tail(&insn->list, &file->insn_list);
-
-Objtool can still be single-threaded before and after generating the 
-instruction hash.
-
-99% of the overhead within decode_instructions() is in 
-arch_decode_instruction(), which is fully thread-safe AFAICS.
-
-So the run time of objtool could be cut in ~third on most systems.
-
-Thanks,
-
-	Ingo
