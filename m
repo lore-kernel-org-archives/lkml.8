@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567F5C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B97C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3AA2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608D72073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551685;
-	bh=gyrgOBtnruqsRqwFRaUPLR8jArzCvKh/o+Fs5Qs5DSA=;
+	s=default; t=1587551690;
+	bh=R/EkibC1xiHR1BW+LamJK6V0IuMDFME4qS/zquvUOgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uz2g0YmFFXqMf2tgilyWBaZpXH3sEqFLdYpEwBV8wX8H2AYZrmA6RtrFGYdTqUDWN
-	 py41IdNo3wqoiS2q9KOXh9aTif1T5LixuedcvbW0REuUAHdMSph+5PH9iUgaMUtBNi
-	 FVxyob84cP++tnLHM1lJ0rnBdaf30BS4HtjLmRjw=
+	b=N9+kJDbTg6E7UuR7eomA30aV/jQ8+zAoqE51WBOkNRFaeGK6ANoe3iIwL27jB9lzS
+	 nA6R/rrNflWFOx3Wc5vlEDFZKaRJfs0cRSK+76v1+HohJHfwGkkDG50aZRj6KN/PG3
+	 CLVJd1n7YA+QhH3drMz9T5h0YgFaQ8Z3mPxSQZag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731296AbgDVKeo (ORCPT
+        id S1731083AbgDVKet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60724 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:34:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730399AbgDVKYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:10 -0400
+        id S1730397AbgDVKYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFCB22076B;
-        Wed, 22 Apr 2020 10:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11C7C2076B;
+        Wed, 22 Apr 2020 10:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551049;
-        bh=gyrgOBtnruqsRqwFRaUPLR8jArzCvKh/o+Fs5Qs5DSA=;
+        s=default; t=1587551044;
+        bh=R/EkibC1xiHR1BW+LamJK6V0IuMDFME4qS/zquvUOgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AliGYZ1v80gJ/z+t/CUNOgBVTUdiPpxCHpd5GiUs9N3DUnITUce7UF6MQdh6sJChE
-         IgRIN6FeVkDZiGrPWGsQziEnqVsOhOUTEhaXFO3MmaXabeNAMdRUYLxe/SSB3RHQ2/
-         ubBYSVxluUDNhRhgQfHAqgmgOwNEA799EefyaPPE=
+        b=JPUguWtT6Ip+AogbcEfVpukymXjIlCoGZsf4sG5H2yDlfZvSjcIM+DSMhmg4OI1qM
+         tlovK3V64zHARHsD16cOX1P8r8ptNKSUFMB4HAvdpOHgRYCcPDh9wbOc6qjkGMGRcx
+         HHB6371GBeVcpSN7s4VTxQ3YIvI+H8usudk9Y7b0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 081/166] f2fs: fix to update f2fs_super_block fields under sb_lock
-Date:   Wed, 22 Apr 2020 11:56:48 +0200
-Message-Id: <20200422095057.468653853@linuxfoundation.org>
+Subject: [PATCH 5.6 079/166] phy: uniphier-usb3ss: Add Pro5 support
+Date:   Wed, 22 Apr 2020 11:56:46 +0200
+Message-Id: <20200422095057.300703336@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,58 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit a4ba5dfc5c88e49bb03385abfdd28c5a0acfbb54 ]
+[ Upstream commit 9376fa634afc207a3ce99e0957e04948c34d6510 ]
 
-Fields in struct f2fs_super_block should be updated under coverage
-of sb_lock, fix to adjust update_sb_metadata() for that rule.
+Pro5 SoC has same scheme of USB3 ss-phy as Pro4, so the data for Pro5 is
+equivalent to Pro4.
 
-Fixes: 04f0b2eaa3b3 ("f2fs: ioctl for removing a range from F2FS")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/gc.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/phy/socionext/phy-uniphier-usb3ss.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index db8725d473b52..9cff2502e3bc6 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1434,12 +1434,19 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
- static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
- {
- 	struct f2fs_super_block *raw_sb = F2FS_RAW_SUPER(sbi);
--	int section_count = le32_to_cpu(raw_sb->section_count);
--	int segment_count = le32_to_cpu(raw_sb->segment_count);
--	int segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
--	long long block_count = le64_to_cpu(raw_sb->block_count);
-+	int section_count;
-+	int segment_count;
-+	int segment_count_main;
-+	long long block_count;
- 	int segs = secs * sbi->segs_per_sec;
- 
-+	down_write(&sbi->sb_lock);
-+
-+	section_count = le32_to_cpu(raw_sb->section_count);
-+	segment_count = le32_to_cpu(raw_sb->segment_count);
-+	segment_count_main = le32_to_cpu(raw_sb->segment_count_main);
-+	block_count = le64_to_cpu(raw_sb->block_count);
-+
- 	raw_sb->section_count = cpu_to_le32(section_count + secs);
- 	raw_sb->segment_count = cpu_to_le32(segment_count + segs);
- 	raw_sb->segment_count_main = cpu_to_le32(segment_count_main + segs);
-@@ -1453,6 +1460,8 @@ static void update_sb_metadata(struct f2fs_sb_info *sbi, int secs)
- 		raw_sb->devs[last_dev].total_segments =
- 						cpu_to_le32(dev_segs + segs);
- 	}
-+
-+	up_write(&sbi->sb_lock);
- }
- 
- static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+diff --git a/drivers/phy/socionext/phy-uniphier-usb3ss.c b/drivers/phy/socionext/phy-uniphier-usb3ss.c
+index ec231e40ef2ac..a7577e316baf5 100644
+--- a/drivers/phy/socionext/phy-uniphier-usb3ss.c
++++ b/drivers/phy/socionext/phy-uniphier-usb3ss.c
+@@ -314,6 +314,10 @@ static const struct of_device_id uniphier_u3ssphy_match[] = {
+ 		.compatible = "socionext,uniphier-pro4-usb3-ssphy",
+ 		.data = &uniphier_pro4_data,
+ 	},
++	{
++		.compatible = "socionext,uniphier-pro5-usb3-ssphy",
++		.data = &uniphier_pro4_data,
++	},
+ 	{
+ 		.compatible = "socionext,uniphier-pxs2-usb3-ssphy",
+ 		.data = &uniphier_pxs2_data,
 -- 
 2.20.1
 
