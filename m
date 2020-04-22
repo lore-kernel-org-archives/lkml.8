@@ -2,76 +2,175 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A152AC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09760C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 834A72082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CCE20706
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:44:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ENAoOIZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgDVQnY (ORCPT
+        id S1726552AbgDVQoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:43:24 -0400
-Received: from namei.org ([65.99.196.166]:52006 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgDVQnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:43:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 03MGgnwT012761;
-        Wed, 22 Apr 2020 16:42:49 GMT
-Date:   Thu, 23 Apr 2020 02:42:49 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     deven.desai@linux.microsoft.com
-cc:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        "Serge E. Hallyn" <serge@hallyn.com>, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, jannh@google.com,
-        tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
-        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Chad Sellers <csellers@tresys.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: Re: [RFC PATCH v3 05/12] fs: add security blob and hooks for
- block_device
-In-Reply-To: <20200415162550.2324-6-deven.desai@linux.microsoft.com>
-Message-ID: <alpine.LRH.2.21.2004230234420.12318@namei.org>
-References: <20200415162550.2324-1-deven.desai@linux.microsoft.com> <20200415162550.2324-6-deven.desai@linux.microsoft.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 22 Apr 2020 12:44:16 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48810 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726147AbgDVQoP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:44:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587573854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c0nWZoKPKTTJxXUMabK38nbk8dEd9Y8pN0ufpg96O1o=;
+        b=ENAoOIZehoG8swNWwCsaw7PsBG6qyf7tYeALkBXSjWK7xMBdfiLIoQ9UKgImCf39OcPHar
+        bEHQeRP0RuB0D3V/nWh2217H2b7A+MzIOUw5zLCS/glXrHEkcZKz26W9VtOIrYbqsoLNWU
+        FYjM9vuoKR+BsD5DtFeukmQSQa40eiE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-9W6c9HByNa2NbULOmEnGpw-1; Wed, 22 Apr 2020 12:44:11 -0400
+X-MC-Unique: 9W6c9HByNa2NbULOmEnGpw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D753418FE860;
+        Wed, 22 Apr 2020 16:44:09 +0000 (UTC)
+Received: from treble (ovpn-117-114.rdu2.redhat.com [10.10.117.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 957706084B;
+        Wed, 22 Apr 2020 16:44:08 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 11:44:06 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: linux-next: Tree for Apr 22 (objtool warnings)
+Message-ID: <20200422164406.qhvd2my35wnjlzyg@treble>
+References: <20200422171016.484b031d@canb.auug.org.au>
+ <2bf0635d-1406-23db-28c7-e55da9a07e05@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2bf0635d-1406-23db-28c7-e55da9a07e05@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Apr 2020, deven.desai@linux.microsoft.com wrote:
-
-> From: Deven Bowers <deven.desai@linux.microsoft.com>
+On Wed, Apr 22, 2020 at 08:35:29AM -0700, Randy Dunlap wrote:
+> On 4/22/20 12:10 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200421:
+> > 
 > 
-> Add a security blob and associated allocation, deallocation and set hooks
-> for a block_device structure.
-> 
-> Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+> on x86_64:
 
-Is there any feedback from block or LSM folk on the addition of a security 
-blob for block_device here?
+In both cases the unreachable instruction happens immediately after a
+call to a function which is truncated with a UD2 (because of
+UBSAN_TRAP).
 
-IPE uses this is to track the status of integrity verification of e.g. 
-DM-Verity devices, per this code from a subsequent patch:
+When I remove UBSAN_TRAP, the UD2s are replaced with calls to
+__ubsan_handle_type_mismatch_v1().
 
+Kees, any idea?
 
-+       ret = security_bdev_setsecurity(dm_table_get_md(v->ti->table)->bdev,
-+                                       DM_VERITY_SIGNATURE_SEC_NAME,
-+                                       v->sig->sig, v->sig->sig_size);
+> arch/x86/net/bpf_jit_comp.o: warning: objtool: bpf_int_jit_compile()+0x246: unreachable instruction
+
+00000000000010a1 <do_jit>:
+    10a1:	55                   	push   %rbp
+    10a2:	53                   	push   %rbx
+    10a3:	48 81 ec d0 00 00 00 	sub    $0xd0,%rsp
+    10aa:	48 89 fb             	mov    %rdi,%rbx
+    10ad:	65 48 8b 04 25 28 00 	mov    %gs:0x28,%rax
+    10b4:	00 00 
+    10b6:	48 89 84 24 c8 00 00 	mov    %rax,0xc8(%rsp)
+    10bd:	00 
+    10be:	31 c0                	xor    %eax,%eax
+    10c0:	48 8b bc 24 e0 00 00 	mov    0xe0(%rsp),%rdi
+    10c7:	00 
+    10c8:	e8 00 00 00 00       	callq  10cd <do_jit+0x2c>
+			10c9: R_X86_64_PLT32	__tsan_func_entry-0x4
+    10cd:	f6 c3 07             	test   $0x7,%bl
+    10d0:	75 7f                	jne    1151 <do_jit+0xb0>
+    10d2:	48 8d 7b 0c          	lea    0xc(%rbx),%rdi
+    10d6:	e8 00 00 00 00       	callq  10db <do_jit+0x3a>
+			10d7: R_X86_64_PLT32	__tsan_read4-0x4
+    10db:	48 89 e7             	mov    %rsp,%rdi
+    10de:	e8 00 00 00 00       	callq  10e3 <do_jit+0x42>
+			10df: R_X86_64_PLT32	__tsan_write8-0x4
+    10e3:	48 8d 6c 24 08       	lea    0x8(%rsp),%rbp
+    10e8:	48 89 2c 24          	mov    %rbp,(%rsp)
+    10ec:	48 8d 7b 04          	lea    0x4(%rbx),%rdi
+    10f0:	e8 00 00 00 00       	callq  10f5 <do_jit+0x54>
+			10f1: R_X86_64_PLT32	__tsan_read4-0x4
+    10f5:	48 8d 7b 20          	lea    0x20(%rbx),%rdi
+    10f9:	e8 00 00 00 00       	callq  10fe <do_jit+0x5d>
+			10fa: R_X86_64_PLT32	__tsan_read8-0x4
+    10fe:	48 8b 7b 20          	mov    0x20(%rbx),%rdi
+    1102:	40 f6 c7 07          	test   $0x7,%dil
+    1106:	75 49                	jne    1151 <do_jit+0xb0>
+    1108:	48 83 c7 18          	add    $0x18,%rdi
+    110c:	e8 00 00 00 00       	callq  1111 <do_jit+0x70>
+			110d: R_X86_64_PLT32	__tsan_read4-0x4
+    1111:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+			1114: R_X86_64_32S	ideal_nops
+    1118:	e8 00 00 00 00       	callq  111d <do_jit+0x7c>
+			1119: R_X86_64_PLT32	__tsan_read8-0x4
+    111d:	48 8b 1d 00 00 00 00 	mov    0x0(%rip),%rbx        # 1124 <do_jit+0x83>
+			1120: R_X86_64_PC32	ideal_nops-0x4
+    1124:	48 8d 7b 48          	lea    0x48(%rbx),%rdi
+    1128:	f6 c3 07             	test   $0x7,%bl
+    112b:	75 24                	jne    1151 <do_jit+0xb0>
+    112d:	e8 00 00 00 00       	callq  1132 <do_jit+0x91>
+			112e: R_X86_64_PLT32	__tsan_read8-0x4
+    1132:	48 8b 43 48          	mov    0x48(%rbx),%rax
+    1136:	8b 10                	mov    (%rax),%edx
+    1138:	89 55 00             	mov    %edx,0x0(%rbp)
+    113b:	0f b6 40 04          	movzbl 0x4(%rax),%eax
+    113f:	88 45 04             	mov    %al,0x4(%rbp)
+    1142:	48 8d 7c 24 0d       	lea    0xd(%rsp),%rdi
+    1147:	e8 00 00 00 00       	callq  114c <do_jit+0xab>
+			1148: R_X86_64_PLT32	__tsan_write1-0x4
+    114c:	c6 44 24 0d 55       	movb   $0x55,0xd(%rsp)
+    1151:	0f 0b                	ud2    
+
+> drivers/media/i2c/ir-kbd-i2c.o: warning: objtool: ir_probe()+0x745: unreachable instruction
+
+000000000000091e <zilog_init>:
+     91e:	55                   	push   %rbp
+     91f:	48 83 ec 70          	sub    $0x70,%rsp
+     923:	65 48 8b 04 25 28 00 	mov    %gs:0x28,%rax
+     92a:	00 00 
+     92c:	48 89 44 24 68       	mov    %rax,0x68(%rsp)
+     931:	31 c0                	xor    %eax,%eax
+     933:	48 8b 7c 24 78       	mov    0x78(%rsp),%rdi
+     938:	e8 00 00 00 00       	callq  93d <zilog_init+0x1f>
+			939: R_X86_64_PLT32	__tsan_func_entry-0x4
+     93d:	48 8d 6c 24 08       	lea    0x8(%rsp),%rbp
+     942:	be 60 00 00 00       	mov    $0x60,%esi
+     947:	48 89 ef             	mov    %rbp,%rdi
+     94a:	e8 00 00 00 00       	callq  94f <zilog_init+0x31>
+			94b: R_X86_64_PLT32	__tsan_write_range-0x4
+     94f:	b9 0c 00 00 00       	mov    $0xc,%ecx
+     954:	31 c0                	xor    %eax,%eax
+     956:	48 89 ef             	mov    %rbp,%rdi
+     959:	f3 48 ab             	rep stos %rax,%es:(%rdi)
+     95c:	48 89 ef             	mov    %rbp,%rdi
+     95f:	e8 00 00 00 00       	callq  964 <zilog_init+0x46>
+			960: R_X86_64_PLT32	__tsan_write1-0x4
+     964:	c6 44 24 08 60       	movb   $0x60,0x8(%rsp)
+     969:	0f 0b                	ud2    
 
 
 -- 
-James Morris
-<jmorris@namei.org>
+Josh
 
