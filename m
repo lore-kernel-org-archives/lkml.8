@@ -2,50 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A58C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97233C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EED4C20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6811920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553113;
-	bh=DEhdbPHZQqfPYtJM5It5za6INTguDrtlMdRmDCnIdgE=;
+	s=default; t=1587553116;
+	bh=69OB8wXKOxwKkXELlIwaMk0gi4EzRqKoBvI16VoEw8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rkgZc5hTZZoP2cry45X4J6IP4e7ZdQ4IOz+YNDnHd7H0m3CaBT6YvhDdzp4BQp6Jt
-	 F3mm/4myzq8oIqt9RjOkWJwNBUlcrPIB6FxGNra3wjqhDv9O7oqMa7UatkQp/N2lBD
-	 K3wo9b6XkEYM/jViGRu0/JGs3vsHEdJwfkWaPkJY=
+	b=0dIRNFFGUPCwAus9DFeMg1Zb9Ro6QdtA5UHTPX5CrSInrPQ+RlzRDxX8GkVcrrnaM
+	 1ZWH3MHRvt9XWmRD0bOABemcD5LOMQLmmSbxVzCPhnIunmYKCmUx1wSxnW9x/hhhhr
+	 B93rjBSNdsiQUM8QI7XztZKAGObMre4BjDcv1V8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgDVKDu (ORCPT
+        id S1732279AbgDVK6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53760 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgDVKDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:45 -0400
+        id S1727898AbgDVKD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED33C20774;
-        Wed, 22 Apr 2020 10:03:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A46120784;
+        Wed, 22 Apr 2020 10:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549824;
-        bh=DEhdbPHZQqfPYtJM5It5za6INTguDrtlMdRmDCnIdgE=;
+        s=default; t=1587549836;
+        bh=69OB8wXKOxwKkXELlIwaMk0gi4EzRqKoBvI16VoEw8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DmOvUa+1e2fQZPwlEYw3CUTwrl4Tr8h87ayAAP5wcfmM799sqDNjN38g5I1lNREXm
-         aCb/nwWAgQAr6dmItKGhMcyyCeZKavwKcSzs2SW49A3t3FjJFg6un/srSA8yS5p5Cw
-         P6ISIjd9udpUQF8X1zQNz8hxcd7fBQNNhId9EttI=
+        b=nrzKVCLNaW72WGqdY5OwNqNBZ67uYDTsy7/fkGrpcKvLDQGbAZ2zGLWYh3wp/H8hH
+         oDmny2orozccCWDHKYAF8PjgXA3GRHHhif0hFN3yuCGxhc1Vx773sHrAvZdOV9oeqb
+         AHv+BtrArl/4eVwrKe2h4BIaOWrvYpg8EGAdm2Bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 022/125] ALSA: hda: Add driver blacklist
-Date:   Wed, 22 Apr 2020 11:55:39 +0200
-Message-Id: <20200422095036.870434379@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 009/125] gfs2: Dont demote a glock until its revokes are written
+Date:   Wed, 22 Apr 2020 11:55:26 +0200
+Message-Id: <20200422095034.472542332@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -58,63 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Bob Peterson <rpeterso@redhat.com>
 
-commit 3c6fd1f07ed03a04debbb9a9d782205f1ef5e2ab upstream.
+[ Upstream commit df5db5f9ee112e76b5202fbc331f990a0fc316d6 ]
 
-The recent AMD platform exposes an HD-audio bus but without any actual
-codecs, which is internally tied with a USB-audio device, supposedly.
-It results in "no codecs" error of HD-audio bus driver, and it's
-nothing but a waste of resources.
+Before this patch, run_queue would demote glocks based on whether
+there are any more holders. But if the glock has pending revokes that
+haven't been written to the media, giving up the glock might end in
+file system corruption if the revokes never get written due to
+io errors, node crashes and fences, etc. In that case, another node
+will replay the metadata blocks associated with the glock, but
+because the revoke was never written, it could replay that block
+even though the glock had since been granted to another node who
+might have made changes.
 
-This patch introduces a static blacklist table for skipping such a
-known bogus PCI SSID entry.  As of writing this patch, the known SSIDs
-are:
-* 1043:874f - ASUS ROG Zenith II / Strix
-* 1462:cb59 - MSI TRX40 Creator
-* 1462:cb60 - MSI TRX40
+This patch changes the logic in run_queue so that it never demotes
+a glock until its count of pending revokes reaches zero.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408140449.22319-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/gfs2/glock.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1971,6 +1971,17 @@ static const struct hdac_io_ops pci_hda_
- 	.dma_free_pages = dma_free_pages,
- };
- 
-+/* Blacklist for skipping the whole probe:
-+ * some HD-audio PCI entries are exposed without any codecs, and such devices
-+ * should be ignored from the beginning.
-+ */
-+static const struct snd_pci_quirk driver_blacklist[] = {
-+	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
-+	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
-+	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
-+	{}
-+};
-+
- static const struct hda_controller_ops pci_hda_ops = {
- 	.disable_msi_reset_irq = disable_msi_reset_irq,
- 	.substream_alloc_pages = substream_alloc_pages,
-@@ -1990,6 +2001,11 @@ static int azx_probe(struct pci_dev *pci
- 	bool schedule_probe;
- 	int err;
- 
-+	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
-+		dev_info(&pci->dev, "Skipping the blacklisted device\n");
-+		return -ENODEV;
-+	}
-+
- 	if (dev >= SNDRV_CARDS)
- 		return -ENODEV;
- 	if (!enable[dev]) {
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index efd44d5645d83..adc1a97cfe96d 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -548,6 +548,9 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
++		smp_mb();
++		if (atomic_read(&gl->gl_revokes) != 0)
++			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
+-- 
+2.20.1
+
 
 
