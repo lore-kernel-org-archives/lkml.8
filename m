@@ -2,89 +2,152 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E64C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6671EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 861812076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:42:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rg2aj+WZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3C99A2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587570180;
+	bh=dFDabSuxkYteRUUv5PVV0IQqfemc6mBZd319vF4jn0w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iaFTABa/K2ODVhGZszQW1rf5z6+AO9AxzYTTI7uAfbzf8CRB5rT6tKfym+3EVgE7+
+	 PAeBUDYzjBknDZIIhK73Vws7YdY1zdN03yqHoVrmFrBSeM3m2ql9mWnNWwXT+1TbSs
+	 oWEZhzRVD1KZRct+grYjs4wsnvTQLgQYl+X3YtxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDVPmy (ORCPT
+        id S1726450AbgDVPm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgDVPmy (ORCPT
+        Wed, 22 Apr 2020 11:42:59 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:26853 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgDVPm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:42:54 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17447C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=w7os9iLev/9dj2qAgL+949q1zGpOmKIk3i33sopb+WM=; b=Rg2aj+WZ7Wbxlfo/3Hh1nS1Dv4
-        Lj+oJWA/iNq8lDrz4075SEyqxxQP06CwR55dudxI/xM/9OtSHU7TBTNWSMIsWAJo2v2nYHn1tyteA
-        oDPK75TnebDxNQX9s6V/pIzLj7jUXVCBtobqO4fMKjmY5IEwy6MbbGGG/GpzDmjZNWFw2Kp4/lMtd
-        tQe9o36pKOa1SNpSYyFSnShDmwgmF7WSNya9fgijcUVauXHmaeL4IHxo3IFUvQgVrhmrtiyppJHW+
-        xU9zT2Sv3tw6PlrEdsGD5gCSKK4hMj6QNf/dEFNhzMDHuJ6BmdGsITBbBl9eDvpqjlyKSaWnh31/K
-        uDeFuSBQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRHW5-0003jE-D5; Wed, 22 Apr 2020 15:42:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A761030477A;
-        Wed, 22 Apr 2020 17:42:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8851E286B71D5; Wed, 22 Apr 2020 17:42:23 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 17:42:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 13/23] sched,ion: Convert to sched_set_normal()
-Message-ID: <20200422154223.GO20730@hirez.programming.kicks-ass.net>
-References: <20200422112719.826676174@infradead.org>
- <20200422112831.988065598@infradead.org>
- <CAKfTPtB8NiKqggZN3v6u=Rdwj4grzRwn1mW31ov0y5ZhDBcvuw@mail.gmail.com>
- <20200422132923.GK20730@hirez.programming.kicks-ass.net>
- <CAKfTPtBsFDt8JyxjD39B2YP+kCN9nXWZxnaJys9sz2CjWzd1Zw@mail.gmail.com>
- <20200422135921.GL20730@hirez.programming.kicks-ass.net>
- <20200422153820.GK9767@localhost.localdomain>
+        Wed, 22 Apr 2020 11:42:58 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 03MFgfIw011166;
+        Thu, 23 Apr 2020 00:42:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03MFgfIw011166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587570162;
+        bh=QUCpK3WJm1ifLwVFUS1q0umABM4aGa5XtBHT0c2+mZI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SOeQtnnrdnb/eEUI0PFq3PB954a4LsBSyQbyKqpLffygtHqhcDuAo4i+OnV4+02Zs
+         Acl5Iw0lHqh+kcXXCeTZH/SqefvmZaygvWPSScOHx2D3aIULpkwax2jHJKwa/UqpJ4
+         uTFOUgog6GvdsWAWh7c3pmyXdQk/Ajcp2OLvLqfi0EuNr5GQr3aeVE/3+styyqFqnF
+         9WjVwezekrG9sppgUr2F54p207mqdYk1eEyoZX2fqT47qSf6DGj+f+nZC+lVAbZtHb
+         9vzLk2eYJY35Hz65QrMQmyh3MiRTkOHw+eg7qNoiFe/msC6WhJ8yZmAAaOAYDJFjpg
+         vawwuHBqHSneQ==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id c24so2091094uap.13;
+        Wed, 22 Apr 2020 08:42:42 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYqtgv01NEyWzkzQUJam/OTOlm0SJzivg3WsIcjpuVluch5+qZ8
+        AHgvl0GEBK4/G292lzRCf/BZRhKyFHZPV8/A2Os=
+X-Google-Smtp-Source: APiQypJK53incbdlqtMV7txS87GEalFCanCE0tnP4L7TDOANgXMWvWbvu8aq1Ibl5jbYxROrMtBhknLCsbHyLbBk8fk=
+X-Received: by 2002:a67:3293:: with SMTP id y141mr21234308vsy.54.1587570161183;
+ Wed, 22 Apr 2020 08:42:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422153820.GK9767@localhost.localdomain>
+References: <20200422004844.53284-1-vitor@massaru.org>
+In-Reply-To: <20200422004844.53284-1-vitor@massaru.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 23 Apr 2020 00:42:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASNBqQfMS49C9z7=opXeGv8-Y2DCDDQ2JqZPvMVZ6XwZg@mail.gmail.com>
+Message-ID: <CAK7LNASNBqQfMS49C9z7=opXeGv8-Y2DCDDQ2JqZPvMVZ6XwZg@mail.gmail.com>
+Subject: Re: [PATCH v3] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 05:38:20PM +0200, Juri Lelli wrote:
-> On 22/04/20 15:59, Peter Zijlstra wrote:
+On Wed, Apr 22, 2020 at 9:48 AM Vitor Massaru Iha <vitor@massaru.org> wrote:
+>
+> In this workflow:
+>
+> $ make ARCH=um defconfig && make ARCH=um -j8
+>   [snip]
+> $ make ARCH=um mrproper
+>   [snip]
+> $ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
+>   [snip]
+>   CC      scripts/mod/empty.o
+> In file included from ../include/linux/types.h:6,
+>                  from ../include/linux/mod_devicetable.h:12,
+>                  from ../scripts/mod/devicetable-offsets.c:3:
+> ../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
+>     5 | #include <asm/types.h>
+>       |          ^~~~~~~~~~~~~
+> compilation terminated.
+> make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
+> make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
+> make: *** [Makefile:180: sub-make] Error 2
+>
+> The cause of the error was because arch/$(SUBARCH)/include/generated files
+> weren't properly cleaned by `make ARCH=um mrproper`.
+>
+> Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated
+> before out-of-tree build").
+> Reported-by: Theodore Ts'o <tytso@mit.edu>
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> Tested-by: Brendan Higgins <brendanhiggins@google.com>
+> Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
+> Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
 
-> > I should get back to proxy execution I suppose...
-> 
-> Huh, so you really think proxy exec should be default on for kernel
-> mutexes...
 
-We'll see, ideally yes, but even if not, then you have something to give
-to people who run into trouble.
+Applied to linux-kbuild/fixes.
+Thanks.
 
-It would also allow a true idle time class, although I'm not sure we'd
-actually want to go there.
+
+
+> ---
+> v2:
+>  * Explains what this PATCH does and the importance as suggested
+>    by Brendan Higgins.
+> v3:
+>  * This problem only affects ARCH=um builds then arch/um/Makefile has
+>    been changed as suggested by Masahiro Yamada;
+>  * And with that the description has also been changed, and also to explain
+>    missing points and correct the tags as suggested by Masahiro Yamada:
+>    - Fix missing command `make ARCH=um mrproper`;
+>    - Add build error message;
+>    - Add "Fixes" tag instead of "This bug was ...";
+>    - Add "Link" tag instead of "Related bug ...";
+>    - Add Reported-by and Suggested-by;
+> ---
+>  arch/um/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/um/Makefile b/arch/um/Makefile
+> index d2daa206872d..275f5ffdf6f0 100644
+> --- a/arch/um/Makefile
+> +++ b/arch/um/Makefile
+> @@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE)
+>  # When cleaning we don't include .config, so we don't include
+>  # TT or skas makefiles and don't clean skas_ptregs.h.
+>  CLEAN_FILES += linux x.i gmon.out
+> +MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
+>
+>  archclean:
+>         @find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
+> --
+> 2.25.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
