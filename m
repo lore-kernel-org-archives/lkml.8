@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9EAC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC52EC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1BF820781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D6020781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551600;
-	bh=Le5r4ZEgqHViB7UDMuTUHMRwchWcpxKe6N8tGPIdKdI=;
+	s=default; t=1587551606;
+	bh=fa6sFC6ExgJLrtzdqYbGOIXx3ZLfMUmZOOEM2DJyOJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1AS63SROFYU8XmyQxe1n+/1y5jkVv65TcSed5KrSCoB/rVv3Uu0aUW4MSfraSwaKk
-	 m+B+nIo0KsNjcMa+IQ5JXxhzoRqzk6WM0LAh6gVkjDVMUXK45pCKpMmy2o6oU+tR6T
-	 xHk8T3m3WwC+mMQ1OOUDTzn1m/FQmEDE9c4DIdt4=
+	b=L2VbBUtG7Nd4DPv1PrmAL2hK+5UEX4HLUOfaL51DbaS5yqpUdiBuyV1Ba6GUPl2Z8
+	 YZlhvIVucLX+0sBpfv1rfT/Z08pLjiovRo3OiwNm2E+p7+1JzpI2xV8ggNc++iw8gL
+	 BdoUfTvws4THqFAOlIv8epJVr71BxiCeeAnFKCBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbgDVKdT (ORCPT
+        id S1731192AbgDVKdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:33:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730469AbgDVKYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:52 -0400
+        id S1729736AbgDVKYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C8612075A;
-        Wed, 22 Apr 2020 10:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A41FE2071E;
+        Wed, 22 Apr 2020 10:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551091;
-        bh=Le5r4ZEgqHViB7UDMuTUHMRwchWcpxKe6N8tGPIdKdI=;
+        s=default; t=1587551089;
+        bh=fa6sFC6ExgJLrtzdqYbGOIXx3ZLfMUmZOOEM2DJyOJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WMBB5Wk/NxtyZGcGww71Ovn1Wkr74v+XaZLc7PRzfpIHNpVrMSDLahM8JBjKJMssP
-         SG3hwdX4Zx/lQ4w0IYnDEqj+0hVErXKyTiVX9Yd2vA5aKvOHSPX/bbndZ+Bkc5GYJD
-         krLTO2cEASTCSRt0Zmg9uK99PHerdyDLmbKyKRk0=
+        b=exhyVC7CPoTysCJE84517JputvHvV7SQu6JszM6LHhXbFgctUcFzNBRiLZ9z7/n7O
+         beF5RS+NozFSpMZ7mJBPhmc0mLuNo+HdHlKqGmKUQ0hRYegE9WTbKWdceHgOTfoSRx
+         qLNCoh0GUYp+wUEDI6rQ8ZGoBDlANWmkbiQt/tW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 096/166] x86/xen: Make the boot CPU idle task reliable
-Date:   Wed, 22 Apr 2020 11:57:03 +0200
-Message-Id: <20200422095059.319186761@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kevin Grandemange <kevin.grandemange@allegrodvt.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 069/166] dma-coherent: fix integer overflow in the reserved-memory dma allocation
+Date:   Wed, 22 Apr 2020 11:56:36 +0200
+Message-Id: <20200422095056.319089776@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,56 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Kevin Grandemange <kevin.grandemange@allegrodvt.com>
 
-[ Upstream commit 2f62f36e62daec43aa7b9633ef7f18e042a80bed ]
+[ Upstream commit 286c21de32b904131f8cf6a36ce40b8b0c9c5da3 ]
 
-The unwinder reports the boot CPU idle task's stack on XEN PV as
-unreliable, which affects at least live patching. There are two reasons
-for this. First, the task does not follow the x86 convention that its
-stack starts at the offset right below saved pt_regs. It allows the
-unwinder to easily detect the end of the stack and verify it. Second,
-startup_xen() function does not store the return address before jumping
-to xen_start_kernel() which confuses the unwinder.
+pageno is an int and the PAGE_SHIFT shift is done on an int,
+overflowing if the memory is bigger than 2G
 
-Amend both issues by moving the starting point of initial stack in
-startup_xen() and storing the return address before the jump, which is
-exactly what call instruction does.
+This can be reproduced using for example a reserved-memory of 4G
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+reserved-memory {
+		    #address-cells = <2>;
+		    #size-cells = <2>;
+		    ranges;
+
+		    reserved_dma: buffer@0 {
+		        compatible = "shared-dma-pool";
+		        no-map;
+		        reg = <0x5 0x00000000 0x1 0x0>;
+        };
+};
+
+Signed-off-by: Kevin Grandemange <kevin.grandemange@allegrodvt.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/xen-head.S | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/dma/coherent.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-index 1d0cee3163e41..d63806e1ff7ae 100644
---- a/arch/x86/xen/xen-head.S
-+++ b/arch/x86/xen/xen-head.S
-@@ -35,7 +35,11 @@ SYM_CODE_START(startup_xen)
- 	rep __ASM_SIZE(stos)
+diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+index 551b0eb7028a3..2a0c4985f38e4 100644
+--- a/kernel/dma/coherent.c
++++ b/kernel/dma/coherent.c
+@@ -134,7 +134,7 @@ static void *__dma_alloc_from_coherent(struct device *dev,
  
- 	mov %_ASM_SI, xen_start_info
--	mov $init_thread_union+THREAD_SIZE, %_ASM_SP
-+#ifdef CONFIG_X86_64
-+	mov initial_stack(%rip), %rsp
-+#else
-+	mov pa(initial_stack), %esp
-+#endif
+ 	spin_lock_irqsave(&mem->spinlock, flags);
  
- #ifdef CONFIG_X86_64
- 	/* Set up %gs.
-@@ -51,7 +55,7 @@ SYM_CODE_START(startup_xen)
- 	wrmsr
- #endif
+-	if (unlikely(size > (mem->size << PAGE_SHIFT)))
++	if (unlikely(size > ((dma_addr_t)mem->size << PAGE_SHIFT)))
+ 		goto err;
  
--	jmp xen_start_kernel
-+	call xen_start_kernel
- SYM_CODE_END(startup_xen)
- 	__FINIT
- #endif
+ 	pageno = bitmap_find_free_region(mem->bitmap, mem->size, order);
+@@ -144,8 +144,9 @@ static void *__dma_alloc_from_coherent(struct device *dev,
+ 	/*
+ 	 * Memory was found in the coherent area.
+ 	 */
+-	*dma_handle = dma_get_device_base(dev, mem) + (pageno << PAGE_SHIFT);
+-	ret = mem->virt_base + (pageno << PAGE_SHIFT);
++	*dma_handle = dma_get_device_base(dev, mem) +
++			((dma_addr_t)pageno << PAGE_SHIFT);
++	ret = mem->virt_base + ((dma_addr_t)pageno << PAGE_SHIFT);
+ 	spin_unlock_irqrestore(&mem->spinlock, flags);
+ 	memset(ret, 0, size);
+ 	return ret;
+@@ -194,7 +195,7 @@ static int __dma_release_from_coherent(struct dma_coherent_mem *mem,
+ 				       int order, void *vaddr)
+ {
+ 	if (mem && vaddr >= mem->virt_base && vaddr <
+-		   (mem->virt_base + (mem->size << PAGE_SHIFT))) {
++		   (mem->virt_base + ((dma_addr_t)mem->size << PAGE_SHIFT))) {
+ 		int page = (vaddr - mem->virt_base) >> PAGE_SHIFT;
+ 		unsigned long flags;
+ 
+@@ -238,10 +239,10 @@ static int __dma_mmap_from_coherent(struct dma_coherent_mem *mem,
+ 		struct vm_area_struct *vma, void *vaddr, size_t size, int *ret)
+ {
+ 	if (mem && vaddr >= mem->virt_base && vaddr + size <=
+-		   (mem->virt_base + (mem->size << PAGE_SHIFT))) {
++		   (mem->virt_base + ((dma_addr_t)mem->size << PAGE_SHIFT))) {
+ 		unsigned long off = vma->vm_pgoff;
+ 		int start = (vaddr - mem->virt_base) >> PAGE_SHIFT;
+-		int user_count = vma_pages(vma);
++		unsigned long user_count = vma_pages(vma);
+ 		int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 
+ 		*ret = -ENXIO;
 -- 
 2.20.1
 
