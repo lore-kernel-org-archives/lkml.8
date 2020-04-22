@@ -2,55 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6DDC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5189CC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB042076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211932076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553181;
-	bh=cIXdAdZ5dVYSOKb5XWstUFzFLikCgwTFPtbTJkH/Hy8=;
+	s=default; t=1587553189;
+	bh=IR9dinZycpk9fBA76RYC0kTqq4SSMvLiFis0KZdrM3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jOO9VSbCUUCTxt6e17oBBaDs0Js9IAfQ1rpnLyu0GPsbOgvOLU3bGogFh/vc/0eON
-	 04FAMIDk0MIDRKkMr/xOAsXCBlNcOYTX91wF/p0fnW/71O8ooXFaKTeq5nrPQyZFOB
-	 l2VC0VxCtuOavW+BC7YGcroY9vF4vsDvN9owK37M=
+	b=sZNeRxJEEHmLyZQFh11jgYW/Snf4hD5LJi35HqiqviZ5W44o5zt9ufDhC1mFrafAA
+	 pf1L1L8800P+gynOl9egiUQ4MzmMoNIjI2EDb9BaANREdhdk7WBldowBWx27+6KWVm
+	 P3tKUH8PzV8CT9TkxBnynBHx6gAoKPQ7GUW1anGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbgDVK7g (ORCPT
+        id S1732324AbgDVK7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52058 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:59:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgDVKCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:02:47 -0400
+        id S1727003AbgDVKCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:02:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3FED20735;
-        Wed, 22 Apr 2020 10:02:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91AC420735;
+        Wed, 22 Apr 2020 10:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549766;
-        bh=cIXdAdZ5dVYSOKb5XWstUFzFLikCgwTFPtbTJkH/Hy8=;
+        s=default; t=1587549752;
+        bh=IR9dinZycpk9fBA76RYC0kTqq4SSMvLiFis0KZdrM3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lUQJifZWNXk9wafQ5VRLcrXQgbyX+AvKF+obq+httTOv7E/vLo/HpJL0eNT5V2JBt
-         iEJD+jn4FnmrjHPc9QVvUBOWTkcCPwHa1MvXM+IcwNHP7LaLUFTuBU6Cn/wgpa1+hv
-         ehu6YXAaan8jc6NvZrpkpfVQgAldtQv3iAQu2Dcs=
+        b=0xmZ/bVJZF51OOJ1QWpMdCta07PUCh1OBUZHn61RFtIIqAF3PluEKjEtxTvj0JyMn
+         JxzLGeT+bKcNg8gkF2+jC50XGLN9BUdxEOZj9zM6YMEgLa3n0QsI8wDSewjm9ynRLr
+         nMDMMqc8qAD1vPWb9t0UV/CcLt0eYeMGOA/bkb0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Joern Engel <joern@lazybastard.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH 4.4 097/100] mtd: phram: fix a double free issue in error path
-Date:   Wed, 22 Apr 2020 11:57:07 +0200
-Message-Id: <20200422095040.354702112@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 091/100] ext2: fix empty body warnings when -Wextra is used
+Date:   Wed, 22 Apr 2020 11:57:01 +0200
+Message-Id: <20200422095039.371486451@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -63,64 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-commit 49c64df880570034308e4a9a49c4bc95cf8cdb33 upstream.
+[ Upstream commit 44a52022e7f15cbaab957df1c14f7a4f527ef7cf ]
 
-The variable 'name' is released multiple times in the error path,
-which may cause double free issues.
-This problem is avoided by adding a goto label to release the memory
-uniformly. And this change also makes the code a bit more cleaner.
+When EXT2_ATTR_DEBUG is not defined, modify the 2 debug macros
+to use the no_printk() macro instead of <nothing>.
+This fixes gcc warnings when -Wextra is used:
 
-Fixes: 4f678a58d335 ("mtd: fix memory leaks in phram_setup")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Joern Engel <joern@lazybastard.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200318153156.25612-1-wenyang@linux.alibaba.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+../fs/ext2/xattr.c:252:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../fs/ext2/xattr.c:258:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../fs/ext2/xattr.c:330:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../fs/ext2/xattr.c:872:45: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
 
+I have verified that the only object code change (with gcc 7.5.0) is
+the reversal of some instructions from 'cmp a,b' to 'cmp b,a'.
+
+Link: https://lore.kernel.org/r/e18a7395-61fb-2093-18e8-ed4f8cf56248@infradead.org
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jan Kara <jack@suse.com>
+Cc: linux-ext4@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/devices/phram.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ fs/ext2/xattr.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/mtd/devices/phram.c
-+++ b/drivers/mtd/devices/phram.c
-@@ -247,22 +247,25 @@ static int phram_setup(const char *val)
+diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
+index 22d817dc821e9..6f6f4f89a2f0c 100644
+--- a/fs/ext2/xattr.c
++++ b/fs/ext2/xattr.c
+@@ -55,6 +55,7 @@
  
- 	ret = parse_num64(&start, token[1]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal start address\n");
-+		goto error;
- 	}
+ #include <linux/buffer_head.h>
+ #include <linux/init.h>
++#include <linux/printk.h>
+ #include <linux/slab.h>
+ #include <linux/mbcache.h>
+ #include <linux/quotaops.h>
+@@ -85,8 +86,8 @@
+ 		printk("\n"); \
+ 	} while (0)
+ #else
+-# define ea_idebug(f...)
+-# define ea_bdebug(f...)
++# define ea_idebug(inode, f...)	no_printk(f)
++# define ea_bdebug(bh, f...)	no_printk(f)
+ #endif
  
- 	ret = parse_num64(&len, token[2]);
- 	if (ret) {
--		kfree(name);
- 		parse_err("illegal device length\n");
-+		goto error;
- 	}
- 
- 	ret = register_device(name, start, len);
--	if (!ret)
--		pr_info("%s device: %#llx at %#llx\n", name, len, start);
--	else
--		kfree(name);
-+	if (ret)
-+		goto error;
- 
-+	pr_info("%s device: %#llx at %#llx\n", name, len, start);
-+	return 0;
-+
-+error:
-+	kfree(name);
- 	return ret;
- }
- 
+ static int ext2_xattr_set2(struct inode *, struct buffer_head *,
+-- 
+2.20.1
+
 
 
