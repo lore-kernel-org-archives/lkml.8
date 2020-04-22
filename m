@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40999C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E0AC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 156EA2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699C32073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552607;
-	bh=J1VH8Nnps960mpwB+U999fFlQpOh/bdPHJUr2edaVa0=;
+	s=default; t=1587552610;
+	bh=+SrwVG1wkcsfrVwkbz4KAAKDbgLeN74p2Cc+qM20LlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tCoF+Ezh+SPLprVuMO4wODIg5dIvUAB3D+7DOznifX6CuZ1ShB3LYe9JNAq0Dc7kM
-	 KP5DxG0SQus8YMjC+aYzaqLYWwzeu7hmE7HdVFPC+dNtFeWzFmZsUYeYA+cvKbGucY
-	 wisudtSKRXOQfoQLseeAJ3ZQSqKh+slFceXXU2PU=
+	b=Wo+R1rQcs4WGh08CDhUfwFhxrGfMY9z8quaQ0qiTpyFenyfShSI6dQF142DBhLd9u
+	 NCdpBU82pE/UiYc6SAHjYGIN5Yl2Gc89SdrXGunIF6VgQoTxyaQDpctsr/7kZFuuTk
+	 oZzPmfYSsnKUyW4465VB30RXPmUVyhyn5fIc0TLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732139AbgDVKuG (ORCPT
+        id S1729363AbgDVKMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46330 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbgDVKMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:54 -0400
+        id S1728769AbgDVKMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AFCA2070B;
-        Wed, 22 Apr 2020 10:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98EC920575;
+        Wed, 22 Apr 2020 10:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550373;
-        bh=J1VH8Nnps960mpwB+U999fFlQpOh/bdPHJUr2edaVa0=;
+        s=default; t=1587550354;
+        bh=+SrwVG1wkcsfrVwkbz4KAAKDbgLeN74p2Cc+qM20LlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eBj1qdyiexcdbs17qSEazwDMyw4dlLitY5rxoyCneZVQLD5UXHHsiZJc4NDuMGoSW
-         8CS4Y/+kFPglFu9gYnGJxaysqghE0DJRw+wlWTbX3jgukqaEv+qH5W9rmXHqzUqqTf
-         ++Fy76IuuYstP6KwZmC5clJ7BCWRJdYjk+0U6ZvA=
+        b=Z7ujgR5POl3x7EgGWVGDs12FjtwdWUi+WDGYivKJ36FNspu4sfgO7msb5+cGQdg0O
+         I/dMw+i/8LZAVX2ofCsONkuzpEsD8FHcREy0xb59UAzDikWT2fnfAfa0iKyLboduI+
+         s7JBVINHM4EUtoRxlZIrjnZk8hiKTW20T6+BO/LA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 120/199] ALSA: usb-audio: Dont override ignore_ctl_error value from the map
-Date:   Wed, 22 Apr 2020 11:57:26 +0200
-Message-Id: <20200422095109.598613646@linuxfoundation.org>
+        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 113/199] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
+Date:   Wed, 22 Apr 2020 11:57:19 +0200
+Message-Id: <20200422095108.968120627@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -58,36 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Can Guo <cang@codeaurora.org>
 
-commit 3507245b82b4362dc9721cbc328644905a3efa22 upstream.
+commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
 
-The mapping table may contain also ignore_ctl_error flag for devices
-that are known to behave wild.  Since this flag always writes the
-card's own ignore_ctl_error flag, it overrides the value already set
-by the module option, so it doesn't follow user's expectation.
-Let's fix the code not to clear the flag that has been set by user.
+The async version of ufshcd_hold(async == true), which is only called in
+queuecommand path as for now, is expected to work in atomic context, thus
+it should not sleep or schedule out. When it runs into the condition that
+clocks are ON but link is still in hibern8 state, it should bail out
+without flushing the clock ungate work.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206873
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200412081331.4742-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
+Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2342,7 +2342,7 @@ static int snd_usb_mixer_controls(struct
- 		if (map->id == state.chip->usb_id) {
- 			state.map = map->map;
- 			state.selector_map = map->selector_map;
--			mixer->ignore_ctl_error = map->ignore_ctl_error;
-+			mixer->ignore_ctl_error |= map->ignore_ctl_error;
- 			break;
- 		}
- 	}
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1448,6 +1448,11 @@ start:
+ 		 */
+ 		if (ufshcd_can_hibern8_during_gating(hba) &&
+ 		    ufshcd_is_link_hibern8(hba)) {
++			if (async) {
++				rc = -EAGAIN;
++				hba->clk_gating.active_reqs--;
++				break;
++			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+ 			flush_work(&hba->clk_gating.ungate_work);
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
 
 
