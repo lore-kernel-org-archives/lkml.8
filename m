@@ -2,151 +2,131 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1DBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729EBC55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8AFB20747
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4812070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587535382;
+	bh=RyobVlYLDlwPdEUHFbysd50nKsdxrBAn3YN9DXUsA+c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=aP71HEzLeUgYkqS0+PmixXN0LQ5H97mQ5bY58m0NuRs4yTUQCFmlBODySv6WHOrHI
+	 MylEeBGIIBI/HJJiXOnsX31Z8bSP2ZyicHEGCEGGKfXec7Fin0jgzPPB6n7uZbV1EO
+	 3N7/pWfBgZX03GlYEEI7LDeAhDEvMSDLSGyvVDfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbgDVGBe (ORCPT
+        id S1726041AbgDVGDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:01:34 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:29025 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgDVGBd (ORCPT
+        Wed, 22 Apr 2020 02:03:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgDVGDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:01:33 -0400
-Received: from [10.28.39.241] (10.28.39.241) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 22 Apr 2020
- 14:02:22 +0800
-Subject: Re: [PATCH v2 2/2] watchdog: Add new arm_smc_wdt watchdog driver
-To:     Evan Benn <evanbenn@chromium.org>,
-        Julius Werner <jwerner@chromium.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wed, 22 Apr 2020 02:03:01 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DC2C03C1A6;
+        Tue, 21 Apr 2020 23:03:00 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id u15so974227ljd.3;
+        Tue, 21 Apr 2020 23:03:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:acked-by
+         :signed-off-by:date:message-id:mime-version;
+        bh=RyobVlYLDlwPdEUHFbysd50nKsdxrBAn3YN9DXUsA+c=;
+        b=CuEqA7g+zZ54dw9bCjayhgv9A2u9MTQNCyt6TyWzFiFMsGJTNLVLxPxjfv8uHI7dQo
+         MC32G8uIM4f5rC1H5sgtFomew636iL82jvLXqaEF1Mn6oSVKztw1QsOEAPPrMKZ9jFGT
+         1wGb16v8CYMvHlnWKfl+sXm5JvhTxP2qfzeYdNUQJdTXsb7uZjoEeL+wg32naJhmfrrk
+         +yhgeue6gQFbxbcm2X8FYAXR+xbgTRsFnEhq2dapuvkCuUTAjd1qoAUrX8cKrVQhino/
+         WB/nHYjmLrpXDhTnnBxrfxXVrB5pdKhJa7AT6hMVN3vafe8XnX2hut2D90jo0gUWJRjd
+         H30w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :acked-by:signed-off-by:date:message-id:mime-version;
+        bh=RyobVlYLDlwPdEUHFbysd50nKsdxrBAn3YN9DXUsA+c=;
+        b=o8GXDqzKhb/YS+LQ8MbzZbE5CYg6gWOG+4tv2Gd1OzSNyJ++P2VsVA7gbRZcOljhcz
+         Lo9k3tZTT29fjw/5MJRjvSZ6MujfNT6B7vYszxJqfnI9CNyQOwqrFS9VN9hxLuYLbK1N
+         HgbQ0zYQkSWBONUrwlfS0LTT1EDGMNF21zXTZDIb38wydooxTfj9oQFzQPvJhuYwfNtZ
+         K85MtI2RE867RfBfuaE5GoJ3+cZGcPTyXAZpMZCnEh0JFjTshqCTU/XOd8nxrxZmGnHT
+         LPjSgL1tWUycgAzSAzZulPBWtWC4NKjI6kgKNTgh2mIrtUZdLXL02J4aleNIHbwzfdFP
+         awOg==
+X-Gm-Message-State: AGi0PuZkhS15Re4MNWFIK0jwgOJr/DVEZbAoQpzf3Av4WKAdrL6dos5o
+        Vlv8dNyH1Xsz/k50ySWI8f0R5Bb7
+X-Google-Smtp-Source: APiQypIjRjgsVPUBcXDJnEvR6tt9J8AMqa4ttQtiCcbriCsZnqyDtDIspQZuvw1zQ4lSotKOpPbzYA==
+X-Received: by 2002:a05:651c:385:: with SMTP id e5mr15448868ljp.208.1587535378749;
+        Tue, 21 Apr 2020 23:02:58 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id k11sm3811034lfe.44.2020.04.21.23.02.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Apr 2020 23:02:58 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Yonghui Yu <yonghui.yu@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <20200421110520.197930-1-evanbenn@chromium.org>
- <20200421210403.v2.2.Ia92bb4d4ce84bcefeba1d00aaa1c1e919b6164ef@changeid>
- <CAODwPW9MtDLSL_up9W0TO1PcjyA_9cUtNo3No7XXusiwqKBLDw@mail.gmail.com>
- <CAKz_xw3-tvYoCDs07xEUBBMf024aezGMoZ35LsTN+_dXT9nC2Q@mail.gmail.com>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <bbd8f97b-8479-c38e-011f-b52e2cf34403@amlogic.com>
-Date:   Wed, 22 Apr 2020 14:02:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 08/29] docs: filesystems: convert configfs.txt to ReST
+In-Reply-To: <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
+References: <cover.1587487612.git.mchehab+huawei@kernel.org> <278a9befc98b49ea866c9b687d070c70cde20628.1587487612.git.mchehab+huawei@kernel.org>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Date:   Wed, 22 Apr 2020 09:02:53 +0300
+Message-ID: <878siocb1u.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAKz_xw3-tvYoCDs07xEUBBMf024aezGMoZ35LsTN+_dXT9nC2Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.241]
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,Evan
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/4/22 9:39, Evan Benn wrote:
-> On Wed, Apr 22, 2020 at 6:31 AM Julius Werner <jwerner@chromium.org> wrote:
->>
->>> +static int smcwd_call(unsigned long smc_func_id, enum smcwd_call call,
->>> +                     unsigned long arg, struct arm_smccc_res *res)
->>
->> I think you should just take a struct watchdog_device* here and do the
->> drvdata unpacking inside the function.
-> 
-> That makes sense, I avoided it because smcwd_call's are made during
-> 'probe', ~while
-> we are 'constructing' the wdd. But this is C, so I think I have
-> permission to do this!
-> 
->>> +static int smcwd_probe(struct platform_device *pdev)
->>> +{
->>> +       struct watchdog_device *wdd;
->>> +       int err;
->>> +       struct arm_smccc_res res;
->>> +       u32 *smc_func_id;
->>> +
->>> +       smc_func_id =
->>> +               devm_kzalloc(&pdev->dev, sizeof(*smc_func_id), GFP_KERNEL);
->>> +       if (!smc_func_id)
->>> +               return -ENOMEM;
->>
->> nit: Could save the allocation by just casting the value itself to a
->> pointer? Or is that considered too hacky?
-> 
-> I am not yet used to what hacks are allowed in the kernel.
-> Where I learned C that would not be allowed.
-> I assumed the kernel allocator has fast paths for tiny sizes though.
-> 
->>> +static const struct of_device_id smcwd_dt_ids[] = {
->>> +       { .compatible = "mediatek,mt8173-smc-wdt" },
->>> +       {}
->>> +};
->>> +MODULE_DEVICE_TABLE(of, smcwd_dt_ids);
->>
->> So I'm a bit confused about this... I thought the plan was to either
->> use arm,smc-id and then there'll be no reason to put platform-specific
->> quirks into the driver, so we can just use a generic "arm,smc-wdt"
->> compatible string on all platforms; or we put individual compatible
->> strings for each platform and use them to hardcode platform-specific
->> differences (like the SMC ID) in the driver. But now you're kinda
->> doing both by making the driver code platform-independent but still
->> using a platform-specific compatible string, that doesn't seem to fit
->> together. (If the driver can be platform independent, I think it's
->> nicer to have a generic compatible string so that future platforms
->> which support the same interface don't have to land code changes in
->> order to just use the driver.)
-> 
-> Yes I think you are correct. I got some reviews about the compatible name,
-> but I think I misinterpreted those, and arm,smc-wdt would work. I did wonder
-> if Xingyu from amlogic needed to modify the driver more, EG with different
-> SMCWD_enum values for the amlogic chip, he could then just add an
-> amlogic compatible
-> and keep our devices running with the other compatible. Although of
-> course it would be nicer if
-> the amlogic firmware could copy the values here.
-Using DTS property(arm,smc-id) or vendor's compatible to specify the 
-Function ID is available for the meson-A1.The generic "arm, smc-wdt" 
-looks nicer for MTK and Amlogic sec wdt, but the driver may not cover 
-the other vendor's platform-specific differences in the future, so the 
-platform-specific compatible string may be introduced eventually.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-But again, I can accept the two methods above.
+> - Add a SPDX header;
+> - Adjust document and section titles;
+> - Use copyright symbol;
+> - Some whitespace fixes and new line breaks;
+> - Mark literal blocks as such;
+> - Add it to filesystems/index.rst.
+>
+> Also, as this file is alone on its own dir, and it doesn't
+> seem too likely that other documents will follow it, let's
+> move it to the filesystems/ root documentation dir.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Thanks
-> 
-> Thanks
-> 
-> Evan
-> 
-> .
-> 
+Acked-By: Felipe Balbi <balbi@kernel.org>
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6f3g0ACgkQzL64meEa
+mQba5A//XsmnQn1aCllE6lC0hRPpOiiZ3kYrkvIcFHatDymDaMfr9EcQ70+t3Ams
+a7EWUKsvLYdVuTku2d5lzBP604QHRfiWDJaHnVI4op6TGXFRVMP1WdLosAOT/W+Y
+xoiEGvbdCPP6gBmni2ov1KANJ190i8xjN8uFJshYp+PVsZAQczUg4M6hX7dq06Rq
+raYGesTSqco821bNK2lxn2Jl2jJ11ExVbuXg4KXGSgwIRFjC6zIleLh531KExYeI
+fOYGnB0vogidsLJPrl4Z67EXY/n60aIX3R8QI/uV/tnqs7feiddEQ761VYzk2r3w
+M4MxxJ2JTnITSdWKW10DevQv/uu8ET/6MLjf8S8NKiwRl9i+cg4zW3TSfLUd8TZ7
+AW9wG1ZZPjVdPSoqFr41unFVZs/35VAAduGuGU1vHoN+FL7nO7Ds+04hT7By/r7I
+joiHLfQTnchumHMaWeCWvM4XUHJgWdbukoguaIKMuvimo7+QD8psnAKgJujIv/zj
+WGt+xkJyQmiv2OHIvpXj3B5G+dF3jvE3qTRJk/Kn/1NBGMnPAYYyBGWawIpusoNB
+CYkKdCUnS4TrEnRODyXP9eJOayq2DFnpqr4TId/B7oaEUVFNIMLSKxnZqAUnJPRM
+/oL6oHjGj9x1Gkqy/9onKjO+sBbY0yiRy4AL4YkR2IlkYb3qC8k=
+=sHvv
+-----END PGP SIGNATURE-----
+--=-=-=--
