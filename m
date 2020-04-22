@@ -2,105 +2,108 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B945C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EA7C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F3320784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9D120784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vBNjvxlE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="natgqUeB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgDVLqa (ORCPT
+        id S1727911AbgDVLrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:46:30 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33498 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgDVLqa (ORCPT
+        Wed, 22 Apr 2020 07:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726061AbgDVLrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:46:30 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBgSpP068303;
-        Wed, 22 Apr 2020 11:45:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=iXHNVaJY3ekqt8rrsqzyayGiIuYPuZ10JP8uzOTtyBM=;
- b=vBNjvxlES5ioi7aQXEXoJ8OYSuZOF6cDwtNh8kpa9OAcTffTDn5fCmfrLmtipCy76zRW
- nvmhgyoJbyRTjXGaSSGE1o0V7OKkD34F9dt+GFXAf69s3JCf8QFHBiGAxQxkIM+NC+cw
- cFSQv5kRrjEZfx1mt5gIiDDyUps1yeVniTIcLsId9ep2WpL53VqypIqYHHsYK8tCHmeD
- uhkdLkcC3ImCBOO5D7nPEwmoIEkeztne43bgIY6ME47ye0Los+4iLHDSx3xNsM6T/kUg
- JL+ho3msLiI3KkSE0niDAx/Hnat3v3G4syLIVpbVDI1YMjMb7qvX4o/EZwk/LnaO64R9 JA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30fsgm29gy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 11:45:35 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBgXiv118837;
-        Wed, 22 Apr 2020 11:45:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30gbbgps60-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 11:45:35 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03MBjWgC022078;
-        Wed, 22 Apr 2020 11:45:32 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Apr 2020 04:45:31 -0700
-Date:   Wed, 22 Apr 2020 14:45:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: SOF: ensure all fields in header are zero'd before
- copying back to userspace
-Message-ID: <20200422114522.GK2659@kadam>
-References: <20200422112417.208843-1-colin.king@canonical.com>
+        Wed, 22 Apr 2020 07:47:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF091C03C1A8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 04:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5c36qYY3DsYBZqhdm79liDlMg19bbaAYWX92R1Gw6eU=; b=natgqUeBA6dgCiDbTbPcUIlXX4
+        SwaEKqzAYYHwPR0vlt0gJZt/Pmi5IMy1nHFTXSVAXq1eHJ5e/84PSvH1hFk7pRvopHB+6hwhxB8Tm
+        j5fknpXYs+qizeLjU2zHv65TQBeAa349ck/MCGhfpazI0ujLHkzzZ+Pq3QOQt/R3heHUCMbsDNdW/
+        PUFub2fddHUbnOl9jIFW2+Din4OiDuryB6nrnn8w0yyw+ytp4ObeHOwv9JJr2EwNT1VQfvZCzSHH4
+        NUE4DoQCuynSdNhEHZNyGFm8p44eEGwzvde0HzubAnE1KQADrQDH75JjGIQVp3jCMftyxRxPB//FL
+        MMGhvdFg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRDqH-0001jV-FH; Wed, 22 Apr 2020 11:47:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43D95306064;
+        Wed, 22 Apr 2020 13:46:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2ACB6203AA837; Wed, 22 Apr 2020 13:46:59 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 13:46:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V6 08/15] ftrace: Add perf text poke events for ftrace
+ trampolines
+Message-ID: <20200422114659.GE20730@hirez.programming.kicks-ass.net>
+References: <20200405201327.7332-1-adrian.hunter@intel.com>
+ <20200405201327.7332-9-adrian.hunter@intel.com>
+ <20200421134504.GQ20730@hirez.programming.kicks-ass.net>
+ <ce16611a-8b6c-765d-c254-5bb98493b082@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422112417.208843-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=856 adultscore=0 mlxscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=908 malwarescore=0 clxscore=1011
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220094
+In-Reply-To: <ce16611a-8b6c-765d-c254-5bb98493b082@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:24:17PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Wed, Apr 22, 2020 at 10:39:06AM +0300, Adrian Hunter wrote:
+> On 21/04/20 4:45 pm, Peter Zijlstra wrote:
+> > On Sun, Apr 05, 2020 at 11:13:20PM +0300, Adrian Hunter wrote:
+> >> Add perf text poke events for ftrace trampolines when created and when
+> >> freed.
+> > 
+> > Maybe also put in a little more detail on the various events. Because
+> > arch_ftrace_update_trampoline() can also generate text_poke_bp() events,
+> > to update an existing trampoline.
+> > 
+> > A diagram, like with the kprobes thing perhaps.
 > 
-> Field header.tlv is uninitialized and being copied back to userspace
-        ^^^^^^^^^^
-header.tlv is a zero element array so it doens't have any stack data.
+> How about adding this:
+> 
+> There can be 3 text_poke events for ftrace trampolines:
+> 
+> 1. NULL -> trampoline
+>    By ftrace_update_trampoline() when !ops->trampoline
+>    Trampoline created
+> 
+> 2. [e.g. on x86] CALL rel32 -> CALL rel32
+>    By arch_ftrace_update_trampoline() when ops->trampoline and
+>                         ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
+>    [e.g. on x86] via text_poke_bp() which generates text poke events
+>    Trampoline-called function target updated
+> 
+> 3. trampoline -> NULL
+>    By ftrace_trampoline_free() when ops->trampoline and
+>                  ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
+>    Trampoline freed
 
-> and hence leaking data from the stack to userspace.  Fix this by
-> ensuring the header structure is zero'd.
-
-regards,
-dan carpenter
-
-
+Yes, very nice. Thanks!
