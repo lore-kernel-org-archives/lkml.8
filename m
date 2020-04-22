@@ -2,49 +2,51 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF52C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5951EC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26EDC2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E8220735
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TcD0zJer"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RBHkB4wa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgDVJIu (ORCPT
+        id S1726654AbgDVJIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:08:50 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:10048 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725924AbgDVJIs (ORCPT
+        Wed, 22 Apr 2020 05:08:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11590 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726611AbgDVJIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 05:08:48 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03M8wB7n011347;
-        Wed, 22 Apr 2020 11:08:38 +0200
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03M8wIQY014607;
+        Wed, 22 Apr 2020 11:08:42 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=Ps7TvwTK/0SEKTWJDXvtpJV0GLq5jnv18Nnlhcp4Kx8=;
- b=TcD0zJerMIjUUHkkZn3jX9sw9yQukoX0mUJx29wBmDDP7x7W8vh2fL7gE1wfUI6eTmJZ
- D9rkMmTbkYSocZCkGDmXWFv1Ogjk8qfHGBbp49WFeyJh0TNIVjuww3XMVmGuY9jfJQqZ
- bSYz6Nw/7QID6U+pUtlbn8hsWnavvWx5ZnQGdA9brMrEiejTNZBYpXbrYed1+bJhuj+t
- leCA1x4jro7K+BccK8+BdqqTIQSGCq4G31OcrDz5kjTl3QKZcNfEcNeyMmAIh2Ez84v5
- 2WFps4uf7iSIv9T164oENzsixFepdm/Xb2xkwyzwjolYszuV3hP4lPpGZSb85kiarWFE OQ== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=ALggLgcR8ql6XDV0NP2omYFrJQllJoBsE5YNgOLy4IA=;
+ b=RBHkB4wapOs+McgfSslZDjr5wwRBPKYOjDNJnGKPY/O+l2tEscVWyj7zSwxyW9BvVqjY
+ hbH8bY5YHlJeIKbONg96dw/CzhKdoE2uHhCt4s3lb/k5xhzBMMEyjwmyqAW5Oe1Nvk8E
+ UQhaF+qvFFCUaNDgaxwn9Hg5wlvN0TLlU7xKeEvu4uOZNDngGcSuIxrS1DpswI2MfTSb
+ 4sDEQh6Mbq/ffpE+ry3oQFmVWqq8bkJidkVM0GL9zQxXePIhilnB535x/qiUts0nciTE
+ /IdEpd/n7mC+g1CjVO/i64SgbcvnfNhyp39SjsTc9AySokBWtK5zS7pK23GqLvQakRej HQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fq11nbvg-1
+        by mx07-00178001.pphosted.com with ESMTP id 30fpp8wp23-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 11:08:38 +0200
+        Wed, 22 Apr 2020 11:08:42 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 625F410002A;
-        Wed, 22 Apr 2020 11:08:38 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 88F1410002A;
+        Wed, 22 Apr 2020 11:08:41 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 55FCC2A4D94;
-        Wed, 22 Apr 2020 11:08:38 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7FB3A2A4D94;
+        Wed, 22 Apr 2020 11:08:41 +0200 (CEST)
 Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Apr 2020 11:08:37
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Apr 2020 11:08:41
  +0200
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Lee Jones <lee.jones@linaro.org>,
@@ -54,14 +56,16 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 0/3] STMFX power related fixes
-Date:   Wed, 22 Apr 2020 11:08:30 +0200
-Message-ID: <20200422090833.9743-1-amelie.delaunay@st.com>
+Subject: [PATCH 3/3] mfd: stmfx: disable irq in suspend to avoid spurious interrupt
+Date:   Wed, 22 Apr 2020 11:08:33 +0200
+Message-ID: <20200422090833.9743-4-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200422090833.9743-1-amelie.delaunay@st.com>
+References: <20200422090833.9743-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-22_03:2020-04-21,2020-04-22 signatures=0
@@ -70,20 +74,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With suspend/resume tests on STM32MP157C-EV1 board, on which STMFX is used by
-several devices, some errors could occurred: -6 when trying to restore STMFX
-registers, spurious interrupts after disabling supply...
-This patchset fixes all these issues and cleans IRQ init error path.
+When STMFX supply is stopped, spurious interrupt can occur. To avoid that,
+disable the interrupt in suspend before disabling the regulator and
+re-enable it at the end of resume.
 
-Amelie Delaunay (3):
-  mfd: stmfx: reset chip on resume as supply was disabled
-  mfd: stmfx: fix stmfx_irq_init error path
-  mfd: stmfx: disable irq in suspend to avoid spurious interrupt
+Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/mfd/stmfx.c       | 6 ++++++
+ include/linux/mfd/stmfx.h | 1 +
+ 2 files changed, 7 insertions(+)
 
- drivers/mfd/stmfx.c       | 22 ++++++++++++++++++++--
- include/linux/mfd/stmfx.h |  1 +
- 2 files changed, 21 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+index 1977fe95f876..711979afd90a 100644
+--- a/drivers/mfd/stmfx.c
++++ b/drivers/mfd/stmfx.c
+@@ -296,6 +296,8 @@ static int stmfx_irq_init(struct i2c_client *client)
+ 	if (ret)
+ 		goto irq_exit;
+ 
++	stmfx->irq = client->irq;
++
+ 	return 0;
+ 
+ irq_exit:
+@@ -486,6 +488,8 @@ static int stmfx_suspend(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	disable_irq(stmfx->irq);
++
+ 	if (stmfx->vdd)
+ 		return regulator_disable(stmfx->vdd);
+ 
+@@ -529,6 +533,8 @@ static int stmfx_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	enable_irq(stmfx->irq);
++
+ 	return 0;
+ }
+ #endif
+diff --git a/include/linux/mfd/stmfx.h b/include/linux/mfd/stmfx.h
+index 3c67983678ec..744dce63946e 100644
+--- a/include/linux/mfd/stmfx.h
++++ b/include/linux/mfd/stmfx.h
+@@ -109,6 +109,7 @@ struct stmfx {
+ 	struct device *dev;
+ 	struct regmap *map;
+ 	struct regulator *vdd;
++	int irq;
+ 	struct irq_domain *irq_domain;
+ 	struct mutex lock; /* IRQ bus lock */
+ 	u8 irq_src;
 -- 
 2.17.1
 
