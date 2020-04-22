@@ -2,120 +2,130 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8A0C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEFAC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F5E206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE5B2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 13:09:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="qsaB9olm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZ8PkCeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgDVNHz (ORCPT
+        id S1726711AbgDVNJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726323AbgDVNHy (ORCPT
+        Wed, 22 Apr 2020 09:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgDVNJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:07:54 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423C1C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:07:54 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l78so2213744qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 06:07:54 -0700 (PDT)
+        Wed, 22 Apr 2020 09:09:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83374C03C1A9;
+        Wed, 22 Apr 2020 06:09:07 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id v4so4915108wme.1;
+        Wed, 22 Apr 2020 06:09:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=t/d88ptbHW16yolwYgjYhhzxJpVgAUC7qN1Ke/LGyuQ=;
-        b=qsaB9olmzPIZAD6whvSiEFkbwl6xLcgwsnRvannVlmAsxdFLZ/RRfMEjlKmi/6OOgu
-         kHYx+tcAXRlSCo/zbrWDhApTqyKO8wuvGNbYSxBaWHI2Ud0Rs082zBJMw1ZunAJesho0
-         fckblzPFrqXW7GtRmvi4suci54vNSBw6essdzZyE7g2hkcBXcgzQlweIKFZN3nv2d7Hk
-         FGXqOUG57vbo7S1jjGLXCJSvYV/owIdJHJjJM41nlfZS7pDLfdoRPDQx5NNfkj3cp8na
-         5sNWxBCG1/yv29Os99j9OCm7iFk016k5Dy3MdH1Oe0xQwj0K7gfEPZlGC10SkI+EAgct
-         UJrg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RKZeIF5oa3PJGYfL412u0zBLwHBoYTt9cbGj5XIHl7w=;
+        b=NZ8PkCeHEJb93tczaENRAIVlVsv5YvvQfIvNgzZqUu90AJ2bRIxEhOHszY209N/LLN
+         uFndkxXGY1EJGgQlzVnWX+F6wk8mfNgrdTtMmC6SJ+9hV/6wIntc7oU4j7ku1ASfNjGT
+         AkiyNOQO2FD7kfl8UmcKrH0Qkfo3SooN5iYYvkGUn5MWryhIxaYYTmQ/+uVByK5+5Lan
+         pcKv3RjWbLoplpSPoK0MI7f4LXUuqqMhmz3CgIWyv/iM42JqvG0/daXbMxt5mHkVlbce
+         D60rNLSNGzc4YX5P896pH05DNWDOFxOLZs8DfEa7Rfjszbb9arilSw4GmHpVK9FO1tr5
+         LUnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t/d88ptbHW16yolwYgjYhhzxJpVgAUC7qN1Ke/LGyuQ=;
-        b=pNXtlE+HRc2/Z5zb4lj7TBshhZqUe2OMVTP0cqVxOFFAbzPNLUfbCyOvbVd+9rqLux
-         BZu8H4o48k+00SwPO/CUX2avLwACqJp+QYUOjuXa7oVtf8118rliRTryMmfFT7fo9kZa
-         atoGSGn6/cj6G6wONNv/F8ICleUjVRVHYAnPT7O6oP01kZuvNVoIRHoWaRnBIVm2DzL1
-         HAJI1CFunLRbd/w9pwmY/qrbeLZQYyFrTpjJKuzxTXIW1l00RsKv2iUmUKdY0PvlpAfX
-         m+qaMETAUGtsxAkcdEVPO5LrOH0XTjqZjZnnHXe3gw/I2hRyvl1VPVeLL++QXb0D6idi
-         /MfA==
-X-Gm-Message-State: AGi0PubEbC5T1QSjDK5q++AmrZbDR4HQp9VI6wR7TiMmkaGpZfmZUFzf
-        pwPUuE6/yHzRItIkrpz/BgHz/Q==
-X-Google-Smtp-Source: APiQypL1fBcrWfoKQ0nPr8lMaz276Ln1+S7PiOroBrRFY9NDcuKY1pmKurdoqkNaldPVIeTpKzqXRw==
-X-Received: by 2002:a37:a9c7:: with SMTP id s190mr27254227qke.435.1587560873513;
-        Wed, 22 Apr 2020 06:07:53 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::921])
-        by smtp.gmail.com with ESMTPSA id t27sm3739061qkg.4.2020.04.22.06.07.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RKZeIF5oa3PJGYfL412u0zBLwHBoYTt9cbGj5XIHl7w=;
+        b=oTDNaJsLO/bkIvR/wt5z0P0Hc1MxT7/IKf9RK1EO19Fxz9VZ4ln2rAojlMysYhDkCu
+         MXDffzpxMAmp4gSV3ZQmpGMPEergB2Rk0QbOLOkH8Qhoe+2Ck+x/AgoE8MiN/NIDpM40
+         t+yXSkBCjoZfDWgWgLlTzGTFLVMBgcacSkBPdnaYzan1+yxr4LN7EhdI1spNSqNvA0jU
+         khYfkcfh5OpzNpqVt+PXp31HkRQYIKeVfZYF8whCVUw1kjwD+5aZM3V7rsc3r2oToUKI
+         FHxAQrs4FwbOjyfFf7w6/BaFVR+Fzzx3NWGBSjTxAaqk5H6ZvJBE9InK2D4vNEJqVXoD
+         UsQQ==
+X-Gm-Message-State: AGi0PubiDOpP1bEUj23FQhS/sYBNMxktFWipPQ3361jtC/5yBnaa1Pkk
+        o/kXFtjFC4kfpzbRlpa34QQ=
+X-Google-Smtp-Source: APiQypKLVEuv665pnccyANSRDruxEFNubppeFp7M7T06aH564HbzZu1v5VJUk8fs3z4dS4rSuo7spw==
+X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr10372240wml.82.1587560946273;
+        Wed, 22 Apr 2020 06:09:06 -0700 (PDT)
+Received: from meru.fronius.com ([2a01:cb18:832e:5f00:8872:7e71:5cf6:8a5b])
+        by smtp.gmail.com with ESMTPSA id o3sm2064820wru.68.2020.04.22.06.09.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 06:07:52 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 09:07:51 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     minchan@kernel.org, mgorman@suse.de, m.szyprowski@samsung.com,
-        mina86@mina86.com, shli@fb.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, ytk.lee@samsung.com
-Subject: Re: [PATCH v2] mm/vmscan: count layzfree pages and fix nr_isolated_*
- mismatch
-Message-ID: <20200422130751.GD358439@cmpxchg.org>
-References: <CGME20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf@epcas1p3.samsung.com>
- <20200422084815.21913-1-jaewon31.kim@samsung.com>
+        Wed, 22 Apr 2020 06:09:05 -0700 (PDT)
+From:   Mathieu Othacehe <m.othacehe@gmail.com>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Othacehe <m.othacehe@gmail.com>
+Subject: [PATCH v5 0/4] iio: vcnl: Add interrupts support for VCNL4010/20.
+Date:   Wed, 22 Apr 2020 15:08:52 +0200
+Message-Id: <20200422130856.1722-1-m.othacehe@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422084815.21913-1-jaewon31.kim@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 05:48:15PM +0900, Jaewon Kim wrote:
-> @@ -1295,11 +1295,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  		 */
->  		if (page_mapped(page)) {
->  			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
-> +			bool lazyfree = PageAnon(page) && !PageSwapBacked(page);
->  
->  			if (unlikely(PageTransHuge(page)))
->  				flags |= TTU_SPLIT_HUGE_PMD;
-> +
->  			if (!try_to_unmap(page, flags)) {
->  				stat->nr_unmap_fail += nr_pages;
-> +				if (lazyfree && PageSwapBacked(page))
+Hello,
 
-This looks pretty strange, until you remember that try_to_unmap()
-could SetPageSwapbacked again.
+Here's a v5 taking Andy remarks into account.
 
-This might be more obvious?
+Thanks,
 
-			was_swapbacked = PageSwapBacked(page);
-			if (!try_to_unmap(page, flags)) {
-				stat->nr_unmap_fail += nr_pages;
-				if (!was_swapbacked && PageSwapBacked(page))
-> +					stat->nr_lazyfree_fail += nr_pages;
->  				goto activate_locked;
+Mathieu
 
-Or at least was_lazyfree.
+Changes from v4:
+* Rename vcnl4010_in_periodic_mode into vcnl4010_is_in_periodic_mode
+and vcnl4010_thr_enabled into vcnl4010_is_thr_enabled.
+Also fix bitmask checking in those functions.
+* Refactor vcnl4010_write_proxy_samp_freq to loop in the
+other direction.
 
-> @@ -1491,8 +1495,8 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
->  		.priority = DEF_PRIORITY,
->  		.may_unmap = 1,
->  	};
-> -	struct reclaim_stat dummy_stat;
-> -	unsigned long ret;
-> +	struct reclaim_stat stat;
-> +	unsigned long reclaimed;
+Changes from v3:
+* Use i2c_smbus_read_byte_data and i2c_smbus_write_word_data
+for read and write functions.
+* Rename vcnl4010_prox_threshold to vcnl4010_config_threshold.
+* Do not lock i2c accesses as they are already protected.
+* Fix a typo in irq name.
+* Do not provide ALS sampling frequency operation, as ALS data
+are not buffered anymore.
+* Return bool in vcnl4010_in_periodic_mode and vcnl4010_thr_enabled
+functions.
 
-nr_reclaimed would be better.
+Changes from v2:
+* Rebase on iio testing branch.
+* Remove useless test in vcnl4010_probe_trigger.
 
-I also prefer keeping dummy_stat, since that's still what it is.
+Changes from v1:
+* Split into four different patches.
+* Use iio_device_claim_direct_mode to protect
+raw access from buffer capture.
+* Requesting a sampling frequency above the limit is no longer possible.
+* Inline read_isr and write_isr functions.
+* Remove IIO_LIGHT data from buffer capture.
+* Make sure postenable and predisable functions respect the common form.
+* Do not set the trigger by default.
+* Remove the devm_iio_triggered_buffer_setup top half.
+
+Mathieu Othacehe (4):
+  iio: vcnl4000: Factorize data reading and writing.
+  iio: vcnl4000: Add event support for VCNL4010/20.
+  iio: vcnl4000: Add sampling frequency support for VCNL4010/20.
+  iio: vcnl4000: Add buffer support for VCNL4010/20.
+
+ drivers/iio/light/Kconfig    |   2 +
+ drivers/iio/light/vcnl4000.c | 750 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 686 insertions(+), 66 deletions(-)
+
+-- 
+2.26.0
+
