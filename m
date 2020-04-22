@@ -2,74 +2,55 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
+X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7C8C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DC9C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13402098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BE52098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgDVMU0 (ORCPT
+        id S1728200AbgDVMUa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
+        Wed, 22 Apr 2020 08:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728800AbgDVMRq (ORCPT
+        by vger.kernel.org with ESMTP id S1728758AbgDVMRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:17:46 -0400
+        Wed, 22 Apr 2020 08:17:42 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AF2C03C1A8;
-        Wed, 22 Apr 2020 05:17:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36251C03C1A9;
+        Wed, 22 Apr 2020 05:17:42 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJp-0007tb-DZ; Wed, 22 Apr 2020 14:17:33 +0200
+        id 1jREJg-0007h7-0q; Wed, 22 Apr 2020 14:17:24 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E355D1C0813;
-        Wed, 22 Apr 2020 14:17:28 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:28 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 831F41C04CD;
+        Wed, 22 Apr 2020 14:17:18 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:18 -0000
+From:   "tip-bot2 for He Zhe" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf expr: Add expr_scanner_ctx object
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Joe Mario <jmario@redhat.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Subject: [tip: perf/core] tools lib traceevent: Take care of return value of asprintf
+Cc:     He Zhe <zhe.he@windriver.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        hewenliang4@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401203340.31402-3-kjain@linux.ibm.com>
-References: <20200401203340.31402-3-kjain@linux.ibm.com>
+In-Reply-To: <1582163930-233692-1-git-send-email-zhe.he@windriver.com>
+References: <1582163930-233692-1-git-send-email-zhe.he@windriver.com>
 MIME-Version: 1.0
-Message-ID: <158755784848.28353.17588548435578970529.tip-bot2@tip-bot2>
+Message-ID: <158755783812.28353.15619168475108123026.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -80,112 +61,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     871f9f599db8d9d2387c0717e712af405290edea
-Gitweb:        https://git.kernel.org/tip/871f9f599db8d9d2387c0717e712af405290edea
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Thu, 02 Apr 2020 02:03:35 +05:30
+Commit-ID:     f8ff18be1f5c6ba1c2befb043bea6e7eaf9f8987
+Gitweb:        https://git.kernel.org/tip/f8ff18be1f5c6ba1c2befb043bea6e7eaf9f8987
+Author:        He Zhe <zhe.he@windriver.com>
+AuthorDate:    Thu, 20 Feb 2020 09:58:50 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 16 Apr 2020 12:19:13 -03:00
+CommitterDate: Sat, 18 Apr 2020 09:05:00 -03:00
 
-perf expr: Add expr_scanner_ctx object
+tools lib traceevent: Take care of return value of asprintf
 
-Add the expr_scanner_ctx object to hold user data for the expr scanner.
-Currently it holds only start_token, Kajol Jain will use it to hold 24x7
-runtime param.
+According to the API, if memory allocation wasn't possible, or some
+other error occurs, asprintf will return -1, and the contents of strp
+below are undefined.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Joe Mario <jmario@redhat.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20200401203340.31402-3-kjain@linux.ibm.com
+  int asprintf(char **strp, const char *fmt, ...);
+
+This patch takes care of return value of asprintf to make it less error
+prone and prevent the following build warning.
+
+  ignoring return value of ‘asprintf’, declared with attribute warn_unused_result [-Wunused-result]
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: hewenliang4@huawei.com
+Link: http://lore.kernel.org/lkml/1582163930-233692-1-git-send-email-zhe.he@windriver.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/expr.c |  6 ++++--
- tools/perf/util/expr.h |  4 ++++
- tools/perf/util/expr.l | 10 +++++-----
- 3 files changed, 13 insertions(+), 7 deletions(-)
+ tools/lib/traceevent/parse-filter.c | 29 ++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c8ccc54..c3382d5 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -3,7 +3,6 @@
- #include <assert.h>
- #include "expr.h"
- #include "expr-bison.h"
--#define YY_EXTRA_TYPE int
- #include "expr-flex.h"
- 
- #ifdef PARSER_DEBUG
-@@ -30,11 +29,14 @@ static int
- __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 	      int start)
- {
-+	struct expr_scanner_ctx scanner_ctx = {
-+		.start_token = start,
-+	};
- 	YY_BUFFER_STATE buffer;
- 	void *scanner;
- 	int ret;
- 
--	ret = expr_lex_init_extra(start, &scanner);
-+	ret = expr_lex_init_extra(&scanner_ctx, &scanner);
- 	if (ret)
- 		return ret;
- 
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index b9e53f2..0938ad1 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -15,6 +15,10 @@ struct expr_parse_ctx {
- 	struct expr_parse_id ids[MAX_PARSE_ID];
- };
- 
-+struct expr_scanner_ctx {
-+	int start_token;
-+};
-+
- void expr__ctx_init(struct expr_parse_ctx *ctx);
- void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
- int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index eaad292..2582c24 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -76,13 +76,13 @@ sym		[0-9a-zA-Z_\.:@]+
- symbol		{spec}*{sym}*{spec}*{sym}*
- 
- %%
--	{
--		int start_token;
-+	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
- 
--		start_token = expr_get_extra(yyscanner);
-+	{
-+		int start_token = sctx->start_token;
- 
--		if (start_token) {
--			expr_set_extra(NULL, yyscanner);
-+		if (sctx->start_token) {
-+			sctx->start_token = 0;
- 			return start_token;
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 20eed71..c271aee 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1958,7 +1958,8 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 				default:
+ 					break;
+ 				}
+-				asprintf(&str, val ? "TRUE" : "FALSE");
++				if (asprintf(&str, val ? "TRUE" : "FALSE") < 0)
++					str = NULL;
+ 				break;
+ 			}
  		}
+@@ -1976,7 +1977,8 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 			break;
+ 		}
+ 
+-		asprintf(&str, "(%s) %s (%s)", left, op, right);
++		if (asprintf(&str, "(%s) %s (%s)", left, op, right) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	case TEP_FILTER_OP_NOT:
+@@ -1992,10 +1994,12 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 			right_val = 0;
+ 		if (right_val >= 0) {
+ 			/* just return the opposite */
+-			asprintf(&str, right_val ? "FALSE" : "TRUE");
++			if (asprintf(&str, right_val ? "FALSE" : "TRUE") < 0)
++				str = NULL;
+ 			break;
+ 		}
+-		asprintf(&str, "%s(%s)", op, right);
++		if (asprintf(&str, "%s(%s)", op, right) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2011,7 +2015,8 @@ static char *val_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ {
+ 	char *str = NULL;
+ 
+-	asprintf(&str, "%lld", arg->value.val);
++	if (asprintf(&str, "%lld", arg->value.val) < 0)
++		str = NULL;
+ 
+ 	return str;
+ }
+@@ -2069,7 +2074,8 @@ static char *exp_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		break;
  	}
+ 
+-	asprintf(&str, "%s %s %s", lstr, op, rstr);
++	if (asprintf(&str, "%s %s %s", lstr, op, rstr) < 0)
++		str = NULL;
+ out:
+ 	free(lstr);
+ 	free(rstr);
+@@ -2113,7 +2119,8 @@ static char *num_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		if (!op)
+ 			op = "<=";
+ 
+-		asprintf(&str, "%s %s %s", lstr, op, rstr);
++		if (asprintf(&str, "%s %s %s", lstr, op, rstr) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2148,8 +2155,9 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		if (!op)
+ 			op = "!~";
+ 
+-		asprintf(&str, "%s %s \"%s\"",
+-			 arg->str.field->name, op, arg->str.val);
++		if (asprintf(&str, "%s %s \"%s\"",
++			 arg->str.field->name, op, arg->str.val) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2165,7 +2173,8 @@ static char *arg_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 
+ 	switch (arg->type) {
+ 	case TEP_FILTER_ARG_BOOLEAN:
+-		asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
++		if (asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE") < 0)
++			str = NULL;
+ 		return str;
+ 
+ 	case TEP_FILTER_ARG_OP:
