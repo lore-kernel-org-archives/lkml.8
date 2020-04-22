@@ -2,104 +2,128 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B722DC55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 05:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EEDC55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 05:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC1520775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 05:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1002075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 05:15:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQq+GjWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgDVFNL (ORCPT
+        id S1726090AbgDVFP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 01:13:11 -0400
-Received: from mx.socionext.com ([202.248.49.38]:9242 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgDVFNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 01:13:10 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 22 Apr 2020 14:13:09 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 14A4760057;
-        Wed, 22 Apr 2020 14:13:09 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 22 Apr 2020 14:13:09 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 923B11A12D0;
-        Wed, 22 Apr 2020 14:13:08 +0900 (JST)
-Received: from [10.213.29.177] (unknown [10.213.29.177])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 5C7BF120131;
-        Wed, 22 Apr 2020 14:13:07 +0900 (JST)
-Subject: Re: [PATCH v3 0/2] PCI: Add new UniPhier PCIe endpoint driver
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1584956454-8829-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <18cf881e-1d80-76bc-8c91-2fa9fa633558@socionext.com>
-Date:   Wed, 22 Apr 2020 14:13:06 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 01:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgDVFP4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 01:15:56 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F332C061BD3;
+        Tue, 21 Apr 2020 22:15:56 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p8so515622pgi.5;
+        Tue, 21 Apr 2020 22:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ESHOCSla3cw+Nj7T3ApIC5nkdM4500s3bEzuUZQ57tw=;
+        b=NQq+GjWdbNVDbABi4BUIyMgzMxdUn0DHqSQ4XTiAJFlEpf7t9lTTIGhSxChGUALiOV
+         ShDrrpzsoqxc/vSSzGGteBeJoSXa+XkYoOb0mCmlzVuIgwKsj9VLMRQOf+LAUcXnrIgy
+         M/CFY/8PXLl2Eba06WrU0d3/mctyW/+uCV1WMhoheCwQ/zvIdlHoKgERHz3KAKCxOAhB
+         6B1X7s00j1NoiYh88mYjKL9SFGWz1J8pRalUIyool6GzYGfSguJQgvsWd57y0ohMRbA0
+         6vkJJRr4cwZCQfBjM5sz8bbUK6DdOgXzOg6h/Jdk40jdjzHeKljuvjzHhM7IUes39yRj
+         8UpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ESHOCSla3cw+Nj7T3ApIC5nkdM4500s3bEzuUZQ57tw=;
+        b=BOcg/tdvHvK6U6UJ+5II6WmmMcPjPdbS2JUAp1ZSqjZp4v5MDHC2k5Ir5tYqmNYBKg
+         TovJQlWVWiGRU489qB7I+oAlg1vFv1JUpyYFqSasiBBGX73swdDYkZBRnbvIgvALptxT
+         pdf6qrZYseZFDBBaM7HAFqTqzmgeWpzAXmoNiU5Q6E+IZb0Hj+DTeqR2K4mM2EPFjLvX
+         4KtR07z1imhAtGPICNSHjTvliH52G5k7bKvxX6Yjvq+mj5DS2kkm3N1G8Xs4+aANKT0O
+         KVPz3i50mdcdZviId5ayFmETYIa0ZCQMDrPHpX4Hg6GEGrRbJtWsi4meM0p2kxPoNSgg
+         SEYg==
+X-Gm-Message-State: AGi0PuYD2rXyya2/b+oc2bRcY7OIOlE+i2qJ92q1eE8a/KfXrQGN4OAG
+        QsSwTodnVKEJl9XuJ9dFN/E=
+X-Google-Smtp-Source: APiQypI6Mu8MV5fceWlOjbgCk3lOwpu5G+5dCRNwKzbNNX1eFE6KL+QNcqNI+jRCRS+6AIETsqLheQ==
+X-Received: by 2002:a63:dd0a:: with SMTP id t10mr24276595pgg.229.1587532555497;
+        Tue, 21 Apr 2020 22:15:55 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id s44sm4273008pjc.28.2020.04.21.22.15.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 22:15:54 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vincent Wang <vincent.wang@unisoc.com>,
+        Samer Xie <samer.xie@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH] PM: sleep: call devfreq_suspend/resume and cpufreq_suspend/resume in pairs.
+Date:   Wed, 22 Apr 2020 13:15:29 +0800
+Message-Id: <20200422051529.30757-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1584956454-8829-1-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/23 18:40, Kunihiko Hayashi wrote:
-> This series adds PCIe endpoint controller driver for Socionext UniPhier
-> SoCs. This controller is based on the DesignWare PCIe core.
-> 
-> This driver supports Pro5 SoC only, so Pro5 needs multiple clocks and
-> resets in devicetree node.
-> 
-> Changes since v2:
-> - dt-bindings: Add clock-names, reset-names, and fix example for Pro5
-> - Remove 'is_legacy' indicating that the compatible is for legacy SoC
-> - Use pci_epc_features instead of defining uniphier_soc_data
-> - Remove redundant register read access
-> - Clean up return code on uniphier_add_pcie_ep()
-> - typo: intx -> INTx
-> 
-> Changes since v1:
-> - dt-bindings: Add Reviewed-by line
-> - Fix register value to set EP mode
-> - Add error message when failed to get phy
-> - Replace INTx assertion time with macro
-> 
-> Kunihiko Hayashi (2):
->    dt-bindings: PCI: Add UniPhier PCIe endpoint controller description
->    PCI: uniphier: Add Socionext UniPhier Pro5 PCIe endpoint controller
->      driver
-> 
->   .../devicetree/bindings/pci/uniphier-pcie-ep.txt   |  53 +++
->   MAINTAINERS                                        |   4 +-
->   drivers/pci/controller/dwc/Kconfig                 |  13 +-
->   drivers/pci/controller/dwc/Makefile                |   1 +
->   drivers/pci/controller/dwc/pcie-uniphier-ep.c      | 380 +++++++++++++++++++++
->   5 files changed, 447 insertions(+), 4 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
->   create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> 
+From: Vincent Wang <vincent.wang@unisoc.com>
 
-Gentle ping.
-Are there any comments about changes since v2?
-v2: https://www.spinics.net/lists/linux-pci/msg92429.html
+If dpm_prepare() fails in dpm_suspend_start(), dpm_suspend() can't be
+called. And then, devfreq_suspend() and cpufreq_suspend() will not be
+called in the suspend flow.
 
-Thank you,
+But in the resiume flow, devfreq_resume() and cpufreq_resume() will
+be called.
 
+This patch will ensure that devfreq_suspend/devfreq_resume and
+cpufreq_suspend/cpufreq_resume are called in pairs.
+
+Signed-off-by: Vincent Wang <vincent.wang@unisoc.com>
+Signed-off-by: Samer Xie <samer.xie@unisoc.com>
+Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
 ---
-Best Regards
-Kunihiko Hayashi
+ drivers/base/power/main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index fdd508a78ffd..eb3d987d43e0 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1866,9 +1866,6 @@ int dpm_suspend(pm_message_t state)
+ 	trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
+ 	might_sleep();
+ 
+-	devfreq_suspend();
+-	cpufreq_suspend();
+-
+ 	mutex_lock(&dpm_list_mtx);
+ 	pm_transition = state;
+ 	async_error = 0;
+@@ -1988,6 +1985,9 @@ int dpm_prepare(pm_message_t state)
+ 	trace_suspend_resume(TPS("dpm_prepare"), state.event, true);
+ 	might_sleep();
+ 
++	devfreq_suspend();
++	cpufreq_suspend();
++
+ 	/*
+ 	 * Give a chance for the known devices to complete their probes, before
+ 	 * disable probing of devices. This sync point is important at least
+-- 
+2.20.1
+
