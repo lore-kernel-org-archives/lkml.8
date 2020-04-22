@@ -2,324 +2,181 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C980EC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2787AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F4D2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58162076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GhZrAiHg";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eRYzu79i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726662AbgDVOrY (ORCPT
+        id S1726799AbgDVOtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:47:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:14585 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgDVOrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:47:23 -0400
-IronPort-SDR: iBMSzdlx8DCHejZkaQfIYmIF6wOFfd7s97pqD/c5hPKdEEUFSMSImCzkZRggUGWDQtJCVZOBlB
- yACB/YhqZK9w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 07:47:23 -0700
-IronPort-SDR: pCt+7jfsTQWe2c268eXgsJTi47PzI6nR6VzUoE1WBQ7YOAjc0ehNz5GFveeUFBxDs8LFK24T/l
- vUfyHWV8m6dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="456533198"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Apr 2020 07:47:23 -0700
-Received: from [10.249.227.181] (abudanko-mobl.ccr.corp.intel.com [10.249.227.181])
-        by linux.intel.com (Postfix) with ESMTP id BEDED5802C9;
-        Wed, 22 Apr 2020 07:47:19 -0700 (PDT)
-Subject: [PATCH v2 4/4] perf docs: introduce security.txt file to document
- related issues
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-References: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <38f3c52f-5ecd-03b1-27a0-12628fd19705@linux.intel.com>
-Date:   Wed, 22 Apr 2020 17:47:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 22 Apr 2020 10:49:03 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:60962 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725934AbgDVOtC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:49:02 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CC6C6C0B87;
+        Wed, 22 Apr 2020 14:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1587566941; bh=38TA8zEJ2eQQzm3e3PrgiAixNlTw7edM3oLvlFL5vLA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=GhZrAiHg4gDQdL44m3Qk6ZI53cbxXkXdsPFiD70dRSWRJM2iFOvaIgR/bURVgJKvB
+         i9wpeY01UJ/GWxXgPZ+ENb9c43EEVWuXlljF32JTs2Wj1dvGBM0ap1b1c3CeBk1Rss
+         P640doklJqDNC3OalpJrh+Kc23XtlUNR2hB7mIl02ZBWiraST/hNqAiC2MZre52gQ/
+         ZuHIGjHTnWFV6IHVhxX59NdwPjFTPCjpsFkCjw389DSqEg2ucOeglslHGIAm6DaOeJ
+         KIQejdM/c94prJdURtaMO38u6/Pe3f5sffnPH1c64lot4L4BsDBL2PaMGvv5lLJXgv
+         rZOPe6j1kG1wg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 49E4BA00D4;
+        Wed, 22 Apr 2020 14:49:00 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 22 Apr 2020 07:48:55 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Wed, 22 Apr 2020 07:48:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hQq4X4cZCh+F3uwBaHGWD8mZ0KdLqDqa5dh67PTe1fqZYoJIpQcGTdEAiNSvFvqWsKtLTNZArPSBXf8P1WcNFiSKAzQ1gtwUHbgR1LEBQCo7Hz4LGH8+d+H5xXG60be+S8TZVWYVDko7UXIMC552KZjp92KC7mtijCZn+mXoDwVWU9Lh0TY5uc9F+rUW0iZyZYZWJKB0NT5QJ61qb0CVnEgYyEMhDePcBOSNL9IgfnHfKs4D5n4x10k70qo0uOwFXjxEC9azdxeHHo43Q+cQLXCU25kP4dQLrc7kgkzg27+ObgMhmr0Jsoh4OFldbx5yEcL73vMjrm0TaAJnwt9Crw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=38TA8zEJ2eQQzm3e3PrgiAixNlTw7edM3oLvlFL5vLA=;
+ b=E1lQX+5By5JL1R8bulsyIiYP83KVS/l4ocmQFEwiZSQ87QYYMrGVluCI9AH0zLNIAAxRG+Gmn9tekGBwa8Bj/DFqVNBTnuVLlAut2vdqhS2+g3PwyeBJ7cblXA2GdSW6twZIPTSiDDRghzF1FXpirb/QLOCgyS//Ith7v+9vomySRdFLE1XlagYvQhiVrc6hSPzDwIveWluyJ1dOZ11QuZoVxk0p2SUD364IyOQ5x6dfp97NY31ZNZBVDBjoyzyF/ZZR6vjA+WC5pM4BS+2Hs8Oa/j5cbFS4tofRFdWtVaWrTbrkvCj5iXakDBli9DvaZshPFr9UrDPIfH7s0T45zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=38TA8zEJ2eQQzm3e3PrgiAixNlTw7edM3oLvlFL5vLA=;
+ b=eRYzu79ii8jSzomKSCoUPzPYPa93Mqn/2UJX8bWmybpKdukcuLDkFLXqga57otFAH6p3RGUO5j61si8d5ryG6QbfVLQLC2wgpjBtL2tg34xbloLCt1Lkf0KSPpkxIhHqQpPLiDDUihGrNolkqFOrHI0bTI5DPIE2SwrnDcT3l+w=
+Received: from SN1PR12MB2557.namprd12.prod.outlook.com (2603:10b6:802:22::15)
+ by SN1PR12MB2574.namprd12.prod.outlook.com (2603:10b6:802:26::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Wed, 22 Apr
+ 2020 14:48:52 +0000
+Received: from SN1PR12MB2557.namprd12.prod.outlook.com
+ ([fe80::20d2:fe98:5580:932d]) by SN1PR12MB2557.namprd12.prod.outlook.com
+ ([fe80::20d2:fe98:5580:932d%7]) with mapi id 15.20.2937.012; Wed, 22 Apr 2020
+ 14:48:52 +0000
+From:   Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        "balbi@kernel.org" <balbi@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "amelie.delaunay@st.com" <amelie.delaunay@st.com>
+Subject: Re: [PATCH 1/4] usb: dwc2: gadget: move gadget resume after the core
+ is in L0 state
+Thread-Topic: [PATCH 1/4] usb: dwc2: gadget: move gadget resume after the core
+ is in L0 state
+Thread-Index: AQHWF9kltb5ivodInUCMhTw1JrJADqiFOpOA
+Date:   Wed, 22 Apr 2020 14:48:52 +0000
+Message-ID: <5391768a-da52-def8-9b2a-aeb559d8e26b@synopsys.com>
+References: <1587472341-17935-1-git-send-email-fabrice.gasnier@st.com>
+ <1587472341-17935-2-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <1587472341-17935-2-git-send-email-fabrice.gasnier@st.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=hminas@synopsys.com; 
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d88aa6a9-9df8-43e5-7881-08d7e6cc46a1
+x-ms-traffictypediagnostic: SN1PR12MB2574:
+x-microsoft-antispam-prvs: <SN1PR12MB2574F6399FB0C5CD5853016FA7D20@SN1PR12MB2574.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 03818C953D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(396003)(346002)(39860400002)(376002)(366004)(8676002)(53546011)(31686004)(6506007)(110136005)(316002)(54906003)(2616005)(86362001)(81156014)(31696002)(478600001)(186003)(4326008)(71200400001)(8936002)(36756003)(26005)(91956017)(6512007)(66556008)(64756008)(66946007)(66476007)(66446008)(5660300002)(6486002)(76116006)(2906002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J4OLJ5PiRHKX3s/6wpY1JCKp9+/ZdJN0oaeqjkrtrDZZWMWa+1qYU/qrkLRAtBg/VWBeXv9MTrWCUDESws8Ofhwfr9iecgzU7MiWvOxEZ/tbJdMd65B25i5yREDPqcm+a1qb+3VtZ4KlUEGDKErYYWmuIrm+3PxYR8n3rbZZdfMXgnmzk7zf43eb8xrXIvm5OA/4j89K0Ay6uRyd9syAoBV4V/HUuNwVjx31SbLY7ffIni2hMqk1rp0S+w2r9qh/arzcwUzCGftQ5M8AIqP8Xls5I8NLMv8Os79TFEerCk0VwRUkWZOmg6SrCm4AlVMeb7D7GoM/jaAb90/VPys/JfBk0hU5iBcQlm8MN7Jh3/iSdk+kjZPZZ+pbSgrDDBjKaSu3yTt/xBXTrDQcDcWlM92oenIp9EaT66cnOor/gFflTzh3vZEyGKRHrOJdL3sj
+x-ms-exchange-antispam-messagedata: E0t0i/JSmyD5/Kmy+Y64lWC1yRsGF5EHCfqJT7gGE/d0qEWPhNlWHcBIu4IZ1K4iGsjp0p/cGwN6mxsiu2J3yxoeuduNwXqWV/HiadQtndelpkcpXWW9rfcUNZm0JDmu2lXCB0t1NPHVphWmhzX77g==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <44B65D7E0EC7F24DB7E0461B4EFC89C7@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d88aa6a9-9df8-43e5-7881-08d7e6cc46a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 14:48:52.6679
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cE5tO3O/59GpLnGUDvMO9VckQE/G04wCYkv+OBPLf7ZxJMfoIQUEzh9MZjJDbhHQXxgLdieKLB3IaYVCxHrdHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2574
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Publish instructions on how to apply LSM hooks for access control
-to perf_event_open() syscall on Fedora (v31) with Targeted 
-SELinux policy.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/security.txt | 236 ++++++++++++++++++++++++++
- 1 file changed, 236 insertions(+)
- create mode 100644 tools/perf/Documentation/security.txt
-
-diff --git a/tools/perf/Documentation/security.txt b/tools/perf/Documentation/security.txt
-new file mode 100644
-index 000000000000..7ca9377c1526
---- /dev/null
-+++ b/tools/perf/Documentation/security.txt
-@@ -0,0 +1,236 @@
-+Overview
-+========
-+
-+For general security related questions of perf_event_open() syscall usage,
-+performance monitoring and observability operations by Perf see here:
-+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-+
-+Enabling LSM based mandatory access control (MAC) to perf_event_open() syscall
-+==============================================================================
-+
-+LSM hooks for mandatory access control for perf_event_open() syscall can be
-+used starting from Linux v5.3. Below are the steps to extend Fedora (v31) with
-+Targeted policy with perf_event_open() access control capabilities:
-+
-+1. Download selinux-policy SRPM package (e.g. selinux-policy-3.14.4-48.fc31.src.rpm on FC31)
-+   and install it so rpmbuild directory would exist in the current working directory:
-+
-+   # rpm -Uhv selinux-policy-3.14.4-48.fc31.src.rpm
-+
-+2. Get into rpmbuild/SPECS directory and unpack the source code:
-+
-+   # rpmbuild -bp selinux-policy.spec
-+
-+3. Place patch below at rpmbuild/BUILD/selinux-policy-b86eaaf4dbcf2d51dd4432df7185c0eaf3cbcc02
-+   directory and apply it:
-+
-+   # patch -p1 < selinux-policy-perf-events-perfmon.patch
-+   patching file policy/flask/access_vectors
-+   patching file policy/flask/security_classes
-+   # cat selinux-policy-perf-events-perfmon.patch
-+diff -Nura a/policy/flask/access_vectors b/policy/flask/access_vectors
-+--- a/policy/flask/access_vectors	2020-02-04 18:19:53.000000000 +0300
-++++ b/policy/flask/access_vectors	2020-02-28 23:37:25.000000000 +0300
-+@@ -174,6 +174,7 @@
-+ 	wake_alarm
-+ 	block_suspend
-+ 	audit_read
-++	perfmon
-+ }
-+ 
-+ #
-+@@ -1099,3 +1100,15 @@
-+ 
-+ class xdp_socket
-+ inherits socket
-++
-++class perf_event
-++{
-++	open
-++	cpu
-++	kernel
-++	tracepoint
-++	read
-++	write
-++}
-++
-++
-+diff -Nura a/policy/flask/security_classes b/policy/flask/security_classes
-+--- a/policy/flask/security_classes	2020-02-04 18:19:53.000000000 +0300
-++++ b/policy/flask/security_classes	2020-02-28 21:35:17.000000000 +0300
-+@@ -200,4 +200,6 @@
-+ 
-+ class xdp_socket
-+ 
-++class perf_event
-++
-+ # FLASK
-+
-+4. Get into rpmbuild/SPECS directory and build policy packages from patched sources:
-+
-+   # rpmbuild --noclean --noprep -ba selinux-policy.spec
-+
-+   so you have this:
-+
-+   # ls -alh rpmbuild/RPMS/noarch/
-+   total 33M
-+   drwxr-xr-x. 2 root root 4.0K Mar 20 12:16 .
-+   drwxr-xr-x. 3 root root 4.0K Mar 20 12:16 ..
-+   -rw-r--r--. 1 root root 112K Mar 20 12:16 selinux-policy-3.14.4-48.fc31.noarch.rpm
-+   -rw-r--r--. 1 root root 1.2M Mar 20 12:17 selinux-policy-devel-3.14.4-48.fc31.noarch.rpm
-+   -rw-r--r--. 1 root root 2.3M Mar 20 12:17 selinux-policy-doc-3.14.4-48.fc31.noarch.rpm
-+   -rw-r--r--. 1 root root  12M Mar 20 12:17 selinux-policy-minimum-3.14.4-48.fc31.noarch.rpm
-+   -rw-r--r--. 1 root root 4.5M Mar 20 12:16 selinux-policy-mls-3.14.4-48.fc31.noarch.rpm
-+   -rw-r--r--. 1 root root 111K Mar 20 12:16 selinux-policy-sandbox-3.14.4-48.fc31.noarch.rpm
-+   -rw-r--r--. 1 root root  14M Mar 20 12:17 selinux-policy-targeted-3.14.4-48.fc31.noarch.rpm
-+
-+5. Install SELinux packages from Fedora repository, if not already done so, and
-+   update with the patched rpms above:
-+
-+   # rpm -Uhv rpmbuild/RPMS/noarch/selinux-policy-*
-+
-+6. Enable SELinux Permissive mode for Targeted policy, if not already done so:
-+
-+   # cat /etc/selinux/config
-+
-+   # This file controls the state of SELinux on the system.
-+   # SELINUX= can take one of these three values:
-+   #     enforcing - SELinux security policy is enforced.
-+   #     permissive - SELinux prints warnings instead of enforcing.
-+   #     disabled - No SELinux policy is loaded.
-+   SELINUX=permissive
-+   # SELINUXTYPE= can take one of these three values:
-+   #     targeted - Targeted processes are protected,
-+   #     minimum - Modification of targeted policy. Only selected processes are protected.
-+   #     mls - Multi Level Security protection.
-+   SELINUXTYPE=targeted
-+
-+7. Enable filesystem SELinux labeling at the next reboot:
-+
-+   # touch /.autorelabel
-+
-+8. Reboot machine and it will label filesystems and load Targeted policy into the kernel;
-+
-+9. Login and check that dmesg output doesn't mention that perf_event class is unknown to SELinux subsystem;
-+
-+10. Check that SELinux is enabled and in Permissive mode
-+
-+    # getenforce
-+    Permissive
-+
-+11. Turn SELinux into Enforcing mode:
-+
-+    # setenforce 1
-+    # getenforce
-+    Enforcing
-+
-+Opening access to perf_event_open() syscall on Fedora with SELinux
-+==================================================================
-+
-+Access to performance monitoring and observability operations by Perf
-+can be limited for superuser or CAP_PERFMON privileged process.
-+MAC policy settings (e.g. SELinux) can be loaded into the kernel and
-+prevent unauthorized access to perf_event_open() syscall. In such case
-+Perf tool provides a message similar to the one below:
-+
-+   # perf stat
-+   Error:
-+   Access to performance monitoring and observability operations is limited.
-+   Enforced MAC policy settings (SELinux) can limit access to performance
-+   monitoring and observability operations. Inspect system audit records for
-+   more perf_event access control information and adjusting the policy.
-+   Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-+   access to performance monitoring and observability operations for users
-+   without CAP_PERFMON capability. perf_event_paranoid setting is -1:
-+     -1: Allow use of (almost) all events by all users
-+         Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-+   >= 0: Disallow raw and ftrace function tracepoint access
-+   >= 1: Disallow CPU event access
-+   >= 2: Disallow kernel profiling
-+   To make the adjusted perf_event_paranoid setting permanent preserve it
-+   in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-+
-+To make sure that access is limited by MAC policy settings inspect system
-+audit records using journalctl command or /var/log/audit/audit.log so the
-+output would contain AVC denied records related to perf_event:
-+
-+   # journalctl --reverse --no-pager | grep perf_event
-+
-+   python3[1318099]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t.
-+                                         If you believe that perf should be allowed open access on perf_event labeled unconfined_t by default.
-+   setroubleshoot[1318099]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t. For complete SELinux messages run: sealert -l 4595ce5b-e58f-462c-9d86-3bc2074935de
-+   audit[1318098]: AVC avc:  denied  { open } for  pid=1318098 comm="perf" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-+
-+In order to open access to perf_event_open() syscall MAC policy settings can
-+require to be extend. On SELinux system this can be done by loading a special
-+policy module extending base policy settings. Perf related policy module can
-+be generated using the system audit records about blocking perf_event access.
-+Run the command below to generate my-perf.te policy extension file with
-+perf_event related rules:
-+
-+   # ausearch -c 'perf' --raw | audit2allow -M my-perf && cat my-perf.te
-+
-+   module my-perf 1.0;
-+
-+   require {
-+        type unconfined_t;
-+        class perf_event { cpu kernel open read tracepoint write };
-+   }
-+
-+   #============= unconfined_t ==============
-+   allow unconfined_t self:perf_event { cpu kernel open read tracepoint write };
-+
-+Now compile, pack and load my-perf.pp extension module into the kernel:
-+
-+   # checkmodule -M -m -o my-perf.mod my-perf.te
-+   # semodule_package -o my-perf.pp -m my-perf.mod
-+   # semodule -X 300 -i my-perf.pp
-+
-+After all those taken steps above access to perf_event_open() syscall should
-+now be allowed by the policy settings. Check access running Perf like this:
-+
-+   # perf stat
-+   ^C
-+   Performance counter stats for 'system wide':
-+
-+         36,387.41 msec cpu-clock                 #    7.999 CPUs utilized
-+             2,629      context-switches          #    0.072 K/sec
-+                57      cpu-migrations            #    0.002 K/sec
-+                 1      page-faults               #    0.000 K/sec
-+       263,721,559      cycles                    #    0.007 GHz
-+       175,746,713      instructions              #    0.67  insn per cycle
-+        19,628,798      branches                  #    0.539 M/sec
-+         1,259,201      branch-misses             #    6.42% of all branches
-+
-+       4.549061439 seconds time elapsed
-+
-+The generated perf-event.pp related policy extension module can be removed
-+from the kernel using this command:
-+
-+   # semodule -X 300 -r my-perf
-+
-+Alternatively the module can be temporarily disabled and enabled back using
-+these two commands:
-+
-+   # semodule -d my-perf
-+   # semodule -e my-perf
-+
-+If something went wrong
-+=======================
-+
-+To turn SELinux into Permissive mode:
-+   # setenforce 0
-+
-+To fully disable SELinux during kernel boot [3] set kernel command line parameter selinux=0
-+
-+To remove SELinux labeling from local filesystems:
-+   # find / -mount -print0 | xargs -0 setfattr -h -x security.selinux
-+
-+To fully turn SELinux off a machine set SELINUX=disabled at /etc/selinux/config file and reboot;
-+
-+Links
-+=====
-+
-+[1] https://download-ib01.fedoraproject.org/pub/fedora/linux/updates/31/Everything/SRPMS/Packages/s/selinux-policy-3.14.4-49.fc31.src.rpm
-+[2] https://docs.fedoraproject.org/en-US/Fedora/11/html/Security-Enhanced_Linux/sect-Security-Enhanced_Linux-Working_with_SELinux-Enabling_and_Disabling_SELinux.html
-+[3] https://danwalsh.livejournal.com/10972.html
--- 
-2.24.1
-
-
+SGkgRmFicmljZSwNCg0KT24gNC8yMS8yMDIwIDQ6MzIgUE0sIEZhYnJpY2UgR2FzbmllciB3cm90
+ZToNCj4gV2hlbiB0aGUgcmVtb3RlIHdha2V1cCBpbnRlcnJ1cHQgaXMgdHJpZ2dlcmVkLCBseF9z
+dGF0ZSBpcyByZXN1bWVkIGZyb20gTDINCj4gdG8gTDAgc3RhdGUuIEJ1dCB3aGVuIHRoZSBnYWRn
+ZXQgcmVzdW1lIGlzIGNhbGxlZCwgbHhfc3RhdGUgaXMgc3RpbGwgTDIuDQo+IFRoaXMgcHJldmVu
+dHMgdGhlIHJlc3VtZSBjYWxsYmFjayB0byBxdWV1ZSBhbnkgcmVxdWVzdC4gQW55IGF0dGVtcHQN
+Cj4gdG8gcXVldWUgYSByZXF1ZXN0IGZyb20gcmVzdW1lIGNhbGxiYWNrIHdpbGwgcmVzdWx0IGlu
+Og0KPiAtICJzdWJtaXQgcmVxdWVzdCBvbmx5IGluIGFjdGl2ZSBzdGF0ZSIgZGVidWcgbWVzc2Fn
+ZSB0byBiZSBpc3N1ZWQNCj4gLSBkd2MyX2hzb3RnX2VwX3F1ZXVlKCkgcmV0dXJucyAtRUFHQUlO
+DQo+IA0KPiBNb3ZlIHRoZSBjYWxsIHRvIHJlc3VtZSBnYWRnZXQgYWZ0ZXIgdGhlIGNvcmUgaXMg
+cHV0IGluIERXQzJfTDAgc3RhdGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaWNlIEdhc25p
+ZXIgPGZhYnJpY2UuZ2FzbmllckBzdC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvdXNiL2R3YzIv
+Y29yZV9pbnRyLmMgfCAxMCArKysrKysrLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0
+aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9k
+d2MyL2NvcmVfaW50ci5jIGIvZHJpdmVycy91c2IvZHdjMi9jb3JlX2ludHIuYw0KPiBpbmRleCA4
+NzZmZjMxLi5iOGViZGE1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi9kd2MyL2NvcmVfaW50
+ci5jDQo+ICsrKyBiL2RyaXZlcnMvdXNiL2R3YzIvY29yZV9pbnRyLmMNCj4gQEAgLTQwNCw5ICs0
+MDQsMTEgQEAgc3RhdGljIHZvaWQgZHdjMl9oYW5kbGVfd2FrZXVwX2RldGVjdGVkX2ludHIoc3Ry
+dWN0IGR3YzJfaHNvdGcgKmhzb3RnKQ0KPiAgIAl9DQo+ICAgDQo+ICAgCWlmIChkd2MyX2lzX2Rl
+dmljZV9tb2RlKGhzb3RnKSkgew0KPiArCQllbnVtIGR3YzJfbHhfc3RhdGUgbHhfc3RhdGUgPSBo
+c290Zy0+bHhfc3RhdGU7DQo+ICsNCj4gICAJCWRldl9kYmcoaHNvdGctPmRldiwgIkRTVFM9MHgl
+MHhcbiIsDQo+ICAgCQkJZHdjMl9yZWFkbChoc290ZywgRFNUUykpOw0KPiAtCQlpZiAoaHNvdGct
+Pmx4X3N0YXRlID09IERXQzJfTDIpIHsNCj4gKwkJaWYgKGx4X3N0YXRlID09IERXQzJfTDIpIHsN
+Cj4gICAJCQl1MzIgZGN0bCA9IGR3YzJfcmVhZGwoaHNvdGcsIERDVEwpOw0KPiAgIA0KPiAgIAkJ
+CS8qIENsZWFyIFJlbW90ZSBXYWtldXAgU2lnbmFsaW5nICovDQo+IEBAIC00MTUsMTEgKzQxNywx
+MyBAQCBzdGF0aWMgdm9pZCBkd2MyX2hhbmRsZV93YWtldXBfZGV0ZWN0ZWRfaW50cihzdHJ1Y3Qg
+ZHdjMl9oc290ZyAqaHNvdGcpDQo+ICAgCQkJcmV0ID0gZHdjMl9leGl0X3BhcnRpYWxfcG93ZXJf
+ZG93bihoc290ZywgdHJ1ZSk7DQo+ICAgCQkJaWYgKHJldCAmJiAocmV0ICE9IC1FTk9UU1VQUCkp
+DQo+ICAgCQkJCWRldl9lcnIoaHNvdGctPmRldiwgImV4aXQgcG93ZXJfZG93biBmYWlsZWRcbiIp
+Ow0KPiAtDQo+IC0JCQljYWxsX2dhZGdldChoc290ZywgcmVzdW1lKTsNCj4gICAJCX0NCj4gICAJ
+CS8qIENoYW5nZSB0byBMMCBzdGF0ZSAqLw0KPiAgIAkJaHNvdGctPmx4X3N0YXRlID0gRFdDMl9M
+MDsNCj4gKw0KPiArCQkvKiBHYWRnZXQgbWF5IHF1ZXVlIG5ldyByZXF1ZXN0cyB1cG9uIHJlc3Vt
+ZSB0byBMMCBzdGF0ZSAqLw0KPiArCQlpZiAobHhfc3RhdGUgPT0gRFdDMl9MMikNCj4gKwkJCWNh
+bGxfZ2FkZ2V0KGhzb3RnLCByZXN1bWUpOw0KPiAgIAl9IGVsc2Ugew0KPiAgIAkJaWYgKGhzb3Rn
+LT5wYXJhbXMucG93ZXJfZG93bikNCj4gICAJCQlyZXR1cm47DQo+IA0KDQpXaGF0IGFib3V0IGJl
+bG93IHBhdGNoIHdpdGhvdXQgaW50cm9kdWNpbmcgYWRkaXRpb25hbCB2YXJpYWJsZS4NCg0KZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2R3YzIvY29yZV9pbnRyLmMgYi9kcml2ZXJzL3VzYi9kd2My
+L2NvcmVfaW50ci5jDQppbmRleCA4NzZmZjMxMjYxZDUuLjU0Mzg2NWUzMWM3MiAxMDA2NDQNCi0t
+LSBhL2RyaXZlcnMvdXNiL2R3YzIvY29yZV9pbnRyLmMNCisrKyBiL2RyaXZlcnMvdXNiL2R3YzIv
+Y29yZV9pbnRyLmMNCkBAIC00MTYsNiArNDE2LDggQEAgc3RhdGljIHZvaWQgZHdjMl9oYW5kbGVf
+d2FrZXVwX2RldGVjdGVkX2ludHIoc3RydWN0IA0KZHdjMl9oc290ZyAqaHNvdGcpDQogICAgICAg
+ICAgICAgICAgICAgICAgICAgaWYgKHJldCAmJiAocmV0ICE9IC1FTk9UU1VQUCkpDQogICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGhzb3RnLT5kZXYsICJleGl0IHBvd2Vy
+X2Rvd24gDQpmYWlsZWRcbiIpOw0KDQorICAgICAgICAgICAgICAgICAgICAgICAvKiBDaGFuZ2Ug
+dG8gTDAgc3RhdGUgKi8NCisgICAgICAgICAgICAgICAgICAgICAgIGhzb3RnLT5seF9zdGF0ZSA9
+IERXQzJfTDA7DQogICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF9nYWRnZXQoaHNvdGcsIHJl
+c3VtZSk7DQogICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgLyogQ2hhbmdlIHRv
+IEwwIHN0YXRlICovDQoNCg0KVGhhbmtzLA0KTWluYXMNCg0K
