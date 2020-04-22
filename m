@@ -2,205 +2,207 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84079C55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF909C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6C120753
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8931920575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="M81xgS/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDVD2f (ORCPT
+        id S1726431AbgDVDdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 23:28:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:24164 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbgDVD2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 23:28:34 -0400
-IronPort-SDR: TLAQwSVycTOn9IGZ3t6p0192xnI+R3aeY0IGl+dTr7rncs7hBZjwJ81M9+bmQlH9gEITsupvfw
- rlXYi1NibLhw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 20:28:33 -0700
-IronPort-SDR: Kgm4GfB/vjdE6ywLMDh8Xh/KM3PVMA2pxPw2mUhmfMlk2vXrvKh9Qe8BGseLISeeGv7CSKytDP
- t7mv5SvgYppQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
-   d="scan'208";a="429759490"
-Received: from glass.png.intel.com ([172.30.181.92])
-  by orsmga005.jf.intel.com with ESMTP; 21 Apr 2020 20:28:30 -0700
-From:   Wong Vee Khee <vee.khee.wong@intel.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Wei Feng <weifeng.voon@intel.com>,
-        Wong Vee Khee <vee.khee.wong@intel.com>
-Subject: [PATCH net-next v2 1/1] net: stmmac: Add support for VLAN promiscuous mode
-Date:   Wed, 22 Apr 2020 11:31:06 +0800
-Message-Id: <20200422033106.25745-1-vee.khee.wong@intel.com>
-X-Mailer: git-send-email 2.17.0
+        Tue, 21 Apr 2020 23:33:31 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:62690 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgDVDda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 23:33:30 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200422033327epoutp03a94b406cf23166739f2308a9651a9898~IBttcg0Ux0765307653epoutp03R
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:33:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200422033327epoutp03a94b406cf23166739f2308a9651a9898~IBttcg0Ux0765307653epoutp03R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587526407;
+        bh=rHRFhOm3d5X3uCzrv6JCkr/Ga5lu4G0lQQo0a8i9lGI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=M81xgS/HNgOmemFKY2ZaGxzmRXpYDVCxjf63pnw2CJEN2qzFlZvbpTd3oviGy8AKX
+         c/b+eJ6PW/LntiNaAUGVPWp4uSfQN0fTjL5v5QtujzJ1erZg2qKK4gV9AVQrOSIQeb
+         pOYvYO1GZuC1HXN5cbjPHZJe+nkWeePp7CzqiHmw=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200422033326epcas1p3445abb3dc8e8ea5ea94bdd7414615af1~IBtsd99P20666006660epcas1p38;
+        Wed, 22 Apr 2020 03:33:26 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 496Qxw042jzMqYkZ; Wed, 22 Apr
+        2020 03:33:24 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E1.AC.04744.30BBF9E5; Wed, 22 Apr 2020 12:33:23 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200422033323epcas1p173c1775e4f262ad67fd6cf5b3c03e48d~IBtpafPcC3085130851epcas1p12;
+        Wed, 22 Apr 2020 03:33:23 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200422033323epsmtrp2871297e58febd5706787c9a36d57c39e~IBtpZmnzm1058110581epsmtrp2k;
+        Wed, 22 Apr 2020 03:33:23 +0000 (GMT)
+X-AuditID: b6c32a38-26bff70000001288-08-5e9fbb03869c
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FA.90.04024.30BBF9E5; Wed, 22 Apr 2020 12:33:23 +0900 (KST)
+Received: from [10.113.221.211] (unknown [10.113.221.211]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200422033323epsmtip20a692321730c3e5cfb52e70ae63cba61~IBtpL78Lg2768627686epsmtip2O;
+        Wed, 22 Apr 2020 03:33:23 +0000 (GMT)
+Subject: Re: [PATCH] drm/exynos: Delete an error message in three functions
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+From:   Inki Dae <inki.dae@samsung.com>
+Message-ID: <a088b8e7-869b-8f8f-b9a1-9b68de7b714c@samsung.com>
+Date:   Wed, 22 Apr 2020 12:38:24 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <57b725ed-f705-b5e1-0da6-3d16801c7c85@web.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRmVeSWpSXmKPExsWy7bCmri7z7vlxBiufWFn0njvJZPF/20Rm
+        iytf37NZvLh3kcVi6y1pi/7Hr5ktzp/fwG5xtukNu8Wmx9dYLS7vmsNmMeP8PqCGWc9ZLWZM
+        fslm8fF/M7MDn8f56b1sHnu/LWDx2LSqk81j+7cHrB73u48zeWxeUu/Rt2UVo8fnTXIet59t
+        YwngjMq2yUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAG6
+        XUmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYFmgV5yYW1yal66XnJ9rZWhgYGQK
+        VJiQnbHu/HTWgjsiFWvf5TYwNgp2MXJySAiYSDy79p21i5GLQ0hgB6PEmtmT2CCcT4wSCw7+
+        ZodwvjFKPNx1jA2mpamrBaplL6PE3GlTWUASQgLvGSWOH6oGsYUFvCWmr5kE1i0isJhZYtG2
+        vYwgCWaBYoneo0tYQWw2AVWJiSvug03lFbCT+NS7iB3EZgGKXzw8DSjOwSEqECFx+msiRImg
+        xMmZT8B2cQpYScycvJgNYqS4xK0n85kgbHmJ5q2zmUH2SgisY5c4cfULI8TVLhK9C7ewQtjC
+        Eq+Ob2GHsKUkPr/bywbR0MwoMXHGaSYIp4NR4u7j6ywQVcYS+5dOZgK5iFlAU2L9Ln2IsKLE
+        zt9zoR7jk3j3tYcVpERCgFeio00IokRJ4tjFG1A3SEhcWDIRGooeEqsv7mGawKg4C8lvs5D8
+        MwvJP7MQFi9gZFnFKJZaUJybnlpsWGCCHNubGMHpWstiB+Oecz6HGAU4GJV4eG+cnxcnxJpY
+        VlyZe4hRgoNZSYR3w0OgEG9KYmVValF+fFFpTmrxIUZTYMhPZJYSTc4H5pK8knhDUyNjY2ML
+        E0MzU0NDJXHeqddz4oQE0hNLUrNTUwtSi2D6mDg4pRoYm35a2nlOX2d4b3XLglmXJc+XFZmE
+        PJ16aotNdoXlkZ+Od0s2tCl/uL4qZRbr7wDbG0tbtq15ITOVTdN/esVck0DBkK+H3Lpb93jH
+        eXmdOmOgsqXg+mmhMrt3K+P2W3Bfnrjv0Q7f0Ltf9C6xm06dks9gNvP5078rq1v6py1aZM52
+        5cv2R/p33yqxFGckGmoxFxUnAgDVZBnj7QMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsWy7bCSvC7z7vlxBrcuylj0njvJZPF/20Rm
+        iytf37NZvLh3kcVi6y1pi/7Hr5ktzp/fwG5xtukNu8Wmx9dYLS7vmsNmMeP8PqCGWc9ZLWZM
+        fslm8fF/M7MDn8f56b1sHnu/LWDx2LSqk81j+7cHrB73u48zeWxeUu/Rt2UVo8fnTXIet59t
+        YwngjOKySUnNySxLLdK3S+DKWHd+OmvBHZGKte9yGxgbBbsYOTkkBEwkmrpaWLsYuTiEBHYz
+        Shx59oOxi5EDKCEhsWUrB4QpLHH4cDFEyVtGib39rawgvcIC3hLT10xiB0mICCxllph8+B07
+        SIJZoFhi24c17BAdvYwSR4/vZwJJsAmoSkxccZ8NxOYVsJP41LsIrIEFKH7x8DSwuKhAhMTz
+        7TcYIWoEJU7OfMICYnMKWEnMnLyYDWKBusSfeZeYIWxxiVtP5jNB2PISzVtnM09gFJqFpH0W
+        kpZZSFpmIWlZwMiyilEytaA4Nz232LDAMC+1XK84Mbe4NC9dLzk/dxMjOD61NHcwXl4Sf4hR
+        gINRiYf3xvl5cUKsiWXFlbmHGCU4mJVEeDc8BArxpiRWVqUW5ccXleakFh9ilOZgURLnfZp3
+        LFJIID2xJDU7NbUgtQgmy8TBKdXAuOxgZ6v0sZ1rZI+X7Mo5fi7uZd2DKc9TllrwlWRGiZz+
+        dO9hatZP3dqVU7um5DQvXbbbI/nGGgEzjnVXC/wsSjo39ifKtzn5bNl019SwVzd5d+X/fyHW
+        n20dpI22r5yh9kx7qkn7DbfNzsVhIcbCyn79M+apCK3bu/HBwqm7fv1YeOPY9pdC35VYijMS
+        DbWYi4oTAd2g5qjLAgAA
+X-CMS-MailID: 20200422033323epcas1p173c1775e4f262ad67fd6cf5b3c03e48d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200405121842epcas1p4c947a40c70881e72c38d6c9cc75c60d5
+References: <CGME20200405121842epcas1p4c947a40c70881e72c38d6c9cc75c60d5@epcas1p4.samsung.com>
+        <57b725ed-f705-b5e1-0da6-3d16801c7c85@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
+Hi Markus Elfring,
 
-For dwmac4, enable VLAN promiscuity when MAC controller is requested to
-enter promiscuous mode.
+20. 4. 5. 오후 9:18에 Markus Elfring 이(가) 쓴 글:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sun, 5 Apr 2020 14:10:09 +0200
+> 
+> The function “platform_get_irq” can log an error already.
+> Thus omit redundant messages for the exception handling in the
+> calling functions.
+> 
+> This issue was detected by using the Coccinelle software.
 
-Signed-off-by: Chuah, Kim Tatt <kim.tatt.chuah@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
-Signed-off-by: Wong Vee Khee <vee.khee.wong@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  1 +
- .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 67 +++++++++++++++++++
- 3 files changed, 69 insertions(+)
+Picked it up.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 6208a68a331d..127f75862962 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -473,6 +473,7 @@ struct mac_device_info {
- 	unsigned int xlgmac;
- 	unsigned int num_vlan;
- 	u32 vlan_filter[32];
-+	unsigned int promisc;
- };
- 
- struct stmmac_rx_routing {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 28cac28253b8..61f3249bd724 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -90,6 +90,7 @@
- #define GMAC_VLAN_CSVL			BIT(19)
- #define GMAC_VLAN_VLC			GENMASK(17, 16)
- #define GMAC_VLAN_VLC_SHIFT		16
-+#define GMAC_VLAN_VLHT			GENMASK(15, 0)
- 
- /* MAC VLAN Tag */
- #define GMAC_VLAN_TAG_VID		GENMASK(15, 0)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 39692d15d80c..ecd834e0e121 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -450,6 +450,12 @@ static int dwmac4_add_hw_vlan_rx_fltr(struct net_device *dev,
- 	if (vid > 4095)
- 		return -EINVAL;
- 
-+	if (hw->promisc) {
-+		netdev_err(dev,
-+			   "Adding VLAN in promisc mode not supported\n");
-+		return -EPERM;
-+	}
-+
- 	/* Single Rx VLAN Filter */
- 	if (hw->num_vlan == 1) {
- 		/* For single VLAN filter, VID 0 means VLAN promiscuous */
-@@ -499,6 +505,12 @@ static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
- {
- 	int i, ret = 0;
- 
-+	if (hw->promisc) {
-+		netdev_err(dev,
-+			   "Deleting VLAN in promisc mode not supported\n");
-+		return -EPERM;
-+	}
-+
- 	/* Single Rx VLAN Filter */
- 	if (hw->num_vlan == 1) {
- 		if ((hw->vlan_filter[0] & GMAC_VLAN_TAG_VID) == vid) {
-@@ -523,9 +535,45 @@ static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
- 	return ret;
- }
- 
-+static void dwmac4_vlan_promisc_enable(struct net_device *dev,
-+				       struct mac_device_info *hw)
-+{
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 value;
-+	u32 hash;
-+	u32 val;
-+	int i;
-+
-+	/* Single Rx VLAN Filter */
-+	if (hw->num_vlan == 1) {
-+		dwmac4_write_single_vlan(dev, 0);
-+		return;
-+	}
-+
-+	/* Extended Rx VLAN Filter Enable */
-+	for (i = 0; i < hw->num_vlan; i++) {
-+		if (hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VEN) {
-+			val = hw->vlan_filter[i] & ~GMAC_VLAN_TAG_DATA_VEN;
-+			dwmac4_write_vlan_filter(dev, hw, i, val);
-+		}
-+	}
-+
-+	hash = readl(ioaddr + GMAC_VLAN_HASH_TABLE);
-+	if (hash & GMAC_VLAN_VLHT) {
-+		value = readl(ioaddr + GMAC_VLAN_TAG);
-+		if (value & GMAC_VLAN_VTHM) {
-+			value &= ~GMAC_VLAN_VTHM;
-+			writel(value, ioaddr + GMAC_VLAN_TAG);
-+		}
-+	}
-+}
-+
- static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
- 					   struct mac_device_info *hw)
- {
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 value;
-+	u32 hash;
- 	u32 val;
- 	int i;
- 
-@@ -542,6 +590,13 @@ static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
- 			dwmac4_write_vlan_filter(dev, hw, i, val);
- 		}
- 	}
-+
-+	hash = readl(ioaddr + GMAC_VLAN_HASH_TABLE);
-+	if (hash & GMAC_VLAN_VLHT) {
-+		value = readl(ioaddr + GMAC_VLAN_TAG);
-+		value |= GMAC_VLAN_VTHM;
-+		writel(value, ioaddr + GMAC_VLAN_TAG);
-+	}
- }
- 
- static void dwmac4_set_filter(struct mac_device_info *hw,
-@@ -624,6 +679,18 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		value |= GMAC_PACKET_FILTER_VTFE;
- 
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
-+
-+	if (dev->flags & IFF_PROMISC) {
-+		if (!hw->promisc) {
-+			hw->promisc = 1;
-+			dwmac4_vlan_promisc_enable(dev, hw);
-+		}
-+	} else {
-+		if (hw->promisc) {
-+			hw->promisc = 0;
-+			dwmac4_restore_hw_vlan_rx_fltr(dev, hw);
-+		}
-+	}
- }
- 
- static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
--- 
-2.17.0
+Thanks,
+Inki Dae.
 
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c     | 4 +---
+>  drivers/gpu/drm/exynos/exynos_drm_rotator.c | 4 +---
+>  drivers/gpu/drm/exynos/exynos_drm_scaler.c  | 4 +---
+>  3 files changed, 3 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index e080aa92338c..a00c6dd16c8a 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -1813,10 +1813,8 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+>  	}
+> 
+>  	dsi->irq = platform_get_irq(pdev, 0);
+> -	if (dsi->irq < 0) {
+> -		dev_err(dev, "failed to request dsi irq resource\n");
+> +	if (dsi->irq < 0)
+>  		return dsi->irq;
+> -	}
+> 
+>  	irq_set_status_flags(dsi->irq, IRQ_NOAUTOEN);
+>  	ret = devm_request_threaded_irq(dev, dsi->irq, NULL,
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_rotator.c b/drivers/gpu/drm/exynos/exynos_drm_rotator.c
+> index dafa87b82052..2d94afba031e 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_rotator.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_rotator.c
+> @@ -293,10 +293,8 @@ static int rotator_probe(struct platform_device *pdev)
+>  		return PTR_ERR(rot->regs);
+> 
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(dev, "failed to get irq\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+> 
+>  	ret = devm_request_irq(dev, irq, rotator_irq_handler, 0, dev_name(dev),
+>  			       rot);
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_scaler.c b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
+> index 93c43c8d914e..ce1857138f89 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_scaler.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
+> @@ -502,10 +502,8 @@ static int scaler_probe(struct platform_device *pdev)
+>  		return PTR_ERR(scaler->regs);
+> 
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(dev, "failed to get irq\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+> 
+>  	ret = devm_request_threaded_irq(dev, irq, NULL,	scaler_irq_handler,
+>  					IRQF_ONESHOT, "drm_scaler", scaler);
+> --
+> 2.26.0
+> 
+> 
+> 
