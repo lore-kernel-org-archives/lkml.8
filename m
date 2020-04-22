@@ -2,51 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FBDC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063F5C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC5A2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5292070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550449;
-	bh=3Z5JyLwQNBx9DKwIuJSFdTwrYfhOFuoxKbc227IbNgo=;
+	s=default; t=1587550458;
+	bh=86Oq2sZQUjcvGZ9/UwEo1yNRJHuBONwEDrlcqA+shww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XX+Bu6Z3zdCkAojwTfGnxbiGYvapFxq05I54yIrXZqQLbo/OiSOuyiHef6dJE0rHp
-	 7kA38s3E34Si+hTWZoO0wvEFwJda7F53gy+NubmhIJqSqsrbHPRbIzVDADkyodCgVr
-	 y8GnJcTdaGQZAeraROj1xQGHV1+8kCUw7zQ7OaFc=
+	b=mvJ+zVmwbDIvZMcfQgEWiRJLXAhScbGwqJ4EFtLWtH/tMPULdfJZhzUEeZKYa2Q95
+	 u3Ot0pTV4sV2H696sGFU66QjafPOs7g+nJE/caWY7X7zKV2Z2AZ86HqEgiAt5oUDMv
+	 YZLCRKdWWQTuA/YPAjf/1qMx7yGBJNk/Xgs3ltO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgDVKOI (ORCPT
+        id S1729501AbgDVKOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48284 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729466AbgDVKOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:00 -0400
+        id S1729479AbgDVKOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7A5220775;
-        Wed, 22 Apr 2020 10:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E89820775;
+        Wed, 22 Apr 2020 10:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550440;
-        bh=3Z5JyLwQNBx9DKwIuJSFdTwrYfhOFuoxKbc227IbNgo=;
+        s=default; t=1587550447;
+        bh=86Oq2sZQUjcvGZ9/UwEo1yNRJHuBONwEDrlcqA+shww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cdh8giHBOE/HgIAELwMKhvj3Snr4ueaLWgPdpvpPE2NBbGjURrfgVjIk/fEEUBM9f
-         ETlxQr0ap+tfX59trXLGunIqwpCZzKX+TeQ/juoCpxap0cDISk5xUXux9e3b91Lshm
-         oJ+vr8wjDzGMjXjuzh3f593SZKjfItoIQGNPedm4=
+        b=VUORTRc6b6KffXEAKbgWZ+oxD1g0qO307uwS7f4yDW3FS2Sh4YQZqnd+g7/rgCyPd
+         yeea/Q6a1Yo1VgYpoRSJcYxbHpghIypAdXGiMZg4r7rR2sJfyJJdpnEgvhrrIHCxvO
+         uwVmIPWpCnxDPF8dbuRYNVsVusRHfGmtib2cDjks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 4.19 09/64] irqchip/mbigen: Free msi_desc on device teardown
-Date:   Wed, 22 Apr 2020 11:56:53 +0200
-Message-Id: <20200422095014.189446952@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 21/64] x86/Hyper-V: Unload vmbus channel in hv panic callback
+Date:   Wed, 22 Apr 2020 11:57:05 +0200
+Message-Id: <20200422095016.907037742@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -59,43 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-commit edfc23f6f9fdbd7825d50ac1f380243cde19b679 upstream.
+[ Upstream commit 74347a99e73ae00b8385f1209aaea193c670f901 ]
 
-Using irq_domain_free_irqs_common() on the irqdomain free path will
-leave the MSI descriptor unfreed when platform devices get removed.
-Properly free it by MSI domain free function.
+When kdump is not configured, a Hyper-V VM might still respond to
+network traffic after a kernel panic when kernel parameter panic=0.
+The panic CPU goes into an infinite loop with interrupts enabled,
+and the VMbus driver interrupt handler still works because the
+VMbus connection is unloaded only in the kdump path.  The network
+responses make the other end of the connection think the VM is
+still functional even though it has panic'ed, which could affect any
+failover actions that should be taken.
 
-Fixes: 9650c60ebfec0 ("irqchip/mbigen: Create irq domain for each mbigen device")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200408114352.1604-1-yuzenghui@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by unloading the VMbus connection during the panic process.
+vmbus_initiate_unload() could then be called twice (e.g., by
+hyperv_panic_event() and hv_crash_handler(), so reset the connection
+state in vmbus_initiate_unload() to ensure the unload is done only
+once.
 
+Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Link: https://lore.kernel.org/r/20200406155331.2105-2-Tianyu.Lan@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mbigen.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/hv/channel_mgmt.c |  3 +++
+ drivers/hv/vmbus_drv.c    | 19 +++++++++++++------
+ 2 files changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -231,10 +231,16 @@ static int mbigen_irq_domain_alloc(struc
- 	return 0;
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 16eb9b3f1cb1b..3bf1f9ef8ea25 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -849,6 +849,9 @@ void vmbus_initiate_unload(bool crash)
+ {
+ 	struct vmbus_channel_message_header hdr;
+ 
++	if (xchg(&vmbus_connection.conn_state, DISCONNECTED) == DISCONNECTED)
++		return;
++
+ 	/* Pre-Win2012R2 hosts don't support reconnect */
+ 	if (vmbus_proto_version < VERSION_WIN8_1)
+ 		return;
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 9aa18f387a346..5ff7c1708d0e7 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -63,9 +63,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+ {
+ 	struct pt_regs *regs;
+ 
+-	regs = current_pt_regs();
++	vmbus_initiate_unload(true);
+ 
+-	hyperv_report_panic(regs, val);
++	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
++		regs = current_pt_regs();
++		hyperv_report_panic(regs, val);
++	}
+ 	return NOTIFY_DONE;
  }
  
-+static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs)
-+{
-+	platform_msi_domain_free(domain, virq, nr_irqs);
-+}
-+
- static const struct irq_domain_ops mbigen_domain_ops = {
- 	.translate	= mbigen_domain_translate,
- 	.alloc		= mbigen_irq_domain_alloc,
--	.free		= irq_domain_free_irqs_common,
-+	.free		= mbigen_irq_domain_free,
- };
+@@ -1228,10 +1231,16 @@ static int vmbus_bus_init(void)
+ 		}
  
- static int mbigen_of_create_domain(struct platform_device *pdev,
+ 		register_die_notifier(&hyperv_die_block);
+-		atomic_notifier_chain_register(&panic_notifier_list,
+-					       &hyperv_panic_block);
+ 	}
+ 
++	/*
++	 * Always register the panic notifier because we need to unload
++	 * the VMbus channel connection to prevent any VMbus
++	 * activity after the VM panics.
++	 */
++	atomic_notifier_chain_register(&panic_notifier_list,
++			       &hyperv_panic_block);
++
+ 	vmbus_request_offers();
+ 
+ 	return 0;
+@@ -1875,7 +1884,6 @@ static void hv_kexec_handler(void)
+ {
+ 	hv_synic_clockevents_cleanup();
+ 	vmbus_initiate_unload(false);
+-	vmbus_connection.conn_state = DISCONNECTED;
+ 	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
+ 	mb();
+ 	cpuhp_remove_state(hyperv_cpuhp_online);
+@@ -1890,7 +1898,6 @@ static void hv_crash_handler(struct pt_regs *regs)
+ 	 * doing the cleanup for current CPU only. This should be sufficient
+ 	 * for kdump.
+ 	 */
+-	vmbus_connection.conn_state = DISCONNECTED;
+ 	hv_synic_cleanup(smp_processor_id());
+ 	hyperv_cleanup();
+ };
+-- 
+2.20.1
+
 
 
