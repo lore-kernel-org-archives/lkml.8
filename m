@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879D7C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0700FC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D8F20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAAD20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549677;
-	bh=npYd3lh51a/ehBF6fTGdVyIDmLK+MDuSxQxua5ODT80=;
+	s=default; t=1587549680;
+	bh=LK/mOx3smz2indgefrkrC75g3zPFnVKw80dhxUMSfcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETUqiKzPJ3zod8han2zuJFVAwTjVnvBdEO1BVAKhk+G59x1CndtEqs/6C18eowfkw
-	 phVtxxo2DOr4nvs2Vn3M1JnzMCaqbKLAw7UU7pX9NeMj4wZpVkAb+1LX00hrL+hRJH
-	 72FlVuPaIsXvGOz6OfgoHVk6w/dhMZYYYGrf6O8k=
+	b=HFi/nihIclGI8phZip5kVAIWUszD2XkbTDoQ7kCrDpEIbX7JAYrNTvEIU3YH9/dt/
+	 za7fFtpmvnyXTzsQC9vKMCf6KlExL2Ql6J93Q7j1kMFGTsOq/Jn4Ux5FLMG0hNjZSX
+	 NwWHHb6mCXm9pQWVhxKLWcNk5GaQrbnLkmNa182Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgDVKBQ (ORCPT
+        id S1726798AbgDVKBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgDVKBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:15 -0400
+        id S1726442AbgDVKBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 398A420774;
-        Wed, 22 Apr 2020 10:01:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 984F420781;
+        Wed, 22 Apr 2020 10:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549674;
-        bh=npYd3lh51a/ehBF6fTGdVyIDmLK+MDuSxQxua5ODT80=;
+        s=default; t=1587549677;
+        bh=LK/mOx3smz2indgefrkrC75g3zPFnVKw80dhxUMSfcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IVUBhktRrurSNJrUKhm0Zzc788l4Kf+fMDpiV9BHlLOBEuItb/Zji38vAEOLtl/St
-         4fh/yfpy1f2yNgVhxzycPRxFmgrp84sr1EMcp6iC3GjA8lJDjJN6SxZ1zgancW8Jd3
-         OUqiQ0wqmV3yZuhdF/PqBPbF5368liltIOJNIRw8=
+        b=McqwiM4U4VCOuILjR8T6uaPcTL6tuVfQzjjw639tgBDTSucg41QFL2Ke1tkVMAcsM
+         P3NVwIPyc6fDbpOWiaXCjiq6c4B0TBwjY8ZLI5vPZkPMxVntKrfKBQlKgDEC6lkQc/
+         0bPHVcxGX7O1yXgq92L/QWQPk+tkn+nNgK9fca4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hongwu Su <hongwus@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 058/100] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
-Date:   Wed, 22 Apr 2020 11:56:28 +0200
-Message-Id: <20200422095033.529908903@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 020/100] ALSA: usb-audio: Add mixer workaround for TRX40 and co
+Date:   Wed, 22 Apr 2020 11:55:50 +0200
+Message-Id: <20200422095026.516029950@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -63,43 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit c63d6099a7959ecc919b2549dc6b71f53521f819 upstream.
+commit 2a48218f8e23d47bd3e23cfdfb8aa9066f7dc3e6 upstream.
 
-The async version of ufshcd_hold(async == true), which is only called in
-queuecommand path as for now, is expected to work in atomic context, thus
-it should not sleep or schedule out. When it runs into the condition that
-clocks are ON but link is still in hibern8 state, it should bail out
-without flushing the clock ungate work.
+Some recent boards (supposedly with a new AMD platform) contain the
+USB audio class 2 device that is often tied with HD-audio.  The device
+exposes an Input Gain Pad control (id=19, control=12) but this node
+doesn't behave correctly, returning an error for each inquiry of
+GET_MIN and GET_MAX that should have been mandatory.
 
-Fixes: f2a785ac2312 ("scsi: ufshcd: Fix race between clk scaling and ungate work")
-Link: https://lore.kernel.org/r/1581392451-28743-6-git-send-email-cang@codeaurora.org
-Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+As a workaround, simply ignore this node by adding a usbmix_name_map
+table entry.  The currently known devices are:
+* 0414:a002 - Gigabyte TRX40 Aorus Pro WiFi
+* 0b05:1916 - ASUS ROG Zenith II
+* 0b05:1917 - ASUS ROG Strix
+* 0db0:0d64 - MSI TRX40 Creator
+* 0db0:543d - MSI TRX40
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200408140449.22319-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/usb/mixer_maps.c |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -595,6 +595,11 @@ start:
- 		 */
- 		if (ufshcd_can_hibern8_during_gating(hba) &&
- 		    ufshcd_is_link_hibern8(hba)) {
-+			if (async) {
-+				rc = -EAGAIN;
-+				hba->clk_gating.active_reqs--;
-+				break;
-+			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
- 			flush_work(&hba->clk_gating.ungate_work);
- 			spin_lock_irqsave(hba->host->host_lock, flags);
+--- a/sound/usb/mixer_maps.c
++++ b/sound/usb/mixer_maps.c
+@@ -361,6 +361,14 @@ static const struct usbmix_name_map dell
+ 	{ 0 }
+ };
+ 
++/* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
++ * response for Input Gain Pad (id=19, control=12).  Skip it.
++ */
++static const struct usbmix_name_map asus_rog_map[] = {
++	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
++	{}
++};
++
+ /*
+  * Control map entries
+  */
+@@ -480,6 +488,26 @@ static struct usbmix_ctl_map usbmix_ctl_
+ 		.id = USB_ID(0x05a7, 0x1020),
+ 		.map = bose_companion5_map,
+ 	},
++	{	/* Gigabyte TRX40 Aorus Pro WiFi */
++		.id = USB_ID(0x0414, 0xa002),
++		.map = asus_rog_map,
++	},
++	{	/* ASUS ROG Zenith II */
++		.id = USB_ID(0x0b05, 0x1916),
++		.map = asus_rog_map,
++	},
++	{	/* ASUS ROG Strix */
++		.id = USB_ID(0x0b05, 0x1917),
++		.map = asus_rog_map,
++	},
++	{	/* MSI TRX40 Creator */
++		.id = USB_ID(0x0db0, 0x0d64),
++		.map = asus_rog_map,
++	},
++	{	/* MSI TRX40 */
++		.id = USB_ID(0x0db0, 0x543d),
++		.map = asus_rog_map,
++	},
+ 	{ 0 } /* terminator */
+ };
+ 
 
 
