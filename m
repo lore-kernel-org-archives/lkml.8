@@ -2,162 +2,146 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08812C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE38BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D82FB2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F32Qzgth"
+	by mail.kernel.org (Postfix) with ESMTP id 957D72076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587552453;
+	bh=qwP/aml+68At3JuRWA+ve+n6C4x2vOF43l2/Fj5sHlY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WU538vRFo/c00O44/mJAz7fh8APrs0mFf+K0KJgqkeDU8W/PhocX3w6kAG5NDFZdM
+	 Ebu8PZDJqxeoyOjUbZYl7FomYaigEev3Z5fwHhxruJFfwGKi9X58UeSv2zNAcWz1ss
+	 uEYq/iKF/4UrFP+9yjKIxRuxvrkCi5zYU/rEwYlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731596AbgDVKr0 (ORCPT
+        id S1732012AbgDVKrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729738AbgDVKPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:51 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE03C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:15:51 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id y10so1016289uao.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ent6+GWTAd1CN2cQFL7owIeVj6EL283gNxioSTs4l5o=;
-        b=F32QzgthXD2jgAuQ+ulZ7jjKUc5cEILBetXy1JuSILGE0igdjC2J+lnu2jSNRH5O+P
-         iUF47dndUkLlazROwjFbGHDTMtiDDzdTJikSM1TF/CvtD9WvqW2VEQhu2wAO7wiglWL6
-         MMekwxK9vV8suAiRek8nAFqL0lJwXKAZSg3US0Bj/E8at5iKP/lc/QmsNULdHi2kp33H
-         l7srBJ5x4usVwd4oulnyViwGb5/3CGCvs0VwhB5f6oXkQD2pcAy+Y2XagtstUjUHbi+e
-         4bHO8GzDRl86l2mdjcRT43iujjarSg946/pa9aUENTDs7od6CaGTzGwAuHdVlQUIjgtm
-         v/yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ent6+GWTAd1CN2cQFL7owIeVj6EL283gNxioSTs4l5o=;
-        b=sey+Go+j5bRbein0JCBtuAO9N6/prJFIApMI+wDFvVU0h1PT016wXCyR2ak+KFap7Z
-         E25kbVng6RGb9FlzHNe6O1dQu1vfyR0NSgO+/0fAKblwbhv8LW0ONhXDRa0QLvT9r3pX
-         EVkU+h/yjdimcnTzd2px/CUk7zwmqrQNde4n6A1WGKW91R6ZdJiCitJohrLyNS0SEkxw
-         YgK3xtpjn3UbvVykny8n+fOHjq5XKNxPGXhlhpkn/bTmbSs01xHs1eFMMAz9FyO7XzMM
-         edoXo7VAJpBWOi6Bp1GLw4y3IwiuXHySFrI/3AC6MzzhChQTqwNW9k0/D7PxFCFew2YX
-         4Unw==
-X-Gm-Message-State: AGi0PubAChVQRHYe+IaotIhRUyma6HjV1FYhwrS1cBRdpwCus6GTsg7Y
-        p8KJ5NCEa3BpnVodLFRFxfWyRcRxylo6QyePpkAkVQ==
-X-Google-Smtp-Source: APiQypLkLgLmjx37u5zwjtD+wcJhoFaiBukTOUSNTmPHeMUtYrDFKBnEw8llvD54u+Y56sM/sAqQ1C17tA2NQVE11MY=
-X-Received: by 2002:ab0:2ea:: with SMTP id 97mr15760020uah.129.1587550548143;
- Wed, 22 Apr 2020 03:15:48 -0700 (PDT)
+        Wed, 22 Apr 2020 06:47:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729698AbgDVKPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DD8D20575;
+        Wed, 22 Apr 2020 10:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587550546;
+        bh=qwP/aml+68At3JuRWA+ve+n6C4x2vOF43l2/Fj5sHlY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xcdm4nxiDsZ3nAOw3opN+2wRqvyQBYXwXgtJQXGBXUVK3V9WYR8NrM2QX+G+mtftK
+         L0y2ruE6QYZn4tKTzLeJoVhJDZ1bxFlL0c9TXrnWn9Dqjgrrt1azMluIm2bE9UQv9z
+         BBUMPm9MFKKtDxn+SwNR0pTHcZx0/DY/9Ox0PESU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Jason Dillaman <dillaman@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/64] rbd: avoid a deadlock on header_rwsem when flushing notifies
+Date:   Wed, 22 Apr 2020 11:57:02 +0200
+Message-Id: <20200422095016.290485975@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
+References: <20200422095008.799686511@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200417145017.3932443d@canb.auug.org.au> <995a958c-15a1-cb05-e276-065c7f6e57fd@infradead.org>
- <CAPDyKFqE7zfaKSbpBoBbrSCEnx+70dOrWs+=QG_x2G-Fpt6=ng@mail.gmail.com>
- <ce11a0b5-22a6-dd18-f858-5d30f43e1128@intel.com> <CAK7LNARCT3YQEnVE0NMCphSuqvjLoG2EXdpdcAZuoEOD_mFyEw@mail.gmail.com>
-In-Reply-To: <CAK7LNARCT3YQEnVE0NMCphSuqvjLoG2EXdpdcAZuoEOD_mFyEw@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 22 Apr 2020 12:15:12 +0200
-Message-ID: <CAPDyKFqCnUzHQ9+FKH-w_VLRNQ_UvK4nmxw+hROwXkxucjzrUw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Apr 17 (mmc/host/sdhci-of-at91.c)
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@atmel.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Apr 2020 at 14:28, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Mon, Apr 20, 2020 at 7:28 PM Adrian Hunter <adrian.hunter@intel.com> w=
-rote:
-> >
-> > On 20/04/20 12:12 pm, Ulf Hansson wrote:
-> > > + Masahiro Yamada, Adrian Hunter
-> > >
-> > > On Fri, 17 Apr 2020 at 16:48, Randy Dunlap <rdunlap@infradead.org> wr=
-ote:
-> > >>
-> > >> On 4/16/20 9:50 PM, Stephen Rothwell wrote:
-> > >>> Hi all,
-> > >>>
-> > >>> Changes since 20200416:
-> > >>>
-> > >>
-> > >> on i386:
-> > >>
-> > >>   CC      drivers/mmc/host/sdhci-of-at91.o
-> > >> In file included from ../include/linux/build_bug.h:5:0,
-> > >>                  from ../include/linux/bitfield.h:10,
-> > >>                  from ../drivers/mmc/host/sdhci-of-at91.c:9:
-> > >> ../drivers/mmc/host/sdhci-of-at91.c: In function =E2=80=98sdhci_at91=
-_set_clks_presets=E2=80=99:
-> > >> ../include/linux/compiler.h:394:38: error: call to =E2=80=98__compil=
-etime_assert_63=E2=80=99 declared with attribute error: FIELD_PREP: value t=
-oo large for the field
-> > >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-> > >>                                       ^
-> > >> ../include/linux/compiler.h:375:4: note: in definition of macro =E2=
-=80=98__compiletime_assert=E2=80=99
-> > >>     prefix ## suffix();    \
-> > >>     ^~~~~~
-> > >> ../include/linux/compiler.h:394:2: note: in expansion of macro =E2=
-=80=98_compiletime_assert=E2=80=99
-> > >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-> > >>   ^~~~~~~~~~~~~~~~~~~
-> > >> ../include/linux/build_bug.h:39:37: note: in expansion of macro =E2=
-=80=98compiletime_assert=E2=80=99
-> > >>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg=
-)
-> > >>                                      ^~~~~~~~~~~~~~~~~~
-> > >> ../include/linux/bitfield.h:49:3: note: in expansion of macro =E2=80=
-=98BUILD_BUG_ON_MSG=E2=80=99
-> > >>    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
-> > >>    ^~~~~~~~~~~~~~~~
-> > >> ../include/linux/bitfield.h:94:3: note: in expansion of macro =E2=80=
-=98__BF_FIELD_CHECK=E2=80=99
-> > >>    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-> > >>    ^~~~~~~~~~~~~~~~
-> > >> ../drivers/mmc/host/sdhci-of-at91.c:185:11: note: in expansion of ma=
-cro =E2=80=98FIELD_PREP=E2=80=99
-> > >>   caps1 |=3D FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
-> >
-> > My guess is the compiler has decided clk_mul is constant (probably (uns=
-igned
-> > int)-1) because there is no CONFIG_COMMON_CLK i.e. clk_get_rate() is 0
-> >
-> > So maybe add to config MMC_SDHCI_OF_AT91
-> >
-> >         depends on COMMON_CLK
-> >
-> > >>            ^~~~~~~~~~
->
->
->
-> I checked include/linux/clk.h
->
->
-> clk_get_rate() is guarded by CONFIG_HAVE_CLK.
->
-> I think
->
->     depends on HAVE_CLK
+From: Ilya Dryomov <idryomov@gmail.com>
 
-Do you have the possibility of sending a patch, asap. Otherwise I can
-help to do it!?
+[ Upstream commit 0e4e1de5b63fa423b13593337a27fd2d2b0bcf77 ]
 
-Kind regards
-Uffe
+rbd_unregister_watch() flushes notifies and therefore cannot be called
+under header_rwsem because a header update notify takes header_rwsem to
+synchronize with "rbd map".  If mapping an image fails after the watch
+is established and a header update notify sneaks in, we deadlock when
+erroring out from rbd_dev_image_probe().
+
+Move watch registration and unregistration out of the critical section.
+The only reason they were put there was to make header_rwsem management
+slightly more obvious.
+
+Fixes: 811c66887746 ("rbd: fix rbd map vs notify races")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jason Dillaman <dillaman@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/rbd.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index d3ad1b8c133e6..8e2df524494cb 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -3427,6 +3427,10 @@ static void cancel_tasks_sync(struct rbd_device *rbd_dev)
+ 	cancel_work_sync(&rbd_dev->unlock_work);
+ }
+ 
++/*
++ * header_rwsem must not be held to avoid a deadlock with
++ * rbd_dev_refresh() when flushing notifies.
++ */
+ static void rbd_unregister_watch(struct rbd_device *rbd_dev)
+ {
+ 	WARN_ON(waitqueue_active(&rbd_dev->lock_waitq));
+@@ -5732,6 +5736,9 @@ static void rbd_dev_image_release(struct rbd_device *rbd_dev)
+  * device.  If this image is the one being mapped (i.e., not a
+  * parent), initiate a watch on its header object before using that
+  * object to get detailed information about the rbd image.
++ *
++ * On success, returns with header_rwsem held for write if called
++ * with @depth == 0.
+  */
+ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
+ {
+@@ -5764,6 +5771,9 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
+ 		}
+ 	}
+ 
++	if (!depth)
++		down_write(&rbd_dev->header_rwsem);
++
+ 	ret = rbd_dev_header_info(rbd_dev);
+ 	if (ret)
+ 		goto err_out_watch;
+@@ -5814,6 +5824,8 @@ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
+ err_out_probe:
+ 	rbd_dev_unprobe(rbd_dev);
+ err_out_watch:
++	if (!depth)
++		up_write(&rbd_dev->header_rwsem);
+ 	if (!depth)
+ 		rbd_unregister_watch(rbd_dev);
+ err_out_format:
+@@ -5872,12 +5884,9 @@ static ssize_t do_rbd_add(struct bus_type *bus,
+ 		goto err_out_rbd_dev;
+ 	}
+ 
+-	down_write(&rbd_dev->header_rwsem);
+ 	rc = rbd_dev_image_probe(rbd_dev, 0);
+-	if (rc < 0) {
+-		up_write(&rbd_dev->header_rwsem);
++	if (rc < 0)
+ 		goto err_out_rbd_dev;
+-	}
+ 
+ 	/* If we are mapping a snapshot it must be marked read-only */
+ 	if (rbd_dev->spec->snap_id != CEPH_NOSNAP)
+-- 
+2.20.1
+
+
+
