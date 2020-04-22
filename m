@@ -2,131 +2,85 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63ABC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCF9C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C40A42082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587565287;
-	bh=TH4MbBTcD9eF7C0JZERo6wOrNIuBToWUQATt+xzUiJU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=evXZ6hKCKHMORhQkEraRC6rx6zNewiCMv0KhSL/CSfT05rhOl5zvggPsQGG87N2pO
-	 uDUe8q3lDWXQoDL4O2RDzopFSZdtuGDMMrkvxi1Si0bESUFVpEIX/Nqgnn/32GjUMR
-	 51QROrZyQ5JYPvHv9WZYHDzU/ZK5emvBUaNh1gJs=
+	by mail.kernel.org (Postfix) with ESMTP id 76B8B2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgDVOV1 convert rfc822-to-8bit (ORCPT
+        id S1727881AbgDVOWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:21:27 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:43250 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgDVOV0 (ORCPT
+        Wed, 22 Apr 2020 10:22:12 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:54955 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725648AbgDVOWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:21:26 -0400
-Received: by mail-oo1-f65.google.com with SMTP id d21so542414ook.10;
-        Wed, 22 Apr 2020 07:21:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zNjUnY94w0UWiXsubeBPALgzfBzt9q3zu5ENZfCjrts=;
-        b=kzMfRMWsG3VKy4zOrZ6AWWh9+VxDQgk3o7R3I3vJGxDuR2m3Ff55DR+qVGM/41INfc
-         SRqtTmc/SPtU898lTlfO6FVqElolwC0KBBORYM7S4V1cbGfEetXQV0rYvx6HEz8IcKAx
-         fnkceX6RjxM0RspmXFvC3Egn2exCU724l4mg5jW+dlVkaVBPkYSC0VQYUhQz9WjTQqgl
-         XCAFoVVwM7KGJ0MPdWtjWxisiIIxDM/j1HOh6pVxbdTWoUvcif6IyLX16jW9MUuK6N7a
-         51QK97T76ALtCwTqpex/TY4Xqy27+JlGFt/r1/muguVL9i5zzJAaqeqneCrgcPUCDniV
-         NiNw==
-X-Gm-Message-State: AGi0Pubq9OqcnWDWAWXiKuf0eaZhRasusOLnyNrvOdH+d8HrByKr4f3z
-        7YsAtydc9QV1gfSMCYBR050QY83CWVH4e4hsggN/cg==
-X-Google-Smtp-Source: APiQypLzDbS17kDo7l7U/QyP+cqX3xyR5zgbb/QPEQAJ3Y5SfI4zsMPbwN/toLIfmHzKulF8hMgy2GynWRg/ze+Lcak=
-X-Received: by 2002:a4a:a286:: with SMTP id h6mr15515496ool.38.1587565284215;
- Wed, 22 Apr 2020 07:21:24 -0700 (PDT)
+        Wed, 22 Apr 2020 10:22:11 -0400
+X-Greylist: delayed 544 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 10:22:10 EDT
+Received: from pro2.mail.ovh.net (unknown [10.108.16.54])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 1039B4F477F5;
+        Wed, 22 Apr 2020 16:13:09 +0200 (CEST)
+Received: from arch.lan (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 22 Apr
+ 2020 16:13:08 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     <linux-iio@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <jic23@kernel.org>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH 6/6] MAINTAINERS: add myself as a SCD30 driver maintainer
+Date:   Wed, 22 Apr 2020 16:11:35 +0200
+Message-ID: <20200422141135.86419-7-tomasz.duszynski@octakon.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
-References: <20200422051529.30757-1-zhang.lyra@gmail.com> <CAJZ5v0ikL3avFomZVqtBhfEjeauN-5ZUm9kZwzG=Vo+Ks0AiyA@mail.gmail.com>
- <CAAfSe-sVEEPOrq_ZzB1z59uXTfhmNh=+U_QvgaTcd4U1=9Tfvg@mail.gmail.com>
-In-Reply-To: <CAAfSe-sVEEPOrq_ZzB1z59uXTfhmNh=+U_QvgaTcd4U1=9Tfvg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 22 Apr 2020 16:21:12 +0200
-Message-ID: <CAJZ5v0jxnSUDqVpaHo6ECQdr6bpe2WHEhV+uDL_=BAJQC9fA9w@mail.gmail.com>
-Subject: Re: [PATCH] PM: sleep: call devfreq_suspend/resume and
- cpufreq_suspend/resume in pairs.
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Vincent Wang <vincent.wang@unisoc.com>,
-        Samer Xie <samer.xie@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [89.70.31.203]
+X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 5833568894880275479
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeejgdeikecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffojghfggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 1:19 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> Hi Rafael,
->
-> (Behalf Of Vincent Wang)
->
-> Thanks for your comments, please see my answers below.
->
-> On Wed, 22 Apr 2020 at 17:05, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Wed, Apr 22, 2020 at 7:15 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > >
-> > > From: Vincent Wang <vincent.wang@unisoc.com>
-> > >
-> > > If dpm_prepare() fails in dpm_suspend_start(), dpm_suspend() can't be
-> > > called.
-> >
-> > That's correct.
-> >
-> > > And then, devfreq_suspend() and cpufreq_suspend() will not be
-> > > called in the suspend flow.
-> >
-> > Right.
-> >
-> > > But in the resiume flow, devfreq_resume() and cpufreq_resume() will
-> > > be called.
-> >
-> > Right, and they are expected to cope with the situation.
-> >
-> > > This patch will ensure that devfreq_suspend/devfreq_resume and
-> > > cpufreq_suspend/cpufreq_resume are called in pairs.
-> >
-> > So why is it better to do this than to make devfreq_resume() meet the
-> > expectations?
->
-> Yes，we found an issue with cpufreq schedutil governor on kernel4.14,
-> and I think the issue should haven't been changed on the latest
-> version of kernel.
->
-> In the function dpm_suspend_start(), dpm_suspend() would not be
-> exceuted if return error from device_prepare() [1]. So
-> cpufreq_cpufreq() will not be called,
+Add myself as a SCD30 driver maintainer.
 
-I guess you mean cpufreq_suspend().
+Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-That should be OK .
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c900a82f7434..e11c5594199d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15001,6 +15001,15 @@ S:	Maintained
+ F:	drivers/misc/phantom.c
+ F:	include/uapi/linux/phantom.h
+ 
++SENSIRION SCD30 CARBON DIOXIDE SENSOR DRIVER
++M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
++S:	Maintained
++F:	drivers/iio/chemical/scd30.h
++F:	drivers/iio/chemical/scd30_core.c
++F:	drivers/iio/chemical/scd30_i2c.c
++F:	drivers/iio/chemical/scd30_serial.c
++F:	Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
++
+ SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
+ M:	Tomasz Duszynski <tduszyns@gmail.com>
+ S:	Maintained
+-- 
+2.26.1
 
-> then cpufreq_remove_update_util_hook() will not be called either, and so
-> cpufreq_update_util_data will not be NULL.
->
-> In the dpm resume flow, sugov_start() will be called, in which
-> sg_cpu.update_util will be set to 0.
-
-Which code patch does this?
-
-Surely not cpufreq_resume(), because that checks cpufreq_suspended which
-cannot be set if cpufreq_suspend() has not been called (because it is the only
-place setting cpufreq_suspended).
