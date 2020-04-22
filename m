@@ -2,123 +2,94 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CD9C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD7AC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF0020784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC61A20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UMHVE5JL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="si7drRH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgDVLga (ORCPT
+        id S1726957AbgDVLhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:36:30 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54522 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgDVLga (ORCPT
+        Wed, 22 Apr 2020 07:37:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726261AbgDVLha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:36:30 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBWSUR048449;
-        Wed, 22 Apr 2020 11:36:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=p0RVzc+WnEu1YNWU0XnqAO1VOpep+QDM8/eMCEip/YY=;
- b=UMHVE5JLM8wd8wB6q2qC7PH8gxSMk6W2lZhEbNs7WPB1uO9uQU3icY/ygTpE9xIhha1b
- JknhmQVEq8oUNKcQOT/RJTNcuA9q00cBNHrgWFKT6/isP69YrL0vWJSypJq8GMLxb7lu
- BR/UPAbNmR1K98fI49S4M6SHbC63DVsjorEEHAj6+ak3a86ospOh1aGZUDfFD3VWOqKX
- sGDFIfhUBh3hKIX9pqIV5QRcJ61RCKVRbSN/dU3bd4bvV+ZnB7JGiAmDE+OD9U9mm73J
- 8N8UcBbIslKq+S59a9JjJo0U6bpTFMBnw7nlhw+FFJI1b15upfhbFVRryptUVAFONjaZ Uw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30fsgm28e9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 11:36:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBVf4r068288;
-        Wed, 22 Apr 2020 11:36:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 30gb3tsdmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 11:36:17 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03MBaA9L013317;
-        Wed, 22 Apr 2020 11:36:10 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 Apr 2020 04:36:09 -0700
-Date:   Wed, 22 Apr 2020 14:35:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>,
-        kbuild-all@lists.01.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Dan Carpenter <error27@gmail.com>
-Subject: Re: [PATCH v3 6/7] misc: bcm-vk: add Broadcom VK driver
-Message-ID: <20200422113558.GJ2659@kadam>
-References: <20200420162809.17529-7-scott.branden@broadcom.com>
- <202004221945.LY6x0DQD%lkp@intel.com>
+        Wed, 22 Apr 2020 07:37:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498B9C03C1A8;
+        Wed, 22 Apr 2020 04:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=js1Zyy8BIVwm7dXq/z2cFwiQcL5H3VEJb75X+ObOHy0=; b=si7drRH+3Qj4mrA77klXk9QyQL
+        7bxV6TMaNDF91zyCSY45V7w9RPD2n1UAvKhYQu1lpZMA0Mcotn+AOAHjgvkEsxDiw+c9H3xRbYsVZ
+        yAA9fjjvm3HYEI9JumzLK02x7EsqinSd8nT2EfRDC+2BK+uokrXb11aP67/hX8c10W/siQtBM/B0U
+        fGtR+GVh5HL+SqL0ShYHAx+Ug9RcvM3cf7r8f4kFwwTjajY/W2TkSCSJO/LWPAEPFFIc2ub6XPn2P
+        qs+dOv2EUBRiRL60MNgV4JtMgxw+TJYAVWdpL8JkrlbIl3Ni0pDCE9v7oTCEaD4SSI5I7AbUJo1Qf
+        j0bp07ww==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRDgy-0002eM-2Z; Wed, 22 Apr 2020 11:37:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C708C30477A;
+        Wed, 22 Apr 2020 13:37:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9933C20280194; Wed, 22 Apr 2020 13:37:21 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 13:37:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
+Message-ID: <20200422113721.GA20730@hirez.programming.kicks-ass.net>
+References: <20200421151537.19241-1-will@kernel.org>
+ <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
+ <20200422081838.GA29541@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202004221945.LY6x0DQD%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220092
+In-Reply-To: <20200422081838.GA29541@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 07:17:34PM +0800, kbuild test robot wrote:
-> Hi Scott,
+On Wed, Apr 22, 2020 at 09:18:39AM +0100, Will Deacon wrote:
+> On Tue, Apr 21, 2020 at 11:42:56AM -0700, Linus Torvalds wrote:
+> > On Tue, Apr 21, 2020 at 8:15 AM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > It's me again. This is version four of the READ_ONCE() codegen improvement
+> > > patches [...]
+> > 
+> > Let's just plan on biting the bullet and do this for 5.8. I'm assuming
+> > that I'll juet get a pull request from you?
 > 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on driver-core/driver-core-testing]
-> [also build test WARNING on next-20200421]
-> [cannot apply to char-misc/char-misc-testing kselftest/next linus/master v5.7-rc2]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Scott-Branden/firmware-add-partial-read-support-in-request_firmware_into_buf/20200422-114528
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git 55623260bb33e2ab849af76edf2253bc04cb241f
-> reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.1-191-gc51a0382-dirty
->         make ARCH=x86_64 allmodconfig
->         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-                                           ^^^^^^^^^^^^^^^^^^^
+> Sure thing, thanks. I'll get it into -next along with the arm64 bits for
+> 5.8, but I'll send it as a separate pull when the time comes. I'll also
+> include the sparc32 changes because otherwise the build falls apart and
+> we'll get an army of angry robots yelling at us (they seem to form the
+> majority of the active sparc32 user base afaict).
 
-Sorry, you asked me about this earlier.  You will need to add
--D__CHECK_ENDIAN__ to enable these Sparse warnings.
-
-regards,
-dan carpenter
-
+So I'm obviously all for these patches; do note however that it collides
+most mighty with the KCSAN stuff, which I believe is still pending.
