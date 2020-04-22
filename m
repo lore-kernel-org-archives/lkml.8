@@ -2,89 +2,369 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD47C5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF993C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4053F2098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DyxCrGC9"
+	by mail.kernel.org (Postfix) with ESMTP id 9ED702082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgDVOT3 (ORCPT
+        id S1727796AbgDVOUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:19:29 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:64450 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgDVOT2 (ORCPT
+        Wed, 22 Apr 2020 10:20:07 -0400
+Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:57629 "EHLO
+        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726643AbgDVOUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:19:28 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 03MEIq6s003059;
-        Wed, 22 Apr 2020 23:18:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 03MEIq6s003059
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587565133;
-        bh=05L0Y4K5hdMLe5DqDt78XEkJuAdMbS03xklsS80D7Zk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DyxCrGC9vbJk3WAzDPNWRUm5TW/6TBn/XNszLdLUySG+DlkgrEeyd2p25GpG475X5
-         Ns8AYwSr9Xo5JC94ZC/m/GNu5zne4CZl2onlRtCFyr2RiFN6hr3/hOvDgOztOxDhtt
-         03UobRstNyV6gNpiLIPx9wr7lV+aZh7JPApv/Xc9AQ/tfKV/7v7a1s50P/Gdrb9r6M
-         UrrfceNsdtesIk6C+5GBx2v6z7fJNM7gqa+k/04+yur6u7y9loB0DiGVw/48Zx6n5H
-         WNAxrcJiCrDKXSRC4cJflY3CsJ6DGDRvl4rJHHmUoSUnC05jryRdbh+v2CCHG+i1XW
-         q3voLqhQl5BHw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: at24: add microchip,24lc[0-9]+ to the compatible pattern
-Date:   Wed, 22 Apr 2020 23:18:36 +0900
-Message-Id: <20200422141836.1964676-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 22 Apr 2020 10:20:05 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.156.173])
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 4A8E05A6DE6D;
+        Wed, 22 Apr 2020 16:13:07 +0200 (CEST)
+Received: from arch.lan (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 22 Apr
+ 2020 16:13:06 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     <linux-iio@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <jic23@kernel.org>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH 3/6] iio: chemical: scd30: add serial interface driver
+Date:   Wed, 22 Apr 2020 16:11:32 +0200
+Message-ID: <20200422141135.86419-4-tomasz.duszynski@octakon.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [89.70.31.203]
+X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 5833005946154015767
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeejgdeikecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffojghfggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch/arm/boot/dts/uniphier-ref-daughter.dtsi has
+Add serial interface driver for the SCD30 sensor.
 
-  compatible = "microchip,24lc128", "atmel,24c128";
-
-and 'make ARCH=arm dtbs_check' warns this:
-
-  eeprom@50: compatible: ['microchip,24lc128', 'atmel,24c128'] is not valid under any of the given schemas (Possible causes of the failure)
-
-Microchip 24LC128 is the device used on this board, and I see it in
-https://www.microchip.com/wwwproducts/en/24LC128
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 ---
+ drivers/iio/chemical/Kconfig        |  11 ++
+ drivers/iio/chemical/Makefile       |   1 +
+ drivers/iio/chemical/scd30_serial.c | 262 ++++++++++++++++++++++++++++
+ 3 files changed, 274 insertions(+)
+ create mode 100644 drivers/iio/chemical/scd30_serial.c
 
- Documentation/devicetree/bindings/eeprom/at24.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-index a15787e504f0..2cd7a04cab7c 100644
---- a/Documentation/devicetree/bindings/eeprom/at24.yaml
-+++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-@@ -34,7 +34,7 @@ properties:
-           - minItems: 1
-             maxItems: 2
-             items:
--              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),(24(c|cs|mac)[0-9]+|spd)$"
-+              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),(24(c|cs|lc|mac)[0-9]+|spd)$"
-               - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
-           - oneOf:
-               - items:
+diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+index 0c99f37b6bb0..1b7a58d320e7 100644
+--- a/drivers/iio/chemical/Kconfig
++++ b/drivers/iio/chemical/Kconfig
+@@ -96,6 +96,17 @@ config SCD30_I2C
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called scd30_i2c.
+ 
++config SCD30_SERIAL
++	tristate "SCD30 carbon dioxide sensor serial driver"
++	depends on SCD30_CORE && SERIAL_DEV_BUS
++	select CRC16
++	help
++	  Say Y here to build support for the Sensirion SCD30 serial interface
++	  driver.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called scd30_serial.
++
+ config SENSIRION_SGP30
+ 	tristate "Sensirion SGPxx gas sensors"
+ 	depends on I2C
+diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+index f60c8ef358c3..1fac1b14f825 100644
+--- a/drivers/iio/chemical/Makefile
++++ b/drivers/iio/chemical/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
+ obj-$(CONFIG_PMS7003) += pms7003.o
+ obj-$(CONFIG_SCD30_CORE) += scd30_core.o
+ obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
++obj-$(CONFIG_SCD30_SERIAL) += scd30_serial.o
+ obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
+ obj-$(CONFIG_SPS30) += sps30.o
+ obj-$(CONFIG_VZ89X)		+= vz89x.o
+diff --git a/drivers/iio/chemical/scd30_serial.c b/drivers/iio/chemical/scd30_serial.c
+new file mode 100644
+index 000000000000..93b98d5f2cc4
+--- /dev/null
++++ b/drivers/iio/chemical/scd30_serial.c
+@@ -0,0 +1,262 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Sensirion SCD30 carbon dioxide sensor serial driver
++ *
++ * Copyright (c) Tomasz Duszynski <tomasz.duszynski@octakon.com>
++ */
++#include <asm/unaligned.h>
++#include <linux/crc16.h>
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/iio/iio.h>
++#include <linux/jiffies.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/serdev.h>
++#include <linux/string.h>
++#include <linux/types.h>
++
++#include "scd30.h"
++
++#define SCD30_SERDEV_ADDR 0x61
++#define SCD30_SERDEV_WRITE 0x06
++#define SCD30_SERDEV_READ 0x03
++#define SCD30_SERDEV_MAX_BUF_SIZE 17
++#define SCD30_SERDEV_RX_HEADER_SIZE 3
++#define SCD30_SERDEV_CRC_SIZE 2
++#define SCD30_SERDEV_TIMEOUT msecs_to_jiffies(500)
++
++struct scd30_serdev_priv {
++	struct completion meas_ready;
++	char *buf;
++	int num_expected;
++	int num;
++};
++
++static u16 scd30_serdev_cmd_lookup_tbl[] = {
++	[CMD_START_MEAS] = 0x0036,
++	[CMD_STOP_MEAS] = 0x0037,
++	[CMD_MEAS_INTERVAL] = 0x0025,
++	[CMD_MEAS_READY] = 0x0027,
++	[CMD_READ_MEAS] = 0x0028,
++	[CMD_ASC] = 0x003a,
++	[CMD_FRC] = 0x0039,
++	[CMD_TEMP_OFFSET] = 0x003b,
++	[CMD_FW_VERSION] = 0x0020,
++	[CMD_RESET] = 0x0034,
++};
++
++static u16 scd30_serdev_calc_crc(const char *buf, int size)
++{
++	return crc16(0xffff, buf, size);
++}
++
++static int scd30_serdev_xfer(struct scd30_state *state, char *txbuf, int txsize,
++			     char *rxbuf, int rxsize)
++{
++	struct serdev_device *serdev = to_serdev_device(state->dev);
++	struct scd30_serdev_priv *priv = state->priv;
++	int ret;
++
++	priv->buf = rxbuf;
++	priv->num_expected = rxsize;
++	priv->num = 0;
++
++	ret = serdev_device_write(serdev, txbuf, txsize, SCD30_SERDEV_TIMEOUT);
++	if (ret < txsize)
++		return ret < 0 ? ret : -EIO;
++
++	ret = wait_for_completion_interruptible_timeout(&priv->meas_ready,
++							SCD30_SERDEV_TIMEOUT);
++	if (ret > 0)
++		ret = 0;
++	else if (!ret)
++		ret = -ETIMEDOUT;
++
++	return ret;
++}
++
++static int scd30_serdev_command(struct scd30_state *state, enum scd30_cmd cmd,
++				u16 arg, char *rsp, int size)
++{
++	/*
++	 * Communication over serial line is based on modbus protocol (or rather
++	 * its variation called modbus over serial to be precise). Upon
++	 * receiving a request device should reply with response.
++	 *
++	 * Frame below represents a request message. Each field takes
++	 * exactly one byte.
++	 *
++	 * +------+------+-----+-----+-------+-------+-----+-----+
++	 * | dev  | op   | reg | reg | byte1 | byte0 | crc | crc |
++	 * | addr | code | msb | lsb |       |       | lsb | msb |
++	 * +------+------+-----+-----+-------+-------+-----+-----+
++	 *
++	 * The message device replies with depends on the 'op code' field from
++	 * the request. In case it was set to SCD30_SERDEV_WRITE sensor should
++	 * reply with unchanged request. Otherwise 'op code' was set to
++	 * SCD30_SERDEV_READ and response looks like the one below. As with
++	 * request, each field takes one byte.
++	 *
++	 * +------+------+--------+-------+-----+-------+-----+-----+
++	 * | dev  | op   | num of | byte0 | ... | byteN | crc | crc |
++	 * | addr | code | bytes  |       |     |       | lsb | msb |
++	 * +------+------+--------+-------+-----+-------+-----+-----+
++	 */
++	char rxbuf[SCD30_SERDEV_MAX_BUF_SIZE];
++	char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR };
++	int ret, rxsize, txsize = 2;
++	u16 crc;
++
++	put_unaligned_be16(scd30_serdev_cmd_lookup_tbl[cmd], txbuf + txsize);
++	txsize += 2;
++
++	if (rsp) {
++		txbuf[1] = SCD30_SERDEV_READ;
++		if (cmd == CMD_READ_MEAS)
++			/* number of u16 words to read */
++			put_unaligned_be16(size / 2, txbuf + txsize);
++		else
++			put_unaligned_be16(0x0001, txbuf + txsize);
++		txsize += 2;
++		crc = scd30_serdev_calc_crc(txbuf, txsize);
++		put_unaligned_le16(crc, txbuf + txsize);
++		txsize += 2;
++		rxsize = SCD30_SERDEV_RX_HEADER_SIZE + size +
++			 SCD30_SERDEV_CRC_SIZE;
++	} else {
++		if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
++			arg = 0x0001;
++
++		txbuf[1] = SCD30_SERDEV_WRITE;
++		put_unaligned_be16(arg, txbuf + txsize);
++		txsize += 2;
++		crc = scd30_serdev_calc_crc(txbuf, txsize);
++		put_unaligned_le16(crc, txbuf + txsize);
++		txsize += 2;
++		rxsize = txsize;
++	}
++
++	ret = scd30_serdev_xfer(state, txbuf, txsize, rxbuf, rxsize);
++	if (ret)
++		return ret;
++
++	switch (txbuf[1]) {
++	case SCD30_SERDEV_WRITE:
++		if (memcmp(txbuf, txbuf, txsize)) {
++			dev_err(state->dev, "wrong message received\n");
++			return -EIO;
++		}
++		break;
++	case SCD30_SERDEV_READ:
++		if (rxbuf[2] != (rxsize -
++				 SCD30_SERDEV_RX_HEADER_SIZE -
++				 SCD30_SERDEV_CRC_SIZE)) {
++			dev_err(state->dev,
++				"received data size does not match header\n");
++			return -EIO;
++		}
++
++		rxsize -= SCD30_SERDEV_CRC_SIZE;
++		crc = get_unaligned_le16(rxbuf + rxsize);
++		if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
++			dev_err(state->dev, "data integrity check failed\n");
++			return -EIO;
++		}
++
++		rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
++		memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
++		break;
++	default:
++		dev_err(state->dev, "received unknown op code\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int scd30_serdev_receive_buf(struct serdev_device *serdev,
++				    const unsigned char *buf, size_t size)
++{
++	struct iio_dev *indio_dev = dev_get_drvdata(&serdev->dev);
++	struct scd30_state *state = iio_priv(indio_dev);
++	struct scd30_serdev_priv *priv = state->priv;
++	int num;
++
++	/* just in case sensor puts some unexpected bytes on the bus */
++	if (!priv->buf)
++		return 0;
++
++	if (priv->num + size >= priv->num_expected)
++		num = priv->num_expected - priv->num;
++	else
++		num = size;
++
++	memcpy(priv->buf + priv->num, buf, num);
++	priv->num += num;
++
++	if (priv->num == priv->num_expected) {
++		priv->buf = NULL;
++		complete(&priv->meas_ready);
++	}
++
++	return num;
++}
++
++static const struct serdev_device_ops scd30_serdev_ops = {
++	.receive_buf = scd30_serdev_receive_buf,
++	.write_wakeup = serdev_device_write_wakeup,
++};
++
++static int scd30_serdev_probe(struct serdev_device *serdev)
++{
++	struct device *dev = &serdev->dev;
++	struct scd30_serdev_priv *priv;
++	int irq, ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	init_completion(&priv->meas_ready);
++	serdev_device_set_client_ops(serdev, &scd30_serdev_ops);
++
++	ret = devm_serdev_device_open(dev, serdev);
++	if (ret)
++		return ret;
++
++	serdev_device_set_baudrate(serdev, 19200);
++	serdev_device_set_flow_control(serdev, false);
++
++	ret = serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
++	if (ret)
++		return ret;
++
++	irq = of_irq_get(dev->of_node, 0);
++	if (irq <= 0)
++		irq = 0;
++
++	return scd30_probe(dev, irq, KBUILD_MODNAME, priv,
++			   scd30_serdev_command);
++}
++
++static const struct of_device_id scd30_serdev_of_match[] = {
++	{ .compatible = "sensirion,scd30" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, scd30_serdev_of_match);
++
++static struct serdev_device_driver scd30_serdev_driver = {
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.of_match_table = scd30_serdev_of_match,
++		.pm = &scd30_pm_ops,
++	},
++	.probe = scd30_serdev_probe,
++};
++module_serdev_device_driver(scd30_serdev_driver);
++
++MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
++MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor serial driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.25.1
+2.26.1
 
