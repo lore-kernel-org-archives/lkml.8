@@ -2,69 +2,86 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006F7C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B853EC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF98F20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4A92087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587559863;
-	bh=R8mR6GpMuum7Mx4R5xu3L8qN6++1a41Ocyl6ssZGeR8=;
+	s=default; t=1587559911;
+	bh=SQkryVGgqoUzY3aJvT8Gf/kltSUg9byJ5NlefWiVwG8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R5MSaup2u9Fkk7KHF7ZwBsL7/A4bE4As/JXiCtK5ZeaIbt8B9Ikoz/KTAHupxdgYt
-	 Luc2UXw2difsMKOOlMZpLMkmuYa6/KNTDIInKBAq7/7GRt0X77c0n5+U5B6x0jpfsx
-	 och3/jxg9HsJTb8rv9XwW+ghseolYuxVq2NkQcy4=
+	b=h6QrRU17d4y9iQ7B1exOfqd3Uhs7fsYVQCaoM0LBP7mAcInofzwIx5PaFFUAgVCsX
+	 441ZAUzmZHfDuJ5dul4YLD+2KJUJVGLOsT4YgrhEWg3s3vOyNo6JSWpu9jo3juCnBr
+	 GY34T00UgaI05d76tEL1BIQkwPc8OHCTtEoel1tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgDVMvD (ORCPT
+        id S1726805AbgDVMvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 08:51:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbgDVMvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:51:01 -0400
-Received: from localhost (unknown [49.207.59.230])
+        id S1726002AbgDVMvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:51:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A01420787;
-        Wed, 22 Apr 2020 12:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87E9320857;
+        Wed, 22 Apr 2020 12:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587559861;
-        bh=R8mR6GpMuum7Mx4R5xu3L8qN6++1a41Ocyl6ssZGeR8=;
+        s=default; t=1587559910;
+        bh=SQkryVGgqoUzY3aJvT8Gf/kltSUg9byJ5NlefWiVwG8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O2YmO+Z57EikXuZrboqa2mTiCQVBTzI+TJCaZZemDw7141Sf/+MqTSUayZFgVIQ32
-         8lXD64tcleJTi3s24zlJir79vcLq2ror9bjn0VUiy+w1QD/vaMyRnJJ94eVjIYbWuB
-         c2eDi3MQ9HjyQAz4yNiQNJAjA4ekNGaspvFxm/AM=
-Date:   Wed, 22 Apr 2020 18:20:54 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: db820c: fix audio configuration
-Message-ID: <20200422125054.GQ72691@vkoul-mobl>
-References: <20200422101922.8894-1-srinivas.kandagatla@linaro.org>
+        b=QNKC+XKcszxrVfeKtalGm+ZbpxJ2JzzPkYK86b1m0xgOpypbG7OUXih/YGp1MOHDD
+         nLxoz1dKTQ9kEBGqoRj1++8cr6ub/J6Uzc8Y7NtfndEoSTPXaoN076qHyoKGY8Wv/b
+         PakdJLJ4IZAY0JIvab9iJ1+oIsMBCc6TVNLNMHzk=
+Date:   Wed, 22 Apr 2020 14:51:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chris Paterson <Chris.Paterson2@renesas.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 00/64] 4.19.118-rc1 review
+Message-ID: <20200422125147.GA3153333@kroah.com>
+References: <20200422095008.799686511@linuxfoundation.org>
+ <TYAPR01MB22852052125D7E1B036BE8AAB7D20@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422101922.8894-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <TYAPR01MB22852052125D7E1B036BE8AAB7D20@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-04-20, 11:19, Srinivas Kandagatla wrote:
-> After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
-> and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
-> asm dais and routing needs to be properly specified at device tree level.
+On Wed, Apr 22, 2020 at 11:10:58AM +0000, Chris Paterson wrote:
+> Hello Greg,
 > 
-> This patch fixes this.
+> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > Behalf Of Greg Kroah-Hartman
+> > Sent: 22 April 2020 10:57
+> > 
+> > This is the start of the stable review cycle for the 4.19.118 release.
+> > There are 64 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> 
+> No build/boot issues seen for CIP configs for Linux 4.19.118-rc1 (b5f03cd61ab6).
+> 
+> Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/138626535
+> GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-pipelines/-/blob/master/trees/linux-4.19.y.yml
+> Relevant LAVA jobs: https://lava.ciplatform.org/scheduler/alljobs?length=25&search=b5f03cd61#table
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Tested-by: Vinod Koul <vkoul@kernel.org>
+Thanks for testing 2 of these and letting me know.
 
--- 
-~Vinod
+greg k-h
