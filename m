@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CAC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7147C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E826F2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D6C2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552399;
-	bh=dAFfcstJg00S/Bt0ciKcvKr/afc1DBg6KrevEqRtYpU=;
+	s=default; t=1587552401;
+	bh=CZgZG+rKEREoHAtxAe5bzj7Vxs8nuKcRagnJnrkCH1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1Z+EF8hqm3hKIn+fB1o4NEvpT0BPX04iH3SuJqycwqyQ82Gh24SjKxuBASjkE6oc
-	 kva2U6ExFBov8Xg8t4znThGNSd6Gdq7mrtDI+Vl0vI0pCS4Fpx+3+fG04UBPq6SvXs
-	 Vsl5qWURtd5K2Sa086NG8qd88hYL+QacGOFQDHJg=
+	b=vnAz72MMmr6C+VWlGS5v1h2sV7qRWdQR+dfa5XaFjSXH9TXWxaY1ejXsEa7trL57P
+	 pTLpmlKqbxrwjhmckugsShZJFSUdRs0OG0P8q9GnNLWdizb28MC2SP4S7dfKVisZH+
+	 9UUAFTIH3ivJBKCaTXwe/PXhYVMDxgQGlfOsF20w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbgDVKqj (ORCPT
+        id S1731922AbgDVKqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:46:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbgDVKQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:51 -0400
+        id S1729785AbgDVKQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F8EA2076B;
-        Wed, 22 Apr 2020 10:16:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02062076E;
+        Wed, 22 Apr 2020 10:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550610;
-        bh=dAFfcstJg00S/Bt0ciKcvKr/afc1DBg6KrevEqRtYpU=;
+        s=default; t=1587550613;
+        bh=CZgZG+rKEREoHAtxAe5bzj7Vxs8nuKcRagnJnrkCH1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+1foNRFX5/ZKI9y9c///eTa6MjkwTxQIcT6nzuS6o8+QtaCwsKkHAIjbGn+n7wz+
-         8zDf5SZrTIK2sU9a8XIK/PkHKXAocdQoDKODj3PnTovIIcjvYyZT+GVGdF+TxOrdO3
-         c8ke/QU39UYyav0OrPinm4FHs2MA4G2pW85u0j3A=
+        b=C7VKlygtfp7BoEfObNaX3dY/mwZIJCzyqlM8LE/bZnjM6R4eXqJ4B8fC4SdJ1Fcfq
+         nvTumntxGkrSb909LUlkeZwogOTDbk2uLQODax+cmLzzZdN4B4Q4VFQR5WJ6n7eZkz
+         fGPYUsOUX1KT6KD3izPd8JAhPJ0xMoEv0xz+rhJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
         Tianyu Lan <Tianyu.Lan@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH 5.4 021/118] x86/Hyper-V: Report crash register data or kmsg before running crash kernel
-Date:   Wed, 22 Apr 2020 11:56:22 +0200
-Message-Id: <20200422095035.165390638@linuxfoundation.org>
+Subject: [PATCH 5.4 022/118] x86/Hyper-V: Report crash register data when sysctl_record_panic_msg is not set
+Date:   Wed, 22 Apr 2020 11:56:23 +0200
+Message-Id: <20200422095035.366179385@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -62,43 +62,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-commit a11589563e96bf262767294b89b25a9d44e7303b upstream.
+commit 040026df7088c56ccbad28f7042308f67bde63df upstream.
 
-We want to notify Hyper-V when a Linux guest VM crash occurs, so
-there is a record of the crash even when kdump is enabled.   But
-crash_kexec_post_notifiers defaults to "false", so the kdump kernel
-runs before the notifiers and Hyper-V never gets notified.  Fix this by
-always setting crash_kexec_post_notifiers to be true for Hyper-V VMs.
+When sysctl_record_panic_msg is not set, the panic will
+not be reported to Hyper-V via hyperv_report_panic_msg().
+So the crash should be reported via hyperv_report_panic().
 
 Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
 Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-5-Tianyu.Lan@microsoft.com
+Link: https://lore.kernel.org/r/20200406155331.2105-6-Tianyu.Lan@microsoft.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mshyperv.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/hv/vmbus_drv.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -263,6 +263,16 @@ static void __init ms_hyperv_init_platfo
- 			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
- 	}
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -48,6 +48,18 @@ static int hyperv_cpuhp_online;
  
-+	/*
-+	 * Hyper-V expects to get crash register data or kmsg when
-+	 * crash enlightment is available and system crashes. Set
-+	 * crash_kexec_post_notifiers to be true to make sure that
-+	 * calling crash enlightment interface before running kdump
-+	 * kernel.
-+	 */
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
-+		crash_kexec_post_notifiers = true;
+ static void *hv_panic_page;
+ 
++/*
++ * Boolean to control whether to report panic messages over Hyper-V.
++ *
++ * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
++ */
++static int sysctl_record_panic_msg = 1;
 +
- #ifdef CONFIG_X86_LOCAL_APIC
- 	if (ms_hyperv.features & HV_X64_ACCESS_FREQUENCY_MSRS &&
- 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
++static int hyperv_report_reg(void)
++{
++	return !sysctl_record_panic_msg || !hv_panic_page;
++}
++
+ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+ 			      void *args)
+ {
+@@ -61,7 +73,7 @@ static int hyperv_panic_event(struct not
+ 	 * the notification here.
+ 	 */
+ 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+-	    && !hv_panic_page) {
++	    && hyperv_report_reg()) {
+ 		regs = current_pt_regs();
+ 		hyperv_report_panic(regs, val);
+ 	}
+@@ -79,7 +91,7 @@ static int hyperv_die_event(struct notif
+ 	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+ 	 * the notification here.
+ 	 */
+-	if (!hv_panic_page)
++	if (hyperv_report_reg())
+ 		hyperv_report_panic(regs, val);
+ 	return NOTIFY_DONE;
+ }
+@@ -1262,13 +1274,6 @@ static void vmbus_isr(void)
+ }
+ 
+ /*
+- * Boolean to control whether to report panic messages over Hyper-V.
+- *
+- * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
+- */
+-static int sysctl_record_panic_msg = 1;
+-
+-/*
+  * Callback from kmsg_dump. Grab as much as possible from the end of the kmsg
+  * buffer and call into Hyper-V to transfer the data.
+  */
 
 
