@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78DCC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC7FC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C2D2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11D820776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551075;
-	bh=U0NUd3gy3ySqpienrLyPfpjtmoETJLPXg4P1CAUJP0Q=;
+	s=default; t=1587551078;
+	bh=dgsp2o5jhO3cVaLbl6yI7GcuL8xJF4PWHyAwkSBbIFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Byfk/cY5hfMY1R/mF0WyGUJ33R1+CBnPT2odJip3BlCk64P1hsD5hENZsqFC7UZrm
-	 MSP3OWBw/IGxEq7y5wSc7qdFGc9sODTEuU65EhAbQgbgOQ0gLyd7aHQTVOijUkY1qr
-	 7691e3YJcc8eIoivIwisvZmrSgv0D+W6UPMgJ8lU=
+	b=GMNHRne2JwudZNzYkHQ0RZEXlA8wV9JjxmJNqKeg1tkNbC/XmPFzqJfVKZphRRe0t
+	 s/HmWJ8coCtTW0NpxhP+yKmBaagkeNyLnO0tI36p0WJ/Pg3S6urhduXYhTFpW0aff8
+	 gmAnBtjPmKf8yYqUKpOJq9zXddOu/aed0h/L3iJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbgDVKYe (ORCPT
+        id S1730439AbgDVKYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:24:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730039AbgDVKXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:46 -0400
+        id S1730385AbgDVKXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42A9020781;
-        Wed, 22 Apr 2020 10:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A77DB2076B;
+        Wed, 22 Apr 2020 10:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551024;
-        bh=U0NUd3gy3ySqpienrLyPfpjtmoETJLPXg4P1CAUJP0Q=;
+        s=default; t=1587551032;
+        bh=dgsp2o5jhO3cVaLbl6yI7GcuL8xJF4PWHyAwkSBbIFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=op7y0Mos8dL59c3Tp7p2lXfqmwYLI941rlKgL88+0QanSvkW2AlY2miYTOeH/QLKC
-         zUyHdkE0c41rZ8SrGG6nnh1ogGMH2LeSJv85/dZM3ra4ir/3Imzb6xO1bqKb2jYy+H
-         7pyz59zL9TDN7T3vQU/PneiKwr2eghg5tdEudXH8=
+        b=SWIJTMC45aiQN/C16lNhDB751ePEr9LYUCf215Lia9A4gOvgyzQlhF663a9jENkFO
+         ewybp+7I3jG2aQ4WSWpqvXNNzZIP9VIhLHgiaYkYwoROKkZ6dslYU6zjhB2yynIdCP
+         cqsxOEjn17J3hhBoIMK4y/cRH6D+6kBY0GEAgBtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH 5.6 027/166] x86/Hyper-V: Trigger crash enlightenment only once during system crash.
-Date:   Wed, 22 Apr 2020 11:55:54 +0200
-Message-Id: <20200422095051.564017171@linuxfoundation.org>
+        stable@vger.kernel.org, Bui Quang Minh <minhquangbui99@gmail.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.6 020/166] xsk: Add missing check on user supplied headroom size
+Date:   Wed, 22 Apr 2020 11:55:47 +0200
+Message-Id: <20200422095050.640912048@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,62 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Magnus Karlsson <magnus.karlsson@intel.com>
 
-commit 73f26e526f19afb3a06b76b970a76bcac2cafd05 upstream.
+commit 99e3a236dd43d06c65af0a2ef9cb44306aef6e02 upstream.
 
-When a guest VM panics, Hyper-V should be notified only once via the
-crash synthetic MSRs.  Current Linux code might write these crash MSRs
-twice during a system panic:
-1) hyperv_panic/die_event() calling hyperv_report_panic()
-2) hv_kmsg_dump() calling hyperv_report_panic_msg()
+Add a check that the headroom cannot be larger than the available
+space in the chunk. In the current code, a malicious user can set the
+headroom to a value larger than the chunk size minus the fixed XDP
+headroom. That way packets with a length larger than the supported
+size in the umem could get accepted and result in an out-of-bounds
+write.
 
-Fix this by not calling hyperv_report_panic() if a kmsg dump has been
-successfully registered.  The notification will happen later via
-hyperv_report_panic_msg().
-
-Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-4-Tianyu.Lan@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Fixes: c0c77d8fb787 ("xsk: add user memory registration support sockopt")
+Reported-by: Bui Quang Minh <minhquangbui99@gmail.com>
+Signed-off-by: Magnus Karlsson <magnus.karlsson@intel.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207225
+Link: https://lore.kernel.org/bpf/1586849715-23490-1-git-send-email-magnus.karlsson@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hv/vmbus_drv.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ net/xdp/xdp_umem.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -55,7 +55,13 @@ static int hyperv_panic_event(struct not
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -343,7 +343,7 @@ static int xdp_umem_reg(struct xdp_umem
+ 	u32 chunk_size = mr->chunk_size, headroom = mr->headroom;
+ 	unsigned int chunks, chunks_per_page;
+ 	u64 addr = mr->addr, size = mr->len;
+-	int size_chk, err;
++	int err;
  
- 	vmbus_initiate_unload(true);
- 
--	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
-+	/*
-+	 * Hyper-V should be notified only once about a panic.  If we will be
-+	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
-+	 * the notification here.
-+	 */
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
-+	    && !hv_panic_page) {
- 		regs = current_pt_regs();
- 		hyperv_report_panic(regs, val);
+ 	if (chunk_size < XDP_UMEM_MIN_CHUNK_SIZE || chunk_size > PAGE_SIZE) {
+ 		/* Strictly speaking we could support this, if:
+@@ -382,8 +382,7 @@ static int xdp_umem_reg(struct xdp_umem
+ 			return -EINVAL;
  	}
-@@ -68,7 +74,13 @@ static int hyperv_die_event(struct notif
- 	struct die_args *die = (struct die_args *)args;
- 	struct pt_regs *regs = die->regs;
  
--	hyperv_report_panic(regs, val);
-+	/*
-+	 * Hyper-V should be notified only once about a panic.  If we will be
-+	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
-+	 * the notification here.
-+	 */
-+	if (!hv_panic_page)
-+		hyperv_report_panic(regs, val);
- 	return NOTIFY_DONE;
- }
+-	size_chk = chunk_size - headroom - XDP_PACKET_HEADROOM;
+-	if (size_chk < 0)
++	if (headroom >= chunk_size - XDP_PACKET_HEADROOM)
+ 		return -EINVAL;
  
+ 	umem->address = (unsigned long)addr;
 
 
