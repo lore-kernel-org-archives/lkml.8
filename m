@@ -2,187 +2,90 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF239C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBB0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA6120747
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587524182;
-	bh=uXktadkm7XuXT9daSgTz03SBn8FHZ34ecH0ouje4lq8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=cXieE/wDfO0MAB8+kC5ifsL6Z++slxVhu9CEXO758qudfjZkTGHdxvXgrn47oTIhg
-	 6IiK3kU9a+bzrGs/2D+d1B9JQC+JkxpBBMaQ9uFJt1hrJFi6Ktg3NxQtyng/3nNZJ7
-	 /F56UDaDxrd0/a3J3dOUm+cXVBzg+IDhAJLG6UUY=
+	by mail.kernel.org (Postfix) with ESMTP id 071B9206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgDVC4V (ORCPT
+        id S1726502AbgDVC5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgDVC4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:56:20 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60608206D5;
-        Wed, 22 Apr 2020 02:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587524179;
-        bh=uXktadkm7XuXT9daSgTz03SBn8FHZ34ecH0ouje4lq8=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=hAyf5PrQe6/18AAwtdCBy7/vTmkGHFGFWYcT0VucAZGK2avIiPxB3tdbXuKdsc1JX
-         fuuHheVQ6av9Fm1wTvsGGd5MVl+Nfvo/B8pgLXXwAlMz+qTt0aiF5K39+1gyc5D7ll
-         j7wFUiAvPfeCpk0eHH6W0COpcM9jSiPWX81GHpDg=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200419121808.440780-4-bryan.odonoghue@linaro.org>
-References: <20200419121808.440780-1-bryan.odonoghue@linaro.org> <20200419121808.440780-4-bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH 3/3] clk: qcom: gcc-msm8939: Make silicon specific updates for msm8939
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Tue, 21 Apr 2020 19:56:18 -0700
-Message-ID: <158752417863.132238.13958544237045504884@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Tue, 21 Apr 2020 22:57:32 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:35428 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726413AbgDVC53 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:57:29 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 21 Apr 2020 19:57:26 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 21 Apr 2020 19:57:26 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id B14284CB2; Tue, 21 Apr 2020 19:57:26 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v13 03/11] ir-rx51: Use 64-bit division macro
+Date:   Tue, 21 Apr 2020 19:57:15 -0700
+Message-Id: <6466ddeafbe9b15aab0cdf393fb254fccab23a90.1587523702.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1587523702.git.gurus@codeaurora.org>
+References: <cover.1587523702.git.gurus@codeaurora.org>
+In-Reply-To: <cover.1587523702.git.gurus@codeaurora.org>
+References: <cover.1587523702.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bryan O'Donoghue (2020-04-19 05:18:08)
-> The msm8939 is based on the msm8916. It is compatible in several ways but,
-> has additional functional blocks added which require additional PLL
-> sources. In some cases functional blocks from the msm8916 have different
-> clock sources or different supported frequencies.
->=20
-> This patch encapsulates the conversion from msm8916 to msm8939.
->=20
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  drivers/clk/qcom/gcc-msm8939.c | 832 ++++++++++++++++++++++++++++-----
->  1 file changed, 709 insertions(+), 123 deletions(-)
->=20
+Since the PWM framework is switching struct pwm_state.period's datatype
+to u64, prepare for this transition by using DIV_ROUND_CLOSEST_ULL to
+handle a 64-bit dividend.
 
-Please use the new way of specifying clk parents with the clk_hw and DT
-based way. Some qcom clk drivers have already migrated. If this is a
-copy of the other driver then perhaps also modify that one in the series
-so that git can find the copy still. Sigh I still haven't written the
-documentation about it!
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Richard Fontana <rfontana@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: linux-media@vger.kernel.org
 
-Look for .parent_data in drivers/clk/qcom/gcc-sc7180.c for the best
-guidance.
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Acked-by: Sean Young <sean@mess.org>
+---
+ drivers/media/rc/ir-rx51.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> @@ -1695,6 +1997,7 @@ static struct clk_branch gcc_blsp1_qup4_spi_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup5_i2c_apps_clk =3D {
->         .halt_reg =3D 0x06020,
->         .clkr =3D {
-> @@ -1712,6 +2015,7 @@ static struct clk_branch gcc_blsp1_qup5_i2c_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup5_spi_apps_clk =3D {
->         .halt_reg =3D 0x0601c,
->         .clkr =3D {
-> @@ -1729,6 +2033,7 @@ static struct clk_branch gcc_blsp1_qup5_spi_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup6_i2c_apps_clk =3D {
->         .halt_reg =3D 0x07020,
->         .clkr =3D {
-> @@ -1746,6 +2051,7 @@ static struct clk_branch gcc_blsp1_qup6_i2c_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup6_spi_apps_clk =3D {
->         .halt_reg =3D 0x0701c,
->         .clkr =3D {
-> @@ -1797,6 +2103,7 @@ static struct clk_branch gcc_blsp1_uart2_apps_clk =
-=3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_boot_rom_ahb_clk =3D {
->         .halt_reg =3D 0x1300c,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2341,6 +2648,7 @@ static struct clk_branch gcc_camss_vfe_axi_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_crypto_ahb_clk =3D {
->         .halt_reg =3D 0x16024,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2359,6 +2667,7 @@ static struct clk_branch gcc_crypto_ahb_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_crypto_axi_clk =3D {
->         .halt_reg =3D 0x16020,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2377,6 +2686,7 @@ static struct clk_branch gcc_crypto_axi_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_crypto_clk =3D {
->         .halt_reg =3D 0x1601c,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2650,6 +3011,7 @@ static struct clk_branch gcc_oxili_gfx3d_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_pdm2_clk =3D {
->         .halt_reg =3D 0x4400c,
->         .clkr =3D {
-> @@ -2667,6 +3029,7 @@ static struct clk_branch gcc_pdm2_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_pdm_ahb_clk =3D {
->         .halt_reg =3D 0x44004,
->         .clkr =3D {
-> @@ -2684,6 +3047,7 @@ static struct clk_branch gcc_pdm_ahb_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
+diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
+index 8574eda..9a5dfd7 100644
+--- a/drivers/media/rc/ir-rx51.c
++++ b/drivers/media/rc/ir-rx51.c
+@@ -241,7 +241,8 @@ static int ir_rx51_probe(struct platform_device *dev)
+ 	}
+ 
+ 	/* Use default, in case userspace does not set the carrier */
+-	ir_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
++	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm),
++			NSEC_PER_SEC);
+ 	pwm_put(pwm);
+ 
+ 	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Drop these useless comments.
