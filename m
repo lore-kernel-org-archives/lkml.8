@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB55C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876AAC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E967220774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF6820774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549767;
-	bh=8W1vFSWViNeHhEhT1gm4IAWUjpSWJW1aRrND3K87PAI=;
+	s=default; t=1587549770;
+	bh=lXo/mUOLvXgMdxR13M1GMOY84RU5XYqhgyq8Pb0pkEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2h/WzCQ31VJ9gwT+Pz8Ryiypf2SAOVunUFdl1mL38SV/KaII6OKZdehGqeDTFJHO2
-	 2A26aB/dPaqGag2d8SxMwjfPx1PsyeYQtqs37v5dWtTgdE9gHVF+Ysd51CEeU8U1nV
-	 8DbImvxWNJD7pgP01/L7lbhZBOc0eNTYVILgFank=
+	b=nP7UgHNviTLTCp6rPANVqSvBk7g9QKhAEo409LGKGt9O1/3iTEq01gsivs6vhGsme
+	 cIwy+IXFgKqnFSYzLmyUXgkyo3h3MyNOrN12ncPGt/cupv++GORcs+Zb6E0zDtRbVO
+	 QA/cTKWIuh+WOKdSosEf2DHNn/cQIDTyoqZ1dijs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDVKCp (ORCPT
+        id S1727060AbgDVKCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51926 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgDVKCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:02:42 -0400
+        id S1727040AbgDVKCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:02:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3140320787;
-        Wed, 22 Apr 2020 10:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 906872087E;
+        Wed, 22 Apr 2020 10:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549761;
-        bh=8W1vFSWViNeHhEhT1gm4IAWUjpSWJW1aRrND3K87PAI=;
+        s=default; t=1587549764;
+        bh=lXo/mUOLvXgMdxR13M1GMOY84RU5XYqhgyq8Pb0pkEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzNZokm1Za+Azl4pahFDePvsuYuqxKmQwva2LgTGc+K9LjPMzLWOMww/LWHJjGW27
-         mVYQZVj4zUMZDLcVb+gJSyNW82/Psq6SqdiwUvCAvd6TFq51suk7kg5Zv4No0EHyxt
-         46JnY0T4/TlPjAyk3blu20YU1N6dAI7CXl+1j+q0=
+        b=07fSFIBpXqGbyHOaQbBARDU/dGrj9//Ud74YpmvU7QzLuQU4F3xMywqsz7fk0hTml
+         +sLELTQ14UqJWg9SiXsbnM3CN0FM+OI08wbjHQzARyaa7oxRh6CabdcCnPeZX6kLw4
+         v5ZTB5DM72e8oDVPPkkHGNc5cIv4zYhZBwBLjtEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.4 095/100] locktorture: Print ratio of acquisitions, not failures
-Date:   Wed, 22 Apr 2020 11:57:05 +0200
-Message-Id: <20200422095040.045537728@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.4 096/100] mtd: lpddr: Fix a double free in probe()
+Date:   Wed, 22 Apr 2020 11:57:06 +0200
+Message-Id: <20200422095040.211671851@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -62,50 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 80c503e0e68fbe271680ab48f0fe29bc034b01b7 upstream.
+commit 4da0ea71ea934af18db4c63396ba2af1a679ef02 upstream.
 
-The __torture_print_stats() function in locktorture.c carefully
-initializes local variable "min" to statp[0].n_lock_acquired, but
-then compares it to statp[i].n_lock_fail.  Given that the .n_lock_fail
-field should normally be zero, and given the initialization, it seems
-reasonable to display the maximum and minimum number acquisitions
-instead of miscomputing the maximum and minimum number of failures.
-This commit therefore switches from failures to acquisitions.
+This function is only called from lpddr_probe().  We free "lpddr" both
+here and in the caller, so it's a double free.  The best place to free
+"lpddr" is in lpddr_probe() so let's delete this one.
 
-And this turns out to be not only a day-zero bug, but entirely my
-own fault.  I hate it when that happens!
-
-Fixes: 0af3fe1efa53 ("locktorture: Add a lock-torture kernel module")
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Will Deacon <will@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 8dc004395d5e ("[MTD] LPDDR qinfo probing.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/linux-mtd/20200228092554.o57igp3nqhyvf66t@kili.mountain
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/locking/locktorture.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/mtd/lpddr/lpddr_cmds.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/kernel/locking/locktorture.c
-+++ b/kernel/locking/locktorture.c
-@@ -655,10 +655,10 @@ static void __torture_print_stats(char *
- 		if (statp[i].n_lock_fail)
- 			fail = true;
- 		sum += statp[i].n_lock_acquired;
--		if (max < statp[i].n_lock_fail)
--			max = statp[i].n_lock_fail;
--		if (min > statp[i].n_lock_fail)
--			min = statp[i].n_lock_fail;
-+		if (max < statp[i].n_lock_acquired)
-+			max = statp[i].n_lock_acquired;
-+		if (min > statp[i].n_lock_acquired)
-+			min = statp[i].n_lock_acquired;
+--- a/drivers/mtd/lpddr/lpddr_cmds.c
++++ b/drivers/mtd/lpddr/lpddr_cmds.c
+@@ -81,7 +81,6 @@ struct mtd_info *lpddr_cmdset(struct map
+ 	shared = kmalloc(sizeof(struct flchip_shared) * lpddr->numchips,
+ 						GFP_KERNEL);
+ 	if (!shared) {
+-		kfree(lpddr);
+ 		kfree(mtd);
+ 		return NULL;
  	}
- 	page += sprintf(page,
- 			"%s:  Total: %lld  Max/Min: %ld/%ld %s  Fail: %d %s\n",
 
 
