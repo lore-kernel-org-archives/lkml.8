@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A0AC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C386C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A1A2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C75D20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550997;
-	bh=pTRJi42QLtD8XK1UmP7p1s0Jn8MlwflehEJVP2yAQXA=;
+	s=default; t=1587551002;
+	bh=BcOsfOkxn0Z2bJhhSJhfv3P9uJjbhL86MgsL5pVv5F8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgMc50NLR6K7OfPzjCBBbCeQrApkC5oMEZpHbhIXV1Cp/qWTrEeiHXiZQvsb6i1NI
-	 RAHVMcX6o1NsbLjYSME/YrkPGAXXVa4bV6BLQyu7uuBeFje7fSzElIaLoPgXkIVNJ3
-	 sTxecjCe+Y3tuwkvlgUT96lcy7yIorfF8s6QCJ8I=
+	b=d6ErzDXvbZqZ2fmJdYtcy+GABR16HrK+hinhj7jlV7a0MFuUp99pKPsiEKkt0N3b+
+	 DFtp1LorNO/ql4iVoMVMKCDO9D3Hx/GwF2Mj6SbBsktFbyVP98/9gLaZABkxnTEP1y
+	 +4se7PpiiGRr1vE3PC1Vwg6lxmtT/K49jEmG2OSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgDVKXP (ORCPT
+        id S1730323AbgDVKXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:23:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58936 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730162AbgDVKWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:22:41 -0400
+        id S1730265AbgDVKXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29A612076B;
-        Wed, 22 Apr 2020 10:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4CCE2076E;
+        Wed, 22 Apr 2020 10:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550960;
-        bh=pTRJi42QLtD8XK1UmP7p1s0Jn8MlwflehEJVP2yAQXA=;
+        s=default; t=1587550980;
+        bh=BcOsfOkxn0Z2bJhhSJhfv3P9uJjbhL86MgsL5pVv5F8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0thnSoyCU5ydWM+tOF4Lg6+cRatFoGzPzb5IAatg5ePu5vkakfop8ShKy5zjoq93
-         GR0OiXH0BNTKGWxX2FG7yFeFwWJJhdpKhkV0vbz6b1OX12vdx1jx6fqvoUf92FzamB
-         bDD2h/WI20MDYOVE/Bo8TYXOOmXmqpudewXz2j0o=
+        b=DF15GOFeLvn1RBwafzX2hdwmsajO1rksd4JgJs7wDJdFdGmEDu9RCL7HxmD+u/oKz
+         pSKExqAJhIUsu40fmGVbiLapwZk6HeE/LV8rhpS32dZsUJRMI9/JQMdDYcynT6mocS
+         Tesb4DO95g5PzTcGxRDq+aNemqdGz1QM7ZUO13Nw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eneas U de Queiroz <cotequeiroz@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Daniel Rosenberg <drosen@google.com>,
+        kernel-team@android.com, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 044/166] crypto: qce - use cryptlen when adding extra sgl
-Date:   Wed, 22 Apr 2020 11:56:11 +0200
-Message-Id: <20200422095053.829913671@linuxfoundation.org>
+Subject: [PATCH 5.6 051/166] f2fs: fix wrong check on F2FS_IOC_FSSETXATTR
+Date:   Wed, 22 Apr 2020 11:56:18 +0200
+Message-Id: <20200422095054.513730507@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,101 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eneas U de Queiroz <cotequeiroz@gmail.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit d6364b8128439a8c0e381f80c38667de9f15eef8 ]
+[ Upstream commit 99eabb914e0f870445d065e83e857507f9728a33 ]
 
-The qce crypto driver appends an extra entry to the dst sgl, to maintain
-private state information.
+This fixes the incorrect failure when enabling project quota on casefold-enabled
+file.
 
-When the gcm driver sends requests to the ctr skcipher, it passes the
-authentication tag after the actual crypto payload, but it must not be
-touched.
-
-Commit 1336c2221bee ("crypto: qce - save a sg table slot for result
-buf") limited the destination sgl to avoid overwriting the
-authentication tag but it assumed the tag would be in a separate sgl
-entry.
-
-This is not always the case, so it is better to limit the length of the
-destination buffer to req->cryptlen before appending the result buf.
-
-Signed-off-by: Eneas U de Queiroz <cotequeiroz@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Daniel Rosenberg <drosen@google.com>
+Cc: kernel-team@android.com
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/qce/dma.c      | 11 ++++++-----
- drivers/crypto/qce/dma.h      |  2 +-
- drivers/crypto/qce/skcipher.c |  5 +++--
- 3 files changed, 10 insertions(+), 8 deletions(-)
+ fs/f2fs/file.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
-index 7da893dc00e73..46db5bf366b44 100644
---- a/drivers/crypto/qce/dma.c
-+++ b/drivers/crypto/qce/dma.c
-@@ -48,9 +48,10 @@ void qce_dma_release(struct qce_dma_data *dma)
- 
- struct scatterlist *
- qce_sgtable_add(struct sg_table *sgt, struct scatterlist *new_sgl,
--		int max_ents)
-+		unsigned int max_len)
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 0d4da644df3bc..a41c633ac6cfe 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1787,12 +1787,15 @@ static int f2fs_file_flush(struct file *file, fl_owner_t id)
+ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
  {
- 	struct scatterlist *sg = sgt->sgl, *sg_last = NULL;
-+	unsigned int new_len;
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
++	u32 masked_flags = fi->i_flags & mask;
++
++	f2fs_bug_on(F2FS_I_SB(inode), (iflags & ~mask));
  
- 	while (sg) {
- 		if (!sg_page(sg))
-@@ -61,13 +62,13 @@ qce_sgtable_add(struct sg_table *sgt, struct scatterlist *new_sgl,
- 	if (!sg)
- 		return ERR_PTR(-EINVAL);
+ 	/* Is it quota file? Do not allow user to mess with it */
+ 	if (IS_NOQUOTA(inode))
+ 		return -EPERM;
  
--	while (new_sgl && sg && max_ents) {
--		sg_set_page(sg, sg_page(new_sgl), new_sgl->length,
--			    new_sgl->offset);
-+	while (new_sgl && sg && max_len) {
-+		new_len = new_sgl->length > max_len ? max_len : new_sgl->length;
-+		sg_set_page(sg, sg_page(new_sgl), new_len, new_sgl->offset);
- 		sg_last = sg;
- 		sg = sg_next(sg);
- 		new_sgl = sg_next(new_sgl);
--		max_ents--;
-+		max_len -= new_len;
+-	if ((iflags ^ fi->i_flags) & F2FS_CASEFOLD_FL) {
++	if ((iflags ^ masked_flags) & F2FS_CASEFOLD_FL) {
+ 		if (!f2fs_sb_has_casefold(F2FS_I_SB(inode)))
+ 			return -EOPNOTSUPP;
+ 		if (!f2fs_empty_dir(inode))
+@@ -1806,9 +1809,9 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+ 			return -EINVAL;
  	}
  
- 	return sg_last;
-diff --git a/drivers/crypto/qce/dma.h b/drivers/crypto/qce/dma.h
-index ed25a0d9829e5..7864021693608 100644
---- a/drivers/crypto/qce/dma.h
-+++ b/drivers/crypto/qce/dma.h
-@@ -43,6 +43,6 @@ void qce_dma_issue_pending(struct qce_dma_data *dma);
- int qce_dma_terminate_all(struct qce_dma_data *dma);
- struct scatterlist *
- qce_sgtable_add(struct sg_table *sgt, struct scatterlist *sg_add,
--		int max_ents);
-+		unsigned int max_len);
- 
- #endif /* _DMA_H_ */
-diff --git a/drivers/crypto/qce/skcipher.c b/drivers/crypto/qce/skcipher.c
-index 4217b745f1242..63ae75809cb70 100644
---- a/drivers/crypto/qce/skcipher.c
-+++ b/drivers/crypto/qce/skcipher.c
-@@ -97,13 +97,14 @@ qce_skcipher_async_req_handle(struct crypto_async_request *async_req)
- 
- 	sg_init_one(&rctx->result_sg, qce->dma.result_buf, QCE_RESULT_BUF_SZ);
- 
--	sg = qce_sgtable_add(&rctx->dst_tbl, req->dst, rctx->dst_nents - 1);
-+	sg = qce_sgtable_add(&rctx->dst_tbl, req->dst, req->cryptlen);
- 	if (IS_ERR(sg)) {
- 		ret = PTR_ERR(sg);
- 		goto error_free;
+-	if ((iflags ^ fi->i_flags) & F2FS_COMPR_FL) {
++	if ((iflags ^ masked_flags) & F2FS_COMPR_FL) {
+ 		if (S_ISREG(inode->i_mode) &&
+-			(fi->i_flags & F2FS_COMPR_FL || i_size_read(inode) ||
++			(masked_flags & F2FS_COMPR_FL || i_size_read(inode) ||
+ 						F2FS_HAS_BLOCKS(inode)))
+ 			return -EINVAL;
+ 		if (iflags & F2FS_NOCOMP_FL)
+@@ -1825,8 +1828,8 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+ 			set_compress_context(inode);
+ 		}
+ 	}
+-	if ((iflags ^ fi->i_flags) & F2FS_NOCOMP_FL) {
+-		if (fi->i_flags & F2FS_COMPR_FL)
++	if ((iflags ^ masked_flags) & F2FS_NOCOMP_FL) {
++		if (masked_flags & F2FS_COMPR_FL)
+ 			return -EINVAL;
  	}
  
--	sg = qce_sgtable_add(&rctx->dst_tbl, &rctx->result_sg, 1);
-+	sg = qce_sgtable_add(&rctx->dst_tbl, &rctx->result_sg,
-+			     QCE_RESULT_BUF_SZ);
- 	if (IS_ERR(sg)) {
- 		ret = PTR_ERR(sg);
- 		goto error_free;
 -- 
 2.20.1
 
