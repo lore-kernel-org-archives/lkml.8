@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D715C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C11DC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDD52073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEF72073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551929;
-	bh=LL415fMCll3EPDqhPFrXHvuwJiE40xZIH4DFBw19Q8k=;
+	s=default; t=1587551931;
+	bh=Xiz+dEZ9779N4+AdXfprVfeVCFAdhf6PfQCMpYw4OaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zcKO/AAGcFjOshYk+MHWL/0y2V+8u1ItwGWXFmCyFXhwUIaAj1DkYEoqjvtvHC1ak
-	 +PlwfMwe9Z4lig2iWLdkclvL1BpQT/+/IGt6wYdbK8/ixOCY51AxQxa4hgAvnWnjhr
-	 IW0yZ+Vw2jti8RPDvN87HnNLLXA7RExtg3uCY7VU=
+	b=s2wAnJDOlM+18NtV8vAf8O5NoixdsB7AMZsXxX4v293t218QaScPNf9XlRs2Q/pJW
+	 HaJy73YQOPMhyHR1ZTqaHt+ot30SDFpwEsmKKajNrky61PVr1CefP2RzafBulPxdg/
+	 PQ1jipAUtLOEh9qCJe2673zq4K+12teWNDB4WMYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbgDVKir (ORCPT
+        id S1731497AbgDVKiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58382 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbgDVKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:22:06 -0400
+        id S1729831AbgDVKVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E45D20781;
-        Wed, 22 Apr 2020 10:21:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D2CC20857;
+        Wed, 22 Apr 2020 10:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550916;
-        bh=LL415fMCll3EPDqhPFrXHvuwJiE40xZIH4DFBw19Q8k=;
+        s=default; t=1587550903;
+        bh=Xiz+dEZ9779N4+AdXfprVfeVCFAdhf6PfQCMpYw4OaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jfYXaVO61Jcqh0eYXSb6JLTG2JZGeXe/o711AYGfhb8xkPmGWHNlWmqjdI2heuJ+y
-         oklI+uTdvFMXQCs/XWsvzHv4odzUJg0j4u4DqfdA6bjgz0iitxO/19Y6aBwEzLnPEf
-         TgJCQ5ad9lisfYsd4PDGrLe+cAmDZBsRgoF9PbU0=
+        b=ghqOZYKxHCQnuEjaoN7NDvciruNIdZluCP5amwO2Cu5YxvjW0sOzVnk3evZjxYNP4
+         bqWqy2hWiSE0aNGtUKT5yIeD+vFPXRk6zg0JKsyXsO7ZsbIwEUJkEOSgW4kdvFQf4r
+         JevhhFn6RI73J/TtIAH9SqXnOLN2Q5MvuKsGi1hc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Ignatov <rdna@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Subject: [PATCH 5.6 009/166] libbpf: Fix bpf_get_link_xdp_id flags handling
-Date:   Wed, 22 Apr 2020 11:55:36 +0200
-Message-Id: <20200422095049.161346249@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 004/166] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Wed, 22 Apr 2020 11:55:31 +0200
+Message-Id: <20200422095048.477652819@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,49 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ignatov <rdna@fb.com>
+From: Li Bin <huawei.libin@huawei.com>
 
-commit f07cbad29741407ace2a9688548fa93d9cb38df3 upstream.
+commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 upstream.
 
-Currently if one of XDP_FLAGS_{DRV,HW,SKB}_MODE flags is passed to
-bpf_get_link_xdp_id() and there is a single XDP program attached to
-ifindex, that program's id will be returned by bpf_get_link_xdp_id() in
-prog_id argument no matter what mode the program is attached in, i.e.
-flags argument is not taken into account.
+If the dxfer_len is greater than 256M then the request is invalid and we
+need to call sg_remove_request in sg_common_write.
 
-For example, if there is a single program attached with
-XDP_FLAGS_SKB_MODE but user calls bpf_get_link_xdp_id() with flags =
-XDP_FLAGS_DRV_MODE, that skb program will be returned.
-
-Fix it by returning info->prog_id only if user didn't specify flags. If
-flags is specified then return corresponding mode-specific-field from
-struct xdp_link_info.
-
-The initial error was introduced in commit 50db9f073188 ("libbpf: Add a
-support for getting xdp prog id on ifindex") and then refactored in
-473f4e133a12 so 473f4e133a12 is used in the Fixes tag.
-
-Fixes: 473f4e133a12 ("libbpf: Add bpf_get_link_xdp_info() function to get more XDP information")
-Signed-off-by: Andrey Ignatov <rdna@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/bpf/0e9e30490b44b447bb2bebc69c7135e7fe7e4e40.1586236080.git.rdna@fb.com
+Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/lib/bpf/netlink.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/sg.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/tools/lib/bpf/netlink.c
-+++ b/tools/lib/bpf/netlink.c
-@@ -289,7 +289,7 @@ int bpf_get_link_xdp_info(int ifindex, s
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -793,8 +793,10 @@ sg_common_write(Sg_fd * sfp, Sg_request
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
  
- static __u32 get_xdp_id(struct xdp_link_info *info, __u32 flags)
- {
--	if (info->attach_mode != XDP_ATTACHED_MULTI)
-+	if (info->attach_mode != XDP_ATTACHED_MULTI && !flags)
- 		return info->prog_id;
- 	if (flags & XDP_FLAGS_DRV_MODE)
- 		return info->drv_prog_id;
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
+ 
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 
 
