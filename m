@@ -2,170 +2,166 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B803CC55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CC5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940EA20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3048520724
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XVhm6vBU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ObH0SMRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgDVCEH (ORCPT
+        id S1726380AbgDVCGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:04:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgDVCEG (ORCPT
+        Tue, 21 Apr 2020 22:06:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27917 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726294AbgDVCGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:04:06 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D5BC0610D6;
-        Tue, 21 Apr 2020 19:04:06 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w20so294648pll.4;
-        Tue, 21 Apr 2020 19:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ToKzHi88KUDCwxX2NbfwDgfuG5Ihi+Tt5yodZXzkNFY=;
-        b=XVhm6vBU+VWXvVfdng0/kTGsT3JWJrh5z+CNgLTgSJDOq3Jw3/NWsiP9ZiNvMBNpyB
-         UVTKb5Op/4TkgwME2B0KA4bYV+JmYEV3/DxB8BzOrNHX8eF2eNBd4Nq/s3pmvaoAYq5t
-         pmz6nO0C+Pl+01573VSuP1HpWFJG72ZReLsM5kgzWHiYP8TI0eoVRHlOEdxXUlF/6kC3
-         /dwdoJWnPtYxd4aCxhykLyanGZMy/H/ubusp5DHRQKmWUnvkiGFLmpKMDDieG1EKoSW0
-         EVTtyqGfJhg79UNZUHFK7e/pbGXx//yaM7phTKz8SDfky9mfQTWSAaalSZqiiw9UaW2U
-         C0Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ToKzHi88KUDCwxX2NbfwDgfuG5Ihi+Tt5yodZXzkNFY=;
-        b=c51fGe4TpyBMMpIU5nBv/Ex+5bd0Kzc98cTRpOuPVW40GNPy/maRcyLS2l2rZXBpix
-         aNHAS39JkCX9YOWaS4Ua9vM41NaxeZjFSpVKLrjpzerVj/v2akgzpVfKJ/dGLh8iNswC
-         XvLV9A6v6S0hyJvW9Pm3t9nwvco5NzDNMQ/0qkJXPPBH5B54T6ElnRdkocbbtmhyUUyp
-         /k/EPB0KKTUPCa4cV3NOLfPfLwdb+974tYdaWwKVc3aK7/JofG0XS2YvvnotLwtF6ynf
-         V8wxGqhdcCSgZszUTLahrwgHQ1SjkZOsVUpQDbSgtStL73Ex7fAN9UavX9SBkjMZ+OOD
-         QH/g==
-X-Gm-Message-State: AGi0PuYso7o+j9Uiah0mZA+dRuAl2Nwdf822xikWGjCkKuSQKP9aRaFb
-        zkVCwn6O82gGmdP3tORVhMY=
-X-Google-Smtp-Source: APiQypJXgydNfvsjf8hhXuV566aJN1m1ixhOB1Bi0Ykz2yql7YMQ2LOopzTvyIJWC/wy2J1KR+rYvA==
-X-Received: by 2002:a17:902:8688:: with SMTP id g8mr25431832plo.268.1587521046418;
-        Tue, 21 Apr 2020 19:04:06 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p68sm3686505pfb.89.2020.04.21.19.04.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Apr 2020 19:04:05 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 19:04:04 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Grant Peltier <grantpeltier93@gmail.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        adam.vaughn.xh@renesas.com, grant.peltier.jg@renesas.com
-Subject: Re: [PATCH 1/2] hwmon: (pmbus/isl68137) add debugfs config and black
- box endpoints
-Message-ID: <20200422020404.GA126375@roeck-us.net>
-References: <cover.1587408025.git.grantpeltier93@gmail.com>
- <203a7cd37dd95a0127cc06de14986721ab621e93.1587408025.git.grantpeltier93@gmail.com>
- <20200421185851.GA95204@roeck-us.net>
- <20200421214917.GA28170@raspberrypi>
+        Tue, 21 Apr 2020 22:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587521206;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o5mZ9zdvVkLzXY5CfBsci5sqeOqS3/3iD+lA0IRj/2o=;
+        b=ObH0SMRvNvKH/r+6cm384tl+POrIifCzbSoUG7J18vG1gE+3x4fBdt/8cqq9q2xURvdwo+
+        6bhkSrgC4uHvrMJWd4vlb4rJvkYPK2gUw39C20Zu6lwGIvket051obz7bAUR9sG7g1bRgt
+        fn41sLHN786Pv9p0anx8htcGmy96wbQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-484-uK28SCOCNgy8aHnax1t1AA-1; Tue, 21 Apr 2020 22:06:43 -0400
+X-MC-Unique: uK28SCOCNgy8aHnax1t1AA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE5E018C43C1;
+        Wed, 22 Apr 2020 02:06:41 +0000 (UTC)
+Received: from T590 (ovpn-8-28.pek2.redhat.com [10.72.8.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C797A58;
+        Wed, 22 Apr 2020 02:06:31 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 10:06:25 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "hare@suse.de" <hare@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+Message-ID: <20200422020625.GD299948@T590>
+References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+ <20200422012814.GB299948@T590>
+ <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200421214917.GA28170@raspberrypi>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:49:17PM -0500, Grant Peltier wrote:
-> On Tue, Apr 21, 2020 at 11:58:51AM -0700, Guenter Roeck wrote:
-> > Normally this is emulated for such controllers. I don't recall seeing
-> > such a need before. The code below duplicates similar code in
-> > i2c_smbus_xfer_emulated(), which is much more sophisticated.
-> > Are you sure this is needed ? Can you point me to an affected
-> > controller ?
+On Wed, Apr 22, 2020 at 01:48:25AM +0000, Dexuan Cui wrote:
+> > From: Ming Lei <ming.lei@redhat.com>
+> > Sent: Tuesday, April 21, 2020 6:28 PM
+> > To: Dexuan Cui <decui@microsoft.com>
 > > 
-> > > +static s32 raa_smbus_read40(const struct i2c_client *client, u8 command,
-> > > +			    unsigned char *data)
-> > > +{
-> > > +	int status;
-> > > +	unsigned char msgbuf[1];
-> > > +	struct i2c_msg msg[2] = {
-> > > +		{
-> > > +			.addr = client->addr,
-> > > +			.flags = client->flags,
-> > > +			.len = 1,
-> > > +			.buf = msgbuf,
-> > > +		},
-> > > +		{
-> > > +			.addr = client->addr,
-> > > +			.flags = client->flags | I2C_M_RD,
-> > > +			.len = 5,
-> > > +			.buf = data,
-> > > +		},
-> > > +	};
+> > On Tue, Apr 21, 2020 at 05:17:24PM -0700, Dexuan Cui wrote:
+> > > During hibernation, the sdevs are suspended automatically in
+> > > drivers/scsi/scsi_pm.c before storvsc_suspend(), so after
+> > > storvsc_suspend(), there is no disk I/O from the file systems, but there
+> > > can still be disk I/O from the kernel space, e.g. disk_check_events() ->
+> > > sr_block_check_events() -> cdrom_check_events() can still submit I/O
+> > > to the storvsc driver, which causes a paic of NULL pointer dereference,
+> > > since storvsc has closed the vmbus channel in storvsc_suspend(): refer
+> > > to the below links for more info:
+> > >
+> > > Fix the panic by blocking/unblocking all the I/O queues properly.
+> > >
+> > > Note: this patch depends on another patch "scsi: core: Allow the state
+> > > change from SDEV_QUIESCE to SDEV_BLOCK" (refer to the second link
+> > above).
+> > >
+> > > Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
+> > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > > ---
+> > >  drivers/scsi/storvsc_drv.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> > > index fb41636519ee..fd51d2f03778 100644
+> > > --- a/drivers/scsi/storvsc_drv.c
+> > > +++ b/drivers/scsi/storvsc_drv.c
+> > > @@ -1948,6 +1948,11 @@ static int storvsc_suspend(struct hv_device
+> > *hv_dev)
+> > >  	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
+> > >  	struct Scsi_Host *host = stor_device->host;
+> > >  	struct hv_host_device *host_dev = shost_priv(host);
+> > > +	int ret;
 > > > +
-> > > +	msgbuf[0] = command;
-> > > +	status = i2c_transfer(client->adapter, msg, 2);
-> > > +	if (status != 2)
-> > > +		return status;
+> > > +	ret = scsi_host_block(host);
+> > > +	if (ret)
+> > > +		return ret;
+> > >
+> > >  	storvsc_wait_to_drain(stor_device);
+> > >
+> > > @@ -1968,10 +1973,15 @@ static int storvsc_suspend(struct hv_device
+> > *hv_dev)
+> > >
+> > >  static int storvsc_resume(struct hv_device *hv_dev)
+> > >  {
+> > > +	struct storvsc_device *stor_device = hv_get_drvdata(hv_dev);
+> > > +	struct Scsi_Host *host = stor_device->host;
+> > >  	int ret;
+> > >
+> > >  	ret = storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
+> > >  				     hv_dev_is_fc(hv_dev));
+> > > +	if (!ret)
+> > > +		ret = scsi_host_unblock(host, SDEV_RUNNING);
+> > > +
+> > >  	return ret;
+> > >  }
 > > 
-> > i2c_transfer() can return 1 if only one of the two messages was sent.
+> > scsi_host_block() is actually too heavy for just avoiding
+> > scsi internal command, which can be done simply by one atomic
+> > variable.
 > > 
-> > > +	return 0;
-> > > +}
-> I have been using BCM2835 for most of my testing. I originally tried using
-> i2c_smbus_read_block_data() but that was returning errors. However, from your
-> email, I went back and tried i2c_smbus_read_i2c_block_data() and that appears
-> to be working so I will switch to that instead.
+> > Not mention scsi_host_block() is implemented too clumsy because
+> > nr_luns * synchronize_rcu() are required in scsi_host_block(),
+> > which should have been optimized to just one.
+> > 
+> > Also scsi_device_quiesce() is heavy too, still takes 2
+> > synchronize_rcu() for one LUN.
+> > 
+> > That is said SCSI suspend may take (3 * nr_luns) sysnchronize_rcu() in
+> > case that the HBA's suspend handler needs scsi_host_block().
+> > 
+> > Thanks,
+> > Ming
 > 
-This is odd, since the function should do a SMBus block read. Did you pass a
-buffer that was too small, by any chance ?
+> When we're in storvsc_suspend(), all the userspace processes have been
+> frozen and all the file systems have been flushed, and there should not
+> be too much I/O from the kernel space, so IMO scsi_host_block() should be
+> pretty fast here. 
 
-> > > +
-> > > +/**
-> > > + * Helper function required since linux SMBus implementation does not currently
-> > > + * (v5.6) support the SMBus 3.0 "Read 32" protocol
-> > > + */
-> > > +static s32 raa_dmpvr2_smbus_read32(const struct i2c_client *client, u8 command,
-> > > +				   unsigned char *data)
-> > > +{
-> > > +	int status;
-> > > +	unsigned char msgbuf[1];
-> > > +	struct i2c_msg msg[2] = {
-> > > +		{
-> > > +			.addr = client->addr,
-> > > +			.flags = client->flags,
-> > > +			.len = 1,
-> > > +			.buf = msgbuf,
-> > > +		},
-> > > +		{
-> > > +			.addr = client->addr,
-> > > +			.flags = client->flags | I2C_M_RD,
-> > > +			.len = 4,
-> > > +			.buf = data,
-> > > +		},
-> > > +	};
-> > > +
-> > > +	msgbuf[0] = command;
-> > > +	status = i2c_transfer(client->adapter, msg, 2);
-> > > +	if (status != 2)
-> > > +		return status;
-> > > +	return 0;
-> > > +}
-> > 
-> > Maybe it would be worthwhile to consider implementing it ?
-> > 
-> I could add these functions to i2c-core-smbus instead if that is desired.
-> However, I am unsure if it would be proper to only partially update the SMBus
-> implementation to match the 3.0 spec. Is there perhaps a better forum to
-> discuss adding all of the 3.0 changes?
-> 
-Never mind, just keep it local. I don't like it too much, but getting patches
-accepted into the i2c core might take several releases, and it would be unfair
-to impose that on you.
+Forget to mention, I guess that storvsc_suspend() may be called from runtime
+PM path, at that time, the whole system is running, and RCU can't be quick.
 
-Guenter
+Thanks, 
+Ming
+
