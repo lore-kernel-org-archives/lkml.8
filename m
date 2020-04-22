@@ -2,156 +2,127 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7CFC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4885CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF5121473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26203214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:33:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YToNmTSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgDVQdi (ORCPT
+        id S1726928AbgDVQdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:33:38 -0400
-Received: from esgaroth.petrovitsch.at ([78.47.184.11]:4789 "EHLO
-        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgDVQdg (ORCPT
+        Wed, 22 Apr 2020 12:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgDVQdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:33:36 -0400
-Received: from [10.68.100.236] (h10-gesig.woeg.acw.at [217.116.178.11] (may be forged))
-        (authenticated bits=0)
-        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id 03MGVYYO000469
-        (version=TLSv1 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO);
-        Wed, 22 Apr 2020 18:31:34 +0200
-Subject: Re: [PATCH 1/4] fs: Implement close-on-fork
-To:     "Karstens, Nate" <Nate.Karstens@garmin.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        Changli Gao <xiaosuo@gmail.com>
-References: <20200420071548.62112-1-nate.karstens@garmin.com>
- <20200420071548.62112-2-nate.karstens@garmin.com>
- <fa6c5c9c7c434f878c94a7c984cd43ba@garmin.com>
- <20200422154356.GU5820@bombadil.infradead.org>
- <6ed7bd08892b4311b70636658321904f@garmin.com>
-From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
-X-Pep-Version: 2.0
-Message-ID: <97f05204-a27c-7cc8-429a-edcf6eebaa11@petrovitsch.priv.at>
-Date:   Wed, 22 Apr 2020 16:31:34 +0000
+        Wed, 22 Apr 2020 12:33:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC09CC03C1A9;
+        Wed, 22 Apr 2020 09:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=GhxXNkwIWL9QIK8tOJiZor+ArOGr/Ec9kz1wNtkTM0E=; b=YToNmTSoYuisnSyd35L7v7LRu0
+        A5ulwNzUkiUyT5V//tSQCKg2khb7bPmuUMiqHb9bvvdLhK74se9wL6GGnHREUs6ZxdcacCc/Jt5cZ
+        3TyV7N5ONiHlxAvsJAsIqc1u6QsqyNpK0Egy780p7nPsvnVUfYtVgG1j8QTN3EwIgoc98IDrjqgwU
+        0ru98OLbqxg6ReXMLvBZSL88XcJXoPvSH/LhVCa8WQw3BPjOQcj+cLFfeHv7HvBjjJuuHf3NlDXKV
+        5KXeivtJD1owtsgk0UiPbzAYMiL3vbmy+Nzq3hN3PaTeHRDWzU3OLI3KIKuVXNoooAki3uQon1big
+        X6OVO1/g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRIJa-0000D2-4q; Wed, 22 Apr 2020 16:33:34 +0000
+Subject: Re: [PATCH] mmc: sdhci-of-at91: make MMC_SDHCI_OF_AT91 depend on
+ HAVE_CLK
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Takao Orito <orito.takao@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org
+References: <20200422153401.7913-1-yamada.masahiro@socionext.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <38b856aa-47a1-7957-ba96-32272aa404c0@infradead.org>
+Date:   Wed, 22 Apr 2020 09:33:33 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <6ed7bd08892b4311b70636658321904f@garmin.com>
-Content-Type: multipart/mixed;
- boundary="------------5C6F5C422D1052E6828086F8"
+In-Reply-To: <20200422153401.7913-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-DCC-INFN-TO-Metrics: esgaroth.tuxoid.at 1233; Body=22 Fuz1=22 Fuz2=22
-X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------5C6F5C422D1052E6828086F8
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On 4/22/20 8:34 AM, Masahiro Yamada wrote:
+> If sdhci-of-at91.c is compiled without CONFIG_HAVE_CLK, the line
+> 
+>   caps1 |= FIELD_PREP(SDHCI_CLOCK_MUL_MASK, clk_mul);
+> 
+> ... emits "FIELD_PREP: value too large for the field" warning.
+> 
+> The compiler seems to decide clk_mul is constant (unsigned int)-1,
+> because clk_get_rate() returns 0 when CONFIG_HAVE_CLK is disabled.
+> 
+> Add HAVE_CLK to the depenency since this driver does not work without
+> the clock APIs anyway.
+> 
+> Link: https://lkml.org/lkml/2020/4/17/613
+> Fixes: linux-next ("mmc: sdhci: use FIELD_GET/PREP for capabilities bit masks")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-On 22/04/2020 16:02, Karstens, Nate wrote:
->> It's not safe to call system() from a threaded app.  That's all.  It's=
- right there in the DESCRIPTION:
->=20
-> That is true, but that description is missing from both the Linux man p=
-age and the glibc documentation (https://www.gnu.org/software/libc/manual=
-/html_mono/libc.html#Running-a-Command). It seems like a minor point that=
- won't be noticed until it causes a problem, and problems are rare enough=
- they might go unnoticed for a while. We have removed system() from our a=
-pplication, but we're also concerned that libraries we integrate will use=
- system() without our knowledge.
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Reimplementing system() is trivial.
-LD_LIBRARY_PRELOAD should take care of all system(3) calls.
+Thanks.
 
-I wonder it it has some value to add runtime checking for
-"multi-threaded" to such lib functions and error out if
-yes.
+> ---
+> 
+> Ulf,
+> 
+> I do not know how to fill the Fixes tag.
+> It is currently 8da1ff4f68a2 in linux-next, but I am not sure it is
+> stable. I just added 'linux-next'.
+> 
+> If you have a preferred way, please modify it.
+> 
+> 
+> 
+> 
+> 
+>  drivers/mmc/host/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 462b5352fea7..2aee844722d6 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -171,7 +171,7 @@ config MMC_SDHCI_OF_ASPEED
+>  config MMC_SDHCI_OF_AT91
+>  	tristate "SDHCI OF support for the Atmel SDMMC controller"
+>  	depends on MMC_SDHCI_PLTFM
+> -	depends on OF
+> +	depends on OF && HAVE_CLK
+>  	help
+>  	  This selects the Atmel SDMMC driver
+>  
+> 
 
-Apart from that, system() is a PITA even on
-single/non-threaded apps.
 
-MfG,
-	Bernd
---=20
-There is no cloud, just other people computers.
--- https://static.fsf.org/nosvn/stickers/thereisnocloud.svg
-
---------------5C6F5C422D1052E6828086F8
-Content-Type: application/pgp-keys;
- name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQGNBFss+8cBDACpXlq0ZC9Qp8R+iFPx5vDPu12FpnmbbV8CwexVDchdizF2qz+A
-PFh12RrkE6yudI0r7peAIRePiSVYqv8XT82TpJM+tbTYk/MSQaPhcmz8jl1HaKv0
-q8g5nKtr42qRsswU7Q2Sa6mWXaIdOisPYZ9eLZC9BDBhI/YrgdAwszyYJ1HUwNkp
-Dw5i4wW/SsIKrotCboYzbBjZfHbmDJr4dFYSoMg5jQVHD2Yz8fqNSoRyd7i/oicn
-1bH/DjEkrmIu9YuptuHYmblpCRo5dLww7kgszNw12j8Iljp64uJ/uz5+asBUmRZM
-mGey82BB1DnIvy1v+GnbGWFIYy79/HeqdN+KbOgO/sXoqYKS5KJ6aSqWOLTQk6sv
-AnDN2PNF5jOB9ROCNwoQSH/YNEfMd/mQ5pGB0UJ4ykD0UnjW7DdXbVOwvwWzfHF7
-HaZXB1NMpBzHxold3W19DThd4HECvXYZ6Au6p0WE8IfABS11CzbX7KJuD5Ua+xKG
-3W05fMg5i0td2aMAEQEAAbQtQmVybmQgUGV0cm92aXRzY2ggPGJlcm5kQHBldHJv
-dml0c2NoLnByaXYuYXQ+iQHUBBMBCgA+AhsDBQsJCAcDBRUKCQgLBRYDAgEAAh4B
-AheAFiEEgDWyyHEwksebo557hUq7AhBHKGYFAl0HmCMFCQO7nFkACgkQhUq7AhBH
-KGZCIQv+Li5U6ZfZ21JJPPzcV4JOq9nzz5YvJpPBwOtDgiDfsJ1WuSjJD0KpeCLh
-nxeTnGM1PwdjtXBImstZfDOX/IH/iiNgWLNz80KKx03yH40tDTPthZ/x5DVIm8Fb
-n4GmGqfTFQCR8km7sNPC1YUOUrQf1FevYq/F/tHsifiisEay4547aNIrWb8bdhpA
-ASSZeSNrVP6YDZIyHaMUo3f0js2e4YiS8JIkA8ysvJyLYifcL+fEERElDMUZql+i
-9/GZwvqG1hk0VNdXybMQuhJgZ8JqJ1sxZqMbr5aS6cnu8qX4C0H2S3u8GZnh9nKG
-03Ly/7m+LF5zo1nGsiJ+9IOaTYIC6y/bdJKCmJQhrMj+J6nU4R9nN7UbEb+cO0/8
-QzpnfbOdPkUl58ho/C/alB5kb5yMMhbrmteG4TQJo2Jj9oTFDKbvaYe/zsXTCK0E
-ZbSiZ4XuY/HvKPegjlptgm7gWLoCE85p1/ELtLiXQ0xQCmBmqwVO856Afw5jpRxd
-2nQF2OCsuQGNBFss+8kBDADRASin2ms38GGbHv5HcWkVWDtPQo08ceO5ULrtA3G3
-lQrv08pbKfSw91n5cIOCDvcCY29GrVZ/lcSGov855zu6tFZ/T+d68zth3aWZzR5d
-Brz6Nb6DclyEMkfKX2xYT7tGoN9XgBboG4yWgTMKvlu6yKxxJM4AM5AjpHodsXwP
-txvzqnmfgIQ4k0idqB7c7khiFsraUM1+f0/Bn+p+RPhqg+C33Ui38IWdwtNgck+G
-U7+WYQi3LxD2mu8BC0NIYJMiFTUPC0a4FTQtKCXno5Stys5wYG6OXiGOw3sTbs3v
-qy95H5/cVa6mf81OiNZP1liXnm0cBrT+UbFgtZk/OnoekzS7RPCdCuMZyxMqPTLl
-+EjNyejmSN3cnGLNDa+Jh/eSIUZzvihuNFxdtQQfuD+nqoPanfSfrWaDABMU7Daf
-6vZI10D3d473WzCplWR4A+Rdm8ysi2haas7KZnL+ajcEo2jCghW83BQPBD57fEtl
-UWLXihAFcEiSx0i2AUAXYOcAEQEAAYkBvAQYAQoAJgIbDBYhBIA1sshxMJLHm6Oe
-e4VKuwIQRyhmBQJdB5gjBQkDu5xXAAoJEIVKuwIQRyhmjFAL/R+o+JL25Dbgyrof
-aJ2dXWbLKsR0WSVwLY8CPVlSylQo8Z7lQ7egMMUU2QKOEJfC2BpXZl/TbHURgkUG
-uRAw+WsFTlqW+OEbsXXnzdonz/K4YtKUHo/cc9os9Iv3xoAqwa7mSMe4vgvyuskI
-VEbyqtOXvKZ2UTQlBh1Etnkkg6uOfSFbWi7IN0fv8gjsImSCuhn9JKWSSMeKWeu0
-+cleW5uRuVexv5nCfVzzye673X+knkcchyUZ40cD9OzME9JHCzAmDWmHobFqsemr
-+2umZxCGzqLttmILn61NdmQvmauDFjNw383ngbMbk4bhduaWWV5dDlXmbsi4bDk6
-HCaskYsbEHXXoOmb/ts7lP6ifqvT1ZfuogJfn5bXv1Sm4IJubJ4S4ZYrLg2fKlWH
-GWMRJlAOV5swTOmw4Gk/PV6jR/ioZxRiZtSZK1Pkso0gbla+HLY4OCo68eafP66p
-H2CEDcqDEBnjApKnTO1a6DtRkQzEs0aLhvXwhvt/HL6/lXIVQA=3D=3D
-=3DGX6K
------END PGP PUBLIC KEY BLOCK-----
-
---------------5C6F5C422D1052E6828086F8--
+-- 
+~Randy
