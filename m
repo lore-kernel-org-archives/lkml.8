@@ -2,78 +2,78 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0F8C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD88C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF01320781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAE320781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgDVLY3 (ORCPT
+        id S1726437AbgDVL2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:24:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42355 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgDVLY2 (ORCPT
+        Wed, 22 Apr 2020 07:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725808AbgDVL2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:24:28 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jRDUH-0006HA-IO; Wed, 22 Apr 2020 11:24:17 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: ensure all fields in header are zero'd before copying back to userspace
-Date:   Wed, 22 Apr 2020 12:24:17 +0100
-Message-Id: <20200422112417.208843-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 22 Apr 2020 07:28:36 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7697AC03C1A8;
+        Wed, 22 Apr 2020 04:28:36 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jRDYN-0006fw-5o; Wed, 22 Apr 2020 13:28:31 +0200
+Date:   Wed, 22 Apr 2020 13:28:31 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-rt-users@vger.kernel.org,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
+ PAGE_SIZE chunks
+Message-ID: <20200422112831.5352gcpo42jgz2dj@linutronix.de>
+References: <20200420075711.2385190-1-Jason@zx2c4.com>
+ <20200422040415.GA2881@sol.localdomain>
+ <CAMj1kXGRNCEkTFPGM03h1N+HtOiLVMcm89UJYMZcuWjyFAp5Ag@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGRNCEkTFPGM03h1N+HtOiLVMcm89UJYMZcuWjyFAp5Ag@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 2020-04-22 09:23:34 [+0200], Ard Biesheuvel wrote:
+> My memory is a bit fuzzy here. I remember talking to the linux-rt guys
+> about what delay is actually acceptable, which was a lot higher than I
+> had thought based on their initial reports about scheduling blackouts
+> on arm64 due to preemption remaining disabled for too long. I intended
+> to revisit this with more accurate bounds but then I apparently
+> forgot.
+> 
+> So SIMD chacha20 and SIMD poly1305 both run in <5 cycles per bytes,
+> both on x86 and ARM. If we take 20 microseconds as a ballpark upper
+> bound for how long preemption may be disabled, that gives us ~4000
+> bytes of ChaCha20 or Poly1305 on a hypothetical 1 GHz core.
+> 
+> So I think 4 KB is indeed a reasonable quantum of work here. Only
+> PAGE_SIZE is not necessarily equal to 4 KB on arm64, so we should use
+> SZ_4K instead.
+> 
+> *However*, at the time, the report was triggered by the fact that we
+> were keeping SIMD enabled across calls into the scatterwalk API, which
+> may call kmalloc()/kfree() etc. There is no need for that anymore, now
+> that the FPU begin/end routines all have been optimized to restore the
+> userland SIMD state lazily.
 
-Field header.tlv is uninitialized and being copied back to userspace
-and hence leaking data from the stack to userspace.  Fix this by
-ensuring the header structure is zero'd.
+The 20usec sound reasonable. The other concern was memory allocation
+within the preempt-disable section. If this is no longer the case,
+perfect.
 
-Fixes: c3078f539704 ("ASoC: SOF: Add Sound Open Firmware KControl support")
-Addresses-Coverity: ("Uninitialized scalar variable")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- sound/soc/sof/control.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
-index dfc412e2d956..97d5c1a4c1ff 100644
---- a/sound/soc/sof/control.c
-+++ b/sound/soc/sof/control.c
-@@ -362,7 +362,7 @@ int snd_sof_bytes_ext_get(struct snd_kcontrol *kcontrol,
- 	struct snd_sof_control *scontrol = be->dobj.private;
- 	struct snd_soc_component *scomp = scontrol->scomp;
- 	struct sof_ipc_ctrl_data *cdata = scontrol->control_data;
--	struct snd_ctl_tlv header;
-+	struct snd_ctl_tlv header = { };
- 	struct snd_ctl_tlv __user *tlvd =
- 		(struct snd_ctl_tlv __user *)binary_data;
- 	int data_size;
--- 
-2.25.1
-
+Sebastian
