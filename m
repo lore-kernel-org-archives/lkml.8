@@ -2,143 +2,99 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6276C55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E6DC38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F42B20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587528259;
-	bh=R50vllRGiQsBJ4Aew3sRKSSCruehTtz3DQqv/n93hNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GnwmqxMUxTixiVgVqFE6dzWJdYR/PjyPg/IxTeCEGQpLkwJltmwslkNU0cX5s2u1V
-	 lqoJfGRKfHHDfztvdMF3gbM6K8ThaODvFyxLHVwWRRUvNFA9U+HYwvzaEcvPE7/HfR
-	 /KLL6KtvmzA+dU+cSIIDIrhGAu3GtIxEqiKtiXmY=
+	by mail.kernel.org (Postfix) with ESMTP id 8286E206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YIzK+alY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgDVEET (ORCPT
+        id S1726110AbgDVEGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 00:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgDVEES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 00:04:18 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 626AF206EC;
-        Wed, 22 Apr 2020 04:04:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587528257;
-        bh=R50vllRGiQsBJ4Aew3sRKSSCruehTtz3DQqv/n93hNM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oLnolN4n3W0qfa33jBbew2yBYuAnakUYs7omwV98FryoaPMJV7me5S/It2jiD/eod
-         VneXTzDyJl1rkZ4eRKvebq4EwhkN0QceSOCed0MRqQ2FcUpDXFvcc6C8Qz92n+Gwox
-         nFX6Tk0k8zatHLfutLngG+aNV9NaJclM54FwYUbo=
-Date:   Tue, 21 Apr 2020 21:04:15 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ardb@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
- PAGE_SIZE chunks
-Message-ID: <20200422040415.GA2881@sol.localdomain>
-References: <20200420075711.2385190-1-Jason@zx2c4.com>
+        Wed, 22 Apr 2020 00:06:14 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59108 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgDVEGO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 00:06:14 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M3wTSX086199;
+        Wed, 22 Apr 2020 04:05:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=0/577IYdzaOZI8ebekA2HHPBCL9rJ5Gyj91H7FB//oA=;
+ b=YIzK+alYeGi7+Y26Ho0Slm3m4QWJOD3IpC2P7zqdz7SADiujSbjqaVk9n+SxT5XzWYdt
+ 0oz83ZaSS5DftkRMe4wEgZDdbV+BYMPImkH7ECg5CBgDKbdwiVU8g217Mr4qxd9qTMEP
+ FiBcE3XeD3MCbYkK1H3jxIFRxMDZLJfnTCRjR2cJX04uZUvL8JmtDGC6OV7T9/fSa5nD
+ GrXauZTR7KFhUCRBcqT/CaYDk8uY7jmjB61plOUkq+NGeDX/ojy7wevmw6hIhDUXQumR
+ SqCJG0O9ehN2LyWWqImk/2ZgygnOGVorOmaXMoKwjv/SnKSFXvOAlwEodkjMRtJOr2LC aQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30fsgm0bnu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 04:05:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M3wFak152472;
+        Wed, 22 Apr 2020 04:05:52 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30gb1hhrss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 04:05:52 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03M45mFS029889;
+        Wed, 22 Apr 2020 04:05:48 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 21:05:48 -0700
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <Kai.Makisara@kolumbus.fi>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <arnd@arndb.de>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] scsi: st: remove unneeded variable 'result' in st_release()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200418070605.11450-1-yanaijie@huawei.com>
+Date:   Wed, 22 Apr 2020 00:05:45 -0400
+In-Reply-To: <20200418070605.11450-1-yanaijie@huawei.com> (Jason Yan's message
+        of "Sat, 18 Apr 2020 15:06:05 +0800")
+Message-ID: <yq18sioi2qu.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420075711.2385190-1-Jason@zx2c4.com>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220030
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 01:57:11AM -0600, Jason A. Donenfeld wrote:
-> The initial Zinc patchset, after some mailing list discussion, contained
-> code to ensure that kernel_fpu_enable would not be kept on for more than
-> a PAGE_SIZE chunk, since it disables preemption. The choice of PAGE_SIZE
-> isn't totally scientific, but it's not a bad guess either, and it's
-> what's used in both the x86 poly1305 and blake2s library code already.
-> Unfortunately it appears to have been left out of the final patchset
-> that actually added the glue code. So, this commit adds back the
-> PAGE_SIZE chunking.
-> 
-> Fixes: 84e03fa39fbe ("crypto: x86/chacha - expose SIMD ChaCha routine as library function")
-> Fixes: b3aad5bad26a ("crypto: arm64/chacha - expose arm64 ChaCha routine as library function")
-> Fixes: a44a3430d71b ("crypto: arm/chacha - expose ARM ChaCha routine as library function")
-> Fixes: f569ca164751 ("crypto: arm64/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
-> Fixes: a6b803b3ddc7 ("crypto: arm/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
-> Cc: Eric Biggers <ebiggers@google.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
-> Eric, Ard - I'm wondering if this was in fact just an oversight in Ard's
-> patches, or if there was actually some later discussion in which we
-> concluded that the PAGE_SIZE chunking wasn't required, perhaps because
-> of FPU changes. If that's the case, please do let me know, in which case
-> I'll submit a _different_ patch that removes the chunking from x86 poly
-> and blake. I can't find any emails that would indicate that, but I might
-> be mistaken.
-> 
->  arch/arm/crypto/chacha-glue.c        | 16 +++++++++++++---
->  arch/arm/crypto/poly1305-glue.c      | 17 +++++++++++++----
->  arch/arm64/crypto/chacha-neon-glue.c | 16 +++++++++++++---
->  arch/arm64/crypto/poly1305-glue.c    | 17 +++++++++++++----
->  arch/x86/crypto/chacha_glue.c        | 16 +++++++++++++---
->  5 files changed, 65 insertions(+), 17 deletions(-)
 
-I don't think you're missing anything.  On x86, kernel_fpu_begin() and
-kernel_fpu_end() did get optimized in v5.2.  But they still disable preemption,
-which is the concern here.
+Jason,
 
-> 
-> diff --git a/arch/arm/crypto/chacha-glue.c b/arch/arm/crypto/chacha-glue.c
-> index 6fdb0ac62b3d..0e29ebac95fd 100644
-> --- a/arch/arm/crypto/chacha-glue.c
-> +++ b/arch/arm/crypto/chacha-glue.c
-> @@ -91,9 +91,19 @@ void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
->  		return;
->  	}
->  
-> -	kernel_neon_begin();
-> -	chacha_doneon(state, dst, src, bytes, nrounds);
-> -	kernel_neon_end();
-> +	for (;;) {
-> +		unsigned int todo = min_t(unsigned int, PAGE_SIZE, bytes);
-> +
-> +		kernel_neon_begin();
-> +		chacha_doneon(state, dst, src, todo, nrounds);
-> +		kernel_neon_end();
-> +
-> +		bytes -= todo;
-> +		if (!bytes)
-> +			break;
-> +		src += todo;
-> +		dst += todo;
-> +	}
->  }
->  EXPORT_SYMBOL(chacha_crypt_arch);
+> Also remove a strange '^L' after this function.
+>
+> Fix the following coccicheck warning:
+>
+> drivers/scsi/st.c:1460:5-11: Unneeded variable: "result". Return "0" on
+> line 1473
 
-Seems this should just be a 'while' loop?
+Applied to 5.8/scsi-queue, thanks!
 
-	while (bytes) {
-		unsigned int todo = min_t(unsigned int, PAGE_SIZE, bytes);
-
-		kernel_neon_begin();
-		chacha_doneon(state, dst, src, todo, nrounds);
-		kernel_neon_end();
-
-		bytes -= todo;
-		src += todo;
-		dst += todo;
-	}
-
-Likewise elsewhere in this patch.  (For Poly1305, len >= POLY1305_BLOCK_SIZE at
-the beginning, so that could use a 'do' loop.)
-
-- Eric
+-- 
+Martin K. Petersen	Oracle Linux Engineering
