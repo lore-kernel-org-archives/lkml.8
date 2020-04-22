@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C193C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7F1C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4A520775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158462070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550205;
-	bh=QENR4zGyzIN9PhPUaOgmP9y+gUIdnqamPAAH9RYeFPo=;
+	s=default; t=1587550212;
+	bh=Dq85OBwbLWN5CPivEkWRazfUgAcrK8+PPUm19L5OCe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfhoI0R3jFE7uk+RcIdg5ZRzsRfA8wOr82uHF6BRkU46KOAQ0RkVOtzSQeGd0Lt8E
-	 pVaBRPidTS+mpRMGoaMx/0xPAuFMl2J+STTRrAipFMxo2XSCpUrbkmZ3x1xkhBh9nU
-	 xZdKNXOVoHt3rzipR8Xa4Q70j9qlY385Qp9g40aI=
+	b=OGZcWIuKYIkSC0i1otoxbu1Za5kZB3+Yy0I0iI7ULXXM50jo/DLcMKWG8Fhvg15QR
+	 1CNxjKFvmqYDlmxJXU1dYS1zqhfMT13A2xOsxIRLMIZ9+gjZolqPuB/G9Gr8cI4FHA
+	 MuNWviguNpnM6Uok+7TChEJO7gS804fvbY56y4k4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgDVKKE (ORCPT
+        id S1728441AbgDVKKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37986 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgDVKKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:00 -0400
+        id S1728285AbgDVKKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 499DC20775;
-        Wed, 22 Apr 2020 10:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD28320575;
+        Wed, 22 Apr 2020 10:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550199;
-        bh=QENR4zGyzIN9PhPUaOgmP9y+gUIdnqamPAAH9RYeFPo=;
+        s=default; t=1587550202;
+        bh=Dq85OBwbLWN5CPivEkWRazfUgAcrK8+PPUm19L5OCe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2iqSmnw4DEp6ZgWbaMe72WWknys92yMWzR7CbuiBj5DtkHJ/Rcz+wvOf7M7adf0Wg
-         GgX/0IHHGCYMfe8sHSRhYI2h6ffsNaqS+ZFjdZAP1RPUIVBBit4UZDChMo7L6v5/99
-         jNgVLF91vQaxZcl6IJbuFLR8HNOL4dCSciD2iz48=
+        b=H6SA3On2a7YcYnvcmhm5PdUF/k2nw6pBWTUlCLiegA5pIp3FjeJa2go7q4W0MQHFH
+         Ll5nFUyHiccrPdwvK7qQ61PYsquyye7kFWzZ3k/SzCr8k+qnxUq0mlDITWUhv4ls9S
+         MUN4fzowC80SPRiy7NIp6IxynOMwJj4cEl/fCYu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.14 048/199] nvme-fc: Revert "add module to ops template to allow module references"
-Date:   Wed, 22 Apr 2020 11:56:14 +0200
-Message-Id: <20200422095103.017626498@linuxfoundation.org>
+        stable@vger.kernel.org, Yicong Yang <yangyicong@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.14 049/199] PCI/ASPM: Clear the correct bits when enabling L1 substates
+Date:   Wed, 22 Apr 2020 11:56:15 +0200
+Message-Id: <20200422095103.092440269@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,136 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-commit 8c5c660529209a0e324c1c1a35ce3f83d67a2aa5 upstream.
+commit 58a3862a10a317a81097ab0c78aecebabb1704f5 upstream.
 
-The original patch was to resolve the lldd being able to be unloaded
-while being used to talk to the boot device of the system. However, the
-end result of the original patch is that any driver unload while a nvme
-controller is live via the lldd is now being prohibited. Given the module
-reference, the module teardown routine can't be called, thus there's no
-way, other than manual actions to terminate the controllers.
+In pcie_config_aspm_l1ss(), we cleared the wrong bits when enabling ASPM L1
+Substates.  Instead of the L1.x enable bits (PCI_L1SS_CTL1_L1SS_MASK, 0xf), we
+cleared the Link Activation Interrupt Enable bit (PCI_L1SS_CAP_L1_PM_SS,
+0x10).
 
-Fixes: 863fbae929c7 ("nvme_fc: add module to ops template to allow module references")
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Clear the L1.x enable bits before writing the new L1.x configuration.
+
+[bhelgaas: changelog]
+Fixes: aeda9adebab8 ("PCI/ASPM: Configure L1 substate settings")
+Link: https://lore.kernel.org/r/1584093227-1292-1-git-send-email-yangyicong@hisilicon.com
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org	# v4.11+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/fc.c          |   14 ++------------
- drivers/nvme/target/fcloop.c    |    1 -
- drivers/scsi/lpfc/lpfc_nvme.c   |    2 --
- drivers/scsi/qla2xxx/qla_nvme.c |    1 -
- include/linux/nvme-fc-driver.h  |    4 ----
- 5 files changed, 2 insertions(+), 20 deletions(-)
+ drivers/pci/pcie/aspm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -337,8 +337,7 @@ nvme_fc_register_localport(struct nvme_f
- 	    !template->ls_req || !template->fcp_io ||
- 	    !template->ls_abort || !template->fcp_abort ||
- 	    !template->max_hw_queues || !template->max_sgl_segments ||
--	    !template->max_dif_sgl_segments || !template->dma_boundary ||
--	    !template->module) {
-+	    !template->max_dif_sgl_segments || !template->dma_boundary) {
- 		ret = -EINVAL;
- 		goto out_reghost_failed;
- 	}
-@@ -1763,7 +1762,6 @@ nvme_fc_ctrl_free(struct kref *ref)
- {
- 	struct nvme_fc_ctrl *ctrl =
- 		container_of(ref, struct nvme_fc_ctrl, ref);
--	struct nvme_fc_lport *lport = ctrl->lport;
- 	unsigned long flags;
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -693,9 +693,9 @@ static void pcie_config_aspm_l1ss(struct
  
- 	if (ctrl->ctrl.tagset) {
-@@ -1789,7 +1787,6 @@ nvme_fc_ctrl_free(struct kref *ref)
- 	if (ctrl->ctrl.opts)
- 		nvmf_free_options(ctrl->ctrl.opts);
- 	kfree(ctrl);
--	module_put(lport->ops->module);
+ 	/* Enable what we need to enable */
+ 	pci_clear_and_set_dword(parent, up_cap_ptr + PCI_L1SS_CTL1,
+-				PCI_L1SS_CAP_L1_PM_SS, val);
++				PCI_L1SS_CTL1_L1SS_MASK, val);
+ 	pci_clear_and_set_dword(child, dw_cap_ptr + PCI_L1SS_CTL1,
+-				PCI_L1SS_CAP_L1_PM_SS, val);
++				PCI_L1SS_CTL1_L1SS_MASK, val);
  }
  
- static void
-@@ -2768,15 +2765,10 @@ nvme_fc_init_ctrl(struct device *dev, st
- 		goto out_fail;
- 	}
- 
--	if (!try_module_get(lport->ops->module)) {
--		ret = -EUNATCH;
--		goto out_free_ctrl;
--	}
--
- 	idx = ida_simple_get(&nvme_fc_ctrl_cnt, 0, 0, GFP_KERNEL);
- 	if (idx < 0) {
- 		ret = -ENOSPC;
--		goto out_mod_put;
-+		goto out_free_ctrl;
- 	}
- 
- 	ctrl->ctrl.opts = opts;
-@@ -2923,8 +2915,6 @@ out_free_queues:
- out_free_ida:
- 	put_device(ctrl->dev);
- 	ida_simple_remove(&nvme_fc_ctrl_cnt, ctrl->cnum);
--out_mod_put:
--	module_put(lport->ops->module);
- out_free_ctrl:
- 	kfree(ctrl);
- out_fail:
---- a/drivers/nvme/target/fcloop.c
-+++ b/drivers/nvme/target/fcloop.c
-@@ -693,7 +693,6 @@ fcloop_targetport_delete(struct nvmet_fc
- #define FCLOOP_DMABOUND_4G		0xFFFFFFFF
- 
- static struct nvme_fc_port_template fctemplate = {
--	.module			= THIS_MODULE,
- 	.localport_delete	= fcloop_localport_delete,
- 	.remoteport_delete	= fcloop_remoteport_delete,
- 	.create_queue		= fcloop_create_queue,
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -1591,8 +1591,6 @@ lpfc_nvme_fcp_abort(struct nvme_fc_local
- 
- /* Declare and initialization an instance of the FC NVME template. */
- static struct nvme_fc_port_template lpfc_nvme_template = {
--	.module	= THIS_MODULE,
--
- 	/* initiator-based functions */
- 	.localport_delete  = lpfc_nvme_localport_delete,
- 	.remoteport_delete = lpfc_nvme_remoteport_delete,
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -578,7 +578,6 @@ static void qla_nvme_remoteport_delete(s
- }
- 
- static struct nvme_fc_port_template qla_nvme_fc_transport = {
--	.module	= THIS_MODULE,
- 	.localport_delete = qla_nvme_localport_delete,
- 	.remoteport_delete = qla_nvme_remoteport_delete,
- 	.create_queue   = qla_nvme_alloc_queue,
---- a/include/linux/nvme-fc-driver.h
-+++ b/include/linux/nvme-fc-driver.h
-@@ -279,8 +279,6 @@ struct nvme_fc_remote_port {
-  *
-  * Host/Initiator Transport Entrypoints/Parameters:
-  *
-- * @module:  The LLDD module using the interface
-- *
-  * @localport_delete:  The LLDD initiates deletion of a localport via
-  *       nvme_fc_deregister_localport(). However, the teardown is
-  *       asynchronous. This routine is called upon the completion of the
-@@ -394,8 +392,6 @@ struct nvme_fc_remote_port {
-  *       Value is Mandatory. Allowed to be zero.
-  */
- struct nvme_fc_port_template {
--	struct module	*module;
--
- 	/* initiator-based functions */
- 	void	(*localport_delete)(struct nvme_fc_local_port *);
- 	void	(*remoteport_delete)(struct nvme_fc_remote_port *);
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
 
 
