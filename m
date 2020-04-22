@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BFBC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ECFC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A59BE2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11EF2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551133;
-	bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
+	s=default; t=1587551135;
+	bh=EmooAh3QNBEGdyK8oG4A8fdn5lpHulsc2cu+K0KzJrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpoMKEBY9DThZLaixyLiXhbQ1PdJUX5W4ZctyebjBVaosc4srTPyK0nI1Veoi/buL
-	 ULweiqR42to6K2MjovHpLLhCuu8+i3OTDxmFdUKXmXq0Wt2FeJsKH2mhLpi2GTx2t2
-	 gY1nChrCWaNxxaFi9OIJ7ei9Je7tzlgniPJJpQqA=
+	b=hJi+hR2I4+9X50pGfxM121usg7Pc6CYTjUyyA3UN2JRyIxWilV983NWfTh/BLqiT8
+	 N8JLXe4wAUdP5Uw+ge6HG9QWwKfsHS2LtTDxzxo0kk0xFOmZ+8nAuREH9v+rzTC++m
+	 DGK75cPV+Tydot09qn2Lv2zoidQOnu4PETMdFV20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbgDVKZb (ORCPT
+        id S1730559AbgDVKZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33790 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730206AbgDVKZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:25:14 -0400
+        id S1730536AbgDVKZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:25:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44C3A2076B;
-        Wed, 22 Apr 2020 10:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7722075A;
+        Wed, 22 Apr 2020 10:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551113;
-        bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
+        s=default; t=1587551121;
+        bh=EmooAh3QNBEGdyK8oG4A8fdn5lpHulsc2cu+K0KzJrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YunIPTupxM0poe8ZvyGv4aEcjLu7Wg19N91CThyAxRp1VNxS973daGOuzX2pGnCDp
-         akTtAsCuOquTEFmQCvywqIEWgIwo21zgLXDoM58C7glrOwCxtJWIb5zpTNOfzoGhO6
-         e4ho3xb/T7Du7dzyuvnNZm+gdBs2cyXnYXHIGslw=
+        b=YnUxXUZ95rOBroY4S0JFpZTmOGo/RJiam950Iu1cDiG74pCZHugANClAHGeOFHWOx
+         X2GPAnKdoC/XMHjgBWsizm3RRquN8bN7iJlKga4YzU/OJJfVc4OuFGMVvpaX2eJ12D
+         cGibco5acbneiUHxXXmZBtVJAPz2fu5c7qPK2WtY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 105/166] percpu_counter: fix a data race at vm_committed_as
-Date:   Wed, 22 Apr 2020 11:57:12 +0200
-Message-Id: <20200422095100.144009687@linuxfoundation.org>
+Subject: [PATCH 5.6 107/166] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
+Date:   Wed, 22 Apr 2020 11:57:14 +0200
+Message-Id: <20200422095100.317308946@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -62,70 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit 7e2345200262e4a6056580f0231cccdaffc825f3 ]
+[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
 
-"vm_committed_as.count" could be accessed concurrently as reported by
-KCSAN,
+We have to properly retry again by returning -EINVAL immediately in case
+somebody else instantiated the table concurrently. We missed to add the
+goto in this function only. The code now matches the other, similar
+shadowing functions.
 
- BUG: KCSAN: data-race in __vm_enough_memory / percpu_counter_add_batch
+We are overwriting an existing region 2 table entry. All allocated pages
+are added to the crst_list to be freed later, so they are not lost
+forever. However, when unshadowing the region 2 table, we wouldn't trigger
+unshadowing of the original shadowed region 3 table that we replaced. It
+would get unshadowed when the original region 3 table is modified. As it's
+not connected to the page table hierarchy anymore, it's not going to get
+used anymore. However, for a limited time, this page table will stick
+around, so it's in some sense a temporary memory leak.
 
- write to 0xffffffff9451c538 of 8 bytes by task 65879 on cpu 35:
-  percpu_counter_add_batch+0x83/0xd0
-  percpu_counter_add_batch at lib/percpu_counter.c:91
-  __vm_enough_memory+0xb9/0x260
-  dup_mm+0x3a4/0x8f0
-  copy_process+0x2458/0x3240
-  _do_fork+0xaa/0x9f0
-  __do_sys_clone+0x125/0x160
-  __x64_sys_clone+0x70/0x90
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Identified by manual code inspection. I don't think this classifies as
+stable material.
 
- read to 0xffffffff9451c538 of 8 bytes by task 66773 on cpu 19:
-  __vm_enough_memory+0x199/0x260
-  percpu_counter_read_positive at include/linux/percpu_counter.h:81
-  (inlined by) __vm_enough_memory at mm/util.c:839
-  mmap_region+0x1b2/0xa10
-  do_mmap+0x45c/0x700
-  vm_mmap_pgoff+0xc0/0x130
-  ksys_mmap_pgoff+0x6e/0x300
-  __x64_sys_mmap+0x33/0x40
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The read is outside percpu_counter::lock critical section which results in
-a data race.  Fix it by adding a READ_ONCE() in
-percpu_counter_read_positive() which could also service as the existing
-compiler memory barrier.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Marco Elver <elver@google.com>
-Link: http://lkml.kernel.org/r/1582302724-2804-1-git-send-email-cai@lca.pw
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/percpu_counter.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/mm/gmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
-index 4f052496cdfd7..0a4f54dd4737b 100644
---- a/include/linux/percpu_counter.h
-+++ b/include/linux/percpu_counter.h
-@@ -78,9 +78,9 @@ static inline s64 percpu_counter_read(struct percpu_counter *fbc)
-  */
- static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
- {
--	s64 ret = fbc->count;
-+	/* Prevent reloads of fbc->count */
-+	s64 ret = READ_ONCE(fbc->count);
- 
--	barrier();		/* Prevent reloads of fbc->count */
- 	if (ret >= 0)
- 		return ret;
- 	return 0;
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 9d9ab77d02dd3..364e3a89c0969 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -1844,6 +1844,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
+ 		goto out_free;
+ 	} else if (*table & _REGION_ENTRY_ORIGIN) {
+ 		rc = -EAGAIN;		/* Race with shadow */
++		goto out_free;
+ 	}
+ 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
+ 	/* mark as invalid as long as the parent table is not protected */
 -- 
 2.20.1
 
