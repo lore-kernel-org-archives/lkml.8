@@ -2,62 +2,66 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0B6C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A98C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968F820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E0B20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aJkRjktk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fOCgPjpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgDVAO1 (ORCPT
+        id S1726398AbgDVAOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54554 "EHLO
+        Tue, 21 Apr 2020 20:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgDVAO1 (ORCPT
+        with ESMTP id S1726012AbgDVAOa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:14:27 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE457C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:14:25 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id q142so521437pfc.21
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:14:25 -0700 (PDT)
+        Tue, 21 Apr 2020 20:14:30 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31395C0610D5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:14:30 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id l9so152082pjq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=bjS7pKjW7i4kMVoZWIx/6+vfkO06Rxr0/XWr9RESCLE=;
-        b=aJkRjktkcTWkT+Lg7eUMVvE1yeUx0kMwgGGAhYrROgyF4sTacHbeXHHvNDDC7kWqlA
-         +Cc+5h16PUXg8ycd8QN5vy/m6CcPRGDPHFwXXtBxm7sIWrXe4rOg0Qy73ip8l4RMZqrw
-         GkOnUHCYrZ6q5HKCOZZplbnF041Pg9ZRJ1NaYpzmd1c2MDxkx+LNfRGcZ2jH1BHE8M2H
-         dr6YXGfvWNV8eY5oGViEcgOvY5+IDSKXTsHvXbgxaOTO9axCGvKDrqZ//7Bjrz0Iakl+
-         nBUyPA8iM8l/0rruoKS0AU0fruLuIs20b4x5aoGNf+yvHkPmCE2eTk8EiplWpBgGC3Bm
-         EU4w==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=/xPYX04nKsJiukhQBuhEJ9u68izHM8ZA0ttUVx7HKYQ=;
+        b=fOCgPjpjPqfxN/zvti9Uz9F22MJpVgNh2v3q4OjtyOZDSp4ZHvIbKO+bJyTLsueskU
+         6Rmqq5V27Lx/yqlIkm6H0R1h1NmhLkwtJUghxHRvkrj+vQGMskDR6WrzkQnOIXkHFWsk
+         rxQwkUz6OXvo4ppJrc6ESa+nQR/cEGDvw5IrPT2xJBM3FI8Y+MItUjG92F9hCpPofyCl
+         IC3wFW0btBDWYfDD+Ispzve/ACmrzfDLNkrHePsFoESSKCrhRNinJTHcFUihIjzGWSMV
+         cMgo5U5WpTSaRtbOJLR3n/ArQ7X6KVyC+Hf3Cv56RiiU92ieeplRQ0m8kGxOrywVuFrD
+         +dXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=bjS7pKjW7i4kMVoZWIx/6+vfkO06Rxr0/XWr9RESCLE=;
-        b=DA7ZES/TZubaIJ1+7uZ8s2Q9QzM5dNj4dL6pgPIPAxzRbcEU7o5QuiFnrOEyDhTS9L
-         4cvrgeNhWWVTz6vSuSbHRARxwvhPGQdH0FtogN0dKn73bwHNEeNcaKTn1j0DDqRb0/vi
-         AAqEN2S9zIS+niOhcQdJYELl95/sEZdMp8t0vZ5Twq42QHzRDkTGjvMgga/jolKS1YmN
-         VdLSiraY8CLNmTMmZmDzet2OjSZkMqTcoAzgAW6fon8QKX9m+Gmsw9T17Qz0BNw0wkS2
-         58jb9kgbbUoRDFbKzmm1UWNRQqJsDae+Z00GyswxCkCMGMhZyySRwFePRicZ3n8g6zy3
-         G7dQ==
-X-Gm-Message-State: AGi0PuY9mRhpNRoJiQb7LGJ2S3o3lcQ07KgIJb9EpiqBRcaXL5PIBRlj
-        LoiK6rGr92OcUfx0IrkfGdl6hmDeGLY=
-X-Google-Smtp-Source: APiQypLX6E3DeJUU9oSYaEho70+3A4+FNKaXoJEPCFmRrx7prMaa6lFk5w9yvZH5HPHOPcCwnfWmqekv4GQ=
-X-Received: by 2002:a63:1506:: with SMTP id v6mr24921841pgl.365.1587514464984;
- Tue, 21 Apr 2020 17:14:24 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 17:14:12 -0700
-Message-Id: <20200422001422.232330-1-walken@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=/xPYX04nKsJiukhQBuhEJ9u68izHM8ZA0ttUVx7HKYQ=;
+        b=r1x2+xdEHSDr7IxCVIlewxrV7s34l7U3iM80qTL66Qvs0WkKj80XOLe+k2jvdsbV4p
+         GNPbM08lVG4SZ843x4aiBjMTQ1DNS8LqLx0Dw4oFYUib8kpTj6QjASUvxRLaOpD+1o/v
+         U5zvWmEOUR2pJ5XIA+T6UhpU/6cfAw08zu+/g4sJt7yfzqvNgf1+NDAlclIvhZYMAd5W
+         RBgiQqWrMu6nCJSQ6QO3eHUBCI9KkyCvgAUcsN1Go6kFQ2W0eFDhJc8BuQswt7rsf/mx
+         +jCFuqxdWWY3J2E9+2kGrPf/sI63PMYYQzhS5JxZLKdsBHq7VRt+qLUrqtxRI7lAYDp/
+         X6EA==
+X-Gm-Message-State: AGi0PuYZVLeDUWbBc16gAe8D+XrzVW+K6Lx0c2TceBWeR+Y8ZWB6jrIg
+        LzJ/ZMosJ/EtMASQz85vwwl8LLQsZgg=
+X-Google-Smtp-Source: APiQypKUjV/xhe4MdNGIXvANHcuoYitjt1clgRyFFabzndb7K24umh2BGOmFP/jqzPtEDLeknFN7MffKs9s=
+X-Received: by 2002:a17:90a:d808:: with SMTP id a8mr8408471pjv.6.1587514469596;
+ Tue, 21 Apr 2020 17:14:29 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 17:14:14 -0700
+In-Reply-To: <20200422001422.232330-1-walken@google.com>
+Message-Id: <20200422001422.232330-3-walken@google.com>
 Mime-Version: 1.0
+References: <20200422001422.232330-1-walken@google.com>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
-Subject: [PATCH v5 00/10] Add a new mmap locking API wrapping mmap_sem calls
+Subject: [PATCH v5 02/10] MMU notifier: use the new mmap locking API
 From:   Michel Lespinasse <walken@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         linux-mm <linux-mm@kvack.org>
@@ -73,290 +77,49 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michel Lespinasse <walken@google.com>
+        Michel Lespinasse <walken@google.com>,
+        Davidlohr Bueso <dbueso@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reposting this patch series on top of v5.7-rc2. I think this would be
-a good time for the series to be picked up in -mm tree for integration
-into v5.8. I also made minor changes to patches 6 and 7 based on
-reviewer feedback on the previous revisions.
+This use is converted manually ahead of the next patch in the series,
+as it requires including a new header which the automated conversion
+would miss.
 
+Signed-off-by: Michel Lespinasse <walken@google.com>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+---
+ include/linux/mmu_notifier.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-This patch series adds a new mmap locking API replacing the existing
-mmap_sem lock and unlocks. Initially the API is just implemente in terms
-of inlined rwsem calls, so it doesn't provide any new functionality.
-
-There are two justifications for the new API:
-
-- At first, it provides an easy hooking point to instrument mmap_sem
-  locking latencies independently of any other rwsems.
-
-- In the future, it may be a starting point for replacing the rwsem
-  implementation with a different one, such as range locks. This is
-  something that is being explored, even though there is no wide concensus
-  about this possible direction yet.
-  (see https://patchwork.kernel.org/cover/11401483/)
-
-
-Changes since v4 of the patchset:
-
-- Applied the changes on top of v5.7-rc2. This was a straight rebase
-  except for changes noted here.
-
-- Patch 01/10: renamed the mmap_write_downgrade API
-  (as suggested by Davidlohr Bueso).
-
-- Patch 05/10: added arch/riscv/mm/pageattr.c changes that had been
-  previously missed, as found by the kbuild bot.
-
-- Patch 06/10: use SINGLE_DEPTH_NESTING as suggested by Matthew Wilcox.
-
-- Patch 08/10: change MMAP_LOCK_INITIALIZER definition
-  as suggested by Matthew Wilcox.
-
-- Patch 09/10: add mm_assert_locked API as suggested by Matthew Wilcox.
-
-
-Changes since v3 of the patchset:
-
-- The changes now apply on top of v5.7-rc1. This was a straight rebase
-  except for changes noted here.
-
-- Re-generated the coccinelle changes (patch 04/10).
-
-- Patch 06/10: removed the mmap_write_unlock_nested API;
-  mmap_write_lock_nested() calls now pair with the regular mmap_write_unlock()
-  as was suggested by many people.
-
-- Patch 07/10: removed the mmap_read_release API; this is replaced with
-  mmap_read_trylock_non_owner() which pairs with mmap_read_unlock_non_owner()
-  Thanks to Peter Zijlstra for the suggestion.
-
-
-Changes since v2 of the patchset:
-
-- Removed the mmap_is_locked API - v2 had removed all uses of it,
-  but the actual function definition was still there unused.
-  Thanks to Jason Gunthorpe for noticing the unused mmap_is_locked function.
-
-
-Changes since v1 of the patchset:
-
-- Manually convert drivers/dma-buf/dma-resv.c ahead of the automated
-  coccinelle conversion as this file requires a new include statement.
-  Thanks to Intel's kbuild test bot for finding the issue.
-
-- In coccinelle automated conversion, apply a single coccinelle rule
-  as suggested by Markus Elfring.
-
-- In manual conversion of sites missed by coccinelle, fix an issue where
-  I had used mm_read_unlock (from an older version of my patchset) instead
-  of mmap_read_unlock in some arch/mips code.
-  This was also identified by Intel's kbuild test bot.
-
-- Do not add a new mmap_is_locked API, and use lockdep_assert_held instead.
-  Thanks to Jason Gunthorpe and Matthew Wilcox for the suggestion.
-
-
-The changes apply on top of v5.7-rc2.
-
-I think these changes are ready for integration into the -mm tree now
-(for integration into v5.8). The coccinelle part of the change is
-relatively invasive, but can be skipped over on a file by file basis
-if it causes any conflicts with other pending changes. The new mmap
-locking API can interoperate with new code that is still using direct
-rwsem calls, until the last patch in the series which renames mmap_sem
-to enforce using the new API. Maybe that last patch could be delayed for
-a bit, so that we'd get a chance to convert any new code that locks
-mmap_sem in the -rc1 release before applying that last patch.
-
-
-Michel Lespinasse (10):
-  mmap locking API: initial implementation as rwsem wrappers
-  MMU notifier: use the new mmap locking API
-  DMA  reservations: use the new mmap locking API
-  mmap locking API: use coccinelle to convert mmap_sem rwsem call sites
-  mmap locking API: convert mmap_sem call sites missed by coccinelle
-  mmap locking API: convert nested write lock sites
-  mmap locking API: add mmap_read_trylock_non_owner()
-  mmap locking API: add MMAP_LOCK_INITIALIZER
-  mmap locking API: use lockdep_assert_held
-  mmap locking API: rename mmap_sem to mmap_lock
-
- arch/alpha/kernel/traps.c                     |  4 +-
- arch/alpha/mm/fault.c                         | 10 +--
- arch/arc/kernel/process.c                     |  4 +-
- arch/arc/kernel/troubleshoot.c                |  4 +-
- arch/arc/mm/fault.c                           |  4 +-
- arch/arm/kernel/process.c                     |  4 +-
- arch/arm/kernel/swp_emulate.c                 |  4 +-
- arch/arm/lib/uaccess_with_memcpy.c            | 16 ++--
- arch/arm/mm/fault.c                           |  6 +-
- arch/arm64/kernel/traps.c                     |  4 +-
- arch/arm64/kernel/vdso.c                      |  8 +-
- arch/arm64/mm/fault.c                         |  8 +-
- arch/csky/kernel/vdso.c                       |  4 +-
- arch/csky/mm/fault.c                          |  8 +-
- arch/hexagon/kernel/vdso.c                    |  4 +-
- arch/hexagon/mm/vm_fault.c                    |  8 +-
- arch/ia64/kernel/perfmon.c                    |  8 +-
- arch/ia64/mm/fault.c                          | 12 +--
- arch/ia64/mm/init.c                           | 12 +--
- arch/m68k/kernel/sys_m68k.c                   | 14 +--
- arch/m68k/mm/fault.c                          |  8 +-
- arch/microblaze/mm/fault.c                    | 12 +--
- arch/mips/kernel/traps.c                      |  4 +-
- arch/mips/kernel/vdso.c                       |  4 +-
- arch/mips/mm/fault.c                          | 10 +--
- arch/nds32/kernel/vdso.c                      |  6 +-
- arch/nds32/mm/fault.c                         | 12 +--
- arch/nios2/mm/fault.c                         | 12 +--
- arch/nios2/mm/init.c                          |  4 +-
- arch/openrisc/mm/fault.c                      | 10 +--
- arch/parisc/kernel/traps.c                    |  6 +-
- arch/parisc/mm/fault.c                        |  8 +-
- arch/powerpc/kernel/vdso.c                    |  6 +-
- arch/powerpc/kvm/book3s_hv.c                  |  6 +-
- arch/powerpc/kvm/book3s_hv_uvmem.c            | 12 +--
- arch/powerpc/kvm/e500_mmu_host.c              |  4 +-
- arch/powerpc/mm/book3s64/iommu_api.c          |  4 +-
- arch/powerpc/mm/book3s64/subpage_prot.c       | 12 +--
- arch/powerpc/mm/copro_fault.c                 |  4 +-
- arch/powerpc/mm/fault.c                       | 12 +--
- arch/powerpc/oprofile/cell/spu_task_sync.c    |  6 +-
- arch/powerpc/platforms/cell/spufs/file.c      |  4 +-
- arch/riscv/kernel/vdso.c                      |  4 +-
- arch/riscv/mm/fault.c                         | 10 +--
- arch/riscv/mm/pageattr.c                      |  4 +-
- arch/s390/kernel/uv.c                         |  4 +-
- arch/s390/kernel/vdso.c                       |  4 +-
- arch/s390/kvm/gaccess.c                       |  4 +-
- arch/s390/kvm/interrupt.c                     |  4 +-
- arch/s390/kvm/kvm-s390.c                      | 28 +++---
- arch/s390/kvm/priv.c                          | 32 +++----
- arch/s390/mm/fault.c                          | 14 +--
- arch/s390/mm/gmap.c                           | 44 +++++-----
- arch/s390/pci/pci_mmio.c                      |  4 +-
- arch/sh/kernel/sys_sh.c                       |  6 +-
- arch/sh/kernel/vsyscall/vsyscall.c            |  4 +-
- arch/sh/mm/fault.c                            | 10 +--
- arch/sparc/mm/fault_32.c                      | 18 ++--
- arch/sparc/mm/fault_64.c                      | 12 +--
- arch/sparc/vdso/vma.c                         |  4 +-
- arch/um/include/asm/mmu_context.h             |  5 +-
- arch/um/kernel/tlb.c                          |  2 +-
- arch/um/kernel/trap.c                         |  6 +-
- arch/unicore32/mm/fault.c                     |  6 +-
- arch/x86/entry/vdso/vma.c                     | 14 +--
- arch/x86/events/core.c                        |  4 +-
- arch/x86/kernel/tboot.c                       |  2 +-
- arch/x86/kernel/vm86_32.c                     |  4 +-
- arch/x86/kvm/mmu/paging_tmpl.h                |  8 +-
- arch/x86/mm/fault.c                           | 10 +--
- arch/x86/um/vdso/vma.c                        |  4 +-
- arch/xtensa/mm/fault.c                        | 10 +--
- drivers/android/binder_alloc.c                | 10 +--
- drivers/dma-buf/dma-resv.c                    |  5 +-
- drivers/firmware/efi/efi.c                    |  2 +-
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  |  4 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c       | 10 +--
- drivers/gpu/drm/amd/amdkfd/kfd_events.c       |  4 +-
- drivers/gpu/drm/etnaviv/etnaviv_gem.c         |  2 +-
- drivers/gpu/drm/i915/gem/i915_gem_mman.c      |  4 +-
- drivers/gpu/drm/i915/gem/i915_gem_userptr.c   |  8 +-
- drivers/gpu/drm/nouveau/nouveau_svm.c         | 22 ++---
- drivers/gpu/drm/radeon/radeon_cs.c            |  4 +-
- drivers/gpu/drm/radeon/radeon_gem.c           |  6 +-
- drivers/gpu/drm/ttm/ttm_bo_vm.c               |  4 +-
- drivers/infiniband/core/umem_odp.c            |  4 +-
- drivers/infiniband/core/uverbs_main.c         |  4 +-
- drivers/infiniband/hw/mlx4/mr.c               |  4 +-
- drivers/infiniband/hw/qib/qib_user_pages.c    |  6 +-
- drivers/infiniband/hw/usnic/usnic_uiom.c      |  4 +-
- drivers/infiniband/sw/siw/siw_mem.c           |  4 +-
- drivers/iommu/amd_iommu_v2.c                  |  4 +-
- drivers/iommu/intel-svm.c                     |  4 +-
- drivers/media/v4l2-core/videobuf-core.c       |  4 +-
- drivers/media/v4l2-core/videobuf-dma-contig.c |  4 +-
- drivers/media/v4l2-core/videobuf-dma-sg.c     |  4 +-
- drivers/misc/cxl/cxllib.c                     |  4 +-
- drivers/misc/cxl/fault.c                      |  4 +-
- drivers/misc/sgi-gru/grufault.c               | 16 ++--
- drivers/misc/sgi-gru/grufile.c                |  4 +-
- drivers/oprofile/buffer_sync.c                | 10 +--
- drivers/staging/kpc2000/kpc_dma/fileops.c     |  4 +-
- drivers/tee/optee/call.c                      |  4 +-
- drivers/vfio/vfio_iommu_type1.c               |  8 +-
- drivers/vhost/vdpa.c                          |  4 +-
- drivers/xen/gntdev.c                          |  4 +-
- drivers/xen/privcmd.c                         | 14 +--
- fs/aio.c                                      |  4 +-
- fs/coredump.c                                 |  4 +-
- fs/exec.c                                     | 16 ++--
- fs/io_uring.c                                 |  4 +-
- fs/proc/base.c                                | 18 ++--
- fs/proc/task_mmu.c                            | 28 +++---
- fs/proc/task_nommu.c                          | 18 ++--
- fs/userfaultfd.c                              | 26 +++---
- include/linux/mm.h                            |  1 +
- include/linux/mm_types.h                      |  2 +-
- include/linux/mmap_lock.h                     | 86 +++++++++++++++++++
- include/linux/mmu_notifier.h                  |  5 +-
- ipc/shm.c                                     |  8 +-
- kernel/acct.c                                 |  4 +-
- kernel/bpf/stackmap.c                         | 17 ++--
- kernel/events/core.c                          |  4 +-
- kernel/events/uprobes.c                       | 16 ++--
- kernel/exit.c                                 |  8 +-
- kernel/fork.c                                 | 14 +--
- kernel/futex.c                                |  4 +-
- kernel/sched/fair.c                           |  4 +-
- kernel/sys.c                                  | 18 ++--
- kernel/trace/trace_output.c                   |  4 +-
- lib/test_lockup.c                             |  8 +-
- mm/filemap.c                                  |  6 +-
- mm/frame_vector.c                             |  4 +-
- mm/gup.c                                      | 20 ++---
- mm/hmm.c                                      |  2 +-
- mm/init-mm.c                                  |  2 +-
- mm/internal.h                                 |  2 +-
- mm/khugepaged.c                               | 36 ++++----
- mm/ksm.c                                      | 34 ++++----
- mm/madvise.c                                  | 18 ++--
- mm/memcontrol.c                               |  8 +-
- mm/memory.c                                   | 16 ++--
- mm/mempolicy.c                                | 22 ++---
- mm/migrate.c                                  |  8 +-
- mm/mincore.c                                  |  4 +-
- mm/mlock.c                                    | 16 ++--
- mm/mmap.c                                     | 36 ++++----
- mm/mmu_notifier.c                             | 22 ++---
- mm/mprotect.c                                 | 12 +--
- mm/mremap.c                                   |  6 +-
- mm/msync.c                                    |  8 +-
- mm/nommu.c                                    | 16 ++--
- mm/oom_kill.c                                 |  4 +-
- mm/pagewalk.c                                 | 15 ++--
- mm/process_vm_access.c                        |  4 +-
- mm/ptdump.c                                   |  4 +-
- mm/swapfile.c                                 |  4 +-
- mm/userfaultfd.c                              | 18 ++--
- mm/util.c                                     | 12 +--
- net/ipv4/tcp.c                                |  4 +-
- net/xdp/xdp_umem.c                            |  4 +-
- virt/kvm/arm/mmu.c                            | 14 +--
- virt/kvm/async_pf.c                           |  4 +-
- virt/kvm/kvm_main.c                           |  8 +-
- 164 files changed, 801 insertions(+), 717 deletions(-)
- create mode 100644 include/linux/mmap_lock.h
-
-
-base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
-
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index 736f6918335e..2f462710a1a4 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -5,6 +5,7 @@
+ #include <linux/list.h>
+ #include <linux/spinlock.h>
+ #include <linux/mm_types.h>
++#include <linux/mmap_lock.h>
+ #include <linux/srcu.h>
+ #include <linux/interval_tree.h>
+ 
+@@ -277,9 +278,9 @@ mmu_notifier_get(const struct mmu_notifier_ops *ops, struct mm_struct *mm)
+ {
+ 	struct mmu_notifier *ret;
+ 
+-	down_write(&mm->mmap_sem);
++	mmap_write_lock(mm);
+ 	ret = mmu_notifier_get_locked(ops, mm);
+-	up_write(&mm->mmap_sem);
++	mmap_write_unlock(mm);
+ 	return ret;
+ }
+ void mmu_notifier_put(struct mmu_notifier *subscription);
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
