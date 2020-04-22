@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C9BC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE30C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001C72076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC412076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552468;
-	bh=pPR3E/+TEmW7X9ElB0tBqcMc5d+em6cDWmEOV6tWQKA=;
+	s=default; t=1587552474;
+	bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LwhF6i3P2prGxibCvWAVO072a1wvt53rjFsCq8MOfcHTiss3Wkfz8hwm7vOGcyqAL
-	 IbKH0gl9wmmcgH0rChKQhBUUzBYorVobTmkgA8l3hlPXgu48+19arWcPgf+fzQPRVN
-	 vFOOPCqF1glAaWzKhXSGd46rLp5MKsp23+DUOCfM=
+	b=kPudRy9VthGrTh/muybR7Ks5YxFUUWH+sHelNIDKjvZKAr4iMx6TXD8sRYUuAYUIi
+	 FbhwpQuLuNSagP+Eip1YL4kMOwTA5fag/3mem5nIptZ9GYLMkoeQKPnce+jcfGYnob
+	 E4uyjj9Phu5FfY6KryClBrcilY/SC3IPJ6F3mIb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbgDVKrq (ORCPT
+        id S1729995AbgDVKrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:47:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729715AbgDVKP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:29 -0400
+        id S1729643AbgDVKPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF1D02070B;
-        Wed, 22 Apr 2020 10:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 421782071E;
+        Wed, 22 Apr 2020 10:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550529;
-        bh=pPR3E/+TEmW7X9ElB0tBqcMc5d+em6cDWmEOV6tWQKA=;
+        s=default; t=1587550516;
+        bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RX8xbtVPTEt0Mzv/rUv+u02H9IKWqFNv5/ttlyYhEDAETrhMj8q9laMfiVU3/Ovmp
-         LcgEwDthexk1tMHpBTFDDco2OwGIEBKTtCAghDyjH00dQ0pnIY3b0lyJd/Kye878KX
-         WDd0AK52JHSdUgTRKxaqWAuQ5ELLKVDfMRdZtOWg=
+        b=y0Hcn6En0CSiU3BqIX4TnXxYEsOwcZY3bSP/J4gwE+NgH1PBYALpAg/hB8QOjG1JC
+         K2qeUa26I5FO+xay+Ud++T4E/1iYDYpg9Wm3OwA06QqPtt30sDtFHbvQFBVwhYeETF
+         ppt5X/H5M2sN63Sc1o8vaa7h6RJwkV2TfBt+ov3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffery Miller <jmiller@neverware.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 51/64] power: supply: axp288_fuel_gauge: Broaden vendor check for Intel Compute Sticks.
-Date:   Wed, 22 Apr 2020 11:57:35 +0200
-Message-Id: <20200422095022.009950514@linuxfoundation.org>
+Subject: [PATCH 4.19 47/64] drm/vc4: Fix HDMI mode validation
+Date:   Wed, 22 Apr 2020 11:57:31 +0200
+Message-Id: <20200422095021.181360986@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -61,47 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffery Miller <jmiller@neverware.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit e42fe5b29ac07210297e75f36deefe54edbdbf80 ]
+[ Upstream commit b1e7396a1d0e6af6806337fdaaa44098d6b3343c ]
 
-The Intel Compute Stick `STK1A32SC` can have a system vendor of
-"Intel(R) Client Systems".
-Broaden the Intel Compute Stick DMI checks so that they match "Intel
-Corporation" as well as "Intel(R) Client Systems".
+Current mode validation impedes setting up some video modes which should
+be supported otherwise. Namely 1920x1200@60Hz.
 
-This fixes an issue where the STK1A32SC compute sticks were still
-exposing a battery with the existing blacklist entry.
+Fix this by lowering the minimum HDMI state machine clock to pixel clock
+ratio allowed.
 
-Signed-off-by: Jeffery Miller <jmiller@neverware.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks.")
+Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200326122001.22215-1-nsaenzjulienne@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/axp288_fuel_gauge.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/power/supply/axp288_fuel_gauge.c b/drivers/power/supply/axp288_fuel_gauge.c
-index ab0b6e78ca02a..157cf5ec6b023 100644
---- a/drivers/power/supply/axp288_fuel_gauge.c
-+++ b/drivers/power/supply/axp288_fuel_gauge.c
-@@ -718,14 +718,14 @@ static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
- 	{
- 		/* Intel Cherry Trail Compute Stick, Windows version */
- 		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-+			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1AW32SC"),
- 		},
- 	},
- 	{
- 		/* Intel Cherry Trail Compute Stick, version without an OS */
- 		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-+			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1A32SC"),
- 		},
- 	},
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index fd5522fd179e5..86b98856756d9 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -698,11 +698,23 @@ static enum drm_mode_status
+ vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
+ 			    const struct drm_display_mode *mode)
+ {
+-	/* HSM clock must be 108% of the pixel clock.  Additionally,
+-	 * the AXI clock needs to be at least 25% of pixel clock, but
+-	 * HSM ends up being the limiting factor.
++	/*
++	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
++	 * be faster than pixel clock, infinitesimally faster, tested in
++	 * simulation. Otherwise, exact value is unimportant for HDMI
++	 * operation." This conflicts with bcm2835's vc4 documentation, which
++	 * states HSM's clock has to be at least 108% of the pixel clock.
++	 *
++	 * Real life tests reveal that vc4's firmware statement holds up, and
++	 * users are able to use pixel clocks closer to HSM's, namely for
++	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
++	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
++	 * 162MHz.
++	 *
++	 * Additionally, the AXI clock needs to be at least 25% of
++	 * pixel clock, but HSM ends up being the limiting factor.
+ 	 */
+-	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 108 / 100))
++	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
+ 		return MODE_CLOCK_HIGH;
+ 
+ 	return MODE_OK;
 -- 
 2.20.1
 
