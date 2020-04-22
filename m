@@ -2,173 +2,82 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A4CC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD51EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A204420724
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:54:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n9EkAxNz"
+	by mail.kernel.org (Postfix) with ESMTP id AB1F020767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587516926;
+	bh=1tGsEv5ZFp9bX2M6Kx0sfhTv+0ZAGMG4B0V9Zh/NRjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rD0wWSxXrl3vRjGfLk4DWrvVeWBAfYAaKSbbg3m9uBpJ6TU8pOGeLG1XhcmqFsDRA
+	 txepmWV9RM5zPR1+qmMy3TLdQphiWoeHqDK++fbAdJ8yDzvd6KdY2kQcQD3HMnJMuM
+	 z9yM+9btuDOGjQ6k4z0+KM1SNz2lyNJhO2KkX/58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgDVAyX (ORCPT
+        id S1726444AbgDVAz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726012AbgDVAyW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:54:22 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D839C0610D5;
-        Tue, 21 Apr 2020 17:54:22 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k18so223575pll.6;
-        Tue, 21 Apr 2020 17:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YOdZFvk+6bmIjWVMk3ZS5OgJr20Jdq2fWyo55D6d2YE=;
-        b=n9EkAxNzxm5oKbg0/6Ld25HxkeLVB5k35B6s0UXQ/yYtU8fx2SqXvyp+vPo2us+ZWy
-         P/zC32Gd6vlT2CbT560rszwyu78rZrM2K2aMP+rmbsAoPvUvSuj+cfJkAhYZF8nZvpy2
-         Y0a9hQYnxZmSHF4S14x7P/F2cMXH6vmDrX1/IZ8zzdXgihagBZhmyJSmE/NCwcSfrwIg
-         1V1slQ0FY91qJDjXDay1507ut2oUQQC8K9xSoUgp7U09qnBVZmLzDegJ7Ijwhl+LK484
-         TmOOLVbL7sxyIQJvLYRVhBOpw2hYQBFrAmNfpF0dD8g7bWmvdQtfXPOyBJAzQLtlFA68
-         8U1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YOdZFvk+6bmIjWVMk3ZS5OgJr20Jdq2fWyo55D6d2YE=;
-        b=dusxenv/46FeBM2U0xTl17VwJrqDnrIqkVQ/Kq0namrAO/Y9onMVbXl+MJi1KCvKoB
-         FeiBr3gh717K/BGgSFXX30ET8f/1TUuTll72x2OpydNslHfJIeyafdLgoxj3VjP8QMbD
-         Q/iP70+IF3l5NSi5zbqe946P0Od/8IZQCKUHLWp+gnWP4vweYD9DOuxsWeQjZayTI49l
-         BnzSjg5S0TBSUaGiB2IvGuHiHP8FI1S5130LABOsepeLCq7vp39OuJZXOVRJoaaodCFa
-         Iyu5igRLOglzugxuwgM4H7y9365mQ2g5MyNXVTv2iHSXrtnNYs2kcVVidH4SecNvdywO
-         yJOg==
-X-Gm-Message-State: AGi0PubQWbl2CBu7qvcnUGWC5BGhgbio4s6eVMZ6tuKYoVAOXWZVKGFh
-        uFiVYfOE6CnRvLDuvJ6cS4ztfRAp54vm+Q==
-X-Google-Smtp-Source: APiQypLM9f008fp5IFx6gLV69yBrskOt/tFdR+z6lhjdhE+NpzJFeXdKMs3e/XH5IvGHEi4JCNvPAQ==
-X-Received: by 2002:a17:90b:14ce:: with SMTP id jz14mr664508pjb.30.1587516861090;
-        Tue, 21 Apr 2020 17:54:21 -0700 (PDT)
-Received: from ?IPv6:2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f? ([2604:4080:1012:8d30:9eb6:d0ff:fe8b:175f])
-        by smtp.gmail.com with ESMTPSA id c15sm3602690pfo.188.2020.04.21.17.54.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 17:54:20 -0700 (PDT)
-Subject: Re: [PATCH] Input: xpad - Add custom init packet for Xbox One S
- controllers
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        LuK1337 <priv.luk@gmail.com>
-Cc:     Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <436c79ed-ca21-c075-e2da-0934da5000a2@gmail.com>
- <20200421092434.3360503-1-priv.luk@gmail.com>
- <20200421180851.GA125362@dtor-ws>
-From:   Cameron Gutman <aicommander@gmail.com>
-Message-ID: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
-Date:   Tue, 21 Apr 2020 17:54:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 20:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgDVAzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:55:25 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04B0C2071E;
+        Wed, 22 Apr 2020 00:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587516925;
+        bh=1tGsEv5ZFp9bX2M6Kx0sfhTv+0ZAGMG4B0V9Zh/NRjQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iIZ/ySE32plEgTzSYEoFVxtu2f+Ees6F8/H9+vpBCrjILSB53HY7a8zDlU8Gy28XU
+         jGiV89vqnJFzcW0fhZ9EGuSjUKvNuvecXtgtyjDYvuFctHpqyN6JQqTBVoTUds1Ln7
+         wDuYMMNFP5kbg/+flHoTivANtUtqEQz1ewVHUmFU=
+Date:   Tue, 21 Apr 2020 20:55:23 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH AUTOSEL 5.6 084/129] drm/nouveau: workaround runpm fail
+ by disabling PCI power management on certain intel bridges
+Message-ID: <20200422005523.GV1809@sasha-vm>
+References: <20200415113445.11881-1-sashal@kernel.org>
+ <20200415113445.11881-84-sashal@kernel.org>
+ <CACO55ttpvfoyt1p_5Y-Q1=+5NruF5kMoug85jE9y+jG+FW=HGw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200421180851.GA125362@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CACO55ttpvfoyt1p_5Y-Q1=+5NruF5kMoug85jE9y+jG+FW=HGw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/21/20 11:08 AM, Dmitry Torokhov wrote:
-> Adding Cameron...
-> 
-> On Tue, Apr 21, 2020 at 11:24:33AM +0200, LuK1337 wrote:
->> From: Łukasz Patron <priv.luk@gmail.com>
->>
->> Sending [ 0x05, 0x20, 0x02, 0x0f, 0x06 ] packet for
->> Xbox One S controllers fixes an issue where controller
->> is stuck in Bluetooth mode and not sending any inputs.
->>
+On Wed, Apr 15, 2020 at 06:11:10PM +0200, Karol Herbst wrote:
+>in addition to that 028a12f5aa829 "drm/nouveau/gr/gp107,gp108:
+>implement workaround for HW hanging during init" should probably get
+>picked as well as it's fixing some runtime pm related issue on a
+>handful of additional GPUs. I have a laptop myself which requires both
+>of those patches.
+>
+>Applies to 5.5 and 5..4 as well.
 
-This one is much better. It's working on both the old 3.1 firmware and the
-new 4.8 firmware for the Xbox One S controller.
+I've grabbed it for 5.6 and 5.4 (5.5 is EOL), thanks!
 
-Just for fun I also decided to test this against my other Xbox One gamepads:
-- idVendor=045e, idProduct=02ea, bcdDevice= 3.01
-- idVendor=045e, idProduct=02ea, bcdDevice= 4.08
-- idVendor=045e, idProduct=02dd, bcdDevice= 2.03
-- idVendor=24c6, idProduct=543a, bcdDevice= 1.01
-
-Initialization was successful on all 4 tested gamepads, so this packet looks
-well-tolerated across the range of devices.
-
-I think we should also mark this for stable to get this backported to older
-kernels, otherwise input will break as users update their firmware. Since you
-mentioned you are new to LKML, you can read about stable updates here [0]
-and include the Cc tag on v2 of this patch with my suggested changes below
-if you agree.
-
->> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
->> ---
->>  drivers/input/joystick/xpad.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
->> index 6b40a1c68f9f..4e1781968411 100644
->> --- a/drivers/input/joystick/xpad.c
->> +++ b/drivers/input/joystick/xpad.c
->> @@ -458,6 +458,15 @@ static const u8 xboxone_fw2015_init[] = {
->>  	0x05, 0x20, 0x00, 0x01, 0x00
->>  };
->>  
->> +/*
->> + * This packet is required for Xbox One S pads (0x045e:0x02ea)
->> + * to initialize the controller that was previously used in
->> + * Bluetooth mode.
->> + */
->> +static const u8 xboxone_s_init[] = {
->> +	0x05, 0x20, 0x02, 0x0f, 0x06
->> +};
-
-The sequence numbers are populated when the driver sends the init packet, so
-you should go ahead and replace that 0x02 with 0x00 to match the other packets.
-
->> +
->>  /*
->>   * This packet is required for the Titanfall 2 Xbox One pads
->>   * (0x0e6f:0x0165) to finish initialization and for Hori pads
->> @@ -516,6 +525,7 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
->>  	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
->>  	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
->>  	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
->> +	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
-
-Can you also add an entry here for the Xbox One Elite Series 2 (0x045e, 0x0b00)
-gamepad? According to [1], it has the same problem as the Xbox One S with the
-4.8 firmware when exiting Bluetooth mode.
-
->>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
->>  	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
->>  	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
->> -- 
->> 2.26.0
->>
-> 
-
-[0]: https://www.kernel.org/doc/html/v5.6/process/stable-kernel-rules.html
-[1]: https://github.com/spurious/SDL-mirror/commit/a0f80727972429bad309d7cf6cca949801d11d45
-
-Regards,
-Cameron
-
-
-
+-- 
+Thanks,
+Sasha
