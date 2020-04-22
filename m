@@ -2,197 +2,111 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B1BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32007C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 502EB20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="U1IeZUUt"
+	by mail.kernel.org (Postfix) with ESMTP id 0CA6F20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587572567;
+	bh=ZoZyVaq22s38SwgSlAoEzZWSyA1+oaavMoyBfVfMs8U=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=er+aFLHOuG4wg1bmwMDnckhbtRcRDdalTWfVCmJJnlC6hz0rWbwjR8JfDS038M3QO
+	 n+7kYx/44bDS1VuiRNagbKUn9L4vwMqznWg2Ceyo4YdCtPEgHqyOQd9xUuph+LoBGF
+	 dSOIfcFteRvYmg5oAWairiDH10Se7ItcV07usXes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgDVQWn (ORCPT
+        id S1727771AbgDVQWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:22:43 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:26247 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbgDVQWO (ORCPT
+        Wed, 22 Apr 2020 12:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbgDVQWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:22:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1587572534; x=1619108534;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=TRDzYTTkszQZoBi8scNuBHRjQdUT5FUctOqTVt7xLgw=;
-  b=U1IeZUUtYwpboci7qpjyul7AyKw9qX0VG538iccZtDNPgMLQIeAZB3Nv
-   XEp55RlqjJ3nHX7b3Yh+iomHqVuw5mUcvqjp+NZgnRFYimIIHExWtY3XD
-   25aQ20Ay2TvkZlEZBOjPhUwe2jiGQ9rZk9/oqtuLwz9yl/cVwu8QjFgdS
-   CPWKkUns6H4vJolP9S8TA6UVgbBVSJV5jn/sHpQPwnUc7jAKcsvzkHs/z
-   zzVelXFe/NrqxYMTBsbWe5QO8KzvYjo5AYeQxP/2YcPE8jnURB/cKJuSL
-   +FyDPS/56fPr60xt4MSk/Z4gVjo5yMqjtAEvke9i+E7cAMzpiUVLNw+L0
-   A==;
-IronPort-SDR: 3vqZ3NXJ69fiJBmI0T8thEi5Gc87e1QRZjTNTHvQo562wMKLGKcLtPg41KrWgoJi5MKMR54vof
- qzn/oWxxkKCHUEpwXdUncRLzaGwprbLBzP5HeTXppkW5IzWHkjzMLtbRfxkfSXTALk6arAlgFV
- 9ybxFzZ/w94I7kBNvJSFhKSfPU8VHeS06cSUFQeAReZtL5Kx2use0iBFpal51LT3nTtR9zG4Sy
- 2QWbP6TUNCdXey8/079eNA2bM4UzReCUQD9X8rN8vepPTBei+Jjt3mpG7zBMBrCufH5/obY2Db
- HJE=
-X-IronPort-AV: E=Sophos;i="5.73,304,1583218800"; 
-   d="scan'208";a="71205674"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Apr 2020 09:22:13 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 22 Apr 2020 09:22:15 -0700
-Received: from soft-dev3.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 22 Apr 2020 09:22:12 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <jiri@resnulli.us>, <ivecera@redhat.com>, <kuba@kernel.org>,
-        <roopa@cumulusnetworks.com>, <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v3 11/11] net: bridge: Add checks for enabling the STP.
-Date:   Wed, 22 Apr 2020 18:18:33 +0200
-Message-ID: <20200422161833.1123-12-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200422161833.1123-1-horatiu.vultur@microchip.com>
-References: <20200422161833.1123-1-horatiu.vultur@microchip.com>
+        Wed, 22 Apr 2020 12:22:42 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE6CC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:22:42 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id y19so1156664qvv.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 09:22:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EjNhcH/bXfvIZUzEIVKgOCJoMZqdaN2tqLtyNe1ZM7c=;
+        b=DTRIJ8iviVnMVICbRDafDZ0ZzbTidI7VRE4I8aJhBLYyvYSzst1rQtmNc8SIu2mR5S
+         +OsIC9oE1hLB9e8G6GB9r7LP37oeG8bt5D12jMhzfWUYny1mM4Ospo9TbkRL3W0g9m2U
+         ENNiGMWwdGxlHA+HzA//YNhNriKkqhHBiodwIO9I/wsig9loxKVhKqIxVc2v64543C/G
+         1K/z4Duh8+B9n2Kvnq5AzY5KKaMyJ2qKPyttM26pFyOiSPPptiz4GrGVl5APASoKpPtL
+         sl7ODCd1JmhGb8Dv5DyK6SMgVCoFGwk2cUFXZ9eEVzxZt2DA0eEdzu8hyt6g4dnSOBFU
+         sRAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=EjNhcH/bXfvIZUzEIVKgOCJoMZqdaN2tqLtyNe1ZM7c=;
+        b=Vs9i55KZUfX5totTSN/aca0CGzvQhTp3iQTN9P97HF3odnX+IGtUpWNZvNJE6/TW3h
+         45dAMq0ZiuPVJtGnP14xCir9TVWjowjqD/9gmlPwympCm3XMPwyZL772ujwIxksIz0fL
+         x6iPUvsL4ND4S7aMly3Mf2augudYAU5RqIg1/Ja07rCNAfyWOPsXZ90N4J60/LhigGMx
+         kH5DDX/mcV8k/D06Zvj11o7KD8f8NmJGC78we0NubnZ+a5ZGVKbUiUVuGcef5Z5Hvgll
+         E1wObCCuxQQNlb/XD0NJoe02diPS0Ge8H3Mshd98JfcNl71G8qgyngw6kZG3b+djMot3
+         S9Rw==
+X-Gm-Message-State: AGi0PubzWAwQ78KL+EZWC0Gi4K/dHRE51XmQKa7/5NJq5nto8EEwbt9O
+        uUrRnbpfK/fmZvqOJ9Ez8K8=
+X-Google-Smtp-Source: APiQypLIRBkrRvorZmQzP9AyOatxObc8z0ffbAJgLwrskkjNJkq9DGhP7FwWpCURk/qaK3ZekGrgqQ==
+X-Received: by 2002:a0c:ba2e:: with SMTP id w46mr24906882qvf.97.1587572560936;
+        Wed, 22 Apr 2020 09:22:40 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:6260])
+        by smtp.gmail.com with ESMTPSA id o201sm4228901qke.31.2020.04.22.09.22.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 09:22:39 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 12:22:38 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+Subject: Re: [Poke: Tejun] Re: [RFC v3 03/11] drm/vblank: Add vblank works
+Message-ID: <20200422162238.GC5462@mtj.thefacebook.com>
+References: <20200417194145.36350-1-lyude@redhat.com>
+ <20200417194145.36350-4-lyude@redhat.com>
+ <ef9da9d93022822fe4bec7e906540fcc9852ce59.camel@redhat.com>
+ <20200417210356.GD43469@mtj.thefacebook.com>
+ <20200421123459.GY3456981@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421123459.GY3456981@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not possible to have the MRP and STP running at the same time on the
-bridge, therefore add check when enabling the STP to check if MRP is already
-enabled. In that case return error.
+Hello,
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_ioctl.c    |  3 +--
- net/bridge/br_netlink.c  |  4 +++-
- net/bridge/br_private.h  |  3 ++-
- net/bridge/br_stp.c      |  6 ++++++
- net/bridge/br_stp_if.c   | 11 ++++++++++-
- net/bridge/br_sysfs_br.c |  4 +---
- 6 files changed, 23 insertions(+), 8 deletions(-)
+On Tue, Apr 21, 2020 at 02:34:59PM +0200, Daniel Vetter wrote:
+> > > Also, of course, let me know if yu're not happy with the
+> > > __kthread_queue_work() changes/kthread_worker usage in drm_vblank_work as well
+> > 
+> > Just glanced over it and I still wonder whether it needs to be that tightly
+> > integrated, but we can look into that once we settle on whether this is the
+> > right direction.
+> 
+> I don't think we absolutely have to do this, simply means some nested
+> irq-safe spinlock. One in vblank_work, other in kthread_worker. Since the
+> delayed work doesn't do that I think it'd be nice if the drm_vblank
+> (instead of timer) delayed work could use the same pattern.
 
-diff --git a/net/bridge/br_ioctl.c b/net/bridge/br_ioctl.c
-index ae22d784b88a..5e71fc8b826f 100644
---- a/net/bridge/br_ioctl.c
-+++ b/net/bridge/br_ioctl.c
-@@ -242,8 +242,7 @@ static int old_dev_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
- 		if (!ns_capable(dev_net(dev)->user_ns, CAP_NET_ADMIN))
- 			return -EPERM;
- 
--		br_stp_set_enabled(br, args[1]);
--		ret = 0;
-+		ret = br_stp_set_enabled(br, args[1], NULL);
- 		break;
- 
- 	case BRCTL_SET_BRIDGE_PRIORITY:
-diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-index 1a5e681a626a..a774e19c41bb 100644
---- a/net/bridge/br_netlink.c
-+++ b/net/bridge/br_netlink.c
-@@ -1109,7 +1109,9 @@ static int br_changelink(struct net_device *brdev, struct nlattr *tb[],
- 	if (data[IFLA_BR_STP_STATE]) {
- 		u32 stp_enabled = nla_get_u32(data[IFLA_BR_STP_STATE]);
- 
--		br_stp_set_enabled(br, stp_enabled);
-+		err = br_stp_set_enabled(br, stp_enabled, extack);
-+		if (err)
-+			return err;
- 	}
- 
- 	if (data[IFLA_BR_PRIORITY]) {
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 5835828320b6..c35647cb138a 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -1283,7 +1283,8 @@ int br_set_ageing_time(struct net_bridge *br, clock_t ageing_time);
- /* br_stp_if.c */
- void br_stp_enable_bridge(struct net_bridge *br);
- void br_stp_disable_bridge(struct net_bridge *br);
--void br_stp_set_enabled(struct net_bridge *br, unsigned long val);
-+int br_stp_set_enabled(struct net_bridge *br, unsigned long val,
-+		       struct netlink_ext_ack *extack);
- void br_stp_enable_port(struct net_bridge_port *p);
- void br_stp_disable_port(struct net_bridge_port *p);
- bool br_stp_recalculate_bridge_id(struct net_bridge *br);
-diff --git a/net/bridge/br_stp.c b/net/bridge/br_stp.c
-index 1f14b8455345..3e88be7aa269 100644
---- a/net/bridge/br_stp.c
-+++ b/net/bridge/br_stp.c
-@@ -36,6 +36,12 @@ void br_set_state(struct net_bridge_port *p, unsigned int state)
- 	};
- 	int err;
- 
-+	/* Don't change the state of the ports if they are driven by a different
-+	 * protocol.
-+	 */
-+	if (p->flags & BR_MRP_AWARE)
-+		return;
-+
- 	p->state = state;
- 	err = switchdev_port_attr_set(p->dev, &attr);
- 	if (err && err != -EOPNOTSUPP)
-diff --git a/net/bridge/br_stp_if.c b/net/bridge/br_stp_if.c
-index d174d3a566aa..a42850b7eb9a 100644
---- a/net/bridge/br_stp_if.c
-+++ b/net/bridge/br_stp_if.c
-@@ -196,10 +196,17 @@ static void br_stp_stop(struct net_bridge *br)
- 	br->stp_enabled = BR_NO_STP;
- }
- 
--void br_stp_set_enabled(struct net_bridge *br, unsigned long val)
-+int br_stp_set_enabled(struct net_bridge *br, unsigned long val,
-+		       struct netlink_ext_ack *extack)
- {
- 	ASSERT_RTNL();
- 
-+	if (br_mrp_enabled(br)) {
-+		NL_SET_ERR_MSG_MOD(extack,
-+				   "STP can't be enabled if MRP is already enabled\n");
-+		return -EINVAL;
-+	}
-+
- 	if (val) {
- 		if (br->stp_enabled == BR_NO_STP)
- 			br_stp_start(br);
-@@ -207,6 +214,8 @@ void br_stp_set_enabled(struct net_bridge *br, unsigned long val)
- 		if (br->stp_enabled != BR_NO_STP)
- 			br_stp_stop(br);
- 	}
-+
-+	return 0;
- }
- 
- /* called under bridge lock */
-diff --git a/net/bridge/br_sysfs_br.c b/net/bridge/br_sysfs_br.c
-index 9ab0f00b1081..7db06e3f642a 100644
---- a/net/bridge/br_sysfs_br.c
-+++ b/net/bridge/br_sysfs_br.c
-@@ -126,9 +126,7 @@ static ssize_t stp_state_show(struct device *d,
- 
- static int set_stp_state(struct net_bridge *br, unsigned long val)
- {
--	br_stp_set_enabled(br, val);
--
--	return 0;
-+	return br_stp_set_enabled(br, val, NULL);
- }
- 
- static ssize_t stp_state_store(struct device *d,
+I'd prefer if they were two separate locks unless that makes practical
+difference, but if it does, please go ahead.
+
+Thanks.
+
 -- 
-2.17.1
-
+tejun
