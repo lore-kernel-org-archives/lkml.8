@@ -2,108 +2,118 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DC4C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35854C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F27142077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2212077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:16:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m1T2jrtK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnJh9sM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgDVWQk (ORCPT
+        id S1726328AbgDVWQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:16:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33688 "EHLO
+        Wed, 22 Apr 2020 18:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbgDVWQj (ORCPT
+        by vger.kernel.org with ESMTP id S1725839AbgDVWQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:16:39 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 759AFC03C1A9;
-        Wed, 22 Apr 2020 15:16:39 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 496vsv17yRz9sSY;
-        Thu, 23 Apr 2020 08:16:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587593795;
-        bh=b3FpIbBdWLCE6rrc0j3weoC6BUfVk+LOtjJLdfX/Jw8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=m1T2jrtKqALUKfvG5oQq52Lf4IKxe3TotkzeAIehzfM48hdeSjy6boOMROdDsGfNY
-         g30OHsa2Ap26boYCBFx4rUR0QEUQm+SLL4UfRfnV0xLC8c6xWIntSmCTBiehL5O0ny
-         xcq+qgmOvvY+FaXVRamcHCuEUid0bu0IPFJG6pCjtzimZKn4KWK0wYntoamJQbCR63
-         6Xo/SSZG7iWu4pGEWAAkAVpeJR+O52nfr0qZ8YxrcfvFBeRnts0z7FOnHkN8tlGVsw
-         1yPaWRcKKtW9nbEMUGJSBO0N9DmlLDkG6KHAECDSAmb3EyhqoF7sJt/deqsgDIcx3s
-         IrcskcUMHu3MA==
-Date:   Thu, 23 Apr 2020 08:16:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the net-next tree
-Message-ID: <20200423081633.241888b4@canb.auug.org.au>
+        Wed, 22 Apr 2020 18:16:46 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80857C03C1A9;
+        Wed, 22 Apr 2020 15:16:46 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id m18so3637369otq.9;
+        Wed, 22 Apr 2020 15:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hdhi8o/uOWcv18fMCxckchm+UgJLFPrhgXGldfLApj0=;
+        b=UnJh9sM7TSGeIv5MmNHB3mprcjGwRVXmTsZwxjCCzsUMzS+l7EtlEXjRCSRxgr1I70
+         JydOlv45izuM8lq0rY7WwxAW32zwlU4ZhpUV9EGBGCeXCVFER6QJ1uSgtl3gi4eJ4OmI
+         6FZzTKPDSRP6yySRUQe1ahy0LgvocWhJ8qwXhrbmsK0H4BEpxFM/YQjkLKddCTqBFXoR
+         Enwa9d4YFYqbYEmFQBGdTSseKQ+AWJNsK/iCwElHIxJgTQTpfQj+pjIJsUHfmHx6FLm/
+         nhU7ZfCo6c5htRQM1tzhTAhbiGtDYIzrA1m/woRwVLY61lu039f3kkXHB9lWtEaGKd2G
+         33RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hdhi8o/uOWcv18fMCxckchm+UgJLFPrhgXGldfLApj0=;
+        b=BMNC8zftxy7MvhrtA8Oi+sSk7OhkCeyPRQ5EUUkqxqHhqTP5YYlJmavPk8w3ze6kLZ
+         WYwo50VDzR5ZU7CVuLnQc7X+q5mVl1bRIyLWyaqaeCjlx+X3aoFI+3rNIbM+MsT9WxpR
+         qG87gWELyZyizbXzhO6oyjuf1XME8B2hppbxzPpsn1LMJinUJSaeZXTYY50KOkh47Ns8
+         nOFGPzcG1LH4f4EflMYC0J5HreMJdcuIoWOt06qVAXCQQqKPtHqbByuQ2rMXKq5DLqxy
+         wjwn1wmbFy7pRfj0N9jSqc2SOGl0b3Z/Av3b72xXlYMQCyO9xvTxZeBvgeS/Cmm/2PTq
+         5EEw==
+X-Gm-Message-State: AGi0PuYaeocX8hvYaAiBeProWCjvmqQaEl2Gf2z9NFugWvzhfBU9uEoM
+        YnQvzFpIvqssMdMQC2/NH/M=
+X-Google-Smtp-Source: APiQypKDY7D7Ugla8GvkGcOcThXiQDbHYF9zM45CaLEWSa0aMvcq3ZC8x2ch5cZFJoO4NsH7Y9UiBA==
+X-Received: by 2002:a05:6830:18e3:: with SMTP id d3mr1034479otf.117.1587593805830;
+        Wed, 22 Apr 2020 15:16:45 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 186sm194282ooi.30.2020.04.22.15.16.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Apr 2020 15:16:45 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 15:16:43 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit
+ kernel
+Message-ID: <20200422221643.GA46781@ubuntu-s3-xlarge-x86>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+ <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jUmrQpVGYDI4bLnMZAYPPUL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jUmrQpVGYDI4bLnMZAYPPUL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 22, 2020 at 10:32:54PM +0800, Jiaxun Yang wrote:
+> LLD failed to link vmlinux with 64bit load address for 32bit ELF
+> while bfd will strip 64bit address into 32bit silently.
+> To fix LLD build, we should truncate load address provided by platform
+> into 32bit for 32bit kernel.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/786
+> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+> Reviewed-by: Maciej W. Rozycki <macro@linux-mips.org>
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Cc: Nathan Chancellor <natechancellor@gmail.com>
+> --
+> V2: Take MaskRay's shell magic.
+> 
+> V3: After spent an hour on dealing with special character issue in
+> Makefile, I gave up to do shell hacks and write a util in C instead.
+> Thanks Maciej for pointing out Makefile variable problem.
+> 
+> v4: Finally we managed to find a Makefile method to do it properly
+> thanks to Kees. As it's too far from the initial version, I removed
+> Review & Test tag from Nick and Fangrui and Cc instead.
+> 
+> v5: Care vmlinuz as well.
 
-Hi all,
-
-In commit
-
-  7dec902f4fc0 ("net: mscc: ocelot: refine the ocelot_ace_is_problematic_ma=
-c_etype function")
-
-Fixes tag
-
-  Fixes: d4d0cb741d7b ("net: mscc: ocelot: deal with problematic MAC_ETYPE =
-VCAP IS2 rules")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 89f9ffd3eb67 ("net: mscc: ocelot: deal with problematic MAC_ETYPE VC=
-AP IS2 rules")
-
-Dave, since you don't rebase your tree, can you start pushing back on
-these, please?
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/jUmrQpVGYDI4bLnMZAYPPUL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6gwkEACgkQAVBC80lX
-0GzHjgf+OvN/fIzhtSNJgATqEPg+xYYEMCnt5domZgarFplYXOPg8hTWPACM86ax
-IESL1YiAFOSB9c2YDZPXNm/2tLDU/EGjGnkm3D3gdPyqlURzFjuze9rA1klPCn8c
-U4UWqoNTkLO7vqi1c52LOtfRySsLumM9t+mTGtqAjpQo+mYIY8Vt4R/r0fHxc4QT
-spMPno5x2nY5E/8rNnWA4yYTNnKrM7ngWaftY37/h6W7KYVEV9+dVDBR0p+/ROYT
-zZey1QQtOxqo+9P3ZKgrlnO581/q/1gznUF1feuUDBbJ3eo4bxWADidCzdhszU9v
-h8yWcNJfXqbz2p12+nImS7O2JPWtiA==
-=PKvZ
------END PGP SIGNATURE-----
-
---Sig_/jUmrQpVGYDI4bLnMZAYPPUL--
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
