@@ -2,131 +2,91 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5113C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCBBC5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A168C206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA1B20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1SlTt7Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gpj2Gyc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgDVHWj (ORCPT
+        id S1726435AbgDVHWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:22:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27523 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725786AbgDVHWj (ORCPT
+        Wed, 22 Apr 2020 03:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725786AbgDVHWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:22:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587540157;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3QU8gwHkCUYXbkdafNMuU8FRFr0WYwJmJfr+Lfeo6IY=;
-        b=g1SlTt7Q1bl3EWqYwqWrygk3qxCqGwuegTTyDImjZUL9xLCRpVT/O20rdiN3h3NvfXRJKc
-        kgv9i7czVFXGVTmBvg1uXcrX/IAOpJh0pCb11Gzqp9vrnTDokKjPfgn5HZqyAqx0Bro4BA
-        rzLTaBjsYHhsH+LXR7ubDF0Ib25u8Y8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-Xb1nON28P2ykE-cM_uB3LA-1; Wed, 22 Apr 2020 03:22:36 -0400
-X-MC-Unique: Xb1nON28P2ykE-cM_uB3LA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75BDC8017F3;
-        Wed, 22 Apr 2020 07:22:34 +0000 (UTC)
-Received: from krava (unknown [10.40.196.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F036176E9D;
-        Wed, 22 Apr 2020 07:22:31 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 09:22:23 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2] perf stat: Improve runtime stat for interval mode
-Message-ID: <20200422072223.GC962614@krava>
-References: <20200420145417.6864-1-yao.jin@linux.intel.com>
+        Wed, 22 Apr 2020 03:22:53 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724A3C03C1A6;
+        Wed, 22 Apr 2020 00:22:53 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id r16so752614edw.5;
+        Wed, 22 Apr 2020 00:22:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uG6Og2QY3Jrt6pTu1AnmMqNruS91FdRXUooE0XdBD+8=;
+        b=Gpj2Gyc8l3uOMNmeMD9MdFBn6dKr8nXeTcwutYx8Lg0zJSPXXDAlQE7RI3lcNmNwfy
+         mVgYkC3JV0D67+7dirmdeUFZAismXWLuYMX/Qy4mxdaPDvhzdtF2kP3LHs5fRE4LwRZj
+         o66vVRkHQJFTwQ/adikAVhOxj1HvtXb9fNVGR58sK46Cztvmtd+GwcaWzcnnx518Wqrl
+         oonmE0VTv8Hh0LSW01IATsV7PPePqp3tuxaFkzH2WP2MOMVBaDzLZblL8lmgfJOfflIp
+         CWZNqBk4Dal8iV6YCDVxVJcAaw3GReHPLDWEOHvqU1bJVlAbUXHXsNhqRIRaLWu9CTo9
+         fYrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uG6Og2QY3Jrt6pTu1AnmMqNruS91FdRXUooE0XdBD+8=;
+        b=VKpjofRJKBrKnptdHbd+RFC6rH4JnsMtWE01qmc1p/D7Z8YEzoFBEJcj82EQmNeaGf
+         q46Cm1yn0VtjidSssMD/VjaidsJb3Qnd7Rk6OpoAvFXVKg23JiHgvFWMia9XNBvBO6ri
+         SUFAy2hNsALetf8USXkh71ad1Z09oXK5DF6XjbdJP0ufILqsLpv/Fqzi1ZkcU4+V7gQs
+         Z1i+Y8W+ul8VQmI7L5XK/EqAiM1CPHIbEpjBjqZ0bX7LYYzBOsMlUcpjyGjMuXN4Z9Fs
+         u3oURGBWoT4f/1r8S/BmlA0PrUzsqH3b9KDFlDmkoMs97iKfkOpwF3cIi5Y9F8yT8M+R
+         qZ5w==
+X-Gm-Message-State: AGi0PuYBBL1XGhQpMFNXLlIzmS7RL+OilrPt8nhU9/Xk5LWOamDJmF9Q
+        32aJrFLjQyHLu2dPYECpM3dGcWyc/EmLWF9Gv3E=
+X-Google-Smtp-Source: APiQypK8VJELWnfcfK/wcqgx6OHAbsYMxvX/T8/hTJry7NGjmJ9koGnCvPtLY9fvIBWkpNTHkjNwsDgaMhqXDCaHw+U=
+X-Received: by 2002:aa7:da8b:: with SMTP id q11mr22791260eds.359.1587540172116;
+ Wed, 22 Apr 2020 00:22:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420145417.6864-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200421171552.28393-1-luke.r.nels@gmail.com> <6f1130b3-eaea-cc5e-716f-5d6be77101b9@zytor.com>
+ <CAKU6vyb38-XcFeAiP7OW0j++0jS-J4gZP6S2E21dpQwvcEFpKQ@mail.gmail.com> <05CE7897-C58E-40C0-8E08-C8E948B70286@zytor.com>
+In-Reply-To: <05CE7897-C58E-40C0-8E08-C8E948B70286@zytor.com>
+From:   Xi Wang <xi.wang@gmail.com>
+Date:   Wed, 22 Apr 2020 00:22:16 -0700
+Message-ID: <CAKU6vyaHcGmgznkDav1wpkB3MiSYM9G2pqmc6DELXwUyNpHwyQ@mail.gmail.com>
+Subject: Re: [PATCH bpf 1/2] bpf, x32: Fix invalid instruction in BPF_LDX zero-extension
+To:     hpa@zytor.com
+Cc:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Wang YanQing <udknight@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 10:54:17PM +0800, Jin Yao wrote:
-> For interval mode, the metric is printed after # if it exists. But
-> it's not calculated by the counts generated in this interval. See
-> following examples,
-> 
->  root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
->  #           time             counts unit events
->       1.000422803            764,809      inst_retired.any          #      2.9 CPI
->       1.000422803          2,234,932      cycles
->       2.001464585          1,960,061      inst_retired.any          #      1.6 CPI
->       2.001464585          4,022,591      cycles
-> 
-> The second CPI should not be 1.6 (4,022,591/1,960,061 is 2.1)
-> 
->  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
->  #           time             counts unit events
->       1.000429493          2,869,311      cycles
->       1.000429493            816,875      instructions              #    0.28  insn per cycle
->       2.001516426          9,260,973      cycles
->       2.001516426          5,250,634      instructions              #    0.87  insn per cycle
-> 
-> The second 'insn per cycle' should not be 0.87 (5,250,634/9,260,973 is 0.57).
-> 
-> The current code uses a global variable rt_stat for tracking and
-> updating the std dev of runtime stat. Unlike the counts, rt_stat is
-> not reset for interval. While the counts are reset for interval.
-> 
-> perf_stat_process_counter()
-> {
->         if (config->interval)
->                 init_stats(ps->res_stats);
-> }
-> 
-> So for interval, the rt_stat should be reset either.
-> 
-> This patch resets rt_stat before read_counters, so the runtime
-> stat is only calculated by the counts generated in this interval.
-> 
-> With this patch,
-> 
->  root@kbl-ppc:~# perf stat -M CPI -I1000 --interval-count 2
->  #           time             counts unit events
->       1.000420924          2,408,818      inst_retired.any          #      2.1 CPI
->       1.000420924          5,010,111      cycles
->       2.001448579          2,798,407      inst_retired.any          #      1.6 CPI
->       2.001448579          4,599,861      cycles
-> 
->  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
->  #           time             counts unit events
->       1.000428555          2,769,714      cycles
->       1.000428555            774,462      instructions              #    0.28  insn per cycle
->       2.001471562          3,595,904      cycles
->       2.001471562          1,243,703      instructions              #    0.35  insn per cycle
-> 
-> Now the second 'insn per cycle' and CPI are calculated by the counts
-> generated in this interval.
-> 
->  v2:
->  ---
->  Use just existing perf_stat__reset_shadow_per_stat(&rt_stat).
->  We don't need to define new function perf_stat__reset_rt_stat.
+On Wed, Apr 22, 2020 at 12:13 AM <hpa@zytor.com> wrote:
+> C7 C0 0 is *not* an invalid instruction, although it is incomplete. It is a different, but arguably even more serious, problem.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
+Yep, it would "eat" three bytes coming after that. :)
