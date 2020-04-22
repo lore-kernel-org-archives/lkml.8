@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCE0C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD281C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C4720774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925F920774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553037;
-	bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
+	s=default; t=1587553042;
+	bh=RvU73F7tLB9ZFjTmEy3uFpOJCsNs03yV0YlJ8KnNps0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pf2CdxcA2l3WpDFrG0IwnL4bQW8uTC9oDsYuoESoOo8Sa5MoIDFkSsFCK0dxaNlMe
-	 MiV2EjKmKsm7xjMXZrgdrYZX9MUio913iiw9gp+ohcJLjkUf1ztW9m8o+MInC+SkpP
-	 GKshuARRef+K8eF+yLWuoQPEPjUiYMOmExFku8BE=
+	b=DdPYqNoxCpQIzm0ksRj+Pl+GtMyrL9l7QsUze6IEpydtNsiofcg9FkCeKuj/d9fV+
+	 lON+MAsMRfWlHXl37R8yuBH/F6sFU0OwSakS+JUu5qOiGbB0EPSAOOfh2q8kqWH7LA
+	 7YAz+HsW3uJFtXP90cSh2faHLVdag4NNaw0yER54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732083AbgDVK5Q (ORCPT
+        id S1732255AbgDVK5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbgDVKF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:29 -0400
+        id S1728181AbgDVKF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB07F20776;
-        Wed, 22 Apr 2020 10:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871632075A;
+        Wed, 22 Apr 2020 10:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549928;
-        bh=3h2z9IDbzxVQV+fUdUOCvqUsPvo+eOXmgmiUdyvpTDk=;
+        s=default; t=1587549925;
+        bh=RvU73F7tLB9ZFjTmEy3uFpOJCsNs03yV0YlJ8KnNps0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5zOepKS7BNfGDo3T+rL1nVSUSgPpmH/LsFTfCMQyOWBAW/u7MkFUSv4BLFm6Qr9Y
-         +2KIer4VUgX93F3ljqkfExPLUwjBf21PQjBJNgtlRfU42ekVYEwkchIQOFVsxceFUI
-         ciCKCzkwnGfaiIuWiByRvBs9LOBPgx1lx8/LD/a0=
+        b=ZflWg7IvEh2RkQHP/NWEKmZ3bRknlHLzWee9eVgm4ypsRmdVDd9QGCdu3zNaTyNvN
+         X/ikQt94yZSNOBh3AS1bz6jDKBqHRCklgDLGC7hJkgxALn9trU4+jf28NrUEml0P93
+         f1sCX8MJVqOhdEuj1otFYALM5EfJWnX15BnqXTFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/125] mfd: dln2: Fix sanity checking for endpoints
-Date:   Wed, 22 Apr 2020 11:56:22 +0200
-Message-Id: <20200422095043.799654775@linuxfoundation.org>
+Subject: [PATCH 4.9 064/125] misc: echo: Remove unnecessary parentheses and simplify check for zero
+Date:   Wed, 22 Apr 2020 11:56:21 +0200
+Message-Id: <20200422095043.664921958@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,59 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit fb945c95a482200876993977008b67ea658bd938 ]
+[ Upstream commit 85dc2c65e6c975baaf36ea30f2ccc0a36a8c8add ]
 
-While the commit 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-tries to harden the sanity checks it made at the same time a regression,
-i.e.  mixed in and out endpoints. Obviously it should have been not tested on
-real hardware at that time, but unluckily it didn't happen.
+Clang warns when multiple pairs of parentheses are used for a single
+conditional statement.
 
-So, fix above mentioned typo and make device being enumerated again.
+drivers/misc/echo/echo.c:384:27: warning: equality comparison with
+extraneous parentheses [-Wparentheses-equality]
+        if ((ec->nonupdate_dwell == 0)) {
+             ~~~~~~~~~~~~~~~~~~~~^~~~
+drivers/misc/echo/echo.c:384:27: note: remove extraneous parentheses
+around the comparison to silence this warning
+        if ((ec->nonupdate_dwell == 0)) {
+            ~                    ^   ~
+drivers/misc/echo/echo.c:384:27: note: use '=' to turn this equality
+comparison into an assignment
+        if ((ec->nonupdate_dwell == 0)) {
+                                 ^~
+                                 =
+1 warning generated.
 
-While here, introduce an enumerator for magic values to prevent similar issue
-to happen in the future.
+Remove them and while we're at it, simplify the zero check as '!var' is
+used more than 'var == 0'.
 
-Fixes: 2b8bd606b1e6 ("mfd: dln2: More sanity checking for endpoints")
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/dln2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/misc/echo/echo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
-index 95d0f2df0ad42..672831d5ee32e 100644
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -93,6 +93,11 @@ struct dln2_mod_rx_slots {
- 	spinlock_t lock;
- };
+diff --git a/drivers/misc/echo/echo.c b/drivers/misc/echo/echo.c
+index 9597e9523cac4..fff13176f9b8b 100644
+--- a/drivers/misc/echo/echo.c
++++ b/drivers/misc/echo/echo.c
+@@ -454,7 +454,7 @@ int16_t oslec_update(struct oslec_state *ec, int16_t tx, int16_t rx)
+ 	 */
+ 	ec->factor = 0;
+ 	ec->shift = 0;
+-	if ((ec->nonupdate_dwell == 0)) {
++	if (!ec->nonupdate_dwell) {
+ 		int p, logp, shift;
  
-+enum dln2_endpoint {
-+	DLN2_EP_OUT	= 0,
-+	DLN2_EP_IN	= 1,
-+};
-+
- struct dln2_dev {
- 	struct usb_device *usb_dev;
- 	struct usb_interface *interface;
-@@ -740,10 +745,10 @@ static int dln2_probe(struct usb_interface *interface,
- 	    hostif->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
--	epin = &hostif->endpoint[0].desc;
--	epout = &hostif->endpoint[1].desc;
-+	epout = &hostif->endpoint[DLN2_EP_OUT].desc;
- 	if (!usb_endpoint_is_bulk_out(epout))
- 		return -ENODEV;
-+	epin = &hostif->endpoint[DLN2_EP_IN].desc;
- 	if (!usb_endpoint_is_bulk_in(epin))
- 		return -ENODEV;
- 
+ 		/* Determine:
 -- 
 2.20.1
 
