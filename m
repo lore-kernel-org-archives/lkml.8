@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63819C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786012084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6A021655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dpt+01Dx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ayF+6gIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgDVWE6 (ORCPT
+        id S1726614AbgDVWFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:04:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
+        Wed, 22 Apr 2020 18:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726503AbgDVWE4 (ORCPT
+        with ESMTP id S1726577AbgDVWE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:04:56 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69561C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:56 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id c190so3362153pfc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:56 -0700 (PDT)
+        Wed, 22 Apr 2020 18:04:59 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 013D7C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:59 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id i9so2946952pjs.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=oAqP7W1R/rWeRnCp5eohdMy0vZSSIvqsCqJsvvhhCbc=;
-        b=dpt+01Dxp1Ig4ZuFFsq0LeyS2p4dzFBIeO+309FExsz0BizUT4EQm0nqqVHf4Y7jp8
-         bmftMI/i0CUyCKZHt2qxdp3I3nhrtuOM/VJn//+ovkpLXCSSAYVLybrQiVdPZz4sPRKW
-         wd5oK4kMzjHcUBEn3aydGBmqcKtuXPiM2aJ+O4C14Q4K0zWKGaq4mhRT5Q8+G5QxaX+F
-         QuZv0ndceG6R7a0fEWpY6Zk73CCxN+nyo/L66vOckuV3bOaXbp8UZmd9D1hKgROviSsj
-         yx/drAkLx90WT4OPJ61CkPq6Jz2HXfhaBz7ceGHdq7wZkSdr2q4y39YT/2g61sSTotIf
-         dwwQ==
+        bh=8jb1TKGtNOzFJaH+zGkIw1wrutaG9liyHI83TX/6kqM=;
+        b=ayF+6gIswEMHPNht9DRwjemw9VXGHQmmH+WQZwyrxUEVDiQGMQTxhFqqbQL3CAJ3hS
+         g8b6n8lWjMwG0kvdSZWrlldhI5uIHsWQ33Be8do2mBbMYsLMkpeuboO6xdkybJBJGgWE
+         rLlW6aW2sMA/ORzubO35PxvarD4+HB2KvIe8+2QsPRJ4tAKWjX5mvP1jx7gxlGdtbzaF
+         Fwx7nsHtDNTaSNH+iNDDEc933apf+WIeexxAT1KDtoauG9SSpgNCi62GDxS95xL2tAIz
+         ghtuSFBu4ih4TbQS0590sbxvwdINGt7Pvk32Wj3Vms6m6ZcYk+D8J2+5d/QDj6nQlrAo
+         r0tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=oAqP7W1R/rWeRnCp5eohdMy0vZSSIvqsCqJsvvhhCbc=;
-        b=Gx5tkjXFvNCsG0+hrfmVaI33rZ2MZlBMe2I4HydN1FqNXuG/2IuMcHtT9otEvGs5SB
-         b4wjItKJQaVoxEaHhrvC7oLACFioanq+UiqXlq19JB6llMjgUM8fDf64V0GMhuFgaBkW
-         u4h3efO0VjVH0zcXjUEGPUYCNpXND9D0MpLylDQBcJJmNv9RYUvJ2E+cvK27ee6O0zfA
-         jkIAXj1rxjLqi3urPVh7EwOQ6UG0qI32tjPqGHTuxnk6HnQ4apcI6Eanvg5yC4/L2rni
-         YwNQTZrTrYZkGz1vbKCTIF1RkowFk+hdR61f4kh1ACBNuD7weO6XWkt9HWwYQlIFp4d6
-         9eMg==
-X-Gm-Message-State: AGi0Pua9/m6UxQirVaeSTncR6WKEXdUlVnKMxt3yQDhxuhwF1i6e4Q2e
-        4OXAFh1c7N05bwdRHzLoK+UAFkpymrSP
-X-Google-Smtp-Source: APiQypIQ7vI6a1YqSpcsaxKNBrRNaNwqASaQTfhAI2I8fELmqoZ/0fm1LrunajBzgkSUaN7zWC/OUeDANrIi
-X-Received: by 2002:a17:90a:ee84:: with SMTP id i4mr891584pjz.71.1587593095931;
- Wed, 22 Apr 2020 15:04:55 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:04:28 -0700
+        bh=8jb1TKGtNOzFJaH+zGkIw1wrutaG9liyHI83TX/6kqM=;
+        b=lZuJ0VD6B7clALstQkzKhdh/J/ckqBUkQW/8kmNHW2tSjA3z+GPw9kaYHCQZeuTmWK
+         fHdbNsbR9nwJP1rHA8Wv54nfP//A+zcK78QthKYoqnqaRydaG9GBXxwxQDFFkckHwND0
+         gEjdArn41ajD4hlIJXKHf0ZzQIMhVPJ1ihl6ewtNrweMOiROEHDARclJ5DyboE6To5Wt
+         H3OUvLMWTUTB+yhw+FzXzzF6I6DqbXiYkzIJdZXogmU1P8XD3ANf71iZemjd5pQ+mbVW
+         B2TJ4SMaHYVU0oC9nDp2Q9TzevvTahhnBfByuo8HkQUQa2losqUg+2SdlQQLdvj6pSj9
+         oRYQ==
+X-Gm-Message-State: AGi0Pua2twMk2TlnDxoWUFJXxZ5WIyzauIoFSukQSXnsnQQBxS41RWaN
+        8C2+BQGUZ3WBCslDizKCbHNUxakG5QyI
+X-Google-Smtp-Source: APiQypIcRniLx2dAK6np1iyd92nSVT7y5C8wddV7Z01zuWs3KW+xK/j6SSGfKeLeZegOBRgqZMDZ77vd28P8
+X-Received: by 2002:a17:90a:2f64:: with SMTP id s91mr973455pjd.30.1587593098406;
+ Wed, 22 Apr 2020 15:04:58 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 15:04:29 -0700
 In-Reply-To: <20200422220430.254014-1-irogers@google.com>
-Message-Id: <20200422220430.254014-10-irogers@google.com>
+Message-Id: <20200422220430.254014-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20200422220430.254014-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v2 09/11] perf metrics: fix parse errors in power9 metrics
+Subject: [PATCH v2 10/11] perf expr: print a debug message for division by zero
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -89,27 +89,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mismatched parentheses.
+If an expression yields 0 and is then divided-by/modulus-by then the
+parsing aborts. Add a debug error message to better enable debugging
+when this happens.
 
-Fixes: 7f3cf5ac7743 (perf vendor events power9: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/powerpc/power9/metrics.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/expr.y | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-index 811c2a8c1c9e..f427436f2c0a 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-@@ -362,7 +362,7 @@
-     },
-     {
-         "BriefDescription": "Completion stall for other reasons",
--        "MetricExpr": "PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FIN - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
-+        "MetricExpr": "(PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FIN - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
-         "MetricGroup": "cpi_breakdown",
-         "MetricName": "other_stall_cpi"
-     },
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 54260094b947..21e82a1e11a2 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -103,8 +103,18 @@ expr:	  NUMBER
+ 	| expr '+' expr		{ $$ = $1 + $3; }
+ 	| expr '-' expr		{ $$ = $1 - $3; }
+ 	| expr '*' expr		{ $$ = $1 * $3; }
+-	| expr '/' expr		{ if ($3 == 0) YYABORT; $$ = $1 / $3; }
+-	| expr '%' expr		{ if ((long)$3 == 0) YYABORT; $$ = (long)$1 % (long)$3; }
++	| expr '/' expr		{ if ($3 == 0) {
++					pr_debug("division by zero\n");
++					YYABORT;
++				  }
++				  $$ = $1 / $3;
++	                        }
++	| expr '%' expr		{ if ((long)$3 == 0) {
++					pr_debug("division by zero\n");
++					YYABORT;
++				  }
++				  $$ = (long)$1 % (long)$3;
++	                        }
+ 	| '-' expr %prec NEG	{ $$ = -$2; }
+ 	| '(' if_expr ')'	{ $$ = $2; }
+ 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
