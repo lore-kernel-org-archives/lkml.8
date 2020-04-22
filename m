@@ -2,104 +2,156 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE532C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC084C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9A612098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEE9206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="WrO5XdhM";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="aAZ5k2Gj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="N8HBeMWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgDVOdB (ORCPT
+        id S1727825AbgDVOdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:33:01 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:57460 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725935AbgDVOdA (ORCPT
+        Wed, 22 Apr 2020 10:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgDVOdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:33:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 659B38EE19C;
-        Wed, 22 Apr 2020 07:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1587565978;
-        bh=M6gdDcbuW+flffcj7MyeO+/4m9VT7LtFOrK/yRp2scQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WrO5XdhMaAlNqj3XroFFwRez3dqb7oiOPLPHX+STuA7bKkQXrqzCXeilgs2vj62a8
-         dtN7T5MWew9GQ5rEfY3QG2jfw0MOZBCAFJlqWm5balqonOlZMl8LgK+o1HHZ9yL/RJ
-         P7q+a4hsvlPez4qWuCoGEOS2WFTgBuelCsScuJJc=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ne34ZMO5wtea; Wed, 22 Apr 2020 07:32:58 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id CC09D8EE0CE;
-        Wed, 22 Apr 2020 07:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1587565977;
-        bh=M6gdDcbuW+flffcj7MyeO+/4m9VT7LtFOrK/yRp2scQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=aAZ5k2GjVbhrgCgDYq1cHevIi1wz2C1YDR0Di2NdAIIxxOPJgzetvPaxqQm67/dYG
-         86owFnqs87t+/+AP5VxJwVX3igQ/oLPNgJMsTtVpgYHpb3YGP/du4FoU7UbDGe5Pio
-         X+J541MSFakK8AyKXdxMyDl6K4CCsOgkMu6rgb3k=
-Message-ID: <1587565975.3485.5.camel@HansenPartnership.com>
-Subject: Re: Implement close-on-fork
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Nate Karstens <nate.karstens@garmin.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, Helge Deller <deller@gmx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, netdev@vger.kernel.org,
+        Wed, 22 Apr 2020 10:33:35 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27401C03C1A9;
+        Wed, 22 Apr 2020 07:33:24 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 28E9220CE6;
+        Wed, 22 Apr 2020 14:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587566003; bh=AZkjRTYvRWUO+/A/Rmcb3WsrGcXYmTEk7WiFNjJa+tw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=N8HBeMWyafIUfveHvGcYAliOblIIn2gyhgYRwoses/QbIqLRIMygdUK4aYI1V3Q/F
+         tv27rC62GofhAS1BLhTBpoUvLA0wrNnPHUsJZ22hGysVMJaM6iZHfuqpaQXYTkP2NM
+         l/qxVdxOBtqx/B1iPn/WF8prur8zSQsg5iDY6uXHLESAvKiRI47LVDOeWold1aoTmY
+         8oLTfuHJ54XnfY74wEqq2mdGgWRK81ssiJqrnCOXzwgkT1roUGjUGsjjYfJnnBUl4R
+         9+nSE5T06Q/jqWiB1ymvlcvqaYTy+Pe5owRCjlH59C7s7Fu+eC/57AceuQPo5Fakq1
+         WzE3x5d/e2GFQ==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     clang-built-linux@googlegroups.com,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         linux-kernel@vger.kernel.org
-Cc:     Changli Gao <xiaosuo@gmail.com>
-Date:   Wed, 22 Apr 2020 07:32:55 -0700
-In-Reply-To: <20200420071548.62112-1-nate.karstens@garmin.com>
-References: <20200420071548.62112-1-nate.karstens@garmin.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit kernel
+Date:   Wed, 22 Apr 2020 22:32:54 +0800
+Message-Id: <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-20 at 02:15 -0500, Nate Karstens wrote:
-> Series of 4 patches to implement close-on-fork. Tests have been
-> published to https://github.com/nkarstens/ltp/tree/close-on-fork.
-> 
-> close-on-fork addresses race conditions in system(), which
-> (depending on the implementation) is non-atomic in that it
-> first calls a fork() and then an exec().
+LLD failed to link vmlinux with 64bit load address for 32bit ELF
+while bfd will strip 64bit address into 32bit silently.
+To fix LLD build, we should truncate load address provided by platform
+into 32bit for 32bit kernel.
 
-Why is this a problem?  I get that there's a time between fork and exec
-when you have open file descriptors, but they should still be running
-in the binary context of the programme that called fork, i.e. under
-your control.  The security problems don't seem to occur until you exec
-some random binary, which close on exec covers.  So what problem would
-close on fork fix?
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/786
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+Reviewed-by: Maciej W. Rozycki <macro@linux-mips.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Nathan Chancellor <natechancellor@gmail.com>
+--
+V2: Take MaskRay's shell magic.
 
-> This functionality was approved by the Austin Common Standards
-> Revision Group for inclusion in the next revision of the POSIX
-> standard (see issue 1318 in the Austin Group Defect Tracker).
+V3: After spent an hour on dealing with special character issue in
+Makefile, I gave up to do shell hacks and write a util in C instead.
+Thanks Maciej for pointing out Makefile variable problem.
 
-URL?  Does this standard give a reason why the functionality might be
-useful.
+v4: Finally we managed to find a Makefile method to do it properly
+thanks to Kees. As it's too far from the initial version, I removed
+Review & Test tag from Nick and Fangrui and Cc instead.
 
-James
+v5: Care vmlinuz as well.
+---
+ arch/mips/Makefile                 | 13 ++++++++++++-
+ arch/mips/boot/compressed/Makefile |  2 +-
+ arch/mips/kernel/vmlinux.lds.S     |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index e1c44aed8156..68c0f22fefc0 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -288,12 +288,23 @@ ifdef CONFIG_64BIT
+   endif
+ endif
+ 
++# When linking a 32-bit executable the LLVM linker cannot cope with a
++# 32-bit load address that has been sign-extended to 64 bits.  Simply
++# remove the upper 32 bits then, as it is safe to do so with other
++# linkers.
++ifdef CONFIG_64BIT
++	load-ld			= $(load-y)
++else
++	load-ld			= $(subst 0xffffffff,0x,$(load-y))
++endif
++
+ KBUILD_AFLAGS	+= $(cflags-y)
+ KBUILD_CFLAGS	+= $(cflags-y)
+-KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
++KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(load-ld)
+ KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
+ 
+ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
++		  VMLINUX_LINK_ADDRESS=$(load-ld) \
+ 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
+ 		  PLATFORM="$(platform-y)" \
+ 		  ITS_INPUTS="$(its-y)"
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index 0df0ee8a298d..3d391256ab7e 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -90,7 +90,7 @@ ifneq ($(zload-y),)
+ VMLINUZ_LOAD_ADDRESS := $(zload-y)
+ else
+ VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+-		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
++		$(obj)/vmlinux.bin $(VMLINUX_LINK_ADDRESS))
+ endif
+ UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
+ 
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index a5f00ec73ea6..5226cd8e4bee 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -55,7 +55,7 @@ SECTIONS
+ 	/* . = 0xa800000000300000; */
+ 	. = 0xffffffff80300000;
+ #endif
+-	. = VMLINUX_LOAD_ADDRESS;
++	. = VMLINUX_LINK_ADDRESS;
+ 	/* read-only */
+ 	_text = .;	/* Text and read-only data */
+ 	.text : {
+-- 
+2.26.0.rc2
 
