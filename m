@@ -2,51 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1A1C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A0AC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355DE2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A1A2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550989;
-	bh=bPwKDTKpL2Y+JZMMa3GJB3P5LJcrgEhmvE86xCxhotQ=;
+	s=default; t=1587550997;
+	bh=pTRJi42QLtD8XK1UmP7p1s0Jn8MlwflehEJVP2yAQXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xAEP41Kd+e3MHSWT+8za6oljkf/xBnU3gNixWes2eDRmgs9t/5/reIyPWuoRbTxvD
-	 BWvsH6VtGwtQXcp20m1Ri38PrIOKtE1NSr1ODBkAoGS4Gr5UFlKCyPOezrvIh8nCWk
-	 frRPSUHDvFcgHjhGpttuErDK+2Zt0j3L+TykQaNc=
+	b=zgMc50NLR6K7OfPzjCBBbCeQrApkC5oMEZpHbhIXV1Cp/qWTrEeiHXiZQvsb6i1NI
+	 RAHVMcX6o1NsbLjYSME/YrkPGAXXVa4bV6BLQyu7uuBeFje7fSzElIaLoPgXkIVNJ3
+	 sTxecjCe+Y3tuwkvlgUT96lcy7yIorfF8s6QCJ8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgDVKXG (ORCPT
+        id S1730296AbgDVKXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57940 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729605AbgDVKVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:32 -0400
+        id S1730162AbgDVKWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:22:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0471D2084D;
-        Wed, 22 Apr 2020 10:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A612076B;
+        Wed, 22 Apr 2020 10:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550891;
-        bh=bPwKDTKpL2Y+JZMMa3GJB3P5LJcrgEhmvE86xCxhotQ=;
+        s=default; t=1587550960;
+        bh=pTRJi42QLtD8XK1UmP7p1s0Jn8MlwflehEJVP2yAQXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w3Wg9uN99Vnttf1PmjqG9EaNa8hYorZy60IUj85apuccv5CEMONq+xpJ+9QPOUr9F
-         YWnAFNfWlqCpJAdLxHiMjgKafYkqyWkAKQJyIt+j+xtV6vTvu5EL5npKxY0u5cjqhL
-         W6sRsVvEwbu71I1BqIhmAxQjk4vy4iL+Nd1y0uZA=
+        b=T0thnSoyCU5ydWM+tOF4Lg6+cRatFoGzPzb5IAatg5ePu5vkakfop8ShKy5zjoq93
+         GR0OiXH0BNTKGWxX2FG7yFeFwWJJhdpKhkV0vbz6b1OX12vdx1jx6fqvoUf92FzamB
+         bDD2h/WI20MDYOVE/Bo8TYXOOmXmqpudewXz2j0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>
-Subject: [PATCH 5.6 017/166] rbd: call rbd_dev_unprobe() after unwatching and flushing notifies
-Date:   Wed, 22 Apr 2020 11:55:44 +0200
-Message-Id: <20200422095050.245586777@linuxfoundation.org>
+        stable@vger.kernel.org, Eneas U de Queiroz <cotequeiroz@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 044/166] crypto: qce - use cryptlen when adding extra sgl
+Date:   Wed, 22 Apr 2020 11:56:11 +0200
+Message-Id: <20200422095053.829913671@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -59,77 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Eneas U de Queiroz <cotequeiroz@gmail.com>
 
-commit 952c48b0ed18919bff7528501e9a3fff8a24f8cd upstream.
+[ Upstream commit d6364b8128439a8c0e381f80c38667de9f15eef8 ]
 
-rbd_dev_unprobe() is supposed to undo most of rbd_dev_image_probe(),
-including rbd_dev_header_info(), which means that rbd_dev_header_info()
-isn't supposed to be called after rbd_dev_unprobe().
+The qce crypto driver appends an extra entry to the dst sgl, to maintain
+private state information.
 
-However, rbd_dev_image_release() calls rbd_dev_unprobe() before
-rbd_unregister_watch().  This is racy because a header update notify
-can sneak in:
+When the gcm driver sends requests to the ctr skcipher, it passes the
+authentication tag after the actual crypto payload, but it must not be
+touched.
 
-  "rbd unmap" thread                   ceph-watch-notify worker
+Commit 1336c2221bee ("crypto: qce - save a sg table slot for result
+buf") limited the destination sgl to avoid overwriting the
+authentication tag but it assumed the tag would be in a separate sgl
+entry.
 
-  rbd_dev_image_release()
-    rbd_dev_unprobe()
-      free and zero out header
-                                       rbd_watch_cb()
-                                         rbd_dev_refresh()
-                                           rbd_dev_header_info()
-                                             read in header
+This is not always the case, so it is better to limit the length of the
+destination buffer to req->cryptlen before appending the result buf.
 
-The same goes for "rbd map" because rbd_dev_image_probe() calls
-rbd_dev_unprobe() on errors.  In both cases this results in a memory
-leak.
-
-Fixes: fd22aef8b47c ("rbd: move rbd_unregister_watch() call into rbd_dev_image_release()")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jason Dillaman <dillaman@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Eneas U de Queiroz <cotequeiroz@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/crypto/qce/dma.c      | 11 ++++++-----
+ drivers/crypto/qce/dma.h      |  2 +-
+ drivers/crypto/qce/skcipher.c |  5 +++--
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -6955,9 +6955,10 @@ static void rbd_print_dne(struct rbd_dev
+diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
+index 7da893dc00e73..46db5bf366b44 100644
+--- a/drivers/crypto/qce/dma.c
++++ b/drivers/crypto/qce/dma.c
+@@ -48,9 +48,10 @@ void qce_dma_release(struct qce_dma_data *dma)
  
- static void rbd_dev_image_release(struct rbd_device *rbd_dev)
+ struct scatterlist *
+ qce_sgtable_add(struct sg_table *sgt, struct scatterlist *new_sgl,
+-		int max_ents)
++		unsigned int max_len)
  {
--	rbd_dev_unprobe(rbd_dev);
- 	if (rbd_dev->opts)
- 		rbd_unregister_watch(rbd_dev);
-+
-+	rbd_dev_unprobe(rbd_dev);
- 	rbd_dev->image_format = 0;
- 	kfree(rbd_dev->spec->image_id);
- 	rbd_dev->spec->image_id = NULL;
-@@ -7007,7 +7008,7 @@ static int rbd_dev_image_probe(struct rb
- 	if (ret) {
- 		if (ret == -ENOENT && !need_watch)
- 			rbd_print_dne(rbd_dev, false);
--		goto err_out_watch;
-+		goto err_out_probe;
+ 	struct scatterlist *sg = sgt->sgl, *sg_last = NULL;
++	unsigned int new_len;
+ 
+ 	while (sg) {
+ 		if (!sg_page(sg))
+@@ -61,13 +62,13 @@ qce_sgtable_add(struct sg_table *sgt, struct scatterlist *new_sgl,
+ 	if (!sg)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	while (new_sgl && sg && max_ents) {
+-		sg_set_page(sg, sg_page(new_sgl), new_sgl->length,
+-			    new_sgl->offset);
++	while (new_sgl && sg && max_len) {
++		new_len = new_sgl->length > max_len ? max_len : new_sgl->length;
++		sg_set_page(sg, sg_page(new_sgl), new_len, new_sgl->offset);
+ 		sg_last = sg;
+ 		sg = sg_next(sg);
+ 		new_sgl = sg_next(new_sgl);
+-		max_ents--;
++		max_len -= new_len;
  	}
  
- 	/*
-@@ -7052,12 +7053,11 @@ static int rbd_dev_image_probe(struct rb
- 	return 0;
+ 	return sg_last;
+diff --git a/drivers/crypto/qce/dma.h b/drivers/crypto/qce/dma.h
+index ed25a0d9829e5..7864021693608 100644
+--- a/drivers/crypto/qce/dma.h
++++ b/drivers/crypto/qce/dma.h
+@@ -43,6 +43,6 @@ void qce_dma_issue_pending(struct qce_dma_data *dma);
+ int qce_dma_terminate_all(struct qce_dma_data *dma);
+ struct scatterlist *
+ qce_sgtable_add(struct sg_table *sgt, struct scatterlist *sg_add,
+-		int max_ents);
++		unsigned int max_len);
  
- err_out_probe:
--	rbd_dev_unprobe(rbd_dev);
--err_out_watch:
- 	if (!depth)
- 		up_write(&rbd_dev->header_rwsem);
- 	if (need_watch)
- 		rbd_unregister_watch(rbd_dev);
-+	rbd_dev_unprobe(rbd_dev);
- err_out_format:
- 	rbd_dev->image_format = 0;
- 	kfree(rbd_dev->spec->image_id);
+ #endif /* _DMA_H_ */
+diff --git a/drivers/crypto/qce/skcipher.c b/drivers/crypto/qce/skcipher.c
+index 4217b745f1242..63ae75809cb70 100644
+--- a/drivers/crypto/qce/skcipher.c
++++ b/drivers/crypto/qce/skcipher.c
+@@ -97,13 +97,14 @@ qce_skcipher_async_req_handle(struct crypto_async_request *async_req)
+ 
+ 	sg_init_one(&rctx->result_sg, qce->dma.result_buf, QCE_RESULT_BUF_SZ);
+ 
+-	sg = qce_sgtable_add(&rctx->dst_tbl, req->dst, rctx->dst_nents - 1);
++	sg = qce_sgtable_add(&rctx->dst_tbl, req->dst, req->cryptlen);
+ 	if (IS_ERR(sg)) {
+ 		ret = PTR_ERR(sg);
+ 		goto error_free;
+ 	}
+ 
+-	sg = qce_sgtable_add(&rctx->dst_tbl, &rctx->result_sg, 1);
++	sg = qce_sgtable_add(&rctx->dst_tbl, &rctx->result_sg,
++			     QCE_RESULT_BUF_SZ);
+ 	if (IS_ERR(sg)) {
+ 		ret = PTR_ERR(sg);
+ 		goto error_free;
+-- 
+2.20.1
+
 
 
