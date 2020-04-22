@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4511EC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EE3C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C48320776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637D420776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549580;
-	bh=rXNVyeTWN1PwcxtA3YxF+ZGQmp65KQpCYuDUWuHLwSU=;
+	s=default; t=1587549582;
+	bh=Gk/Czi4m2Tf2En50KfXTdS7aDN51Zm2XDzTUsTdMWx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnNFEPsSDDmOCrqkMKLCt5AcdLdcAE/USp+lLK1q4eKPEzNsiuHRRLKGTWHbpRBcD
-	 k6G6kWeTRmSIqec0B0CcceeksYrHgEc62oXOChGTelBRfKcPQhSEx2XEeRQRodwmJF
-	 C3D5Sb5U/jG89r/uMV/Cy2x/lA+b3vi30G7DidRA=
+	b=E0DM3ininvj1HZKurmO7AOCbjpNBtBPqzUsc+BlryxCdCcZcz/PZl4H21qCEmZM76
+	 eycRd0IggBtsyibohD2LmkK5Rs//oUJkouwBD3rvGxOpWE/hmf0NxgXX6PncoD/4CO
+	 ASxcYG323YirqrXxZvDUn4nC5Vm3bSl9+DobslTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgDVJ7i (ORCPT
+        id S1726500AbgDVJ7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:59:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 05:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgDVJ7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:59:34 -0400
+        id S1726457AbgDVJ7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:59:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67CBC20775;
-        Wed, 22 Apr 2020 09:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD6632077D;
+        Wed, 22 Apr 2020 09:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549572;
-        bh=rXNVyeTWN1PwcxtA3YxF+ZGQmp65KQpCYuDUWuHLwSU=;
+        s=default; t=1587549575;
+        bh=Gk/Czi4m2Tf2En50KfXTdS7aDN51Zm2XDzTUsTdMWx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1kT9RvwnPnSFYwGFTuTJ62KwgXeU6dcHvgC5x4x9nAu+Fk4QBjiDVbcfublqqSWjT
-         1VuVVVutdq/N6FRmZbIohLc3TwvAjzZ9pHIeeTeg4b1IqltMYjeN5xSfVZCkqq4aWP
-         KRTILbXinT2vv4+A28qshiytcg4CiZujiJb+xwbo=
+        b=U246vZIT9qaKdN9X+16mDFy3WX3xB9DKR/AFgDZgrJwLbmsAQfuJAl/iiOreLffAN
+         zk+YSNAo3uicHh0+iLic7ZO2cJsvCRpx7Z5M4nY5VFGymXE3tWcRrzBUVEwOZCV3Dv
+         xvExzCxGIIl9KLNCJLy/sw6noXYvKTGo1JN9k9WM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 006/100] selftests/x86/ptrace_syscall_32: Fix no-vDSO segfault
-Date:   Wed, 22 Apr 2020 11:55:36 +0200
-Message-Id: <20200422095023.797552500@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 007/100] libata: Remove extra scsi_host_put() in ata_scsi_add_hosts()
+Date:   Wed, 22 Apr 2020 11:55:37 +0200
+Message-Id: <20200422095024.046830392@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -60,40 +59,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 630b99ab60aa972052a4202a1ff96c7e45eb0054 ]
+[ Upstream commit 1d72f7aec3595249dbb83291ccac041a2d676c57 ]
 
-If AT_SYSINFO is not present, don't try to call a NULL pointer.
+If the call to scsi_add_host_with_dma() in ata_scsi_add_hosts() fails,
+then we may get use-after-free KASAN warns:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/faaf688265a7e1a5b944d6f8bc0f6368158306d3.1584052409.git.luto@kernel.org
+==================================================================
+BUG: KASAN: use-after-free in kobject_put+0x24/0x180
+Read of size 1 at addr ffff0026b8c80364 by task swapper/0/1
+CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-rc3-00004-g5a71b206ea82-dirty #1765
+Hardware name: Huawei TaiShan 200 (Model 2280)/BC82AMDD, BIOS 2280-V2 CS V3.B160.01 02/24/2020
+Call trace:
+dump_backtrace+0x0/0x298
+show_stack+0x14/0x20
+dump_stack+0x118/0x190
+print_address_description.isra.9+0x6c/0x3b8
+__kasan_report+0x134/0x23c
+kasan_report+0xc/0x18
+__asan_load1+0x5c/0x68
+kobject_put+0x24/0x180
+put_device+0x10/0x20
+scsi_host_put+0x10/0x18
+ata_devres_release+0x74/0xb0
+release_nodes+0x2d0/0x470
+devres_release_all+0x50/0x78
+really_probe+0x2d4/0x560
+driver_probe_device+0x7c/0x148
+device_driver_attach+0x94/0xa0
+__driver_attach+0xa8/0x110
+bus_for_each_dev+0xe8/0x158
+driver_attach+0x30/0x40
+bus_add_driver+0x220/0x2e0
+driver_register+0xbc/0x1d0
+__pci_register_driver+0xbc/0xd0
+ahci_pci_driver_init+0x20/0x28
+do_one_initcall+0xf0/0x608
+kernel_init_freeable+0x31c/0x384
+kernel_init+0x10/0x118
+ret_from_fork+0x10/0x18
+
+Allocated by task 5:
+save_stack+0x28/0xc8
+__kasan_kmalloc.isra.8+0xbc/0xd8
+kasan_kmalloc+0xc/0x18
+__kmalloc+0x1a8/0x280
+scsi_host_alloc+0x44/0x678
+ata_scsi_add_hosts+0x74/0x268
+ata_host_register+0x228/0x488
+ahci_host_activate+0x1c4/0x2a8
+ahci_init_one+0xd18/0x1298
+local_pci_probe+0x74/0xf0
+work_for_cpu_fn+0x2c/0x48
+process_one_work+0x488/0xc08
+worker_thread+0x330/0x5d0
+kthread+0x1c8/0x1d0
+ret_from_fork+0x10/0x18
+
+Freed by task 5:
+save_stack+0x28/0xc8
+__kasan_slab_free+0x118/0x180
+kasan_slab_free+0x10/0x18
+slab_free_freelist_hook+0xa4/0x1a0
+kfree+0xd4/0x3a0
+scsi_host_dev_release+0x100/0x148
+device_release+0x7c/0xe0
+kobject_put+0xb0/0x180
+put_device+0x10/0x20
+scsi_host_put+0x10/0x18
+ata_scsi_add_hosts+0x210/0x268
+ata_host_register+0x228/0x488
+ahci_host_activate+0x1c4/0x2a8
+ahci_init_one+0xd18/0x1298
+local_pci_probe+0x74/0xf0
+work_for_cpu_fn+0x2c/0x48
+process_one_work+0x488/0xc08
+worker_thread+0x330/0x5d0
+kthread+0x1c8/0x1d0
+ret_from_fork+0x10/0x18
+
+There is also refcount issue, as well:
+WARNING: CPU: 1 PID: 1 at lib/refcount.c:28 refcount_warn_saturate+0xf8/0x170
+
+The issue is that we make an erroneous extra call to scsi_host_put()
+for that host:
+
+So in ahci_init_one()->ata_host_alloc_pinfo()->ata_host_alloc(), we setup
+a device release method - ata_devres_release() - which intends to release
+the SCSI hosts:
+
+static void ata_devres_release(struct device *gendev, void *res)
+{
+	...
+	for (i = 0; i < host->n_ports; i++) {
+		struct ata_port *ap = host->ports[i];
+
+		if (!ap)
+			continue;
+
+		if (ap->scsi_host)
+			scsi_host_put(ap->scsi_host);
+
+	}
+	...
+}
+
+However in the ata_scsi_add_hosts() error path, we also call
+scsi_host_put() for the SCSI hosts.
+
+Fix by removing the the scsi_host_put() calls in ata_scsi_add_hosts() and
+leave this to ata_devres_release().
+
+Fixes: f31871951b38 ("libata: separate out ata_host_alloc() and ata_host_register()")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/ptrace_syscall.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/ata/libata-scsi.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 5105b49cd8aa5..8b3c1236f04dc 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -284,8 +284,12 @@ int main()
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index a44aeda571091..59dc033408be7 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -3720,22 +3720,19 @@ int ata_scsi_add_hosts(struct ata_host *host, struct scsi_host_template *sht)
+ 		 */
+ 		shost->max_host_blocked = 1;
  
- #if defined(__i386__) && (!defined(__GLIBC__) || __GLIBC__ > 2 || __GLIBC_MINOR__ >= 16)
- 	vsyscall32 = (void *)getauxval(AT_SYSINFO);
--	printf("[RUN]\tCheck AT_SYSINFO return regs\n");
--	test_sys32_regs(do_full_vsyscall32);
-+	if (vsyscall32) {
-+		printf("[RUN]\tCheck AT_SYSINFO return regs\n");
-+		test_sys32_regs(do_full_vsyscall32);
-+	} else {
-+		printf("[SKIP]\tAT_SYSINFO is not available\n");
-+	}
- #endif
+-		rc = scsi_add_host_with_dma(ap->scsi_host,
+-						&ap->tdev, ap->host->dev);
++		rc = scsi_add_host_with_dma(shost, &ap->tdev, ap->host->dev);
+ 		if (rc)
+-			goto err_add;
++			goto err_alloc;
+ 	}
  
- 	test_ptrace_syscall_restart();
+ 	return 0;
+ 
+- err_add:
+-	scsi_host_put(host->ports[i]->scsi_host);
+  err_alloc:
+ 	while (--i >= 0) {
+ 		struct Scsi_Host *shost = host->ports[i]->scsi_host;
+ 
++		/* scsi_host_put() is in ata_devres_release() */
+ 		scsi_remove_host(shost);
+-		scsi_host_put(shost);
+ 	}
+ 	return rc;
+ }
 -- 
 2.20.1
 
