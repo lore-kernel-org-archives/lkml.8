@@ -2,112 +2,80 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93672C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08E7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1812070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XXLAHVjC"
+	by mail.kernel.org (Postfix) with ESMTP id CA9EE2071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:50:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587516609;
+	bh=bF7X9h26ISAZy0y8EdjOKnsOs24egAoS183uGUzNkmw=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=UwdWz6zGFrQg4rpBcAHJSk/oWnJUVcBu0YpQIxLE5Fx5A6Qgz5M4V126/TiMZy0YG
+	 fC2sIDzU0uHgKyiHMuS9nPF5kAy3AQVNa5ZYSpg4w2o+Nw/qrD6Cw2rsX/DTwJe044
+	 Q9zYoPkNY82WOjCmNqMjzbKHyWvT67QUG2BnYBXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgDVAtS (ORCPT
+        id S1726431AbgDVAuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726387AbgDVAtR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:49:17 -0400
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E35FC0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:49:17 -0700 (PDT)
-Received: by mail-qv1-xf2c.google.com with SMTP id fb4so122561qvb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DXWORpjRxTkR+i2fu0N9aGTa6+ZQqTZNmK158+3pxDo=;
-        b=XXLAHVjCxmQ0g6P2WSs/mW+8skAgEVSeb5nc/EBOC+NLqjYIAm5C09vy+AXo9NYmfF
-         NuHUkcuMDH0a1DRZzGjmt54BElkiJlno6nBpxUT0EPKcmqSA4/bYO2WbY7dzaNrsqOn5
-         cyDQd1ZAV0QjIHtu5L4OU2ziPMQrf7AdumzEU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DXWORpjRxTkR+i2fu0N9aGTa6+ZQqTZNmK158+3pxDo=;
-        b=QT3HVDvF5dU2RYvWkTmr7n55mBbwT6dFtLL27DZB3g1rnKTY6imPNk4QOzbEUoUok7
-         4ohiwC2NF1pmRf+a3ZOl+2PP+Ih/pkxpUo6pjGnoV6MU+NSa8HQSwjokUrrn/lUk6IHE
-         uXFemkxtXNgOdZjx/8da5LXBL68VlBog4qq3h5mX0EPUUdT0KsC7ZZFDolP+pb8RUOO0
-         1YsS6KJ7q12DPRL5fLXruJ6RFiKojfqQNASz4OdBhdLkfmnTwPHT6Gj6G14GAvLDCu8l
-         lWRJbpzM2Y/GyQJ/BzR4288NwrYKbPZM6musH1uwOvAABV0pfs0bMWIfx2arCJ0/qq6v
-         JiHg==
-X-Gm-Message-State: AGi0PubPvIt8T8LmVK4b4apal3CIocST4ZCtVuYhuIWYWZT8Ku3wz9ZH
-        WQqLBM5+UK0m4fvkfhKI9aO4lWzE5TM=
-X-Google-Smtp-Source: APiQypIMhp7JY0W4gwQZKnCtTSbtRigeRBOH8mIizZ81Igo0bb+2DddE6rIniYJ6VPwP2HYeBRn1pw==
-X-Received: by 2002:a0c:a8e5:: with SMTP id h37mr2182035qvc.69.1587516556307;
-        Tue, 21 Apr 2020 17:49:16 -0700 (PDT)
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
-        by smtp.gmail.com with ESMTPSA id q32sm3028626qta.13.2020.04.21.17.49.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 17:49:16 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id i2so315501ybk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:49:15 -0700 (PDT)
-X-Received: by 2002:ab0:592c:: with SMTP id n41mr14287181uad.73.1587516064329;
- Tue, 21 Apr 2020 17:41:04 -0700 (PDT)
+        Tue, 21 Apr 2020 20:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbgDVAuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:50:08 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087D02070B;
+        Wed, 22 Apr 2020 00:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587516608;
+        bh=bF7X9h26ISAZy0y8EdjOKnsOs24egAoS183uGUzNkmw=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=FHKSEzZYJriFNaeXlgiLofnNxLG2IBj7Y9yYcZbdKeX0pJ5Kg13MuZPPih3jeRgWT
+         L52QEt9VbtHWQuRPpT/r9Jc6+tNVwpodXMREih72C0twWl2KdifAQddOp4hEjASf+i
+         g4tyJwyHpZCNzF7xBGwqMiFTTzr6CwQIZviWIFEM=
+Date:   Tue, 21 Apr 2020 20:50:06 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     dsterba@suse.cz, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.6 051/129] btrfs: handle NULL roots in
+ btrfs_put/btrfs_grab_fs_root
+Message-ID: <20200422005006.GU1809@sasha-vm>
+References: <20200415113445.11881-1-sashal@kernel.org>
+ <20200415113445.11881-51-sashal@kernel.org>
+ <20200415132224.GB5920@suse.cz>
 MIME-Version: 1.0
-References: <20200421110520.197930-1-evanbenn@chromium.org> <e81737bc-9461-0fdb-245f-d88bdde8f0ee@roeck-us.net>
-In-Reply-To: <e81737bc-9461-0fdb-245f-d88bdde8f0ee@roeck-us.net>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Wed, 22 Apr 2020 10:40:37 +1000
-X-Gmail-Original-Message-ID: <CAKz_xw0wAN4rG8xF1Y7amshoECJAjiWNDFQ5GQHPAbCfXi1bDg@mail.gmail.com>
-Message-ID: <CAKz_xw0wAN4rG8xF1Y7amshoECJAjiWNDFQ5GQHPAbCfXi1bDg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
-To:     Guenter Roeck <linux@roeck-us.net>, Simon Glass <sjg@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Julius Werner <jwerner@chromium.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200415132224.GB5920@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject says v2. This is confusing, at the very least.
+On Wed, Apr 15, 2020 at 03:22:24PM +0200, David Sterba wrote:
+>On Wed, Apr 15, 2020 at 07:33:26AM -0400, Sasha Levin wrote:
+>> From: Josef Bacik <josef@toxicpanda.com>
+>>
+>> [ Upstream commit 4cdfd93002cb84471ed85b4999cd38077a317873 ]
+>>
+>> We want to use this for dropping all roots, and in some error cases we
+>> may not have a root, so handle this to make the cleanup code easier.
+>> Make btrfs_grab_fs_root the same so we can use it in cases where the
+>> root may not exist (like the quota root).
 >
-> Guenter
+>This is another patch from the preparatory series, not needed for
+>stable. Please drop it, thanks.
 
-Apologies! I am using the patman script, it threw this message that I
-did not understand: 'Change log for unknown version v3'.
-And I did not spot the issue in the emails before send. Not sure why
-patman worked for v2 and v3 but not v4... I will take a look.
+Dropped, thanks!
 
-Evan
+-- 
+Thanks,
+Sasha
