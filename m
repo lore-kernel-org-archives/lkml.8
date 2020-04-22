@@ -2,121 +2,116 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2ED8C38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A39FC55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8273B20747
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D0820722
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:22:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffHScq1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgDVDP7 (ORCPT
+        id S1726407AbgDVDWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 23:15:59 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:36846 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726228AbgDVDP7 (ORCPT
+        Tue, 21 Apr 2020 23:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726228AbgDVDWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 23:15:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TwHav-7_1587525353;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TwHav-7_1587525353)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 22 Apr 2020 11:15:54 +0800
-Subject: Re: [PATCH 15/18] mm: memcontrol: make swap tracking an integral part
- of memory control
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Joonsoo Kim <js1304@gmail.com>, Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-16-hannes@cmpxchg.org>
- <e9d58c82-d746-dcd0-d9e3-6322014a3b03@linux.alibaba.com>
- <20200421143923.GC341682@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <2721c508-9b32-d0e7-454d-386129bfda1b@linux.alibaba.com>
-Date:   Wed, 22 Apr 2020 11:14:40 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Tue, 21 Apr 2020 23:22:51 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA08EC0610D6;
+        Tue, 21 Apr 2020 20:22:49 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id i16so460165ils.12;
+        Tue, 21 Apr 2020 20:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3ngwWNryn53mv5pf3kxdo+3CTU9h4WSyb9ORxIz0mDo=;
+        b=ffHScq1RcJmx3bP5Ru5ifCLjCgE4UUmpBUUaHrF0ci728gEjOLaSzxbbUZsIkImI+d
+         1389lfc19T2o62fNbQwdfXzNcIL6c9HxDudSbtJmsy36/5VXNMHNbp5vNxc8oBc4Aemr
+         jrgyS7FnmRVztOR+5/v7UZjd7stM2dRL+2yWul50ScFOEbXgULqM7xutrIqo6XLN+Swq
+         ZIcu15X0Svf6wcNkn+3m3WrV2m/9sgFFJ8Bpod9AnCftroQz2tvkF8iErYQun9Qb6EBO
+         /mfpD3VHT5W47hagPHTjxhjfhJc7R+9V99x5bvhLpliBD1d0n6wZxPrh6pUdVOWmDUxP
+         ukkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ngwWNryn53mv5pf3kxdo+3CTU9h4WSyb9ORxIz0mDo=;
+        b=euwdsPmkxhPjamWqDvS2YeESCmh2Ua+6AFblAPY8YkmboVRZhyRlQCehLh9V5s0Qqb
+         elVudvR69OGT95/qnylo0w6cM9VxwWZvjyyNfiS1s8XbfQ6dBciw62mX85aEe5b1lr2I
+         ZTrHS1X9eHfQMeiV17j7tBhC0bdIKCkUjMGWEVcVif/clTmsoIhEi8EeqAIpqUE2lO0i
+         igMbUKjdc6ya6IyLPCcfWqEd5b4bgYMmzzXPu+4FUMpn70YTHC+Jc7c134L9ov8lRw1o
+         aBEx0dmJduQs7OyyvlR1sutK1mh5QC8PAjn5oS4yaphucl6p+eb6FOMBcU/sYekE6+4b
+         B7og==
+X-Gm-Message-State: AGi0PubqsjC74IzLiuiTi7dN1TBSjj7bFQIWgB88C/CNh//Flnx6Gs9M
+        O+EStw6U5cfIsxJtUydmImcc6pWzbCL9H8q/NA==
+X-Google-Smtp-Source: APiQypKWVc/5KxHWRXc9pXM1nr31xgg5a0uM08KcpBvS2/zCInPHw70vQv4k1EfyXLA3/6mHs8xWM6RZMaBmXcWSw74=
+X-Received: by 2002:a92:41c7:: with SMTP id o190mr23768272ila.11.1587525767232;
+ Tue, 21 Apr 2020 20:22:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200421143923.GC341682@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200421171552.28393-1-luke.r.nels@gmail.com> <6f1130b3-eaea-cc5e-716f-5d6be77101b9@zytor.com>
+ <CAKU6vyb38-XcFeAiP7OW0j++0jS-J4gZP6S2E21dpQwvcEFpKQ@mail.gmail.com>
+In-Reply-To: <CAKU6vyb38-XcFeAiP7OW0j++0jS-J4gZP6S2E21dpQwvcEFpKQ@mail.gmail.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Tue, 21 Apr 2020 23:22:36 -0400
+Message-ID: <CAMzpN2hpwK00duVmrzuhDeZY+H7doJ+C-O6=SWrzy+KvAsupqw@mail.gmail.com>
+Subject: Re: [PATCH bpf 1/2] bpf, x32: Fix invalid instruction in BPF_LDX zero-extension
+To:     Xi Wang <xi.wang@gmail.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Wang YanQing <udknight@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 3:32 PM Xi Wang <xi.wang@gmail.com> wrote:
+>
+> On Tue, Apr 21, 2020 at 10:39 AM H. Peter Anvin <hpa@zytor.com> wrote:
+> > x32 is not x86-32.  In Linux we generally call the latter "i386".
+>
+> Agreed.  Most of the previous patches to this file use "x32" and this
+> one just wanted to be consistent.
+>
+> > C7 /0 imm32 is a valid instruction on i386. However, it is also
+> > inefficient when the destination is a register, because B8+r imm32 is
+> > equivalent, and when the value is zero, XOR is indeed more efficient.
+> >
+> > The real error is using EMIT3() instead of EMIT2_off32(), but XOR is
+> > more efficient. However, let's make the bug statement *correct*, or it
+> > is going to confuse the Hades out of people in the future.
+>
+> I don't see how the bug statement is incorrect, which merely points
+> out that "C7 C0 0" is an invalid instruction, regardless of whether
+> the JIT intended to emit C7 /0 imm32, B8+r imm32, 31 /r, 33 /r, or any
+> other equivalent form.
 
+You should explain the reason it is invalid, ie. the instruction
+encoding needs a 32-bit immediate but the current code only emits an
+8-bit immediate.
 
-在 2020/4/21 下午10:39, Johannes Weiner 写道:
-> Hi Alex,
-> 
-> thanks for your quick review so far, I'll add the tags to the patches.
-> 
-> On Tue, Apr 21, 2020 at 05:27:30PM +0800, Alex Shi wrote:
->>
->>
->> 在 2020/4/21 上午6:11, Johannes Weiner 写道:
->>> The swapaccount=0 boot option will continue to exist, and it will
->>> eliminate the page_counter overhead and hide the swap control files,
->>> but it won't disable swap slot ownership tracking.
->>
->> May we add extra explanation for this change to user? and the default
->> memsw limitations?
-> 
-> Can you elaborate what you think is missing and where you would like
-> to see it documented?
-> 
-Maybe the following doc change is better after whole patchset? 
-Guess users would would happy to know details of this change.
-
-Also as to the RSS account name change, I don't know if it's good to polish
-them in docs.
-
-Thanks
-Alex
-
-diff --git a/Documentation/admin-guide/cgroup-v1/memory.rst b/Documentation/admin-guide/cgroup-v1/memory.rst
-index 0ae4f564c2d6..1fd0878089fe 100644
---- a/Documentation/admin-guide/cgroup-v1/memory.rst
-+++ b/Documentation/admin-guide/cgroup-v1/memory.rst
-@@ -199,11 +199,11 @@ An RSS page is unaccounted when it's fully unmapped. A PageCache page is
- unaccounted when it's removed from radix-tree. Even if RSS pages are fully
- unmapped (by kswapd), they may exist as SwapCache in the system until they
- are really freed. Such SwapCaches are also accounted.
--A swapped-in page is not accounted until it's mapped.
-+A swapped-in page is accounted after adding into swapcache.
-
- Note: The kernel does swapin-readahead and reads multiple swaps at once.
--This means swapped-in pages may contain pages for other tasks than a task
--causing page fault. So, we avoid accounting at swap-in I/O.
-+Since page's memcg recorded into swap whatever memsw enabled, the page will
-+be accounted after swapin.
-
- At page migration, accounting information is kept.
-
-@@ -230,10 +230,10 @@ caller of swapoff rather than the users of shmem.
- 2.4 Swap Extension (CONFIG_MEMCG_SWAP)
- --------------------------------------
-
--Swap Extension allows you to record charge for swap. A swapped-in page is
--charged back to original page allocator if possible.
-+Swap usage is always recorded for each of cgroup. Swap Extension allows you to
-+read and limit it.
-
--When swap is accounted, following files are added.
-+When swap is limited, following files are added.
-
-  - memory.memsw.usage_in_bytes.
-  - memory.memsw.limit_in_bytes.
-
-> From a semantics POV, nothing changes with this patch. The memsw limit
-> defaults to "max", so it doesn't exert any control per default. The
-> only difference is whether we maintain swap records or not.
-> 
+--
+Brian Gerst
