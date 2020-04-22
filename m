@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E68C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F97C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 445EE2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CEB2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549560;
-	bh=ZfU77++yMcL770c3ZrBqDkny1zBJBG8/lLNTflP8DkQ=;
+	s=default; t=1587549562;
+	bh=Ah1phaatKWQi3TK8AmYCuGygrGtfYztTNYjAIJTHsNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eK5eK4zy5x1OK0i5qqltrdeq+3Uh2SnoVm7oE9H5J9p9Jw+6LR8TOBN881U/Z1SkY
-	 zpVaCHzoatIFMRZYawuE79qlZRWKQ+/eJicWY6U4g/aoiB/xDJOeqxRGflH9i8b1t9
-	 9eNWtvCv/m53lq9aNqkDr3k6JjPkcifiPijMqAvI=
+	b=ZRmQ/LLA6oMR0EezDZIlln03fKtcrL1CtBvmj5E36oxWXqNPYAg4MFGyarv8kUM5n
+	 hIytYeErMO3JBwtEPcWcS2/yh50jM9WIifM8Rn+E/ovvxECwkgvIW4ehuDXTXmlSZj
+	 spkuv1OssQnP1+hs6NS5ycrNkXnHnrMmWezzzdcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgDVJ7T (ORCPT
+        id S1726400AbgDVJ7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:59:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45530 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 05:59:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgDVJ7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:59:15 -0400
+        id S1726358AbgDVJ7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:59:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A1822076C;
-        Wed, 22 Apr 2020 09:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA082076E;
+        Wed, 22 Apr 2020 09:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549554;
-        bh=ZfU77++yMcL770c3ZrBqDkny1zBJBG8/lLNTflP8DkQ=;
+        s=default; t=1587549557;
+        bh=Ah1phaatKWQi3TK8AmYCuGygrGtfYztTNYjAIJTHsNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rjfIAQyjR1xgGY7ZkUw3NOEhKcvl2Ya2b37oD52q1zGaneqQYu2chICTa/FEFB9cz
-         jFyPtLX8/2BMNcXrwJNxc53YuxwV1QTj3YpUYOvd6vxxZs9l64iuToTcj6nrAHe0dS
-         RBrItKrDYJ1kpCATb8KSWxaFN1ksI3v1W1FkMsrc=
+        b=nVriN0PPgK8tas6k4z1msAuQhcuoQfxuxp/MFkmy5hJk/Poz9Xko1nJTdXrJL/4L7
+         webD0/+XCPMHOdio6SytQH2Q5DEuPUAFa3c8kSSSfwFf7wVZP1Y809sVkTz90LHzOb
+         TzNBOnKUQXCQA/edFtznHDsjVr3Ctp7sVsMl1pKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 012/100] btrfs: track reloc roots based on their commit root bytenr
-Date:   Wed, 22 Apr 2020 11:55:42 +0200
-Message-Id: <20200422095025.154423768@linuxfoundation.org>
+Subject: [PATCH 4.4 013/100] misc: rtsx: set correct pcr_ops for rts522A
+Date:   Wed, 22 Apr 2020 11:55:43 +0200
+Message-Id: <20200422095025.302564921@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -60,119 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ea287ab157c2816bf12aad4cece41372f9d146b4 ]
+[ Upstream commit 10cea23b6aae15e8324f4101d785687f2c514fe5 ]
 
-We always search the commit root of the extent tree for looking up back
-references, however we track the reloc roots based on their current
-bytenr.
+rts522a should use rts522a_pcr_ops, which is
+diffrent with rts5227 in phy/hw init setting.
 
-This is wrong, if we commit the transaction between relocating tree
-blocks we could end up in this code in build_backref_tree
-
-  if (key.objectid == key.offset) {
-	  /*
-	   * Only root blocks of reloc trees use backref
-	   * pointing to itself.
-	   */
-	  root = find_reloc_root(rc, cur->bytenr);
-	  ASSERT(root);
-	  cur->root = root;
-	  break;
-  }
-
-find_reloc_root() is looking based on the bytenr we had in the commit
-root, but if we've COWed this reloc root we will not find that bytenr,
-and we will trip over the ASSERT(root).
-
-Fix this by using the commit_root->start bytenr for indexing the commit
-root.  Then we change the __update_reloc_root() caller to be used when
-we switch the commit root for the reloc root during commit.
-
-This fixes the panic I was seeing when we started throttling relocation
-for delayed refs.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326032618.20472-1-yuehaibing@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/mfd/rts5227.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 246754b31619e..df04309390bba 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1289,7 +1289,7 @@ static int __must_check __add_reloc_root(struct btrfs_root *root)
- 	if (!node)
- 		return -ENOMEM;
- 
--	node->bytenr = root->node->start;
-+	node->bytenr = root->commit_root->start;
- 	node->data = root;
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
-@@ -1321,10 +1321,11 @@ static void __del_reloc_root(struct btrfs_root *root)
- 	if (rc && root->node) {
- 		spin_lock(&rc->reloc_root_tree.lock);
- 		rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--				      root->node->start);
-+				      root->commit_root->start);
- 		if (rb_node) {
- 			node = rb_entry(rb_node, struct mapping_node, rb_node);
- 			rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-+			RB_CLEAR_NODE(&node->rb_node);
- 		}
- 		spin_unlock(&rc->reloc_root_tree.lock);
- 		if (!node)
-@@ -1342,7 +1343,7 @@ static void __del_reloc_root(struct btrfs_root *root)
-  * helper to update the 'address of tree root -> reloc tree'
-  * mapping
-  */
--static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
-+static int __update_reloc_root(struct btrfs_root *root)
+diff --git a/drivers/mfd/rts5227.c b/drivers/mfd/rts5227.c
+index ff296a4bf3d23..dc6a9432a4b65 100644
+--- a/drivers/mfd/rts5227.c
++++ b/drivers/mfd/rts5227.c
+@@ -369,6 +369,7 @@ static const struct pcr_ops rts522a_pcr_ops = {
+ void rts522a_init_params(struct rtsx_pcr *pcr)
  {
- 	struct rb_node *rb_node;
- 	struct mapping_node *node = NULL;
-@@ -1350,7 +1351,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
+ 	rts5227_init_params(pcr);
++	pcr->ops = &rts522a_pcr_ops;
  
- 	spin_lock(&rc->reloc_root_tree.lock);
- 	rb_node = tree_search(&rc->reloc_root_tree.rb_root,
--			      root->node->start);
-+			      root->commit_root->start);
- 	if (rb_node) {
- 		node = rb_entry(rb_node, struct mapping_node, rb_node);
- 		rb_erase(&node->rb_node, &rc->reloc_root_tree.rb_root);
-@@ -1362,7 +1363,7 @@ static int __update_reloc_root(struct btrfs_root *root, u64 new_bytenr)
- 	BUG_ON((struct btrfs_root *)node->data != root);
- 
- 	spin_lock(&rc->reloc_root_tree.lock);
--	node->bytenr = new_bytenr;
-+	node->bytenr = root->node->start;
- 	rb_node = tree_insert(&rc->reloc_root_tree.rb_root,
- 			      node->bytenr, &node->rb_node);
- 	spin_unlock(&rc->reloc_root_tree.lock);
-@@ -1503,6 +1504,7 @@ int btrfs_update_reloc_root(struct btrfs_trans_handle *trans,
- 	}
- 
- 	if (reloc_root->commit_root != reloc_root->node) {
-+		__update_reloc_root(reloc_root);
- 		btrfs_set_root_node(root_item, reloc_root->node);
- 		free_extent_buffer(reloc_root->commit_root);
- 		reloc_root->commit_root = btrfs_root_node(reloc_root);
-@@ -4578,11 +4580,6 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
- 	BUG_ON(rc->stage == UPDATE_DATA_PTRS &&
- 	       root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID);
- 
--	if (root->root_key.objectid == BTRFS_TREE_RELOC_OBJECTID) {
--		if (buf == root->node)
--			__update_reloc_root(root, cow->start);
--	}
--
- 	level = btrfs_header_level(buf);
- 	if (btrfs_header_generation(buf) <=
- 	    btrfs_root_last_snapshot(&root->root_item))
+ 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
+ }
 -- 
 2.20.1
 
