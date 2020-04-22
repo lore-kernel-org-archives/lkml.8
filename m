@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C49C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29185C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514A92075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60B82084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550752;
-	bh=ha+CAQ7iEhlPF52xa10ZLaHKRCJQ1ZS6XYdgwGYgaWw=;
+	s=default; t=1587550781;
+	bh=u/HMnLGTaLSNri32SyqVZvXqm4KgTOgJ5AYusxzD3mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uLkZjxOtDUq499rtbZl15mGmRbUosOd4yh3gN2a/8ocoZrIAlFj/7gVPl5i9n95IP
-	 1bH471SNOz4ni7uS2iHAIjyCL7DoipNNrkDaACMlGNYLRJ/OCXiuzZ8EvbpqDIHnUH
-	 jOd51SCjEPuP3qMHnLMoBbKHda0GAcFcfn9Af3IU=
+	b=KsME1JWybBg8ZUqL7AqDI/SbgMT9Qp5LF/OtOMK95NgmF9ov9oO/6sBybafCaQvSV
+	 H65+Bc0Ot3SUCLte/10AmsqzIZkuwodB3KYGULRu1HOFSuvQddZqeQ54ZFTbvOdj2D
+	 JM2ZCJjGRs92XQcdt8SSUhS2qwbSo6+X//8dS9nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgDVKTL (ORCPT
+        id S1730058AbgDVKTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54602 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729919AbgDVKSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:10 -0400
+        id S1729928AbgDVKSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CE1B2075A;
-        Wed, 22 Apr 2020 10:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 103F62076B;
+        Wed, 22 Apr 2020 10:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550690;
-        bh=ha+CAQ7iEhlPF52xa10ZLaHKRCJQ1ZS6XYdgwGYgaWw=;
+        s=default; t=1587550692;
+        bh=u/HMnLGTaLSNri32SyqVZvXqm4KgTOgJ5AYusxzD3mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCkjrSXvni1A9F5d+K4eJ792g+miATOzt4tNRGV/CGV5RAOeBShKzy3hrWLfzv+6e
-         snAK/LB3XCv6M+SLBLyKk/7JYtnWXlMX8ePTyLF2mPcTduWEwxdjtdPhjmeT3yx54P
-         cR544kNxjmI7C+oUpl87vFhRgVl1qGS/gbKW8Ww0=
+        b=l538e/JgXw2g/Z9UZnthWv66XTpel90CQf3VmAKe+SBCctlsSXDv2Z/AAquxvcvvu
+         HAM2941LsAiFvDIJIctcdhACSqq073dZu1G1jS0dDy07HdQS/c2F6dpRMnp9Hqm6H5
+         MERgC83T/kMQybAtDJ+tlCuV1PLg2zG+XaySGxwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/118] KVM: PPC: Book3S HV: Fix H_CEDE return code for nested guests
-Date:   Wed, 22 Apr 2020 11:56:55 +0200
-Message-Id: <20200422095040.897701454@linuxfoundation.org>
+Subject: [PATCH 5.4 037/118] clk: at91: usb: continue if clk_hw_round_rate() return zero
+Date:   Wed, 22 Apr 2020 11:56:38 +0200
+Message-Id: <20200422095038.020122851@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -62,65 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Roth <mdroth@linux.vnet.ibm.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 1f50cc1705350a4697923203fedd7d8fb1087fe2 ]
+[ Upstream commit b0ecf1c6c6e82da4847900fad0272abfd014666d ]
 
-The h_cede_tm kvm-unit-test currently fails when run inside an L1 guest
-via the guest/nested hypervisor.
+clk_hw_round_rate() may call round rate function of its parents. In case
+of SAM9X60 two of USB parrents are PLLA and UPLL. These clocks are
+controlled by clk-sam9x60-pll.c driver. The round rate function for this
+driver is sam9x60_pll_round_rate() which call in turn
+sam9x60_pll_get_best_div_mul(). In case the requested rate is not in the
+proper range (rate < characteristics->output[0].min &&
+rate > characteristics->output[0].max) the sam9x60_pll_round_rate() will
+return a negative number to its caller (called by
+clk_core_round_rate_nolock()). clk_hw_round_rate() will return zero in
+case a negative number is returned by clk_core_round_rate_nolock(). With
+this, the USB clock will continue its rate computation even caller of
+clk_hw_round_rate() returned an error. With this, the USB clock on SAM9X60
+may not chose the best parent. I detected this after a suspend/resume
+cycle on SAM9X60.
 
-  ./run-tests.sh -v
-  ...
-  TESTNAME=h_cede_tm TIMEOUT=90s ACCEL= ./powerpc/run powerpc/tm.elf -smp 2,threads=2 -machine cap-htm=on -append "h_cede_tm"
-  FAIL h_cede_tm (2 tests, 1 unexpected failures)
-
-While the test relates to transactional memory instructions, the actual
-failure is due to the return code of the H_CEDE hypercall, which is
-reported as 224 instead of 0. This happens even when no TM instructions
-are issued.
-
-224 is the value placed in r3 to execute a hypercall for H_CEDE, and r3
-is where the caller expects the return code to be placed upon return.
-
-In the case of guest running under a nested hypervisor, issuing H_CEDE
-causes a return from H_ENTER_NESTED. In this case H_CEDE is
-specially-handled immediately rather than later in
-kvmppc_pseries_do_hcall() as with most other hcalls, but we forget to
-set the return code for the caller, hence why kvm-unit-test sees the
-224 return code and reports an error.
-
-Guest kernels generally don't check the return value of H_CEDE, so
-that likely explains why this hasn't caused issues outside of
-kvm-unit-tests so far.
-
-Fix this by setting r3 to 0 after we finish processing the H_CEDE.
-
-RHBZ: 1778556
-
-Fixes: 4bad77799fed ("KVM: PPC: Book3S HV: Handle hypercalls correctly when nested")
-Cc: linuxppc-dev@ozlabs.org
-Cc: David Gibson <david@gibson.dropbear.id.au>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Michael Roth <mdroth@linux.vnet.ibm.com>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-2-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/at91/clk-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 36abbe3c346df..e2183fed947d4 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3623,6 +3623,7 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu *vcpu, u64 time_limit,
- 		if (trap == BOOK3S_INTERRUPT_SYSCALL && !vcpu->arch.nested &&
- 		    kvmppc_get_gpr(vcpu, 3) == H_CEDE) {
- 			kvmppc_nested_cede(vcpu);
-+			kvmppc_set_gpr(vcpu, 3, 0);
- 			trap = 0;
- 		}
- 	} else {
+diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
+index bda92980e0155..c0895c993cce2 100644
+--- a/drivers/clk/at91/clk-usb.c
++++ b/drivers/clk/at91/clk-usb.c
+@@ -75,6 +75,9 @@ static int at91sam9x5_clk_usb_determine_rate(struct clk_hw *hw,
+ 			tmp_parent_rate = req->rate * div;
+ 			tmp_parent_rate = clk_hw_round_rate(parent,
+ 							   tmp_parent_rate);
++			if (!tmp_parent_rate)
++				continue;
++
+ 			tmp_rate = DIV_ROUND_CLOSEST(tmp_parent_rate, div);
+ 			if (tmp_rate < req->rate)
+ 				tmp_diff = req->rate - tmp_rate;
 -- 
 2.20.1
 
