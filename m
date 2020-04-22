@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2447EC38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A7EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09BC22075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7429206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbgDVELy (ORCPT
+        id S1726547AbgDVEMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 00:11:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60088 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 00:12:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60174 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgDVELw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 00:11:52 -0400
+        id S1726494AbgDVEL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 00:11:58 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 850FFADE1;
-        Wed, 22 Apr 2020 04:11:49 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 1E94DAE6E;
+        Wed, 22 Apr 2020 04:11:55 +0000 (UTC)
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     tglx@linutronix.de, pbonzini@redhat.com
 Cc:     bigeasy@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
@@ -30,9 +30,9 @@ Cc:     bigeasy@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
         joel@joelfernandes.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, dave@stgolabs.net,
         Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 3/5] rcuwait: Introduce prepare_to and finish_rcuwait
-Date:   Tue, 21 Apr 2020 21:07:37 -0700
-Message-Id: <20200422040739.18601-4-dave@stgolabs.net>
+Subject: [PATCH 5/5] sched/swait: Reword some of the main description
+Date:   Tue, 21 Apr 2020 21:07:39 -0700
+Message-Id: <20200422040739.18601-6-dave@stgolabs.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200422040739.18601-1-dave@stgolabs.net>
 References: <20200422040739.18601-1-dave@stgolabs.net>
@@ -41,59 +41,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows further flexibility for some callers to implement
-ad-hoc versions of the generic rcuwait_wait_event(). For example,
-kvm will need this to maintain tracing semantics. The naming
-is of course similar to what waitqueue apis offer.
+With both the increased use of swait and kvm no longer using
+it, we can reword some of the comments. While removing Linus'
+valid rant, I've also cared to explicitly mention that swait
+is very different than regular wait. In addition it is
+mentioned against using swait in favor of the regular flavor.
 
 Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- include/linux/rcuwait.h | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ include/linux/swait.h | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
-diff --git a/include/linux/rcuwait.h b/include/linux/rcuwait.h
-index 6ebb23258a27..0c6a3d0d25ab 100644
---- a/include/linux/rcuwait.h
-+++ b/include/linux/rcuwait.h
-@@ -29,12 +29,25 @@ extern int rcuwait_wake_up(struct rcuwait *w);
+diff --git a/include/linux/swait.h b/include/linux/swait.h
+index 73e06e9986d4..6a8c22b8c2a5 100644
+--- a/include/linux/swait.h
++++ b/include/linux/swait.h
+@@ -9,23 +9,10 @@
+ #include <asm/current.h>
  
  /*
-  * The caller is responsible for locking around rcuwait_wait_event(),
-- * such that writes to @task are properly serialized.
-+ * and prepare_to_rcuwait() such that writes to @task are properly
-+ * serialized.
-  */
-+
-+static inline void prepare_to_rcuwait(struct rcuwait *w)
-+{
-+	rcu_assign_pointer(w->task, current);
-+}
-+
-+static inline void finish_rcuwait(struct rcuwait *w)
-+{
-+	WRITE_ONCE(w->task, NULL);
-+	__set_current_state(TASK_RUNNING);
-+}
-+
- #define rcuwait_wait_event(w, condition, state)				\
- ({									\
- 	int __ret = 0;							\
--	rcu_assign_pointer((w)->task, current);				\
-+	prepare_to_rcuwait(w);						\
- 	for (;;) {							\
- 		/*							\
- 		 * Implicit barrier (A) pairs with (B) in		\
-@@ -51,9 +64,7 @@ extern int rcuwait_wake_up(struct rcuwait *w);
- 									\
- 		schedule();						\
- 	}								\
--									\
--	WRITE_ONCE((w)->task, NULL);					\
--	__set_current_state(TASK_RUNNING);				\
-+	finish_rcuwait(w);						\
- 	__ret;								\
- })
- 
+- * BROKEN wait-queues.
+- *
+- * These "simple" wait-queues are broken garbage, and should never be
+- * used. The comments below claim that they are "similar" to regular
+- * wait-queues, but the semantics are actually completely different, and
+- * every single user we have ever had has been buggy (or pointless).
+- *
+- * A "swake_up_one()" only wakes up _one_ waiter, which is not at all what
+- * "wake_up()" does, and has led to problems. In other cases, it has
+- * been fine, because there's only ever one waiter (kvm), but in that
+- * case gthe whole "simple" wait-queue is just pointless to begin with,
+- * since there is no "queue". Use "wake_up_process()" with a direct
+- * pointer instead.
+- *
+- * While these are very similar to regular wait queues (wait.h) the most
+- * important difference is that the simple waitqueue allows for deterministic
+- * behaviour -- IOW it has strictly bounded IRQ and lock hold times.
++ * Simple waitqueues are semantically very different to regular wait queues
++ * (wait.h). The most important difference is that the simple waitqueue allows
++ * for deterministic behaviour -- IOW it has strictly bounded IRQ and lock hold
++ * times.
+  *
+  * Mainly, this is accomplished by two things. Firstly not allowing swake_up_all
+  * from IRQ disabled, and dropping the lock upon every wakeup, giving a higher
+@@ -39,7 +26,7 @@
+  *    sleeper state.
+  *
+  *  - the !exclusive mode; because that leads to O(n) wakeups, everything is
+- *    exclusive.
++ *    exclusive. As such swake_up_one will only ever awake _one_ waiter.
+  *
+  *  - custom wake callback functions; because you cannot give any guarantees
+  *    about random code. This also allows swait to be used in RT, such that
 -- 
 2.16.4
 
