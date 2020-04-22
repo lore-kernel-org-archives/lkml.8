@@ -2,98 +2,143 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956E1C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2F4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD172098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFE62098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="diK9Pqlk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TeTZHVtr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgDVSz3 (ORCPT
+        id S1726822AbgDVS4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58878 "EHLO
+        Wed, 22 Apr 2020 14:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgDVSz3 (ORCPT
+        with ESMTP id S1726208AbgDVS4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:55:29 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CEFC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:55:27 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b188so1996327qkd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:55:27 -0700 (PDT)
+        Wed, 22 Apr 2020 14:56:04 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF66C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:56:04 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id w3so1301002plz.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:56:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xLUryRWs2hS8C6rmdpuM1w1GZL5DMkigM47LhtMAQbY=;
-        b=diK9Pqlk64BLQ1DKCWq4alJLwqOwl8lX2xNeh6ahfNizfenun/PLDEBEaoSIcU2+O2
-         kty4ZXG4ZSbMldO5+OnRbMo4RjQeqZlFlxPS0kXnkP0HKz7ED2okkR0jk19mt2gOUSiI
-         vHK3sbe0Xh1tR/QYvB88Lid/yNGCMfkgGygQtdtPdvdXjCz3Zl7lRjF/3CJh6jrQGQlW
-         B7m4ucg4dYftjbTZ1IN9cj6hcr1+h+saAcYtxAouFgD8S6dHw0ePHREQ3TWWatqxz2Ls
-         cnevsjBa3KSH+mOXAnAiFz0EuEsie6sKJ0dA7xzSDCVoZyGsIxRobey12WGXWDJ1w74c
-         A4/Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3sa/gVNaip+9XRbdoEuhfmV9mpmTLztLhq1CX0xqZKM=;
+        b=TeTZHVtryc/TNpZDkEHi8Lap8iCWQeAkNNt/EuK6exhX8Ba2jVVcA+bTbQcnJEr0df
+         HX3BkrkG7XxP18JV0chyW5cvhKlzBfw1uD3ir1HuhEPwgY1NiKy6jxedoB+JOAZBH9CY
+         1zlHtkyCOlKm3Lxhb6wBA1DtYNVYUuH7SyT4HeoNl71o7u/TIbtCAXHs0EOAMdfu9Ljh
+         4lnUJJzKrdrxUaNaORwXM4rQTDm3sFB7k/LP3fZ6D/GeFO5PDSQ/Q3TSboJHODxkJkw+
+         SGjDEDsPK1YBKM0xZIQ/B0EKTw2gfFzM5jOJIcz3bip2lC33xt2FOdb28x85B9kWp60R
+         bg9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xLUryRWs2hS8C6rmdpuM1w1GZL5DMkigM47LhtMAQbY=;
-        b=meaX4vVL5Z1kovNlIDruRvNRqAxEVmv87V/J6u7dSGFMav585fJuk1KPPdkEskYmdF
-         GtSsNfZovMTSje3x6O6qhvlUhEj6Xrh7f/rZ/Xl4K0CMHLSUzbFe04lH2dZLjc77uKCm
-         GKtwzwe4Bo0vXH+Hoty4tDYn0zEA889PvVeKIN3+Cf2ltzQ4fbTJz60kAV7TuX4YkJMU
-         E3YnEel5VidQwrCIcsYzzE1KjAtwWfauQ/x8NDtm5t7I1RSUXxuZueQqT99AUhC/wuoB
-         w7T0DUhbiOCIz0douKZ9aXZrBhk8gPagjjCC2ljI4fb+XQjRVPKDG+tcJGM4QLOPQ3FR
-         pzXw==
-X-Gm-Message-State: AGi0PuZ1VS/Rz0gXjlsmiVjPCa89WZHH68kU5p9Lr/h6LwurcPdShBw3
-        MrW1HhDKVFyuQIyvU5+ilKwTEg==
-X-Google-Smtp-Source: APiQypLxT4cQDVOJW5C6AxROGVfl/mi3cYixvqOcyBz8pQ58M8OWm5vyj6Ueu2R3gSlG6DiLoDcZ9w==
-X-Received: by 2002:a37:7443:: with SMTP id p64mr26002162qkc.269.1587581726859;
-        Wed, 22 Apr 2020 11:55:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id o94sm62648qtd.34.2020.04.22.11.55.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Apr 2020 11:55:26 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jRKWr-0003jf-Oo; Wed, 22 Apr 2020 15:55:25 -0300
-Date:   Wed, 22 Apr 2020 15:55:25 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: Re: [PATCH rdma-rc 0/2] Two fixes in handling FD object
-Message-ID: <20200422185525.GA14322@ziepe.ca>
-References: <20200421082929.311931-1-leon@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3sa/gVNaip+9XRbdoEuhfmV9mpmTLztLhq1CX0xqZKM=;
+        b=TGE+VQ3XkC0qZ6l5Ejrz5mLRTDNTMORZrqmp5nKHfgeQIhIdaNbzI0aZYt8WWGaDnH
+         qELHMjRvxSyyOEnYHlK+a26OSCWYF3eeuGCxSCwd0A91cTGiq8cifEVZ4EYmnO1zLgia
+         vKCTHGLNqAzfLaBhAUldv53Mh6l3fCNmQ+jdzOtgLpyRvKQ/oHUKud42cSR0szwj47BR
+         yifJaVv8H0CSxROk0lU90eGVZmVuCxEKlWtyRIQhbvgRkXm+3zgB/+QgxTdMN0SC9nzP
+         ZY8/3E1af5eoieWnOqK4djmscQ/F78dgvM4+veDglOvs8G8EQhHSSEhe4RtE3BqIWwsZ
+         3Ngw==
+X-Gm-Message-State: AGi0PubrlVvpxp6U462kLCGU6uIib6c0lHnYXWgFc4kdoVSrE49nD5b0
+        nXPwQ0NgNvuPUiusE4/9OBPBHMmgjoxKkJQSmgiJCA==
+X-Google-Smtp-Source: APiQypJVmgo8hMpt6SVbdHV0tTZqVK+VaZWQoCa2kBRNcaeP/pRK1RcWMRMS4sqwvHIMgMI0YN5Mz3aCQcVNvE+dYVc=
+X-Received: by 2002:a17:902:b20e:: with SMTP id t14mr69738plr.223.1587581763189;
+ Wed, 22 Apr 2020 11:56:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421082929.311931-1-leon@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200417075739.GA7322@zn.tnic> <20200417080726.GS2424@tucnak>
+ <20200417084224.GB7322@zn.tnic> <20200417085859.GU2424@tucnak>
+ <20200417090909.GC7322@zn.tnic> <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
+ <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
+ <20200417190607.GY2424@tucnak> <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+ <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de> <20200422102309.GA26846@zn.tnic>
+In-Reply-To: <20200422102309.GA26846@zn.tnic>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 22 Apr 2020 11:55:50 -0700
+Message-ID: <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 11:29:27AM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
-> 
-> Hi,
-> 
-> These two patches are fixing two crashes in FD object handling.
-> 
-> Thanks
-> 
-> Leon Romanovsky (2):
->   RDMA/core: Prevent mixed use of FDs between shared ufiles
->   RDMA/core: Fix overwriting of uobj in case of error
+On Wed, Apr 22, 2020 at 3:23 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> Ok,
+>
+> let's try the simple and clean fix first. Nick, would that work on LLVM
+> too?
+>
+> And I hope this will remain working and the compiler won't jump over an
+> inline asm and go nuts.
+>
+> Thx.
+>
+> ---
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index 3b9bf8c7e29d..06d2e16bedbb 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -266,6 +266,13 @@ static void notrace start_secondary(void *unused)
+>
+>         wmb();
+>         cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+> +
+> +       /*
+> +        * Prevent tail call to cpu_startup_entry() because the stack protector
+> +        * guard has been changed in the middle of this function and must not be
+> +        * checked before tail calling another function.
 
-Applied to for-rc, thanks
+Can you add by whom?  It's not clear to me which function call in
+start_secondary modifies the stack protector guard.
 
-Jason
+Another question.  Do we not want a stack protector at all in this
+function?  I'm not super familiar with how they work; do we not want
+them at all, or simply not to check the guard?
+
+But if we're not going to check it, I think
+__attribute__((no_stack_protector)) applied to start_secondary might
+be a more precise fix.  Though the empty asm statement may be the most
+portable at this time, and with a well specified comment, I can live
+with it.
+
+> +        */
+> +        asm ("");
+>  }
+>
+>  /**
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
