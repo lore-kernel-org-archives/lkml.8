@@ -2,81 +2,85 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E4AC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F5AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384F8206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B380206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="2cM/3ayz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KOZVBoF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgDVHiy (ORCPT
+        id S1726399AbgDVHjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:38:54 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:58799 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgDVHiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:38:54 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id aa0d615f;
-        Wed, 22 Apr 2020 07:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=/sg8GZPKwFtmJRFpacBo1cf/OgI=; b=2cM/3a
-        yz8IvpwnuEqoqbbkvRLBLcWqtHUcAdVxzlKYl0UKYPgfJGksZQclryc+Gq6hnEsN
-        /SUy54gs4FfYaHCIFYqk/eyrPTw4mVNlI45sfjxn04BMGq3sHWL3jQjU7TjERqJ2
-        /OpA6dkjWLCV75Ez/50e/A1h0raPy656P+JZw2gnl/lbbA4d0SyMcysFFJ/tKwXx
-        hCqu93Bibdwyq6YSdi9T9hSqteq6qdFOLJX4aF7/+DcQomBVrGalXvOCYYCvuxh4
-        65L+FTc6Fe5wokQN4/l0VH37J4Pa/fZhDlodXype6u+WujJ+EbU+S51/rZpecNWA
-        3s/wTvIttHLz/xdA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 684cb763 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 22 Apr 2020 07:28:02 +0000 (UTC)
-Received: by mail-il1-f178.google.com with SMTP id f82so922965ilh.8;
-        Wed, 22 Apr 2020 00:38:52 -0700 (PDT)
-X-Gm-Message-State: AGi0Pubkt8TsqluhG9prKhqcn/iwJ29IYSseAeqMbVcSMkVaTwKYCHhN
-        e1d1rmneQ3noGZUl7ZOgAO+rRwS+uzc5X12k8cs=
-X-Google-Smtp-Source: APiQypLTtpTIRljCgyNakNz/zRP4C8vI82xsF2BjTAYEiN/4S1KV/Cc2xjZaNymJWJMjKaZ/6lHCQwvSaS71tFjtaME=
-X-Received: by 2002:a92:bf0b:: with SMTP id z11mr22557664ilh.207.1587541131618;
- Wed, 22 Apr 2020 00:38:51 -0700 (PDT)
+        Wed, 22 Apr 2020 03:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725786AbgDVHjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:39:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44EB0C03C1A6;
+        Wed, 22 Apr 2020 00:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=WtcH9W9UJR7zIdoPQnBUNprDw0gzdRhH+V87MBmxzmA=; b=KOZVBoF7MIc4arL1LFgotKDaNl
+        CGgqIxdSvJ5C+lxlXZBTKlsMAothNUd0o7cmku6oxxZCctumxAIphVrtha/+AgGevK2uOw5vO69u4
+        TSPFNEbgwMuwUysdBSO+0PQKLZNNl+IqZENDFOwTAs+TcU7rLkjh2GtEgkgwBewqBi4qSoXPBFJKD
+        sVzUoeR52ym7SiUPFf+UuZpHOZUXZt3fHlutzQNem9EAnfe2no5bGOsLfL35ikjjOJjeSEqcBoxqK
+        9eVZTYj3w7DLYxpNNKyEphCUipl2dpLbRQg82zUz+OIhxVdc5uoA0LBXF4v4xm0WV3V375l+7RlCs
+        dzjF/Wmw==;
+Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jR9yB-00008a-Vb; Wed, 22 Apr 2020 07:38:56 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/9] vboxsf: don't use the source name in the bdi name
+Date:   Wed, 22 Apr 2020 09:38:43 +0200
+Message-Id: <20200422073851.303714-2-hch@lst.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200422073851.303714-1-hch@lst.de>
+References: <20200422073851.303714-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200420075711.2385190-1-Jason@zx2c4.com> <20200422040415.GA2881@sol.localdomain>
- <CAMj1kXGRNCEkTFPGM03h1N+HtOiLVMcm89UJYMZcuWjyFAp5Ag@mail.gmail.com>
-In-Reply-To: <CAMj1kXGRNCEkTFPGM03h1N+HtOiLVMcm89UJYMZcuWjyFAp5Ag@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 22 Apr 2020 01:38:40 -0600
-X-Gmail-Original-Message-ID: <CAHmME9oZUO4=uV8EsKwQf_TJ20EL62fn=-UiyZW-we5TukqxGQ@mail.gmail.com>
-Message-ID: <CAHmME9oZUO4=uV8EsKwQf_TJ20EL62fn=-UiyZW-we5TukqxGQ@mail.gmail.com>
-Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
- PAGE_SIZE chunks
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 1:23 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> So I think 4 KB is indeed a reasonable quantum of work here. Only
-> PAGE_SIZE is not necessarily equal to 4 KB on arm64, so we should use
-> SZ_4K instead.
+Simplify the bdi name to mirror what we are doing elsewhere, and
+drop them name in favor of just using a number.  This avoids a
+potentially very long bdi name.
 
-Will wait to hear the rt guys' opinion, but sure, we can do SZ_4K
-explicitly. If we go with that in the end, v2 will adjust the other
-places that are already using PAGE_SIZE.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/vboxsf/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> So do we have any callers that are likely to pass more than 4 KB of
-> input at a time?
+diff --git a/fs/vboxsf/super.c b/fs/vboxsf/super.c
+index 675e26989376..8fe03b4a0d2b 100644
+--- a/fs/vboxsf/super.c
++++ b/fs/vboxsf/super.c
+@@ -164,7 +164,7 @@ static int vboxsf_fill_super(struct super_block *sb, struct fs_context *fc)
+ 		goto fail_free;
+ 	}
+ 
+-	err = super_setup_bdi_name(sb, "vboxsf-%s.%d", fc->source, sbi->bdi_id);
++	err = super_setup_bdi_name(sb, "vboxsf-%d", sbi->bdi_id);
+ 	if (err)
+ 		goto fail_free;
+ 
+-- 
+2.26.1
 
-Network packets can be big -- ethernet jumbo packets are 9k, for
-example -- so that means this could potentially ipsec, wireguard, and
-maybe wifi too. (Crypto api users might go through another layer of
-indirection that splits things up smaller, maybe.)
