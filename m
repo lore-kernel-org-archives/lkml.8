@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50603C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1557C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D022075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3982070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550540;
-	bh=jlCOKvLmCY4J1mQYSp+GJ52kQPnp+v36+Lyr6EuYj8A=;
+	s=default; t=1587550542;
+	bh=Oa3weY7BfUIns8j7jNX/b1G9HlmZHjIRmvuenY3urTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7QsRKL+hp+Jxktpdx9ASHqse98jaT1aui7AUzoccz0JXelvx5NLK1MB0JNIhCbm7
-	 aAjwkhfo+KrAYR8xfhfcYUAIlgwUNvH4U8Ys51X9mzaKxbD0qroebNErtFGLGgUQjv
-	 ArOsfXYDrFD3GMvs89JhBSw+Zl2AuhHI/3uqKHA0=
+	b=ccH2Bk/wNy3L6EsLqRMsIya9K3S5tpgVPZOAxEDwdaW31IRdlNMDgGsmMzCqImWde
+	 G4iQoy4DncjEBp6/2AU+F5TXvmyXZcFiSKZZkSSXtHkKJI+Ksw9FaxxszAF91pUKT1
+	 QF0GHWKMAqrfj/hXXN6vnzJ09C5q3Svh61P+9RzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgDVKPj (ORCPT
+        id S1729685AbgDVKPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729708AbgDVKP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:27 -0400
+        id S1729678AbgDVKPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402F12075A;
-        Wed, 22 Apr 2020 10:15:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92B212070B;
+        Wed, 22 Apr 2020 10:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550526;
-        bh=jlCOKvLmCY4J1mQYSp+GJ52kQPnp+v36+Lyr6EuYj8A=;
+        s=default; t=1587550539;
+        bh=Oa3weY7BfUIns8j7jNX/b1G9HlmZHjIRmvuenY3urTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqbpzjOdX5CMXf+LD7XndGN1ZaMx7Yoe7+uzos2wJqdo2Ql5J6pmfab7VG+NKnQoU
-         vyLU8XlcjSej0fAskW/5K/v0Kpi40w4yT4yW6oNMj7s04HSvljO/hahEfQTwgDZawy
-         NdJuXqsZa04uRiAkE+12nZuqrCjzXdjx4SBRvQMI=
+        b=ffJ2U42esklSNjXOhX7PWIdh0zKWmTGARFD3TDovlGBExpydd+LMZ6JxpVsXG/r5L
+         guLgs+Ml3r2eKHuBUbPTLvaBHsDcosEjhn2pxSb+QMvLytYoBmmzf7gzXHs44cBPSC
+         yD2W429qqtsElZCCeLyVDpGJrrWa4OYVpuP0XLwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH 4.19 15/64] x86/Hyper-V: Report crash register data or kmsg before running crash kernel
-Date:   Wed, 22 Apr 2020 11:56:59 +0200
-Message-Id: <20200422095015.598699528@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 55/64] net: dsa: bcm_sf2: Fix overflow checks
+Date:   Wed, 22 Apr 2020 11:57:39 +0200
+Message-Id: <20200422095022.788532969@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,45 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit a11589563e96bf262767294b89b25a9d44e7303b upstream.
+commit d0802dc411f469569a537283b6f3833af47aece9 upstream.
 
-We want to notify Hyper-V when a Linux guest VM crash occurs, so
-there is a record of the crash even when kdump is enabled.   But
-crash_kexec_post_notifiers defaults to "false", so the kdump kernel
-runs before the notifiers and Hyper-V never gets notified.  Fix this by
-always setting crash_kexec_post_notifiers to be true for Hyper-V VMs.
+Commit f949a12fd697 ("net: dsa: bcm_sf2: fix buffer overflow doing
+set_rxnfc") tried to fix the some user controlled buffer overflows in
+bcm_sf2_cfp_rule_set() and bcm_sf2_cfp_rule_del() but the fix was using
+CFP_NUM_RULES, which while it is correct not to overflow the bitmaps, is
+not representative of what the device actually supports. Correct that by
+using bcm_sf2_cfp_rule_size() instead.
 
-Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-5-Tianyu.Lan@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+The latter subtracts the number of rules by 1, so change the checks from
+greater than or equal to greater than accordingly.
+
+Fixes: f949a12fd697 ("net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mshyperv.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/dsa/bcm_sf2_cfp.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -250,6 +250,16 @@ static void __init ms_hyperv_init_platfo
- 			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
- 	}
+--- a/drivers/net/dsa/bcm_sf2_cfp.c
++++ b/drivers/net/dsa/bcm_sf2_cfp.c
+@@ -742,17 +742,14 @@ static int bcm_sf2_cfp_rule_set(struct d
+ 	     fs->m_ext.data[1]))
+ 		return -EINVAL;
  
-+	/*
-+	 * Hyper-V expects to get crash register data or kmsg when
-+	 * crash enlightment is available and system crashes. Set
-+	 * crash_kexec_post_notifiers to be true to make sure that
-+	 * calling crash enlightment interface before running kdump
-+	 * kernel.
-+	 */
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
-+		crash_kexec_post_notifiers = true;
-+
- #ifdef CONFIG_X86_LOCAL_APIC
- 	if (ms_hyperv.features & HV_X64_ACCESS_FREQUENCY_MSRS &&
- 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
+-	if (fs->location != RX_CLS_LOC_ANY && fs->location >= CFP_NUM_RULES)
++	if (fs->location != RX_CLS_LOC_ANY &&
++	    fs->location > bcm_sf2_cfp_rule_size(priv))
+ 		return -EINVAL;
+ 
+ 	if (fs->location != RX_CLS_LOC_ANY &&
+ 	    test_bit(fs->location, priv->cfp.used))
+ 		return -EBUSY;
+ 
+-	if (fs->location != RX_CLS_LOC_ANY &&
+-	    fs->location > bcm_sf2_cfp_rule_size(priv))
+-		return -EINVAL;
+-
+ 	/* This rule is a Wake-on-LAN filter and we must specifically
+ 	 * target the CPU port in order for it to be working.
+ 	 */
+@@ -839,7 +836,7 @@ static int bcm_sf2_cfp_rule_del(struct b
+ 	u32 next_loc = 0;
+ 	int ret;
+ 
+-	if (loc >= CFP_NUM_RULES)
++	if (loc > bcm_sf2_cfp_rule_size(priv))
+ 		return -EINVAL;
+ 
+ 	/* Refuse deleting unused rules, and those that are not unique since
 
 
