@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1758BC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A84C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E66E42087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639A320857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgDVMwO (ORCPT
+        id S1727025AbgDVMwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:52:14 -0400
-Received: from mga12.intel.com ([192.55.52.136]:14544 "EHLO mga12.intel.com"
+        Wed, 22 Apr 2020 08:52:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16652 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgDVMwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726935AbgDVMwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 08:52:09 -0400
-IronPort-SDR: qF6TRgyjzOgeltMuNLlriR6h1aggkk4cNiqKlP2pDwvQsC5Ty1IldQ6TK+ZxuNgP2oGm5RhfEP
- KK9oJCoMZCBw==
+IronPort-SDR: QWA45NzheCGfzluupWbsLgkn9AcGEYmeewuYvppw/Q187mCgeR0OOUP/BLEcXn2ACSG3lmonCv
+ m33lLUZ6z2Jw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 05:52:09 -0700
-IronPort-SDR: XVfy5RVeVikMWBN9wW4aU8hHFd6TBhcaIz4OwSlXwIKp6JH3urB/5okv8Ps2mQRTLHk0iw62Dm
- cVyhuI2+Rv3Q==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 05:52:09 -0700
+IronPort-SDR: XJreV5C7FPpnJpwyQNh5SK+V2yecn3Xn76JMKEsrzz9I+znEGndMWngHMhuMwZJrXNxAARCbtn
+ GqT5RPfnvQug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
-   d="scan'208";a="245966348"
+   d="scan'208";a="247457312"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Apr 2020 05:52:07 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2020 05:52:07 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B1D618D4; Wed, 22 Apr 2020 15:52:03 +0300 (EEST)
+        id BBCC2925; Wed, 22 Apr 2020 15:52:03 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Joe Perches <joe@perches.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 6/7] kernel.h: Split out panic and oops helpers
-Date:   Wed, 22 Apr 2020 15:52:00 +0300
-Message-Id: <20200422125201.37618-6-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 7/7] kernel.h: Split out might_sleep() and friends
+Date:   Wed, 22 Apr 2020 15:52:01 +0300
+Message-Id: <20200422125201.37618-7-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
 References: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
@@ -54,363 +54,240 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 kernel.h is being used as a dump for all kinds of stuff for a long time.
-Here is the attempt to start cleaning it up by splitting out panic and
-oops helpers.
+Here is the attempt to start cleaning it up by splitting out might_sleep()
+and friends.
 
-At the same time convert users in header and lib folder to use new header.
+At the same time convert users in header and crypto folder to use new header.
 Though for time being include new header back to kernel.h to avoid twisted
 indirected includes for existing users.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v4: new patch
- arch/x86/include/asm/desc.h    |  1 +
- arch/x86/kernel/setup.c        |  1 +
- include/asm-generic/bug.h      |  3 +-
- include/linux/kernel.h         | 67 +-----------------------------
- include/linux/ktime.h          |  2 +
- include/linux/panic.h          | 75 ++++++++++++++++++++++++++++++++++
- include/linux/panic_notifier.h | 12 ++++++
- include/linux/thread_info.h    |  1 +
- kernel/kexec_core.c            |  1 +
- kernel/panic.c                 |  1 +
- kernel/rcu/tree.c              |  2 +
- kernel/trace/trace.c           |  1 +
- lib/errseq.c                   |  1 +
- 13 files changed, 101 insertions(+), 67 deletions(-)
- create mode 100644 include/linux/panic.h
- create mode 100644 include/linux/panic_notifier.h
+v4: rebase on latest kernel and previous patches in the series
+ crypto/asymmetric_keys/pkcs7_trust.c |  3 +-
+ include/linux/kernel.h               | 67 +------------------------
+ include/linux/might_sleep.h          | 73 ++++++++++++++++++++++++++++
+ include/linux/percpu-rwsem.h         |  1 +
+ include/linux/sched.h                |  1 +
+ include/linux/wait_bit.h             |  1 +
+ 6 files changed, 79 insertions(+), 67 deletions(-)
+ create mode 100644 include/linux/might_sleep.h
 
-diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
-index 68a99d2a5f335..ac3878ac07091 100644
---- a/arch/x86/include/asm/desc.h
-+++ b/arch/x86/include/asm/desc.h
-@@ -9,6 +9,7 @@
- #include <asm/irq_vectors.h>
- #include <asm/cpu_entry_area.h>
+diff --git a/crypto/asymmetric_keys/pkcs7_trust.c b/crypto/asymmetric_keys/pkcs7_trust.c
+index 61af3c4d82ccf..9a3f0c3cafa27 100644
+--- a/crypto/asymmetric_keys/pkcs7_trust.c
++++ b/crypto/asymmetric_keys/pkcs7_trust.c
+@@ -6,8 +6,9 @@
+  */
  
-+#include <linux/debug_locks.h>
- #include <linux/smp.h>
- #include <linux/percpu.h>
- 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a3767e74c758c..821960a2b412d 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -13,6 +13,7 @@
- #include <linux/initrd.h>
- #include <linux/iscsi_ibft.h>
- #include <linux/memblock.h>
-+#include <linux/panic_notifier.h>
- #include <linux/pci.h>
- #include <linux/root_dev.h>
- #include <linux/sfi.h>
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index 384b5c835ced3..d3ae3e5b3643e 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -16,7 +16,8 @@
- #endif
- 
- #ifndef __ASSEMBLY__
+ #define pr_fmt(fmt) "PKCS7: "fmt
 -#include <linux/kernel.h>
-+#include <linux/panic.h>
+ #include <linux/export.h>
++#include <linux/might_sleep.h>
 +#include <linux/printk.h>
- 
- #ifdef CONFIG_BUG
- 
+ #include <linux/slab.h>
+ #include <linux/err.h>
+ #include <linux/asn1.h>
 diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 8a0e5ed1b905a..cd83a57c1b244 100644
+index cd83a57c1b244..4558a6af90399 100644
 --- a/include/linux/kernel.h
 +++ b/include/linux/kernel.h
-@@ -13,6 +13,7 @@
+@@ -11,6 +11,7 @@
+ #include <linux/bitops.h>
+ #include <linux/log2.h>
  #include <linux/math.h>
++#include <linux/might_sleep.h>
  #include <linux/minmax.h>
  #include <linux/typecheck.h>
-+#include <linux/panic.h>
- #include <linux/printk.h>
- #include <linux/build_bug.h>
- 
-@@ -76,7 +77,6 @@
+ #include <linux/panic.h>
+@@ -77,72 +78,6 @@
  #define lower_32_bits(n) ((u32)(n))
  
  struct completion;
--struct pt_regs;
- struct user;
- 
- #ifdef CONFIG_PREEMPT_VOLUNTARY
-@@ -159,15 +159,6 @@ void __might_fault(const char *file, int line);
- static inline void might_fault(void) { }
- #endif
- 
--extern struct atomic_notifier_head panic_notifier_list;
--extern long (*panic_blink)(int state);
--__printf(1, 2)
--void panic(const char *fmt, ...) __noreturn __cold;
--void nmi_panic(struct pt_regs *regs, const char *msg);
--extern void oops_enter(void);
--extern void oops_exit(void);
--void print_oops_end_marker(void);
--extern int oops_may_print(void);
- void do_exit(long error_code) __noreturn;
- void complete_and_exit(struct completion *, long) __noreturn;
- 
-@@ -360,34 +351,7 @@ extern unsigned int sysctl_oops_all_cpu_backtrace;
- #endif /* CONFIG_SMP */
- 
- extern void bust_spinlocks(int yes);
--extern int panic_timeout;
--extern unsigned long panic_print;
--extern int panic_on_oops;
--extern int panic_on_unrecovered_nmi;
--extern int panic_on_io_nmi;
--extern int panic_on_warn;
--extern int sysctl_panic_on_rcu_stall;
--extern int sysctl_panic_on_stackoverflow;
- 
--extern bool crash_kexec_post_notifiers;
+-struct user;
 -
--/*
-- * panic_cpu is used for synchronizing panic() and crash_kexec() execution. It
-- * holds a CPU number which is executing panic() currently. A value of
-- * PANIC_CPU_INVALID means no CPU has entered panic() or crash_kexec().
+-#ifdef CONFIG_PREEMPT_VOLUNTARY
+-extern int _cond_resched(void);
+-# define might_resched() _cond_resched()
+-#else
+-# define might_resched() do { } while (0)
+-#endif
+-
+-#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+-extern void ___might_sleep(const char *file, int line, int preempt_offset);
+-extern void __might_sleep(const char *file, int line, int preempt_offset);
+-extern void __cant_sleep(const char *file, int line, int preempt_offset);
+-
+-/**
+- * might_sleep - annotation for functions that can sleep
+- *
+- * this macro will print a stack trace if it is executed in an atomic
+- * context (spinlock, irq-handler, ...). Additional sections where blocking is
+- * not allowed can be annotated with non_block_start() and non_block_end()
+- * pairs.
+- *
+- * This is a useful debugging help to be able to catch problems early and not
+- * be bitten later when the calling function happens to sleep when it is not
+- * supposed to.
 - */
--extern atomic_t panic_cpu;
--#define PANIC_CPU_INVALID	-1
--
--/*
-- * Only to be used by arch init code. If the user over-wrote the default
-- * CONFIG_PANIC_TIMEOUT, honor it.
+-# define might_sleep() \
+-	do { __might_sleep(__FILE__, __LINE__, 0); might_resched(); } while (0)
+-/**
+- * cant_sleep - annotation for functions that cannot sleep
+- *
+- * this macro will print a stack trace if it is executed with preemption enabled
 - */
--static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
--{
--	if (panic_timeout == arch_default_timeout)
--		panic_timeout = timeout;
--}
- extern const char *print_tainted(void);
- enum lockdep_ok {
- 	LOCKDEP_STILL_OK,
-@@ -414,35 +378,6 @@ extern enum system_states {
- 	SYSTEM_SUSPEND,
- } system_state;
- 
--/* This cannot be an enum because some may be used in assembly source. */
--#define TAINT_PROPRIETARY_MODULE	0
--#define TAINT_FORCED_MODULE		1
--#define TAINT_CPU_OUT_OF_SPEC		2
--#define TAINT_FORCED_RMMOD		3
--#define TAINT_MACHINE_CHECK		4
--#define TAINT_BAD_PAGE			5
--#define TAINT_USER			6
--#define TAINT_DIE			7
--#define TAINT_OVERRIDDEN_ACPI_TABLE	8
--#define TAINT_WARN			9
--#define TAINT_CRAP			10
--#define TAINT_FIRMWARE_WORKAROUND	11
--#define TAINT_OOT_MODULE		12
--#define TAINT_UNSIGNED_MODULE		13
--#define TAINT_SOFTLOCKUP		14
--#define TAINT_LIVEPATCH			15
--#define TAINT_AUX			16
--#define TAINT_RANDSTRUCT		17
--#define TAINT_FLAGS_COUNT		18
+-# define cant_sleep() \
+-	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
+-# define sched_annotate_sleep()	(current->task_state_change = 0)
+-/**
+- * non_block_start - annotate the start of section where sleeping is prohibited
+- *
+- * This is on behalf of the oom reaper, specifically when it is calling the mmu
+- * notifiers. The problem is that if the notifier were to block on, for example,
+- * mutex_lock() and if the process which holds that mutex were to perform a
+- * sleeping memory allocation, the oom reaper is now blocked on completion of
+- * that memory allocation. Other blocking calls like wait_event() pose similar
+- * issues.
+- */
+-# define non_block_start() (current->non_block_count++)
+-/**
+- * non_block_end - annotate the end of section where sleeping is prohibited
+- *
+- * Closes a section opened by non_block_start().
+- */
+-# define non_block_end() WARN_ON(current->non_block_count-- == 0)
+-#else
+-  static inline void ___might_sleep(const char *file, int line,
+-				   int preempt_offset) { }
+-  static inline void __might_sleep(const char *file, int line,
+-				   int preempt_offset) { }
+-# define might_sleep() do { might_resched(); } while (0)
+-# define cant_sleep() do { } while (0)
+-# define sched_annotate_sleep() do { } while (0)
+-# define non_block_start() do { } while (0)
+-# define non_block_end() do { } while (0)
+-#endif
 -
--struct taint_flag {
--	char c_true;	/* character printed when tainted */
--	char c_false;	/* character printed when not tainted */
--	bool module;	/* also show as a per-module taint flag */
--};
--
--extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
--
- extern const char hex_asc[];
- #define hex_asc_lo(x)	hex_asc[((x) & 0x0f)]
- #define hex_asc_hi(x)	hex_asc[((x) & 0xf0) >> 4]
-diff --git a/include/linux/ktime.h b/include/linux/ktime.h
-index 42d2e6ac35f29..c7aa465a85f77 100644
---- a/include/linux/ktime.h
-+++ b/include/linux/ktime.h
-@@ -24,6 +24,8 @@
- #include <linux/time.h>
- #include <linux/jiffies.h>
+-#define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
  
-+#include <asm/bug.h>
-+
- /* Nanosecond scalar representation for kernel time values */
- typedef s64	ktime_t;
- 
-diff --git a/include/linux/panic.h b/include/linux/panic.h
+ #ifndef CONFIG_PREEMPT_RT
+ # define cant_migrate()		cant_sleep()
+diff --git a/include/linux/might_sleep.h b/include/linux/might_sleep.h
 new file mode 100644
-index 0000000000000..a06e775a5c37f
+index 0000000000000..dbf0097113337
 --- /dev/null
-+++ b/include/linux/panic.h
-@@ -0,0 +1,75 @@
++++ b/include/linux/might_sleep.h
+@@ -0,0 +1,73 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PANIC_H
-+#define _LINUX_PANIC_H
++#ifndef _LINUX_MIGHT_SLEEP_H
++#define _LINUX_MIGHT_SLEEP_H
 +
-+#include <linux/types.h>
-+
-+struct pt_regs;
-+
-+extern long (*panic_blink)(int state);
-+__printf(1, 2)
-+void panic(const char *fmt, ...) __noreturn __cold;
-+void nmi_panic(struct pt_regs *regs, const char *msg);
-+extern void oops_enter(void);
-+extern void oops_exit(void);
-+void print_oops_end_marker(void);
-+extern int oops_may_print(void);
-+
-+extern int panic_timeout;
-+extern unsigned long panic_print;
-+extern int panic_on_oops;
-+extern int panic_on_unrecovered_nmi;
-+extern int panic_on_io_nmi;
-+extern int panic_on_warn;
-+
-+extern int sysctl_panic_on_rcu_stall;
-+extern int sysctl_panic_on_stackoverflow;
-+
-+/*
-+ * panic_cpu is used for synchronizing panic() and crash_kexec() execution. It
-+ * holds a CPU number which is executing panic() currently. A value of
-+ * PANIC_CPU_INVALID means no CPU has entered panic() or crash_kexec().
-+ */
-+extern atomic_t panic_cpu;
-+#define PANIC_CPU_INVALID	-1
-+
-+/*
-+ * Only to be used by arch init code. If the user over-wrote the default
-+ * CONFIG_PANIC_TIMEOUT, honor it.
-+ */
-+static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
-+{
-+	if (panic_timeout == arch_default_timeout)
-+		panic_timeout = timeout;
-+}
-+
-+/* This cannot be an enum because some may be used in assembly source. */
-+#define TAINT_PROPRIETARY_MODULE	0
-+#define TAINT_FORCED_MODULE		1
-+#define TAINT_CPU_OUT_OF_SPEC		2
-+#define TAINT_FORCED_RMMOD		3
-+#define TAINT_MACHINE_CHECK		4
-+#define TAINT_BAD_PAGE			5
-+#define TAINT_USER			6
-+#define TAINT_DIE			7
-+#define TAINT_OVERRIDDEN_ACPI_TABLE	8
-+#define TAINT_WARN			9
-+#define TAINT_CRAP			10
-+#define TAINT_FIRMWARE_WORKAROUND	11
-+#define TAINT_OOT_MODULE		12
-+#define TAINT_UNSIGNED_MODULE		13
-+#define TAINT_SOFTLOCKUP		14
-+#define TAINT_LIVEPATCH			15
-+#define TAINT_AUX			16
-+#define TAINT_RANDSTRUCT		17
-+#define TAINT_FLAGS_COUNT		18
-+
-+struct taint_flag {
-+	char c_true;	/* character printed when tainted */
-+	char c_false;	/* character printed when not tainted */
-+	bool module;	/* also show as a per-module taint flag */
-+};
-+
-+extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
-+
-+#endif	/* _LINUX_PANIC_H */
-diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
-new file mode 100644
-index 0000000000000..41e32483d7a7b
---- /dev/null
-+++ b/include/linux/panic_notifier.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PANIC_NOTIFIERS_H
-+#define _LINUX_PANIC_NOTIFIERS_H
-+
-+#include <linux/notifier.h>
-+#include <linux/types.h>
-+
-+extern struct atomic_notifier_head panic_notifier_list;
-+
-+extern bool crash_kexec_post_notifiers;
-+
-+#endif	/* _LINUX_PANIC_NOTIFIERS_H */
-diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
-index e93e249a4e9bf..7a3033aef28cd 100644
---- a/include/linux/thread_info.h
-+++ b/include/linux/thread_info.h
-@@ -35,6 +35,7 @@ enum {
- 	GOOD_STACK,
- };
- 
 +#include <asm/bug.h>
- #include <asm/thread_info.h>
- 
- #ifdef __KERNEL__
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index ba1d91e868ca7..077fcf31d5ce9 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -28,6 +28,7 @@
- #include <linux/suspend.h>
- #include <linux/device.h>
- #include <linux/freezer.h>
-+#include <linux/panic_notifier.h>
- #include <linux/pfn.h>
- #include <linux/pm.h>
- #include <linux/cpu.h>
-diff --git a/kernel/panic.c b/kernel/panic.c
-index ec6d7d788ce75..f28a7478e0161 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -23,6 +23,7 @@
- #include <linux/reboot.h>
- #include <linux/delay.h>
- #include <linux/kexec.h>
-+#include <linux/panic_notifier.h>
- #include <linux/sched.h>
- #include <linux/sysrq.h>
- #include <linux/init.h>
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 6d39485f7f517..8611f400acd91 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -32,6 +32,8 @@
- #include <linux/export.h>
- #include <linux/completion.h>
- #include <linux/moduleparam.h>
-+#include <linux/panic.h>
-+#include <linux/panic_notifier.h>
- #include <linux/percpu.h>
- #include <linux/notifier.h>
- #include <linux/cpu.h>
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8d2b988126250..f23b6ae084b5c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -39,6 +39,7 @@
- #include <linux/slab.h>
- #include <linux/ctype.h>
- #include <linux/init.h>
-+#include <linux/panic_notifier.h>
- #include <linux/poll.h>
- #include <linux/nmi.h>
- #include <linux/fs.h>
-diff --git a/lib/errseq.c b/lib/errseq.c
-index 81f9e33aa7e72..93e9b94358dc6 100644
---- a/lib/errseq.c
-+++ b/lib/errseq.c
++#include <asm/current.h>
++
++#ifdef CONFIG_PREEMPT_VOLUNTARY
++extern int _cond_resched(void);
++# define might_resched() _cond_resched()
++#else
++# define might_resched() do { } while (0)
++#endif
++
++#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
++extern void ___might_sleep(const char *file, int line, int preempt_offset);
++extern void __might_sleep(const char *file, int line, int preempt_offset);
++extern void __cant_sleep(const char *file, int line, int preempt_offset);
++
++/**
++ * might_sleep - annotation for functions that can sleep
++ *
++ * this macro will print a stack trace if it is executed in an atomic
++ * context (spinlock, irq-handler, ...). Additional sections where blocking is
++ * not allowed can be annotated with non_block_start() and non_block_end()
++ * pairs.
++ *
++ * This is a useful debugging help to be able to catch problems early and not
++ * be bitten later when the calling function happens to sleep when it is not
++ * supposed to.
++ */
++# define might_sleep() \
++	do { __might_sleep(__FILE__, __LINE__, 0); might_resched(); } while (0)
++/**
++ * cant_sleep - annotation for functions that cannot sleep
++ *
++ * this macro will print a stack trace if it is executed with preemption enabled
++ */
++# define cant_sleep() \
++	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
++# define sched_annotate_sleep()	(current->task_state_change = 0)
++/**
++ * non_block_start - annotate the start of section where sleeping is prohibited
++ *
++ * This is on behalf of the oom reaper, specifically when it is calling the mmu
++ * notifiers. The problem is that if the notifier were to block on, for example,
++ * mutex_lock() and if the process which holds that mutex were to perform a
++ * sleeping memory allocation, the oom reaper is now blocked on completion of
++ * that memory allocation. Other blocking calls like wait_event() pose similar
++ * issues.
++ */
++# define non_block_start() (current->non_block_count++)
++/**
++ * non_block_end - annotate the end of section where sleeping is prohibited
++ *
++ * Closes a section opened by non_block_start().
++ */
++# define non_block_end() WARN_ON(current->non_block_count-- == 0)
++#else
++  static inline void ___might_sleep(const char *file, int line,
++				   int preempt_offset) { }
++  static inline void __might_sleep(const char *file, int line,
++				   int preempt_offset) { }
++# define might_sleep() do { might_resched(); } while (0)
++# define cant_sleep() do { } while (0)
++# define sched_annotate_sleep() do { } while (0)
++# define non_block_start() do { } while (0)
++# define non_block_end() do { } while (0)
++#endif
++
++#define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
++
++#endif	/* _LINUX_MIGHT_SLEEP_H */
+diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+index 5e033fe1ff4e9..504cb587cf7ea 100644
+--- a/include/linux/percpu-rwsem.h
++++ b/include/linux/percpu-rwsem.h
 @@ -3,6 +3,7 @@
- #include <linux/bug.h>
- #include <linux/atomic.h>
- #include <linux/errseq.h>
-+#include <linux/log2.h>
+ #define _LINUX_PERCPU_RWSEM_H
  
+ #include <linux/atomic.h>
++#include <linux/might_sleep.h>
+ #include <linux/percpu.h>
+ #include <linux/rcuwait.h>
+ #include <linux/wait.h>
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 36306c7d2afcc..7acc5a2df398e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -15,6 +15,7 @@
+ #include <linux/sem.h>
+ #include <linux/shm.h>
+ #include <linux/kcov.h>
++#include <linux/might_sleep.h>
+ #include <linux/mutex.h>
+ #include <linux/plist.h>
+ #include <linux/hrtimer.h>
+diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
+index 7dec36aecbd9f..324cdbf5b4a49 100644
+--- a/include/linux/wait_bit.h
++++ b/include/linux/wait_bit.h
+@@ -5,6 +5,7 @@
  /*
-  * An errseq_t is a way of recording errors in one place, and allowing any
+  * Linux wait-bit related types and methods:
+  */
++#include <linux/might_sleep.h>
+ #include <linux/wait.h>
+ 
+ struct wait_bit_key {
 -- 
 2.26.1
 
