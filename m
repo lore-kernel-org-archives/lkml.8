@@ -2,112 +2,159 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BCFC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74168C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D45320787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5425820780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czKi7qn2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgDVMBC (ORCPT
+        id S1728512AbgDVMBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:01:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2080 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726477AbgDVMA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:00:59 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 64EC8B75D221856C0CEB;
-        Wed, 22 Apr 2020 13:00:58 +0100 (IST)
-Received: from [127.0.0.1] (10.47.10.232) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 22 Apr
- 2020 13:00:56 +0100
-Subject: Re: [RFC PATCH v2 10/13] perf metricgroup: Split up
- metricgroup__add_metric()
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <qiangqing.zhang@nxp.com>, <irogers@google.com>,
-        <robin.murphy@arm.com>, <zhangshaokun@hisilicon.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1587120084-18990-1-git-send-email-john.garry@huawei.com>
- <1587120084-18990-11-git-send-email-john.garry@huawei.com>
- <20200422114432.GH962614@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b793b75e-0c55-a986-0a5e-a7aac269cae5@huawei.com>
-Date:   Wed, 22 Apr 2020 13:00:22 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 22 Apr 2020 08:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727974AbgDVMBq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:01:46 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED5EC03C1A8;
+        Wed, 22 Apr 2020 05:01:45 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d15so466135wrx.3;
+        Wed, 22 Apr 2020 05:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iOKXRpXv+gkEgofK4WVWRQKy9tlZ8yvYUK75eISMHWM=;
+        b=czKi7qn21POWgr44WAv0KdcLxI/rxgkVzrlB/1C4Xw4WEoR6ftneGr4rQ2iMCyufUz
+         pcFMo829elw+M1gPwGJq7n4Hefkg1pBL6KAzY2pV5y11GBX/Bfv5BMxdQP/CUSD3OSJ4
+         3Idb9AILqcpMVQScuFr+q0G9QEVExG4DmMAsfTAkfunYXiVH5SpQm73iGD2o7iKwx5Lt
+         9Lxv9S+u09drWbnwxBQxzneFd7z7DKPHYdYEhZDcCr1rGDPXAcfcBb7eFJczltlqofnX
+         xsmgXDx9NvO/yYeemtjZoyn8VdN9ZMIXMgIc0z8EjaUGD5MewXNrSiMiL9mg3BhyIy24
+         rT1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iOKXRpXv+gkEgofK4WVWRQKy9tlZ8yvYUK75eISMHWM=;
+        b=nsWobq/dRrfBf0Uzle5BGWmaCbk4jb85NYaL6fmFQgPm8DNRgGWfx93HOF76koWR9h
+         G+oYJcGFbtfWKWJCy2oWbkdGIpgeST+qi2yExG89e+cOrGSgqMl4LvmN/tMK3iy7ZVPI
+         2XzS6VV4hHOm1S6dqMwQ2CZzHddx05wyq6qxHmRA+z61NS4hef0f9UTzGSuOeJPaSMP9
+         +1uEHVhhLaj8XHcLNYpa0iJaNM2TGTcjj82WpKm1LzdigVeAxl6wPCZb+72sw63vX9jc
+         Uss8Aq0+jZn4jLBFg9GcUrsx1OODkgwcK3SV7pkMrOyoTARjtm8Oyi8+hl3hsDFffDXG
+         AC8Q==
+X-Gm-Message-State: AGi0PuZkmR+rBg/aAmSkaaQeqnk1Tm72TKdrXhcE0DkQTYrQPN5A1tpi
+        qo9DkO3/khwAzaYjR7Q8bMk=
+X-Google-Smtp-Source: APiQypL1hXf3hE8tEvLggJJTkHpQZJynplGAtPQGFoM6V+qOP/gFDPqiGq8QGze8PKklHkmiSsjBVQ==
+X-Received: by 2002:adf:82cf:: with SMTP id 73mr28979371wrc.411.1587556904428;
+        Wed, 22 Apr 2020 05:01:44 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id s18sm8576749wra.94.2020.04.22.05.01.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 05:01:43 -0700 (PDT)
+Subject: Re: [PATCH] media: MAINTAINERS: Fix Hantro, Rga and Rkvdec entries
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, kernel@collabora.com,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+References: <20200422111403.19114-1-ezequiel@collabora.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <73d3d8c1-1952-aeb1-5bc0-829503cf29bd@gmail.com>
+Date:   Wed, 22 Apr 2020 14:01:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200422114432.GH962614@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200422111403.19114-1-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.10.232]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/2020 12:44, Jiri Olsa wrote:
->>   static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->>   				   struct list_head *group_list)
->>   {
->> @@ -502,37 +542,12 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->>   			break;
->>   		if (!pe->metric_expr)
->>   			continue;
->> -		if (match_metric(pe->metric_group, metric) ||
->> -		    match_metric(pe->metric_name, metric)) {
->> -			const char **ids;
->> -			int idnum;
->> -			struct egroup *eg;
->> -
->> -			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
->>   
->> -			if (expr__find_other(pe->metric_expr,
->> -					     NULL, &ids, &idnum) < 0)
->> -				continue;
->> -			if (events->len > 0)
->> -				strbuf_addf(events, ",");
->> -
->> -			if (metricgroup__has_constraint(pe))
->> -				metricgroup__add_metric_non_group(events, ids, idnum);
->> -			else
->> -				metricgroup__add_metric_weak_group(events, ids, idnum);
->> -
->> -			eg = malloc(sizeof(struct egroup));
->> -			if (!eg) {
->> -				ret = -ENOMEM;
->> -				break;
->> -			}
->> -			eg->ids = ids;
->> -			eg->idnum = idnum;
->> -			eg->metric_name = pe->metric_name;
->> -			eg->metric_expr = pe->metric_expr;
->> -			eg->metric_unit = pe->unit;
->> -			list_add_tail(&eg->nd, group_list);
->> -			ret = 0;
-> also this place got changed just recently a lot,
-> so you might want to rebase to the Arnaldo's latest perf/core
+Hi Ezequiel,
 
-Hi jirka,
+On 4/22/20 1:14 PM, Ezequiel Garcia wrote:
+> It seems recent merges introduced a couple issues
+> here, so let's fix them all. Also, reorder Rockchip
+> video decoder as per parse-maintainers.pl script
+> and add linux-rockchip mailing list.
+> 
+> Reported-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  MAINTAINERS | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 09e0137df61d..4d5b06c6fe0f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7460,7 +7460,7 @@ L:	linux-media@vger.kernel.org
+>  L:	linux-rockchip@lists.infradead.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+> -F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
+> +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+>  F:	drivers/staging/media/hantro/
+>  
+>  HARD DRIVE ACTIVE PROTECTION SYSTEM (HDAPS) DRIVER
+> @@ -14465,13 +14465,6 @@ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
+>  F:	drivers/hid/hid-roccat*
+>  F:	include/linux/hid-roccat*
+>  
+> -ROCKCHIP VIDEO DECODER DRIVER
+> -M:	Ezequiel Garcia <ezequiel@collabora.com>
+> -L:	linux-media@vger.kernel.org
+> -S:	Maintained
+> -F:	drivers/staging/media/rkvdec/
+> -F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> -
+>  ROCKCHIP ISP V1 DRIVER
+>  M:	Helen Koike <helen.koike@collabora.com>
+>  L:	linux-media@vger.kernel.org
 
-Yeah, I saw that. I can check.
+L:	linux-rockchip@lists.infradead.org
 
-TBH, apart from that, I would be welcome to opinion on this latter patch 
-of the series, concerned with metrics. I just split (butcher) the 
-function and call common parts from 2x places now. Maybe there's a more 
-fluid way to do this.
+> @@ -14483,12 +14476,19 @@ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+>  M:	Jacob Chen <jacob-chen@iotwrt.com>
+>  M:	Ezequiel Garcia <ezequiel@collabora.com>
+>  L:	linux-media@vger.kernel.org
+> +L:	linux-rockchip@lists.infradead.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+>  F:	Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> -F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+>  F:	drivers/media/platform/rockchip/rga/
+>  
+> +ROCKCHIP VIDEO DECODER DRIVER
+> +M:	Ezequiel Garcia <ezequiel@collabora.com>
+> +L:	linux-media@vger.kernel.org
+> +L:	linux-rockchip@lists.infradead.org
+> +S:	Maintained
 
-Cheers,
-John
+> +F:	drivers/staging/media/rkvdec/
+> +F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+
+When I look at the other entries 'drivers/' is sort below 'Documentation/'.
+
+./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS
+--order
+
+> +
+>  ROCKER DRIVER
+>  M:	Jiri Pirko <jiri@resnulli.us>
+>  L:	netdev@vger.kernel.org
+> 
+
