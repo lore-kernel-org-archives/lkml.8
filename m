@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6D5C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AA2C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9032076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1802075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550700;
-	bh=20LqGUbpu9uV7aO8fe3tVxSx3iJIER0RsqWKu+XbUFY=;
+	s=default; t=1587550706;
+	bh=nW6ZITNHnrJvpwoENRnTK7zuEUJpfMTYYeAfMuYD/hY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/TnKyte0EB226e81OmuKH1ffStafK/k+RznC3bRquoSzAqSmpIpepqQc2AiwFT4Q
-	 oDpZVlsiJzH4k6xyFiVZQlkD8NuiMszFM6f1baQ4yPeuT6sqU0jkf0TWmuNTiLRB5K
-	 B5p64Xv6pslbQCK4PZUEissnAeyHIvMYmkPKchLE=
+	b=b8BmUor4UrHL47ik+26p4g7pa4uEp/GrCSHdNd2GIwAznHO+qDfMU775IZIC5LjF2
+	 IUbevpKexwxuwpdhBHyjs9rrULPMXoI6ocI6q7HGJJUtMRilAeXYmcZAk7bbPUlNQF
+	 bAF/m4XOW3ujHcOfJnevK3GzNJeob0H40ytNYyu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgDVKST (ORCPT
+        id S1729956AbgDVKSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53396 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbgDVKRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:18 -0400
+        id S1729506AbgDVKR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE4C2076B;
-        Wed, 22 Apr 2020 10:17:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA002075A;
+        Wed, 22 Apr 2020 10:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550637;
-        bh=20LqGUbpu9uV7aO8fe3tVxSx3iJIER0RsqWKu+XbUFY=;
+        s=default; t=1587550647;
+        bh=nW6ZITNHnrJvpwoENRnTK7zuEUJpfMTYYeAfMuYD/hY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pS6tZUz41HWo875noCi2CSS4ghBkAJ3vOuIFgR2rDu/iivLV4qWqwX7Z6FPIXoEaL
-         oUioWvO+Yu4WCHT3kM4d5tL+v3Ut84fJNWbeIX5/4Fa9vB9x6n3AeQ2VU2LmCcyQoO
-         XBvTQ+Fnp0GxuISLrzhL8yN+NXZjxBahg7RIBPH4=
+        b=zJdRyjxPLz110FwcvJ9kHlQc1LtN8rpu+JxksB8C2U/fYRVypnQuX1QNTwKR3e+7z
+         UlFBhPwlHfkiJZ0oi8iP521tlgMjZ8pGv0zB50ByQR2Op9kBhxMFpTnu+LOtzX7sVA
+         zkeVRpRLYhJGuKaZFQ0yt0YhRKFn/iMtUbNMNlB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, cki-project@redhat.com,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 031/118] block, bfq: invoke flush_idle_tree after reparent_active_queues in pd_offline
-Date:   Wed, 22 Apr 2020 11:56:32 +0200
-Message-Id: <20200422095036.940892995@linuxfoundation.org>
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.4 004/118] arm, bpf: Fix bugs with ALU64 {RSH, ARSH} BPF_K shift by 0
+Date:   Wed, 22 Apr 2020 11:56:05 +0200
+Message-Id: <20200422095032.287562787@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,65 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-commit 4d38a87fbb77fb9ff2ff4e914162a8ae6453eff5 upstream.
+commit bb9562cf5c67813034c96afb50bd21130a504441 upstream.
 
-In bfq_pd_offline(), the function bfq_flush_idle_tree() is invoked to
-flush the rb tree that contains all idle entities belonging to the pd
-(cgroup) being destroyed. In particular, bfq_flush_idle_tree() is
-invoked before bfq_reparent_active_queues(). Yet the latter may happen
-to add some entities to the idle tree. It happens if, in some of the
-calls to bfq_bfqq_move() performed by bfq_reparent_active_queues(),
-the queue to move is empty and gets expired.
+The current arm BPF JIT does not correctly compile RSH or ARSH when the
+immediate shift amount is 0. This causes the "rsh64 by 0 imm" and "arsh64
+by 0 imm" BPF selftests to hang the kernel by reaching an instruction
+the verifier determines to be unreachable.
 
-This commit simply reverses the invocation order between
-bfq_flush_idle_tree() and bfq_reparent_active_queues().
+The root cause is in how immediate right shifts are encoded on arm.
+For LSR and ASR (logical and arithmetic right shift), a bit-pattern
+of 00000 in the immediate encodes a shift amount of 32. When the BPF
+immediate is 0, the generated code shifts by 32 instead of the expected
+behavior (a no-op).
 
-Tested-by: cki-project@redhat.com
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This patch fixes the bugs by adding an additional check if the BPF
+immediate is 0. After the change, the above mentioned BPF selftests pass.
+
+Fixes: 39c13c204bb11 ("arm: eBPF JIT compiler")
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20200408181229.10909-1-luke.r.nels@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/bfq-cgroup.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ arch/arm/net/bpf_jit_32.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -877,13 +877,6 @@ static void bfq_pd_offline(struct blkg_p
- 		st = bfqg->sched_data.service_tree + i;
+--- a/arch/arm/net/bpf_jit_32.c
++++ b/arch/arm/net/bpf_jit_32.c
+@@ -929,7 +929,11 @@ static inline void emit_a32_rsh_i64(cons
+ 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
  
- 		/*
--		 * The idle tree may still contain bfq_queues belonging
--		 * to exited task because they never migrated to a different
--		 * cgroup from the one being destroyed now.
--		 */
--		bfq_flush_idle_tree(st);
--
--		/*
- 		 * It may happen that some queues are still active
- 		 * (busy) upon group destruction (if the corresponding
- 		 * processes have been forced to terminate). We move
-@@ -896,6 +889,19 @@ static void bfq_pd_offline(struct blkg_p
- 		 * scheduler has taken no reference.
- 		 */
- 		bfq_reparent_active_queues(bfqd, bfqg, st, i);
-+
-+		/*
-+		 * The idle tree may still contain bfq_queues
-+		 * belonging to exited task because they never
-+		 * migrated to a different cgroup from the one being
-+		 * destroyed now. In addition, even
-+		 * bfq_reparent_active_queues() may happen to add some
-+		 * entities to the idle tree. It happens if, in some
-+		 * of the calls to bfq_bfqq_move() performed by
-+		 * bfq_reparent_active_queues(), the queue to move is
-+		 * empty and gets expired.
+ 	/* Do LSR operation */
+-	if (val < 32) {
++	if (val == 0) {
++		/* An immediate value of 0 encodes a shift amount of 32
++		 * for LSR. To shift by 0, don't do anything.
 +		 */
-+		bfq_flush_idle_tree(st);
- 	}
++	} else if (val < 32) {
+ 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
+ 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
+ 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_LSR, val), ctx);
+@@ -955,7 +959,11 @@ static inline void emit_a32_arsh_i64(con
+ 	rd = arm_bpf_get_reg64(dst, tmp, ctx);
  
- 	__bfq_deactivate_entity(entity, false);
+ 	/* Do ARSH operation */
+-	if (val < 32) {
++	if (val == 0) {
++		/* An immediate value of 0 encodes a shift amount of 32
++		 * for ASR. To shift by 0, don't do anything.
++		 */
++	} else if (val < 32) {
+ 		emit(ARM_MOV_SI(tmp2[1], rd[1], SRTYPE_LSR, val), ctx);
+ 		emit(ARM_ORR_SI(rd[1], tmp2[1], rd[0], SRTYPE_ASL, 32 - val), ctx);
+ 		emit(ARM_MOV_SI(rd[0], rd[0], SRTYPE_ASR, val), ctx);
 
 
