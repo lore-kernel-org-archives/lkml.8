@@ -2,129 +2,168 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CEAC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E125CC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E7A21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587588632;
-	bh=ba/VpW1rfJQ6IqlivIHGTiQZUhWmQAKxSxz45LgtBl0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=yFzCsbl9e2ksb7xAYbhqtZzjojw5A1k5jwNMBOGjyBXlIlKLeasQEZK36FZKoduqD
-	 e1JEpu0EqFCDOvYoGClNEkEYzsv3JKFJyCrEzbfFsCA8sPUCKDnZxBpvsbPWj1hWOg
-	 UmfDN+ihe3O0vuglkpx7coDxkf9S1Jnkn50obnoE=
+	by mail.kernel.org (Postfix) with ESMTP id B6F5D20882
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:52:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Sguza6MM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgDVUub (ORCPT
+        id S1726423AbgDVUwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:50:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 16:52:50 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:51874 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgDVUub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:50:31 -0400
-Received: from localhost (mobile-166-175-187-227.mycingular.net [166.175.187.227])
+        id S1725779AbgDVUwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:52:49 -0400
+Received: from zn.tnic (p200300EC2F0DC10035D7F52705C6D57D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c100:35d7:f527:5c6:d57d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ADD42077D;
-        Wed, 22 Apr 2020 20:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587588630;
-        bh=ba/VpW1rfJQ6IqlivIHGTiQZUhWmQAKxSxz45LgtBl0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Hv7dVKaLz4pLARkfibDJyiXpH/zPj46TRBQ0CYLhopEeCwYDhh7CKOmHAbFrU9cSa
-         fuxjJZhqwNyQkkW/b+CrhuwJVV3nhknevRti99E0/Qn4WlFEqZjqG54EI3z/rgOTtf
-         Y/6nKQyqkAVKDaqc6lOH+ObLzg//5AsyYKFu+mFM=
-Date:   Wed, 22 Apr 2020 15:50:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Cc:     alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>,
-        Roy Spliet <nouveau@spliet.org>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-pm@vger.kernel.org
-Subject: Re: Unrecoverable AER error when resuming from RAM (hda regression
- in 5.7-rc2)
-Message-ID: <20200422205028.GA223132@google.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E0261EC0D10;
+        Wed, 22 Apr 2020 22:52:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587588767;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=u+HqmlOUses7b9oLfg+sdTbrH1hHJKz/zlSE9Ft+gjs=;
+        b=Sguza6MMZRSvNRezF/I/pHCBEKrR0CjVdwrACCOtO81Npt30UPWUujWaQu2J6BGAcuE9AW
+        wX/bHCHxHRsGULDBwDr00Z4M22ZSa8wnKbimhMLQwYSA4sb3tMHyO7p3XaGbPrTOMU9gDt
+        ujDlxMX9JTyCQdFjZQXd09MJtvmmThQ=
+Date:   Wed, 22 Apr 2020 22:52:43 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/10] EDAC/mc: Fix usage of snprintf() and dimm
+ location setup
+Message-ID: <20200422205243.GH26846@zn.tnic>
+References: <20200422115814.22205-1-rrichter@marvell.com>
+ <20200422115814.22205-2-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1587494585.7pihgq0z3i.none@localhost>
+In-Reply-To: <20200422115814.22205-2-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael, linux-pm]
-
-On Tue, Apr 21, 2020 at 03:08:44PM -0400, Alex Xu (Hello71) wrote:
-> With 5.7-rc2, after resuming from suspend to RAM, I get:
+On Wed, Apr 22, 2020 at 01:58:05PM +0200, Robert Richter wrote:
+> The setup of the dimm->location may be incomplete in case writing to
+> dimm->label fails due to small buffer size. Fix this by iterating
+> through all existing layers.
 > 
-> [   55.679382] pcieport 0000:00:03.1: AER: Multiple Uncorrected (Non-Fatal) error received: 0000:00:00.0
-> [   55.679405] pcieport 0000:00:03.1: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> [   55.679410] pcieport 0000:00:03.1: AER:   device [1022:1453] error status/mask=00100000/04400000
-> [   55.679414] pcieport 0000:00:03.1: AER:    [20] UnsupReq               (First)
-> [   55.679417] pcieport 0000:00:03.1: AER:   TLP Header: 40000004 0a0000ff fffc0e80 00000000
-> [   55.679423] amdgpu 0000:0a:00.0: AER: can't recover (no error_detected callback)
-> [   55.679425] snd_hda_intel 0000:0a:00.1: AER: can't recover (no error_detected callback)
-> [   55.679455] pcieport 0000:00:03.1: AER: device recovery failed
-
-I'm not at all confident in my decoding skills, but I *think* the TLP
-header decodes to:
-
-  Fmt           010b         3 DW header with data (32-bit address)
-  Type          00000b       MWr
-  Length        0x4          4 DW = 16 bytes
-  Requester ID  0x0a00       0a:00.0
-  Byte enables  0xff
-  Address       0xfffc0e80
-
-which would mean the 0a:00.0 GPU did a 16-byte write to 0xfffc0e80,
-and the 00:03.1 Root Port reported that as an Unsupported Request.
-I don't know why that would be unless the address is invalid.
-
-Maybe that's supposed to be an MSI address?  Maybe a complete dmesg or
-/proc/iomem would have a clue?
-
-I feel like this UR issue could be a PCI core issue or maybe some sort
-of misuse of PCI power management, but I can't seem to get traction on
-it.
-
-> Then the display freezes and the system basically falls apart (can't 
-> even sudo reboot -f, need to use magic sysrq).
+> Also, the return value of snprintf() can be higher than the number of
+> bytes written to the buffer in case it is to small. Fix usage of
+> snprintf() by either porting it to scnprintf() or fixing the handling
+> of the return code.
 > 
-> I bisected this to "ALSA: hda: Skip controller resume if not needed". 
-> Setting snd_hda_intel.power_save=0 resolves the issue.
-
-FWIW, the complete citation is c4c8dd6ef807 ("ALSA: hda: Skip
-controller resume if not needed"),
-https://git.kernel.org/linus/c4c8dd6ef807, which first appeared in
-v5.7-rc2.
-
-> I am using an ASRock B450 Pro4 with Realtek HDA codec:
+> It is very unlikely the buffer is too small in practice, but fixing it
+> anyway.
 > 
-> [    1.009400] snd_hda_intel 0000:0a:00.1: enabling device (0000 -> 0002)
-> [    1.009425] snd_hda_intel 0000:0a:00.1: Force to non-snoop mode
-> [    1.009653] snd_hda_intel 0000:0c:00.3: enabling device (0000 -> 0002)
-> [    1.021452] snd_hda_codec_generic hdaudioC0D0: ignore pin 0x7, too many assigned pins
-> [    1.021461] snd_hda_codec_generic hdaudioC0D0: ignore pin 0x9, too many assigned pins
-> [    1.021471] snd_hda_codec_generic hdaudioC0D0: ignore pin 0xb, too many assigned pins
-> [    1.021480] snd_hda_codec_generic hdaudioC0D0: ignore pin 0xd, too many assigned pins
-> [    1.021482] snd_hda_codec_generic hdaudioC0D0: autoconfig for Generic: line_outs=0 (0x0/0x0/0x0/0x0/0x0) type:line
-> [    1.021482] snd_hda_codec_generic hdaudioC0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-> [    1.021483] snd_hda_codec_generic hdaudioC0D0:    hp_outs=0 (0x0/0x0/0x0/0x0/0x0)
-> [    1.021484] snd_hda_codec_generic hdaudioC0D0:    mono: mono_out=0x0
-> [    1.021484] snd_hda_codec_generic hdaudioC0D0:    dig-out=0x3/0x5
-> [    1.021485] snd_hda_codec_generic hdaudioC0D0:    inputs:
-> [    1.046053] snd_hda_codec_realtek hdaudioC1D0: autoconfig for ALC892: line_outs=1 (0x14/0x0/0x0/0x0/0x0) type:line
-> [    1.046054] snd_hda_codec_realtek hdaudioC1D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-> [    1.046055] snd_hda_codec_realtek hdaudioC1D0:    hp_outs=1 (0x1b/0x0/0x0/0x0/0x0)
-> [    1.046055] snd_hda_codec_realtek hdaudioC1D0:    mono: mono_out=0x0
-> [    1.046056] snd_hda_codec_realtek hdaudioC1D0:    inputs:
-> [    1.046057] snd_hda_codec_realtek hdaudioC1D0:      Front Mic=0x19
-> [    1.046058] snd_hda_codec_realtek hdaudioC1D0:      Rear Mic=0x18
-> [    1.046058] snd_hda_codec_realtek hdaudioC1D0:      Line=0x1a
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/edac_mc.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> I also have an ASUS RX 480 graphics card with HDMI audio output.
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 75ede27bdf6a..107d7c4de933 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -130,11 +130,11 @@ unsigned int edac_dimm_info_location(struct dimm_info *dimm, char *buf,
+>  		n = snprintf(p, len, "%s %d ",
+>  			      edac_layer_name[mci->layers[i].type],
+>  			      dimm->location[i]);
+> +		if (len <= n)
+> +			return count + len - 1;
+>  		p += n;
+>  		len -= n;
+>  		count += n;
+> -		if (!len)
+> -			break;
+>  	}
+>  
+>  	return count;
+> @@ -397,19 +397,19 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
+>  		 */
+>  		len = sizeof(dimm->label);
+>  		p = dimm->label;
+> -		n = snprintf(p, len, "mc#%u", mci->mc_idx);
+> +		n = scnprintf(p, len, "mc#%u", mci->mc_idx);
+>  		p += n;
+>  		len -= n;
+> +
+>  		for (layer = 0; layer < mci->n_layers; layer++) {
+> -			n = snprintf(p, len, "%s#%u",
+> -				     edac_layer_name[mci->layers[layer].type],
+> -				     pos[layer]);
+
+The edac_layer_name[]'s are single words of a couple of letters and the
+pos is a number. The buffer we pass in is at least 80 chars and in one
+place even a PAGE_SIZE.
+
+But in general, this is just silly with the buffers on stack and
+printing into them.
+
+It would be much better to opencode that loop in
+edac_dimm_info_location() and simply dump those layer names at the call
+sites. And then kill that silly edac_dimm_info_location() function. See
+below for example.
+
+And then since two call sites do edac_dbg(), you can put that in a
+function edac_dbg_dump_dimm_location() or so and call it and not care
+about any buffer lengths and s*printf's and so on.
+
+Right?
+
+---
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index 422120793a6b..7c04ef0c3536 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -91,16 +91,23 @@ static void edac_mc_dump_channel(struct rank_info *chan)
+ 
+ static void edac_mc_dump_dimm(struct dimm_info *dimm)
+ {
+-	char location[80];
++	struct mem_ctl_info *mci = dimm->mci;
++	int i;
+ 
+ 	if (!dimm->nr_pages)
+ 		return;
+ 
+-	edac_dimm_info_location(dimm, location, sizeof(location));
++	edac_dbg(4, "%s%i: ", dimm->mci->csbased ? "rank" : "dimm", dimm->idx);
++
++	for (i = 0; i < mci->n_layers; i++)
++		edac_dbg(4, "%s %d ",
++			 edac_layer_name[mci->layers[i].type],
++			 dimm->location[i]);
++
++	edac_dbg(4, "mapped as virtual row %d, chan %d\n",
++		 dimm->csrow, dimm->cschannel);
+ 
+-	edac_dbg(4, "%s%i: %smapped as virtual row %d, chan %d\n",
+-		 dimm->mci->csbased ? "rank" : "dimm",
+-		 dimm->idx, location, dimm->csrow, dimm->cschannel);
+ 	edac_dbg(4, "  dimm = %p\n", dimm);
+ 	edac_dbg(4, "  dimm->label = '%s'\n", dimm->label);
+ 	edac_dbg(4, "  dimm->nr_pages = 0x%x\n", dimm->nr_pages);
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
