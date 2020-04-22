@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1E5C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462ABC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 940B720784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE8320775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552908;
-	bh=i3Ux0xyQDuBdGA7BktnWpwTgBU7SDcaAFTMtDViyrKQ=;
+	s=default; t=1587552913;
+	bh=qNozrlyI2SnAMAfBALERdcstlwLYUaOaO+RmbvU4N1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H2cWrvjfBdG6hpzdFpEsBU7UdY0DH8v44Q5I1liHii2uAzmXIkbHnKFhPRo4scAO1
-	 MI8vhoYqvqNMWDYIUetsrplwPp/mdcs3HGtPDgKf/vqRBrC14GxZTtYyVrMb+ZQo+h
-	 QiHoE0xf947Xm3vAISU8rTDOB3pIZeUxkkwwA1k4=
+	b=HM/jEkDu36KfufO4bzcF7wf1BPWyYSsTxOEI9Skfu4eCP1AUk4SEBHiFy8xOa2W4Q
+	 dbhKqIAnmcAEVKMcmwaHBucem/skfWmfBPtgVVFBtCNxir9tRvUyrv3MR09/vxRJ1d
+	 ZB5H0lJk6UVnTHSB2g6A5BDVlqOg+IkASWMi8eZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgDVKHR (ORCPT
+        id S1728485AbgDVKHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:07:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbgDVKHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:07:14 -0400
+        id S1727883AbgDVKHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B58820774;
-        Wed, 22 Apr 2020 10:07:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE49220774;
+        Wed, 22 Apr 2020 10:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550033;
-        bh=i3Ux0xyQDuBdGA7BktnWpwTgBU7SDcaAFTMtDViyrKQ=;
+        s=default; t=1587550023;
+        bh=qNozrlyI2SnAMAfBALERdcstlwLYUaOaO+RmbvU4N1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0lN3PR2lM1b0BNqWHFUMpqjiiJnpn2lIHzXcCWs/N0xfzA/GgQ4OTFyXwN3T3EkAr
-         8HM2MxY2Ascy8907mzaWJpaGf8rHcHdWoBr6c0PCQhVZNA6pKiP/KD12LNjQLwxxQA
-         rHQVeKP8n2znGtcpvYJqc6kJiBy4ByItLMgs4KrQ=
+        b=ycQm+gc/SOzBAw4wD8IeqMYqrx7W5yhLo/8zhs8kjPJLsZw9Cs/l+AaZ6uytrOzow
+         M1mA97mdHBbuet8RiNTfUc868SgafS9uyEBQ+fhbmvU2Z4FuyT+TzABmSzz/9oxI9e
+         D05GhVJ5fOaay4MBbpqFHbbi/Kaq/DV60nvd4Krg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Wayne Lin <Wayne.Lin@amd.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Lyude Paul <lyude@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 108/125] powerpc/maple: Fix declaration made after definition
-Date:   Wed, 22 Apr 2020 11:57:05 +0200
-Message-Id: <20200422095050.271385494@linuxfoundation.org>
+Subject: [PATCH 4.9 060/125] drm/dp_mst: Fix clearing payload state on topology disable
+Date:   Wed, 22 Apr 2020 11:56:17 +0200
+Message-Id: <20200422095043.155469271@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -62,90 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
+[ Upstream commit 8732fe46b20c951493bfc4dba0ad08efdf41de81 ]
 
-When building ppc64 defconfig, Clang errors (trimmed for brevity):
+The issues caused by:
 
-  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
-  must precede definition [-Werror,-Wignored-attributes]
-  machine_device_initcall(maple, maple_cpc925_edac_setup);
-  ^
+commit 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology
+mgr")
 
-machine_device_initcall expands to __define_machine_initcall, which in
-turn has the macro machine_is used in it, which declares mach_##name
-with an __attribute__((weak)). define_machine actually defines
-mach_##name, which in this file happens before the declaration, hence
-the warning.
+Prompted me to take a closer look at how we clear the payload state in
+general when disabling the topology, and it turns out there's actually
+two subtle issues here.
 
-To fix this, move define_machine after machine_device_initcall so that
-the declaration occurs before the definition, which matches how
-machine_device_initcall and define_machine work throughout
-arch/powerpc.
+The first is that we're not grabbing &mgr.payload_lock when clearing the
+payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
+lock order is &mgr.payload_lock -> &mgr.lock (because we always want
+&mgr.lock to be the inner-most lock so topology validation always
+works), this makes perfect sense. It also means that -technically- there
+could be racing between someone calling
+drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
+modeset occurring that's modifying the payload state at the same time.
 
-While we're here, remove some spaces before tabs.
+The second is the more obvious issue that Wayne Lin discovered, that
+we're not clearing proposed_payloads when disabling the topology.
 
-Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
+I actually can't see any obvious places where the racing caused by the
+first issue would break something, and it could be that some of our
+higher-level locks already prevent this by happenstance, but better safe
+then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
+first grabs &mgr.payload_lock followed by &mgr.lock so that we never
+race when modifying the payload state. Then, we also clear
+proposed_payloads to fix the original issue of enabling a new topology
+with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
+structures, but those are getting destroyed along with the ports anyway.
+
+Changes since v1:
+* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
+  vsyrjala
+
+Cc: Sean Paul <sean@poorly.run>
+Cc: Wayne Lin <Wayne.Lin@amd.com>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200122194321.14953-1-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
-index b7f937563827d..d1fee2d35b49c 100644
---- a/arch/powerpc/platforms/maple/setup.c
-+++ b/arch/powerpc/platforms/maple/setup.c
-@@ -299,23 +299,6 @@ static int __init maple_probe(void)
- 	return 1;
- }
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 592ebcd440b6d..8dbcb498d56c3 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2034,6 +2034,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 	int ret = 0;
+ 	struct drm_dp_mst_branch *mstb = NULL;
  
--define_machine(maple) {
--	.name			= "Maple",
--	.probe			= maple_probe,
--	.setup_arch		= maple_setup_arch,
--	.init_IRQ		= maple_init_IRQ,
--	.pci_irq_fixup		= maple_pci_irq_fixup,
--	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
--	.restart		= maple_restart,
--	.halt			= maple_halt,
--       	.get_boot_time		= maple_get_boot_time,
--       	.set_rtc_time		= maple_set_rtc_time,
--       	.get_rtc_time		= maple_get_rtc_time,
--      	.calibrate_decr		= generic_calibrate_decr,
--	.progress		= maple_progress,
--	.power_save		= power4_idle,
--};
--
- #ifdef CONFIG_EDAC
- /*
-  * Register a platform device for CPC925 memory controller on
-@@ -372,3 +355,20 @@ static int __init maple_cpc925_edac_setup(void)
- }
- machine_device_initcall(maple, maple_cpc925_edac_setup);
- #endif
-+
-+define_machine(maple) {
-+	.name			= "Maple",
-+	.probe			= maple_probe,
-+	.setup_arch		= maple_setup_arch,
-+	.init_IRQ		= maple_init_IRQ,
-+	.pci_irq_fixup		= maple_pci_irq_fixup,
-+	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
-+	.restart		= maple_restart,
-+	.halt			= maple_halt,
-+	.get_boot_time		= maple_get_boot_time,
-+	.set_rtc_time		= maple_set_rtc_time,
-+	.get_rtc_time		= maple_get_rtc_time,
-+	.calibrate_decr		= generic_calibrate_decr,
-+	.progress		= maple_progress,
-+	.power_save		= power4_idle,
-+};
++	mutex_lock(&mgr->payload_lock);
+ 	mutex_lock(&mgr->lock);
+ 	if (mst_state == mgr->mst_state)
+ 		goto out_unlock;
+@@ -2096,7 +2097,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 		/* this can fail if the device is gone */
+ 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
+ 		ret = 0;
+-		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
++		memset(mgr->payloads, 0,
++		       mgr->max_payloads * sizeof(mgr->payloads[0]));
++		memset(mgr->proposed_vcpis, 0,
++		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
+ 		mgr->payload_mask = 0;
+ 		set_bit(0, &mgr->payload_mask);
+ 		mgr->vcpi_mask = 0;
+@@ -2104,6 +2108,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 
+ out_unlock:
+ 	mutex_unlock(&mgr->lock);
++	mutex_unlock(&mgr->payload_lock);
+ 	if (mstb)
+ 		drm_dp_put_mst_branch_device(mstb);
+ 	return ret;
 -- 
 2.20.1
 
