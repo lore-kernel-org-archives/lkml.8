@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2006C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2512C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEFDA20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7485320B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553015;
-	bh=e66SOZrJj+tchAMkjoViTZCmh1xUJ9+TISSEaltwPyU=;
+	s=default; t=1587553021;
+	bh=2ljXkslZOpMp5BLxMzDGaoSB4iFl8kKSsg9LYxSJrPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+utZ/kCuudQEqzHMFYa3r0S1p0CpIhKGiBLMAvpAE8sKFy9HDY2z6LZpn+Qn4Sz3
-	 5JmslOvt7ah+dJARpBV11O+FdyshAInJsthttmZ5ts1Q/JJ3PLX9uDY4t6nNytxTF+
-	 zRfZYdRyxlH2COPw9dCVn1RcAjVCz1DGmsAwsIUk=
+	b=DuJHbafsK2PF6qR5fG6rpOitD4UyWKAZ5fzVCNGTGkfOpQWFA1CVJZG+ZQw+HHUVI
+	 O2oceRD9G9v+Pzdnp7T/+WVyElWo+aiMvXT6LVigeUHn4Oozm/dy1eV7lpf4ca63iS
+	 JiMI2dg8WGvRIfEedDeaCPSAkcZurOjjNxNi5FQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgDVK4y (ORCPT
+        id S1728252AbgDVKF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57662 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgDVKGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:00 -0400
+        id S1728237AbgDVKFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 811512075A;
-        Wed, 22 Apr 2020 10:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD4632075A;
+        Wed, 22 Apr 2020 10:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549960;
-        bh=e66SOZrJj+tchAMkjoViTZCmh1xUJ9+TISSEaltwPyU=;
+        s=default; t=1587549950;
+        bh=2ljXkslZOpMp5BLxMzDGaoSB4iFl8kKSsg9LYxSJrPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQ5iCFGcSFb5JDKam5bNylZtFB3gyPGuo3U5CW1kVlBj4JxrPy+pwYvotk9gdrADb
-         BcXbq6wmfaztBwbjmYJuHYA2kGBsBAxYcA6Ccm0SNwohY5Lo+Q2GVwUSyZHzW1q/Pl
-         FuUyVjSAfDINFt8MTZEba9wSFTKD2Mh+ynglTZqs=
+        b=YoECw+2QXNL5/8PkCOiisnbfd0zCtPmZ93DG60enIux9mPI6oPZXfozCPESLUoUBB
+         dU6cmpyuCeR1cqV4DMs9y2pZaDotkQ+E6pD/VZPxga2z2Ufy93ROmcrVBiuQCtUsba
+         6PXmP9GR6rNzm9AjT0E9NBHkWJVTIm/NEydH37Qk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 077/125] btrfs: check commit root generation in should_ignore_root
-Date:   Wed, 22 Apr 2020 11:56:34 +0200
-Message-Id: <20200422095045.552660569@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 073/125] ext4: fix incorrect inodes per group in error message
+Date:   Wed, 22 Apr 2020 11:56:30 +0200
+Message-Id: <20200422095045.028958463@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,54 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-commit 4d4225fc228e46948486d8b8207955f0c031b92e upstream.
+commit b9c538da4e52a7b79dfcf4cfa487c46125066dfb upstream.
 
-Previously we would set the reloc root's last snapshot to transid - 1.
-However there was a problem with doing this, and we changed it to
-setting the last snapshot to the generation of the commit node of the fs
-root.
+If ext4_fill_super detects an invalid number of inodes per group, the
+resulting error message printed the number of blocks per group, rather
+than the number of inodes per group. Fix it to print the correct value.
 
-This however broke should_ignore_root().  The assumption is that if we
-are in a generation newer than when the reloc root was created, then we
-would find the reloc root through normal backref lookups, and thus can
-ignore any fs roots we find with an old enough reloc root.
-
-Now that the last snapshot could be considerably further in the past
-than before, we'd end up incorrectly ignoring an fs root.  Thus we'd
-find no nodes for the bytenr we were searching for, and we'd fail to
-relocate anything.  We'd loop through the relocate code again and see
-that there were still used space in that block group, attempt to
-relocate those bytenr's again, fail in the same way, and just loop like
-this forever.  This is tricky in that we have to not modify the fs root
-at all during this time, so we need to have a block group that has data
-in this fs root that is not shared by any other root, which is why this
-has been difficult to reproduce.
-
-Fixes: 054570a1dc94 ("Btrfs: fix relocation incorrectly dropping data references")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: cd6bb35bf7f6d ("ext4: use more strict checks for inodes_per_block on mount")
+Link: https://lore.kernel.org/r/8be03355983a08e5d4eed480944613454d7e2550.1585434649.git.josh@joshtriplett.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ext4/super.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -537,8 +537,8 @@ static int should_ignore_root(struct btr
- 	if (!reloc_root)
- 		return 0;
- 
--	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
--	    root->fs_info->running_transaction->transid - 1)
-+	if (btrfs_header_generation(reloc_root->commit_root) ==
-+	    root->fs_info->running_transaction->transid)
- 		return 0;
- 	/*
- 	 * if there is reloc tree and it was created in previous
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3820,7 +3820,7 @@ static int ext4_fill_super(struct super_
+ 	if (sbi->s_inodes_per_group < sbi->s_inodes_per_block ||
+ 	    sbi->s_inodes_per_group > blocksize * 8) {
+ 		ext4_msg(sb, KERN_ERR, "invalid inodes per group: %lu\n",
+-			 sbi->s_blocks_per_group);
++			 sbi->s_inodes_per_group);
+ 		goto failed_mount;
+ 	}
+ 	sbi->s_itb_per_group = sbi->s_inodes_per_group /
 
 
