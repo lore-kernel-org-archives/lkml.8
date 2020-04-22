@@ -2,91 +2,159 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6341C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50796C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B21DE206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587541183;
-	bh=ZHbcz1Eeh3V+F7rFdCI0cvU6YMIbLIa9ttnDYToWGlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B9TaTeNgF7PcDS4sC/eIvqofNmeXrZTLRVtpnpTmf0aUiP1ESXCVDnpp5jbNn9wMp
-	 0l8d1/2KGTzmPIv4zIOzfvzas5TvhE3OxKmkIWEBBxo8mjBpm+GVRvY1Mmy61mf+fL
-	 Z0mfijwgCacJER70UY/Q5ur0oM4AHP0lCws+Z1+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 2DC37206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KSDsogL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDVHjm (ORCPT
+        id S1726497AbgDVHjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:39:42 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46499 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgDVHjW (ORCPT
+        Wed, 22 Apr 2020 03:39:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726077AbgDVHjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:39:22 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f18so1151656lja.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:39:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zGscgFhHY8NA5eLH18mLgSeKi3UH/pOfcnI3ew9ER3A=;
-        b=LTdBPo+UXdRaITqG5Ufpr8qWbGVNho+r5Cs04xRFFoF44M5ro4YdPEvumdv29bwCng
-         HrmOLSsOpSkEJASvXC5L/G/La7JgPxs0LI5ZuEScomJOET2GGLH/7nzTSY+ceIXcR7xe
-         l3IKzgh6nLnJV8OrZ48W+bdCNBMqtX7ebDy/qsZdeFuSkO5qBjkh4dYqF2Z8iLCmVLi4
-         idgGS0Q2NKpganmNhd5yj9w0p41QNvMg+voAgFJmlelA4d2rrq35bNXDdyyleiJ4qfCp
-         0q8ictgrf5GdL/rNEqq+OGqnSgKlmryXzc9WcCS02N7LR6Da3I2GYOjjbpiAJE1t4/+v
-         0cMw==
-X-Gm-Message-State: AGi0PuauoMeUwsiYfNNIBo7p6OkCr5XFDI+uvSfCozIpdMpnoaCbxIL5
-        NOpXVbg2ofGocyN+lY1QG60=
-X-Google-Smtp-Source: APiQypIWNRK6TM2V8ljdse8PMIAgIHZiWJMGIEyTkzRsZ5cMuTWF0RbKwMKM5IuTT4LyTzJJQN8rUA==
-X-Received: by 2002:a2e:b8c1:: with SMTP id s1mr16023319ljp.0.1587541160045;
-        Wed, 22 Apr 2020 00:39:20 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id g6sm1382667ljj.78.2020.04.22.00.39.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 00:39:19 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1jR9yg-0003oZ-88; Wed, 22 Apr 2020 09:39:26 +0200
-Date:   Wed, 22 Apr 2020 09:39:26 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     zenyu@tuta.io
-Cc:     Johan <johan@kernel.org>, Elder <elder@kernel.org>,
-        Gregkh <gregkh@linuxfoundation.org>,
-        Greybus Dev <greybus-dev@lists.linaro.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] greybus: fix typos in GREYBUS/GREYBUS_ES2 help text
-Message-ID: <20200422073926.GI18608@localhost>
-References: <M4O-2uM----2@tuta.io>
+        Wed, 22 Apr 2020 03:39:10 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442ADC03C1A7;
+        Wed, 22 Apr 2020 00:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=vXsb2L81VYge+RDUvb4eLGTxpLRW7iFlEkDQ2VQetHw=; b=KSDsogL+yl2sBfCcotk1n10lgY
+        ZxLAVTkFoWdbB9CAd9bTfpLQ9t66t4DOzODAlfKle/kvgMTGS7OhHS5qT3MUTR3s1vvYa0yhV9IGx
+        CUXvI3PSeSBo7+z63Eu6pr/QwY2YBwLVrO9JqanK2e+3DT2Ql5z1Cp/l/n5BtbJT2wfa77eAZrN3k
+        lLpORMhOn8EI9TvmabqgLHRdXwbYg1YNY9OQF9iTp02+wCSGtNWjZdpr9Q3xtBKLpX6Ik1ThdrX+Q
+        o4d4EnfZVJoN822KrMzJEJO6iNZjyFjBELD8XwDeGJGV0s0p51UCwvrrOUWiYK7Mt8EXRq9gkjzk0
+        Eu0m/lLg==;
+Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jR9yG-00009Z-QW; Wed, 22 Apr 2020 07:39:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/9] bdi: use bdi_dev_name() to get device name
+Date:   Wed, 22 Apr 2020 09:38:45 +0200
+Message-Id: <20200422073851.303714-4-hch@lst.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200422073851.303714-1-hch@lst.de>
+References: <20200422073851.303714-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <M4O-2uM----2@tuta.io>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 10:55:22AM +0200, zenyu@tuta.io wrote:
-> From: Zenyu Sy <zenyu@tuta.io>
-> 
-> Fix typos ("an" -> "a", "chose" -> "choose") in Kconfig
-> 
-> Signed-off-by: Zenyu Sy <zenyu@tuta.io>
+From: Yufen Yu <yuyufen@huawei.com>
 
-This patch is white-space damaged and does not apply. Please fix and
-verify your setup by mailing the patch to yourself and try to apply it
-(and/or run checkpatch.pl on it).
+Use the common interface bdi_dev_name() to get device name.
 
-And since this one supersedes your first patch you should have added a
-version number to the subject line ("[PATCH v2]") and a short changelog
-below the --- line.
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/bfq-iosched.c        | 5 +++--
+ block/blk-cgroup.c         | 2 +-
+ fs/ceph/debugfs.c          | 2 +-
+ include/trace/events/wbt.h | 8 ++++----
+ 4 files changed, 9 insertions(+), 8 deletions(-)
 
-The spelling fixes look good otherwise.
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 78ba57efd16b..4d4fe44a9eea 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -4976,8 +4976,9 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
+ 	ioprio_class = IOPRIO_PRIO_CLASS(bic->ioprio);
+ 	switch (ioprio_class) {
+ 	default:
+-		dev_err(bfqq->bfqd->queue->backing_dev_info->dev,
+-			"bfq: bad prio class %d\n", ioprio_class);
++		pr_err("bdi %s: bfq: bad prio class %d\n",
++				bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
++				ioprio_class);
+ 		/* fall through */
+ 	case IOPRIO_CLASS_NONE:
+ 		/*
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index c5dc833212e1..930212c1a512 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -496,7 +496,7 @@ const char *blkg_dev_name(struct blkcg_gq *blkg)
+ {
+ 	/* some drivers (floppy) instantiate a queue w/o disk registered */
+ 	if (blkg->q->backing_dev_info->dev)
+-		return dev_name(blkg->q->backing_dev_info->dev);
++		return bdi_dev_name(blkg->q->backing_dev_info);
+ 	return NULL;
+ }
+ 
+diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
+index 481ac97b4d25..dcaed75de9e6 100644
+--- a/fs/ceph/debugfs.c
++++ b/fs/ceph/debugfs.c
+@@ -271,7 +271,7 @@ void ceph_fs_debugfs_init(struct ceph_fs_client *fsc)
+ 				    &congestion_kb_fops);
+ 
+ 	snprintf(name, sizeof(name), "../../bdi/%s",
+-		 dev_name(fsc->sb->s_bdi->dev));
++		 bdi_dev_name(fsc->sb->s_bdi));
+ 	fsc->debugfs_bdi =
+ 		debugfs_create_symlink("bdi",
+ 				       fsc->client->debugfs_dir,
+diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
+index 784814160197..9c66e59d859c 100644
+--- a/include/trace/events/wbt.h
++++ b/include/trace/events/wbt.h
+@@ -33,7 +33,7 @@ TRACE_EVENT(wbt_stat,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strlcpy(__entry->name, dev_name(bdi->dev),
++		strlcpy(__entry->name, bdi_dev_name(bdi),
+ 			ARRAY_SIZE(__entry->name));
+ 		__entry->rmean		= stat[0].mean;
+ 		__entry->rmin		= stat[0].min;
+@@ -68,7 +68,7 @@ TRACE_EVENT(wbt_lat,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strlcpy(__entry->name, dev_name(bdi->dev),
++		strlcpy(__entry->name, bdi_dev_name(bdi),
+ 			ARRAY_SIZE(__entry->name));
+ 		__entry->lat = div_u64(lat, 1000);
+ 	),
+@@ -105,7 +105,7 @@ TRACE_EVENT(wbt_step,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strlcpy(__entry->name, dev_name(bdi->dev),
++		strlcpy(__entry->name, bdi_dev_name(bdi),
+ 			ARRAY_SIZE(__entry->name));
+ 		__entry->msg	= msg;
+ 		__entry->step	= step;
+@@ -141,7 +141,7 @@ TRACE_EVENT(wbt_timer,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strlcpy(__entry->name, dev_name(bdi->dev),
++		strlcpy(__entry->name, bdi_dev_name(bdi),
+ 			ARRAY_SIZE(__entry->name));
+ 		__entry->status		= status;
+ 		__entry->step		= step;
+-- 
+2.26.1
 
-Thanks,
-Johan
