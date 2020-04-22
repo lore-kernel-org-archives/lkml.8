@@ -2,322 +2,127 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB29C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1030C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B8420774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="Bp+KHoub"
+	by mail.kernel.org (Postfix) with ESMTP id 7A0ED20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587552968;
+	bh=8cvQTWe3si+sePj6bWCOuMaFO2j/tQNZdvqhTtJ5L84=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lDJjS4/xRhNaGnV8U4g3YnH4r+9/xudYZ2FHocnxWFEtdD/QtlqJ6gvohcXz2bb/G
+	 H6Iwptgk38xvbrU4Jpdl91+rCFhEHdgBpEvqQd6DAJ/tCdvQ1o3F1Pog708TVw9YZ5
+	 LoCragp9Ci5P6kNESLx3s0c/+bqW0NJoSTU5hTcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbgDVK4D (ORCPT
+        id S1732133AbgDVK4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:56:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728404AbgDVKGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:48 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017D5C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:06:48 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b11so1672361wrs.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=p8LewY0CJ3zmj/qBloX8wsPTmFOoGjdsxqYE008qJjA=;
-        b=Bp+KHoubwkHeZZ228s+sgr4DZ5C3NJTH5MLyc44DQowU3ZY3VhQASe18vLjho6x6Ib
-         lN8atbbQQlybjTqfYPLc3VOhLOBfLyKiCz/QUcguF4GOiSVBD70AinjE5lhWPiDwFz94
-         kl3TESXniGyaRPZJ2XY6SePh2FetITjivd7+DQdIA6dVJrYdbSOqVZwNwr7lh8TLCCvF
-         pSASfdWCVtNaREj8K2adiRjsx1qvGwy0DmYsaMQldtIOGnV+eLPOL/H/hmjQb5fXSvJ3
-         /PH9kAVWMeorrEfiKG1SJTw6qEZKs+hghgir+/+cDtoTcAw5fVTatr2cmXu293SakmaN
-         OGsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p8LewY0CJ3zmj/qBloX8wsPTmFOoGjdsxqYE008qJjA=;
-        b=uWXAYLngKXYsGrRZyPBTuyCl1yCSxjN8H7ZYmhm/9LBqfhUlBz0iYYnLMO5QkmGK+8
-         PfDTbtmMQWqP3KfCbrVPvoxKy8jOjyaJbAWA/kTQlYAIWMTiMPDETDHoexO84Ujg3/xi
-         zkRDb5NRNZN7tvD72jeE4p5zQQWS1J9LPgZ36BDskvcNXKdJjKIQv6yQpd+UiVhGGQdr
-         0IByy31PJ2t5VCaEWNJKVYxwSezhLv6fWS09R1xCLbRxhz5vHubnqeUqearWTaCWYK2w
-         eiyZbV68c3ueiG0jl5iy63yu69OaxB36/1DtcinhN4c9V//M+bWKKM+kJNp38cuCpiGl
-         Vk0A==
-X-Gm-Message-State: AGi0PuZWLdOViSfUI630Y1znwzqwbsTYtrgpbJXxhaVwY7JC6vw9yIVY
-        gxBrURI99uVvwZy2nlcPdjPa6g==
-X-Google-Smtp-Source: APiQypLSuhLBBh4+dc7cEnCse/Gbu4xt3oQ8YGm3MRsMhB3dTsGz/+705SocdG3+e1SzFzwScv5A6A==
-X-Received: by 2002:adf:edcc:: with SMTP id v12mr29558991wro.317.1587550006735;
-        Wed, 22 Apr 2020 03:06:46 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id j13sm7812462wrq.24.2020.04.22.03.06.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:06:45 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
-Cc:     narayan@google.com, zezeozue@google.com, kernel-team@android.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maco@google.com, bvanassche@acm.org, Chaitanya.Kulkarni@wdc.com,
-        jaegeuk@kernel.org, Martijn Coenen <maco@android.com>
-Subject: [PATCH v2 3/5] loop: Move loop_set_status_from_info() and friends up
-Date:   Wed, 22 Apr 2020 12:06:34 +0200
-Message-Id: <20200422100636.46357-4-maco@android.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-In-Reply-To: <20200422100636.46357-1-maco@android.com>
-References: <20200422100636.46357-1-maco@android.com>
+        Wed, 22 Apr 2020 06:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728392AbgDVKGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C200C2075A;
+        Wed, 22 Apr 2020 10:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587550006;
+        bh=8cvQTWe3si+sePj6bWCOuMaFO2j/tQNZdvqhTtJ5L84=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fPXHZNqVqwIHCJzV5vql0HDLXBYM6sjzqDXbEBWz0FYDyu0yst9du/hKlYarsbK4F
+         Bq7FSXAAvDrt4EmM5waWCtS3lR7hX84aUSERZoMqjeVZv/LOS673W4C+q+hAAriJzs
+         upiiAsw6JtlCshzN37dtkPLgTZ4NzrObNQy/EGNw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 094/125] scsi: ufs: make sure all interrupts are processed
+Date:   Wed, 22 Apr 2020 11:56:51 +0200
+Message-Id: <20200422095048.399890302@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
+References: <20200422095032.909124119@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So we can use it without forward declaration. This is a separate commit
-to make it easier to verify that this is just a move, without functional
-modifications.
+From: Venkat Gopalakrishnan <venkatg@codeaurora.org>
 
-Signed-off-by: Martijn Coenen <maco@android.com>
+[ Upstream commit 7f6ba4f12e6cbfdefbb95cfd8fc67ece6c15d799 ]
+
+As multiple requests are submitted to the ufs host controller in
+parallel there could be instances where the command completion interrupt
+arrives later for a request that is already processed earlier as the
+corresponding doorbell was cleared when handling the previous
+interrupt. Read the interrupt status in a loop after processing the
+received interrupt to catch such interrupts and handle it.
+
+Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Subhash Jadavani <subhashj@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/loop.c | 206 +++++++++++++++++++++----------------------
- 1 file changed, 103 insertions(+), 103 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |   27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 3f8051d3115e..f6c6036324bf 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -971,6 +971,109 @@ static void loop_update_rotational(struct loop_device *lo)
- 		blk_queue_flag_clear(QUEUE_FLAG_NONROT, q);
- }
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4397,19 +4397,30 @@ static irqreturn_t ufshcd_intr(int irq,
+ 	u32 intr_status, enabled_intr_status;
+ 	irqreturn_t retval = IRQ_NONE;
+ 	struct ufs_hba *hba = __hba;
++	int retries = hba->nutrs;
  
-+static int
-+loop_release_xfer(struct loop_device *lo)
-+{
-+	int err = 0;
-+	struct loop_func_table *xfer = lo->lo_encryption;
-+
-+	if (xfer) {
-+		if (xfer->release)
-+			err = xfer->release(lo);
-+		lo->transfer = NULL;
-+		lo->lo_encryption = NULL;
-+		module_put(xfer->owner);
-+	}
-+	return err;
-+}
-+
-+static int
-+loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
-+	       const struct loop_info64 *i)
-+{
-+	int err = 0;
-+
-+	if (xfer) {
-+		struct module *owner = xfer->owner;
-+
-+		if (!try_module_get(owner))
-+			return -EINVAL;
-+		if (xfer->init)
-+			err = xfer->init(lo, i);
-+		if (err)
-+			module_put(owner);
-+		else
-+			lo->lo_encryption = xfer;
-+	}
-+	return err;
-+}
-+
-+/**
-+ * loop_set_status_from_info - configure device from loop_info
-+ * @lo: struct loop_device to configure
-+ * @info: struct loop_info64 to configure the device with
-+ *
-+ * Configures the loop device parameters according to the passed
-+ * in loop_info64 configuration.
-+ */
-+static int
-+loop_set_status_from_info(struct loop_device *lo,
-+			  const struct loop_info64 *info)
-+{
-+	int err;
-+	struct loop_func_table *xfer;
-+	kuid_t uid = current_uid();
-+
-+	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE)
-+		return -EINVAL;
-+
-+	err = loop_release_xfer(lo);
-+	if (err)
-+		return err;
-+
-+	if (info->lo_encrypt_type) {
-+		unsigned int type = info->lo_encrypt_type;
-+
-+		if (type >= MAX_LO_CRYPT)
-+			return -EINVAL;
-+		xfer = xfer_funcs[type];
-+		if (xfer == NULL)
-+			return -EINVAL;
-+	} else
-+		xfer = NULL;
-+
-+	err = loop_init_xfer(lo, xfer, info);
-+	if (err)
-+		return err;
-+
-+	lo->lo_offset = info->lo_offset;
-+	lo->lo_sizelimit = info->lo_sizelimit;
-+	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
-+	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
-+	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
-+	lo->lo_crypt_name[LO_NAME_SIZE-1] = 0;
-+
-+	if (!xfer)
-+		xfer = &none_funcs;
-+	lo->transfer = xfer->transfer;
-+	lo->ioctl = xfer->ioctl;
-+
-+	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
-+	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
-+		lo->lo_flags ^= LO_FLAGS_AUTOCLEAR;
-+
-+	lo->lo_encrypt_key_size = info->lo_encrypt_key_size;
-+	lo->lo_init[0] = info->lo_init[0];
-+	lo->lo_init[1] = info->lo_init[1];
-+	if (info->lo_encrypt_key_size) {
-+		memcpy(lo->lo_encrypt_key, info->lo_encrypt_key,
-+		       info->lo_encrypt_key_size);
-+		lo->lo_key_owner = uid;
-+	}
-+
-+	return 0;
-+}
-+
- static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 		       struct block_device *bdev, unsigned int arg)
- {
-@@ -1094,43 +1197,6 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	return error;
- }
+ 	spin_lock(hba->host->host_lock);
+ 	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	enabled_intr_status =
+-		intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
  
--static int
--loop_release_xfer(struct loop_device *lo)
--{
--	int err = 0;
--	struct loop_func_table *xfer = lo->lo_encryption;
--
--	if (xfer) {
--		if (xfer->release)
--			err = xfer->release(lo);
--		lo->transfer = NULL;
--		lo->lo_encryption = NULL;
--		module_put(xfer->owner);
--	}
--	return err;
--}
--
--static int
--loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
--	       const struct loop_info64 *i)
--{
--	int err = 0;
--
--	if (xfer) {
--		struct module *owner = xfer->owner;
--
--		if (!try_module_get(owner))
--			return -EINVAL;
--		if (xfer->init)
--			err = xfer->init(lo, i);
--		if (err)
--			module_put(owner);
--		else
--			lo->lo_encryption = xfer;
--	}
--	return err;
--}
--
- static int __loop_clr_fd(struct loop_device *lo, bool release)
- {
- 	struct file *filp = NULL;
-@@ -1275,72 +1341,6 @@ static int loop_clr_fd(struct loop_device *lo)
- 	return __loop_clr_fd(lo, false);
- }
+-	if (intr_status)
+-		ufshcd_writel(hba, intr_status, REG_INTERRUPT_STATUS);
++	/*
++	 * There could be max of hba->nutrs reqs in flight and in worst case
++	 * if the reqs get finished 1 by 1 after the interrupt status is
++	 * read, make sure we handle them by checking the interrupt status
++	 * again in a loop until we process all of the reqs before returning.
++	 */
++	do {
++		enabled_intr_status =
++			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
++		if (intr_status)
++			ufshcd_writel(hba, intr_status, REG_INTERRUPT_STATUS);
++		if (enabled_intr_status) {
++			ufshcd_sl_intr(hba, enabled_intr_status);
++			retval = IRQ_HANDLED;
++		}
++
++		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
++	} while (intr_status && --retries);
  
--/**
-- * loop_set_status_from_info - configure device from loop_info
-- * @lo: struct loop_device to configure
-- * @info: struct loop_info64 to configure the device with
-- *
-- * Configures the loop device parameters according to the passed
-- * in loop_info64 configuration.
-- */
--static int
--loop_set_status_from_info(struct loop_device *lo,
--			  const struct loop_info64 *info)
--{
--	int err;
--	struct loop_func_table *xfer;
--	kuid_t uid = current_uid();
--
--	if ((unsigned int) info->lo_encrypt_key_size > LO_KEY_SIZE)
--		return -EINVAL;
--
--	err = loop_release_xfer(lo);
--	if (err)
--		return err;
--
--	if (info->lo_encrypt_type) {
--		unsigned int type = info->lo_encrypt_type;
--
--		if (type >= MAX_LO_CRYPT)
--			return -EINVAL;
--		xfer = xfer_funcs[type];
--		if (xfer == NULL)
--			return -EINVAL;
--	} else
--		xfer = NULL;
--
--	err = loop_init_xfer(lo, xfer, info);
--	if (err)
--		return err;
--
--	lo->lo_offset = info->lo_offset;
--	lo->lo_sizelimit = info->lo_sizelimit;
--	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
--	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
--	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
--	lo->lo_crypt_name[LO_NAME_SIZE-1] = 0;
--
--	if (!xfer)
--		xfer = &none_funcs;
--	lo->transfer = xfer->transfer;
--	lo->ioctl = xfer->ioctl;
--
--	if ((lo->lo_flags & LO_FLAGS_AUTOCLEAR) !=
--	     (info->lo_flags & LO_FLAGS_AUTOCLEAR))
--		lo->lo_flags ^= LO_FLAGS_AUTOCLEAR;
--
--	lo->lo_encrypt_key_size = info->lo_encrypt_key_size;
--	lo->lo_init[0] = info->lo_init[0];
--	lo->lo_init[1] = info->lo_init[1];
--	if (info->lo_encrypt_key_size) {
--		memcpy(lo->lo_encrypt_key, info->lo_encrypt_key,
--		       info->lo_encrypt_key_size);
--		lo->lo_key_owner = uid;
+-	if (enabled_intr_status) {
+-		ufshcd_sl_intr(hba, enabled_intr_status);
+-		retval = IRQ_HANDLED;
 -	}
--
--	return 0;
--}
--
- static int
- loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- {
--- 
-2.26.2.303.gf8c07b1a785-goog
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
+ }
+
 
