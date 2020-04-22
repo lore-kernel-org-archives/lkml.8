@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C64C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC92C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D312076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C6220784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551101;
-	bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
+	s=default; t=1587551106;
+	bh=SFHvZtCLZ6EPWmNWrCEP+2BJ94BANmVoF5rF+9ZXu9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v2ulHp2iyitlneEP1Q961BM6UC9I3wOftNUtapDua2hX+eBl0GGF9gSJFgqTLgV01
-	 lBKgDYQiiERj0dkLubievRaCutfDnQYZCo9e4mhnUwQEJWEe+fKW9tewXVFaiSqr0u
-	 3PH88KTYvNgtgJZRjU8mZxd8484g8QBNFDIjOzds=
+	b=0a4QDOoPqzVVfLO6Ntc46w9aZUl05M/tUaNz3RoubMrTkt0D/KOnFZHaY3XZsaw/l
+	 rsYhJLsRZvacSOp8vBq9I9rzvlyoEFv6ksHf/Dxi70G88HwimdxnmQyukTLJL0PM+R
+	 PIYoegehaD+Wa6nqmmHUJh31vtOFNwMNSdWgi6f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbgDVKZA (ORCPT
+        id S1730491AbgDVKZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:25:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60724 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729924AbgDVKYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:23 -0400
+        id S1730462AbgDVKYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D3AB20784;
-        Wed, 22 Apr 2020 10:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2436E2071E;
+        Wed, 22 Apr 2020 10:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551061;
-        bh=cV2r83eP8e/jucUSXYvFnWLjmbcZKhtPCDO2eIQor/o=;
+        s=default; t=1587551086;
+        bh=SFHvZtCLZ6EPWmNWrCEP+2BJ94BANmVoF5rF+9ZXu9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W3bqqjNfVktYKsLO/FoI6SP7LYqXnS6WNovJMFXQAKMfRhxald/UP/0YVaYr5JjBR
-         YzNbsNPP6x+M0evBU6TQ5DT5KNAZXE6iAbId+Z5xrcYwImzhfryae+K+bJfwKVIpPZ
-         pODA8BlLYoRZValhCkY6T7/+uyDPamp+ASFghZ1w=
+        b=o9DW/jLz+jJkWdCYj2OEsYaSI4Pi1B6XVkfK9ttVWPTuYVb97puw64MheZH2jfgi2
+         hU2eyF8HtG8fD4rzJFP0DWkcjXOD+m0NPSnzmS3gsYiocYp5gU5bZrJ8NLdlD3so3Z
+         LAII7M+rC3z3hYuVrl6bZH9puat81nxXd+gmfA04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Long Li <longli@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 068/166] soc: imx: gpc: fix power up sequencing
-Date:   Wed, 22 Apr 2020 11:56:35 +0200
-Message-Id: <20200422095056.204058571@linuxfoundation.org>
+Subject: [PATCH 5.6 095/166] cifs: Allocate encryption header through kmalloc
+Date:   Wed, 22 Apr 2020 11:57:02 +0200
+Message-Id: <20200422095059.240155317@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,76 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Long Li <longli@microsoft.com>
 
-[ Upstream commit e0ea2d11f8a08ba7066ff897e16c5217215d1e68 ]
+[ Upstream commit 3946d0d04bb360acca72db5efe9ae8440012d9dc ]
 
-Currently we wait only until the PGC inverts the isolation setting
-before disabling the peripheral clocks. This doesn't ensure that the
-reset is properly propagated through the peripheral devices in the
-power domain.
+When encryption is used, smb2_transform_hdr is defined on the stack and is
+passed to the transport. This doesn't work with RDMA as the buffer needs to
+be DMA'ed.
 
-Wait until the PGC signals that the power up request is done and
-wait a bit for resets to propagate before disabling the clocks.
+Fix it by using kmalloc.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Long Li <longli@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/imx/gpc.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ fs/cifs/transport.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
-index 98b9d9a902ae3..90a8b2c0676ff 100644
---- a/drivers/soc/imx/gpc.c
-+++ b/drivers/soc/imx/gpc.c
-@@ -87,8 +87,8 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
- static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index cb3ee916f5275..c97570eb2c180 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -466,7 +466,7 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	      struct smb_rqst *rqst, int flags)
  {
- 	struct imx_pm_domain *pd = to_imx_pm_domain(genpd);
--	int i, ret, sw, sw2iso;
--	u32 val;
-+	int i, ret;
-+	u32 val, req;
+ 	struct kvec iov;
+-	struct smb2_transform_hdr tr_hdr;
++	struct smb2_transform_hdr *tr_hdr;
+ 	struct smb_rqst cur_rqst[MAX_COMPOUND];
+ 	int rc;
  
- 	if (pd->supply) {
- 		ret = regulator_enable(pd->supply);
-@@ -107,17 +107,18 @@ static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
- 	regmap_update_bits(pd->regmap, pd->reg_offs + GPC_PGC_CTRL_OFFS,
- 			   0x1, 0x1);
+@@ -476,28 +476,34 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	if (num_rqst > MAX_COMPOUND - 1)
+ 		return -ENOMEM;
  
--	/* Read ISO and ISO2SW power up delays */
--	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
--	sw = val & 0x3f;
--	sw2iso = (val >> 8) & 0x3f;
+-	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
+-	memset(&iov, 0, sizeof(iov));
+-	memset(&tr_hdr, 0, sizeof(tr_hdr));
 -
- 	/* Request GPC to power up domain */
--	val = BIT(pd->cntr_pdn_bit + 1);
--	regmap_update_bits(pd->regmap, GPC_CNTR, val, val);
-+	req = BIT(pd->cntr_pdn_bit + 1);
-+	regmap_update_bits(pd->regmap, GPC_CNTR, req, req);
+-	iov.iov_base = &tr_hdr;
+-	iov.iov_len = sizeof(tr_hdr);
+-	cur_rqst[0].rq_iov = &iov;
+-	cur_rqst[0].rq_nvec = 1;
+-
+ 	if (!server->ops->init_transform_rq) {
+ 		cifs_server_dbg(VFS, "Encryption requested but transform "
+ 				"callback is missing\n");
+ 		return -EIO;
+ 	}
  
--	/* Wait ISO + ISO2SW IPG clock cycles */
--	udelay(DIV_ROUND_UP(sw + sw2iso, pd->ipg_rate_mhz));
-+	/* Wait for the PGC to handle the request */
-+	ret = regmap_read_poll_timeout(pd->regmap, GPC_CNTR, val, !(val & req),
-+				       1, 50);
-+	if (ret)
-+		pr_err("powerup request on domain %s timed out\n", genpd->name);
++	tr_hdr = kmalloc(sizeof(*tr_hdr), GFP_NOFS);
++	if (!tr_hdr)
++		return -ENOMEM;
 +
-+	/* Wait for reset to propagate through peripherals */
-+	usleep_range(5, 10);
++	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
++	memset(&iov, 0, sizeof(iov));
++	memset(tr_hdr, 0, sizeof(*tr_hdr));
++
++	iov.iov_base = tr_hdr;
++	iov.iov_len = sizeof(*tr_hdr);
++	cur_rqst[0].rq_iov = &iov;
++	cur_rqst[0].rq_nvec = 1;
++
+ 	rc = server->ops->init_transform_rq(server, num_rqst + 1,
+ 					    &cur_rqst[0], rqst);
+ 	if (rc)
+-		return rc;
++		goto out;
  
- 	/* Disable reset clocks for all devices in the domain */
- 	for (i = 0; i < pd->num_clks; i++)
-@@ -343,6 +344,7 @@ static const struct regmap_config imx_gpc_regmap_config = {
- 	.rd_table = &access_table,
- 	.wr_table = &access_table,
- 	.max_register = 0x2ac,
-+	.fast_io = true,
- };
+ 	rc = __smb_send_rqst(server, num_rqst + 1, &cur_rqst[0]);
+ 	smb3_free_compound_rqst(num_rqst, &cur_rqst[1]);
++out:
++	kfree(tr_hdr);
+ 	return rc;
+ }
  
- static struct generic_pm_domain *imx_gpc_onecell_domains[] = {
 -- 
 2.20.1
 
