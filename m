@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A10C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98E5C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3BD20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF182075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551267;
-	bh=Q+1ZS5W6jXT+EKzQgp5O3Yy0jxmJ2fHRHozCR6SdLn4=;
+	s=default; t=1587551269;
+	bh=oGNoFMiTl3XoTCe407hIxRE+bzjUiNIRIr0wS07o/Qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntm0wfvIT2NseDsXbomDPLHtn9hcxLP4Q8DLN2iIdOKF8q75OKGMkT0IOY+FzLIIB
-	 aV6LF3Wsuicb8KVlWg60T2cU+nSC30VHQO2alPjr0COammzP4kavFith1CxH1ripy2
-	 zl3kSTWntnDZOQFSixCPM8VOceM6CzwUbZvLxjL4=
+	b=z0AcrfLL2u+2Zkqw1CwFXfteIJ0ahSoYkhU8pBpe+tGFW+LkWehxi/aRP60C6McOa
+	 eLrO3irZsaByAlOiAQaT3q5Nx8mlau2tRH3WU/Pyncu5N1cPsyuEnP/JoekJ6Aofez
+	 pCENk2I9CAiaSJ5MVHAaIvl4JFl9Q7FaydsHP7Vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730934AbgDVK1q (ORCPT
+        id S1730943AbgDVK1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36758 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgDVK1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:27:37 -0400
+        id S1730921AbgDVK1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:27:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C29A2076B;
-        Wed, 22 Apr 2020 10:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B71C20784;
+        Wed, 22 Apr 2020 10:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551256;
-        bh=Q+1ZS5W6jXT+EKzQgp5O3Yy0jxmJ2fHRHozCR6SdLn4=;
+        s=default; t=1587551261;
+        bh=oGNoFMiTl3XoTCe407hIxRE+bzjUiNIRIr0wS07o/Qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AHi0ejJ7qMKeJWLwvRCmtqmjrdfpMJLcTWTGfLFt1MjcoAoh+P5SVNFNlp9iaFhd5
-         K7YYrayI/RVCl8baoAA8svYSrbhvGQaovYpbx7uKfDknNgyX8FiG1PKeyIeZ5syofy
-         QQlzLjf9qZCvq8VXj6rz5nklBOp8LIMPV0XSMZI0=
+        b=0l9PPAP3zeXHfdKTYAFEwxnpAzWlKuozNnhFwyxeEY0Q+iNfqzc0evg336nnxcjxq
+         yO0/e7L0TJLBT/o1OcD++VR/0Vt93vfjo5hObaXAeEnONed6O1VWb7AjCxmppEivP2
+         J54RHdX5DP4nK9dXanhvDL1/5wAOmrE1eW8eigo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Zhang <Jack.Zhang1@amd.com>,
-        Nirmoy Das <nirmoy.das@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 112/166] drm/amdkfd: kfree the wrong pointer
-Date:   Wed, 22 Apr 2020 11:57:19 +0200
-Message-Id: <20200422095100.770595930@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 5.6 159/166] docs: Fix path to MTD command line partition parser
+Date:   Wed, 22 Apr 2020 11:58:06 +0200
+Message-Id: <20200422095105.491986803@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -61,39 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Zhang <Jack.Zhang1@amd.com>
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-[ Upstream commit 3148a6a0ef3cf93570f30a477292768f7eb5d3c3 ]
+commit fb2511247dc4061fd122d0195838278a4a0b7b59 upstream.
 
-Originally, it kfrees the wrong pointer for mem_obj.
-It would cause memory leak under stress test.
+cmdlinepart.c has been moved to drivers/mtd/parsers/.
 
-Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
-Acked-by: Nirmoy Das <nirmoy.das@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a3f12a35c91d ("mtd: parsers: Move CMDLINE parser")
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-index 2a9e401317353..0d70cb2248fe9 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-@@ -1104,9 +1104,9 @@ int kfd_gtt_sa_allocate(struct kfd_dev *kfd, unsigned int size,
- 	return 0;
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2795,7 +2795,7 @@
+ 			<name>,<region-number>[,<base>,<size>,<buswidth>,<altbuswidth>]
  
- kfd_gtt_no_free_chunk:
--	pr_debug("Allocation failed with mem_obj = %p\n", mem_obj);
-+	pr_debug("Allocation failed with mem_obj = %p\n", *mem_obj);
- 	mutex_unlock(&kfd->gtt_sa_lock);
--	kfree(mem_obj);
-+	kfree(*mem_obj);
- 	return -ENOMEM;
- }
+ 	mtdparts=	[MTD]
+-			See drivers/mtd/cmdlinepart.c.
++			See drivers/mtd/parsers/cmdlinepart.c
  
--- 
-2.20.1
-
+ 	multitce=off	[PPC]  This parameter disables the use of the pSeries
+ 			firmware feature for updating multiple TCE entries
 
 
