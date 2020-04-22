@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F22C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A1BC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC70420656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A16B2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551830;
-	bh=HwwyHRg0ZPQDirdfAAsga1hDTp9J9Yf9FyLxGAaxAx8=;
+	s=default; t=1587551834;
+	bh=u/HMnLGTaLSNri32SyqVZvXqm4KgTOgJ5AYusxzD3mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKUtO1/yteb23vcxlf1598lljE5CQXlNocYhqbDzYlobNi8ZYSUQXXDiRHgje3c3I
-	 q10XuSEC45OzwbtBxEP5I4HNiAwMXIh+dpjKwLxW32TH7oloxhbB+tfZ66tbNGoE3Q
-	 qCXl9gDKt7X+ZayVGNDVPbQLhz1///wzKsyNN7pg=
+	b=MSURD3DoE0FXEcZZ/+/eJD5vUobQrlbg6QwppWZt8C711DpHa6muFpmMiGovs/M7M
+	 mGQ3rPDMxf24ouW+IU2vLhdTwqudCrb+DBGheM//9AkDpu40RqNLiAk2nSaLLZuOW4
+	 6OrnnUjgLTe823hjsJFWqBXqjKOt9CbSAagl0je0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbgDVKWe (ORCPT
+        id S1730436AbgDVKhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729646AbgDVKSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:55 -0400
+        id S1730209AbgDVKWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:22:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC0420781;
-        Wed, 22 Apr 2020 10:18:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36BE42075A;
+        Wed, 22 Apr 2020 10:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550734;
-        bh=HwwyHRg0ZPQDirdfAAsga1hDTp9J9Yf9FyLxGAaxAx8=;
+        s=default; t=1587550955;
+        bh=u/HMnLGTaLSNri32SyqVZvXqm4KgTOgJ5AYusxzD3mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0A6fWadygcZpjVTrrIi2OTzJj6AwR+KCopritNVFeGw2CNY9B85DjHOLRcAaJ5xGi
-         VcE0QJge7PETlKm+cwtAVoJvJE+XCSCzayiowJtaqwh9LcB18zSKRC4lUKJNRXOeYv
-         YrtqmDHjAOubte58KKK+H40bDMAVCCbvn5dQhv6U=
+        b=vFzgHEvUegU1hdph0a4+/p5Qm/AMUpNZ8ZSaq/GgoMC7Rva64vV8S5Zo2ck2jkO0J
+         Ln8K1tJTuQHQYXAZ3WPZpbGdcF5bdb7iN6mQ0jL6+21NeVpRY4JX/429jHGiqQ8rIm
+         Rs22N7zqxT4GJcSz8MBc2ZlCp7juA6A4ZZMafm8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 070/118] drm/nouveau/svm: check for SVM initialized before migrating
-Date:   Wed, 22 Apr 2020 11:57:11 +0200
-Message-Id: <20200422095043.297971794@linuxfoundation.org>
+Subject: [PATCH 5.6 042/166] clk: at91: usb: continue if clk_hw_round_rate() return zero
+Date:   Wed, 22 Apr 2020 11:56:09 +0200
+Message-Id: <20200422095053.550865792@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
-References: <20200422095031.522502705@linuxfoundation.org>
+In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
+References: <20200422095047.669225321@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,38 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 822cab6150d3002952407a8297ff5a0d32bb7b54 ]
+[ Upstream commit b0ecf1c6c6e82da4847900fad0272abfd014666d ]
 
-When migrating system memory to GPU memory, check that SVM has been
-enabled. Even though most errors can be ignored since migration is
-a performance optimization, return an error because this is a violation
-of the API.
+clk_hw_round_rate() may call round rate function of its parents. In case
+of SAM9X60 two of USB parrents are PLLA and UPLL. These clocks are
+controlled by clk-sam9x60-pll.c driver. The round rate function for this
+driver is sam9x60_pll_round_rate() which call in turn
+sam9x60_pll_get_best_div_mul(). In case the requested rate is not in the
+proper range (rate < characteristics->output[0].min &&
+rate > characteristics->output[0].max) the sam9x60_pll_round_rate() will
+return a negative number to its caller (called by
+clk_core_round_rate_nolock()). clk_hw_round_rate() will return zero in
+case a negative number is returned by clk_core_round_rate_nolock(). With
+this, the USB clock will continue its rate computation even caller of
+clk_hw_round_rate() returned an error. With this, the USB clock on SAM9X60
+may not chose the best parent. I detected this after a suspend/resume
+cycle on SAM9X60.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Link: https://lkml.kernel.org/r/1579261009-4573-2-git-send-email-claudiu.beznea@microchip.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_svm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/clk/at91/clk-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
-index 668d4bd0c118f..25b7055949c45 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -173,6 +173,11 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
- 	mm = get_task_mm(current);
- 	down_read(&mm->mmap_sem);
- 
-+	if (!cli->svm.svmm) {
-+		up_read(&mm->mmap_sem);
-+		return -EINVAL;
-+	}
+diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
+index bda92980e0155..c0895c993cce2 100644
+--- a/drivers/clk/at91/clk-usb.c
++++ b/drivers/clk/at91/clk-usb.c
+@@ -75,6 +75,9 @@ static int at91sam9x5_clk_usb_determine_rate(struct clk_hw *hw,
+ 			tmp_parent_rate = req->rate * div;
+ 			tmp_parent_rate = clk_hw_round_rate(parent,
+ 							   tmp_parent_rate);
++			if (!tmp_parent_rate)
++				continue;
 +
- 	for (addr = args->va_start, end = args->va_start + size; addr < end;) {
- 		struct vm_area_struct *vma;
- 		unsigned long next;
+ 			tmp_rate = DIV_ROUND_CLOSEST(tmp_parent_rate, div);
+ 			if (tmp_rate < req->rate)
+ 				tmp_diff = req->rate - tmp_rate;
 -- 
 2.20.1
 
