@@ -5,65 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87778C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76595C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF8B20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59AB120CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgDVMSg (ORCPT
+        id S1729210AbgDVMSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
+        Wed, 22 Apr 2020 08:18:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729055AbgDVMSL (ORCPT
+        by vger.kernel.org with ESMTP id S1727021AbgDVMSK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:18:11 -0400
+        Wed, 22 Apr 2020 08:18:10 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC8CC03C1A8;
-        Wed, 22 Apr 2020 05:18:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F381EC03C1A8;
+        Wed, 22 Apr 2020 05:18:09 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJu-0007tT-3B; Wed, 22 Apr 2020 14:17:38 +0200
+        id 1jREK3-00084b-6p; Wed, 22 Apr 2020 14:17:47 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 637021C0451;
-        Wed, 22 Apr 2020 14:17:28 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:27 -0000
-From:   "tip-bot2 for Kajol Jain" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AE6CF1C0821;
+        Wed, 22 Apr 2020 14:17:34 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:34 -0000
+From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf metrictroup: Split the metricgroup__add_metric function
-Cc:     Kajol Jain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
+Subject: [tip: perf/core] powerpc/perf: open access for CAP_PERFMON privileged process
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jamorris@linux.microsoft.com>,
         Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Joe Mario <jmario@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
+        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
+        linux-man@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401203340.31402-4-kjain@linux.ibm.com>
-References: <20200401203340.31402-4-kjain@linux.ibm.com>
+In-Reply-To: <ac98cd9f-b59e-673c-c70d-180b3e7695d2@linux.intel.com>
+References: <ac98cd9f-b59e-673c-c70d-180b3e7695d2@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158755784797.28353.3422186725377296528.tip-bot2@tip-bot2>
+Message-ID: <158755785430.28353.5755921061444872247.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -79,125 +74,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     47352aba40035ab3fdc50dd03a94456feabed7d8
-Gitweb:        https://git.kernel.org/tip/47352aba40035ab3fdc50dd03a94456feabed7d8
-Author:        Kajol Jain <kjain@linux.ibm.com>
-AuthorDate:    Thu, 02 Apr 2020 02:03:36 +05:30
+Commit-ID:     ff46758313e688fca7d762b3e6ead32843999511
+Gitweb:        https://git.kernel.org/tip/ff46758313e688fca7d762b3e6ead32843999511
+Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
+AuthorDate:    Thu, 02 Apr 2020 11:49:36 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 16 Apr 2020 12:19:13 -03:00
+CommitterDate: Thu, 16 Apr 2020 12:19:08 -03:00
 
-perf metrictroup: Split the metricgroup__add_metric function
+powerpc/perf: open access for CAP_PERFMON privileged process
 
-This patch refactors metricgroup__add_metric function where some part of
-it move to function metricgroup__add_metric_param.  No logic change.
+Open access to monitoring for CAP_PERFMON privileged process.  Providing
+the access under CAP_PERFMON capability singly, without the rest of
+CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials
+and makes operation more secure.
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+CAP_PERFMON implements the principle of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+principle of least privilege: A security design principle that states
+that a process or program be granted only those privileges (e.g.,
+capabilities) necessary to accomplish its legitimate function, and only
+for the time that such privileges are actually required)
+
+For backward compatibility reasons access to the monitoring remains open
+for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
+secure monitoring is discouraged with respect to CAP_PERFMON capability.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+Acked-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Joe Mario <jmario@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Igor Lubashev <ilubashe@akamai.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Mackerras <paulus@ozlabs.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20200401203340.31402-4-kjain@linux.ibm.com
+Cc: intel-gfx@lists.freedesktop.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-man@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Cc: selinux@vger.kernel.org
+Link: http://lore.kernel.org/lkml/ac98cd9f-b59e-673c-c70d-180b3e7695d2@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/metricgroup.c | 60 +++++++++++++++++++---------------
- 1 file changed, 35 insertions(+), 25 deletions(-)
+ arch/powerpc/perf/imc-pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 926449a..7ad81c8 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -485,6 +485,39 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
- 	return false;
- }
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index eb82dda..0edcfd0 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -976,7 +976,7 @@ static int thread_imc_event_init(struct perf_event *event)
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
  
-+static int __metricgroup__add_metric(struct strbuf *events,
-+			struct list_head *group_list, struct pmu_event *pe)
-+{
-+
-+	const char **ids;
-+	int idnum;
-+	struct egroup *eg;
-+
-+	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum) < 0)
-+		return -EINVAL;
-+
-+	if (events->len > 0)
-+		strbuf_addf(events, ",");
-+
-+	if (metricgroup__has_constraint(pe))
-+		metricgroup__add_metric_non_group(events, ids, idnum);
-+	else
-+		metricgroup__add_metric_weak_group(events, ids, idnum);
-+
-+	eg = malloc(sizeof(*eg));
-+	if (!eg)
-+		return -ENOMEM;
-+
-+	eg->ids = ids;
-+	eg->idnum = idnum;
-+	eg->metric_name = pe->metric_name;
-+	eg->metric_expr = pe->metric_expr;
-+	eg->metric_unit = pe->unit;
-+	list_add_tail(&eg->nd, group_list);
-+
-+	return 0;
-+}
-+
- static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				   struct list_head *group_list)
- {
-@@ -504,35 +537,12 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 			continue;
- 		if (match_metric(pe->metric_group, metric) ||
- 		    match_metric(pe->metric_name, metric)) {
--			const char **ids;
--			int idnum;
--			struct egroup *eg;
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
  
- 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+ 	/* Sampling not supported */
+@@ -1412,7 +1412,7 @@ static int trace_imc_event_init(struct perf_event *event)
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
  
--			if (expr__find_other(pe->metric_expr,
--					     NULL, &ids, &idnum) < 0)
--				continue;
--			if (events->len > 0)
--				strbuf_addf(events, ",");
--
--			if (metricgroup__has_constraint(pe))
--				metricgroup__add_metric_non_group(events, ids, idnum);
--			else
--				metricgroup__add_metric_weak_group(events, ids, idnum);
--
--			eg = malloc(sizeof(struct egroup));
--			if (!eg) {
--				ret = -ENOMEM;
-+			ret = __metricgroup__add_metric(events,	group_list, pe);
-+			if (ret == -ENOMEM)
- 				break;
--			}
--			eg->ids = ids;
--			eg->idnum = idnum;
--			eg->metric_name = pe->metric_name;
--			eg->metric_expr = pe->metric_expr;
--			eg->metric_unit = pe->unit;
--			list_add_tail(&eg->nd, group_list);
--			ret = 0;
- 		}
- 	}
- 	return ret;
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
+ 
+ 	/* Return if this is a couting event */
