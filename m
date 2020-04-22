@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F0BC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C1FC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F25F2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8332076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552629;
-	bh=ku/WBQgDgTsASdjlbTI9Gz4PTwRb7TBqXG5/TcklQrI=;
+	s=default; t=1587552634;
+	bh=r9cPRRzUeSOgbRfR8rknZofdFTnT3oSAVu+UkQoNh2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMdoBbvibs45I4021lDoyRJxUa+A45DqUfXgdDFikG4jxXKL9l8mNTCtGpzF+T/Ls
-	 PfRQrqZelR7SdqrsVoP5WXltU5FBNgQZvk3ofUjicY9jafC0AoHgMmf09EKkryExAH
-	 Ha5BLBYt8Rg4i/8VHLVk6HHLGfjVoBdUErLWb+f8=
+	b=sbZKqVIM2JJtEDP39TDql1VSh0KWIMcg7coz38VeaV7/aMP85IzFtfPGBwlO8gH8a
+	 jhO3FNJ2tkCQpdm54QRrAyFpWbwe5PMFAiW8S+3I4shHzZGkoQzyHGpGadVGYIgoQy
+	 4MvPI23w1sXB+doVvIKeubnHe0kPh5dF1IAvWx4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732176AbgDVKu2 (ORCPT
+        id S1731755AbgDVKud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgDVKMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:17 -0400
+        id S1729307AbgDVKML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909072071E;
-        Wed, 22 Apr 2020 10:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42B8D2071E;
+        Wed, 22 Apr 2020 10:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550336;
-        bh=ku/WBQgDgTsASdjlbTI9Gz4PTwRb7TBqXG5/TcklQrI=;
+        s=default; t=1587550329;
+        bh=r9cPRRzUeSOgbRfR8rknZofdFTnT3oSAVu+UkQoNh2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gcN5eoz0WQNg+F05ayrYhOk+gARoLyRSsyK/HMfYeHoxpKB0/8s1NE1tEQI/o3BbO
-         yTeO5F6E3Msct+WITdda49Yvk4KW5BWsmj0/LGno1ve4NY91+li3hUZe/ihZ6+52Yn
-         XHeX/lMl1LXvvXIgaIMPxYDLmDqXMoLlux4cBgLg=
+        b=x5vIS32XvHfFQvS1538ChRL3wbW6wWihpj+o6ki8AHIrvJPLndQQtz1vfLS0mCDTe
+         fYqvQIJ2xSz8nx5NgFB1n2bU1OnYF+V04yGkLOS7OHU7TG68fZzKcEPe4ZwGlVvjKT
+         KTv3y+/d74N/I9vlXFqWL4uwOG2PaSMEI1QGIFCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yilu Lin <linyilu@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.14 063/199] CIFS: Fix bug which the return value by asynchronous read is error
-Date:   Wed, 22 Apr 2020 11:56:29 +0200
-Message-Id: <20200422095104.559673854@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Xu <peterx@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 060/199] KVM: x86: Allocate new rmap and large page tracking when moving memslot
+Date:   Wed, 22 Apr 2020 11:56:26 +0200
+Message-Id: <20200422095104.253905519@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,63 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yilu Lin <linyilu@huawei.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 97adda8b3ab703de8e4c8d27646ddd54fe22879c upstream.
+commit edd4fa37baa6ee8e44dc65523b27bd6fe44c94de upstream.
 
-This patch is used to fix the bug in collect_uncached_read_data()
-that rc is automatically converted from a signed number to an
-unsigned number when the CIFS asynchronous read fails.
-It will cause ctx->rc is error.
+Reallocate a rmap array and recalcuate large page compatibility when
+moving an existing memslot to correctly handle the alignment properties
+of the new memslot.  The number of rmap entries required at each level
+is dependent on the alignment of the memslot's base gfn with respect to
+that level, e.g. moving a large-page aligned memslot so that it becomes
+unaligned will increase the number of rmap entries needed at the now
+unaligned level.
 
-Example:
-Share a directory and create a file on the Windows OS.
-Mount the directory to the Linux OS using CIFS.
-On the CIFS client of the Linux OS, invoke the pread interface to
-deliver the read request.
+Not updating the rmap array is the most obvious bug, as KVM accesses
+garbage data beyond the end of the rmap.  KVM interprets the bad data as
+pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
 
-The size of the read length plus offset of the read request is greater
-than the maximum file size.
+  general protection fault: 0000 [#1] SMP
+  CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
+  Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
+  RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
+  RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
+  RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
+  RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
+  R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
+  R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
+  FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
+  Call Trace:
+   kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
+   __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
+   kvm_set_memory_region+0x45/0x60 [kvm]
+   kvm_vm_ioctl+0x30f/0x920 [kvm]
+   do_vfs_ioctl+0xa1/0x620
+   ksys_ioctl+0x66/0x70
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x4c/0x170
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f7ed9911f47
+  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
+  RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+  RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
+  RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
+  RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
+  R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
+  R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
+  Modules linked in: kvm_intel kvm irqbypass
+  ---[ end trace 0c5f570b3358ca89 ]---
 
-In this case, the CIFS server on the Windows OS returns a failure
-message (for example, the return value of
-smb2.nt_status is STATUS_INVALID_PARAMETER).
+The disallow_lpage tracking is more subtle.  Failure to update results
+in KVM creating large pages when it shouldn't, either due to stale data
+or again due to indexing beyond the end of the metadata arrays, which
+can lead to memory corruption and/or leaking data to guest/userspace.
 
-After receiving the response message, the CIFS client parses
-smb2.nt_status to STATUS_INVALID_PARAMETER
-and converts it to the Linux error code (rdata->result=-22).
+Note, the arrays for the old memslot are freed by the unconditional call
+to kvm_free_memslot() in __kvm_set_memory_region().
 
-Then the CIFS client invokes the collect_uncached_read_data function to
-assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
-
-The type of the ctx->total_len variable is unsigned integer,
-the type of the rc variable is integer, and the type of
-the ctx->rc variable is ssize_t.
-
-Therefore, during the ternary operation, the value of rc is
-automatically converted to an unsigned number. The final result is
-ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
-
-Signed-off-by: Yilu Lin <linyilu@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Fixes: 05da45583de9b ("KVM: MMU: large page support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/x86.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3303,7 +3303,7 @@ again:
- 	if (rc == -ENODATA)
- 		rc = 0;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8584,6 +8584,13 @@ int kvm_arch_create_memslot(struct kvm *
+ {
+ 	int i;
  
--	ctx->rc = (rc == 0) ? ctx->total_len : rc;
-+	ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
- 
- 	mutex_unlock(&ctx->aio_mutex);
++	/*
++	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
++	 * old arrays will be freed by __kvm_set_memory_region() if installing
++	 * the new memslot is successful.
++	 */
++	memset(&slot->arch, 0, sizeof(slot->arch));
++
+ 	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
+ 		struct kvm_lpage_info *linfo;
+ 		unsigned long ugfn;
+@@ -8657,6 +8664,10 @@ int kvm_arch_prepare_memory_region(struc
+ 				const struct kvm_userspace_memory_region *mem,
+ 				enum kvm_mr_change change)
+ {
++	if (change == KVM_MR_MOVE)
++		return kvm_arch_create_memslot(kvm, memslot,
++					       mem->memory_size >> PAGE_SHIFT);
++
+ 	return 0;
+ }
  
 
 
