@@ -2,113 +2,75 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CF6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B34C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1C520776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:03:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AxpNiQo8"
+	by mail.kernel.org (Postfix) with ESMTP id 1922F20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 17:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgDVRDf (ORCPT
+        id S1726891AbgDVRDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 13:03:35 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36313 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726147AbgDVRDf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 13:03:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587575014;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=K+Vw95hzbBrvACE7p1+DGBuatgWYBdD+qziGcMPXbJ0=;
-        b=AxpNiQo8cNoISyIjci7l1IYB8ofUH+5fXJ8zb2Oql6BO1cNCl3lAgIorGo9bIkQ3NfCGc8
-        Eg2skCy+AUHlfDx64m3+tUkp18h2Mbq3y3pubZ6rJOlOUTKHT1sZySD1UklXySw1ByhEN1
-        uvbZQPV9kmxc1so2hb5xVKg0ufkrnr8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-HYUCnAmwNdGbaFJx3Q681A-1; Wed, 22 Apr 2020 13:03:28 -0400
-X-MC-Unique: HYUCnAmwNdGbaFJx3Q681A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88DD918B9FC3;
-        Wed, 22 Apr 2020 17:03:26 +0000 (UTC)
-Received: from tucnak.zalov.cz (ovpn-112-104.ams2.redhat.com [10.36.112.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 231BE10190D6;
-        Wed, 22 Apr 2020 17:03:25 +0000 (UTC)
-Received: from tucnak.zalov.cz (localhost [127.0.0.1])
-        by tucnak.zalov.cz (8.15.2/8.15.2) with ESMTP id 03MH3AfF003682;
-        Wed, 22 Apr 2020 19:03:15 +0200
-Received: (from jakub@localhost)
-        by tucnak.zalov.cz (8.15.2/8.15.2/Submit) id 03MH2pcI003681;
-        Wed, 22 Apr 2020 19:02:51 +0200
-Date:   Wed, 22 Apr 2020 19:02:51 +0200
-From:   Jakub Jelinek <jakub@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
-Message-ID: <20200422170251.GQ2424@tucnak>
-Reply-To: Jakub Jelinek <jakub@redhat.com>
-References: <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
- <20200417190607.GY2424@tucnak>
- <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
- <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
- <20200422102309.GA26846@zn.tnic>
- <20200422114007.GC20730@hirez.programming.kicks-ass.net>
- <20200422134924.GB26846@zn.tnic>
- <20200422135531.GM2424@tucnak>
- <20a91f2e-0f25-8dba-e441-3233cc1ef398@suse.cz>
- <20200422165339.GE26846@zn.tnic>
+        Wed, 22 Apr 2020 13:03:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:53680 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbgDVRDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 13:03:55 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F271B68C4E; Wed, 22 Apr 2020 19:03:49 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 19:03:49 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 1/2] driver core: platform: Initialize
+ dma_parms for platform devices
+Message-ID: <20200422170349.GA28781@lst.de>
+References: <20200422100954.31211-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422165339.GE26846@zn.tnic>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200422100954.31211-1-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 06:53:39PM +0200, Borislav Petkov wrote:
-> > $ cat asm-detect.c
-> > int foo(int a);
-> > int bar(int a)
-> > {
-> >   int r = foo(a);
-> >   asm ("");
-> >   return r;
-> > }
-> > 
-> > $ gcc -O2 -c asm-detect.c -S -o/dev/stdout | grep jmp
-> > [no output]
+On Wed, Apr 22, 2020 at 12:09:54PM +0200, Ulf Hansson wrote:
+> It's currently the platform driver's responsibility to initialize the
+> pointer, dma_parms, for its corresponding struct device. The benefit with
+> this approach allows us to avoid the initialization and to not waste memory
+> for the struct device_dma_parameters, as this can be decided on a case by
+> case basis.
 > 
-> That is a good test to run at the beginning of the compilation I guess.
+> However, it has turned out that this approach is not very practical.  Not
+> only does it lead to open coding, but also to real errors. In principle
+> callers of dma_set_max_seg_size() doesn't check the error code, but just
+> assumes it succeeds.
+> 
+> For these reasons, let's do the initialization from the common platform bus
+> at the device registration point. This also follows the way the PCI devices
+> are being managed, see pci_device_add().
+> 
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Cc: <stable@vger.kernel.org>
+> Tested-by: Haibo Chen <haibo.chen@nxp.com>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-If it is x86 specific, it can work, though I'd suggest -o - instead of
--o/dev/stdout and being more picky on where you want to match the jmp,
-as you don't want to match it in comments, or say filenames in the asm file
-etc.  E.g. require that jmp must be preceeded on the line only by whitespace
-and followed by whitespace.
+Looks good,
 
-	Jakub
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
