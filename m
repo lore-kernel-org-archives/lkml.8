@@ -2,128 +2,100 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5C6C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A8FC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982FA2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:19:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="NuulK9Hi"
+	by mail.kernel.org (Postfix) with ESMTP id 4D2E920776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587597691;
+	bh=eQWN3pP46KHM49RJh6DB+rLU7u/InpAf2XNNJk3Uh0A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=y6eQ/OCsaRUUTVTfeSNz+4aCublXRc4dr7Oox3ciCGmixYArPt4pHPnt3L5vm89KL
+	 z5tEspaj2W1ik+y1xEjdZ6F69eaoMA9FQHbEWihhZhq0wxv2sTGgO0ePunphpQhGvI
+	 phwD5s/bDP9VQSHCH7rXleDzGhrp2vk/GADLjbAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgDVXTK (ORCPT
+        id S1726362AbgDVXVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:19:10 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:43125 "EHLO mail.zx2c4.com"
+        Wed, 22 Apr 2020 19:21:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgDVXTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:19:08 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 54d56bd2;
-        Wed, 22 Apr 2020 23:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=2ctCQDriktgX2OaH1HEUsyi2w
-        ic=; b=NuulK9HiXMmy6kNr2uzQyrPQg8BHVUPmbQOivtEo76JyahCeZWNiRI+vG
-        ymYG1Smy1G8Sf9zsbsdrJVgw50+H2CubF/9hJEr4e/z1VXfbVbvK/yQ3tXZUwj6N
-        zazAqt2NfbmZ5kX2C9tMGYy4VLXOnzk0q/t0YgesaAoFywx3EZ2COX7ltDAvpDEK
-        Fl/tkKA/UyuZC7mGWCgY5em4ZaLMlDOJmKvYvbkTqmE4W/ZMPjxCjO0BrmMP4F3K
-        XTi2UKj+gTyibrwNTZX4C22pOGmAXVK80QFtofx0K71eCKaaNsOZy8JIgrVPUtJ6
-        kMVJbnKypyHjB9uPQyStkU1x770sA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 97c28892 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 22 Apr 2020 23:08:08 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>, stable@vger.kernel.org
-Subject: [PATCH crypto-stable v3 2/2] crypto: arch/nhpoly1305 - process in explicit 4k chunks
-Date:   Wed, 22 Apr 2020 17:18:54 -0600
-Message-Id: <20200422231854.675965-2-Jason@zx2c4.com>
-In-Reply-To: <20200422231854.675965-1-Jason@zx2c4.com>
-References: <20200422200344.239462-1-Jason@zx2c4.com>
- <20200422231854.675965-1-Jason@zx2c4.com>
+        id S1725968AbgDVXVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 19:21:30 -0400
+Received: from localhost (mobile-166-175-187-227.mycingular.net [166.175.187.227])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 529712076C;
+        Wed, 22 Apr 2020 23:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587597689;
+        bh=eQWN3pP46KHM49RJh6DB+rLU7u/InpAf2XNNJk3Uh0A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZlR+o4j/dIfsKlG85ZyM/YXf5IjN3j5mL315OQtJva0g0unK7gSvSEvf93zO6/i9D
+         RXsaegX5CNyrsxE8zkl9PnrDZXu5bGH8raTLZ40pfFSDEBdGUpy9GmQDya+o6RsQrc
+         KS9fX0bRBoDa5BlL1cBbNhSkocIzs8LGohDtrQaQ=
+Date:   Wed, 22 Apr 2020 18:21:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>,
+        alsa-devel@alsa-project.org, Roy Spliet <nouveau@spliet.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: Unrecoverable AER error when resuming from RAM (hda regression
+ in 5.7-rc2)
+Message-ID: <20200422232127.GA24666@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5h8sinxlfz.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than chunking via PAGE_SIZE, this commit changes the arch
-implementations to chunk in explicit 4k parts, so that calculations on
-maximum acceptable latency don't suddenly become invalid on platforms
-where PAGE_SIZE isn't 4k, such as arm64.
+On Wed, Apr 22, 2020 at 11:25:04PM +0200, Takashi Iwai wrote:
+> On Wed, 22 Apr 2020 22:50:28 +0200,
+> Bjorn Helgaas wrote:
+> > ...
+> > I feel like this UR issue could be a PCI core issue or maybe some sort
+> > of misuse of PCI power management, but I can't seem to get traction on
+> > it.
+> > 
+> > > Then the display freezes and the system basically falls apart (can't 
+> > > even sudo reboot -f, need to use magic sysrq).
+> > > 
+> > > I bisected this to "ALSA: hda: Skip controller resume if not needed". 
+> > > Setting snd_hda_intel.power_save=0 resolves the issue.
+> > 
+> > FWIW, the complete citation is c4c8dd6ef807 ("ALSA: hda: Skip
+> > controller resume if not needed"),
+> > https://git.kernel.org/linus/c4c8dd6ef807, which first appeared in
+> > v5.7-rc2.
+> 
+> Yes, and I posted the fix patch right now:
+>   https://lore.kernel.org/r/20200422203744.26299-1-tiwai@suse.de
+> 
+> The possible cause was the tricky resume code that both HD-audio
+> controller (the parent PCI device) and the codec devices used.
+> 
+> At least the patch above seems working for the reporter's machine.
+> Now we need a bit more testing before merging, but it looks promising,
+> so far.
 
-Fixes: 0f961f9f670e ("crypto: x86/nhpoly1305 - add AVX2 accelerated NHPoly1305")
-Fixes: 012c82388c03 ("crypto: x86/nhpoly1305 - add SSE2 accelerated NHPoly1305")
-Fixes: a00fa0c88774 ("crypto: arm64/nhpoly1305 - add NEON-accelerated NHPoly1305")
-Fixes: 16aae3595a9d ("crypto: arm/nhpoly1305 - add NEON-accelerated NHPoly1305")
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- arch/arm/crypto/nhpoly1305-neon-glue.c   | 2 +-
- arch/arm64/crypto/nhpoly1305-neon-glue.c | 2 +-
- arch/x86/crypto/nhpoly1305-avx2-glue.c   | 2 +-
- arch/x86/crypto/nhpoly1305-sse2-glue.c   | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Great, I'm glad you figured something out because I sure wasn't
+getting anywhere!
 
-diff --git a/arch/arm/crypto/nhpoly1305-neon-glue.c b/arch/arm/crypto/nhpoly1305-neon-glue.c
-index ae5aefc44a4d..ffa8d73fe722 100644
---- a/arch/arm/crypto/nhpoly1305-neon-glue.c
-+++ b/arch/arm/crypto/nhpoly1305-neon-glue.c
-@@ -30,7 +30,7 @@ static int nhpoly1305_neon_update(struct shash_desc *desc,
- 		return crypto_nhpoly1305_update(desc, src, srclen);
- 
- 	do {
--		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
-+		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
- 
- 		kernel_neon_begin();
- 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_neon);
-diff --git a/arch/arm64/crypto/nhpoly1305-neon-glue.c b/arch/arm64/crypto/nhpoly1305-neon-glue.c
-index 895d3727c1fb..c5405e6a6db7 100644
---- a/arch/arm64/crypto/nhpoly1305-neon-glue.c
-+++ b/arch/arm64/crypto/nhpoly1305-neon-glue.c
-@@ -30,7 +30,7 @@ static int nhpoly1305_neon_update(struct shash_desc *desc,
- 		return crypto_nhpoly1305_update(desc, src, srclen);
- 
- 	do {
--		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
-+		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
- 
- 		kernel_neon_begin();
- 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_neon);
-diff --git a/arch/x86/crypto/nhpoly1305-avx2-glue.c b/arch/x86/crypto/nhpoly1305-avx2-glue.c
-index f7567cbd35b6..80fcb85736e1 100644
---- a/arch/x86/crypto/nhpoly1305-avx2-glue.c
-+++ b/arch/x86/crypto/nhpoly1305-avx2-glue.c
-@@ -29,7 +29,7 @@ static int nhpoly1305_avx2_update(struct shash_desc *desc,
- 		return crypto_nhpoly1305_update(desc, src, srclen);
- 
- 	do {
--		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
-+		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
- 
- 		kernel_fpu_begin();
- 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_avx2);
-diff --git a/arch/x86/crypto/nhpoly1305-sse2-glue.c b/arch/x86/crypto/nhpoly1305-sse2-glue.c
-index a661ede3b5cf..cc6b7c1a2705 100644
---- a/arch/x86/crypto/nhpoly1305-sse2-glue.c
-+++ b/arch/x86/crypto/nhpoly1305-sse2-glue.c
-@@ -29,7 +29,7 @@ static int nhpoly1305_sse2_update(struct shash_desc *desc,
- 		return crypto_nhpoly1305_update(desc, src, srclen);
- 
- 	do {
--		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
-+		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
- 
- 		kernel_fpu_begin();
- 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_sse2);
--- 
-2.26.2
+Maybe this is a tangent, but I can't figure out what
+snd_power_change_state() is doing.  It *looks* like it's supposed to
+change the PCI power state, but I gave up trying to figure out where
+it actually touches the device.
 
+It seems like sound has more magic in power management than other
+device types, which makes me wonder if we're not providing the right
+interfaces or something.
+
+Bjorn
