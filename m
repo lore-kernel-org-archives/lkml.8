@@ -2,130 +2,104 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D533C55190
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE532C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCDD20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A612098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="p78a3N7V"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="WrO5XdhM";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="aAZ5k2Gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgDVO0m (ORCPT
+        id S1727107AbgDVOdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:26:42 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:59336 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgDVO0l (ORCPT
+        Wed, 22 Apr 2020 10:33:01 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:57460 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725935AbgDVOdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:26:41 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 1287820CD7;
-        Wed, 22 Apr 2020 14:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587565589; bh=p5gnRIZ0/bXq2CwVeK3wJszOYSy/wquMYCbBmYV8dBU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p78a3N7VO3xp7N0BySi1ZbKQiCW0BH819CFCjPTso4wJbaMgdXdGrhXgdl9/A3ixZ
-         0IUAHGI9PLpK6bpRgxl3ZlfWWUNphp9h8dYsfMCGh6D0yd90OBws1+F7JVkEBAUNR6
-         7w2kiRjOhk4sl0VD0qHuzaeS6hYtE9AcfMXeYg8YCOYWVp4lAa7H7ZP5062uB/qVZR
-         7+NJsYEIddLiPz+dmOYT0cSz/6D9EJei7TJD3LREeqVMqDVNIFAD91W/gBguDJDaH8
-         GAZi9VdrV00DxNthO9e7ShlernKT+pAezi3zG60HiJyjSlPaAcimR4/GZcT6qkyxiD
-         PN8Ws/TpyT5ww==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org, maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 6/6] dt-bindings: interrupt-controller: Add Loongson PCH MSI
-Date:   Wed, 22 Apr 2020 22:24:26 +0800
-Message-Id: <20200422142428.1249684-7-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 22 Apr 2020 10:33:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 659B38EE19C;
+        Wed, 22 Apr 2020 07:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1587565978;
+        bh=M6gdDcbuW+flffcj7MyeO+/4m9VT7LtFOrK/yRp2scQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=WrO5XdhMaAlNqj3XroFFwRez3dqb7oiOPLPHX+STuA7bKkQXrqzCXeilgs2vj62a8
+         dtN7T5MWew9GQ5rEfY3QG2jfw0MOZBCAFJlqWm5balqonOlZMl8LgK+o1HHZ9yL/RJ
+         P7q+a4hsvlPez4qWuCoGEOS2WFTgBuelCsScuJJc=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Ne34ZMO5wtea; Wed, 22 Apr 2020 07:32:58 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id CC09D8EE0CE;
+        Wed, 22 Apr 2020 07:32:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1587565977;
+        bh=M6gdDcbuW+flffcj7MyeO+/4m9VT7LtFOrK/yRp2scQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=aAZ5k2GjVbhrgCgDYq1cHevIi1wz2C1YDR0Di2NdAIIxxOPJgzetvPaxqQm67/dYG
+         86owFnqs87t+/+AP5VxJwVX3igQ/oLPNgJMsTtVpgYHpb3YGP/du4FoU7UbDGe5Pio
+         X+J541MSFakK8AyKXdxMyDl6K4CCsOgkMu6rgb3k=
+Message-ID: <1587565975.3485.5.camel@HansenPartnership.com>
+Subject: Re: Implement close-on-fork
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Nate Karstens <nate.karstens@garmin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Changli Gao <xiaosuo@gmail.com>
+Date:   Wed, 22 Apr 2020 07:32:55 -0700
+In-Reply-To: <20200420071548.62112-1-nate.karstens@garmin.com>
+References: <20200420071548.62112-1-nate.karstens@garmin.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding for Loongson PCH MSI controller.
+On Mon, 2020-04-20 at 02:15 -0500, Nate Karstens wrote:
+> Series of 4 patches to implement close-on-fork. Tests have been
+> published to https://github.com/nkarstens/ltp/tree/close-on-fork.
+> 
+> close-on-fork addresses race conditions in system(), which
+> (depending on the implementation) is non-atomic in that it
+> first calls a fork() and then an exec().
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../loongson,pch-msi.yaml                     | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+Why is this a problem?  I get that there's a time between fork and exec
+when you have open file descriptors, but they should still be running
+in the binary context of the programme that called fork, i.e. under
+your control.  The security problems don't seem to occur until you exec
+some random binary, which close on exec covers.  So what problem would
+close on fork fix?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-new file mode 100644
-index 000000000000..dfb9cecacba0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,pch-msi.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Loongson PCH MSI Controller
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description: |
-+  This interrupt controller is found in the Loongson-7A family of PCH for
-+  transforming interrupts from PCIe MSI into HyperTransport vectorized
-+  interrupts.
-+
-+properties:
-+  compatible:
-+    const: loongson,pch-msi-1.0
-+
-+  reg:
-+    maxItems: 1
-+
-+  loongson,msi-base-vec:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value of the base of parent HyperTransport vector allocated
-+      to PCH MSI.
-+
-+  loongson,msi-num-vecs:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value of the number of parent HyperTransport vectors allocated
-+      to PCH MSI.
-+
-+  msi-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - msi-controller
-+  - loongson,msi-base-vec
-+  - loongson,msi-num-vecs
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    msi: msi-controller@2ff00000 {
-+      compatible = "loongson,pch-msi-1.0";
-+      reg = <0x2ff00000 0x4>;
-+      msi-controller;
-+      loongson,msi-base-vec = <64>;
-+      loongson,msi-num-vecs = <64>;
-+      interrupt-parent = <&htvec>;
-+    };
-+...
--- 
-2.26.0.rc2
+> This functionality was approved by the Austin Common Standards
+> Revision Group for inclusion in the next revision of the POSIX
+> standard (see issue 1318 in the Austin Group Defect Tracker).
+
+URL?  Does this standard give a reason why the functionality might be
+useful.
+
+James
 
