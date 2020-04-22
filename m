@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1B5C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4B7C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F8E2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D362220882
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550143;
-	bh=IEmHJ0+oWUsdPbe5mSVSh1U50jpKuCMgd3Fdn1BbhVg=;
+	s=default; t=1587550145;
+	bh=QF9c6+MH0YbWaRTKCfrPPHbam1WjjKd6j69dKZVjBWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RJfZdoWTPaQghGqsDDJolCX58W2cQRWl7ma8w2NjgIgmSNODdxYzGMrD+BYrKdji5
-	 Svsq2KRumI6sJ/atv/Ww53VzjX+g8vDhJiSEOuMu2/Utf5eafWS7EHHWx8by5CvMbT
-	 v4RjBwts8i/+zEKPNhUFjza7pUMDV8LN2C3E5Py0=
+	b=gg7Ao/PXli9N2sl9J4c3cq3mbXfLZzTlawhneTY32/v2cKu3lrtODJAgzrrVU6d/M
+	 rn0qyOthGBsly5kTUVhqQjmhcYVPFrSlN/JazUOrJXBerQBythRGLeJY4GVgu4WPAF
+	 SKn3OeoqY/DBN+o9fUQAIRn4D6KpZPdSNcS9VkxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgDVKJC (ORCPT
+        id S1728813AbgDVKJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35048 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgDVKI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:08:56 -0400
+        id S1728801AbgDVKJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA9F2077D;
-        Wed, 22 Apr 2020 10:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E75F20776;
+        Wed, 22 Apr 2020 10:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550135;
-        bh=IEmHJ0+oWUsdPbe5mSVSh1U50jpKuCMgd3Fdn1BbhVg=;
+        s=default; t=1587550140;
+        bh=QF9c6+MH0YbWaRTKCfrPPHbam1WjjKd6j69dKZVjBWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HDzVJ2Gi7uo0DQqD05Ybi9uVJmbHg5dscFag402y2BhMPFkvSdgxGnTA4avIkZc08
-         qbToW+ua3he80/U4tHrhBJSix1VJHB8re20upYV+nzLIGpvSSHS088Z+uYKsSXNNJN
-         AFdeHYH4wKlXvI1ecCIXwQ70o0rgZccfErhx9zF0=
+        b=Ab5X57utfPKuT82L4aRHzhR4IJge4w1eX10PkQplI1DxDuM8yZ8BXs7mwqH/CjZd4
+         rk0dF2LxFZnq3OPc4ethJxs6OfpkL9tGgcG70gUe/+AryqxooJSP00QjPQHLZENIof
+         8ajYcIKaZAaITpl/ew5npWKalVNlooP1DMt84T3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 024/199] irqchip/gic-v4: Provide irq_retrigger to avoid circular locking dependency
-Date:   Wed, 22 Apr 2020 11:55:50 +0200
-Message-Id: <20200422095100.563479948@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>,
+        Wang Wang <wangwang2@huawei.com>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 026/199] block, bfq: fix use-after-free in bfq_idle_slice_timer_body
+Date:   Wed, 22 Apr 2020 11:55:52 +0200
+Message-Id: <20200422095100.739224150@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -59,143 +62,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 7809f7011c3bce650e502a98afeb05961470d865 ]
+[ Upstream commit 2f95fa5c955d0a9987ffdc3a095e2f4e62c5f2a9 ]
 
-On a very heavily loaded D05 with GICv4, I managed to trigger the
-following lockdep splat:
+In bfq_idle_slice_timer func, bfqq = bfqd->in_service_queue is
+not in bfqd-lock critical section. The bfqq, which is not
+equal to NULL in bfq_idle_slice_timer, may be freed after passing
+to bfq_idle_slice_timer_body. So we will access the freed memory.
 
-[ 6022.598864] ======================================================
-[ 6022.605031] WARNING: possible circular locking dependency detected
-[ 6022.611200] 5.6.0-rc4-00026-geee7c7b0f498 #680 Tainted: G            E
-[ 6022.618061] ------------------------------------------------------
-[ 6022.624227] qemu-system-aar/7569 is trying to acquire lock:
-[ 6022.629789] ffff042f97606808 (&p->pi_lock){-.-.}, at: try_to_wake_up+0x54/0x7a0
-[ 6022.637102]
-[ 6022.637102] but task is already holding lock:
-[ 6022.642921] ffff002fae424cf0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x5c/0x98
-[ 6022.651350]
-[ 6022.651350] which lock already depends on the new lock.
-[ 6022.651350]
-[ 6022.659512]
-[ 6022.659512] the existing dependency chain (in reverse order) is:
-[ 6022.666980]
-[ 6022.666980] -> #2 (&irq_desc_lock_class){-.-.}:
-[ 6022.672983]        _raw_spin_lock_irqsave+0x50/0x78
-[ 6022.677848]        __irq_get_desc_lock+0x5c/0x98
-[ 6022.682453]        irq_set_vcpu_affinity+0x40/0xc0
-[ 6022.687236]        its_make_vpe_non_resident+0x6c/0xb8
-[ 6022.692364]        vgic_v4_put+0x54/0x70
-[ 6022.696273]        vgic_v3_put+0x20/0xd8
-[ 6022.700183]        kvm_vgic_put+0x30/0x48
-[ 6022.704182]        kvm_arch_vcpu_put+0x34/0x50
-[ 6022.708614]        kvm_sched_out+0x34/0x50
-[ 6022.712700]        __schedule+0x4bc/0x7f8
-[ 6022.716697]        schedule+0x50/0xd8
-[ 6022.720347]        kvm_arch_vcpu_ioctl_run+0x5f0/0x978
-[ 6022.725473]        kvm_vcpu_ioctl+0x3d4/0x8f8
-[ 6022.729820]        ksys_ioctl+0x90/0xd0
-[ 6022.733642]        __arm64_sys_ioctl+0x24/0x30
-[ 6022.738074]        el0_svc_common.constprop.3+0xa8/0x1e8
-[ 6022.743373]        do_el0_svc+0x28/0x88
-[ 6022.747198]        el0_svc+0x14/0x40
-[ 6022.750761]        el0_sync_handler+0x124/0x2b8
-[ 6022.755278]        el0_sync+0x140/0x180
-[ 6022.759100]
-[ 6022.759100] -> #1 (&rq->lock){-.-.}:
-[ 6022.764143]        _raw_spin_lock+0x38/0x50
-[ 6022.768314]        task_fork_fair+0x40/0x128
-[ 6022.772572]        sched_fork+0xe0/0x210
-[ 6022.776484]        copy_process+0x8c4/0x18d8
-[ 6022.780742]        _do_fork+0x88/0x6d8
-[ 6022.784478]        kernel_thread+0x64/0x88
-[ 6022.788563]        rest_init+0x30/0x270
-[ 6022.792390]        arch_call_rest_init+0x14/0x1c
-[ 6022.796995]        start_kernel+0x498/0x4c4
-[ 6022.801164]
-[ 6022.801164] -> #0 (&p->pi_lock){-.-.}:
-[ 6022.806382]        __lock_acquire+0xdd8/0x15c8
-[ 6022.810813]        lock_acquire+0xd0/0x218
-[ 6022.814896]        _raw_spin_lock_irqsave+0x50/0x78
-[ 6022.819761]        try_to_wake_up+0x54/0x7a0
-[ 6022.824018]        wake_up_process+0x1c/0x28
-[ 6022.828276]        wakeup_softirqd+0x38/0x40
-[ 6022.832533]        __tasklet_schedule_common+0xc4/0xf0
-[ 6022.837658]        __tasklet_schedule+0x24/0x30
-[ 6022.842176]        check_irq_resend+0xc8/0x158
-[ 6022.846609]        irq_startup+0x74/0x128
-[ 6022.850606]        __enable_irq+0x6c/0x78
-[ 6022.854602]        enable_irq+0x54/0xa0
-[ 6022.858431]        its_make_vpe_non_resident+0xa4/0xb8
-[ 6022.863557]        vgic_v4_put+0x54/0x70
-[ 6022.867469]        kvm_arch_vcpu_blocking+0x28/0x38
-[ 6022.872336]        kvm_vcpu_block+0x48/0x490
-[ 6022.876594]        kvm_handle_wfx+0x18c/0x310
-[ 6022.880938]        handle_exit+0x138/0x198
-[ 6022.885022]        kvm_arch_vcpu_ioctl_run+0x4d4/0x978
-[ 6022.890148]        kvm_vcpu_ioctl+0x3d4/0x8f8
-[ 6022.894494]        ksys_ioctl+0x90/0xd0
-[ 6022.898317]        __arm64_sys_ioctl+0x24/0x30
-[ 6022.902748]        el0_svc_common.constprop.3+0xa8/0x1e8
-[ 6022.908046]        do_el0_svc+0x28/0x88
-[ 6022.911871]        el0_svc+0x14/0x40
-[ 6022.915434]        el0_sync_handler+0x124/0x2b8
-[ 6022.919951]        el0_sync+0x140/0x180
-[ 6022.923773]
-[ 6022.923773] other info that might help us debug this:
-[ 6022.923773]
-[ 6022.931762] Chain exists of:
-[ 6022.931762]   &p->pi_lock --> &rq->lock --> &irq_desc_lock_class
-[ 6022.931762]
-[ 6022.942101]  Possible unsafe locking scenario:
-[ 6022.942101]
-[ 6022.948007]        CPU0                    CPU1
-[ 6022.952523]        ----                    ----
-[ 6022.957039]   lock(&irq_desc_lock_class);
-[ 6022.961036]                                lock(&rq->lock);
-[ 6022.966595]                                lock(&irq_desc_lock_class);
-[ 6022.973109]   lock(&p->pi_lock);
-[ 6022.976324]
-[ 6022.976324]  *** DEADLOCK ***
+In addition, considering the bfqq may be in race, we should
+firstly check whether bfqq is in service before doing something
+on it in bfq_idle_slice_timer_body func. If the bfqq in race is
+not in service, it means the bfqq has been expired through
+__bfq_bfqq_expire func, and wait_request flags has been cleared in
+__bfq_bfqd_reset_in_service func. So we do not need to re-clear the
+wait_request of bfqq which is not in service.
 
-This is happening because we have a pending doorbell that requires
-retrigger. As SW retriggering is done in a tasklet, we trigger the
-circular dependency above.
+KASAN log is given as follows:
+[13058.354613] ==================================================================
+[13058.354640] BUG: KASAN: use-after-free in bfq_idle_slice_timer+0xac/0x290
+[13058.354644] Read of size 8 at addr ffffa02cf3e63f78 by task fork13/19767
+[13058.354646]
+[13058.354655] CPU: 96 PID: 19767 Comm: fork13
+[13058.354661] Call trace:
+[13058.354667]  dump_backtrace+0x0/0x310
+[13058.354672]  show_stack+0x28/0x38
+[13058.354681]  dump_stack+0xd8/0x108
+[13058.354687]  print_address_description+0x68/0x2d0
+[13058.354690]  kasan_report+0x124/0x2e0
+[13058.354697]  __asan_load8+0x88/0xb0
+[13058.354702]  bfq_idle_slice_timer+0xac/0x290
+[13058.354707]  __hrtimer_run_queues+0x298/0x8b8
+[13058.354710]  hrtimer_interrupt+0x1b8/0x678
+[13058.354716]  arch_timer_handler_phys+0x4c/0x78
+[13058.354722]  handle_percpu_devid_irq+0xf0/0x558
+[13058.354731]  generic_handle_irq+0x50/0x70
+[13058.354735]  __handle_domain_irq+0x94/0x110
+[13058.354739]  gic_handle_irq+0x8c/0x1b0
+[13058.354742]  el1_irq+0xb8/0x140
+[13058.354748]  do_wp_page+0x260/0xe28
+[13058.354752]  __handle_mm_fault+0x8ec/0x9b0
+[13058.354756]  handle_mm_fault+0x280/0x460
+[13058.354762]  do_page_fault+0x3ec/0x890
+[13058.354765]  do_mem_abort+0xc0/0x1b0
+[13058.354768]  el0_da+0x24/0x28
+[13058.354770]
+[13058.354773] Allocated by task 19731:
+[13058.354780]  kasan_kmalloc+0xe0/0x190
+[13058.354784]  kasan_slab_alloc+0x14/0x20
+[13058.354788]  kmem_cache_alloc_node+0x130/0x440
+[13058.354793]  bfq_get_queue+0x138/0x858
+[13058.354797]  bfq_get_bfqq_handle_split+0xd4/0x328
+[13058.354801]  bfq_init_rq+0x1f4/0x1180
+[13058.354806]  bfq_insert_requests+0x264/0x1c98
+[13058.354811]  blk_mq_sched_insert_requests+0x1c4/0x488
+[13058.354818]  blk_mq_flush_plug_list+0x2d4/0x6e0
+[13058.354826]  blk_flush_plug_list+0x230/0x548
+[13058.354830]  blk_finish_plug+0x60/0x80
+[13058.354838]  read_pages+0xec/0x2c0
+[13058.354842]  __do_page_cache_readahead+0x374/0x438
+[13058.354846]  ondemand_readahead+0x24c/0x6b0
+[13058.354851]  page_cache_sync_readahead+0x17c/0x2f8
+[13058.354858]  generic_file_buffered_read+0x588/0xc58
+[13058.354862]  generic_file_read_iter+0x1b4/0x278
+[13058.354965]  ext4_file_read_iter+0xa8/0x1d8 [ext4]
+[13058.354972]  __vfs_read+0x238/0x320
+[13058.354976]  vfs_read+0xbc/0x1c0
+[13058.354980]  ksys_read+0xdc/0x1b8
+[13058.354984]  __arm64_sys_read+0x50/0x60
+[13058.354990]  el0_svc_common+0xb4/0x1d8
+[13058.354994]  el0_svc_handler+0x50/0xa8
+[13058.354998]  el0_svc+0x8/0xc
+[13058.354999]
+[13058.355001] Freed by task 19731:
+[13058.355007]  __kasan_slab_free+0x120/0x228
+[13058.355010]  kasan_slab_free+0x10/0x18
+[13058.355014]  kmem_cache_free+0x288/0x3f0
+[13058.355018]  bfq_put_queue+0x134/0x208
+[13058.355022]  bfq_exit_icq_bfqq+0x164/0x348
+[13058.355026]  bfq_exit_icq+0x28/0x40
+[13058.355030]  ioc_exit_icq+0xa0/0x150
+[13058.355035]  put_io_context_active+0x250/0x438
+[13058.355038]  exit_io_context+0xd0/0x138
+[13058.355045]  do_exit+0x734/0xc58
+[13058.355050]  do_group_exit+0x78/0x220
+[13058.355054]  __wake_up_parent+0x0/0x50
+[13058.355058]  el0_svc_common+0xb4/0x1d8
+[13058.355062]  el0_svc_handler+0x50/0xa8
+[13058.355066]  el0_svc+0x8/0xc
+[13058.355067]
+[13058.355071] The buggy address belongs to the object at ffffa02cf3e63e70#012 which belongs to the cache bfq_queue of size 464
+[13058.355075] The buggy address is located 264 bytes inside of#012 464-byte region [ffffa02cf3e63e70, ffffa02cf3e64040)
+[13058.355077] The buggy address belongs to the page:
+[13058.355083] page:ffff7e80b3cf9800 count:1 mapcount:0 mapping:ffff802db5c90780 index:0xffffa02cf3e606f0 compound_mapcount: 0
+[13058.366175] flags: 0x2ffffe0000008100(slab|head)
+[13058.370781] raw: 2ffffe0000008100 ffff7e80b53b1408 ffffa02d730c1c90 ffff802db5c90780
+[13058.370787] raw: ffffa02cf3e606f0 0000000000370023 00000001ffffffff 0000000000000000
+[13058.370789] page dumped because: kasan: bad access detected
+[13058.370791]
+[13058.370792] Memory state around the buggy address:
+[13058.370797]  ffffa02cf3e63e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fb fb
+[13058.370801]  ffffa02cf3e63e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[13058.370805] >ffffa02cf3e63f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[13058.370808]                                                                 ^
+[13058.370811]  ffffa02cf3e63f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[13058.370815]  ffffa02cf3e64000: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+[13058.370817] ==================================================================
+[13058.370820] Disabling lock debugging due to kernel taint
 
-The easy cop-out is to provide a retrigger callback that doesn't
-require acquiring any extra lock.
+Here, we directly pass the bfqd to bfq_idle_slice_timer_body func.
+--
+V2->V3: rewrite the comment as suggested by Paolo Valente
+V1->V2: add one comment, and add Fixes and Reported-by tag.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200310184921.23552-5-maz@kernel.org
+Fixes: aee69d78d ("block, bfq: introduce the BFQ-v0 I/O scheduler as an extra scheduler")
+Acked-by: Paolo Valente <paolo.valente@linaro.org>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ block/bfq-iosched.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 799df1e598db3..84b23d902d5b8 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2591,12 +2591,18 @@ static int its_vpe_set_irqchip_state(struct irq_data *d,
- 	return 0;
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 93863c6173e66..959bee9fa9118 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -4541,20 +4541,28 @@ static void bfq_prepare_request(struct request *rq, struct bio *bio)
+ 	spin_unlock_irq(&bfqd->lock);
  }
  
-+static int its_vpe_retrigger(struct irq_data *d)
-+{
-+	return !its_vpe_set_irqchip_state(d, IRQCHIP_STATE_PENDING, true);
-+}
+-static void bfq_idle_slice_timer_body(struct bfq_queue *bfqq)
++static void
++bfq_idle_slice_timer_body(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ {
+-	struct bfq_data *bfqd = bfqq->bfqd;
+ 	enum bfqq_expiration reason;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&bfqd->lock, flags);
+-	bfq_clear_bfqq_wait_request(bfqq);
+ 
++	/*
++	 * Considering that bfqq may be in race, we should firstly check
++	 * whether bfqq is in service before doing something on it. If
++	 * the bfqq in race is not in service, it has already been expired
++	 * through __bfq_bfqq_expire func and its wait_request flags has
++	 * been cleared in __bfq_bfqd_reset_in_service func.
++	 */
+ 	if (bfqq != bfqd->in_service_queue) {
+ 		spin_unlock_irqrestore(&bfqd->lock, flags);
+ 		return;
+ 	}
+ 
++	bfq_clear_bfqq_wait_request(bfqq);
 +
- static struct irq_chip its_vpe_irq_chip = {
- 	.name			= "GICv4-vpe",
- 	.irq_mask		= its_vpe_mask_irq,
- 	.irq_unmask		= its_vpe_unmask_irq,
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_set_affinity	= its_vpe_set_affinity,
-+	.irq_retrigger		= its_vpe_retrigger,
- 	.irq_set_irqchip_state	= its_vpe_set_irqchip_state,
- 	.irq_set_vcpu_affinity	= its_vpe_set_vcpu_affinity,
- };
+ 	if (bfq_bfqq_budget_timeout(bfqq))
+ 		/*
+ 		 * Also here the queue can be safely expired
+@@ -4599,7 +4607,7 @@ static enum hrtimer_restart bfq_idle_slice_timer(struct hrtimer *timer)
+ 	 * early.
+ 	 */
+ 	if (bfqq)
+-		bfq_idle_slice_timer_body(bfqq);
++		bfq_idle_slice_timer_body(bfqd, bfqq);
+ 
+ 	return HRTIMER_NORESTART;
+ }
 -- 
 2.20.1
 
