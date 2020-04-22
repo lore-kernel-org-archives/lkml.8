@@ -2,144 +2,153 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E5AC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A898C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B267F2098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FCA2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgDVMSv (ORCPT
+        id S1729395AbgDVMTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:18:51 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2872 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729017AbgDVMSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:18:10 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6D3479F84AA3A02A7E97;
-        Wed, 22 Apr 2020 20:18:05 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 22 Apr 2020
- 20:18:03 +0800
-Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-References: <20200421143149.45108-1-yuehaibing@huawei.com>
- <20200422093344.GY13121@gauss3.secunet.de>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lucien.xin@gmail.com>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
-Date:   Wed, 22 Apr 2020 20:18:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 22 Apr 2020 08:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728931AbgDVMSB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:18:01 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12C0C03C1AA;
+        Wed, 22 Apr 2020 05:18:00 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jREK5-00089Q-BF; Wed, 22 Apr 2020 14:17:49 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BDA291C04CF;
+        Wed, 22 Apr 2020 14:17:36 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:36 -0000
+From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/core: open access to probes for CAP_PERFMON
+ privileged process
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-man@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <3c129d9a-ba8a-3483-ecc5-ad6c8e7c203f@linux.intel.com>
+References: <3c129d9a-ba8a-3483-ecc5-ad6c8e7c203f@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422093344.GY13121@gauss3.secunet.de>
-Content-Type: text/plain; charset="windows-1252"
+Message-ID: <158755785633.28353.17624268753935462706.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/22 17:33, Steffen Klassert wrote:
-> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
->> While update xfrm policy as follow:
->>
->> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>  priority 1 mark 0 mask 0x10
->> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>  priority 2 mark 0 mask 0x00
->> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>  priority 2 mark 0 mask 0x10
->>
->> We get this warning:
->>
->> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
->> Kernel panic - not syncing: panic_on_warn set ...
->> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
->> Call Trace:
->> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
->>  xfrm_policy_inexact_insert+0x70/0x330
->>  xfrm_policy_insert+0x1df/0x250
->>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
->>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
->>  netlink_rcv_skb+0x4c/0x120
->>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
->>  netlink_unicast+0x1b3/0x270
->>  netlink_sendmsg+0x350/0x470
->>  sock_sendmsg+0x4f/0x60
->>
->> Policy C and policy A has the same mark.v and mark.m, so policy A is
->> matched in first round lookup while updating C. However policy C and
->> policy B has same mark and priority, which also leads to matched. So
->> the WARN_ON is triggered.
->>
->> xfrm policy lookup should only be matched when the found policy has the
->> same lookup keys (mark.v & mark.m) no matter priority.
->>
->> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  net/xfrm/xfrm_policy.c | 16 +++++-----------
->>  1 file changed, 5 insertions(+), 11 deletions(-)
->>
->> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
->> index 297b2fd..67d0469 100644
->> --- a/net/xfrm/xfrm_policy.c
->> +++ b/net/xfrm/xfrm_policy.c
->> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
->>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>  				   struct xfrm_policy *pol)
->>  {
->> -	u32 mark = policy->mark.v & policy->mark.m;
->> -
->> -	if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->> -		return true;
->> -
->> -	if ((mark & pol->mark.m) == pol->mark.v &&
->> -	    policy->priority == pol->priority)
-> 
-> If you remove the priority check, you can't insert policies with matching
-> mark and different priorities anymore. This brings us back the old bug.
+The following commit has been merged into the perf/core branch of tip:
 
-Yes, this is true.
+Commit-ID:     c9e0924e5c2b59365f9c0d43ff8722e79ecf4088
+Gitweb:        https://git.kernel.org/tip/c9e0924e5c2b59365f9c0d43ff8722e79ecf4088
+Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
+AuthorDate:    Thu, 02 Apr 2020 11:47:01 +03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Thu, 16 Apr 2020 12:19:08 -03:00
 
-> 
-> I plan to apply the patch from Xin Long, this seems to be the right way
-> to address this problem.
+perf/core: open access to probes for CAP_PERFMON privileged process
 
-That still brings an issue, update like this:
+Open access to monitoring via kprobes and uprobes and eBPF tracing for
+CAP_PERFMON privileged process. Providing the access under CAP_PERFMON
+capability singly, without the rest of CAP_SYS_ADMIN credentials,
+excludes chances to misuse the credentials and makes operation more
+secure.
 
-policy A (mark.v = 1, mark.m = 0, priority = 1)
-policy B (mark.v = 1, mark.m = 0, priority = 1)
+perf kprobes and uprobes are used by ftrace and eBPF. perf probe uses
+ftrace to define new kprobe events, and those events are treated as
+tracepoint events. eBPF defines new probes via perf_event_open interface
+and then the probes are used in eBPF tracing.
 
-A and B will all in the list.
+CAP_PERFMON implements the principle of least privilege for performance
+monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+principle of least privilege: A security design principle that states
+that a process or program be granted only those privileges (e.g.,
+capabilities) necessary to accomplish its legitimate function, and only
+for the time that such privileges are actually required)
 
-So should do this:
+For backward compatibility reasons access to perf_events subsystem
+remains open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN
+usage for secure perf_events monitoring is discouraged with respect to
+CAP_PERFMON capability.
 
- static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
-                                   struct xfrm_policy *pol)
- {
--       u32 mark = policy->mark.v & policy->mark.m;
--
--       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
--               return true;
--
--       if ((mark & pol->mark.m) == pol->mark.v &&
-+       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
-            policy->priority == pol->priority)
-                return true;
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Igor Lubashev <ilubashe@akamai.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Cc: selinux@vger.kernel.org
+Cc: linux-man@vger.kernel.org
+Link: http://lore.kernel.org/lkml/3c129d9a-ba8a-3483-ecc5-ad6c8e7c203f@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ kernel/events/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-
-> 
-> .
-> 
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 74025b7..52951e9 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9397,7 +9397,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
+ 	if (event->attr.type != perf_kprobe.type)
+ 		return -ENOENT;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
+ 
+ 	/*
+@@ -9457,7 +9457,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
+ 	if (event->attr.type != perf_uprobe.type)
+ 		return -ENOENT;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!perfmon_capable())
+ 		return -EACCES;
+ 
+ 	/*
