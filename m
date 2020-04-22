@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD3BC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC52C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E752075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9616920781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551484;
-	bh=Lh/aVkzRGiJf794rdAEn6bIXmrdHDr/0NaGaE+pi0Js=;
+	s=default; t=1587551487;
+	bh=VyeAYrSuj5Nu9IZdaUdo5Y5eQ7ucFMmf8JRnu3917n8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nxg95ZDo1MdYUmTMUIprqo49FdjW64yMSCOGJSVPRvfUIPrgDLGkU6EVrTpcoHoeq
-	 Fhb5NFFB7Z5qtq3UvtQJZUWKTlN2n98ZM/cfY3CngDLvICoB7hQbGfdjkLmH5F8u5Y
-	 TEqPxW22NtfcYYazvjJ2UEQNrs0G159GTTBJ4goc=
+	b=vn8EFGdrUUfKzEqK3Y8wPbyai3RGvi+EQ2sJtK9UiXkgXcmu0HyfTcg6Kkmg/TvNP
+	 zwhLiRpdzfrKbS2XALr6C9HMkmN0f3jSZ6VEet2GML6tJsa1MiaQNOODmn5uYjegrw
+	 Xw/cv1Zh9GUD8jSx++evhITQYtIUiHWGMAPwr/ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgDVK0L (ORCPT
+        id S1730670AbgDVK0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34890 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730656AbgDVK0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:26:03 -0400
+        id S1730637AbgDVK0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:26:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD59120781;
-        Wed, 22 Apr 2020 10:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38BAC20784;
+        Wed, 22 Apr 2020 10:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551163;
-        bh=Lh/aVkzRGiJf794rdAEn6bIXmrdHDr/0NaGaE+pi0Js=;
+        s=default; t=1587551160;
+        bh=VyeAYrSuj5Nu9IZdaUdo5Y5eQ7ucFMmf8JRnu3917n8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBJPfM8o0uO+xq+gq1vyVA0MxWc+Lf7PqRLVq2ft7OatProTHWZSZoJHCPLqhmbdp
-         et8p2gHnYh3um6m0sbhIWKLv+A+lsjPbtXAyQEz4RixuXXgpWOugRlK1tBip3qbbJY
-         JohPoYMoTJ0YvLJBx21iRco7HtFEoz+5qcFe5/tw=
+        b=zcNl0b1BAO6BPFRCxURBvYnr6/PNvR1e8A8H9yudmnjlQFtusXPKWfAz6AF6QWvsw
+         ome5FKjClT1PRa5hBQHDQRC5wtIgCRiohCHYwqhEOyTnI1BtvpZzDLsCcc1qL1DstW
+         UU79Zzb+7ajBMy7F+pvYvwKRe3zyQqHd9qgag/9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 127/166] iommu/vt-d: Add build dependency on IOASID
-Date:   Wed, 22 Apr 2020 11:57:34 +0200
-Message-Id: <20200422095102.118034582@linuxfoundation.org>
+Subject: [PATCH 5.6 126/166] iommu/virtio: Fix freeing of incomplete domains
+Date:   Wed, 22 Apr 2020 11:57:33 +0200
+Message-Id: <20200422095102.034165688@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,37 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 4a663dae47316ae8b97d5b77025fe7dfd9d3487f ]
+[ Upstream commit 7062af3ed2ba451029e3733d9f677c68f5ea9e77 ]
 
-IOASID code is needed by VT-d scalable mode for PASID allocation.
-Add explicit dependency such that IOASID is built-in whenever Intel
-IOMMU is enabled.
-Otherwise, aux domain code will fail when IOMMU is built-in and IOASID
-is compiled as a module.
+Calling viommu_domain_free() on a domain that hasn't been finalised (not
+attached to any device, for example) can currently cause an Oops,
+because we attempt to call ida_free() on ID 0, which may either be
+unallocated or used by another domain.
 
-Fixes: 59a623374dc38 ("iommu/vt-d: Replace Intel specific PASID allocator with IOASID")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Only initialise the vdomain->viommu pointer, which denotes a finalised
+domain, at the end of a successful viommu_domain_finalise().
+
+Fixes: edcd69ab9a32 ("iommu: Add virtio-iommu driver")
+Reported-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/20200326093558.2641019-3-jean-philippe@linaro.org
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/virtio-iommu.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index d2fade9849997..25149544d57c9 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -188,6 +188,7 @@ config INTEL_IOMMU
- 	select NEED_DMA_MAP_STATE
- 	select DMAR_TABLE
- 	select SWIOTLB
-+	select IOASID
- 	help
- 	  DMA remapping (DMAR) devices support enables independent address
- 	  translations for Direct Memory Access (DMA) from devices.
+diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+index cce329d71fbad..5eed75cd121f1 100644
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -613,18 +613,20 @@ static int viommu_domain_finalise(struct viommu_dev *viommu,
+ 	int ret;
+ 	struct viommu_domain *vdomain = to_viommu_domain(domain);
+ 
+-	vdomain->viommu		= viommu;
+-	vdomain->map_flags	= viommu->map_flags;
++	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
++			      viommu->last_domain, GFP_KERNEL);
++	if (ret < 0)
++		return ret;
++
++	vdomain->id		= (unsigned int)ret;
+ 
+ 	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
+ 	domain->geometry	= viommu->geometry;
+ 
+-	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
+-			      viommu->last_domain, GFP_KERNEL);
+-	if (ret >= 0)
+-		vdomain->id = (unsigned int)ret;
++	vdomain->map_flags	= viommu->map_flags;
++	vdomain->viommu		= viommu;
+ 
+-	return ret > 0 ? 0 : ret;
++	return 0;
+ }
+ 
+ static void viommu_domain_free(struct iommu_domain *domain)
 -- 
 2.20.1
 
