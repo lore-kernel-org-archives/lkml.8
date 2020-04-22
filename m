@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B35C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5FDC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B79B2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409FA2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553378;
-	bh=i3Rhkjl2pl8lrpd2bvu8KC/WZTiZaXHdz5AcnTEfjMo=;
+	s=default; t=1587553390;
+	bh=TZoybMhF4gxKDISr4rcuiX1uOk1zp5q2YmpQeJdacyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYC/wh4wZ20PR0tWs/afBn0En7x35/E/2z7UAxmTMdRWYShBCgwnzivBTFG+DNOFn
-	 KMBVTSf3X/JzJX29DxkFSxxVz/Z0zmWpB5hHMokBlsuSfbDz21bm+fMiwXm84ZOuHu
-	 AdF/AJR4+qZyvFxbvfvycvVoK9RKUjbh4ZUgzuvE=
+	b=GngIwOHp5BEZ2qTCa1uGdg3WmM2m1fBZ1V4LBMJcmEW4FtONK1BS438V1fG74gzdv
+	 pCp2Uu1ZPdEOOy7KeSibiCmtdlO5D/6n7HR4idChbmwXmVqQdtQF9ywVPdpkiIyubI
+	 nwJ1FwXcZy+CCNBD9j59d2W1R4NLWFZd/gKjT6eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732448AbgDVLC5 (ORCPT
+        id S1728459AbgDVLDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726608AbgDVKAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:19 -0400
+        id S1726104AbgDVKAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:00:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A7F20774;
-        Wed, 22 Apr 2020 10:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C6EC20776;
+        Wed, 22 Apr 2020 10:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549619;
-        bh=i3Rhkjl2pl8lrpd2bvu8KC/WZTiZaXHdz5AcnTEfjMo=;
+        s=default; t=1587549611;
+        bh=TZoybMhF4gxKDISr4rcuiX1uOk1zp5q2YmpQeJdacyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yeZFI1/BbdmEHkwUKSsUZ36N35yzF2lU/xKM9uRVLa46EPb5z1uOfAd+LcpO20+yS
-         CvY6By2NaErzUolfPjSa+KnPG/UFIYPpmAbrKmapZnrY5Vnn/4i9CPWGj5Q+bXYGjM
-         l4a3mE9ar9mWRDzlzhHbZEXliTY3SQK67wYD7jBI=
+        b=RkLFpJDSCW1RZVvggj4a2ZfQdtZUfG8Mqgr+oLOOXw8R+BPawS3lrGiIbjJNeFuot
+         U06PHZoUcNMOEq6CtVN1Pg5OzBtdarWrPsUoLWXa2aCFEA/l4k0vit9lbkj4IASUgv
+         +RQeKKluehFweSS/SRhbRfJ+SbKU0ydqokYroWvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 037/100] ALSA: hda: Initialize power_state field properly
-Date:   Wed, 22 Apr 2020 11:56:07 +0200
-Message-Id: <20200422095029.213822414@linuxfoundation.org>
+        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 017/100] ASoC: topology: use name_prefix for new kcontrol
+Date:   Wed, 22 Apr 2020 11:55:47 +0200
+Message-Id: <20200422095025.970327637@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -59,35 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: 이경택 <gt82.lee@samsung.com>
 
-commit 183ab39eb0ea9879bb68422a83e65f750f3192f0 upstream.
+commit abca9e4a04fbe9c6df4d48ca7517e1611812af25 upstream.
 
-The recent commit 98081ca62cba ("ALSA: hda - Record the current power
-state before suspend/resume calls") made the HD-audio driver to store
-the PM state in power_state field.  This forgot, however, the
-initialization at power up.  Although the codec drivers usually don't
-need to refer to this field in the normal operation, let's initialize
-it properly for consistency.
+Current topology doesn't add prefix of component to new kcontrol.
 
-Fixes: 98081ca62cba ("ALSA: hda - Record the current power state before suspend/resume calls")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Link: https://lore.kernel.org/r/009b01d60804$ae25c2d0$0a714870$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_codec.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/soc-topology.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -876,6 +876,7 @@ int snd_hda_codec_new(struct hda_bus *bu
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -378,7 +378,7 @@ static int soc_tplg_add_kcontrol(struct
+ 	struct snd_soc_component *comp = tplg->comp;
  
- 	/* power-up all before initialization */
- 	hda_set_power_state(codec, AC_PWRST_D0);
-+	codec->core.dev.power.power_state = PMSG_ON;
+ 	return soc_tplg_add_dcontrol(comp->card->snd_card,
+-				comp->dev, k, NULL, comp, kcontrol);
++				comp->dev, k, comp->name_prefix, comp, kcontrol);
+ }
  
- 	snd_hda_codec_proc_new(codec);
- 
+ /* remove a mixer kcontrol */
 
 
