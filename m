@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE30C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74C7C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC412076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB712084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552474;
-	bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
+	s=default; t=1587552477;
+	bh=J2Tscg0fW3pcCyob+6YGj5QCeCv1qdJ+BxsxnfTJYBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPudRy9VthGrTh/muybR7Ks5YxFUUWH+sHelNIDKjvZKAr4iMx6TXD8sRYUuAYUIi
-	 FbhwpQuLuNSagP+Eip1YL4kMOwTA5fag/3mem5nIptZ9GYLMkoeQKPnce+jcfGYnob
-	 E4uyjj9Phu5FfY6KryClBrcilY/SC3IPJ6F3mIb4=
+	b=WuqmiEwkqIRTbU+v/VnVVbd80jwRs1FzSYOoBS212bGz/eB14ofwh67XyX5rMYRmh
+	 2b4mriVqG1LhniPKaTwkPXMBc2J01cc+elkyyaZx5pKolABmh0cdPzbMw7AV9/Lkkp
+	 vmas+MyEyjwjNULqXZrHaCyh7H8xTjow6169I0kE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbgDVKrx (ORCPT
+        id S1731759AbgDVKr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:47:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50542 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:47:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729643AbgDVKPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:17 -0400
+        id S1729244AbgDVKPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 421782071E;
-        Wed, 22 Apr 2020 10:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC2E620575;
+        Wed, 22 Apr 2020 10:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550516;
-        bh=jTuUCyPuJOG1nAdrPAoxt4PboG749EAUEnTxsfy/RmE=;
+        s=default; t=1587550514;
+        bh=J2Tscg0fW3pcCyob+6YGj5QCeCv1qdJ+BxsxnfTJYBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0Hcn6En0CSiU3BqIX4TnXxYEsOwcZY3bSP/J4gwE+NgH1PBYALpAg/hB8QOjG1JC
-         K2qeUa26I5FO+xay+Ud++T4E/1iYDYpg9Wm3OwA06QqPtt30sDtFHbvQFBVwhYeETF
-         ppt5X/H5M2sN63Sc1o8vaa7h6RJwkV2TfBt+ov3M=
+        b=TLswHyqUxGOOeL7690T5HGokE8YX2bguNeD/qulb4+Fa3JXDm0Wd562vuNHuYPQCR
+         z6QmaszBoERT/Ab4e3n7opudlj78JEeQ8Ze+FCBs9VsqBH4T+LFT+rrsHZctRsx31D
+         jVAdgPTn0InLg8jawocDI1oDglxUNLz1dRZA0+Wk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 47/64] drm/vc4: Fix HDMI mode validation
-Date:   Wed, 22 Apr 2020 11:57:31 +0200
-Message-Id: <20200422095021.181360986@linuxfoundation.org>
+Subject: [PATCH 4.19 46/64] f2fs: fix NULL pointer dereference in f2fs_write_begin()
+Date:   Wed, 22 Apr 2020 11:57:30 +0200
+Message-Id: <20200422095021.001448305@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -62,59 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit b1e7396a1d0e6af6806337fdaaa44098d6b3343c ]
+[ Upstream commit 62f63eea291b50a5677ae7503ac128803174698a ]
 
-Current mode validation impedes setting up some video modes which should
-be supported otherwise. Namely 1920x1200@60Hz.
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+RIP: 0010:f2fs_write_begin+0x823/0xb90 [f2fs]
+Call Trace:
+ f2fs_quota_write+0x139/0x1d0 [f2fs]
+ write_blk+0x36/0x80 [quota_tree]
+ get_free_dqblk+0x42/0xa0 [quota_tree]
+ do_insert_tree+0x235/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ do_insert_tree+0x26e/0x4a0 [quota_tree]
+ qtree_write_dquot+0x70/0x190 [quota_tree]
+ v2_write_dquot+0x43/0x90 [quota_v2]
+ dquot_acquire+0x77/0x100
+ f2fs_dquot_acquire+0x2f/0x60 [f2fs]
+ dqget+0x310/0x450
+ dquot_transfer+0x7e/0x120
+ f2fs_setattr+0x11a/0x4a0 [f2fs]
+ notify_change+0x349/0x480
+ chown_common+0x168/0x1c0
+ do_fchownat+0xbc/0xf0
+ __x64_sys_fchownat+0x20/0x30
+ do_syscall_64+0x5f/0x220
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fix this by lowering the minimum HDMI state machine clock to pixel clock
-ratio allowed.
+Passing fsdata parameter to .write_{begin,end} in f2fs_quota_write(),
+so that if quota file is compressed one, we can avoid above NULL
+pointer dereference when updating quota content.
 
-Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks.")
-Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200326122001.22215-1-nsaenzjulienne@suse.de
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index fd5522fd179e5..86b98856756d9 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -698,11 +698,23 @@ static enum drm_mode_status
- vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
- 			    const struct drm_display_mode *mode)
- {
--	/* HSM clock must be 108% of the pixel clock.  Additionally,
--	 * the AXI clock needs to be at least 25% of pixel clock, but
--	 * HSM ends up being the limiting factor.
-+	/*
-+	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
-+	 * be faster than pixel clock, infinitesimally faster, tested in
-+	 * simulation. Otherwise, exact value is unimportant for HDMI
-+	 * operation." This conflicts with bcm2835's vc4 documentation, which
-+	 * states HSM's clock has to be at least 108% of the pixel clock.
-+	 *
-+	 * Real life tests reveal that vc4's firmware statement holds up, and
-+	 * users are able to use pixel clocks closer to HSM's, namely for
-+	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
-+	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
-+	 * 162MHz.
-+	 *
-+	 * Additionally, the AXI clock needs to be at least 25% of
-+	 * pixel clock, but HSM ends up being the limiting factor.
- 	 */
--	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 108 / 100))
-+	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
- 		return MODE_CLOCK_HIGH;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index da348cf4ff56a..45f8f6ec22a55 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1648,6 +1648,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 	int offset = off & (sb->s_blocksize - 1);
+ 	size_t towrite = len;
+ 	struct page *page;
++	void *fsdata = NULL;
+ 	char *kaddr;
+ 	int err = 0;
+ 	int tocopy;
+@@ -1657,7 +1658,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 								towrite);
+ retry:
+ 		err = a_ops->write_begin(NULL, mapping, off, tocopy, 0,
+-							&page, NULL);
++							&page, &fsdata);
+ 		if (unlikely(err)) {
+ 			if (err == -ENOMEM) {
+ 				congestion_wait(BLK_RW_ASYNC, HZ/50);
+@@ -1672,7 +1673,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 		flush_dcache_page(page);
  
- 	return MODE_OK;
+ 		a_ops->write_end(NULL, mapping, off, tocopy, tocopy,
+-						page, NULL);
++						page, fsdata);
+ 		offset = 0;
+ 		towrite -= tocopy;
+ 		off += tocopy;
 -- 
 2.20.1
 
