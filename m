@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BC1C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FFBC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6C92076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD06A2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553263;
-	bh=MlK/zlRV4Vbr+VBF6tClXVnQyWd7bATBm1JqPTpxmts=;
+	s=default; t=1587553272;
+	bh=8H8u6hTqwGmn5z1Om6Z7kpMBmTSpROkiyjdq6uJkSnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpzqlN7CfN/hSZIScKN2mUAiRdYbzmz+2qLAhOPATczIugoCngQOfKjQHMZyO07st
-	 fL4IA9Kyn/jCGcc8gnvqHWRLixx89MsW+/KCt2pBf1KNeF3xWNjDeDkdKxUg/SUHjD
-	 nPj+tzuELZwCtIq56RUPfzxh2JbxrxT/3oETmlvE=
+	b=Hfen3bhBbAp5LUuO7GUMvB35p4+OVGsjSVDdItUl0mVd6ipyMWUasKpDicqYU5HY+
+	 fhCJromp45T+bF2e7hK2Saz7hXDzT9pbh1d/SeNfNjZkCLnqDa1Mv67bMGjCDj4Z8q
+	 u1pxe/4ggDxwrVa5z+LyHNk7fWCI8I1Vl4i5bBFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732336AbgDVLBC (ORCPT
+        id S1727941AbgDVLBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50362 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgDVKBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:44 -0400
+        id S1726100AbgDVKBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4658720735;
-        Wed, 22 Apr 2020 10:01:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310C32077D;
+        Wed, 22 Apr 2020 10:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549703;
-        bh=MlK/zlRV4Vbr+VBF6tClXVnQyWd7bATBm1JqPTpxmts=;
+        s=default; t=1587549691;
+        bh=8H8u6hTqwGmn5z1Om6Z7kpMBmTSpROkiyjdq6uJkSnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vDwZ8Sqo6zZj5plH6QQKaJ4uvOOYgbYyvjPrkza9YB5jObopPxYQQrkiOwackRqr1
-         ISLuLbAF6z0DNvW11XxSmhSHT13kywLPTgkaQ/063Da98RNxf7Q2LUNkfcT6q9k5y3
-         mdsFdz78kYzTYG6q+wqSKZzaqLSRXkeeKQ9r9Fzs=
+        b=i+kh52VhBWLQSCNZ1mkJ0yuaELo6zxllUm66JFlGpsbBXUZLRUXacB06CdL8HtLAd
+         QbFHN+X32hxIkqtqxA8KdGK4mE11qSCiX2xkeX/HnsLSWzcDmpHSmLQhdQGVC3esQl
+         5ifP6hpNtz3OKEEAQmFCZANI8VXdK1mxpP0WBxpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.4 073/100] of: unittest: kmemleak on changeset destroy
-Date:   Wed, 22 Apr 2020 11:56:43 +0200
-Message-Id: <20200422095036.308047614@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.4 060/100] ext4: fix incorrect group count in ext4_fill_super error message
+Date:   Wed, 22 Apr 2020 11:56:30 +0200
+Message-Id: <20200422095033.905142426@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -60,40 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Josh Triplett <josh@joshtriplett.org>
 
-commit b3fb36ed694b05738d45218ea72cf7feb10ce2b1 upstream.
+commit df41460a21b06a76437af040d90ccee03888e8e5 upstream.
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 1 of 5.
+ext4_fill_super doublechecks the number of groups before mounting; if
+that check fails, the resulting error message prints the group count
+from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
+computed group count instead (which at that point has just been computed
+in "blocks_count").
 
-of_unittest_changeset() reaches deeply into the dynamic devicetree
-functions.  Several nodes were left with an elevated reference
-count and thus were not properly cleaned up.  Fix the reference
-counts so that the memory will be freed.
-
-Fixes: 201c910bd689 ("of: Transactional DT support.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
+Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/of/unittest.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext4/super.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -544,6 +544,10 @@ static void __init of_unittest_changeset
- 	mutex_unlock(&of_mutex);
- 
- 	of_changeset_destroy(&chgset);
-+
-+	of_node_put(n1);
-+	of_node_put(n2);
-+	of_node_put(n21);
- #endif
- }
- 
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3791,9 +3791,9 @@ static int ext4_fill_super(struct super_
+ 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
+ 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
+ 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
+-		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
++		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
+ 		       "(block count %llu, first data block %u, "
+-		       "blocks per group %lu)", sbi->s_groups_count,
++		       "blocks per group %lu)", blocks_count,
+ 		       ext4_blocks_count(es),
+ 		       le32_to_cpu(es->s_first_data_block),
+ 		       EXT4_BLOCKS_PER_GROUP(sb));
 
 
