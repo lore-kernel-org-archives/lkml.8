@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB58C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FDDC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED772076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F2F20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550880;
-	bh=5nkV7eDi5Bx2nfm80C2yfyXLGRKXoar9TVzuNHHDrnU=;
+	s=default; t=1587550894;
+	bh=ZwYuWogEoMguMqy8IBBG5/+pe0y6k0fPBiOgbUr18LM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1EvXLWenOZJpML64pwI7FcZHi+J4W03e8t4acxm/4NCtHm3pm0c4uFfwaRoQYTfux
-	 u4Gp1NPJjkJMIMHNWrbfAo2sGsX1I5JLElYDew4+hWPF+RdmQcH7aQj6DOKuEGA/wu
-	 3vrzGreLJyJnhI45BOsJ9KRsQlVhTDsaDWLUr2M4=
+	b=N4qLPOAFOe5jC3ec8q0mG0noM3NjIy7w8En/91S9cuJcvpb3U/N1j569n0PxXcSHe
+	 pDr8B2rEhRSe0/Kq28kLjOuJrAe0Jwfl3c62e2NY3L1ONOZ8J8PyNHIjWHdGB9J+e7
+	 d1fi0Y36FD9gLZbmWlWvVWPyCOcbO1WrkXiwY8v4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbgDVKUe (ORCPT
+        id S1730163AbgDVKVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:20:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54970 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729963AbgDVKS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:27 -0400
+        id S1729621AbgDVKSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8D922075A;
-        Wed, 22 Apr 2020 10:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EC622070B;
+        Wed, 22 Apr 2020 10:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550707;
-        bh=5nkV7eDi5Bx2nfm80C2yfyXLGRKXoar9TVzuNHHDrnU=;
+        s=default; t=1587550709;
+        bh=ZwYuWogEoMguMqy8IBBG5/+pe0y6k0fPBiOgbUr18LM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPc8fLm91Njb6X5OwKFNiDPFwW4xeJivIGPkG3nyW4ukiOXeXYObBWq7Qx/1Ve9lz
-         Oj1AVcmDGK1Um6JVqzr3W5AU0jQu01ABleoTv9+2JX+IxK96faDOyi+wNKjnsBs/zM
-         cw8GTlAQ+n4R/t+2/+4IMZPHqaXL0B8WMeoNvvQk=
+        b=QxieqCrvFU1VTeESXIGqquyAjb8hFIFQr/YDXDYVZ02t/W0wSo7er4CxJoP96UJku
+         QUfPewUo5mTL+mul2wjPeXyLIZNEL9eNAi5MJ2uux34Rw0Wy1mm1SUfX2+lsbUVuLK
+         rRm7vLAgZPsDCgnLVmewvuI+VCOqzBwKX2tBHPvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Domenico Andreoli <domenico.andreoli@linux.com>,
+        Marian Klein <mkleinsoft@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/118] s390/cpuinfo: fix wrong output when CPU0 is offline
-Date:   Wed, 22 Apr 2020 11:57:01 +0200
-Message-Id: <20200422095041.859212172@linuxfoundation.org>
+Subject: [PATCH 5.4 061/118] hibernate: Allow uswsusp to write to swap
+Date:   Wed, 22 Apr 2020 11:57:02 +0200
+Message-Id: <20200422095042.013796362@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -61,47 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Domenico Andreoli <domenico.andreoli@linux.com>
 
-[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
+[ Upstream commit 56939e014a6c212b317414faa307029e2e80c3b9 ]
 
-/proc/cpuinfo should not print information about CPU 0 when it is offline.
+It turns out that there is one use case for programs being able to
+write to swap devices, and that is the userspace hibernation code.
 
-Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-[heiko.carstens@de.ibm.com: shortened commit message]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Quick fix: disable the S_SWAPFILE check if hibernation is configured.
+
+Fixes: dc617f29dbe5 ("vfs: don't allow writes to swap files")
+Reported-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Reported-by: Marian Klein <mkleinsoft@gmail.com>
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/processor.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/block_dev.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
-index 6ebc2117c66c7..91b9b3f73de6e 100644
---- a/arch/s390/kernel/processor.c
-+++ b/arch/s390/kernel/processor.c
-@@ -165,8 +165,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
- static int show_cpuinfo(struct seq_file *m, void *v)
- {
- 	unsigned long n = (unsigned long) v - 1;
-+	unsigned long first = cpumask_first(cpu_online_mask);
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index d612468ee66bf..34644ce4b5025 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -34,6 +34,7 @@
+ #include <linux/task_io_accounting_ops.h>
+ #include <linux/falloc.h>
+ #include <linux/uaccess.h>
++#include <linux/suspend.h>
+ #include "internal.h"
  
--	if (!n)
-+	if (n == first)
- 		show_cpu_summary(m, v);
- 	if (!machine_has_cpu_mhz)
- 		return 0;
-@@ -179,6 +180,8 @@ static inline void *c_update(loff_t *pos)
- {
- 	if (*pos)
- 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
-+	else
-+		*pos = cpumask_first(cpu_online_mask);
- 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
- }
+ struct bdev_inode {
+@@ -1975,7 +1976,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (bdev_read_only(I_BDEV(bd_inode)))
+ 		return -EPERM;
  
+-	if (IS_SWAPFILE(bd_inode))
++	/* uswsusp needs write permission to the swap */
++	if (IS_SWAPFILE(bd_inode) && !hibernation_available())
+ 		return -ETXTBSY;
+ 
+ 	if (!iov_iter_count(from))
 -- 
 2.20.1
 
