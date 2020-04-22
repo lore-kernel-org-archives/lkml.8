@@ -2,82 +2,124 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFDEC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DA3C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF046205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51C52070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:14:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQsa+QXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgDVIOY (ORCPT
+        id S1726451AbgDVIO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:14:24 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2390 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgDVIOX (ORCPT
+        Wed, 22 Apr 2020 04:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725811AbgDVIOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:14:23 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e9ffcc0d7f-02096; Wed, 22 Apr 2020 16:13:53 +0800 (CST)
-X-RM-TRANSID: 2eea5e9ffcc0d7f-02096
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15e9ffcbef88-bc4f9;
-        Wed, 22 Apr 2020 16:13:53 +0800 (CST)
-X-RM-TRANSID: 2ee15e9ffcbef88-bc4f9
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] net: phy: Use IS_ERR() to check and simplify code
-Date:   Wed, 22 Apr 2020 16:15:42 +0800
-Message-Id: <20200422081542.8344-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Wed, 22 Apr 2020 04:14:25 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E983CC03C1A6;
+        Wed, 22 Apr 2020 01:14:24 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id v4so4280766wme.1;
+        Wed, 22 Apr 2020 01:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=gcZwmzpZRozVbeeueq/lfLKF1YE2Wt6O6Z8WN9igdl4=;
+        b=mQsa+QXeSYNo2dTVR3JqEP4N3d8jiSjSTcaw4vL+TujGAXv74FP5C/J44fhBnCd0Tt
+         vY+mfGIHID7KJ59EQ/gQxCJsOz9hSShh2s3dHxK8YBOYxkB5hqMrTwaOcJ7ZZnJK42QM
+         32s929B8ZZtK10UeINRuaHSsOJT+QbsnOZrZxW1WZaY0A/KKL1D9Wks59qP7X2PR7fyL
+         Fo0p3TE1dT8NP5bVAh12KRUf95y47XjPoAxjHumxfbvnGdEZ0aKg1SCVHeiL+atXU3o1
+         SR65CgmfMFiW7so27tKhEkHZeeDZIQal8T2h8RJ78NiFe8Ns4jbxHldQkLSr1aHmO5hf
+         hQhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=gcZwmzpZRozVbeeueq/lfLKF1YE2Wt6O6Z8WN9igdl4=;
+        b=ms/ssngyyS1SV/TlnCmHO+5lEWx6D5dKC2lwbMGcI/3Ok6iMZZNth6vW1AgWu/Apxs
+         zMtIB3TOsSxP7ZAnsbfvdJ3xS1JfYPMxEffF9rlRTMwMldv36VoHnWe1a3bA0bSdIzzA
+         EuczIuZbK/K+OJjVqJDiKFYellCIZDLNZQqwkZ4pLxO5fFpW3fDUHEPTF2IlO7ecwvqH
+         qKj/fxoh0/gKxFO5HVHH6CgEUFWFbwwKkGzwd4lR6N0I1yI+6mXJ4qfFBor8zkQYjzF8
+         i6qqJDmJr/4bCh/x/kiwRe0JQ+rZ2bCnvxhrUK3JfXNQIU0MG0Hfn+OFBCzSECXucu9Y
+         yJyQ==
+X-Gm-Message-State: AGi0PuZ1FaujBGdJE3Xk5Us8ISqAhUgwof+nbrAbGD8RsR5Z4K6jfzy3
+        AJilj3/lLgK8wDJRHi/EY2+8g6QLel0=
+X-Google-Smtp-Source: APiQypIFeRvLPBvGOlE2vs2gyjN93pw7CkcVxnQtwefOITVt+0IY5bCY3jraVTYx9xUOe18V7AOGgw==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr8919770wmc.142.1587543263394;
+        Wed, 22 Apr 2020 01:14:23 -0700 (PDT)
+Received: from meru ([2a01:cb18:832e:5f00:1d35:d245:4470:8434])
+        by smtp.gmail.com with ESMTPSA id z8sm7319302wrr.40.2020.04.22.01.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 01:14:22 -0700 (PDT)
+From:   Mathieu Othacehe <m.othacehe@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 4/4] iio: vcnl4000: Add buffer support for VCNL4010/20.
+References: <20200421075532.19192-1-m.othacehe@gmail.com>
+        <20200421075532.19192-5-m.othacehe@gmail.com>
+        <CAHp75VfXBgQad1oCBe+oqcC_oRa-3q8OBYcAOV8WfCo7n1wXWw@mail.gmail.com>
+Date:   Wed, 22 Apr 2020 10:14:21 +0200
+In-Reply-To: <CAHp75VfXBgQad1oCBe+oqcC_oRa-3q8OBYcAOV8WfCo7n1wXWw@mail.gmail.com>
+        (Andy Shevchenko's message of "Tue, 21 Apr 2020 15:27:14 +0300")
+Message-ID: <87tv1cos2q.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use IS_ERR() and PTR_ERR() instead of PTR_ZRR_OR_ZERO()
-to simplify code, avoid redundant paramenter definitions
-and judgements.
 
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- drivers/net/phy/mdio_bus.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+>> +static int vcnl4010_buffer_predisable(struct iio_dev *indio_dev)
+>> +{
+>> +       struct vcnl4000_data *data = iio_priv(indio_dev);
+>> +       int ret, ret_disable;
+>> +
+>> +       ret = i2c_smbus_write_byte_data(data->client, VCNL4010_INT_CTRL, 0);
+>> +       if (ret < 0)
+>> +               goto end;
+>> +
+>> +       ret = i2c_smbus_write_byte_data(data->client, VCNL4000_COMMAND, 0);
+>> +
+>> +end:
+>
+>> +       ret_disable = iio_triggered_buffer_predisable(indio_dev);
+>> +       if (ret == 0)
+>> +               ret = ret_disable;
+>
+> What is this?
+>
+> Can't you rather call IIO API first, and then try to handle the rest?
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 9bb9f37f2..b1114f204 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -42,14 +42,11 @@
- 
- static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
- {
--	int error;
--
- 	/* Deassert the optional reset signal */
- 	mdiodev->reset_gpio = gpiod_get_optional(&mdiodev->dev,
- 						 "reset", GPIOD_OUT_LOW);
--	error = PTR_ERR_OR_ZERO(mdiodev->reset_gpio);
--	if (error)
--		return error;
-+	if (IS_ERR(mdiodev->reset_gpio))
-+		return PTR_ERR(mdiodev->reset_gpio);
- 
- 	if (mdiodev->reset_gpio)
- 		gpiod_set_consumer_name(mdiodev->reset_gpio, "PHY reset");
--- 
-2.20.1.windows.1
+Well, iio_triggered_buffer_predisable will call free_irq which requires
+that the interruption source is disabled, hence this strange pattern.
 
+However, this may be some misunderstanding from me, but I noticed
+something strange here. In a configuration with one CPU and
+CONFIG_PREEMPT disabled, I have kernel lockups when disabling the
+buffer.
 
+This is because free_irq calls synchronize_irq that will wait for any
+IRQ handler to be over. If the kthread handling the interruption is
+still running, it has no chances to terminate, and synchronize_irq waits
+forever. So maybe I'm missing something.
 
+Anyway, I'll send a v5 addressing your remarks.
+
+Thanks,
+
+Mathieu
