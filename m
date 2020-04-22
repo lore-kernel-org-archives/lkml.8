@@ -2,151 +2,162 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3797C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0834BC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D462082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA322074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZzzMniS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U4iDnYZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgDVPVu (ORCPT
+        id S1726442AbgDVPWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgDVPVt (ORCPT
+        Wed, 22 Apr 2020 11:22:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:32884 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgDVPWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:21:49 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62386C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:21:48 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id q18so1232589pgm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HG3yYEiNc0envK1euxexUufAAl4nbvpE6zokSUWiokM=;
-        b=nZzzMniSbj02OzHpHPqt7kEflsYgvSeEH9cTwn32djvqykD4v7ut2HI16jk3LX5r1m
-         iGJjGN6nX4/mbNsBmDdw0/GVUxyLLmkkigSgSw1+asfeW49OyLUMk/Dt2QmHRTAgKHTS
-         B1kmamcknz9dE0f2mrkp6MSfyryWNo0kaB9qEPmQzlI9ASonUsbSIQSf1XI+oK/44n8+
-         FxFctYO1yg0MQxAHmqMb+igSj2MkWzVBP2KAG2cplRraTSkWMjMmFTPEuI59rtJ4YIn1
-         NTPLjH6j4PDkayI4MHAtVfOe0VCbXyJou0UJcCJXkRbUUmTbwVZ9Lqwbh95+amDK5ISD
-         SoJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HG3yYEiNc0envK1euxexUufAAl4nbvpE6zokSUWiokM=;
-        b=jt1DwU1+u4PjvZ03/+aMGK25nFZvyUbWq/vreGaF+dVjNEZuPXRTR652riitdmKpni
-         lvELppjTB4uKSy5zii9KEUK1VobuvyxB3QnumF8JneDuvvIxCo9sHm6cJ0mVrsZ1CYsN
-         e5vAPic6Q2f4OCHdsII/HuAAIQgfDTNizRTpIgISAbxU8L9VQmWMYlleIfHHnu50bO0Y
-         sApH40ELAuWQyNuwKvcK6wIvXAAnQXx9vU4osCrF55ACrj9ouWfLL1zZVh3+7aKt4e5S
-         RSXxR4ZCkcqvO/N0rcn8FmAO9XwbJUlsZEnG315MJ90Zt/Gh2NjYkwIJpueb6ncNv9lH
-         oFyg==
-X-Gm-Message-State: AGi0PubJLmZryL4nSVPp126lbvYesnBx7JBOtnmS9DidoznUE9U7drz8
-        lJhlM1zy1lvqL3vrt9TlGy4=
-X-Google-Smtp-Source: APiQypLh7oHfDORxCtqZwJwOyMBu9z4t1h/pwGHqNs7EvgsRntlz9Au3nusIGydC3+aAKxF7K73PSA==
-X-Received: by 2002:a63:d40a:: with SMTP id a10mr25840974pgh.53.1587568907934;
-        Wed, 22 Apr 2020 08:21:47 -0700 (PDT)
-Received: from localhost ([89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id 79sm5468092pgd.62.2020.04.22.08.21.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Apr 2020 08:21:47 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 23:21:42 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     kraxel@redhat.com, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] drm/bochs: fix an issue of ioremap() leak
-Message-ID: <20200422152142.GA26943@nuc8i5>
-References: <20200421164543.16605-1-zhengdejin5@gmail.com>
- <CAHp75Ve4JwkM+=WHHF73jwNwRS39E-xPDrcn77zCUTpVkj8buA@mail.gmail.com>
- <20200422135215.GA25950@nuc8i5>
- <CAHp75Vf2j-QraBxKofgyhtAxpHXnik3DP9kefPhA_d3BuSjfvw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vf2j-QraBxKofgyhtAxpHXnik3DP9kefPhA_d3BuSjfvw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 22 Apr 2020 11:22:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MFJ070049163;
+        Wed, 22 Apr 2020 15:22:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=URGddE/rla++MvolJEfSZrKgtDDP+qOWMmeR82gZX2A=;
+ b=U4iDnYZn5mArrrPDO/jPJ5tpWfk04o1vdsyNldlo4hs3VJA2YgKf/AhTSnr5T7zh8ROK
+ TRWnI4KDJc4Z0KZlxbVd+u73ZzAZtgV+HRdFYEtweQFCXnUaWkXGOENSZAGcpa3+azUZ
+ ciP1Zu1J/+6bFTOw+z3Cfj4cPmvy24nJ16rS0k7VbkFtUvrvfCJCmT9RvE2xQ23Rc0Af
+ U6qUdoxnLHs9s6MPxdTo3E57S8vpiVO63AS2/cV5B0l1m9qTzEPMoIyk2wWwrCFeoTcj
+ K+cMRp4Ry5BvhGtVZ89eSiZc3vdlDu4ErCavlBB5u84UJPwsuEeQu5smP7KXZpX4Qagt kA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30grpgqyss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 15:22:00 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MFIJLQ180656;
+        Wed, 22 Apr 2020 15:21:59 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30gb1jt2f4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 15:21:59 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03MFLtvK001754;
+        Wed, 22 Apr 2020 15:21:55 GMT
+Received: from [10.175.186.214] (/10.175.186.214)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Apr 2020 08:21:54 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/1] x86/fpu: Allow clearcpuid= to clear several bits
+From:   John Haxby <john.haxby@oracle.com>
+In-Reply-To: <20200422143554.GI608746@tassilo.jf.intel.com>
+Date:   Wed, 22 Apr 2020 16:21:51 +0100
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+        x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <96EA2DF4-7490-4FF0-BB3E-EC9157517918@oracle.com>
+References: <cover.1587555769.git.john.haxby@oracle.com>
+ <03a3a4d135b17115db9ad91413e21af73e244500.1587555769.git.john.haxby@oracle.com>
+ <20200422143554.GI608746@tassilo.jf.intel.com>
+To:     Andi Kleen <ak@linux.intel.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 05:40:51PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 22, 2020 at 4:52 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> >
-> > On Tue, Apr 21, 2020 at 08:24:24PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Apr 21, 2020 at 7:45 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> > > >
-> > > > It forgot to call bochs_hw_fini() to release related resources when
-> > > > bochs_pci_probe() fail. eg: io virtual address get by ioremap().
-> > >
-> > > Good start, although I think the best is to switch this driver to use
-> > > pcim_*() functions and drop tons of legacy code.
-> > >
-> > Andy, thanks for your encouragement, I think we might be able to fix this
-> > issue first, after that, drop tons of legacy code by pcim_*() functions.
-> > Do you think it is ok?
-> 
-> It's really up to maintainer. I'm not the one here.
->
-Thanks Andy.
 
-Hi Gerd:
 
-I am a newbie, andy gave me some directions to submit the patch, eg: check
-ioremap leak. At this time, I found that the bochs driver may have similar
-problems, so I submitted this patch, then, Andy said the best is to switch
-this driver to use pcim _ * () functions and drop tons of legacy code.
-I think we might be able to fix this issue first, after that, drop tons
-of legacy code by pcim_*() functions. Can you give me some suggestions?
-thank you very much!
+> On 22 Apr 2020, at 15:35, Andi Kleen <ak@linux.intel.com> wrote:
+>=20
+>=20
+> Thanks good catch.
+>=20
+>> 	if (cmdline_find_option(boot_command_line, "clearcpuid", arg,
+>> -				sizeof(arg)) &&
+>> -	    get_option(&argptr, &bit) &&
+>> -	    bit >=3D 0 &&
+>> -	    bit < NCAPINTS * 32)
+>> -		setup_clear_cpu_cap(bit);
+>> +				sizeof(arg))) {
+>> +		/* cpuid bit numbers are mostly three digits */
+>> +		enum  { nints =3D sizeof(arg)/(3+1) + 1 };
+>=20
+> Not sure what the digits have to do with the stack space of an int =
+array.
+>=20
+> We should have enough stack to afford some more than 8.
 
-BR,
-Dejin
+sizeof(arg) =3D=3D 32; room enough for eight three-digit with their =
+trailing commas.   If sizeof(arg) =3D=3D 1024 instead then there'd be =
+more than enough room to remove every single feature.   TBH, 512 is more =
+than enough for the 89 flags I have listed on this machine I'm looking =
+at here.   I'll grow sizeof(arg) and nints accordingly.
 
-> > > > Fixes: 81da8c3b8d3df6 ("drm/bochs: add drm_driver.release callback.")
-> > > > CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > > > ---
-> > > >  drivers/gpu/drm/bochs/bochs_drv.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
-> > > > index addb0568c1af..210a60135c8a 100644
-> > > > --- a/drivers/gpu/drm/bochs/bochs_drv.c
-> > > > +++ b/drivers/gpu/drm/bochs/bochs_drv.c
-> > > > @@ -138,6 +138,7 @@ static int bochs_pci_probe(struct pci_dev *pdev,
-> > > >         return ret;
-> > > >
-> > > >  err_unload:
-> > > > +       bochs_hw_fini(dev);
-> > > >         bochs_unload(dev);
-> > > >  err_free_dev:
-> > > >         drm_dev_put(dev);
-> > > > --
-> > > > 2.25.0
-> > > >
-> > >
-> > >
-> > > --
-> > > With Best Regards,
-> > > Andy Shevchenko
-> 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+>=20
+> Would be good to have a warning if the arguments are longer.
+>=20
+
+Yes, I should definitely do that -- coming to a V2 soon.
+
+
+> Maybe it would be simpler to fix the early arg parser
+> to allow multiple instances again? That would also avoid the limit,
+> and keep everything compatible.
+>=20
+
+I did wonder about that.   However, cmdline_find_option() is =
+specifically documented as=20
+
+ * Find a non-boolean option (i.e. option=3Dargument). In accordance =
+with
+ * standard Linux practice, if this option is repeated, this returns the
+ * last instance on the command line.
+
+And since that appeared in 2017 I decided to stick with the new-fangled =
+interface :)   This is a little-used feature; I'm not sure it's worth =
+the effort of parsing the command line for the old style.  What do you =
+think?
+
+jch
+
+
+> -Andi
+>=20
+>=20
+>> +		int i, bits[nints];
+>> +
+>> +		get_options(arg, nints, bits);
+>> +		for (i =3D 1; i <=3D bits[0]; i++) {
+>> +			if (bits[i] >=3D 0 && bits[i] < NCAPINTS * 32)
+>> +				setup_clear_cpu_cap(bits[i]);
+>> +		}
+>> +	}
+>> }
+>>=20
+>> /*
+>> --=20
+>> 2.25.3
+>>=20
+
