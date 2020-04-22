@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB8C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B87C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A02F2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030A520857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550280;
-	bh=b3/W7jcf3pRlbI3TaNKbiNoXM+9KitAJVtIo5w9oeAo=;
+	s=default; t=1587550283;
+	bh=oev9dOGIQmfk186ikyTgsK0bFimUavJW717j2HZkwLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZPRuDxPGyjVjo3TFupUU5ZD8RIgH+NUDrBKcM70zqqG2TsN/B8pNgFKUJ0He/Zhbp
-	 qNeGYXTeLWf1L/iuBJ7Wf+PoJv5xLMhr3uj5co+J+T7+/M+1/ai5x1S2D1/Lsjwiiz
-	 ZYl5exfqYlcQziYBTn6PiAdmoMUeBsZrz91368EA=
+	b=gg3mWdbb/bkjRpxvWtTora+rRxwF6o6HWq8AG7G5rlYWlltQcIBUVyrEC9ScrHUFx
+	 RpnVaObUejaku+u4UUeWenPU8zaB/g91LVVxQwdt+gctZwciouVwKmfRK5Sa/0nHsN
+	 r8buJK8+FhdIzcUf3PgKJNO7dwraW+/I+PrQF9Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgDVKLT (ORCPT
+        id S1729183AbgDVKLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgDVKLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:16 -0400
+        id S1729160AbgDVKLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:11:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD89D2075A;
-        Wed, 22 Apr 2020 10:11:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E8D52076E;
+        Wed, 22 Apr 2020 10:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550275;
-        bh=b3/W7jcf3pRlbI3TaNKbiNoXM+9KitAJVtIo5w9oeAo=;
+        s=default; t=1587550272;
+        bh=oev9dOGIQmfk186ikyTgsK0bFimUavJW717j2HZkwLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ASTug0Xy6igg1jtPg51NzXlgkI654F2q2cu4cby7zRjL1bgu+ExusmpfjgURPplRn
-         967/x3KGkjNIkay6kWMVK/LSMt1irjJqa+LxonuW0oc9qrwApPUkgUlC4pwKdpST+h
-         UKBfWXvrtBSrPmi7MXDF5AZoeYLZIzUU4o7AhC60=
+        b=OfJ5WXuvUYfBIX1oyD6ArNeUmyLQE4w4S1EIUcAPfmTvxJWAqxJqqyMo9Q6uLniwZ
+         L5LC3ncP8AgqbEB9Uvs+fOjA2iLHtrJ32FfVb5NEQl8jZX3G2/8pN1evhEH3QTELWH
+         FdvKqGlZPc/wyoqHvoUWKjLmVw+TZKf6DTCU97Eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Lunt <samuel.j.lunt@gmail.com>,
-        He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, trivial@kernel.org,
-        stable@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 080/199] perf tools: Support Python 3.8+ in Makefile
-Date:   Wed, 22 Apr 2020 11:56:46 +0200
-Message-Id: <20200422095106.117968848@linuxfoundation.org>
+        stable@vger.kernel.org, Changwei Ge <chge@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 079/199] ocfs2: no need try to truncate file beyond i_size
+Date:   Wed, 22 Apr 2020 11:56:45 +0200
+Message-Id: <20200422095106.030745281@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -64,59 +66,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Lunt <samueljlunt@gmail.com>
+From: Changwei Ge <chge@linux.alibaba.com>
 
-commit b9c9ce4e598e012ca7c1813fae2f4d02395807de upstream.
+commit 783fda856e1034dee90a873f7654c418212d12d7 upstream.
 
-Python 3.8 changed the output of 'python-config --ldflags' to no longer
-include the '-lpythonX.Y' flag (this apparently fixed an issue loading
-modules with a statically linked Python executable).  The libpython
-feature check in linux/build/feature fails if the Python library is not
-included in FEATURE_CHECK_LDFLAGS-libpython variable.
+Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
+exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
+size.  This restriction is not necessary and violates fallocate(2)
+semantics.
 
-This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
-the '--embed' flag and passes that flag alongside '--ldflags' if so.
+If fallocate(2) offset is beyond inode size, just return success and do
+nothing further.
 
-tools/perf is the only place the libpython feature check is used.
+Otherwise, ocfs2 will crash the kernel.
 
-Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
-Tested-by: He Zhe <zhe.he@windriver.com>
-Link: http://lore.kernel.org/lkml/c56be2e1-8111-9dfe-8298-f7d0f9ab7431@windriver.com
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: trivial@kernel.org
-Cc: stable@kernel.org
-Link: http://lore.kernel.org/lkml/20200131181123.tmamivhq4b7uqasr@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  kernel BUG at fs/ocfs2//alloc.c:7264!
+   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
+   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
+   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
+   ocfs2_fallocate+0x83/0xa0 [ocfs2]
+   vfs_fallocate+0x148/0x230
+   SyS_fallocate+0x48/0x80
+   do_syscall_64+0x79/0x170
+
+Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/Makefile.config |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ fs/ocfs2/alloc.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -179,8 +179,17 @@ strip-libs  = $(filter-out -l%,$(1))
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -7240,6 +7240,10 @@ int ocfs2_truncate_inline(struct inode *
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 	struct ocfs2_inline_data *idata = &di->id2.i_data;
  
- PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
- 
-+# Python 3.8 changed the output of `python-config --ldflags` to not include the
-+# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
-+# libpython fails if that flag is not included in LDFLAGS
-+ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
-+  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
-+else
-+  PYTHON_CONFIG_LDFLAGS := --ldflags
-+endif
++	/* No need to punch hole beyond i_size. */
++	if (start >= i_size_read(inode))
++		return 0;
 +
- ifdef PYTHON_CONFIG
--  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
-+  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
-   PYTHON_EMBED_LDFLAGS := $(call strip-libs,$(PYTHON_EMBED_LDOPTS))
-   PYTHON_EMBED_LIBADD := $(call grep-libs,$(PYTHON_EMBED_LDOPTS)) -lutil
-   PYTHON_EMBED_CCOPTS := $(shell $(PYTHON_CONFIG_SQ) --cflags 2>/dev/null)
+ 	if (end > i_size_read(inode))
+ 		end = i_size_read(inode);
+ 
 
 
