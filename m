@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98E4C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7656DC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73DC2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549A42071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550172;
-	bh=no0cu/GcBoa4h31619A2Tv0ZNmB4vF9yJ80qWdtZ6os=;
+	s=default; t=1587550175;
+	bh=zYLLeZUuJjFU+3s0q+vvwntAkLUUhn1wQ9t3ln5uvKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y74aSBXafhO1SDHATzO809sngcd3/V583a07af5W+VGrSB8zeRVeMiOZKLVHS+LzG
-	 WEYdgSpbkHrsXHSua6ypsIGUrfc50jp3OnBdMElvvJpDuzVSxKyOKsZUSopYc8m/Z2
-	 TFXTAtDdWU+RicjiHhhJwq6t3pa+/3HCJR/zysn0=
+	b=VuxuC73tx6ARHtyfovg1enxcKskBJ0XRSY2XyfSElAbkJuswQ+/JiytPsBjqrSaMm
+	 7cvX2+FjRM6g6uxshTBc0btBkSeA7+W/JExgzJ65uhbRYWAqXY4IE3YFJ/7IkbXaQJ
+	 Kxt5oPT7zJRQ8FLmF9jWdPZldEby/h3cNpFKoaco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgDVKJb (ORCPT
+        id S1728877AbgDVKJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:09:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36154 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728857AbgDVKJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:09:25 -0400
+        id S1728292AbgDVKJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C174320575;
-        Wed, 22 Apr 2020 10:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 519162071E;
+        Wed, 22 Apr 2020 10:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550165;
-        bh=no0cu/GcBoa4h31619A2Tv0ZNmB4vF9yJ80qWdtZ6os=;
+        s=default; t=1587550162;
+        bh=zYLLeZUuJjFU+3s0q+vvwntAkLUUhn1wQ9t3ln5uvKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqj2st/nlFZeIemZ/GYzBGdaQLjps7KqIkAn79UARvg3+reDi9vkI1rgbmkD6H0ff
-         hCs1bFj1R8TmZ9XMa8DrHt5d0krjn+8kTRvc+9fK7tFrpOaW+ergeBdJ+7JObBgzk6
-         c7KDBZFgRHjIIowh0sVVIad8VuXsGjVvueM4fkIc=
+        b=FTTNvYbyltm4XchC9nsVFVtmqw9whaTYBkqKtp1w+lzxKt0drk3P2DIPBRaasW1hY
+         uVx7Tm3imM+gXnq27EXDXDboYsjhjKnduux2n7Ge3QM415wOO0IkzrqdpSHvd7aWdX
+         6vGr0kQ5zIw7Eq3x/N0TnxisxtI6sbctdiZRzH24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 035/199] ASoC: topology: use name_prefix for new kcontrol
-Date:   Wed, 22 Apr 2020 11:56:01 +0200
-Message-Id: <20200422095101.557362470@linuxfoundation.org>
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 034/199] ASoC: dpcm: allow start or stop during pause for backend
+Date:   Wed, 22 Apr 2020 11:56:00 +0200
+Message-Id: <20200422095101.462146954@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,29 +61,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: 이경택 <gt82.lee@samsung.com>
 
-commit abca9e4a04fbe9c6df4d48ca7517e1611812af25 upstream.
+commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 upstream.
 
-Current topology doesn't add prefix of component to new kcontrol.
+soc_compr_trigger_fe() allows start or stop after pause_push.
+In dpcm_be_dai_trigger(), however, only pause_release is allowed
+command after pause_push.
+So, start or stop after pause in compress offload is always
+returned as error if the compress offload is used with dpcm.
+To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
+for start or stop command.
 
 Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Link: https://lore.kernel.org/r/009b01d60804$ae25c2d0$0a714870$@samsung.com
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-topology.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-pcm.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -421,7 +421,7 @@ static int soc_tplg_add_kcontrol(struct
- 	struct snd_soc_component *comp = tplg->comp;
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2048,7 +2048,8 @@ int dpcm_be_dai_trigger(struct snd_soc_p
+ 		switch (cmd) {
+ 		case SNDRV_PCM_TRIGGER_START:
+ 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
+-			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
- 	return soc_tplg_add_dcontrol(comp->card->snd_card,
--				comp->dev, k, NULL, comp, kcontrol);
-+				comp->dev, k, comp->name_prefix, comp, kcontrol);
- }
+ 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
+@@ -2078,7 +2079,8 @@ int dpcm_be_dai_trigger(struct snd_soc_p
+ 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
+ 			break;
+ 		case SNDRV_PCM_TRIGGER_STOP:
+-			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
++			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
++			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 				continue;
  
- /* remove a mixer kcontrol */
+ 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
 
 
