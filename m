@@ -2,130 +2,97 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7C9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EB8C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670912076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223752076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoSSPda+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rtbMvXXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgDVWGI (ORCPT
+        id S1726712AbgDVWGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:06:08 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24577 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgDVWGH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:06:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587593166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=R0sldwnn1cfxMDEFTQ7UtOS5tzOYyY4+qEFdH8+Xtdw=;
-        b=UoSSPda+bxFxMzhRGPrpvqIfj9KvPWtpKIaUo60PdAz0En9HnJ4j+0Srel/i2ODeljTpja
-        W+xqJ4nyfEHCMh/8JqqVuPhjGaP05z9pTCTxlWlBQmRVk0HymmZTSlJ4Q3wjmJafD6aZNp
-        s2Q1K7vEZtOO46eYzV1kvDg8dZBgvdU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-TZ-wCd3GMDuexy9L6HbH7g-1; Wed, 22 Apr 2020 18:06:04 -0400
-X-MC-Unique: TZ-wCd3GMDuexy9L6HbH7g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 22 Apr 2020 18:06:30 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49263 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgDVWG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 18:06:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1AC3107ACC4;
-        Wed, 22 Apr 2020 22:06:02 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-113-5.ams2.redhat.com [10.36.113.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 66F2F5D70A;
-        Wed, 22 Apr 2020 22:06:01 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date:   Thu, 23 Apr 2020 00:05:59 +0200
-Message-Id: <20200422220559.99726-1-hdegoede@redhat.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 496vfB4JL4z9sSX;
+        Thu, 23 Apr 2020 08:06:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587593187;
+        bh=TTMSDBNA5O6jYEnVeviUPfJ9u2dsDfKsDa6deGWFYR0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rtbMvXXebPH2tMr/YFqsl7l2zCmNMnInQl7L7KPWJHilOgHNBAcku3CNiKco1OEji
+         Nc6PxrdWSTRCRdHtDS86ulEjJ2aR6F9zShHHyqyXy/+fKtdbC9+0yvA/cib5VPU2mB
+         43nYCAGFWbdiZpNO+iMSRzXJgmEH4QZPl+JIiPkaLot2ODpzIHS6SIlkyLHgdtmdWw
+         wW1Jsbv75QCvsiKJ6gKK57yprBOF7cKOusAGg5GAlOVXIeFjOFkzOWcZaDH3RDwC/U
+         N9C7cCG9QzMbJVFACqlyBAXqJglwQw8ryWjCq/Re8kNF+2AQqnVox3bvV+2RxbtAQt
+         th/TA1DHuji0w==
+Date:   Thu, 23 Apr 2020 08:06:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yuiko Oshino <yuiko.oshino@microchip.com>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20200423080625.76785b93@canb.auug.org.au>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/JoqlmvAVm_f6Uo7Ko+H7kbL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-asus-nb-wmi does not add any extra functionality on these Asus
-Transformer books. They have detachable keyboards, so the hotkeys are
-send through a HID device (and handled by the hid-asus driver) and also
-the rfkill functionality is not used on these devices.
+--Sig_/JoqlmvAVm_f6Uo7Ko+H7kbL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Besides not adding any extra functionality, initializing the WMI interfac=
-e
-on these devices actually has a negative side-effect. For some reason
-the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LE=
-D,
-high and there is no (WMI or other) interface to drive this low again
-causing the LED to be permanently on, even during suspend.
+Hi all,
 
-This commit adds a blacklist of DMI system_ids on which not to load the
-asus-nb-wmi and adds these Transformer books to this list. This fixes
-the webcam LED being permanently on under Linux.
+In commit
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+  63edbcceef61 ("net: phy: microchip_t1: add lan87xx_phy_init to initialize=
+ the lan87xx phy.")
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/as=
-us-nb-wmi.c
-index 6f12747a359a..c4404d9c1de4 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -515,9 +515,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver =3D=
- {
- 	.detect_quirks =3D asus_nb_wmi_quirks,
- };
-=20
-+static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst =3D=
- {
-+	{
-+		/*
-+		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-+		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-+		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-+		 */
-+		.matches =3D {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+	},
-+	{
-+		/* The Asus T200TA has the same issue as the T100TA */
-+		.matches =3D {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
-=20
- static int __init asus_nb_wmi_init(void)
- {
-+	if (dmi_check_system(asus_nb_wmi_blacklist))
-+		return -ENODEV;
-+
- 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
- }
-=20
+Fixes tag
+
+  Fixes: 3e50d2da5850 ("Add driver for Microchip LAN87XX T1 PHYs")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
 --=20
-2.26.0
+Cheers,
+Stephen Rothwell
 
+--Sig_/JoqlmvAVm_f6Uo7Ko+H7kbL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6gv+EACgkQAVBC80lX
+0GxWYAgAm6OibxfSfdLHoyAfb1dF9U6I94T/gSoj5e1gqNdau0pdD7JwBK9YOmDg
+j2f8H64jhlepjxg+xnx2cDnj0coy2AYbVkQ3kfZWVnZmdNOStT/o8OwcDUrV0MtV
+EOoXUgYvKLw92k+Fwls5UcXqFkY8RlKvj+P4odCmqbtPOELxetlMqojHSVqaAq/g
+AcCNY1uXiexNRI8iOxM+9Wdp+FAusK4bJzpyyK6m91I2faTsgnJ1qel60S7N2yTS
+YPHAaIethx1NHXABe0lUiXU9iW/7lZwKE5ul8D5zxtid2S+UgEFt46PUCA35aMrf
+orq9hnVGtcRfAgY1KmzhkzhohP48YA==
+=o+g7
+-----END PGP SIGNATURE-----
+
+--Sig_/JoqlmvAVm_f6Uo7Ko+H7kbL--
