@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80012C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2006C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 517322076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEFDA20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553013;
-	bh=q43WsyVwnxr+w9PBven+jALxwMWtgXu7qhQ+Mok4cgM=;
+	s=default; t=1587553015;
+	bh=e66SOZrJj+tchAMkjoViTZCmh1xUJ9+TISSEaltwPyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uIm6XiHV9Qk3uKejEiRMvndQFs2QoPfqhB2Uulq5S9ppe/IDT1AbYQUp+8DpsiJPZ
-	 BXLscOpYCpTG/ergGngJvVByFb+G4DV0poMGKGTqL0CTgu2je2hG1mCDBhDfF4CJ7N
-	 9ocHyxyLMQmrOt8KQ70vmp7Gy4DFFW/e0W4c64U0=
+	b=r+utZ/kCuudQEqzHMFYa3r0S1p0CpIhKGiBLMAvpAE8sKFy9HDY2z6LZpn+Qn4Sz3
+	 5JmslOvt7ah+dJARpBV11O+FdyshAInJsthttmZ5ts1Q/JJ3PLX9uDY4t6nNytxTF+
+	 zRfZYdRyxlH2COPw9dCVn1RcAjVCz1DGmsAwsIUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgDVKGA (ORCPT
+        id S1728788AbgDVK4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbgDVKFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:48 -0400
+        id S1727035AbgDVKGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D7182076C;
-        Wed, 22 Apr 2020 10:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 811512075A;
+        Wed, 22 Apr 2020 10:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549947;
-        bh=q43WsyVwnxr+w9PBven+jALxwMWtgXu7qhQ+Mok4cgM=;
+        s=default; t=1587549960;
+        bh=e66SOZrJj+tchAMkjoViTZCmh1xUJ9+TISSEaltwPyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Z6Ypi8zY3mwV7JyTg+xiEzPfD31wAO26uRF/fE6GEb8eOcmcngRsEqXF4bYBgwBH
-         nPQOwlosSNiJNmRGLe5t/T63ExdZlFHUKsaFZpI0UEm5roxeOWpsvdwEGYVdmyMMeF
-         hsxwSgi8cW6HhBfGE/rr0t34Mtpm/5NBP7Z6b8oM=
+        b=KQ5iCFGcSFb5JDKam5bNylZtFB3gyPGuo3U5CW1kVlBj4JxrPy+pwYvotk9gdrADb
+         BcXbq6wmfaztBwbjmYJuHYA2kGBsBAxYcA6Ccm0SNwohY5Lo+Q2GVwUSyZHzW1q/Pl
+         FuUyVjSAfDINFt8MTZEba9wSFTKD2Mh+ynglTZqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.9 072/125] ext4: fix incorrect group count in ext4_fill_super error message
-Date:   Wed, 22 Apr 2020 11:56:29 +0200
-Message-Id: <20200422095044.903316387@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 077/125] btrfs: check commit root generation in should_ignore_root
+Date:   Wed, 22 Apr 2020 11:56:34 +0200
+Message-Id: <20200422095045.552660569@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -59,39 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Triplett <josh@joshtriplett.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit df41460a21b06a76437af040d90ccee03888e8e5 upstream.
+commit 4d4225fc228e46948486d8b8207955f0c031b92e upstream.
 
-ext4_fill_super doublechecks the number of groups before mounting; if
-that check fails, the resulting error message prints the group count
-from the ext4_sb_info sbi, which hasn't been set yet. Print the freshly
-computed group count instead (which at that point has just been computed
-in "blocks_count").
+Previously we would set the reloc root's last snapshot to transid - 1.
+However there was a problem with doing this, and we changed it to
+setting the last snapshot to the generation of the commit node of the fs
+root.
 
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
-Fixes: 4ec1102813798 ("ext4: Add sanity checks for the superblock before mounting the filesystem")
-Link: https://lore.kernel.org/r/8b957cd1513fcc4550fe675c10bcce2175c33a49.1585431964.git.josh@joshtriplett.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This however broke should_ignore_root().  The assumption is that if we
+are in a generation newer than when the reloc root was created, then we
+would find the reloc root through normal backref lookups, and thus can
+ignore any fs roots we find with an old enough reloc root.
+
+Now that the last snapshot could be considerably further in the past
+than before, we'd end up incorrectly ignoring an fs root.  Thus we'd
+find no nodes for the bytenr we were searching for, and we'd fail to
+relocate anything.  We'd loop through the relocate code again and see
+that there were still used space in that block group, attempt to
+relocate those bytenr's again, fail in the same way, and just loop like
+this forever.  This is tricky in that we have to not modify the fs root
+at all during this time, so we need to have a block group that has data
+in this fs root that is not shared by any other root, which is why this
+has been difficult to reproduce.
+
+Fixes: 054570a1dc94 ("Btrfs: fix relocation incorrectly dropping data references")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |    4 ++--
+ fs/btrfs/relocation.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3951,9 +3951,9 @@ static int ext4_fill_super(struct super_
- 			EXT4_BLOCKS_PER_GROUP(sb) - 1);
- 	do_div(blocks_count, EXT4_BLOCKS_PER_GROUP(sb));
- 	if (blocks_count > ((uint64_t)1<<32) - EXT4_DESC_PER_BLOCK(sb)) {
--		ext4_msg(sb, KERN_WARNING, "groups count too large: %u "
-+		ext4_msg(sb, KERN_WARNING, "groups count too large: %llu "
- 		       "(block count %llu, first data block %u, "
--		       "blocks per group %lu)", sbi->s_groups_count,
-+		       "blocks per group %lu)", blocks_count,
- 		       ext4_blocks_count(es),
- 		       le32_to_cpu(es->s_first_data_block),
- 		       EXT4_BLOCKS_PER_GROUP(sb));
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -537,8 +537,8 @@ static int should_ignore_root(struct btr
+ 	if (!reloc_root)
+ 		return 0;
+ 
+-	if (btrfs_root_last_snapshot(&reloc_root->root_item) ==
+-	    root->fs_info->running_transaction->transid - 1)
++	if (btrfs_header_generation(reloc_root->commit_root) ==
++	    root->fs_info->running_transaction->transid)
+ 		return 0;
+ 	/*
+ 	 * if there is reloc tree and it was created in previous
 
 
