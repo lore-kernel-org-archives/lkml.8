@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2CDC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F66C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9162020774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D282520774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549846;
-	bh=Obv2RGH5YaGvCgQQFtLrRO8YWKPExsVOknJMAtx0uhM=;
+	s=default; t=1587549851;
+	bh=Ggeq70J8G2gaqNjrHukKTEeM0dgdIV++8xjVOu/F9Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q7vYiHjQgV+/IsD6rgj+AVGJya+8r+ZDs94prLC0Eb9LcSc4ZRoQJtgElWPAalax0
-	 nGf5fCFypiNqV3hYT14hbPFL3syRqQZydvUaIlDEfBENS3uiR3pZk395kOvOOFOLNa
-	 cruy/S4ey2SrxPhDn6Xns8TOihh6vyn5yziGhEqc=
+	b=QQK64JJ4mfiIqqvB3XJGUdvzRGwhDymSe23jrYqa/zrU3IZrHzKGrebLeXzfy81MK
+	 mtXKHHbNZCAboyXUdtY+NlYcrsGXn2GuqWwOA/Poh52NW3GBRTt77e4bl0fjO7DIWC
+	 RjHCzs8R5EsCpvS02xLfyng5dVvl51YLUXsOUS/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgDVKEG (ORCPT
+        id S1727971AbgDVKEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:04:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54136 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbgDVKEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:01 -0400
+        id S1727953AbgDVKEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB9B2076C;
-        Wed, 22 Apr 2020 10:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9442075A;
+        Wed, 22 Apr 2020 10:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549841;
-        bh=Obv2RGH5YaGvCgQQFtLrRO8YWKPExsVOknJMAtx0uhM=;
+        s=default; t=1587549846;
+        bh=Ggeq70J8G2gaqNjrHukKTEeM0dgdIV++8xjVOu/F9Yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gqsDTGX94c1dLqH/VLHD7Kr+V5ZYoiZZtg0hoTFahGf2m0Ql2fFplcdM1sDtjq4Ro
-         tjWj0IVg6r5OG5OdlcypIAmSovR/xVES0g2N1y1h07lHdEOeS6tzv4/Or7USQu1Hfl
-         DhyJ4pATGc+qrkppea4rQh5DLbQndaqCE3KFouZY=
+        b=LCKetvK1U69628NpmgNSiQkEGDCsmiRRnGdop374Gz9XehJn0YnSUEnVcwv0wQj9E
+         O/R+rXI30GkPMLJauR5zfQYxasmNT7zdZHGVvt6xzmn0+ptSv3eiPrPGMxbCDKbej1
+         m+iX++7ns3d1qMM7sD1O7+NfuzpMF2kKNWs7SKxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 4.9 028/125] thermal: devfreq_cooling: inline all stubs for CONFIG_DEVFREQ_THERMAL=n
-Date:   Wed, 22 Apr 2020 11:55:45 +0200
-Message-Id: <20200422095037.887922037@linuxfoundation.org>
+        stable@vger.kernel.org, Sungbo Eo <mans0n@gorani.run>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.9 030/125] irqchip/versatile-fpga: Apply clear-mask earlier
+Date:   Wed, 22 Apr 2020 11:55:47 +0200
+Message-Id: <20200422095038.247181412@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,48 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Sungbo Eo <mans0n@gorani.run>
 
-commit 3f5b9959041e0db6dacbea80bb833bff5900999f upstream.
+commit 6a214a28132f19ace3d835a6d8f6422ec80ad200 upstream.
 
-When CONFIG_DEVFREQ_THERMAL is disabled all functions except
-of_devfreq_cooling_register_power() were already inlined. Also inline
-the last function to avoid compile errors when multiple drivers call
-of_devfreq_cooling_register_power() when CONFIG_DEVFREQ_THERMAL is not
-set. Compilation failed with the following message:
-  multiple definition of `of_devfreq_cooling_register_power'
-(which then lists all usages of of_devfreq_cooling_register_power())
+Clear its own IRQs before the parent IRQ get enabled, so that the
+remaining IRQs do not accidentally interrupt the parent IRQ controller.
 
-Thomas Zimmermann reported this problem [0] on a kernel config with
-CONFIG_DRM_LIMA={m,y}, CONFIG_DRM_PANFROST={m,y} and
-CONFIG_DEVFREQ_THERMAL=n after both, the lima and panfrost drivers
-gained devfreq cooling support.
+This patch also fixes a reboot bug on OX820 SoC, where the remaining
+rps-timer IRQ raises a GIC interrupt that is left pending. After that,
+the rps-timer IRQ is cleared during driver initialization, and there's
+no IRQ left in rps-irq when local_irq_enable() is called, which evokes
+an error message "unexpected IRQ trap".
 
-[0] https://www.spinics.net/lists/dri-devel/msg252825.html
-
-Fixes: a76caf55e5b356 ("thermal: Add devfreq cooling")
+Fixes: bdd272cbb97a ("irqchip: versatile FPGA: support cascaded interrupts from DT")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Cc: stable@vger.kernel.org
-Reported-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200403205133.1101808-1-martin.blumenstingl@googlemail.com
+Link: https://lore.kernel.org/r/20200321133842.2408823-1-mans0n@gorani.run
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/devfreq_cooling.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-versatile-fpga.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/include/linux/devfreq_cooling.h
-+++ b/include/linux/devfreq_cooling.h
-@@ -53,7 +53,7 @@ void devfreq_cooling_unregister(struct t
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -211,6 +211,9 @@ int __init fpga_irq_of_init(struct devic
+ 	if (of_property_read_u32(node, "valid-mask", &valid_mask))
+ 		valid_mask = 0;
  
- #else /* !CONFIG_DEVFREQ_THERMAL */
++	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
++	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
++
+ 	/* Some chips are cascaded from a parent IRQ */
+ 	parent_irq = irq_of_parse_and_map(node, 0);
+ 	if (!parent_irq) {
+@@ -220,9 +223,6 @@ int __init fpga_irq_of_init(struct devic
  
--struct thermal_cooling_device *
-+static inline struct thermal_cooling_device *
- of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 				  struct devfreq_cooling_power *dfc_power)
- {
+ 	fpga_irq_init(base, node->name, 0, parent_irq, valid_mask, node);
+ 
+-	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
+-	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
+-
+ 	/*
+ 	 * On Versatile AB/PB, some secondary interrupts have a direct
+ 	 * pass-thru to the primary controller for IRQs 20 and 22-31 which need
 
 
