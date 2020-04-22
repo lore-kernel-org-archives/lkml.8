@@ -2,98 +2,134 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76FCC38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E543C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0C8F2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2VzN4hL"
+	by mail.kernel.org (Postfix) with ESMTP id 607DD20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgDVGeX (ORCPT
+        id S1726424AbgDVGfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgDVGeW (ORCPT
+        Wed, 22 Apr 2020 02:35:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725308AbgDVGfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:34:22 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF4FC03C1A6;
-        Tue, 21 Apr 2020 23:34:22 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b8so573795pfp.8;
-        Tue, 21 Apr 2020 23:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cNPk7dyrNsunZ6orqrkHd3dWM4T8VDBKi6CmTIj2FrI=;
-        b=M2VzN4hLhiH0xZ3XfNmNlGsb5z71UEM7bOyLibiJrUfqzWnsr7Mnho6vtHE/m4Si0v
-         lnCn+vZHkutsNSoFUaoObLyQiQSLmg2E532x3z54L9M827P0YXucnSwhA9qoFbPgLZYo
-         6Pnn7OD2T+2mft6/ZrVBqjr0Z8Ia+jWOrzp/UEJQUDs5z096V3X2fOD5cVO1szM/Osar
-         MC4rKQaH88JrQvya16KDxQlKEJnatD7NZPCiq5AMNNXi5TrKQHsT+Y2049Noj50KK5GE
-         xNN6BnnrnU38ST/mJuA5+lzdnq8CaNQK5ozCSe1BGa4cBaHzURGRTJKAOhW/d2ZL/Ba4
-         lD2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cNPk7dyrNsunZ6orqrkHd3dWM4T8VDBKi6CmTIj2FrI=;
-        b=FYwqDUEXRdKR+PlJP2TlcoJKQHtLvjDHkebc7d7maI8S8A6IGgd+eWKxEsbmAwdquu
-         t9amFRtJbh/pnneCn/IQJUo0/nMUXVTlVU7QjJWChBxoYwzsEv2E4XYo0Io81nNdi7wE
-         tNa8Ykhe2fNuq+RlUOLTCAegj1yThfHQFa8GZxl1/GXQVC9thMCI5CRpcJ7TziqYBOwZ
-         sZLCTrPr/pH5W4VTC/UtYEDSjZXC1uU+7VOTgYBtmBLWMaHZPdudM9MBydzZoSStsiqg
-         4SnA2e3tC4IlMddMl6kyy8JZ+RVb/Cgapa4hqwJzg2CSluOOjHpePUo3iFtVZ+qe+RgT
-         CrJg==
-X-Gm-Message-State: AGi0PuYPJxDtn6O2av7GMLXsM1Q39tjh46hrsLJZYqymj6VGJ5DCZmMV
-        tN39aYRErWN9C//UoJicpYA=
-X-Google-Smtp-Source: APiQypJP4b55YW0Xr4yN/i1f5EJtGYDB6MWrsPNzg/jfdpNKfoNyvy6w6+Inzdjw2v98RvW4I4Yapw==
-X-Received: by 2002:aa7:850f:: with SMTP id v15mr24807543pfn.204.1587537260883;
-        Tue, 21 Apr 2020 23:34:20 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id j7sm4417821pjy.9.2020.04.21.23.34.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Apr 2020 23:34:20 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:34:11 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 01/18] mm: fix NUMA node file count error in
- replace_page_cache()
-Message-ID: <20200422063357.GA6780@js1304-desktop>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-2-hannes@cmpxchg.org>
+        Wed, 22 Apr 2020 02:35:34 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03M6WWvR069795;
+        Wed, 22 Apr 2020 02:35:24 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghmd27tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 02:35:24 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03M6V61Y005021;
+        Wed, 22 Apr 2020 06:35:23 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 30fs66xxha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 06:35:23 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03M6ZMnB61342080
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 06:35:22 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73835BE05D;
+        Wed, 22 Apr 2020 06:35:22 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58240BE051;
+        Wed, 22 Apr 2020 06:35:21 +0000 (GMT)
+Received: from Harens-MacBook-Pro.local (unknown [9.160.75.2])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Wed, 22 Apr 2020 06:35:21 +0000 (GMT)
+Subject: Re: linux-next: build failure after merge of the powerpc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200422154129.11f988fd@canb.auug.org.au>
+From:   Haren Myneni <haren@linux.ibm.com>
+Message-ID: <d88c34d2-9b35-b4f9-be35-754830057b1d@linux.ibm.com>
+Date:   Tue, 21 Apr 2020 23:35:19 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420221126.341272-2-hannes@cmpxchg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200422154129.11f988fd@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_10:2020-04-21,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 malwarescore=0
+ clxscore=1011 mlxscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:11:09PM -0400, Johannes Weiner wrote:
-> When replacing one page with another one in the cache, we have to
-> decrease the file count of the old page's NUMA node and increase the
-> one of the new NUMA node, otherwise the old node leaks the count and
-> the new node eventually underflows its counter.
+Stephen, Sorry missed it. Thanks for fixing it.
+
+Acked-by: Haren Myneni <haren@linux.ibm.com>
+
+On 4/21/20 10:41 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Fixes: 74d609585d8b ("page cache: Add and replace pages using the XArray")
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-
-Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-
-Thanks.
+> After merging the powerpc tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+> 
+> In file included from <command-line>:32:
+> ./usr/include/asm/vas-api.h:15:2: error: unknown type name '__u32'
+>    15 |  __u32 version;
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:16:2: error: unknown type name '__s16'
+>    16 |  __s16 vas_id; /* specific instance of vas or -1 for default */
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:17:2: error: unknown type name '__u16'
+>    17 |  __u16 reserved1;
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:18:2: error: unknown type name '__u64'
+>    18 |  __u64 flags; /* Future use */
+>       |  ^~~~~
+> ./usr/include/asm/vas-api.h:19:2: error: unknown type name '__u64'
+>    19 |  __u64 reserved2[6];
+>       |  ^~~~~
+> 
+> Caused by commit
+> 
+>   45f25a79fe50 ("powerpc/vas: Define VAS_TX_WIN_OPEN ioctl API")
+> 
+> uapi headers should be self contained.  I have added the following patch
+> for today:
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 22 Apr 2020 15:28:26 +1000
+> Subject: [PATCH] powerpc/vas: uapi headers should be self contained
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>> ---
+>  arch/powerpc/include/uapi/asm/vas-api.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/uapi/asm/vas-api.h b/arch/powerpc/include/uapi/asm/vas-api.h
+> index fe95d67e3bab..ebd4b2424785 100644
+> --- a/arch/powerpc/include/uapi/asm/vas-api.h
+> +++ b/arch/powerpc/include/uapi/asm/vas-api.h
+> @@ -6,6 +6,8 @@
+>  #ifndef _UAPI_MISC_VAS_H
+>  #define _UAPI_MISC_VAS_H
+>  
+> +#include <linux/types.h>
+> +
+>  #include <asm/ioctl.h>
+>  
+>  #define VAS_MAGIC	'v'
+> 
