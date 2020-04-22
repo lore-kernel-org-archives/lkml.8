@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B732AC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CA6C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912112070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919F72071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550359;
-	bh=gWC0m1bf5GBLVpVZ+GDC5apO0b5wKNLHiXHzt13xFmM=;
+	s=default; t=1587550364;
+	bh=ItN11y+WxepZrDCfpTynFPnBVdMVdz9XD8CthUf6dbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fUZrtYr4B+H8u91FwDiQKWF8SpicEEFe5Hse6y/IZlOdiDkPCBeTVdqizk3+HOq/A
-	 EumoytfuCCoJcU+fQI6YWEZNyinPbscklbeHAemaTmw0HTTfGzHXf5AWxGocQDbD6y
-	 tkkP43xGdB17KvDZd2Oo+Lxya5ULvG+wfzm1wv2I=
+	b=X2zUOd3nE/9D/1iU/wvq2OA0vRMTG0MQiPSSJzyl2+VVJjDUaFtUYAcAI6UmaF9/3
+	 5ak6dmzySxJBaasPUUpUKgNoNjkruxvo+Wu86Ve39qivJJ+3UHPfr4qj/LHa+llHyp
+	 W3AG29PzSnMLZf1534fw+jZ7jtLcU/bWOsXQTPEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgDVKMi (ORCPT
+        id S1729020AbgDVKMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728819AbgDVKMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:25 -0400
+        id S1729333AbgDVKM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D616F20575;
-        Wed, 22 Apr 2020 10:12:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 548E52071E;
+        Wed, 22 Apr 2020 10:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550344;
-        bh=gWC0m1bf5GBLVpVZ+GDC5apO0b5wKNLHiXHzt13xFmM=;
+        s=default; t=1587550346;
+        bh=ItN11y+WxepZrDCfpTynFPnBVdMVdz9XD8CthUf6dbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFbZfgFl1oejmNCrdiWX3fPatRTKQM9E7ATum+UzE3Rd/JyjKA9emkBIfcjyeDzN0
-         gyw+RD8C3c7YyBGtX6TL8PbVrX/wQ/HtGYz5bwLQNI8bvfMVkukVEc1NAywe6umNM0
-         Zh0G1v8ACn+LD5NWt7FNHOlnU7wvE6dEEvQHRGlI=
+        b=CSMLX9AsiUBTDtMHy3hV31sh9JLiyeJ6NHQHoRHJt1a0+vqRZEywPTDi50z3rQtCt
+         tm41WKh48DjfGEtWFaKX6p6Lso+zvu0EUppzPFBYjuWDRpxicc5IwM9CIPgD4TbGQE
+         r6FfjMOKD5U6BDB8r6Nj0l7Hu5btX5gLJkgjWsPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Stallard <code@timstallard.me.uk>,
+        stable@vger.kernel.org, Wang Wenhu <wenhu.wang@vivo.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 109/199] net: ipv6: do not consider routes via gateways for anycast address check
-Date:   Wed, 22 Apr 2020 11:57:15 +0200
-Message-Id: <20200422095108.624850147@linuxfoundation.org>
+Subject: [PATCH 4.14 110/199] net: qrtr: send msgs from local of same id as broadcast
+Date:   Wed, 22 Apr 2020 11:57:16 +0200
+Message-Id: <20200422095108.702699277@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -59,66 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Stallard <code@timstallard.me.uk>
+From: Wang Wenhu <wenhu.wang@vivo.com>
 
-[ Upstream commit 03e2a984b6165621f287fadf5f4b5cd8b58dcaba ]
+[ Upstream commit 6dbf02acef69b0742c238574583b3068afbd227c ]
 
-The behaviour for what is considered an anycast address changed in
-commit 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after
-encountering pmtu exception"). This now considers the first
-address in a subnet where there is a route via a gateway
-to be an anycast address.
+If the local node id(qrtr_local_nid) is not modified after its
+initialization, it equals to the broadcast node id(QRTR_NODE_BCAST).
+So the messages from local node should not be taken as broadcast
+and keep the process going to send them out anyway.
 
-This breaks path MTU discovery and traceroutes when a host in a
-remote network uses the address at the start of a prefix
-(eg 2600:: advertised as 2600::/48 in the DFZ) as ICMP errors
-will not be sent to anycast addresses.
+The definitions are as follow:
+static unsigned int qrtr_local_nid = NUMA_NO_NODE;
 
-This patch excludes any routes with a gateway, or via point to
-point links, like the behaviour previously from
-rt6_is_gw_or_nonexthop in net/ipv6/route.c.
-
-This can be tested with:
-ip link add v1 type veth peer name v2
-ip netns add test
-ip netns exec test ip link set lo up
-ip link set v2 netns test
-ip link set v1 up
-ip netns exec test ip link set v2 up
-ip addr add 2001:db8::1/64 dev v1 nodad
-ip addr add 2001:db8:100:: dev lo nodad
-ip netns exec test ip addr add 2001:db8::2/64 dev v2 nodad
-ip netns exec test ip route add unreachable 2001:db8:1::1
-ip netns exec test ip route add 2001:db8:100::/64 via 2001:db8::1
-ip netns exec test sysctl net.ipv6.conf.all.forwarding=1
-ip route add 2001:db8:1::1 via 2001:db8::2
-ping -I 2001:db8::1 2001:db8:1::1 -c1
-ping -I 2001:db8:100:: 2001:db8:1::1 -c1
-ip addr delete 2001:db8:100:: dev lo
-ip netns delete test
-
-Currently the first ping will get back a destination unreachable ICMP
-error, but the second will never get a response, with "icmp6_send:
-acast source" logged. After this patch, both get destination
-unreachable ICMP replies.
-
-Fixes: 45e4fd26683c ("ipv6: Only create RTF_CACHE routes after encountering pmtu exception")
-Signed-off-by: Tim Stallard <code@timstallard.me.uk>
+Fixes: fdf5fd397566 ("net: qrtr: Broadcast messages only from control port")
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip6_route.h |    1 +
- 1 file changed, 1 insertion(+)
+ net/qrtr/qrtr.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/include/net/ip6_route.h
-+++ b/include/net/ip6_route.h
-@@ -207,6 +207,7 @@ static inline bool ipv6_anycast_destinat
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -710,20 +710,21 @@ static int qrtr_sendmsg(struct socket *s
  
- 	return rt->rt6i_flags & RTF_ANYCAST ||
- 		(rt->rt6i_dst.plen < 127 &&
-+		 !(rt->rt6i_flags & (RTF_GATEWAY | RTF_NONEXTHOP)) &&
- 		 ipv6_addr_equal(&rt->rt6i_dst.addr, daddr));
- }
+ 	node = NULL;
+ 	if (addr->sq_node == QRTR_NODE_BCAST) {
+-		enqueue_fn = qrtr_bcast_enqueue;
+-		if (addr->sq_port != QRTR_PORT_CTRL) {
++		if (addr->sq_port != QRTR_PORT_CTRL &&
++		    qrtr_local_nid != QRTR_NODE_BCAST) {
+ 			release_sock(sk);
+ 			return -ENOTCONN;
+ 		}
++		enqueue_fn = qrtr_bcast_enqueue;
+ 	} else if (addr->sq_node == ipc->us.sq_node) {
+ 		enqueue_fn = qrtr_local_enqueue;
+ 	} else {
+-		enqueue_fn = qrtr_node_enqueue;
+ 		node = qrtr_node_lookup(addr->sq_node);
+ 		if (!node) {
+ 			release_sock(sk);
+ 			return -ECONNRESET;
+ 		}
++		enqueue_fn = qrtr_node_enqueue;
+ 	}
  
+ 	plen = (len + 3) & ~3;
 
 
