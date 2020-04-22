@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9220CC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2D0C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C0C20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C51320784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553072;
-	bh=oOeR16JP7+33GN5eawThT9fiHBTWNBFySfENnXf8aGU=;
+	s=default; t=1587553083;
+	bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LDLeB6InyIq+U4E1b0bQ3i1oNAhVJgm6oyg1PWgQyUG4kHBZQepD+/Qqz+GOa3Vzq
-	 25hRj5GHgF03cYQXZE6axXOqXgeFFsK7b/DE2e0R6DuFcsKwQ32lYffHvNJLKx8IFw
-	 Ayw9EeTnbMucNhCo+ABe5gMxhev4Bnd7dDOnemos=
+	b=L11oh1Lpzx8OIO1V1QxANQrNU6rQaKwO2hGJSAX1EPT9cSIr8AJ9RzCVVj7LYobxR
+	 P0vGPA1lFPDyCD/6EXVAG730FVRmnCXoVunCQDVTNS6D9g1dJWzOrTTisyRmCRfDz/
+	 UOAaNYEL1aPamgk815ZeHD4+ulauSRLWjNlINASk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbgDVK5v (ORCPT
+        id S1728676AbgDVK6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55458 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:58:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbgDVKEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:47 -0400
+        id S1728052AbgDVKEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95D72077D;
-        Wed, 22 Apr 2020 10:04:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFBEA20575;
+        Wed, 22 Apr 2020 10:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549887;
-        bh=oOeR16JP7+33GN5eawThT9fiHBTWNBFySfENnXf8aGU=;
+        s=default; t=1587549875;
+        bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AX2iHwcOZh/nZ/9uaAQ8KRkYOUGrk+riz1xNNYFWUDMsw1CxWuTed7Z8Ke9NvX8yb
-         i6rD+P8KMNWxxWMOo5qKo1sPuJ5E99e/ogjn3vBl6KjLre/wsl2npeoRdXk0+BaY7j
-         24d11rUKFyJ6GDGCg85BP7zCn7H4zP4BTUOGaBWM=
+        b=N7TLKgmWiSQc38brpxXmEmxPvQjyAMa2lc6M1blLqQhf361YlgjYv5LmCYHSMR4KQ
+         P8lQiA4fRlMiGoT4pMZtBT9SzgsZge1hyIOiDh44XJV12OGG5XTzHTQTCp1IPRNDPe
+         fWKdHKry73sxvlJ26mDOSxmNPSXTtqwrR1MQ+yTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harshini Shetty <harshini.x.shetty@sony.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.9 046/125] dm verity fec: fix memory leak in verity_fec_dtr
-Date:   Wed, 22 Apr 2020 11:56:03 +0200
-Message-Id: <20200422095040.979310396@linuxfoundation.org>
+        stable@vger.kernel.org, Rosioru Dragos <dragos.rosioru@nxp.com>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 041/125] crypto: mxs-dcp - fix scatterlist linearization for hash
+Date:   Wed, 22 Apr 2020 11:55:58 +0200
+Message-Id: <20200422095040.173295676@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,57 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shetty, Harshini X (EXT-Sony Mobile) <Harshini.X.Shetty@sony.com>
+From: Rosioru Dragos <dragos.rosioru@nxp.com>
 
-commit 75fa601934fda23d2f15bf44b09c2401942d8e15 upstream.
+commit fa03481b6e2e82355c46644147b614f18c7a8161 upstream.
 
-Fix below kmemleak detected in verity_fec_ctr. output_pool is
-allocated for each dm-verity-fec device. But it is not freed when
-dm-table for the verity target is removed. Hence free the output
-mempool in destructor function verity_fec_dtr.
+The incorrect traversal of the scatterlist, during the linearization phase
+lead to computing the hash value of the wrong input buffer.
+New implementation uses scatterwalk_map_and_copy()
+to address this issue.
 
-unreferenced object 0xffffffffa574d000 (size 4096):
-  comm "init", pid 1667, jiffies 4294894890 (age 307.168s)
-  hex dump (first 32 bytes):
-    8e 36 00 98 66 a8 0b 9b 00 00 00 00 00 00 00 00  .6..f...........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000060e82407>] __kmalloc+0x2b4/0x340
-    [<00000000dd99488f>] mempool_kmalloc+0x18/0x20
-    [<000000002560172b>] mempool_init_node+0x98/0x118
-    [<000000006c3574d2>] mempool_init+0x14/0x20
-    [<0000000008cb266e>] verity_fec_ctr+0x388/0x3b0
-    [<000000000887261b>] verity_ctr+0x87c/0x8d0
-    [<000000002b1e1c62>] dm_table_add_target+0x174/0x348
-    [<000000002ad89eda>] table_load+0xe4/0x328
-    [<000000001f06f5e9>] dm_ctl_ioctl+0x3b4/0x5a0
-    [<00000000bee5fbb7>] do_vfs_ioctl+0x5dc/0x928
-    [<00000000b475b8f5>] __arm64_sys_ioctl+0x70/0x98
-    [<000000005361e2e8>] el0_svc_common+0xa0/0x158
-    [<000000001374818f>] el0_svc_handler+0x6c/0x88
-    [<000000003364e9f4>] el0_svc+0x8/0xc
-    [<000000009d84cec9>] 0xffffffffffffffff
-
-Fixes: a739ff3f543af ("dm verity: add support for forward error correction")
-Depends-on: 6f1c819c219f7 ("dm: convert to bioset_init()/mempool_init()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Harshini Shetty <harshini.x.shetty@sony.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 15b59e7c3733 ("crypto: mxs - Add Freescale MXS DCP driver")
+Signed-off-by: Rosioru Dragos <dragos.rosioru@nxp.com>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-verity-fec.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/mxs-dcp.c |   54 ++++++++++++++++++++++-------------------------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
---- a/drivers/md/dm-verity-fec.c
-+++ b/drivers/md/dm-verity-fec.c
-@@ -563,6 +563,7 @@ void verity_fec_dtr(struct dm_verity *v)
- 	mempool_destroy(f->rs_pool);
- 	mempool_destroy(f->prealloc_pool);
- 	mempool_destroy(f->extra_pool);
-+	mempool_destroy(f->output_pool);
- 	kmem_cache_destroy(f->cache);
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -25,6 +25,7 @@
+ #include <crypto/sha.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/internal/skcipher.h>
++#include <crypto/scatterwalk.h>
  
- 	if (f->data_bufio)
+ #define DCP_MAX_CHANS	4
+ #define DCP_BUF_SZ	PAGE_SIZE
+@@ -621,49 +622,46 @@ static int dcp_sha_req_to_buf(struct cry
+ 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
+ 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
+ 	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
+-	const int nents = sg_nents(req->src);
+ 
+ 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
+ 	uint8_t *out_buf = sdcp->coh->sha_out_buf;
+ 
+-	uint8_t *src_buf;
+-
+ 	struct scatterlist *src;
+ 
+-	unsigned int i, len, clen;
++	unsigned int i, len, clen, oft = 0;
+ 	int ret;
+ 
+ 	int fin = rctx->fini;
+ 	if (fin)
+ 		rctx->fini = 0;
+ 
+-	for_each_sg(req->src, src, nents, i) {
+-		src_buf = sg_virt(src);
+-		len = sg_dma_len(src);
++	src = req->src;
++	len = req->nbytes;
+ 
+-		do {
+-			if (actx->fill + len > DCP_BUF_SZ)
+-				clen = DCP_BUF_SZ - actx->fill;
+-			else
+-				clen = len;
++	while (len) {
++		if (actx->fill + len > DCP_BUF_SZ)
++			clen = DCP_BUF_SZ - actx->fill;
++		else
++			clen = len;
+ 
+-			memcpy(in_buf + actx->fill, src_buf, clen);
+-			len -= clen;
+-			src_buf += clen;
+-			actx->fill += clen;
++		scatterwalk_map_and_copy(in_buf + actx->fill, src, oft, clen,
++					 0);
+ 
+-			/*
+-			 * If we filled the buffer and still have some
+-			 * more data, submit the buffer.
+-			 */
+-			if (len && actx->fill == DCP_BUF_SZ) {
+-				ret = mxs_dcp_run_sha(req);
+-				if (ret)
+-					return ret;
+-				actx->fill = 0;
+-				rctx->init = 0;
+-			}
+-		} while (len);
++		len -= clen;
++		oft += clen;
++		actx->fill += clen;
++
++		/*
++		 * If we filled the buffer and still have some
++		 * more data, submit the buffer.
++		 */
++		if (len && actx->fill == DCP_BUF_SZ) {
++			ret = mxs_dcp_run_sha(req);
++			if (ret)
++				return ret;
++			actx->fill = 0;
++			rctx->init = 0;
++		}
+ 	}
+ 
+ 	if (fin) {
 
 
