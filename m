@@ -2,254 +2,115 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8800CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332D2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D122076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C0F2074B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyS+ynH7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gch71prR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgDVUF6 (ORCPT
+        id S1726380AbgDVUIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41556 "EHLO
+        Wed, 22 Apr 2020 16:08:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725779AbgDVUF5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726002AbgDVUIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:05:57 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF40C03C1A9;
-        Wed, 22 Apr 2020 13:05:57 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id f82so3244268ilh.8;
-        Wed, 22 Apr 2020 13:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Xw3SluUqEV6Dcus+DaT8e6xQrR+AQO/E/D6ih0GzeD0=;
-        b=CyS+ynH71ki+YJPjlxz1hBv+LXYl4ILW6jmkRbKWgiAZdKXtGWDYIXr9uZidi9SlmW
-         WsWRL2XpgsOHt5e4k75kW4R7K96kNriryVBN6zl3TmPHeU/DOwm+48c5E/3dq50f/SI+
-         G7K0fdjPR/LOwmbBWjyDVxsY9Zcz0rVAjqhJtLFEaYN4Kpbizt0HvfkfRUmme40j9OP+
-         LTB6J+CbesvBXuHz+Y2YDoihlayzLyhwjpOEINvwOE9XF05xmm+HZwiE3RQVP/oqT0kS
-         +jCjlCfB27rx6vtAGjWHpMApvN/6PgTTwigN8npgFPHBwgUt1k/WWZygSC0AQJaToRlY
-         7pZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Xw3SluUqEV6Dcus+DaT8e6xQrR+AQO/E/D6ih0GzeD0=;
-        b=jZSKPQiAqqzi/Nvlu55+N4+7gvcgwE2UXvWC4Xz9t8zZ0p9X5RXNd18MeRt43qvPZP
-         tfuC7BarMxrA2gKGypXZTQ3hv2NljHPmeUeCQl33vkQQrltcrVzg8+6jLrEYo8NUiox0
-         4h+yryrWqRKG4dsjwJXtmzblQisi1uXPqwzVb2iLONXhAyme0eCP1vI1818xLhhrFZXU
-         0htBy1XA8kYZqUynZrmzUmF7DSDuf9jUwtetmAKd5tQk3SGCzs2FOUIpqXH4ZP9FLzrO
-         Pg7JCh965o0XigBpjloH3FfS+F4GvnSTKmiM/U7DOSgyoh1UPyn8bGYVcU8vJDpR6zb8
-         wLiw==
-X-Gm-Message-State: AGi0PuadjsEwjqT1DSCRVcIavPTBJb83O5+h2WcmgzlCRtRr20pQDbqO
-        WdApmnU3jvPm+jTE0olWw9IRrp4SkldvibSh72w=
-X-Google-Smtp-Source: APiQypLA6rfyq5iysKbMF3E/bLPKjBS2o/ZGybhQgd+qAuG5aybxGINyfc3iCOabGaQC8z+V6zkaG0zXNpEVwyRHGYY=
-X-Received: by 2002:a92:dc0d:: with SMTP id t13mr93915iln.287.1587585957053;
- Wed, 22 Apr 2020 13:05:57 -0700 (PDT)
+        Wed, 22 Apr 2020 16:08:39 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F4DC03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 13:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=MZtG2KeEuTg4yxv86Z8L4utsUbXSvWTuQZuzRxUSn2U=; b=gch71prRJAzB3Y0FYH7ky8mFbA
+        6RnCv0KWoS5iBsJKg3sBToeckgJV5VR3hoEBm1JHcqArZY70gy9M7qQ3vaYWxbrVUCSD/MofQ7hOJ
+        b/s8jO6kZy8b6bx/EGQdid//orECye8WG/jSblkkoq4sRtcqX/+W6wY3NMXKxWGYL5Sm5sQEK5AXs
+        X2A+xfB5yKKjlVUZd5wgH4rhHpSXkNgrf+Wo4cC+VYopsFS6iIgtgRfTTCBZFKlb0bC52tk6WWYYD
+        w6jy7ZH/jPa1Y5Yxo/pSyNhrA+eVOq8HMGtROIrE0IZzXyXS2enl7WN57KPzegQik+SWuF8gVPW0C
+        I0cwTHDQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRLfH-0000bq-MX; Wed, 22 Apr 2020 20:08:11 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8C4169836F8; Wed, 22 Apr 2020 22:08:08 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 22:08:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        jpoimboe@redhat.com, x86@kernel.org, mhiramat@kernel.org,
+        mbenes@suse.cz, jthierry@redhat.com, alexandre.chartre@oracle.com
+Subject: Re: [PATCH 3/3] x86/ftrace: Do not jump to direct code in created
+ trampolines
+Message-ID: <20200422200808.GX2483@worktop.programming.kicks-ass.net>
+References: <20200422162539.808362933@goodmis.org>
+ <20200422162750.638839749@goodmis.org>
 MIME-Version: 1.0
-References: <20200418011211.31725-5-Po.Liu@nxp.com> <20200422024852.23224-1-Po.Liu@nxp.com>
- <20200422024852.23224-2-Po.Liu@nxp.com> <20200422191910.gacjlviegrjriwcx@ws.localdomain>
- <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
-In-Reply-To: <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
-From:   Dave Taht <dave.taht@gmail.com>
-Date:   Wed, 22 Apr 2020 13:05:45 -0700
-Message-ID: <CAA93jw6fAyKHCLGD8vsXXz1yGPwXk5tOzWXDMbbn3z3Kw5P8PA@mail.gmail.com>
-Subject: Re: [v3,net-next 1/4] net: qos: introduce a gate control flow action
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Po Liu <Po.Liu@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        michael.chan@broadcom.com, vishal@chelsio.com,
-        Saeed Mahameed <saeedm@mellanox.com>, leon@kernel.org,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        simon.horman@netronome.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>, moshe@mellanox.com,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Andre Guedes <andre.guedes@linux.intel.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422162750.638839749@goodmis.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:31 PM Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> Hi Allan,
->
-> On Wed, 22 Apr 2020 at 22:20, Allan W. Nielsen
-> <allan.nielsen@microchip.com> wrote:
-> >
-> > Hi Po,
-> >
-> > Nice to see even more work on the TSN standards in the upstream kernel.
-> >
-> > On 22.04.2020 10:48, Po Liu wrote:
-> > >EXTERNAL EMAIL: Do not click links or open attachments unless you know=
- the content is safe
-> > >
-> > >Introduce a ingress frame gate control flow action.
-> > >Tc gate action does the work like this:
-> > >Assume there is a gate allow specified ingress frames can be passed at
-> > >specific time slot, and be dropped at specific time slot. Tc filter
-> > >chooses the ingress frames, and tc gate action would specify what slot
-> > >does these frames can be passed to device and what time slot would be
-> > >dropped.
-> > >Tc gate action would provide an entry list to tell how much time gate
-> > >keep open and how much time gate keep state close. Gate action also
-> > >assign a start time to tell when the entry list start. Then driver wou=
-ld
-> > >repeat the gate entry list cyclically.
-> > >For the software simulation, gate action requires the user assign a ti=
-me
-> > >clock type.
-> > >
-> > >Below is the setting example in user space. Tc filter a stream source =
-ip
-> > >address is 192.168.0.20 and gate action own two time slots. One is las=
-t
-> > >200ms gate open let frame pass another is last 100ms gate close let
-> > >frames dropped. When the frames have passed total frames over 8000000
-> > >bytes, frames will be dropped in one 200000000ns time slot.
-> > >
-> > >> tc qdisc add dev eth0 ingress
-> > >
-> > >> tc filter add dev eth0 parent ffff: protocol ip \
-> > >           flower src_ip 192.168.0.20 \
-> > >           action gate index 2 clockid CLOCK_TAI \
-> > >           sched-entry open 200000000 -1 8000000 \
-> > >           sched-entry close 100000000 -1 -1
-> >
-> > First of all, it is a long time since I read the 802.1Qci and when I di=
-d
-> > it, it was a draft. So please let me know if I'm completly off here.
-> >
-> > I know you are focusing on the gate control in this patch serie, but I
-> > assume that you later will want to do the policing and flow-meter as
-> > well. And it could make sense to consider how all of this work
-> > toghether.
-> >
-> > A common use-case for the policing is to have multiple rules pointing a=
-t
-> > the same policing instance. Maybe you want the sum of the traffic on 2
-> > ports to be limited to 100mbit. If you specify such action on the
-> > individual rule (like done with the gate), then you can not have two
-> > rules pointing at the same policer instance.
-> >
-> > Long storry short, have you considered if it would be better to do
-> > something like:
-> >
-> >    tc filter add dev eth0 parent ffff: protocol ip \
-> >             flower src_ip 192.168.0.20 \
-> >             action psfp-id 42
-> >
-> > And then have some other function to configure the properties of psfp-i=
-d
-> > 42?
-> >
-> >
-> > /Allan
-> >
->
-> It is very good that you brought it up though, since in my opinion too
-> it is a rather important aspect, and it seems that the fact this
-> feature is already designed-in was a bit too subtle.
->
-> "psfp-id" is actually his "index" argument.
->
-> You can actually do this:
-> tc filter add dev eth0 ingress \
->         flower skip_hw dst_mac 01:80:c2:00:00:0e \
->         action gate index 1 clockid CLOCK_TAI \
->         base-time 200000000000 \
->         sched-entry OPEN 200000000 -1 -1 \
->         sched-entry CLOSE 100000000 -1 -1
-> tc filter add dev eth0 ingress \
->         flower skip_hw dst_mac 01:80:c2:00:00:0f \
->         action gate index 1
->
-> Then 2 filters get created with the same action:
->
-> tc -s filter show dev swp2 ingress
-> filter protocol all pref 49151 flower chain 0
-> filter protocol all pref 49151 flower chain 0 handle 0x1
->   dst_mac 01:80:c2:00:00:0f
->   skip_hw
->   not_in_hw
->         action order 1:
->         priority wildcard       clockid TAI     flags 0x6404f
->         base-time 200000000000                  cycle-time 300000000
->          cycle-time-ext 0
->          number    0    gate-state open         interval 200000000
->          ipv wildcard    max-octets wildcard
->          number    1    gate-state close        interval 100000000
->          ipv wildcard    max-octets wildcard
->         pipe
->          index 2 ref 2 bind 2 installed 168 sec used 168 sec
->         Action statistics:
->         Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
->         backlog 0b 0p requeues 0
->
-> filter protocol all pref 49152 flower chain 0
-> filter protocol all pref 49152 flower chain 0 handle 0x1
->   dst_mac 01:80:c2:00:00:0e
->   skip_hw
->   not_in_hw
->         action order 1:
->         priority wildcard       clockid TAI     flags 0x6404f
->         base-time 200000000000                  cycle-time 300000000
->          cycle-time-ext 0
->          number    0    gate-state open         interval 200000000
->          ipv wildcard    max-octets wildcard
->          number    1    gate-state close        interval 100000000
->          ipv wildcard    max-octets wildcard
->         pipe
->          index 2 ref 2 bind 2 installed 168 sec used 168 sec
->         Action statistics:
->         Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
->         backlog 0b 0p requeues 0
->
-> Actually my only concern is that maybe this mechanism should (?) have
-> been more generic. At the moment, this patch series implements it via
-> a TCA_GATE_ENTRY_INDEX netlink attribute, so every action which wants
-> to be shared across filters needs to reinvent this wheel.
->
-> Thoughts, everyone?
+On Wed, Apr 22, 2020 at 12:25:42PM -0400, Steven Rostedt wrote:
 
-I don't have anything valuable to add, aside from commenting this
-whole thing makes my brain hurt.
+> @@ -367,6 +371,17 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+>  	if (WARN_ON(ret < 0))
+>  		goto fail;
+>  
+> +	/* No need to test direct calls on created trampolines */
+> +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+> +		/* NOP the jnz 1f; but make sure it's a 2 byte jnz */
+> +		ip = trampoline + (jmp_offset - start_offset);
+> +		if (WARN_ON(*(char *)ip != 0x75))
+> +			goto fail;
+> +		ret = probe_kernel_read(ip, ideal_nops[2], 2);
 
-> Thanks,
-> -Vladimir
+Now you're just being silly, are you really, actually worried you can't
+read ideal_nops[] ?
 
+> +		if (ret < 0)
+> +			goto fail;
+> +	}
+> +
+>  	/*
+>  	 * The address of the ftrace_ops that is used for this trampoline
+>  	 * is stored at the end of the trampoline. This will be used to
+> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+> index 0882758d165a..f72ef157feb3 100644
+> --- a/arch/x86/kernel/ftrace_64.S
+> +++ b/arch/x86/kernel/ftrace_64.S
+> @@ -241,6 +241,7 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
+>  	 */
+>  	movq ORIG_RAX(%rsp), %rax
+>  	testq	%rax, %rax
+> +SYM_INNER_LABEL(ftrace_regs_caller_jmp, SYM_L_GLOBAL)
+>  	jnz	1f
+>  
 
+I you worry about performance, it would make more sense to do something
+like so:
 
---=20
-Make Music, Not War
+SYM_INNER_LABEL(ftrace_regs_caller_from, SYM_L_GLOBAL)
+	movq ORIG_RAX(%rsp), %rax
+	testq	%rax, %rax
+	jnz	1f
+SYM_INNER_LABEL(ftrace_regs_caller_to, SYM_L_GLOBAL)
 
-Dave T=C3=A4ht
-CTO, TekLibre, LLC
-http://www.teklibre.com
-Tel: 1-831-435-0729
+	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+		ip = trampoline + (ftrace_regs_caller_from - start_offset);
+		((u8[])ip)[0] = JMP8_INSN_OPCODE;
+		((u8[])ip)[1] = ftrace_regs_caller_to - ftrace_regs_caller_from - JMP8_INSN_SIZE;
+	}
+
+Or nop the whole range, but it's like 10 bytes so I'm not sure that's
+actually faster.
