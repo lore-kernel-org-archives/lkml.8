@@ -2,126 +2,142 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE710C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F170C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B53AE2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8BA2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="chRmDbJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgDVW7x (ORCPT
+        id S1726355AbgDVXAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:59:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48408 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726030AbgDVW7w (ORCPT
+        Wed, 22 Apr 2020 19:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725846AbgDVXAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:59:52 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MMW4dG141686
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 18:59:52 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrc6c5b3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 18:59:51 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 22 Apr 2020 23:59:25 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Apr 2020 23:59:22 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03MMxjv156557718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 22:59:45 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97B474C040;
-        Wed, 22 Apr 2020 22:59:45 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B00984C044;
-        Wed, 22 Apr 2020 22:59:44 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.162.195])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Apr 2020 22:59:44 +0000 (GMT)
-Subject: Re: [PATCH 5/5] ima: Remove unused build_ima_appraise variable
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, krzysztof.struczynski@huawei.com,
-        silviu.vlasceanu@huawei.com
-Date:   Wed, 22 Apr 2020 18:59:44 -0400
-In-Reply-To: <20200325161455.7610-2-roberto.sassu@huawei.com>
-References: <20200325161116.7082-1-roberto.sassu@huawei.com>
-         <20200325161455.7610-1-roberto.sassu@huawei.com>
-         <20200325161455.7610-2-roberto.sassu@huawei.com>
+        Wed, 22 Apr 2020 19:00:30 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279C3C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:00:30 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u16so4511063wmc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 16:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=e554rqOamBc28ZX8vvZpsq69HYHRpFVMDSx5grItHmM=;
+        b=chRmDbJ0uUdLZcdIJvf8cYaWYGgdwKM+jUSpQz7q9qlWn0tzs2WPYj6NQl2dhIh4fc
+         PvAWXm7KCUbFY2ABHnDTtEhST+1qxdmWmWoKLsOwTKX2Iv9osg6hHutG8/6VyWdI0SIm
+         Ik+2UYbOCpb0jVQ5GgDCcBUEw+v+wme1WnC60YGXRFZJfNhAhn8hWX038WJ3uJGvGGP5
+         ZL/4tbrKW6PgNzgkMNxGH0bX4DdfdBXlyVvLqG6HPlW96IS0WQwRk+tGnB9BVTbxxiFC
+         do2w3Wj1azkyqvzvX15VSwGD7f9/593SL5IjcuaK6BGiKA6EQ2xCuNpbQYy5TEXqvQxq
+         +QMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=e554rqOamBc28ZX8vvZpsq69HYHRpFVMDSx5grItHmM=;
+        b=lTFFeflJ/r2n0ZZvsHgncdq2qMHc23SmQPKbyYpUlzLnZIXOP5hkCgwSAIHdQw6xlu
+         Lwh7oO+aQUJ8LQE1Tpul9+0GYgLZP5XQJKqSJ72bUPuyHoUmW2ws8PecBek2wZriqTBV
+         D/2oKJ57ri0FqAtBFW3mDmggx1KsJJbBLzuZ7Tu6A62KxoUsuVtRHTnpD9m0LFyW0jH+
+         sgF7/ToZ59HhFb3FmTYTxFZhZsOI8Q/UMJUg5cVX77WLVqr7wvKRgbgnyhVUBv4pZ0FC
+         VB2vN4lSprlrMb7frte+BMjOMjSAccMa+Ue0RS80NQsqTEv3BgtERbkQ7aMSlsK/fqw4
+         Vuwg==
+X-Gm-Message-State: AGi0PuZsKS3sz6hRmhRPxjD2lSSRZo8MKrlXXn6XVKP6Fx8ktDrUEv38
+        +ywqYVgd/tUp/dQM7uUlzc8KYwrIxgE0PN1pKCXjng==
+X-Google-Smtp-Source: APiQypIBvwm616bfo/vRDZbkHiy6iwoJAtIW33eryYqczNrjRdeZMMvY1tlPxntuueFgSTp8Q1w80CJo4ZfmJvA8awo=
+X-Received: by 2002:a1c:9989:: with SMTP id b131mr788850wme.176.1587596428422;
+ Wed, 22 Apr 2020 16:00:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200421195629.GE608746@tassilo.jf.intel.com> <5957D3CC-B54B-4A1A-998A-0E6F58589CF4@amacapital.net>
+ <20200421205119.GK1809@sasha-vm>
+In-Reply-To: <20200421205119.GK1809@sasha-vm>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Wed, 22 Apr 2020 16:00:16 -0700
+Message-ID: <CALCETrUGuvMgvcsUWsdmUr-=6c6BpRpOKC1MN+E16g17U7vyMQ@mail.gmail.com>
+Subject: Re: [PATCH v9 00/17] Enable FSGSBASE instructions
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        "Metzger, Markus T" <markus.t.metzger@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Pedro Alves <palves@redhat.com>,
+        Simon Marchi <simark@simark.ca>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042222-0012-0000-0000-000003A97B84
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042222-0013-0000-0000-000021E6CDBA
-Message-Id: <1587596384.5165.31.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_08:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 phishscore=0 priorityscore=1501 adultscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220168
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roberto, Krzysztof,
+On Tue, Apr 21, 2020 at 1:51 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> On Tue, Apr 21, 2020 at 01:21:39PM -0700, Andy Lutomirski wrote:
+> >
+> >
+> >> On Apr 21, 2020, at 12:56 PM, Andi Kleen <ak@linux.intel.com> wrote:
+> >>
+> >> =EF=BB=BF
+> >>>
+> >>> Andi's point is that there is no known user it breaks, and the Intel
+> >>> folks did some digging into potential users who might be affected by
+> >>> this, including 'rr' brought up by Andy, and concluded that there won=
+'t
+> >>> be breakage as a result of this patchset:
+> >>>
+> >>>    https://mail.mozilla.org/pipermail/rr-dev/2018-March/000616.html
+> >>>
+> >>> Sure, if you poke at it you could see a behavior change, but is there
+> >>> an actual user that will be affected by it? I suspect not.
+> >>
+> >> Actually we don't know of any behavior changes caused by the kernel
+> >> with selectors.
+> >>
+> >> The application can change itself of course, but only if it uses the
+> >> new instructions, which no current application does.
+> >
+> >If you use ptrace to change the gs selector, the behavior is different o=
+n a patched kernel.
+> >
+> >Again, I=E2=80=99m not saying that the change is problematic. But I will=
+ say that the fact that anyone involved in this series keeps ignoring this =
+fact makes me quite uncomfortable with the patch set.
+>
+> That's what I referred to with "poke at it". While the behavior may be
+> different, I fail to find anyone who cares.
+>
+> >>
+> >> [This was different in the original patch kit long ago which could
+> >> change behavior on context switch for programs with out of sync select=
+ors,
+> >> but this has been long fixed]
+> >
+> >That=E2=80=99s the issue I was referring to.
+> >
+> >>
+> >> A debugger can also change behavior, but we're not aware of any case
+> >> that it would break.
+> >
+> >How hard did you look?
+>
+> Come on, how does one respond to this?
+>
+> Is there a real use case affected by this? If so, point it out and I'll
+> be happy to go test it. This was already done (per your previous
+> request) for gdb and rr.
+>
 
-On Wed, 2020-03-25 at 17:14 +0100, Roberto Sassu wrote:
-> From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-> 
-> After adding the new add_rule() function in commit c52657d93b05
-> ("ima: refactor ima_init_policy()"), all appraisal flags are added to the
-> temp_ima_appraise variable. Remove build_ima_appraise that is not set
-> anymore.
-> 
-> Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-> ---
->  security/integrity/ima/ima_policy.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index ea9b991f0232..fcc26bddd7fc 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -48,7 +48,6 @@
->  
->  int ima_policy_flag;
->  static int temp_ima_appraise;
-> -static int build_ima_appraise __ro_after_init;
->  
->  #define MAX_LSM_RULES 6
->  enum lsm_rule_types { LSM_OBJ_USER, LSM_OBJ_ROLE, LSM_OBJ_TYPE,
-> @@ -606,7 +605,7 @@ void ima_update_policy_flag(void)
->  			ima_policy_flag |= entry->action;
->  	}
->  
-> -	ima_appraise |= (build_ima_appraise | temp_ima_appraise);
-> +	ima_appraise |= temp_ima_appraise;
-
-You're correct that build_ima_appraise isn't being used any longer,
-but ima_appraise isn't defined as __ro_after_init.  Instead of
-removing build_ima_appraise, does it make sense to set it?
-
-Mimi
-
->  	if (!ima_appraise)
->  		ima_policy_flag &= ~IMA_APPRAISE;
->  }
-
+gdb and rr are certainly a good start.  If patches show up, I'll take a loo=
+k.
