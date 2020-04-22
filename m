@@ -2,47 +2,47 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B341C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F3AC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9902082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51580214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Uyw7hoXg"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XoB0vG6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgDVUrj (ORCPT
+        id S1726761AbgDVUro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:47:39 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58844 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726554AbgDVUr3 (ORCPT
+        Wed, 22 Apr 2020 16:47:44 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49406 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726589AbgDVUra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:47:29 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 03MKlF51016576
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 13:47:27 -0700
+        Wed, 22 Apr 2020 16:47:30 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MKi5EV011539
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 13:47:28 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=u/B8/5V4H+vV0kd1fnGy2m75vmohOQ5/MXL5DW2/p98=;
- b=Uyw7hoXgE/Kd/3KtM76UFoq1dhKeMtIRSTo4HKWRv7bUZ96ao8uA6rlbT7+4mOhrHM0N
- 0zsJp/cmj2Jrf8AWYBSULbJT1oKFbs9+Praf88xH8PnYkGIqvAF6VgXCSfxflN3ZUgvj
- yTp2x6xB+5YUPQg4MR6kurMp+gsr04hACBc= 
+ bh=36iL6fcUyzzyk2uQxjMSUmOSX6/ONuAh4DixC9KKRUY=;
+ b=XoB0vG6nnJZPep0lAuBlXxhRrkYyKUAV5hW41YjDa5aPsk1AQ8Le905H+ndRq1ykw9c3
+ l7ubrzSQX1iNmjLnHtWAGE425jvPAptbQIfR5ThLnl9GY+5SLjGT1ha0w/3Wk7diYUek
+ c2YY9gjHBk1EB0OV3H9kDNh8rFOfqHuHFfc= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 30jatkntqx-20
+        by mx0a-00082601.pphosted.com with ESMTP id 30jtc5h1xt-6
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 13:47:27 -0700
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::5) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 13:47:28 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:108::8) by
+ mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 22 Apr 2020 13:47:21 -0700
+ 15.1.1847.3; Wed, 22 Apr 2020 13:47:27 -0700
 Received: by devvm4439.prn2.facebook.com (Postfix, from userid 111017)
-        id EB8AA22935811; Wed, 22 Apr 2020 13:47:16 -0700 (PDT)
+        id 0EC542293581D; Wed, 22 Apr 2020 13:47:17 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm4439.prn2.facebook.com
@@ -50,11 +50,12 @@ To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
         <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>
+        Roman Gushchin <guro@fb.com>, Waiman Long <longman@redhat.com>,
+        "Tobin C . Harding" <tobin@kernel.org>, Tejun Heo <tj@kernel.org>
 Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v3 13/19] mm: memcg/slab: simplify memcg cache creation
-Date:   Wed, 22 Apr 2020 13:47:02 -0700
-Message-ID: <20200422204708.2176080-14-guro@fb.com>
+Subject: [PATCH v3 19/19] tools/cgroup: add memcg_slabinfo.py tool
+Date:   Wed, 22 Apr 2020 13:47:08 -0700
+Message-ID: <20200422204708.2176080-20-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200422204708.2176080-1-guro@fb.com>
 References: <20200422204708.2176080-1-guro@fb.com>
@@ -64,220 +65,333 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-22_07:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 adultscore=0 suspectscore=2
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220159
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ clxscore=1015 spamscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ bulkscore=0 mlxscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220158
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because the number of non-root kmem_caches doesn't depend on the
-number of memory cgroups anymore and is generally not very big,
-there is no more need for a dedicated workqueue.
+Add a drgn-based tool to display slab information for a given memcg.
+Can replace cgroup v1 memory.kmem.slabinfo interface on cgroup v2,
+but in a more flexiable way.
 
-Also, as there is no more need to pass any arguments to the
-memcg_create_kmem_cache() except the root kmem_cache, it's
-possible to just embed the work structure into the kmem_cache
-and avoid the dynamic allocation of the work structure.
+Currently supports only SLUB configuration, but SLAB can be trivially
+added later.
 
-This will also simplify the synchronization: for each root kmem_cache
-there is only one work. So there will be no more concurrent attempts
-to create a non-root kmem_cache for a root kmem_cache: the second and
-all following attempts to queue the work will fail.
-
-On the kmem_cache destruction path there is no more need to call the
-expensive flush_workqueue() and wait for all pending works to be
-finished. Instead, cancel_work_sync() can be used to cancel/wait for
-only one work.
+Output example:
+$ sudo ./tools/cgroup/memcg_slabinfo.py /sys/fs/cgroup/user.slice/user-11=
+1017.slice/user\@111017.service
+shmem_inode_cache     92     92    704   46    8 : tunables    0    0    =
+0 : slabdata      2      2      0
+eventpoll_pwq         56     56     72   56    1 : tunables    0    0    =
+0 : slabdata      1      1      0
+eventpoll_epi         32     32    128   32    1 : tunables    0    0    =
+0 : slabdata      1      1      0
+kmalloc-8              0      0      8  512    1 : tunables    0    0    =
+0 : slabdata      0      0      0
+kmalloc-96             0      0     96   42    1 : tunables    0    0    =
+0 : slabdata      0      0      0
+kmalloc-2048           0      0   2048   16    8 : tunables    0    0    =
+0 : slabdata      0      0      0
+kmalloc-64           128    128     64   64    1 : tunables    0    0    =
+0 : slabdata      2      2      0
+mm_struct            160    160   1024   32    8 : tunables    0    0    =
+0 : slabdata      5      5      0
+signal_cache          96     96   1024   32    8 : tunables    0    0    =
+0 : slabdata      3      3      0
+sighand_cache         45     45   2112   15    8 : tunables    0    0    =
+0 : slabdata      3      3      0
+files_cache          138    138    704   46    8 : tunables    0    0    =
+0 : slabdata      3      3      0
+task_delay_info      153    153     80   51    1 : tunables    0    0    =
+0 : slabdata      3      3      0
+task_struct           27     27   3520    9    8 : tunables    0    0    =
+0 : slabdata      3      3      0
+radix_tree_node       56     56    584   28    4 : tunables    0    0    =
+0 : slabdata      2      2      0
+btrfs_inode          140    140   1136   28    8 : tunables    0    0    =
+0 : slabdata      5      5      0
+kmalloc-1024          64     64   1024   32    8 : tunables    0    0    =
+0 : slabdata      2      2      0
+kmalloc-192           84     84    192   42    2 : tunables    0    0    =
+0 : slabdata      2      2      0
+inode_cache           54     54    600   27    4 : tunables    0    0    =
+0 : slabdata      2      2      0
+kmalloc-128            0      0    128   32    1 : tunables    0    0    =
+0 : slabdata      0      0      0
+kmalloc-512           32     32    512   32    4 : tunables    0    0    =
+0 : slabdata      1      1      0
+skbuff_head_cache     32     32    256   32    2 : tunables    0    0    =
+0 : slabdata      1      1      0
+sock_inode_cache      46     46    704   46    8 : tunables    0    0    =
+0 : slabdata      1      1      0
+cred_jar             378    378    192   42    2 : tunables    0    0    =
+0 : slabdata      9      9      0
+proc_inode_cache      96     96    672   24    4 : tunables    0    0    =
+0 : slabdata      4      4      0
+dentry               336    336    192   42    2 : tunables    0    0    =
+0 : slabdata      8      8      0
+filp                 697    864    256   32    2 : tunables    0    0    =
+0 : slabdata     27     27      0
+anon_vma             644    644     88   46    1 : tunables    0    0    =
+0 : slabdata     14     14      0
+pid                 1408   1408     64   64    1 : tunables    0    0    =
+0 : slabdata     22     22      0
+vm_area_struct      1200   1200    200   40    2 : tunables    0    0    =
+0 : slabdata     30     30      0
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
 ---
- include/linux/memcontrol.h |  1 -
- mm/memcontrol.c            | 48 +-------------------------------------
- mm/slab.h                  |  2 ++
- mm/slab_common.c           | 22 +++++++++--------
- 4 files changed, 15 insertions(+), 58 deletions(-)
+ tools/cgroup/memcg_slabinfo.py | 226 +++++++++++++++++++++++++++++++++
+ 1 file changed, 226 insertions(+)
+ create mode 100755 tools/cgroup/memcg_slabinfo.py
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 698b92d60da5..87e6da5015b3 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1440,7 +1440,6 @@ int obj_cgroup_charge(struct obj_cgroup *objcg, gfp=
-_t gfp, size_t size);
- void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size);
-=20
- extern struct static_key_false memcg_kmem_enabled_key;
--extern struct workqueue_struct *memcg_kmem_cache_wq;
-=20
- extern int memcg_nr_cache_ids;
- void memcg_get_cache_ids(void);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 9fe2433fbe67..55fd42155a37 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -379,8 +379,6 @@ void memcg_put_cache_ids(void)
-  */
- DEFINE_STATIC_KEY_FALSE(memcg_kmem_enabled_key);
- EXPORT_SYMBOL(memcg_kmem_enabled_key);
--
--struct workqueue_struct *memcg_kmem_cache_wq;
- #endif
-=20
- static int memcg_shrinker_map_size;
-@@ -2900,39 +2898,6 @@ static void memcg_free_cache_id(int id)
- 	ida_simple_remove(&memcg_cache_ida, id);
- }
-=20
--struct memcg_kmem_cache_create_work {
--	struct kmem_cache *cachep;
--	struct work_struct work;
--};
--
--static void memcg_kmem_cache_create_func(struct work_struct *w)
--{
--	struct memcg_kmem_cache_create_work *cw =3D
--		container_of(w, struct memcg_kmem_cache_create_work, work);
--	struct kmem_cache *cachep =3D cw->cachep;
--
--	memcg_create_kmem_cache(cachep);
--
--	kfree(cw);
--}
--
--/*
-- * Enqueue the creation of a per-memcg kmem_cache.
-- */
--static void memcg_schedule_kmem_cache_create(struct kmem_cache *cachep)
--{
--	struct memcg_kmem_cache_create_work *cw;
--
--	cw =3D kmalloc(sizeof(*cw), GFP_NOWAIT | __GFP_NOWARN);
--	if (!cw)
--		return;
--
--	cw->cachep =3D cachep;
--	INIT_WORK(&cw->work, memcg_kmem_cache_create_func);
--
--	queue_work(memcg_kmem_cache_wq, &cw->work);
--}
--
- /**
-  * memcg_kmem_get_cache: select memcg or root cache for allocation
-  * @cachep: the original global kmem cache
-@@ -2949,7 +2914,7 @@ struct kmem_cache *memcg_kmem_get_cache(struct kmem=
-_cache *cachep)
-=20
- 	memcg_cachep =3D READ_ONCE(cachep->memcg_params.memcg_cache);
- 	if (unlikely(!memcg_cachep)) {
--		memcg_schedule_kmem_cache_create(cachep);
-+		queue_work(system_wq, &cachep->memcg_params.work);
- 		return cachep;
- 	}
-=20
-@@ -7122,17 +7087,6 @@ static int __init mem_cgroup_init(void)
- {
- 	int cpu, node;
-=20
--#ifdef CONFIG_MEMCG_KMEM
--	/*
--	 * Kmem cache creation is mostly done with the slab_mutex held,
--	 * so use a workqueue with limited concurrency to avoid stalling
--	 * all worker threads in case lots of cgroups are created and
--	 * destroyed simultaneously.
--	 */
--	memcg_kmem_cache_wq =3D alloc_workqueue("memcg_kmem_cache", 0, 1);
--	BUG_ON(!memcg_kmem_cache_wq);
--#endif
--
- 	cpuhp_setup_state_nocalls(CPUHP_MM_MEMCQ_DEAD, "mm/memctrl:dead", NULL,
- 				  memcg_hotplug_cpu_dead);
-=20
-diff --git a/mm/slab.h b/mm/slab.h
-index 28c582ec997a..a4e115cb8bdc 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -45,12 +45,14 @@ struct kmem_cache {
-  * @memcg_cache: pointer to memcg kmem cache, used by all non-root memor=
-y
-  *		cgroups.
-  * @root_caches_node: list node for slab_root_caches list.
-+ * @work: work struct used to create the non-root cache.
-  */
- struct memcg_cache_params {
- 	struct kmem_cache *root_cache;
-=20
- 	struct kmem_cache *memcg_cache;
- 	struct list_head __root_caches_node;
-+	struct work_struct work;
- };
- #endif /* CONFIG_SLOB */
-=20
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index e9deaafddbb6..10aa2acb84ca 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -132,10 +132,18 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, g=
-fp_t flags, size_t nr,
-=20
- LIST_HEAD(slab_root_caches);
-=20
-+static void memcg_kmem_cache_create_func(struct work_struct *work)
-+{
-+	struct kmem_cache *cachep =3D container_of(work, struct kmem_cache,
-+						 memcg_params.work);
-+	memcg_create_kmem_cache(cachep);
-+}
+diff --git a/tools/cgroup/memcg_slabinfo.py b/tools/cgroup/memcg_slabinfo=
+.py
+new file mode 100755
+index 000000000000..c4225ed63565
+--- /dev/null
++++ b/tools/cgroup/memcg_slabinfo.py
+@@ -0,0 +1,226 @@
++#!/usr/bin/env drgn
++#
++# Copyright (C) 2020 Roman Gushchin <guro@fb.com>
++# Copyright (C) 2020 Facebook
 +
- void slab_init_memcg_params(struct kmem_cache *s)
- {
- 	s->memcg_params.root_cache =3D NULL;
- 	s->memcg_params.memcg_cache =3D NULL;
-+	INIT_WORK(&s->memcg_params.work, memcg_kmem_cache_create_func);
- }
-=20
- static void init_memcg_params(struct kmem_cache *s,
-@@ -584,15 +592,9 @@ static int shutdown_memcg_caches(struct kmem_cache *=
-s)
- 	return 0;
- }
-=20
--static void flush_memcg_workqueue(struct kmem_cache *s)
-+static void cancel_memcg_cache_creation(struct kmem_cache *s)
- {
--	/*
--	 * SLAB and SLUB create memcg kmem_caches through workqueue and SLUB
--	 * deactivates the memcg kmem_caches through workqueue. Make sure all
--	 * previous workitems on workqueue are processed.
--	 */
--	if (likely(memcg_kmem_cache_wq))
--		flush_workqueue(memcg_kmem_cache_wq);
-+	cancel_work_sync(&s->memcg_params.work);
- }
- #else
- static inline int shutdown_memcg_caches(struct kmem_cache *s)
-@@ -600,7 +602,7 @@ static inline int shutdown_memcg_caches(struct kmem_c=
-ache *s)
- 	return 0;
- }
-=20
--static inline void flush_memcg_workqueue(struct kmem_cache *s)
-+static inline void cancel_memcg_cache_creation(struct kmem_cache *s)
- {
- }
- #endif /* CONFIG_MEMCG_KMEM */
-@@ -619,7 +621,7 @@ void kmem_cache_destroy(struct kmem_cache *s)
- 	if (unlikely(!s))
- 		return;
-=20
--	flush_memcg_workqueue(s);
-+	cancel_memcg_cache_creation(s);
-=20
- 	get_online_cpus();
- 	get_online_mems();
++from os import stat
++import argparse
++import sys
++
++from drgn.helpers.linux import list_for_each_entry, list_empty
++from drgn.helpers.linux import for_each_page
++from drgn.helpers.linux.cpumask import for_each_online_cpu
++from drgn.helpers.linux.percpu import per_cpu_ptr
++from drgn import container_of, FaultError, Object
++
++
++DESC =3D """
++This is a drgn script to provide slab statistics for memory cgroups.
++It supports cgroup v2 and v1 and can emulate memory.kmem.slabinfo
++interface of cgroup v1.
++For drgn, visit https://github.com/osandov/drgn.
++"""
++
++
++MEMCGS =3D {}
++
++OO_SHIFT =3D 16
++OO_MASK =3D ((1 << OO_SHIFT) - 1)
++
++
++def err(s):
++    print('slabinfo.py: error: %s' % s, file=3Dsys.stderr, flush=3DTrue)
++    sys.exit(1)
++
++
++def find_memcg_ids(css=3Dprog['root_mem_cgroup'].css, prefix=3D''):
++    if not list_empty(css.children.address_of_()):
++        for css in list_for_each_entry('struct cgroup_subsys_state',
++                                       css.children.address_of_(),
++                                       'sibling'):
++            name =3D prefix + '/' + css.cgroup.kn.name.string_().decode(=
+'utf-8')
++            memcg =3D container_of(css, 'struct mem_cgroup', 'css')
++            MEMCGS[css.cgroup.kn.id.value_()] =3D memcg
++            find_memcg_ids(css, name)
++
++
++def is_root_cache(s):
++    try:
++        return False if s.memcg_params.root_cache else True
++    except AttributeError:
++        return True
++
++
++def cache_name(s):
++    if is_root_cache(s):
++        return s.name.string_().decode('utf-8')
++    else:
++        return s.memcg_params.root_cache.name.string_().decode('utf-8')
++
++
++# SLUB
++
++def oo_order(s):
++    return s.oo.x >> OO_SHIFT
++
++
++def oo_objects(s):
++    return s.oo.x & OO_MASK
++
++
++def count_partial(n, fn):
++    nr_pages =3D 0
++    for page in list_for_each_entry('struct page', n.partial.address_of_=
+(),
++                                    'lru'):
++         nr_pages +=3D fn(page)
++    return nr_pages
++
++
++def count_free(page):
++    return page.objects - page.inuse
++
++
++def slub_get_slabinfo(s, cfg):
++    nr_slabs =3D 0
++    nr_objs =3D 0
++    nr_free =3D 0
++
++    for node in range(cfg['nr_nodes']):
++        n =3D s.node[node]
++        nr_slabs +=3D n.nr_slabs.counter.value_()
++        nr_objs +=3D n.total_objects.counter.value_()
++        nr_free +=3D count_partial(n, count_free)
++
++    return {'active_objs': nr_objs - nr_free,
++            'num_objs': nr_objs,
++            'active_slabs': nr_slabs,
++            'num_slabs': nr_slabs,
++            'objects_per_slab': oo_objects(s),
++            'cache_order': oo_order(s),
++            'limit': 0,
++            'batchcount': 0,
++            'shared': 0,
++            'shared_avail': 0}
++
++
++def cache_show(s, cfg, objs):
++    if cfg['allocator'] =3D=3D 'SLUB':
++        sinfo =3D slub_get_slabinfo(s, cfg)
++    else:
++        err('SLAB isn\'t supported yet')
++
++    if cfg['shared_slab_pages']:
++        sinfo['active_objs'] =3D objs
++        sinfo['num_objs'] =3D objs
++
++    print('%-17s %6lu %6lu %6u %4u %4d'
++          ' : tunables %4u %4u %4u'
++          ' : slabdata %6lu %6lu %6lu' % (
++              cache_name(s), sinfo['active_objs'], sinfo['num_objs'],
++              s.size, sinfo['objects_per_slab'], 1 << sinfo['cache_order=
+'],
++              sinfo['limit'], sinfo['batchcount'], sinfo['shared'],
++              sinfo['active_slabs'], sinfo['num_slabs'],
++              sinfo['shared_avail']))
++
++
++def detect_kernel_config():
++    cfg =3D {}
++
++    cfg['nr_nodes'] =3D prog['nr_online_nodes'].value_()
++
++    if prog.type('struct kmem_cache').members[1][1] =3D=3D 'flags':
++        cfg['allocator'] =3D 'SLUB'
++    elif prog.type('struct kmem_cache').members[1][1] =3D=3D 'batchcount=
+':
++        cfg['allocator'] =3D 'SLAB'
++    else:
++        err('Can\'t determine the slab allocator')
++
++    cfg['shared_slab_pages'] =3D False
++    try:
++        if prog.type('struct obj_cgroup'):
++            cfg['shared_slab_pages'] =3D True
++    except:
++        pass
++
++    return cfg
++
++
++def for_each_slab_page(prog):
++    PGSlab =3D 1 << prog.constant('PG_slab')
++    PGHead =3D 1 << prog.constant('PG_head')
++
++    for page in for_each_page(prog):
++        try:
++            if page.flags.value_() & PGSlab:
++                yield page
++        except FaultError:
++            pass
++
++
++def main():
++    parser =3D argparse.ArgumentParser(description=3DDESC,
++                                     formatter_class=3D
++                                     argparse.RawTextHelpFormatter)
++    parser.add_argument('cgroup', metavar=3D'CGROUP',
++                        help=3D'Target memory cgroup')
++    args =3D parser.parse_args()
++
++    try:
++        cgroup_id =3D stat(args.cgroup).st_ino
++        find_memcg_ids()
++        memcg =3D MEMCGS[cgroup_id]
++    except KeyError:
++        err('Can\'t find the memory cgroup')
++
++    cfg =3D detect_kernel_config()
++
++    print('# name            <active_objs> <num_objs> <objsize> <objpers=
+lab> <pagesperslab>'
++          ' : tunables <limit> <batchcount> <sharedfactor>'
++          ' : slabdata <active_slabs> <num_slabs> <sharedavail>')
++
++    if cfg['shared_slab_pages']:
++        obj_cgroups =3D set()
++        stats =3D {}
++        caches =3D {}
++
++        # find memcg pointers belonging to the specified cgroup
++        obj_cgroups.add(memcg.objcg.value_())
++        for ptr in list_for_each_entry('struct obj_cgroup',
++                                       memcg.objcg_list.address_of_(),
++                                       'list'):
++            obj_cgroups.add(ptr.value_())
++
++        # look over all slab pages, belonging to non-root memcgs
++        # and look for objects belonging to the given memory cgroup
++        for page in for_each_slab_page(prog):
++            objcg_vec_raw =3D page.obj_cgroups.value_()
++            if objcg_vec_raw =3D=3D 0:
++                continue
++            cache =3D page.slab_cache
++            if not cache:
++                continue
++            addr =3D cache.value_()
++            caches[addr] =3D cache
++            # clear the lowest bit to get the true obj_cgroups
++            objcg_vec =3D Object(prog, page.obj_cgroups.type_,
++                               value=3Dobjcg_vec_raw & ~1)
++
++            if addr not in stats:
++                stats[addr] =3D 0
++
++            for i in range(oo_objects(cache)):
++                if objcg_vec[i].value_() in obj_cgroups:
++                    stats[addr] +=3D 1
++
++        for addr in caches:
++            if stats[addr] > 0:
++                cache_show(caches[addr], cfg, stats[addr])
++
++    else:
++        for s in list_for_each_entry('struct kmem_cache',
++                                     memcg.kmem_caches.address_of_(),
++                                     'memcg_params.kmem_caches_node'):
++            cache_show(s, cfg, None)
++
++
++main()
 --=20
 2.25.3
 
