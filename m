@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED28DC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8A8C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC5A820780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A078420776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550021;
-	bh=U7xw5TIMIELme+svUXYqgI9d762UMw58MuzqpUriD5M=;
+	s=default; t=1587550031;
+	bh=fkfJeNmA8af7oSzYw22zY5mDN3nDtEpq/rmKMEts3g8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDLhWiIe9tIr7Fo7/Xn1iy26zafH2kUuDVWAN+a4u1xu6g7mNgaf7gDvFzle2h6y7
-	 lj/e/u8Pyp5SAFKjmb+CB0f5uniyNJIu8vlXf6/RRtnVoAq0pBCj/xVNHRL5FwqP33
-	 HK4k2Vuu9pNIfEuHzfn5NH86RKwBaeQIgvlYgkPI=
+	b=hGAVIl7yU71E86qX/KbgKsuPjZiUlPdXCnz/Kf+umiOZ05iTKJ9C0R/sWU9ThrgvZ
+	 TTSMqxORlQDGc4jAlcLfO3OyL4lZh17XRmYwOmFdHA9VDSFXfO07jj1PQVftjcidkg
+	 q9JkXKGqT2Lotn96QN+E4zCJCjHJmSVqPSxJMfOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgDVKHB (ORCPT
+        id S1728491AbgDVKHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:07:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgDVKGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:51 -0400
+        id S1728472AbgDVKHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FFBA20774;
-        Wed, 22 Apr 2020 10:06:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 254E62076C;
+        Wed, 22 Apr 2020 10:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550011;
-        bh=U7xw5TIMIELme+svUXYqgI9d762UMw58MuzqpUriD5M=;
+        s=default; t=1587550025;
+        bh=fkfJeNmA8af7oSzYw22zY5mDN3nDtEpq/rmKMEts3g8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEsbspSiVrtBnYl7o92gmTQ03+U/FvSCfoAU0iQUGoADODYAP45MSYrlVtojd9n+k
-         riyff+g1bbd7vWg+/96MJlD+lyRiF+ZemGUab7nfNoASCKDoR5Z09Hi3d1kLsZPSBr
-         63cvADMS3bH39EKjzE2aMhNiXtTGEqnXTF3MOHK8=
+        b=jAanALtZWuj6RnbGlWij/uMBPyi+oO/WrygmgoF7h5dhjalvfJa2TBhBDOA3r3zW4
+         W11hLw5lt3tg7V6+lex+J2rcgWZFu+6RMJeQ/aKLLZF1aS5eR4zGsX8PS7U/odhAzx
+         cuArkPQgfxBZ09fsHkQ1Iop3HddWs0/V0fVQlyec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dedy Lansky <dlansky@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4.9 096/125] wil6210: rate limit wil_rx_refill error
-Date:   Wed, 22 Apr 2020 11:56:53 +0200
-Message-Id: <20200422095048.660973854@linuxfoundation.org>
+        stable@vger.kernel.org, Changwei Ge <chge@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 051/125] ocfs2: no need try to truncate file beyond i_size
+Date:   Wed, 22 Apr 2020 11:56:08 +0200
+Message-Id: <20200422095041.772870898@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,34 +66,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dedy Lansky <dlansky@codeaurora.org>
+From: Changwei Ge <chge@linux.alibaba.com>
 
-[ Upstream commit 3d6b72729cc2933906de8d2c602ae05e920b2122 ]
+commit 783fda856e1034dee90a873f7654c418212d12d7 upstream.
 
-wil_err inside wil_rx_refill can flood the log buffer.
-Replace it with wil_err_ratelimited.
+Linux fallocate(2) with FALLOC_FL_PUNCH_HOLE mode set, its offset can
+exceed the inode size.  Ocfs2 now doesn't allow that offset beyond inode
+size.  This restriction is not necessary and violates fallocate(2)
+semantics.
 
-Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+If fallocate(2) offset is beyond inode size, just return success and do
+nothing further.
+
+Otherwise, ocfs2 will crash the kernel.
+
+  kernel BUG at fs/ocfs2//alloc.c:7264!
+   ocfs2_truncate_inline+0x20f/0x360 [ocfs2]
+   ocfs2_remove_inode_range+0x23c/0xcb0 [ocfs2]
+   __ocfs2_change_file_space+0x4a5/0x650 [ocfs2]
+   ocfs2_fallocate+0x83/0xa0 [ocfs2]
+   vfs_fallocate+0x148/0x230
+   SyS_fallocate+0x48/0x80
+   do_syscall_64+0x79/0x170
+
+Signed-off-by: Changwei Ge <chge@linux.alibaba.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200407082754.17565-1-chge@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wireless/ath/wil6210/txrx.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/ath/wil6210/txrx.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx.c
-@@ -546,8 +546,8 @@ static int wil_rx_refill(struct wil6210_
- 			v->swtail = next_tail) {
- 		rc = wil_vring_alloc_skb(wil, v, v->swtail, headroom);
- 		if (unlikely(rc)) {
--			wil_err(wil, "Error %d in wil_rx_refill[%d]\n",
--				rc, v->swtail);
-+			wil_err_ratelimited(wil, "Error %d in rx refill[%d]\n",
-+					    rc, v->swtail);
- 			break;
- 		}
- 	}
+---
+ fs/ocfs2/alloc.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/fs/ocfs2/alloc.c
++++ b/fs/ocfs2/alloc.c
+@@ -7246,6 +7246,10 @@ int ocfs2_truncate_inline(struct inode *
+ 	struct ocfs2_dinode *di = (struct ocfs2_dinode *)di_bh->b_data;
+ 	struct ocfs2_inline_data *idata = &di->id2.i_data;
+ 
++	/* No need to punch hole beyond i_size. */
++	if (start >= i_size_read(inode))
++		return 0;
++
+ 	if (end > i_size_read(inode))
+ 		end = i_size_read(inode);
+ 
 
 
