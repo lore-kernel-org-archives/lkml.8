@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE88C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76338C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB2BC2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474FD20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NI5DoMF/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="piV1LTan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDVHsq (ORCPT
+        id S1726639AbgDVHsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39754 "EHLO
+        Wed, 22 Apr 2020 03:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726577AbgDVHsc (ORCPT
+        by vger.kernel.org with ESMTP id S1726363AbgDVHsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:48:32 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3BDC03C1A6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:32 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id z3so1563265qtb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:32 -0700 (PDT)
+        Wed, 22 Apr 2020 03:48:24 -0400
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C67C03C1A6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:24 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id 189so993713pgb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=sO5BGMnC3muRvVqxOCgNBH4Ftq8H2ieY1lBwILjyo+Y=;
-        b=NI5DoMF/owW2aZ5VxZUSuylgSMaEjauN6nilTzGlADR3PgAO1bFr7LZOubyt4n76+y
-         kiHg+vwUf761EXMA+iC7czaEqgKGLsfdY7ofWV3LrEQ4zDXpB+QVRWJKXq0uOTarN4j2
-         8yBI1n4UI6qMGsaURmxhtK9f2JDRv4yDcODuGJls2RHrKZ8QgAO+CK2JOWZlo86c5HAl
-         g8U9CrYIxjRFfZ/gJ0pwMGGU9GsGe1atcTxT8KppmghucC//ufRGx8HTpHuplIGXbZS5
-         hMsnBYEPqP78iqGxqJrbm7Qlw5emygt5xhzX1gs7q9B194mNbhA/3+EbdMypGPeH3WTw
-         ryDw==
+        bh=OXZleKkWZzKKnBm05g6e7Gyf0CCs6T7oZwd1F3IVZx4=;
+        b=piV1LTanFc70NR+r9jRoJBIka9YA42dJ3uR84Dp/LxbBUlrzb66Fc4Yzc8yYFrlar3
+         YkGX1+iVNc7KnurONdqfiVL/sXfRPahOocQMNUyafUP9TdWwYjukCQI/XV2E6SQKQOR9
+         /Hsfr90B8Gqo+SI7LR/Z0CtEZZLLWVvGrXSh9GwT7UUZ/jFrXhui5FG4b4lxIADgAgJ8
+         hAq6C3rjvo+Q/CWWzeotjcy0WuiXNKvsvodBsL0zI5G2I5PDizFg1uvnEt8RHZbhcKFt
+         an2HCk+dgm4YYEZs3RW/m58/UhphNvnZzGYEwXgYkltwVGvwSy1Rn8F8RSLy251w9skU
+         hCfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=sO5BGMnC3muRvVqxOCgNBH4Ftq8H2ieY1lBwILjyo+Y=;
-        b=emCBbAbUSVKhfRyEa1KESc1T/0u3V0gCEgy0CaU3LqFxeXFdwpdHd/hrtCEvagJWz2
-         aS7hvYJe14dDElH3x0p24QsvOwy2GCeHIt/ddBShj5FgUoK3Dke8nugqH0kyPAvXD9Y3
-         B0n01IxsoWVPVgccr5wgxolTU7WmvolpKYL5XboLk8o4tGhFVH7QcbgLL6M0MiPfHKDE
-         pL/tI1c76Nyi/Y7oxoLoDUNuhjJt9n9z79R2S3i0C2XOv2bqaXWouiKDLHILc1FvGuPR
-         9mJRjcgOY2N2eMWGxwVyzy6Myyc61HqqKjacIUSYICE9Lraa3jWnR4PHrAUqo6gc61No
-         7Z2A==
-X-Gm-Message-State: AGi0PuZBly+fEIG2GI2G1XFYpJOIqKTswuW1i5g0wLliLMfYUyDNeM09
-        RMtKRzLlfu/ovWnml3xR0ZvMEEQwV/IA
-X-Google-Smtp-Source: APiQypJ0RIPZlQIw6798l9F9cXKVdTJwTuI6GHmTM781lC50iAL3+WsiJ2iXQ/cVVDWXR7zWEOoxulq/08ND
-X-Received: by 2002:a0c:c28b:: with SMTP id b11mr4161450qvi.112.1587541711533;
- Wed, 22 Apr 2020 00:48:31 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 00:48:08 -0700
+        bh=OXZleKkWZzKKnBm05g6e7Gyf0CCs6T7oZwd1F3IVZx4=;
+        b=LhzPyf3CIQy+I9g8XONCi1XmUQCsv8DC2BtySn4jSbpQEcEc7gkwzLx9a8xnbMoyE5
+         Kq8N5T6X1TBXcR6SkLo0EiYBjkhqUHvxM0T8CpOh+wMDyOfD/4mDjg9UWSWRwNWDruhr
+         6WEBsOyf1gE79f35AUc7jpUdhSk8gpWbv8fC7dZpmNFAECo0LuPWm5iAzpCJNQ3WSkCR
+         wuzIR9lRNIgFn8/pR2/bkcok364iAbvphEH3ETsS71tFlaP+zZ4j8XykT5yyeRVni58c
+         Oxm9kejxwj2hsSW0SoWH4buVv2rWyy5FDRxUj6B73BA3OwVqvAq525KZc/DjBYAQGtQX
+         yJeA==
+X-Gm-Message-State: AGi0PuZwlU5RfcWgY2ntVS6Ur5KJX2PW8J23/9Dg9ubWJ7aOrAp8gK7o
+        Fs3amCcEA92tmAIaR7A1R54+3R1mXcRL
+X-Google-Smtp-Source: APiQypIyJTHGfpp6A4QQxTBiZ3b+h8XXcgNpuiTC0F/FXhrotj5YSMwZWq0PznA+cS86xqsFG6U/aY+SWXQ/
+X-Received: by 2002:a17:90a:de0e:: with SMTP id m14mr10282958pjv.54.1587541703261;
+ Wed, 22 Apr 2020 00:48:23 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 00:48:05 -0700
 In-Reply-To: <20200422074809.160248-1-irogers@google.com>
-Message-Id: <20200422074809.160248-8-irogers@google.com>
+Message-Id: <20200422074809.160248-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20200422074809.160248-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 7/8] perf expr: debug lex if debugging yaxx
+Subject: [PATCH 4/8] perf expr: allow ',' to be an other token
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -87,26 +87,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only effects parser debugging (disabled by default). Enables displaying
-'--accepting rule at line .. ("...").
+Corrects parse errors in expr__find_other of expressions with min.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/expr.y | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c3382d58cf40..8694bec86f1a 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -44,6 +44,7 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index cd17486c1c5d..54260094b947 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -80,7 +80,7 @@ other: ID
+ 	ctx->ids[ctx->num_ids++].name = $1;
+ }
+ |
+-MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')'
++MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
  
- #ifdef PARSER_DEBUG
- 	expr_debug = 1;
-+	expr_set_debug(1, scanner);
- #endif
  
- 	ret = expr_parse(val, ctx, scanner);
+ all_expr: if_expr			{ *final_val = $1; }
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
