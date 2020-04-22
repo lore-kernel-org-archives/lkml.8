@@ -2,170 +2,134 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9306AC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53638C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68879206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313AA206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eDWJvQoY"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pVaaOgeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgDVOfi (ORCPT
+        id S1727962AbgDVOfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbgDVOfh (ORCPT
+        Wed, 22 Apr 2020 10:35:46 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:54866 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbgDVOfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:35:37 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837E3C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 07:35:37 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id x9so702958vkd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 07:35:37 -0700 (PDT)
+        Wed, 22 Apr 2020 10:35:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6r060DYJVZuVXNH4Pw8Vog7xFy/id6N/VIMCOquzR7U=;
-        b=eDWJvQoYw0D566ye1FZEi0s6T0WZmoyGNsc/8zWhyCZTuWw6KdGKF4mnmujYBQc+tC
-         BSUGRUwJ9QrdeexT+FmaHXYPQNM7WaImUsMikx2Qulye0j9XGzYCAIJlEFMo10DZdVec
-         eu/h3ItHJ5Pi4ijg2do5aCwU5G2x9Ozv3k/jU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6r060DYJVZuVXNH4Pw8Vog7xFy/id6N/VIMCOquzR7U=;
-        b=ZabPnEtBhC3coupEc9vDAdZ6yOCHoOasUSLly1HdnJAj341MvdPAbq5VB4p60hEd7l
-         /XrITthjLYz2xrrdkB29lHlj1p2UGP9IoLyRuGrsMA+IeLMnjO+6eMNTClC8i1d4WfPx
-         XSmvjQ0gDDVPRx02F0Id/Bd42zHV887U0KrZWDx0RDFRnBocJpd0RsNSQuGTWc0jo9KM
-         qF7dVs+K7chNgaHWQxtB2mDmVkciGTT7ym5S33X4kheRkC+EVy3+FZvK8USuXkdighQ6
-         xpqWn/HBedHnZG/7D9zx+ZXeK/Bt+RgIRMe6uDRTSj9pwUwCVtgdaEqeEc9OsmU/t5Ty
-         ndgw==
-X-Gm-Message-State: AGi0PuavU7wEdKKnAbhUSUAEoMLDqt5JmLp8hgx6edLz9WYtglo+5wTK
-        /qqsIOqkDiUJC0AdlZGw0VFRlopfyC8=
-X-Google-Smtp-Source: APiQypKIetlCxrnKipqb9LoER+Wa/GEZ7pRd5L/g4ps9+CqHWlM4J7ugplAfbeY3S06bd6AkJT4v8g==
-X-Received: by 2002:a1f:32cf:: with SMTP id y198mr19594204vky.96.1587566136196;
-        Wed, 22 Apr 2020 07:35:36 -0700 (PDT)
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
-        by smtp.gmail.com with ESMTPSA id n193sm1655668vkf.43.2020.04.22.07.35.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 07:35:34 -0700 (PDT)
-Received: by mail-vk1-f182.google.com with SMTP id 10so693480vkr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 07:35:34 -0700 (PDT)
-X-Received: by 2002:a1f:9605:: with SMTP id y5mr5583628vkd.75.1587566133956;
- Wed, 22 Apr 2020 07:35:33 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587566144; x=1619102144;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=VyvTAFNY/PJIZIzdT/RK7DKK5sVJPpUbovBzORaA9b8=;
+  b=pVaaOgeKOFmsL3WFr0E7ZUgFfOhXDpTKoou7ANhng/alZWHTtC2kpr4j
+   0TTFkL72eixXC5vE1a4t0GlTyOmsXMPsNSgqPgrvh+cXTm+VNU/52keVD
+   zgjghrAORs1hUKgyMEEinmZaQLbPcegTnjmmk1+uUViA0n/56Ibzrtpa6
+   o=;
+IronPort-SDR: oFf+XMB52+Nnq5FTYuJ0l5VruB5O5i2cc113aDzkRwYh2ixClq+z8wZGnnq9JKuLB2/h7tuTHF
+ RKkey7pEQQ8A==
+X-IronPort-AV: E=Sophos;i="5.72,414,1580774400"; 
+   d="scan'208";a="28207546"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 22 Apr 2020 14:35:31 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 638A3A1B6D;
+        Wed, 22 Apr 2020 14:35:30 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 22 Apr 2020 14:35:29 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.92) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 22 Apr 2020 14:35:21 +0000
+Subject: Re: [PATCH v1 13/15] nitro_enclaves: Add Kconfig for the Nitro
+ Enclaves driver
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <20200421184150.68011-14-andraprs@amazon.com>
+ <0b169445-a0c6-8eef-86b8-71a09021e143@infradead.org>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <65322574-8bdf-51c7-04e0-54c344f8014b@amazon.com>
+Date:   Wed, 22 Apr 2020 17:35:12 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200422112719.826676174@infradead.org> <20200422112831.870192415@infradead.org>
- <20200422135628.GH4898@sirena.org.uk>
-In-Reply-To: <20200422135628.GH4898@sirena.org.uk>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 22 Apr 2020 07:35:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VcbXoxtzyvLsFZuCDXJwCv8Y3pUdYBKMUmJaNcueBrqQ@mail.gmail.com>
-Message-ID: <CAD=FV=VcbXoxtzyvLsFZuCDXJwCv8Y3pUdYBKMUmJaNcueBrqQ@mail.gmail.com>
-Subject: Re: [PATCH 11/23] sched,spi: Convert to sched_set_fifo*()
-To:     Mark Brown <broonie@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>, qais.yousef@arm.com,
-        juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        dietmar.eggemann@arm.com, Benjamin Segall <bsegall@google.com>,
-        mgorman@suse.de, Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0b169445-a0c6-8eef-86b8-71a09021e143@infradead.org>
+Content-Language: en-US
+X-Originating-IP: [10.43.160.92]
+X-ClientProxiedBy: EX13D42UWA004.ant.amazon.com (10.43.160.18) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+CgpPbiAyMS8wNC8yMDIwIDIxOjUwLCBSYW5keSBEdW5sYXAgd3JvdGU6Cj4gSGktLQo+Cj4gT24g
+NC8yMS8yMCAxMTo0MSBBTSwgQW5kcmEgUGFyYXNjaGl2IHdyb3RlOgo+PiBTaWduZWQtb2ZmLWJ5
+OiBBbmRyYSBQYXJhc2NoaXYgPGFuZHJhcHJzQGFtYXpvbi5jb20+Cj4+IC0tLQo+PiAgIGRyaXZl
+cnMvdmlydC9LY29uZmlnICAgICAgICB8ICAyICsrCj4+ICAgZHJpdmVycy92aXJ0L2FtYXpvbi9L
+Y29uZmlnIHwgMjggKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDIgZmlsZXMgY2hh
+bmdlZCwgMzAgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Zp
+cnQvYW1hem9uL0tjb25maWcKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlydC9LY29uZmln
+IGIvZHJpdmVycy92aXJ0L0tjb25maWcKPj4gaW5kZXggMzYzYWYyZWFmMmJhLi4wNmJiNWNmYTE5
+MWQgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvdmlydC9LY29uZmlnCj4+ICsrKyBiL2RyaXZlcnMv
+dmlydC9LY29uZmlnCj4+IEBAIC0zMiw0ICszMiw2IEBAIGNvbmZpZyBGU0xfSFZfTUFOQUdFUgo+
+PiAgICAgICAgICAgICBwYXJ0aXRpb24gc2h1dHMgZG93bi4KPj4KPj4gICBzb3VyY2UgImRyaXZl
+cnMvdmlydC92Ym94Z3Vlc3QvS2NvbmZpZyIKPj4gKwo+PiArc291cmNlICJkcml2ZXJzL3ZpcnQv
+YW1hem9uL0tjb25maWciCj4+ICAgZW5kaWYKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlydC9h
+bWF6b24vS2NvbmZpZyBiL2RyaXZlcnMvdmlydC9hbWF6b24vS2NvbmZpZwo+PiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjU3ZmQwYWE1ODgwMwo+PiAtLS0gL2Rl
+di9udWxsCj4+ICsrKyBiL2RyaXZlcnMvdmlydC9hbWF6b24vS2NvbmZpZwo+PiBAQCAtMCwwICsx
+LDI4IEBACj4+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4+ICsjCj4+ICsj
+IENvcHlyaWdodCAyMDIwIEFtYXpvbi5jb20sIEluYy4gb3IgaXRzIGFmZmlsaWF0ZXMuIEFsbCBS
+aWdodHMgUmVzZXJ2ZWQuCj4+ICsjCj4+ICsjIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJl
+OyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5IGl0Cj4+ICsjIHVuZGVyIHRo
+ZSB0ZXJtcyBhbmQgY29uZGl0aW9ucyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2Us
+Cj4+ICsjIHZlcnNpb24gMiwgYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5k
+YXRpb24uCj4+ICsjCj4+ICsjIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9w
+ZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAo+PiArIyBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7
+IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZgo+PiArIyBNRVJDSEFOVEFCSUxJ
+VFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuIFNlZSB0aGUKPj4gKyMgR05V
+IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4gKyMKPj4gKyMgWW91
+IHNob3VsZCBoYXZlIHJlY2VpdmVkIGEgY29weSBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
+Y2Vuc2UKPj4gKyMgYWxvbmcgd2l0aCB0aGlzIHByb2dyYW07IGlmIG5vdCwgc2VlIDxodHRwOi8v
+d3d3LmdudS5vcmcvbGljZW5zZXMvPi4KPj4gKwo+PiArIyBBbWF6b24gTml0cm8gRW5jbGF2ZXMg
+KE5FKSBzdXBwb3J0Lgo+PiArIyBOaXRybyBpcyBhIGh5cGVydmlzb3IgdGhhdCBoYXMgYmVlbiBk
+ZXZlbG9wZWQgYnkgQW1hem9uLgo+PiArCj4+ICtjb25maWcgTklUUk9fRU5DTEFWRVMKPj4gKyAg
+ICAgdHJpc3RhdGUgIk5pdHJvIEVuY2xhdmVzIFN1cHBvcnQiCj4+ICsgICAgIGRlcGVuZHMgb24g
+SE9UUExVR19DUFUKPj4gKyAgICAgLS0taGVscC0tLQo+IEZvciB2MjoKPiBXZSBhcmUgbW92aW5n
+IGF3YXkgZnJvbSB0aGUgdXNlIG9mICItLS1oZWxwLS0tIiB0byBqdXN0ICJoZWxwIi4KCkhpIFJh
+bmR5LAoKQWNrLCB0aGFuayB5b3UsIEkgdXBkYXRlZCBpbiB2Mi4KClRoYW5rcywKQW5kcmEKCj4K
+Pj4gKyAgICAgICBUaGlzIGRyaXZlciBjb25zaXN0cyBvZiBzdXBwb3J0IGZvciBlbmNsYXZlIGxp
+ZmV0aW1lIG1hbmFnZW1lbnQKPj4gKyAgICAgICBmb3IgTml0cm8gRW5jbGF2ZXMgKE5FKS4KPj4g
+Kwo+PiArICAgICAgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBN
+IGhlcmUuCj4+ICsgICAgICAgVGhlIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBuaXRyb19lbmNsYXZl
+cy4KPj4KPiB0aGFua3MuCj4gLS0KPiB+UmFuZHkKPgoKCgoKQW1hem9uIERldmVsb3BtZW50IENl
+bnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0
+cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4g
+UmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUu
+Cg==
 
-On Wed, Apr 22, 2020 at 6:56 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, Apr 22, 2020 at 01:27:30PM +0200, Peter Zijlstra wrote:
-> > Because SCHED_FIFO is a broken scheduler model (see previous patches)
-> > take away the priority field, the kernel can't possibly make an
-> > informed decision.
-> >
-> > No effective change.
->
-> Copying Doug who did this change and Guenter who reviewed it.  This
-> looks fine to me but I've no particular involvement with the code or
-> platforms that are affected here.
-
-Thanks!  Probably the maintainers of cros_ec_spi.c (Benson and Enric)
-should be aware of it, too.  CCing them.
-
-From my point of view, my response is pretty much identical to the one
-I wrote when the priority was reduced from "MAX_RT_PRIO - 1" to
-"MAX_RT_PRIO / 2" [1].  Basically, any priority that keeps us from
-being preempted by tasks that are only high priority for performance
-reasons (like dm crypt and loopback did when I last analyzed) is fine.
-Our priority needs to be high not for performance reasons but for
-correctness reasons (the other side will drop our data if we don't
-respond in time).
-
-Thus:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-
-[1] https://lore.kernel.org/r/CAD=FV=UsYF1R6+XRfFFFm6PfmkTsEOfxxgCw2JxCnpyu1kGVLQ@mail.gmail.com
-
-
-> > Cc: broonie@kernel.org
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> > ---
-> >  drivers/platform/chrome/cros_ec_spi.c |    6 +-----
-> >  1 file changed, 1 insertion(+), 5 deletions(-)
-> >
-> > --- a/drivers/platform/chrome/cros_ec_spi.c
-> > +++ b/drivers/platform/chrome/cros_ec_spi.c
-> > @@ -709,9 +709,6 @@ static void cros_ec_spi_high_pri_release
-> >  static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
-> >                                          struct cros_ec_spi *ec_spi)
-> >  {
-> > -     struct sched_param sched_priority = {
-> > -             .sched_priority = MAX_RT_PRIO / 2,
-> > -     };
-> >       int err;
-> >
-> >       ec_spi->high_pri_worker =
-> > @@ -728,8 +725,7 @@ static int cros_ec_spi_devm_high_pri_all
-> >       if (err)
-> >               return err;
-> >
-> > -     err = sched_setscheduler_nocheck(ec_spi->high_pri_worker->task,
-> > -                                      SCHED_FIFO, &sched_priority);
-> > +     err = sched_set_fifo(ec_spi->high_pri_worker->task);
-> >       if (err)
-> >               dev_err(dev, "Can't set cros_ec high pri priority: %d\n", err);
-> >       return err;
-> > --- a/drivers/spi/spi.c
-> > +++ b/drivers/spi/spi.c
-> > @@ -1589,11 +1589,9 @@ EXPORT_SYMBOL_GPL(spi_take_timestamp_pos
-> >   */
-> >  static void spi_set_thread_rt(struct spi_controller *ctlr)
-> >  {
-> > -     struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
-> > -
-> >       dev_info(&ctlr->dev,
-> >               "will run message pump with realtime priority\n");
-> > -     sched_setscheduler(ctlr->kworker_task, SCHED_FIFO, &param);
-> > +     sched_set_fifo(ctlr->kworker_task);
-> >  }
-> >
-> >  static int spi_init_queue(struct spi_controller *ctlr)
-> >
-> >
