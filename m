@@ -2,183 +2,140 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE688C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3764C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2E32073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552199;
-	bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vEzNfhuxxKj/Jatfmd1hpTA8szV1fDYNEfvBFqOdGOPadZOupRxrrDB3bnguvSHp4
-	 2L83WGpqzPgNFMpD4tVzj/bNxARnuHtLMKkeu2jxxMkujWDNISkC708xYumJ5CgEYH
-	 3IzcS2mHN/ozF8EsatSUuWGKbLxhOSNcEpQ5jT0I=
+	by mail.kernel.org (Postfix) with ESMTP id 9F0A420656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQog2JFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbgDVKnS (ORCPT
+        id S1731789AbgDVKnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730066AbgDVKTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:19:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D78202076E;
-        Wed, 22 Apr 2020 10:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550778;
-        bh=sscrRof2T2gOXm1DhhLMfhcfPs75brf/YmFVxd4ypA8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDKXYg+8SgUoNfgDydu2FuqGlYKE3H93+/9y8oy/37Ir9t0NVrb2wnSQQCK/P+kr7
-         vFXSSQxhA3fY2kDaJdX3gkcuN18X0djhv9ih0e7kkMTr4P6ql/xNnFV5ML4Dl2s6D5
-         zGZXC78GmDV/Y1PDycxeu3t0MI7JadEHFV76yb7g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 082/118] csky: Fixup get wrong psr value from phyical reg
-Date:   Wed, 22 Apr 2020 11:57:23 +0200
-Message-Id: <20200422095045.041054715@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
-References: <20200422095031.522502705@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Apr 2020 06:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730067AbgDVKTj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:19:39 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D762C03C1A8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:19:35 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id t14so1686927wrw.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5PhIRlfxSd6Xawyu0KJOVJaENTrBMylRV4/RWfRrVd8=;
+        b=fQog2JFHadvS9RrhNUQ8NXgdPQM3795g/mlpdl336mApkCejO/gL0OcFOxX3/2PN/P
+         GpPKu2N7mnFNBSVAl9Xp/lWjM5TGxtcVffG1VqZ8BoRtN81WAQ8wtyBKO98NSQ6pJgqC
+         CpiHAOm6KVVOYAWLE68uhj4Pmewf835akUehm840wphbDXoh25/uZiCot+NenUXr3lWO
+         HcAGIWiqCtC0K4H8SBUEAp0zSaNgRiDvB5Qc38OIS9pHCj98Lq8MMZ1RXctVEGbEDbaE
+         fL4ywv2N1AKR4tIzgjjR7qLgIpQfWFPEC1VBkbw36K2d3qp/YfcLQaJRpowtxgMCjMSJ
+         rK0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5PhIRlfxSd6Xawyu0KJOVJaENTrBMylRV4/RWfRrVd8=;
+        b=dHahfOQD05Gy2WE+ZVJpPDxpfzMSo7KzoxR4nQKDhUOzkrZ4mYVv7YOKb92rihwXyJ
+         1cmVnKOCp2/syAyMoJeTzJlOEzqvwwKUhq1ZKvN7MlYiX51hAXl5bRpYWDEe7SOFQKfp
+         Z41lOl0YJ1kIgFDQ6L2/g1ZOhU9Q37IElu3W7n274YhynUBlYtODdPphGZBJ5DuHbAMz
+         /OLPeJW/R6/CN5L7EXTRYXXK5TvSxsom+1cAbhPV8rsp9Or5BcKLeZ29jn0sUkVZe7KG
+         +fcLSnEyKPExMnFB7xbfUHftki2JNgLPl0TT+V1ji3IBlwGl/vevtPOed0foPVlBQhCd
+         6H5Q==
+X-Gm-Message-State: AGi0PuY8nePr8DkJ/nC+2f2Zwq63LYaucDXn9NBupF39XBcM3st6RvUq
+        ItkrNk0UaFJND6WhJ9f9dDg80w==
+X-Google-Smtp-Source: APiQypKtnvoqO690NcodPG5Icoc96fbnAS6AsX06nqnlt6p4KLnlpdrwCBcwDHeB2H2N5nbR++xHTw==
+X-Received: by 2002:a5d:4381:: with SMTP id i1mr28121319wrq.194.1587550774176;
+        Wed, 22 Apr 2020 03:19:34 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id k3sm8483299wru.90.2020.04.22.03.19.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 03:19:33 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2] arm64: dts: qcom: db820c: fix audio configuration
+Date:   Wed, 22 Apr 2020 11:19:22 +0100
+Message-Id: <20200422101922.8894-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
+and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
+asm dais and routing needs to be properly specified at device tree level.
 
-[ Upstream commit 9c0e343d7654a329d1f9b53d253cbf7fb6eff85d ]
+This patch fixes this.
 
-We should get psr value from regs->psr in stack, not directly get
-it from phyiscal register then save the vector number in
-tsk->trap_no.
-
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/csky/include/asm/processor.h |  1 +
- arch/csky/kernel/traps.c          | 11 ++++++++++-
- arch/csky/mm/fault.c              |  7 +++++++
- 3 files changed, 18 insertions(+), 1 deletion(-)
+Changes since v1:
+	- removed invalid direction property
 
-diff --git a/arch/csky/include/asm/processor.h b/arch/csky/include/asm/processor.h
-index 21e0bd5293dde..c6bcd7f7c720b 100644
---- a/arch/csky/include/asm/processor.h
-+++ b/arch/csky/include/asm/processor.h
-@@ -43,6 +43,7 @@ extern struct cpuinfo_csky cpu_data[];
- struct thread_struct {
- 	unsigned long  ksp;       /* kernel stack pointer */
- 	unsigned long  sr;        /* saved status register */
-+	unsigned long  trap_no;   /* saved status register */
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 19 ++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index af87350b5547..6e81db5671c9 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -908,10 +908,27 @@
+ 	status = "okay";
+ };
  
- 	/* FPU regs */
- 	struct user_fp __aligned(16) user_fp;
-diff --git a/arch/csky/kernel/traps.c b/arch/csky/kernel/traps.c
-index b057480e7463c..63715cb90ee99 100644
---- a/arch/csky/kernel/traps.c
-+++ b/arch/csky/kernel/traps.c
-@@ -115,8 +115,9 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 	int sig;
- 	unsigned long vector;
- 	siginfo_t info;
-+	struct task_struct *tsk = current;
- 
--	vector = (mfcr("psr") >> 16) & 0xff;
-+	vector = (regs->sr >> 16) & 0xff;
- 
- 	switch (vector) {
- 	case VEC_ZERODIV:
-@@ -129,6 +130,7 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 		sig = SIGTRAP;
- 		break;
- 	case VEC_ILLEGAL:
-+		tsk->thread.trap_no = vector;
- 		die_if_kernel("Kernel mode ILLEGAL", regs, vector);
- #ifndef CONFIG_CPU_NO_USER_BKPT
- 		if (*(uint16_t *)instruction_pointer(regs) != USR_BKPT)
-@@ -146,16 +148,20 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 		sig = SIGTRAP;
- 		break;
- 	case VEC_ACCESS:
-+		tsk->thread.trap_no = vector;
- 		return buserr(regs);
- #ifdef CONFIG_CPU_NEED_SOFTALIGN
- 	case VEC_ALIGN:
-+		tsk->thread.trap_no = vector;
- 		return csky_alignment(regs);
- #endif
- #ifdef CONFIG_CPU_HAS_FPU
- 	case VEC_FPE:
-+		tsk->thread.trap_no = vector;
- 		die_if_kernel("Kernel mode FPE", regs, vector);
- 		return fpu_fpe(regs);
- 	case VEC_PRIV:
-+		tsk->thread.trap_no = vector;
- 		die_if_kernel("Kernel mode PRIV", regs, vector);
- 		if (fpu_libc_helper(regs))
- 			return;
-@@ -164,5 +170,8 @@ asmlinkage void trap_c(struct pt_regs *regs)
- 		sig = SIGSEGV;
- 		break;
- 	}
++&q6asmdai {
++	dai@0 {
++		reg = <0>;
++	};
 +
-+	tsk->thread.trap_no = vector;
++	dai@1 {
++		reg = <1>;
++	};
 +
- 	send_sig(sig, current, 0);
- }
-diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
-index f76618b630f91..562c7f7087490 100644
---- a/arch/csky/mm/fault.c
-+++ b/arch/csky/mm/fault.c
-@@ -179,11 +179,14 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- bad_area_nosemaphore:
- 	/* User mode accesses just cause a SIGSEGV */
- 	if (user_mode(regs)) {
-+		tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
- 		force_sig_fault(SIGSEGV, si_code, (void __user *)address);
- 		return;
- 	}
- 
- no_context:
-+	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
++	dai@2 {
++		reg = <2>;
++	};
++};
 +
- 	/* Are we prepared to handle this kernel fault? */
- 	if (fixup_exception(regs))
- 		return;
-@@ -198,6 +201,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- 	die_if_kernel("Oops", regs, write);
+ &sound {
+ 	compatible = "qcom,apq8096-sndcard";
+ 	model = "DB820c";
+-	audio-routing =	"RX_BIAS", "MCLK";
++	audio-routing =	"RX_BIAS", "MCLK",
++		"MM_DL1",  "MultiMedia1 Playback",
++		"MM_DL2",  "MultiMedia2 Playback",
++		"MultiMedia3 Capture", "MM_UL3";
  
- out_of_memory:
-+	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
-+
- 	/*
- 	 * We ran out of memory, call the OOM killer, and return the userspace
- 	 * (which will retry the fault, or kill us if we got oom-killed).
-@@ -206,6 +211,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
- 	return;
- 
- do_sigbus:
-+	tsk->thread.trap_no = (regs->sr >> 16) & 0xff;
-+
- 	up_read(&mm->mmap_sem);
- 
- 	/* Kernel mode? Handle exceptions or die */
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 14827adebd94..98634d5c4440 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -2066,6 +2066,8 @@
+ 						reg = <APR_SVC_ASM>;
+ 						q6asmdai: dais {
+ 							compatible = "qcom,q6asm-dais";
++							#address-cells = <1>;
++							#size-cells = <0>;
+ 							#sound-dai-cells = <1>;
+ 							iommus = <&lpass_q6_smmu 1>;
+ 						};
 -- 
-2.20.1
-
-
+2.21.0
 
