@@ -2,96 +2,143 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FC3C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFA8C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F54420656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551735;
-	bh=micotk57/YyCbC9O+mxgFISmiIDBkthE9XBBlTkxP7s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bMhwOqiK5kz7w0GdMd9T2HNFP8QQoUuRjErcH7cW0PCvF6BoMswzMWOaHvdPsGnbi
-	 Ghs89tQSnCDNKKtj1aWeEQHKLoaClryboDxBbhrmI5Np8CB2AWY4zRQuuakQ0c61/E
-	 5v56xo69K665UaphNknTsFIU3n280Bks5s+wNmc4=
+	by mail.kernel.org (Postfix) with ESMTP id A32992073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="jGXtLpkb";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="FFqSxCdv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731384AbgDVKfe (ORCPT
+        id S1731343AbgDVKfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgDVKXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E522A2071E;
-        Wed, 22 Apr 2020 10:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551012;
-        bh=micotk57/YyCbC9O+mxgFISmiIDBkthE9XBBlTkxP7s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZkhhVBNyMgjIVI6iepKoaDwSPCK6omcjzTXd8hbuHDNQBgq+u2Hh8ZD0ng4GzGsLl
-         +OFi3A3UO3Eh1PmSYa+GKI30qUO7DigJoTUEwC32en2H2e0qe4e3UQcw7raTnWr5yP
-         eP1/mikO/bOeDe4SMGxf0LL7vXir1F524hpcP2HA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 063/166] xfs: fix use-after-free when aborting corrupt attr inactivation
-Date:   Wed, 22 Apr 2020 11:56:30 +0200
-Message-Id: <20200422095055.594423338@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
-References: <20200422095047.669225321@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Apr 2020 06:35:38 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:2815 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731381AbgDVKfc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:35:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587551732; x=1619087732;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=MdrS2JP0e0emC0iygxoUjItHdbhZL0AN0RAyFpbOMIo=;
+  b=jGXtLpkbQsa9oZwx2TlCglccH4eLx1bysv5AKLfsx1FnBCb16pRBdlIO
+   mAtr+Mu6HrmY73RaO8ZJumCR+R7GgFB+Z5q7nSNMCXqwh7laJJ27QdGjY
+   gNxIYjmzA1uvksGgh4d21C+Kr8T1xNkWGghkUQS1GIISP1tGIxZBe7/VV
+   UrEyKFEvpBIx1dPg8uaZzTJaBLxDwh/RgcQXikVjysQDWIgRuT+0SlDIn
+   +qib5beCTm2RIB3pQ3cJW0bsD9E8+TWZQAMwtjjH3kVsKUx2hKGq9SMEB
+   Q5tzN13VkxtQezs0809txMbviOy7VnxbCMQkT055TZUxEGUFqicIXlm56
+   A==;
+IronPort-SDR: CV3UUf1sWeOfwluMsbMlr/xFgtEozRMtmoSmenfK/hhYIPVuHX5+bVaLTp8hIepz9WsJAAFvyV
+ moulelecz0j2zZg0te11F+TGwEbg2tnUiomaENO2HJbXwNDJHJNoMeO3OfjTbe3QutbkHGaV6u
+ JSvZ0Pq5gxbhsj3uDKr8Xxy78xiCBUpaSfApfxMbmuyYDUKMyK864z1h0hUWPHwoWUXNW4JkLI
+ wD6lEAN8deV/Ef9G9C1+RExkAsDRnJcMotUITns2CTF+ewt6tdOXVUht9w2ioXLqyJewoK+mvC
+ ZG0=
+X-IronPort-AV: E=Sophos;i="5.72,413,1580745600"; 
+   d="scan'208";a="137300294"
+Received: from mail-cys01nam02lp2059.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.59])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Apr 2020 18:35:31 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mrLqFrunRvFSEbXo0iwzPLwZYmZnSNpNr89kUDib1MAfqYe1piBv34nibaip0QcfBUdC+AQogRSMHRol/zJgP+/eEfEop/n9Fd4YwKkA4PaBD1T0KwWYoC8qgPqx1/lj3OxpxjH7Es6ljAMesZwWgBaLUVm1hSDY0nkqnEUaQ454xKm1WOx6+liRHrBWdb9u+Izfdml6M/3uYlZnnBVrEr+r5PKIiJgmuthn4kDXkCmcnqyffcXV3quAygDyFO1TN3BJC0o/KeKHFCIMYGpS5PmNHf3L8rYYaCf90coh05ysJpL+onRRWR9qOqxdbd8PL5nJzuUZ+Xann7npeOgUng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bQHKrUYqInIdoHSn5IvHnZwZu6R8f2ANu7K/ZctM1rI=;
+ b=Txq52ZmWyIW9sCNj/QodSYa+z276/qK6Sioq8tUKBhWF7jFIiGXajL8v8WLF5ZZqdHG48Q1NkUcf6kMY4YcQQ6RoA2JCM6xjZUqntBr3Cx0rO5iDqC1uaSCFwsn088u9RJyIPxnR4JCSU5tTNSIladJ2jbB8Nr+5ygLFm11WhyOqUZ30lu5PwFO07oZhG+otddWNCUaXcHyM82oVJBQOOGLTdQfa/XfEKhctW+75iBG8aY2RmR1ySG/s1ZE5DR/MELhcGCQUTIZQ5MGEjoq2Kc9QX7p1yYe4xePB4ji1Jd+OZwBzAvLfNrwHfJ9LwAibXJR5IPinXaywVOzKEMT1hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bQHKrUYqInIdoHSn5IvHnZwZu6R8f2ANu7K/ZctM1rI=;
+ b=FFqSxCdvOI7x3mOwjGQVgiHZqwSBb9tz7IWzvFyZMTxdxGa4FImW7BqZxw2DFwYE6X2uua7cZ6sRg7JuF+3rfxO3F1Ajfm6xwZObOwjyRcj92S1dQ9mQXTq5kmsbQu6aUz4sAoeSQLc754ns982ZerduHADEdaW8rNsaYNuUNWg=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB3839.namprd04.prod.outlook.com (2603:10b6:805:3f::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Wed, 22 Apr
+ 2020 10:35:29 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2937.012; Wed, 22 Apr 2020
+ 10:35:29 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Asutosh Das <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/3] scsi: ufs: add write booster feature support
+Thread-Topic: [PATCH v2 1/3] scsi: ufs: add write booster feature support
+Thread-Index: AQHWGC/ZP5mEb4mHQU6B/JvojeGq46iE8eUA
+Date:   Wed, 22 Apr 2020 10:35:29 +0000
+Message-ID: <SN6PR04MB4640895F87719D8B04D0F74EFCD20@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <cover.1586374414.git.asutoshd@codeaurora.org>
+ <6519cd576299d5881129b0e48870a53a0afc7835.1587509578.git.asutoshd@codeaurora.org>
+In-Reply-To: <6519cd576299d5881129b0e48870a53a0afc7835.1587509578.git.asutoshd@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dee2446c-0967-4f6a-9c4c-08d7e6a8e0b5
+x-ms-traffictypediagnostic: SN6PR04MB3839:
+x-microsoft-antispam-prvs: <SN6PR04MB38393317710B3147EC98C2E2FCD20@SN6PR04MB3839.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 03818C953D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(66446008)(64756008)(81156014)(8936002)(55016002)(316002)(7696005)(110136005)(6506007)(26005)(4744005)(54906003)(8676002)(52536014)(2906002)(66556008)(71200400001)(186003)(4326008)(5660300002)(86362001)(478600001)(9686003)(66946007)(76116006)(33656002)(66476007)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YqvxcmwJ0X67fQfqAK52bKSyRcPmOYAt56XzqTWcfS8Xv3TJKAZA0PAwaMLQkrCTykHvtOEIIy7lyqVQSJKXTYBzO0ca92d5Thcwy2MzmWshAWZZRfq7NZwJRbDdnqQOPhA77Dd1ffRROpOD5WTgGDC+koCN93id9xqvCGbS4QmRSzGkAIyB63Uf590PA74La0Noat6ROuMRAz4bsnCLx7uHBYyWXqtP94gmLDUzvd6EqG6T04FbV1xcZjPmy1M5Piuw8psvdPcT84TJZRfEu5cDwpkoMvY5cYPEUNj/zzirZONAgrpjJ//kF5sRTmcWbblDACO1nyoCEsGIVjApbd7Vu6cnmH6MHA5wGqwHapGTrjGnvFyS4F6Xa7nazFh0sugDnNTteYIVgJ4wc2A7pr/rwuVx7qxZkAzN43iYNWOJqQKa3gFmDe83aBpbNaJd
+x-ms-exchange-antispam-messagedata: vocKJWG7JMIcLmlSE+shZlqIvxxNhTPXM/xBqdUOMd8xERfE36UOMbC0nt7q4tViybIg6R00QzlkD1XWK+G6vXxLdyXuwrK/YRFzzF54hSxac+97fwqRWBj8ksU1+k8bvNc50ywJQy+0mQCqWZHrHw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dee2446c-0967-4f6a-9c4c-08d7e6a8e0b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 10:35:29.3847
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +v7hzeZIhnqfljXX7Y1Qn2llxJ8A5RMNAquaPX7ue/amETBjzwJRF3ajc3hWlBTv/e1FsEq82qvcZbnYhgBlCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB3839
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+> +       /* Enable Write Booster if we have scaled up else disable it */
+> +       if (!ret) {
+> +               up_write(&hba->clk_scaling_lock);
+> +               ufshcd_wb_ctrl(hba, scale_up);
+> +               down_write(&hba->clk_scaling_lock);
+> +       }
+Maybe add "goto out_unprepare" if ufshcd_scale_gear() in the clause above,
+Instead of checking !ret, to follow the function flow.
 
-[ Upstream commit 496b9bcd62b0b3a160be61e3265a086f97adcbd3 ]
-
-Log the corrupt buffer before we release the buffer.
-
-Fixes: a5155b870d687 ("xfs: always log corruption errors")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/xfs/xfs_attr_inactive.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_attr_inactive.c b/fs/xfs/xfs_attr_inactive.c
-index bbfa6ba84dcd7..fe8f60b59ec4d 100644
---- a/fs/xfs/xfs_attr_inactive.c
-+++ b/fs/xfs/xfs_attr_inactive.c
-@@ -145,8 +145,8 @@ xfs_attr3_node_inactive(
- 	 * Since this code is recursive (gasp!) we must protect ourselves.
- 	 */
- 	if (level > XFS_DA_NODE_MAXDEPTH) {
--		xfs_trans_brelse(*trans, bp);	/* no locks for later trans */
- 		xfs_buf_corruption_error(bp);
-+		xfs_trans_brelse(*trans, bp);	/* no locks for later trans */
- 		return -EFSCORRUPTED;
- 	}
- 
--- 
-2.20.1
-
-
+Thanks,
+Avri
 
