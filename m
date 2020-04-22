@@ -2,146 +2,330 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A28C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DEFC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3FF20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A70F2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EckCc9k8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmUe4CbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgDVTqT (ORCPT
+        id S1726439AbgDVTt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:46:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41844 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726079AbgDVTqT (ORCPT
+        Wed, 22 Apr 2020 15:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725779AbgDVTt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:46:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587584777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bz3/wnwvPYrqLraYmQKr5kAw4lnPaAd0IDA6hfhqLJ8=;
-        b=EckCc9k8OVadqZDyiRwqNa5VBTkLQn1nOLnw1t3Il+WDoFoIwpOLsoabjJkUyPHGdVP9dN
-        HNoii0rAPOwcc/WpnTb1qy6JQjnfLVyw5eeXn6bZZVeHERAhAaBSnZS097uHZunjRczU+f
-        VsDOTYludNznqzUIl525uGkdkgZooSM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-fAo_F7r5Oj6tBd3ZC9FM_A-1; Wed, 22 Apr 2020 15:46:13 -0400
-X-MC-Unique: fAo_F7r5Oj6tBd3ZC9FM_A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63BF7800685;
-        Wed, 22 Apr 2020 19:46:11 +0000 (UTC)
-Received: from treble (unknown [10.10.115.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 146175C1D4;
-        Wed, 22 Apr 2020 19:46:06 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 14:46:05 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-Message-ID: <20200422194605.n77t2wtx5fomxpyd@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <20200422164037.7edd21ea@thinkpad>
- <20200422172126.743908f5@thinkpad>
+        Wed, 22 Apr 2020 15:49:58 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79CF2C03C1A9;
+        Wed, 22 Apr 2020 12:49:58 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p8so1627788pgi.5;
+        Wed, 22 Apr 2020 12:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HEjXLWdl4sPw3XwPrs+z0qSSwTKkZOkRFQhqNicUnn8=;
+        b=hmUe4CbGCx7ZGzijtOIN3tmK9FTwPhKDYRSCHLVOzn7pV6XooalEFsDq91hNgXpblR
+         N09kyRKZ/hyOaNU/0Jju84PzZpnqRSgl1aw9FoH3FXGk5O62q0UufIqzaIUULi3lMSGa
+         EPOuSiDFw3FEgzhNl/TaWePHvp0dmHqxmjG1iLlxyZDTDY40XvHECFTBlS2Tyh4so24+
+         Wa07s+y5L5acSUlMs+ho2pbfQwF14TXMW0OqFNG5KcvCg6cCpD9mepg9Bv5QXEUo26av
+         0HTjRD2ddNgSd5QbYuA0O29gezH01ftVFtMeLVQjeEW5AdL3tLW+Pgdx+spld6qRgryM
+         MIyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HEjXLWdl4sPw3XwPrs+z0qSSwTKkZOkRFQhqNicUnn8=;
+        b=R6WAZu1UROnwfDxUsv8EYTMc7tVChGhWeWlFwY8dwJQpZcanxQ3m3Iry9EZr6xdv21
+         MJR5lESXa3LaJ2Pq1QG4zzqwF8gk8Ks6nQspaf/rQ8YrFRJK6glZpZv/cPiC4heScUJr
+         UnMpwxf7DyZmQqOj/Nqj3ZFhW14Iww9pwD4gW2AwbPWa7GEValWuGAzwFSZkV9MrXXDV
+         +6S4tu6UOWEjnQIRSxQd9selniYmBUik/yw8BuuKc6dGS0c4be86KB/z3PkAyCxL4Qc9
+         BtuVbBEYnkhh37fOG0f5e32+ZnmSqUI9GXO1iLhThEfWcpxLK043yI1JjyLWNxYVU7zL
+         lN9Q==
+X-Gm-Message-State: AGi0PubmUj9EnKYvJuhOjUQacsXPZAAukIKKKCsoD/puQkHryF+XHStz
+        NBvnCo5wTuJTipWAfngsj6vr0E43ATEoTmPZT0hLgUYPzihUNg==
+X-Google-Smtp-Source: APiQypIxyLahKCi/vpYF0opnA8l/k+KC9QX6ZJk1GOml3m2DnJfOIKNJrf7hKD/6La/CA40tlXqFvOF6AFIYCRvpy8M=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr663246pgb.203.1587584997877;
+ Wed, 22 Apr 2020 12:49:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200422172126.743908f5@thinkpad>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-2-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200422141135.86419-2-tomasz.duszynski@octakon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Apr 2020 22:49:44 +0300
+Message-ID: <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
+Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 05:21:26PM +0200, Gerald Schaefer wrote:
-> > Sorry, just noticed this. Heiko will return next month, and I'm not
-> > really familiar with s390 livepatching. Adding Vasily, he might
-> > have some more insight.
-> > 
-> > So, I might be completely wrong here, but using s390_kernel_write()
-> > for writing to anything other than 1:1 mapped kernel, should go
-> > horribly wrong, as that runs w/o DAT. It would allow to bypass
-> > DAT write protection, which I assume is why you want to use it,
-> > but it should not work on module text section, as that would be
-> > in vmalloc space and not 1:1 mapped kernel memory.
-> > 
-> > Not quite sure how to test / trigger this, did this really work for
-> > you on s390?
-> 
-> OK, using s390_kernel_write() as default write function for module
-> relocation seems to work fine for me, so apparently I am missing /
-> mixing up something. Sorry for the noise, please ignore my concern.
+On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> Add Sensirion SCD30 carbon dioxide core driver.
 
-Hi Gerald,
+And DocLink tar of Datasheet: with a link?
 
-I think you were right.  Joe found the below panic with his klp-convert
-tests.
+...
 
-Your test was probably the early module loading case (normal relocations
-before write protection), rather than the late case.  Not sure why that
-would work, but calling s390_kernel_write() late definitely seems to be
-broken.
+> +static SIMPLE_DEV_PM_OPS(scd30_pm_ops, scd30_suspend, scd30_resume);
 
-Is there some other way to write vmalloc'ed s390 text without using
-module_disable_ro()?
+Would it be used in every module? You will get a compiler warning per
+each module that is not using it.
 
-[   50.294476] Unable to handle kernel pointer dereference in virtual kernel address space
-[   50.294479] Failing address: 000003ff8015b000 TEID: 000003ff8015b407
-[   50.294480] Fault in home space mode while using kernel ASCE.
-[   50.294483] AS:000000006cef0007 R3:000000007e2c4007 S:0000000003ccb800 P:0000 00000257321d
-[   50.294557] Oops: 0004 ilc:3 [#1] SMP
-[   50.294561] Modules linked in: test_klp_convert1(K+) test_klp_convert_mod ghash_s390 prng xts aes_s390 des_s390 libdes sha512_s390 vmur zcrypt_cex4 ip_tables xfs libcrc32c dasd_fba_mod qeth_l2 dasd_eckd_mod dasd_mod qeth lcs ctcm qdio cc
-wgroup fsm dm_mirror dm_region_hash dm_log dm_mod pkey zcrypt [last unloaded: test_klp_atomic_replace]
-[   50.294576] CPU: 0 PID: 1743 Comm: modprobe Tainted: G              K   5.6.0 + #2
-[   50.294579] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
-[   50.294583] Krnl PSW : 0704e00180000000 000000006bf6be0a (apply_rela+0x2ba/0x 4e0)
-[   50.294589]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI: 0 EA:3
-[   50.294684] Krnl GPRS: 000003ff80147010 000003e0001b9588 000003ff8015c168 000 003ff8015b19a
-[   50.294686]            000003ff8015b07c 0d10e310100a0004 000003ff80147010 000 00000000000a0
-[   50.294687]            000003ff8015e588 000003ff8015e5e8 000003ff8015d300 000 0003b00000014
-[   50.294698]            000000007a663000 000000006c6bbb80 000003e0009a7918 000 003e0009a78b8
-[   50.294707] Krnl Code: 000000006bf6bdf8: e350d0080004        lg      %r5,8(%r 13)
-[   50.294707]            000000006bf6bdfe: e34010080008        ag      %r4,8(%r 1)
-[   50.294707]           #000000006bf6be04: e340a2000008        ag      %r4,512( %r10)
-[   50.294707]           >000000006bf6be0a: e35040000024        stg     %r5,0(%r 4)
-[   50.294707]            000000006bf6be10: c050007c6136        larl    %r5,0000 00006cef807c
-[   50.294707]            000000006bf6be16: e35050000012        lt      %r5,0(%r 5)
-[   50.294707]            000000006bf6be1c: a78400a6            brc     8,000000 006bf6bf68
-[   50.294707]            000000006bf6be20: a55e07f1            llilh   %r5,2033
-01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 01.
-01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 00.
-[   50.295369] Call Trace:
-[   50.295372]  [<000000006bf6be0a>] apply_rela+0x2ba/0x4e0
-[   50.295376]  [<000000006bf6c5c8>] apply_relocate_add+0xe0/0x138
-[   50.295378]  [<000000006c0229a0>] klp_apply_section_relocs+0xe8/0x128
-[   50.295380]  [<000000006c022b4c>] klp_apply_object_relocs+0x9c/0xd0
-[   50.295382]  [<000000006c022bb0>] klp_init_object_loaded+0x30/0x138
-[   50.295384]  [<000000006c023052>] klp_enable_patch+0x39a/0x870
-[   50.295387]  [<000003ff8015b0da>] test_klp_convert_init+0x22/0x50 [test_klp_convert1]
-[   50.295389]  [<000000006bf54838>] do_one_initcall+0x40/0x1f0
-[   50.295391]  [<000000006c04d610>] do_init_module+0x70/0x280
-[   50.295392]  [<000000006c05002a>] load_module+0x1aba/0x1d10
-[   50.295394]  [<000000006c0504c4>] __do_sys_finit_module+0xa4/0xe8
-[   50.295416]  [<000000006c6b5742>] system_call+0x2aa/0x2c8
-[   50.295416] Last Breaking-Event-Address:
-[   50.295418]  [<000000006c6b6aa0>] __s390_indirect_jump_r4+0x0/0xc
-[   50.295421] Kernel panic - not syncing: Fatal exception: panic_on_oops
+...
+
+> +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> +               int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
+> +                              u16 arg, char *rsp, int size));
+
+My gosh.
+Please, supply proper structure member in priv or alike.
+
+...
+
+> + * Copyright (c) Tomasz Duszynski <tomasz.duszynski@octakon.com>
+
+Year?
+
+...
+
+> +#include <asm/byteorder.h>
+
+asm goes after linux.
+
+> +#include <linux/bits.h>
+> +#include <linux/compiler.h>
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/export.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/types.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/string.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+
+Are you sure you need all of them?!
+
+...
+
+> +/* pressure compensation in millibars */
+Put the unit as a suffix to each definition and drop useless comment.
+
+> +/* measurement interval in seconds */
+
+Ditto.
+
+> +/* reference CO2 concentration in ppm */
+
+Ditto.
+
+> +enum {
+> +       CONC,
+> +       TEMP,
+> +       HR,
+> +};
+
+Way too generic names for anonymous enum.
+
+...
+
+> +static int scd30_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
+> +                        char *rsp, int size)
+> +{
+
+> +       /*
+> +        * assumption holds that response buffer pointer has been already
+> +        * properly aligned so casts are safe
+> +        */
+> +       while (size >= sizeof(u32)) {
+
+> +               *(u32 *)rsp = be32_to_cpup((__be32 *)rsp);
+
+Seems like rsp should be void * rather than char *.
+
+> +               rsp += sizeof(u32);
+> +               size -= sizeof(u32);
+> +       }
+
+NIH of https://elixir.bootlin.com/linux/v5.7-rc2/ident/be32_to_cpu_array ?
+
+> +       if (size)
+
+It can be done before even while loop with an immediate bail out.
+
+> +               *(u16 *)rsp = be16_to_cpup((__be16 *)rsp);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +/* simplified float to fixed point conversion with a scaling factor of 0.01 */
+> +static int scd30_float_to_fp(int float32)
+> +{
+> +       int fraction, shift,
+> +           mantissa = float32 & GENMASK(22, 0),
+> +           sign = float32 & BIT(31) ? -1 : 1,
+> +           exp = (float32 & ~BIT(31)) >> 23;
+> +
+> +       /* special case 0 */
+> +       if (!exp && !mantissa)
+> +               return 0;
+> +
+> +       exp -= 127;
+> +       if (exp < 0) {
+> +               exp = -exp;
+
+> +               /* return values ranging from 1 to 99 */
+> +               return sign * ((((BIT(23) + mantissa) * 100) >> 23) >> exp);
+
+  shift = 23 + exp;
+  ... >> shift);
+
+> +       }
+> +
+> +       /* return values starting at 100 */
+> +       shift = 23 - exp;
+> +       float32 = BIT(exp) + (mantissa >> shift);
+> +       fraction = mantissa & GENMASK(shift - 1, 0);
+> +
+> +       return sign * (float32 * 100 + ((fraction * 100) >> shift));
+> +}
+
+Sounds like a candidate to IIO library or even lib/math/*.c.
+
+...
+
+> +static int scd30_wait_meas_irq(struct scd30_state *state)
+> +{
+> +       int ret, timeout = msecs_to_jiffies(state->meas_interval * 1250);
+
+Magic number.
+
+> +       reinit_completion(&state->meas_ready);
+> +       enable_irq(state->irq);
+> +       ret = wait_for_completion_interruptible_timeout(&state->meas_ready,
+> +                                                       timeout);
+> +       if (ret > 0)
+> +               ret = 0;
+> +       else if (!ret)
+> +               ret = -ETIMEDOUT;
+> +
+> +       disable_irq(state->irq);
+> +
+> +       return ret;
+> +}
+
+...
+
+> +static int scd30_wait_meas_poll(struct scd30_state *state)
+> +{
+> +       int tries = 5;
+> +
+> +       while (tries--) {
+> +               int ret;
+> +               u16 val;
+> +
+> +               ret = scd30_command(state, CMD_MEAS_READY, 0, (char *)&val,
+> +                                   sizeof(val));
+> +               if (ret)
+> +                       return -EIO;
+> +
+> +               /* new measurement available */
+> +               if (val)
+> +                       break;
+> +
+> +               msleep_interruptible(state->meas_interval * 250);
+> +       }
+> +
+> +       if (tries == -1)
+> +               return -ETIMEDOUT;
+
+unsigned int tries = ...;
+
+do {
+ ...
+} while (--tries);
+if (!tries)
+  return ...;
+
+looks better and I guess less code in asm.
+
+> +       return 0;
+> +}
+
+...
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+Shadowed error code. Don't do like this.
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+Ditto.
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+Ditto.
+
+> +       val = !!val;
+
+kstrtobool()?
+
+...
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+No shadowed error code, please. Check entire code.
+
+> +static IIO_DEVICE_ATTR_RW(pressure_comp, 0);
+> +static IIO_DEVICE_ATTR_RO(pressure_comp_available, 0);
+> +static IIO_DEVICE_ATTR_RW(meas_interval, 0);
+> +static IIO_DEVICE_ATTR_RO(meas_interval_available, 0);
+> +static IIO_DEVICE_ATTR_RW(asc, 0);
+> +static IIO_DEVICE_ATTR_RW(frc, 0);
+> +static IIO_DEVICE_ATTR_RO(frc_available, 0);
+> +static IIO_DEVICE_ATTR_RW(temp_offset, 0);
+> +static IIO_CONST_ATTR(temp_offset_available, "[0 1 65535]");
+> +static IIO_DEVICE_ATTR_WO(reset, 0);
+
+Do you need all of them? Doesn't  IIO core provides a tons of helpers for these?
+Btw, where is ABI documentation? It's a show stopper.
 
 -- 
-Josh
-
+With Best Regards,
+Andy Shevchenko
