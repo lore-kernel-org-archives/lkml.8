@@ -2,52 +2,54 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F616C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93222C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8BA2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F41A2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552566;
-	bh=RJLVCku9igORfpt5oVv3tIoCepU57wftd4+a8zsHa/g=;
+	s=default; t=1587552573;
+	bh=nVeMz1uSldBrbMtlQANPq6nQoTCdnAS5pl29GGePaBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2RCqODgRGHhAH2eeP/vXigL0bmkJ3SRQJ7Ic8sr3FZEr1lB9YZlLjsq4Fou4DZX3y
-	 fgH6IyGdqYcP/IRrf2id4utHQZoIhl0Pz3pXT9S0tXoaC5AhQQRigDSIl9Pg9HvDvZ
-	 JGrngs9tM8KzU/cFoh+CP3BetOa8gJm2QoyPKofw=
+	b=Ink+dD3t0XihLzucMI3ltJo6puU+bdMD4QihEg5YHWz3CQifFHNUrOYs0V9VnYyBv
+	 SdxJ16KKSVOajSjmQqtvGauLqw9Wx2TxQevN+VynRmp/Zm04D2zRKFe1EOd5hBeVIb
+	 KqYAtY6roozjqr+wRMsrSM95murQOP0fpq9LgeQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732102AbgDVKtZ (ORCPT
+        id S1732116AbgDVKtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:49:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbgDVKNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:34 -0400
+        id S1726363AbgDVKNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAECC20776;
-        Wed, 22 Apr 2020 10:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97FA72077D;
+        Wed, 22 Apr 2020 10:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550413;
-        bh=RJLVCku9igORfpt5oVv3tIoCepU57wftd4+a8zsHa/g=;
+        s=default; t=1587550396;
+        bh=nVeMz1uSldBrbMtlQANPq6nQoTCdnAS5pl29GGePaBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NmOiWFiBK5WknABTJid7dvMwY6hfkNre4ryrlKw4c/rsMUO18iH9RxhtIcV9JJlyG
-         FvaoDm+9FsvO1dmrFdgv6epAtDuxI1f87OzlZYuD+7uYcnjDp+Hv9xQ2QyvqRqTr1R
-         lBv0fZthGFcu0VV8Bvaq04Csgw1vGwoWP2mAfSqg=
+        b=bUOpt7gg62Z1OyCEJERAO4wwl9TONyagXVF3yibjgf5MEo+ZavvTqrM1KlEKi/z4q
+         jaXHtKa9HzAdf9wLY+enOEwp5h+JUKCg3ZNu24Zwebf/J6I5jOCD6AimB54m8ZnqMC
+         wZQxlA3cDs4FrHppf54Q+721r9OxnJSfT84h/uV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taras Chornyi <taras.chornyi@plvision.eu>,
-        Vadym Kochan <vadym.kochan@plvision.eu>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 108/199] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
-Date:   Wed, 22 Apr 2020 11:57:14 +0200
-Message-Id: <20200422095108.530696540@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        openipmi-developer@lists.sourceforge.net,
+        Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 102/199] ipmi: fix hung processes in __get_guid()
+Date:   Wed, 22 Apr 2020 11:57:08 +0200
+Message-Id: <20200422095108.071555301@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,100 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taras Chornyi <taras.chornyi@plvision.eu>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 690cc86321eb9bcee371710252742fb16fe96824 ]
+[ Upstream commit 32830a0534700f86366f371b150b17f0f0d140d7 ]
 
-When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
-with autojoin flag or when multicast ip is deleted kernel will crash.
+The wait_event() function is used to detect command completion.
+When send_guid_cmd() returns an error, smi_send() has not been
+called to send data. Therefore, wait_event() should not be used
+on the error path, otherwise it will cause the following warning:
 
-steps to reproduce:
+[ 1361.588808] systemd-udevd   D    0  1501   1436 0x00000004
+[ 1361.588813]  ffff883f4b1298c0 0000000000000000 ffff883f4b188000 ffff887f7e3d9f40
+[ 1361.677952]  ffff887f64bd4280 ffffc90037297a68 ffffffff8173ca3b ffffc90000000010
+[ 1361.767077]  00ffc90037297ad0 ffff887f7e3d9f40 0000000000000286 ffff883f4b188000
+[ 1361.856199] Call Trace:
+[ 1361.885578]  [<ffffffff8173ca3b>] ? __schedule+0x23b/0x780
+[ 1361.951406]  [<ffffffff8173cfb6>] schedule+0x36/0x80
+[ 1362.010979]  [<ffffffffa071f178>] get_guid+0x118/0x150 [ipmi_msghandler]
+[ 1362.091281]  [<ffffffff810d5350>] ? prepare_to_wait_event+0x100/0x100
+[ 1362.168533]  [<ffffffffa071f755>] ipmi_register_smi+0x405/0x940 [ipmi_msghandler]
+[ 1362.258337]  [<ffffffffa0230ae9>] try_smi_init+0x529/0x950 [ipmi_si]
+[ 1362.334521]  [<ffffffffa022f350>] ? std_irq_setup+0xd0/0xd0 [ipmi_si]
+[ 1362.411701]  [<ffffffffa0232bd2>] init_ipmi_si+0x492/0x9e0 [ipmi_si]
+[ 1362.487917]  [<ffffffffa0232740>] ? ipmi_pci_probe+0x280/0x280 [ipmi_si]
+[ 1362.568219]  [<ffffffff810021a0>] do_one_initcall+0x50/0x180
+[ 1362.636109]  [<ffffffff812231b2>] ? kmem_cache_alloc_trace+0x142/0x190
+[ 1362.714330]  [<ffffffff811b2ae1>] do_init_module+0x5f/0x200
+[ 1362.781208]  [<ffffffff81123ca8>] load_module+0x1898/0x1de0
+[ 1362.848069]  [<ffffffff811202e0>] ? __symbol_put+0x60/0x60
+[ 1362.913886]  [<ffffffff8130696b>] ? security_kernel_post_read_file+0x6b/0x80
+[ 1362.998514]  [<ffffffff81124465>] SYSC_finit_module+0xe5/0x120
+[ 1363.068463]  [<ffffffff81124465>] ? SYSC_finit_module+0xe5/0x120
+[ 1363.140513]  [<ffffffff811244be>] SyS_finit_module+0xe/0x10
+[ 1363.207364]  [<ffffffff81003c04>] do_syscall_64+0x74/0x180
 
-ip addr add 224.0.0.0/32 dev eth0
-ip addr del 224.0.0.0/32 dev eth0
-
-or
-
-ip addr add 224.0.0.0/32 dev eth0 autojoin
-
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
- pc : _raw_write_lock_irqsave+0x1e0/0x2ac
- lr : lock_sock_nested+0x1c/0x60
- Call trace:
-  _raw_write_lock_irqsave+0x1e0/0x2ac
-  lock_sock_nested+0x1c/0x60
-  ip_mc_config.isra.28+0x50/0xe0
-  inet_rtm_deladdr+0x1a8/0x1f0
-  rtnetlink_rcv_msg+0x120/0x350
-  netlink_rcv_skb+0x58/0x120
-  rtnetlink_rcv+0x14/0x20
-  netlink_unicast+0x1b8/0x270
-  netlink_sendmsg+0x1a0/0x3b0
-  ____sys_sendmsg+0x248/0x290
-  ___sys_sendmsg+0x80/0xc0
-  __sys_sendmsg+0x68/0xc0
-  __arm64_sys_sendmsg+0x20/0x30
-  el0_svc_common.constprop.2+0x88/0x150
-  do_el0_svc+0x20/0x80
- el0_sync_handler+0x118/0x190
-  el0_sync+0x140/0x180
-
-Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
-Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 50c812b2b951 ("[PATCH] ipmi: add full sysfs support")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Corey Minyard <minyard@acm.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: openipmi-developer@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # 2.6.17-
+Message-Id: <20200403090408.58745-1-wenyang@linux.alibaba.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/devinet.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -579,12 +579,15 @@ struct in_ifaddr *inet_ifa_byprefix(stru
- 	return NULL;
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index c82d9fd2f05af..f72a272eeb9b2 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -2647,7 +2647,9 @@ get_guid(ipmi_smi_t intf)
+ 	if (rv)
+ 		/* Send failed, no GUID available. */
+ 		intf->bmc->guid_set = 0;
+-	wait_event(intf->waitq, intf->bmc->guid_set != 2);
++	else
++		wait_event(intf->waitq, intf->bmc->guid_set != 2);
++
+ 	intf->null_user_handler = NULL;
  }
  
--static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
-+static int ip_mc_autojoin_config(struct net *net, bool join,
-+				 const struct in_ifaddr *ifa)
- {
-+#if defined(CONFIG_IP_MULTICAST)
- 	struct ip_mreqn mreq = {
- 		.imr_multiaddr.s_addr = ifa->ifa_address,
- 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
- 	};
-+	struct sock *sk = net->ipv4.mc_autojoin_sk;
- 	int ret;
- 
- 	ASSERT_RTNL();
-@@ -597,6 +600,9 @@ static int ip_mc_config(struct sock *sk,
- 	release_sock(sk);
- 
- 	return ret;
-+#else
-+	return -EOPNOTSUPP;
-+#endif
- }
- 
- static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
-@@ -638,7 +644,7 @@ static int inet_rtm_deladdr(struct sk_bu
- 			continue;
- 
- 		if (ipv4_is_multicast(ifa->ifa_address))
--			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
-+			ip_mc_autojoin_config(net, false, ifa);
- 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
- 		return 0;
- 	}
-@@ -896,8 +902,7 @@ static int inet_rtm_newaddr(struct sk_bu
- 		 */
- 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
- 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
--			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
--					       true, ifa);
-+			int ret = ip_mc_autojoin_config(net, true, ifa);
- 
- 			if (ret < 0) {
- 				inet_free_ifa(ifa);
+-- 
+2.20.1
+
 
 
