@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815B5C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68039C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68F1421D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E9B217BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgDVMSG (ORCPT
+        id S1729037AbgDVMSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53378 "EHLO
+        Wed, 22 Apr 2020 08:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728716AbgDVMRk (ORCPT
+        by vger.kernel.org with ESMTP id S1728718AbgDVMRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 08:17:40 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3CDBC03C1A9;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2272C03C1A8;
         Wed, 22 Apr 2020 05:17:39 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJo-0007nH-6v; Wed, 22 Apr 2020 14:17:32 +0200
+        id 1jREJo-0007sf-Hz; Wed, 22 Apr 2020 14:17:32 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6804F1C0483;
-        Wed, 22 Apr 2020 14:17:23 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:22 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6B4E71C0450;
+        Wed, 22 Apr 2020 14:17:27 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:26 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf thread-stack: Add thread_stack__sample_late()
+Subject: [tip: perf/core] perf auxtrace: Add ->evsel_is_auxtrace() callback
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401101613.6201-10-adrian.hunter@intel.com>
-References: <20200401101613.6201-10-adrian.hunter@intel.com>
+In-Reply-To: <20200401101613.6201-2-adrian.hunter@intel.com>
+References: <20200401101613.6201-2-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158755784297.28353.7627391855107279620.tip-bot2@tip-bot2>
+Message-ID: <158755784695.28353.4504990292045831376.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,107 +63,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     4fef41bfb1d8d2ada4a18eb3ab80c2682bcbae12
-Gitweb:        https://git.kernel.org/tip/4fef41bfb1d8d2ada4a18eb3ab80c2682bcbae12
+Commit-ID:     853f37d75c44c305f750d8c4a34d83f03b610fce
+Gitweb:        https://git.kernel.org/tip/853f37d75c44c305f750d8c4a34d83f03b610fce
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Wed, 01 Apr 2020 13:16:06 +03:00
+AuthorDate:    Wed, 01 Apr 2020 13:15:58 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Thu, 16 Apr 2020 12:19:15 -03:00
 
-perf thread-stack: Add thread_stack__sample_late()
+perf auxtrace: Add ->evsel_is_auxtrace() callback
 
-Add a thread stack function to create a call chain for hardware events
-where the sample records get created some time after the event occurred.
+Add ->evsel_is_auxtrace() callback to identify if a selected event
+is an AUX area event.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200401101613.6201-10-adrian.hunter@intel.com
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20200401101613.6201-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 57 +++++++++++++++++++++++++++++++++-
- tools/perf/util/thread-stack.h |  3 ++-
- 2 files changed, 60 insertions(+)
+ tools/perf/util/auxtrace.c |  9 +++++++++
+ tools/perf/util/auxtrace.h | 12 ++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 0885967..83f6c83 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -497,6 +497,63 @@ void thread_stack__sample(struct thread *thread, int cpu,
- 	chain->nr = i;
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 3571ce7..2c4ad68 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -2577,3 +2577,12 @@ void auxtrace__free(struct perf_session *session)
+ 
+ 	return session->auxtrace->free(session);
+ }
++
++bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
++				 struct evsel *evsel)
++{
++	if (!session->auxtrace || !session->auxtrace->evsel_is_auxtrace)
++		return false;
++
++	return session->auxtrace->evsel_is_auxtrace(session, evsel);
++}
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index e58ef16..db65aae 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -21,6 +21,7 @@
+ union perf_event;
+ struct perf_session;
+ struct evlist;
++struct evsel;
+ struct perf_tool;
+ struct mmap;
+ struct perf_sample;
+@@ -166,6 +167,8 @@ struct auxtrace {
+ 			    struct perf_tool *tool);
+ 	void (*free_events)(struct perf_session *session);
+ 	void (*free)(struct perf_session *session);
++	bool (*evsel_is_auxtrace)(struct perf_session *session,
++				  struct evsel *evsel);
+ };
+ 
+ /**
+@@ -584,6 +587,8 @@ void auxtrace__dump_auxtrace_sample(struct perf_session *session,
+ int auxtrace__flush_events(struct perf_session *session, struct perf_tool *tool);
+ void auxtrace__free_events(struct perf_session *session);
+ void auxtrace__free(struct perf_session *session);
++bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
++				 struct evsel *evsel);
+ 
+ #define ITRACE_HELP \
+ "				i:	    		synthesize instructions events\n"		\
+@@ -750,6 +755,13 @@ void auxtrace_index__free(struct list_head *head __maybe_unused)
  }
  
-+/*
-+ * Hardware sample records, created some time after the event occurred, need to
-+ * have subsequent addresses removed from the call chain.
-+ */
-+void thread_stack__sample_late(struct thread *thread, int cpu,
-+			       struct ip_callchain *chain, size_t sz,
-+			       u64 sample_ip, u64 kernel_start)
+ static inline
++bool auxtrace__evsel_is_auxtrace(struct perf_session *session __maybe_unused,
++				 struct evsel *evsel __maybe_unused)
 +{
-+	struct thread_stack *ts = thread__stack(thread, cpu);
-+	u64 sample_context = callchain_context(sample_ip, kernel_start);
-+	u64 last_context, context, ip;
-+	size_t nr = 0, j;
-+
-+	if (sz < 2) {
-+		chain->nr = 0;
-+		return;
-+	}
-+
-+	if (!ts)
-+		goto out;
-+
-+	/*
-+	 * When tracing kernel space, kernel addresses occur at the top of the
-+	 * call chain after the event occurred but before tracing stopped.
-+	 * Skip them.
-+	 */
-+	for (j = 1; j <= ts->cnt; j++) {
-+		ip = ts->stack[ts->cnt - j].ret_addr;
-+		context = callchain_context(ip, kernel_start);
-+		if (context == PERF_CONTEXT_USER ||
-+		    (context == sample_context && ip == sample_ip))
-+			break;
-+	}
-+
-+	last_context = sample_ip; /* Use sample_ip as an invalid context */
-+
-+	for (; nr < sz && j <= ts->cnt; nr++, j++) {
-+		ip = ts->stack[ts->cnt - j].ret_addr;
-+		context = callchain_context(ip, kernel_start);
-+		if (context != last_context) {
-+			if (nr >= sz - 1)
-+				break;
-+			chain->ips[nr++] = context;
-+			last_context = context;
-+		}
-+		chain->ips[nr] = ip;
-+	}
-+out:
-+	if (nr) {
-+		chain->nr = nr;
-+	} else {
-+		chain->ips[0] = sample_context;
-+		chain->ips[1] = sample_ip;
-+		chain->nr = 2;
-+	}
++	return false;
 +}
 +
- struct call_return_processor *
- call_return_processor__new(int (*process)(struct call_return *cr, u64 *parent_db_id, void *data),
- 			   void *data)
-diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
-index e1ec5a5..8962ddc 100644
---- a/tools/perf/util/thread-stack.h
-+++ b/tools/perf/util/thread-stack.h
-@@ -85,6 +85,9 @@ int thread_stack__event(struct thread *thread, int cpu, u32 flags, u64 from_ip,
- void thread_stack__set_trace_nr(struct thread *thread, int cpu, u64 trace_nr);
- void thread_stack__sample(struct thread *thread, int cpu, struct ip_callchain *chain,
- 			  size_t sz, u64 ip, u64 kernel_start);
-+void thread_stack__sample_late(struct thread *thread, int cpu,
-+			       struct ip_callchain *chain, size_t sz, u64 ip,
-+			       u64 kernel_start);
- int thread_stack__flush(struct thread *thread);
- void thread_stack__free(struct thread *thread);
- size_t thread_stack__depth(struct thread *thread, int cpu);
++static inline
+ int auxtrace_parse_filters(struct evlist *evlist __maybe_unused)
+ {
+ 	return 0;
