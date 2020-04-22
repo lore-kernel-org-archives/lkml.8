@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EA4C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0145C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E1C2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8528620CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552461;
-	bh=v7Vipc0VT/4/+NWQ5NLJhdexjHV4UhMafyaRIs4x8WU=;
+	s=default; t=1587552464;
+	bh=RxG7sT2TZaY9cUwBJw2sOGIMMnDdQK0IvDqDfreJGso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezkuA/wThjkv7xqMaQ7sj+R7UUn9vpLNBO9XLa3UiBgkTzP+9XiX1Ma8cPlvkbvO3
-	 fQedpfmzRkkASfxUho8HlJAAVzZamsUIcXAtqZh/Ff0GoHUM1Z/IjXKvKyGLptziJ6
-	 SvwFqS2Yu6I8IKopa7IGUyEysWysz1Si8Z5wIOV0=
+	b=ErTYaTcacqYptCPKvNEA3bdbnY/RzRXFh10F6Z1/HHFmjqUSs3naT/cGjucZMJ/tU
+	 LmvkuGQ83j/2jminFGYWVMastH4Mjktz+K88xiGVViolihWlqbbxBv1aWU/9esHQWb
+	 ClYa3em6jZAHvcCWgudsIigzidhS68WnpRlqUCmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732018AbgDVKrg (ORCPT
+        id S1729723AbgDVKPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729665AbgDVKPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:15:34 -0400
+        id S1729665AbgDVKPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:15:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D112070B;
-        Wed, 22 Apr 2020 10:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358C820781;
+        Wed, 22 Apr 2020 10:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550534;
-        bh=v7Vipc0VT/4/+NWQ5NLJhdexjHV4UhMafyaRIs4x8WU=;
+        s=default; t=1587550521;
+        bh=RxG7sT2TZaY9cUwBJw2sOGIMMnDdQK0IvDqDfreJGso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpzjoLGuaav27l0wt7hVcgdfmIEIDy/e383t/W6dmd8BrYvlHuZP1Sc8x1+cRSkfS
-         YVALNGKdS695TpMYmffwcMCqHjd94XNNUMOQM0GA+nlvg2oWvbP3Ed4yZOsecVNUz2
-         dcEDPmFXINSNzFOP5p1GSqePiAzUdMZAOJAMiQcc=
+        b=EezFReuAf88KI+hHAHNB5lcFzMJiKrxltlKq9RppOZPJzYjzXR4Gq+a4Ll/2xJT33
+         h4/JwJHFoZubKenLw1Bnqk8F9kSsDcxIwjCKuhLcVRA+m6u/AlDugNo/cqEbfmlp+1
+         nQPqmAUjThekgUfDufxnuz9jP/tMvBPcQ9e+JoHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Huang <ahuang12@lenovo.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 53/64] iommu/amd: Fix the configuration of GCR3 table root pointer
-Date:   Wed, 22 Apr 2020 11:57:37 +0200
-Message-Id: <20200422095022.347731069@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 49/64] ext2: fix empty body warnings when -Wextra is used
+Date:   Wed, 22 Apr 2020 11:57:33 +0200
+Message-Id: <20200422095021.673973807@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -59,36 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Huang <ahuang12@lenovo.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit c20f36534666e37858a14e591114d93cc1be0d34 ]
+[ Upstream commit 44a52022e7f15cbaab957df1c14f7a4f527ef7cf ]
 
-The SPA of the GCR3 table root pointer[51:31] masks 20 bits. However,
-this requires 21 bits (Please see the AMD IOMMU specification).
-This leads to the potential failure when the bit 51 of SPA of
-the GCR3 table root pointer is 1'.
+When EXT2_ATTR_DEBUG is not defined, modify the 2 debug macros
+to use the no_printk() macro instead of <nothing>.
+This fixes gcc warnings when -Wextra is used:
 
-Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
-Fixes: 52815b75682e2 ("iommu/amd: Add support for IOMMUv2 domain mode")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+../fs/ext2/xattr.c:252:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../fs/ext2/xattr.c:258:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../fs/ext2/xattr.c:330:42: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+../fs/ext2/xattr.c:872:45: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+
+I have verified that the only object code change (with gcc 7.5.0) is
+the reversal of some instructions from 'cmp a,b' to 'cmp b,a'.
+
+Link: https://lore.kernel.org/r/e18a7395-61fb-2093-18e8-ed4f8cf56248@infradead.org
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jan Kara <jack@suse.com>
+Cc: linux-ext4@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext2/xattr.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 69f3d4c95b530..859b06424e5c4 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -352,7 +352,7 @@
+diff --git a/fs/ext2/xattr.c b/fs/ext2/xattr.c
+index dd8f10db82e99..4439bfaf1c57f 100644
+--- a/fs/ext2/xattr.c
++++ b/fs/ext2/xattr.c
+@@ -56,6 +56,7 @@
  
- #define DTE_GCR3_VAL_A(x)	(((x) >> 12) & 0x00007ULL)
- #define DTE_GCR3_VAL_B(x)	(((x) >> 15) & 0x0ffffULL)
--#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0xfffffULL)
-+#define DTE_GCR3_VAL_C(x)	(((x) >> 31) & 0x1fffffULL)
+ #include <linux/buffer_head.h>
+ #include <linux/init.h>
++#include <linux/printk.h>
+ #include <linux/slab.h>
+ #include <linux/mbcache.h>
+ #include <linux/quotaops.h>
+@@ -84,8 +85,8 @@
+ 		printk("\n"); \
+ 	} while (0)
+ #else
+-# define ea_idebug(f...)
+-# define ea_bdebug(f...)
++# define ea_idebug(inode, f...)	no_printk(f)
++# define ea_bdebug(bh, f...)	no_printk(f)
+ #endif
  
- #define DTE_GCR3_INDEX_A	0
- #define DTE_GCR3_INDEX_B	1
+ static int ext2_xattr_set2(struct inode *, struct buffer_head *,
 -- 
 2.20.1
 
