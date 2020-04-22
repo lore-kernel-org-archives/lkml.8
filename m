@@ -2,727 +2,153 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F95BC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36F4C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1B020781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3A320781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="cqzdB8E5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgDVLUw (ORCPT
+        id S1726761AbgDVLW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726684AbgDVLUv (ORCPT
+        Wed, 22 Apr 2020 07:22:58 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:30822 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726192AbgDVLW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:20:51 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7952EC03C1A8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 04:20:51 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jRDQo-0006Dz-MW; Wed, 22 Apr 2020 13:20:42 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jRDQn-0005Xf-Q6; Wed, 22 Apr 2020 13:20:41 +0200
-Date:   Wed, 22 Apr 2020 13:20:41 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     David Jander <david@protonic.nl>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Robin van der Gracht <robin@protonic.nl>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 3/5] ARM: dts: add Protonic VT7 board
-Message-ID: <20200422112041.ouo2s6beu3r47lbq@pengutronix.de>
-References: <20200421124057.19238-1-o.rempel@pengutronix.de>
- <20200421124057.19238-4-o.rempel@pengutronix.de>
- <20200422070441.5hvozjvcssanqnjb@pengutronix.de>
- <20200422113802.5961d776@erd988>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422113802.5961d776@erd988>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:02:45 up 159 days,  2:21, 172 users,  load average: 0.09, 0.12,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 22 Apr 2020 07:22:57 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBH7T4031363;
+        Wed, 22 Apr 2020 07:22:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=51JALZmJ9EhYQ3O125NgFZ6HIO2CHxeW0BnTFPrbfa0=;
+ b=cqzdB8E5piSTd2X09Vd4cKofDJmYpZKNzvXAcBoGUn1DqIeGHAA1+fUBtLz6I3OO5wc6
+ IC1sn9s8dlyGtT9re9OKoSqL4NMmQ9oPNfNusTpbNbXqV1UbyogJ8vjSRxtbbOQBsGUO
+ DoPjU81HBeewYx5JHuZfwbVEEa9TW2RG8P8xR3V7ANUIHOC2d6PeokWurryOh598Y7sW
+ aknby7r+2F8WzMMr8FbuOhQ+o45Uni2aeSCDGrZf3v+lJTNYhdcffIL4bdP5RI3+Q7Vy
+ pFrPG7PjtGlDZ5MljvegQ//LZoCNSBMGkbsZbYExab5KT0ib0l6413UWWm/ZnJ6jUSg9 NA== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 30fvvhpqf4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 07:22:46 -0400
+Received: from pps.filterd (m0134318.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBMjvL124744;
+        Wed, 22 Apr 2020 07:22:45 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0a-00154901.pphosted.com with ESMTP id 30fv6fpbws-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Apr 2020 07:22:45 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd52.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBMdpW022475;
+        Wed, 22 Apr 2020 07:22:39 -0400
+Received: from mailsyshubprd56.lss.emc.com ([mailsyshubprd56.lss.emc.com [10.106.48.138]]) by mailuogwprd52.lss.emc.com with ESMTP id 03MBMV9X022362 ;
+          Wed, 22 Apr 2020 07:22:32 -0400
+Received: from vd-leonidr.xiolab.lab.emc.com (vd-leonidr.xiolab.lab.emc.com [10.76.212.243])
+        by mailsyshubprd56.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBMK2b011459;
+        Wed, 22 Apr 2020 07:22:29 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] dmaengine: ioat: remove unnesesery double complition timer modification.
+Date:   Wed, 22 Apr 2020 14:22:06 +0300
+Message-Id: <1587554529-29839-2-git-send-email-leonid.ravich@dell.com>
+X-Mailer: git-send-email 1.9.3
+In-Reply-To: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
+References: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
+X-Sentrion-Hostname: mailuogwprd52.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_03:2020-04-22,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ mlxlogscore=491 bulkscore=0 clxscore=1011 suspectscore=13 impostorscore=0
+ adultscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220091
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=13
+ malwarescore=0 clxscore=1015 mlxlogscore=575 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I David,
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-On 20-04-22 11:38, David Jander wrote:
-> 
-> Hi Marco,
-> 
-> Just chiming in with the answers I know most of...
+removing unnecessary mod_timer from timeout handler
+incase of ioat_cleanup_preamble() is true  for cleaner code
 
-Thanks for your reponse =)
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+ drivers/dma/ioat/dma.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-> On Wed, 22 Apr 2020 09:04:41 +0200
-> Marco Felsch <m.felsch@pengutronix.de> wrote:
-> 
-> > Hi Oleksij,
-> > 
-> > On 20-04-21 14:40, Oleksij Rempel wrote:
-> > > The Protonic VT7 is a mid-class ISObus Virtual Terminal with a 7 inch
-> > > touchscreen display.
-> > > 
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Robin van der Gracht <robin@protonic.nl>
-> > > Signed-off-by: David Jander <david@protonic.nl>
-> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > > ---
-> > >  arch/arm/boot/dts/Makefile          |   1 +
-> > >  arch/arm/boot/dts/imx6dl-prtvt7.dts | 472 ++++++++++++++++++++++++++++
-> > >  2 files changed, 473 insertions(+)
-> > >  create mode 100644 arch/arm/boot/dts/imx6dl-prtvt7.dts
-> > > 
-> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > > index 8ce744f1cbfc9..66ee89e7929f9 100644
-> > > --- a/arch/arm/boot/dts/Makefile
-> > > +++ b/arch/arm/boot/dts/Makefile
-> > > @@ -450,6 +450,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
-> > >  	imx6dl-pico-hobbit.dtb \
-> > >  	imx6dl-pico-nymph.dtb \
-> > >  	imx6dl-pico-pi.dtb \
-> > > +	imx6dl-prtvt7.dtb \
-> > >  	imx6dl-rex-basic.dtb \
-> > >  	imx6dl-riotboard.dtb \
-> > >  	imx6dl-sabreauto.dtb \
-> > > diff --git a/arch/arm/boot/dts/imx6dl-prtvt7.dts b/arch/arm/boot/dts/imx6dl-prtvt7.dts
-> > > new file mode 100644
-> > > index 0000000000000..a948c7c6eb3ce
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/imx6dl-prtvt7.dts
-> > > @@ -0,0 +1,472 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-> > > +/*
-> > > + * Copyright (c) 2016 Protonic Holland
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +#include "imx6dl.dtsi"
-> > > +#include "imx6qdl-prti6q.dtsi"  
-> > 
-> > Should we name it "imx6qdl-prt-common.dtsi"? Still don't like that this
-> > dtsi comes from the 1st commit rather then having a single commit adding
-> > the .dtsi but that is only my opinion.
-> 
-> Isn't the extension ".dtsi" implying "common" already?
-> This file is strictly common to the "prti6q" family of products, not to all
-> Protonic products, so the name you suggest would be potentially misleading I
-> guess. Maybe we can just leave it like this?
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index da59b28..55a8cf1 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -922,17 +922,23 @@ void ioat_timer_event(struct timer_list *t)
+ 		spin_lock_bh(&ioat_chan->prep_lock);
+ 		check_active(ioat_chan);
+ 		spin_unlock_bh(&ioat_chan->prep_lock);
+-		spin_unlock_bh(&ioat_chan->cleanup_lock);
+-		return;
++		goto unlock_out;
++	}
++
++	/* handle the missed cleanup case */
++	if (ioat_cleanup_preamble(ioat_chan, &phys_complete)) {
++		/* timer restarted in ioat_cleanup_preamble
++		 * and IOAT_COMPLETION_ACK cleared
++		 */
++		__cleanup(ioat_chan, phys_complete);
++		goto unlock_out;
+ 	}
+ 
+ 	/* if we haven't made progress and we have already
+ 	 * acknowledged a pending completion once, then be more
+ 	 * forceful with a restart
+ 	 */
+-	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
+-		__cleanup(ioat_chan, phys_complete);
+-	else if (test_bit(IOAT_COMPLETION_ACK, &ioat_chan->state)) {
++	if (test_bit(IOAT_COMPLETION_ACK, &ioat_chan->state)) {
+ 		u32 chanerr;
+ 
+ 		chanerr = readl(ioat_chan->reg_base + IOAT_CHANERR_OFFSET);
+@@ -945,12 +951,13 @@ void ioat_timer_event(struct timer_list *t)
+ 			ioat_ring_active(ioat_chan));
+ 
+ 		ioat_reboot_chan(ioat_chan);
+-		spin_unlock_bh(&ioat_chan->cleanup_lock);
+-		return;
+-	} else
+-		set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
+ 
++		goto unlock_out;
++	}
++
++	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
+ 	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
++unlock_out:
+ 	spin_unlock_bh(&ioat_chan->cleanup_lock);
+ }
+ 
+-- 
+1.9.3
 
-It was just a suggestion. It's not that obvious that the WD2 is part of
-the PRTI6Q family for outsiders.
-
-> > > +#include <dt-bindings/input/input.h>
-> > > +#include <dt-bindings/leds/common.h>
-> > > +#include <dt-bindings/sound/fsl-imx-audmux.h>
-> > > +
-> > > +/ {
-> > > +	model = "Protonic VT7";
-> > > +	compatible = "prt,prtvt7", "fsl,imx6dl";
-> > > +
-> > > +	memory@10000000 {
-> > > +		device_type = "memory";
-> > > +		reg = <0x10000000 0x20000000>;
-> > > +	};
-> > > +
-> > > +	backlight_lcd: backlight-lcd {
-> > > +		compatible = "pwm-backlight";
-> > > +		pwms = <&pwm1 0 500000>;
-> > > +		brightness-levels = <0 20 81 248 1000>;
-> > > +		default-brightness-level = <20>;
-> > > +		num-interpolated-steps = <21>;  
-> > 
-> > Do you need this fine granularity here? Just asking ;)
-> 
-> Yes. These amount of steps are needed.
-> 
-> > > +		power-supply = <&reg_12v_bl>;
-> > > +		enable-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;  
-> > 
-> > Where gets this gpio muxed?
-> 
-> In imx6qdl-prti6q.dtsi
-
-Yep, thanks for the link. So you override here the complete node since
-it has the extact name. What do you want to change here and why didn't
-you use phandle from the .dtsi?
-
-> > > +	};
-> > > +
-> > > +	display {
-> > > +		compatible = "fsl,imx-parallel-display";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_ipu1_disp>;
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;
-> > > +		interface-pix-fmt = "rgb24";
-> > > +		status = "okay";  
-> > 
-> > Status not needed here.
-> 
-> Ack.
-> 
-> > > +
-> > > +		port@0 {
-> > > +			reg = <0>;
-> > > +
-> > > +			display_in: endpoint {
-> > > +				remote-endpoint = <&ipu1_di0_disp0>;
-> > > +			};
-> > > +		};
-> > > +
-> > > +		port@1 {
-> > > +			reg = <1>;
-> > > +
-> > > +			display_out: endpoint {
-> > > +				remote-endpoint = <&panel_in>;
-> > > +			};
-> > > +		};
-> > > +	};
-> > > +
-> > > +	keys {
-> > > +		compatible = "gpio-keys";
-> > > +		autorepeat;
-> > > +
-> > > +		esc {
-> > > +			label = "GPIO Key ESC";
-> > > +			linux,code = <KEY_ESC>;
-> > > +			gpios = <&gpio_pca 0 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		up {
-> > > +			label = "GPIO Key UP";
-> > > +			linux,code = <KEY_UP>;
-> > > +			gpios = <&gpio_pca 1 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		down {
-> > > +			label = "GPIO Key DOWN";
-> > > +			linux,code = <KEY_DOWN>;
-> > > +			gpios = <&gpio_pca 4 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		enter {
-> > > +			label = "GPIO Key Enter";
-> > > +			linux,code = <KEY_ENTER>;
-> > > +			gpios = <&gpio_pca 3 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		cycle {
-> > > +			label = "GPIO Key CYCLE";
-> > > +			linux,code = <KEY_CYCLEWINDOWS>;
-> > > +			gpios = <&gpio_pca 2 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f1 {
-> > > +			label = "GPIO Key F1";
-> > > +			linux,code = <KEY_F1>;
-> > > +			gpios = <&gpio_pca 14 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f2 {
-> > > +			label = "GPIO Key F2";
-> > > +			linux,code = <KEY_F2>;
-> > > +			gpios = <&gpio_pca 13 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f3 {
-> > > +			label = "GPIO Key F3";
-> > > +			linux,code = <KEY_F3>;
-> > > +			gpios = <&gpio_pca 12 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f4 {
-> > > +			label = "GPIO Key F4";
-> > > +			linux,code = <KEY_F4>;
-> > > +			gpios = <&gpio_pca 11 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f5 {
-> > > +			label = "GPIO Key F5";
-> > > +			linux,code = <KEY_F5>;
-> > > +			gpios = <&gpio_pca 10 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f6 {
-> > > +			label = "GPIO Key F6";
-> > > +			linux,code = <KEY_F6>;
-> > > +			gpios = <&gpio_pca 5 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f7 {
-> > > +			label = "GPIO Key F7";
-> > > +			linux,code = <KEY_F7>;
-> > > +			gpios = <&gpio_pca 6 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f8 {
-> > > +			label = "GPIO Key F8";
-> > > +			linux,code = <KEY_F8>;
-> > > +			gpios = <&gpio_pca 7 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f9 {
-> > > +			label = "GPIO Key F9";
-> > > +			linux,code = <KEY_F9>;
-> > > +			gpios = <&gpio_pca 8 GPIO_ACTIVE_LOW>;
-> > > +		};
-> > > +
-> > > +		f10 {
-> > > +			label = "GPIO Key F10";
-> > > +			linux,code = <KEY_F10>;
-> > > +			gpios = <&gpio_pca 9 GPIO_ACTIVE_LOW>;
-> > > +		};  
-> > 
-> > Don't know if there is a common rule if the gpio key should be sorted
-> > alphabetical too.
-> > 
-> > > +	};
-> > > +
-> > > +	leds {
-> > > +		compatible = "gpio-leds";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_leds>;
-> > > +
-> > > +		led-debug0 {
-> > > +			function = LED_FUNCTION_STATUS;
-> > > +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-> > > +			linux,default-trigger = "heartbeat";
-> > > +		};
-> > > +	};
-> > > +
-> > > +	panel {
-> > > +		compatible = "innolux,g070y2t0ec";  
-> > 
-> > Did you send a patch for this panel?
-> 
-> Good catch. Yes, there is a patch for this panel. Maybe that patch should come
-> first, Oleksij?
-
-I would appreciate this. It happens often that drivers are not mainlined
-yet but patches are on the ML and on their way to mainline.
-
-> > > +		backlight = <&backlight_lcd>;
-> > > +
-> > > +		port {
-> > > +			panel_in: endpoint {
-> > > +				remote-endpoint = <&display_out>;
-> > > +			};
-> > > +		};
-> > > +	};
-> > > +
-> > > +	reg_12v_bl: regulator-bl-12v {  
-> > 
-> > Nit, it's common to allign the pahndle and the name, so either:
-> > 
-> > reg_12v_bl -> regulator-12v-bl
-> > 
-> > or
-> > 
-> > reg_bl_12v -> regulator-bl-12v
-> > 
-> > also it would be cool to keep the first digit after the point like you
-> > did it for the 1.8 regulator. So the result would be:
-> > 
-> > reg_12v0_bl -> regulator-12v0-bl
-> > 
-> > or
-> > 
-> > reg_bl_12v0 -> regulator-bl-12v0
-> 
-> I'm not strictly against it, but isn't the implicit rule "All significant
-> digits, with a minimum of 2" even better here? Just saying... 12000v0 would
-> look a bit awkward ;-)
-
-Yep, that looks a bit awkward.. What I wanted to say is to keep the
-style over the DTs and don't mix them.
-
-> > > +		compatible = "regulator-fixed";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_reg_12v_bl>;
-> > > +		regulator-name = "12v-bl";
-> > > +		regulator-min-microvolt = <12000000>;
-> > > +		regulator-max-microvolt = <12000000>;
-> > > +		gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-> > > +		enable-active-high;
-> > > +	};
-> > > +
-> > > +	reg_1v8: regulator-1v8 {
-> > > +		compatible = "regulator-fixed";
-> > > +		regulator-name = "1v8";
-> > > +		regulator-min-microvolt = <1800000>;
-> > > +		regulator-max-microvolt = <1800000>;
-> > > +		regulator-always-on;
-> > > +	};
-> > > +
-> > > +	sound {
-> > > +		compatible = "simple-audio-card";
-> > > +		simple-audio-card,name = "prti6q-sgtl5000";
-> > > +		simple-audio-card,format = "i2s";
-> > > +		simple-audio-card,widgets =
-> > > +			"Microphone", "Microphone Jack",
-> > > +			"Line", "Line In Jack",
-> > > +			"Headphone", "Headphone Jack",
-> > > +			"Speaker", "External Speaker";
-> > > +		simple-audio-card,routing =
-> > > +			"MIC_IN", "Microphone Jack",
-> > > +			"LINE_IN", "Line In Jack",
-> > > +			"Headphone Jack", "HP_OUT",
-> > > +			"External Speaker", "LINE_OUT";
-> > > +
-> > > +		simple-audio-card,cpu {
-> > > +			sound-dai = <&ssi1>;
-> > > +			system-clock-frequency = <0>;
-> > > +		};
-> > > +
-> > > +		simple-audio-card,codec {
-> > > +			sound-dai = <&sgtl5000>;
-> > > +			bitclock-master;
-> > > +			frame-master;
-> > > +		};
-> > > +	};
-> > > +};
-> > > +
-> > > +&clks {
-> > > +	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>;
-> > > +	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>;
-> > > +};
-> > > +
-> > > +&ecspi2 {
-> > > +	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&pinctrl_ecspi2>;
-> > > +	status = "okay";
-> > > +
-> > > +	tsc@0 {
-> > > +		compatible = "ti,tsc2046";
-> > > +		reg = <0>;
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_tsc>;
-> > > +		spi-max-frequency = <100000>;
-> > > +		interrupts-extended = <&gpio3 20 IRQ_TYPE_EDGE_FALLING>;  
-> > 
-> > The this should be listed within the binding doc.
-> > 
-> > > +		pendown-gpio = <&gpio3 20 GPIO_ACTIVE_HIGH>;  
-> > 
-> > IRQ and the GPIO are the same gpio line?
-> 
-> Yes, this driver uses the same GPIO as interrupt and also as a GPIO. A bit
-> strange, I agree. It is the same pin on the TS controller.
-> 
-> > > +		vcc-supply = <&reg_3v3>;
-> > > +
-> > > +		ti,vref-delay-usecs = /bits/ 16 <100>;
-> > > +
-> > > +		ti,x-min = /bits/ 16 <0>;
-> > > +		ti,x-max = /bits/ 16 <8000>;
-> > > +		ti,y-min = /bits/ 16 <0>;
-> > > +		ti,y-max = /bits/ 16 <4800>;
-> > > +		ti,x-plate-ohms = /bits/ 16 <800>;
-> > > +		ti,y-plate-ohms = /bits/ 16 <300>;
-> > > +		ti,pressure-max = /bits/ 16 <4095>;
-> > > +
-> > > +		ti,skip-samples = <2>;
-> > > +		ti,sample-period-msecs = <10>;
-> > > +		ti,report-period-msecs = <30>;
-> > > +
-> > > +		ti,filter-tolerance = <80>;
-> > > +		ti,touch-resistance-threshold = <3500>;
-> 
-> Now that I see this, this DT node corresponds to a rewritten version of the
-> ads7846 touchscreen driver, which probably also should precede this patch?
-> The original driver is horribly buggy, and I have submitted patches twice
-> already long ago to input mailing list, but unfortunately it got completely
-> ignored both times.
-
-Pls, can you resend the patches with cc me or give me some pointers? So
-we can give them another try.
-
-> > > +	};
-> > > +};
-> > > +
-> > > +&audmux {  
-> > 
-> > Pls, sort it alphabetical.
-> > 
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&pinctrl_audmux>;
-> > > +	status = "okay";
-> > > +
-> > > +	mux_ssi1 {
-> > > +		fsl,audmux-port = <0>;
-> > > +		fsl,port-config = <
-> > > +			IMX_AUDMUX_V2_PTCR_SYN 		0
-> > > +			IMX_AUDMUX_V2_PTCR_TFSEL(2) 	0
-> > > +			IMX_AUDMUX_V2_PTCR_TCSEL(2) 	0
-> > > +			IMX_AUDMUX_V2_PTCR_TFSDIR 	0
-> > > +			IMX_AUDMUX_V2_PTCR_TCLKDIR IMX_AUDMUX_V2_PDCR_RXDSEL(2)
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	mux_pins3 {
-> > > +		fsl,audmux-port = <2>;
-> > > +		fsl,port-config = <
-> > > +			IMX_AUDMUX_V2_PTCR_SYN IMX_AUDMUX_V2_PDCR_RXDSEL(0)
-> > > +			0		       IMX_AUDMUX_V2_PDCR_TXRXEN
-> > > +		>;
-> > > +	};
-> > > +};
-> > > +
-> > > +&can1 {  
-> > 
-> > This here too.
-> > 
-> > > +	pinctrl-0 = <&pinctrl_can1 &pinctrl_can1phy>;
-> > > +};
-> > > +
-> > > +&i2c1 {
-> > > +	sgtl5000: codec@a {
-> > > +		compatible = "fsl,sgtl5000";
-> > > +		reg = <0xa>;
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_codec>;
-> > > +		#sound-dai-cells = <0>;
-> > > +		clocks = <&clks 201>;
-> > > +		VDDA-supply = <&reg_3v3>;
-> > > +		VDDIO-supply = <&reg_3v3>;
-> > > +		VDDD-supply = <&reg_1v8>;
-> > > +	};
-> > > +};
-> > > +
-> > > +&i2c3 {
-> > > +	rtc@51 {
-> > > +		compatible = "nxp,pcf8563";
-> > > +		reg = <0x51>;
-> > > +	};
-> > > +
-> > > +	gpio_pca: gpio@74 {
-> > > +		compatible = "nxp,pca9539";
-> > > +		reg = <0x74>;
-> > > +		interrupts-extended = <&gpio4 5 IRQ_TYPE_LEVEL_LOW>;
-> > > +		#gpio-cells = <2>;
-> > > +		gpio-controller;
-> > > +	};
-> > > +};
-> > > +
-> > > +&ipu1 {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&pinctrl_ipu1_csi0>;
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&ipu1_di0_disp0 {
-> > > +	remote-endpoint = <&display_in>;
-> > > +};
-> > > +
-> > > +&pwm1 {
-> > > +	pinctrl-names = "default";
-> > > +	pinctrl-0 = <&pinctrl_pwm1>;
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&snvs_poweroff {
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&snvs_pwrkey {
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&ssi1 {
-> > > +	#sound-dai-cells = <0>;
-> > > +	fsl,mode = "i2s-slave";
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&usbh1 {
-> > > +	status = "disabled";
-> > > +};
-> > > +
-> > > +&vpu {
-> > > +	status = "disabled";
-> > > +};  
-> > 
-> > Why do you disable this nodes? You should drop it from the common .dtsi
-> > if you disable them more than once.
-> 
-> We should have to count the enables and disables, and decide which solution
-> ends up with less lines of code overall, I suppose.
-> Our boards DT's are built in a kind of class hierarchy. There are a total of
-> 16+ different i.MX6 boards. Almost all of them inherit from PRTI6Q, and some
-> have other, higher-order ancestors. Oleksij is busy with the first few of them
-> right now.
-> We can optimize all inheritances for the few boards that are being submitted
-> now, but if the rest will follow, the end result might either be less than
-> optimal, or this will need to change again.
-
-I see, but I still prefer the "enable once" way since it is a bit more
-straight forward. But it should be no blocker..
-
-> > > +&iomuxc {
-> > > +	pinctrl_audmux: audmuxgrp {
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1		0x030b0
-> > > +			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-> > > +			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-> > > +			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
-> > > +			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_can1phy: can1phy {
-> > > +		fsl,pins = <
-> > > +			/* CAN1_SR */
-> > > +			MX6QDL_PAD_KEY_COL3__GPIO4_IO12		0x13070
-> > > +			/* CAN1_TERM */
-> > > +			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_codec: codecgrp {
-> > > +		fsl,pins = <
-> > > +			/* AUDIO_nRESET */
-> > > +			MX6QDL_PAD_CSI0_VSYNC__GPIO5_IO21	0x1f0b0
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_ecspi2: ecspi2grp {
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
-> > > +			MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
-> > > +			MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
-> > > +			MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_ipu1_csi0: ipu1csi0grp {
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19	0x1b0b0
-> > > +			MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK 0x1b0b0
-> > > +			/* ITU656_nRESET */
-> > > +			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
-> > > +			/* ITU656_nPDN */
-> > > +			MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20	0x1b0b0
-> > > +		>;
-> > > +	};  
-> > 
-> > Why do you mux the the camera interface and have no camera device within
-> > this dt.
-> 
-> Because the camera requires more patches that are on the way to mainline, but
-> not there yet. Maybe for now these should be removed?
-
-Adding the muxing later would be the better way.
-
-Regards,
-  Marco
-
-> > > +	pinctrl_ipu1_disp: ipudisp1grp {
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0xb0
-> > > +			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15	   0xb0
-> > > +
-> > > +			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07 0xb0
-> > > +
-> > > +			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15 0xb0
-> > > +
-> > > +			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22 0xb0
-> > > +			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23 0xb0
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_leds: ledsgrp {
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_pwm1: pwm1grp {
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_GPIO_9__PWM1_OUT		0x1b0b0
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_reg_12v_bl: 12blgrp {  
-> > 
-> > Pls, keep the name scheme like the others.
-> > 
-> > Regards,
-> >   Marco
-> > 
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_GPIO_7__GPIO1_IO07		0x1b0b0
-> > > +		>;
-> > > +	};
-> > > +
-> > > +	pinctrl_tsc: tscgrp {
-> > > +
-> > > +		fsl,pins = <
-> > > +			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b0
-> > > +			MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
-> > > +		>;
-> > > +	};
-> > > +};  
-> 
-> Best regards,
-> 
-> -- 
-> David Jander
-> Protonic Holland.
