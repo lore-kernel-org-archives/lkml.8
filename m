@@ -2,139 +2,183 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E0C5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DBCC5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65DB92082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587573571;
-	bh=2rmDWww6rHau1JQr0OtwOsytcBhyKnLhZgMaxwDb5pk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ev1lUK1bhbtpPzVp3Lp1bWzHwgqREa8gJTZipEDkoboOfUcfwv5bXklxCjWcaZ3is
-	 NtgYaS6VdOVFeXzRr6GxdAcax01SvieqY/9HO/8lJkKwpM+yadUwriHYjahuu6rECd
-	 IOmnTjfSzAFgKN5dmilb0PBh9Vai4fYky7du/84k=
+	by mail.kernel.org (Postfix) with ESMTP id 2FFEB2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="I4EUWzd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgDVQja (ORCPT
+        id S1726456AbgDVQkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 12:40:19 -0400
+Received: from ns.pmeerw.net ([84.19.176.117]:56404 "EHLO ns.pmeerw.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbgDVQja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:39:30 -0400
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37F3721473;
-        Wed, 22 Apr 2020 16:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587573569;
-        bh=2rmDWww6rHau1JQr0OtwOsytcBhyKnLhZgMaxwDb5pk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IDdy+xsDxWGQDq0yE5KuRWhZLri9WYXQm5wMtacNPEfeTJVbqvsyJa4Z6tIQpURno
-         LEQLMMHaMdO9C85oQhOYCV1F+Rj4+wBrIp4m6jtOLH+0ivmx/Qk19CUqc3QXZ2N649
-         QA19N8U8TVbIdywAO21NstaMQ1l7XYQj8hKFMJDo=
-Received: by mail-il1-f178.google.com with SMTP id q10so2579104ile.0;
-        Wed, 22 Apr 2020 09:39:29 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY9facAuOQkNzrp1akIl0roEFnbGLQpvR0hGo0JqM6CAoSwpYMV
-        H+P+yXoHDCuvxedRnHjDGDRl2fHnENLtuhIRvYE=
-X-Google-Smtp-Source: APiQypKyqgCn3vKrlX0X8msYPbgz4jhNTQCAHufT+5l+uzBP2FrPCjFC+hPYuzn8+fMuaBgej1tcbMGsnUpTH2pprh0=
-X-Received: by 2002:a92:aa0f:: with SMTP id j15mr27302801ili.211.1587573568568;
- Wed, 22 Apr 2020 09:39:28 -0700 (PDT)
+        id S1726006AbgDVQkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 12:40:18 -0400
+Received: by ns.pmeerw.net (Postfix, from userid 1000)
+        id 3F478E01CB; Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
+        t=1587573617; bh=McsTMxwzAFpLpU1JXIxR7mSymPut3YX7nBAYc8yLJBw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=I4EUWzd0zUhHuWZGbheNH6bJICyGifB/ISIONWZiCSVzEJCyoEtuHKBeNqUy9htv9
+         +7bJf/ONQTjhUoFi39a5WF9hh+xzYg8aHqhJdT88XzGmKxP6hkCzTtpklFhKOVl8j4
+         JhA5ThSvY0rsJ/i0kbuqbNc0hE+wmOeCAQ4vXs+8=
+Received: from localhost (localhost [127.0.0.1])
+        by ns.pmeerw.net (Postfix) with ESMTP id 2C28CE01A3;
+        Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
+From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org
+Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
+ attributes
+In-Reply-To: <20200422141135.86419-5-tomasz.duszynski@octakon.com>
+Message-ID: <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-5-tomasz.duszynski@octakon.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CAMj1kXEXTq8RhD-AM4i3ZmXRcLDTW8waNDbWNa0V8V1nz4zb_A@mail.gmail.com>
- <mhng-2320bbe6-c880-40f4-914e-a6209d0f2f95@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-2320bbe6-c880-40f4-914e-a6209d0f2f95@palmerdabbelt-glaptop1>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 22 Apr 2020 18:39:17 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG6KG7L5kopUMyY-DCkURfRZYDvOVU9+U=+eiktXfhrvg@mail.gmail.com>
-Message-ID: <CAMj1kXG6KG7L5kopUMyY-DCkURfRZYDvOVU9+U=+eiktXfhrvg@mail.gmail.com>
-Subject: Re: [v4 PATCH 0/3] Add UEFI support for RISC-V
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Atish Patra <Atish.Patra@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 at 22:59, Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Tue, 21 Apr 2020 00:24:04 PDT (-0700), ardb@kernel.org wrote:
-> > On Tue, 21 Apr 2020 at 05:34, Atish Patra <atish.patra@wdc.com> wrote:
-> >>
-> >> This series adds UEFI support for RISC-V. Currently, only boot time
-> >> services have been added. Runtime services will be added in a separate
-> >> series. This series depends on some core EFI patches
-> >> present in current in efi-next and following other patches.
-> >>
-> >> U-Boot: Adds the boot hartid under chosen node.
-> >> https://lists.denx.de/pipermail/u-boot/2020-April/405726.html
-> >>
-> >> Linux kernel: 5.7-rc1
-> >>
-> >> OpenSBI: master
-> >>
-> >> Patch 1 just moves arm-stub code to a generic code so that it can be used
-> >> across different architecture.
-> >>
-> >> Patch 3 adds fixmap bindings so that CONFIG_EFI can be compiled and we do not
-> >> have create separate config to enable boot time services.
-> >> As runtime services are not enabled at this time, full generic early ioremap
-> >> support is also not added in this series.
-> >>
-> >> Patch 4 and 5 adds the PE/COFF header and EFI stub code support for RISC-V
-> >> respectively.
-> >>
-> >> The patches can also be found in following git repo.
-> >>
-> >> https://github.com/atishp04/linux/tree/wip_uefi_riscv_v4
-> >>
-> >> The patches have been verified on Qemu using bootefi command in U-Boot.
-> >>
-> >> Changes from v3->v4:
-> >> 1. Rebased on top of efi-next.
-> >> 2. Dropped patch 1 & 2 from this series as it is already queued in efi-next.
-> >> Changes from v2->v3:
-> >> 3. Improved handle_kernel_image() for RISC-V.
-> >>
-> >
-> > Thanks Atish. This looks nice and simple now.
-> >
-> > I will need an ack from the RISC-V maintainers on these, and it is up
-> > to them to consider whether the changes to core kconfigs and makefiles
-> > are likely to cause trouble or not. If so, I am happy to work out a
-> > way to merge this via a shared stable branch.
->
-> Sorry it took me a while to get around to these, but they're essentially good
-> with me.  There's some comments about needing ISA_C/c.li, but that's pretty
-> trivial.  In terms of mechanics: I don't really ever understand how to do these
-> multi-tree merges.  In an ideal world I'd like to have the arch/riscv/ stuff
-> stay in riscv/for-next, both because I don't want to deal with merge conflicts
-> and because that's where the RISC-V autobuilders look.
->
-> The best I can come up with is to split #3 up such that drivers/firmware/efi/
-> is its own patch and then send that up along with the PE header definitions
-> into an RC.  It'd be unused code at that point, but at least it'd break the
-> dependency between the trees and it'll be getting tested in riscv/for-next so
-> it won't rot.  We can ARMSTUB->GENERIC_STUB by just having the RISC-V support
-> select woth ARMSTUB and GENERIC_STUB, with a cleanup going in after everything
-> is merged.
->
-> That said, I'm happy if there's a better way to do this...
->
+On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
 
-I'll reshuffle the code a bit, and send out an updated series. If we
-are all happy with that, I will stick the first 2 patches on a shared
-tag that you can pull into your branch, and you can apply the
-remaining 4 patches on top of that. Are you ok with a tag based on
-v5.7-rc2?
+> Add documentation for sensor specific iio attributes.
+
+minor comments below
+ 
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> new file mode 100644
+> index 000000000000..0431a718447d
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> @@ -0,0 +1,97 @@
+> +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Given that sensor's CO2 measurement chamber has fixed volume
+> +		pressure changes will affect concentration readings. Writing
+> +		current ambient pressure here will allow senor to make necessary
+
+sensor
+
+> +		adjustments. Upon reading previously set value is returned.
+> +		Units are millibars.
+
+unit for pressure in IIO is kilopascal (e.g. 
+/sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
+
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		The range of available values in millibars represented as the
+> +		minimum value, the step and the maximum value, all enclosed in
+> +		square brackets.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
+> +Date:		January 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Amount of time between subsequent measurements. Writing this
+> +		attribute will change measurement interval. Upon reading
+> +		current measurement interval is returned. Units are seconds.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		The range of available values in seconds represented as the
+> +		minimum value, the step and the maximum value, all enclosed in
+> +		square brackets.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/asc
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Writing 1 or 0 to this attribute will respectively activate or
+> +		deactivate automatic self calibration procedure. Upon reading 1
+
+deactivate automatic self calibration (asc) procedure
+
+> +		is returned if asc is ongoing, 0 otherwise.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/frc
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Forced recalibration is used to compensate for sensor drifts
+> +		when a reference value of CO2 concentration in close proximity
+> +		to the sensor is available. Writing attribute will set frc
+> +		value. Upon reading current frc is returned. Units are
+> +		millibars.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		The range of available values in millibars represented as the
+> +		minimum value, the step and the maximum value, all enclosed in
+> +		square brackets.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Sensor readings may be affected by ambient temperature.
+> +		Writing temperature offset will compensate for unwanted changes.
+> +		Note that written offset gets multiplied by a factor of 100
+> +		by a sensor internally.
+> +
+> +		For example, writing 10 here will correspond to 0.1 degree
+> +		Celsius.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		The range of available values in degrees Celsius represented as
+> +		the minimum value, the step and the maximum value, all enclosed
+> +		in square brackets.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/reset
+> +Date:		April 2020
+> +KernelVersion:	5.8
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Software reset mechanism forces sensor into the same state
+> +		as after powering up without the need for removing power supply.
+> +		Writing any value will reset sensor.
+> 
+
+-- 
+
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
