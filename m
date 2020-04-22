@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8B3C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A214CC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B71A2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBD120656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551956;
-	bh=dUEfWMtiuAicjjPNhOpc86+qxyFCQ0oSenl0428WBpw=;
+	s=default; t=1587551958;
+	bh=pRybFx7TvkkN+rt1U19VDCk30YEFvQNOLv/gbKHErgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bCDGLgItPk9pf4/fFRNjZGPbHbQbZ5pZAOTPN8/iTkH6SlktonlhFh8P4b6hJtIII
-	 1bGwlSCSObTshkSA6EZ7ESNdlBNm4mkBehdvMDORw/qaBBYrjir4nccTkirfbu+NCn
-	 6kUuSOSMrXyB9D/vT6tlkzojvbYCFXbtrL4P/lc4=
+	b=Ok9S/JGvDwQFZ7+MHsJubMmySRsB6akya+X3wMzoUZWGdT24wfwXk/NpgYsR/jqVc
+	 o9tDjChgqmDLaysjCYdg5353Tyyx2obCQpDAvYerutOgLilOotqLcp2pW6ZMzSMLsm
+	 tsxhQKvixbkWenUuekmOw+COq69id4EhPpFDmtn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbgDVKjO (ORCPT
+        id S1730293AbgDVKjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:39:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbgDVKV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:29 -0400
+        id S1729682AbgDVKVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84CB820784;
-        Wed, 22 Apr 2020 10:21:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D88720775;
+        Wed, 22 Apr 2020 10:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550889;
-        bh=dUEfWMtiuAicjjPNhOpc86+qxyFCQ0oSenl0428WBpw=;
+        s=default; t=1587550898;
+        bh=pRybFx7TvkkN+rt1U19VDCk30YEFvQNOLv/gbKHErgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gX6nY0SfEYtGO83Mv+V/OD/k+Uw1TMYOPwYZoIv2nDNntFSW72ml+5kyOKjRLjfyM
-         Qt8TQKWNZC2NLjS2TOaYWTdA72huSwzPYnHMZio0ufq41G3FAA9Gq+MWm6riivQ2EM
-         pTF8Q3gmmrqYNvCmIHQdbVToW9C9Lg4HQwywjlVU=
+        b=yGsdz9tEBg14jtBOv1W9iL/fx8aFecmplNfj2LW+ohtbIQNtjMeI2NHX2NGXUSsOA
+         ccX9A5/CiKDeCctnKFk8FytaCkrLgIf5BhMXH+IBubBTKIan0aTPB93KDiu6aimR04
+         AL4w2LM8u7VFu9wvcucGWEYHdXH41Rnk2H0d5T9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>
-Subject: [PATCH 5.6 016/166] rbd: avoid a deadlock on header_rwsem when flushing notifies
-Date:   Wed, 22 Apr 2020 11:55:43 +0200
-Message-Id: <20200422095050.121296682@linuxfoundation.org>
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.6 002/166] arm, bpf: Fix offset overflow for BPF_MEM BPF_DW
+Date:   Wed, 22 Apr 2020 11:55:29 +0200
+Message-Id: <20200422095048.211829808@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -59,84 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-commit 0e4e1de5b63fa423b13593337a27fd2d2b0bcf77 upstream.
+commit 4178417cc5359c329790a4a8f4a6604612338cca upstream.
 
-rbd_unregister_watch() flushes notifies and therefore cannot be called
-under header_rwsem because a header update notify takes header_rwsem to
-synchronize with "rbd map".  If mapping an image fails after the watch
-is established and a header update notify sneaks in, we deadlock when
-erroring out from rbd_dev_image_probe().
+This patch fixes an incorrect check in how immediate memory offsets are
+computed for BPF_DW on arm.
 
-Move watch registration and unregistration out of the critical section.
-The only reason they were put there was to make header_rwsem management
-slightly more obvious.
+For BPF_LDX/ST/STX + BPF_DW, the 32-bit arm JIT breaks down an 8-byte
+access into two separate 4-byte accesses using off+0 and off+4. If off
+fits in imm12, the JIT emits a ldr/str instruction with the immediate
+and avoids the use of a temporary register. While the current check off
+<= 0xfff ensures that the first immediate off+0 doesn't overflow imm12,
+it's not sufficient for the second immediate off+4, which may cause the
+second access of BPF_DW to read/write the wrong address.
 
-Fixes: 811c66887746 ("rbd: fix rbd map vs notify races")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jason Dillaman <dillaman@redhat.com>
+This patch fixes the problem by changing the check to
+off <= 0xfff - 4 for BPF_DW, ensuring off+4 will never overflow.
+
+A side effect of simplifying the check is that it now allows using
+negative immediate offsets in ldr/str. This means that small negative
+offsets can also avoid the use of a temporary register.
+
+This patch introduces no new failures in test_verifier or test_bpf.c.
+
+Fixes: c5eae692571d6 ("ARM: net: bpf: improve 64-bit store implementation")
+Fixes: ec19e02b343db ("ARM: net: bpf: fix LDX instructions")
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20200409221752.28448-1-luke.r.nels@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/rbd.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/arm/net/bpf_jit_32.c |   40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -4554,6 +4554,10 @@ static void cancel_tasks_sync(struct rbd
- 	cancel_work_sync(&rbd_dev->unlock_work);
+--- a/arch/arm/net/bpf_jit_32.c
++++ b/arch/arm/net/bpf_jit_32.c
+@@ -992,21 +992,35 @@ static inline void emit_a32_mul_r64(cons
+ 	arm_bpf_put_reg32(dst_hi, rd[0], ctx);
  }
  
-+/*
-+ * header_rwsem must not be held to avoid a deadlock with
-+ * rbd_dev_refresh() when flushing notifies.
-+ */
- static void rbd_unregister_watch(struct rbd_device *rbd_dev)
- {
- 	cancel_tasks_sync(rbd_dev);
-@@ -6964,6 +6968,9 @@ static void rbd_dev_image_release(struct
-  * device.  If this image is the one being mapped (i.e., not a
-  * parent), initiate a watch on its header object before using that
-  * object to get detailed information about the rbd image.
-+ *
-+ * On success, returns with header_rwsem held for write if called
-+ * with @depth == 0.
-  */
- static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
- {
-@@ -6993,6 +7000,9 @@ static int rbd_dev_image_probe(struct rb
- 		}
- 	}
- 
-+	if (!depth)
-+		down_write(&rbd_dev->header_rwsem);
++static bool is_ldst_imm(s16 off, const u8 size)
++{
++	s16 off_max = 0;
 +
- 	ret = rbd_dev_header_info(rbd_dev);
- 	if (ret) {
- 		if (ret == -ENOENT && !need_watch)
-@@ -7044,6 +7054,8 @@ static int rbd_dev_image_probe(struct rb
- err_out_probe:
- 	rbd_dev_unprobe(rbd_dev);
- err_out_watch:
-+	if (!depth)
-+		up_write(&rbd_dev->header_rwsem);
- 	if (need_watch)
- 		rbd_unregister_watch(rbd_dev);
- err_out_format:
-@@ -7107,12 +7119,9 @@ static ssize_t do_rbd_add(struct bus_typ
- 		goto err_out_rbd_dev;
- 	}
++	switch (size) {
++	case BPF_B:
++	case BPF_W:
++		off_max = 0xfff;
++		break;
++	case BPF_H:
++		off_max = 0xff;
++		break;
++	case BPF_DW:
++		/* Need to make sure off+4 does not overflow. */
++		off_max = 0xfff - 4;
++		break;
++	}
++	return -off_max <= off && off <= off_max;
++}
++
+ /* *(size *)(dst + off) = src */
+ static inline void emit_str_r(const s8 dst, const s8 src[],
+-			      s32 off, struct jit_ctx *ctx, const u8 sz){
++			      s16 off, struct jit_ctx *ctx, const u8 sz){
+ 	const s8 *tmp = bpf2a32[TMP_REG_1];
+-	s32 off_max;
+ 	s8 rd;
  
--	down_write(&rbd_dev->header_rwsem);
- 	rc = rbd_dev_image_probe(rbd_dev, 0);
--	if (rc < 0) {
--		up_write(&rbd_dev->header_rwsem);
-+	if (rc < 0)
- 		goto err_out_rbd_dev;
--	}
+ 	rd = arm_bpf_get_reg32(dst, tmp[1], ctx);
  
- 	if (rbd_dev->opts->alloc_size > rbd_dev->layout.object_size) {
- 		rbd_warn(rbd_dev, "alloc_size adjusted to %u",
+-	if (sz == BPF_H)
+-		off_max = 0xff;
+-	else
+-		off_max = 0xfff;
+-
+-	if (off < 0 || off > off_max) {
++	if (!is_ldst_imm(off, sz)) {
+ 		emit_a32_mov_i(tmp[0], off, ctx);
+ 		emit(ARM_ADD_R(tmp[0], tmp[0], rd), ctx);
+ 		rd = tmp[0];
+@@ -1035,18 +1049,12 @@ static inline void emit_str_r(const s8 d
+ 
+ /* dst = *(size*)(src + off) */
+ static inline void emit_ldx_r(const s8 dst[], const s8 src,
+-			      s32 off, struct jit_ctx *ctx, const u8 sz){
++			      s16 off, struct jit_ctx *ctx, const u8 sz){
+ 	const s8 *tmp = bpf2a32[TMP_REG_1];
+ 	const s8 *rd = is_stacked(dst_lo) ? tmp : dst;
+ 	s8 rm = src;
+-	s32 off_max;
+-
+-	if (sz == BPF_H)
+-		off_max = 0xff;
+-	else
+-		off_max = 0xfff;
+ 
+-	if (off < 0 || off > off_max) {
++	if (!is_ldst_imm(off, sz)) {
+ 		emit_a32_mov_i(tmp[0], off, ctx);
+ 		emit(ARM_ADD_R(tmp[0], tmp[0], src), ctx);
+ 		rm = tmp[0];
 
 
