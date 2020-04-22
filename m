@@ -2,51 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6599C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED936C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3FFB2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D8B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550355;
-	bh=ME0WeMs8A61c6lYVuqvVeOyocXUUkTtNfSPHYXf/LFc=;
+	s=default; t=1587550357;
+	bh=riH/lBRgNZh9iLXbysPeiUcE97OY0ociiRapqLHSDp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NjEsMbF/eMpDA9aKKI9K850tiLH1FRmYWRxPQn7VNpnHeUwMtuV/E7ULWxtKzRIKf
-	 /jJjY3NKxM/8mTPndYrFGG11b5jprlYhcljvdEC7kuB7jZVfeWz3bxD29BsKme5Rzt
-	 1Ur2BAGRJiPK6f1hYlEnYjPVbATsvdQcMZubC/6c=
+	b=tta544Em2R431mCDRtlODNimGv9SxFI3p2BCfrpejTudBuzUJCmJBajIQ8Iry7J9U
+	 9xuWXb4UAKfMHOHOdb6vRnqB3UiCX2MRVpbacKoH7o6SlZzAr/Y1deTrI+hAmIX1Xm
+	 pJA8GqBsR+x8bou0Pol/oX8lHT6kL3bkYM/3cJKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgDVKMd (ORCPT
+        id S1729013AbgDVKMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729324AbgDVKMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:20 -0400
+        id S1728471AbgDVKMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F33552070B;
-        Wed, 22 Apr 2020 10:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629222075A;
+        Wed, 22 Apr 2020 10:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550339;
-        bh=ME0WeMs8A61c6lYVuqvVeOyocXUUkTtNfSPHYXf/LFc=;
+        s=default; t=1587550341;
+        bh=riH/lBRgNZh9iLXbysPeiUcE97OY0ociiRapqLHSDp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6MA5VjoOfIraeP3uJzb6IWjJzGIfcT77CE1Mn2Yde3njpitgCoI7/u9vKTJYsMhq
-         La7L/kOsZboFcapcMqTiT/e7O7HnQ1SVmiWxwoupOnd5UrpDIu2Eik7DwtM7FMhvVe
-         jtHXeUttDnZ+ka0EohJoqhmDbx9ezfaRD9lHuT44=
+        b=VZXmoUfbN8fUOlbkdR9s/cqBW89s9lUbrzYT6GbXTR258Asmd1jlL/VToxI22eln3
+         RJZRIv+iiUJ6uyMrR3iTEAQvqWVLDJ8xXkIb8EWUnqzgIXCG+LfqoT3TjliyiEgbSx
+         8hRlRaiKlM+OL4ZgOJ4UwaLC4L04/kSjZhlOvjqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 054/199] ath9k: Handle txpower changes even when TPC is disabled
-Date:   Wed, 22 Apr 2020 11:56:20 +0200
-Message-Id: <20200422095103.649955731@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 100/199] drm: Remove PageReserved manipulation from drm_pci_alloc
+Date:   Wed, 22 Apr 2020 11:57:06 +0200
+Message-Id: <20200422095107.917541008@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -59,57 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
+[ Upstream commit ea36ec8623f56791c6ff6738d0509b7920f85220 ]
 
-When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
-reconfigure HW's maximum txpower.
+drm_pci_alloc/drm_pci_free are very thin wrappers around the core dma
+facilities, and we have no special reason within the drm layer to behave
+differently. In particular, since
 
-This fixes 0dBm txpower setting when user attaches to an interface for
-the first time with the following scenario:
+commit de09d31dd38a50fdce106c15abd68432eebbd014
+Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Date:   Fri Jan 15 16:51:42 2016 -0800
 
-ieee80211_do_open()
-    ath9k_add_interface()
-        ath9k_set_txpower() /* Set TX power with not yet initialized
-                               sc->hw->conf.power_level */
+    page-flags: define PG_reserved behavior on compound pages
 
-    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
-                             raise IEEE80211_CONF_CHANGE_POWER */
+    As far as I can see there's no users of PG_reserved on compound pages.
+    Let's use PF_NO_COMPOUND here.
 
-    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
+it has been illegal to combine GFP_COMP with SetPageReserved, so lets
+stop doing both and leave the dma layer to its own devices.
 
-This issue can be reproduced with the following:
-
-  $ modprobe -r ath9k
-  $ modprobe ath9k
-  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
-  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
-  $ killall wpa_supplicant
-  $ iw dev /* TX power goes back to calibrated value and subsequent
-              calls will be fine */
-
-Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
-Cc: stable@vger.kernel.org
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Taketo Kabe
+Bug: https://gitlab.freedesktop.org/drm/intel/issues/1027
+Fixes: de09d31dd38a ("page-flags: define PG_reserved behavior on compound pages")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: <stable@vger.kernel.org> # v4.5+
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200202171635.4039044-1-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/drm_pci.c | 25 ++-----------------------
+ 1 file changed, 2 insertions(+), 23 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/main.c
-+++ b/drivers/net/wireless/ath/ath9k/main.c
-@@ -1456,6 +1456,9 @@ static int ath9k_config(struct ieee80211
- 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
+diff --git a/drivers/gpu/drm/drm_pci.c b/drivers/gpu/drm/drm_pci.c
+index 1235c9877d6f1..2078d7706a67b 100644
+--- a/drivers/gpu/drm/drm_pci.c
++++ b/drivers/gpu/drm/drm_pci.c
+@@ -46,8 +46,6 @@
+ drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t align)
+ {
+ 	drm_dma_handle_t *dmah;
+-	unsigned long addr;
+-	size_t sz;
+ 
+ 	/* pci_alloc_consistent only guarantees alignment to the smallest
+ 	 * PAGE_SIZE order which is greater than or equal to the requested size.
+@@ -61,22 +59,13 @@ drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t ali
+ 		return NULL;
+ 
+ 	dmah->size = size;
+-	dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size, &dmah->busaddr, GFP_KERNEL | __GFP_COMP);
++	dmah->vaddr = dma_alloc_coherent(&dev->pdev->dev, size, &dmah->busaddr, GFP_KERNEL);
+ 
+ 	if (dmah->vaddr == NULL) {
+ 		kfree(dmah);
+ 		return NULL;
  	}
  
-+	if (changed & IEEE80211_CONF_CHANGE_POWER)
-+		ath9k_set_txpower(sc, NULL);
-+
- 	mutex_unlock(&sc->mutex);
- 	ath9k_ps_restore(sc);
+-	memset(dmah->vaddr, 0, size);
+-
+-	/* XXX - Is virt_to_page() legal for consistent mem? */
+-	/* Reserve */
+-	for (addr = (unsigned long)dmah->vaddr, sz = size;
+-	     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
+-		SetPageReserved(virt_to_page((void *)addr));
+-	}
+-
+ 	return dmah;
+ }
  
+@@ -89,19 +78,9 @@ EXPORT_SYMBOL(drm_pci_alloc);
+  */
+ void __drm_legacy_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah)
+ {
+-	unsigned long addr;
+-	size_t sz;
+-
+-	if (dmah->vaddr) {
+-		/* XXX - Is virt_to_page() legal for consistent mem? */
+-		/* Unreserve */
+-		for (addr = (unsigned long)dmah->vaddr, sz = dmah->size;
+-		     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
+-			ClearPageReserved(virt_to_page((void *)addr));
+-		}
++	if (dmah->vaddr)
+ 		dma_free_coherent(&dev->pdev->dev, dmah->size, dmah->vaddr,
+ 				  dmah->busaddr);
+-	}
+ }
+ 
+ /**
+-- 
+2.20.1
+
 
 
