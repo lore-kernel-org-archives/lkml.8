@@ -2,200 +2,100 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53174C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FACEC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C572071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB3A20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:54:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXjitgiB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="grccDY5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDVWwZ (ORCPT
+        id S1726158AbgDVWyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39246 "EHLO
+        Wed, 22 Apr 2020 18:54:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbgDVWwY (ORCPT
+        by vger.kernel.org with ESMTP id S1725839AbgDVWyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:52:24 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05146C03C1A9;
-        Wed, 22 Apr 2020 15:52:24 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u16so4495494wmc.5;
-        Wed, 22 Apr 2020 15:52:23 -0700 (PDT)
+        Wed, 22 Apr 2020 18:54:46 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7E8C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:54:46 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id i16so2100126ybq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 15:54:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0a5U6ggzTBhJKkj3lnCxXrthjJ0PFsVQAhwvnaFSQsI=;
-        b=hXjitgiBDm1zEMIauxjENMtdp45AP2m3ZXOiQIHi90v1+OcV94Fv4OwWHSLStwgvkH
-         0BOjaRyWHX67YoOnstDTuv+LwieMbHWXu88l5P06UnIiVWDP3IMQKNGSkIF4oZ96ldEE
-         relHcGhKEc8/K5KUZPdiBH//Rds2e7hVNjM9JVVWmcS8op+diEUmZOXahLDMCDXJCywC
-         lvreMw8k8wzjCzMZflDsGBAUvQxbWGVy/TBuRQ/wjJ+/NtFBmJSlbGFQao8HgFh3wF15
-         mxirOTAv+vR1e2NXC3LLmuj0HE17rl4tmgCgAw6svieTpA0JoScQjlMDCAs/tmALx6pO
-         FCNw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1hkThsyt9bGtB9j8NC1A75L5tYk+krUsD870wYCpjgo=;
+        b=grccDY5gsDJ5hIEWCdBAC3aLQKWnBAH9o+1yZqpLA7oE0WwwyFQbq8mPDFLPXItXaE
+         O3tD1g/qkiIqUkY1o/8lANVEHsCexzPsfHg5zuJRE1uYzzdvHVr8lPyOkcU7A7uYUH6Y
+         50bz25QJG/pr4eVVPeIA0fZCsNK47MTFZVPTiWkozxgiz+tSDOypKiVtaT8pmG9Z5o+2
+         i/NSLKKbOLjtzaAwHC3OGBFOHg2eqr+UaS3QgwDP6whVswYMpMRi7Q+8Q3WjXtM4O8mG
+         G/zRGqyTMP6vT1RwK8qv4vs4Hcr/abLrFTt3ZFJ9rc0tA0ImMDoZz1age+oO++Z7bLe6
+         en7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0a5U6ggzTBhJKkj3lnCxXrthjJ0PFsVQAhwvnaFSQsI=;
-        b=DC0AFGhjtYQcY4CDETfu0wzY65AoDK8FgOoVDISh2HiznR3YLyaoD/ocSu4IeZJmGU
-         R4Oz298r6GqJ84fzFZUfbwWJvp3ZGTW32rwfwlHdd/7pMBYP7r7fkVI6BAZa7Radlhok
-         nyGloI235X5yUrQjxEUSzC5MAWsez6AsVCuy5bi4kB0eQLrXo9FSge0r85s8HSXnAtdO
-         XT2ABJH+voJ97X1GVl1irjgfc9fInndvuE/RGotibf6+HkaWObJPZWeZn3CnNycgbrS9
-         fsth1wo2REfVI6gk/P9HBkSayJMeRCVtJlNkWOh/61O5gaD+LSU9s0F+Jyv+N4Mr4snX
-         tx7Q==
-X-Gm-Message-State: AGi0PuZVtZw7aUnISHhmjfgg9cCBLAu2/GxBG57hFWbIBVNqLT6siiMx
-        grBp0Hnv0fumFDpHhdaguQKxb7fy
-X-Google-Smtp-Source: APiQypKwMWFRikXiouBWrMK1xvkZcGGYtXUrIdMULAMsLh2jF8lcm+Wr63vDsB4I5cYzESTIw/Jytw==
-X-Received: by 2002:a1c:7c13:: with SMTP id x19mr777465wmc.124.1587595941596;
-        Wed, 22 Apr 2020 15:52:21 -0700 (PDT)
-Received: from [192.168.43.25] ([109.126.129.227])
-        by smtp.gmail.com with ESMTPSA id n6sm942038wrs.81.2020.04.22.15.52.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 15:52:21 -0700 (PDT)
-Subject: Re: [PATCH 1/2] io_uring: trigger timeout after any sqe->off CQEs
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1587229607.git.asml.silence@gmail.com>
- <28005ea0de63e15dbffd87a49fe9b671f1afa87e.1587229607.git.asml.silence@gmail.com>
- <88cbde3c-52a1-7fb3-c4a7-b548beaa5502@kernel.dk>
- <f9c1492c-a0f6-c6ec-ec2e-82a5894060f6@gmail.com>
- <3fe32d07-10e6-4a5a-1390-f03ec4a09c6f@gmail.com>
- <cf991f17-ad5f-c80a-d993-544d8746ac72@gmail.com>
- <c4bb1251-4ad5-0218-690f-c1be09908e67@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <0891010c-6b4b-1efa-a9c0-2e416138edeb@gmail.com>
-Date:   Thu, 23 Apr 2020 01:51:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1hkThsyt9bGtB9j8NC1A75L5tYk+krUsD870wYCpjgo=;
+        b=YUMc1tTnX41hIwsedun3hebJasgdI5NpPcy1J0pjqzzh1SRUFq3URBNJ6iFxlC7+Ku
+         UMne773POXAQ74aKR6ZoxXNr4FoK+pGJBvB/EeFJ2FJQnYYajaw0ago3aHc3DNtP+X6F
+         eS1A9tTAUxCHJjfo52y7EnMjglNl951Pab14agmvsJg6iz3rSkd2MLSJFT8Hz3Lmtg6y
+         dNYc33MOeZi56FgCiL0lxVZJ94IJ/c3Q3+C0maKGmwjuK8mRj8lgBIlKzfG9nRbyU2UD
+         uRbIvzdmjHYqfxDmnczvE1D87P8RiRk0cVRkqC8YMhO+adM1Pn2jISYg18aRA+GA2s4h
+         WXBg==
+X-Gm-Message-State: AGi0Pub3i6nmK2c76Y1uOVGLUVLAJ71/yFKkSsUb11VVc5Wrb/wSsJcP
+        InRsz1grovIZWPBmqbNR7/1Onfeh4vMuhGlw5ohtsiCoX/s=
+X-Google-Smtp-Source: APiQypKSA3iG8RJ4S9ABuuHBi5v+zPHefh7pQMT1p5WEIRRe2JN/cU34UXFN5xqaBgolc6AC5fz3XpktcZtm8dVfsD0=
+X-Received: by 2002:a25:4c07:: with SMTP id z7mr1966878yba.298.1587596085501;
+ Wed, 22 Apr 2020 15:54:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c4bb1251-4ad5-0218-690f-c1be09908e67@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200422001422.232330-1-walken@google.com> <20200422001422.232330-11-walken@google.com>
+ <20200422015829.GR5820@bombadil.infradead.org>
+In-Reply-To: <20200422015829.GR5820@bombadil.infradead.org>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Wed, 22 Apr 2020 15:54:32 -0700
+Message-ID: <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
+Subject: Re: [PATCH v5 10/10] mmap locking API: rename mmap_sem to mmap_lock
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/2020 01:23, Jens Axboe wrote:
-> On 4/22/20 4:20 PM, Pavel Begunkov wrote:
->> On 20/04/2020 23:15, Pavel Begunkov wrote:
->>> On 20/04/2020 23:12, Pavel Begunkov wrote:
->>>> On 20/04/2020 22:40, Jens Axboe wrote:
->>>>> On 4/18/20 11:20 AM, Pavel Begunkov wrote:
->>>>>> +static void __io_flush_timeouts(struct io_ring_ctx *ctx)
->>>>>> +{
->>>>>> +	u32 end, start;
->>>>>> +
->>>>>> +	start = end = ctx->cached_cq_tail;
->>>>>> +	do {
->>>>>> +		struct io_kiocb *req = list_first_entry(&ctx->timeout_list,
->>>>>> +							struct io_kiocb, list);
->>>>>> +
->>>>>> +		if (req->flags & REQ_F_TIMEOUT_NOSEQ)
->>>>>> +			break;
->>>>>> +		/*
->>>>>> +		 * multiple timeouts may have the same target,
->>>>>> +		 * check that @req is in [first_tail, cur_tail]
->>>>>> +		 */
->>>>>> +		if (!io_check_in_range(req->timeout.target_cq, start, end))
->>>>>> +			break;
->>>>>> +
->>>>>> +		list_del_init(&req->list);
->>>>>> +		io_kill_timeout(req);
->>>>>> +		end = ctx->cached_cq_tail;
->>>>>> +	} while (!list_empty(&ctx->timeout_list));
->>>>>> +}
->>>>>> +
->>>>>>  static void io_commit_cqring(struct io_ring_ctx *ctx)
->>>>>>  {
->>>>>>  	struct io_kiocb *req;
->>>>>>  
->>>>>> -	while ((req = io_get_timeout_req(ctx)) != NULL)
->>>>>> -		io_kill_timeout(req);
->>>>>> +	if (!list_empty(&ctx->timeout_list))
->>>>>> +		__io_flush_timeouts(ctx);
->>>>>>  
->>>>>>  	__io_commit_cqring(ctx);
->>>>>>  
->>>>>
->>>>> Any chance we can do this without having to iterate timeouts on the
->>>>> completion path?
->>>>>
->>>>
->>>> If you mean the one in __io_flush_timeouts(), then no, unless we forbid timeouts
->>>> with identical target sequences + some extra constraints. The loop there is not
->>>> new, it iterates only over timeouts, that need to be completed, and removes
->>>> them. That's amortised O(1).
->>>
->>> We can think about adding unlock/lock, if that's what you are thinking about.
->>>
->>>
->>>> On the other hand, there was a loop in io_timeout_fn() doing in
->>>> total O(n^2), and it was killed by this patch.
->>>
->>
->> Any thoughts on this?
->>
->> I'll return fixing the last timeout bug I saw, but I'd prefer to know
->> on top of what to do that.
-> 
-> I think it's fine, but also likely something that we should defer to
-> 5.8. So if there are minor fixes to be done for 5.7, it should be
-> arranged as such.
+On Tue, Apr 21, 2020 at 6:58 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Tue, Apr 21, 2020 at 05:14:22PM -0700, Michel Lespinasse wrote:
+> > Rename the mmap_sem field to mmap_lock. Any new uses of this lock
+>
+> Shouldn't some of these be folded into the previous patch?
 
-Right, totally agree
+So, I didn't do it because previous patch only handled rwsem_is_locked
+call sites. I leaned towards adding as few new API functions as
+possible until we figure out exactly what is required.
 
--- 
-Pavel Begunkov
+That said, I agree it seems reasonable to split mmap_assert_locked()
+into mmap_assert_read_locked() and mmap_assert_write_locked(), and
+convert the lockdep asserts to use these instead.
+I'm not sure we need to do it right away though; we are at least not
+losing any test coverage with the existing version of the patchset...
