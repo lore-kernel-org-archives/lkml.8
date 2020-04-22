@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B672AC5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98CBC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFE020776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9FEB2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550902;
-	bh=UGUfe1U4LpfmshnMIP8jNUJV/ZQTslokztFJNdAPGx8=;
+	s=default; t=1587550945;
+	bh=QGF7u/cPWJ5PqpDZ6tAaNUUCujAeJ37DZ/ssCQQWpJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tL//sa37Ivv37CaUPNIeOu2qZi0glM2iHVYqCasfmgsauXHhEc4CDm9+KTLfmDko4
-	 sK/ywxDTtWDo3KHQ4opRUnSfs35IN31mzvkQKYhnhe6ePgEKbPFTdSK4/JXMKG/TPJ
-	 lkk3mHg0Cs4xUCOSXi2SDHo4S7N4UfilPACttWO4=
+	b=0BkaM4rhGXQ4x5+KZMRQ4PRI6s4tpyi4swaZ2GmDKB98gbX/U1nAfWT/d98hepNtN
+	 Yg4U5LK10vpXZxdZWjKtWXtjlnMgPjhLCBuXSLLZdpzVOs0yPan/WsuorAsO7tv3gm
+	 4XG3MEogb1SdFK2FdwEIeu5yxZt1EkqIEUHZ/5ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgDVKVl (ORCPT
+        id S1726515AbgDVKWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:22:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729999AbgDVKSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:18:40 -0400
+        id S1730008AbgDVKSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:18:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 108802070B;
-        Wed, 22 Apr 2020 10:18:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B72B20781;
+        Wed, 22 Apr 2020 10:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550719;
-        bh=UGUfe1U4LpfmshnMIP8jNUJV/ZQTslokztFJNdAPGx8=;
+        s=default; t=1587550722;
+        bh=QGF7u/cPWJ5PqpDZ6tAaNUUCujAeJ37DZ/ssCQQWpJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dx6MvKW3w5RasMtBpMgIjRAuSRvHwloR3xzLHeAss1yus/9im9CWZCbiwZL8/cXnc
-         8gUwBZnVZtd+exJWm8sKkxIUYU6MReXp9tkCHY7bCSZfxvMjJSRQYpisWJkWMT69cX
-         VrLmGJIuqf2ugwhPwn8g5B0SUHnkJKu6C/udxA+U=
+        b=0w109pc0+2mIKC07YJTaOYMIm2DN0GuMZ29Ol5niJeaBo5rDX8J2sSUPmF4lslhb+
+         t4HiIgh38Iyjr1XbykfV6iq0p3VWy2w7GrQ2a+WcZ1kZt11HeSUvNQQxH7caR1ZaiV
+         klp2ZEE85K0fJj9gN0fDR3LDT9H+l2h4vRquegKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 038/118] net/mlx5e: Enforce setting of a single FEC mode
-Date:   Wed, 22 Apr 2020 11:56:39 +0200
-Message-Id: <20200422095038.180585894@linuxfoundation.org>
+Subject: [PATCH 5.4 065/118] s390/cpum_sf: Fix wrong page count in error message
+Date:   Wed, 22 Apr 2020 11:57:06 +0200
+Message-Id: <20200422095042.568722780@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,36 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 4bd9d5070b92da012f2715cf8e4859acb78b8f35 ]
+[ Upstream commit 4141b6a5e9f171325effc36a22eb92bf961e7a5c ]
 
-Ethtool command allow setting of several FEC modes in a single set
-command. The driver can only set a single FEC mode at a time. With this
-patch driver will reply not-supported on setting several FEC modes.
+When perf record -e SF_CYCLES_BASIC_DIAG runs with very high
+frequency, the samples arrive faster than the perf process can
+save them to file. Eventually, for longer running processes, this
+leads to the siutation where the trace buffers allocated by perf
+slowly fills up. At one point the auxiliary trace buffer is full
+and  the CPU Measurement sampling facility is turned off. Furthermore
+a warning is printed to the kernel log buffer:
 
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+cpum_sf: The AUX buffer with 0 pages for the diagnostic-sampling
+	mode is full
+
+The number of allocated pages for the auxiliary trace buffer is shown
+as zero pages. That is wrong.
+
+Fix this by saving the number of allocated pages before entering the
+work loop in the interrupt handler. When the interrupt handler processes
+the samples, it may detect the buffer full condition and stop sampling,
+reducing the buffer size to zero.
+Print the correct value in the error message:
+
+cpum_sf: The AUX buffer with 256 pages for the diagnostic-sampling
+	mode is full
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/s390/kernel/perf_cpum_sf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index 304ddce6b0872..39ee32518b106 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1548,6 +1548,10 @@ static int mlx5e_set_fecparam(struct net_device *netdev,
- 	int mode;
- 	int err;
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index fdb8083e7870c..229e1e2f8253a 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1589,6 +1589,7 @@ static void hw_collect_aux(struct cpu_hw_sf *cpuhw)
+ 	perf_aux_output_end(handle, size);
+ 	num_sdb = aux->sfb.num_sdb;
  
-+	if (bitmap_weight((unsigned long *)&fecparam->fec,
-+			  ETHTOOL_FEC_BASER_BIT + 1) > 1)
-+		return -EOPNOTSUPP;
-+
- 	for (mode = 0; mode < ARRAY_SIZE(pplm_fec_2_ethtool); mode++) {
- 		if (!(pplm_fec_2_ethtool[mode] & fecparam->fec))
- 			continue;
++	num_sdb = aux->sfb.num_sdb;
+ 	while (!done) {
+ 		/* Get an output handle */
+ 		aux = perf_aux_output_begin(handle, cpuhw->event);
 -- 
 2.20.1
 
