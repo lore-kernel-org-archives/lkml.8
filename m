@@ -2,129 +2,73 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2BBC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C28FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5CD12071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0D62168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgDVWuU (ORCPT
+        id S1726387AbgDVWvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:50:20 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59297 "EHLO mga09.intel.com"
+        Wed, 22 Apr 2020 18:51:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35348 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbgDVWuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:50:20 -0400
-IronPort-SDR: w2TekEPaGgH6ZQLQlfwVylgdaj8X6dwjZPWsl8Hv4O8McGptNdWVnBZIYrh02BTzVl9w89bl8+
- bFhA8ZakmMRw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 15:50:19 -0700
-IronPort-SDR: AQJuUtKle/RXyk8OeabhgcPSN8iqD+WQkZDNbNj4VjAxRWLpaxrc9UF/e5AuG4sQTEgZBWoWbs
- SBDNZPZOJnDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="259231225"
-Received: from crschrol-desk22.amr.corp.intel.com (HELO [10.254.73.197]) ([10.254.73.197])
-  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 15:50:18 -0700
-Subject: Re: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use DPC
-To:     Jon Derrick <jonathan.derrick@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Rajat Jain <rajatja@google.com>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
- <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
-Date:   Wed, 22 Apr 2020 15:50:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1725839AbgDVWvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 18:51:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 51A07ABC7;
+        Wed, 22 Apr 2020 22:51:37 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 87993DA704; Thu, 23 Apr 2020 00:50:54 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 00:50:54 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH v2] btrfs: Fix block group leak when remove it fails
+Message-ID: <20200422225054.GU18421@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+References: <1587437651-87784-1-git-send-email-xiyuyang19@fudan.edu.cn>
 MIME-Version: 1.0
-In-Reply-To: <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587437651-87784-1-git-send-email-xiyuyang19@fudan.edu.cn>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 10:54:11AM +0800, Xiyu Yang wrote:
+> btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
+> returns a local reference of the blcok group that contains the given
+> bytenr to "block_group" with increased refcount.
+> 
+> When btrfs_remove_block_group() returns, "block_group" becomes invalid,
+> so the refcount should be decreased to keep refcount balanced.
+> 
+> The reference counting issue happens in several exception handling paths
+> of btrfs_remove_block_group(). When those error scenarios occur such as
+> btrfs_alloc_path() returns NULL, the function forgets to decrease its
+> refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
+> leak.
+> 
+> Fix this issue by jumping to "out_put_group" label and calling
+> btrfs_put_block_group() when those error scenarios occur.
+> 
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 
-
-On 4/20/20 2:37 PM, Jon Derrick wrote:
-> The existing portdrv model prevents DPC services without either OS
-> control (_OSC) granted to AER services, a Host Bridge requesting Native
-> AER, or using one of the 'pcie_ports=' parameters of 'native' or
-> 'dpc-native'.
-> 
-> The DPC port service driver itself will also fail to probe if the kernel
-> assumes the port is using Firmware-First AER. It's a reasonable
-> expectation that a port using Firmware-First AER will also be using
-> Firmware-First DPC, however if a Host Bridge requests Native DPC, the
-> DPC driver should allow it and not fail to bind due to AER capability
-> settings.
-> 
-> Host Bridges which request Native DPC port services will also likely
-> request Native AER, however it shouldn't be a requirement. This patch
-> allows ports on those Host Bridges to have DPC port services.
-> 
-> This will avoid the unlikely situation where the port is Firmware-First
-> AER and Native DPC, and a BIOS or switch firmware preconfiguration of
-> the DPC trigger could result in unhandled DPC events.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->   drivers/pci/pcie/dpc.c          | 3 ++-
->   drivers/pci/pcie/portdrv_core.c | 3 ++-
->   2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 7621704..3f3106f 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -284,7 +284,8 @@ static int dpc_probe(struct pcie_device *dev)
->   	int status;
->   	u16 ctl, cap;
->   
-> -	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native &&
-> +	    !pci_find_host_bridge(pdev->bus)->native_dpc)
-Why do it in probe as well ? if host->native_dpc is not set then the
-device DPC probe it self won't happen right ?
->   		return -ENOTSUPP;
->   
->   	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 50a9522..f2139a1 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -256,7 +256,8 @@ static int get_port_device_capability(struct pci_dev *dev)
->   	 */
->   	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
->   	    pci_aer_available() &&
-> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> +	    (pcie_ports_dpc_native || host->native_dpc ||
-> +	     (services & PCIE_PORT_SERVICE_AER)))
->   		services |= PCIE_PORT_SERVICE_DPC;
->   
->   	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> 
+Added to misc-next, thanks.
