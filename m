@@ -2,159 +2,139 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50796C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01943C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC37206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KSDsogL+"
+	by mail.kernel.org (Postfix) with ESMTP id D8AA0206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgDVHjO (ORCPT
+        id S1726620AbgDVHjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726077AbgDVHjK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:39:10 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442ADC03C1A7;
-        Wed, 22 Apr 2020 00:39:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=vXsb2L81VYge+RDUvb4eLGTxpLRW7iFlEkDQ2VQetHw=; b=KSDsogL+yl2sBfCcotk1n10lgY
-        ZxLAVTkFoWdbB9CAd9bTfpLQ9t66t4DOzODAlfKle/kvgMTGS7OhHS5qT3MUTR3s1vvYa0yhV9IGx
-        CUXvI3PSeSBo7+z63Eu6pr/QwY2YBwLVrO9JqanK2e+3DT2Ql5z1Cp/l/n5BtbJT2wfa77eAZrN3k
-        lLpORMhOn8EI9TvmabqgLHRdXwbYg1YNY9OQF9iTp02+wCSGtNWjZdpr9Q3xtBKLpX6Ik1ThdrX+Q
-        o4d4EnfZVJoN822KrMzJEJO6iNZjyFjBELD8XwDeGJGV0s0p51UCwvrrOUWiYK7Mt8EXRq9gkjzk0
-        Eu0m/lLg==;
-Received: from [2001:4bb8:191:e12c:c70:4a89:bc61:3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jR9yG-00009Z-QW; Wed, 22 Apr 2020 07:39:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
-        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
-        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] bdi: use bdi_dev_name() to get device name
-Date:   Wed, 22 Apr 2020 09:38:45 +0200
-Message-Id: <20200422073851.303714-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200422073851.303714-1-hch@lst.de>
-References: <20200422073851.303714-1-hch@lst.de>
+        Wed, 22 Apr 2020 03:39:49 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41788 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbgDVHjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:39:47 -0400
+IronPort-SDR: ayo8cCg8ajFOOTdASh6lBOIhqPIEwTThV3dw8F3JB8GrEM0Xn5+ugtCZqTFZnNq6F2S/qX1yuT
+ +8vQJdnWhqXw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 00:39:44 -0700
+IronPort-SDR: Y4kJm8tR+zcYkVeYbRmYKmz7vFnym1XDSE0gfzRmkCsjqNxyzXCQIgvJ0vGn3licwk1jCyoJHR
+ NJZy1UT7TZbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
+   d="scan'208";a="245907344"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Apr 2020 00:39:40 -0700
+Subject: Re: [PATCH V6 08/15] ftrace: Add perf text poke events for ftrace
+ trampolines
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+References: <20200405201327.7332-1-adrian.hunter@intel.com>
+ <20200405201327.7332-9-adrian.hunter@intel.com>
+ <20200421134504.GQ20730@hirez.programming.kicks-ass.net>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <ce16611a-8b6c-765d-c254-5bb98493b082@intel.com>
+Date:   Wed, 22 Apr 2020 10:39:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200421134504.GQ20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+On 21/04/20 4:45 pm, Peter Zijlstra wrote:
+> On Sun, Apr 05, 2020 at 11:13:20PM +0300, Adrian Hunter wrote:
+>> Add perf text poke events for ftrace trampolines when created and when
+>> freed.
+> 
+> Maybe also put in a little more detail on the various events. Because
+> arch_ftrace_update_trampoline() can also generate text_poke_bp() events,
+> to update an existing trampoline.
+> 
+> A diagram, like with the kprobes thing perhaps.
 
-Use the common interface bdi_dev_name() to get device name.
+How about adding this:
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/bfq-iosched.c        | 5 +++--
- block/blk-cgroup.c         | 2 +-
- fs/ceph/debugfs.c          | 2 +-
- include/trace/events/wbt.h | 8 ++++----
- 4 files changed, 9 insertions(+), 8 deletions(-)
+There can be 3 text_poke events for ftrace trampolines:
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 78ba57efd16b..4d4fe44a9eea 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4976,8 +4976,9 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
- 	ioprio_class = IOPRIO_PRIO_CLASS(bic->ioprio);
- 	switch (ioprio_class) {
- 	default:
--		dev_err(bfqq->bfqd->queue->backing_dev_info->dev,
--			"bfq: bad prio class %d\n", ioprio_class);
-+		pr_err("bdi %s: bfq: bad prio class %d\n",
-+				bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
-+				ioprio_class);
- 		/* fall through */
- 	case IOPRIO_CLASS_NONE:
- 		/*
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index c5dc833212e1..930212c1a512 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -496,7 +496,7 @@ const char *blkg_dev_name(struct blkcg_gq *blkg)
- {
- 	/* some drivers (floppy) instantiate a queue w/o disk registered */
- 	if (blkg->q->backing_dev_info->dev)
--		return dev_name(blkg->q->backing_dev_info->dev);
-+		return bdi_dev_name(blkg->q->backing_dev_info);
- 	return NULL;
- }
- 
-diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
-index 481ac97b4d25..dcaed75de9e6 100644
---- a/fs/ceph/debugfs.c
-+++ b/fs/ceph/debugfs.c
-@@ -271,7 +271,7 @@ void ceph_fs_debugfs_init(struct ceph_fs_client *fsc)
- 				    &congestion_kb_fops);
- 
- 	snprintf(name, sizeof(name), "../../bdi/%s",
--		 dev_name(fsc->sb->s_bdi->dev));
-+		 bdi_dev_name(fsc->sb->s_bdi));
- 	fsc->debugfs_bdi =
- 		debugfs_create_symlink("bdi",
- 				       fsc->client->debugfs_dir,
-diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
-index 784814160197..9c66e59d859c 100644
---- a/include/trace/events/wbt.h
-+++ b/include/trace/events/wbt.h
-@@ -33,7 +33,7 @@ TRACE_EVENT(wbt_stat,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->rmean		= stat[0].mean;
- 		__entry->rmin		= stat[0].min;
-@@ -68,7 +68,7 @@ TRACE_EVENT(wbt_lat,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->lat = div_u64(lat, 1000);
- 	),
-@@ -105,7 +105,7 @@ TRACE_EVENT(wbt_step,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->msg	= msg;
- 		__entry->step	= step;
-@@ -141,7 +141,7 @@ TRACE_EVENT(wbt_timer,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, dev_name(bdi->dev),
-+		strlcpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->status		= status;
- 		__entry->step		= step;
--- 
-2.26.1
+1. NULL -> trampoline
+   By ftrace_update_trampoline() when !ops->trampoline
+   Trampoline created
+
+2. [e.g. on x86] CALL rel32 -> CALL rel32
+   By arch_ftrace_update_trampoline() when ops->trampoline and
+                        ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
+   [e.g. on x86] via text_poke_bp() which generates text poke events
+   Trampoline-called function target updated
+
+3. trampoline -> NULL
+   By ftrace_trampoline_free() when ops->trampoline and
+                 ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
+   Trampoline freed
+
+> 
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>> ---
+>>  kernel/trace/ftrace.c | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>> index 398d58b8ffa5..3318f7eca76c 100644
+>> --- a/kernel/trace/ftrace.c
+>> +++ b/kernel/trace/ftrace.c
+>> @@ -2792,6 +2792,13 @@ static void ftrace_trampoline_free(struct ftrace_ops *ops)
+>>  {
+>>  	if (ops && (ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP) &&
+>>  	    ops->trampoline) {
+>> +		/*
+>> +		 * Record the text poke event before the ksymbol unregister
+>> +		 * event.
+>> +		 */
+>> +		perf_event_text_poke((void *)ops->trampoline,
+>> +				     (void *)ops->trampoline,
+>> +				     ops->trampoline_size, NULL, 0);
+>>  		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
+>>  				   ops->trampoline, ops->trampoline_size,
+>>  				   true, FTRACE_TRAMPOLINE_SYM);
+>> @@ -6816,6 +6823,13 @@ static void ftrace_update_trampoline(struct ftrace_ops *ops)
+>>  		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
+>>  				   ops->trampoline, ops->trampoline_size, false,
+>>  				   FTRACE_TRAMPOLINE_SYM);
+>> +		/*
+>> +		 * Record the perf text poke event after the ksymbol register
+>> +		 * event.
+>> +		 */
+>> +		perf_event_text_poke((void *)ops->trampoline, NULL, 0,
+>> +				     (void *)ops->trampoline,
+>> +				     ops->trampoline_size);
+>>  	}
+>>  }
+>>  
+>> -- 
+>> 2.17.1
+>>
 
