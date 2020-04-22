@@ -2,139 +2,75 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F08C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E301C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E9720882
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Y9jYQrTD"
+	by mail.kernel.org (Postfix) with ESMTP id E298020882
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDVM2W (ORCPT
+        id S1726424AbgDVM23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725968AbgDVM2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:28:21 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653DBC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:28:21 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l25so2116091qkk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 05:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=f0jbQ8lqR59CMuevuoKxB5R1TbGTdEWUgK8b7QwWaig=;
-        b=Y9jYQrTD+KBkq/Ivls3qIPwJpmM6ww7CJ2CqQanRl1MnnhVRBjIC8FJ9elhRHjgaAi
-         WtmVdh8KfHvs79NF9myzgKF3YDZQa+Kv8hbQ1f0XynyfQj818YgCxZe6+8zI0tDFDBNA
-         roHEPrdPPArwYVRbpIyKS14DdWpNtXoIySwVZMyzDaghAT7+l+UFo8jBdGkcVPgJmNK1
-         Ax88OWfXdaPqDS8yCuOPxz5U+/l5yJQY7Kk5uHPF34cinwO+6pSMWgPjLxzO6Hy1mSN2
-         GGyZFtH27zc+d6gpMknc6PTpEE65vwc0nQSxz8MYH4htOoqzKxDJB+0noiDXVVFZw7Q+
-         CcIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f0jbQ8lqR59CMuevuoKxB5R1TbGTdEWUgK8b7QwWaig=;
-        b=CH0qdCQEy6hELDnRlTQTpNkNV0ph3/kzRKYx+JnhUrc9PqNlmi1Ng5zqBsmcfZ5/cO
-         ym9yiKdtmB4YhROUhxU1ywdlKDv3nEWcRR2F93yFwMexWH+nfkmgPEJlw9+xNNtQU9Rq
-         veAyNO7Xz3TcOFRCvzdBNdJ6UhG5/tZvFi0b/LoTy0sd2g+fKjNUUrl9d4fc7a2xS9bc
-         fZJo1Ruam1YXiXxw8PbHpscJ23MqmelgVfUQIrsMwckaIZv5txUuqXLhFISlNarTdEwt
-         BmFTjHuOme4aWWFLNkFQhHSm63xoqfw/M/bvsLL5T25LQ9kTquyRyuHXvV6NnoRz6pmb
-         OG/g==
-X-Gm-Message-State: AGi0PubJx6I6gDndzBpbjJvIeLHaEHXcidPRoF/MZ7cJy0yOPLdrruBY
-        /UFzA+5SiSe+H8KGcOc7HT2rBQ==
-X-Google-Smtp-Source: APiQypK0yZ624EmqPtADqI8HwZ3PCh6fLl7kwzINQkJkM5bvPq4ticXu2xFDQMmITKIA5k9hjWwx/g==
-X-Received: by 2002:a05:620a:8da:: with SMTP id z26mr19355762qkz.182.1587558500498;
-        Wed, 22 Apr 2020 05:28:20 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::921])
-        by smtp.gmail.com with ESMTPSA id 28sm3853059qkp.10.2020.04.22.05.28.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 05:28:19 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 08:28:18 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 10/18] mm: memcontrol: switch to native NR_ANON_MAPPED
- counter
-Message-ID: <20200422122818.GB358439@cmpxchg.org>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-11-hannes@cmpxchg.org>
- <20200422065151.GJ6780@js1304-desktop>
+        Wed, 22 Apr 2020 08:28:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40608 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725968AbgDVM22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:28:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6DC6AAEBF;
+        Wed, 22 Apr 2020 12:28:26 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 14:28:26 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+In-Reply-To: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+Message-ID: <alpine.LSU.2.21.2004221411140.28581@pobox.suse.cz>
+References: <cover.1587131959.git.jpoimboe@redhat.com> <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422065151.GJ6780@js1304-desktop>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Joonsoo,
+> +int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+> +		       unsigned int symindex, unsigned int relsec,
+> +		       struct module *me)
+> +{
+> +	int ret;
+> +	bool early = me->state == MODULE_STATE_UNFORMED;
+> +	void *(*write)(void *, const void *, size_t) = memcpy;
+> +
+> +	if (!early) {
+> +		write = s390_kernel_write;
+> +		mutex_lock(&text_mutex);
+> +	}
+> +
+> +	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> +				   write);
+> +
+> +	if (!early)
+> +		mutex_unlock(&text_mutex);
+> +
+> +	return ret;
+> +}
 
-On Wed, Apr 22, 2020 at 03:51:52PM +0900, Joonsoo Kim wrote:
-> On Mon, Apr 20, 2020 at 06:11:18PM -0400, Johannes Weiner wrote:
-> > @@ -3768,7 +3761,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
-> >  
-> >  static const unsigned int memcg1_stats[] = {
-> >  	NR_FILE_PAGES,
-> > -	MEMCG_RSS,
-> > +	NR_ANON_MAPPED,
-> >  	MEMCG_RSS_HUGE,
-> >  	NR_SHMEM,
-> >  	NR_FILE_MAPPED,
-> > @@ -5395,7 +5388,12 @@ static int mem_cgroup_move_account(struct page *page,
-> >  
-> >  	lock_page_memcg(page);
-> >  
-> > -	if (!PageAnon(page)) {
-> > +	if (PageAnon(page)) {
-> > +		if (page_mapped(page)) {
-> 
-> This page_mapped() check is newly inserted. Could you elaborate more
-> on why mem_cgroup_charge_statistics() doesn't need this check?
+It means that you can take text_mutex the second time here because it 
+is still taken in klp_init_object_loaded(). It is removed later in the 
+series though. The same applies for x86 patch.
 
-MEMCG_RSS extended from when the page was charged until it was
-uncharged, but NR_ANON_MAPPED is only counted while the page is really
-mapped into page tables. That starts shortly after we charge and ends
-shortly before we uncharge, so pages could move between cgroups before
-or after they are mapped, while they aren't counted in NR_ANON_MAPPED.
+Also, s390_kernel_write() grabs s390_kernel_write_lock spinlock before 
+writing anything, so maybe text_mutex is not really needed as long as 
+s390_kernel_write is called everywhere for text patching.
 
-So to know that the page is counted, charge_statistics() only needed
-to know that the page is charged and Anon; move_account() also needs
-to know that the page is mapped.
-
-> > @@ -1181,7 +1187,7 @@ void page_add_new_anon_rmap(struct page *page,
-> >  		/* increment count (starts at -1) */
-> >  		atomic_set(&page->_mapcount, 0);
-> >  	}
-> > -	__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
-> > +	__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
-> >  	__page_set_anon_rmap(page, vma, address, 1);
-> >  }
-> 
-> memcg isn't setup yet and accounting isn't applied to proper memcg.
-> Maybe, it would be applied to root memcg. With this change, we don't
-> need the mapping to commit the charge so switching the order of
-> page_add_new_anon_rmap() and mem_cgroup_commit_charge() will solve the
-> issue.
-
-Good catch, it's that dreaded circular dependency. It's fixed two
-patches down when I charge anon pages earlier as well. But I'll change
-the rmap<->commit order in this patch to avoid the temporary bug.
-
-Thanks for your thorough review!
+Miroslav
