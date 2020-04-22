@@ -2,128 +2,95 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A62DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3B9C38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB1E6206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE76206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 04:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J4tOajzt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKfmdlAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgDVEMv (ORCPT
+        id S1726090AbgDVEOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 00:12:51 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2939 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgDVEMu (ORCPT
+        Wed, 22 Apr 2020 00:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725811AbgDVEOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 00:12:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9fc4350001>; Tue, 21 Apr 2020 21:12:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 21 Apr 2020 21:12:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 21 Apr 2020 21:12:50 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
- 2020 04:12:49 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
- 2020 04:12:48 +0000
-Subject: Re: Re: [RFC PATCH v8 0/9] Add Tegra driver for video capture
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>, <digetx@gmail.com>,
-        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
- <5c44beca-4016-6e4f-01bb-e38480bfc34b@xs4all.nl>
- <20200421205032.GD3233341@ulmo>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <cfbd9954-6a89-3973-55f5-920b7a807774@nvidia.com>
-Date:   Tue, 21 Apr 2020 21:12:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 22 Apr 2020 00:14:05 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51645C061BD3;
+        Tue, 21 Apr 2020 21:14:04 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id x1so797608ejd.8;
+        Tue, 21 Apr 2020 21:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kg2icj+XoK5z32K73+Ky/IwpjRd8JDVLbZ4vK1dpblg=;
+        b=fKfmdlAjjmK8jg1eJvSvHV5q0/GDlVU5mgiBSkk2siru0FaCsYR7TDzluj28w2ykYI
+         rBtotEP8Ybp+ikkyTDdYtDCF5749niE/qGwtj7Wi0vOQVDqDPabTDvaqObBHZBCaH2sz
+         kD5P+o+VjEcB3y1ohRM4KTR85lwz8xggeIkarMzqnXwHOgeTh3ixzF3PHC4AjvS3QNbs
+         glErE9umhqdySH8MsjfA91MnzebjY144oQOJ2IghEXix0p16bfMwYMrrA8H0mXxoOIwm
+         r2TuQf4Xg9iMpQojz5tUPRuWc/16xIRNbzSQK71IoO6We8SFpqtnib4UW18zYRoUGQ4C
+         AvyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kg2icj+XoK5z32K73+Ky/IwpjRd8JDVLbZ4vK1dpblg=;
+        b=c3tBE1BnmgK1IfiWE4JQesm8lDqeZDiGZCjnO8gUrnTnCv1UXsqd9hTOanml4uWvPS
+         krJt7WpExkR85fvEAaeCOQqfPVyUjy2yPOSPimP+FtBrvscy9LOkoKfRwv750JiqUDem
+         s8DDnG1EKDGgCEJO+TuxCnBfyXne3d+aj7Hs6NAZqvS7HgQDxkMzvdX8Fm9ZkwPbXkXR
+         oQZ17klMQJdyeePzEOebax1y3zVs6lNwB9wKfG8IGSrBfgQczmelfY+YPU80Qek8qTGB
+         pKc9zKUmuPlQWIyxU9s53G6BmKc2oYssZv7HiYIbUwHmnQvhWhBqefyfgUVysvu6+qYM
+         ckLg==
+X-Gm-Message-State: AGi0PubIi9yfmR84LhTRaS6sq2PI8DJDmXHfF4CtBTggPWbL92vAKV3g
+        WlThLl+Pgk4oRXfGMdaE8G4hYWr3Yy/Gc8goWUU=
+X-Google-Smtp-Source: APiQypI6WXkmtEDcEn4hoI80i3yEhHGQE8peJzOKcK0eRX/He4uM5ZDaJo/shg3UcGKBmW0Dnwh6M7vluM08gr+QaLE=
+X-Received: by 2002:a17:906:548:: with SMTP id k8mr23639280eja.259.1587528842861;
+ Tue, 21 Apr 2020 21:14:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200421205032.GD3233341@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587528757; bh=e1UDRc9LEWdDQqaH6RNlYU5o4VaoyIvF1ybwOVa69Y0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=J4tOajztaOIXIOdr2cQJxAyPjXsnlchY3FCd7y0FRaKBWMCKFzfzbEFSh4uf6AbID
-         3zIouYXEl2IZ4TXHwg2+hlnhxjsfQe9J2Uu6do5hnn+FoofcNvcR2tB5FFyYcPrKO9
-         aycILuMg9uvUPxG647Kb082qLwc94hTDyznYVHQab4Fd6ti+s5RDenr52//WmL+g5K
-         kVy+cC29xWw5zT15mnze/LZnq72S6Hazek0o+k2FJuzSrBz0jAReohMGN87jqUo0gq
-         KtKQQr5zsAfMEb5eSr+Z7Z2YxNeOwEBUcCesIeDlNizzSdrtfLQjvxTxOGyNcI/U7z
-         dE7AH2VqS0NTg==
+References: <20200421171552.28393-1-luke.r.nels@gmail.com> <6f1130b3-eaea-cc5e-716f-5d6be77101b9@zytor.com>
+ <CAKU6vyb38-XcFeAiP7OW0j++0jS-J4gZP6S2E21dpQwvcEFpKQ@mail.gmail.com> <CAMzpN2hpwK00duVmrzuhDeZY+H7doJ+C-O6=SWrzy+KvAsupqw@mail.gmail.com>
+In-Reply-To: <CAMzpN2hpwK00duVmrzuhDeZY+H7doJ+C-O6=SWrzy+KvAsupqw@mail.gmail.com>
+From:   Xi Wang <xi.wang@gmail.com>
+Date:   Tue, 21 Apr 2020 21:13:26 -0700
+Message-ID: <CAKU6vybSa3vwxNcgG2oLmYcvYhaeFhtkJGLKT7Rg=24t7Ju0yg@mail.gmail.com>
+Subject: Re: [PATCH bpf 1/2] bpf, x32: Fix invalid instruction in BPF_LDX zero-extension
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Wang YanQing <udknight@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 8:22 PM Brian Gerst <brgerst@gmail.com> wrote:
+> You should explain the reason it is invalid, ie. the instruction
+> encoding needs a 32-bit immediate but the current code only emits an
+> 8-bit immediate.
 
-On 4/21/20 1:50 PM, Thierry Reding wrote:
-> On Tue, Apr 21, 2020 at 01:09:50PM +0200, Hans Verkuil wrote:
->> Hi Sowjanya,
->>
->> On 21/04/2020 02:11, Sowjanya Komatineni wrote:
->>> This series adds Tegra210 VI and CSI driver for built-in test pattern
->>> generator (TPG) capture.
->>>
->>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
->>> CSI port is one-to-one mapped to VI channel for video capture.
->>>
->>> This series has TPG support only where it creates hard media links
->>> between CSI subdevice and VI video device without device graphs.
->>>
->>> v4l2-compliance results are available below the patch diff.
->> I'm ready to merge this v8. Looking at the series I should only merge
->> patches 6 and 7, all other patches go through different subsystems, right?
-> You could also pick up patch 5 because it adds the bindings that are
-> implemented by the driver in patch 6. But I can also pick that up into
-> the Tegra tree. In fact, I do have a set of patches to convert some
-> Tegra bindings to the new json-schema format and the host1x file is
-> among them. If I do get around to finish those up for v5.8 it might be
-> better for me to pick up patch 5 so that I can base my conversion patch
-> on top of that.
->
-> Either way is fine with me, so I've acked the three patches. Take which
-> ones you want and I'll pick up the rest.
->
-> Thanks again for your guidance on this patch set!
->
-> Thierry
-
-Hi Hans,
-
-Would like to add a small fix to the driver for explicit check for vi 
-and csi availability before TPG setup and cleanup in case if video 
-driver is enabled without device tree support where vi and csi drivers 
-does not register.
-
-Although we are not enabling driver by default now, would be good to 
-have this in this series itself.
-
-Will send out the updated version, please pick v9.
-
-Thanks
-
-Sowjanya
-
-
+Thanks!  Will do in v2.
