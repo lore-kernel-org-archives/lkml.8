@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D46C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99CEC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE13208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34EE20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550249;
-	bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
+	s=default; t=1587550254;
+	bh=a3khiwbXj9vLnBMCrBQtFdH8pevxEFZcUyptAjZFPsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkMxxZYqyfFAl8xj+XT2khTj3fUDuWmh3GYqibNDAqwQZ8PA+z87PZpzByjDYfjqk
-	 R1WUpsRm1AoRmD8NCSjiBLKtXKBFjBzpKkUGLhkIR/gvq0IYHj87P0OLDJW790zYiU
-	 g/49CJy0lWjujnGjDnvaSmBALQh7DFYQkl2YnnKw=
+	b=0DweXJhZxA8R3j9NpfzIp5EKFYx20MZruvgGHBjtpvgpSs9m9fK+Z4EJd317dX4KG
+	 qEDPo0+vFSf5RkvpPJ+4CUKYIc/1VRnVYoB5pg97V0MCtgVOerZri/Dv6hCXWJn0BW
+	 yDP+0JiYpwY0EMyHRz3OWmTx1iVOGpM04rv8WuKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgDVKKs (ORCPT
+        id S1729097AbgDVKKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40598 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:10:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbgDVKKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:37 -0400
+        id S1729065AbgDVKKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F20072071E;
-        Wed, 22 Apr 2020 10:10:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F192D2076E;
+        Wed, 22 Apr 2020 10:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550236;
-        bh=XjmrEhuophM687LSAaFi/HfiN1o+mJnwbGhVRoqqK60=;
+        s=default; t=1587550241;
+        bh=a3khiwbXj9vLnBMCrBQtFdH8pevxEFZcUyptAjZFPsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mIwSqzp8DT1KABz336mDFLu/CRRdql4mK/WxgOnqXhzNOcIkkw58nS4Fv4s7alU0q
-         9SHwcPt/HvJ+CqNWqIQl0EGLI6JURREh5d5FzHH/HjU8XEKtBOwPjc/pmyQk0u2qEg
-         Tb9kP1Tpuhv0USeuzGJoUXa/Q6IuZhAnzNYJudU0=
+        b=iV/vuCeK9ECeuh4xDpg90uxJs/i1Mhzzq5FN3kcCFz/07zbYvpX9XEd3HuHpBDW4x
+         VCcWGwGHgBFtZPBEwFCspsqn8DTjhLAcQoXFdZBEOEeM8UVn2r77D928msu7fzpucr
+         UGhnElAkCdcqJ2Qe5IktMguLpQ+q5+IkviAGiDZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rosioru Dragos <dragos.rosioru@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 065/199] crypto: mxs-dcp - fix scatterlist linearization for hash
-Date:   Wed, 22 Apr 2020 11:56:31 +0200
-Message-Id: <20200422095104.741897862@linuxfoundation.org>
+        stable@vger.kernel.org, Liam mcbirnie <liam.mcbirnie@boeing.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 067/199] net: rtnl_configure_link: fix dev flags changes arg to __dev_notify_flags
+Date:   Wed, 22 Apr 2020 11:56:33 +0200
+Message-Id: <20200422095104.917614826@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,110 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rosioru Dragos <dragos.rosioru@nxp.com>
+From: Roopa Prabhu <roopa@cumulusnetworks.com>
 
-commit fa03481b6e2e82355c46644147b614f18c7a8161 upstream.
+commit 56a49d7048703f5ffdb84d3a0ee034108fba6850 upstream.
 
-The incorrect traversal of the scatterlist, during the linearization phase
-lead to computing the hash value of the wrong input buffer.
-New implementation uses scatterwalk_map_and_copy()
-to address this issue.
+This fix addresses https://bugzilla.kernel.org/show_bug.cgi?id=201071
 
-Cc: <stable@vger.kernel.org>
-Fixes: 15b59e7c3733 ("crypto: mxs - Add Freescale MXS DCP driver")
-Signed-off-by: Rosioru Dragos <dragos.rosioru@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Commit 5025f7f7d506 wrongly relied on __dev_change_flags to notify users of
+dev flag changes in the case when dev->rtnl_link_state = RTNL_LINK_INITIALIZED.
+Fix it by indicating flag changes explicitly to __dev_notify_flags.
+
+Fixes: 5025f7f7d506 ("rtnetlink: add rtnl_link_state check in rtnl_configure_link")
+Reported-By: Liam mcbirnie <liam.mcbirnie@boeing.com>
+Signed-off-by: Roopa Prabhu <roopa@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/mxs-dcp.c |   54 ++++++++++++++++++++++-------------------------
- 1 file changed, 26 insertions(+), 28 deletions(-)
+ net/core/rtnetlink.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/mxs-dcp.c
-+++ b/drivers/crypto/mxs-dcp.c
-@@ -25,6 +25,7 @@
- #include <crypto/sha.h>
- #include <crypto/internal/hash.h>
- #include <crypto/internal/skcipher.h>
-+#include <crypto/scatterwalk.h>
- 
- #define DCP_MAX_CHANS	4
- #define DCP_BUF_SZ	PAGE_SIZE
-@@ -621,49 +622,46 @@ static int dcp_sha_req_to_buf(struct cry
- 	struct dcp_async_ctx *actx = crypto_ahash_ctx(tfm);
- 	struct dcp_sha_req_ctx *rctx = ahash_request_ctx(req);
- 	struct hash_alg_common *halg = crypto_hash_alg_common(tfm);
--	const int nents = sg_nents(req->src);
- 
- 	uint8_t *in_buf = sdcp->coh->sha_in_buf;
- 	uint8_t *out_buf = sdcp->coh->sha_out_buf;
- 
--	uint8_t *src_buf;
--
- 	struct scatterlist *src;
- 
--	unsigned int i, len, clen;
-+	unsigned int i, len, clen, oft = 0;
- 	int ret;
- 
- 	int fin = rctx->fini;
- 	if (fin)
- 		rctx->fini = 0;
- 
--	for_each_sg(req->src, src, nents, i) {
--		src_buf = sg_virt(src);
--		len = sg_dma_len(src);
-+	src = req->src;
-+	len = req->nbytes;
- 
--		do {
--			if (actx->fill + len > DCP_BUF_SZ)
--				clen = DCP_BUF_SZ - actx->fill;
--			else
--				clen = len;
-+	while (len) {
-+		if (actx->fill + len > DCP_BUF_SZ)
-+			clen = DCP_BUF_SZ - actx->fill;
-+		else
-+			clen = len;
- 
--			memcpy(in_buf + actx->fill, src_buf, clen);
--			len -= clen;
--			src_buf += clen;
--			actx->fill += clen;
-+		scatterwalk_map_and_copy(in_buf + actx->fill, src, oft, clen,
-+					 0);
- 
--			/*
--			 * If we filled the buffer and still have some
--			 * more data, submit the buffer.
--			 */
--			if (len && actx->fill == DCP_BUF_SZ) {
--				ret = mxs_dcp_run_sha(req);
--				if (ret)
--					return ret;
--				actx->fill = 0;
--				rctx->init = 0;
--			}
--		} while (len);
-+		len -= clen;
-+		oft += clen;
-+		actx->fill += clen;
-+
-+		/*
-+		 * If we filled the buffer and still have some
-+		 * more data, submit the buffer.
-+		 */
-+		if (len && actx->fill == DCP_BUF_SZ) {
-+			ret = mxs_dcp_run_sha(req);
-+			if (ret)
-+				return ret;
-+			actx->fill = 0;
-+			rctx->init = 0;
-+		}
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -2424,7 +2424,7 @@ int rtnl_configure_link(struct net_devic
  	}
  
- 	if (fin) {
+ 	if (dev->rtnl_link_state == RTNL_LINK_INITIALIZED) {
+-		__dev_notify_flags(dev, old_flags, 0U);
++		__dev_notify_flags(dev, old_flags, (old_flags ^ dev->flags));
+ 	} else {
+ 		dev->rtnl_link_state = RTNL_LINK_INITIALIZED;
+ 		__dev_notify_flags(dev, old_flags, ~0U);
 
 
