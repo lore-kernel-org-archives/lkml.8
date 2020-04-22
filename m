@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52068C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384D1C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F98B2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1041320656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551934;
-	bh=Z+kFyNN5ev+xESvpZfYsp5aT/excqR2Qxg8XYqwsifY=;
+	s=default; t=1587551941;
+	bh=YTEsb73itkQL/bKAHc2dPoNzxc5Vsey7cfT5do3YXzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b8F0HVvWF9dL56x2s5kb384qg9yvOL0Cdu1j0PAXWUBNCdGHRlxEixXDZQjYAj/Af
-	 ocW8VgsoruFucFoh5/AFTjvj5nFVvoFnjpz+FtTIfKyaZCqjSVgurpeg26RujNhqg5
-	 FpCHBbtRkwVsPOtI7RmXns03OwhkAGsTcipR+Lxw=
+	b=Bq5ubzMK9dtukaM9Sx228wUBqb+FK3D7tiTxb7fPkGv+e4WkeyNrxTO3znEJsjsRx
+	 AR5XcI0pEXw2uRwcmG8P2SGxXGLSOKxqAcBQFkKXuiSC+3hxZY5KozEL1QiGDUfxqg
+	 zMYvPjlMIFXXDeSmMLVkKQobF60iWPKn4md1yheo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbgDVKix (ORCPT
+        id S1731509AbgDVKi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:38:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729277AbgDVKVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:47 -0400
+        id S1729810AbgDVKVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACECC20776;
-        Wed, 22 Apr 2020 10:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDF022076E;
+        Wed, 22 Apr 2020 10:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550906;
-        bh=Z+kFyNN5ev+xESvpZfYsp5aT/excqR2Qxg8XYqwsifY=;
+        s=default; t=1587550901;
+        bh=YTEsb73itkQL/bKAHc2dPoNzxc5Vsey7cfT5do3YXzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5rj5FGxLlGhWX786/mIk46Uat3Pj8mJHdkdBYaynaFGPWz5IGheupz56jQaghhGK
-         o0oneZvi23qiSkwGHZkn4JD3ACiRkUvXB5zArapmJqsojgM3DpNfdFt+8q+0gxDWbh
-         ThQI4JyYqvsuE3nej6LGJNi4QZJigv0LszPR26Nk=
+        b=oA/W6tgAy2tYmwrZqAe07gVNyTWrac5Coev7ISNWC7uak+E/+5b8qZboahFT1F5BX
+         bTNRE8ksWJtKYdnUMze4vIJO4PiId0XHPHTj7Nmb0Xj4O+Wwi2MMW0GYIdHnrAIbR8
+         mVkE0xODQxJpoaXN9HwOQwJDX015EjyFQl+Ci/Bg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 005/166] ALSA: hda: Honor PM disablement in PM freeze and thaw_noirq ops
-Date:   Wed, 22 Apr 2020 11:55:32 +0200
-Message-Id: <20200422095048.599244508@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 5.6 003/166] objtool: Fix switch table detection in .text.unlikely
+Date:   Wed, 22 Apr 2020 11:55:30 +0200
+Message-Id: <20200422095048.339759418@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -58,43 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 10db5bccc390e8e4bd9fcd1fbd4f1b23f271a405 upstream.
+commit b401efc120a399dfda1f4d2858a4de365c9b08ef upstream.
 
-freeze_noirq and thaw_noirq need to check the PM availability like
-other PM ops.  There are cases where the device got disabled due to
-the error, and the PM operation should be ignored for that.
+If a switch jump table's indirect branch is in a ".cold" subfunction in
+.text.unlikely, objtool doesn't detect it, and instead prints a false
+warning:
 
-Fixes: 3e6db33aaf1d ("ALSA: hda - Set SKL+ hda controller power at freeze() and thaw()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  drivers/media/v4l2-core/v4l2-ioctl.o: warning: objtool: v4l_print_format.cold()+0xd6: sibling call from callable instruction with modified stack frame
+  drivers/hwmon/max6650.o: warning: objtool: max6650_probe.cold()+0xa5: sibling call from callable instruction with modified stack frame
+  drivers/media/dvb-frontends/drxk_hard.o: warning: objtool: init_drxk.cold()+0x16f: sibling call from callable instruction with modified stack frame
+
+Fix it by comparing the function, instead of the section and offset.
+
+Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/157c35d42ca9b6354bbb1604fe9ad7d1153ccb21.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ tools/objtool/check.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1071,6 +1071,8 @@ static int azx_freeze_noirq(struct devic
- 	struct azx *chip = card->private_data;
- 	struct pci_dev *pci = to_pci_dev(dev);
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1011,10 +1011,7 @@ static struct rela *find_jump_table(stru
+ 	 * it.
+ 	 */
+ 	for (;
+-	     &insn->list != &file->insn_list &&
+-	     insn->sec == func->sec &&
+-	     insn->offset >= func->offset;
+-
++	     &insn->list != &file->insn_list && insn->func && insn->func->pfunc == func;
+ 	     insn = insn->first_jump_src ?: list_prev_entry(insn, list)) {
  
-+	if (!azx_is_pm_ready(card))
-+		return 0;
- 	if (chip->driver_type == AZX_DRIVER_SKL)
- 		pci_set_power_state(pci, PCI_D3hot);
- 
-@@ -1083,6 +1085,8 @@ static int azx_thaw_noirq(struct device
- 	struct azx *chip = card->private_data;
- 	struct pci_dev *pci = to_pci_dev(dev);
- 
-+	if (!azx_is_pm_ready(card))
-+		return 0;
- 	if (chip->driver_type == AZX_DRIVER_SKL)
- 		pci_set_power_state(pci, PCI_D0);
- 
+ 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
 
 
