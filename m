@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585F9C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0243C5518F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B7E20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A472076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbgDVJZI (ORCPT
+        id S1726416AbgDVJZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
+        Wed, 22 Apr 2020 05:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726046AbgDVJZI (ORCPT
+        by vger.kernel.org with ESMTP id S1726327AbgDVJZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 05:25:08 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2ACC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 02:25:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1030BC03C1AB
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 02:25:08 -0700 (PDT)
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jRBcr-0007Rj-37; Wed, 22 Apr 2020 11:25:01 +0200
+        id 1jRBcr-0007Rh-33; Wed, 22 Apr 2020 11:25:01 +0200
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jRBco-0006LC-Qu; Wed, 22 Apr 2020 11:24:58 +0200
+        id 1jRBco-0006Ku-K1; Wed, 22 Apr 2020 11:24:58 +0200
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -43,9 +43,9 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
         devicetree@vger.kernel.org
-Subject: [PATCH net-next v5 3/4] net: mdio: of: export part of of_mdiobus_register_phy()
-Date:   Wed, 22 Apr 2020 11:24:55 +0200
-Message-Id: <20200422092456.24281-4-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v5 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+Date:   Wed, 22 Apr 2020 11:24:53 +0200
+Message-Id: <20200422092456.24281-2-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200422092456.24281-1-o.rempel@pengutronix.de>
 References: <20200422092456.24281-1-o.rempel@pengutronix.de>
@@ -60,151 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function will be needed in tja11xx driver for secondary PHY
-support.
+Document the NXP TJA11xx PHY bindings.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/of/of_mdio.c    | 73 ++++++++++++++++++++++++-----------------
- include/linux/of_mdio.h | 11 ++++++-
- 2 files changed, 52 insertions(+), 32 deletions(-)
+ .../devicetree/bindings/net/nxp,tja11xx.yaml  | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 9f982c0627a0d..a04afe79529ca 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -60,39 +60,15 @@ static struct mii_timestamper *of_find_mii_timestamper(struct device_node *node)
- 	return register_mii_timestamper(arg.np, arg.args[0]);
- }
- 
--static int of_mdiobus_register_phy(struct mii_bus *mdio,
--				    struct device_node *child, u32 addr)
-+int of_mdiobus_phy_device_register(struct mii_bus *mdio, struct phy_device *phy,
-+			      struct device_node *child, u32 addr)
- {
--	struct mii_timestamper *mii_ts;
--	struct phy_device *phy;
--	bool is_c45;
- 	int rc;
--	u32 phy_id;
--
--	mii_ts = of_find_mii_timestamper(child);
--	if (IS_ERR(mii_ts))
--		return PTR_ERR(mii_ts);
--
--	is_c45 = of_device_is_compatible(child,
--					 "ethernet-phy-ieee802.3-c45");
--
--	if (!is_c45 && !of_get_phy_id(child, &phy_id))
--		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
--	else
--		phy = get_phy_device(mdio, addr, is_c45);
--	if (IS_ERR(phy)) {
--		if (mii_ts)
--			unregister_mii_timestamper(mii_ts);
--		return PTR_ERR(phy);
--	}
- 
- 	rc = of_irq_get(child, 0);
--	if (rc == -EPROBE_DEFER) {
--		if (mii_ts)
--			unregister_mii_timestamper(mii_ts);
--		phy_device_free(phy);
-+	if (rc == -EPROBE_DEFER)
- 		return rc;
--	}
+diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+new file mode 100644
+index 0000000000000..42be0255512b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0+
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	if (rc > 0) {
- 		phy->irq = rc;
- 		mdio->irq[addr] = rc;
-@@ -117,11 +93,48 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 	/* All data is now stored in the phy struct;
- 	 * register it */
- 	rc = phy_device_register(phy);
-+	if (rc) {
-+		of_node_put(child);
-+		return rc;
-+	}
++title: NXP TJA11xx PHY
 +
-+	dev_dbg(&mdio->dev, "registered phy %pOFn at address %i\n",
-+		child, addr);
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_mdiobus_phy_device_register);
++maintainers:
++  - Andrew Lunn <andrew@lunn.ch>
++  - Florian Fainelli <f.fainelli@gmail.com>
++  - Heiner Kallweit <hkallweit1@gmail.com>
 +
-+static int of_mdiobus_register_phy(struct mii_bus *mdio,
-+				    struct device_node *child, u32 addr)
-+{
-+	struct mii_timestamper *mii_ts;
-+	struct phy_device *phy;
-+	bool is_c45;
-+	int rc;
-+	u32 phy_id;
++description:
++  Bindings for NXP TJA11xx automotive PHYs
 +
-+	mii_ts = of_find_mii_timestamper(child);
-+	if (IS_ERR(mii_ts))
-+		return PTR_ERR(mii_ts);
++allOf:
++  - $ref: ethernet-phy.yaml#
 +
-+	is_c45 = of_device_is_compatible(child,
-+					 "ethernet-phy-ieee802.3-c45");
++patternProperties:
++  "^ethernet-phy@[0-9a-f]+$":
++    type: object
++    description: |
++      Some packages have multiple PHYs. Secondary PHY should be defines as
++      subnode of the first (parent) PHY.
 +
-+	if (!is_c45 && !of_get_phy_id(child, &phy_id))
-+		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
-+	else
-+		phy = get_phy_device(mdio, addr, is_c45);
-+	if (IS_ERR(phy)) {
-+		if (mii_ts)
-+			unregister_mii_timestamper(mii_ts);
-+		return PTR_ERR(phy);
-+	}
++    properties:
++      reg:
++        minimum: 0
++        maximum: 31
++        description:
++          The ID number for the child PHY. Should be +1 of parent PHY.
 +
-+	rc = of_mdiobus_phy_device_register(mdio, phy, child, addr);
- 	if (rc) {
- 		if (mii_ts)
- 			unregister_mii_timestamper(mii_ts);
- 		phy_device_free(phy);
--		of_node_put(child);
- 		return rc;
- 	}
- 
-@@ -132,8 +145,6 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 	if (mii_ts)
- 		phy->mii_ts = mii_ts;
- 
--	dev_dbg(&mdio->dev, "registered phy %pOFn at address %i\n",
--		child, addr);
- 	return 0;
- }
- 
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index 491a2b7e77c1e..0f61a4ac6bcfb 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -30,7 +30,9 @@ extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
- extern int of_phy_register_fixed_link(struct device_node *np);
- extern void of_phy_deregister_fixed_link(struct device_node *np);
- extern bool of_phy_is_fixed_link(struct device_node *np);
--
-+extern int of_mdiobus_phy_device_register(struct mii_bus *mdio,
-+				     struct phy_device *phy,
-+				     struct device_node *child, u32 addr);
- 
- static inline int of_mdio_parse_addr(struct device *dev,
- 				     const struct device_node *np)
-@@ -118,6 +120,13 @@ static inline bool of_phy_is_fixed_link(struct device_node *np)
- {
- 	return false;
- }
++    required:
++      - reg
 +
-+static inline int of_mdiobus_phy_device_register(struct mii_bus *mdio,
-+					    struct phy_device *phy,
-+					    struct device_node *child, u32 addr)
-+{
-+	return -ENOSYS;
-+}
- #endif
- 
- 
++examples:
++  - |
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tja1101_phy0: ethernet-phy@4 {
++            reg = <0x4>;
++        };
++    };
++  - |
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tja1102_phy0: ethernet-phy@4 {
++            reg = <0x4>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            tja1102_phy1: ethernet-phy@5 {
++                reg = <0x5>;
++            };
++        };
++    };
 -- 
 2.26.1
 
