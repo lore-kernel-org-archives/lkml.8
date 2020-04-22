@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595F0C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9220CC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3658420775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C0C20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553068;
-	bh=EJmqHt+h/6G4Xr4awT29NwvKmpV78geh+kOmsfZbSi8=;
+	s=default; t=1587553072;
+	bh=oOeR16JP7+33GN5eawThT9fiHBTWNBFySfENnXf8aGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qb1Jwp0mRqlOB65FfaE+NArH0WhgvTvJvBmBU5eq+qgmdj0HaEJL5BjhqyXeH6Hwv
-	 vq55VPo/PB81aTrxxYBU/iPX/AEPxsCx5B3239W9+TOqVGoSQDurUe6jKFx9nU/Gon
-	 PWOfZX44RWSh4R+1wx5bLMupPbNR9DlnaBhx2YAU=
+	b=LDLeB6InyIq+U4E1b0bQ3i1oNAhVJgm6oyg1PWgQyUG4kHBZQepD+/Qqz+GOa3Vzq
+	 25hRj5GHgF03cYQXZE6axXOqXgeFFsK7b/DE2e0R6DuFcsKwQ32lYffHvNJLKx8IFw
+	 Ayw9EeTnbMucNhCo+ABe5gMxhev4Bnd7dDOnemos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgDVKEu (ORCPT
+        id S1732270AbgDVK5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55326 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:57:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728059AbgDVKEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:04:42 -0400
+        id S1726795AbgDVKEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:04:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC5E22077D;
-        Wed, 22 Apr 2020 10:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C95D72077D;
+        Wed, 22 Apr 2020 10:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549882;
-        bh=EJmqHt+h/6G4Xr4awT29NwvKmpV78geh+kOmsfZbSi8=;
+        s=default; t=1587549887;
+        bh=oOeR16JP7+33GN5eawThT9fiHBTWNBFySfENnXf8aGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1EvBQP7EuJ32aJw/z0GCJfxJZdrFxfj40vrZEa6OJhrZ9YXaYMSW4iO+poZwqZdfQ
-         Z+U6sdHA2zXhMge+mcYtn4JEqUQLdubE5pv+7wElWK1VeeKYd9iPv0d+YTp0KPnq5a
-         7fl9PmK6a79bBJdL5DBzetDVc8wEMFyqelRsjWfA=
+        b=AX2iHwcOZh/nZ/9uaAQ8KRkYOUGrk+riz1xNNYFWUDMsw1CxWuTed7Z8Ke9NvX8yb
+         i6rD+P8KMNWxxWMOo5qKo1sPuJ5E99e/ogjn3vBl6KjLre/wsl2npeoRdXk0+BaY7j
+         24d11rUKFyJ6GDGCg85BP7zCn7H4zP4BTUOGaBWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Anssi Hannula <anssi.hannula@bitwise.fi>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.9 044/125] tools: gpio: Fix out-of-tree build regression
-Date:   Wed, 22 Apr 2020 11:56:01 +0200
-Message-Id: <20200422095040.635320732@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Harshini Shetty <harshini.x.shetty@sony.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.9 046/125] dm verity fec: fix memory leak in verity_fec_dtr
+Date:   Wed, 22 Apr 2020 11:56:03 +0200
+Message-Id: <20200422095040.979310396@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -61,42 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
+From: Shetty, Harshini X (EXT-Sony Mobile) <Harshini.X.Shetty@sony.com>
 
-commit 82f04bfe2aff428b063eefd234679b2d693228ed upstream.
+commit 75fa601934fda23d2f15bf44b09c2401942d8e15 upstream.
 
-Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
-gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
-instead of the correct $(OUTPUT) for the output directory, breaking
-out-of-tree build (O=xx) with the following error:
+Fix below kmemleak detected in verity_fec_ctr. output_pool is
+allocated for each dm-verity-fec device. But it is not freed when
+dm-table for the verity target is removed. Hence free the output
+mempool in destructor function verity_fec_dtr.
 
-  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
+unreferenced object 0xffffffffa574d000 (size 4096):
+  comm "init", pid 1667, jiffies 4294894890 (age 307.168s)
+  hex dump (first 32 bytes):
+    8e 36 00 98 66 a8 0b 9b 00 00 00 00 00 00 00 00  .6..f...........
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000060e82407>] __kmalloc+0x2b4/0x340
+    [<00000000dd99488f>] mempool_kmalloc+0x18/0x20
+    [<000000002560172b>] mempool_init_node+0x98/0x118
+    [<000000006c3574d2>] mempool_init+0x14/0x20
+    [<0000000008cb266e>] verity_fec_ctr+0x388/0x3b0
+    [<000000000887261b>] verity_ctr+0x87c/0x8d0
+    [<000000002b1e1c62>] dm_table_add_target+0x174/0x348
+    [<000000002ad89eda>] table_load+0xe4/0x328
+    [<000000001f06f5e9>] dm_ctl_ioctl+0x3b4/0x5a0
+    [<00000000bee5fbb7>] do_vfs_ioctl+0x5dc/0x928
+    [<00000000b475b8f5>] __arm64_sys_ioctl+0x70/0x98
+    [<000000005361e2e8>] el0_svc_common+0xa0/0x158
+    [<000000001374818f>] el0_svc_handler+0x6c/0x88
+    [<000000003364e9f4>] el0_svc+0x8/0xc
+    [<000000009d84cec9>] 0xffffffffffffffff
 
-Fix that.
-
-Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
-Cc: <stable@vger.kernel.org>
-Cc: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
-Link: https://lore.kernel.org/r/20200325103154.32235-1-anssi.hannula@bitwise.fi
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a739ff3f543af ("dm verity: add support for forward error correction")
+Depends-on: 6f1c819c219f7 ("dm: convert to bioset_init()/mempool_init()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Harshini Shetty <harshini.x.shetty@sony.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/gpio/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-verity-fec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -32,7 +32,7 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
+--- a/drivers/md/dm-verity-fec.c
++++ b/drivers/md/dm-verity-fec.c
+@@ -563,6 +563,7 @@ void verity_fec_dtr(struct dm_verity *v)
+ 	mempool_destroy(f->rs_pool);
+ 	mempool_destroy(f->prealloc_pool);
+ 	mempool_destroy(f->extra_pool);
++	mempool_destroy(f->output_pool);
+ 	kmem_cache_destroy(f->cache);
  
- prepare: $(OUTPUT)include/linux/gpio.h
- 
--GPIO_UTILS_IN := $(output)gpio-utils-in.o
-+GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
- $(GPIO_UTILS_IN): prepare FORCE
- 	$(Q)$(MAKE) $(build)=gpio-utils
- 
+ 	if (f->data_bufio)
 
 
