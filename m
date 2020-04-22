@@ -2,167 +2,109 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962BDC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13767C5518B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A792076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="xK9s/gf9"
+	by mail.kernel.org (Postfix) with ESMTP id ECEB52076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgDVOoh (ORCPT
+        id S1726860AbgDVOo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:44:37 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:59380 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgDVOoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:44:37 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 936652049C;
-        Wed, 22 Apr 2020 14:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587566665; bh=2QrrPQMNXyaHZFXv5Ije5R/4LJpU1TcycXqfIH3U5dI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xK9s/gf9qngTX/oObXxMguv/y31vuDUuOiKBv/qGwnZiSZqDmzmVf7SZ15pJxnKgs
-         dxwWbCS8AU4YmhhdP+JSXT5K5rrKVbjOOg6VjDmh5OTixxEUPOqI7S8HW51vflxL8Z
-         KCoOq/7UaETZXfRtxQnEBpNjzOFbCmrHxaxMtgIkvXGt1zeTNiFGhSi6k6DU8fhDRH
-         xWrOT5+OHesb1sPxgjpBpeTP8DtlZklliu47h2R8PYf/mhW7xs+8ulKvfeb9ygNtEI
-         29uEwbeis5qQFjucXZIt0KxG8gdCaxluCKohxwDb+wrrvZjJOzVnV/mk6+HUsJlUTd
-         Gg3tC3Jl9lTLA==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Kamal Dasu <kdasu.kdev@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Kernel: Identify Loongson-2K processors
-Date:   Wed, 22 Apr 2020 22:43:44 +0800
-Message-Id: <20200422144349.1252775-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
+        Wed, 22 Apr 2020 10:44:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:63947 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbgDVOo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:44:58 -0400
+IronPort-SDR: utVCDyUzPh+V4NRjbJt02diWMoVmVNxb6zUYj9b3N/Km0NVAkSHJh/DloBBYq0xHITqWri1eSp
+ EpWBXQW6e9Gg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 07:44:57 -0700
+IronPort-SDR: 1L91aZrf0wL+5BL4j6agU5mLFDRPbJdAcwATbeYYmRxG0ptjt1/yQAhEnUWHeBnKRtSz2lLq0P
+ CdEq6w7fKEvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="247481908"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2020 07:44:57 -0700
+Received: from [10.249.227.181] (abudanko-mobl.ccr.corp.intel.com [10.249.227.181])
+        by linux.intel.com (Postfix) with ESMTP id D361E5802C9;
+        Wed, 22 Apr 2020 07:44:54 -0700 (PDT)
+Subject: [PATCH v2 2/4] perf docs: substitute CAP_SYS_ADMIN with CAP_PERFMON
+ where needed
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+References: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <f1b48de9-e2b7-d20b-3686-3a15b73ef45c@linux.intel.com>
+Date:   Wed, 22 Apr 2020 17:44:53 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Loongson-2K (Loongson64 Reduced) is a family of SoC shipped with
-gs264e core.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Substitute CAP_SYS_ADMIN with CAP_PERFMON in the docs where admin
+is mentioned. CAP_SYS_ADMIN still works in keeping with user space
+backward compatibility approach.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- arch/mips/include/asm/cpu.h  |  4 ++++
- arch/mips/kernel/cpu-probe.c | 19 ++++++++++++++++++-
- arch/mips/kernel/idle.c      |  3 ++-
- arch/mips/mm/c-r4k.c         | 12 +++++++++---
- 4 files changed, 33 insertions(+), 5 deletions(-)
+ tools/perf/Documentation/perf-intel-pt.txt | 2 +-
+ tools/perf/design.txt                      | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/include/asm/cpu.h b/arch/mips/include/asm/cpu.h
-index 216a22916740..46c190e78acf 100644
---- a/arch/mips/include/asm/cpu.h
-+++ b/arch/mips/include/asm/cpu.h
-@@ -250,6 +250,10 @@
- #define PRID_REV_LOONGSON1C		0x0020	/* Same as Loongson-1B */
- #define PRID_REV_LOONGSON2E		0x0002
- #define PRID_REV_LOONGSON2F		0x0003
-+#define PRID_REV_LOONGSON2K_R1_0	0x0000
-+#define PRID_REV_LOONGSON2K_R1_1	0x0001
-+#define PRID_REV_LOONGSON2K_R1_2	0x0002
-+#define PRID_REV_LOONGSON2K_R1_3	0x0003
- #define PRID_REV_LOONGSON3A_R1		0x0005
- #define PRID_REV_LOONGSON3B_R1		0x0006
- #define PRID_REV_LOONGSON3B_R2		0x0007
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index f21a2304401f..6de14b527c68 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1935,7 +1935,24 @@ static inline void cpu_probe_cavium(struct cpuinfo_mips *c, unsigned int cpu)
- static inline void cpu_probe_loongson(struct cpuinfo_mips *c, unsigned int cpu)
- {
- 	switch (c->processor_id & PRID_IMP_MASK) {
--	case PRID_IMP_LOONGSON_64C:  /* Loongson-2/3 */
-+	case PRID_IMP_LOONGSON_64R: /* Loongson-64 Reduced */
-+		switch (c->processor_id & PRID_REV_MASK) {
-+		case PRID_REV_LOONGSON2K_R1_0:
-+		case PRID_REV_LOONGSON2K_R1_1:
-+		case PRID_REV_LOONGSON2K_R1_2:
-+		case PRID_REV_LOONGSON2K_R1_3:
-+			c->cputype = CPU_LOONGSON64;
-+			__cpu_name[cpu] = "Loongson-2K";
-+			set_elf_platform(cpu, "gs264e");
-+			set_isa(c, MIPS_CPU_ISA_M64R2);
-+			break;
-+		}
-+		decode_configs(c);
-+		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
-+		c->ases |= (MIPS_ASE_LOONGSON_MMI | MIPS_ASE_LOONGSON_EXT |
-+				MIPS_ASE_LOONGSON_EXT2);
-+		break;
-+	case PRID_IMP_LOONGSON_64C:  /* Loongson-3 Classic */
- 		switch (c->processor_id & PRID_REV_MASK) {
- 		case PRID_REV_LOONGSON3A_R2_0:
- 		case PRID_REV_LOONGSON3A_R2_1:
-diff --git a/arch/mips/kernel/idle.c b/arch/mips/kernel/idle.c
-index 37f8e78e2869..60d8c2a380fe 100644
---- a/arch/mips/kernel/idle.c
-+++ b/arch/mips/kernel/idle.c
-@@ -180,7 +180,8 @@ void __init check_wait(void)
- 		break;
- 	case CPU_LOONGSON64:
- 		if ((c->processor_id & (PRID_IMP_MASK | PRID_REV_MASK)) >=
--				(PRID_IMP_LOONGSON_64C | PRID_REV_LOONGSON3A_R2_0))
-+				(PRID_IMP_LOONGSON_64C | PRID_REV_LOONGSON3A_R2_0) ||
-+				(c->processor_id & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64R)
- 			cpu_wait = r4k_wait;
- 		break;
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 456fdcbf26ac..176597be0755 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -687,7 +687,7 @@ The v4.2 kernel introduced support for a context switch metadata event,
+ PERF_RECORD_SWITCH, which allows unprivileged users to see when their processes
+ are scheduled out and in, just not by whom, which is left for the
+ PERF_RECORD_SWITCH_CPU_WIDE, that is only accessible in system wide context,
+-which in turn requires CAP_SYS_ADMIN.
++which in turn requires CAP_PERFMON.
  
-diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
-index 36a311348739..378ef5d46bec 100644
---- a/arch/mips/mm/c-r4k.c
-+++ b/arch/mips/mm/c-r4k.c
-@@ -1303,7 +1303,8 @@ static void probe_pcache(void)
- 					  c->dcache.linesz;
- 		c->dcache.waybit = 0;
- 		if ((c->processor_id & (PRID_IMP_MASK | PRID_REV_MASK)) >=
--				(PRID_IMP_LOONGSON_64C | PRID_REV_LOONGSON3A_R2_0))
-+				(PRID_IMP_LOONGSON_64C | PRID_REV_LOONGSON3A_R2_0) ||
-+				(c->processor_id & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64R)
- 			c->options |= MIPS_CPU_PREFETCH;
- 		break;
+ Please see the 45ac1403f564 ("perf: Add PERF_RECORD_SWITCH to indicate context
+ switches") commit, that introduces these metadata events for further info.
+diff --git a/tools/perf/design.txt b/tools/perf/design.txt
+index a42fab308ff6..6fd879440c40 100644
+--- a/tools/perf/design.txt
++++ b/tools/perf/design.txt
+@@ -258,8 +258,7 @@ gets schedule to. Per task counters can be created by any user, for
+ their own tasks.
  
-@@ -1629,8 +1630,13 @@ static void __init loongson3_sc_init(void)
- 	scache_size = c->scache.sets *
- 				  c->scache.ways *
- 				  c->scache.linesz;
--	/* Loongson-3 has 4 cores, 1MB scache for each. scaches are shared */
--	scache_size *= 4;
-+
-+	/* Loongson-3 has 4-Scache banks, while Loongson-2K have only 2 banks */
-+	if ((c->processor_id & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64R)
-+		scache_size *= 2;
-+	else
-+		scache_size *= 4;
-+
- 	c->scache.waybit = 0;
- 	c->scache.waysize = scache_size / c->scache.ways;
- 	pr_info("Unified secondary cache %ldkB %s, linesize %d bytes.\n",
+ A 'pid == -1' and 'cpu == x' counter is a per CPU counter that counts
+-all events on CPU-x. Per CPU counters need CAP_PERFMON or CAP_SYS_ADMIN
+-privilege.
++all events on CPU-x. Per CPU counters need CAP_PERFMON privilege.
+ 
+ The 'flags' parameter is currently unused and must be zero.
+ 
 -- 
-2.26.0.rc2
+2.24.1
+
 
