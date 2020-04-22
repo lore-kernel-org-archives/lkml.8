@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465EAC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815B5C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFBD21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F1421D7B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgDVMSE (ORCPT
+        id S1729000AbgDVMSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53368 "EHLO
+        Wed, 22 Apr 2020 08:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728686AbgDVMRi (ORCPT
+        by vger.kernel.org with ESMTP id S1728716AbgDVMRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:17:38 -0400
+        Wed, 22 Apr 2020 08:17:40 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4028C03C1A8;
-        Wed, 22 Apr 2020 05:17:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3CDBC03C1A9;
+        Wed, 22 Apr 2020 05:17:39 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJo-0007nb-9Y; Wed, 22 Apr 2020 14:17:32 +0200
+        id 1jREJo-0007nH-6v; Wed, 22 Apr 2020 14:17:32 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E9AC11C02FC;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6804F1C0483;
         Wed, 22 Apr 2020 14:17:23 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:23 -0000
+Date:   Wed, 22 Apr 2020 12:17:22 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf auxtrace: Add an option to synthesize
- callchains for regular events
+Subject: [tip: perf/core] perf thread-stack: Add thread_stack__sample_late()
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401101613.6201-9-adrian.hunter@intel.com>
-References: <20200401101613.6201-9-adrian.hunter@intel.com>
+In-Reply-To: <20200401101613.6201-10-adrian.hunter@intel.com>
+References: <20200401101613.6201-10-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158755784355.28353.8738282978125640759.tip-bot2@tip-bot2>
+Message-ID: <158755784297.28353.7627391855107279620.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,126 +60,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     1c5c25b3fdbd7035f6d53a1a99b5afd577ce13e1
-Gitweb:        https://git.kernel.org/tip/1c5c25b3fdbd7035f6d53a1a99b5afd577ce13e1
+Commit-ID:     4fef41bfb1d8d2ada4a18eb3ab80c2682bcbae12
+Gitweb:        https://git.kernel.org/tip/4fef41bfb1d8d2ada4a18eb3ab80c2682bcbae12
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Wed, 01 Apr 2020 13:16:05 +03:00
+AuthorDate:    Wed, 01 Apr 2020 13:16:06 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Thu, 16 Apr 2020 12:19:15 -03:00
 
-perf auxtrace: Add an option to synthesize callchains for regular events
+perf thread-stack: Add thread_stack__sample_late()
 
-Currently, callchains can be synthesized only for synthesized events. Add
-an itrace option to synthesize callchains for regular events.
+Add a thread stack function to create a call chain for hardware events
+where the sample records get created some time after the event occurred.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200401101613.6201-9-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200401101613.6201-10-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/itrace.txt | 1 +
- tools/perf/builtin-report.c         | 3 ++-
- tools/perf/builtin-script.c         | 2 +-
- tools/perf/util/auxtrace.c          | 6 +++++-
- tools/perf/util/auxtrace.h          | 2 ++
- tools/perf/util/s390-cpumsf.c       | 2 +-
- 6 files changed, 12 insertions(+), 4 deletions(-)
+ tools/perf/util/thread-stack.c | 57 +++++++++++++++++++++++++++++++++-
+ tools/perf/util/thread-stack.h |  3 ++-
+ 2 files changed, 60 insertions(+)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index 82ff7da..671e154 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -10,6 +10,7 @@
- 		e	synthesize error events
- 		d	create a debug log
- 		g	synthesize a call chain (use with i or x)
-+		G	synthesize a call chain on existing event records
- 		l	synthesize last branch entries (use with i or x)
- 		s       skip initial number of events
+diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
+index 0885967..83f6c83 100644
+--- a/tools/perf/util/thread-stack.c
++++ b/tools/perf/util/thread-stack.c
+@@ -497,6 +497,63 @@ void thread_stack__sample(struct thread *thread, int cpu,
+ 	chain->nr = i;
+ }
  
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 26d8fc2..c0cebd5 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -339,6 +339,7 @@ static int report__setup_sample_type(struct report *rep)
- 	bool is_pipe = perf_data__is_pipe(session->data);
- 
- 	if (session->itrace_synth_opts->callchain ||
-+	    session->itrace_synth_opts->add_callchain ||
- 	    (!is_pipe &&
- 	     perf_header__has_feat(&session->header, HEADER_AUXTRACE) &&
- 	     !session->itrace_synth_opts->set))
-@@ -1332,7 +1333,7 @@ int cmd_report(int argc, const char **argv)
- 	if (symbol_conf.cumulate_callchain && !callchain_param.order_set)
- 		callchain_param.order = ORDER_CALLER;
- 
--	if (itrace_synth_opts.callchain &&
-+	if ((itrace_synth_opts.callchain || itrace_synth_opts.add_callchain) &&
- 	    (int)itrace_synth_opts.callchain_sz > report.max_stack)
- 		report.max_stack = itrace_synth_opts.callchain_sz;
- 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 8bf3ba2..06b511c 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3537,7 +3537,7 @@ int cmd_script(int argc, const char **argv)
- 		return -1;
- 	}
- 
--	if (itrace_synth_opts.callchain &&
-+	if ((itrace_synth_opts.callchain || itrace_synth_opts.add_callchain) &&
- 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
- 		scripting_max_stack = itrace_synth_opts.callchain_sz;
- 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index b60bae8..809a09e 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1462,8 +1462,12 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 			synth_opts->branches = true;
- 			synth_opts->returns = true;
- 			break;
-+		case 'G':
- 		case 'g':
--			synth_opts->callchain = true;
-+			if (p[-1] == 'G')
-+				synth_opts->add_callchain = true;
-+			else
-+				synth_opts->callchain = true;
- 			synth_opts->callchain_sz =
- 					PERF_ITRACE_DEFAULT_CALLCHAIN_SZ;
- 			while (*p == ' ' || *p == ',')
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index db65aae..dd8a4ff 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -74,6 +74,7 @@ enum itrace_period_type {
-  * @calls: limit branch samples to calls (can be combined with @returns)
-  * @returns: limit branch samples to returns (can be combined with @calls)
-  * @callchain: add callchain to 'instructions' events
-+ * @add_callchain: add callchain to existing event records
-  * @thread_stack: feed branches to the thread_stack
-  * @last_branch: add branch context to 'instruction' events
-  * @callchain_sz: maximum callchain size
-@@ -101,6 +102,7 @@ struct itrace_synth_opts {
- 	bool			calls;
- 	bool			returns;
- 	bool			callchain;
-+	bool			add_callchain;
- 	bool			thread_stack;
- 	bool			last_branch;
- 	unsigned int		callchain_sz;
-diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index d7779e4..38a9428 100644
---- a/tools/perf/util/s390-cpumsf.c
-+++ b/tools/perf/util/s390-cpumsf.c
-@@ -1079,7 +1079,7 @@ static bool check_auxtrace_itrace(struct itrace_synth_opts *itops)
- 		itops->pwr_events || itops->errors ||
- 		itops->dont_decode || itops->calls || itops->returns ||
- 		itops->callchain || itops->thread_stack ||
--		itops->last_branch;
-+		itops->last_branch || itops->add_callchain;
- 	if (!ison)
- 		return true;
- 	pr_err("Unsupported --itrace options specified\n");
++/*
++ * Hardware sample records, created some time after the event occurred, need to
++ * have subsequent addresses removed from the call chain.
++ */
++void thread_stack__sample_late(struct thread *thread, int cpu,
++			       struct ip_callchain *chain, size_t sz,
++			       u64 sample_ip, u64 kernel_start)
++{
++	struct thread_stack *ts = thread__stack(thread, cpu);
++	u64 sample_context = callchain_context(sample_ip, kernel_start);
++	u64 last_context, context, ip;
++	size_t nr = 0, j;
++
++	if (sz < 2) {
++		chain->nr = 0;
++		return;
++	}
++
++	if (!ts)
++		goto out;
++
++	/*
++	 * When tracing kernel space, kernel addresses occur at the top of the
++	 * call chain after the event occurred but before tracing stopped.
++	 * Skip them.
++	 */
++	for (j = 1; j <= ts->cnt; j++) {
++		ip = ts->stack[ts->cnt - j].ret_addr;
++		context = callchain_context(ip, kernel_start);
++		if (context == PERF_CONTEXT_USER ||
++		    (context == sample_context && ip == sample_ip))
++			break;
++	}
++
++	last_context = sample_ip; /* Use sample_ip as an invalid context */
++
++	for (; nr < sz && j <= ts->cnt; nr++, j++) {
++		ip = ts->stack[ts->cnt - j].ret_addr;
++		context = callchain_context(ip, kernel_start);
++		if (context != last_context) {
++			if (nr >= sz - 1)
++				break;
++			chain->ips[nr++] = context;
++			last_context = context;
++		}
++		chain->ips[nr] = ip;
++	}
++out:
++	if (nr) {
++		chain->nr = nr;
++	} else {
++		chain->ips[0] = sample_context;
++		chain->ips[1] = sample_ip;
++		chain->nr = 2;
++	}
++}
++
+ struct call_return_processor *
+ call_return_processor__new(int (*process)(struct call_return *cr, u64 *parent_db_id, void *data),
+ 			   void *data)
+diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
+index e1ec5a5..8962ddc 100644
+--- a/tools/perf/util/thread-stack.h
++++ b/tools/perf/util/thread-stack.h
+@@ -85,6 +85,9 @@ int thread_stack__event(struct thread *thread, int cpu, u32 flags, u64 from_ip,
+ void thread_stack__set_trace_nr(struct thread *thread, int cpu, u64 trace_nr);
+ void thread_stack__sample(struct thread *thread, int cpu, struct ip_callchain *chain,
+ 			  size_t sz, u64 ip, u64 kernel_start);
++void thread_stack__sample_late(struct thread *thread, int cpu,
++			       struct ip_callchain *chain, size_t sz, u64 ip,
++			       u64 kernel_start);
+ int thread_stack__flush(struct thread *thread);
+ void thread_stack__free(struct thread *thread);
+ size_t thread_stack__depth(struct thread *thread, int cpu);
