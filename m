@@ -2,55 +2,56 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661B2C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2F4C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3282076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1EE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552843;
-	bh=YH4AGpdCWy5IFEc8AHZ2MuIqQUIpNjevYeeA9hxY4Kw=;
+	s=default; t=1587552861;
+	bh=emg9Yop65gmpV8WnaGAa6QGP//H+vngZqB0Pb/B/fdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syh+WDMJILF8YMtOfiT8VTccBkUz70ZzH81YQEIKTrw+78fdErx6p5d08dGTMChHN
-	 Ss9cXOG+posE/P+11khS8xQMPn2p4Xac1ZhjS3PDxiJjyYfufxlxhA4cxlqb4DBQ8l
-	 cNF0uNMv4qKs+qCAt9JwlN5bZHWek70iVS2ziX/A=
+	b=ced4fpguwHBzeCyvHh6qbtSlsh68gPwBBuSSsDGvoFeYMcxkXcee/WAErzRKLC1E7
+	 jZyYuJK8IkJLrG3PkNcIuZ8PObMGG5yjEvDRaZI/wG8EscjBmb7k+6noY5OhS2iiS7
+	 iQYYqeLIpvyN7nf7nhjKxVWH/IOD+XpIUkrOCQgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgDVKyC (ORCPT
+        id S1728058AbgDVKIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:54:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33898 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:08:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbgDVKI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:08:27 -0400
+        id S1728609AbgDVKH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:07:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D00E02076C;
-        Wed, 22 Apr 2020 10:08:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9745B20575;
+        Wed, 22 Apr 2020 10:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550106;
-        bh=YH4AGpdCWy5IFEc8AHZ2MuIqQUIpNjevYeeA9hxY4Kw=;
+        s=default; t=1587550077;
+        bh=emg9Yop65gmpV8WnaGAa6QGP//H+vngZqB0Pb/B/fdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXAOInUWNDbCOwPrVHvRW+v3wrmvAptsOOsWCZoS0oX0QaJ56B1gE0v4rQiywpNNL
-         jvpAZpWtC5+Q543GtW9CpMvwCtmT8TLLiYoI/7qmaLAL1lUw2cVLQkuwpXBuFsxsqz
-         /TNXNyErfRSdNopvBAHEUigpyWTKp/sezazpBlGg=
+        b=ANKtH0AS9qr8Q3cD2KwLuFGf9ekgA7cA8bQR09t+RF3N3SKLxJWtGaW1ulLN0VxSD
+         Dnew1n/tVzBHOvx9uQ+Z4HGs4lxWAh1ko4znxXqMXlaFlvHGo3CnMdLG3erK3joCti
+         ZPZoZZ3YN63Tl0iVOXqfPpWS2jwjsrtar/+MZEpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 004/199] hinic: fix wrong para of wait_for_completion_timeout
-Date:   Wed, 22 Apr 2020 11:55:30 +0200
-Message-Id: <20200422095058.279264154@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Neves <sneves@dei.uc.pt>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Nobuhiro Iwamatsu (CIP)" <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.9 125/125] x86/vdso: Fix lsl operand order
+Date:   Wed, 22 Apr 2020 11:57:22 +0200
+Message-Id: <20200422095052.541251374@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
-References: <20200422095057.806111593@linuxfoundation.org>
+In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
+References: <20200422095032.909124119@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,60 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Samuel Neves <sneves@dei.uc.pt>
 
-[ Upstream commit 0da7c322f116210ebfdda59c7da663a6fc5e9cc8 ]
+commit e78e5a91456fcecaa2efbb3706572fe043766f4d upstream.
 
-the second input parameter of wait_for_completion_timeout should
-be jiffies instead of millisecond
+In the __getcpu function, lsl is using the wrong target and destination
+registers. Luckily, the compiler tends to choose %eax for both variables,
+so it has been working so far.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a582c540ac1b ("x86/vdso: Use RDPID in preference to LSL when available")
+Signed-off-by: Samuel Neves <sneves@dei.uc.pt>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20180901201452.27828-1-sneves@dei.uc.pt
+Signed-off-by: Nobuhiro Iwamatsu (CIP) <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c | 3 ++-
- drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c | 5 +++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/vgtod.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-index 7d95f0866fb0b..e1de97effcd24 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-@@ -398,7 +398,8 @@ static int cmdq_sync_cmd_direct_resp(struct hinic_cmdq *cmdq,
- 
- 	spin_unlock_bh(&cmdq->cmdq_lock);
- 
--	if (!wait_for_completion_timeout(&done, CMDQ_TIMEOUT)) {
-+	if (!wait_for_completion_timeout(&done,
-+					 msecs_to_jiffies(CMDQ_TIMEOUT))) {
- 		spin_lock_bh(&cmdq->cmdq_lock);
- 
- 		if (cmdq->errcode[curr_prod_idx] == &errcode)
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-index 278dc13f3dae8..9fcf2e5e00039 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
-@@ -52,7 +52,7 @@
- 
- #define MSG_NOT_RESP                    0xFFFF
- 
--#define MGMT_MSG_TIMEOUT                1000
-+#define MGMT_MSG_TIMEOUT                5000
- 
- #define mgmt_to_pfhwdev(pf_mgmt)        \
- 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
-@@ -276,7 +276,8 @@ static int msg_to_mgmt_sync(struct hinic_pf_to_mgmt *pf_to_mgmt,
- 		goto unlock_sync_msg;
- 	}
- 
--	if (!wait_for_completion_timeout(recv_done, MGMT_MSG_TIMEOUT)) {
-+	if (!wait_for_completion_timeout(recv_done,
-+					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
- 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
- 		err = -ETIMEDOUT;
- 		goto unlock_sync_msg;
--- 
-2.20.1
-
+--- a/arch/x86/include/asm/vgtod.h
++++ b/arch/x86/include/asm/vgtod.h
+@@ -92,7 +92,7 @@ static inline unsigned int __getcpu(void
+ 	 *
+ 	 * If RDPID is available, use it.
+ 	 */
+-	alternative_io ("lsl %[p],%[seg]",
++	alternative_io ("lsl %[seg],%[p]",
+ 			".byte 0xf3,0x0f,0xc7,0xf8", /* RDPID %eax/rax */
+ 			X86_FEATURE_RDPID,
+ 			[p] "=a" (p), [seg] "r" (__PER_CPU_SEG));
 
 
