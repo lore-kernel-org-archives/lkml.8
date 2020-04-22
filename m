@@ -2,156 +2,160 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC084C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3528AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEE9206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="N8HBeMWy"
+	by mail.kernel.org (Postfix) with ESMTP id E4FC8206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgDVOdg (ORCPT
+        id S1727872AbgDVOfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgDVOdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:33:35 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27401C03C1A9;
-        Wed, 22 Apr 2020 07:33:24 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 28E9220CE6;
-        Wed, 22 Apr 2020 14:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587566003; bh=AZkjRTYvRWUO+/A/Rmcb3WsrGcXYmTEk7WiFNjJa+tw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N8HBeMWyafIUfveHvGcYAliOblIIn2gyhgYRwoses/QbIqLRIMygdUK4aYI1V3Q/F
-         tv27rC62GofhAS1BLhTBpoUvLA0wrNnPHUsJZ22hGysVMJaM6iZHfuqpaQXYTkP2NM
-         l/qxVdxOBtqx/B1iPn/WF8prur8zSQsg5iDY6uXHLESAvKiRI47LVDOeWold1aoTmY
-         8oLTfuHJ54XnfY74wEqq2mdGgWRK81ssiJqrnCOXzwgkT1roUGjUGsjjYfJnnBUl4R
-         9+nSE5T06Q/jqWiB1ymvlcvqaYTy+Pe5owRCjlH59C7s7Fu+eC/57AceuQPo5Fakq1
-         WzE3x5d/e2GFQ==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     clang-built-linux@googlegroups.com,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit kernel
-Date:   Wed, 22 Apr 2020 22:32:54 +0800
-Message-Id: <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
-References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+        Wed, 22 Apr 2020 10:35:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:50868 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726573AbgDVOfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:35:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDCF230E;
+        Wed, 22 Apr 2020 07:35:30 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 240433F68F;
+        Wed, 22 Apr 2020 07:35:29 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 15:35:27 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     steve.capper@arm.com, steven.price@arm.com, will@kernel.org,
+        keescook@chromium.org, greg@kroah.com, akpm@linux-foundation.org,
+        alexios.zavras@intel.com, broonie@kernel.org,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Subject: Re: [PATCH v2] arm64: add check_wx_pages debugfs for CHECK_WX
+Message-ID: <20200422143526.GD54796@lakrids.cambridge.arm.com>
+References: <20200307093926.27145-1-tranmanphong@gmail.com>
+ <20200421173557.10817-1-tranmanphong@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421173557.10817-1-tranmanphong@gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LLD failed to link vmlinux with 64bit load address for 32bit ELF
-while bfd will strip 64bit address into 32bit silently.
-To fix LLD build, we should truncate load address provided by platform
-into 32bit for 32bit kernel.
+On Wed, Apr 22, 2020 at 12:35:58AM +0700, Phong Tran wrote:
+> follow the suggestion from
+> https://github.com/KSPP/linux/issues/35
+> 
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+> Change since v1:
+> - Update the Kconfig help text
+> - Don't check the return value of debugfs_create_file()
+> - Tested on QEMU aarch64
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/786
-Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-Reviewed-by: Maciej W. Rozycki <macro@linux-mips.org>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Nathan Chancellor <natechancellor@gmail.com>
---
-V2: Take MaskRay's shell magic.
+As on v1, I think that this should be generic across all architectures
+with CONFIG_DEBUG_WX. Adding this only on arm64 under
+CONFIG_PTDUMP_DEBUGFS (which does not generally imply a WX check)
+doesn't seem right.
 
-V3: After spent an hour on dealing with special character issue in
-Makefile, I gave up to do shell hacks and write a util in C instead.
-Thanks Maciej for pointing out Makefile variable problem.
+Maybe we need a new ARCH_HAS_CHECK_WX config to make that simpler, but
+that seems simple to me.
 
-v4: Finally we managed to find a Makefile method to do it properly
-thanks to Kees. As it's too far from the initial version, I removed
-Review & Test tag from Nick and Fangrui and Cc instead.
+Thanks,
+Marm.
 
-v5: Care vmlinuz as well.
----
- arch/mips/Makefile                 | 13 ++++++++++++-
- arch/mips/boot/compressed/Makefile |  2 +-
- arch/mips/kernel/vmlinux.lds.S     |  2 +-
- 3 files changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index e1c44aed8156..68c0f22fefc0 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -288,12 +288,23 @@ ifdef CONFIG_64BIT
-   endif
- endif
- 
-+# When linking a 32-bit executable the LLVM linker cannot cope with a
-+# 32-bit load address that has been sign-extended to 64 bits.  Simply
-+# remove the upper 32 bits then, as it is safe to do so with other
-+# linkers.
-+ifdef CONFIG_64BIT
-+	load-ld			= $(load-y)
-+else
-+	load-ld			= $(subst 0xffffffff,0x,$(load-y))
-+endif
-+
- KBUILD_AFLAGS	+= $(cflags-y)
- KBUILD_CFLAGS	+= $(cflags-y)
--KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
-+KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DVMLINUX_LINK_ADDRESS=$(load-ld)
- KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
- 
- bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
-+		  VMLINUX_LINK_ADDRESS=$(load-ld) \
- 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
- 		  PLATFORM="$(platform-y)" \
- 		  ITS_INPUTS="$(its-y)"
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index 0df0ee8a298d..3d391256ab7e 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -90,7 +90,7 @@ ifneq ($(zload-y),)
- VMLINUZ_LOAD_ADDRESS := $(zload-y)
- else
- VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
--		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
-+		$(obj)/vmlinux.bin $(VMLINUX_LINK_ADDRESS))
- endif
- UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
- 
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index a5f00ec73ea6..5226cd8e4bee 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -55,7 +55,7 @@ SECTIONS
- 	/* . = 0xa800000000300000; */
- 	. = 0xffffffff80300000;
- #endif
--	. = VMLINUX_LOAD_ADDRESS;
-+	. = VMLINUX_LINK_ADDRESS;
- 	/* read-only */
- 	_text = .;	/* Text and read-only data */
- 	.text : {
--- 
-2.26.0.rc2
-
+> root@qemuarm64:~# zcat /proc/config.gz | grep PTDUMP
+> CONFIG_GENERIC_PTDUMP=y
+> CONFIG_PTDUMP_CORE=y
+> CONFIG_PTDUMP_DEBUGFS=y
+> root@qemuarm64:~# uname -a
+> Linux qemuarm64 5.7.0-rc2-00001-g20ddb383c313 #3 SMP PREEMPT Tue Apr 21 23:18:56 +07 2020 aarch64 GNU/Linux
+> root@qemuarm64:~# echo 1 > /sys/kernel/debug/check_wx_pages
+> [   63.261868] Checked W+X mappings: passed, no W+X pages found
+> ---
+>  arch/arm64/Kconfig.debug        |  5 ++++-
+>  arch/arm64/include/asm/ptdump.h |  2 ++
+>  arch/arm64/mm/dump.c            |  1 +
+>  arch/arm64/mm/ptdump_debugfs.c  | 18 ++++++++++++++++++
+>  4 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
+> index a1efa246c9ed..cd82c9d3664a 100644
+> --- a/arch/arm64/Kconfig.debug
+> +++ b/arch/arm64/Kconfig.debug
+> @@ -48,7 +48,10 @@ config DEBUG_WX
+>  	  of other unfixed kernel bugs easier.
+>  
+>  	  There is no runtime or memory usage effect of this option
+> -	  once the kernel has booted up - it's a one time check.
+> +	  once the kernel has booted up - it's a one time check at
+> +	  boot, and can also be triggered at runtime by echo "1" to
+> +	  "check_wx_pages". The "check_wx_pages" is available only with
+> +	  CONFIG_PTDUMP_DEBUGFS is enabled.
+>  
+>  	  If in doubt, say "Y".
+>  
+> diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
+> index 38187f74e089..c90a6ec6f59b 100644
+> --- a/arch/arm64/include/asm/ptdump.h
+> +++ b/arch/arm64/include/asm/ptdump.h
+> @@ -24,9 +24,11 @@ struct ptdump_info {
+>  void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
+>  #ifdef CONFIG_PTDUMP_DEBUGFS
+>  void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
+> +void ptdump_check_wx_init(void);
+>  #else
+>  static inline void ptdump_debugfs_register(struct ptdump_info *info,
+>  					   const char *name) { }
+> +static inline void ptdump_check_wx_init(void) { }
+>  #endif
+>  void ptdump_check_wx(void);
+>  #endif /* CONFIG_PTDUMP_CORE */
+> diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+> index 860c00ec8bd3..60c99a047763 100644
+> --- a/arch/arm64/mm/dump.c
+> +++ b/arch/arm64/mm/dump.c
+> @@ -378,6 +378,7 @@ static int ptdump_init(void)
+>  #endif
+>  	ptdump_initialize();
+>  	ptdump_debugfs_register(&kernel_ptdump_info, "kernel_page_tables");
+> +	ptdump_check_wx_init();
+>  	return 0;
+>  }
+>  device_initcall(ptdump_init);
+> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+> index d29d722ec3ec..6b0aa16cb17b 100644
+> --- a/arch/arm64/mm/ptdump_debugfs.c
+> +++ b/arch/arm64/mm/ptdump_debugfs.c
+> @@ -20,3 +20,21 @@ void ptdump_debugfs_register(struct ptdump_info *info, const char *name)
+>  {
+>  	debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
+>  }
+> +
+> +static int check_wx_debugfs_set(void *data, u64 val)
+> +{
+> +	if (val != 1ULL)
+> +		return -EINVAL;
+> +
+> +	ptdump_check_wx();
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_SIMPLE_ATTRIBUTE(check_wx_fops, NULL, check_wx_debugfs_set, "%llu\n");
+> +
+> +void ptdump_check_wx_init(void)
+> +{
+> +	debugfs_create_file("check_wx_pages", 0200, NULL,
+> +			NULL, &check_wx_fops) ? 0 : -ENOMEM;
+> +}
+> -- 
+> 2.20.1
+> 
