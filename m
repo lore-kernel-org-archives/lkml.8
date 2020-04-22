@@ -2,108 +2,156 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C64C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F54BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2E720781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312F52077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Dxu2Tos7";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="JZjiB4RC"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="RsnQK3YA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgDVVH3 (ORCPT
+        id S1726373AbgDVVJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:07:29 -0400
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:40076 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgDVVH3 (ORCPT
+        Wed, 22 Apr 2020 17:09:58 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:44198 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725779AbgDVVJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:07:29 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 496tL34ZJyzQlHY;
-        Wed, 22 Apr 2020 23:07:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-transfer-encoding:content-type:content-type:mime-version
-        :references:in-reply-to:message-id:subject:subject:from:from
-        :date:date:received; s=mail20150812; t=1587589639; bh=4C1ZcPFlNo
-        MYHc6s+skkSb0gvvRJHnGvtMmmxQe7rNo=; b=Dxu2Tos7jNms31cX2a4dFFfjeA
-        zdXu9yM7UHjoaNHSmiVlvn4yzXK/PY6QsBam2+miWBZcJH/9WzHERi/3ARzXpF1t
-        D9hrDJoiUhLswwV4MgFXwUAj7+5y276AGrbWe/7F88VGXDs9w6CzDZ5Ka/aLS4Cy
-        E7OzDcKr6qoioHX/RHrh/S0vx8MOy90clHG9rqYm1T32g+VDL2vbLoRT/Xo/MwJV
-        Xb8RzuioO0xCtPer7w1nXf1Q3eokbbhkITg/sg9ALCGuE/6hl1lWG5yCIxmhvfiY
-        OREMCNcQ+drl+08+GOrRDW76Vg1bl0tJkg+hRkmzfLqP+4ZuzEd3sba8bgXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1587589641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cGGpp/0boXM4fgRdSDqWdoU87OHSgjQHu1ui442p74A=;
-        b=JZjiB4RCJ/mP9MwbxgiQiMxM5m40yqrcy5yEuMIbVOhSwZ5MvbU7qrYFBDaTOb3yf3L9un
-        Xj3E5+dQ5NlHY30RgibvyOVkX4PK/gjQV4CAYSmDVLZsPURplH3DSNvTWI//FNeLPBZsoJ
-        PoHDoiV7WEeM9xoAiW79HD5sRSCZTDgm3f7ksk0UpgnLXIt0OT0h10MStYA06Gvw01s8wH
-        +TjY3YQJXajEP04g/+HbLXT91B4kqE+HD3OiR7A8nUgVpRLCek0Jl0Mhyyt4qOe7DtAlao
-        qfA5d4fVFfVT+xYFvYhs7mVUfFHrRYIj3QP5lovTXx+AXUTQSX/u3R+UrWHXrQ==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id 4-OrVoBX8US2; Wed, 22 Apr 2020 23:07:19 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 23:07:14 +0200
-From:   "Erhard F." <erhard_f@mailbox.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Aishwarya R <aishwaryarj100@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        Wed, 22 Apr 2020 17:09:57 -0400
+Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ML6ih6016716;
+        Wed, 22 Apr 2020 17:09:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=Vwgi5V1MgHj6+1pQhGZX34Vv1m9mwYTiRUxt0kq77KM=;
+ b=RsnQK3YAmSbEwNXLwPw/yoGC7tKPEcUvop2iFSWq/oXzbOdavDEzgHp6O6fuZn6LH3Oc
+ 04pBRYmpeF9rVHKfVrF41aTpu2ktLqJzppADSAz+Yh7Ov4ZLnblO0HPpDwLP81cnE3Y3
+ UQsinmBHwEmg9s+dBmmmg98m4M1B0Ib/XDOluL/CC3HXUxKLEt+F/Dj6y33jzwHWMJ9v
+ fWTgxuUEWToQlJKI6rtfGTXNnTQmKq86LIVSsJOYsG5w7r8i3oj0RwFBER2MX+8Eg5uD
+ z/o3Gnu5r2j8iged4MnVdzVZ2VP5LO1Fr+E9X5QT82LzHVMHQ0s1wiU5dgil6OnCiAaf xg== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 30fvm3gx7u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 17:09:51 -0400
+Received: from pps.filterd (m0144104.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ML9W6t015147;
+        Wed, 22 Apr 2020 17:09:50 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0b-00154901.pphosted.com with ESMTP id 30jredcwum-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Apr 2020 17:09:50 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd52.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03ML9n3t006013;
+        Wed, 22 Apr 2020 17:09:49 -0400
+Received: from mailapphubprd02.lss.emc.com ([mailapphubprd02.lss.emc.com [10.253.24.52]]) by mailuogwprd52.lss.emc.com with ESMTP id 03ML9W9s005957 ;
+          Wed, 22 Apr 2020 17:09:33 -0400
+Received: from vd-leonidr.xiolab.lab.emc.com (vd-leonidr.xiolab.lab.emc.com [10.76.212.243])
+        by mailapphubprd02.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03ML9NiM032414;
+        Wed, 22 Apr 2020 17:09:29 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: powermac: Simplify reading the "reg" and
- "i2c-address" property
-Message-ID: <20200422230709.19a81ef9@supah>
-In-Reply-To: <20200421093712.GA1241@ninjato>
-References: <20200408100354.17782-1-aishwaryarj100@gmail.com>
-        <20200415131916.23555-1-aishwaryarj100@gmail.com>
-        <20200421093712.GA1241@ninjato>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C31D01782
-X-Rspamd-Score: -5.79 / 15.00 / 15.00
+Subject: [PATCH v3 2/3] dmaengine: ioat: remove unnesesery double complition timer modification.
+Date:   Thu, 23 Apr 2020 00:09:17 +0300
+Message-Id: <1587589761-32690-2-git-send-email-leonid.ravich@dell.com>
+X-Mailer: git-send-email 1.9.3
+In-Reply-To: <1587589761-32690-1-git-send-email-leonid.ravich@dell.com>
+References: <1587583557-4113-3-git-send-email-leonid.ravich@dell.com>
+ <1587589761-32690-1-git-send-email-leonid.ravich@dell.com>
+X-Sentrion-Hostname: mailuogwprd52.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_08:2020-04-22,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=13 bulkscore=0
+ adultscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=394 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220161
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=479 priorityscore=1501
+ phishscore=0 spamscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ clxscore=1015 suspectscore=13 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 11:37:13 +0200
-Wolfram Sang <wsa@the-dreams.de> wrote:
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-> On Wed, Apr 15, 2020 at 06:49:14PM +0530, Aishwarya R wrote:
-> > >> Use of_property_read_u32 to read the "reg" and "i2c-address" property
-> > >> instead of using of_get_property to check the return values.
-> > >>
-> > >> Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>  
-> >   
-> > > This is quite a fragile driver. Have you tested it on HW?  
-> > 
-> > This change is not tested with the Hardware.
-> > But of_property_read_u32 is better here than generic of_get_property.
-> > This make sure that value read properly independent of system endianess.  
-> 
-> This driver is only used on PPC_BE. And it is *very* fragile. The gain
-> is not enough for me to accept it without testing. Maybe Erhard (CCed)
-> is interested. If not, you may find someone on the ppc lists.
-> 
+removing unnecessary mod_timer from timeout handler
+incase of ioat_cleanup_preamble() is true  for cleaner code
 
-I applied the patch on top of kernel 5.6.6 and tested it on a PowerMac G4 3,6 DP and a PowerMac G5 11,2. Both machines run without anything suspicious going on. dmesg | grep i2c looks the same with patch and without patch.
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+ drivers/dma/ioat/dma.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-Tested-by: Erhard Furtner <erhard_f@mailbox.org>
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index da59b28..55a8cf1 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -922,17 +922,23 @@ void ioat_timer_event(struct timer_list *t)
+ 		spin_lock_bh(&ioat_chan->prep_lock);
+ 		check_active(ioat_chan);
+ 		spin_unlock_bh(&ioat_chan->prep_lock);
+-		spin_unlock_bh(&ioat_chan->cleanup_lock);
+-		return;
++		goto unlock_out;
++	}
++
++	/* handle the missed cleanup case */
++	if (ioat_cleanup_preamble(ioat_chan, &phys_complete)) {
++		/* timer restarted in ioat_cleanup_preamble
++		 * and IOAT_COMPLETION_ACK cleared
++		 */
++		__cleanup(ioat_chan, phys_complete);
++		goto unlock_out;
+ 	}
+ 
+ 	/* if we haven't made progress and we have already
+ 	 * acknowledged a pending completion once, then be more
+ 	 * forceful with a restart
+ 	 */
+-	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
+-		__cleanup(ioat_chan, phys_complete);
+-	else if (test_bit(IOAT_COMPLETION_ACK, &ioat_chan->state)) {
++	if (test_bit(IOAT_COMPLETION_ACK, &ioat_chan->state)) {
+ 		u32 chanerr;
+ 
+ 		chanerr = readl(ioat_chan->reg_base + IOAT_CHANERR_OFFSET);
+@@ -945,12 +951,13 @@ void ioat_timer_event(struct timer_list *t)
+ 			ioat_ring_active(ioat_chan));
+ 
+ 		ioat_reboot_chan(ioat_chan);
+-		spin_unlock_bh(&ioat_chan->cleanup_lock);
+-		return;
+-	} else
+-		set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
+ 
++		goto unlock_out;
++	}
++
++	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
+ 	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
++unlock_out:
+ 	spin_unlock_bh(&ioat_chan->cleanup_lock);
+ }
+ 
+-- 
+1.9.3
+
