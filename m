@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE89C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9D5C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0E120774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833A72076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553395;
-	bh=XaxPX5jkkt3FhVpFH+7Y7CjBGsNidhj++XYQ7Stjqvw=;
+	s=default; t=1587553402;
+	bh=6aBwVWkpgvenD+Eks1k1FUa5VQnfnIQFKzB25qLtDu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGCdgXyskWzDOTFoVUTOaZfeintiup+RhA5vgHeeQYsWuybjVj5W8xrf8UjbitgaQ
-	 6VKABM7h8qtYY+KbMSPDiaTwJQ74C7+J42weqrQhh45rgWiVMKtYJrER+oskO0Za24
-	 QUnLRpJNn2cyXsU3eGWjIcGNT3y2vZaAT5+Gcvcw=
+	b=BPizgpz5m1yf/0vgZuyjewH9GDzouQzENAM+KNf6KBwuhk2k7jB5x2HeUqnSR9iR1
+	 Hyk9zeWpbpZPBn1XM+/DN79Blou1/Zcz8ygY4m/E5JJox5zgjNH08gtVq0TDojY2+4
+	 bOsZr+y5Urz5CC/ujuh6xsRaEBpIz3m5q4H9zlXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732460AbgDVLDO (ORCPT
+        id S1732467AbgDVLDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:03:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgDVKAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:07 -0400
+        id S1726597AbgDVKAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:00:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88BF720780;
-        Wed, 22 Apr 2020 10:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1DA2077D;
+        Wed, 22 Apr 2020 10:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549607;
-        bh=XaxPX5jkkt3FhVpFH+7Y7CjBGsNidhj++XYQ7Stjqvw=;
+        s=default; t=1587549604;
+        bh=6aBwVWkpgvenD+Eks1k1FUa5VQnfnIQFKzB25qLtDu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=afrlXW9awhkZG774GcN7eUhmntwGRaeIVjYTdXHM15GMXRLK84GEuwqQddY7MSHcV
-         RWm1KntsINT38MOAAACtNGoIcYsk2ohJNdeTuezcNN221mX47mOoiE7KphipDrZv6w
-         O6I1nq654cvccUCsOeBJJdqccVVijTn43j2s10+s=
+        b=vUxMVxfHR0QyE443TyCa/m8X+BZLmNyZsDWlYAheNONk1CWFN6cowt/ZrgOM4OLR6
+         T/FVZDt2y+emb+fWd9Vt47bcp6Anv5LyihevsCSpfg7QHTe/YSI+ua/plI8Bmjs7Jl
+         3fU7zwb67g6N957egBRJ+ZIKYQZ143mFLmTbViDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 033/100] KVM: x86: Allocate new rmap and large page tracking when moving memslot
-Date:   Wed, 22 Apr 2020 11:56:03 +0200
-Message-Id: <20200422095028.713381007@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH 4.4 032/100] x86/entry/32: Add missing ASM_CLAC to general_protection entry
+Date:   Wed, 22 Apr 2020 11:56:02 +0200
+Message-Id: <20200422095028.574173221@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -61,102 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit edd4fa37baa6ee8e44dc65523b27bd6fe44c94de upstream.
+commit 3d51507f29f2153a658df4a0674ec5b592b62085 upstream.
 
-Reallocate a rmap array and recalcuate large page compatibility when
-moving an existing memslot to correctly handle the alignment properties
-of the new memslot.  The number of rmap entries required at each level
-is dependent on the alignment of the memslot's base gfn with respect to
-that level, e.g. moving a large-page aligned memslot so that it becomes
-unaligned will increase the number of rmap entries needed at the now
-unaligned level.
+All exception entry points must have ASM_CLAC right at the
+beginning. The general_protection entry is missing one.
 
-Not updating the rmap array is the most obvious bug, as KVM accesses
-garbage data beyond the end of the rmap.  KVM interprets the bad data as
-pointers, leading to non-canonical #GPs, unexpected #PFs, etc...
-
-  general protection fault: 0000 [#1] SMP
-  CPU: 0 PID: 1909 Comm: move_memory_reg Not tainted 5.4.0-rc7+ #139
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  RIP: 0010:rmap_get_first+0x37/0x50 [kvm]
-  Code: <48> 8b 3b 48 85 ff 74 ec e8 6c f4 ff ff 85 c0 74 e3 48 89 d8 5b c3
-  RSP: 0018:ffffc9000021bbc8 EFLAGS: 00010246
-  RAX: ffff00617461642e RBX: ffff00617461642e RCX: 0000000000000012
-  RDX: ffff88827400f568 RSI: ffffc9000021bbe0 RDI: ffff88827400f570
-  RBP: 0010000000000000 R08: ffffc9000021bd00 R09: ffffc9000021bda8
-  R10: ffffc9000021bc48 R11: 0000000000000000 R12: 0030000000000000
-  R13: 0000000000000000 R14: ffff88827427d700 R15: ffffc9000021bce8
-  FS:  00007f7eda014700(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f7ed9216ff8 CR3: 0000000274391003 CR4: 0000000000162eb0
-  Call Trace:
-   kvm_mmu_slot_set_dirty+0xa1/0x150 [kvm]
-   __kvm_set_memory_region.part.64+0x559/0x960 [kvm]
-   kvm_set_memory_region+0x45/0x60 [kvm]
-   kvm_vm_ioctl+0x30f/0x920 [kvm]
-   do_vfs_ioctl+0xa1/0x620
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f7ed9911f47
-  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 21 6f 2c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffc00937498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  RAX: ffffffffffffffda RBX: 0000000001ab0010 RCX: 00007f7ed9911f47
-  RDX: 0000000001ab1350 RSI: 000000004020ae46 RDI: 0000000000000004
-  RBP: 000000000000000a R08: 0000000000000000 R09: 00007f7ed9214700
-  R10: 00007f7ed92149d0 R11: 0000000000000246 R12: 00000000bffff000
-  R13: 0000000000000003 R14: 00007f7ed9215000 R15: 0000000000000000
-  Modules linked in: kvm_intel kvm irqbypass
-  ---[ end trace 0c5f570b3358ca89 ]---
-
-The disallow_lpage tracking is more subtle.  Failure to update results
-in KVM creating large pages when it shouldn't, either due to stale data
-or again due to indexing beyond the end of the metadata arrays, which
-can lead to memory corruption and/or leaking data to guest/userspace.
-
-Note, the arrays for the old memslot are freed by the unconditional call
-to kvm_free_memslot() in __kvm_set_memory_region().
-
-Fixes: 05da45583de9b ("KVM: MMU: large page support")
+Fixes: e59d1b0a2419 ("x86-32, smap: Add STAC/CLAC instructions to 32-bit kernel entry")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lkml.kernel.org/r/20200225220216.219537887@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/entry/entry_32.S |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7982,6 +7982,13 @@ int kvm_arch_create_memslot(struct kvm *
- {
- 	int i;
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1071,6 +1071,7 @@ ENTRY(int3)
+ END(int3)
  
-+	/*
-+	 * Clear out the previous array pointers for the KVM_MR_MOVE case.  The
-+	 * old arrays will be freed by __kvm_set_memory_region() if installing
-+	 * the new memslot is successful.
-+	 */
-+	memset(&slot->arch, 0, sizeof(slot->arch));
-+
- 	for (i = 0; i < KVM_NR_PAGE_SIZES; ++i) {
- 		unsigned long ugfn;
- 		int lpages;
-@@ -8050,6 +8057,10 @@ int kvm_arch_prepare_memory_region(struc
- 				const struct kvm_userspace_memory_region *mem,
- 				enum kvm_mr_change change)
- {
-+	if (change == KVM_MR_MOVE)
-+		return kvm_arch_create_memslot(kvm, memslot,
-+					       mem->memory_size >> PAGE_SHIFT);
-+
- 	return 0;
- }
- 
+ ENTRY(general_protection)
++	ASM_CLAC
+ 	pushl	$do_general_protection
+ 	jmp	error_code
+ END(general_protection)
 
 
