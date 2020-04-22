@@ -2,183 +2,104 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE51CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01032C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B58E22082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3F720661
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:53:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qUdGxncK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgDVPwF convert rfc822-to-8bit (ORCPT
+        id S1726573AbgDVPxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:52:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:6011 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726547AbgDVPwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:52:05 -0400
-IronPort-SDR: 8m2OxFzb3ldwl6XPo/9cO7OsNzpy/fMA3VIR/MvenoNprxf+vN1lOfsK+szpA6gIJ8w3Aej47N
- CwQG81G5Jy9A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 08:52:04 -0700
-IronPort-SDR: TjUAltXeCoo925sIJYL3sVkWXBBK96XchWNtkhSibXo8PV4Aq6G3f8oErs7mfdwIV7yW37IqQ5
- bId691ZTbd4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,303,1583222400"; 
-   d="scan'208";a="259113020"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 08:52:02 -0700
-Received: from fmsmsx125.amr.corp.intel.com (10.18.125.40) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 22 Apr 2020 08:51:27 -0700
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.13]) by
- FMSMSX125.amr.corp.intel.com ([169.254.2.138]) with mapi id 14.03.0439.000;
- Wed, 22 Apr 2020 08:51:27 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Bernard Zhao <bernard@vivo.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        "Ori Messinger" <Ori.Messinger@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "opensource.kernel@vivo.com" <opensource.kernel@vivo.com>
-Subject: RE: [PATCH] amdgpu: fixes memleak issue when init failed
-Thread-Topic: [PATCH] amdgpu: fixes memleak issue when init failed
-Thread-Index: AQHWGHMwaB1WU0xlDki55E9Aceac76iFShmg
-Date:   Wed, 22 Apr 2020 15:51:27 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010212C230@FMSMSX108.amr.corp.intel.com>
-References: <20200421111715.1231-1-bernard@vivo.com>
-In-Reply-To: <20200421111715.1231-1-bernard@vivo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.107]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Wed, 22 Apr 2020 11:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgDVPxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:53:09 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AF6C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:53:08 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id f8so2090267lfe.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0udPE9EnePSlFarVuldYTggNRyQNC5Zk7MCG7l+KWZc=;
+        b=qUdGxncKjL48ifOV0XDyL0sTKyG/EZjKG5C8HIRjgDIX5h+Sh2a12dWMuHuy9PpLnj
+         +MnY47OTG88LNJIydi6UUAUuNCkpqpuz4NTmJf9XPDynqedL3FutsknAGPY0Fi0YRZTM
+         KkM+MalPiSWZbFzYonetaNIwfAzWWfxbjgbWnRdrmz+PlL/HvTCo4fmzSkzBOUu5kzfY
+         fN9A9QleyEhlQY+wFeHBbKYjzJz+d5+qV40tIiqYUajacYuhMVtnQBeZ6/eXkw23wZAy
+         jTV4wSkGt9QIr4PbESLQiOmcWk5zIuaCjZFfFc43kfpLNmtnqrs8SqgTMxifh5F7Rrmc
+         cr9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0udPE9EnePSlFarVuldYTggNRyQNC5Zk7MCG7l+KWZc=;
+        b=Je5inqYFd9ytoXdJSx0GrnvXMk6avAInACIw2gZFxh2O8UOIzPAHxHM/Bx1o+WETU8
+         81w0mBB7uHithtefVTPvpohQz1f+k2IfQ8PTJ5TKjpRWbRAJK/uHwKzNDCJGesmDFMnU
+         U//pU4YMIT1W+bR2IMb+XCGgSomRLTx8HBmCWgVF4YDpgJ3xh4DwsPGJkhntAD4WQRm8
+         3R29/5IzC3BRt3jqvufG4WSQg5cU8O36OFUJpiN57NP36ngEHR9krshCIYHkGRyd7ajX
+         AezJt4KalRmO8Jq7sldPQWPPCkdSVdaWLgJmvD9xMYOa8DCDu2Aovn3qVCkal0CFg1S3
+         w2/g==
+X-Gm-Message-State: AGi0PuaW29peVrkk1Nf15lV+lA0vzPmjI6vofNI0jOXLbqjeP4SBDCCY
+        B3KbhJ6GpXKirHpNl96RxiZVrlG/+QYhQkdQ8+bkmQ==
+X-Google-Smtp-Source: APiQypIWkemN+mKU8J8xU8e7NjHLXmqNFRLkAUOYPdZIndUBuIhsCmbdsuuurJVWWsy7/9khQfAjp49aoUagFcLxMGU=
+X-Received: by 2002:ac2:46f9:: with SMTP id q25mr17725719lfo.149.1587570787276;
+ Wed, 22 Apr 2020 08:53:07 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200422112719.826676174@infradead.org> <20200422112831.988065598@infradead.org>
+ <CAKfTPtB8NiKqggZN3v6u=Rdwj4grzRwn1mW31ov0y5ZhDBcvuw@mail.gmail.com>
+ <20200422132923.GK20730@hirez.programming.kicks-ass.net> <CAKfTPtBsFDt8JyxjD39B2YP+kCN9nXWZxnaJys9sz2CjWzd1Zw@mail.gmail.com>
+ <20200422135921.GL20730@hirez.programming.kicks-ass.net> <CAKfTPtDa2JPtc2qPSe=d187u8pp7AdvV4wKJiUJsDiAvUTE9hg@mail.gmail.com>
+ <20200422153910.GN20730@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200422153910.GN20730@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 22 Apr 2020 17:52:55 +0200
+Message-ID: <CAKfTPtA=d6pnczmU8LFpV=d-9-KArO0qfQuvzod5xYo1pKjK5g@mail.gmail.com>
+Subject: Re: [PATCH 13/23] sched,ion: Convert to sched_set_normal()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Bernard Zhao
->Sent: Tuesday, April 21, 2020 7:17 AM
->To: Alex Deucher <alexander.deucher@amd.com>; Christian König
-><christian.koenig@amd.com>; David (ChunMing) Zhou
-><David1.Zhou@amd.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
-><daniel@ffwll.ch>; Tom St Denis <tom.stdenis@amd.com>; Ori Messinger
-><Ori.Messinger@amd.com>; Sam Ravnborg <sam@ravnborg.org>; Bernard
->Zhao <bernard@vivo.com>; amd-gfx@lists.freedesktop.org; dri-
->devel@lists.freedesktop.org; linux-kernel@vger.kernel.org
->Cc: opensource.kernel@vivo.com
->Subject: [PATCH] amdgpu: fixes memleak issue when init failed
+On Wed, 22 Apr 2020 at 17:39, Peter Zijlstra <peterz@infradead.org> wrote:
 >
->VRAM manager and DRM MM when init failed, there is no operaction
->to free kzalloc memory & remove device file.
->This will lead to memleak & cause stability issue.
+> On Wed, Apr 22, 2020 at 05:09:15PM +0200, Vincent Guittot wrote:
+> > > It's not unbounded, like a true idle-time scheduler would be, but it can
+> > > still be pretty horrible. nice19 has some of that too of course, but
+> > > idle has it worse, esp. also because it begs others to preempt it.
+> >
+> > Yeah... you have to pay the benefit of letting other tasks to preempt
+> > faster. But both sched_idle and nice19 have the same weight
 >
->Signed-off-by: Bernard Zhao <bernard@vivo.com>
->---
-> drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 24
->++++++++++++++++----
-> 1 file changed, 19 insertions(+), 5 deletions(-)
+> #define WEIGHT_IDLEPRIO         3
 >
->diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->index 82a3299e53c0..4c5fb153e6b4 100644
->--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
->@@ -175,30 +175,44 @@ static int amdgpu_vram_mgr_init(struct
->ttm_mem_type_manager *man,
-> 	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vram_total);
-> 	if (ret) {
-> 		DRM_ERROR("Failed to create device file
->mem_info_vram_total\n");
->-		return ret;
->+		goto VRAM_TOTAL_FAIL;
-> 	}
-> 	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vis_vram_total);
+>  /*  15 */        36,        29,        23,        18,        15,
+>
+> 15 != 3
 
-Have you looked at the DEVICE_ATTR mechanism?
+Good point
+Don't know why I thought they had same weight
 
-It is set up to add device files.  You won't get the granularity of each file,
-but it has a lot more automatic-ness to setting this stuff up.
-
-Mike
-
-> 	if (ret) {
-> 		DRM_ERROR("Failed to create device file
->mem_info_vis_vram_total\n");
->-		return ret;
->+		goto VIS_VRAM_TOTA_FAIL;
-> 	}
-> 	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vram_used);
-> 	if (ret) {
-> 		DRM_ERROR("Failed to create device file
->mem_info_vram_used\n");
->-		return ret;
->+		goto VRAM_USED_FAIL;
-> 	}
-> 	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vis_vram_used);
-> 	if (ret) {
-> 		DRM_ERROR("Failed to create device file
->mem_info_vis_vram_used\n");
->-		return ret;
->+		goto VIS_VRAM_USED_FAIL;
-> 	}
-> 	ret = device_create_file(adev->dev,
->&dev_attr_mem_info_vram_vendor);
-> 	if (ret) {
-> 		DRM_ERROR("Failed to create device file
->mem_info_vram_vendor\n");
->-		return ret;
->+		goto VRAM_VERDOR_FAIL;
-> 	}
 >
-> 	return 0;
->+
->+VRAM_VERDOR_FAIL:
->+	device_remove_file(adev->dev,
->&dev_attr_mem_info_vis_vram_used);
->+VIS_VRAM_USED_FAIL:
->+	device_remove_file(adev->dev, &dev_attr_mem_info_vram_used);
->+RVAM_USED_FAIL:
->+	device_remove_file(adev->dev,
->&dev_attr_mem_info_vis_vram_total);
->+VIS_VRAM_TOTA_FAIL:
->+	device_remove_file(adev->dev, &dev_attr_mem_info_vram_total);
->+VRAM_TOTAL_FAIL:
->+	kfree(mgr);
->+	man->priv = NULL;
->+
->+	return ret;
-> }
->
-> /**
->--
->2.26.2
->
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Also, like said elsewhere, idle is much more eager to let itself be
+> preempted.
