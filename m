@@ -2,139 +2,100 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12368C38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F704C38A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27DB206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BD82070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 03:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="SUr/qn7f";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pEDjSUE1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KQPhED0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgDVDnl (ORCPT
+        id S1726435AbgDVDpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 23:43:41 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54909 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726294AbgDVDnl (ORCPT
+        Tue, 21 Apr 2020 23:45:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50438 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgDVDpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 23:43:41 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 12B025C008C;
-        Tue, 21 Apr 2020 23:43:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 21 Apr 2020 23:43:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=2
-        pJX7Yg+sQ/AyYD6L8gjHh63yS93sxWkwLxkCvnI+ek=; b=SUr/qn7fhubwORw6r
-        1SR1sDofmVTFUbL2y0aluMDxkSGyAp1JV9NqfoBrmMZEAev+b7/MxxOFbt9w7orK
-        lUq1CGofBI93ZRVKcgJ0X+4czDPtNhntXkWz8azKX7Mq34PtY5GwhgB5ukVTSO94
-        y83SC6XxnrVsNt9vxoD0DxbwdLOlh0sCGhrxFY/6qndn1uecSkUStY1AxkcH4esY
-        PlxOjFHQVsEytDwCu8IWG8jKNOrRARJ2zU5t+hjIj8OItQZMXbQFKn3959Lf3Knx
-        7NOxuYQJFsPR8K5mNS4FBrYiKQn/wGSggYfQNHatsjiCLcFFeLXGnjbHJl+XMnTO
-        C6USw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=2pJX7Yg+sQ/AyYD6L8gjHh63yS93sxWkwLxkCvnI+
-        ek=; b=pEDjSUE1KhTlyS+psV8vjg4C1Tyf6w6G+iTzSvAiQ1Pu/GPPmA/Wpxju4
-        SkMwqtzAf4viQKZBKvxTYN4EuXT+Kz2lzCCMt74s04/G8tW0aLfqCryiy6/J1WUC
-        yuCprfcsr9Hh7Bye9JhgzEv6qBx3QjMNBq6u31+5pPVLuqr5rKJZC1VzSFv8cI4q
-        SgJ9wc8ZU5DkTJzQ39hfI9feYy2RTSQ4g8VIYx3kQe6lXOAjvSd/fwQECz8B+q2y
-        mWVGYHwM6jkRumlYmRu3/1QFHITmhvBnueLN19+NXkSWmXEwprHM8zpsZ125KPy7
-        Gv48rfuu8YIG63gWjkYU+IoTsWqGg==
-X-ME-Sender: <xms:a72fXl1iQLl-hxurLDCJOq4UcTOlYCAoULamXhs92wLvx1UZo5cZig>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeeigdejfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:a72fXtYgV6rQfSAYqart0nvBnVlL9KjQo39zrgU259M2Cu6-FzEpog>
-    <xmx:a72fXqhDEEPTT-D7lKYImMPPJhMgHl8famBhYC3lucKX_t8_AtQuSA>
-    <xmx:a72fXlhmUeT3Q19ZdBKOazxMRNHTnYt6lWWuhtkSFKAdaMiibpkwMg>
-    <xmx:bL2fXlphHTNRxzMA5Dni2eoELwMRrM5WNxGoeXAN_SWRsCeie_Atug>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5921B3065CB0;
-        Tue, 21 Apr 2020 23:43:38 -0400 (EDT)
-Subject: Re: [linux-sunxi] [RFC PATCH 4/4] pwm: sun4i: Delay after writing the
- period
-To:     dev@pascalroeleven.nl, Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com
-References: <20200317155906.31288-1-dev@pascalroeleven.nl>
- <20200317155906.31288-5-dev@pascalroeleven.nl>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <f1d9a17e-df9e-dc12-603d-84e908a04b81@sholland.org>
-Date:   Tue, 21 Apr 2020 22:43:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 21 Apr 2020 23:45:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M3huv4118421;
+        Wed, 22 Apr 2020 03:45:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=mLgnlQplhq2XV43NF0tRQ/qHr3g2MI1dyzlJt0Z02dM=;
+ b=KQPhED0Ti6Qylcb8yTYFnYZieQijukojqiqEO/TTuN2gVtH1fAiZYOr7smA2gt61tKsn
+ wJWHeWGd9b1fkTgylcG68JMsASYXOrqR1b8fk15zmnqaWPOq7RQGRhDNl+hBGDSzBjNb
+ rw8PEVC6JajezJ+VTs+vMpaF4HGhR6PX9P5I+zXIpgco0osfQofpVXmEmpemor6/dNTq
+ zfDvgeIRnrrEPYQo/om7cXk/G7wNT1ZmnTKenOCnbgPsvyzVrBm0HSM48ntCDLjlPCP9
+ up0dsonhzfHs/Bpbd3syX9vPvFNrDoOGWJa8CdTwcLxRvgFR24iksC4Y6uJRm28+9Vnf 1g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30grpgmrhc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 03:45:06 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03M3faX3096490;
+        Wed, 22 Apr 2020 03:45:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 30gb3t76xw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 03:45:04 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03M3j26i023490;
+        Wed, 22 Apr 2020 03:45:02 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Apr 2020 20:45:02 -0700
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, bvanassche@acm.org, hare@suse.de,
+        mikelley@microsoft.com, longli@microsoft.com, ming.lei@redhat.com
+Subject: Re: [PATCH] scsi: core: Allow the state change from SDEV_QUIESCE to SDEV_BLOCK
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1587170445-50013-1-git-send-email-decui@microsoft.com>
+Date:   Tue, 21 Apr 2020 23:44:57 -0400
+In-Reply-To: <1587170445-50013-1-git-send-email-decui@microsoft.com> (Dexuan
+        Cui's message of "Fri, 17 Apr 2020 17:40:45 -0700")
+Message-ID: <yq1lfmoi3pi.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200317155906.31288-5-dev@pascalroeleven.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220028
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Pascal,
 
-On 3/17/20 10:59 AM, Pascal Roeleven wrote:
-> When disabling, ensure the period write is complete before continuing.
-> This fixes an issue on some devices when the write isn't complete before
-> the panel is turned off but the clock gate is still on.
-> 
-> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
-> ---
->  drivers/pwm/pwm-sun4i.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index a11d00f96..75250fd4c 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -299,6 +299,10 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
->  	next_period = jiffies + usecs_to_jiffies(cstate.period / 1000 + 1);
->  
-> +	/* When disabling, make sure the period register is written first */
-> +	if (!state->enabled && cstate.enabled)
-> +		sun4i_pwm_wait(next_period);
-> +
+Dexuan,
 
-It is not visible from the context of this patch, but this call to
-sun4i_pwm_wait() ends up calling msleep() inside a spinlock, which isn't
-allowed. The spinlock should probably be converted to a mutex, considering that
-sun4i_pwm_apply() already sleeps and takes mutexes.
+> However, from reading the code, I think the APIs don't really work for
+> aacraid, because, in the resume path of hibernation, when
+> aac_suspend() -> scsi_host_block() is called, scsi_device_quiesce()
+> has set the state to SDEV_QUIESCE, so aac_suspend() ->
+> scsi_host_block() returns -EINVAL.
+>
+> Fix the issue by allowing the state change.
 
-Regards,
-Samuel
+Applied to 5.7/scsi-fixes, thanks!
 
->  	if (state->polarity != PWM_POLARITY_NORMAL)
->  		ctrl &= ~BIT_CH(PWM_ACT_STATE, pwm->hwpwm);
->  	else
-> @@ -320,6 +324,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		return 0;
->  
->  	/* We need a full period to elapse before disabling the channel. */
-> +	next_period = jiffies + usecs_to_jiffies(cstate.period / 1000 + 1);
->  	sun4i_pwm_wait(next_period);
->  
->  	spin_lock(&sun4i_pwm->ctrl_lock);
-> 
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
