@@ -2,108 +2,97 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8A3C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0E8C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B0E205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+ruexNn"
+	by mail.kernel.org (Postfix) with ESMTP id 4B854206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587543526;
+	bh=qKTrX6IeQOH1sN4dcsG+sIFtqX60IcAtKde3714EdwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zX6VWpFALdjn8g/mCu23MFjt2jZ0r89KOvgiP6zf3hoHnHsVGP4NBI+n8RNzoxtdP
+	 7nYndSX6khS4EcxXWiV2ioWShv2tkffe5E1Gr99ZDakODFCUpMMPXHwhez45AJfKpW
+	 rrgq1mapCeryXtXEOA522maVK/XiX/ndn0/5Ndew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgDVIS0 (ORCPT
+        id S1726456AbgDVISp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725811AbgDVISZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:18:25 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F361C03C1A6;
-        Wed, 22 Apr 2020 01:18:24 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e25so1307567ljg.5;
-        Wed, 22 Apr 2020 01:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nt+kRiqmM2DnZoAPDCxq3F10ZB+J0rcax3yCDJcUZQo=;
-        b=O+ruexNnVUo5OzrLczwc6UYX+jSD+p7msm6KuPB2fMV3u/6qIzH5PiXt3i/UXFejdU
-         eX+aSwjvYfhvFYkV8XPDGAOo1/SmrJqWiAmWTNmduOfZ48pAf01ToMJT2Hyv/8ynP1t8
-         r6eBgt5i43TwWZm13zJ/cUe/KQJs7+JSa44ldvfQyT1m+JHQa/bXWHgKcji7pgcJldhn
-         QpRuSXm5AUkHrb75d2M+rOieLrKbMBKZf4cUtHkvA5qkegrdHqNIU/OZSKdcukUMcBO+
-         XSEWaPTQq95wYAWzpR2jCmygLUCK1wtzmPSyw61ROAwUQ4/nDORzCU/sYdIOo3g6CmGi
-         63hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nt+kRiqmM2DnZoAPDCxq3F10ZB+J0rcax3yCDJcUZQo=;
-        b=LxjH02X1KxXtY/0NdN0FPov3SzSYhpTH3vBuQW1LtgBsjg+R9uoByfUPcokOnSyQlS
-         3kNdYjcTsog5edA1UTv84TfpfIxDdsZWF3YqdUrS43f2hYVJmp/+VUNyg3Y/+/JItck0
-         9rPXOlkOZXOUOgw+eJkK9g+v5JxbEA2sVYeCQ1alX3SRyExTttynJ3fLKGhK6uHf0AhZ
-         WgSRfQ1+DYIUdc99r9B58tyq3CbQV5TvVPZbnAloHntvlv1qR/PQFTt+VQg7DKcfTFkq
-         SVXH5/Ya/Uj6gnu6c9Ih6hsmPQ+m42+b+zVYzR0wnAxP9KHh6mtKHA1c1aJaOavxTU4X
-         pupQ==
-X-Gm-Message-State: AGi0PuaZoDdQRinnfAhsSc0ZUmnqrFQiY9cda7WdNf4Nb3DyhpvKQDd4
-        av2Mrc2P7fDUCyphRjJcNnqe5zQ8HwM=
-X-Google-Smtp-Source: APiQypJOPrvwNHcGRwIeARqlkuawGEIenbD2GGiUS/itar2r/mjHhhLGt7usGl8ha9CtKdAADnH41w==
-X-Received: by 2002:a2e:164b:: with SMTP id 11mr15263577ljw.23.1587543502188;
-        Wed, 22 Apr 2020 01:18:22 -0700 (PDT)
-Received: from test.lan ([91.105.39.216])
-        by smtp.gmail.com with ESMTPSA id f21sm3947163lfk.94.2020.04.22.01.18.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Apr 2020 01:18:21 -0700 (PDT)
-From:   Evalds Iodzevics <evalds.iodzevics@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de,
-        ben@decadent.org.uk, bp@suse.de,
-        Evalds Iodzevics <evalds.iodzevics@gmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] x86/microcode/intel: replace sync_core() with native_cpuid_reg(eax)
-Date:   Wed, 22 Apr 2020 11:17:59 +0300
-Message-Id: <20200422081759.1632-1-evalds.iodzevics@gmail.com>
-X-Mailer: git-send-email 2.17.4
+        Wed, 22 Apr 2020 04:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgDVISp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:18:45 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF6520663;
+        Wed, 22 Apr 2020 08:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587543524;
+        bh=qKTrX6IeQOH1sN4dcsG+sIFtqX60IcAtKde3714EdwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SaFBd0qQpVm6Jz+PKjXp3tXRmYe3vNQMbpxXwl94dli2KhSzDDIWFkb2yiwF+Pcif
+         gXDFjAp5nat471/4iBV5/Ji5nHJOabF8YlLAEgeMzkkdf5mLTFf5mWiwWLwAWGou3o
+         VM0U3QCNmoHn9DZ3+DLlysj7QbFJf/Tdy9vW2Pg0=
+Date:   Wed, 22 Apr 2020 09:18:39 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v4 00/11] Rework READ_ONCE() to improve codegen
+Message-ID: <20200422081838.GA29541@willie-the-truck>
+References: <20200421151537.19241-1-will@kernel.org>
+ <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjjz927czq5zKkV1TUvajbWZGsPeFBSgnQftLNWmCcoSg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Intel it is required to do CPUID(1) before reading the microcode
-revision MSR. Current code in 4.4 an 4.9 relies on sync_core() to call
-CPUID, unfortunately on 32 bit machines code inside sync_core() always
-jumps past CPUID instruction as it depends on data structure boot_cpu_data
-witch are not populated correctly so early in boot sequence.
+On Tue, Apr 21, 2020 at 11:42:56AM -0700, Linus Torvalds wrote:
+> On Tue, Apr 21, 2020 at 8:15 AM Will Deacon <will@kernel.org> wrote:
+> >
+> > It's me again. This is version four of the READ_ONCE() codegen improvement
+> > patches [...]
+> 
+> Let's just plan on biting the bullet and do this for 5.8. I'm assuming
+> that I'll juet get a pull request from you?
 
-It depends on:
-commit 5dedade6dfa2 ("x86/CPU: Add native CPUID variants returning a single
-datum")
+Sure thing, thanks. I'll get it into -next along with the arm64 bits for
+5.8, but I'll send it as a separate pull when the time comes. I'll also
+include the sparc32 changes because otherwise the build falls apart and
+we'll get an army of angry robots yelling at us (they seem to form the
+majority of the active sparc32 user base afaict).
 
-This patch is for 4.4 but also should apply to 4.9
+> > (I'm interpreting the silence as monumental joy)
+> 
+> By now I think we can take that for granted.
+> 
+> Because "monumental joy" is certainly exactly what I felt re-reading
+> that "unqualified scalar type" macro.
+> 
+> Or maybe it was just my breakfast trying to say "Hi!".
 
-Signed-off-by: Evalds Iodzevics <evalds.iodzevics@gmail.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/include/asm/microcode_intel.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Haha! It's definitely best viewed on an empty stomach, but the comment
+does give you ample warning.
 
-diff --git a/arch/x86/include/asm/microcode_intel.h b/arch/x86/include/asm/microcode_intel.h
-index 90343ba50485..92ce9c8a508b 100644
---- a/arch/x86/include/asm/microcode_intel.h
-+++ b/arch/x86/include/asm/microcode_intel.h
-@@ -60,7 +60,7 @@ static inline u32 intel_get_microcode_revision(void)
- 	native_wrmsrl(MSR_IA32_UCODE_REV, 0);
- 
- 	/* As documented in the SDM: Do a CPUID 1 here */
--	sync_core();
-+	native_cpuid_eax(1);
- 
- 	/* get the current revision from MSR 0x8B */
- 	native_rdmsr(MSR_IA32_UCODE_REV, dummy, rev);
--- 
-2.17.4
-
+Will
