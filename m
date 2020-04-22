@@ -2,147 +2,193 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E107BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119E9C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5E52076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8F12076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgDVSvS (ORCPT
+        id S1726764AbgDVSvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:51:18 -0400
+        Wed, 22 Apr 2020 14:51:23 -0400
 Received: from mga09.intel.com ([134.134.136.24]:46413 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVSvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:51:18 -0400
-IronPort-SDR: D6KacBdzTlj8G5VOh9aWCb6EOOvUUdni1RbstJ1IjBTU2IVEoHZUsxzQLOfTRPgyi+Gkjp3Sak
- fZs713zbNklA==
+        id S1725810AbgDVSvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:51:22 -0400
+IronPort-SDR: qA3ucP6gC5+IQx3Xsjgf+YjHMnYXASXGXj6l7UCQyGwuaPg3FYQqVJyb2uuzftZAqoG7yqgKRM
+ 0s/PzybHF6Ag==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:51:16 -0700
-IronPort-SDR: TKtdATS7yWGw2OCbole89FnH53XDXqkqleqAih3nQ+HB0LJ9y9DhecE8KRNAlLcYoZJSXnv28F
- eFTRptEjGCGw==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:51:21 -0700
+IronPort-SDR: qqIquuGL482KeAk9Fi2fpLDL6RgzKTQLdO3ZrjDmL6Yf3xRhccswmwkjvWiLXWUe5Hc3zejhOa
+ XdCI2ppN3jtA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="430025955"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga005.jf.intel.com with ESMTP; 22 Apr 2020 11:51:16 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 22 Apr 2020 11:50:27 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 22 Apr 2020 11:50:26 -0700
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82]) by
- fmsmsx602.amr.corp.intel.com ([10.18.126.82]) with mapi id 15.01.1713.004;
- Wed, 22 Apr 2020 11:50:26 -0700
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH] virtchnl: Add missing explicit padding
- to structures
-Thread-Topic: [Intel-wired-lan] [PATCH] virtchnl: Add missing explicit padding
- to structures
-Thread-Index: AQHWFAL0wDsVJ0rZrUijuL8oTIwLrKiFhYsA
-Date:   Wed, 22 Apr 2020 18:50:26 +0000
-Message-ID: <1e732391d4e94bbc87ab01ee80934fd3@intel.com>
-References: <20200416095049.12917-1-geert@linux-m68k.org>
-In-Reply-To: <20200416095049.12917-1-geert@linux-m68k.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+   d="scan'208";a="290931747"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Apr 2020 11:51:21 -0700
+Date:   Wed, 22 Apr 2020 11:51:21 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 03/11] fs/stat: Define DAX statx attribute
+Message-ID: <20200422185121.GL3372712@iweiny-DESK2.sc.intel.com>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-4-ira.weiny@intel.com>
+ <20200422162951.GE6733@magnolia>
 MIME-Version: 1.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422162951.GE6733@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEludGVsLXdpcmVkLWxhbiA8aW50ZWwt
-d2lyZWQtbGFuLWJvdW5jZXNAb3N1b3NsLm9yZz4gT24gQmVoYWxmIE9mIEdlZXJ0IFV5dHRlcmhv
-ZXZlbg0KU2VudDogVGh1cnNkYXksIEFwcmlsIDE2LCAyMDIwIDI6NTEgQU0NClRvOiBLaXJzaGVy
-LCBKZWZmcmV5IFQgPGplZmZyZXkudC5raXJzaGVyQGludGVsLmNvbT47IERhdmlkIFMgLiBNaWxs
-ZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+DQpDYzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgaW50
-ZWwtd2lyZWQtbGFuQGxpc3RzLm9zdW9zbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgtbTY4ay5vcmc+DQpTdWJqZWN0OiBb
-SW50ZWwtd2lyZWQtbGFuXSBbUEFUQ0hdIHZpcnRjaG5sOiBBZGQgbWlzc2luZyBleHBsaWNpdCBw
-YWRkaW5nIHRvIHN0cnVjdHVyZXMNCg0KT24gZS5nLiBtNjhrLCB0aGUgYWxpZ25tZW50IG9mIDMy
-LWJpdCB2YWx1ZXMgaXMgb25seSAyIGJ5dGVzLCBsZWFkaW5nDQp0bzoNCg0KICAgIC4vaW5jbHVk
-ZS9saW51eC9hdmYvdmlydGNobmwuaDoxNDc6MzY6IHdhcm5pbmc6IGRpdmlzaW9uIGJ5IHplcm8g
-Wy1XZGl2LWJ5LXplcm9dDQogICAgICB7IHZpcnRjaG5sX3N0YXRpY19hc3NlcnRfIyNYID0gKG4p
-Lygoc2l6ZW9mKHN0cnVjdCBYKSA9PSAobikpID8gMSA6IDApIH0NCgkJCQkJXg0KICAgIC4vaW5j
-bHVkZS9saW51eC9hdmYvdmlydGNobmwuaDo1Nzc6MTogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1h
-Y3JvIOKAmFZJUlRDSE5MX0NIRUNLX1NUUlVDVF9MRU7igJkNCiAgICAgVklSVENITkxfQ0hFQ0tf
-U1RSVUNUX0xFTigyNzIsIHZpcnRjaG5sX2ZpbHRlcik7DQogICAgIF5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fn4NCiAgICAuL2luY2x1ZGUvbGludXgvYXZmL3ZpcnRjaG5sLmg6NTc3OjMyOiBlcnJv
-cjogZW51bWVyYXRvciB2YWx1ZSBmb3Ig4oCYdmlydGNobmxfc3RhdGljX2Fzc2VydF92aXJ0Y2hu
-bF9maWx0ZXLigJkgaXMgbm90IGFuIGludGVnZXIgY29uc3RhbnQNCiAgICAgVklSVENITkxfQ0hF
-Q0tfU1RSVUNUX0xFTigyNzIsIHZpcnRjaG5sX2ZpbHRlcik7DQoJCQkJICAgIF5+fn5+fn5+fn5+
-fn5+fg0KICAgIC4vaW5jbHVkZS9saW51eC9hdmYvdmlydGNobmwuaDoxNDc6NTM6IG5vdGU6IGlu
-IGRlZmluaXRpb24gb2YgbWFjcm8g4oCYVklSVENITkxfQ0hFQ0tfU1RSVUNUX0xFTuKAmQ0KICAg
-ICAgeyB2aXJ0Y2hubF9zdGF0aWNfYXNzZXJ0XyMjWCA9IChuKS8oKHNpemVvZihzdHJ1Y3QgWCkg
-PT0gKG4pKSA/IDEgOiAwKSB9DQoJCQkJCQkJIF4NCiAgICAuL2luY2x1ZGUvbGludXgvYXZmL3Zp
-cnRjaG5sLmg6MTQ3OjM2OiB3YXJuaW5nOiBkaXZpc2lvbiBieSB6ZXJvIFstV2Rpdi1ieS16ZXJv
-XQ0KICAgICAgeyB2aXJ0Y2hubF9zdGF0aWNfYXNzZXJ0XyMjWCA9IChuKS8oKHNpemVvZihzdHJ1
-Y3QgWCkgPT0gKG4pKSA/IDEgOiAwKSB9DQoJCQkJCV4NCiAgICAuL2luY2x1ZGUvbGludXgvYXZm
-L3ZpcnRjaG5sLmg6NjE5OjE6IG5vdGU6IGluIGV4cGFuc2lvbiBvZiBtYWNybyDigJhWSVJUQ0hO
-TF9DSEVDS19TVFJVQ1RfTEVO4oCZDQogICAgIFZJUlRDSE5MX0NIRUNLX1NUUlVDVF9MRU4oMTYs
-IHZpcnRjaG5sX3BmX2V2ZW50KTsNCiAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KICAg
-IC4vaW5jbHVkZS9saW51eC9hdmYvdmlydGNobmwuaDo2MTk6MzE6IGVycm9yOiBlbnVtZXJhdG9y
-IHZhbHVlIGZvciDigJh2aXJ0Y2hubF9zdGF0aWNfYXNzZXJ0X3ZpcnRjaG5sX3BmX2V2ZW504oCZ
-IGlzIG5vdCBhbiBpbnRlZ2VyIGNvbnN0YW50DQogICAgIFZJUlRDSE5MX0NIRUNLX1NUUlVDVF9M
-RU4oMTYsIHZpcnRjaG5sX3BmX2V2ZW50KTsNCgkJCQkgICBefn5+fn5+fn5+fn5+fn5+fg0KICAg
-IC4vaW5jbHVkZS9saW51eC9hdmYvdmlydGNobmwuaDoxNDc6NTM6IG5vdGU6IGluIGRlZmluaXRp
-b24gb2YgbWFjcm8g4oCYVklSVENITkxfQ0hFQ0tfU1RSVUNUX0xFTuKAmQ0KICAgICAgeyB2aXJ0
-Y2hubF9zdGF0aWNfYXNzZXJ0XyMjWCA9IChuKS8oKHNpemVvZihzdHJ1Y3QgWCkgPT0gKG4pKSA/
-IDEgOiAwKSB9DQoJCQkJCQkJIF4NCiAgICAuL2luY2x1ZGUvbGludXgvYXZmL3ZpcnRjaG5sLmg6
-MTQ3OjM2OiB3YXJuaW5nOiBkaXZpc2lvbiBieSB6ZXJvIFstV2Rpdi1ieS16ZXJvXQ0KICAgICAg
-eyB2aXJ0Y2hubF9zdGF0aWNfYXNzZXJ0XyMjWCA9IChuKS8oKHNpemVvZihzdHJ1Y3QgWCkgPT0g
-KG4pKSA/IDEgOiAwKSB9DQoJCQkJCV4NCiAgICAuL2luY2x1ZGUvbGludXgvYXZmL3ZpcnRjaG5s
-Lmg6NjQwOjE6IG5vdGU6IGluIGV4cGFuc2lvbiBvZiBtYWNybyDigJhWSVJUQ0hOTF9DSEVDS19T
-VFJVQ1RfTEVO4oCZDQogICAgIFZJUlRDSE5MX0NIRUNLX1NUUlVDVF9MRU4oMTIsIHZpcnRjaG5s
-X2l3YXJwX3F2X2luZm8pOw0KICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQogICAgLi9p
-bmNsdWRlL2xpbnV4L2F2Zi92aXJ0Y2hubC5oOjY0MDozMTogZXJyb3I6IGVudW1lcmF0b3IgdmFs
-dWUgZm9yIOKAmHZpcnRjaG5sX3N0YXRpY19hc3NlcnRfdmlydGNobmxfaXdhcnBfcXZfaW5mb+KA
-mSBpcyBub3QgYW4gaW50ZWdlciBjb25zdGFudA0KICAgICBWSVJUQ0hOTF9DSEVDS19TVFJVQ1Rf
-TEVOKDEyLCB2aXJ0Y2hubF9pd2FycF9xdl9pbmZvKTsNCgkJCQkgICBefn5+fn5+fn5+fn5+fn5+
-fn5+fn5+DQogICAgLi9pbmNsdWRlL2xpbnV4L2F2Zi92aXJ0Y2hubC5oOjE0Nzo1Mzogbm90ZTog
-aW4gZGVmaW5pdGlvbiBvZiBtYWNybyDigJhWSVJUQ0hOTF9DSEVDS19TVFJVQ1RfTEVO4oCZDQog
-ICAgICB7IHZpcnRjaG5sX3N0YXRpY19hc3NlcnRfIyNYID0gKG4pLygoc2l6ZW9mKHN0cnVjdCBY
-KSA9PSAobikpID8gMSA6IDApIH0NCgkJCQkJCQkgXg0KICAgIC4vaW5jbHVkZS9saW51eC9hdmYv
-dmlydGNobmwuaDoxNDc6MzY6IHdhcm5pbmc6IGRpdmlzaW9uIGJ5IHplcm8gWy1XZGl2LWJ5LXpl
-cm9dDQogICAgICB7IHZpcnRjaG5sX3N0YXRpY19hc3NlcnRfIyNYID0gKG4pLygoc2l6ZW9mKHN0
-cnVjdCBYKSA9PSAobikpID8gMSA6IDApIH0NCgkJCQkJXg0KICAgIC4vaW5jbHVkZS9saW51eC9h
-dmYvdmlydGNobmwuaDo2NDc6MTogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvIOKAmFZJUlRD
-SE5MX0NIRUNLX1NUUlVDVF9MRU7igJkNCiAgICAgVklSVENITkxfQ0hFQ0tfU1RSVUNUX0xFTigx
-NiwgdmlydGNobmxfaXdhcnBfcXZsaXN0X2luZm8pOw0KICAgICBefn5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+DQogICAgLi9pbmNsdWRlL2xpbnV4L2F2Zi92aXJ0Y2hubC5oOjY0NzozMTogZXJyb3I6
-IGVudW1lcmF0b3IgdmFsdWUgZm9yIOKAmHZpcnRjaG5sX3N0YXRpY19hc3NlcnRfdmlydGNobmxf
-aXdhcnBfcXZsaXN0X2luZm/igJkgaXMgbm90IGFuIGludGVnZXIgY29uc3RhbnQNCiAgICAgVklS
-VENITkxfQ0hFQ0tfU1RSVUNUX0xFTigxNiwgdmlydGNobmxfaXdhcnBfcXZsaXN0X2luZm8pOw0K
-CQkJCSAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQogICAgLi9pbmNsdWRlL2xpbnV4L2F2
-Zi92aXJ0Y2hubC5oOjE0Nzo1Mzogbm90ZTogaW4gZGVmaW5pdGlvbiBvZiBtYWNybyDigJhWSVJU
-Q0hOTF9DSEVDS19TVFJVQ1RfTEVO4oCZDQogICAgICB7IHZpcnRjaG5sX3N0YXRpY19hc3NlcnRf
-IyNYID0gKG4pLygoc2l6ZW9mKHN0cnVjdCBYKSA9PSAobikpID8gMSA6IDApIH0NCgkJCQkJCQkg
-Xg0KDQpGaXggdGhpcyBieSBhZGRpbmcgZXhwbGljaXQgcGFkZGluZyB0byBzdHJ1Y3R1cmVzIHdp
-dGggaG9sZXMuDQoNClJlcG9ydGVkLWJ5OiBub3JlcGx5QGVsbGVybWFuLmlkLmF1DQpTaWduZWQt
-b2ZmLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KLS0tDQpF
-eHBvc2VkIGJ5IHRoZSAic2VsZWN0IFBDSSIgaW4gY29tbWl0IDRiZTVlODY0OGIwYzI4N2EgKCJt
-ZWRpYTogbW92ZSBDRUMgcGxhdGZvcm0gZHJpdmVycyB0byBhIHNlcGFyYXRlIGRpcmVjdG9yeSIp
-Lg0KLS0tDQogaW5jbHVkZS9saW51eC9hdmYvdmlydGNobmwuaCB8IDUgKysrKysNCiAxIGZpbGUg
-Y2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQoNClRlc3RlZC1ieTogQW5kcmV3IEJvd2VycyA8YW5k
-cmV3eC5ib3dlcnNAaW50ZWwuY29tPg0KDQoNCg0K
+On Wed, Apr 22, 2020 at 09:29:51AM -0700, Darrick J. Wong wrote:
+> On Tue, Apr 21, 2020 at 12:17:45PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > In order for users to determine if a file is currently operating in DAX
+> > state (effective DAX).  Define a statx attribute value and set that
+> > attribute if the effective DAX flag is set.
+> > 
+> > To go along with this we propose the following addition to the statx man
+> > page:
+> > 
+> > STATX_ATTR_DAX
+> > 
+> > 	The file is in the DAX (cpu direct access) state.  DAX state
+> > 	attempts to minimize software cache effects for both I/O and
+> > 	memory mappings of this file.  It requires a file system which
+> > 	has been configured to support DAX.
+> > 
+> > 	DAX generally assumes all accesses are via cpu load / store
+> > 	instructions which can minimize overhead for small accesses, but
+> > 	may adversely affect cpu utilization for large transfers.
+> > 
+> > 	File I/O is done directly to/from user-space buffers and memory
+> > 	mapped I/O may be performed with direct memory mappings that
+> > 	bypass kernel page cache.
+> > 
+> > 	While the DAX property tends to result in data being transferred
+> > 	synchronously, it does not give the same guarantees of O_SYNC
+> > 	where data and the necessary metadata are transferred together.
+> > 
+> > 	A DAX file may support being mapped with the MAP_SYNC flag,
+> > 	which enables a program to use CPU cache flush instructions to
+> > 	persist CPU store operations without an explicit fsync(2).  See
+> > 	mmap(2) for more information.
+> 
+> One thing I hadn't noticed before -- this is a change to userspace API,
+> so please cc this series to linux-api@vger.kernel.org when you send V10.
+
+Right!  Glad you caught me on this because I was just preparing to send V10.
+
+Is there someone I could directly mail who needs to look at this?  I guess I
+thought we had the important FS people involved for this type of API change.
+:-/
+
+> 
+> Also, I've started to think about commit order sequencing for actually
+> landing this series.  Usually I try to put vfs and documentation things
+> before xfs stuff, which means I came up with:
+> 
+> vfs       xfs          I_DONTCACHE
+> 2 3 11    1 4 5 6 7    8 9 10
+> 
+> Note that I separated the DONTCACHE part because it touches VFS
+> internals, which implies a higher standard of review (aka Al) and I do
+> not wish to hold up the 2-3-11-1-4-5-6-7 patches if the dontcache part
+> becomes contentious.
+> 
+> What do you think of that ordering?
+
+I think 1 stands on it's own separate from this series...  so I would keep it
+first.  Moving Documentation up is easy.
+
+I've changed to this order...
+
+prelim   vfs       xfs        I_DONTCACHE
+1        2 3 11    4 5 6 7    8 9 10
+
+Which is pretty much the same now that I look at it!  ;-)
+
+> 
+> (Heck, maybe I'll just put patch 1 in the queue for 5.8 right now...)
+
+IMHO, I think 1 and 2 can go.
+
+While patch 2 is in the VFS layer it is very much a DAX thing.  Jan and
+Christoph approved it.  I think even Dave approved the version before I
+removed io_is_direct() but I don't recall now.
+
+Dan and I also discussed it internally when I first found the issue.  So I'm
+very confident in it!  :-D
+
+Unfortunately, 3 and 10 are the critical pieces to the feature.  So we could
+move 3 out later after 8 and 9 are approved.  But I don't think it buys us
+much to have the tri-state go in without the rest.
+
+Ira
+
+> 
+> --D
+> 
+> > Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V2:
+> > 	Update man page text with comments from Darrick, Jan, Dan, and
+> > 	Dave.
+> > ---
+> >  fs/stat.c                 | 3 +++
+> >  include/uapi/linux/stat.h | 1 +
+> >  2 files changed, 4 insertions(+)
+> > 
+> > diff --git a/fs/stat.c b/fs/stat.c
+> > index 030008796479..894699c74dde 100644
+> > --- a/fs/stat.c
+> > +++ b/fs/stat.c
+> > @@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+> >  	if (IS_AUTOMOUNT(inode))
+> >  		stat->attributes |= STATX_ATTR_AUTOMOUNT;
+> >  
+> > +	if (IS_DAX(inode))
+> > +		stat->attributes |= STATX_ATTR_DAX;
+> > +
+> >  	if (inode->i_op->getattr)
+> >  		return inode->i_op->getattr(path, stat, request_mask,
+> >  					    query_flags);
+> > diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+> > index ad80a5c885d5..e5f9d5517f6b 100644
+> > --- a/include/uapi/linux/stat.h
+> > +++ b/include/uapi/linux/stat.h
+> > @@ -169,6 +169,7 @@ struct statx {
+> >  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+> >  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
+> >  #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
+> > +#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
+> >  
+> >  
+> >  #endif /* _UAPI_LINUX_STAT_H */
+> > -- 
+> > 2.25.1
+> > 
