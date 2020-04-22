@@ -7,57 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D014C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB55C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFAC20735
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E967220774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549763;
-	bh=Zb2q7FIeXzFHGV5URxwb82rv0SspNQ/Ggeon+/n54N8=;
+	s=default; t=1587549767;
+	bh=8W1vFSWViNeHhEhT1gm4IAWUjpSWJW1aRrND3K87PAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUsL05UFDY22vZVGa7aPiHFZ96TwZuyArVsovF9TUx8T191ow9aSoYiYMxfeVinlA
-	 +BbDsquiUEQsVRzWGKg1P63SFBWhvWzA2OLEn1eEpOyVOu23lvov7Pr1WRdN+9cb9M
-	 6zEXBzfnUpXde7VbEmtPHl+Bd7KGsXoRtxluv7lQ=
+	b=2h/WzCQ31VJ9gwT+Pz8Ryiypf2SAOVunUFdl1mL38SV/KaII6OKZdehGqeDTFJHO2
+	 2A26aB/dPaqGag2d8SxMwjfPx1PsyeYQtqs37v5dWtTgdE9gHVF+Ysd51CEeU8U1nV
+	 8DbImvxWNJD7pgP01/L7lbhZBOc0eNTYVILgFank=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgDVKCm (ORCPT
+        id S1727049AbgDVKCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51750 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbgDVKCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:02:37 -0400
+        id S1727034AbgDVKCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:02:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FBD02076C;
-        Wed, 22 Apr 2020 10:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3140320787;
+        Wed, 22 Apr 2020 10:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549756;
-        bh=Zb2q7FIeXzFHGV5URxwb82rv0SspNQ/Ggeon+/n54N8=;
+        s=default; t=1587549761;
+        bh=8W1vFSWViNeHhEhT1gm4IAWUjpSWJW1aRrND3K87PAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+zOSzPKTKXLzPAr7beVNciAyOGkzKNue7o1OgWPyfulQtFcMM8ZW//8lXYTOEl0l
-         xMpkQ8ApNGUkhk6WwmD9fJ5aDZdN/zwniMnvgQC93PzC/TiIo28KqAchaAMv5905ef
-         j56fvF/UHcq91/bp77apiWxfk+/FWEcD65vtn5EA=
+        b=xzNZokm1Za+Azl4pahFDePvsuYuqxKmQwva2LgTGc+K9LjPMzLWOMww/LWHJjGW27
+         mVYQZVj4zUMZDLcVb+gJSyNW82/Psq6SqdiwUvCAvd6TFq51suk7kg5Zv4No0EHyxt
+         46JnY0T4/TlPjAyk3blu20YU1N6dAI7CXl+1j+q0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Peter Rosin <peda@axentia.se>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.4 093/100] fbdev: potential information leak in do_fb_ioctl()
-Date:   Wed, 22 Apr 2020 11:57:03 +0200
-Message-Id: <20200422095039.680764821@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 4.4 095/100] locktorture: Print ratio of acquisitions, not failures
+Date:   Wed, 22 Apr 2020 11:57:05 +0200
+Message-Id: <20200422095040.045537728@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -70,46 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-commit d3d19d6fc5736a798b118971935ce274f7deaa82 upstream.
+commit 80c503e0e68fbe271680ab48f0fe29bc034b01b7 upstream.
 
-The "fix" struct has a 2 byte hole after ->ywrapstep and the
-"fix = info->fix;" assignment doesn't necessarily clear it.  It depends
-on the compiler.  The solution is just to replace the assignment with an
-memcpy().
+The __torture_print_stats() function in locktorture.c carefully
+initializes local variable "min" to statp[0].n_lock_acquired, but
+then compares it to statp[i].n_lock_fail.  Given that the .n_lock_fail
+field should normally be zero, and given the initialization, it seems
+reasonable to display the maximum and minimum number acquisitions
+instead of miscomputing the maximum and minimum number of failures.
+This commit therefore switches from failures to acquisitions.
 
-Fixes: 1f5e31d7e55a ("fbmem: don't call copy_from/to_user() with mutex held")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200113100132.ixpaymordi24n3av@kili.mountain
+And this turns out to be not only a day-zero bug, but entirely my
+own fault.  I hate it when that happens!
+
+Fixes: 0af3fe1efa53 ("locktorture: Add a lock-torture kernel module")
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Will Deacon <will@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/core/fbmem.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/locktorture.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -1132,7 +1132,7 @@ static long do_fb_ioctl(struct fb_info *
- 	case FBIOGET_FSCREENINFO:
- 		if (!lock_fb_info(info))
- 			return -ENODEV;
--		fix = info->fix;
-+		memcpy(&fix, &info->fix, sizeof(fix));
- 		unlock_fb_info(info);
- 
- 		ret = copy_to_user(argp, &fix, sizeof(fix)) ? -EFAULT : 0;
+--- a/kernel/locking/locktorture.c
++++ b/kernel/locking/locktorture.c
+@@ -655,10 +655,10 @@ static void __torture_print_stats(char *
+ 		if (statp[i].n_lock_fail)
+ 			fail = true;
+ 		sum += statp[i].n_lock_acquired;
+-		if (max < statp[i].n_lock_fail)
+-			max = statp[i].n_lock_fail;
+-		if (min > statp[i].n_lock_fail)
+-			min = statp[i].n_lock_fail;
++		if (max < statp[i].n_lock_acquired)
++			max = statp[i].n_lock_acquired;
++		if (min > statp[i].n_lock_acquired)
++			min = statp[i].n_lock_acquired;
+ 	}
+ 	page += sprintf(page,
+ 			"%s:  Total: %lld  Max/Min: %ld/%ld %s  Fail: %d %s\n",
 
 
