@@ -2,143 +2,126 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E440AC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4D7C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C124C2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2882075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551570;
-	bh=ewkoBHbHJxY5CrvIeBKC0dzVMq+kGM5Cv1GG4sWq4j4=;
+	s=default; t=1587551577;
+	bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2fJH3gIL1CKi/WNipKHJ35a3YpUdNhW8zDuFYSEtE+7X+TwnvWVBICOzvhBjm0/he
-	 QQ1FShY76tu2TmmDlwMNd5fKOB1mYcZPFs0DvOPliFcrNSdhsKmxh7n3kxzASOHOJk
-	 6HHDZ3QctS9RaXPN5qufQD80LFmSthg0XQffFzxI=
+	b=qy03KBv8RG906AYy4vjPqd3xV2zkaC9+stsNQccbFkl4CMTK4xSmKJFgr/GLQyuuv
+	 atuBbeUlGnKSvloiJMhX4bZYFbdnZHY+riy4Rl+4FiyT20AQBaugxdjehatEz1njyj
+	 yBgneRSg2LzAMMa3FTHsq14wL9i3+RVeLJUCpMyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbgDVKct (ORCPT
+        id S1730503AbgDVKZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731127AbgDVKc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:32:27 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5378FC03C1A8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:32:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u16so1729044wmc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eOSmb4FNbQc6x3T+mRoZC0joYWCmW+ZeBUjg4eP6aXk=;
-        b=Zm9KGFN5WhiJAMGvIS/8fs+K7TIH74Egwy+ahtjhZ7hyTvZf2WPAY1ohhPkUR4bnGU
-         WARVTSb60uIFdCGRa0w3NMyvGFKex9AAsfatpQkJFc3UcEf9+GRPz1n1QzKv7nlO17XX
-         MDfbkz+nLt6/7tqO7tl74oA0bg/dKqZSQhtrtcwYhBAXdpgkbSleTnu5BlbFPuOa7ZoQ
-         P1x+OLPCx2iwGeahB8YIdwjvvokevpQwQJfm8MI970PtLvMm6Ptm7ixkBmB3K1gTX0tA
-         bIFn+duuqMpZKItsW0r507SpwNE0zY1akPctSg2uOXa1+Gx4Ucchj4XLwyPgv/11ljuy
-         9GGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=eOSmb4FNbQc6x3T+mRoZC0joYWCmW+ZeBUjg4eP6aXk=;
-        b=mEkB3iLY0F0UaxWNiWmOAfoNz44D+mp3TatmAG5KFGK/dxN5p2BzXwO1q8o0TdY2Yc
-         6sjThwO3UXOH3+t5jrLG8/tqeoseA52oHEtS+gFkQVp1tO9hBd3+oTxMAaBcxpB8alyf
-         mciD026ICsSLSgi/uYaLLM8aI9YWC55/4t2AvIoH0PQ1spr5gWcPmPc+aL0Jhehdw7Bq
-         5fT0fdaht1RRIT+oEY7BN6z6TqPOQ4raVgfim5Q+aSqoEVNBmf8wfskVYCxuhYHOD609
-         fL2KumJ7oMvKlg88Js5QL3cX/XKzqrGpCYO9X+nQEscYfynCxoxAy06iuejGiOofU0Z5
-         +6aw==
-X-Gm-Message-State: AGi0Pubh179VQNn/xCu3mUOU9QOWTx2vOzCKZl4dZJOmxFmYGb9u7a8E
-        /vYsTPmmvQws6FKMZ9K6j/4ahcCJ
-X-Google-Smtp-Source: APiQypKDt445X4MTERp9wOMYIX8ok4hBlzelZltnx8LUq0sA1j7glgEufMILI4Amg4B2foHyXUop2w==
-X-Received: by 2002:a1c:3b09:: with SMTP id i9mr9568179wma.19.1587551545700;
-        Wed, 22 Apr 2020 03:32:25 -0700 (PDT)
-Received: from localhost.localdomain (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id s12sm6891603wmc.7.2020.04.22.03.32.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:32:24 -0700 (PDT)
-From:   Ingo Molnar <mingo@kernel.org>
+        Wed, 22 Apr 2020 06:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730476AbgDVKY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E904F20776;
+        Wed, 22 Apr 2020 10:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587551096;
+        bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BW/XRh63tRkDUUveaNk+ktq/cNenSZwyy5DsrHiqtYUnlCtJi65AckmFpfj8RZgWP
+         1rHRtOURAIz7HSjI0k7QVNXRZH81etA2pThcNCPcd5Lu8S/VvPfx8r3sOVBFgd0OKt
+         3hjn49duyA287M3WBAofMvrr1HGLeWXy0EyBSMEI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 3/3] objtool: Constify arch_decode_instruction()
-Date:   Wed, 22 Apr 2020 12:32:05 +0200
-Message-Id: <20200422103205.61900-4-mingo@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200422103205.61900-1-mingo@kernel.org>
-References: <20200422103205.61900-1-mingo@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 098/166] dt-bindings: thermal: tsens: Fix nvmem-cell-names schema
+Date:   Wed, 22 Apr 2020 11:57:05 +0200
+Message-Id: <20200422095059.485243431@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
+References: <20200422095047.669225321@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mostly straightforward constification, except that WARN_FUNC()
-needs a writable pointer while we have read-only pointers,
-so deflect this to WARN().
+From: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[ Upstream commit b9589def9f9af93d9d4c5969c9a6c166f070e36e ]
+
+There's a typo 'nvmem-cells-names' in the schema which means the correct
+'nvmem-cell-names' in the examples are not checked. The possible values
+are wrong too both in that the 2nd entry is not specified correctly and the
+values are just wrong based on the dts files in the kernel.
+
+Fixes: a877e768f655 ("dt-bindings: thermal: tsens: Convert over to a yaml schema")
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/arch.h            | 2 +-
- tools/objtool/arch/x86/decode.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/thermal/qcom-tsens.yaml          | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index 561c3162d177..445b8fa73ccb 100644
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -72,7 +72,7 @@ struct instruction;
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index eef13b9446a87..a4df53228122a 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -53,13 +53,12 @@ properties:
+     description:
+       Reference to an nvmem node for the calibration data
  
- void arch_initial_func_cfi_state(struct cfi_init_state *state);
+-  nvmem-cells-names:
++  nvmem-cell-names:
+     minItems: 1
+     maxItems: 2
+     items:
+-      - enum:
+-        - caldata
+-        - calsel
++      - const: calib
++      - const: calib_sel
  
--int arch_decode_instruction(struct elf *elf, struct section *sec,
-+int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, enum insn_type *type,
- 			    unsigned long *immediate,
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index f0d42ad7d5ff..c45a0b4e0760 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -27,7 +27,7 @@ static unsigned char op_to_cfi_reg[][2] = {
- 	{CFI_DI, CFI_R15},
- };
+   "#qcom,sensors":
+     allOf:
+@@ -125,7 +124,7 @@ examples:
+                  <0x4a8000 0x1000>; /* SROT */
  
--static int is_x86_64(struct elf *elf)
-+static int is_x86_64(const struct elf *elf)
- {
- 	switch (elf->ehdr.e_machine) {
- 	case EM_X86_64:
-@@ -77,7 +77,7 @@ unsigned long arch_jump_destination(struct instruction *insn)
- 	return insn->offset + insn->len + insn->immediate;
- }
+            nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+-           nvmem-cell-names = "caldata", "calsel";
++           nvmem-cell-names = "calib", "calib_sel";
  
--int arch_decode_instruction(struct elf *elf, struct section *sec,
-+int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, enum insn_type *type,
- 			    unsigned long *immediate,
-@@ -98,7 +98,7 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- 	insn_get_length(&insn);
- 
- 	if (!insn_complete(&insn)) {
--		WARN_FUNC("can't decode instruction", sec, offset);
-+		WARN("can't decode instruction at %s:0x%lx", sec->name, offset);
- 		return -1;
- 	}
- 
+            interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+            interrupt-names = "uplow";
 -- 
 2.20.1
+
+
 
