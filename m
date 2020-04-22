@@ -2,97 +2,78 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5184C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92439C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9BD22075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587541175;
-	bh=RnDWO7dM9txe51VHGs0QOaPAEq5owpW0a53Byz4Aryg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JjdFAAcwLgsTRnQ68Wz1ARSBX/ijDLDCeWril2eKuCpMkPzROUs9azGg083jsjfgT
-	 3E81zJEDMU42QDv8P+VKDUbf2i7PlPNADR18MbqlpIx4cXtvmVw6U3rKwdFoewcBRh
-	 OhX7qc6PZ8JkZD8XM5/I6tp0Zh3pm2gZaYm8AiOs=
+	by mail.kernel.org (Postfix) with ESMTP id 7C3C7206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgDVHje (ORCPT
+        id S1726599AbgDVHji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60084 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 03:39:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:62378 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgDVHjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:39:32 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E93206A2;
-        Wed, 22 Apr 2020 07:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587541171;
-        bh=RnDWO7dM9txe51VHGs0QOaPAEq5owpW0a53Byz4Aryg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xdLaHAs4ifiovQ8cW9ySsd/SFz/w+PrIrbKhZxCqsVRwP5UCLCbNf4P9lh8AUroot
-         G0wDca7ZKtVUu4GoRM/QsyDH5gNgA2rqn178igYJSEAF1DvagLLZn04fsq7tSXejHK
-         fpMahL8DQaVY9m3ATQFwqa6/STDJHDmgok6EtmEI=
-Received: by mail-io1-f48.google.com with SMTP id e9so1297397iok.9;
-        Wed, 22 Apr 2020 00:39:31 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYJUL673sXcLZdw+1BHonfqviPtd9fUFVZMB2t7gVrzeTkWux8z
-        Q4J8E67X7DjBd4hj9okOV6ZBbaQa6FB4Q6njNtg=
-X-Google-Smtp-Source: APiQypIOD3MLCJCWegGwFiasQHrx/Z50Nx7XZRqMk6mTr0/9I4V/gRZuKtyrEjBB3TxLoITpe4F/M+bgvZaWUlhlq3M=
-X-Received: by 2002:a02:7785:: with SMTP id g127mr23633017jac.134.1587541170836;
- Wed, 22 Apr 2020 00:39:30 -0700 (PDT)
+        id S1726523AbgDVHjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:39:37 -0400
+IronPort-SDR: 1yzLhHY0RV5LMWR0X9m1ksDPCizZZSg4bXwQRuSRzUIwMkLpAYdwg96QMtP05CetTnigfAbPbm
+ 4CseAVGLniIA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 00:39:36 -0700
+IronPort-SDR: rOG+gugz38OPOtrE3zpkTsVVAm/Lg3MPFrilo7XoPSO6y6dcaEB9DcMLSduCNt4tZDIQAx1LDf
+ UKPM1Wovwvaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
+   d="scan'208";a="402455261"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga004.jf.intel.com with ESMTP; 22 Apr 2020 00:39:34 -0700
+Subject: Re: [kbuild-all] Re: sound/soc/soc-compress.c:75:28: warning:
+ 'component' is used uninitialized in this function
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+References: <202004201540.vYPhhYMs%lkp@intel.com>
+ <87eeshuzla.wl-kuninori.morimoto.gx@renesas.com>
+ <21c9be58-057d-a151-f64d-e8f85f1c585c@intel.com>
+ <875zdsunmj.wl-kuninori.morimoto.gx@renesas.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <7048e026-2f6c-7b49-000a-a3b313a14366@intel.com>
+Date:   Wed, 22 Apr 2020 15:39:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20200420075711.2385190-1-Jason@zx2c4.com> <20200422040415.GA2881@sol.localdomain>
- <CAHmME9q=hMRjBG=SBX8gCC3qx-t1wdEwMOYx952m9HkByjiofA@mail.gmail.com>
-In-Reply-To: <CAHmME9q=hMRjBG=SBX8gCC3qx-t1wdEwMOYx952m9HkByjiofA@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 22 Apr 2020 09:39:19 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE-UZxw0C3WRVh7RfuWE0BNDT4bt4qJa1SyOH3K-qBBcQ@mail.gmail.com>
-Message-ID: <CAMj1kXE-UZxw0C3WRVh7RfuWE0BNDT4bt4qJa1SyOH3K-qBBcQ@mail.gmail.com>
-Subject: Re: [PATCH crypto-stable] crypto: arch/lib - limit simd usage to
- PAGE_SIZE chunks
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <875zdsunmj.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 at 09:32, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Tue, Apr 21, 2020 at 10:04 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > Seems this should just be a 'while' loop?
-> >
-> >         while (bytes) {
-> >                 unsigned int todo = min_t(unsigned int, PAGE_SIZE, bytes);
-> >
-> >                 kernel_neon_begin();
-> >                 chacha_doneon(state, dst, src, todo, nrounds);
-> >                 kernel_neon_end();
-> >
-> >                 bytes -= todo;
-> >                 src += todo;
-> >                 dst += todo;
-> >         }
->
-> The for(;;) is how it's done elsewhere in the kernel (that this patch
-> doesn't touch), because then we can break out of the loop before
-> having to increment src and dst unnecessarily. Likely a pointless
-> optimization as probably the compiler can figure out how to avoid
-> that. But maybe it can't. If you have a strong preference, I can
-> reactor everything to use `while (bytes)`, but if you don't care,
-> let's keep this as-is. Opinion?
->
 
-Since we're bikeshedding, I'd prefer 'do { } while (bytes);' here,
-given that bytes is guaranteed to be non-zero before we enter the
-loop. But in any case, I'd prefer avoiding for(;;) or while(1) where
-we can.
+
+On 4/22/20 12:53 PM, Kuninori Morimoto wrote:
+> Hi Rong
+>
+>>> Hmm... I still can't reproduce this issue.
+>>> I don't have gcc-6, thus can't try it.
+>>> Is this the issue ??
+> (snip)
+>> We can reproduce the warning with gcc-6 (gcc version 6.5.0 20181026
+>> (Debian 6.5.0-2)),
+>> and the warning can be closed if changed to "struct snd_soc_component
+>> *component = NULL, *save = NULL;"
+> Thank you for your feedback.
+> It sounds reasonable for me.
+> Can you post it ? or do you want me to do it ?
+
+Thanks, I have posted it.
+
+Best Regards,
+Rong Chen
