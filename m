@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352C3C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8B3C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 070DA20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B71A2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551953;
-	bh=Y8KrPqTYg6EyHN8+4nfG36nHZ7JfVHBBJJRUstUqWxo=;
+	s=default; t=1587551956;
+	bh=dUEfWMtiuAicjjPNhOpc86+qxyFCQ0oSenl0428WBpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JdLmUoPEaNuYfvteyelBE+LMJpB6eCLvUD556vDd6vpcFIvRxSpSlsZbsd1h0z2zT
-	 n9D8z8M3jAQiuUxqE1h6j+LktbTllNjXWbdlVndsn3JFbyxLFMpcvuobyFdzMW1T1x
-	 ZbCGkcmhiGriJKUENVwC6LR8ZtBYA3LeZCJwl0Rk=
+	b=bCDGLgItPk9pf4/fFRNjZGPbHbQbZ5pZAOTPN8/iTkH6SlktonlhFh8P4b6hJtIII
+	 1bGwlSCSObTshkSA6EZ7ESNdlBNm4mkBehdvMDORw/qaBBYrjir4nccTkirfbu+NCn
+	 6kUuSOSMrXyB9D/vT6tlkzojvbYCFXbtrL4P/lc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgDVKjM (ORCPT
+        id S1730935AbgDVKjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:39:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729448AbgDVKVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:36 -0400
+        id S1729434AbgDVKV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D49DB20882;
-        Wed, 22 Apr 2020 10:21:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CB820784;
+        Wed, 22 Apr 2020 10:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550896;
-        bh=Y8KrPqTYg6EyHN8+4nfG36nHZ7JfVHBBJJRUstUqWxo=;
+        s=default; t=1587550889;
+        bh=dUEfWMtiuAicjjPNhOpc86+qxyFCQ0oSenl0428WBpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9kYYHJfHRsKU2hcmdypXH/qB5iNk0Jutxm4ag5UCwdElHJG0UnHufkbZiWfCQbza
-         yA+HMc8he04+DuMKgIKJYnsSpOGPvCFRXGHzN6LyMNEUQoUSTsoNq2rVq+2NcDlS+C
-         Tatt6K0gVqSoMp2joSYzTKbABl1XLp8bvL1oWJlc=
+        b=gX6nY0SfEYtGO83Mv+V/OD/k+Uw1TMYOPwYZoIv2nDNntFSW72ml+5kyOKjRLjfyM
+         Qt8TQKWNZC2NLjS2TOaYWTdA72huSwzPYnHMZio0ufq41G3FAA9Gq+MWm6riivQ2EM
+         pTF8Q3gmmrqYNvCmIHQdbVToW9C9Lg4HQwywjlVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 019/166] ALSA: hda: Dont release card at firmware loading error
-Date:   Wed, 22 Apr 2020 11:55:46 +0200
-Message-Id: <20200422095050.507371801@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Jason Dillaman <dillaman@redhat.com>
+Subject: [PATCH 5.6 016/166] rbd: avoid a deadlock on header_rwsem when flushing notifies
+Date:   Wed, 22 Apr 2020 11:55:43 +0200
+Message-Id: <20200422095050.121296682@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -58,59 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 upstream.
+commit 0e4e1de5b63fa423b13593337a27fd2d2b0bcf77 upstream.
 
-At the error path of the firmware loading error, the driver tries to
-release the card object and set NULL to drvdata.  This may be referred
-badly at the possible PM action, as the driver itself is still bound
-and the PM callbacks read the card object.
+rbd_unregister_watch() flushes notifies and therefore cannot be called
+under header_rwsem because a header update notify takes header_rwsem to
+synchronize with "rbd map".  If mapping an image fails after the watch
+is established and a header update notify sneaks in, we deadlock when
+erroring out from rbd_dev_image_probe().
 
-Instead, we continue the probing as if it were no option set.  This is
-often a better choice than the forced abort, too.
+Move watch registration and unregistration out of the critical section.
+The only reason they were put there was to make header_rwsem management
+slightly more obvious.
 
-Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 811c66887746 ("rbd: fix rbd map vs notify races")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jason Dillaman <dillaman@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |   19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/block/rbd.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2031,24 +2031,15 @@ static void azx_firmware_cb(const struct
- {
- 	struct snd_card *card = context;
- 	struct azx *chip = card->private_data;
--	struct pci_dev *pci = chip->pci;
- 
--	if (!fw) {
--		dev_err(card->dev, "Cannot load firmware, aborting\n");
--		goto error;
--	}
--
--	chip->fw = fw;
-+	if (fw)
-+		chip->fw = fw;
-+	else
-+		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
- 	if (!chip->disabled) {
- 		/* continue probing */
--		if (azx_probe_continue(chip))
--			goto error;
-+		azx_probe_continue(chip);
- 	}
--	return; /* OK */
--
-- error:
--	snd_card_free(card);
--	pci_set_drvdata(pci, NULL);
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -4554,6 +4554,10 @@ static void cancel_tasks_sync(struct rbd
+ 	cancel_work_sync(&rbd_dev->unlock_work);
  }
- #endif
  
++/*
++ * header_rwsem must not be held to avoid a deadlock with
++ * rbd_dev_refresh() when flushing notifies.
++ */
+ static void rbd_unregister_watch(struct rbd_device *rbd_dev)
+ {
+ 	cancel_tasks_sync(rbd_dev);
+@@ -6964,6 +6968,9 @@ static void rbd_dev_image_release(struct
+  * device.  If this image is the one being mapped (i.e., not a
+  * parent), initiate a watch on its header object before using that
+  * object to get detailed information about the rbd image.
++ *
++ * On success, returns with header_rwsem held for write if called
++ * with @depth == 0.
+  */
+ static int rbd_dev_image_probe(struct rbd_device *rbd_dev, int depth)
+ {
+@@ -6993,6 +7000,9 @@ static int rbd_dev_image_probe(struct rb
+ 		}
+ 	}
+ 
++	if (!depth)
++		down_write(&rbd_dev->header_rwsem);
++
+ 	ret = rbd_dev_header_info(rbd_dev);
+ 	if (ret) {
+ 		if (ret == -ENOENT && !need_watch)
+@@ -7044,6 +7054,8 @@ static int rbd_dev_image_probe(struct rb
+ err_out_probe:
+ 	rbd_dev_unprobe(rbd_dev);
+ err_out_watch:
++	if (!depth)
++		up_write(&rbd_dev->header_rwsem);
+ 	if (need_watch)
+ 		rbd_unregister_watch(rbd_dev);
+ err_out_format:
+@@ -7107,12 +7119,9 @@ static ssize_t do_rbd_add(struct bus_typ
+ 		goto err_out_rbd_dev;
+ 	}
+ 
+-	down_write(&rbd_dev->header_rwsem);
+ 	rc = rbd_dev_image_probe(rbd_dev, 0);
+-	if (rc < 0) {
+-		up_write(&rbd_dev->header_rwsem);
++	if (rc < 0)
+ 		goto err_out_rbd_dev;
+-	}
+ 
+ 	if (rbd_dev->opts->alloc_size > rbd_dev->layout.object_size) {
+ 		rbd_warn(rbd_dev, "alloc_size adjusted to %u",
 
 
