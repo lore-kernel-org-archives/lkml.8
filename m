@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3152FC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631E4C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103322078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9F02082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549624;
-	bh=RXGWWDNqVU5w/HtdHRoEklIc5A5zJOR7dLQpA+nJpVI=;
+	s=default; t=1587549627;
+	bh=wRvSAt//1Dl7jXusj8IViGumHNtyt3coDpWgMy+UbOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=huC4W1JW1pp1Ct38BZiRqzmnW/hWQqy9dDJN3CLpvdKZNOXFJQSwGzFhxkdMTdqIX
-	 1Z8SbWskilVx1MPmIwKMhHCh3XYBaAy5O7IWrIy+BUkem5/O2Qit27BEX2EXhKGOyD
-	 nFyAXLDTsz1a/MKsEhTdVWelj4OuHpR3LjMywj8w=
+	b=sStN9DX4vEmf/E0pPH5c4NVaiKDV1KHUzptl7pNswFzF7etSMXKpViarv+vjNKP4z
+	 2o1bLXt8NMLasmKeukVz3kvidMV0i8mX83oGgbY60a7SkK7GL5OE/ptCzAHjS95TC5
+	 6duXETfmfPim+YL9BdTTr+22Vkx08E3ujx3wm1Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgDVKAX (ORCPT
+        id S1726629AbgDVKAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47466 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgDVKAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:17 -0400
+        id S1726487AbgDVKAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:00:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49E4520776;
-        Wed, 22 Apr 2020 10:00:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7BD62077D;
+        Wed, 22 Apr 2020 10:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549616;
-        bh=RXGWWDNqVU5w/HtdHRoEklIc5A5zJOR7dLQpA+nJpVI=;
+        s=default; t=1587549614;
+        bh=wRvSAt//1Dl7jXusj8IViGumHNtyt3coDpWgMy+UbOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AKNyEYwdqj8yyhMZY7VG3qQvmCqdVaNU/Ssj+uk2NmXlG9hbV6NV4hV0ahauYA37z
-         j4siQTOi+utCbY7teu4gCWdrg0qvMD+6lvDX64bgNesTnBWe1MWzknw2UAbi9PZkiD
-         hp2LhQnye/aSW83fkI8uEsZ1kvpveTLuahy15RzI=
+        b=gxwCDm2Va/bC/GJ2GTXgvBX3vcdC2gCakg1uS+rPk8qy/8LD4QFQamVZ0RPReDJ5N
+         FfJA2VTB/SlurIFbrZ35hDw+Jl0Yd+TWAMj8XaSPdz1tSLqyhl1hWQ1RbIbPMAI22/
+         +Wl/33VQVUeX1urYB59SVqvg/eR8XSr20ZLL28UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vineeth Remanan Pillai <vineethp@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 036/100] xen-netfront: Rework the fix for Rx stall during OOM and network stress
-Date:   Wed, 22 Apr 2020 11:56:06 +0200
-Message-Id: <20200422095029.087288097@linuxfoundation.org>
+Subject: [PATCH 4.4 035/100] futex: futex_wake_op, do not fail on invalid op
+Date:   Wed, 22 Apr 2020 11:56:05 +0200
+Message-Id: <20200422095028.981138893@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -62,66 +63,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Remanan Pillai <vineethp@amazon.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 538d92912d3190a1dd809233a0d57277459f37b2 upstream.
+commit e78c38f6bdd900b2ad9ac9df8eff58b745dc5b3c upstream.
 
-The commit 90c311b0eeea ("xen-netfront: Fix Rx stall during network
-stress and OOM") caused the refill timer to be triggerred almost on
-all invocations of xennet_alloc_rx_buffers for certain workloads.
-This reworks the fix by reverting to the old behaviour and taking into
-consideration the skb allocation failure. Refill timer is now triggered
-on insufficient requests or skb allocation failure.
+In commit 30d6e0a4190d ("futex: Remove duplicated code and fix undefined
+behaviour"), I let FUTEX_WAKE_OP to fail on invalid op.  Namely when op
+should be considered as shift and the shift is out of range (< 0 or > 31).
 
-Signed-off-by: Vineeth Remanan Pillai <vineethp@amazon.com>
-Fixes: 90c311b0eeea (xen-netfront: Fix Rx stall during network stress and OOM)
-Reported-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+But strace's test suite does this madness:
+
+  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xa0caffee);
+  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xbadfaced);
+  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xffffffff);
+
+When I pick the first 0xa0caffee, it decodes as:
+
+  0x80000000 & 0xa0caffee: oparg is shift
+  0x70000000 & 0xa0caffee: op is FUTEX_OP_OR
+  0x0f000000 & 0xa0caffee: cmp is FUTEX_OP_CMP_EQ
+  0x00fff000 & 0xa0caffee: oparg is sign-extended 0xcaf = -849
+  0x00000fff & 0xa0caffee: cmparg is sign-extended 0xfee = -18
+
+That means the op tries to do this:
+
+  (futex |= (1 << (-849))) == -18
+
+which is completely bogus. The new check of op in the code is:
+
+        if (encoded_op & (FUTEX_OP_OPARG_SHIFT << 28)) {
+                if (oparg < 0 || oparg > 31)
+                        return -EINVAL;
+                oparg = 1 << oparg;
+        }
+
+which results obviously in the "Invalid argument" errno:
+
+  FAIL: futex
+  ===========
+
+  futex(0x7fabd78bcffc, 0x5, 0xfacefeed, 0xb, 0x7fabd78bcffc, 0xa0caffee) = -1: Invalid argument
+  futex.test: failed test: ../futex failed with code 1
+
+So let us soften the failure to print only a (ratelimited) message, crop
+the value and continue as if it were right.  When userspace keeps up, we
+can switch this to return -EINVAL again.
+
+[v2] Do not return 0 immediatelly, proceed with the cropped value.
+
+Fixes: 30d6e0a4190d ("futex: Remove duplicated code and fix undefined behaviour")
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/xen-netfront.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ kernel/futex.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -283,6 +283,7 @@ static void xennet_alloc_rx_buffers(stru
- {
- 	RING_IDX req_prod = queue->rx.req_prod_pvt;
- 	int notify;
-+	int err = 0;
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -1479,8 +1479,16 @@ static int futex_atomic_op_inuser(unsign
+ 	int oldval, ret;
  
- 	if (unlikely(!netif_carrier_ok(queue->info->netdev)))
- 		return;
-@@ -297,8 +298,10 @@ static void xennet_alloc_rx_buffers(stru
- 		struct xen_netif_rx_request *req;
- 
- 		skb = xennet_alloc_one_rx_buffer(queue);
--		if (!skb)
-+		if (!skb) {
-+			err = -ENOMEM;
- 			break;
+ 	if (encoded_op & (FUTEX_OP_OPARG_SHIFT << 28)) {
+-		if (oparg < 0 || oparg > 31)
+-			return -EINVAL;
++		if (oparg < 0 || oparg > 31) {
++			char comm[sizeof(current->comm)];
++			/*
++			 * kill this print and return -EINVAL when userspace
++			 * is sane again
++			 */
++			pr_info_ratelimited("futex_wake_op: %s tries to shift op by %d; fix this program\n",
++					get_task_comm(comm, current), oparg);
++			oparg &= 31;
 +		}
- 
- 		id = xennet_rxidx(req_prod);
- 
-@@ -322,8 +325,13 @@ static void xennet_alloc_rx_buffers(stru
- 
- 	queue->rx.req_prod_pvt = req_prod;
- 
--	/* Not enough requests? Try again later. */
--	if (req_prod - queue->rx.sring->req_prod < NET_RX_SLOTS_MIN) {
-+	/* Try again later if there are not enough requests or skb allocation
-+	 * failed.
-+	 * Enough requests is quantified as the sum of newly created slots and
-+	 * the unconsumed slots at the backend.
-+	 */
-+	if (req_prod - queue->rx.rsp_cons < NET_RX_SLOTS_MIN ||
-+	    unlikely(err)) {
- 		mod_timer(&queue->rx_refill_timer, jiffies + (HZ/10));
- 		return;
+ 		oparg = 1 << oparg;
  	}
+ 
 
 
