@@ -2,152 +2,96 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6671EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6A2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C99A2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587570180;
-	bh=dFDabSuxkYteRUUv5PVV0IQqfemc6mBZd319vF4jn0w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iaFTABa/K2ODVhGZszQW1rf5z6+AO9AxzYTTI7uAfbzf8CRB5rT6tKfym+3EVgE7+
-	 PAeBUDYzjBknDZIIhK73Vws7YdY1zdN03yqHoVrmFrBSeM3m2ql9mWnNWwXT+1TbSs
-	 oWEZhzRVD1KZRct+grYjs4wsnvTQLgQYl+X3YtxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 877582076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgDVPm7 (ORCPT
+        id S1726591AbgDVPoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:42:59 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:26853 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgDVPm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:42:58 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 03MFgfIw011166;
-        Thu, 23 Apr 2020 00:42:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03MFgfIw011166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587570162;
-        bh=QUCpK3WJm1ifLwVFUS1q0umABM4aGa5XtBHT0c2+mZI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SOeQtnnrdnb/eEUI0PFq3PB954a4LsBSyQbyKqpLffygtHqhcDuAo4i+OnV4+02Zs
-         Acl5Iw0lHqh+kcXXCeTZH/SqefvmZaygvWPSScOHx2D3aIULpkwax2jHJKwa/UqpJ4
-         uTFOUgog6GvdsWAWh7c3pmyXdQk/Ajcp2OLvLqfi0EuNr5GQr3aeVE/3+styyqFqnF
-         9WjVwezekrG9sppgUr2F54p207mqdYk1eEyoZX2fqT47qSf6DGj+f+nZC+lVAbZtHb
-         9vzLk2eYJY35Hz65QrMQmyh3MiRTkOHw+eg7qNoiFe/msC6WhJ8yZmAAaOAYDJFjpg
-         vawwuHBqHSneQ==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id c24so2091094uap.13;
-        Wed, 22 Apr 2020 08:42:42 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYqtgv01NEyWzkzQUJam/OTOlm0SJzivg3WsIcjpuVluch5+qZ8
-        AHgvl0GEBK4/G292lzRCf/BZRhKyFHZPV8/A2Os=
-X-Google-Smtp-Source: APiQypJK53incbdlqtMV7txS87GEalFCanCE0tnP4L7TDOANgXMWvWbvu8aq1Ibl5jbYxROrMtBhknLCsbHyLbBk8fk=
-X-Received: by 2002:a67:3293:: with SMTP id y141mr21234308vsy.54.1587570161183;
- Wed, 22 Apr 2020 08:42:41 -0700 (PDT)
+        Wed, 22 Apr 2020 11:44:01 -0400
+Received: from mga01.intel.com ([192.55.52.88]:32121 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726154AbgDVPoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:44:01 -0400
+IronPort-SDR: EkJZ5xH3CsMZl2nxn0B62GL0E6bODK3BPqvEiXgJ0/W4T8wZfnrV7fiVaHw2HDeIZKS17phkdn
+ yh1ragYfSqPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 08:44:01 -0700
+IronPort-SDR: uacoHrS/75vy0fPWVfYZWr90WFuxiU1gdrPpxIteIEZyoAgjFdEtLcjloN+lDtgm0kwddB598v
+ 0XaXqF7klQ1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,303,1583222400"; 
+   d="scan'208";a="334662350"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 22 Apr 2020 08:43:59 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jRHXe-002TBj-6x; Wed, 22 Apr 2020 18:44:02 +0300
+Date:   Wed, 22 Apr 2020 18:44:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v4 4/7] kernel.h: Split out min()/max() et al helpers
+Message-ID: <20200422154402.GK185537@smile.fi.intel.com>
+References: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
+ <20200422125201.37618-4-andriy.shevchenko@linux.intel.com>
+ <5b413a379b8bba39fb75469699b7fd0d50d67e96.camel@perches.com>
 MIME-Version: 1.0
-References: <20200422004844.53284-1-vitor@massaru.org>
-In-Reply-To: <20200422004844.53284-1-vitor@massaru.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 23 Apr 2020 00:42:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASNBqQfMS49C9z7=opXeGv8-Y2DCDDQ2JqZPvMVZ6XwZg@mail.gmail.com>
-Message-ID: <CAK7LNASNBqQfMS49C9z7=opXeGv8-Y2DCDDQ2JqZPvMVZ6XwZg@mail.gmail.com>
-Subject: Re: [PATCH v3] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b413a379b8bba39fb75469699b7fd0d50d67e96.camel@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 9:48 AM Vitor Massaru Iha <vitor@massaru.org> wrote:
->
-> In this workflow:
->
-> $ make ARCH=um defconfig && make ARCH=um -j8
->   [snip]
-> $ make ARCH=um mrproper
->   [snip]
-> $ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
->   [snip]
->   CC      scripts/mod/empty.o
-> In file included from ../include/linux/types.h:6,
->                  from ../include/linux/mod_devicetable.h:12,
->                  from ../scripts/mod/devicetable-offsets.c:3:
-> ../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
->     5 | #include <asm/types.h>
->       |          ^~~~~~~~~~~~~
-> compilation terminated.
-> make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
-> make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
-> make: *** [Makefile:180: sub-make] Error 2
->
-> The cause of the error was because arch/$(SUBARCH)/include/generated files
-> weren't properly cleaned by `make ARCH=um mrproper`.
->
-> Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated
-> before out-of-tree build").
-> Reported-by: Theodore Ts'o <tytso@mit.edu>
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Tested-by: Brendan Higgins <brendanhiggins@google.com>
-> Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-> Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
+On Wed, Apr 22, 2020 at 07:52:32AM -0700, Joe Perches wrote:
+> On Wed, 2020-04-22 at 15:51 +0300, Andy Shevchenko wrote:
+> > kernel.h is being used as a dump for all kinds of stuff for a long time.
+> > Here is the attempt to start cleaning it up by splitting out min()/max()
+> > et al helpers.
+> 
+> While adding organization into kernel.h by splitting
+> out various bits into separate files is a fine idea,
+> I believe removing the generic #include <linux/kernel.h>
+> from various files and substituting the sub-includes
+> is not a good idea.
 
+Are you sure?
 
-Applied to linux-kbuild/fixes.
-Thanks.
+> > At the same time convert users in header and lib folder to use new header.
+> > Though for time being include new header back to kernel.h to avoid twisted
+> > indirected includes for existing users.
+> 
+> Yeah, that's the difficult bit and it could make
+> using precompiled headers very cumbersome.
+> 
+> I'd rather make #include <linux/kernel.h>" _more_
+> common or even used as the mandatory first #include
+> for all kernel .c files.
 
+Huh?
 
+Perhaps we may just cat include/linux/* > include/linux/kernel.h?
 
-> ---
-> v2:
->  * Explains what this PATCH does and the importance as suggested
->    by Brendan Higgins.
-> v3:
->  * This problem only affects ARCH=um builds then arch/um/Makefile has
->    been changed as suggested by Masahiro Yamada;
->  * And with that the description has also been changed, and also to explain
->    missing points and correct the tags as suggested by Masahiro Yamada:
->    - Fix missing command `make ARCH=um mrproper`;
->    - Add build error message;
->    - Add "Fixes" tag instead of "This bug was ...";
->    - Add "Link" tag instead of "Related bug ...";
->    - Add Reported-by and Suggested-by;
-> ---
->  arch/um/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/um/Makefile b/arch/um/Makefile
-> index d2daa206872d..275f5ffdf6f0 100644
-> --- a/arch/um/Makefile
-> +++ b/arch/um/Makefile
-> @@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE)
->  # When cleaning we don't include .config, so we don't include
->  # TT or skas makefiles and don't clean skas_ptregs.h.
->  CLEAN_FILES += linux x.i gmon.out
-> +MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
->
->  archclean:
->         @find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
-> --
-> 2.25.1
->
-
+> That would also ensure that common kernel facilities
+> are not duplicated or have naming conflicts with other
+> files.
 
 -- 
-Best Regards
-Masahiro Yamada
+With Best Regards,
+Andy Shevchenko
+
+
