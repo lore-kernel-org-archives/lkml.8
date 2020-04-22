@@ -2,53 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0B5C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947E8C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD3C2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715C72073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552754;
-	bh=b4IWSodilP/n6yol7fL8g/RGKl2d0kiQs1kpArRe4r0=;
+	s=default; t=1587552758;
+	bh=wgY92Up2hqj3U3bxEm7of4dFDNE/XdwTMo46DQJ7BiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMa1tmCcZK2fmzQ04/A5Ew+TFClv7870d/Ma/QCmolF9a6FjdSLhpmplLEVk0xkR8
-	 +xWRBIbKzrQwCiKcShO9QMICk3gbXX1mobI/VSv9w1zAc5Z2OFxBGECt0Hp1LelmzJ
-	 TMbG7X/QcmnF1Gfhhjvv/6Q04r0It8iAlFhgOoY0=
+	b=DGtMGX+a33atXjuhz1MHzwAzqhQgq+wgjD8PU5g2lEp0ZTMqhQrzuUpKpjSyxE72d
+	 B8II4yAksyGpuxHcDleV6bZLXsF2i9Kc4Z7yvkAzcKELSUMB2gBxslAROYLxPm10wL
+	 xVqn5RZLqBhTfJTz5keZR/TZrUus0krATvTbKODg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgDVKwd (ORCPT
+        id S1732155AbgDVKwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:52:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38352 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgDVKKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:05 -0400
+        id S1726798AbgDVKJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:09:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2622070B;
-        Wed, 22 Apr 2020 10:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B427C2070B;
+        Wed, 22 Apr 2020 10:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550204;
-        bh=b4IWSodilP/n6yol7fL8g/RGKl2d0kiQs1kpArRe4r0=;
+        s=default; t=1587550197;
+        bh=wgY92Up2hqj3U3bxEm7of4dFDNE/XdwTMo46DQJ7BiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdLD8sTeckPR/B0tcgiAZmchWJMWdl5VlsihsKYMmRguqSCm5Mrvm10CkuIB6uZ0f
-         hxEWG6kF0RQdkAm9sDAAGRLVD0pt8DelDU4msmoJiuFyY6S0kq8htOpm+hDNVf+sAH
-         PxiZy4KiD+lyyaOU780wwAzeZy5oCVgaEkb9aNDY=
+        b=DSL94LrshyIwWeaC7jzMIhOjhLD/mp6y1lwRI20bgEAwm55GyAvliENLaviyJjdwX
+         5Z1um0puHgnTgEN7oTeooGCO7p9K/Ip2XuLdLi7VxTn2yk5b8edgqYU519Xij9Uj9n
+         AXVXAb3zI2wST4Kgzih3tJvAAfLFXMGPu6g9U71A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Michael Wang <yun.wang@linux.alibaba.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 014/199] sched: Avoid scale real weight down to zero
-Date:   Wed, 22 Apr 2020 11:55:40 +0200
-Message-Id: <20200422095059.621982077@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 4.14 047/199] thermal: devfreq_cooling: inline all stubs for CONFIG_DEVFREQ_THERMAL=n
+Date:   Wed, 22 Apr 2020 11:56:13 +0200
+Message-Id: <20200422095102.898478844@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,82 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Wang <yun.wang@linux.alibaba.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 26cf52229efc87e2effa9d788f9b33c40fb3358a ]
+commit 3f5b9959041e0db6dacbea80bb833bff5900999f upstream.
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
+When CONFIG_DEVFREQ_THERMAL is disabled all functions except
+of_devfreq_cooling_register_power() were already inlined. Also inline
+the last function to avoid compile errors when multiple drivers call
+of_devfreq_cooling_register_power() when CONFIG_DEVFREQ_THERMAL is not
+set. Compilation failed with the following message:
+  multiple definition of `of_devfreq_cooling_register_power'
+(which then lists all usages of of_devfreq_cooling_register_power())
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+Thomas Zimmermann reported this problem [0] on a kernel config with
+CONFIG_DRM_LIMA={m,y}, CONFIG_DRM_PANFROST={m,y} and
+CONFIG_DEVFREQ_THERMAL=n after both, the lima and panfrost drivers
+gained devfreq cooling support.
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+[0] https://www.spinics.net/lists/dri-devel/msg252825.html
 
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
+Fixes: a76caf55e5b356 ("thermal: Add devfreq cooling")
+Cc: stable@vger.kernel.org
+Reported-by: Thomas Zimmermann <tzimmermann@suse.de>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200403205133.1101808-1-martin.blumenstingl@googlemail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
-
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
-
-And in calc_group_shares() we calculate shares as:
-
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
-
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
-
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
-
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
-
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ include/linux/devfreq_cooling.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 268f560ec9986..391d73a12ad72 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -89,7 +89,13 @@ static inline void cpu_load_update_active(struct rq *this_rq) { }
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
--- 
-2.20.1
-
+--- a/include/linux/devfreq_cooling.h
++++ b/include/linux/devfreq_cooling.h
+@@ -75,7 +75,7 @@ void devfreq_cooling_unregister(struct t
+ 
+ #else /* !CONFIG_DEVFREQ_THERMAL */
+ 
+-struct thermal_cooling_device *
++static inline struct thermal_cooling_device *
+ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 				  struct devfreq_cooling_power *dfc_power)
+ {
 
 
