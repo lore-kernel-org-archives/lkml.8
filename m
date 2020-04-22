@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0700FC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80252C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAAAD20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540ED20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549680;
-	bh=LK/mOx3smz2indgefrkrC75g3zPFnVKw80dhxUMSfcM=;
+	s=default; t=1587549685;
+	bh=Gffv+ReFDRRO5s95+puu/0ZhUVTFVRoGi0XUyz/4kE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HFi/nihIclGI8phZip5kVAIWUszD2XkbTDoQ7kCrDpEIbX7JAYrNTvEIU3YH9/dt/
-	 za7fFtpmvnyXTzsQC9vKMCf6KlExL2Ql6J93Q7j1kMFGTsOq/Jn4Ux5FLMG0hNjZSX
-	 NwWHHb6mCXm9pQWVhxKLWcNk5GaQrbnLkmNa182Q=
+	b=SCQRXqveMD5f9DxxxUoTALL21hnYHfrmu/X3ZrNmVTkp4wFu9lW4PKSsyR//RqK8F
+	 6NqexEYm7IFbCt73fbEuZUR0yWPxV7OPhHl9WAxs/XqPBXxn0Qtj9jD0rrpH1j7MdR
+	 vY3kRh475MFFYYCJFreVqdysXtnMscs20eHfMvDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgDVKBT (ORCPT
+        id S1726811AbgDVKBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49610 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:01:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbgDVKBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:01:17 -0400
+        id S1726799AbgDVKBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 984F420781;
-        Wed, 22 Apr 2020 10:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13B5C2076C;
+        Wed, 22 Apr 2020 10:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549677;
-        bh=LK/mOx3smz2indgefrkrC75g3zPFnVKw80dhxUMSfcM=;
+        s=default; t=1587549679;
+        bh=Gffv+ReFDRRO5s95+puu/0ZhUVTFVRoGi0XUyz/4kE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=McqwiM4U4VCOuILjR8T6uaPcTL6tuVfQzjjw639tgBDTSucg41QFL2Ke1tkVMAcsM
-         P3NVwIPyc6fDbpOWiaXCjiq6c4B0TBwjY8ZLI5vPZkPMxVntKrfKBQlKgDEC6lkQc/
-         0bPHVcxGX7O1yXgq92L/QWQPk+tkn+nNgK9fca4M=
+        b=NmLsHHIvMimPLNh+co8MV1nafhvUH0ku2oQUtpMctYCZR/eIVciIeT0869qAnvdZq
+         hSWk11xQ8ZNePAcRHR59Nkh6o3aTnfzbJecRZd8qn66lWy7jXrcUAo+KTENkC3suKE
+         76+B6g3T7E59QNKeRFcZWNrmLjKF67I03V1Ie39A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 020/100] ALSA: usb-audio: Add mixer workaround for TRX40 and co
-Date:   Wed, 22 Apr 2020 11:55:50 +0200
-Message-Id: <20200422095026.516029950@linuxfoundation.org>
+Subject: [PATCH 4.4 021/100] ALSA: hda: Add driver blacklist
+Date:   Wed, 22 Apr 2020 11:55:51 +0200
+Message-Id: <20200422095026.684017108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -60,75 +60,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 2a48218f8e23d47bd3e23cfdfb8aa9066f7dc3e6 upstream.
+commit 3c6fd1f07ed03a04debbb9a9d782205f1ef5e2ab upstream.
 
-Some recent boards (supposedly with a new AMD platform) contain the
-USB audio class 2 device that is often tied with HD-audio.  The device
-exposes an Input Gain Pad control (id=19, control=12) but this node
-doesn't behave correctly, returning an error for each inquiry of
-GET_MIN and GET_MAX that should have been mandatory.
+The recent AMD platform exposes an HD-audio bus but without any actual
+codecs, which is internally tied with a USB-audio device, supposedly.
+It results in "no codecs" error of HD-audio bus driver, and it's
+nothing but a waste of resources.
 
-As a workaround, simply ignore this node by adding a usbmix_name_map
-table entry.  The currently known devices are:
-* 0414:a002 - Gigabyte TRX40 Aorus Pro WiFi
-* 0b05:1916 - ASUS ROG Zenith II
-* 0b05:1917 - ASUS ROG Strix
-* 0db0:0d64 - MSI TRX40 Creator
-* 0db0:543d - MSI TRX40
+This patch introduces a static blacklist table for skipping such a
+known bogus PCI SSID entry.  As of writing this patch, the known SSIDs
+are:
+* 1043:874f - ASUS ROG Zenith II / Strix
+* 1462:cb59 - MSI TRX40 Creator
+* 1462:cb60 - MSI TRX40
 
 BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206543
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200408140449.22319-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200408140449.22319-2-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer_maps.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ sound/pci/hda/hda_intel.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/sound/usb/mixer_maps.c
-+++ b/sound/usb/mixer_maps.c
-@@ -361,6 +361,14 @@ static const struct usbmix_name_map dell
- 	{ 0 }
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1982,6 +1982,17 @@ static const struct hdac_io_ops pci_hda_
+ 	.dma_free_pages = dma_free_pages,
  };
  
-+/* Some mobos shipped with a dummy HD-audio show the invalid GET_MIN/GET_MAX
-+ * response for Input Gain Pad (id=19, control=12).  Skip it.
++/* Blacklist for skipping the whole probe:
++ * some HD-audio PCI entries are exposed without any codecs, and such devices
++ * should be ignored from the beginning.
 + */
-+static const struct usbmix_name_map asus_rog_map[] = {
-+	{ 19, NULL, 12 }, /* FU, Input Gain Pad */
++static const struct snd_pci_quirk driver_blacklist[] = {
++	SND_PCI_QUIRK(0x1043, 0x874f, "ASUS ROG Zenith II / Strix", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb59, "MSI TRX40 Creator", 0),
++	SND_PCI_QUIRK(0x1462, 0xcb60, "MSI TRX40", 0),
 +	{}
 +};
 +
- /*
-  * Control map entries
-  */
-@@ -480,6 +488,26 @@ static struct usbmix_ctl_map usbmix_ctl_
- 		.id = USB_ID(0x05a7, 0x1020),
- 		.map = bose_companion5_map,
- 	},
-+	{	/* Gigabyte TRX40 Aorus Pro WiFi */
-+		.id = USB_ID(0x0414, 0xa002),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Zenith II */
-+		.id = USB_ID(0x0b05, 0x1916),
-+		.map = asus_rog_map,
-+	},
-+	{	/* ASUS ROG Strix */
-+		.id = USB_ID(0x0b05, 0x1917),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 Creator */
-+		.id = USB_ID(0x0db0, 0x0d64),
-+		.map = asus_rog_map,
-+	},
-+	{	/* MSI TRX40 */
-+		.id = USB_ID(0x0db0, 0x543d),
-+		.map = asus_rog_map,
-+	},
- 	{ 0 } /* terminator */
- };
+ static const struct hda_controller_ops pci_hda_ops = {
+ 	.disable_msi_reset_irq = disable_msi_reset_irq,
+ 	.substream_alloc_pages = substream_alloc_pages,
+@@ -2001,6 +2012,11 @@ static int azx_probe(struct pci_dev *pci
+ 	bool schedule_probe;
+ 	int err;
  
++	if (snd_pci_quirk_lookup(pci, driver_blacklist)) {
++		dev_info(&pci->dev, "Skipping the blacklisted device\n");
++		return -ENODEV;
++	}
++
+ 	if (dev >= SNDRV_CARDS)
+ 		return -ENODEV;
+ 	if (!enable[dev]) {
 
 
