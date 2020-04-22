@@ -2,110 +2,83 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5BDC5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBF5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B855E2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snwH3gA2"
+	by mail.kernel.org (Postfix) with ESMTP id D548D20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgDVOIn (ORCPT
+        id S1727090AbgDVOJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgDVOIi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:08:38 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0759AC03C1AA;
-        Wed, 22 Apr 2020 07:08:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t63so2487135wmt.3;
-        Wed, 22 Apr 2020 07:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wn/XLaNsEUc+JrRQ7mg4yGN/42PXRkrYATqvOjyi41s=;
-        b=snwH3gA2y8hxo2yX0BZogJrmkiRtOPUxjXX+dPm4cR0dVk9LX0VxJ7oPquVLBJbHqz
-         AWnwU3Mhtf0HovRIhUHzwtrkmb9A4hbMEuyPbYmr869gTWKpZ9nPKxwopbxNddiNT0iO
-         k95XZEP72PHNiVNwG/Wmr+htitVZPOUMLegX7fQFxuH6K/643K5oMFXCotPVRHG5OblZ
-         xcAnlzlRxlAYONV4tjcdkDdRPdzcr33n9n0qSv65oa+5hlCLxfiY1UdBC7PSos/Sc3Id
-         DNTZU26mI5J9GuQBD88ysDyCov7KTkmiRHTeQDVWryCdAkWal+U18AwAOPnPOd1vAUGi
-         to9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wn/XLaNsEUc+JrRQ7mg4yGN/42PXRkrYATqvOjyi41s=;
-        b=c3wFRSH7RIAg41n76ETY1Dss0GA1v/2B0t+TAIquTICvHQlajeqUJD5E9dgc337lea
-         y+78nVBVDEvimV8TYL0p5izb2oK+923TfYzRCMAiC7fnXk6XvcmAhzPNVWhLAEbpDt5a
-         Y6gMdibTu9gyuNw0RTrO2XjWeqLLcLZ6psYHlI4FFoEXNC8aIKWqbXTkFKYPFhrYlVSa
-         P91lao3qUy4ytsStIEeSZit1C62V+aKxQF48edLHBKT6ZtfMnI6GEKpzp4+9EcrRTEGF
-         5jZYntaHVkTY5rVBcbgeOnuxR4GFnEXekMrmrl+K0WDN9ENSLO5yG29hsBlIz6HGGUdX
-         3HrA==
-X-Gm-Message-State: AGi0PuZE/C13bIEiBCorxJYuUoxiLICMpgkMpHbMQgty7xnFLkjnJYXU
-        JRVKsc5tjzJ+MHBG1VhQ2/8=
-X-Google-Smtp-Source: APiQypLcBdgKcojkVDWJDUlHMTtYzEZSNEqVPBloleybYbcysXDKZ/PSC6WiURn0kRHtcRsdukQqQA==
-X-Received: by 2002:a7b:c850:: with SMTP id c16mr10268138wml.108.1587564516651;
-        Wed, 22 Apr 2020 07:08:36 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host36-18-dynamic.45-213-r.retail.telecomitalia.it. [213.45.18.36])
-        by smtp.googlemail.com with ESMTPSA id a9sm7526790wmm.38.2020.04.22.07.08.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 07:08:35 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Ilia Lin <ilia.lin@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sricharan R <sricharan@codeaurora.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: opp: Fix wrong binding in qcom-nvmem-cpufreq
-Date:   Wed, 22 Apr 2020 16:08:27 +0200
-Message-Id: <20200422140827.1726-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200422140827.1726-1-ansuelsmth@gmail.com>
-References: <20200422140827.1726-1-ansuelsmth@gmail.com>
+        Wed, 22 Apr 2020 10:09:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59046 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgDVOJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:09:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 817B3ABCF;
+        Wed, 22 Apr 2020 14:09:02 +0000 (UTC)
+Subject: Re: [RFC PATCH 4/4] mm: Add PG_zero support
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20200412090945.GA19582@open-light-1.localdomain>
+ <20200412101223.GK21484@bombadil.infradead.org>
+ <5eb37d79-6420-fcb9-2b4c-6cc6194afcd9@linux.intel.com>
+ <20200413140537.eb674579cf8c71b4e20581ab@linux-foundation.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <344a3a78-62ad-48fe-40cf-18993175d1e0@suse.cz>
+Date:   Wed, 22 Apr 2020 16:09:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200413140537.eb674579cf8c71b4e20581ab@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update binding to new generic name "operating-points-v2-qcom-cpu"
+On 4/13/20 11:05 PM, Andrew Morton wrote:
+> On Mon, 13 Apr 2020 08:11:59 -0700 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
+> 
+>> In addition, unlike madvising the page away there is a pretty 
+>> significant performance penalty for having to clear the page a second 
+>> time when the page is split or merged.
+> 
+> I wonder if there might be an issue with increased memory traffic (and
+> increased energy consumption, etc).  If a page is zeroed immediately
+> before getting data written into it (eg, plain old file write(),
+> anonymous pagefault) then we can expect that those 4096 zeroes will be
+> in CPU cache and mostly not written back.  But if that page was zeroed
+> a "long" time ago, the caches will probably have been written back. 
+> Net result: we go from 4k of memory traffic for a 4k page up to 8k of
+> memory traffic?
 
-Fixes: a8811ec764f9 cpufreq: qcom: Add support for krait based socs
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Heh, I was quite sure that this is not the first time background zeroing is
+proposed, so I went to google for it... and found that one BSD kernel actually
+removed this functionality in 2016 [1] and this was one of the reasons.
 
-diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-index 64f07417ecfb..537e1774f589 100644
---- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-+++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-@@ -19,7 +19,7 @@ In 'cpu' nodes:
- 
- In 'operating-points-v2' table:
- - compatible: Should be
--	- 'operating-points-v2-kryo-cpu' for apq8096, msm8996, msm8974,
-+	- 'operating-points-v2-qcom-cpu' for apq8096, msm8996, msm8974,
- 					     apq8064, ipq8064, msm8960 and ipq8074.
- 
- Optional properties:
--- 
-2.25.1
+[1]
+https://gitweb.dragonflybsd.org/dragonfly.git/commitdiff/afd2da4dc9056ea79cdf15e8a9386a3d3998f33e
+
+> Also, the name CONFIG_ZERO_PAGE sounds like it has something to do with
+> the long established "zero page".  Confusing.  CONFIG_PREZERO_PAGE,
+> maybe?
+> 
 
