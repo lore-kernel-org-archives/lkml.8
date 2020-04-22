@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B97C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774BC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 608D72073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E282075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551690;
-	bh=R/EkibC1xiHR1BW+LamJK6V0IuMDFME4qS/zquvUOgI=;
+	s=default; t=1587551695;
+	bh=G7KxnwoLgLdPJXOkgOpWzhaL/rwPD/wpMyKVXu5Bt9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N9+kJDbTg6E7UuR7eomA30aV/jQ8+zAoqE51WBOkNRFaeGK6ANoe3iIwL27jB9lzS
-	 nA6R/rrNflWFOx3Wc5vlEDFZKaRJfs0cRSK+76v1+HohJHfwGkkDG50aZRj6KN/PG3
-	 CLVJd1n7YA+QhH3drMz9T5h0YgFaQ8Z3mPxSQZag=
+	b=G/pHmfcgbj56o0/7r2r9Ys3Qe5nX4TWey0Vu/m5y/s0qXWZAMm4zu+Q6IlfyPeZXJ
+	 4xviaL9CQ42bUTw27JI0q6LsZBzN+Ii+6ZCYh6zCsz6kNHFTex4B7oKUesOv50KF1t
+	 mi8rJAqAoUvDAIXI5KRLBlnt/0TV+HJFMO0D0wO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbgDVKet (ORCPT
+        id S1731306AbgDVKey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:34:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730397AbgDVKYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:04 -0400
+        id S1730391AbgDVKYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11C7C2076B;
-        Wed, 22 Apr 2020 10:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945D42084D;
+        Wed, 22 Apr 2020 10:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551044;
-        bh=R/EkibC1xiHR1BW+LamJK6V0IuMDFME4qS/zquvUOgI=;
+        s=default; t=1587551042;
+        bh=G7KxnwoLgLdPJXOkgOpWzhaL/rwPD/wpMyKVXu5Bt9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JPUguWtT6Ip+AogbcEfVpukymXjIlCoGZsf4sG5H2yDlfZvSjcIM+DSMhmg4OI1qM
-         tlovK3V64zHARHsD16cOX1P8r8ptNKSUFMB4HAvdpOHgRYCcPDh9wbOc6qjkGMGRcx
-         HHB6371GBeVcpSN7s4VTxQ3YIvI+H8usudk9Y7b0=
+        b=SGOB7E+tpel/JkD1Fk8UE5XWAjHwB8ZRIk0OFnZzCGclGqdZcL/2xWXmsKzcHbDYr
+         y92vujsU/pKD/LBT367epuGIadECaEqyphCtWFpincgVY0IPi6ViQs/Znapws4H8Vd
+         XZenoM+K7c4uIQlicNHi9wEMzF9O9sr373jF0NrE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 079/166] phy: uniphier-usb3ss: Add Pro5 support
-Date:   Wed, 22 Apr 2020 11:56:46 +0200
-Message-Id: <20200422095057.300703336@linuxfoundation.org>
+Subject: [PATCH 5.6 078/166] drivers: thermal: tsens: Release device in success path
+Date:   Wed, 22 Apr 2020 11:56:45 +0200
+Message-Id: <20200422095057.203705435@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -61,35 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
 
-[ Upstream commit 9376fa634afc207a3ce99e0957e04948c34d6510 ]
+[ Upstream commit f22a3bf0d2225fba438c46a25d3ab8823585a5e0 ]
 
-Pro5 SoC has same scheme of USB3 ss-phy as Pro4, so the data for Pro5 is
-equivalent to Pro4.
+We don't currently call put_device in case of successfully initialising
+the device. So we hold the reference and keep the device pinned forever.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Allow control to fall through so we can use same code for success and
+error paths to put_device.
+
+As a part of this fixup, change devm_ioremap_resource to act on the same
+device pointer as that used to allocate regmap memory. That ensures that
+we are free to release op->dev after examining its resources.
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/d3996667e9f976bb30e97e301585cb1023be422e.1584015867.git.amit.kucheria@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/socionext/phy-uniphier-usb3ss.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/thermal/qcom/tsens-common.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/phy/socionext/phy-uniphier-usb3ss.c b/drivers/phy/socionext/phy-uniphier-usb3ss.c
-index ec231e40ef2ac..a7577e316baf5 100644
---- a/drivers/phy/socionext/phy-uniphier-usb3ss.c
-+++ b/drivers/phy/socionext/phy-uniphier-usb3ss.c
-@@ -314,6 +314,10 @@ static const struct of_device_id uniphier_u3ssphy_match[] = {
- 		.compatible = "socionext,uniphier-pro4-usb3-ssphy",
- 		.data = &uniphier_pro4_data,
- 	},
-+	{
-+		.compatible = "socionext,uniphier-pro5-usb3-ssphy",
-+		.data = &uniphier_pro4_data,
-+	},
- 	{
- 		.compatible = "socionext,uniphier-pxs2-usb3-ssphy",
- 		.data = &uniphier_pxs2_data,
+diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+index c8d57ee0a5bb2..2cc276cdfcdb1 100644
+--- a/drivers/thermal/qcom/tsens-common.c
++++ b/drivers/thermal/qcom/tsens-common.c
+@@ -602,7 +602,7 @@ int __init init_common(struct tsens_priv *priv)
+ 		/* DT with separate SROT and TM address space */
+ 		priv->tm_offset = 0;
+ 		res = platform_get_resource(op, IORESOURCE_MEM, 1);
+-		srot_base = devm_ioremap_resource(&op->dev, res);
++		srot_base = devm_ioremap_resource(dev, res);
+ 		if (IS_ERR(srot_base)) {
+ 			ret = PTR_ERR(srot_base);
+ 			goto err_put_device;
+@@ -620,7 +620,7 @@ int __init init_common(struct tsens_priv *priv)
+ 	}
+ 
+ 	res = platform_get_resource(op, IORESOURCE_MEM, 0);
+-	tm_base = devm_ioremap_resource(&op->dev, res);
++	tm_base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(tm_base)) {
+ 		ret = PTR_ERR(tm_base);
+ 		goto err_put_device;
+@@ -687,8 +687,6 @@ int __init init_common(struct tsens_priv *priv)
+ 	tsens_enable_irq(priv);
+ 	tsens_debug_init(op);
+ 
+-	return 0;
+-
+ err_put_device:
+ 	put_device(&op->dev);
+ 	return ret;
 -- 
 2.20.1
 
