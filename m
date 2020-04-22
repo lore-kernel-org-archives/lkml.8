@@ -2,194 +2,123 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F27C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644E7C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F41B2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4F7206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587541518;
+	bh=SFuuKuCDmUz/6+YIAohRQGbnXeuDc+lBBpM/F7qNxt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JgHRxKzr0btiSNANP/mgYm46W6lghUqIvM91aIjzi27CjAS6Cnz47vOEgRQyU9p+A
+	 Z3yUduO6ai1w6qwMI5UOR7vdy1y+PDldO4QeEoSTWZ2riy9HHoLZhpx2UrIr0o5d9g
+	 hAN/caFDQhQ+cmyAJrDXW0z4LPYL7jpYucicIvgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgDVHow (ORCPT
+        id S1726451AbgDVHpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:44:52 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42689 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbgDVHov (ORCPT
+        Wed, 22 Apr 2020 03:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725786AbgDVHpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:44:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so1266759otq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:44:50 -0700 (PDT)
+        Wed, 22 Apr 2020 03:45:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D993C03C1A6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:45:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z6so1146313wml.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 00:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+uecPKpriXTCW3WPXlVyFe8EDCQwaAwVshvBb4/pq3A=;
+        b=t41i42tG2CNYqEhd7H/1TKRPoI9NT75SIs++h2epz5duRs4XGu3vGoOAayC3SoboBg
+         gqGtyiZkBBHUZHEnhp90bZM6DBEk3QnjXlVyuKaB2dEjEqQedaPTnDGJTfWDQDeK7sKf
+         oozq0PyzMhrFqG5In/8aH5FWu9r1Fs0iwyAxb0HZEZvfrdMovLjTJtIEUH8/y8KS9Fm2
+         BriOptl+mYVFJD05YG50HyaJtm79xACi4eJVGzocAxSBxmuctrjN+x2neUcNutYGRRr1
+         ZpXale1v4XIUiCpF0TakzxlQxZ9OpYSRQha8FnAp54qGrq25lfPOW8qBg2ROEX11QcE5
+         O7fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W8UTgb8AJJo1U8f4exnqk+Ltaibbt3oOSY4Baq5cKuw=;
-        b=pkL1h5yNaPrUB5wxnyVMq/bacedbn9F1iV7ZfBRflXErkm/u80eDhV4KUycxmg7jM3
-         gihNvmL5eGSFX+6+nt4tN76Q1N1t4eTi6wRVg/cLyqmXxQW+REGANFIt+3SATUei5scW
-         4QB1YlKY44wbk2LJKhtOxSvqJRkEtaj7g/nK6oq6kM2FFTHUelUJ1oy8HhM1IWSqANKc
-         cnIrCMo79aRnkFsQKG4s7nYuWvmd0KcicIkCaIgXks8gL/z4v3KDivPpJHJqeIetKRic
-         7EhHK/TDTY+C56eV83qTD6Em4k9VnCWZROjt0fQd+whY5Y2nVPZ3EevzJEy/wMIyBKaF
-         Ew8g==
-X-Gm-Message-State: AGi0Puaq1yiCP3KvqZw0lDHoqLvOwkekvsrisVuUPxc33jtOQl44QChr
-        /UtAix0pgSu8z160uvgsrI+bc0ZYgyRRAw8QMQA=
-X-Google-Smtp-Source: APiQypIQuWSb/KptqNf0JYBzAoXNw5FdyLfnxWcWcL9WWkufg7XYfJEyF59W2Oyod1GqjmPbAgOwdUKzSAqLbd0VOFA=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr13049588ots.250.1587541489795;
- Wed, 22 Apr 2020 00:44:49 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+uecPKpriXTCW3WPXlVyFe8EDCQwaAwVshvBb4/pq3A=;
+        b=LhWGoAmuwGLHNNjO0Qfh47TBp3w14jL6yOfynXpX5/SSg7EQ8ywGMgdXf7AsWM1lSp
+         JJNzmj604F00MnDEdJ7LRleUiCPQ7Cq/9G087M3lFOEnN+OG0XE0oE5IKmLzyqeLkJjH
+         4J0OSBm8itG1BC+Nxlno6oFE6Kw6strvvCdM5z5ofowYkcvCFrkTkKl4GPvLaj+Qjx+N
+         B5OEONVojJwC6vgnId6Alaa+3Ch9QjhHpjuX3sxqXjPwxZanYnZozach+Zjwv4QQsE5p
+         ud33ezg6szCd5J7AhwqIQAHJR9pPkdcc+ij7N+YzHP+5xDSHEevzD0nEoe8GDaLcVDFp
+         1M1A==
+X-Gm-Message-State: AGi0Puah7MWwSy5LvB2UyhEuhIVFudg7ZxunbTvIquEJIynuwWIB8hLN
+        lHPyPeOasnYYlHtUrWMS4Io=
+X-Google-Smtp-Source: APiQypKEcCslVKMHhhTGvbuD7l/G5BD7dJunTIVdgXiqTxxI5vPhiW7LhpKxZFRrLnyuEcMFzZ41rA==
+X-Received: by 2002:a1c:1dc3:: with SMTP id d186mr8948957wmd.90.1587541515304;
+        Wed, 22 Apr 2020 00:45:15 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id h2sm7288127wro.9.2020.04.22.00.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 00:45:14 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 09:45:12 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] perf/urgent for 5.7-rc2
+Message-ID: <20200422074512.GA19309@gmail.com>
+References: <158730459860.31269.9496277256253823777.tglx@nanos.tec.linutronix.de>
+ <158730460101.31269.5005570498545135614.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wjUS9b-B1n=OCBdqq3mdVTNGz0zqhGnrtMijoB5qT+96g@mail.gmail.com>
+ <20200419200758.3xry3vn2a5caxapx@treble>
+ <20200420074845.GA72554@gmail.com>
+ <20200420082728.GA20696@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200419191958.208600-1-masahiroy@kernel.org>
-In-Reply-To: <20200419191958.208600-1-masahiroy@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 22 Apr 2020 09:44:38 +0200
-Message-ID: <CAMuHMdXmJ3gfYzubQRbN6Bx0A=p8TodidmoeaZkJVtYjhDcQnw@mail.gmail.com>
-Subject: Re: [PATCH v4] ARM: decompressor: simplify libfdt builds
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420082728.GA20696@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san, Kees, Russell,
 
--CC RMK's patch system
-+CC lakml
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-On Sun, Apr 19, 2020 at 9:26 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> Copying source files during the build time may not end up with
-> as clean code as expected.
->
-> lib/fdt*.c simply wrap scripts/dtc/libfdt/fdt*.c, and it works
-> nicely. Let's follow this approach for the arm decompressor, too.
->
-> Add four wrappers, arch/arm/boot/compressed/fdt*.c and remove
-> the Makefile messes. Another nice thing is we no longer need to
-> maintain the own libfdt_env.h because the decompressor can include
-> <linux/libfdt_env.h>.
->
-> There is a subtle problem when generated files are turned into
-> check-in files.
->
-> When you are doing a rebuild of an existing object tree with O=
-> option, there exists stale "shipped" copies that the old Makefile
-> implementation created. The build system ends up with compiling the
-> stale generated files because Make searches for prerequisites in the
-> current directory, i.e. $(objtree) first, and then the directory
-> listed in VPATH, i.e. $(srctree).
->
-> To mend this issue, I added the following code:
->
->   ifdef building_out_of_srctree
->   $(shell rm -f $(addprefix $(obj)/, fdt_rw.c fdt_ro.c fdt_wip.c fdt.c))
->   endif
->
-> This will need to stay for a while because "git bisect" crossing this
-> commit, otherwise, would result in a build error.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> On Mon, Apr 20, 2020 at 09:48:45AM +0200, Ingo Molnar wrote:
+> > Fortunately, much of what objtool does against vmlinux.o can be 
+> > parallelized in a rather straightforward fashion I believe, if we build 
+> > with -ffunction-sections.
+> 
+> So that FGKASLR is going to get us -ffunction-sections, but
+> parallelizing objtool isn't going to be trivial, it's data structures
+> aren't really build for that, esp. decode_instructions() which actively
+> generates data.
+> 
+> Still, it's probably doable.
 
-This is now commit 365a6327cd643eed ("ARM: 8968/1: decompressor:
-simplify libfdt builds") in arm/for-next.
+So AFAICS in the narrow code section I identified as the main overhead, 
+only the instruction hash needs threading, i.e. this step:
 
-In light of reworking "[PATCH v5] ARM: boot: Obtain start of physical
-memory from DTB"[1] on top of this, which would conditionally add
-another source file to libfdt_objs, I have a few questions.
+                        hash_add(file->insn_hash, &insn->hash, insn->offset);
+                        list_add_tail(&insn->list, &file->insn_list);
 
-> --- a/arch/arm/boot/compressed/Makefile
-> +++ b/arch/arm/boot/compressed/Makefile
-> @@ -76,29 +76,31 @@ compress-$(CONFIG_KERNEL_LZMA) = lzma
->  compress-$(CONFIG_KERNEL_XZ)   = xzkern
->  compress-$(CONFIG_KERNEL_LZ4)  = lz4
->
-> -# Borrowed libfdt files for the ATAG compatibility mode
-> -
-> -libfdt         := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c
-> -libfdt_hdrs    := fdt.h libfdt.h libfdt_internal.h
-> -
-> -libfdt_objs    := $(addsuffix .o, $(basename $(libfdt)))
-> +ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
-> +libfdt_objs = fdt_rw.o fdt_ro.o fdt_wip.o fdt.o atags_to_fdt.o
->
+Objtool can still be single-threaded before and after generating the 
+instruction hash.
 
-I guess the code below can be moved out of the ifeq block, as it doesn't
-really do anything if CONFIG_ARM_ATAG_DTB_COMPAT=n, and $(libfdt_objs)
-becomes empty?
-If not, I think I'll have to add a new Kconfig symbol ARM_BOOT_LIBFDT,
-to be selected by ARM_ATAG_DTB_COMPAT and USE_OF.
+99% of the overhead within decode_instructions() is in 
+arch_decode_instruction(), which is fully thread-safe AFAICS.
 
-> -$(addprefix $(obj)/,$(libfdt) $(libfdt_hdrs)): $(obj)/%: $(srctree)/scripts/dtc/libfdt/%
-> -       $(call cmd,shipped)
-> +OBJS   += $(libfdt_objs)
->
-> -$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o): \
-> -       $(addprefix $(obj)/,$(libfdt_hdrs))
-> +# -fstack-protector-strong triggers protection checks in this code,
-> +# but it is being used too early to link to meaningful stack_chk logic.
-> +nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-> +$(foreach o, $(libfdt_objs), \
-> +       $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt $(nossp-flags-y)))
+So the run time of objtool could be cut in ~third on most systems.
 
-Is there a real reason this is only applied to a subset of the C object
-files, and not to all of them? Or have we been lucky so far, by not
-triggering the issue in decompressed.c, misc.c, and string.c (yet)?
+Thanks,
 
-Thanks!
-
-> +
-> +# These were previously generated C files. When you are building the kernel
-> +# with O=, make sure to remove the stale files in the output tree. Otherwise,
-> +# the build system wrongly compiles the stale ones.
-> +ifdef building_out_of_srctree
-> +$(shell rm -f $(addprefix $(obj)/, fdt_rw.c fdt_ro.c fdt_wip.c fdt.c))
-> +endif
->
-> -ifeq ($(CONFIG_ARM_ATAG_DTB_COMPAT),y)
-> -OBJS   += $(libfdt_objs) atags_to_fdt.o
->  endif
->
->  targets       := vmlinux vmlinux.lds piggy_data piggy.o \
->                  lib1funcs.o ashldi3.o bswapsdi2.o \
->                  head.o $(OBJS)
->
-> -clean-files += piggy_data lib1funcs.S ashldi3.S bswapsdi2.S \
-> -               $(libfdt) $(libfdt_hdrs) hyp-stub.S
-> +clean-files += piggy_data lib1funcs.S ashldi3.S bswapsdi2.S hyp-stub.S
->
->  KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
->
-> @@ -107,15 +109,6 @@ ORIG_CFLAGS := $(KBUILD_CFLAGS)
->  KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
->  endif
->
-> -# -fstack-protector-strong triggers protection checks in this code,
-> -# but it is being used too early to link to meaningful stack_chk logic.
-> -nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-> -CFLAGS_atags_to_fdt.o := $(nossp-flags-y)
-> -CFLAGS_fdt.o := $(nossp-flags-y)
-> -CFLAGS_fdt_ro.o := $(nossp-flags-y)
-> -CFLAGS_fdt_rw.o := $(nossp-flags-y)
-> -CFLAGS_fdt_wip.o := $(nossp-flags-y)
-> -
->  ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
->              -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
->  asflags-y := -DZIMAGE
-
-[1] https://lore.kernel.org/r/20200415153409.30112-1-geert+renesas@glider.be
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Ingo
