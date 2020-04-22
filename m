@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3D0C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F85C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209B32073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005D32073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551561;
-	bh=dULWsYOFSJUhwWnnrs2iITKRs532zp7IRjpEN/cvhWk=;
+	s=default; t=1587551566;
+	bh=MFoXzUo4HUhOTCG0G7ix3BHbTupMCL7ylAjiMzgDUIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUkZaEdKq03VqSFiWCP3niBufRptrvMKTXgnZFTxnt7SZa2N9DUZxZAXGPLRi8vp2
-	 KYpI3ObgfP/dBdRXSirDdLkhfDW+IrHpxV5v8wsgjGSk37nxuMr19dop9rx7740ouT
-	 SvrFwUTuYrPHVT9u4UFpVaTIeFtHFQURqZxyUQNU=
+	b=P7hmp/7lOOlclmCC/3FDrAhf+9r5MKtKQFrJ/M95rVWBcJSeyyW6/G2/o50bJ6AB2
+	 T57h1xTrXVcsKOdyT+AX8/uRmndgYG/VCIud1TLyonbbUpZcWO0k54rwi7dEChLtPK
+	 RnGfsDmOjcORgRgaIVVzo2T0XCoT5bec+bl50pHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgDVKcg (ORCPT
+        id S1731141AbgDVKcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:32:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36920 "EHLO
+        Wed, 22 Apr 2020 06:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731119AbgDVKcZ (ORCPT
+        with ESMTP id S1731124AbgDVKc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:32:25 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71A7C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:32:24 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id h2so1706219wmb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:32:24 -0700 (PDT)
+        Wed, 22 Apr 2020 06:32:26 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E95F6C03C1A8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:32:25 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 188so1714010wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lNc4we7ESJBS0HuNbhflGP7Zf4Z9nmjjGCh1DH2rdq4=;
-        b=dUouRE0SOcGAsrk1VtKYHClkJ6iKHArdDMWWgQByxLq8/UgJN3/74xwmAa+PPp/h1K
-         dDjn8lN5/zQrsZSHbUoVx9SAQ/Zg4Ym873ZWn+Xdob6XeEWl1/7Mak8IPfiA50eOUQCf
-         fXeLJeMHutX6eIdDWeARKVWfq3LOK2xtJN4olLubWb7FGsYxz3BVlfyzYJdM4zVbEZ4E
-         TSP/aSp4X6pMSkwhoSR2M5SSn1xWqKhXoSlWO41RpO7tA7QKlsalmRVkdpWAlMUHXkj6
-         cPSPNIIhcz0KIhpZaKxHRqzH0SvyTDn4YvusuiqyMzuub5cYeJu1VmJIq+MPhLx5rhwB
-         tOTg==
+        bh=wFpDohVto6uoX2W5waXoFiYKAl66JhA2t9807XRdebY=;
+        b=EdbkPJ/O0A0k7r8wauBMXkp+DnjaU8ddUlf8SmCT5SrTCtg4GNejvIplMfrlFAO/nq
+         wvcrTLIsX0DHs8oad9NEX4HusoTtMNaaUCXlY5O60+ke1j4MWRMgaeFKACnVFVz5k0Hl
+         TArGwLLIP7qJTodpQOdsfXvXyUt24kXZYyXeaLXu/+A7ngWyr1NG0JQ6gCEQLvzUrfOv
+         B8kmWmdiHxueSi268qMFP135RvKbJGi2nV9U8lIoWyioM6+L8Zv5kEvfiwBZdDsz1ZMn
+         UAWPQOEHcuOV/Vnium8B4MBJfRAFBXYnHO1P9aHInanjA29t4SsBA0zzW3SMKU9cJmXv
+         EyZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=lNc4we7ESJBS0HuNbhflGP7Zf4Z9nmjjGCh1DH2rdq4=;
-        b=a3wE+y9YBucUKa37EsFxIs3+bcFMB2MXBIuT2uBRW2iYmn0HZ5rjCl3Y14iuzDeCTe
-         wcAX44un4D1S8S7lFXQvRg+uqdLi+26P4c+MVGkZM2zki2ezLq1eu4GOJwTey9Xe+W4r
-         xs/sVKKywsVTkCK60Rcu/I+A3JXpS288XByYkv9doN1wszg7a06yebP6iaQD8iCYD9hK
-         6UFrvYMmQh7SaWcR3ykdgljds5eH6wjBANctR2s2Snqj+LH5/jPH55ig3vcCGGz4aOiv
-         fXgSI5DfcU5Lu1CBW/7BMDP1eDtQA2CEBdJOJ61tU/VYqJUSaXfsKkcBrK4XMo9N/1lN
-         LTgA==
-X-Gm-Message-State: AGi0PubUyg1hHa/wTRM+ZmE2WxWuuJmD4jvHS53A0vh+Gvcd/gXm1y7r
-        wCRnMXd5xVUB6n2lxTYAzU8yTnsO
-X-Google-Smtp-Source: APiQypLGHJtudSOWeWVg0GgdHoVq9ESiVrgJ5vVvqIDjCppR1LhZxC73OryVAgYZDbYLMOcTG2DVLQ==
-X-Received: by 2002:a1c:ba09:: with SMTP id k9mr9607860wmf.176.1587551543071;
-        Wed, 22 Apr 2020 03:32:23 -0700 (PDT)
+        bh=wFpDohVto6uoX2W5waXoFiYKAl66JhA2t9807XRdebY=;
+        b=mtnLxepL57tYheogizqvmnXerxewuqZxo5+DsQl1J8Vi5390VjVFquxTGipidodzq0
+         LZsWVyARd9RL23sTIVq6vVK4xAJh6jb0hja+vHT8Iu9No3H3VjXrEyyMczZCuKhvo6y7
+         Ed1mImsp83QV6PGTiLYbN/eeR8mU5vEyw7mUDeMBFKovjllT26as/mW7o945TLpbiypK
+         zNQTkgD0pRFoSitqwY5kBQlknwJ23QauN1xGeNnJAwGJ6Bkkj2YHpjPiiUzsFfxJKwTQ
+         QWygCYn7l02E5vzgkyhEbebyJShqY04yvB8C71in/DKjae7fPm1266K3JsPsEE4S1UR9
+         vYCA==
+X-Gm-Message-State: AGi0PuZqKRA9HRHbo21ZBLmjugL2Oj8S5vb1loPMbcj/JCjL2k+Hmsba
+        ayr9TUskJrCewNd4igevTxS308NE
+X-Google-Smtp-Source: APiQypKjpmidtYWIkJFXst2NibuJDHyTXYUM4IG5dOQELWJ7w3a1ZSaE/t0BX1WEAqevD1w9dzkpjA==
+X-Received: by 2002:a1c:b38b:: with SMTP id c133mr9561157wmf.24.1587551544425;
+        Wed, 22 Apr 2020 03:32:24 -0700 (PDT)
 Received: from localhost.localdomain (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id s12sm6891603wmc.7.2020.04.22.03.32.21
+        by smtp.gmail.com with ESMTPSA id s12sm6891603wmc.7.2020.04.22.03.32.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:32:22 -0700 (PDT)
+        Wed, 22 Apr 2020 03:32:23 -0700 (PDT)
 From:   Ingo Molnar <mingo@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -72,9 +72,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 1/3] objtool: Constify 'struct elf *' parameters
-Date:   Wed, 22 Apr 2020 12:32:03 +0200
-Message-Id: <20200422103205.61900-2-mingo@kernel.org>
+Subject: [PATCH 2/3] objtool: Rename elf_read() to elf_open_read()
+Date:   Wed, 22 Apr 2020 12:32:04 +0200
+Message-Id: <20200422103205.61900-3-mingo@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200422103205.61900-1-mingo@kernel.org>
 References: <20200422103205.61900-1-mingo@kernel.org>
@@ -85,106 +85,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to parallelize certain parts of objtool, map out which uses
-of various data structures are read-only vs. read-write.
+'struct elf *' handling is an open/close paradigm, make sure the naming
+matches that:
 
-As a first step constify 'struct elf' pointer passing, most of the secondary
-uses of it in find_symbol_*() methods are read-only.
-
-Also, while at it, better group the 'struct elf' handling methods in elf.h.
+   elf_open_read()
+   elf_write()
+   elf_close()
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/objtool/elf.c | 10 +++++-----
- tools/objtool/elf.h | 20 ++++++++++----------
- 2 files changed, 15 insertions(+), 15 deletions(-)
+ tools/objtool/check.c | 2 +-
+ tools/objtool/elf.c   | 2 +-
+ tools/objtool/elf.h   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index f2a84271e807..12e2aea42bb2 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2614,7 +2614,7 @@ int check(const char *_objname, bool orc)
+ 
+ 	objname = _objname;
+ 
+-	file.elf = elf_read(objname, orc ? O_RDWR : O_RDONLY);
++	file.elf = elf_open_read(objname, orc ? O_RDWR : O_RDONLY);
+ 	if (!file.elf)
+ 		return 1;
+ 
 diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index f26bb3e8db7b..fab5534c3365 100644
+index fab5534c3365..453b723c89d5 100644
 --- a/tools/objtool/elf.c
 +++ b/tools/objtool/elf.c
-@@ -127,7 +127,7 @@ static int symbol_by_offset(const void *key, const struct rb_node *node)
+@@ -542,7 +542,7 @@ static int read_relas(struct elf *elf)
  	return 0;
  }
  
--struct section *find_section_by_name(struct elf *elf, const char *name)
-+struct section *find_section_by_name(const struct elf *elf, const char *name)
+-struct elf *elf_read(const char *name, int flags)
++struct elf *elf_open_read(const char *name, int flags)
  {
- 	struct section *sec;
- 
-@@ -217,7 +217,7 @@ struct symbol *find_func_containing(struct section *sec, unsigned long offset)
- 	return NULL;
- }
- 
--struct symbol *find_symbol_by_name(struct elf *elf, const char *name)
-+struct symbol *find_symbol_by_name(const struct elf *elf, const char *name)
- {
- 	struct symbol *sym;
- 
-@@ -228,7 +228,7 @@ struct symbol *find_symbol_by_name(struct elf *elf, const char *name)
- 	return NULL;
- }
- 
--struct rela *find_rela_by_dest_range(struct elf *elf, struct section *sec,
-+struct rela *find_rela_by_dest_range(const struct elf *elf, struct section *sec,
- 				     unsigned long offset, unsigned int len)
- {
- 	struct rela *rela, *r = NULL;
-@@ -257,7 +257,7 @@ struct rela *find_rela_by_dest_range(struct elf *elf, struct section *sec,
- 	return NULL;
- }
- 
--struct rela *find_rela_by_dest(struct elf *elf, struct section *sec, unsigned long offset)
-+struct rela *find_rela_by_dest(const struct elf *elf, struct section *sec, unsigned long offset)
- {
- 	return find_rela_by_dest_range(elf, sec, offset, 1);
- }
-@@ -769,7 +769,7 @@ int elf_rebuild_rela_section(struct section *sec)
- 	return 0;
- }
- 
--int elf_write(struct elf *elf)
-+int elf_write(const struct elf *elf)
- {
- 	struct section *sec;
- 	Elf_Scn *s;
+ 	struct elf *elf;
+ 	Elf_Cmd cmd;
 diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index 2811d04346c9..a55bcde9f1b1 100644
+index a55bcde9f1b1..5e76ac38cf99 100644
 --- a/tools/objtool/elf.h
 +++ b/tools/objtool/elf.h
-@@ -114,22 +114,22 @@ static inline u32 rela_hash(struct rela *rela)
+@@ -113,7 +113,7 @@ static inline u32 rela_hash(struct rela *rela)
+ 	return sec_offset_hash(rela->sec, rela->offset);
  }
  
- struct elf *elf_read(const char *name, int flags);
--struct section *find_section_by_name(struct elf *elf, const char *name);
-+struct section *elf_create_section(struct elf *elf, const char *name, size_t entsize, int nr);
-+struct section *elf_create_rela_section(struct elf *elf, struct section *base);
-+void elf_add_rela(struct elf *elf, struct rela *rela);
-+int elf_write(const struct elf *elf);
-+void elf_close(struct elf *elf);
-+
-+struct section *find_section_by_name(const struct elf *elf, const char *name);
- struct symbol *find_func_by_offset(struct section *sec, unsigned long offset);
- struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
--struct symbol *find_symbol_by_name(struct elf *elf, const char *name);
-+struct symbol *find_symbol_by_name(const struct elf *elf, const char *name);
- struct symbol *find_symbol_containing(struct section *sec, unsigned long offset);
--struct rela *find_rela_by_dest(struct elf *elf, struct section *sec, unsigned long offset);
--struct rela *find_rela_by_dest_range(struct elf *elf, struct section *sec,
-+struct rela *find_rela_by_dest(const struct elf *elf, struct section *sec, unsigned long offset);
-+struct rela *find_rela_by_dest_range(const struct elf *elf, struct section *sec,
- 				     unsigned long offset, unsigned int len);
- struct symbol *find_func_containing(struct section *sec, unsigned long offset);
--struct section *elf_create_section(struct elf *elf, const char *name, size_t
--				   entsize, int nr);
--struct section *elf_create_rela_section(struct elf *elf, struct section *base);
- int elf_rebuild_rela_section(struct section *sec);
--int elf_write(struct elf *elf);
--void elf_close(struct elf *elf);
--void elf_add_rela(struct elf *elf, struct rela *rela);
- 
- #define for_each_sec(file, sec)						\
- 	list_for_each_entry(sec, &file->elf->sections, list)
+-struct elf *elf_read(const char *name, int flags);
++struct elf *elf_open_read(const char *name, int flags);
+ struct section *elf_create_section(struct elf *elf, const char *name, size_t entsize, int nr);
+ struct section *elf_create_rela_section(struct elf *elf, struct section *base);
+ void elf_add_rela(struct elf *elf, struct rela *rela);
 -- 
 2.20.1
 
