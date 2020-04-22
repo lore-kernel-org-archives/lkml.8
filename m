@@ -2,48 +2,48 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5CEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1794AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5421E20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC3B20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MN8Wqi0V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D6ZnM1cB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgDVVkm (ORCPT
+        id S1726644AbgDVVku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:40:42 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42098 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726562AbgDVVkl (ORCPT
+        Wed, 22 Apr 2020 17:40:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46929 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726431AbgDVVkt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:40:41 -0400
+        Wed, 22 Apr 2020 17:40:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587591639;
+        s=mimecast20190719; t=1587591647;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:in-reply-to:
          references:references:references;
-        bh=/kIA4+QZqqISnPEbYYsZEJA0KgGrqNOmJL/9H2ArNGo=;
-        b=MN8Wqi0VG1eI2DHN+f6aEdhWA48vp2qfgYKuG210M8NMCWAy0LKrjZBbmAtreP3pspFl0l
-        sTxp+2pLJmWvi2hVuKFgtltpWpP5IsLlbc4KbBUD+o6TH4T14pbAViKn4im6otTAq5QLrn
-        SJJYBIZOzLpDgMOWMsEYkmzxEbIb3BE=
+        bh=xx+EjAV9D45r5GFEZlIOhsXocUtYPXxPxCOFFaC3wos=;
+        b=D6ZnM1cBqw7HlUXC9XkTqS+KopZppFINABaEQTDNZvxVqsXQ6vL90XHGy/UbIhCQch2nJ8
+        o26sWToC7BHqL/5PPY3AVH4c01+2ki1mpKuX8h3Dd1ILHP0RB35mnfLxgxawSgnvyTKbt2
+        /F8A1u5NHTnoZQ4ky+ry6mUfOVHlO08=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-y7nOhjMyNWuZrfkUKTEwgg-1; Wed, 22 Apr 2020 17:40:36 -0400
-X-MC-Unique: y7nOhjMyNWuZrfkUKTEwgg-1
+ us-mta-15-0Ez5N7UWMz6ESc9Dyx_RYA-1; Wed, 22 Apr 2020 17:40:18 -0400
+X-MC-Unique: 0Ez5N7UWMz6ESc9Dyx_RYA-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF90D8017FD;
-        Wed, 22 Apr 2020 21:40:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90148DBA3;
+        Wed, 22 Apr 2020 21:40:16 +0000 (UTC)
 Received: from madcap2.tricolour.ca (unknown [10.3.128.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 95E115D70A;
-        Wed, 22 Apr 2020 21:40:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 452305D70A;
+        Wed, 22 Apr 2020 21:40:13 +0000 (UTC)
 From:   Richard Guy Briggs <rgb@redhat.com>
 To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -52,9 +52,9 @@ Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
         omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
         eparis@parisplace.org, ebiederm@xmission.com, tgraf@infradead.org,
         Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak25 v4 3/3] audit: add subj creds to NETFILTER_CFG record to cover async unregister
-Date:   Wed, 22 Apr 2020 17:39:30 -0400
-Message-Id: <b8ba40255978a73ea15e3859d5c945ecd5fede8e.1587500467.git.rgb@redhat.com>
+Subject: [PATCH ghak25 v4 1/3] audit: tidy and extend netfilter_cfg x_tables and ebtables logging
+Date:   Wed, 22 Apr 2020 17:39:28 -0400
+Message-Id: <97d8dabf45ee191bc4b51dea2ae27d34fd5ea40d.1587500467.git.rgb@redhat.com>
 In-Reply-To: <cover.1587500467.git.rgb@redhat.com>
 References: <cover.1587500467.git.rgb@redhat.com>
 In-Reply-To: <cover.1587500467.git.rgb@redhat.com>
@@ -65,53 +65,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some table unregister actions seem to be initiated by the kernel to
-garbage collect unused tables that are not initiated by any userspace
-actions.  It was found to be necessary to add the subject credentials to
-cover this case to reveal the source of these actions.  A sample record:
+NETFILTER_CFG record generation was inconsistent for x_tables and
+ebtables configuration changes.  The call was needlessly messy and there
+were supporting records missing at times while they were produced when
+not requested.  Simplify the logging call into a new audit_log_nfcfg
+call.  Honour the audit_enabled setting while more consistently
+recording information including supporting records by tidying up dummy
+checks.
 
-  type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
+Add an op= field that indicates the operation being performed (register
+or replace).
+
+Here is the enhanced sample record:
+  type=NETFILTER_CFG msg=audit(1580905834.919:82970): table=filter family=2 entries=83 op=replace
+
+Generate audit NETFILTER_CFG records on ebtables table registration.
+Previously this was being done for x_tables registration and replacement
+operations and ebtables table replacement only.
+
+See: https://github.com/linux-audit/audit-kernel/issues/25
+See: https://github.com/linux-audit/audit-kernel/issues/35
+See: https://github.com/linux-audit/audit-kernel/issues/43
 
 Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 ---
- kernel/auditsc.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ include/linux/audit.h           | 21 +++++++++++++++++++++
+ kernel/auditsc.c                | 24 ++++++++++++++++++++++++
+ net/bridge/netfilter/ebtables.c | 12 ++++--------
+ net/netfilter/x_tables.c        | 12 +++---------
+ 4 files changed, 52 insertions(+), 17 deletions(-)
 
+diff --git a/include/linux/audit.h b/include/linux/audit.h
+index f9ceae57ca8d..5c7f07a9776d 100644
+--- a/include/linux/audit.h
++++ b/include/linux/audit.h
+@@ -94,6 +94,11 @@ struct audit_ntp_data {
+ struct audit_ntp_data {};
+ #endif
+ 
++enum audit_nfcfgop {
++	AUDIT_XT_OP_REGISTER,
++	AUDIT_XT_OP_REPLACE,
++};
++
+ extern int is_audit_feature_set(int which);
+ 
+ extern int __init audit_register_class(int class, unsigned *list);
+@@ -379,6 +384,8 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
+ extern void __audit_fanotify(unsigned int response);
+ extern void __audit_tk_injoffset(struct timespec64 offset);
+ extern void __audit_ntp_log(const struct audit_ntp_data *ad);
++extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
++			      enum audit_nfcfgop op);
+ 
+ static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
+ {
+@@ -514,6 +521,14 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+ 		__audit_ntp_log(ad);
+ }
+ 
++static inline void audit_log_nfcfg(const char *name, u8 af,
++				   unsigned int nentries,
++				   enum audit_nfcfgop op)
++{
++	if (audit_enabled)
++		__audit_log_nfcfg(name, af, nentries, op);
++}
++
+ extern int audit_n_rules;
+ extern int audit_signals;
+ #else /* CONFIG_AUDITSYSCALL */
+@@ -646,6 +661,12 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+ 
+ static inline void audit_ptrace(struct task_struct *t)
+ { }
++
++static inline void audit_log_nfcfg(const char *name, u8 af,
++				   unsigned int nentries,
++				   enum audit_nfcfgop op)
++{ }
++
+ #define audit_n_rules 0
+ #define audit_signals 0
+ #endif /* CONFIG_AUDITSYSCALL */
 diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index d281c18d1771..d7a45b181be0 100644
+index 814406a35db1..705beac0ce29 100644
 --- a/kernel/auditsc.c
 +++ b/kernel/auditsc.c
-@@ -2557,12 +2557,30 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
- 		       enum audit_nfcfgop op)
- {
- 	struct audit_buffer *ab;
-+	const struct cred *cred;
-+	struct tty_struct *tty;
-+	char comm[sizeof(current->comm)];
+@@ -130,6 +130,16 @@ struct audit_tree_refs {
+ 	struct audit_chunk *c[31];
+ };
  
- 	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
- 	if (!ab)
- 		return;
- 	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
- 			 name, af, nentries, audit_nfcfgs[op].s);
++struct audit_nfcfgop_tab {
++	enum audit_nfcfgop	op;
++	const char		*s;
++};
 +
-+	cred = current_cred();
-+	tty = audit_get_tty();
-+	audit_log_format(ab, " pid=%u uid=%u auid=%u tty=%s ses=%u",
-+			 task_pid_nr(current),
-+			 from_kuid(&init_user_ns, cred->uid),
-+			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
-+			 tty ? tty_name(tty) : "(none)",
-+			 audit_get_sessionid(current));
-+	audit_put_tty(tty);
-+	audit_log_task_context(ab); /* subj= */
-+	audit_log_format(ab, " comm=");
-+	audit_log_untrustedstring(ab, get_task_comm(comm, current));
-+	audit_log_d_path_exe(ab, current->mm); /* exe= */
++const struct audit_nfcfgop_tab audit_nfcfgs[] = {
++	{ AUDIT_XT_OP_REGISTER,	"register"	},
++	{ AUDIT_XT_OP_REPLACE,	"replace"	},
++};
 +
- 	audit_log_end(ab);
+ static int audit_match_perm(struct audit_context *ctx, int mask)
+ {
+ 	unsigned n;
+@@ -2542,6 +2552,20 @@ void __audit_ntp_log(const struct audit_ntp_data *ad)
+ 	audit_log_ntp_val(ad, "adjust",	AUDIT_NTP_ADJUST);
  }
- EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
+ 
++void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
++		       enum audit_nfcfgop op)
++{
++	struct audit_buffer *ab;
++
++	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
++	if (!ab)
++		return;
++	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
++			 name, af, nentries, audit_nfcfgs[op].s);
++	audit_log_end(ab);
++}
++EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
++
+ static void audit_log_task(struct audit_buffer *ab)
+ {
+ 	kuid_t auid, uid;
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index 78db58c7aec2..0a148e68b6e1 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1046,14 +1046,8 @@ static int do_replace_finish(struct net *net, struct ebt_replace *repl,
+ 	vfree(table);
+ 	vfree(counterstmp);
+ 
+-#ifdef CONFIG_AUDIT
+-	if (audit_enabled) {
+-		audit_log(audit_context(), GFP_KERNEL,
+-			  AUDIT_NETFILTER_CFG,
+-			  "table=%s family=%u entries=%u",
+-			  repl->name, AF_BRIDGE, repl->nentries);
+-	}
+-#endif
++	audit_log_nfcfg(repl->name, AF_BRIDGE, repl->nentries,
++			AUDIT_XT_OP_REPLACE);
+ 	return ret;
+ 
+ free_unlock:
+@@ -1223,6 +1217,8 @@ int ebt_register_table(struct net *net, const struct ebt_table *input_table,
+ 		*res = NULL;
+ 	}
+ 
++	audit_log_nfcfg(repl->name, AF_BRIDGE, repl->nentries,
++			AUDIT_XT_OP_REGISTER);
+ 	return ret;
+ free_unlock:
+ 	mutex_unlock(&ebt_mutex);
+diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
+index cd2b034eef59..8f8c5dbf603d 100644
+--- a/net/netfilter/x_tables.c
++++ b/net/netfilter/x_tables.c
+@@ -1408,15 +1408,9 @@ struct xt_table_info *
+ 		}
+ 	}
+ 
+-#ifdef CONFIG_AUDIT
+-	if (audit_enabled) {
+-		audit_log(audit_context(), GFP_KERNEL,
+-			  AUDIT_NETFILTER_CFG,
+-			  "table=%s family=%u entries=%u",
+-			  table->name, table->af, private->number);
+-	}
+-#endif
+-
++	audit_log_nfcfg(table->name, table->af, private->number,
++			!private->number ? AUDIT_XT_OP_REGISTER :
++					   AUDIT_XT_OP_REPLACE);
+ 	return private;
+ }
+ EXPORT_SYMBOL_GPL(xt_replace_table);
 -- 
 1.8.3.1
 
