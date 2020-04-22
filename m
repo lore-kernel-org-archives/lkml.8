@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B551CC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ECEC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 907B720774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A7120780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552517;
-	bh=PB4GcZ126GmyWWayUQIsGkLrexLF2d6Uee3Qe8PvmyI=;
+	s=default; t=1587552519;
+	bh=czNOZ/O19Y/a5rd/bkVz1OVazGaWvhmfaQGyVFf4l9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0uA7EUVMCj/9P2EXis0CR0PZaweJGcK5t7Scdm1dlL30hln5byMnB5h7NK1wbSJSW
-	 rPB/929H879xj2xpoBt+HHzbXy8qRsCtxAaTPeoHbn1E8OT26zGXMHzPenmoxeIjlE
-	 45TBoHkxF3P+ZHBtPomkECOXqG/IxYGB8B3rVkZU=
+	b=oYVJ5z9ls1wYEPW9RNCrLqxOzJOAzTqQKduUW/Hp7RvJ3g3OkVOGwUxfvxr0tQxWP
+	 M5XcIMHOjNGY5RCuC+Ej424vtGLgV4NDQ+qUqbwvLSUWGQVzw9oRMY12OGCZM1WST/
+	 6rQh7yD9zEyZbCAzD5UpY94ltwdMrI3dSKgXnLco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgDVKOW (ORCPT
+        id S1732057AbgDVKsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729499AbgDVKOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:18 -0400
+        id S1729522AbgDVKOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5106520575;
-        Wed, 22 Apr 2020 10:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8FC2070B;
+        Wed, 22 Apr 2020 10:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550457;
-        bh=PB4GcZ126GmyWWayUQIsGkLrexLF2d6Uee3Qe8PvmyI=;
+        s=default; t=1587550462;
+        bh=czNOZ/O19Y/a5rd/bkVz1OVazGaWvhmfaQGyVFf4l9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UpRGE5BC7EG1eLPtrZgSag9IhEFhV0osuAuATj0kd7FNvpbXSNOnyKjd0bjM25K2U
-         iaAJeLUn8dRAc/6pbCQP4uUFwv3Q+w+7CXABGJOs5IDYXVPpKJ2tTgUPjlxI03tukz
-         GXCmj7N/7qmoJQiPNJmtifA7nSVpL79lWsFK5V+M=
+        b=J4kX5dMHoj1ICpOF76+XPqhbSmaGYpJtJexwkvUvO4/Yzty2c6dG8a9HHR+XnA9Vl
+         2aUHVCq0MC9yhQ7Bu/ozOY31w02NQC5Qj84vYHuUrSWH0mDohrnj7gsYauf5RVhAhJ
+         bxBa7c4sgButsegpoUlR3NBiszmUnWDD/xUDZHgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/64] x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-Date:   Wed, 22 Apr 2020 11:57:09 +0200
-Message-Id: <20200422095017.502624781@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        "Andrew F. Davis" <afd@ti.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 27/64] power: supply: bq27xxx_battery: Silence deferred-probe error
+Date:   Wed, 22 Apr 2020 11:57:11 +0200
+Message-Id: <20200422095017.861461520@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,99 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit f3a99e761efa616028b255b4de58e9b5b87c5545 ]
+[ Upstream commit 583b53ece0b0268c542a1eafadb62e3d4b0aab8c ]
 
-When oops happens with panic_on_oops unset, the oops
-thread is killed by die() and system continues to run.
-In such case, guest should not report crash register
-data to host since system still runs. Check panic_on_oops
-and return directly in hyperv_report_panic() when the function
-is called in the die() and panic_on_oops is unset. Fix it.
+The driver fails to probe with -EPROBE_DEFER if battery's power supply
+(charger driver) isn't ready yet and this results in a bit noisy error
+message in KMSG during kernel's boot up. Let's silence the harmless
+error message.
 
-Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-7-Tianyu.Lan@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Andrew F. Davis <afd@ti.com>
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/hyperv/hv_init.c       | 6 +++++-
- arch/x86/include/asm/mshyperv.h | 2 +-
- drivers/hv/vmbus_drv.c          | 5 +++--
- 3 files changed, 9 insertions(+), 4 deletions(-)
+ drivers/power/supply/bq27xxx_battery.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 8a9cff1f129dc..1663ad84778ba 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -30,6 +30,7 @@
- #include <linux/clockchips.h>
- #include <linux/hyperv.h>
- #include <linux/slab.h>
-+#include <linux/kernel.h>
- #include <linux/cpuhotplug.h>
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index f022e1b550dfe..ff02a917556a9 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -1887,7 +1887,10 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
  
- #ifdef CONFIG_HYPERV_TSCPAGE
-@@ -427,11 +428,14 @@ void hyperv_cleanup(void)
- }
- EXPORT_SYMBOL_GPL(hyperv_cleanup);
- 
--void hyperv_report_panic(struct pt_regs *regs, long err)
-+void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die)
- {
- 	static bool panic_reported;
- 	u64 guest_id;
- 
-+	if (in_die && !panic_on_oops)
-+		return;
-+
- 	/*
- 	 * We prefer to report panic on 'die' chain as we have proper
- 	 * registers to report, but if we miss it (e.g. on BUG()) we need
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index f37704497d8f3..5b58a6cf487ff 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -338,7 +338,7 @@ static inline int cpumask_to_vpset(struct hv_vpset *vpset,
- 
- void __init hyperv_init(void);
- void hyperv_setup_mmu_ops(void);
--void hyperv_report_panic(struct pt_regs *regs, long err);
-+void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die);
- void hyperv_report_panic_msg(phys_addr_t pa, size_t size);
- bool hv_is_hyperv_initialized(void);
- void hyperv_cleanup(void);
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index eacfe7933c4dd..fb22b72fd535a 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -43,6 +43,7 @@
- #include <linux/kdebug.h>
- #include <linux/efi.h>
- #include <linux/random.h>
-+#include <linux/kernel.h>
- #include "hyperv_vmbus.h"
- 
- struct vmbus_dynid {
-@@ -85,7 +86,7 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
- 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
- 	    && hyperv_report_reg()) {
- 		regs = current_pt_regs();
--		hyperv_report_panic(regs, val);
-+		hyperv_report_panic(regs, val, false);
+ 	di->bat = power_supply_register_no_ws(di->dev, psy_desc, &psy_cfg);
+ 	if (IS_ERR(di->bat)) {
+-		dev_err(di->dev, "failed to register battery\n");
++		if (PTR_ERR(di->bat) == -EPROBE_DEFER)
++			dev_dbg(di->dev, "failed to register battery, deferring probe\n");
++		else
++			dev_err(di->dev, "failed to register battery\n");
+ 		return PTR_ERR(di->bat);
  	}
- 	return NOTIFY_DONE;
- }
-@@ -102,7 +103,7 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
- 	 * the notification here.
- 	 */
- 	if (hyperv_report_reg())
--		hyperv_report_panic(regs, val);
-+		hyperv_report_panic(regs, val, true);
- 	return NOTIFY_DONE;
- }
  
 -- 
 2.20.1
