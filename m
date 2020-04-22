@@ -2,106 +2,79 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922F4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53148C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710522076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p37iL8wo"
+	by mail.kernel.org (Postfix) with ESMTP id 37DA320767
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgDVPxi (ORCPT
+        id S1726780AbgDVPx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgDVPxh (ORCPT
+        Wed, 22 Apr 2020 11:53:56 -0400
+Received: from smtprelay0251.hostedemail.com ([216.40.44.251]:36456 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726494AbgDVPxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:53:37 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29F5C03C1A9;
-        Wed, 22 Apr 2020 08:53:37 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p8so1296012pgi.5;
-        Wed, 22 Apr 2020 08:53:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8DXOAVnHR/JBy0Y4uPJ7GHHi938/y6M1uaE+uBo8UB4=;
-        b=p37iL8woIBWNU97EnJMT9VwP7l2RKgc8soMSx4IV+IX62SYlHIqQdpGySbCjARcv7D
-         qDHkwJRGOOhe5LB/rrzCnEOCGZrjk8QWB0EE52Sp0aHSY13nrTMj3aX4A59ll4UidDsO
-         IVGCKAZ/VSuHoDsim1ZSp1O8r3x7kkkFQIfiWPsMLYHAOwAEQw9dfuBPZLQXeLe8OxBB
-         AfAEET9OzEtDYHMI5c5tecVubReXE3btLphVRcTBTOxwA362MdDP7/LsMtArPvYySZxp
-         vB4ufq7h+xTpZmo3zmohx4Efzthsovh+DjhsL4tZIvQKPeCoevAXisI2BmTEHKgrR+l4
-         1DFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8DXOAVnHR/JBy0Y4uPJ7GHHi938/y6M1uaE+uBo8UB4=;
-        b=gdv7SpbfPa0XP3MyccLQlL2DV4OX/HUhr/lFgi1Nq+GEsyQ2Radw3RV4BvpenIB+eE
-         w3rNMi8krloklgBmAjd6t+xzeB9ETFgBsPg9KGT3hkwKx6JAHArWZA/07bvrFeyd8kG3
-         S9Ju/zXPxdC8NozCUi6VlwfJ4cfkDLZZDRXChhu8wHmVrzl5upwXiTk3kO33Sk5wgIK3
-         kUYBHdM/odioDYwh+6wHd/iXPhNvPQ9rLP+2SGGfvpooVsTHmnXZE/iwHUMfmaflLoZa
-         PhQK+JrCovFUTwVwdTbzMj4KPz2y0fgAa623zBSJQwHllrpNzxp6QVz6j2cOJ6Vu/JTH
-         NBbA==
-X-Gm-Message-State: AGi0PuZF08QGihepy8OLYVZ1d6e3/+KvCbmZF0wavUGiG87cWgzaf0bZ
-        IR9fon2PRF+BU1E94QJPJTw=
-X-Google-Smtp-Source: APiQypLhyEB4b+85IkZPJo2ASXh+Y/49d68Z1e97PBFqQn5TiO1hKIDkGgZIzkquqVbKKzf4UK/c8g==
-X-Received: by 2002:a63:594:: with SMTP id 142mr26040751pgf.418.1587570817396;
-        Wed, 22 Apr 2020 08:53:37 -0700 (PDT)
-Received: from localhost ([89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id 36sm5529103pgs.70.2020.04.22.08.53.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Apr 2020 08:53:36 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     b.zolnierkie@samsung.com, tglx@linutronix.de,
-        gregkh@linuxfoundation.org, tsbogend@alpha.franken.de,
-        FlorianSchandinat@gmx.de, ralf@linux-mips.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v1] console: fix an issue about ioremap leak.
-Date:   Wed, 22 Apr 2020 23:53:28 +0800
-Message-Id: <20200422155328.27473-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 22 Apr 2020 11:53:55 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id B5D6B100E7B52;
+        Wed, 22 Apr 2020 15:53:54 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: flock01_794fcb3173706
+X-Filterd-Recvd-Size: 2052
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 Apr 2020 15:53:53 +0000 (UTC)
+Message-ID: <2539aded26601a969999065fb1b4c780a22e307f.camel@perches.com>
+Subject: Re: [PATCH v4 4/7] kernel.h: Split out min()/max() et al helpers
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 22 Apr 2020 08:51:35 -0700
+In-Reply-To: <20200422154402.GK185537@smile.fi.intel.com>
+References: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
+         <20200422125201.37618-4-andriy.shevchenko@linux.intel.com>
+         <5b413a379b8bba39fb75469699b7fd0d50d67e96.camel@perches.com>
+         <20200422154402.GK185537@smile.fi.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if do_take_over_console() return an error in the newport_probe(),
-due to the io virtual address is not released, it will cause a leak.
+On Wed, 2020-04-22 at 18:44 +0300, Andy Shevchenko wrote:
+> On Wed, Apr 22, 2020 at 07:52:32AM -0700, Joe Perches wrote:
+> > On Wed, 2020-04-22 at 15:51 +0300, Andy Shevchenko wrote:
+> > > kernel.h is being used as a dump for all kinds of stuff for a long time.
+> > > Here is the attempt to start cleaning it up by splitting out min()/max()
+> > > et al helpers.
+> > 
+> > While adding organization into kernel.h by splitting
+> > out various bits into separate files is a fine idea,
+> > I believe removing the generic #include <linux/kernel.h>
+> > from various files and substituting the sub-includes
+> > is not a good idea.
+> 
+> Are you sure?
 
-Fixes: e84de0c6190503 ("MIPS: GIO bus support for SGI IP22/28")
-CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/video/console/newport_con.c | 3 +++
- 1 file changed, 3 insertions(+)
+Yes.
 
-diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
-index 00dddf6e08b0..6bfc8e3ffd4a 100644
---- a/drivers/video/console/newport_con.c
-+++ b/drivers/video/console/newport_con.c
-@@ -720,6 +720,9 @@ static int newport_probe(struct gio_device *dev,
- 	console_lock();
- 	err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
- 	console_unlock();
-+
-+	if (err)
-+		iounmap((void *)npregs);
- 	return err;
- }
- 
--- 
-2.25.0
+> Perhaps we may just cat include/linux/* > include/linux/kernel.h?
+
+Silly argument,  There's a real argument to be made to
+tmove many of the files in include/linux to separate
+directories or out of include/ altogether to subsystem
+specific locations.
+
 
