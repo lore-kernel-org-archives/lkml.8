@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E363C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6430AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 696892070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BC320882
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550256;
-	bh=jjGhZd1676gM1faEzaRyv70Uy8sPoRRPSl6ORlKF1AQ=;
+	s=default; t=1587550258;
+	bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4MlI407i2OXM2QAiWYVg/0pmRjPugNFLBlunJ0IpGF7/KwTYR+oKao0xdm9oeMQb
-	 LZ5jX4Qc4hzoan32uqFDuUPheNGFbDMzamJTmD5gjKr9x0sqCzU6TYbsQhS5AfT0St
-	 5IpBXpkp3XwQfL0ncZ4KaNwYxMVNBBLYCQBNIdRA=
+	b=pdL+8dzmt/OCxWP1hCY/n6JbLS8WOmFthvE4c9C0n6MZ4pR5wMUJcqkkDGhotlvsN
+	 WS/7Fl08ovShjLR1oljHW05iBZsNgd1fp3tqFU69c0iCTuv+sE6Fs0S7feqr54CLm8
+	 M7karVN3XU+vcA4dwsdvdgWpvMb6gx0Eq69IE+00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgDVKKz (ORCPT
+        id S1729115AbgDVKK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41118 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbgDVKKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:46 -0400
+        id S1728536AbgDVKKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98B532071E;
-        Wed, 22 Apr 2020 10:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20AFB2077D;
+        Wed, 22 Apr 2020 10:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550246;
-        bh=jjGhZd1676gM1faEzaRyv70Uy8sPoRRPSl6ORlKF1AQ=;
+        s=default; t=1587550248;
+        bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VefO1/OQiqXosLSb0P/Nw+oaIfNc9v3tyTZnIsJ6UlLuhYHfv2PBjOvbdQp/YE7Ea
-         yimFnMgIB4iD4vI2Zk1wlsYYZ8SC4o/E3GRgZY81P0j+0Ni5U8bA7JkdF9DmouMXFb
-         VrYU9zm28O3KeQI0AVIN2stwgRbWk4wMBFUyZ900=
+        b=k6GnO5j5wT5v8kunH3gK4PcNRi9hkYJ8gjyWwR1OnNZVPcy/y4GyRJ+H5xcz6ammB
+         qfjeSDVLjJdE4Ys/sTQ552r7RzYBKpbzTGZ4235MJO3ewpp7bLO4zBkeS4M0eYreye
+         5tC7UHjHp9gyTq8PdFKywB2IE4+2fSbWWSvweZGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>, konrad.wilk@oracle.com,
-        dwmw@amazon.co.uk, bp@suse.de, srinivas.eeda@oracle.com,
-        peterz@infradead.org, hpa@zytor.com,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 069/199] x86/speculation: Remove redundant arch_smt_update() invocation
-Date:   Wed, 22 Apr 2020 11:56:35 +0200
-Message-Id: <20200422095105.093919891@linuxfoundation.org>
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Anssi Hannula <anssi.hannula@bitwise.fi>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.14 070/199] tools: gpio: Fix out-of-tree build regression
+Date:   Wed, 22 Apr 2020 11:56:36 +0200
+Message-Id: <20200422095105.183592978@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -62,54 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
 
-commit 34d66caf251df91ff27b24a3a786810d29989eca upstream.
+commit 82f04bfe2aff428b063eefd234679b2d693228ed upstream.
 
-With commit a74cfffb03b7 ("x86/speculation: Rework SMT state change"),
-arch_smt_update() is invoked from each individual CPU hotplug function.
+Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
+gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
+instead of the correct $(OUTPUT) for the output directory, breaking
+out-of-tree build (O=xx) with the following error:
 
-Therefore the extra arch_smt_update() call in the sysfs SMT control is
-redundant.
+  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
 
-Fixes: a74cfffb03b7 ("x86/speculation: Rework SMT state change")
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: <konrad.wilk@oracle.com>
-Cc: <dwmw@amazon.co.uk>
-Cc: <bp@suse.de>
-Cc: <srinivas.eeda@oracle.com>
-Cc: <peterz@infradead.org>
-Cc: <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/e2e064f2-e8ef-42ca-bf4f-76b612964752@default
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fix that.
+
+Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
+Cc: <stable@vger.kernel.org>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+Link: https://lore.kernel.org/r/20200325103154.32235-1-anssi.hannula@bitwise.fi
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cpu.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ tools/gpio/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2089,10 +2089,8 @@ int cpuhp_smt_disable(enum cpuhp_smt_con
- 		 */
- 		cpuhp_offline_cpu_device(cpu);
- 	}
--	if (!ret) {
-+	if (!ret)
- 		cpu_smt_control = ctrlval;
--		arch_smt_update();
--	}
- 	cpu_maps_update_done();
- 	return ret;
- }
-@@ -2103,7 +2101,6 @@ int cpuhp_smt_enable(void)
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
  
- 	cpu_maps_update_begin();
- 	cpu_smt_control = CPU_SMT_ENABLED;
--	arch_smt_update();
- 	for_each_present_cpu(cpu) {
- 		/* Skip online CPUs and CPUs on offline nodes */
- 		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
+ prepare: $(OUTPUT)include/linux/gpio.h
+ 
+-GPIO_UTILS_IN := $(output)gpio-utils-in.o
++GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
+ $(GPIO_UTILS_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=gpio-utils
+ 
 
 
