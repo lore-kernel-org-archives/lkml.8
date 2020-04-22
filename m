@@ -2,242 +2,236 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5BFC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACF0C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4645F206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235FF2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="um/9N2Hc"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Sgk74T1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgDVIsL (ORCPT
+        id S1726558AbgDVIsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:48:11 -0400
-Received: from mail-eopbgr60109.outbound.protection.outlook.com ([40.107.6.109]:9698
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725786AbgDVIsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:48:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S7X0w/9qAb6cgRBhGMNIdX7T3FWZOWt0XyBdXN3YqhAwYMdTlg6hzh1QEFi6nL3sVZV6RisMiJgvSdsWeoLRpFwtQU/V0NwXxqr3ILBwPbk8paqY2K4tL/F3yzyXTT84D+kpOJCdBKBcHDzrz453iPjB2e5zZuX5kSg3ughOQ2/jPvGx5tZTmKxHWn3pOgJymX0t7owstSOSr7Xwvr7D8WuxT5GpaK+BvK4hgGM3ulLDx/dXwMSUyJUHIPQI3Q58EY+McjN52nC4xQrDVH3XQXCNKSuBclZpiv5DWNuEKsBz659lLbfsnZJMjxtKVqFM5j/JIeF4VxeF5zOafIODSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DwKFfMrLHNaXPtn0igXOB1VftcWFgWKC4UZ3jpuSxc4=;
- b=ICQ1EevBxtq1VkgbVNzYT6DT5z89w34OYJj4It/lexnb3aC0M3gmMpjwjX/aG91Dj1r2JBHuBezfEZRMyuQJxN+Zymhiv2MryXwtbZS/Pg1eDZuygaVXf4B9Escj82oe90BLu+sz5+1Jb3ptiV/sUMcOxBdsiVL3rIcl41yJ5ZOpfnwXnc9nQtGkwjut3si79oPTgVzUPuxZ81iGeraYkE9ur2wc3h5lSkLv5kNJro/f+fEoMCaAQBaF6Zev/eUKKMgbquOJ++F0WvhHxwtWYPYosQJiH3XClARJPu+qN8GOkXgEVEK/X1zJ517hTqF4TRpv/c4qbMayHAm4dsVy4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DwKFfMrLHNaXPtn0igXOB1VftcWFgWKC4UZ3jpuSxc4=;
- b=um/9N2HcWPh3jfL5hQ+DPR6vFXL9krnN4OLwBMSjUh3ep3hC+NLa6qKYWIk36yJ9uIFNnoUmWmcDhyG/gWZt1YGR8EGzU4LphyiBgOboDgMWoxOFJCRVKidX81mKTGUCH6tp3HerStFE+njerInkKhcqZ5ZSoHMuq0VKq0/Z+54=
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
- by AM6PR05MB5640.eurprd05.prod.outlook.com (2603:10a6:20b:94::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Wed, 22 Apr
- 2020 08:48:06 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::95fc:fc35:26a2:a920]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::95fc:fc35:26a2:a920%7]) with mapi id 15.20.2921.030; Wed, 22 Apr 2020
- 08:48:06 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "david@protonic.nl" <david@protonic.nl>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-Thread-Topic: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-Thread-Index: AQHWGHaxUA6NfMbeRU2VdAoOfe//rKiE1IqA
-Date:   Wed, 22 Apr 2020 08:48:06 +0000
-Message-ID: <88640742d3a6ff4bc028034e46aac838e5a6d01f.camel@toradex.com>
-References: <20200422072137.8517-1-o.rempel@pengutronix.de>
-In-Reply-To: <20200422072137.8517-1-o.rempel@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.1 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-originating-ip: [51.154.7.61]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7329b223-b8e0-4a54-976e-08d7e699e082
-x-ms-traffictypediagnostic: AM6PR05MB5640:
-x-microsoft-antispam-prvs: <AM6PR05MB5640B390A40FC8A2D3EB882BF4D20@AM6PR05MB5640.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03818C953D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39840400004)(346002)(136003)(366004)(396003)(376002)(91956017)(36756003)(76116006)(478600001)(6512007)(5660300002)(86362001)(6486002)(8936002)(66556008)(4326008)(6506007)(54906003)(2616005)(66946007)(64756008)(66446008)(8676002)(66476007)(81156014)(71200400001)(26005)(2906002)(44832011)(110136005)(7416002)(316002)(186003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Bk7+SoOOO7QEGlYiyms/ovtyhcpCzQDwxSBJPNPpS5upgiLTumhyObwJmwU/GEPmhexgvA5W2kBnIbHVQG+EOgpe/KDZ11+c50bVCznBkI9ds0txX4S8xaS7oeVWrS4x3tGbXMRWFPKGIV6PDgVkakogUpU4wfjbkICHbhIrtXU6yFi3PO3vtPmBr+phdxvmQfjOU/uiBPCnc2XWEeO90x2RbkaOGgMxxmk3Y+flbb7L8hp3PWPHQuzE37cez1UuBDx2ijh51RbgCRnK4iV3kDZy2VgkGggmZoJT+PXiL0/SvAsl+1rIpyLkF0AkDLlEu7zhW45CliBGzzZMsm6zwU3Opv2MM4cGtCXyuS/858QOCCGs18AVGk3DinX2vo2OIiY7jqILHzMvpQw/7bxfELtfMNBitoC6Hhn+ycYrAvRwfESkejF9Tuzsj63bBNZ1
-x-ms-exchange-antispam-messagedata: YspuEVgixvn1ml0xorFR6tdzxwbqIGmcUuiLRnwnbi8dhwJZqHQsBCd4eXzW7bM6TRBxm8SpzuAYbB8LdxXuvAgeY0071CSA0c8CxFbbBU1j+ycojPjpFCAM2Nk8yLdPPXaTZANPpeZLHT7MGDMiRw==
-x-ms-exchange-transport-forked: True
+        Wed, 22 Apr 2020 04:48:40 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:11482 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgDVIsj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:48:39 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200422084835epoutp03bcac1d1017289299b797647d8a554cc5~IGA2i7ueN2433724337epoutp03t
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:48:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200422084835epoutp03bcac1d1017289299b797647d8a554cc5~IGA2i7ueN2433724337epoutp03t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587545315;
+        bh=eQSA8h2xg1wXg3fIRq7J83yR47+XW1DnktB+3VwIZXI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Sgk74T1HcYskWRrHtU/QYzDuDnUW4NF/pak9r42uNRkN1HAFs0VAyJ8Tg37LzoPJz
+         PUMQEG9lXCkypYIRmdNhdZNk1MVTbgJnFSP71iftBFe29Z9DEavRi41ZycYBduJ9MW
+         w1ctan+lmPxfvGuKWV1l+DGTyXecpqMFmfU6uieg=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200422084834epcas1p2d258c0bbc7d7a3b2a1d430235488778e~IGA12TL_g2724327243epcas1p2I;
+        Wed, 22 Apr 2020 08:48:34 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 496YxY45wGzMqYkV; Wed, 22 Apr
+        2020 08:48:33 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        25.9D.04744.1E400AE5; Wed, 22 Apr 2020 17:48:33 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf~IGAz6cMT90541005410epcas1p3l;
+        Wed, 22 Apr 2020 08:48:32 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200422084832epsmtrp1a57fc1df04dbeea36a5614e95117a474~IGAz5ei8E1528715287epsmtrp1Z;
+        Wed, 22 Apr 2020 08:48:32 +0000 (GMT)
+X-AuditID: b6c32a38-253ff70000001288-4d-5ea004e1aa22
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8A.C6.04158.0E400AE5; Wed, 22 Apr 2020 17:48:32 +0900 (KST)
+Received: from jaewon-linux.10.32.193.11 (unknown [10.253.104.82]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200422084832epsmtip12c8d7257ca3409a76ed0a09342adb55a~IGAztwAtT0500705007epsmtip1W;
+        Wed, 22 Apr 2020 08:48:32 +0000 (GMT)
+From:   Jaewon Kim <jaewon31.kim@samsung.com>
+To:     minchan@kernel.org, mgorman@suse.de, hannes@cmpxchg.org,
+        m.szyprowski@samsung.com, mina86@mina86.com, shli@fb.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, ytk.lee@samsung.com,
+        Jaewon Kim <jaewon31.kim@samsung.com>
+Subject: [PATCH v2] mm/vmscan: count layzfree pages and fix nr_isolated_*
+ mismatch
+Date:   Wed, 22 Apr 2020 17:48:15 +0900
+Message-Id: <20200422084815.21913-1-jaewon31.kim@samsung.com>
+X-Mailer: git-send-email 2.13.7
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+e3eu01rdVuvX9JjXeih5dyas5+VEWRxowKjKJByXbbrlPbi
+        3i16/GO5TFPT9ZAMq/UkNDPuLJo9IJOeYpFkL1aZtUpqC0sTyurOa9R/n3PO98s5nHOUmLpc
+        nqDMd7hZzsHYKHk8fulmoja5E/fn6AL741FNwzk5qhNWotJANUDl0W4Zam+qkaOX534TqL4l
+        pED7I2GA/Le9BDrTG1WgM8EKHHU1DFs0nL75KYrRvsKIgg4eDiloobZETgs9+xT0nUM/cPr8
+        z24ZvbexFtCB+9vpr8LkrPhs24I8lrGwnIZ1mJ2WfIc1g1q+2rTYZEzT6ZP16WgupXEwdjaD
+        ylyRlbw03yZOTWk2MzaPmMpieJ5KWbiAc3rcrCbPybszKNZlsbn0OpeWZ+y8x2HVmp32eXqd
+        bo5RVG605b3qeoe7gjO2+J724gWgU7MHxCkhmQrvXq/GYqwmLwPYUrp2D4gXuQfAqtPPhwp9
+        ADZdZf4afB3VMkl0DcCCijcKKfgO4L3dA4MOOTkLRv37iBiPIQ8A2NdIxEQYWQZgR0+lLFYY
+        Ta6BoWJh0ICT0+DA1xAeYxWZAa+0PRZZKbabAo//xmJeSLbK4ZdwAJPGyIS1B0plEo+G3bcb
+        FRInwI8VRQrJUAjg5+oAkAIvgCGhHEgqAywve4jFOmBkImxoSpHSU2Hwx5FBCUaOgJHeMkIa
+        QgWLi9SSZDr0hnsJiSfCgV/hIaZh5MkNQlrXBviifweoBJMO/2vgB6AWjGNdvN3K8npX6v9X
+        EsDgKyahy+Bq24pmQCoBNVz19MHRHDXBbOa32psBVGLUGNWFTjGlsjBbt7Gc08R5bCzfDIzi
+        9nxYwlizU3xsh9ukN84xGAwoNW1umtFAjVcdfGLLUZNWxs1uYlkXy/31yZRxCQXAzX2wjHDc
+        SRu5V1Zf0plpbre/XrehMkl7Kt3k0Y/q2pXFNe70r1/rqqmbtWTCI2/VvZbkY5HTAvpWP98a
+        zH7btqak+Gy49cTbRSsNZRezPcN8M19RXf1CGxYN3crdmRgsPvluVb96pvcZsQzlas3RxZOr
+        ZldOqItblnL+evv7JaUUzucx+iSM45k/fDV8vaADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsWy7bCSnO4DlgVxBq2/FS3mrF/DZrF6k69F
+        9+aZjBa9718xWVzeNYfN4t6a/6wWa4/cZbeY/O4Zo8WC4y2sFsu+vme3WLazn8Xi8XpuBx6P
+        w2/eM3tMbH7H7rFz1l12j02rOtk8Nn2axO5xYsZvFo91f14xefRtWcXosfl0tcfnTXIBXFFc
+        NimpOZllqUX6dglcGfcfP2Up2KleMfHGV5YGxocKXYycHBICJhITr81k6mLk4hAS2M0o0d/d
+        zQ6RkJF4c/4pSxcjB5AtLHH4cDFEzVdGiVPLXzGD1LAJaEu8XzCJFSQhIjCHUaLjyHc2EIdZ
+        YAKjxPGJ01lBqoQFgiSenZjJAmKzCKhK/P18F8zmFbCV2H3uKtQGeYmF/5knMPIsYGRYxSiZ
+        WlCcm55bbFhglJdarlecmFtcmpeul5yfu4kRHKRaWjsYT5yIP8QowMGoxMN74/y8OCHWxLLi
+        ytxDjBIczEoivBseAoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJ
+        MnFwSjUwZmgYbVLKnKVoePP40qU3E7SDvjg8D1fTbvD/lvQ6wSNW68f+hCVmxvXiD9xLf0fz
+        yV+x1/oquc5s7s4PIabprye5FfA4z9+6Idxpyq7yJVWGArEdBy94NrzqPq2cGPpPKWXbAb5P
+        cc++TzKX7Nt3YGeO5rqPexxPKDx5ffSQ4TX2Ww/VX85rVmIpzkg01GIuKk4EAGrvZJ9OAgAA
+X-CMS-MailID: 20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <7BB2D7AA7C900E43A912F2C92B380AEB@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7329b223-b8e0-4a54-976e-08d7e699e082
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2020 08:48:06.5744
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oizpWnph0UqMDWf9NVteOmpuuoNgXjRAwLif+puYzVJrI0xfWPJD5tQXPH24jG1OEFNfothDT+yEsUmAp4OOXgRqDK1Ay82mfViA338dYEo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5640
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf
+References: <CGME20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTIyIGF0IDA5OjIxICswMjAwLCBPbGVrc2lqIFJlbXBlbCB3cm90ZToN
-Cj4gQWRkIHN1cHBvcnQgZm9yIGZvbGxvd2luZyBwaHktbW9kZXM6IHJnbWlpLCByZ21paS1pZCwg
-cmdtaWktdHhpZCwNCj4gcmdtaWktcnhpZC4NCj4gDQo+IFRoaXMgUEhZIGhhcyBhbiBpbnRlcm5h
-bCBSWCBkZWxheSBvZiAxLjJucyBhbmQgbm8gZGVsYXkgZm9yIFRYLg0KPiANCj4gVGhlIHBhZCBz
-a2V3IHJlZ2lzdGVycyBhbGxvdyB0byBzZXQgdGhlIHRvdGFsIFRYIGRlbGF5IHRvIG1heCAxLjM4
-bnMNCj4gYW5kDQo+IHRoZSB0b3RhbCBSWCBkZWxheSB0byBtYXggb2YgMi41OG5zIChjb25maWd1
-cmFibGUgMS4zOG5zICsgYnVpbGQgaW4NCj4gMS4ybnMpIGFuZCBhIG1pbmltYWwgZGVsYXkgb2Yg
-MG5zLg0KPiANCj4gQWNjb3JkaW5nIHRvIHRoZSBSR01JSSB2MS4zIHNwZWNpZmljYXRpb24gdGhl
-IGRlbGF5IHByb3ZpZGVkIGJ5IFBDQg0KPiB0cmFjZXMNCj4gc2hvdWxkIGJlIGJldHdlZW4gMS41
-bnMgYW5kIDIuMG5zLiBUaGUgUkdNSUkgdjIuMCBhbGxvd3MgdG8gcHJvdmlkZQ0KPiB0aGlzDQo+
-IGRlbGF5IGJ5IE1BQyBvciBQSFkuIFNvLCB3ZSBjb25maWd1cmUgdGhpcyBQSFkgdG8gdGhlIGJl
-c3QgdmFsdWVzIHdlDQo+IGNhbg0KPiBnZXQgYnkgdGhpcyBIVzogVFggZGVsYXkgdG8gMS4zOG5z
-IChtYXggc3VwcG9ydGVkIHZhbHVlKSBhbmQgUlggZGVsYXkNCj4gdG8NCj4gMS44MG5zIChiZXN0
-IGNhbGN1bGF0ZWQgZGVsYXkpDQo+IA0KPiBUaGUgcGh5LW1vZGVzIGNhbiBzdGlsbCBiZSBmaW5l
-IHR1bmVkL292ZXJ3cml0dGVuIGJ5ICotc2tldy1wcw0KPiBkZXZpY2UgdHJlZSBwcm9wZXJ0aWVz
-IGRlc2NyaWJlZCBpbjoNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9t
-aWNyZWwta3N6OTB4MS50eHQNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9sZWtzaWogUmVtcGVsIDxv
-LnJlbXBlbEBwZW5ndXRyb25peC5kZT4NCg0KUmV2aWV3ZWQtYnk6IFBoaWxpcHBlIFNjaGVua2Vy
-IDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCg0KPiAtLS0NCj4gY2hhbmdlcyB2MzoN
-Cj4gLSBjaGFuZ2UgZGVsYXkgb24gUlggbGluZSB0byAxLjgwbnMNCj4gLSBhZGQgd2FybmluZyBp
-ZiAqLXNrZXctcHMgcHJvcGVydGllcyBhcmUgdXNlZCB0b2dldGhlciB3aXRoIG5vdCByZ21paQ0K
-PiAgIG1vZGUuIA0KPiANCj4gY2hhbmdlcyB2MjoNCj4gLSBjaGFuZ2UgUlhfSUQgdmFsdWUgZnJv
-bSAweDFhIHRvIDB4YS4gVGhlIG92ZXJmbG93IGJpdCB3YXMgZGV0ZWN0ZWQNCj4gYnkNCj4gICBG
-SUVMRF9QUkVQKCkgYnVpbGQgY2hlY2suDQo+ICAgUmVwb3J0ZWQtYnk6IGtidWlsZCB0ZXN0IHJv
-Ym90IDxsa3BAaW50ZWwuY29tPg0KPiANCj4gIGRyaXZlcnMvbmV0L3BoeS9taWNyZWwuYyB8IDEy
-OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0KPiAtDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMTIzIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9uZXQvcGh5L21pY3JlbC5jIGIvZHJpdmVycy9uZXQvcGh5L21pY3JlbC5j
-DQo+IGluZGV4IDA1ZDIwMzQzYjgxNjEuLjA0NTc4M2ViNGJjNzAgMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvbmV0L3BoeS9taWNyZWwuYw0KPiArKysgYi9kcml2ZXJzL25ldC9waHkvbWljcmVsLmMN
-Cj4gQEAgLTE5LDYgKzE5LDcgQEANCj4gICAqCQkJIGtzejk0NzcNCj4gICAqLw0KPiAgDQo+ICsj
-aW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4N
-Cj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9waHkuaD4N
-Cj4gQEAgLTQ5MCw5ICs0OTEsNTAgQEAgc3RhdGljIGludCBrc3o5MDIxX2NvbmZpZ19pbml0KHN0
-cnVjdCBwaHlfZGV2aWNlDQo+ICpwaHlkZXYpDQo+ICANCj4gIC8qIE1NRCBBZGRyZXNzIDB4MiAq
-Lw0KPiAgI2RlZmluZSBNSUlfS1NaOTAzMVJOX0NPTlRST0xfUEFEX1NLRVcJNA0KPiArI2RlZmlu
-ZSBNSUlfS1NaOTAzMVJOX1JYX0NUTF9NCQlHRU5NQVNLKDcsIDQpDQo+ICsjZGVmaW5lIE1JSV9L
-U1o5MDMxUk5fVFhfQ1RMX00JCUdFTk1BU0soMywgMCkNCj4gKw0KPiAgI2RlZmluZSBNSUlfS1Na
-OTAzMVJOX1JYX0RBVEFfUEFEX1NLRVcJNQ0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1JYRDMJ
-CUdFTk1BU0soMTUsIDEyKQ0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1JYRDIJCUdFTk1BU0so
-MTEsIDgpDQo+ICsjZGVmaW5lIE1JSV9LU1o5MDMxUk5fUlhEMQkJR0VOTUFTSyg3LCA0KQ0KPiAr
-I2RlZmluZSBNSUlfS1NaOTAzMVJOX1JYRDAJCUdFTk1BU0soMywgMCkNCj4gKw0KPiAgI2RlZmlu
-ZSBNSUlfS1NaOTAzMVJOX1RYX0RBVEFfUEFEX1NLRVcJNg0KPiArI2RlZmluZSBNSUlfS1NaOTAz
-MVJOX1RYRDMJCUdFTk1BU0soMTUsIDEyKQ0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1RYRDIJ
-CUdFTk1BU0soMTEsIDgpDQo+ICsjZGVmaW5lIE1JSV9LU1o5MDMxUk5fVFhEMQkJR0VOTUFTSyg3
-LCA0KQ0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1RYRDAJCUdFTk1BU0soMywgMCkNCj4gKw0K
-PiAgI2RlZmluZSBNSUlfS1NaOTAzMVJOX0NMS19QQURfU0tFVwk4DQo+ICsjZGVmaW5lIE1JSV9L
-U1o5MDMxUk5fR1RYX0NMSwkJR0VOTUFTSyg5LCA1KQ0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJO
-X1JYX0NMSwkJR0VOTUFTSyg0LCAwKQ0KPiArDQo+ICsvKiBLU1o5MDMxIGhhcyBpbnRlcm5hbCBS
-R01JSV9JRFJYID0gMS4ybnMgYW5kIFJHTUlJX0lEVFggPSAwbnMuIFRvDQo+ICsgKiBwcm92aWRl
-IGRpZmZlcmVudCBSR01JSSBvcHRpb25zIHdlIG5lZWQgdG8gY29uZmlndXJlIGRlbGF5IG9mZnNl
-dA0KPiArICogZm9yIGVhY2ggcGFkIHJlbGF0aXZlIHRvIGJ1aWxkIGluIGRlbGF5Lg0KPiArICov
-DQo+ICsvKiBrZWVwIHJ4IGFzICJObyBkZWxheSBhZGp1c3RtZW50IiBhbmQgc2V0IHJ4X2NsayB0
-byArMC42MG5zIHRvIGdldA0KPiBkZWxheXMgb2YNCj4gKyAqIDEuODBucw0KPiArICovDQo+ICsj
-ZGVmaW5lIFJYX0lECQkJCTB4Nw0KPiArI2RlZmluZSBSWF9DTEtfSUQJCQkweDE5DQo+ICsNCj4g
-Ky8qIHNldCByeCB0byArMC4zMG5zIGFuZCByeF9jbGsgdG8gLTAuOTBucyB0byBjb21wZW5zYXRl
-IHRoZQ0KPiArICogaW50ZXJuYWwgMS4ybnMgZGVsYXkuDQo+ICsgKi8NCj4gKyNkZWZpbmUgUlhf
-TkQJCQkJMHhjDQo+ICsjZGVmaW5lIFJYX0NMS19ORAkJCTB4MA0KPiArDQo+ICsvKiBzZXQgdHgg
-dG8gLTAuNDJucyBhbmQgdHhfY2xrIHRvICswLjk2bnMgdG8gZ2V0IDEuMzhucyBkZWxheSAqLw0K
-PiArI2RlZmluZSBUWF9JRAkJCQkweDANCj4gKyNkZWZpbmUgVFhfQ0xLX0lECQkJMHgxZg0KPiAr
-DQo+ICsvKiBzZXQgdHggYW5kIHR4X2NsayB0byAiTm8gZGVsYXkgYWRqdXN0bWVudCIgdG8ga2Vl
-cCAwbnMNCj4gKyAqIGRlYWx5DQo+ICsgKi8NCj4gKyNkZWZpbmUgVFhfTkQJCQkJMHg3DQo+ICsj
-ZGVmaW5lIFRYX0NMS19ORAkJCTB4Zg0KPiAgDQo+ICAvKiBNTUQgQWRkcmVzcyAweDFDICovDQo+
-ICAjZGVmaW5lIE1JSV9LU1o5MDMxUk5fRURQRAkJMHgyMw0KPiBAQCAtNTAxLDcgKzU0Myw4IEBA
-IHN0YXRpYyBpbnQga3N6OTAyMV9jb25maWdfaW5pdChzdHJ1Y3QgcGh5X2RldmljZQ0KPiAqcGh5
-ZGV2KQ0KPiAgc3RhdGljIGludCBrc3o5MDMxX29mX2xvYWRfc2tld192YWx1ZXMoc3RydWN0IHBo
-eV9kZXZpY2UgKnBoeWRldiwNCj4gIAkJCQkgICAgICAgY29uc3Qgc3RydWN0IGRldmljZV9ub2Rl
-DQo+ICpvZl9ub2RlLA0KPiAgCQkJCSAgICAgICB1MTYgcmVnLCBzaXplX3QgZmllbGRfc3osDQo+
-IC0JCQkJICAgICAgIGNvbnN0IGNoYXIgKmZpZWxkW10sIHU4DQo+IG51bWZpZWxkcykNCj4gKwkJ
-CQkgICAgICAgY29uc3QgY2hhciAqZmllbGRbXSwgdTgNCj4gbnVtZmllbGRzLA0KPiArCQkJCSAg
-ICAgICBib29sICp1cGRhdGUpDQo+ICB7DQo+ICAJaW50IHZhbFs0XSA9IHstMSwgLTIsIC0zLCAt
-NH07DQo+ICAJaW50IG1hdGNoZXMgPSAwOw0KPiBAQCAtNTE3LDYgKzU2MCw4IEBAIHN0YXRpYyBp
-bnQga3N6OTAzMV9vZl9sb2FkX3NrZXdfdmFsdWVzKHN0cnVjdA0KPiBwaHlfZGV2aWNlICpwaHlk
-ZXYsDQo+ICAJaWYgKCFtYXRjaGVzKQ0KPiAgCQlyZXR1cm4gMDsNCj4gIA0KPiArCSp1cGRhdGUg
-fD0gdHJ1ZTsNCj4gKw0KPiAgCWlmIChtYXRjaGVzIDwgbnVtZmllbGRzKQ0KPiAgCQluZXd2YWwg
-PSBwaHlfcmVhZF9tbWQocGh5ZGV2LCAyLCByZWcpOw0KPiAgCWVsc2UNCj4gQEAgLTU2NSw2ICs2
-MTAsNjcgQEAgc3RhdGljIGludCBrc3o5MDMxX2VuYWJsZV9lZHBkKHN0cnVjdCBwaHlfZGV2aWNl
-DQo+ICpwaHlkZXYpDQo+ICAJCQkgICAgIHJlZyB8IE1JSV9LU1o5MDMxUk5fRURQRF9FTkFCTEUp
-Ow0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgaW50IGtzejkwMzFfY29uZmlnX3JnbWlpX2RlbGF5KHN0
-cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYpDQo+ICt7DQo+ICsJdTE2IHJ4LCB0eCwgcnhfY2xrLCB0
-eF9jbGs7DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCXN3aXRjaCAocGh5ZGV2LT5pbnRlcmZhY2Up
-IHsNCj4gKwljYXNlIFBIWV9JTlRFUkZBQ0VfTU9ERV9SR01JSToNCj4gKwkJdHggPSBUWF9ORDsN
-Cj4gKwkJdHhfY2xrID0gVFhfQ0xLX05EOw0KPiArCQlyeCA9IFJYX05EOw0KPiArCQlyeF9jbGsg
-PSBSWF9DTEtfTkQ7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX1JH
-TUlJX0lEOg0KPiArCQl0eCA9IFRYX0lEOw0KPiArCQl0eF9jbGsgPSBUWF9DTEtfSUQ7DQo+ICsJ
-CXJ4ID0gUlhfSUQ7DQo+ICsJCXJ4X2NsayA9IFJYX0NMS19JRDsNCj4gKwkJYnJlYWs7DQo+ICsJ
-Y2FzZSBQSFlfSU5URVJGQUNFX01PREVfUkdNSUlfUlhJRDoNCj4gKwkJdHggPSBUWF9ORDsNCj4g
-KwkJdHhfY2xrID0gVFhfQ0xLX05EOw0KPiArCQlyeCA9IFJYX0lEOw0KPiArCQlyeF9jbGsgPSBS
-WF9DTEtfSUQ7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJ
-X1RYSUQ6DQo+ICsJCXR4ID0gVFhfSUQ7DQo+ICsJCXR4X2NsayA9IFRYX0NMS19JRDsNCj4gKwkJ
-cnggPSBSWF9ORDsNCj4gKwkJcnhfY2xrID0gUlhfQ0xLX05EOw0KPiArCQlicmVhazsNCj4gKwlk
-ZWZhdWx0Og0KPiArCQlyZXR1cm4gMDsNCj4gKwl9DQo+ICsNCj4gKwlyZXQgPSBwaHlfd3JpdGVf
-bW1kKHBoeWRldiwgMiwgTUlJX0tTWjkwMzFSTl9DT05UUk9MX1BBRF9TS0VXLA0KPiArCQkJICAg
-IEZJRUxEX1BSRVAoTUlJX0tTWjkwMzFSTl9SWF9DVExfTSwgcngpIHwNCj4gKwkJCSAgICBGSUVM
-RF9QUkVQKE1JSV9LU1o5MDMxUk5fVFhfQ1RMX00sIHR4KSk7DQo+ICsJaWYgKHJldCA8IDApDQo+
-ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gKwlyZXQgPSBwaHlfd3JpdGVfbW1kKHBoeWRldiwgMiwg
-TUlJX0tTWjkwMzFSTl9SWF9EQVRBX1BBRF9TS0VXLA0KPiArCQkJICAgIEZJRUxEX1BSRVAoTUlJ
-X0tTWjkwMzFSTl9SWEQzLCByeCkgfA0KPiArCQkJICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkwMzFS
-Tl9SWEQyLCByeCkgfA0KPiArCQkJICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkwMzFSTl9SWEQxLCBy
-eCkgfA0KPiArCQkJICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkwMzFSTl9SWEQwLCByeCkpOw0KPiAr
-CWlmIChyZXQgPCAwKQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJcmV0ID0gcGh5X3dyaXRl
-X21tZChwaHlkZXYsIDIsIE1JSV9LU1o5MDMxUk5fVFhfREFUQV9QQURfU0tFVywNCj4gKwkJCSAg
-ICBGSUVMRF9QUkVQKE1JSV9LU1o5MDMxUk5fVFhEMywgdHgpIHwNCj4gKwkJCSAgICBGSUVMRF9Q
-UkVQKE1JSV9LU1o5MDMxUk5fVFhEMiwgdHgpIHwNCj4gKwkJCSAgICBGSUVMRF9QUkVQKE1JSV9L
-U1o5MDMxUk5fVFhEMSwgdHgpIHwNCj4gKwkJCSAgICBGSUVMRF9QUkVQKE1JSV9LU1o5MDMxUk5f
-VFhEMCwgdHgpKTsNCj4gKwlpZiAocmV0IDwgMCkNCj4gKwkJcmV0dXJuIHJldDsNCj4gKw0KPiAr
-CXJldHVybiBwaHlfd3JpdGVfbW1kKHBoeWRldiwgMiwgTUlJX0tTWjkwMzFSTl9DTEtfUEFEX1NL
-RVcsDQo+ICsJCQkgICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkwMzFSTl9HVFhfQ0xLLCB0eF9jbGsp
-IHwNCj4gKwkJCSAgICAgRklFTERfUFJFUChNSUlfS1NaOTAzMVJOX1JYX0NMSywgcnhfY2xrKSk7
-DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbnQga3N6OTAzMV9jb25maWdfaW5pdChzdHJ1Y3QgcGh5
-X2RldmljZSAqcGh5ZGV2KQ0KPiAgew0KPiAgCWNvbnN0IHN0cnVjdCBkZXZpY2UgKmRldiA9ICZw
-aHlkZXYtPm1kaW8uZGV2Ow0KPiBAQCAtNTk3LDIxICs3MDMsMzMgQEAgc3RhdGljIGludCBrc3o5
-MDMxX2NvbmZpZ19pbml0KHN0cnVjdCBwaHlfZGV2aWNlDQo+ICpwaHlkZXYpDQo+ICAJfSB3aGls
-ZSAoIW9mX25vZGUgJiYgZGV2X3dhbGtlcik7DQo+ICANCj4gIAlpZiAob2Zfbm9kZSkgew0KPiAr
-CQlib29sIHVwZGF0ZSA9IGZhbHNlOw0KPiArDQo+ICsJCWlmIChwaHlfaW50ZXJmYWNlX2lzX3Jn
-bWlpKHBoeWRldikpIHsNCj4gKwkJCXJlc3VsdCA9IGtzejkwMzFfY29uZmlnX3JnbWlpX2RlbGF5
-KHBoeWRldik7DQo+ICsJCQlpZiAocmVzdWx0IDwgMCkNCj4gKwkJCQlyZXR1cm4gcmVzdWx0Ow0K
-PiArCQl9DQo+ICsNCj4gIAkJa3N6OTAzMV9vZl9sb2FkX3NrZXdfdmFsdWVzKHBoeWRldiwgb2Zf
-bm9kZSwNCj4gIAkJCQlNSUlfS1NaOTAzMVJOX0NMS19QQURfU0tFVywgNSwNCj4gLQkJCQljbGtf
-c2tld3MsIDIpOw0KPiArCQkJCWNsa19za2V3cywgMiwgJnVwZGF0ZSk7DQo+ICANCj4gIAkJa3N6
-OTAzMV9vZl9sb2FkX3NrZXdfdmFsdWVzKHBoeWRldiwgb2Zfbm9kZSwNCj4gIAkJCQlNSUlfS1Na
-OTAzMVJOX0NPTlRST0xfUEFEX1NLRVcsIDQsDQo+IC0JCQkJY29udHJvbF9za2V3cywgMik7DQo+
-ICsJCQkJY29udHJvbF9za2V3cywgMiwgJnVwZGF0ZSk7DQo+ICANCj4gIAkJa3N6OTAzMV9vZl9s
-b2FkX3NrZXdfdmFsdWVzKHBoeWRldiwgb2Zfbm9kZSwNCj4gIAkJCQlNSUlfS1NaOTAzMVJOX1JY
-X0RBVEFfUEFEX1NLRVcsIDQsDQo+IC0JCQkJcnhfZGF0YV9za2V3cywgNCk7DQo+ICsJCQkJcnhf
-ZGF0YV9za2V3cywgNCwgJnVwZGF0ZSk7DQo+ICANCj4gIAkJa3N6OTAzMV9vZl9sb2FkX3NrZXdf
-dmFsdWVzKHBoeWRldiwgb2Zfbm9kZSwNCj4gIAkJCQlNSUlfS1NaOTAzMVJOX1RYX0RBVEFfUEFE
-X1NLRVcsIDQsDQo+IC0JCQkJdHhfZGF0YV9za2V3cywgNCk7DQo+ICsJCQkJdHhfZGF0YV9za2V3
-cywgNCwgJnVwZGF0ZSk7DQo+ICsNCj4gKwkJaWYgKHVwZGF0ZSAmJiBwaHlkZXYtPmludGVyZmFj
-ZSAhPQ0KPiBQSFlfSU5URVJGQUNFX01PREVfUkdNSUkpDQo+ICsJCQlwaHlkZXZfd2FybihwaHlk
-ZXYsDQo+ICsJCQkJICAgICIqLXNrZXctcHMgdmFsdWVzIHNob3VsZCBiZSB1c2VkDQo+IG9ubHkg
-d2l0aCBwaHktbW9kZSA9IFwicmdtaWlcIlxuIik7DQo+ICANCj4gIAkJLyogU2lsaWNvbiBFcnJh
-dGEgU2hlZXQgKERTODAwMDA2OTFEIG9yIERTODAwMDA2OTJEKToNCj4gIAkJICogV2hlbiB0aGUg
-ZGV2aWNlIGxpbmtzIGluIHRoZSAxMDAwQkFTRS1UIHNsYXZlIG1vZGUNCj4gb25seSwNCg==
+This patch fix nr_isolate_* mismatch problem between cma and dirty
+lazyfree page.
+
+If try_to_unmap_one is used for reclaim and it detects a dirty lazyfree
+page, then the lazyfree page is changed to a normal anon page having
+SwapBacked by commit 802a3a92ad7a ("mm: reclaim MADV_FREE pages"). Even
+with the change, reclaim context correctly counts isolated files because
+it uses is_file_lru to distinguish file. And the change to anon is not
+happened if try_to_unmap_one is used for migration. So migration context
+like compaction also correctly counts isolated files even though it uses
+page_is_file_lru insted of is_file_lru. Recently page_is_file_cache was
+renamed to page_is_file_lru by commit 9de4f22a60f7 ("mm: code cleanup for
+MADV_FREE").
+
+But the nr_isolate_* mismatch problem happens on cma alloc. There is
+reclaim_clean_pages_from_list which is being used only by cma. It was
+introduced by commit 02c6de8d757c ("mm: cma: discard clean pages during
+contiguous allocation instead of migration") to reclaim clean file pages
+without migration. The cma alloc uses both reclaim_clean_pages_from_list
+and migrate_pages, and it uses page_is_file_lru to count isolated
+files. If there are dirty lazyfree pages allocated from cma memory
+region, the pages are counted as isolated file at the beginging but are
+counted as isolated anon after finished.
+
+Mem-Info:
+Node 0 active_anon:3045904kB inactive_anon:611448kB active_file:14892kB inactive_file:205636kB unevictable:10416kB isolated(anon):0kB isolated(file):37664kB mapped:630216kB dirty:384kB writeback:0kB shmem:42576kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
+
+Like log above, there was too much isolated file, 37664kB, which
+triggers too_many_isolated in reclaim when there is no isolated file in
+system wide. It could be reproducible by running two programs, doing
+MADV_FREE, writing and doing cma alloc, respectively. Although isolated
+anon is 0, I found that the internal value of isolated anon was the
+negative value of isolated file.
+
+Fix this by compensating the isolated count for both LRU lists. Count
+non-discarded lazyfree pages in shrink_page_list, then compensate the
+counted number in reclaim_clean_pages_from_list.
+
+Reported-by: Yong-Taek Lee <ytk.lee@samsung.com>
+Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+Suggested-by: and Acked-by: Minchan Kim <minchan@kernel.org>
+---
+v2: do not change logic regarding lazyfree
+    just count dirty lazyfree pages and fix the count issue
+v1: skip dirty lazyfree pages in reclaim_clean_pages_from_list
+---
+ include/linux/vmstat.h |  1 +
+ mm/vmscan.c            | 26 ++++++++++++++++++++------
+ 2 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 292485f3d24d..10cc932e209a 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -29,6 +29,7 @@ struct reclaim_stat {
+ 	unsigned nr_activate[2];
+ 	unsigned nr_ref_keep;
+ 	unsigned nr_unmap_fail;
++	unsigned nr_lazyfree_fail;
+ };
+ 
+ enum writeback_stat_item {
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b06868fc4926..cd6881810ee9 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1295,11 +1295,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 		 */
+ 		if (page_mapped(page)) {
+ 			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
++			bool lazyfree = PageAnon(page) && !PageSwapBacked(page);
+ 
+ 			if (unlikely(PageTransHuge(page)))
+ 				flags |= TTU_SPLIT_HUGE_PMD;
++
+ 			if (!try_to_unmap(page, flags)) {
+ 				stat->nr_unmap_fail += nr_pages;
++				if (lazyfree && PageSwapBacked(page))
++					stat->nr_lazyfree_fail += nr_pages;
+ 				goto activate_locked;
+ 			}
+ 		}
+@@ -1491,8 +1495,8 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
+ 		.priority = DEF_PRIORITY,
+ 		.may_unmap = 1,
+ 	};
+-	struct reclaim_stat dummy_stat;
+-	unsigned long ret;
++	struct reclaim_stat stat;
++	unsigned long reclaimed;
+ 	struct page *page, *next;
+ 	LIST_HEAD(clean_pages);
+ 
+@@ -1504,11 +1508,21 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
+ 		}
+ 	}
+ 
+-	ret = shrink_page_list(&clean_pages, zone->zone_pgdat, &sc,
+-			TTU_IGNORE_ACCESS, &dummy_stat, true);
++	reclaimed = shrink_page_list(&clean_pages, zone->zone_pgdat, &sc,
++			TTU_IGNORE_ACCESS, &stat, true);
+ 	list_splice(&clean_pages, page_list);
+-	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_FILE, -ret);
+-	return ret;
++	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_FILE, -reclaimed);
++	/*
++	 * Since lazyfree pages are isolated from file LRU from the beginning,
++	 * they will rotate back to anonymous LRU in the end if it failed to
++	 * discard so isolated count will be mismatched.
++	 * Compensate the isolated count for both LRU lists.
++	 */
++	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_ANON,
++					stat.nr_lazyfree_fail);
++	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_FILE,
++					-stat.nr_lazyfree_fail);
++	return reclaimed;
+ }
+ 
+ /*
+-- 
+2.13.7
+
