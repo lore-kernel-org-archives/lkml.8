@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5CCC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04772C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D56B2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54DF20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549949;
-	bh=ipGa19nKKTFXIKRlrk5uJWMpFfYkR2QvtOVETI2Td8s=;
+	s=default; t=1587549952;
+	bh=XK9eMSM/yxlwNs6spFUXAH1CLJpeXLHJC3qRUonC59c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJ9MgTsAuDS12LZ1LRxShfvh6UO6BV3h5CCVyduPXpQuMPqjwNnASE/T4vv2V4xYh
-	 +sbD85DSMcog+nC2O9kc8SPBZeE5Ajzepxod9JDIQlWMR5A4KjavAfRVxuyVrFz8+E
-	 NjcXNU+JF0MlHrEchYH1KgKTJrvTcY5vob5iSFvI=
+	b=be5wHKHcjZa1XembSfX8BPuKtq32kpW6673Wld8VeyK/lr0HuH5s1P2RPPxl9zu9F
+	 AAA0RIPsIJJWuuVsr6f+5ir5MpIMIaYbCWadNnK6BE98VH44l46JOxDwZjUqgPVRy6
+	 HZjUOGhNW0s4AeX52Kpln7kSkDbko6n+otB1NFtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgDVKFr (ORCPT
+        id S1728242AbgDVKFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57114 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:05:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbgDVKFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:05:43 -0400
+        id S1728225AbgDVKFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:05:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82FA220781;
-        Wed, 22 Apr 2020 10:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E71C42075A;
+        Wed, 22 Apr 2020 10:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549943;
-        bh=ipGa19nKKTFXIKRlrk5uJWMpFfYkR2QvtOVETI2Td8s=;
+        s=default; t=1587549945;
+        bh=XK9eMSM/yxlwNs6spFUXAH1CLJpeXLHJC3qRUonC59c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nSfU+F8miE+Xdi28WazhQa69lnLHohN5VOQbPxgONprZDYxEfZGofqmEMii/JE/+U
-         BlLSU+Tp3+5HoOTr/8wSER27z1k/zu9c8hLFk0ep1fTYDYhegatWLifox80melMkgk
-         /Wv9V39gWOtljfKoxSvX3awRRuMMcz2kqftMor5s=
+        b=w7ENCVFuq3fetWKESrlZAl+kE24dQK8AFaT3tl0bU3qzKq90FWWL3cIBOvTzKkzIx
+         LusbvnyiVJfNXEbIi0IlSdIC8r/HC4saTp6XPCrJ+THrvHB1JJfT95DBFHS0EpQAd7
+         cgoQpBmX9nnnBppN+sX6y/LIO3lP17iSyI3DN1/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.9 053/125] Input: i8042 - add Acer Aspire 5738z to nomux list
-Date:   Wed, 22 Apr 2020 11:56:10 +0200
-Message-Id: <20200422095042.103805039@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 071/125] jbd2: improve comments about freeing data buffers whose page mapping is NULL
+Date:   Wed, 22 Apr 2020 11:56:28 +0200
+Message-Id: <20200422095044.766641370@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -59,52 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit ebc68cedec4aead47d8d11623d013cca9bf8e825 upstream.
+commit 780f66e59231fcf882f36c63f287252ee47cc75a upstream.
 
-The Acer Aspire 5738z has a button to disable (and re-enable) the
-touchpad next to the touchpad.
+Improve comments in jbd2_journal_commit_transaction() to describe why
+we don't need to clear the buffer_mapped bit for freeing file mapping
+buffers whose page mapping is NULL.
 
-When this button is pressed a LED underneath indicates that the touchpad
-is disabled (and an event is send to userspace and GNOME shows its
-touchpad enabled / disable OSD thingie).
-
-So far so good, but after re-enabling the touchpad it no longer works.
-
-The laptop does not have an external ps2 port, so mux mode is not needed
-and disabling mux mode fixes the touchpad no longer working after toggling
-it off and back on again, so lets add this laptop model to the nomux list.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200331123947.318908-1-hdegoede@redhat.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20200217112706.20085-1-yi.zhang@huawei.com
+Fixes: c96dceeabf76 ("jbd2: do not clear the BH_Mapped flag when forgetting a metadata buffer")
+Suggested-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/serio/i8042-x86ia64io.h |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/jbd2/commit.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -534,6 +534,17 @@ static const struct dmi_system_id __init
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo LaVie Z"),
- 		},
- 	},
-+	{
-+		/*
-+		 * Acer Aspire 5738z
-+		 * Touchpad stops working in mux mode when dis- + re-enabled
-+		 * with the touchpad enable/disable toggle hotkey
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5738"),
-+		},
-+	},
- 	{ }
- };
- 
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -990,9 +990,10 @@ restart_loop:
+ 			 * journalled data) we need to unmap buffer and clear
+ 			 * more bits. We also need to be careful about the check
+ 			 * because the data page mapping can get cleared under
+-			 * out hands, which alse need not to clear more bits
+-			 * because the page and buffers will be freed and can
+-			 * never be reused once we are done with them.
++			 * our hands. Note that if mapping == NULL, we don't
++			 * need to make buffer unmapped because the page is
++			 * already detached from the mapping and buffers cannot
++			 * get reused.
+ 			 */
+ 			mapping = READ_ONCE(bh->b_page->mapping);
+ 			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
 
 
