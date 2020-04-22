@@ -2,103 +2,113 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB182C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207F6C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97A012076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1962084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 21:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="A94S6RHh"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ErRlwMxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgDVVZ5 (ORCPT
+        id S1726636AbgDVV0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 17:25:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54002 "EHLO
+        Wed, 22 Apr 2020 17:26:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgDVVZ5 (ORCPT
+        with ESMTP id S1726066AbgDVV0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:25:57 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E12C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:25:56 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id r7so2682633edo.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=mRuIQRX3UeU0blGuPEnScFGYp7NwM8RgwXBeGeDaOVI=;
-        b=A94S6RHhP0FD2gZNczyvML/aEqAk/Z6paQl9qmz/cmB0Hdp710uzwwkRCp3vHY9vlX
-         TEC1whYyICjn1NEDIOmwEmZG1PBmQenTO+bnRLHfzUToY+MRZpUQ735Iyhw4Z/1Mq+na
-         hMNwUgeK/gGYq0eYdZ2D0C5VKgbR6Rmd1J0eGPLndbdrenN/dvkyZ5Bncgj06bX9O/b4
-         LiIbyX2fgDz6WwWg/a4xOkLXK2JcdVYh/5nigWxvJAZ7R0AnssIo6MWVYfhYNIpg5DB+
-         UpMna9h/UeJTRF/Xk7P1tSyzWZeYI8LNuuQcBJsI0gkyjUegRO38KgF8U7NlCuibZjtr
-         8oxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=mRuIQRX3UeU0blGuPEnScFGYp7NwM8RgwXBeGeDaOVI=;
-        b=fxoKE7YOgSUzsFrPbd/ZjMah6/DV8XbcLWdtnSKaOLBgfi5I81rOCYa65brGpfWX3G
-         iG/ZL6K+i7kxmIXVSUpVnqjFPZlpkM9trrwJXMdyYbaqg8nbfpNkDEljGttytj2BpwzL
-         lCXf5FVTpKshPCBvN6ky1F47DTyaD4rjztzV/wZYbS7ELJAT7JcOaV5t7+VsM5ZZRX6W
-         RsPtuWEn5szCJ/qPWYP5nTYRWDiWquqKkv5rOVFLh0b4HZlMYGDiicoKqKLquXWHn9y4
-         8mU7YyaeJlk13pzAjII1lFVzQXlwOUISQZ5FyRb2fNkav5DEN3HyukisYku5U0DfTX8s
-         Z5oA==
-X-Gm-Message-State: AGi0PuYkvxdYAJIJoPltadzZr03JYrWQgiA5oJLpVoC8qZwTz9iaqCL4
-        9P9RRNn+rUOgE/IfXKCVeomdHyyp43OF1Q0IKgSh
-X-Google-Smtp-Source: APiQypKDbUBEnzDY7XXQBQy9V9Ty73Piah8yLs/mTDj7UdFZP9Jmx8O3fzY7/dgsubMcaJ2oXKarinHY5Iptk1hVcso=
-X-Received: by 2002:a05:6402:1b0b:: with SMTP id by11mr460843edb.269.1587590755431;
- Wed, 22 Apr 2020 14:25:55 -0700 (PDT)
+        Wed, 22 Apr 2020 17:26:11 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C620C03C1A9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 14:26:11 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F0DC10035D7F52705C6D57D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:c100:35d7:f527:5c6:d57d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7B2511EC0D10;
+        Wed, 22 Apr 2020 23:26:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587590769;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=X97GDs7zUOOEwi+VzwvV8BMbJR1hFYVTTX0qpebTCh0=;
+        b=ErRlwMxXmkcWC7xLafWBUtoif4ZttGvQ0ELm/XvU5Z891wTqTziknSEADz8tUwlEeYGBPz
+        D0qCO31lhiMMXfdNuBKxujfuzKrtg6VnjdWCIAhJ25oA3Lm7ZkrjSr5h/OY6/DcC5rLZU9
+        o2Y9HvznpSD/GLbk6z3Pghskc1C3+i8=
+Date:   Wed, 22 Apr 2020 23:26:05 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michael Matz <matz@suse.de>, Jakub Jelinek <jakub@redhat.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] x86: fix early boot crash on gcc-10
+Message-ID: <20200422212605.GI26846@zn.tnic>
+References: <20200417090909.GC7322@zn.tnic>
+ <CAKwvOdnFXPBJsAUD++HtYS5JiR2KmX73M5GAUe-tvX-JYV7DaA@mail.gmail.com>
+ <CAKwvOdmNwNwa6rMC27-QZq8VDrYdTQeQqss-bAwF1EMmnAHxdw@mail.gmail.com>
+ <20200417190607.GY2424@tucnak>
+ <CAKwvOdkkbWgWmNthq5KijCdtatM9PEAaCknaq8US9w4qaDuwug@mail.gmail.com>
+ <alpine.LSU.2.21.2004201401120.11688@wotan.suse.de>
+ <20200422102309.GA26846@zn.tnic>
+ <CAKwvOd=Dza3UBfeUzs2RW6ko5fDr3jYeGQAYpJXqyEVns6DJHg@mail.gmail.com>
+ <20200422192113.GG26846@zn.tnic>
+ <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 22 Apr 2020 17:25:44 -0400
-Message-ID: <CAHC9VhQNo=Z3G-K8KvTGiu0Fzmwv4byFQriNuTsu+vwnx85YXg@mail.gmail.com>
-Subject: [GIT PULL] Audit fixes for v5.7 (#1)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdkbcO8RzoafON2mGiSy5P96P5+aY8GySysF2my7q+nTqw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Apr 22, 2020 at 02:05:13PM -0700, Nick Desaulniers wrote:
+> s/functions/statements/
+> or
+> s/functions/function calls/
+> 
+> Sorry to be pedantic and bikeshed a comment! *ducks*
 
-One small audit patch for the next v5.7-rcX release.  You can read the
-commit description, but basically it fixes a missing length check on
-input from userspace, nothing crazy.
+Yeah, you beter duck! :-P
 
-Thanks,
--Paul
---
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+> With that you can add my:
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
- Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+Ok ok, will fix.
 
-are available in the Git repository at:
+> Filed: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94722
+> (Maybe a link to that might be helpful in the comment, for future
+> travelers? But I don't feel strongly about that either way, and
+> trust+defer to your judgement).
 
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git
-   tags/audit-pr-20200422
+Here's an answer to that, also from upthread:
 
-for you to fetch changes up to 763dafc520add02a1f4639b500c509acc0ea8e5b:
+https://lkml.kernel.org/r/20200316180303.GR2156@tucnak
 
- audit: check the length of userspace generated audit records
-   (2020-04-20 17:10:58 -0400)
+Btw lore.kernel.org has this cool mbox.gz feature:
 
-----------------------------------------------------------------
-audit/stable-5.7 PR 20200422
+https://lore.kernel.org/lkml/20200316180303.GR2156@tucnak/t.mbox.gz
 
-----------------------------------------------------------------
-Paul Moore (1):
-     audit: check the length of userspace generated audit records
+This way, you can grep the whole thread, open it with a proper mail
+program etc. Very useful for catching up on threads.
 
-kernel/audit.c | 3 +++
-1 file changed, 3 insertions(+)
+Thx.
 
 -- 
-paul moore
-www.paul-moore.com
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
