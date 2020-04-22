@@ -2,75 +2,123 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E301C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B313C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E298020882
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2243120882
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgDVM23 (ORCPT
+        id S1726463AbgDVM2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:28:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40608 "EHLO mx2.suse.de"
+        Wed, 22 Apr 2020 08:28:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:49304 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgDVM22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:28:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6DC6AAEBF;
-        Wed, 22 Apr 2020 12:28:26 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 14:28:26 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-In-Reply-To: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
-Message-ID: <alpine.LSU.2.21.2004221411140.28581@pobox.suse.cz>
-References: <cover.1587131959.git.jpoimboe@redhat.com> <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725968AbgDVM2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:28:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2F6431B;
+        Wed, 22 Apr 2020 05:28:35 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3FA3D3F6CF;
+        Wed, 22 Apr 2020 05:28:35 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        James Morse <james.morse@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: arm_sdei: Drop check for /firmware/ node and always register driver
+Date:   Wed, 22 Apr 2020 13:28:23 +0100
+Message-Id: <20200422122823.1390-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
-> +		       unsigned int symindex, unsigned int relsec,
-> +		       struct module *me)
-> +{
-> +	int ret;
-> +	bool early = me->state == MODULE_STATE_UNFORMED;
-> +	void *(*write)(void *, const void *, size_t) = memcpy;
-> +
-> +	if (!early) {
-> +		write = s390_kernel_write;
-> +		mutex_lock(&text_mutex);
-> +	}
-> +
-> +	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-> +				   write);
-> +
-> +	if (!early)
-> +		mutex_unlock(&text_mutex);
-> +
-> +	return ret;
-> +}
+As with most of the drivers, let us register this driver unconditionally
+by dropping the checks for presence of firmware nodes(DT) or entries(ACPI).
 
-It means that you can take text_mutex the second time here because it 
-is still taken in klp_init_object_loaded(). It is removed later in the 
-series though. The same applies for x86 patch.
+Further, as mentioned in the commit acafce48b07b ("firmware: arm_sdei:
+Fix DT platform device creation"), the core takes care of creation of
+platform device when the appropriate device node is found and probe
+is called accordingly.
 
-Also, s390_kernel_write() grabs s390_kernel_write_lock spinlock before 
-writing anything, so maybe text_mutex is not really needed as long as 
-s390_kernel_write is called everywhere for text patching.
+Let us check only for the presence of ACPI firmware entry before creating
+the platform device and flag warning if we fail.
 
-Miroslav
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/firmware/arm_sdei.c | 37 ++++++++++++-------------------------
+ 1 file changed, 12 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index 334c8be0c11f..5afd7409e6fa 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -1079,26 +1079,9 @@ static struct platform_driver sdei_driver = {
+ 	.probe		= sdei_probe,
+ };
+ 
+-static bool __init sdei_present_dt(void)
+-{
+-	struct device_node *np, *fw_np;
+-
+-	fw_np = of_find_node_by_name(NULL, "firmware");
+-	if (!fw_np)
+-		return false;
+-
+-	np = of_find_matching_node(fw_np, sdei_of_match);
+-	if (!np)
+-		return false;
+-	of_node_put(np);
+-
+-	return true;
+-}
+-
+ static bool __init sdei_present_acpi(void)
+ {
+ 	acpi_status status;
+-	struct platform_device *pdev;
+ 	struct acpi_table_header *sdei_table_header;
+ 
+ 	if (acpi_disabled)
+@@ -1113,20 +1096,24 @@ static bool __init sdei_present_acpi(void)
+ 	if (ACPI_FAILURE(status))
+ 		return false;
+ 
+-	pdev = platform_device_register_simple(sdei_driver.driver.name, 0, NULL,
+-					       0);
+-	if (IS_ERR(pdev))
+-		return false;
+-
+ 	return true;
+ }
+ 
+ static int __init sdei_init(void)
+ {
+-	if (sdei_present_dt() || sdei_present_acpi())
+-		platform_driver_register(&sdei_driver);
++	int ret = platform_driver_register(&sdei_driver);
+ 
+-	return 0;
++	if (!ret && sdei_present_acpi()) {
++		struct platform_device *pdev;
++
++		pdev = platform_device_register_simple(sdei_driver.driver.name,
++						       0, NULL, 0);
++		if (IS_ERR(pdev))
++			pr_info("Failed to register ACPI:SDEI platform device %ld\n",
++				PTR_ERR(pdev));
++	}
++
++	return ret;
+ }
+ 
+ /*
+-- 
+2.17.1
+
