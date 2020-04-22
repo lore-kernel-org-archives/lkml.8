@@ -2,110 +2,105 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7152CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D21CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFC5206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C37C20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587523813;
+	bh=jeKrgn+vYwXwg75fzJr3ucFd8MMCv3flh6yGk+f3Pv0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=kms6PrhF+azaINHTpCCntF8O7M07lMsQrWgZ5ol/45S8U3zIhTceosuzFRrP0I1WB
+	 +YEmfB2A7sCOhFcAWzNRmqEo4F7uu+jf1Js+k6Aa4GSuP/wFCJP19ReMgsfosJM6oC
+	 S9BGKkXVpGqAptUxnoUVP5SLZPMn3OCf4rBTkQlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgDVCqi (ORCPT
+        id S1726399AbgDVCuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725912AbgDVCqi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:46:38 -0400
-X-Greylist: delayed 27013 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 21 Apr 2020 19:46:37 PDT
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF37C0610D6;
-        Tue, 21 Apr 2020 19:46:37 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jR5P8-0081T1-82; Wed, 22 Apr 2020 02:46:26 +0000
-Date:   Wed, 22 Apr 2020 03:46:26 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 5/5] sysctl: pass kernel pointers to ->proc_handler
-Message-ID: <20200422024626.GI23230@ZenIV.linux.org.uk>
-References: <20200421171539.288622-1-hch@lst.de>
- <20200421171539.288622-6-hch@lst.de>
- <20200421191615.GE23230@ZenIV.linux.org.uk>
+        Tue, 21 Apr 2020 22:50:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgDVCuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:50:12 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53D3206D5;
+        Wed, 22 Apr 2020 02:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587523811;
+        bh=jeKrgn+vYwXwg75fzJr3ucFd8MMCv3flh6yGk+f3Pv0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=XoGzn7sHNE9IV5gmu3y02AdQzZFYq/yUkPoRUxGhldCDhrsPHbLB5xZea4Zx40jwD
+         qV60y+HChfjrWQ6PhFaq/dD091NV2zUNxxO15vnCeBT7gvsJqzEaXC3GzYNieanfJc
+         XodtmPFw/1zIe5JVy3VK4T5Fl5pGKdrHf9p+9OoQ=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421191615.GE23230@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200419121808.440780-2-bryan.odonoghue@linaro.org>
+References: <20200419121808.440780-1-bryan.odonoghue@linaro.org> <20200419121808.440780-2-bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH 1/3] clk: qcom: Add DT bindings for msm8939 gcc
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        robh+dt@kernel.org
+Date:   Tue, 21 Apr 2020 19:50:10 -0700
+Message-ID: <158752381090.132238.9198658810848946174@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 08:16:15PM +0100, Al Viro wrote:
-> On Tue, Apr 21, 2020 at 07:15:39PM +0200, Christoph Hellwig wrote:
-> > Instead of having all the sysctl handlers deal with user pointers, which
-> > is rather hairy in terms of the BPF interaction, copy the input to and
-> > from  userspace in common code.  This also means that the strings are
-> > always NUL-terminated by the common code, making the API a little bit
-> > safer.
-> > 
-> > As most handler just pass through the data to one of the common handlers
-> > a lot of the changes are mechnical.
-> 
-> > @@ -564,27 +564,38 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *buf,
-> >  	if (!table->proc_handler)
-> >  		goto out;
-> >  
-> > -	error = BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, buf, &count,
-> > -					   ppos, &new_buf);
-> > +	if (write) {
-> > +		kbuf = memdup_user_nul(ubuf, count);
-> > +		if (IS_ERR(kbuf)) {
-> > +			error = PTR_ERR(kbuf);
-> > +			goto out;
-> > +		}
-> > +	} else {
-> > +		error = -ENOMEM;
-> > +		kbuf = kzalloc(count, GFP_KERNEL);
-> 
-> Better allocate count + 1 bytes here, that way a lot of insanity in the
-> instances can be simply converted to snprintf().  Yes, I know it'll bring
-> the Church Of Avoiding The Abomination Of Sprintf out of the woodwork,
-> but...
+Quoting Bryan O'Donoghue (2020-04-19 05:18:06)
+> diff --git a/include/dt-bindings/clock/qcom,gcc-msm8939.h b/include/dt-bi=
+ndings/clock/qcom,gcc-msm8939.h
+> new file mode 100644
+> index 000000000000..f9ac936590f3
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,gcc-msm8939.h
+> @@ -0,0 +1,215 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright 2020 Linaro Limited
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 
-FWIW, consider e.g. net/sunrpc/sysctl.c:
+Please remove the boiler plate that SPDX already covers.
 
-Nevermind that the read side should be simply
-		int err = proc_douintvec(table, write, buffer, lenp, ppos);
-		/* Display the RPC tasks on writing to rpc_debug */
-		if (!err && strcmp(table->procname, "rpc_debug") == 0)
-			rpc_show_tasks(&init_net);
-		return err;
-the write side would become
-		len = snprintf(buffer, *lenp + 1, "0x%04x\n",
-				*(unsigned int *)table->data);
-		if (len > *lenp)
-			len = *lenp;
-		*lenp -= len;
-		*ppos += len;
-		return 0;
-and I really wonder if lifting the trailing boilerplate into the caller would've
-been better.  Note that e.g. gems like
-                        if (!first)
-                                err = proc_put_char(&buffer, &left, '\t');
-                        if (err)
-                                break;
-                        err = proc_put_long(&buffer, &left, lval, neg);
-                        if (err)
-                                break;
-are due to lack of snprintf-to-user; now, lose the "to user" part and we suddenly
-can be rid of that stuff...
+> diff --git a/include/dt-bindings/reset/qcom,gcc-msm8939.h b/include/dt-bi=
+ndings/reset/qcom,gcc-msm8939.h
+> new file mode 100644
+> index 000000000000..a8c8135ce24d
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/qcom,gcc-msm8939.h
+> @@ -0,0 +1,119 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright 2020 Linaro Limited
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+Same.
