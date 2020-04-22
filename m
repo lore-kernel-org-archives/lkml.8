@@ -2,112 +2,173 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDB4C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D727DC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A88206B9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:40:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="Ki4mBfA7"
+	by mail.kernel.org (Postfix) with ESMTP id BDD55206B9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgDVIka (ORCPT
+        id S1726695AbgDVIl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:40:30 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:41424 "EHLO web0081.zxcs.nl"
+        Wed, 22 Apr 2020 04:41:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45282 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726552AbgDVIk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:40:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
-        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
-        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vpGUfuTiVLd2vA91ue4c0K9V/4VZKL+mbW8WcjO/LrA=; b=Ki4mBfA7ZnNAsIT4ktrRzJONzz
-        qGcH4XX8vK9hT0WegeJHXHi9GvfaTzDrFsGGzgrIGxVbAd1awjUtXZFs+hVnKXbXeoLyFQr5KtIhP
-        xlYu37mmaPdqJlz6jaJwzzlIzXOseOphSdyN+fY8h8JEb9IvKQLpMTBV59EIQdTAuW734Vupni4Ew
-        UDtTt1uueJRAdHdKXCAh2bm8uKhnnhxF2mqQyggxYa3shekii9sWDk8UbiHKGeVw2RoqY2QbFUydF
-        O5qgvGJ81fO9ehCniBZrn1P3xFqFjxgkMcwboDpUly3hRVJ2fFevFnkoLglHEQefQwj65hHLEFFDb
-        lkr/7p3w==;
-Received: from spamrelay.zxcs.nl ([185.104.28.12]:50258 helo=mail-slave01.zxcs.nl)
-        by web0081.zxcs.nl with esmtp (Exim 4.93.0.4)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jRAvU-002uIq-5s; Wed, 22 Apr 2020 10:40:12 +0200
+        id S1725786AbgDVIl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:41:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 63498AF2C;
+        Wed, 22 Apr 2020 08:41:23 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 736CC1E0E5A; Wed, 22 Apr 2020 10:41:23 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 10:41:23 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V9 08/11] fs: Lift XFS_IDONTCACNE to the VFS layer
+Message-ID: <20200422084123.GB8775@quack2.suse.cz>
+References: <20200421191754.3372370-1-ira.weiny@intel.com>
+ <20200421191754.3372370-9-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Apr 2020 10:40:11 +0200
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [RFC PATCH 4/4] pwm: sun4i: Delay after writing the
- period
-In-Reply-To: <f1d9a17e-df9e-dc12-603d-84e908a04b81@sholland.org>
-References: <20200317155906.31288-1-dev@pascalroeleven.nl>
- <20200317155906.31288-5-dev@pascalroeleven.nl>
- <f1d9a17e-df9e-dc12-603d-84e908a04b81@sholland.org>
-User-Agent: Roundcube Webmail/1.4.2
-Message-ID: <fd36eddb87b529498e0429afe3521da7@pascalroeleven.nl>
-X-Sender: dev@pascalroeleven.nl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421191754.3372370-9-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-22 05:43, Samuel Holland wrote:
-> Hello Pascal,
+On Tue 21-04-20 12:17:50, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> On 3/17/20 10:59 AM, Pascal Roeleven wrote:
->> When disabling, ensure the period write is complete before continuing.
->> This fixes an issue on some devices when the write isn't complete 
->> before
->> the panel is turned off but the clock gate is still on.
->> 
->> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
->> ---
->>  drivers/pwm/pwm-sun4i.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->> 
->> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
->> index a11d00f96..75250fd4c 100644
->> --- a/drivers/pwm/pwm-sun4i.c
->> +++ b/drivers/pwm/pwm-sun4i.c
->> @@ -299,6 +299,10 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, 
->> struct pwm_device *pwm,
->>  	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
->>  	next_period = jiffies + usecs_to_jiffies(cstate.period / 1000 + 1);
->> 
->> +	/* When disabling, make sure the period register is written first */
->> +	if (!state->enabled && cstate.enabled)
->> +		sun4i_pwm_wait(next_period);
->> +
+> DAX effective mode (S_DAX) changes requires inode eviction.
 > 
-> It is not visible from the context of this patch, but this call to
-> sun4i_pwm_wait() ends up calling msleep() inside a spinlock, which 
-> isn't
-> allowed. The spinlock should probably be converted to a mutex, 
-> considering that
-> sun4i_pwm_apply() already sleeps and takes mutexes.
+> XFS has an advisory flag (XFS_IDONTCACHE) to prevent caching of the
+> inode if no other additional references are taken.  We lift this flag to
+> the VFS layer and change the behavior slightly by allowing the flag to
+> remain even if multiple references are taken.
 > 
-> Regards,
-> Samuel
+> This will expedite the eviction of inodes to change S_DAX.
 > 
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Yes you're right. A different implementation of this patch series is 
-being worked on, in which I'll take this into account. Unfortunately I 
-have other things to work on at the moment, so it might take a while.
+Besides the two nits Darrick had I didn't find any other problem so feel
+free to add:
 
-Regards,
-Pascal
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+to the fixed up version.
+
+								Honza
+
+
+> 
+> ---
+> Changes from V8:
+> 	Remove XFS_IDONTCACHE
+> ---
+>  fs/xfs/xfs_icache.c | 4 ++--
+>  fs/xfs/xfs_inode.h  | 2 +-
+>  fs/xfs/xfs_super.c  | 2 +-
+>  include/linux/fs.h  | 6 +++++-
+>  4 files changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 17a0b86fe701..de76f7f60695 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -477,7 +477,7 @@ xfs_iget_cache_hit(
+>  		xfs_ilock(ip, lock_flags);
+>  
+>  	if (!(flags & XFS_IGET_INCORE))
+> -		xfs_iflags_clear(ip, XFS_ISTALE | XFS_IDONTCACHE);
+> +		xfs_iflags_clear(ip, XFS_ISTALE);
+>  	XFS_STATS_INC(mp, xs_ig_found);
+>  
+>  	return 0;
+> @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
+>  	 */
+>  	iflags = XFS_INEW;
+>  	if (flags & XFS_IGET_DONTCACHE)
+> -		iflags |= XFS_IDONTCACHE;
+> +		VFS_I(ip)->i_state |= I_DONTCACHE;
+>  	ip->i_udquot = NULL;
+>  	ip->i_gdquot = NULL;
+>  	ip->i_pdquot = NULL;
+> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> index 83073c883fbf..52b8ee21a0b1 100644
+> --- a/fs/xfs/xfs_inode.h
+> +++ b/fs/xfs/xfs_inode.h
+> @@ -218,7 +218,7 @@ static inline bool xfs_inode_has_cow_data(struct xfs_inode *ip)
+>  #define XFS_IFLOCK		(1 << __XFS_IFLOCK_BIT)
+>  #define __XFS_IPINNED_BIT	8	 /* wakeup key for zero pin count */
+>  #define XFS_IPINNED		(1 << __XFS_IPINNED_BIT)
+> -#define XFS_IDONTCACHE		(1 << 9) /* don't cache the inode long term */
+> +/* Was XFS_IDONTCACHE 9 */
+>  #define XFS_IEOFBLOCKS		(1 << 10)/* has the preallocblocks tag set */
+>  /*
+>   * If this unlinked inode is in the middle of recovery, don't let drop_inode
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 0d0f74786799..2e165e226e15 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -742,7 +742,7 @@ xfs_fs_drop_inode(
+>  		return 0;
+>  	}
+>  
+> -	return generic_drop_inode(inode) || (ip->i_flags & XFS_IDONTCACHE);
+> +	return generic_drop_inode(inode);
+>  }
+>  
+>  static void
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index a87cc5845a02..44bd45af760f 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2156,6 +2156,8 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>   *
+>   * I_CREATING		New object's inode in the middle of setting up.
+>   *
+> + * I_DONTCACHE		Evict inode as soon as it is not used anymore.
+> + *
+>   * Q: What is the difference between I_WILL_FREE and I_FREEING?
+>   */
+>  #define I_DIRTY_SYNC		(1 << 0)
+> @@ -2178,6 +2180,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+>  #define I_WB_SWITCH		(1 << 13)
+>  #define I_OVL_INUSE		(1 << 14)
+>  #define I_CREATING		(1 << 15)
+> +#define I_DONTCACHE		(1 << 16)
+>  
+>  #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+>  #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
+> @@ -3049,7 +3052,8 @@ extern int inode_needs_sync(struct inode *inode);
+>  extern int generic_delete_inode(struct inode *inode);
+>  static inline int generic_drop_inode(struct inode *inode)
+>  {
+> -	return !inode->i_nlink || inode_unhashed(inode);
+> +	return !inode->i_nlink || inode_unhashed(inode) ||
+> +		(inode->i_state & I_DONTCACHE);
+>  }
+>  
+>  extern struct inode *ilookup5_nowait(struct super_block *sb,
+> -- 
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
