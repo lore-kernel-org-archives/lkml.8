@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF039C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3ADC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 961EB20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440F820774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549819;
-	bh=xE9iEB2EOZynkW1xI7hOkI/p0HTahCOTiIf9DKNcDiU=;
+	s=default; t=1587549823;
+	bh=kZ0NiSTwCEI9iWhJHS4nvEjEPhJyU7VAc4ik70TAT4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3ShpwTlHS4CI07d03WCI7BIt9GLC9I2A3dQMziUI5qwI6wgkvZPjiP8KSZIE19uk
-	 +eZIG65XpXF2xUtY8foPeIFKWH7jKNQgEeUXxVuDJf9G3qRAHQ3hHC1TjK0fDdiik7
-	 mefT1j7bdT9zSSzsv9i4jgVCEsOE1DDeSZBt86Tk=
+	b=v0NpdUyQI6B4ngj/T0hjTJ69VQUlToMlkm6qceisBbwX8eq5GUsOUvg7VloztBFn2
+	 KxWKdHYnVz8egXrruOQBZUPzbnxrnEFNhQFoXv04MuImP0Auh46jeMRggs5eyDDYVF
+	 CGkt8ZFeBzwYEBP1bu316DUqjmSdzOfPbjPCnsgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgDVKDi (ORCPT
+        id S1726641AbgDVKDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53376 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:03:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgDVKDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:03:32 -0400
+        id S1727845AbgDVKDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:03:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5B820575;
-        Wed, 22 Apr 2020 10:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC9D620774;
+        Wed, 22 Apr 2020 10:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549812;
-        bh=xE9iEB2EOZynkW1xI7hOkI/p0HTahCOTiIf9DKNcDiU=;
+        s=default; t=1587549817;
+        bh=kZ0NiSTwCEI9iWhJHS4nvEjEPhJyU7VAc4ik70TAT4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RHj2VJtviD3MYfjD3Ttr2bQcKSqCL9uaPzS1Hd1xKs1J4tKdEjupQUjI8PbyYLoGb
-         e4ftx8BREPoai9Kf/GunIDBk1RVjOWFu7FQ7HjRlkbETTsGXUTBjDFkovn2AEcdERh
-         dfZbHXPwN8tz/bmhW/5vq3saCe2NaTMruevmQInY=
+        b=2p4PKhv6CePkCKjbAJIR9P6CDyEgh8HOnW8hSyGROWsbg2uZgcUELZi5VF7wAX5w/
+         n79SHMVqE9IgbTgIUCn45dsmoW1TBQQc/vVZDRQOT2276JYKoUOkUgjUjYli/osKjP
+         EpBvZicCJA4gUo+BinTQAvX646nghHkTAB5BQfeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 017/125] ASoC: dpcm: allow start or stop during pause for backend
-Date:   Wed, 22 Apr 2020 11:55:34 +0200
-Message-Id: <20200422095036.022132693@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.9 019/125] usb: gadget: f_fs: Fix use after free issue as part of queue failure
+Date:   Wed, 22 Apr 2020 11:55:36 +0200
+Message-Id: <20200422095036.400891919@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -59,49 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 이경택 <gt82.lee@samsung.com>
+From: Sriharsha Allenki <sallenki@codeaurora.org>
 
-commit 21fca8bdbb64df1297e8c65a746c4c9f4a689751 upstream.
+commit f63ec55ff904b2f2e126884fcad93175f16ab4bb upstream.
 
-soc_compr_trigger_fe() allows start or stop after pause_push.
-In dpcm_be_dai_trigger(), however, only pause_release is allowed
-command after pause_push.
-So, start or stop after pause in compress offload is always
-returned as error if the compress offload is used with dpcm.
-To fix the problem, SND_SOC_DPCM_STATE_PAUSED should be allowed
-for start or stop command.
+In AIO case, the request is freed up if ep_queue fails.
+However, io_data->req still has the reference to this freed
+request. In the case of this failure if there is aio_cancel
+call on this io_data it will lead to an invalid dequeue
+operation and a potential use after free issue.
+Fix this by setting the io_data->req to NULL when the request
+is freed as part of queue failure.
 
-Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/004d01d607c1$7a3d5250$6eb7f6f0$@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2e4c7553cd6f ("usb: gadget: f_fs: add aio support")
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+CC: stable <stable@vger.kernel.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200326115620.12571-1-sallenki@codeaurora.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-pcm.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/f_fs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -2062,7 +2062,8 @@ int dpcm_be_dai_trigger(struct snd_soc_p
- 		switch (cmd) {
- 		case SNDRV_PCM_TRIGGER_START:
- 			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_PREPARE) &&
--			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP))
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
- 				continue;
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1036,6 +1036,7 @@ static ssize_t ffs_epfile_io(struct file
  
- 			ret = dpcm_do_trigger(dpcm, be_substream, cmd);
-@@ -2092,7 +2093,8 @@ int dpcm_be_dai_trigger(struct snd_soc_p
- 			be->dpcm[stream].state = SND_SOC_DPCM_STATE_START;
- 			break;
- 		case SNDRV_PCM_TRIGGER_STOP:
--			if (be->dpcm[stream].state != SND_SOC_DPCM_STATE_START)
-+			if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_START) &&
-+			    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
- 				continue;
- 
- 			if (!snd_soc_dpcm_can_be_free_stop(fe, be, stream))
+ 		ret = usb_ep_queue(ep->ep, req, GFP_ATOMIC);
+ 		if (unlikely(ret)) {
++			io_data->req = NULL;
+ 			usb_ep_free_request(ep->ep, req);
+ 			goto error_lock;
+ 		}
 
 
