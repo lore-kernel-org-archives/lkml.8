@@ -2,73 +2,87 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D7C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FACC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C80AE2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520E4206B9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:31:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587544266;
+	bh=6mKw5Xt6j7tOLgVDJ+VCoanJlRGTeZitW7Ao8zuGAus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ji5DUOVnGIKpTr77VgWNM9sfOthccA159QuMuBcjTtlj7MTf5/7JNv02rUj67nDCg
+	 mkCNs1xmn1lfBMNAzXDiw5ZVuy+kVogiQY+1pytjyqLMjVgVFJ+TOaKsFMEQsLQvwP
+	 N2Rg/L7m7izZIXkktFYCTTPKutBtgKnyz5eZAluY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgDVI2z (ORCPT
+        id S1726412AbgDVIbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:28:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57568 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726396AbgDVI2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:28:49 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 05290F7D3C5C81FB0C00;
-        Wed, 22 Apr 2020 16:28:46 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 22 Apr 2020 16:28:41 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
-        <john.fastabend@gmail.com>, <kpsingh@chromium.org>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH bpf-next 2/2] libbpf: Return err if bpf_object__load failed
-Date:   Wed, 22 Apr 2020 16:30:10 +0800
-Message-ID: <20200422083010.28000-3-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200422083010.28000-1-maowenan@huawei.com>
-References: <20200422083010.28000-1-maowenan@huawei.com>
+        Wed, 22 Apr 2020 04:31:05 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34372 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbgDVIbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:31:04 -0400
+Received: by mail-pl1-f195.google.com with SMTP id s10so669311plr.1;
+        Wed, 22 Apr 2020 01:31:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s97SDRXqlAdd9mHwA+NMgZaoH23nHGMSFxZOHwMKFy4=;
+        b=Jl2K612g9W0KiGOeQeROvUrAvOxFcFOoGnj73Jx5eFhV5tCCzOeNAbDpt8m0Jv91qh
+         TadydVgS0r8Rnmq7ZpJ/4WsFDSilDkrBNbL+jr6HKUK7CAq0VoHAHprrs8dx70o9JCQP
+         11fLGIFXsUF19S4hrd31UZrSQ/pdaZd9lP1pHQs+3tenVIcKFItoGOzUwD9MvL0yZI1B
+         jPytCJ4mZrpL8tRrbJsKGjpSPssHi5EZ6tfgNh0ktRh7bSjkuloDh3f3oHY/JcsXGezw
+         w32VAA4uDXUY/dQdMCtYwM4N3aKAY2fFbDbDf1qVTDEkbgrJjmjySOKBPexv+3ZCE6g6
+         v1UA==
+X-Gm-Message-State: AGi0PuZwUXiPS7q8MEmCuuDbpVA0uUAQLF42nY/Dx1nID3iozmvvRX4S
+        v01jK7Ng01eno5MHv7SuUDc=
+X-Google-Smtp-Source: APiQypLC+5l3Vomt6V1tjxuSMEOSaTQGxRu4RC97cmXMmvff519FuiqU2hJzm9o0idxvt/67s0u33w==
+X-Received: by 2002:a17:90a:2526:: with SMTP id j35mr10033059pje.98.1587544264097;
+        Wed, 22 Apr 2020 01:31:04 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id a15sm4727083pju.3.2020.04.22.01.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 01:31:02 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id F0C41402A1; Wed, 22 Apr 2020 08:31:01 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 08:31:01 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v3 3/4] kmod: Return directly if module name is empty in
+ request_module()
+Message-ID: <20200422083101.GU11244@42.do-not-panic.com>
+References: <1587386035-5188-1-git-send-email-yangtiezhu@loongson.cn>
+ <1587386035-5188-4-git-send-email-yangtiezhu@loongson.cn>
+ <20200420181931.GJ11244@42.do-not-panic.com>
+ <675147f7-2762-c574-4c3d-de6b25a5a44a@loongson.cn>
+ <20200421144931.GA20103@linux-8ccs>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421144931.GA20103@linux-8ccs>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bpf_object__load() has various return code, when
-it failed to load object, it must return err instead
-of return -EINVAL.
+On Tue, Apr 21, 2020 at 04:49:32PM +0200, Jessica Yu wrote:
+> As for why __request_module() returns 256, I am guessing this would
+> come from kernel_wait4(), but I did not dive into the call path to
+> verify this yet.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- tools/lib/bpf/libbpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I got it. I'll send a fix.
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 8f480e29a6b0..8e1dc6980fac 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -7006,7 +7006,7 @@ int bpf_prog_load_xattr(const struct bpf_prog_load_attr *attr,
- 	err = bpf_object__load(obj);
- 	if (err) {
- 		bpf_object__close(obj);
--		return -EINVAL;
-+		return err;
- 	}
- 
- 	*pobj = obj;
--- 
-2.20.1
-
+  Luis
