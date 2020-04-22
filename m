@@ -2,87 +2,106 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B751FC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F327C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5092076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A33D2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 14:54:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UUrQV2YD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgDVOtN (ORCPT
+        id S1726721AbgDVOyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:49:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51414 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgDVOtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:49:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9ED44AA55;
-        Wed, 22 Apr 2020 14:49:10 +0000 (UTC)
-Message-ID: <1587566950.9537.107.camel@suse.cz>
-Subject: Re: [BISECTED]: Kernel panic (was: Linux 5.7-rc2)
-From:   Giovanni Gherdovich <ggherdovich@suse.cz>
-To:     Dave Kleikamp <dave.kleikamp@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 22 Apr 2020 10:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbgDVOyE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:54:04 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03CB5C03C1A9;
+        Wed, 22 Apr 2020 07:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=C/y0MT4RUP0Ak6RuYzOz+uq54Hlm5rIbVfYvdumz+DM=; b=UUrQV2YDRusF3q4mtsyE/OglW+
+        U6JQFBF+3KcYfY7tjK+1QSbpmnSpKbp0FQEukWKyUX5k1kTTlBNKnSHilBSlB3pqEDAVNJZ/pHo4a
+        zYgNUSBw8W/iY24GB0zmPhRnlYzY+nDJE/wb167ntBElVK2e5ENkXqzpxo6dWG6pnauv1YaZFu48A
+        kzkSovg89bUxZz5vghqkSykuvsyd2vKZjRiE4udPWELuOoPACF7LwCTxdaVgiMZAZPW0sv2RHGs/s
+        qNhCOEWrh95kiNuxy8LDPyIhj1cL/HyP6dkVzmx82qtF5inj36eqJfFWCCsKHhaKI+YjcVHe6A1fh
+        kv0SMH1A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRGkr-0002YT-JX; Wed, 22 Apr 2020 14:53:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4E49C3010C4;
+        Wed, 22 Apr 2020 16:53:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 30D18203AA838; Wed, 22 Apr 2020 16:53:34 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 16:53:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Harald Arnesen <harald@skogtun.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 22 Apr 2020 16:49:10 +0200
-In-Reply-To: <5b9531e1-e0ae-cf5d-84f2-6bbb5c2cd089@oracle.com>
-References: <CAHk-=wiQsJu-ZFjt7+c9FVD5R40khtZiihrT+7O3UaVvHYz=HQ@mail.gmail.com>
-         <428bac87-b6dd-0867-c8f8-622cd606de3e@skogtun.org>
-         <CAHk-=wiX+NT2yxtdPszH9U_S96MCNQA56GJFXY45mZc47yG5KQ@mail.gmail.com>
-         <20200421212347.GV2483@worktop.programming.kicks-ass.net>
-         <1587546150.9537.84.camel@suse.cz>
-         <5b9531e1-e0ae-cf5d-84f2-6bbb5c2cd089@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>, Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH] x86, sched: Prevent divisions by zero in frequency
+ invariant accounting
+Message-ID: <20200422145334.GM20730@hirez.programming.kicks-ass.net>
+References: <20200422144055.18171-1-ggherdovich@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422144055.18171-1-ggherdovich@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-22 at 09:12 -0500, Dave Kleikamp wrote:
-> On 4/22/20 4:02 AM, Giovanni Gherdovich wrote:
-> > Linus, Peter:
-> > 
-> > the panic seen by Harald Arnesen (and Dave Kleikamp) is unrelated to
-> > virtualization, and happens on all machines that have a CPU with less than 4
-> > physical cores. It's a very serious (and very stupid) bug in the original
-> > version of my code and is fixed by patch 2/4 "x86, sched: Account for CPUs
-> > with less than 4 cores in freq. invariance" in the series 
-> > 
-> > https://lore.kernel.org/lkml/20200416054745.740-1-ggherdovich@suse.cz
-> > 
-> > Harald, Dave:
-> > 
-> > for peace of mind, can you please share the output of
-> > 
-> >   turbostat --interval 1 sleep 0
+On Wed, Apr 22, 2020 at 04:40:55PM +0200, Giovanni Gherdovich wrote:
+> The product mcnt * arch_max_freq_ratio could be zero if it overflows u64.
 > 
-> This is a Lenovo T410.
+> For context, a large value for arch_max_freq_ratio would be 5000,
+> corresponding to a turbo_freq/base_freq ratio of 5 (normally it's more like
+> 1500-2000). A large increment frequency for the MPERF counter would be 5GHz
+> (the base clock of all CPUs on the market today is less than that). With
+> these figures, a CPU would need to go without a scheduler tick for around 8
+> days for the u64 overflow to happen. It is unlikely, but the check is
+> warranted.
 > 
-> turbostat version 20.03.20 - Len Brown <lenb@kernel.org>
-> CPUID(0): GenuineIntel 0xb CPUID levels; 0x80000008 xlevels; family:model:stepping 0x6:25:5 (6:37:5)
-> [...]
-> cpu0: MSR_TURBO_RATIO_LIMIT: 0x00001416
-> 20 * 133.3 = 2666.6 MHz max turbo 2 active cores
-> 22 * 133.3 = 2933.3 MHz max turbo 1 active cores
+> Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+> Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+> ---
+>  arch/x86/kernel/smpboot.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index 8c89e4d9ad28..fb71395cbcad 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -2055,14 +2055,14 @@ void arch_scale_freq_tick(void)
+>  
+>  	acnt = aperf - this_cpu_read(arch_prev_aperf);
+>  	mcnt = mperf - this_cpu_read(arch_prev_mperf);
+> -	if (!mcnt)
+> -		return;
+>  
+>  	this_cpu_write(arch_prev_aperf, aperf);
+>  	this_cpu_write(arch_prev_mperf, mperf);
+>  
+>  	acnt <<= 2*SCHED_CAPACITY_SHIFT;
+>  	mcnt *= arch_max_freq_ratio;
+> +	if (!mcnt)
+> +		return;
 
-
-2 cores/ 4 threads, reported 4C turbo frequency of zero (i.e. bits 31:24
-in MSR_TURBO_RATIO_LIMIT). This is consistent with all other occurrences
-of this bug that have been reported.
-
-Thanks Dave for your reply.
-
-
-Giovanni
+Should we not pr_warn() and disable the whole thing when this happens?
