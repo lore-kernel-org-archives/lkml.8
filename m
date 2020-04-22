@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AA9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E0FC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7368621D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3442173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 22:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgDVWZI (ORCPT
+        id S1726756AbgDVWZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 18:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35012 "EHLO
+        Wed, 22 Apr 2020 18:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726643AbgDVWY7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726684AbgDVWZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 18:24:59 -0400
+        Wed, 22 Apr 2020 18:25:02 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13DBC03C1AB;
-        Wed, 22 Apr 2020 15:24:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB02C03C1AA;
+        Wed, 22 Apr 2020 15:25:02 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRNnR-0001Qg-Oa; Thu, 23 Apr 2020 00:24:46 +0200
+        id 1jRNnX-0001S3-9D; Thu, 23 Apr 2020 00:24:52 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 21FBA1C04CF;
-        Thu, 23 Apr 2020 00:24:43 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 22:24:42 -0000
-From:   "tip-bot2 for Kristen Carlson Accardi" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 297001C04D7;
+        Thu, 23 Apr 2020 00:24:46 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 22:24:45 -0000
+From:   "tip-bot2 for Muchun Song" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Do not assume order of parent/child functions
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+Subject: [tip: objtool/core] objtool: Remove redundant .rodata section name comparison
+Cc:     Muchun Song <songmuchun@bytedance.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158759428235.28353.10463012010844983639.tip-bot2@tip-bot2>
+Message-ID: <158759428560.28353.8582555495693130530.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,44 +57,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     5920038dc2aa75b7aa3f5ca767b06a71c67cf897
-Gitweb:        https://git.kernel.org/tip/5920038dc2aa75b7aa3f5ca767b06a71c67cf897
-Author:        Kristen Carlson Accardi <kristen@linux.intel.com>
-AuthorDate:    Wed, 15 Apr 2020 14:04:43 -07:00
+Commit-ID:     069cdb3f72e947c7564240fa4c5468b7e514b679
+Gitweb:        https://git.kernel.org/tip/069cdb3f72e947c7564240fa4c5468b7e514b679
+Author:        Muchun Song <songmuchun@bytedance.com>
+AuthorDate:    Sun, 12 Apr 2020 22:44:05 +08:00
 Committer:     Josh Poimboeuf <jpoimboe@redhat.com>
-CommitterDate: Tue, 21 Apr 2020 18:50:26 -05:00
+CommitterDate: Tue, 14 Apr 2020 17:34:07 -05:00
 
-objtool: Do not assume order of parent/child functions
+objtool: Remove redundant .rodata section name comparison
 
-If a .cold function is examined prior to it's parent, the link
-to the parent/child function can be overwritten when the parent
-is examined. Only update pfunc and cfunc if they were previously
-nil to prevent this from happening.
+If the prefix of section name is not '.rodata', the following
+function call can never return 0.
 
-This fixes an -ffunction-sections issue.
+    strcmp(sec->name, C_JUMP_TABLE_SECTION)
 
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+So the name comparison is pointless, just remove it.
+
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/elf.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/objtool/check.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 43748cb..03e542d 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -418,7 +418,13 @@ static int read_symbols(struct elf *elf)
- 			size_t pnamelen;
- 			if (sym->type != STT_FUNC)
- 				continue;
--			sym->pfunc = sym->cfunc = sym;
-+
-+			if (sym->pfunc == NULL)
-+				sym->pfunc = sym;
-+
-+			if (sym->cfunc == NULL)
-+				sym->cfunc = sym;
-+
- 			coldstr = strstr(sym->name, ".cold");
- 			if (!coldstr)
- 				continue;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 10fbfb3..276bce3 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1372,8 +1372,8 @@ static void mark_rodata(struct objtool_file *file)
+ 	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
+ 	 */
+ 	for_each_sec(file, sec) {
+-		if ((!strncmp(sec->name, ".rodata", 7) && !strstr(sec->name, ".str1.")) ||
+-		    !strcmp(sec->name, C_JUMP_TABLE_SECTION)) {
++		if (!strncmp(sec->name, ".rodata", 7) &&
++		    !strstr(sec->name, ".str1.")) {
+ 			sec->rodata = true;
+ 			found = true;
+ 		}
