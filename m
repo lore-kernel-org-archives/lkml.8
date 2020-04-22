@@ -2,129 +2,329 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4BEC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70293C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49490206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o1SzwFR2"
+	by mail.kernel.org (Postfix) with ESMTP id 4A4E920780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 07:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVHqC (ORCPT
+        id S1726476AbgDVHqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725786AbgDVHqB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:46:01 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CD8C03C1A6;
-        Wed, 22 Apr 2020 00:46:01 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z26so1181617ljz.11;
-        Wed, 22 Apr 2020 00:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ysk4WMk8NsMihs1evCSOYe7LHkphmnmScYSQbOC8Llc=;
-        b=o1SzwFR2bkjbNNOJOE+ecvk9bOWfpyLmOCyf88lxbsunX1mPfn4RXpmFWpKI/wKJ4+
-         3GrBxCgb8eBCPNdmnGEAsXvcBhzy5CNWepgs2qeUcBULvHwjqL/R7VIbidYmhk/oSRkd
-         RrQCn9Ther16dMsGytaq97Rrpz4iVojN2Z8IoP3JT7VNBETLZQls7yE7W/U1TwZs2BZb
-         wEN46kjfuRnh4sgQZJOUPWu1WHj6+cXeiAueKH5CUQmUoeZ9Ir8Qfxj/y1Vx+j4PKuy8
-         IOVpVgFp/k5YjV56fDk+iu4AHawH2gUKdFZMpgw/FwBCyqN6wrnvIRhDXYHj8ken4q6A
-         nHmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ysk4WMk8NsMihs1evCSOYe7LHkphmnmScYSQbOC8Llc=;
-        b=XwZ8pufyYz039lNU8kBBozVoeU4gectRexW3zaG+IflUZRjcxO0xybkSkhk9iawlSq
-         Qtb3y9HWIYufB1Z25RP0FMB+yYaypmf32EBAsp+AraRQAGSKeNDtCHrc8qTjrgJqd63K
-         Cdz4QKOK44+5w/I0u5U28CXptrOU6guWiZfUitqQlGY5GlLHlMBWGalanQcYZJhogC72
-         OYogIx5A5hONA0yPB8AGbsa2nzdasOQGo7sYN2UCj26b12+iULAC7qQS2xX6Bl/kBD7Q
-         9K/JHt8F3QTuxAlZGUa7/vr9UCVw9AtigQjFRndSvDuo37NqPY9NQng75q1p6Q12QjHT
-         KFog==
-X-Gm-Message-State: AGi0PuY/GtaZP0NLXKjfc2ogaKDKuhn9dZBJmoS+/N12Gb1hhdJNaYA2
-        5Sfj+ji9eODGkNm/JgcGFGs=
-X-Google-Smtp-Source: APiQypIUxB9mDL/04B4tBAHmaWMbUqrOKIOV9TnnpC5t2Iz3mxa2dl45kat7lf7lCzElc1tvOqJyNg==
-X-Received: by 2002:a2e:b4f1:: with SMTP id s17mr15071165ljm.283.1587541559956;
-        Wed, 22 Apr 2020 00:45:59 -0700 (PDT)
-Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
-        by smtp.googlemail.com with ESMTPSA id c4sm3968427lfg.82.2020.04.22.00.45.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 00:45:59 -0700 (PDT)
-From:   LuK1337 <priv.luk@gmail.com>
-Cc:     Cameron Gutman <aicommander@gmail.com>,
-        =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: xpad - Add custom init packet for Xbox One S controllers
-Date:   Wed, 22 Apr 2020 09:45:45 +0200
-Message-Id: <20200422074546.14993-1-priv.luk@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
-References: <92b71dc5-ddd5-7ffd-65f8-65a6610dfe43@gmail.com>
+        Wed, 22 Apr 2020 03:46:19 -0400
+Received: from mga06.intel.com ([134.134.136.31]:36404 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725786AbgDVHqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 03:46:18 -0400
+IronPort-SDR: yqjJJAZ+apkpBUZhenY05i3cNHKqJjeSN21IGYOxKEo8mUonxREeU+Ir7X1IQE77Bfi+mfiy9z
+ axPJa9yCOh3Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 00:46:17 -0700
+IronPort-SDR: IiqeFspJ0CdB38qBX6Cd2a66HZX2GAU621wxqs2QmfifCRoH56m9KszWZEuthNv39GbncIKt4K
+ Qz6f47zS8OYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
+   d="scan'208";a="279929982"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Apr 2020 00:46:09 -0700
+Date:   Wed, 22 Apr 2020 03:36:28 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Zeng, Xin" <xin.zeng@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v5 0/4] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200422073628.GA12879@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200413055201.27053-1-yan.y.zhao@intel.com>
+ <20200417104450.2d2f2fa9.cohuck@redhat.com>
+ <20200417095202.GD16688@joy-OptiPlex-7040>
+ <20200417132457.45d91fe3.cohuck@redhat.com>
+ <20200420012457.GE16688@joy-OptiPlex-7040>
+ <20200420165600.4951ae82@w520.home>
+ <20200421023718.GA12111@joy-OptiPlex-7040>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86DF06@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D86DF06@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Łukasz Patron <priv.luk@gmail.com>
+On Tue, Apr 21, 2020 at 08:08:49PM +0800, Tian, Kevin wrote:
+> > From: Yan Zhao
+> > Sent: Tuesday, April 21, 2020 10:37 AM
+> > 
+> > On Tue, Apr 21, 2020 at 06:56:00AM +0800, Alex Williamson wrote:
+> > > On Sun, 19 Apr 2020 21:24:57 -0400
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >
+> > > > On Fri, Apr 17, 2020 at 07:24:57PM +0800, Cornelia Huck wrote:
+> > > > > On Fri, 17 Apr 2020 05:52:02 -0400
+> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > >
+> > > > > > On Fri, Apr 17, 2020 at 04:44:50PM +0800, Cornelia Huck wrote:
+> > > > > > > On Mon, 13 Apr 2020 01:52:01 -0400
+> > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > > >
+> > > > > > > > This patchset introduces a migration_version attribute under sysfs
+> > of VFIO
+> > > > > > > > Mediated devices.
+> > > > > > > >
+> > > > > > > > This migration_version attribute is used to check migration
+> > compatibility
+> > > > > > > > between two mdev devices.
+> > > > > > > >
+> > > > > > > > Currently, it has two locations:
+> > > > > > > > (1) under mdev_type node,
+> > > > > > > >     which can be used even before device creation, but only for
+> > mdev
+> > > > > > > >     devices of the same mdev type.
+> > > > > > > > (2) under mdev device node,
+> > > > > > > >     which can only be used after the mdev devices are created, but
+> > the src
+> > > > > > > >     and target mdev devices are not necessarily be of the same
+> > mdev type
+> > > > > > > > (The second location is newly added in v5, in order to keep
+> > consistent
+> > > > > > > > with the migration_version node for migratable pass-though
+> > devices)
+> > > > > > >
+> > > > > > > What is the relationship between those two attributes?
+> > > > > > >
+> > > > > > (1) is for mdev devices specifically, and (2) is provided to keep the
+> > same
+> > > > > > sysfs interface as with non-mdev cases. so (2) is for both mdev
+> > devices and
+> > > > > > non-mdev devices.
+> > > > > >
+> > > > > > in future, if we enable vfio-pci vendor ops, (i.e. a non-mdev device
+> > > > > > is binding to vfio-pci, but is able to register migration region and do
+> > > > > > migration transactions from a vendor provided affiliate driver),
+> > > > > > the vendor driver would export (2) directly, under device node.
+> > > > > > It is not able to provide (1) as there're no mdev devices involved.
+> > > > >
+> > > > > Ok, creating an alternate attribute for non-mdev devices makes sense.
+> > > > > However, wouldn't that rather be a case (3)? The change here only
+> > > > > refers to mdev devices.
+> > > > >
+> > > > as you pointed below, (3) and (2) serve the same purpose.
+> > > > and I think a possible usage is to migrate between a non-mdev device and
+> > > > an mdev device. so I think it's better for them both to use (2) rather
+> > > > than creating (3).
+> > >
+> > > An mdev type is meant to define a software compatible interface, so in
+> > > the case of mdev->mdev migration, doesn't migrating to a different type
+> > > fail the most basic of compatibility tests that we expect userspace to
+> > > perform?  IOW, if two mdev types are migration compatible, it seems a
+> > > prerequisite to that is that they provide the same software interface,
+> > > which means they should be the same mdev type.
+> > >
+> > > In the hybrid cases of mdev->phys or phys->mdev, how does a
+> > management
+> > > tool begin to even guess what might be compatible?  Are we expecting
+> > > libvirt to probe ever device with this attribute in the system?  Is
+> > > there going to be a new class hierarchy created to enumerate all
+> > > possible migrate-able devices?
+> > >
+> > yes, management tool needs to guess and test migration compatible
+> > between two devices. But I think it's not the problem only for
+> > mdev->phys or phys->mdev. even for mdev->mdev, management tool needs
+> > to
+> > first assume that the two mdevs have the same type of parent devices
+> > (e.g.their pciids are equal). otherwise, it's still enumerating
+> > possibilities.
+> > 
+> > on the other hand, for two mdevs,
+> > mdev1 from pdev1, its mdev_type is 1/2 of pdev1;
+> > mdev2 from pdev2, its mdev_type is 1/4 of pdev2;
+> > if pdev2 is exactly 2 times of pdev1, why not allow migration between
+> > mdev1 <-> mdev2.
+> 
+> How could the manage tool figure out that 1/2 of pdev1 is equivalent 
+> to 1/4 of pdev2? If we really want to allow such thing happen, the best
+> choice is to report the same mdev type on both pdev1 and pdev2.
+I think that's exactly the value of this migration_version interface.
+the management tool can take advantage of this interface to know if two
+devices are migration compatible, no matter they are mdevs, non-mdevs,
+or mix.
 
-Sending [ 0x05, 0x20, 0x02, 0x0f, 0x06 ] packet for
-Xbox One S controllers fixes an issue where controller
-is stuck in Bluetooth mode and not sending any inputs.
+as I know, (please correct me if not right), current libvirt still
+requires manually generating mdev devices, and it just duplicates src vm
+configuration to the target vm.
+for libvirt, currently it's always phys->phys and mdev->mdev (and of the
+same mdev type).
+But it does not justify that hybrid cases should not be allowed. otherwise,
+why do we need to introduce this migration_version interface and leave
+the judgement of migration compatibility to vendor driver? why not simply
+set the criteria to something like "pciids of parent devices are equal,
+and mdev types are equal" ?
 
-Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
----
- drivers/input/joystick/xpad.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
-index 6b40a1c68f9f..c77cdb3b62b5 100644
---- a/drivers/input/joystick/xpad.c
-+++ b/drivers/input/joystick/xpad.c
-@@ -458,6 +458,16 @@ static const u8 xboxone_fw2015_init[] = {
- 	0x05, 0x20, 0x00, 0x01, 0x00
- };
- 
-+/*
-+ * This packet is required for Xbox One S (0x045e:0x02ea)
-+ * and Xbox One Elite Series 2 (0x045e:0x0b00) pads to
-+ * initialize the controller that was previously used in
-+ * Bluetooth mode.
-+ */
-+static const u8 xboxone_s_init[] = {
-+	0x05, 0x20, 0x00, 0x0f, 0x06
-+};
-+
- /*
-  * This packet is required for the Titanfall 2 Xbox One pads
-  * (0x0e6f:0x0165) to finish initialization and for Hori pads
-@@ -516,6 +526,8 @@ static const struct xboxone_init_packet xboxone_init_packets[] = {
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0165, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0f0d, 0x0067, xboxone_hori_init),
- 	XBOXONE_INIT_PKT(0x0000, 0x0000, xboxone_fw2015_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x02ea, xboxone_s_init),
-+	XBOXONE_INIT_PKT(0x045e, 0x0b00, xboxone_s_init),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init1),
- 	XBOXONE_INIT_PKT(0x0e6f, 0x0000, xboxone_pdp_init2),
- 	XBOXONE_INIT_PKT(0x24c6, 0x541a, xboxone_rumblebegin_init),
--- 
-2.26.0
+> btw mdev<->phys just brings trouble to upper stack as Alex pointed out. 
+could you help me understand why it will bring trouble to upper stack?
 
+I think it just needs to read src migration_version under src dev node,
+and test it in target migration version under target dev node. 
+
+after all, through this interface we just help the upper layer
+knowing available options through reading and testing, and they decide
+to use it or not.
+
+> Can we simplify the requirement by allowing only mdev<->mdev and 
+> phys<->phys migration? If an customer does want to migrate between a 
+> mdev and phys, he could wrap physical device into a wrapped mdev 
+> instance (with the same type as the source mdev) instead of using vendor 
+> ops. Doing so does add some burden but if mdev<->phys is not dominant 
+> usage then such tradeoff might be worthywhile...
+>
+If the interfaces for phys<->phys and mdev<->mdev are consistent, it makes no
+difference to phys<->mdev, right?
+I think the vendor string for a mdev device is something like:
+"Parent PCIID + mdev type + software version", and
+that for a phys device is something like:
+"PCIID + software version".
+as long as we don't migrate between devices from different vendors, it's
+easy for vendor driver to tell if a phys device is migration compatible
+to a mdev device according it supports it or not.
+
+
+Thanks
+Yan
+> 
+> > 
+> > 
+> > > I agree that there was a gap in the previous proposal for non-mdev
+> > > devices, but I think this bring a lot of questions that we need to
+> > > puzzle through and libvirt will need to re-evaluate how they might
+> > > decide to pick a migration target device.  For example, I'm sure
+> > > libvirt would reject any policy decisions regarding picking a physical
+> > > device versus an mdev device.  Had we previously left it that only a
+> > > layer above libvirt would select a target device and libvirt only tests
+> > > compatibility to that target device?
+> > I'm not sure if there's a layer above libvirt would select a target
+> > device. but if there is such a layer (even it's human), we need to
+> > provide an interface for them to know whether their decision is suitable
+> > for migration. The migration_version interface provides a potential to
+> > allow mdev->phys migration, even libvirt may currently reject it.
+> > 
+> > 
+> > > We also need to consider that this expands the namespace.  If we no
+> > > longer require matching types as the first level of comparison, then
+> > > vendor migration strings can theoretically collide.  How do we
+> > > coordinate that can't happen?  Thanks,
+> > yes, it's indeed a problem.
+> > could only allowing migration beteen devices from the same vendor be a
+> > good
+> > prerequisite?
+> > 
+> > Thanks
+> > Yan
+> > >
+> > > > > > > Is existence (and compatibility) of (1) a pre-req for possible
+> > > > > > > existence (and compatibility) of (2)?
+> > > > > > >
+> > > > > > no. (2) does not reply on (1).
+> > > > >
+> > > > > Hm. Non-existence of (1) seems to imply "this type does not support
+> > > > > migration". If an mdev created for such a type suddenly does support
+> > > > > migration, it feels a bit odd.
+> > > > >
+> > > > yes. but I think if the condition happens, it should be reported a bug
+> > > > to vendor driver.
+> > > > should I add a line in the doc like "vendor driver should ensure that the
+> > > > migration compatibility from migration_version under mdev_type should
+> > be
+> > > > consistent with that from migration_version under device node" ?
+> > > >
+> > > > > (It obviously cannot be a prereq for what I called (3) above.)
+> > > > >
+> > > > > >
+> > > > > > > Does userspace need to check (1) or can it completely rely on (2), if
+> > > > > > > it so chooses?
+> > > > > > >
+> > > > > > I think it can completely reply on (2) if compatibility check before
+> > > > > > mdev creation is not required.
+> > > > > >
+> > > > > > > If devices with a different mdev type are indeed compatible, it
+> > seems
+> > > > > > > userspace can only find out after the devices have actually been
+> > > > > > > created, as (1) does not apply?
+> > > > > > yes, I think so.
+> > > > >
+> > > > > How useful would it be for userspace to even look at (1) in that case?
+> > > > > It only knows if things have a chance of working if it actually goes
+> > > > > ahead and creates devices.
+> > > > >
+> > > > hmm, is it useful for userspace to test the migration_version under mdev
+> > > > type before it knows what mdev device to generate ?
+> > > > like when the userspace wants to migrate an mdev device in src vm,
+> > > > but it has not created target vm and the target mdev device.
+> > > >
+> > > > > >
+> > > > > > > One of my worries is that the existence of an attribute with the
+> > same
+> > > > > > > name in two similar locations might lead to confusion. But maybe it
+> > > > > > > isn't a problem.
+> > > > > > >
+> > > > > > Yes, I have the same feeling. but as (2) is for sysfs interface
+> > > > > > consistency, to make it transparent to userspace tools like libvirt,
+> > > > > > I guess the same name is necessary?
+> > > > >
+> > > > > What do we actually need here, I wonder? (1) and (2) seem to serve
+> > > > > slightly different purposes, while (2) and what I called (3) have the
+> > > > > same purpose. Is it important to userspace that (1) and (2) have the
+> > > > > same name?
+> > > > so change (1) to migration_type_version and (2) to
+> > > > migration_instance_version?
+> > > > But as they are under different locations, could that location imply
+> > > > enough information?
+> > > >
+> > > >
+> > > > Thanks
+> > > > Yan
+> > > >
+> > > >
+> > >
+> > _______________________________________________
+> > intel-gvt-dev mailing list
+> > intel-gvt-dev@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
