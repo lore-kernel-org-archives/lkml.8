@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122A9C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECDCC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D667020775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B308220780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550432;
-	bh=H6Z+9XzVrFIBUDc5K9rnUjwU+Iy5AVOXH2RUfq6xHqU=;
+	s=default; t=1587550435;
+	bh=EczdJwOSH1Flg9d2wPTjMWsHf7BqvRqH92roZ4Bulhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u7JIRjN0ge1Or+rjewh5jWgRkGGRHtfmnXSGmAdEOlc0295usz7BLgOlAU2nQPse1
-	 EjAeTEi8jRWNl70Mre+m3SK6KG/bSXIpRr6eR6Jeomy1AVuN2UhtgoKzyqH2+lVbDy
-	 dogkQ6t2bsiOIBKbdXC7/vAxfA5C7EzWRz+XVWMQ=
+	b=LFWhD9KxCLa38jA4ZDXIVO0vINYY0hmuwwEXjLYsWLQBuwsJitWD3uvpsvE7zcuIS
+	 Lom2I0RDWTI+BRXbJYRYNaxQHwQB3EgldCa9kEsG42HBnT3J/iNbtNMhMWybKvH+Qg
+	 qAwuNL1yDDFc+Jh432Wqh03Vf7ZjU/sXxJWGkkug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgDVKNw (ORCPT
+        id S1729452AbgDVKNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47802 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgDVKNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:43 -0400
+        id S1726398AbgDVKNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8EB42070B;
-        Wed, 22 Apr 2020 10:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F962071E;
+        Wed, 22 Apr 2020 10:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550423;
-        bh=H6Z+9XzVrFIBUDc5K9rnUjwU+Iy5AVOXH2RUfq6xHqU=;
+        s=default; t=1587550425;
+        bh=EczdJwOSH1Flg9d2wPTjMWsHf7BqvRqH92roZ4Bulhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bl/Ww1YMhOsSPv5DiA5zkD+n8eVLQdh5OxFPBk++TpXF2PqsvwDqvI4+C2YxnwPdF
-         8wJ2hDfNKpdBx4fFmJkqvDNaCwgEavngexlDFjkSdWB+g2R6mnT1DwX5m/mnjfFH6S
-         BwRe78ZheELjSU2wOrZk02Zs9Is4BJNPpaWzOoXo=
+        b=VZ/x/C8reg/kj6eO/+B2nMnZYPQsNYXOVJEE4YmF9HO9BB6Z2KXDmgogCgCX43lMx
+         qcWBC9HFPJ3yZiIS1ftpgzFpwtlcOTCEJakVkr985DfUJsT2gQUyleypKqWPMcStSy
+         s0hztUpwr2zjtXrA81jbF38ToyQnV5a15jZm7iFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.19 02/64] objtool: Fix switch table detection in .text.unlikely
-Date:   Wed, 22 Apr 2020 11:56:46 +0200
-Message-Id: <20200422095012.643786966@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 03/64] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Wed, 22 Apr 2020 11:56:47 +0200
+Message-Id: <20200422095012.888605991@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,45 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Li Bin <huawei.libin@huawei.com>
 
-commit b401efc120a399dfda1f4d2858a4de365c9b08ef upstream.
+commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 upstream.
 
-If a switch jump table's indirect branch is in a ".cold" subfunction in
-.text.unlikely, objtool doesn't detect it, and instead prints a false
-warning:
+If the dxfer_len is greater than 256M then the request is invalid and we
+need to call sg_remove_request in sg_common_write.
 
-  drivers/media/v4l2-core/v4l2-ioctl.o: warning: objtool: v4l_print_format.cold()+0xd6: sibling call from callable instruction with modified stack frame
-  drivers/hwmon/max6650.o: warning: objtool: max6650_probe.cold()+0xa5: sibling call from callable instruction with modified stack frame
-  drivers/media/dvb-frontends/drxk_hard.o: warning: objtool: init_drxk.cold()+0x16f: sibling call from callable instruction with modified stack frame
-
-Fix it by comparing the function, instead of the section and offset.
-
-Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/157c35d42ca9b6354bbb1604fe9ad7d1153ccb21.1585761021.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/objtool/check.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/scsi/sg.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -938,10 +938,7 @@ static struct rela *find_switch_table(st
- 	 * it.
- 	 */
- 	for (;
--	     &insn->list != &file->insn_list &&
--	     insn->sec == func->sec &&
--	     insn->offset >= func->offset;
--
-+	     &insn->list != &file->insn_list && insn->func && insn->func->pfunc == func;
- 	     insn = insn->first_jump_src ?: list_prev_entry(insn, list)) {
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -808,8 +808,10 @@ sg_common_write(Sg_fd * sfp, Sg_request
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
  
- 		if (insn != orig_insn && insn->type == INSN_JUMP_DYNAMIC)
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
+ 
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 
 
