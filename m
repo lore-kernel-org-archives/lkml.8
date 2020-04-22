@@ -2,105 +2,123 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D21CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0DEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C37C20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587523813;
-	bh=jeKrgn+vYwXwg75fzJr3ucFd8MMCv3flh6yGk+f3Pv0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=kms6PrhF+azaINHTpCCntF8O7M07lMsQrWgZ5ol/45S8U3zIhTceosuzFRrP0I1WB
-	 +YEmfB2A7sCOhFcAWzNRmqEo4F7uu+jf1Js+k6Aa4GSuP/wFCJP19ReMgsfosJM6oC
-	 S9BGKkXVpGqAptUxnoUVP5SLZPMn3OCf4rBTkQlA=
+	by mail.kernel.org (Postfix) with ESMTP id 01EE8206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVCuM (ORCPT
+        id S1726422AbgDVCuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgDVCuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:50:12 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A53D3206D5;
-        Wed, 22 Apr 2020 02:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587523811;
-        bh=jeKrgn+vYwXwg75fzJr3ucFd8MMCv3flh6yGk+f3Pv0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=XoGzn7sHNE9IV5gmu3y02AdQzZFYq/yUkPoRUxGhldCDhrsPHbLB5xZea4Zx40jwD
-         qV60y+HChfjrWQ6PhFaq/dD091NV2zUNxxO15vnCeBT7gvsJqzEaXC3GzYNieanfJc
-         XodtmPFw/1zIe5JVy3VK4T5Fl5pGKdrHf9p+9OoQ=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 21 Apr 2020 22:50:50 -0400
+Received: from m176150.mail.qiye.163.com ([59.111.176.150]:2433 "EHLO
+        m176150.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgDVCut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:50:49 -0400
+Received: from vivo.com (wm-10.qy.internal [127.0.0.1])
+        by m176150.mail.qiye.163.com (Hmail) with ESMTP id 5D7731A2065;
+        Wed, 22 Apr 2020 10:50:13 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AIsAfwDqCFqyDHqDpvcvoKov.3.1587523813368.Hmail.bernard@vivo.com>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSCBWM10gYW1kZ3B1Om9wdGltaXphdGlvbi0tIHJlZHVjZSBubyBuZWVkIG11dGV4X2xvY2sgYXJlYQ==?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <08ef8975-43d2-049b-1c80-de33af7ebd4a@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200419121808.440780-2-bryan.odonoghue@linaro.org>
-References: <20200419121808.440780-1-bryan.odonoghue@linaro.org> <20200419121808.440780-2-bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH 1/3] clk: qcom: Add DT bindings for msm8939 gcc
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Tue, 21 Apr 2020 19:50:10 -0700
-Message-ID: <158752381090.132238.9198658810848946174@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 22 Apr 2020 10:50:13 +0800 (GMT+08:00)
+From:   =?UTF-8?B?6LW15Yab5aWO?= <bernard@vivo.com>
+Date:   Wed, 22 Apr 2020 10:50:13 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCSENCQkJNTklDTUlOTllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSE5ITk5LSE9CN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Mgg6HQw*Cjg9CgI*Mwo*Cw0YDRQwFA1VSFVKTkNMTklIQ0pIT0JLVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTE9PSjcG
+X-HM-Tid: 0a719fcb000e93b4kuws5d7731a2065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bryan O'Donoghue (2020-04-19 05:18:06)
-> diff --git a/include/dt-bindings/clock/qcom,gcc-msm8939.h b/include/dt-bi=
-ndings/clock/qcom,gcc-msm8939.h
-> new file mode 100644
-> index 000000000000..f9ac936590f3
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/qcom,gcc-msm8939.h
-> @@ -0,0 +1,215 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Copyright 2020 Linaro Limited
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-Please remove the boiler plate that SPDX already covers.
-
-> diff --git a/include/dt-bindings/reset/qcom,gcc-msm8939.h b/include/dt-bi=
-ndings/reset/qcom,gcc-msm8939.h
-> new file mode 100644
-> index 000000000000..a8c8135ce24d
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/qcom,gcc-msm8939.h
-> @@ -0,0 +1,119 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Copyright 2020 Linaro Limited
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-Same.
+ClN1cmUsIHRoaXMgc2VlbXMgdG8gYmUgYSBsb3QgbW9yZSBwcm9mZXNzaW9uYWwgdGhhbiBteSBw
+cmV2aW91cyBtb2RpZmljYXRpb24uIApNeSBvcmlnaW5hbCBpbnRlbnRpb24gaXMgdG8gbWFrZSB0
+aGUgY29kZSBlYXNpZXIgdG8gcmVhZCwgYW5kIEkgbGVhcm5lZCBhIGxvdCBmcm9tCnN1Ym1pdHRp
+bmcgdGhlc2UgcGF0Y2hlcy4gVGhhbmsgeW91IHZlcnkgbXVjaCBmb3IgYWxsIHlvdXIgZ3VpZGFu
+Y2UhCgpSZWdhcmRzLApCZXJuYXJkCgrlj5Hku7bkurrvvJpGZWxpeCBLdWVobGluZyA8ZmVsaXgu
+a3VlaGxpbmdAYW1kLmNvbT4K5Y+R6YCB5pel5pyf77yaMjAyMC0wNC0yMiAxMDoyNzoxNgrmlLbk
+u7bkurrvvJoxNTg3MTgxNDY0LTExNDIxNS0xLWdpdC1zZW5kLWVtYWlsLWJlcm5hcmRAdml2by5j
+b20sQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPiwiQ2hyaXN0aWFuIEvD
+tm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4sIkRhdmlkIChDaHVuTWluZykgWmhvdSIg
+PERhdmlkMS5aaG91QGFtZC5jb20+LERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4sRGFu
+aWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPixhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZyxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnLGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmcK5oqE6YCB5Lq677yab3BlbnNvdXJjZS5rZXJuZWxAdml2by5jb20sQmVybmFyZCBaaGFv
+IDxiZXJuYXJkQHZpdm8uY29tPgrkuLvpopjvvJpSZTogW1BBVENIIFYzXSBhbWRncHU6b3B0aW1p
+emF0aW9uLS0gcmVkdWNlIG5vIG5lZWQgbXV0ZXhfbG9jayBhcmVhCgpUaGFua3MgYWdhaW4gZm9y
+IHRoZSBwYXRjaC4gSSdtIGdvaW5nCiAgICAgIHRvIGFwcGx5IHRoaXMgd2l0aCBzb21lIG1pbm9y
+IGZpeGVzLiBUaGUgaGVhZGxpbmUgc2hvdWxkIHN0YXJ0CiAgICAgIHdpdGggImRybS9hbWRncHU6
+Ii7CoCBJJ2xsIGFsc28gY2hhbmdlIHRoZSB3b3JkaW5nIG9mIHRoZSBoZWFkbGluZQogICAgICBh
+bmQgY29tbWl0IG1lc3NhZ2U6Cgpkcm0vYW1kZ3B1OiBzaHJpbmsgY3JpdGljYWwgc2VjdGlvbgog
+ICAgICAgIGluIGFtZGdwdV9hbWRrZmRfZ3B1dm1fZnJlZV9tZW1vcnlfb2ZfZ3B1CgpSZWR1Y2Ug
+dGhlIG1lbS0+bG9ja2BzIHByb3RlY3RlZAogICAgICAgIGNvZGUgYXJlYSwgbm8gbmVlZCB0byBw
+cm90ZWN0IHByX2RlYnVnLgogICAgICAKVGhpcyBhbHNvIHNpbXBsaWZpZXMgZXJyb3IgaGFuZGxp
+bmcuCgpUaGVyZSBpcyBvbmUgbW9yZSBjb3NtZXRpYyBjaGFuZ2UgSSdtCiAgICAgIGdvaW5nIHRv
+IG1ha2UsIHNlZSBpbmxpbmUuIEknbGwgYXBwbHkgeW91ciBwYXRjaCB3aXRoIHRob3NlCiAgICAg
+IHVwZGF0ZXMgaWYgeW91J3JlIE9LIHdpdGggdGhhdC4KCk9uIDIwMjAtMDQtMjEgMjo0OCwgQmVy
+bmFyZCBaaGFvIHdyb3RlOgoKTWF5YmUgd2UgY291bGQgcmVkdWNlIHRoZSBtdXRleF9sb2NrKCZt
+ZW0tPmxvY2spYHMgcHJvdGVjdGVkIGNvZGUgYXJlYSwKYW5kIG5vIG5lZWQgdG8gcHJvdGVjdCBw
+cl9kZWJ1Zy4KClNpZ25lZC1vZmYtYnk6IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4K
+CkNoYW5nZXMgc2luY2UgVjE6Cipjb21taXQgbWVzc2FnZSBpbXByb3ZlCgpDaGFuZ2VzIHNpbmNl
+IFYyOgoqbW92ZSBjb21tZW50IGFsb25nIHdpdGggdGhlIG11dGV4X3VubG9jawoKTGluayBmb3Ig
+VjE6CipodHRwczovL25hbTExLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9
+aHR0cHMlM0ElMkYlMkZsb3JlLmtlcm5lbC5vcmclMkZwYXRjaHdvcmslMkZwYXRjaCUyRjEyMjY1
+ODglMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q0ZlbGl4Lkt1ZWhsaW5nJTQwYW1kLmNvbSU3Q2M3MTVm
+NWQwMmFhZTQwODQ2YjhmMDhkN2U1YzAwMWZkJTdDM2RkODk2MWZlNDg4NGU2MDhlMTFhODJkOTk0
+ZTE4M2QlN0MwJTdDMCU3QzYzNzIzMDQ4NTE1Mjc4OTY4MiZhbXA7c2RhdGE9NFVkWmlXTUFiVzhl
+UjFCUzIlMkY2cU12czVLNmNIV3k1YzhJMzJSZVE0dXowJTNEJmFtcDtyZXNlcnZlZD0wCkxpbmsg
+Zm9yIFYyOgoqaHR0cHM6Ly9uYW0xMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/
+dXJsPWh0dHBzJTNBJTJGJTJGbG9yZS5rZXJuZWwub3JnJTJGcGF0Y2h3b3JrJTJGcGF0Y2glMkYx
+MjI3OTA3JTJGJmFtcDtkYXRhPTAyJTdDMDElN0NGZWxpeC5LdWVobGluZyU0MGFtZC5jb20lN0Nj
+NzE1ZjVkMDJhYWU0MDg0NmI4ZjA4ZDdlNWMwMDFmZCU3QzNkZDg5NjFmZTQ4ODRlNjA4ZTExYTgy
+ZDk5NGUxODNkJTdDMCU3QzAlN0M2MzcyMzA0ODUxNTI3OTk2NzMmYW1wO3NkYXRhPVd0JTJCazdr
+NE10U1g0eklEZ21MRU9CNlpLemZ1cUFkNkdKWjNDcmVxZjFhWSUzRCZhbXA7cmVzZXJ2ZWQ9MAot
+LS0KIGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ3B1dm0uYyB8IDE0
+ICsrKysrKystLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA3IGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9h
+bWRrZmRfZ3B1dm0uYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRf
+Z3B1dm0uYwppbmRleCAzMjczMTdjNTRmN2MuLmYwM2Q5ODQzZDcyMyAxMDA2NDQKLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FtZGtmZF9ncHV2bS5jCisrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ3B1dm0uYwpAQCAtMTI4NSwyMSAr
+MTI4NSwyMSBAQCBpbnQgYW1kZ3B1X2FtZGtmZF9ncHV2bV9mcmVlX21lbW9yeV9vZl9ncHUoCiAJ
+c3RydWN0IGJvX3ZtX3Jlc2VydmF0aW9uX2NvbnRleHQgY3R4OwogCXN0cnVjdCB0dG1fdmFsaWRh
+dGVfYnVmZmVyICpib19saXN0X2VudHJ5OwogCWludCByZXQ7CisJdW5zaWduZWQgaW50IG1hcHBl
+ZF90b19ncHVfbWVtb3J5OwogICAgCiAgICAKSSdsbCBtb3ZlIHRoaXMgYmVmb3JlIHRoZSAiaW50
+IHJldDsiIGxpbmUuIEl0IG1ha2VzIHRoZSBjb2RlIG1vcmUKICAgICAgcmVhZGFibGUgaWYgbG9u
+ZyBkZWNsYXJhdGlvbnMgY29tZSBiZWZvcmUgc2hvcnQgb25lcy4KICAgIApSZWdhcmRzLAoKICAg
+ICAgwqAgRmVsaXgKCgogCW11dGV4X2xvY2soJm1lbS0+bG9jayk7CisJbWFwcGVkX3RvX2dwdV9t
+ZW1vcnkgPSBtZW0tPm1hcHBlZF90b19ncHVfbWVtb3J5OworCW11dGV4X3VubG9jaygmbWVtLT5s
+b2NrKTsKKwkvKiBsb2NrIGlzIG5vdCBuZWVkZWQgYWZ0ZXIgdGhpcywgc2luY2UgbWVtIGlzIHVu
+dXNlZCBhbmQgd2lsbAorCSAqIGJlIGZyZWVkIGFueXdheQorCSAqLwogCi0JaWYgKG1lbS0+bWFw
+cGVkX3RvX2dwdV9tZW1vcnkgPiAwKSB7CisJaWYgKG1hcHBlZF90b19ncHVfbWVtb3J5ID4gMCkg
+ewogCQlwcl9kZWJ1ZygiQk8gVkEgMHglbGx4IHNpemUgMHglbHggaXMgc3RpbGwgbWFwcGVkLlxu
+IiwKIAkJCQltZW0tPnZhLCBib19zaXplKTsKLQkJbXV0ZXhfdW5sb2NrKCZtZW0tPmxvY2spOwog
+CQlyZXR1cm4gLUVCVVNZOwogCX0KIAotCW11dGV4X3VubG9jaygmbWVtLT5sb2NrKTsKLQkvKiBs
+b2NrIGlzIG5vdCBuZWVkZWQgYWZ0ZXIgdGhpcywgc2luY2UgbWVtIGlzIHVudXNlZCBhbmQgd2ls
+bAotCSAqIGJlIGZyZWVkIGFueXdheQotCSAqLwotCiAJLyogTm8gbW9yZSBNTVUgbm90aWZpZXJz
+ICovCiAJYW1kZ3B1X21uX3VucmVnaXN0ZXIobWVtLT5ibyk7CiAKCiAgICAKICAgIAoKICAgIAog
+IAoNCg0K
