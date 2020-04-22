@@ -2,64 +2,63 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2CCC5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A7CC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE77720780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167CC20780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q8E9NsMQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X5nJyTqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgDVMET (ORCPT
+        id S1728594AbgDVMGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:04:19 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39074 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgDVMET (ORCPT
+        Wed, 22 Apr 2020 08:06:06 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49092 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgDVMGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:04:19 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MBwRhm108352;
-        Wed, 22 Apr 2020 12:03:51 GMT
+        Wed, 22 Apr 2020 08:06:06 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MC2rO5097413;
+        Wed, 22 Apr 2020 12:05:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=0sge0UWysT17PtNdI9Z8VmS+FyRtHkKG1FJsSBeTKNA=;
- b=q8E9NsMQYqPf81xi+Pj3nn7wwTbBI4A7B6ZN76ZesHwwJewdpvI0NRlhCk0Z4MChwaIc
- jh5NQF/myFzldo5XHp0D01AUDK1i4UlYIIYLZyFQVykC6j2X0AWpUUurG7xCkIZPyIcM
- 8mwrZriF6xakPDsblTfDUv15MZaB/NktaCGS1UELzd7ml7vpTniV4w7kI0iYaZOcgxry
- iruKvnXcuokumvlrYEXBGOZ6VnRBL9S9AleADM6c84fJj6JagQryQQ5EPxneQfC+vxvl
- P87wM+0hNuP/oZQCI+bP7HKWt5QKO1SB72bYwuMacO+/1IB/JQ0mwX0ES2rjQ70Fod6I Hg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30grpgptbc-1
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=L7GWEspZEtRD1L/VpVBFE+u2DMBWTYytg1A5zTqZe30=;
+ b=X5nJyTqxnfILH2uNAa7QDwqOe8hrE6bDeRIvPmz1Cpaoh53/11LPQPw4KtyysOCmdkPi
+ HiB5s88TgJfH6kGG/vfz0meC7MjVbU8YZyJ13789MnTI2g+ypq4g7gXTMZFczjrg+7Q2
+ 3HuFxt3gbvnbw6fC0WkPO27FuVleMvCSnpWPcSRaa/UDboA3z82Q8BpwquavPEnsNerG
+ aD+PTW6qPezUpl01xWk3L3RK8W9Zzr+wj6Bhad/SDV8qjmPPjjj8cZbtzpAmLr5sYcA+
+ 0u25f+ExdHzlDGJVayFr2cB9giFclsvPfZx9K0suD3VjISH/tzfnTiPZvr1slurgZcII bA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30fsgm2cbn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 12:03:51 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MC2aHW176872;
-        Wed, 22 Apr 2020 12:03:50 GMT
+        Wed, 22 Apr 2020 12:05:45 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MC2HqJ052051;
+        Wed, 22 Apr 2020 12:03:44 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 30gbbgr0ya-1
+        by userp3030.oracle.com with ESMTP id 30gb1jeep1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Apr 2020 12:03:50 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03MC3nu4180211;
-        Wed, 22 Apr 2020 12:03:49 GMT
+        Wed, 22 Apr 2020 12:03:44 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03MC3imt056174;
+        Wed, 22 Apr 2020 12:03:44 GMT
 Received: from control-surface.uk.oracle.com (dhcp-10-175-178-214.vpn.oracle.com [10.175.178.214])
-        by aserp3020.oracle.com with ESMTP id 30gbbgr0ve-1
+        by userp3030.oracle.com with ESMTP id 30gb1jeehu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 22 Apr 2020 12:03:49 +0000
+        Wed, 22 Apr 2020 12:03:43 +0000
 Received: from control-surface.uk.oracle.com (localhost [127.0.0.1])
-        by control-surface.uk.oracle.com (8.15.2/8.15.2) with ESMTPS id 03MC3ltD080679
+        by control-surface.uk.oracle.com (8.15.2/8.15.2) with ESMTPS id 03MC3epQ080674
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 13:03:47 +0100
+        Wed, 22 Apr 2020 13:03:41 +0100
 Received: (from jch@localhost)
-        by control-surface.uk.oracle.com (8.15.2/8.15.2/Submit) id 03MC3lhA080678;
-        Wed, 22 Apr 2020 13:03:47 +0100
+        by control-surface.uk.oracle.com (8.15.2/8.15.2/Submit) id 03MC3dPx080672;
+        Wed, 22 Apr 2020 13:03:39 +0100
 X-Authentication-Warning: control-surface.uk.oracle.com: jch set sender to john.haxby@oracle.com using -f
 From:   John Haxby <john.haxby@oracle.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
@@ -67,112 +66,47 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
         Jonathan Corbet <corbet@lwn.net>
 Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, John Haxby <john.haxby@oracle.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 1/1] x86/fpu: Allow clearcpuid= to clear several bits
-Date:   Wed, 22 Apr 2020 13:03:19 +0100
-Message-Id: <03a3a4d135b17115db9ad91413e21af73e244500.1587555769.git.john.haxby@oracle.com>
+        linux-kernel@vger.kernel.org, John Haxby <john.haxby@oracle.com>
+Subject: [PATCH 0/1] x86/fpu: Allow clearcpuid= to clear several bits
+Date:   Wed, 22 Apr 2020 13:03:18 +0100
+Message-Id: <cover.1587555769.git.john.haxby@oracle.com>
 X-Mailer: git-send-email 2.25.3
-In-Reply-To: <cover.1587555769.git.john.haxby@oracle.com>
-References: <cover.1587555769.git.john.haxby@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9598 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1011
- malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220096
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prior to 0c2a3913d6f5, clearcpuid= could be specified several times on
-the command line to clear several bits. The old multiple option is a
-little anachronistic so change clearcpuid to accept a comma-separated
-list of numbers. Up to about eight bits can be cleared.
+Back in the mists of time, well, prior to 4.14.9, you could put clearcpuid=N
+several times on the command line to clear several CPUID bits.  Unfortunately,
+there was a problem with the way that this was done which meant XSAVE, in
+particular, wasn't cleared early enough.  This was fixed in 0c2a3913d6f5
+("x86/fpu: Parse clearcpuid= as early XSAVE argument").  Unfortunately that
+also meant that only one bit could be cleared.
 
-Fixes: 0c2a3913d6f5 ("x86/fpu: Parse clearcpuid= as early XSAVE argument")
-Signed-off-by: John Haxby <john.haxby@oracle.com>
-Cc: stable@vger.kernel.org
----
+This patch mostly fixes that.  Gone is the old, anachronistic, multiple
+clearcpuid= arguments to be replaced by a single clearcpuid=BITNUM[,BITNUM,...]
+argument.  It's no longer possible to clear perhaps dozens of flags with a very
+long kernel command line, but you can clear up to about eight bits now instead
+of just one.
+
+jch
+
+
+John Haxby (1):
+  x86/fpu: Allow clearcpuid= to clear several bits
+
  .../admin-guide/kernel-parameters.txt         | 24 ++++++++++---------
  arch/x86/kernel/fpu/init.c                    | 18 ++++++++------
  2 files changed, 24 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f2a93c8679e8..f380781be9e0 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -577,18 +577,20 @@
- 			loops can be debugged more effectively on production
- 			systems.
- 
--	clearcpuid=BITNUM [X86]
--			Disable CPUID feature X for the kernel. See
-+	clearcpuid=BITNUM[,BITNUM,...] [X86]
-+			Disable CPUID features for the kernel. See
- 			arch/x86/include/asm/cpufeatures.h for the valid bit
--			numbers. Note the Linux specific bits are not necessarily
--			stable over kernel options, but the vendor specific
--			ones should be.
--			Also note that user programs calling CPUID directly
--			or using the feature without checking anything
--			will still see it. This just prevents it from
--			being used by the kernel or shown in /proc/cpuinfo.
--			Also note the kernel might malfunction if you disable
--			some critical bits.
-+			numbers. Up to about eight bits can be cleared. Note the
-+			Linux specific bits are not necessarily stable over
-+			kernel options, but the vendor specific ones should be.
-+			Also note that user programs calling CPUID directly or
-+			using the feature without checking anything will still
-+			see it. This just prevents it from being used by the
-+			kernel or shown in /proc/cpuinfo.  Also note the kernel
-+			might malfunction if you disable some critical bits.
-+			Consider using a virtual machine emulating an older CPU
-+			type for clearing many bits or for making the cleared
-+			bits visible to user programs.
- 
- 	cma=nn[MG]@[start[MG][-end[MG]]]
- 			[ARM,X86,KNL]
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 6ce7e0a23268..8d826505c22e 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -243,8 +243,6 @@ static void __init fpu__init_system_ctx_switch(void)
- static void __init fpu__init_parse_early_param(void)
- {
- 	char arg[32];
--	char *argptr = arg;
--	int bit;
- 
- #ifdef CONFIG_X86_32
- 	if (cmdline_find_option_bool(boot_command_line, "no387"))
-@@ -268,11 +266,17 @@ static void __init fpu__init_parse_early_param(void)
- 		setup_clear_cpu_cap(X86_FEATURE_XSAVES);
- 
- 	if (cmdline_find_option(boot_command_line, "clearcpuid", arg,
--				sizeof(arg)) &&
--	    get_option(&argptr, &bit) &&
--	    bit >= 0 &&
--	    bit < NCAPINTS * 32)
--		setup_clear_cpu_cap(bit);
-+				sizeof(arg))) {
-+		/* cpuid bit numbers are mostly three digits */
-+		enum  { nints = sizeof(arg)/(3+1) + 1 };
-+		int i, bits[nints];
-+
-+		get_options(arg, nints, bits);
-+		for (i = 1; i <= bits[0]; i++) {
-+			if (bits[i] >= 0 && bits[i] < NCAPINTS * 32)
-+				setup_clear_cpu_cap(bits[i]);
-+		}
-+	}
- }
- 
- /*
 -- 
 2.25.3
 
