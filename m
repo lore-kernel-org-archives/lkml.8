@@ -2,99 +2,95 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D9C55181
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05819C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88F4C206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D69206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 02:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eZUdjEYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgDVCxl (ORCPT
+        id S1726426AbgDVCzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:53:41 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2863 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726173AbgDVCxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:53:40 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 571D6B555698B4456EC4;
-        Wed, 22 Apr 2020 10:53:38 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 22 Apr 2020 10:53:27 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] ide: Use memdup_user() as a cleanup
-Date:   Wed, 22 Apr 2020 10:59:41 +0800
-Message-ID: <1587524381-120136-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Tue, 21 Apr 2020 22:55:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:34107 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgDVCzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:55:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 496Q5Z1Pblz9sSm;
+        Wed, 22 Apr 2020 12:54:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587524098;
+        bh=T8qV6w7B9lBd+fsLege8VP5ioZ0Edf4sm2JMw8Hx1IM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eZUdjEYlpde+MRRLfX11VgjRNJvS0x+a+/rEUa5c3Wy5B7Hgw6P/Ab0kHz5KhzidU
+         43pNy7l9Mfw8QU+Q1sIXf6UlsOVefRZppC7R/b5WobMmN1Av3uAWfTR6ni1qVfDSSA
+         RCwdKd1G2I358jJ22GHwiDirGE6eUq32CGNkfCJ5iiPkzsAbhHUKYPysssFRutrCmt
+         pYXZesKu6VohTaYhowRi6fONHDFuPoCSR0DVy26neys+5y7LgsE27Iq1ZkkDl9Ulwx
+         XpORvmaSw+DuBxwpShdMRViQIzzEw9QvCbRtepWCfDNemBQxR7CwXEp4dE2tnoRyD0
+         D9jMO7iwSjB0g==
+Date:   Wed, 22 Apr 2020 12:54:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alasdair G Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Baryshkov <dmitry_baryshkov@mentor.com>
+Subject: linux-next: build failure after merge of the device-mapper tree
+Message-ID: <20200422125453.2fa88c9f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/5yGH2uSSHj5jJy+4lHEyjU7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix coccicheck warning which recommends to use memdup_user().
+--Sig_/5yGH2uSSHj5jJy+4lHEyjU7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch fixes the following coccicheck warnings:
+Hi all,
 
-drivers/ide/ide-taskfile.c:492:11-18: WARNING opportunity for memdup_user
-drivers/ide/ide-taskfile.c:505:10-17: WARNING opportunity for memdup_user
+After merging the device-mapper tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- drivers/ide/ide-taskfile.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ERROR: modpost: "key_type_encrypted" [drivers/md/dm-crypt.ko] undefined!
 
-diff --git a/drivers/ide/ide-taskfile.c b/drivers/ide/ide-taskfile.c
-index aab6a10..336b575 100644
---- a/drivers/ide/ide-taskfile.c
-+++ b/drivers/ide/ide-taskfile.c
-@@ -489,28 +489,16 @@ int ide_taskfile_ioctl(ide_drive_t *drive, unsigned long arg)
- 
- 	if (taskout) {
- 		int outtotal = tasksize;
--		outbuf = kzalloc(taskout, GFP_KERNEL);
--		if (outbuf == NULL) {
--			err = -ENOMEM;
--			goto abort;
--		}
--		if (copy_from_user(outbuf, buf + outtotal, taskout)) {
--			err = -EFAULT;
--			goto abort;
--		}
-+		outbuf = memdup_user(buf + outtotal, taskout);
-+		if (IS_ERR(outbuf))
-+			return PTR_ERR(outbuf);
- 	}
- 
- 	if (taskin) {
- 		int intotal = tasksize + taskout;
--		inbuf = kzalloc(taskin, GFP_KERNEL);
--		if (inbuf == NULL) {
--			err = -ENOMEM;
--			goto abort;
--		}
--		if (copy_from_user(inbuf, buf + intotal, taskin)) {
--			err = -EFAULT;
--			goto abort;
--		}
-+		inbuf = memdup_user(buf + intotal, taskin);
-+		if (IS_ERR(inbuf))
-+			return PTR_ERR(inbuf);
- 	}
- 
- 	memset(&cmd, 0, sizeof(cmd));
--- 
-2.6.2
+Caused by commit
 
+  5cacab0334b9 ("dm crypt: support using encrypted keys")
+
+CONFIG_ENCRYPTED_KEYS is not set for this build.
+
+I have used the device-mapper tree from next-20200421 fot today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5yGH2uSSHj5jJy+4lHEyjU7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6fsf0ACgkQAVBC80lX
+0GyNaAf+PJZU/6KC9mVuXUASOLXduHbynXjRruymtnmzoSgF2br4AI+VW27V1X0V
+5eSptr/S5Z46SlR+G5Se5gN/ng8i6GHD2zvu+TECxGVZG3ylMTJ2qWsRfTWR34VV
+77nze1NUXuF7ClY4d2oGvMi/TMhsdGa9jU29foaDv7SybeLstt6wdR1Mub6ZHWzB
+khA0kRyPOTyUykfrt3j26cO72ONt3HUHdi2SUNff1mfDoRgsXR8HxhD31jUWlIFF
+FD7mj5R4NPBkw0bTXY17eOtJ48FelucbTAV9Upt+uxdrl45gPFefc/0QbxR6G02u
+Wtq+xl28saiXtildBXRKEfnC2hqgxg==
+=C2wQ
+-----END PGP SIGNATURE-----
+
+--Sig_/5yGH2uSSHj5jJy+4lHEyjU7--
