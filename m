@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C65C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6CEC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3C42073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC832073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552495;
-	bh=k8xYy+LMBvtR9vGrgEP7ljRQZTei9c9KafyXYKHGOAA=;
+	s=default; t=1587552497;
+	bh=i3Ux0xyQDuBdGA7BktnWpwTgBU7SDcaAFTMtDViyrKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kRQQMT9DoZ8csIhzAgAMUzLlAqxzX+U1Lu1aLqD6ajTPFxiIk+WzRF2sbHMupMzZt
-	 m5a1MFCzDO+FxfuvnUg1iOnm6N5iRwPDC+InRx4JEheP3vsZJctxSXM0fQP4Z90A02
-	 frkZUBEYHQH19E8DboRQhgAfKlg145ImN37XWtdw=
+	b=SIP6nedVSR3y/6KA7Nog7ae3oiqPvQQ68rS4Kq+h6DFZyG5HhIyWq7OkRjbOu9NEn
+	 h/50Fyu2ob5ysIj4v+AgtO8yzjj22GcH4YTXCT/ccrZn9/muaxVj1LMvR7AepRQwHN
+	 efA8stytoPrZaQ2NW6uVg18TzYUPMDzVO7P1F1EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732040AbgDVKsO (ORCPT
+        id S1728692AbgDVKOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49756 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbgDVKOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:52 -0400
+        id S1729568AbgDVKOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF04B20575;
-        Wed, 22 Apr 2020 10:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E127D2070B;
+        Wed, 22 Apr 2020 10:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550492;
-        bh=k8xYy+LMBvtR9vGrgEP7ljRQZTei9c9KafyXYKHGOAA=;
+        s=default; t=1587550482;
+        bh=i3Ux0xyQDuBdGA7BktnWpwTgBU7SDcaAFTMtDViyrKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOcTITFxwuO986jwqY+hFLlUsPvtQbhXuEXyWeierS5l4fNC+zlQuIzjUI3HINsrZ
-         8HEVkZGSGS9BLvqXZCUlfYytQh04MiCrmloWnZo/l69f0q2Plrsv0ZxUdxuBr3KBKY
-         6E5+L72u9YRR8FmNHtwB8M8Pyi7N7nQGoWPao2M4=
+        b=hxNrTzozeedO7kTd83AdPW7CnjjZpnoTIcV7dos2x5GdbtJ9fb0e6y08bS6yfRywC
+         pgn06bEePu+gRkMmk6nffivd+VBmSaIRHPRMpLdcl6nmseKMxZR2lhmhJZLZuDnFZO
+         6vUSjltkaVlk5cnrePObwi4bUDPO2sk7kqH8PVNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Long Li <longli@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/64] cifs: Allocate encryption header through kmalloc
-Date:   Wed, 22 Apr 2020 11:57:22 +0200
-Message-Id: <20200422095019.806639632@linuxfoundation.org>
+Subject: [PATCH 4.19 34/64] powerpc/maple: Fix declaration made after definition
+Date:   Wed, 22 Apr 2020 11:57:18 +0200
+Message-Id: <20200422095018.993169650@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -60,81 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 3946d0d04bb360acca72db5efe9ae8440012d9dc ]
+[ Upstream commit af6cf95c4d003fccd6c2ecc99a598fb854b537e7 ]
 
-When encryption is used, smb2_transform_hdr is defined on the stack and is
-passed to the transport. This doesn't work with RDMA as the buffer needs to
-be DMA'ed.
+When building ppc64 defconfig, Clang errors (trimmed for brevity):
 
-Fix it by using kmalloc.
+  arch/powerpc/platforms/maple/setup.c:365:1: error: attribute declaration
+  must precede definition [-Werror,-Wignored-attributes]
+  machine_device_initcall(maple, maple_cpc925_edac_setup);
+  ^
 
-Signed-off-by: Long Li <longli@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+machine_device_initcall expands to __define_machine_initcall, which in
+turn has the macro machine_is used in it, which declares mach_##name
+with an __attribute__((weak)). define_machine actually defines
+mach_##name, which in this file happens before the declaration, hence
+the warning.
+
+To fix this, move define_machine after machine_device_initcall so that
+the declaration occurs before the definition, which matches how
+machine_device_initcall and define_machine work throughout
+arch/powerpc.
+
+While we're here, remove some spaces before tabs.
+
+Fixes: 8f101a051ef0 ("edac: cpc925 MC platform device setup")
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200323222729.15365-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/transport.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ arch/powerpc/platforms/maple/setup.c | 34 ++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index 0c4df56c825ab..70412944b267d 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -392,7 +392,7 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	      struct smb_rqst *rqst, int flags)
- {
- 	struct kvec iov;
--	struct smb2_transform_hdr tr_hdr;
-+	struct smb2_transform_hdr *tr_hdr;
- 	struct smb_rqst cur_rqst[MAX_COMPOUND];
- 	int rc;
- 
-@@ -402,28 +402,34 @@ smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	if (num_rqst > MAX_COMPOUND - 1)
- 		return -ENOMEM;
- 
--	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
--	memset(&iov, 0, sizeof(iov));
--	memset(&tr_hdr, 0, sizeof(tr_hdr));
--
--	iov.iov_base = &tr_hdr;
--	iov.iov_len = sizeof(tr_hdr);
--	cur_rqst[0].rq_iov = &iov;
--	cur_rqst[0].rq_nvec = 1;
--
- 	if (!server->ops->init_transform_rq) {
- 		cifs_dbg(VFS, "Encryption requested but transform callback "
- 			 "is missing\n");
- 		return -EIO;
- 	}
- 
-+	tr_hdr = kmalloc(sizeof(*tr_hdr), GFP_NOFS);
-+	if (!tr_hdr)
-+		return -ENOMEM;
-+
-+	memset(&cur_rqst[0], 0, sizeof(cur_rqst));
-+	memset(&iov, 0, sizeof(iov));
-+	memset(tr_hdr, 0, sizeof(*tr_hdr));
-+
-+	iov.iov_base = tr_hdr;
-+	iov.iov_len = sizeof(*tr_hdr);
-+	cur_rqst[0].rq_iov = &iov;
-+	cur_rqst[0].rq_nvec = 1;
-+
- 	rc = server->ops->init_transform_rq(server, num_rqst + 1,
- 					    &cur_rqst[0], rqst);
- 	if (rc)
--		return rc;
-+		goto out;
- 
- 	rc = __smb_send_rqst(server, num_rqst + 1, &cur_rqst[0]);
- 	smb3_free_compound_rqst(num_rqst, &cur_rqst[1]);
-+out:
-+	kfree(tr_hdr);
- 	return rc;
+diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
+index b7f937563827d..d1fee2d35b49c 100644
+--- a/arch/powerpc/platforms/maple/setup.c
++++ b/arch/powerpc/platforms/maple/setup.c
+@@ -299,23 +299,6 @@ static int __init maple_probe(void)
+ 	return 1;
  }
  
+-define_machine(maple) {
+-	.name			= "Maple",
+-	.probe			= maple_probe,
+-	.setup_arch		= maple_setup_arch,
+-	.init_IRQ		= maple_init_IRQ,
+-	.pci_irq_fixup		= maple_pci_irq_fixup,
+-	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
+-	.restart		= maple_restart,
+-	.halt			= maple_halt,
+-       	.get_boot_time		= maple_get_boot_time,
+-       	.set_rtc_time		= maple_set_rtc_time,
+-       	.get_rtc_time		= maple_get_rtc_time,
+-      	.calibrate_decr		= generic_calibrate_decr,
+-	.progress		= maple_progress,
+-	.power_save		= power4_idle,
+-};
+-
+ #ifdef CONFIG_EDAC
+ /*
+  * Register a platform device for CPC925 memory controller on
+@@ -372,3 +355,20 @@ static int __init maple_cpc925_edac_setup(void)
+ }
+ machine_device_initcall(maple, maple_cpc925_edac_setup);
+ #endif
++
++define_machine(maple) {
++	.name			= "Maple",
++	.probe			= maple_probe,
++	.setup_arch		= maple_setup_arch,
++	.init_IRQ		= maple_init_IRQ,
++	.pci_irq_fixup		= maple_pci_irq_fixup,
++	.pci_get_legacy_ide_irq	= maple_pci_get_legacy_ide_irq,
++	.restart		= maple_restart,
++	.halt			= maple_halt,
++	.get_boot_time		= maple_get_boot_time,
++	.set_rtc_time		= maple_set_rtc_time,
++	.get_rtc_time		= maple_get_rtc_time,
++	.calibrate_decr		= generic_calibrate_decr,
++	.progress		= maple_progress,
++	.power_save		= power4_idle,
++};
 -- 
 2.20.1
 
