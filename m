@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED0EC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE50C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24AD720882
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791B42070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550485;
-	bh=6Qusnb+hvblgVvgzQUKkQ1ZP7XGAWG225QsbQDOykRc=;
+	s=default; t=1587550494;
+	bh=VKvRnzrhE79l30fPjNatQ8L377zR5ldGkynql46Qu7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lbI28MAK/6iSHg4XPGFaIo5C7KmGNJU083pMXpp9gy06/pbUhIsY0IAheFigx49r/
-	 T1WFa2oXDpMPedjZEwCm4n2ChEtmLazi4LN8Fs6W53uMUDv5eFFCwNkCzbzGW2jBmy
-	 cKZmzcdVLmIHmESLoFbJfFi5E2se0U/SMfroLfzk=
+	b=X4JhhEhqgZOEw3ocntr72RKYtIYSLYQvA4cl+844g5iV9Z2OwA03j4eprL5y93OQr
+	 RGI/Uz+Erca0GXXmtr/fTgcd8E9p/VsdxPQc7Di+TrVFKweewn/qNRLSPspUNfv3df
+	 uh2DpU/P3vEqZaKdRLFkSyQD0098uYTR7Y+sXhvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgDVKOo (ORCPT
+        id S1729598AbgDVKOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbgDVKOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:38 -0400
+        id S1729577AbgDVKOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0D722071E;
-        Wed, 22 Apr 2020 10:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DEB920776;
+        Wed, 22 Apr 2020 10:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550477;
-        bh=6Qusnb+hvblgVvgzQUKkQ1ZP7XGAWG225QsbQDOykRc=;
+        s=default; t=1587550484;
+        bh=VKvRnzrhE79l30fPjNatQ8L377zR5ldGkynql46Qu7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOedRFQAS9OWDvbzOLwI8qphUiUPhNv8H8FoSQA8klJ1LJjBVBqVKKdtVjEET2JQT
-         hNmWZNi2+r/RD7R4BOBKkxW9ocDP4gdZicC60G43uhJ5SYjwE9ndWYSyT6ZbiZRMBI
-         GY4fjvyDHqLWgQRDSwCFLfPMTOQ25idYjSPNqZ7k=
+        b=LTkvZ0poKx9A2RHXaqXaEdCUYyyq1leyuUB5d20lsxg6JbUJKSroXKxopXvHr45gM
+         vTyKd8yAEREipUKpUZ+RR92FAYiwHX+GSuQrMlkMQ7Tv/D6O/YLslSUWLZFnC7x+jX
+         kq/6gX3pQ26pK4Uha4B3dHhQAW+o8wQMyw4+lwG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/64] NFS: direct.c: Fix memory leak of dreq when nfs_get_lock_context fails
-Date:   Wed, 22 Apr 2020 11:57:16 +0200
-Message-Id: <20200422095018.683178013@linuxfoundation.org>
+Subject: [PATCH 4.19 35/64] s390/cpum_sf: Fix wrong page count in error message
+Date:   Wed, 22 Apr 2020 11:57:19 +0200
+Message-Id: <20200422095019.152022733@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -61,48 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 8605cf0e852af3b2c771c18417499dc4ceed03d5 ]
+[ Upstream commit 4141b6a5e9f171325effc36a22eb92bf961e7a5c ]
 
-When dreq is allocated by nfs_direct_req_alloc(), dreq->kref is
-initialized to 2. Therefore we need to call nfs_direct_req_release()
-twice to release the allocated dreq. Usually it is called in
-nfs_file_direct_{read, write}() and nfs_direct_complete().
+When perf record -e SF_CYCLES_BASIC_DIAG runs with very high
+frequency, the samples arrive faster than the perf process can
+save them to file. Eventually, for longer running processes, this
+leads to the siutation where the trace buffers allocated by perf
+slowly fills up. At one point the auxiliary trace buffer is full
+and  the CPU Measurement sampling facility is turned off. Furthermore
+a warning is printed to the kernel log buffer:
 
-However, current code only calls nfs_direct_req_relese() once if
-nfs_get_lock_context() fails in nfs_file_direct_{read, write}().
-So, that case would result in memory leak.
+cpum_sf: The AUX buffer with 0 pages for the diagnostic-sampling
+	mode is full
 
-Fix this by adding the missing call.
+The number of allocated pages for the auxiliary trace buffer is shown
+as zero pages. That is wrong.
 
-Signed-off-by: Misono Tomohiro <misono.tomohiro@jp.fujitsu.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fix this by saving the number of allocated pages before entering the
+work loop in the interrupt handler. When the interrupt handler processes
+the samples, it may detect the buffer full condition and stop sampling,
+reducing the buffer size to zero.
+Print the correct value in the error message:
+
+cpum_sf: The AUX buffer with 256 pages for the diagnostic-sampling
+	mode is full
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/kernel/perf_cpum_sf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index c61bd3fc723ee..e5da9d7fb69e9 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -600,6 +600,7 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
-@@ -1023,6 +1024,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	l_ctx = nfs_get_lock_context(dreq->ctx);
- 	if (IS_ERR(l_ctx)) {
- 		result = PTR_ERR(l_ctx);
-+		nfs_direct_req_release(dreq);
- 		goto out_release;
- 	}
- 	dreq->l_ctx = l_ctx;
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 5bfb1ce129f4b..74a296cea21cc 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1537,6 +1537,7 @@ static void hw_collect_aux(struct cpu_hw_sf *cpuhw)
+ 	perf_aux_output_end(handle, size);
+ 	num_sdb = aux->sfb.num_sdb;
+ 
++	num_sdb = aux->sfb.num_sdb;
+ 	while (!done) {
+ 		/* Get an output handle */
+ 		aux = perf_aux_output_begin(handle, cpuhw->event);
 -- 
 2.20.1
 
