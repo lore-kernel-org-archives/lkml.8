@@ -2,51 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA4DC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FD3C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEB720784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6768520780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552367;
-	bh=ZaYqdeRvQZPigS+ANvJSCa11Eqd6O2GHEYnBCZcLTBg=;
+	s=default; t=1587552369;
+	bh=OB6uo/HCyFxTsaJ3MtSPMJJb5ck8q2hYb6nWW83YjS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4nH6spTYtiiLoPCjhZkIcFX2t0a8imaKcxjOTFF4MeWYd23temUi5RXFhiAsf/IH
-	 /p2XDCUDGsE7m+VVX0L7ZngQN2NWoXfTJ6KQUeM7FiAkIMrAtnK47+YHbiyj8+gK/g
-	 vhZ8yi0wjLn/ag7btrGmP+KUP5/bZF8Cr/fOKTII=
+	b=cqjZsF8fXUWSrFPtgOYCQ3D/qCoj0s5zdp6nrTze+18IjFJuqq1qQV1HcuiBu+myH
+	 ex0Sy4QdGT2xRh5p7Gn+c1NIs0sfnF7mrdF8ntKP3rYrinTLH36uhMhD88eP4+16aU
+	 LdQcH5jsfsxBX0siEzzAGYfLBEpSpGEHazYj+m/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgDVKR1 (ORCPT
+        id S1731941AbgDVKqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729758AbgDVKQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:27 -0400
+        id S1729829AbgDVKRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 796EB2075A;
-        Wed, 22 Apr 2020 10:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C55352070B;
+        Wed, 22 Apr 2020 10:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550585;
-        bh=ZaYqdeRvQZPigS+ANvJSCa11Eqd6O2GHEYnBCZcLTBg=;
+        s=default; t=1587550645;
+        bh=OB6uo/HCyFxTsaJ3MtSPMJJb5ck8q2hYb6nWW83YjS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jb8S1kHJGiz2hLB84li+8eFRniquru5rFnFXLVbBfPKvrc3wIKckVQ7huau1aXMzu
-         I7zHnZGmh1BGIMS3Ihv2quBFkkC3QyB4d6nl4kpcUcza8CGEALCdWi6T1IkoJ0y0/w
-         5au1exWSsXGr7F/KORV3lEBPJGhJdsAVi0J4jPS4=
+        b=yrHhI+1uBi6QJB7871pwDdLc66nbI8NDM8uVOI/e25eY4vRdQcito0PCT7951zrOt
+         EqiUvpyxLA3XYLW8ky22E96zuyBzQlHMTfPyAGn/+fV48oDYEGKYPwG0ZgxcbcpPge
+         Yh03RJS6RKovdoqmQO18dw+5tZA+XF1h44IAEih0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 012/118] irqchip/mbigen: Free msi_desc on device teardown
-Date:   Wed, 22 Apr 2020 11:56:13 +0200
-Message-Id: <20200422095033.567991077@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 034/118] x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+Date:   Wed, 22 Apr 2020 11:56:35 +0200
+Message-Id: <20200422095037.497701884@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -59,43 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-commit edfc23f6f9fdbd7825d50ac1f380243cde19b679 upstream.
+[ Upstream commit 7f11a2cc10a4ae3a70e2c73361f4a9a33503539b ]
 
-Using irq_domain_free_irqs_common() on the irqdomain free path will
-leave the MSI descriptor unfreed when platform devices get removed.
-Properly free it by MSI domain free function.
+If kmsg_dump_register() fails, hv_panic_page will not be used
+anywhere.  So free and reset it.
 
-Fixes: 9650c60ebfec0 ("irqchip/mbigen: Create irq domain for each mbigen device")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200408114352.1604-1-yuzenghui@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Link: https://lore.kernel.org/r/20200406155331.2105-3-Tianyu.Lan@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mbigen.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/hv/vmbus_drv.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -220,10 +220,16 @@ static int mbigen_irq_domain_alloc(struc
- 	return 0;
- }
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 593107c20e977..40f6b73dae940 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1401,9 +1401,13 @@ static int vmbus_bus_init(void)
+ 			hv_panic_page = (void *)get_zeroed_page(GFP_KERNEL);
+ 			if (hv_panic_page) {
+ 				ret = kmsg_dump_register(&hv_kmsg_dumper);
+-				if (ret)
++				if (ret) {
+ 					pr_err("Hyper-V: kmsg dump register "
+ 						"error 0x%x\n", ret);
++					hv_free_hyperv_page(
++					    (unsigned long)hv_panic_page);
++					hv_panic_page = NULL;
++				}
+ 			} else
+ 				pr_err("Hyper-V: panic message page memory "
+ 					"allocation failed");
+@@ -1433,7 +1437,6 @@ static int vmbus_bus_init(void)
+ 	hv_remove_vmbus_irq();
  
-+static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs)
-+{
-+	platform_msi_domain_free(domain, virq, nr_irqs);
-+}
-+
- static const struct irq_domain_ops mbigen_domain_ops = {
- 	.translate	= mbigen_domain_translate,
- 	.alloc		= mbigen_irq_domain_alloc,
--	.free		= irq_domain_free_irqs_common,
-+	.free		= mbigen_irq_domain_free,
- };
- 
- static int mbigen_of_create_domain(struct platform_device *pdev,
+ 	bus_unregister(&hv_bus);
+-	free_page((unsigned long)hv_panic_page);
+ 	unregister_sysctl_table(hv_ctl_table_hdr);
+ 	hv_ctl_table_hdr = NULL;
+ 	return ret;
+-- 
+2.20.1
+
 
 
