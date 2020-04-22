@@ -2,195 +2,112 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1DCC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9EAC5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015A52077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178052077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=national.shitposting.agency header.i=@national.shitposting.agency header.b="VL1t9syW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u1hPBAcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgDVUKr (ORCPT
+        id S1726528AbgDVUMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:10:47 -0400
-Received: from mail.cock.li ([37.120.193.124]:36688 "EHLO mail.cock.li"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgDVUKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:10:46 -0400
-Date:   Wed, 22 Apr 2020 22:10:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=national.shitposting.agency; s=mail; t=1587586243;
-        bh=zotRwtlkRnjxrTqO4ZjJddMzOpEG/wCSIPY2YTo8VNY=;
-        h=Date:From:To:Subject:From;
-        b=VL1t9syWCukD0pAaaLxUbqU5SeozqoEK8msroPWu9GP3FEoDmtAdqTOiOFlnl102Q
-         qAQHEgZOcgJCeZ34l54xQWX2QqnEveejDZEol7+HMCRyjj1k+gc9HNyxbXufs5tyrm
-         fQ3EHdyZsvhvaJ0f/TnEQ8fCVsxlCxvjBDfFOAyQ5BG4M6TONa72VEleWrXHz8RZVF
-         mE1DU/Nlo7Y0o2aCtSc7F/ey6lcRDxqlNeBydaNlFZj/xY4+JTx6el6JOs0ufxXmR1
-         YQGVDY852Lg7nQObXkcirWkvimMcVb3doKsxZoPGlRy/y+c9Yt6juweOQmz6oWZbSf
-         QHx4P1qTMubnw==
-From:   zsugabubus <zsugabubus@national.shitposting.agency>
-To:     linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] scripts/prettify: add script to prettify code
-Message-ID: <20200422201039.ghwdjwwmesiwnwts@localhost>
+        Wed, 22 Apr 2020 16:12:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgDVUMY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:12:24 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BBCC03C1A9;
+        Wed, 22 Apr 2020 13:12:23 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id a2so2885384ejx.5;
+        Wed, 22 Apr 2020 13:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KXxHIljFmLh8soPuXzemAjRAO1AtwvjZf5J7ToWtf8U=;
+        b=u1hPBAcyimOPDcc2gD5ogfk1Ot74MUK5tYKviAVgA6IkyMxKKCCEMDVGkxkdEgfdc4
+         XM6G1lMg52sPDHfSR7z23W74gApPXHMukxAYl5kis+8QHlS0x/fEsX/8t1om9BQwD0SF
+         zBONh7CDl7pC0lDbGxX0+r6Mx5BRBSCcpN5t3El8CZzFJVP5/BkQwG78YlGOE1IMqwoB
+         2QzLn6MIaY2guVhELsH5xU78iVVK6knNYDVrbw8Hxsa6ahrEYz4fBv+AaGtT8tCEkK/D
+         oNth3+4/Wgo5jZ5hl0TYgD8WWpcfRle8/2Qo8di9i1wol8eczleLtryqxxNH68uWAmTq
+         UbJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KXxHIljFmLh8soPuXzemAjRAO1AtwvjZf5J7ToWtf8U=;
+        b=laf8d6tNL8bur27vnOipydfDLZ80L7POLYaBBM//EaxjmxAQ0Fop/zwy7i6haMF1fI
+         MdorALb1SQIMTioVRav1fDOQ1wowmZcR7N7XOUjCBcp5R+UKJ0Lr8lWeBgL1JESFT2PG
+         WW5l95TTaPWQ0OwW8GYZZ3ZWhpUu/AfFmN7fSCTMNTWSt5Z2Tb7bfzfaWRXQ3vKCO5cZ
+         pG2aVCXjXjrdV3gtFWZCeeFjRMSPs6j5cfl4ilQtyUfHj0OW5wodLHXQ9EErILZ6W3JP
+         KApIPxrAox04zqlLW8L8R3zJxDjYoJGovV2gAIc1SB5s+FaJoOMycPGYZzTuRlbBaU2h
+         HK6A==
+X-Gm-Message-State: AGi0PuYpPP9gnN0bI28LgbQcCsYK5ZFLAxVZ6dLbE1pLu00yZA4shlaq
+        lpbM8zE+PtVQNghHDNRHB8c=
+X-Google-Smtp-Source: APiQypLbfBgCcNY33E1Ne4qeN757gm6FckRRpoa0bnDaomgSbHDVMvWzDe6WgrndkPNb/HjvmjqE/w==
+X-Received: by 2002:a17:907:b11:: with SMTP id h17mr55555ejl.371.1587586341762;
+        Wed, 22 Apr 2020 13:12:21 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host36-18-dynamic.45-213-r.retail.telecomitalia.it. [213.45.18.36])
+        by smtp.googlemail.com with ESMTPSA id q1sm8789ejf.42.2020.04.22.13.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 13:12:20 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Viresh Kumar <vireshk@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilia Lin <ilia.lin@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sricharan R <sricharan@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] cpufreq: qcom: fix  compatibility issue with old binding
+Date:   Wed, 22 Apr 2020 22:12:15 +0200
+Message-Id: <20200422201216.10593-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mix and mess of tabs and spaces are all around in the code. This script
-is for here to correct those >1.5 million lines where code does not match
-kernel coding style.
+Binding has changed from operating-points-v2-kryo-cpu to
+operating-points-v2-qcom-cpu. Also check for old binding in driver
+probe.
 
-Usage of `prettify` is pretty simple: It expects a directory you would
-like to prettify (default: .) then watch it go.
-
+Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based socs")
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- scripts/prettify | 94 ++++++++++++++++++++++++++++++++++++++++++++++++
- scripts/retab    | 28 +++++++++++++++
- 2 files changed, 122 insertions(+)
- create mode 100755 scripts/prettify
- create mode 100755 scripts/retab
+ drivers/cpufreq/qcom-cpufreq-nvmem.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/scripts/prettify b/scripts/prettify
-new file mode 100755
-index 000000000..3c725ec5c
---- /dev/null
-+++ b/scripts/prettify
-@@ -0,0 +1,94 @@
-+#!/usr/bin/sh -eu
-+# SPDX-License-Identifier: GPL-3.0-or-later
-+TREE=${1:-.}
+diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+index a1b8238872a2..9e9279162b5b 100644
+--- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
++++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+@@ -278,6 +278,10 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 
+ 	ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
++	if (!ret)
++		ret = of_device_is_compatible(np,
++					      "operating-points-v2-kryo-cpu");
 +
-+XARGS="xargs -rP $(nproc 2>/dev/null || echo 2) -n 5000"
-+
-+export RETAB_TABWIDTH=8
-+
-+# Using BEGIN and END we can easily filter which lines we want to retab.
-+# However, we have to hack a little bit more to ignore characters from the
-+# line, e.g. ones inside comments. These space characters, we do not
-+# want to retab, are substituted with '\n' (an extremal character) at
-+# the beginning and after retab finished they are substituted back.
-+
-+trap '
-+echo >&2 warning: sed temporary files may remained.  Please remove them manually:
-+find >&2 "$TREE" -name "sed*"
-+' INT TERM
-+
-+true &&
-+echo 'Pass: Enforce Coding Standards' &&
-+find "$TREE" -type f -name '*.[ch]' \
-+| $XARGS sed -i -E '
-+# Trailing white.
-+s/\s{1,}$//
-+# Move # to the first column.
-+s/^(\s{1,})#(\s*)/#\1\2/
-+
-+# Spacing around keywords.
-+s/^(\s{1,}(if|else if|switch|for|while))\s*\(\s*/\1 (/
-+s/(sizeof|typeof|alignof|__attribute__)\s*\(\s*/\1(/
-+
-+# Open bracket spacing.
-+/^\s*(if|\}?\s*else if|switch|for|while) / s/\s*\)$/)/;
-+/^\s*(if|\}?\s*else if|switch|for|while) / s/\s*\)\s*\{$/) {/;
-+s/\}else/} else/
-+
-+# // -> /* */ comments.
-+s/((^|\s*[a-z_]{1,}:|.*;)\s*)\/\/\s*(.*)$/\1\/* \3 *\//
-+'
-+
-+# Converts the random sequence of spaces and tabs at the first lines of
-+# #defines to tabs and only keeps spaces if needed for the alignment.
-+# When people did not use tabs for indentation, at 7/8 of the cases, some
-+# spaces will remain, because they put their code at non-tabstop column. Hurray!
-+# Maybe it could be corrected in another pass that aligns whole blocks.
-+true &&
-+echo 'Pass: Retab #defines' &&
-+export RETAB_BEGIN='/^#\s*define\s*[A-Za-z_]{1,}.*$/ {
-+:right
-+  s/((\/\*|\().*) /\1\n/g
-+t right;' &&
-+export RETAB_END='s/\n/ /g; }' &&
-+find "$TREE" -type f -name '*.h' \
-+| $XARGS ./retab
-+
-+# Convert space indentation to tab indentation.
-+true &&
-+echo 'Pass: Retab Indentations' &&
-+export RETAB_BEGIN='/^[ \t]{2,}[^ \t*]/ {
-+:loop;
-+	s/^([ \t]*[^ ]{1,}) /\1\n/g;
-+t loop;' &&
-+export RETAB_END='s/\n/ /g; }' &&
-+find "$TREE" -type f -name '*.[ch]' \
-+| $XARGS ./retab
-+
-+# Someone people cannot fking count to 8... or more precisely to 1 tab, so they
-+# hit space 6 or 7 times (randomly) to indent their codes. Note that these
-+# partial tabs could not be converted to tabs in the previous passes.
-+true &&
-+echo 'Pass: ++Space -> Tab at Line Starts' &&
-+find "$TREE" -type f -name '*.[ch]' \
-+| $XARGS sed -i -E '
-+:next
-+# Skip fors spanning multiple lines.
-+/^\s*for .*;$/ {
-+	n; n; b next
-+}
-+
-+# Repeat replace on current line.
-+:rep
-+	s/^(\t{,4}) {5,7}([_a-zA-Z{}]|\/\*)/\1\t\2/g
-+t rep
-+
-+# Skip to the next statement.
-+/^$|\*\/$|[){};]$/ { n; b next }
-+:skip
-+/[{};]$/! { n; b skip }
-+'
-+
-+trap '' INT TERM
-+
-+echo 'Done.  :)'
-diff --git a/scripts/retab b/scripts/retab
-new file mode 100755
-index 000000000..caf1cd58a
---- /dev/null
-+++ b/scripts/retab
-@@ -0,0 +1,28 @@
-+#!/usr/bin/sh -eu
-+# SPDX-License-Identifier: GPL-3.0-or-later
-+# [ RETAB_TABWIDTH=8 ] sed "[ $RETAB_BEGIN ] { retab logic } [ $RETAB_END ]" [ FILE... ]
-+
-+: ${RETAB_TABWIDTH:=8}
-+
-+IFS=
-+# An extremal character.
-+marker=$(printf '\x01')
-+
-+exec sed --in-place -E "${RETAB_BEGIN:-}"'{
-+	# Mark tabstops.
-+	:tabstop
-+		s/^(([^\t]{'"$RETAB_TABWIDTH"'}|.*\t)*[^\t]{'"$((RETAB_TABWIDTH-1))"'}) /\1'"$marker"'/
-+	t tabstop
-+
-+  # Do replace space with a one-width tabulator if it would be the only change
-+  # in that whitespace chunk.
-+	s/([^ ])'"$marker"'([ \t]*[^ \t'"$marker"'])/\1 \2/g
-+
-+	# Place tabulators at tabstops.
-+	s/ {,'"$((RETAB_TABWIDTH-1))"'}'"$marker"'/\t/g
-+
-+	# Remove needless space(s) before tabulators.
-+	:spc
-+		s/^(([^\t]{'"$RETAB_TABWIDTH"'}|.*\t)*[^\t]{,'"$((RETAB_TABWIDTH-2))"'}) \t/\1\t/g
-+	t spc
-+};'"${RETAB_END:-}" -- "$@"
+ 	if (!ret) {
+ 		of_node_put(np);
+ 		return -ENOENT;
 -- 
-2.26.1
+2.25.1
+
