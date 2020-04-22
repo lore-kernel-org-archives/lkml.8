@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD775C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A45FC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAA32075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663F020775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550645;
-	bh=8Wco1LY/21WJk6K3aCn8LMqP5SK4Id+lrMtZrhm9VNg=;
+	s=default; t=1587550655;
+	bh=dgsp2o5jhO3cVaLbl6yI7GcuL8xJF4PWHyAwkSBbIFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lT84ktcJziFu8VK09N0uFrsF+4foJIAyNW6CBgrx6pU6Z1/Kiy44QcvUiTt3qKek/
-	 /aAnTnwTe6pfkuJXuPVj31TDkTnrToEE6qF3IBIOwMDp3JwLaPPLcYQ3tLNFJBLUV7
-	 iQ/wrdu5FQMFCK9UHMygnugmKrZ35DrfNy38Q37o=
+	b=mNgJRzI8071OeTEnTEIX63E2xkv+bUubM0R/Zef25bx1WXswlMEHJTHm8CcKoSvgJ
+	 z57JIcmVjJblBMNkqvnOz5cURgL5VLdJ/NVH/1Fr6dFfVw6O7v2wFhZS28y1Wmr3ZH
+	 PDY0EYaTOiW5gLQYLgxsBDPjMrxqVILFQpEP9f8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbgDVKRZ (ORCPT
+        id S1729852AbgDVKRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52148 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:17:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729751AbgDVKQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:23 -0400
+        id S1729691AbgDVKQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBBB72076B;
-        Wed, 22 Apr 2020 10:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D862076B;
+        Wed, 22 Apr 2020 10:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550583;
-        bh=8Wco1LY/21WJk6K3aCn8LMqP5SK4Id+lrMtZrhm9VNg=;
+        s=default; t=1587550591;
+        bh=dgsp2o5jhO3cVaLbl6yI7GcuL8xJF4PWHyAwkSBbIFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqhLXHg/5EQ6CLzLU377INjrFgqWNlWfePEyV61HGOZ1Hveii2oFJg7b5Onu6Htrc
-         V42a1UhRBu64HjEGS80Pb2mH3EUJWcH+/PMkpRdxraivkUSWrNZSNj3PhlBjDImaq6
-         lLYCKy2yweh/2nqz7dPdI01ypl8qXyNTHmZQhX3k=
+        b=kXbtkGXZBB1JVl7mlnU4ewxKblAmsa41iUXOTrUnbgvXxDzIsCO3njfgk+LUZNVA9
+         QfK2eutDTY5XNCi4CWzK5imk0zCeNdpddsskHyri+kl2EXTzhUxnVt8Ooc59YvJlfN
+         nQJ9DZ98M/QMT68U0QyhV+nBspVQhqtHZjS+HeD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 011/118] netfilter: nf_tables: report EOPNOTSUPP on unsupported flags/object type
-Date:   Wed, 22 Apr 2020 11:56:12 +0200
-Message-Id: <20200422095033.436693159@linuxfoundation.org>
+        stable@vger.kernel.org, Bui Quang Minh <minhquangbui99@gmail.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.4 014/118] xsk: Add missing check on user supplied headroom size
+Date:   Wed, 22 Apr 2020 11:56:15 +0200
+Message-Id: <20200422095033.911940986@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -58,41 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Magnus Karlsson <magnus.karlsson@intel.com>
 
-commit d9583cdf2f38d0f526d9a8c8564dd2e35e649bc7 upstream.
+commit 99e3a236dd43d06c65af0a2ef9cb44306aef6e02 upstream.
 
-EINVAL should be used for malformed netlink messages. New userspace
-utility and old kernels might easily result in EINVAL when exercising
-new set features, which is misleading.
+Add a check that the headroom cannot be larger than the available
+space in the chunk. In the current code, a malicious user can set the
+headroom to a value larger than the chunk size minus the fixed XDP
+headroom. That way packets with a length larger than the supported
+size in the umem could get accepted and result in an out-of-bounds
+write.
 
-Fixes: 8aeff920dcc9 ("netfilter: nf_tables: add stateful object reference to set elements")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: c0c77d8fb787 ("xsk: add user memory registration support sockopt")
+Reported-by: Bui Quang Minh <minhquangbui99@gmail.com>
+Signed-off-by: Magnus Karlsson <magnus.karlsson@intel.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207225
+Link: https://lore.kernel.org/bpf/1586849715-23490-1-git-send-email-magnus.karlsson@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_tables_api.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/xdp/xdp_umem.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3598,7 +3598,7 @@ static int nf_tables_newset(struct net *
- 			      NFT_SET_INTERVAL | NFT_SET_TIMEOUT |
- 			      NFT_SET_MAP | NFT_SET_EVAL |
- 			      NFT_SET_OBJECT))
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 		/* Only one of these operations is supported */
- 		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
- 			     (NFT_SET_MAP | NFT_SET_OBJECT))
-@@ -3636,7 +3636,7 @@ static int nf_tables_newset(struct net *
- 		objtype = ntohl(nla_get_be32(nla[NFTA_SET_OBJ_TYPE]));
- 		if (objtype == NFT_OBJECT_UNSPEC ||
- 		    objtype > NFT_OBJECT_MAX)
--			return -EINVAL;
-+			return -EOPNOTSUPP;
- 	} else if (flags & NFT_SET_OBJECT)
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -343,7 +343,7 @@ static int xdp_umem_reg(struct xdp_umem
+ 	u32 chunk_size = mr->chunk_size, headroom = mr->headroom;
+ 	unsigned int chunks, chunks_per_page;
+ 	u64 addr = mr->addr, size = mr->len;
+-	int size_chk, err;
++	int err;
+ 
+ 	if (chunk_size < XDP_UMEM_MIN_CHUNK_SIZE || chunk_size > PAGE_SIZE) {
+ 		/* Strictly speaking we could support this, if:
+@@ -382,8 +382,7 @@ static int xdp_umem_reg(struct xdp_umem
+ 			return -EINVAL;
+ 	}
+ 
+-	size_chk = chunk_size - headroom - XDP_PACKET_HEADROOM;
+-	if (size_chk < 0)
++	if (headroom >= chunk_size - XDP_PACKET_HEADROOM)
  		return -EINVAL;
- 	else
+ 
+ 	umem->address = (unsigned long)addr;
 
 
