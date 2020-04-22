@@ -2,54 +2,52 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ECEC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC244C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4A7120780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7A020780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552519;
-	bh=czNOZ/O19Y/a5rd/bkVz1OVazGaWvhmfaQGyVFf4l9s=;
+	s=default; t=1587552525;
+	bh=leaZrV4yhUV/EyvhpoGz/LdZrNv5qMhyiFDoCe6zH1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYVJ5z9ls1wYEPW9RNCrLqxOzJOAzTqQKduUW/Hp7RvJ3g3OkVOGwUxfvxr0tQxWP
-	 M5XcIMHOjNGY5RCuC+Ej424vtGLgV4NDQ+qUqbwvLSUWGQVzw9oRMY12OGCZM1WST/
-	 6rQh7yD9zEyZbCAzD5UpY94ltwdMrI3dSKgXnLco=
+	b=d3A+X2u1tE3vBAm1ThK76qMXEZcbmrT8Qtgd4VlwUeapY5FYPhtTMgjGdLiCtxI/O
+	 vkBGUZCj+17eFxydvckjSbMcQH8TH38ky+KarNtRJEz1P7IKoGUOHF1RX0Rs9P/UNz
+	 Uwu0WeiqF97GARHFG713DjwAp2eVG8Eta+k3iEvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732057AbgDVKsi (ORCPT
+        id S1729492AbgDVKOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48898 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbgDVKOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:24 -0400
+        id S1729471AbgDVKOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A8FC2070B;
-        Wed, 22 Apr 2020 10:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF01220575;
+        Wed, 22 Apr 2020 10:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550462;
-        bh=czNOZ/O19Y/a5rd/bkVz1OVazGaWvhmfaQGyVFf4l9s=;
+        s=default; t=1587550445;
+        bh=leaZrV4yhUV/EyvhpoGz/LdZrNv5qMhyiFDoCe6zH1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4kX5dMHoj1ICpOF76+XPqhbSmaGYpJtJexwkvUvO4/Yzty2c6dG8a9HHR+XnA9Vl
-         2aUHVCq0MC9yhQ7Bu/ozOY31w02NQC5Qj84vYHuUrSWH0mDohrnj7gsYauf5RVhAhJ
-         bxBa7c4sgButsegpoUlR3NBiszmUnWDD/xUDZHgA=
+        b=TZCnSyXXQ3AubAdz4r5+jpaRYs4NIseYcyHN/NFFJ2dgRcAIF7++wmr/Nso9rDX0Q
+         +HZ/aK90qhJArRPB6sDkf4IkigIivrJyDXZiuvJTtTVZjpXJiceFI1umeibKBLusgm
+         gj4+sS169CvCPg+slI39BtueYj4cEL1BXmT3TSDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        "Andrew F. Davis" <afd@ti.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/64] power: supply: bq27xxx_battery: Silence deferred-probe error
-Date:   Wed, 22 Apr 2020 11:57:11 +0200
-Message-Id: <20200422095017.861461520@linuxfoundation.org>
+        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
+        Frank Rowand <frank.rowand@sony.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 4.19 12/64] of: unittest: kmemleak in of_unittest_platform_populate()
+Date:   Wed, 22 Apr 2020 11:56:56 +0200
+Message-Id: <20200422095015.001955705@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -62,42 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Frank Rowand <frank.rowand@sony.com>
 
-[ Upstream commit 583b53ece0b0268c542a1eafadb62e3d4b0aab8c ]
+commit 216830d2413cc61be3f76bc02ffd905e47d2439e upstream.
 
-The driver fails to probe with -EPROBE_DEFER if battery's power supply
-(charger driver) isn't ready yet and this results in a bit noisy error
-message in KMSG during kernel's boot up. Let's silence the harmless
-error message.
+kmemleak reports several memory leaks from devicetree unittest.
+This is the fix for problem 2 of 5.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Andrew F. Davis <afd@ti.com>
-Reviewed-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+of_unittest_platform_populate() left an elevated reference count for
+grandchild nodes (which are platform devices).  Fix the platform
+device reference counts so that the memory will be freed.
+
+Fixes: fb2caa50fbac ("of/selftest: add testcase for nodes with same name and address")
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/power/supply/bq27xxx_battery.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/of/unittest.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index f022e1b550dfe..ff02a917556a9 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -1887,7 +1887,10 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1059,10 +1059,13 @@ static void __init of_unittest_platform_
  
- 	di->bat = power_supply_register_no_ws(di->dev, psy_desc, &psy_cfg);
- 	if (IS_ERR(di->bat)) {
--		dev_err(di->dev, "failed to register battery\n");
-+		if (PTR_ERR(di->bat) == -EPROBE_DEFER)
-+			dev_dbg(di->dev, "failed to register battery, deferring probe\n");
-+		else
-+			dev_err(di->dev, "failed to register battery\n");
- 		return PTR_ERR(di->bat);
+ 	of_platform_populate(np, match, NULL, &test_bus->dev);
+ 	for_each_child_of_node(np, child) {
+-		for_each_child_of_node(child, grandchild)
+-			unittest(of_find_device_by_node(grandchild),
++		for_each_child_of_node(child, grandchild) {
++			pdev = of_find_device_by_node(grandchild);
++			unittest(pdev,
+ 				 "Could not create device for node '%pOFn'\n",
+ 				 grandchild);
++			of_dev_put(pdev);
++		}
  	}
  
--- 
-2.20.1
-
+ 	of_platform_depopulate(&test_bus->dev);
 
 
