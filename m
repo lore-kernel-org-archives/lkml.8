@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E260C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D6AC5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AAE020775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E61D2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552991;
-	bh=in12tsT4gXL1ga0bTUIzcTFDR64Uyu8m1TorXuPbdVo=;
+	s=default; t=1587552995;
+	bh=+PJ94ccQdJuqFuZrlOtbwsk/rV08C4OmA0oXebMTwKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XAB1wjlfIHsXrDCIvcjPOhnL6pzE5lFTucWYG18vEyYID8rS4imtz3Gx1M1GsQBcZ
-	 V3/7ahaE/gmTFcAs9OE2cX9XEXV6egGWeadHL5xj+uqb4Ywwj5knV0t81ym3aRBT6g
-	 ytHjAYnbI08etQs/djzRfmire04yCp5TdEDMNLHA=
+	b=LuPQp33S7BmMaCOuBFI9QdGCUS8MKHjFMp4uotD9wD2YaxnTULd6qAsWxxlDFqAVU
+	 YRgWSgrGAEzzokmvLom7WgSloLS66Bl1Dy8zU5hlHBRTVFjJ2vHGx4NK8jDkiE+nec
+	 g/gvTdJj3PiGH3yKdwF95FrUD2ffG5aK1Nt3xwJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbgDVK4a (ORCPT
+        id S1732196AbgDVK4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58468 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:56:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgDVKG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:29 -0400
+        id S1728323AbgDVKGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A673F20575;
-        Wed, 22 Apr 2020 10:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B125A20774;
+        Wed, 22 Apr 2020 10:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549989;
-        bh=in12tsT4gXL1ga0bTUIzcTFDR64Uyu8m1TorXuPbdVo=;
+        s=default; t=1587549984;
+        bh=+PJ94ccQdJuqFuZrlOtbwsk/rV08C4OmA0oXebMTwKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T6ov6k4fhwB5Td2OAuPCofCz5wbfDDYDwSLSebMX12mB1CEqFWEtubMo7QXDoyH1r
-         gVuBmpZBe2oo37qB10A08JbhVBDd/74pin9hyIsa9hy/0H0e2FA3Kg5rUK4922xdva
-         +0vdUi8lCO26plXIGGeB+5H5lEPb9zC1x/oZfnZg=
+        b=Ca6nBWCOLGDIc7w16cxmqgnCT2zv6Dt2npIu3vVxs8rxSlNXEgW5jGak4MWo+vVui
+         Yh+zTjjrlwIszPHf7dz94wYWeGNGzqi2FQ23w1XM370eKRzlDtE7JjTiMwwN+ua4Xp
+         0HdfD09VkQBJCC3YRIuqablb+og13WeUe2dftXbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.9 088/125] of: unittest: kmemleak on changeset destroy
-Date:   Wed, 22 Apr 2020 11:56:45 +0200
-Message-Id: <20200422095047.225506345@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 086/125] scsi: sg: add sg_remove_request in sg_common_write
+Date:   Wed, 22 Apr 2020 11:56:43 +0200
+Message-Id: <20200422095046.935017908@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -60,40 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Li Bin <huawei.libin@huawei.com>
 
-commit b3fb36ed694b05738d45218ea72cf7feb10ce2b1 upstream.
+commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 upstream.
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 1 of 5.
+If the dxfer_len is greater than 256M then the request is invalid and we
+need to call sg_remove_request in sg_common_write.
 
-of_unittest_changeset() reaches deeply into the dynamic devicetree
-functions.  Several nodes were left with an elevated reference
-count and thus were not properly cleaned up.  Fix the reference
-counts so that the memory will be freed.
-
-Fixes: 201c910bd689 ("of: Transactional DT support.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
+Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/of/unittest.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/sg.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -539,6 +539,10 @@ static void __init of_unittest_changeset
- 	unittest(!of_changeset_revert(&chgset), "revert failed\n");
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -809,8 +809,10 @@ sg_common_write(Sg_fd * sfp, Sg_request
+ 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
+ 			(int) cmnd[0], (int) hp->cmd_len));
  
- 	of_changeset_destroy(&chgset);
-+
-+	of_node_put(n1);
-+	of_node_put(n2);
-+	of_node_put(n21);
- #endif
- }
+-	if (hp->dxfer_len >= SZ_256M)
++	if (hp->dxfer_len >= SZ_256M) {
++		sg_remove_request(sfp, srp);
+ 		return -EINVAL;
++	}
  
+ 	k = sg_start_req(srp, cmnd);
+ 	if (k) {
 
 
