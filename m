@@ -2,129 +2,158 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0754BC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1DFC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D94E720767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587546317;
-	bh=scuGun3nfqbPUtfjQHliRKHGQDOacg8jVjjlSU3FirQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=COKLgk3AunJW8zbNHHvjifKJfKvBvOam008fjh+QPA173W0NkUXicjBxe+bG3Yu52
-	 Ikmsxt4Y06US3ttkBZZ7emEdPbS3H88YAA+5lIm/4nOaYDzPHJNWIq4G8KDLiXpqwM
-	 51Ci28y7Ou4ESdzGBXaskeBSERtiUi9zgmv+Z0Oc=
+	by mail.kernel.org (Postfix) with ESMTP id 14B3120735
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgDVJFR (ORCPT
+        id S1726562AbgDVJHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:05:17 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42612 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgDVJFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:05:16 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so1413015otq.9;
-        Wed, 22 Apr 2020 02:05:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B5vud3pf8Y69anGfFBmw7nwGjrVBjnFCZosReDIIX64=;
-        b=HhZ9zwwCZJ0VSex3qIBfOASl5dC63rr1q+leZv0RRI6JjRFB0UkOdI0zezTffNQOdO
-         ajNBkS5UdAob3u1vxnrVDd14SUQGGVq7914MyD+I2cwHBJzjQiGVAkqOIBtbsfMKhY5Y
-         pm1jxidgkkZ7TlDDb9e598ogee9+NDMBo/TovfLAVsVtMVbh5kJUbS4bI+USvbZtufJp
-         sqYbgHCPoaUfn/2/eJEAnn0nLbLFqCHqSNXb/YuzrX9dEWlEplP99whW1xyjwWd9F6Rs
-         TIYtX/yCWhwET+wepZTi+3dSo+DO9JG/gF3tNrbN1Ljk3+gjLMDj6BQNm9Vei2q3+g2F
-         orJw==
-X-Gm-Message-State: AGi0PubbDlI+1GGjozwCpgZbHNThy2JKDMlv2AsW2aDcYxOI7Z5lTr6r
-        akVhUqsmc0l8t2kVG6/fmJOIos9nf/iay1Xk/Uc=
-X-Google-Smtp-Source: APiQypJUxZX+VI/95qmujC40IKjXMF96E9hSjeeyFG1Ok5dU9Nkee09qE9cnSpVt/T0Km+isZ++7cDGWO/GG7Rxxlh8=
-X-Received: by 2002:a05:6830:18d0:: with SMTP id v16mr16109926ote.118.1587546315616;
- Wed, 22 Apr 2020 02:05:15 -0700 (PDT)
+        Wed, 22 Apr 2020 05:07:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57664 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbgDVJHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:07:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7086FAEED;
+        Wed, 22 Apr 2020 09:07:49 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6DCF91E125C; Wed, 22 Apr 2020 11:07:46 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 11:07:46 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, yuyufen@huawei.com, tj@kernel.org, jack@suse.cz,
+        bvanassche@acm.org, tytso@mit.edu, hdegoede@redhat.com,
+        gregkh@linuxfoundation.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/9] bdi: use bdi_dev_name() to get device name
+Message-ID: <20200422090746.GD8775@quack2.suse.cz>
+References: <20200422073851.303714-1-hch@lst.de>
+ <20200422073851.303714-4-hch@lst.de>
 MIME-Version: 1.0
-References: <20200422051529.30757-1-zhang.lyra@gmail.com>
-In-Reply-To: <20200422051529.30757-1-zhang.lyra@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 22 Apr 2020 11:05:04 +0200
-Message-ID: <CAJZ5v0ikL3avFomZVqtBhfEjeauN-5ZUm9kZwzG=Vo+Ks0AiyA@mail.gmail.com>
-Subject: Re: [PATCH] PM: sleep: call devfreq_suspend/resume and
- cpufreq_suspend/resume in pairs.
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Vincent Wang <vincent.wang@unisoc.com>,
-        Samer Xie <samer.xie@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422073851.303714-4-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 7:15 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> From: Vincent Wang <vincent.wang@unisoc.com>
->
-> If dpm_prepare() fails in dpm_suspend_start(), dpm_suspend() can't be
-> called.
+On Wed 22-04-20 09:38:45, Christoph Hellwig wrote:
+> From: Yufen Yu <yuyufen@huawei.com>
+> 
+> Use the common interface bdi_dev_name() to get device name.
+> 
+> Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-That's correct.
+Looks good to me. You can add:
 
-> And then, devfreq_suspend() and cpufreq_suspend() will not be
-> called in the suspend flow.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Right.
+								Honza
 
-> But in the resiume flow, devfreq_resume() and cpufreq_resume() will
-> be called.
-
-Right, and they are expected to cope with the situation.
-
-> This patch will ensure that devfreq_suspend/devfreq_resume and
-> cpufreq_suspend/cpufreq_resume are called in pairs.
-
-So why is it better to do this than to make devfreq_resume() meet the
-expectations?
-
-> Signed-off-by: Vincent Wang <vincent.wang@unisoc.com>
-> Signed-off-by: Samer Xie <samer.xie@unisoc.com>
-> Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
 > ---
->  drivers/base/power/main.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index fdd508a78ffd..eb3d987d43e0 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -1866,9 +1866,6 @@ int dpm_suspend(pm_message_t state)
->         trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
->         might_sleep();
->
-> -       devfreq_suspend();
-> -       cpufreq_suspend();
-> -
->         mutex_lock(&dpm_list_mtx);
->         pm_transition = state;
->         async_error = 0;
-> @@ -1988,6 +1985,9 @@ int dpm_prepare(pm_message_t state)
->         trace_suspend_resume(TPS("dpm_prepare"), state.event, true);
->         might_sleep();
->
-> +       devfreq_suspend();
-> +       cpufreq_suspend();
-> +
->         /*
->          * Give a chance for the known devices to complete their probes, before
->          * disable probing of devices. This sync point is important at least
-> --
-> 2.20.1
->
+>  block/bfq-iosched.c        | 5 +++--
+>  block/blk-cgroup.c         | 2 +-
+>  fs/ceph/debugfs.c          | 2 +-
+>  include/trace/events/wbt.h | 8 ++++----
+>  4 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> index 78ba57efd16b..4d4fe44a9eea 100644
+> --- a/block/bfq-iosched.c
+> +++ b/block/bfq-iosched.c
+> @@ -4976,8 +4976,9 @@ bfq_set_next_ioprio_data(struct bfq_queue *bfqq, struct bfq_io_cq *bic)
+>  	ioprio_class = IOPRIO_PRIO_CLASS(bic->ioprio);
+>  	switch (ioprio_class) {
+>  	default:
+> -		dev_err(bfqq->bfqd->queue->backing_dev_info->dev,
+> -			"bfq: bad prio class %d\n", ioprio_class);
+> +		pr_err("bdi %s: bfq: bad prio class %d\n",
+> +				bdi_dev_name(bfqq->bfqd->queue->backing_dev_info),
+> +				ioprio_class);
+>  		/* fall through */
+>  	case IOPRIO_CLASS_NONE:
+>  		/*
+> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+> index c5dc833212e1..930212c1a512 100644
+> --- a/block/blk-cgroup.c
+> +++ b/block/blk-cgroup.c
+> @@ -496,7 +496,7 @@ const char *blkg_dev_name(struct blkcg_gq *blkg)
+>  {
+>  	/* some drivers (floppy) instantiate a queue w/o disk registered */
+>  	if (blkg->q->backing_dev_info->dev)
+> -		return dev_name(blkg->q->backing_dev_info->dev);
+> +		return bdi_dev_name(blkg->q->backing_dev_info);
+>  	return NULL;
+>  }
+>  
+> diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
+> index 481ac97b4d25..dcaed75de9e6 100644
+> --- a/fs/ceph/debugfs.c
+> +++ b/fs/ceph/debugfs.c
+> @@ -271,7 +271,7 @@ void ceph_fs_debugfs_init(struct ceph_fs_client *fsc)
+>  				    &congestion_kb_fops);
+>  
+>  	snprintf(name, sizeof(name), "../../bdi/%s",
+> -		 dev_name(fsc->sb->s_bdi->dev));
+> +		 bdi_dev_name(fsc->sb->s_bdi));
+>  	fsc->debugfs_bdi =
+>  		debugfs_create_symlink("bdi",
+>  				       fsc->client->debugfs_dir,
+> diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
+> index 784814160197..9c66e59d859c 100644
+> --- a/include/trace/events/wbt.h
+> +++ b/include/trace/events/wbt.h
+> @@ -33,7 +33,7 @@ TRACE_EVENT(wbt_stat,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, dev_name(bdi->dev),
+> +		strlcpy(__entry->name, bdi_dev_name(bdi),
+>  			ARRAY_SIZE(__entry->name));
+>  		__entry->rmean		= stat[0].mean;
+>  		__entry->rmin		= stat[0].min;
+> @@ -68,7 +68,7 @@ TRACE_EVENT(wbt_lat,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, dev_name(bdi->dev),
+> +		strlcpy(__entry->name, bdi_dev_name(bdi),
+>  			ARRAY_SIZE(__entry->name));
+>  		__entry->lat = div_u64(lat, 1000);
+>  	),
+> @@ -105,7 +105,7 @@ TRACE_EVENT(wbt_step,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, dev_name(bdi->dev),
+> +		strlcpy(__entry->name, bdi_dev_name(bdi),
+>  			ARRAY_SIZE(__entry->name));
+>  		__entry->msg	= msg;
+>  		__entry->step	= step;
+> @@ -141,7 +141,7 @@ TRACE_EVENT(wbt_timer,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, dev_name(bdi->dev),
+> +		strlcpy(__entry->name, bdi_dev_name(bdi),
+>  			ARRAY_SIZE(__entry->name));
+>  		__entry->status		= status;
+>  		__entry->step		= step;
+> -- 
+> 2.26.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
