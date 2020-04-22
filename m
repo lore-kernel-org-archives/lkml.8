@@ -2,156 +2,89 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1696EC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A4CC5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33C220774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3487F20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553431;
-	bh=CaI+v9D1Ksy/IQA5snBLD83O5DgBFgJMn4PiWZLu3jI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9A+vdvKqiizK55QwqLRgx/HNTS05mY0F0rhqRownvvKEWyc0Ur33dKRYzW/UAP/y
-	 XKu4OD5fKDXy3v8rg5NF/IJ7DFTNsFszRdb7j7h8K4sPMAwtyjymaMFRa28wx1DBaq
-	 KI+/8mNopcbRPOQ2v2Qo3UawO2eRrxmmDfwosvvM=
+	s=default; t=1587553531;
+	bh=4MnyMmkAl/EqqxNgkyGui3OAOBpCB1BjyNAYWxVtRPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zV8DcBWlf4SXrnMFinjsibyTe78XXQpWnmzWbjNna/YNrzbC4TdjrwbbpI6Br9rFp
+	 INGPn2/r5ESTC5d+EsSLHzazgeMfUEtomZzHGarRsSfWAUujd2DQSzKBzOiQ6rcWec
+	 i5dDW99SOcaMHl+5U0xRvIcXCXkMWnwzvZUKAia4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732511AbgDVLDu (ORCPT
+        id S1726817AbgDVLFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgDVJ7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:59:23 -0400
+        id S1726358AbgDVLF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:05:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DA4820735;
-        Wed, 22 Apr 2020 09:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5AB2076E;
+        Wed, 22 Apr 2020 11:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549562;
-        bh=CaI+v9D1Ksy/IQA5snBLD83O5DgBFgJMn4PiWZLu3jI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLJkN2azZHaBkN5B7WzlFDMz4HKRqic+mGceYhHQEUC6DLBq4tOvjnlDtNfL0HtXI
-         5JdhQStyTFodTZo0tJeDrRWHnDMFSv5t+B5zQItlC02zIwoEu4N3Gbv+VQWDohglyr
-         IM47MFQb7YMcxXIF1qOOPNJRcYt+DOk1SpAZ2fIQ=
+        s=default; t=1587553528;
+        bh=4MnyMmkAl/EqqxNgkyGui3OAOBpCB1BjyNAYWxVtRPg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A/JTGIrWnpiXib7VYLPnVA8Y0FdMixdMiXBEqxIureN5dh5gi/qIJiBbTinXyXwxa
+         5sxDMeeFyYxJxvmhIN82sdppx+JEjwZixbAuV3FNxOL498wCVv6LXplntqy0Bfei56
+         sQsz2V3ug7BF5Jylv+qxW5saHwblk1Y1KRBlIR+4=
+Date:   Wed, 22 Apr 2020 13:05:25 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zheng Wei <wei.zheng@vivo.com>,
-        "David S. Miller" <davem@davemloft.net>,
+To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 002/100] net: vxge: fix wrong __VA_ARGS__ usage
-Date:   Wed, 22 Apr 2020 11:55:32 +0200
-Message-Id: <20200422095022.984933248@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
-References: <20200422095022.476101261@linuxfoundation.org>
-User-Agent: quilt/0.66
+Subject: Re: [PATCH 5.6 096/166] x86/xen: Make the boot CPU idle task reliable
+Message-ID: <20200422110525.GA3128451@kroah.com>
+References: <20200422095047.669225321@linuxfoundation.org>
+ <20200422095059.319186761@linuxfoundation.org>
+ <48afe770-83c3-03c0-c21f-334ab2056ea3@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <48afe770-83c3-03c0-c21f-334ab2056ea3@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Wei <wei.zheng@vivo.com>
+On Wed, Apr 22, 2020 at 12:45:32PM +0200, Jürgen Groß wrote:
+> On 22.04.20 11:57, Greg Kroah-Hartman wrote:
+> > From: Miroslav Benes <mbenes@suse.cz>
+> > 
+> > [ Upstream commit 2f62f36e62daec43aa7b9633ef7f18e042a80bed ]
+> > 
+> > The unwinder reports the boot CPU idle task's stack on XEN PV as
+> > unreliable, which affects at least live patching. There are two reasons
+> > for this. First, the task does not follow the x86 convention that its
+> > stack starts at the offset right below saved pt_regs. It allows the
+> > unwinder to easily detect the end of the stack and verify it. Second,
+> > startup_xen() function does not store the return address before jumping
+> > to xen_start_kernel() which confuses the unwinder.
+> > 
+> > Amend both issues by moving the starting point of initial stack in
+> > startup_xen() and storing the return address before the jump, which is
+> > exactly what call instruction does.
+> > 
+> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> > Reviewed-by: Juergen Gross <jgross@suse.com>
+> > Signed-off-by: Juergen Gross <jgross@suse.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> You'll need upstream d6f34f4c6b4a96 ("x86/xen: fix booting 32-bit pv
+> guest"), too.
 
-[ Upstream commit b317538c47943f9903860d83cc0060409e12d2ff ]
+Thanks for that, now queued up.
 
-printk in macro vxge_debug_ll uses __VA_ARGS__ without "##" prefix,
-it causes a build error when there is no variable
-arguments(e.g. only fmt is specified.).
-
-Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/neterion/vxge/vxge-config.h |  2 +-
- drivers/net/ethernet/neterion/vxge/vxge-main.h   | 14 +++++++-------
- 2 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.h b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-index 6ce4412fcc1ad..380e841fdd957 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-@@ -2065,7 +2065,7 @@ vxge_hw_vpath_strip_fcs_check(struct __vxge_hw_device *hldev, u64 vpath_mask);
- 	if ((level >= VXGE_ERR && VXGE_COMPONENT_LL & VXGE_DEBUG_ERR_MASK) ||  \
- 	    (level >= VXGE_TRACE && VXGE_COMPONENT_LL & VXGE_DEBUG_TRACE_MASK))\
- 		if ((mask & VXGE_DEBUG_MASK) == mask)			       \
--			printk(fmt "\n", __VA_ARGS__);			       \
-+			printk(fmt "\n", ##__VA_ARGS__);		       \
- } while (0)
- #else
- #define vxge_debug_ll(level, mask, fmt, ...)
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.h b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-index 3a79d93b84453..5b535aa10d23e 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-main.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-@@ -454,49 +454,49 @@ int vxge_fw_upgrade(struct vxgedev *vdev, char *fw_name, int override);
- 
- #if (VXGE_DEBUG_LL_CONFIG & VXGE_DEBUG_MASK)
- #define vxge_debug_ll_config(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_ll_config(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_INIT & VXGE_DEBUG_MASK)
- #define vxge_debug_init(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_init(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_TX & VXGE_DEBUG_MASK)
- #define vxge_debug_tx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_tx(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_RX & VXGE_DEBUG_MASK)
- #define vxge_debug_rx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_rx(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_MEM & VXGE_DEBUG_MASK)
- #define vxge_debug_mem(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_mem(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_ENTRYEXIT & VXGE_DEBUG_MASK)
- #define vxge_debug_entryexit(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_entryexit(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_INTR & VXGE_DEBUG_MASK)
- #define vxge_debug_intr(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_intr(level, fmt, ...)
- #endif
--- 
-2.20.1
-
-
-
+greg k-h
