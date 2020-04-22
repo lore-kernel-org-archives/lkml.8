@@ -2,91 +2,110 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E26C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B877C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 608322071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3192071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlXXhxuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgDVTyW (ORCPT
+        id S1726573AbgDVTzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:54:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
+        Wed, 22 Apr 2020 15:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725779AbgDVTyW (ORCPT
+        by vger.kernel.org with ESMTP id S1725961AbgDVTzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:54:22 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0055BC03C1A9;
-        Wed, 22 Apr 2020 12:54:21 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRLRm-0007aD-O3; Wed, 22 Apr 2020 21:54:14 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 355771C02FC;
-        Wed, 22 Apr 2020 21:54:14 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 19:54:13 -0000
-From:   "tip-bot2 for Harry Pan" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/cstate: Add Jasper Lake CPU support
-Cc:     Harry Pan <harry.pan@intel.com>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200402190658.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid>
-References: <20200402190658.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid>
+        Wed, 22 Apr 2020 15:55:17 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEEFEC03C1A9;
+        Wed, 22 Apr 2020 12:55:17 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r4so1634956pgg.4;
+        Wed, 22 Apr 2020 12:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zs8P//rvg1SHF869DDtGbnL1grMzFoBcMAhWEXUbn6o=;
+        b=KlXXhxukDACNLMUxpYlTVSzYG6IvesGADSdCuxMosdiu9EKeJNaTlEvk1Ajs9junY3
+         UIRo9RskUrRx0zTQ77/IZAhjY+dXigzRdC9Hfvm17e8wuVTeyXTR+1BxFhQeGZax8Don
+         bH+R1wrMoEMuqHZwwta9VKDTfRLdi3InCi8Ak0eXzjkxVTrq3f+WVPPRbAMgf7DUCTgW
+         0TpgX124ei9O8xtv07Vr8+M4fdOdOpmviyfftxoHs73SaVLm3F2msDSVg9spxnupq6o1
+         9Dr5PrtirY4tjGIl9lppDQvDzlDlhAPTt31Aq8BKnfPFooYEeVQjbgHG+jKuGbiKqSBp
+         oU4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zs8P//rvg1SHF869DDtGbnL1grMzFoBcMAhWEXUbn6o=;
+        b=VxovGCUo+SBCbk/+VGmKoCTs7tewYAkJWZWV3rybKypIXjSInLEO6vlLwnqi6V1ndB
+         M1EvOOaRKYCOBM6xjf+10koKrXVIZ40k28l4lu/axRGeqCqOrkrJQN1Sdtmafti1YqKw
+         ryFRxziJK+TPgJvULH782Z0AA5tZpQFc2yT0ySZemKTlHaDDdttdZYMJd/KpNvX4+m3S
+         i13vAHEnRqZh7QJxuBAy7s27xR0mKrG9KzvGp64LZiwBsCdQK63EiGTuNz+vvTwGKB6M
+         E1Kfn2q+c2Fgb07ks5nVcYAbK1lVL+A7wtShVwzb6QrLAF5Fhkurjg6Vqe2jDeOZBqSI
+         kgTQ==
+X-Gm-Message-State: AGi0PubEsG10a+BSH/dhyB6Py9zNIg1JsRBEDJzKYivOIxp7fcnZfkqB
+        +OnnTYREGntQgJps1N76HRxPnfnH2M8vD+h5jCQ=
+X-Google-Smtp-Source: APiQypJH46V+NkKJyqIIaJ0hU0KoYCno8EKW/Oi/CecMsV4MkYyux/EQvd9iy76qKPRUhBptl4/+K6Zb3chyB9UssPY=
+X-Received: by 2002:aa7:8f26:: with SMTP id y6mr206525pfr.36.1587585317156;
+ Wed, 22 Apr 2020 12:55:17 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158758525378.28353.13945235876360246667.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-4-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200422141135.86419-4-tomasz.duszynski@octakon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Apr 2020 22:55:05 +0300
+Message-ID: <CAHp75VeXd7hgdZ-1FDCpyad7_rHV1ERiigctn-6AYvVhLyX5QA@mail.gmail.com>
+Subject: Re: [PATCH 3/6] iio: chemical: scd30: add serial interface driver
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> Add serial interface driver for the SCD30 sensor.
 
-Commit-ID:     5b16ef2e43ffa1be596652d992235b1cbb244935
-Gitweb:        https://git.kernel.org/tip/5b16ef2e43ffa1be596652d992235b1cbb244935
-Author:        Harry Pan <harry.pan@intel.com>
-AuthorDate:    Thu, 02 Apr 2020 19:07:09 +08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 22 Apr 2020 21:43:12 +02:00
+...
 
-perf/x86/cstate: Add Jasper Lake CPU support
+> +#include <linux/of_irq.h>
 
-The Jasper Lake processor is Tremont microarchitecture, reuse the
-glm_cstates table of Goldmont and Goldmont Plus to enable the C-states
-residency profiling.
+Do you need this?
 
-Signed-off-by: Harry Pan <harry.pan@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200402190658.1.Ic02e891daac41303aed1f2fc6c64f6110edd27bd@changeid
----
- arch/x86/events/intel/cstate.c | 1 +
- 1 file changed, 1 insertion(+)
+> +static int scd30_serdev_probe(struct serdev_device *serdev)
+> +{
+> +       struct device *dev = &serdev->dev;
+> +       struct scd30_serdev_priv *priv;
+> +       int irq, ret;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index e4aa20c..442e1ed 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -643,6 +643,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&glm_cstates),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&glm_cstates),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&glm_cstates),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&glm_cstates),
- 
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_cstates),
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&icl_cstates),
+> +       irq = of_irq_get(dev->of_node, 0);
+
+fwnode_irq_get() ?
+
+> +       if (irq <= 0)
+> +               irq = 0;
+> +
+> +       return scd30_probe(dev, irq, KBUILD_MODNAME, priv,
+> +                          scd30_serdev_command);
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
