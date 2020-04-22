@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A22C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D9AC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 039502076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135A12076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552507;
-	bh=smI26Thxjv2e0tMx0kjMXubhh1q/+1ZeAOE/x4BuRko=;
+	s=default; t=1587552512;
+	bh=c3tDbP3kjZMereB6y5jCbrX1IZryCnz0sMYCtncHOyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TbKx1g2g2cPt104/oTBUBvMLpFQxH5CH0IxchRqQX8ZmXfBFG18mA+hisrT9kOP/F
-	 hOiQhOys75aoJuLjgK3yvx4VO8+inOY5pDvPsdbLfAYCbx/qOU0cuBYbQ6EWWxgc0C
-	 IWTduiWITeQr1pZv6VM0gyXdzPdlzzOOxPzGWkJ0=
+	b=PmM1jIAGyUAOLDwqdgXLf2w3tg1+rILjelQmHNe8JZKpVF1QaeYrg6rV/QjOTuLCy
+	 mCaIzxuSstZMcXdlnU8OpXx/Zh+QABcG23IYBGEGiDevoarIIQfyYrpD2PTnY6Cr4i
+	 1zj/gqmQkAQWescMxy5xfzd6yhXi+a4EtO+eAtkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731877AbgDVKs0 (ORCPT
+        id S1731700AbgDVKsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:48:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49382 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:48:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729558AbgDVKOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:40 -0400
+        id S1728259AbgDVKO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 743DE20775;
-        Wed, 22 Apr 2020 10:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2A62071E;
+        Wed, 22 Apr 2020 10:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550479;
-        bh=smI26Thxjv2e0tMx0kjMXubhh1q/+1ZeAOE/x4BuRko=;
+        s=default; t=1587550465;
+        bh=c3tDbP3kjZMereB6y5jCbrX1IZryCnz0sMYCtncHOyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PyHjPA7IgVd0Q7TPUpzW99D8kMC0glG9eGbxGx37uYPmWARhQ2i1wYcqM8NozonoG
-         v7TPOy8ZbEsVowPLwjHBCxLi17HU8A/OGyiCF8XJUVmKUvHjtFf9mrjg5e+IByiYkO
-         NwS6G63TLdfILNmtpuFUFTWAVCudTc7VVcAHTaUU=
+        b=z9O/RbfA2qQhwUGIlGL7lVEm0+chH/XPHQSbFJzlSV1w3AbqjtEvnq79Gxu6j08sK
+         syR5JDbKL1mGbc7N5FdG4LxGgGqxkFzuAxTeoJfk4kG0TBaUyMmXv50rHeLYg0lWmY
+         E43fABCuWoURiL5QLf+LtvLB0ppvXaYtgUBLTV0A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/64] s390/cpuinfo: fix wrong output when CPU0 is offline
-Date:   Wed, 22 Apr 2020 11:57:17 +0200
-Message-Id: <20200422095018.866565980@linuxfoundation.org>
+Subject: [PATCH 4.19 28/64] clk: tegra: Fix Tegra PMC clock out parents
+Date:   Wed, 22 Apr 2020 11:57:12 +0200
+Message-Id: <20200422095018.029209976@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -61,47 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
+[ Upstream commit 6fe38aa8cac3a5db38154331742835a4d9740788 ]
 
-/proc/cpuinfo should not print information about CPU 0 when it is offline.
+Tegra PMC clocks clk_out_1, clk_out_2, and clk_out_3 supported parents
+are osc, osc_div2, osc_div4 and extern clock.
 
-Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-[heiko.carstens@de.ibm.com: shortened commit message]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
+for PMC clocks.
+
+This patch fixes this.
+
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/processor.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
-index 6fe2e1875058b..675d4be0c2b77 100644
---- a/arch/s390/kernel/processor.c
-+++ b/arch/s390/kernel/processor.c
-@@ -157,8 +157,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
- static int show_cpuinfo(struct seq_file *m, void *v)
- {
- 	unsigned long n = (unsigned long) v - 1;
-+	unsigned long first = cpumask_first(cpu_online_mask);
+diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
+index a35579a3f884f..476dab494c44d 100644
+--- a/drivers/clk/tegra/clk-tegra-pmc.c
++++ b/drivers/clk/tegra/clk-tegra-pmc.c
+@@ -60,16 +60,16 @@ struct pmc_clk_init_data {
  
--	if (!n)
-+	if (n == first)
- 		show_cpu_summary(m, v);
- 	if (!machine_has_cpu_mhz)
- 		return 0;
-@@ -171,6 +172,8 @@ static inline void *c_update(loff_t *pos)
- {
- 	if (*pos)
- 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
-+	else
-+		*pos = cpumask_first(cpu_online_mask);
- 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
- }
+ static DEFINE_SPINLOCK(clk_out_lock);
  
+-static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern1",
++static const char *clk_out1_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern1",
+ };
+ 
+-static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern2",
++static const char *clk_out2_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern2",
+ };
+ 
+-static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
+-	"clk_m_div4", "extern3",
++static const char *clk_out3_parents[] = { "osc", "osc_div2",
++	"osc_div4", "extern3",
+ };
+ 
+ static struct pmc_clk_init_data pmc_clks[] = {
 -- 
 2.20.1
 
