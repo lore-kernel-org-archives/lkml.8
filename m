@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E4EC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F616C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE5620784
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8BA2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552560;
-	bh=brI1eFVheBp82O1Mm9OtdOwC6ysMUp1xIN/FwyHk7UY=;
+	s=default; t=1587552566;
+	bh=RJLVCku9igORfpt5oVv3tIoCepU57wftd4+a8zsHa/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Whnp8ieqB+nlFJQv4ay3OAXx/skCxZTvwMs1zrSyveOXbz6mtDVFs8+MHitHcn3Bl
-	 SrbLoe1oERrPCs6N4yyYMoL0h17sNB3c/IhfZPQcvVuHrdO3Umxkzr3t+03ARvx4MF
-	 cA0stgpH1u0Gs8+LEyjgQXQ/83ljo0A3f5jaExfY=
+	b=2RCqODgRGHhAH2eeP/vXigL0bmkJ3SRQJ7Ic8sr3FZEr1lB9YZlLjsq4Fou4DZX3y
+	 fgH6IyGdqYcP/IRrf2id4utHQZoIhl0Pz3pXT9S0tXoaC5AhQQRigDSIl9Pg9HvDvZ
+	 JGrngs9tM8KzU/cFoh+CP3BetOa8gJm2QoyPKofw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732097AbgDVKtT (ORCPT
+        id S1732102AbgDVKtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgDVKNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:13:39 -0400
+        id S1726201AbgDVKNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:13:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED8EF20776;
-        Wed, 22 Apr 2020 10:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAECC20776;
+        Wed, 22 Apr 2020 10:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550418;
-        bh=brI1eFVheBp82O1Mm9OtdOwC6ysMUp1xIN/FwyHk7UY=;
+        s=default; t=1587550413;
+        bh=RJLVCku9igORfpt5oVv3tIoCepU57wftd4+a8zsHa/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbVqB4dp5Fppz8q1STY5FEliXutVkIBDfecrzfYzhyjINMDCPgE7Hz1VMTDnuoPj8
-         RVK4MELGY2iGp0Hec6MspUsrehCCxeH0otas+XY0lidYaS/xgalvPZmiI2B0ucsymf
-         xW1f3Z/iXjB9z4hVrXByLwSMlhmHVzO/gI7SdLks=
+        b=NmOiWFiBK5WknABTJid7dvMwY6hfkNre4ryrlKw4c/rsMUO18iH9RxhtIcV9JJlyG
+         FvaoDm+9FsvO1dmrFdgv6epAtDuxI1f87OzlZYuD+7uYcnjDp+Hv9xQ2QyvqRqTr1R
+         lBv0fZthGFcu0VV8Bvaq04Csgw1vGwoWP2mAfSqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4.19 01/64] arm, bpf: Fix offset overflow for BPF_MEM BPF_DW
-Date:   Wed, 22 Apr 2020 11:56:45 +0200
-Message-Id: <20200422095012.107035823@linuxfoundation.org>
+        stable@vger.kernel.org, Taras Chornyi <taras.chornyi@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 108/199] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
+Date:   Wed, 22 Apr 2020 11:57:14 +0200
+Message-Id: <20200422095108.530696540@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
-References: <20200422095008.799686511@linuxfoundation.org>
+In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
+References: <20200422095057.806111593@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,109 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Taras Chornyi <taras.chornyi@plvision.eu>
 
-commit 4178417cc5359c329790a4a8f4a6604612338cca upstream.
+[ Upstream commit 690cc86321eb9bcee371710252742fb16fe96824 ]
 
-This patch fixes an incorrect check in how immediate memory offsets are
-computed for BPF_DW on arm.
+When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
+with autojoin flag or when multicast ip is deleted kernel will crash.
 
-For BPF_LDX/ST/STX + BPF_DW, the 32-bit arm JIT breaks down an 8-byte
-access into two separate 4-byte accesses using off+0 and off+4. If off
-fits in imm12, the JIT emits a ldr/str instruction with the immediate
-and avoids the use of a temporary register. While the current check off
-<= 0xfff ensures that the first immediate off+0 doesn't overflow imm12,
-it's not sufficient for the second immediate off+4, which may cause the
-second access of BPF_DW to read/write the wrong address.
+steps to reproduce:
 
-This patch fixes the problem by changing the check to
-off <= 0xfff - 4 for BPF_DW, ensuring off+4 will never overflow.
+ip addr add 224.0.0.0/32 dev eth0
+ip addr del 224.0.0.0/32 dev eth0
 
-A side effect of simplifying the check is that it now allows using
-negative immediate offsets in ldr/str. This means that small negative
-offsets can also avoid the use of a temporary register.
+or
 
-This patch introduces no new failures in test_verifier or test_bpf.c.
+ip addr add 224.0.0.0/32 dev eth0 autojoin
 
-Fixes: c5eae692571d6 ("ARM: net: bpf: improve 64-bit store implementation")
-Fixes: ec19e02b343db ("ARM: net: bpf: fix LDX instructions")
-Co-developed-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200409221752.28448-1-luke.r.nels@gmail.com
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
+ pc : _raw_write_lock_irqsave+0x1e0/0x2ac
+ lr : lock_sock_nested+0x1c/0x60
+ Call trace:
+  _raw_write_lock_irqsave+0x1e0/0x2ac
+  lock_sock_nested+0x1c/0x60
+  ip_mc_config.isra.28+0x50/0xe0
+  inet_rtm_deladdr+0x1a8/0x1f0
+  rtnetlink_rcv_msg+0x120/0x350
+  netlink_rcv_skb+0x58/0x120
+  rtnetlink_rcv+0x14/0x20
+  netlink_unicast+0x1b8/0x270
+  netlink_sendmsg+0x1a0/0x3b0
+  ____sys_sendmsg+0x248/0x290
+  ___sys_sendmsg+0x80/0xc0
+  __sys_sendmsg+0x68/0xc0
+  __arm64_sys_sendmsg+0x20/0x30
+  el0_svc_common.constprop.2+0x88/0x150
+  do_el0_svc+0x20/0x80
+ el0_sync_handler+0x118/0x190
+  el0_sync+0x140/0x180
+
+Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
+Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm/net/bpf_jit_32.c |   40 ++++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ net/ipv4/devinet.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/arch/arm/net/bpf_jit_32.c
-+++ b/arch/arm/net/bpf_jit_32.c
-@@ -993,21 +993,35 @@ static inline void emit_a32_mul_r64(cons
- 	arm_bpf_put_reg32(dst_hi, rd[0], ctx);
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -579,12 +579,15 @@ struct in_ifaddr *inet_ifa_byprefix(stru
+ 	return NULL;
  }
  
-+static bool is_ldst_imm(s16 off, const u8 size)
-+{
-+	s16 off_max = 0;
-+
-+	switch (size) {
-+	case BPF_B:
-+	case BPF_W:
-+		off_max = 0xfff;
-+		break;
-+	case BPF_H:
-+		off_max = 0xff;
-+		break;
-+	case BPF_DW:
-+		/* Need to make sure off+4 does not overflow. */
-+		off_max = 0xfff - 4;
-+		break;
-+	}
-+	return -off_max <= off && off <= off_max;
-+}
-+
- /* *(size *)(dst + off) = src */
- static inline void emit_str_r(const s8 dst, const s8 src[],
--			      s32 off, struct jit_ctx *ctx, const u8 sz){
-+			      s16 off, struct jit_ctx *ctx, const u8 sz){
- 	const s8 *tmp = bpf2a32[TMP_REG_1];
--	s32 off_max;
- 	s8 rd;
+-static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
++static int ip_mc_autojoin_config(struct net *net, bool join,
++				 const struct in_ifaddr *ifa)
+ {
++#if defined(CONFIG_IP_MULTICAST)
+ 	struct ip_mreqn mreq = {
+ 		.imr_multiaddr.s_addr = ifa->ifa_address,
+ 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
+ 	};
++	struct sock *sk = net->ipv4.mc_autojoin_sk;
+ 	int ret;
  
- 	rd = arm_bpf_get_reg32(dst, tmp[1], ctx);
+ 	ASSERT_RTNL();
+@@ -597,6 +600,9 @@ static int ip_mc_config(struct sock *sk,
+ 	release_sock(sk);
  
--	if (sz == BPF_H)
--		off_max = 0xff;
--	else
--		off_max = 0xfff;
--
--	if (off < 0 || off > off_max) {
-+	if (!is_ldst_imm(off, sz)) {
- 		emit_a32_mov_i(tmp[0], off, ctx);
- 		emit(ARM_ADD_R(tmp[0], tmp[0], rd), ctx);
- 		rd = tmp[0];
-@@ -1036,18 +1050,12 @@ static inline void emit_str_r(const s8 d
+ 	return ret;
++#else
++	return -EOPNOTSUPP;
++#endif
+ }
  
- /* dst = *(size*)(src + off) */
- static inline void emit_ldx_r(const s8 dst[], const s8 src,
--			      s32 off, struct jit_ctx *ctx, const u8 sz){
-+			      s16 off, struct jit_ctx *ctx, const u8 sz){
- 	const s8 *tmp = bpf2a32[TMP_REG_1];
- 	const s8 *rd = is_stacked(dst_lo) ? tmp : dst;
- 	s8 rm = src;
--	s32 off_max;
--
--	if (sz == BPF_H)
--		off_max = 0xff;
--	else
--		off_max = 0xfff;
+ static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
+@@ -638,7 +644,7 @@ static int inet_rtm_deladdr(struct sk_bu
+ 			continue;
  
--	if (off < 0 || off > off_max) {
-+	if (!is_ldst_imm(off, sz)) {
- 		emit_a32_mov_i(tmp[0], off, ctx);
- 		emit(ARM_ADD_R(tmp[0], tmp[0], src), ctx);
- 		rm = tmp[0];
+ 		if (ipv4_is_multicast(ifa->ifa_address))
+-			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
++			ip_mc_autojoin_config(net, false, ifa);
+ 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
+ 		return 0;
+ 	}
+@@ -896,8 +902,7 @@ static int inet_rtm_newaddr(struct sk_bu
+ 		 */
+ 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
+ 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
+-			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
+-					       true, ifa);
++			int ret = ip_mc_autojoin_config(net, true, ifa);
+ 
+ 			if (ret < 0) {
+ 				inet_free_ifa(ifa);
 
 
