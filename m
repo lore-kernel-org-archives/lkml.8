@@ -2,51 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E797C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9712FC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7228D2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768C720781
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551373;
-	bh=CV4lsd8GFjskQ68BrjCsNHsoRiEhRicJFGhZqLBaR7M=;
+	s=default; t=1587551377;
+	bh=UjrAK+OQRBdE3nXPOYyXQpoWIFD+vJtFTxgV0domYGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xiv+2vEyarcUAYJjfEWRw+am/5CJGyPiYOQEy2DTvV4eeF5KKwAB5/hmFE4q2IKvb
-	 9MgHhpyNPA1Atwbq973ZhYSpcTIdZAk0fEWvaC31wyIuHg+kSFzXeq03A0xkOJeemf
-	 fKle/I3TjcPH6aqLk45YtpfLi+nPOBc8sAtt7GgI=
+	b=SXHvTDvDioQQN5QySHEIR1q4VfnD28ub5oI24C3NLndDnc9yR4CZDg+cC5R0PwMSa
+	 jgInWK7G4cDwabYM7jYVWARROMEW7eJ5NYYWyX8jyb8zU4v235k6HlMjGG+0jDs8YR
+	 OrC1qffT/jfqALwWap2Tx1V31f7uF71xYKbEKBuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbgDVK3c (ORCPT
+        id S1730782AbgDVK04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35884 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730789AbgDVK05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:26:57 -0400
+        id S1730752AbgDVK0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:26:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8732076B;
-        Wed, 22 Apr 2020 10:26:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 161752075A;
+        Wed, 22 Apr 2020 10:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551217;
-        bh=CV4lsd8GFjskQ68BrjCsNHsoRiEhRicJFGhZqLBaR7M=;
+        s=default; t=1587551197;
+        bh=UjrAK+OQRBdE3nXPOYyXQpoWIFD+vJtFTxgV0domYGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QvWUy6fhoe4GPR7kt9Z1EES9dAvGrL6d3HM0rbZtrufQytoCm/8IdSj8cFQrth5cQ
-         3Qjzrfq1DteYx0CRooOKiRNCwNmh2wRmkvYE2ddtJgjSobZSKImu0ughTYx33H6dbb
-         MUXyfQjlcMyRncUGKdaVNxDwnseNUNezJBeh434U=
+        b=Jc71hZdU3O5+EqvgIBAcYprxf8xcbRm9KsAGIAaANgrx3G04Kqjhxi++QKWuZ9G4J
+         oAviHEnX9+cOji03u6DKxAG+dqan+ccFsV74PcHWGDJ4/T5qM0yPOxVcorXjH4U/qL
+         1vQNLTgMSol0ORkqgp5uFj0+MwTAoeQCU1L8+cVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 147/166] net: dsa: bcm_sf2: Fix overflow checks
-Date:   Wed, 22 Apr 2020 11:57:54 +0200
-Message-Id: <20200422095104.361727106@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffery Miller <jmiller@neverware.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 140/166] power: supply: axp288_fuel_gauge: Broaden vendor check for Intel Compute Sticks.
+Date:   Wed, 22 Apr 2020 11:57:47 +0200
+Message-Id: <20200422095103.654584568@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -59,59 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Jeffery Miller <jmiller@neverware.com>
 
-commit d0802dc411f469569a537283b6f3833af47aece9 upstream.
+[ Upstream commit e42fe5b29ac07210297e75f36deefe54edbdbf80 ]
 
-Commit f949a12fd697 ("net: dsa: bcm_sf2: fix buffer overflow doing
-set_rxnfc") tried to fix the some user controlled buffer overflows in
-bcm_sf2_cfp_rule_set() and bcm_sf2_cfp_rule_del() but the fix was using
-CFP_NUM_RULES, which while it is correct not to overflow the bitmaps, is
-not representative of what the device actually supports. Correct that by
-using bcm_sf2_cfp_rule_size() instead.
+The Intel Compute Stick `STK1A32SC` can have a system vendor of
+"Intel(R) Client Systems".
+Broaden the Intel Compute Stick DMI checks so that they match "Intel
+Corporation" as well as "Intel(R) Client Systems".
 
-The latter subtracts the number of rules by 1, so change the checks from
-greater than or equal to greater than accordingly.
+This fixes an issue where the STK1A32SC compute sticks were still
+exposing a battery with the existing blacklist entry.
 
-Fixes: f949a12fd697 ("net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jeffery Miller <jmiller@neverware.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2_cfp.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/power/supply/axp288_fuel_gauge.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/dsa/bcm_sf2_cfp.c
-+++ b/drivers/net/dsa/bcm_sf2_cfp.c
-@@ -882,17 +882,14 @@ static int bcm_sf2_cfp_rule_set(struct d
- 	     fs->m_ext.data[1]))
- 		return -EINVAL;
- 
--	if (fs->location != RX_CLS_LOC_ANY && fs->location >= CFP_NUM_RULES)
-+	if (fs->location != RX_CLS_LOC_ANY &&
-+	    fs->location > bcm_sf2_cfp_rule_size(priv))
- 		return -EINVAL;
- 
- 	if (fs->location != RX_CLS_LOC_ANY &&
- 	    test_bit(fs->location, priv->cfp.used))
- 		return -EBUSY;
- 
--	if (fs->location != RX_CLS_LOC_ANY &&
--	    fs->location > bcm_sf2_cfp_rule_size(priv))
--		return -EINVAL;
--
- 	ret = bcm_sf2_cfp_rule_cmp(priv, port, fs);
- 	if (ret == 0)
- 		return -EEXIST;
-@@ -973,7 +970,7 @@ static int bcm_sf2_cfp_rule_del(struct b
- 	struct cfp_rule *rule;
- 	int ret;
- 
--	if (loc >= CFP_NUM_RULES)
-+	if (loc > bcm_sf2_cfp_rule_size(priv))
- 		return -EINVAL;
- 
- 	/* Refuse deleting unused rules, and those that are not unique since
+diff --git a/drivers/power/supply/axp288_fuel_gauge.c b/drivers/power/supply/axp288_fuel_gauge.c
+index e1bc4e6e6f30e..f40fa0e63b6e5 100644
+--- a/drivers/power/supply/axp288_fuel_gauge.c
++++ b/drivers/power/supply/axp288_fuel_gauge.c
+@@ -706,14 +706,14 @@ static const struct dmi_system_id axp288_fuel_gauge_blacklist[] = {
+ 	{
+ 		/* Intel Cherry Trail Compute Stick, Windows version */
+ 		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
++			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1AW32SC"),
+ 		},
+ 	},
+ 	{
+ 		/* Intel Cherry Trail Compute Stick, version without an OS */
+ 		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
++			DMI_MATCH(DMI_SYS_VENDOR, "Intel"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "STK1A32SC"),
+ 		},
+ 	},
+-- 
+2.20.1
+
 
 
