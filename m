@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4C6C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9540FC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E5C2098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CDD20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgDVMRj (ORCPT
+        id S1728748AbgDVMWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:17:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53296 "EHLO
+        Wed, 22 Apr 2020 08:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726403AbgDVMR2 (ORCPT
+        by vger.kernel.org with ESMTP id S1728755AbgDVMRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:17:28 -0400
+        Wed, 22 Apr 2020 08:17:42 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2E4C03C1AA;
-        Wed, 22 Apr 2020 05:17:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD9DC03C1A8;
+        Wed, 22 Apr 2020 05:17:41 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJc-0007iH-MC; Wed, 22 Apr 2020 14:17:20 +0200
+        id 1jREJl-0007qC-9I; Wed, 22 Apr 2020 14:17:29 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0542B1C02FC;
-        Wed, 22 Apr 2020 14:17:19 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:18 -0000
-From:   "tip-bot2 for Stephane Eranian" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7B5611C0809;
+        Wed, 22 Apr 2020 14:17:25 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:25 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf stat: Force error in fallback on :k events
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/core] perf cs-etm: Implement ->evsel_is_auxtrace() callback
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200414161550.225588-1-irogers@google.com>
-References: <20200414161550.225588-1-irogers@google.com>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200401101613.6201-6-adrian.hunter@intel.com>
+References: <20200401101613.6201-6-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158755783861.28353.11402611117303898622.tip-bot2@tip-bot2>
+Message-ID: <158755784506.28353.8721773656438110928.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,118 +61,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     bec49a9e05db3dbdca696fa07c62c52638fb6371
-Gitweb:        https://git.kernel.org/tip/bec49a9e05db3dbdca696fa07c62c52638fb6371
-Author:        Stephane Eranian <eranian@google.com>
-AuthorDate:    Tue, 14 Apr 2020 09:15:50 -07:00
+Commit-ID:     a58ab57caad02b0d854969e191b5d1d4b0f90930
+Gitweb:        https://git.kernel.org/tip/a58ab57caad02b0d854969e191b5d1d4b0f90930
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Wed, 01 Apr 2020 13:16:02 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 18 Apr 2020 09:05:00 -03:00
+CommitterDate: Thu, 16 Apr 2020 12:19:15 -03:00
 
-perf stat: Force error in fallback on :k events
+perf cs-etm: Implement ->evsel_is_auxtrace() callback
 
-When it is not possible for a non-privilege perf command to monitor at
-the kernel level (:k), the fallback code forces a :u. That works if the
-event was previously monitoring both levels.  But if the event was
-already constrained to kernel only, then it does not make sense to
-restrict it to user only.
+Implement ->evsel_is_auxtrace() callback.
 
-Given the code works by exclusion, a kernel only event would have:
-
-  attr->exclude_user = 1
-
-The fallback code would add:
-
-  attr->exclude_kernel = 1
-
-In the end the end would not monitor in either the user level or kernel
-level. In other words, it would count nothing.
-
-An event programmed to monitor kernel only cannot be switched to user
-only without seriously warning the user.
-
-This patch forces an error in this case to make it clear the request
-cannot really be satisfied.
-
-Behavior with paranoid 1:
-
-  $ sudo bash -c "echo 1 > /proc/sys/kernel/perf_event_paranoid"
-  $ perf stat -e cycles:k sleep 1
-
-   Performance counter stats for 'sleep 1':
-
-           1,520,413      cycles:k
-
-         1.002361664 seconds time elapsed
-
-         0.002480000 seconds user
-         0.000000000 seconds sys
-
-Old behavior with paranoid 2:
-
-  $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
-  $ perf stat -e cycles:k sleep 1
-   Performance counter stats for 'sleep 1':
-
-                   0      cycles:ku
-
-         1.002358127 seconds time elapsed
-
-         0.002384000 seconds user
-         0.000000000 seconds sys
-
-New behavior with paranoid 2:
-
-  $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
-  $ perf stat -e cycles:k sleep 1
-  Error:
-  You may not have permission to collect stats.
-
-  Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-  which controls use of the performance events system by
-  unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).
-
-  The current value is 2:
-
-    -1: Allow use of (almost) all events by all users
-        Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-  >= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN
-        Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN
-  >= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN
-  >= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN
-
-  To make this setting permanent, edit /etc/sysctl.conf too, e.g.:
-
-          kernel.perf_event_paranoid = -1
-
-v2 of this patch addresses the review feedback from jolsa@redhat.com.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200414161550.225588-1-irogers@google.com
+Link: http://lore.kernel.org/lkml/20200401101613.6201-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/util/cs-etm.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 8300e8c..6a571d3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2427,6 +2427,10 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
- 		char *new_name;
- 		const char *sep = ":";
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 62d2f9b..3c802fd 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -631,6 +631,16 @@ static void cs_etm__free(struct perf_session *session)
+ 	zfree(&aux);
+ }
  
-+		/* If event has exclude user then don't exclude kernel. */
-+		if (evsel->core.attr.exclude_user)
-+			return false;
++static bool cs_etm__evsel_is_auxtrace(struct perf_session *session,
++				      struct evsel *evsel)
++{
++	struct cs_etm_auxtrace *aux = container_of(session->auxtrace,
++						   struct cs_etm_auxtrace,
++						   auxtrace);
 +
- 		/* Is there already the separator in the name. */
- 		if (strchr(name, '/') ||
- 		    strchr(name, ':'))
++	return evsel->core.attr.type == aux->pmu_type;
++}
++
+ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+ {
+ 	struct machine *machine;
+@@ -2618,6 +2628,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+ 	etm->auxtrace.flush_events = cs_etm__flush_events;
+ 	etm->auxtrace.free_events = cs_etm__free_events;
+ 	etm->auxtrace.free = cs_etm__free;
++	etm->auxtrace.evsel_is_auxtrace = cs_etm__evsel_is_auxtrace;
+ 	session->auxtrace = &etm->auxtrace;
+ 
+ 	etm->unknown_thread = thread__new(999999999, 999999999);
