@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D876AC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7395AC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BF220776
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4364820774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549993;
-	bh=CgiWHZVCcyQWUaKc5iQgvL1E3E25p2lVHzwXT1qcaJk=;
+	s=default; t=1587549999;
+	bh=e0BLSrIFRbPvC47jx0c234YbzrAFTYQdeTkVFHy1MJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ieVk1Y+rfzJ5DWRgTTc0vNLMmCx+fLOllxKvCKc/wVg5EJ6k1SO8YDURjZ+yzwNly
-	 vHtGZ8DyGULE5/uGNs4VMRJjBqp5kBoLgK1ZIQK2+QLUcnoUPQLtXcVS7ya0Z95ILm
-	 ib5i6CyC6fIHhWj+UdmTLsa95ehoP25zgNwTvOzI=
+	b=HgMptl7QTcntNb+bfvgnsxGyiZ17Jz2aBKSCINbcCO1/7F5Wq14ELobCNW7eg9d/8
+	 GGlAiy3Q5e5fmfgFhCIrMizGXtaOVPDGRG/mwkOTW3NJLurLoAP61CSZKrlE2CUlfJ
+	 kisZ8xqLN8xk+CJWcK9zbmDtm+jbvj9zy2fcqTZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgDVKGc (ORCPT
+        id S1727791AbgDVKGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:06:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbgDVKG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:06:26 -0400
+        id S1728372AbgDVKGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:06:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FE6620575;
-        Wed, 22 Apr 2020 10:06:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8908420774;
+        Wed, 22 Apr 2020 10:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549986;
-        bh=CgiWHZVCcyQWUaKc5iQgvL1E3E25p2lVHzwXT1qcaJk=;
+        s=default; t=1587549994;
+        bh=e0BLSrIFRbPvC47jx0c234YbzrAFTYQdeTkVFHy1MJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIoI7C5MFDYFT4OXSUpktqCTMtJ5MNurW/SXws/SX2fS1IvKHMFKwBr2YHy2uB1dr
-         7trPA9DmlHnLmodA9qVEB5Pkp0rK3o+6zKVJfqsDZ3OCOfiSag+PHD9Q6bIE6EkCdl
-         dzexswCM/JHsvYP5KKdbNPlNsHuyyvjvUWPbfXIY=
+        b=j/WFXit/83hu98Nkc7HbVTXsL20l9ucnEAfn+wMPRgHBZhwE9s27mcFHwCQ5BxZPu
+         ztoovFTmhasQaUE0/55/qiKFxv50rexAIrOBKQl6KWgUOfx4e/1LBrzBRrZN7OBGV5
+         T+uo3fPxleL48blwA88aV3XRcGwLi1wHya5r5Rf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 087/125] ALSA: hda: Dont release card at firmware loading error
-Date:   Wed, 22 Apr 2020 11:56:44 +0200
-Message-Id: <20200422095047.068983960@linuxfoundation.org>
+        stable@vger.kernel.org, Joe Moriarty <joe.moriarty@oracle.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.9 090/125] drm: NULL pointer dereference [null-pointer-deref] (CWE 476) problem
+Date:   Wed, 22 Apr 2020 11:56:47 +0200
+Message-Id: <20200422095047.524731877@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095032.909124119@linuxfoundation.org>
 References: <20200422095032.909124119@linuxfoundation.org>
@@ -58,59 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Joe Moriarty <joe.moriarty@oracle.com>
 
-commit 25faa4bd37c10f19e4b848b9032a17a3d44c6f09 upstream.
+commit 22a07038c0eaf4d1315a493ce66dcd255accba19 upstream.
 
-At the error path of the firmware loading error, the driver tries to
-release the card object and set NULL to drvdata.  This may be referred
-badly at the possible PM action, as the driver itself is still bound
-and the PM callbacks read the card object.
+The Parfait (version 2.1.0) static code analysis tool found the
+following NULL pointer derefernce problem.
 
-Instead, we continue the probing as if it were no option set.  This is
-often a better choice than the forced abort, too.
+- drivers/gpu/drm/drm_dp_mst_topology.c
+The call to drm_dp_calculate_rad() in function drm_dp_port_setup_pdt()
+could result in a NULL pointer being returned to port->mstb due to a
+failure to allocate memory for port->mstb.
 
-Fixes: 5cb543dba986 ("ALSA: hda - Deferred probing with request_firmware_nowait()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Joe Moriarty <joe.moriarty@oracle.com>
+Reviewed-by: Steven Sistare <steven.sistare@oracle.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180212195144.98323-3-joe.moriarty@oracle.com
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |   19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1828,24 +1828,15 @@ static void azx_firmware_cb(const struct
- {
- 	struct snd_card *card = context;
- 	struct azx *chip = card->private_data;
--	struct pci_dev *pci = chip->pci;
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -1041,10 +1041,12 @@ static bool drm_dp_port_setup_pdt(struct
+ 		lct = drm_dp_calculate_rad(port, rad);
  
--	if (!fw) {
--		dev_err(card->dev, "Cannot load firmware, aborting\n");
--		goto error;
--	}
--
--	chip->fw = fw;
-+	if (fw)
-+		chip->fw = fw;
-+	else
-+		dev_err(card->dev, "Cannot load firmware, continue without patching\n");
- 	if (!chip->disabled) {
- 		/* continue probing */
--		if (azx_probe_continue(chip))
--			goto error;
-+		azx_probe_continue(chip);
+ 		port->mstb = drm_dp_add_mst_branch_device(lct, rad);
+-		port->mstb->mgr = port->mgr;
+-		port->mstb->port_parent = port;
++		if (port->mstb) {
++			port->mstb->mgr = port->mgr;
++			port->mstb->port_parent = port;
+ 
+-		send_link = true;
++			send_link = true;
++		}
+ 		break;
  	}
--	return; /* OK */
--
-- error:
--	snd_card_free(card);
--	pci_set_drvdata(pci, NULL);
- }
- #endif
- 
+ 	return send_link;
 
 
