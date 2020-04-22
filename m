@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A577AC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6599C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 802592071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FFB2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550351;
-	bh=sItzWrsRKdwC5QEvlKIli2KrdE3jMIrVDLdEUJrfUqc=;
+	s=default; t=1587550355;
+	bh=ME0WeMs8A61c6lYVuqvVeOyocXUUkTtNfSPHYXf/LFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZ3aszKOBXKWDcZimsRtz1GFHk9/b4zSVXfgzTFYrJwuVvFTyxWb5hISM+u14bn+D
-	 O6AORogOpfo+QfV/bl3UkqeYMVU/8pYFEFSFmiuzXYvgFU92S87k/JAiSalWOLGzH8
-	 guUCYYlv2NFXBqoLPJiyzRLMvlOzubCjMAdiuoZI=
+	b=NjEsMbF/eMpDA9aKKI9K850tiLH1FRmYWRxPQn7VNpnHeUwMtuV/E7ULWxtKzRIKf
+	 /jJjY3NKxM/8mTPndYrFGG11b5jprlYhcljvdEC7kuB7jZVfeWz3bxD29BsKme5Rzt
+	 1Ur2BAGRJiPK6f1hYlEnYjPVbATsvdQcMZubC/6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgDVKM3 (ORCPT
+        id S1729350AbgDVKMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729321AbgDVKMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:12:15 -0400
+        id S1729324AbgDVKMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:12:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103E52070B;
-        Wed, 22 Apr 2020 10:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33552070B;
+        Wed, 22 Apr 2020 10:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550334;
-        bh=sItzWrsRKdwC5QEvlKIli2KrdE3jMIrVDLdEUJrfUqc=;
+        s=default; t=1587550339;
+        bh=ME0WeMs8A61c6lYVuqvVeOyocXUUkTtNfSPHYXf/LFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jngezCdN3dshGXPFwugTM2UTvPxP0KT690+cGAgqDaY78BZ6rE91mXPSAsf7WBnWY
-         X/6iXXZF9E+C6Muved98xqo345PXkTFIjHyA3+6kmeDswbhPwKvnn8jhjl/sZgQa5k
-         +wykr2lEW3tI249d5ZaTPGrC5a8i5AnDUXUEi+3A=
+        b=B6MA5VjoOfIraeP3uJzb6IWjJzGIfcT77CE1Mn2Yde3njpitgCoI7/u9vKTJYsMhq
+         La7L/kOsZboFcapcMqTiT/e7O7HnQ1SVmiWxwoupOnd5UrpDIu2Eik7DwtM7FMhvVe
+         jtHXeUttDnZ+ka0EohJoqhmDbx9ezfaRD9lHuT44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 062/199] KVM: VMX: fix crash cleanup when KVM wasnt used
-Date:   Wed, 22 Apr 2020 11:56:28 +0200
-Message-Id: <20200422095104.459711739@linuxfoundation.org>
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 054/199] ath9k: Handle txpower changes even when TPC is disabled
+Date:   Wed, 22 Apr 2020 11:56:20 +0200
+Message-Id: <20200422095103.649955731@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,75 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-commit dbef2808af6c594922fe32833b30f55f35e9da6d upstream.
+commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
 
-If KVM wasn't used at all before we crash the cleanup procedure fails with
- BUG: unable to handle page fault for address: ffffffffffffffc8
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 23215067 P4D 23215067 PUD 23217067 PMD 0
- Oops: 0000 [#8] SMP PTI
- CPU: 0 PID: 3542 Comm: bash Kdump: loaded Tainted: G      D           5.6.0-rc2+ #823
- RIP: 0010:crash_vmclear_local_loaded_vmcss.cold+0x19/0x51 [kvm_intel]
+When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
+reconfigure HW's maximum txpower.
 
-The root cause is that loaded_vmcss_on_cpu list is not yet initialized,
-we initialize it in hardware_enable() but this only happens when we start
-a VM.
+This fixes 0dBm txpower setting when user attaches to an interface for
+the first time with the following scenario:
 
-Previously, we used to have a bitmap with enabled CPUs and that was
-preventing [masking] the issue.
+ieee80211_do_open()
+    ath9k_add_interface()
+        ath9k_set_txpower() /* Set TX power with not yet initialized
+                               sc->hw->conf.power_level */
 
-Initialized loaded_vmcss_on_cpu list earlier, right before we assign
-crash_vmclear_loaded_vmcss pointer. blocked_vcpu_on_cpu list and
-blocked_vcpu_on_cpu_lock are moved altogether for consistency.
+    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
+                             raise IEEE80211_CONF_CHANGE_POWER */
 
-Fixes: 31603d4fc2bb ("KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Message-Id: <20200401081348.1345307-1-vkuznets@redhat.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
+
+This issue can be reproduced with the following:
+
+  $ modprobe -r ath9k
+  $ modprobe ath9k
+  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
+  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
+  $ killall wpa_supplicant
+  $ iw dev /* TX power goes back to calibrated value and subsequent
+              calls will be fine */
+
+Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
+Cc: stable@vger.kernel.org
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/ath9k/main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -3776,10 +3776,6 @@ static int hardware_enable(void)
- 	if (cr4_read_shadow() & X86_CR4_VMXE)
- 		return -EBUSY;
- 
--	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
--	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
--	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
--
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, old);
- 
- 	test_bits = FEATURE_CONTROL_LOCKED;
-@@ -12900,7 +12896,7 @@ module_exit(vmx_exit)
- 
- static int __init vmx_init(void)
- {
--	int r;
-+	int r, cpu;
- 
- 	r = kvm_init(&vmx_x86_ops, sizeof(struct vcpu_vmx),
- 		     __alignof__(struct vcpu_vmx), THIS_MODULE);
-@@ -12922,6 +12918,12 @@ static int __init vmx_init(void)
- 		}
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1456,6 +1456,9 @@ static int ath9k_config(struct ieee80211
+ 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
  	}
  
-+	for_each_possible_cpu(cpu) {
-+		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
-+		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
-+		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
-+	}
++	if (changed & IEEE80211_CONF_CHANGE_POWER)
++		ath9k_set_txpower(sc, NULL);
 +
- #ifdef CONFIG_KEXEC_CORE
- 	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
- 			   crash_vmclear_local_loaded_vmcss);
+ 	mutex_unlock(&sc->mutex);
+ 	ath9k_ps_restore(sc);
+ 
 
 
