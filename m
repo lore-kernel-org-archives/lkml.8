@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED00DC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B22C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76052073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0012071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551910;
-	bh=qf2dcxdlSyp8hF1Man+929JVoDmyuznROXXiamjfelU=;
+	s=default; t=1587551913;
+	bh=0y/5BMQGM3DYpHq4BrRPiLOjAhM4y++Aic+mXtCHW3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dIN9jXt1F5fjRW9FoZMfCNQQa0QMHZqV9rRWMUGsUh9ZU2hHnzbqAf2LnWGwLF0ww
-	 hTM+VN232hJr80WJ+vwfslK8kFnyruUxc9j1zsHQXi08fFXolaOiP/rmYQ8HMYvfk6
-	 YciwXB7YbUsjUxr7sE5vwmkxr8jTT1RVo7Qb+Vdw=
+	b=wKF40x9wWt5ws9b9zqfIMmWaS0wHgyAqHibt88AEVJW5L/La4Ch68GtpcLdceWHPn
+	 fUCmX09lJklCoJ3i2nNKE7UPMgqORp+vBauTG519QxzdizPs7CfXidte2nToWNcZE/
+	 uAOWJkVGdtMtTxzkfODBuKQyEJnpOQfxtvnfLo+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731476AbgDVKia (ORCPT
+        id S1731482AbgDVKic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58434 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgDVKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729916AbgDVKWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 06:22:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D3622084D;
-        Wed, 22 Apr 2020 10:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F2BE20780;
+        Wed, 22 Apr 2020 10:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550921;
-        bh=qf2dcxdlSyp8hF1Man+929JVoDmyuznROXXiamjfelU=;
+        s=default; t=1587550913;
+        bh=0y/5BMQGM3DYpHq4BrRPiLOjAhM4y++Aic+mXtCHW3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0SArciEdBcH5Tjk59Uz/gxC12j+VRGXnwZ8p35x/bbPY9Uxge1Oxta5SwaZh1LVIE
-         ILzmvtOK60/JQrjOEJ8n2tV1b2WVhNreOhi9KNrDJ37vSJDCN042QXh9fmDapJmLzq
-         4i31qH24ePutD9tYBB0TjPf8vnFmZ6+DOdfcmumQ=
+        b=rLmId7krcogdJgacgP0luF/J+v6pM1dd3xKSBLMONM/yKS9/l5VxVD7V8ytU7ToHq
+         JpT1UaBlxmRbpxa/ZX0jtR1GxV71jVHKFfbtTmruHA4ULfEC1N9mM6EIZ2je1qvWmb
+         +2r8u8Ym94rKoShk05VNkh6u8nI6+DelqAWemzMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Erhard F." <erhard_f@mailbox.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.6 021/166] of: unittest: kmemleak on changeset destroy
-Date:   Wed, 22 Apr 2020 11:55:48 +0200
-Message-Id: <20200422095050.780723107@linuxfoundation.org>
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>
+Subject: [PATCH 5.6 008/166] xsk: Fix out of boundary write in __xsk_rcv_memcpy
+Date:   Wed, 22 Apr 2020 11:55:35 +0200
+Message-Id: <20200422095049.026646752@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,40 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-commit b3fb36ed694b05738d45218ea72cf7feb10ce2b1 upstream.
+commit db5c97f02373917efe2c218ebf8e3d8b19e343b6 upstream.
 
-kmemleak reports several memory leaks from devicetree unittest.
-This is the fix for problem 1 of 5.
+first_len is the remainder of the first page we're copying.
+If this size is larger, then out of page boundary write will
+otherwise happen.
 
-of_unittest_changeset() reaches deeply into the dynamic devicetree
-functions.  Several nodes were left with an elevated reference
-count and thus were not properly cleaned up.  Fix the reference
-counts so that the memory will be freed.
-
-Fixes: 201c910bd689 ("of: Transactional DT support.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: c05cd3645814 ("xsk: add support to allow unaligned chunk placement")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Link: https://lore.kernel.org/bpf/1585813930-19712-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/of/unittest.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/xdp/xsk.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -777,6 +777,10 @@ static void __init of_unittest_changeset
- 	unittest(!of_changeset_revert(&chgset), "revert failed\n");
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -131,8 +131,9 @@ static void __xsk_rcv_memcpy(struct xdp_
+ 		u64 page_start = addr & ~(PAGE_SIZE - 1);
+ 		u64 first_len = PAGE_SIZE - (addr - page_start);
  
- 	of_changeset_destroy(&chgset);
-+
-+	of_node_put(n1);
-+	of_node_put(n2);
-+	of_node_put(n21);
- #endif
- }
+-		memcpy(to_buf, from_buf, first_len + metalen);
+-		memcpy(next_pg_addr, from_buf + first_len, len - first_len);
++		memcpy(to_buf, from_buf, first_len);
++		memcpy(next_pg_addr, from_buf + first_len,
++		       len + metalen - first_len);
  
+ 		return;
+ 	}
 
 
