@@ -2,169 +2,111 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B73C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1861C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742D22077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830372076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587553251;
+	bh=Hokkj9t4l0CDUQoUg6xPxXeuKWo+dJ3Dzjt1UnMNo/0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fN7PSPN6q2bRvixUH+L3L0NQkFFRRsVAjnCcWXRQxj/BfWT5rqmLDqeHdw5imhFo5
+	 GobROLv3jn5Euy2AYhodhjWDNdXm9x5InW3Vgnylv48xmAUilcY14YHoMLPEZnw/dg
+	 dt0FGMF3zM46UfHl39MMmaQwB2ubCALCnVs9QoXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732353AbgDVLAN (ORCPT
+        id S1726419AbgDVKB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:00:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:47506 "EHLO foss.arm.com"
+        Wed, 22 Apr 2020 06:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726976AbgDVK7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:59:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3768931B;
-        Wed, 22 Apr 2020 03:59:53 -0700 (PDT)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DDE83F6CF;
-        Wed, 22 Apr 2020 03:59:49 -0700 (PDT)
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200403123020.13897-1-qais.yousef@arm.com>
- <292dbd54-e590-dc4f-41e6-5f86e478c0ee@arm.com>
- <20200420151341.7zni3bwroso2kpdc@e107158-lin.cambridge.arm.com>
- <de020088-3b06-3674-dab9-244ae577cc54@arm.com>
- <20200421112733.4jbguidgbqwzhv23@e107158-lin.cambridge.arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <45236ccd-24d2-3b99-cd9b-bac13cfaceab@arm.com>
-Date:   Wed, 22 Apr 2020 12:59:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726894AbgDVKBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEA0320780;
+        Wed, 22 Apr 2020 10:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587549713;
+        bh=Hokkj9t4l0CDUQoUg6xPxXeuKWo+dJ3Dzjt1UnMNo/0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q66pzJpozumBfwVlEpRTrBT/G7UtVZncKkJwS2Nf5sGe+V5UutlFNaU8Dut3cA2+m
+         HrpL0F++77khQNbpGYcIb/S6FjK65QHPCDLnEROG0yHacE8TarbfSG+RQGO3BRa/RG
+         V3P5+d8de/eod/LdAbOUvIUC9v1PdQ0tqa4/CIrs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dedy Lansky <dlansky@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 4.4 077/100] wil6210: fix temperature debugfs
+Date:   Wed, 22 Apr 2020 11:56:47 +0200
+Message-Id: <20200422095036.949134012@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
+References: <20200422095022.476101261@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200421112733.4jbguidgbqwzhv23@e107158-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/2020 13:27, Qais Yousef wrote:
-> On 04/21/20 13:18, Dietmar Eggemann wrote:
->> On 20/04/2020 17:13, Qais Yousef wrote:
->>> On 04/20/20 10:29, Dietmar Eggemann wrote:
->>>> On 03.04.20 14:30, Qais Yousef wrote:
->>>>
->>>> [...]
->>>>
->>>>> @@ -924,6 +945,14 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->>>>>  	return uc_req;
->>>>>  }
->>>>>  
->>>>> +static void uclamp_rt_sync_default_util_min(struct task_struct *p)
->>>>> +{
->>>>> +	struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
->>>>> +
->>>>> +	if (!uc_se->user_defined)
->>>>> +		uclamp_se_set(uc_se, sysctl_sched_rt_default_uclamp_util_min, false);
->>>>> +}
->>>>> +
->>>>>  unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
->>>>>  {
->>>>>  	struct uclamp_se uc_eff;
->>>>> @@ -1030,6 +1059,12 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->>>>>  	if (unlikely(!p->sched_class->uclamp_enabled))
->>>>>  		return;
->>>>>  
->>>>> +	/*
->>>>> +	 * When sysctl_sched_rt_default_uclamp_util_min value is changed by the
->>>>> +	 * user, we apply any new value on the next wakeup, which is here.
->>>>> +	 */
->>>>> +	uclamp_rt_sync_default_util_min(p);
->>>>> +
->>>>
->>>> Does this have to be an extra function? Can we not reuse
->>>> uclamp_tg_restrict() by slightly rename it to uclamp_restrict()?
+From: Dedy Lansky <dlansky@codeaurora.org>
 
-Btw, there was an issue in my little snippet. I used uc_req.user_defined
-uninitialized in uclamp_restrict().
+[ Upstream commit 6d9eb7ebae3d7e951bc0999235ae7028eb4cae4f ]
 
+For negative temperatures, "temp" debugfs is showing wrong values.
+Use signed types so proper calculations is done for sub zero
+temperatures.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index f3706dad32ce..7e6b2b7cd1e5 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -903,12 +903,11 @@ uclamp_restrict(struct task_struct *p, enum uclamp_id clamp_id)
+Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/wireless/ath/wil6210/debugfs.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+--- a/drivers/net/wireless/ath/wil6210/debugfs.c
++++ b/drivers/net/wireless/ath/wil6210/debugfs.c
+@@ -1088,7 +1088,7 @@ static const struct file_operations fops
+ };
+ 
+ /*---------temp------------*/
+-static void print_temp(struct seq_file *s, const char *prefix, u32 t)
++static void print_temp(struct seq_file *s, const char *prefix, s32 t)
  {
- 	struct uclamp_se uc_req, __maybe_unused uc_max;
+ 	switch (t) {
+ 	case 0:
+@@ -1096,7 +1096,8 @@ static void print_temp(struct seq_file *
+ 		seq_printf(s, "%s N/A\n", prefix);
+ 	break;
+ 	default:
+-		seq_printf(s, "%s %d.%03d\n", prefix, t / 1000, t % 1000);
++		seq_printf(s, "%s %s%d.%03d\n", prefix, (t < 0 ? "-" : ""),
++			   abs(t / 1000), abs(t % 1000));
+ 		break;
+ 	}
+ }
+@@ -1104,7 +1105,7 @@ static void print_temp(struct seq_file *
+ static int wil_temp_debugfs_show(struct seq_file *s, void *data)
+ {
+ 	struct wil6210_priv *wil = s->private;
+-	u32 t_m, t_r;
++	s32 t_m, t_r;
+ 	int rc = wmi_get_temperature(wil, &t_m, &t_r);
  
--	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN &&
--	    !uc_req.user_defined) {
-+	if (unlikely(rt_task(p)) && clamp_id == UCLAMP_MIN) {
- 		struct uclamp_se *uc_se = &p->uclamp_req[UCLAMP_MIN];
- 		int rt_min = sysctl_sched_rt_default_uclamp_util_min;
- 
--		if (uc_se->value != rt_min) {
-+		if (!uc_se->user_defined && uc_se->value != rt_min) {
- 			uclamp_se_set(uc_se, rt_min, false);
- 			printk("uclamp_restrict() [%s %d] p->uclamp_req[%d].value=%d\n",
- 			       p->comm, p->pid, clamp_id, uc_se->value);
+ 	if (rc) {
 
->>> Hmm the thing is that we're not restricting here. In contrary we're boosting,
->>> so the name would be misleading.
->>
->> I always thought that we're restricting p->uclamp_req[UCLAMP_MIN].value (default 1024) to
->> sysctl_sched_rt_default_uclamp_util_min (0-1024)?
-> 
-> The way I look at it is that we're *setting* it to
-> sysctl_sched_rt_default_uclamp_util_min if !user_defined.
-> 
-> The restriction mechanism that ensures this set value doesn't escape
-> cgroup/global restrictions setup.
 
-I guess we overall agree here. 
-
-I see 3 restriction levels: (!user_defined) task -> taskgroup -> system
-
-I see sysctl_sched_rt_default_uclamp_util_min (min_rt_default) as a
-restriction on task level.
-
-It's true that the task level restriction is setting the value at the same time.
-
-For CFS (id=UCLAMP_[MIN\|MAX]) and RT (id=UCLAMP_MAX) we use
-uclamp_none(id) and those values (0, 1024) are fixed so these task level
-values don't need to be further restricted.
-
-For RT (id=UCLAMP_MIN) we use 'min_rt_default' and since it can change
-we have to check the task level restriction in 'uclamp_eff_get() ->
-uclamp_(tg)_restrict()'.
-
-root@h960:~# echo 999 > /proc/sys/kernel/sched_rt_default_util_clamp_min
-
-[ 2540.507236] uclamp_eff_get() [rtkit-daemon 419] tag=0 uclamp_id=0 uc_req.value=1024
-[ 2540.514947] uclamp_eff_get() [rtkit-daemon 419] tag=1 uclamp_id=0 uc_req.value=1024
-[ 2548.015208] uclamp_restrict() [rtkit-daemon 419] p->uclamp_req[0].value=999
-
-root@h960:~# echo 666 > /proc/sys/kernel/sched_util_clamp_min
-
-[ 2548.022219] uclamp_eff_get() [rtkit-daemon 419] tag=0 uclamp_id=0 uc_req.value=999
-[ 2548.029825] uclamp_eff_get() [rtkit-daemon 419] tag=1 uclamp_id=0 uc_req.value=999
-[ 2553.479509] uclamp_eff_get() [rtkit-daemon 419] tag=0 uclamp_id=0 uc_max.value=666
-[ 2553.487131] uclamp_eff_get() [rtkit-daemon 419] tag=1 uclamp_id=0 uc_max.value=666
-
-Haven't tried to put an rt task into a taskgroup other than root.
