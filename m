@@ -2,172 +2,117 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BAEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A956C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B522076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:39:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6+ewChR"
+	by mail.kernel.org (Postfix) with ESMTP id 110162076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbgDVPjR (ORCPT
+        id S1726608AbgDVPjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgDVPjR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:39:17 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08223C03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:39:17 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 18so1270443pfx.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=OSzsOQN8Z1q5Ww0pPBotbwJfApA1ur1KHIVoOxI4Rrw=;
-        b=g6+ewChR1dfm8d7rbsEaXxVVw8tca9f8lcTqPwL2DHu8RVOvpgak8FFsHJXn+8zdJS
-         TQomHYy5JEP16wiHIJhMl/Yc9H4L53lH3a+NN0gwQHA/cUPbTgdjfbnOGoV06w85VQko
-         FYaEXTatbcNneu451BucAl8GA6y4rDMBGfp91F2ct/NmwErVYA1PrgbKsdrsecqH5zZU
-         IxhBj6rybFoKPmm1hwe7/vSczGLbji8kQOFjcmwVrdQeWXO4Srz8afR2NfWbPjNGY26L
-         wj5sCPFs3NaCS/iFMIKPuks34mkZf/24JcUzlwl0af5LMGlXQj2cLmxEK582nA5xD1b2
-         uz6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=OSzsOQN8Z1q5Ww0pPBotbwJfApA1ur1KHIVoOxI4Rrw=;
-        b=ucAXY4lKNg40F0CfGRTshI2T7Z2DKWcrHgNTCVKaNXq/qnMEcuP6+5VlyIWYT60XXb
-         K59UKGTNzv+nEr6H+2cujI8mRjIBISzH0jNAmScIU9w+DuetGLhPZoc3W5PKjG9y+8tD
-         PLIo3LZhyN5u4yJ7VKVK7u0CAqDO1pICpDlZ0vq262n0/XrUsRSA04SsD8zLva8oKG0Q
-         t+uWYW6jS5XCSZ/gyPtPwiKTPfdWhW8nmZG8zc7M1DWs54ErnFS0PjYZIVyw6EbJTuaz
-         XHnVj/iz51//Hj0xlYyLqylJnB2M1pEx3d1nhYN13Mbdly/J3r1+6ZM5FLjFL8h7Uzu+
-         K4jg==
-X-Gm-Message-State: AGi0PuaY0Je5ljETQpjIKfIsRVC6CE7bkyiXVdTbXPyIQYLaYdqURMHS
-        lxtmuY+4dJsxkiYQaOqFpTQ=
-X-Google-Smtp-Source: APiQypI3c0dky0npRWJ2vqUNhjgaVx/d2aoSqIAgxb9oK5DJxVFZ+N0yGfof2GL4IhuULOChQShSDA==
-X-Received: by 2002:a63:e607:: with SMTP id g7mr26503214pgh.303.1587569956501;
-        Wed, 22 Apr 2020 08:39:16 -0700 (PDT)
-Received: from blackclown ([182.70.139.46])
-        by smtp.gmail.com with ESMTPSA id m14sm5358050pgk.56.2020.04.22.08.39.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Apr 2020 08:39:15 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 21:09:00 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     jerome.pouiller@silabs.com, gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: wfx: cleanup long lines in data_tx.c
-Message-ID: <20200422153900.GA6184@blackclown>
+        Wed, 22 Apr 2020 11:39:22 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2082 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726403AbgDVPjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 11:39:21 -0400
+Received: from lhreml719-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id B66DEF958287947BB4C1;
+        Wed, 22 Apr 2020 16:39:19 +0100 (IST)
+Received: from fraeml705-chm.china.huawei.com (10.206.15.54) by
+ lhreml719-chm.china.huawei.com (10.201.108.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Wed, 22 Apr 2020 16:39:19 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Wed, 22 Apr 2020 17:39:18 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Wed, 22 Apr 2020 17:39:18 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>
+Subject: RE: [PATCH 1/5] ima: Set file->f_mode instead of file->f_flags in
+ ima_calc_file_hash()
+Thread-Topic: [PATCH 1/5] ima: Set file->f_mode instead of file->f_flags in
+ ima_calc_file_hash()
+Thread-Index: AQHWAsBIfWLB8bRS20i6QFRA3R5usKiFFOmAgABdoMA=
+Date:   Wed, 22 Apr 2020 15:39:18 +0000
+Message-ID: <d20f3ea6f2fe425bb8234b1bd5a2f6a9@huawei.com>
+References: <20200325161116.7082-1-roberto.sassu@huawei.com>
+ <1587556981.5738.7.camel@linux.ibm.com>
+In-Reply-To: <1587556981.5738.7.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.19.211]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Break lines with length over 80 characters to conform
-to the linux coding style. Issue found by checkpatch.
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/staging/wfx/data_tx.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.c
-index c30e4f5b6e2d..85ad94de20e5 100644
---- a/drivers/staging/wfx/data_tx.c
-+++ b/drivers/staging/wfx/data_tx.c
-@@ -165,7 +165,8 @@ static int wfx_tx_policy_upload(struct wfx_vif *wvif)
- 		spin_lock_bh(&wvif->tx_policy_cache.lock);
- 		for (i = 0; i < HIF_TX_RETRY_POLICY_MAX; ++i)
- 			if (!policies[i].uploaded &&
--			    memzcmp(policies[i].rates, sizeof(policies[i].rates)))
-+			    memzcmp(policies[i].rates,
-+				    sizeof(policies[i].rates)))
- 				break;
- 		if (i < HIF_TX_RETRY_POLICY_MAX) {
- 			policies[i].uploaded = true;
-@@ -290,7 +291,8 @@ static void wfx_tx_fixup_rates(struct ieee80211_tx_rate *rates)
- 		if (rates[i].idx == -1) {
- 			rates[i].idx = 0;
- 			rates[i].count = 8; // == hw->max_rate_tries
--			rates[i].flags = rates[i - 1].flags & IEEE80211_TX_RC_MCS;
-+			rates[i].flags = rates[i - 1].flags &
-+					 IEEE80211_TX_RC_MCS;
- 			break;
- 		}
- 	}
-@@ -318,7 +320,9 @@ static u8 wfx_tx_get_rate_id(struct wfx_vif *wvif,
- 	return rate_id;
- }
- 
--static struct hif_ht_tx_parameters wfx_tx_get_tx_parms(struct wfx_dev *wdev, struct ieee80211_tx_info *tx_info)
-+static struct
-+hif_ht_tx_parameters wfx_tx_get_tx_parms(struct wfx_dev *wdev,
-+					 struct ieee80211_tx_info *tx_info)
- {
- 	struct ieee80211_tx_rate *rate = &tx_info->driver_rates[0];
- 	struct hif_ht_tx_parameters ret = { };
-@@ -381,7 +385,8 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta,
- 	hif_msg->id = HIF_REQ_ID_TX;
- 	hif_msg->interface = wvif->id;
- 	if (skb->len > wvif->wdev->hw_caps.size_inp_ch_buf) {
--		dev_warn(wvif->wdev->dev, "requested frame size (%d) is larger than maximum supported (%d)\n",
-+		dev_warn(wvif->wdev->dev,
-+			 "requested frame size (%d) is larger than maximum supported (%d)\n",
- 			 skb->len, wvif->wdev->hw_caps.size_inp_ch_buf);
- 		skb_pull(skb, wmsg_len);
- 		return -EIO;
-@@ -394,7 +399,8 @@ static int wfx_tx_inner(struct wfx_vif *wvif, struct ieee80211_sta *sta,
- 	// data for debug.
- 	req->packet_id = queue_id << 28 |
- 			 IEEE80211_SEQ_TO_SN(le16_to_cpu(hdr->seq_ctrl)) << 16 |
--			 (atomic_add_return(1, &wvif->wdev->packet_id) & 0xFFFF);
-+			 (atomic_add_return(1, &wvif->wdev->packet_id) &
-+			  0xFFFF);
- 	req->data_flags.fc_offset = offset;
- 	if (tx_info->flags & IEEE80211_TX_CTL_SEND_AFTER_DTIM)
- 		req->data_flags.after_dtim = 1;
-@@ -517,7 +523,8 @@ void wfx_tx_confirm_cb(struct wfx_vif *wvif, const struct hif_cnf_tx *arg)
- 		if (tx_count < rate->count &&
- 		    arg->status == HIF_STATUS_RETRY_EXCEEDED &&
- 		    arg->ack_failures)
--			dev_dbg(wvif->wdev->dev, "all retries were not consumed: %d != %d\n",
-+			dev_dbg(wvif->wdev->dev,
-+				"all retries were not consumed: %d != %d\n",
- 				rate->count, tx_count);
- 		if (tx_count <= rate->count && tx_count &&
- 		    arg->txed_rate != wfx_get_hw_rate(wvif->wdev, rate))
-@@ -557,7 +564,8 @@ void wfx_tx_confirm_cb(struct wfx_vif *wvif, const struct hif_cnf_tx *arg)
- 		else
- 			tx_info->flags |= IEEE80211_TX_STAT_ACK;
- 	} else if (arg->status == HIF_REQUEUE) {
--		WARN(!arg->tx_result_flags.requeue, "incoherent status and result_flags");
-+		WARN(!arg->tx_result_flags.requeue,
-+		     "incoherent status and result_flags");
- 		if (tx_info->flags & IEEE80211_TX_CTL_SEND_AFTER_DTIM) {
- 			wvif->after_dtim_tx_allowed = false; // DTIM period elapsed
- 			schedule_work(&wvif->update_tim_work);
-@@ -595,7 +603,8 @@ void wfx_flush(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
- 		if (wait_event_timeout(wdev->tx_dequeue,
- 				       wfx_tx_queue_empty(wdev, queue, vif_id),
- 				       msecs_to_jiffies(1000)) <= 0)
--			dev_warn(wdev->dev, "frames queued while flushing tx queues?");
-+			dev_warn(wdev->dev,
-+				 "frames queued while flushing tx queues?");
- 	}
- 	wfx_tx_flush(wdev);
- 	if (wdev->chip_frozen)
--- 
-2.17.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
+ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
+Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBNaW1pIFpvaGFyDQo+IFNlbnQ6IFdlZG5lc2RheSwg
+QXByaWwgMjIsIDIwMjAgMjowMyBQTQ0KPiBUbzogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNz
+dUBodWF3ZWkuY29tPg0KPiBDYzogbGludXgtaW50ZWdyaXR5QHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgtc2VjdXJpdHktbW9kdWxlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZzsgS3J6eXN6dG9mIFN0cnVjenluc2tpDQo+IDxrcnp5c3p0b2Yuc3RydWN6eW5z
+a2lAaHVhd2VpLmNvbT47IFNpbHZpdSBWbGFzY2VhbnUNCj4gPFNpbHZpdS5WbGFzY2VhbnVAaHVh
+d2VpLmNvbT47IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc7IEdvbGR3eW4NCj4gUm9kcmlndWVzIDxy
+Z29sZHd5bkBzdXNlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzVdIGltYTogU2V0IGZp
+bGUtPmZfbW9kZSBpbnN0ZWFkIG9mIGZpbGUtPmZfZmxhZ3MgaW4NCj4gaW1hX2NhbGNfZmlsZV9o
+YXNoKCkNCj4gDQo+IFtDQydpbmcgR29sZHd5biBSb2RyaWd1ZXNdDQo+IA0KPiBIaSBSb2JlcnRv
+LA0KPiANCj4gT24gV2VkLCAyMDIwLTAzLTI1IGF0IDE3OjExICswMTAwLCBSb2JlcnRvIFNhc3N1
+IHdyb3RlOg0KPiA+IENvbW1pdCBhNDA4ZTRhODZiMzYgKCJpbWE6IG9wZW4gYSBuZXcgZmlsZSBp
+bnN0YW5jZSBpZiBubyByZWFkDQo+ID4gcGVybWlzc2lvbnMiKSB0cmllcyB0byBjcmVhdGUgYSBu
+ZXcgZmlsZSBkZXNjcmlwdG9yIHRvIGNhbGN1bGF0ZSBhIGZpbGUNCj4gPiBkaWdlc3QgaWYgdGhl
+IGZpbGUgaGFzIG5vdCBiZWVuIG9wZW5lZCB3aXRoIE9fUkRPTkxZIGZsYWcuIEhvd2V2ZXIsIGlm
+IGENCj4gPiBuZXcgZmlsZSBkZXNjcmlwdG9yIGNhbm5vdCBiZSBvYnRhaW5lZCwgaXQgc2V0cyB0
+aGUgRk1PREVfUkVBRCBmbGFnIHRvDQo+ID4gZmlsZS0+Zl9mbGFncyBpbnN0ZWFkIG9mIGZpbGUt
+PmZfbW9kZS4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggZml4ZXMgdGhpcyBpc3N1ZSBieSByZXBsYWNp
+bmcgZl9mbGFncyB3aXRoIGZfbW9kZSBhcyBpdCB3YXMNCj4gPiBiZWZvcmUgdGhhdCBjb21taXQu
+DQo+ID4NCj4gPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZyAjIDQuMjAueA0KPiA+IEZpeGVz
+OiBhNDA4ZTRhODZiMzYgKCJpbWE6IG9wZW4gYSBuZXcgZmlsZSBpbnN0YW5jZSBpZiBubyByZWFk
+DQo+IHBlcm1pc3Npb25zIikNCj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnRvIFNhc3N1IDxyb2Jl
+cnRvLnNhc3N1QGh1YXdlaS5jb20+DQo+ID4gLS0tDQo+ID4gIHNlY3VyaXR5L2ludGVncml0eS9p
+bWEvaW1hX2NyeXB0by5jIHwgNCArKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvaW50
+ZWdyaXR5L2ltYS9pbWFfY3J5cHRvLmMNCj4gYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9j
+cnlwdG8uYw0KPiA+IGluZGV4IDQyM2M4NGY5NWExNC4uOGFiMTdhYTg2N2RkIDEwMDY0NA0KPiA+
+IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2NyeXB0by5jDQo+ID4gKysrIGIvc2Vj
+dXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfY3J5cHRvLmMNCj4gPiBAQCAtNDM2LDcgKzQzNiw3IEBA
+IGludCBpbWFfY2FsY19maWxlX2hhc2goc3RydWN0IGZpbGUgKmZpbGUsIHN0cnVjdA0KPiBpbWFf
+ZGlnZXN0X2RhdGEgKmhhc2gpDQo+ID4gIAkJCSAqLw0KPiANCj4gVGhhbmtzLCBSb2JlcnRvLiDC
+oFRoZSBjb21tZW50IGFib3ZlIGhlcmUgYW5kIHRoZSByZXN0IG9mIHRoZSBjb2RlDQo+IHJlZmVy
+cyB0byBmbGFncy4gwqBCb3RoIHNob3VsZCBiZSB1cGRhdGVkIGFzIHdlbGwgdG8gcmVmbGVjdCB1
+c2luZw0KPiBmX21vZGUuDQo+IA0KPiA+ICAJCQlwcl9pbmZvX3JhdGVsaW1pdGVkKCJVbmFibGUg
+dG8gcmVvcGVuIGZpbGUgZm9yDQo+IHJlYWRpbmcuXG4iKTsNCj4gPiAgCQkJZiA9IGZpbGU7DQo+
+ID4gLQkJCWYtPmZfZmxhZ3MgfD0gRk1PREVfUkVBRDsNCj4gPiArCQkJZi0+Zl9tb2RlIHw9IEZN
+T0RFX1JFQUQ7DQo+ID4gIAkJCW1vZGlmaWVkX2ZsYWdzID0gdHJ1ZTsNCj4gDQo+IFRoZSB2YXJp
+YWJsZSBzaG91bGQgYmUgY2hhbmdlZCB0byAibW9kaWZpZWRfbW9kZSIuDQoNCk9rLiBJIHdpbGwg
+c2VuZCBhIG5ldyB2ZXJzaW9uIG9mIHRoZSBwYXRjaC4NCg0KVGhhbmtzDQoNClJvYmVydG8NCg0K
+SFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2VsZG9yZiBHbWJILCBIUkIgNTYwNjMNCk1hbmFnaW5n
+IERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFuLCBTaGkgWWFubGkNCg0KDQo+ID4gIAkJfSBlbHNl
+IHsNCj4gPiAgCQkJbmV3X2ZpbGVfaW5zdGFuY2UgPSB0cnVlOw0KPiA+IEBAIC00NTYsNyArNDU2
+LDcgQEAgaW50IGltYV9jYWxjX2ZpbGVfaGFzaChzdHJ1Y3QgZmlsZSAqZmlsZSwgc3RydWN0DQo+
+IGltYV9kaWdlc3RfZGF0YSAqaGFzaCkNCj4gPiAgCWlmIChuZXdfZmlsZV9pbnN0YW5jZSkNCj4g
+PiAgCQlmcHV0KGYpOw0KPiA+ICAJZWxzZSBpZiAobW9kaWZpZWRfZmxhZ3MpDQo+ID4gLQkJZi0+
+Zl9mbGFncyAmPSB+Rk1PREVfUkVBRDsNCj4gPiArCQlmLT5mX21vZGUgJj0gfkZNT0RFX1JFQUQ7
+DQo+ID4gIAlyZXR1cm4gcmM7DQo+ID4gIH0NCj4gPg0KDQo=
