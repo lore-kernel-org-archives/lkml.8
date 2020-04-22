@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876AAC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6761C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF6820774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896AA20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549770;
-	bh=lXo/mUOLvXgMdxR13M1GMOY84RU5XYqhgyq8Pb0pkEw=;
+	s=default; t=1587549773;
+	bh=/shy0GdN/NXun4N9nEB8CicnvknVFEkqKuMDz9PbvHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nP7UgHNviTLTCp6rPANVqSvBk7g9QKhAEo409LGKGt9O1/3iTEq01gsivs6vhGsme
-	 cIwy+IXFgKqnFSYzLmyUXgkyo3h3MyNOrN12ncPGt/cupv++GORcs+Zb6E0zDtRbVO
-	 QA/cTKWIuh+WOKdSosEf2DHNn/cQIDTyoqZ1dijs=
+	b=unMO8Haz/znJZPhqO66nWDe4CsXWHwlOBaG1RwnR1VsqYDE/62gsme9cOw1gpAPvk
+	 /HCRzQmsqTrUkbTVRHTWTsL8bUzvtIwkFLEd3hkEpJPIjtZDHFKzVmgv31JaFmOQky
+	 ed4rOMbbjCl2hzD7BIGdTZKJit2qcUyoxsJFfWoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgDVKCt (ORCPT
+        id S1727071AbgDVKCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52000 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbgDVKCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:02:44 -0400
+        id S1727055AbgDVKCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:02:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 906872087E;
-        Wed, 22 Apr 2020 10:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D11120787;
+        Wed, 22 Apr 2020 10:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549764;
-        bh=lXo/mUOLvXgMdxR13M1GMOY84RU5XYqhgyq8Pb0pkEw=;
+        s=default; t=1587549768;
+        bh=/shy0GdN/NXun4N9nEB8CicnvknVFEkqKuMDz9PbvHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07fSFIBpXqGbyHOaQbBARDU/dGrj9//Ud74YpmvU7QzLuQU4F3xMywqsz7fk0hTml
-         +sLELTQ14UqJWg9SiXsbnM3CN0FM+OI08wbjHQzARyaa7oxRh6CabdcCnPeZX6kLw4
-         v5ZTB5DM72e8oDVPPkkHGNc5cIv4zYhZBwBLjtEY=
+        b=hm1nDchaNwdko9Kd6MuQxt1Gusqt5q3DFVA9pWooFbZVBBtWNPP+Lfibag4xKas4p
+         AnJqPl0cXtHdLo0NNzl5Sp+aJJKltdbMB7TbUKZiTgmjSS4ANw1d+1aKc1M+YCrMX/
+         FfCn03kBLbG9alKxIAUYxoSdAQX1IRoZW45vKqrE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.4 096/100] mtd: lpddr: Fix a double free in probe()
-Date:   Wed, 22 Apr 2020 11:57:06 +0200
-Message-Id: <20200422095040.211671851@linuxfoundation.org>
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Evalds Iodzevics <evalds.iodzevics@gmail.com>
+Subject: [PATCH 4.4 098/100] x86/CPU: Add native CPUID variants returning a single datum
+Date:   Wed, 22 Apr 2020 11:57:08 +0200
+Message-Id: <20200422095040.523364127@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -59,33 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Borislav Petkov <bp@suse.de>
 
-commit 4da0ea71ea934af18db4c63396ba2af1a679ef02 upstream.
+commit 5dedade6dfa243c130b85d1e4daba6f027805033 upstream.
 
-This function is only called from lpddr_probe().  We free "lpddr" both
-here and in the caller, so it's a double free.  The best place to free
-"lpddr" is in lpddr_probe() so let's delete this one.
+... similarly to the cpuid_<reg>() variants.
 
-Fixes: 8dc004395d5e ("[MTD] LPDDR qinfo probing.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/20200228092554.o57igp3nqhyvf66t@kili.mountain
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: http://lkml.kernel.org/r/20170109114147.5082-2-bp@alien8.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Evalds Iodzevics <evalds.iodzevics@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/lpddr/lpddr_cmds.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/include/asm/processor.h |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/drivers/mtd/lpddr/lpddr_cmds.c
-+++ b/drivers/mtd/lpddr/lpddr_cmds.c
-@@ -81,7 +81,6 @@ struct mtd_info *lpddr_cmdset(struct map
- 	shared = kmalloc(sizeof(struct flchip_shared) * lpddr->numchips,
- 						GFP_KERNEL);
- 	if (!shared) {
--		kfree(lpddr);
- 		kfree(mtd);
- 		return NULL;
- 	}
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -212,6 +212,24 @@ static inline void native_cpuid(unsigned
+ 	    : "memory");
+ }
+ 
++#define native_cpuid_reg(reg)					\
++static inline unsigned int native_cpuid_##reg(unsigned int op)	\
++{								\
++	unsigned int eax = op, ebx, ecx = 0, edx;		\
++								\
++	native_cpuid(&eax, &ebx, &ecx, &edx);			\
++								\
++	return reg;						\
++}
++
++/*
++ * Native CPUID functions returning a single datum.
++ */
++native_cpuid_reg(eax)
++native_cpuid_reg(ebx)
++native_cpuid_reg(ecx)
++native_cpuid_reg(edx)
++
+ static inline void load_cr3(pgd_t *pgdir)
+ {
+ 	write_cr3(__pa(pgdir));
 
 
