@@ -2,231 +2,135 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121DCC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9CEC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61FB20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2796F2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2u4L54U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pl9SzVv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbgDVKfs (ORCPT
+        id S1731156AbgDVKfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35504 "EHLO
+        Wed, 22 Apr 2020 06:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730343AbgDVKX3 (ORCPT
+        with ESMTP id S1731107AbgDVKfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:29 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC029C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:23:28 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d24so749833pll.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:23:28 -0700 (PDT)
+        Wed, 22 Apr 2020 06:35:48 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE9AC03C1A8;
+        Wed, 22 Apr 2020 03:35:47 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so1711997ljg.5;
+        Wed, 22 Apr 2020 03:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=WRRFLMP1BZKaT01S2NP0T7yJMR9Vv9XgNrqlamOXvlk=;
-        b=h2u4L54UOBk5bt6yv8RXgBBHJazXRBpDVcwKdGjQh8rJdtnaRazSV/jGVNL229gKug
-         KO4ju7yXSfaW2KATsjEEa2gdlizp+eNdhoRtNbGfw/i16Vie+HMSKHFQhAPxa0WVwMz3
-         dTtWlPOFZBnGd6uMIQ6/7SRFss6P5y7pOQPzc=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EcjcBCMisxSrvOIyXUn8t/Z2HQERoHgRrxwf6c0lYoA=;
+        b=Pl9SzVv1JQtR3HbMFszvij+VHWA9WVSyFHTToSyD+LB//HCJRy260B2Wp2RQzrxuTw
+         9NPqH/cRptXKxFTZrKvJgy9cUbISAuo9jW3F6V8Pz8ajARd9xizsEvReCxiWYR4N2fec
+         H/orW+bSltcvbneXsFJw28PjL72pvwS6FzVtED8bAdnQ8x2Uu7lQeW/5Ds9FGU4970YS
+         zU/CWpkpKjjWg1jgvqUduNmS6CAxCUkU5i41f40SgnlXW440KxIW28nuqs8zCHxODru+
+         uGBhVRT9FKsLDSj5TIkQI+D4PTqk6BBEDv9sBcrY03uNLW+NwqfJQmbOB1guC+Z8vGPX
+         kjSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=WRRFLMP1BZKaT01S2NP0T7yJMR9Vv9XgNrqlamOXvlk=;
-        b=ZA0tvUAFk24vBTlf+jHWKlgmYvMrJFZU9WFzeRUfNNwZYdooD5bKqIDZXRsc3adRAO
-         FSG4aZMQVItiSCEdHLbCEats4Ccja4x6YjlTrOSd5pjMcKrCd0iHZIqUNK2Jl8rylSha
-         D8hLJo12BPod3d6R3SqoL9HyW1gisNS5KSFQfBqq/Gy9pLtt7HMnXnuf3hNJqfAJntbF
-         qsHRQNazmLXAI/hprP+sxLbCqWNs29vsm7a9S+yD9/umbGI3FiEPPBJkrEb1oWarbePY
-         E/vUiBGoWq+i9zz4DuzEqYSk//7VHFgbkzvSasBPsGtGhN4Fm9kSAobsUTUosT3NK69e
-         wlAA==
-X-Gm-Message-State: AGi0PuZ7kcfRZF1VToPzhWo9RRpSvocB3lpEOmUJVayMuweAfNoIzo6u
-        Zeod7zS1PlnVs3ZK4s8DUV8QPg==
-X-Google-Smtp-Source: APiQypIlibtTzWoHaOZSF9q8way5d7W2yJSRS6zaspDWYgGUnJV4TbKw4SlxZxjRNZrPc7P2cqeBag==
-X-Received: by 2002:a17:90a:b10f:: with SMTP id z15mr9879288pjq.188.1587551008343;
-        Wed, 22 Apr 2020 03:23:28 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x12sm4998977pfq.209.2020.04.22.03.23.27
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EcjcBCMisxSrvOIyXUn8t/Z2HQERoHgRrxwf6c0lYoA=;
+        b=CxXpS/6q463N03nACgt2yl2z/9DlHDy3dNNnZmomDS0EnA7vlLdp3/rSbQyNs2l8WM
+         c3iVQlD3fjelzWLaG/zovkV0YuyBwcm+vzgtVxbR58kvPEFrf/oE6hFXb0M2ws8RnFxL
+         PezyrCM/znK1vGw04/oM8+VParRmKHjYBm+OB6CZXF2Stxq2MQl806bvrDk3bAFcmZAp
+         83h8JneKDc8YHUdhWe6ugYdThqAkzsyxC7msnsqc7FJrtAnuOY4y0ldIQoL3xSvrSjok
+         N8jtdGjbYjQZmO9gSpMMFI1Se79faccxLInrsFVEzN4eZq5SxjOaPiKyphVBRI/54aJ/
+         aqmg==
+X-Gm-Message-State: AGi0Pua5K8ZTbYWFbywZb49kxe8v+EyNg8YUkmXDUre2MJ9sqzZOPOXd
+        DZp+yaQibTJzd/BEtGx8CYo=
+X-Google-Smtp-Source: APiQypI8yrYLAQ1fShd21gimlYy0KkVj7Jgppggs0qJFJV/wXUgMQ+RzDIYpdbzsCODzrKnxrOxGTw==
+X-Received: by 2002:a2e:a586:: with SMTP id m6mr14589992ljp.32.1587551746322;
+        Wed, 22 Apr 2020 03:35:46 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id v8sm4248533lfp.85.2020.04.22.03.35.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:23:27 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 22 Apr 2020 03:35:45 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 22 Apr 2020 12:35:36 +0200
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH rcu/dev -fixes 2/4] rcu/tree: Skip entry into the page
+ allocator for PREEMPT_RT
+Message-ID: <20200422103536.GA16263@pc636>
+References: <20200420153837.194532-1-joel@joelfernandes.org>
+ <20200420153837.194532-3-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
-References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
-Subject: Re: [PATCH v2 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        jernej.skrabec@siol.net, bjorn.andersson@linaro.org,
-        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>,
-        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
-        airlied@linux.ie, bgolaszewski@baylibre.com, daniel@ffwll.ch,
-        linus.walleij@linaro.org, narmstrong@baylibre.com,
-        robh+dt@kernel.org, spanda@codeaurora.org
-Date:   Wed, 22 Apr 2020 03:23:26 -0700
-Message-ID: <158755100643.159702.17904334834962681759@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420153837.194532-3-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-04-20 22:06:17)
-> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
-> be used as GPIOs in a system.  Each pin can be configured as input,
-> output, or a special function for the bridge chip.  These are:
-> - GPIO1: SUSPEND Input
-> - GPIO2: DSIA VSYNC
-> - GPIO3: DSIA HSYNC or VSYNC
-> - GPIO4: PWM
->=20
-> Let's expose these pins as GPIOs.  A few notes:
-> - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
-> - These pins can't be configured for IRQ.
-> - There are no programmable pulls or other fancy features.
-> - Keeping the bridge chip powered might be expensive.  The driver is
->   setup such that if all used GPIOs are only inputs we'll power the
->   bridge chip on just long enough to read the GPIO and then power it
->   off again.  Setting a GPIO as output will keep the bridge powered.
-> - If someone releases a GPIO we'll implicitly switch it to an input so
->   we no longer need to keep the bridge powered for it.
->=20
-> Becaue of all of the above limitations we just need to implement a
-
-Because
-
-> bare-bones GPIO driver.  The device tree bindings already account for
-> this device being a GPIO controller so we only need the driver changes
-> for it.
->=20
-> NOTE: Despite the fact that these pins are nominally muxable I don't
-> believe it makes sense to expose them through the pinctrl interface as
-> well as the GPIO interface.  The special functions are things that the
-> bridge chip driver itself would care about and it can just configure
-> the pins as needed.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, Apr 20, 2020 at 11:38:35AM -0400, Joel Fernandes (Google) wrote:
+> To keep kfree_rcu() path working on raw non-preemptible sections,
+> prevent the optional entry into the allocator as it uses sleeping locks.
+> In fact, even if the caller of kfree_rcu() is preemptible, this path
+> still is not, as krcp->lock is a raw spinlock as done in previous
+> patches. With additional page pre-allocation in the works, hitting this
+> return is going to be much less likely soon so just prevent it for now
+> so that PREEMPT_RT does not break. Note that page allocation here is an
+> optimization and skipping it still makes kfree_rcu() work.
+> 
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
+> Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > ---
->=20
+>  kernel/rcu/tree.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index cf68d3d9f5b81..cd61649e1b001 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3092,6 +3092,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+>  		if (!bnode) {
+>  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
+>  
+> +			/*
+> +			 * To keep this path working on raw non-preemptible
+> +			 * sections, prevent the optional entry into the
+> +			 * allocator as it uses sleeping locks. In fact, even
+> +			 * if the caller of kfree_rcu() is preemptible, this
+> +			 * path still is not, as krcp->lock is a raw spinlock.
+> +			 * With additional page pre-allocation in the works,
+> +			 * hitting this return is going to be much less likely.
+> +			 */
+> +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> +				return false;
+> +
+>  			bnode = (struct kfree_rcu_bulk_data *)
+>  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+>  		}
+This will not be correctly working by just reverting everything to the
+"rcu_head path" for CONFIG_PREEMPT_RT kernel. We need to preallocate at
+least once. I can add caching on top of this series to address it.
 
-Cool patch.
-
-> Changes in v2:
-> - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
->=20
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 165 ++++++++++++++++++++++++++
->  1 file changed, 165 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index 6ad688b320ae..d04c2b83d699 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -874,6 +886,153 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn=
-_bridge *pdata)
->         return 0;
->  }
-> =20
-> +static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
-> +{
-> +       return container_of(chip, struct ti_sn_bridge, gchip);
-> +}
-> +
-> +static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
-> +                                          unsigned int offset)
-> +{
-> +       struct ti_sn_bridge *pdata =3D gchip_to_pdata(chip);
-> +
-> +       return (atomic_read(&pdata->gchip_output) & BIT(offset)) ?
-
-Any reason this isn't a bitmap?
-
-> +               GPIOF_DIR_OUT : GPIOF_DIR_IN;
-
-And why can't we read the hardware to figure out if it's in output or
-input mode?
-
-> +}
-> +
-[...]
-> +static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
-> +                                             unsigned int offset, int va=
-l)
-> +{
-> +       struct ti_sn_bridge *pdata =3D gchip_to_pdata(chip);
-> +       int shift =3D offset * 2;
-> +       int old_gchip_output;
-> +       int ret;
-> +
-> +       old_gchip_output =3D atomic_fetch_or(BIT(offset), &pdata->gchip_o=
-utput);
-
-I presume gpiolib is already preventing a gpio from being modified twice
-at the same time. So is this atomic stuff really necessary?
-
-> +       if (old_gchip_output & BIT(offset))
-> +               return 0;
-> +
-> +       pm_runtime_get_sync(pdata->dev);
-> +
-> +       /* Set value first to avoid glitching */
-> +       ti_sn_bridge_gpio_set(chip, offset, val);
-> +
-> +       /* Set direction */
-> +       ret =3D regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
-> +                                0x3 << shift, SN_GPIO_MUX_OUTPUT << shif=
-t);
-> +       if (ret) {
-> +               atomic_andnot(BIT(offset), &pdata->gchip_output);
-> +               pm_runtime_put(pdata->dev);
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static void ti_sn_bridge_gpio_free(struct gpio_chip *chip, unsigned int =
-offset)
-> +{
-> +       /* We won't keep pm_runtime if we're input, so switch there on fr=
-ee */
-> +       ti_sn_bridge_gpio_direction_input(chip, offset);
-> +}
-> +
-> +static const char * const ti_sn_bridge_gpio_names[] =3D {
-> +       "GPIO1", "GPIO2", "GPIO3", "GPIO4"
-> +};
-> +
-> +static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
-> +{
-[...]
-> +       pdata->gchip.names =3D ti_sn_bridge_gpio_names;
-> +       pdata->gchip.ngpio =3D ARRAY_SIZE(ti_sn_bridge_gpio_names);
-> +       ret =3D devm_gpiochip_add_data(pdata->dev, &pdata->gchip, pdata);
-> +       if (ret) {
-> +               dev_err(pdata->dev, "can't add gpio chip\n");
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-
-return ret?
-
-> +}
-> +
->  static int ti_sn_bridge_probe(struct i2c_client *client,
->                               const struct i2c_device_id *id)
->  {
+--
+Vlad Rezki
