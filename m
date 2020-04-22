@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C91C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E17BC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A13E20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479EA2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552744;
-	bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
+	s=default; t=1587552750;
+	bh=aGquuusWEy//4Cijg3ojUT8EFZej4syeVu8388MiEp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N24tKlDICcCTZ6UuZQpHWVVJs0NlBe1X5yv2/PDtZL2XH84T3VIcaK+pPOlc317c4
-	 fKuV2KnQ4bjdNDSYuyJ9W9KMO7+mI7TX3SZ3Nmc1op7Bdce6tBEbWjvB7UCFlFNHo1
-	 yCcPwDWWiO2Pu/eShJuuRCCrJ7ZS3XjoCuoNdjkA=
+	b=fxW5t+N8KX3QVhAHjwupcP5wF14MXnEFB7CRxiaKkjJX5y860nTa/0wtlVcTpXMLu
+	 wB+Bu/Viluihadck2rYamAx2GRDZE84wXkOhSbyeqVq02EcB+69vePP13lY0UJpTsJ
+	 VzmNDcutgALozOpKC5PK7s9AsU3x5MC5yWesrv1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbgDVKwW (ORCPT
+        id S1732235AbgDVKw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbgDVKKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:14 -0400
+        id S1728947AbgDVKKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 151212070B;
-        Wed, 22 Apr 2020 10:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9888020775;
+        Wed, 22 Apr 2020 10:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550214;
-        bh=sPrl9R+yoAc0NrziY7jtHcAjfyMMgN98O+1GI2m295k=;
+        s=default; t=1587550207;
+        bh=aGquuusWEy//4Cijg3ojUT8EFZej4syeVu8388MiEp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oofcqkLKjBUZ+RsqpqjLBOe6aZTc3es9Qe3V5pjIgJKvkEXlbHVs0JPhDQ0Hyu1xv
-         t6IfCV9CtAU2NUJZnGi1B6EECcYZaEBVbuYqknVa95SaN77W1yO4J7WdTl6PIJGFst
-         5FBg9xxvToeCrBkbP7tcxknRvJCl9SsSHcTjMM3g=
+        b=sIA8bzobJSeocmwKnZv0psD+I6F6FkWpOCFH9Dv0qGWOeb7jDpoLhzcJ7/rpCu3yE
+         92DFBTZ3sRG7rQjiPJp5zLl39lNyqhI6pTPKvBPZDrCgRlDo/XxH1JBmsYJB6rzdmK
+         oaCvrkgGjkG8tSE27upk9whXU9QH2z75Mf1c27wI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 4.14 053/199] MIPS: OCTEON: irq: Fix potential NULL pointer dereference
-Date:   Wed, 22 Apr 2020 11:56:19 +0200
-Message-Id: <20200422095103.552452457@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 4.14 050/199] PCI: endpoint: Fix for concurrent memory allocation in OB address region
+Date:   Wed, 22 Apr 2020 11:56:16 +0200
+Message-Id: <20200422095103.177403649@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,38 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 792a402c2840054533ef56279c212ef6da87d811 upstream.
+commit 04e046ca57ebed3943422dee10eec9e73aec081e upstream.
 
-There is a potential NULL pointer dereference in case kzalloc()
-fails and returns NULL.
+pci-epc-mem uses a bitmap to manage the Endpoint outbound (OB) address
+region. This address region will be shared by multiple endpoint
+functions (in the case of multi function endpoint) and it has to be
+protected from concurrent access to avoid updating an inconsistent state.
 
-Fix this by adding a NULL check on *cd*
+Use a mutex to protect bitmap updates to prevent the memory
+allocation API from returning incorrect addresses.
 
-This bug was detected with the help of Coccinelle.
-
-Fixes: 64b139f97c01 ("MIPS: OCTEON: irq: add CIB and other fixes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v4.14+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/cavium-octeon/octeon-irq.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/endpoint/pci-epc-mem.c |   10 ++++++++--
+ include/linux/pci-epc.h            |    3 +++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/arch/mips/cavium-octeon/octeon-irq.c
-+++ b/arch/mips/cavium-octeon/octeon-irq.c
-@@ -2199,6 +2199,9 @@ static int octeon_irq_cib_map(struct irq
- 	}
+--- a/drivers/pci/endpoint/pci-epc-mem.c
++++ b/drivers/pci/endpoint/pci-epc-mem.c
+@@ -90,6 +90,7 @@ int __pci_epc_mem_init(struct pci_epc *e
+ 	mem->page_size = page_size;
+ 	mem->pages = pages;
+ 	mem->size = size;
++	mutex_init(&mem->lock);
  
- 	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
-+	if (!cd)
-+		return -ENOMEM;
-+
- 	cd->host_data = host_data;
- 	cd->bit = hw;
+ 	epc->mem = mem;
  
+@@ -133,7 +134,7 @@ void __iomem *pci_epc_mem_alloc_addr(str
+ 				     phys_addr_t *phys_addr, size_t size)
+ {
+ 	int pageno;
+-	void __iomem *virt_addr;
++	void __iomem *virt_addr = NULL;
+ 	struct pci_epc_mem *mem = epc->mem;
+ 	unsigned int page_shift = ilog2(mem->page_size);
+ 	int order;
+@@ -141,15 +142,18 @@ void __iomem *pci_epc_mem_alloc_addr(str
+ 	size = ALIGN(size, mem->page_size);
+ 	order = pci_epc_mem_get_order(mem, size);
+ 
++	mutex_lock(&mem->lock);
+ 	pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
+ 	if (pageno < 0)
+-		return NULL;
++		goto ret;
+ 
+ 	*phys_addr = mem->phys_base + (pageno << page_shift);
+ 	virt_addr = ioremap(*phys_addr, size);
+ 	if (!virt_addr)
+ 		bitmap_release_region(mem->bitmap, pageno, order);
+ 
++ret:
++	mutex_unlock(&mem->lock);
+ 	return virt_addr;
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+@@ -175,7 +179,9 @@ void pci_epc_mem_free_addr(struct pci_ep
+ 	pageno = (phys_addr - mem->phys_base) >> page_shift;
+ 	size = ALIGN(size, mem->page_size);
+ 	order = pci_epc_mem_get_order(mem, size);
++	mutex_lock(&mem->lock);
+ 	bitmap_release_region(mem->bitmap, pageno, order);
++	mutex_unlock(&mem->lock);
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
+ 
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -63,6 +63,7 @@ struct pci_epc_ops {
+  * @bitmap: bitmap to manage the PCI address space
+  * @pages: number of bits representing the address region
+  * @page_size: size of each page
++ * @lock: mutex to protect bitmap
+  */
+ struct pci_epc_mem {
+ 	phys_addr_t	phys_base;
+@@ -70,6 +71,8 @@ struct pci_epc_mem {
+ 	unsigned long	*bitmap;
+ 	size_t		page_size;
+ 	int		pages;
++	/* mutex to protect against concurrent access for memory allocation*/
++	struct mutex	lock;
+ };
+ 
+ /**
 
 
