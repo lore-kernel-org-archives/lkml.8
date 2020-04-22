@@ -7,49 +7,69 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4559C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7C8C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B1120CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13402098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgDVMRm convert rfc822-to-8bit (ORCPT
+        id S1728050AbgDVMU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53302 "EHLO
+        Wed, 22 Apr 2020 08:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727782AbgDVMR3 (ORCPT
+        by vger.kernel.org with ESMTP id S1728800AbgDVMRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:17:29 -0400
+        Wed, 22 Apr 2020 08:17:46 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5E6C03C1AD;
-        Wed, 22 Apr 2020 05:17:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AF2C03C1A8;
+        Wed, 22 Apr 2020 05:17:46 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJf-0007kT-JW; Wed, 22 Apr 2020 14:17:23 +0200
+        id 1jREJp-0007tb-DZ; Wed, 22 Apr 2020 14:17:33 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 114601C02FC;
-        Wed, 22 Apr 2020 14:17:21 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:20 -0000
-From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E355D1C0813;
+        Wed, 22 Apr 2020 14:17:28 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:28 -0000
+From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf evlist: Move leader-sampling configuration
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/core] perf expr: Add expr_scanner_ctx object
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Joe Mario <jmario@redhat.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401101613.6201-14-adrian.hunter@intel.com>
-References: <20200401101613.6201-14-adrian.hunter@intel.com>
+In-Reply-To: <20200401203340.31402-3-kjain@linux.ibm.com>
+References: <20200401203340.31402-3-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Message-ID: <158755784068.28353.2670739462496950321.tip-bot2@tip-bot2>
+Message-ID: <158755784848.28353.17588548435578970529.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -60,120 +80,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     5f34278867b78bed77dcbd723056244e9bfc12ef
-Gitweb:        https://git.kernel.org/tip/5f34278867b78bed77dcbd723056244e9bfc12ef
-Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Wed, 01 Apr 2020 13:16:10 +03:00
+Commit-ID:     871f9f599db8d9d2387c0717e712af405290edea
+Gitweb:        https://git.kernel.org/tip/871f9f599db8d9d2387c0717e712af405290edea
+Author:        Jiri Olsa <jolsa@kernel.org>
+AuthorDate:    Thu, 02 Apr 2020 02:03:35 +05:30
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Sat, 18 Apr 2020 09:05:00 -03:00
+CommitterDate: Thu, 16 Apr 2020 12:19:13 -03:00
 
-perf evlist: Move leader-sampling configuration
+perf expr: Add expr_scanner_ctx object
 
-Move leader-sampling configuration in preparation for adding support for
-leader sampling with AUX area events.
+Add the expr_scanner_ctx object to hold user data for the expr scanner.
+Currently it holds only start_token, Kajol Jain will use it to hold 24x7
+runtime param.
 
-Committer notes:
-
-It only makes sense when configuring an evsel that is part of an evlist,
-so the only case where it is called outside perf_evlist__config(), in
-some 'perf test' entry, is safe, and even there we should just use
-perf_evlist__config(), but since in that case we have just one evsel in
-the evlist, it is equivalent.
-
-Also fixed up this problem:
-
-  util/record.c: In function ‘perf_evlist__config’:
-  util/record.c:223:3: error: too many arguments to function ‘perf_evsel__config_leader_sampling’
-    223 |   perf_evsel__config_leader_sampling(evsel, evlist);
-        |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/record.c:170:13: note: declared here
-    170 | static void perf_evsel__config_leader_sampling(struct evsel *evsel)
-        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200401101613.6201-14-adrian.hunter@intel.com
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Joe Mario <jmario@redhat.com>
+Cc: Kajol Jain <kjain@linux.ibm.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linuxppc-dev@lists.ozlabs.org
+Link: http://lore.kernel.org/lkml/20200401203340.31402-3-kjain@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c  | 19 -------------------
- tools/perf/util/record.c | 29 +++++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 19 deletions(-)
+ tools/perf/util/expr.c |  6 ++++--
+ tools/perf/util/expr.h |  4 ++++
+ tools/perf/util/expr.l | 10 +++++-----
+ 3 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f320ada..8300e8c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1002,25 +1002,6 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index c8ccc54..c3382d5 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -3,7 +3,6 @@
+ #include <assert.h>
+ #include "expr.h"
+ #include "expr-bison.h"
+-#define YY_EXTRA_TYPE int
+ #include "expr-flex.h"
+ 
+ #ifdef PARSER_DEBUG
+@@ -30,11 +29,14 @@ static int
+ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+ 	      int start)
+ {
++	struct expr_scanner_ctx scanner_ctx = {
++		.start_token = start,
++	};
+ 	YY_BUFFER_STATE buffer;
+ 	void *scanner;
+ 	int ret;
+ 
+-	ret = expr_lex_init_extra(start, &scanner);
++	ret = expr_lex_init_extra(&scanner_ctx, &scanner);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index b9e53f2..0938ad1 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -15,6 +15,10 @@ struct expr_parse_ctx {
+ 	struct expr_parse_id ids[MAX_PARSE_ID];
+ };
+ 
++struct expr_scanner_ctx {
++	int start_token;
++};
++
+ void expr__ctx_init(struct expr_parse_ctx *ctx);
+ void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
+ int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index eaad292..2582c24 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -76,13 +76,13 @@ sym		[0-9a-zA-Z_\.:@]+
+ symbol		{spec}*{sym}*{spec}*{sym}*
+ 
+ %%
+-	{
+-		int start_token;
++	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
+ 
+-		start_token = expr_get_extra(yyscanner);
++	{
++		int start_token = sctx->start_token;
+ 
+-		if (start_token) {
+-			expr_set_extra(NULL, yyscanner);
++		if (sctx->start_token) {
++			sctx->start_token = 0;
+ 			return start_token;
  		}
  	}
- 
--	/*
--	 * Disable sampling for all group members other
--	 * than leader in case leader 'leads' the sampling.
--	 */
--	if ((leader != evsel) && leader->sample_read) {
--		attr->freq           = 0;
--		attr->sample_freq    = 0;
--		attr->sample_period  = 0;
--		attr->write_backward = 0;
--
--		/*
--		 * We don't get sample for slave events, we make them
--		 * when delivering group leader sample. Set the slave
--		 * event to follow the master sample_type to ease up
--		 * report.
--		 */
--		attr->sample_type = leader->core.attr.sample_type;
--	}
--
- 	if (opts->no_samples)
- 		attr->sample_freq = 0;
- 
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 7def661..8870ae4 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -167,6 +167,31 @@ bool perf_can_aux_sample(void)
- 	return true;
- }
- 
-+static void perf_evsel__config_leader_sampling(struct evsel *evsel)
-+{
-+	struct perf_event_attr *attr = &evsel->core.attr;
-+	struct evsel *leader = evsel->leader;
-+
-+	/*
-+	 * Disable sampling for all group members other
-+	 * than leader in case leader 'leads' the sampling.
-+	 */
-+	if (leader != evsel && leader->sample_read) {
-+		attr->freq           = 0;
-+		attr->sample_freq    = 0;
-+		attr->sample_period  = 0;
-+		attr->write_backward = 0;
-+
-+		/*
-+		 * We don't get sample for slave events, we make them
-+		 * when delivering group leader sample. Set the slave
-+		 * event to follow the master sample_type to ease up
-+		 * report.
-+		 */
-+		attr->sample_type = leader->core.attr.sample_type;
-+	}
-+}
-+
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain)
- {
-@@ -193,6 +218,10 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			evsel->core.attr.comm_exec = 1;
- 	}
- 
-+	/* Configure leader sampling here now that the sample type is known */
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__config_leader_sampling(evsel);
-+
- 	if (opts->full_auxtrace) {
- 		/*
- 		 * Need to be able to synthesize and parse selected events with
