@@ -2,99 +2,137 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B969CC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63753C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB302076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MtBnqEYd"
+	by mail.kernel.org (Postfix) with ESMTP id 4B0562076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgDVSCg (ORCPT
+        id S1726831AbgDVSEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:02:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50690 "EHLO
+        Wed, 22 Apr 2020 14:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726924AbgDVSCg (ORCPT
+        by vger.kernel.org with ESMTP id S1726082AbgDVSEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:02:36 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE41AC03C1A9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:02:35 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g4so3338707ljl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 11:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OxPQfRGdb/9tZKOeYvx9nsO533AAnUsM72YkEAHTBCI=;
-        b=MtBnqEYdd89iXzsWZUzdrGnwyjo111BKIiu7L3ZHWXsQEJMUCoEyKDRbJIyIbEZ0UL
-         DV3+yaBUmM6gMxXui+ZOIe6OyD7VtRJ23975UXk+/Wj0COST+PbV9MJTROveWW0bw2T7
-         GtXFKn4EezlfKVlwrZaFUmoy/J+Vyg0tVlz69s+eov79IvvYBC6QTV2+OAVc8P/TxcAB
-         A8+D4KWyIqFJwYB36BbmoTeDFQv2oa4PzTVNJUV6suxSZPhHbZMiB3N4XCK8SMiAZedT
-         H6oGGCppXSeyYI9Pa+3Rc/6Drhivl0uuWfd0hsHATauPrPn70QbuvXx3LUDAOw5klFM8
-         xeuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OxPQfRGdb/9tZKOeYvx9nsO533AAnUsM72YkEAHTBCI=;
-        b=TgXgWMHvRJrILc+KhVew6dHXcBkAR/+Iw5bAOrPmsMRC+B6U8Tg1qYW/TWbmhHoqVC
-         2TOYp9Zt+BgnXsTqnI5nhhIR7P8pApkxbivE4rgmfNd8mmy1c3KqfDl/eyNM3CLYWQ+R
-         0bZ6CvLA1sSBEkpyXsJdF8Nq2d3+c6PeffWCt0RcSLD8C6DYbfragJGR4fcZGS2lCmSB
-         EYB0FX/NNhu9dTIQNu+80+2zjakxYnY+gydoDkmV+bh8xBJ12renIsZo+0PFK0WncpkZ
-         JRu7icw54ygQ34Wlk0tqGX2kvTycvixb+rD+uh6fAWMfCKUHVR3lIyaCM1phPZuQpUPR
-         EvrA==
-X-Gm-Message-State: AGi0Pub77xBPYN7WHwa8VWWrDE+y0tIdM/wBqnVenYE3XeTGhBd1y7cW
-        jYbe3rMVtGBkm7y/t+Ox4syGdynL/VB3vNaPdiFT2w==
-X-Google-Smtp-Source: APiQypKntPoBdVTS/8WRMaXpnY/jdYe0MPd3EYScD5Cm/9aT/zP0pcWdgKz8DqlIB8lwr7cYH+N/ASnro4D3GssV3l8=
-X-Received: by 2002:a05:651c:1209:: with SMTP id i9mr21615lja.250.1587578553958;
- Wed, 22 Apr 2020 11:02:33 -0700 (PDT)
+        Wed, 22 Apr 2020 14:04:09 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12814C03C1A9;
+        Wed, 22 Apr 2020 11:04:09 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jRJjA-0006Gx-Hv; Wed, 22 Apr 2020 20:04:04 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 004C91C02FC;
+        Wed, 22 Apr 2020 20:04:03 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 18:04:03 -0000
+From:   "tip-bot2 for Mihai Carabas" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/microcode] x86/microcode: Fix return value for microcode
+ late loading
+Cc:     Mihai Carabas <mihai.carabas@oracle.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1587497318-4438-1-git-send-email-mihai.carabas@oracle.com>
+References: <1587497318-4438-1-git-send-email-mihai.carabas@oracle.com>
 MIME-Version: 1.0
-References: <20200420221126.341272-1-hannes@cmpxchg.org> <20200420221126.341272-3-hannes@cmpxchg.org>
-In-Reply-To: <20200420221126.341272-3-hannes@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 22 Apr 2020 11:02:22 -0700
-Message-ID: <CALvZod5XC+v_ThY=QyiXu9uWgkuc6x63jwUjW9mdWueoPh3LBw@mail.gmail.com>
-Subject: Re: [PATCH 02/18] mm: memcontrol: fix theoretical race in charge moving
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Joonsoo Kim <js1304@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158757864352.28353.206205836206503586.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 3:11 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> The move_lock is a per-memcg lock, but the VM accounting code that
-> needs to acquire it comes from the page and follows page->mem_cgroup
-> under RCU protection. That means that the page becomes unlocked not
-> when we drop the move_lock, but when we update page->mem_cgroup. And
-> that assignment doesn't imply any memory ordering. If that pointer
-> write gets reordered against the reads of the page state -
-> page_mapped, PageDirty etc. the state may change while we rely on it
-> being stable and we can end up corrupting the counters.
->
-> Place an SMP memory barrier to make sure we're done with all page
-> state by the time the new page->mem_cgroup becomes visible.
->
-> Also replace the open-coded move_lock with a lock_page_memcg() to make
-> it more obvious what we're serializing against.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+The following commit has been merged into the x86/microcode branch of tip:
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Commit-ID:     9adbf3c609af92a57a73000a3cb8f4c2d307dfa3
+Gitweb:        https://git.kernel.org/tip/9adbf3c609af92a57a73000a3cb8f4c2d307dfa3
+Author:        Mihai Carabas <mihai.carabas@oracle.com>
+AuthorDate:    Tue, 21 Apr 2020 22:28:38 +03:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 22 Apr 2020 19:55:50 +02:00
+
+x86/microcode: Fix return value for microcode late loading
+
+The return value from stop_machine() might not be consistent.
+
+stop_machine_cpuslocked() returns:
+- zero if all functions have returned 0.
+- a non-zero value if at least one of the functions returned
+a non-zero value.
+
+There is no way to know if it is negative or positive. So make
+__reload_late() return 0 on success or negative otherwise.
+
+ [ bp: Unify ret val check and touch up. ]
+
+Signed-off-by: Mihai Carabas <mihai.carabas@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/1587497318-4438-1-git-send-email-mihai.carabas@oracle.com
+---
+ arch/x86/kernel/cpu/microcode/core.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 7019d4b..baec68b 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -545,8 +545,7 @@ static int __wait_for_cpus(atomic_t *t, long long timeout)
+ /*
+  * Returns:
+  * < 0 - on error
+- *   0 - no update done
+- *   1 - microcode was updated
++ *   0 - success (no update done or microcode was updated)
+  */
+ static int __reload_late(void *info)
+ {
+@@ -573,11 +572,11 @@ static int __reload_late(void *info)
+ 	else
+ 		goto wait_for_siblings;
+ 
+-	if (err > UCODE_NFOUND) {
+-		pr_warn("Error reloading microcode on CPU %d\n", cpu);
++	if (err >= UCODE_NFOUND) {
++		if (err == UCODE_ERROR)
++			pr_warn("Error reloading microcode on CPU %d\n", cpu);
++
+ 		ret = -1;
+-	} else if (err == UCODE_UPDATED || err == UCODE_OK) {
+-		ret = 1;
+ 	}
+ 
+ wait_for_siblings:
+@@ -608,7 +607,7 @@ static int microcode_reload_late(void)
+ 	atomic_set(&late_cpus_out, 0);
+ 
+ 	ret = stop_machine_cpuslocked(__reload_late, NULL, cpu_online_mask);
+-	if (ret > 0)
++	if (ret == 0)
+ 		microcode_check();
+ 
+ 	pr_info("Reload completed, microcode revision: 0x%x\n", boot_cpu_data.microcode);
+@@ -649,7 +648,7 @@ static ssize_t reload_store(struct device *dev,
+ put:
+ 	put_online_cpus();
+ 
+-	if (ret >= 0)
++	if (ret == 0)
+ 		ret = size;
+ 
+ 	return ret;
