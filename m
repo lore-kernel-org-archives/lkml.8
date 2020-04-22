@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA716C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A87C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB1D20780
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4585020780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551711;
-	bh=u+ZK0QjmPA3ERKqb6bXhhJqFb/fnt7rrc/MvdpraFAQ=;
+	s=default; t=1587551713;
+	bh=UCBTEmjPwfYxedLpiloHCMhgXUjd7KM5HX10MVfS7vk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGyaFmeC60oeIYebzCf2b69v4mnxN/TKC5kWctjANZ1BB/HYKcVXtL6W+i8lPRu9N
-	 YPhXqefGRZf1kqG8k5ohZjuE716hkWsM5pcBJYyl603dG2aSoWsDiPv92pRUKP95nn
-	 PCQ95cY7Z9gAEHF4SkyarsHKnkk/hlcbAm7F//7s=
+	b=E6hgqtPSpTLTR6Q2ibNcB5y79uMA6LywnsGVM4r9gSvtOPlJeXvgPfzHHvCXwIE3W
+	 Liqyrw5+Ho0PT2kre3Xu0iXOWGNaZwqqWXXPMp40C6yC8ObLNrwCG1hALHVE6bmSLr
+	 UHwMc/Y8YcmvaM2aNWQ0IGwOPx6jmfmhmumDqzmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgDVKXl (ORCPT
+        id S1730363AbgDVKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:23:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59770 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730320AbgDVKXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:20 -0400
+        id S1730302AbgDVKXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FEDC20780;
-        Wed, 22 Apr 2020 10:23:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CFD72076B;
+        Wed, 22 Apr 2020 10:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551000;
-        bh=u+ZK0QjmPA3ERKqb6bXhhJqFb/fnt7rrc/MvdpraFAQ=;
+        s=default; t=1587550997;
+        bh=UCBTEmjPwfYxedLpiloHCMhgXUjd7KM5HX10MVfS7vk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rXb59OwfYnfUttjCtfvBgYXiZxjkA83GKnFxb+gb4B0hvO71uKW94gYCZodBxv2uH
-         /bMIiuFx7/MkrL+chNh62Pd6E5v6KPEZZ0HKsO8BfV7stv52LhYW0ZZoPNdZoc3bsg
-         uyaw+zgAuMrqW9PNO1JT4bzOF58HCqvNFpJh0OCU=
+        b=OoImiid6NkLZFI1ToVJqUZvH4/JIgbWU7R0DohuW9RrhQWPwiPU7PQ8cD6iCrf61V
+         BXfBfgGPCTW1A6KTnbCrhN+OYfGWPb/XN9GiA4BxnVAuiiWm6dI6Qxdz4HxLKjJcQV
+         SSX+ZnsDsB2SZduPJLkvcoIV8HHW9tqxOdBhSXPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        "Andrew F. Davis" <afd@ti.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 059/166] power: supply: bq27xxx_battery: Silence deferred-probe error
-Date:   Wed, 22 Apr 2020 11:56:26 +0200
-Message-Id: <20200422095055.188150785@linuxfoundation.org>
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 058/166] arm64: dts: allwinner: a64: Fix display clock register range
+Date:   Wed, 22 Apr 2020 11:56:25 +0200
+Message-Id: <20200422095055.101757354@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -62,40 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 583b53ece0b0268c542a1eafadb62e3d4b0aab8c ]
+[ Upstream commit 3e9a1a8b7f811de3eb1445d72f68766b704ad17c ]
 
-The driver fails to probe with -EPROBE_DEFER if battery's power supply
-(charger driver) isn't ready yet and this results in a bit noisy error
-message in KMSG during kernel's boot up. Let's silence the harmless
-error message.
+Register range of display clocks is 0x10000, as it can be seen from
+DE2 documentation.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Andrew F. Davis <afd@ti.com>
-Reviewed-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fix it.
+
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Fixes: 2c796fc8f5dbd ("arm64: dts: allwinner: a64: add necessary device tree nodes for DE2 CCU")
+[wens@csie.org: added fixes tag]
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/bq27xxx_battery.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 195c18c2f426e..664e50103eaaf 100644
---- a/drivers/power/supply/bq27xxx_battery.c
-+++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -1885,7 +1885,10 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 862b47dc9dc90..baa6f08dc1087 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -264,7 +264,7 @@
  
- 	di->bat = power_supply_register_no_ws(di->dev, psy_desc, &psy_cfg);
- 	if (IS_ERR(di->bat)) {
--		dev_err(di->dev, "failed to register battery\n");
-+		if (PTR_ERR(di->bat) == -EPROBE_DEFER)
-+			dev_dbg(di->dev, "failed to register battery, deferring probe\n");
-+		else
-+			dev_err(di->dev, "failed to register battery\n");
- 		return PTR_ERR(di->bat);
- 	}
- 
+ 			display_clocks: clock@0 {
+ 				compatible = "allwinner,sun50i-a64-de2-clk";
+-				reg = <0x0 0x100000>;
++				reg = <0x0 0x10000>;
+ 				clocks = <&ccu CLK_BUS_DE>,
+ 					 <&ccu CLK_DE>;
+ 				clock-names = "bus",
 -- 
 2.20.1
 
