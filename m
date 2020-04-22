@@ -2,95 +2,78 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92908C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE00EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D8120882
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:36:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SG47h4RL"
+	by mail.kernel.org (Postfix) with ESMTP id 830AC2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 20:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDVUgq (ORCPT
+        id S1726307AbgDVUmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgDVUgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:36:46 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A469C03C1A9;
-        Wed, 22 Apr 2020 13:36:46 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a32so1432847pje.5;
-        Wed, 22 Apr 2020 13:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tp5JKfaToqqIW2zkMiFvVRjM2kIU4R3S3MSpUkg5j24=;
-        b=SG47h4RL/PKOXwdGjP1taBzeygt5h58CbVzd8RMpLvfiZ5Dcd2V2YSUURkbFaY1AN+
-         yLw06X68RZrGm2aIsuos4Ab3DYf2Ei7lUYr4VB/BVGaotoGzZ5i2Lm5IltivIBD6tQ8x
-         sPs46y98yg1DQlAc4+wu1sqFZ+NRWbTUg51l5wWpT3jQsMpAWm685wRAQUtfKwSfzb5o
-         ixGUl0iES2Ll+w0B1qK0mesi4bqmI7V7k356TYXjYj9XcFSJKLmQRahRSv/nYvVwL6Yl
-         yasnOk3bSMRZIvgIYiMJ3nNe9U4pPiK1IQnTQZipwGZG/F8PerZwzIAKVLIrePjUPSeS
-         i/Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tp5JKfaToqqIW2zkMiFvVRjM2kIU4R3S3MSpUkg5j24=;
-        b=BteT+Gzb7Y98XRIY/HSoGvVnkAUOepRBlaFpc36YUTePhyOnsacCursI11aB5OJZBS
-         CbK8+oCWxpnCT8EZDvY7sFNiYRuaxeDVJTh2fEc0hOch40OBXGPkWF6UBS3hY7JoT2Qd
-         Fzf14JyK6XB6CdPvEYzIN/HlIGY75SfLXZPUKOkNcb/79DSUChn28xMtACl3ZX4ebWHA
-         cjrOGrgQrOMao1/wtzdQKH9gYADntp3dVTE1Q31a9ugME1itTOr8l6GUb9Ef7p5bPXxB
-         L6J61NtXr/dMI2H8Wfx9ryJV28eI3hAVBhKj5YlWW1vYL7zVgH7L1D/NJqbb8zq0vmri
-         1Oeg==
-X-Gm-Message-State: AGi0PuZkqCrcLZdGd8he3vyvrts17CF8AG9AU0VYH27kKNfo37rUchXj
-        BdMs/7ZE8aLOguK3p5cT6KI=
-X-Google-Smtp-Source: APiQypKq+hfANmGmbx55N1emufW6FlXjLARkgnSpkFyuz1/tUQ6Z1zIsBwIKH36yAS/ptE+h5j6Ayw==
-X-Received: by 2002:a17:902:aa09:: with SMTP id be9mr434867plb.341.1587587805903;
-        Wed, 22 Apr 2020 13:36:45 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d203sm368313pfd.79.2020.04.22.13.36.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Apr 2020 13:36:45 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 13:36:44 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 000/166] 5.6.7-rc1 review
-Message-ID: <20200422203644.GD52250@roeck-us.net>
-References: <20200422095047.669225321@linuxfoundation.org>
+        Wed, 22 Apr 2020 16:42:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10492 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgDVUmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:42:06 -0400
+IronPort-SDR: kfSrRkHOnSjh6H53DTzMRtYkFQj/8pwM3bMbUb6nGjszav6unI/kh12MgpvQZ7gttDtUEJCelX
+ vVB4KE1Nnjog==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 13:42:05 -0700
+IronPort-SDR: xBg8ru2THU27gYbXvzDcJOubD485D4k856TbNQPd/rTurIEctE94R/3lqD1MRTtmV+MJtEHwdg
+ easCQ7x/UWJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="365793601"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 13:42:05 -0700
+Date:   Wed, 22 Apr 2020 13:41:17 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH 0/7] x86: tag application address space for devices
+Message-ID: <20200422204117.GB229170@romley-ivt3.sc.intel.com>
+References: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1585596788-193989-1-git-send-email-fenghua.yu@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 11:55:27AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.7 release.
-> There are 166 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Mar 30, 2020 at 12:33:01PM -0700, Fenghua Yu wrote:
+> Typical hardware devices require a driver stack to translate application
+> buffers to hardware addresses, and a kernel-user transition to notify the
+> hardware of new work. What if both the translation and transition overhead
+> could be eliminated? This is what Shared Virtual Address (SVA) and ENQCMD
+> enabled hardware like Data Streaming Accelerator (DSA) aims to achieve.
+> Applications map portals in their local-address-space and directly submit
+> work to them using a new instruction.
 > 
-> Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
-> Anything received after that time might be too late.
-> 
+Hi, maintainers,
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 428 pass: 428 fail: 0
+Any comment on this series?
 
-Guenter
+Thanks.
+
+-Fenghua
