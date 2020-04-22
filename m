@@ -2,96 +2,173 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768E6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CB5C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41BCC21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18DFB2075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2IppJag"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="sB5TODDr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgDVTZQ (ORCPT
+        id S1726362AbgDVT04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgDVTZQ (ORCPT
+        Wed, 22 Apr 2020 15:26:56 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:30650 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726050AbgDVT0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:25:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9273C03C1A9;
-        Wed, 22 Apr 2020 12:25:15 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so1600043pfw.13;
-        Wed, 22 Apr 2020 12:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uj9s171jvFoitIg5Oada+VYi2BRzx4238j/iCXrZ1Ac=;
-        b=R2IppJagLrK+ryuyiK45iVoThp1/7fgOnR3z4KrIzUwZu1rDqA44kra36HLdi5SSh6
-         Zakfejh+fL1i2wJM8OleIPMjOB/ciAJbQVFTi2c3KKPun/NIbm+M+jqBJAC62GsSNuE6
-         o+mfma/kTQh+13VUasKDCc1k7W+ZS1pRKR+rDhgZFnJOG/aYKsu57wYAtKaYvDMAdfI9
-         9XKH3yjgAScv8t5Op4J/8EVxDw1oaA1fjkp33M4AgcUfYeWc7Fq0q1hg4uiAaLL5PBmy
-         87w85tYUIf95QWGCSGeeXLXcj9xe0hciJj/XpphMfXNVbNaRgyoJ6SQWPUOQIvefGdBA
-         diOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uj9s171jvFoitIg5Oada+VYi2BRzx4238j/iCXrZ1Ac=;
-        b=sAef1FouCKeeHAYsDNUlbMyfKFdex4GSAsyzY7D4YauQOSDiuOw0TqvxCryIHxv8gi
-         VeNZHmCQNJWcz7FPVqE7N1dWruS2Pq7tMbP+6CWZN5zenunSSnkEWso7ti8Xy+50eYas
-         7AHLonr9iw3HqIbndzsROdmGDoylKxSA8Yb2fryI0rQqemb9EsLUuwBmgFJcjpr8y26d
-         hqw2jyGRzLUmoHEGPaD0iDwc6vrHm2asbzVoEi7bO+f5nQNLcNwOnch8XfmC+W+TIUaq
-         /WXT6nj5Hte47QsUU9tEuQS4APsOxY07s6Z4ruda07Jyjtef/BnJPtIVPkbYLJ4ps0m4
-         pZfQ==
-X-Gm-Message-State: AGi0PuaEb1a7peQMP1EOU6SZ8/GIlyByTYlsu6EJbEGW6rZhl+F95TD2
-        y1zwLJ3SnertoDJ8jAuzYO78QVl/+WN9gC4gO0FR8Z45ix/+hQ==
-X-Google-Smtp-Source: APiQypLk7oEoO4P2UL6Bp5lqa7linV94/uY192MJZRmUZKWU4eCwmc5qbgsAG9zIXt25afUutnQtpmDQGPlH/3mB8/0=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr572706pgb.203.1587583515291;
- Wed, 22 Apr 2020 12:25:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-7-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200422141135.86419-7-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Apr 2020 22:25:03 +0300
-Message-ID: <CAHp75VeQComzEs0JmOBAqtKQ5Ez79sRHmsMNHiU9X2zWfnrpew@mail.gmail.com>
-Subject: Re: [PATCH 6/6] MAINTAINERS: add myself as a SCD30 driver maintainer
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 22 Apr 2020 15:26:55 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MJMDvl011835;
+        Wed, 22 Apr 2020 15:26:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=NCDBMDVDi/HxAMGCKnU86qDjhkCvMKOClGQzbK+YQQc=;
+ b=sB5TODDr/Qvo7ITgjrHqL2hu1nVeIbqKwB/nKVpbGG3xPG+/NT+v5spz62XEjbVHjtVQ
+ cgMy7u5VVp3UtYY3r0bWfeO0IzMQ19CekfgvuMdhoB5kCOKwceoAbQfaGcwM2HOCZcKA
+ W5+/o9/BPGLYpFC2A/klOfwSin8MbMZM0wvFt1k/wYxyKn4XXfWRM6FUo0AzlwY58+YE
+ y91ShK426hI3Tudic+utwXcYmc2korKJv1d7s9p2+j4GamvW5N77/SK1haQR5WlqMBRX
+ 0Ju7b5S2ExW/OY/fLxB2sKnitr9OF56mulO4o0wKAVFATgK39Z5Ycou9rRchd/Vs+5wT Hg== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 30fvpwgcms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Apr 2020 15:26:48 -0400
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MJN0D6090460;
+        Wed, 22 Apr 2020 15:26:48 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0a-00154901.pphosted.com with ESMTP id 30htj5xu6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Apr 2020 15:26:48 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd51.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MJQl2w014694;
+        Wed, 22 Apr 2020 15:26:47 -0400
+Received: from mailsyshubprd04.lss.emc.com ([mailsyshubprd04.lss.emc.com [10.253.24.26]]) by mailuogwprd51.lss.emc.com with ESMTP id 03MJQNFp014541 ;
+          Wed, 22 Apr 2020 15:26:24 -0400
+Received: from vd-leonidr.xiolab.lab.emc.com (vd-leonidr.xiolab.lab.emc.com [10.76.212.243])
+        by mailsyshubprd04.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MJQKHC016271;
+        Wed, 22 Apr 2020 15:26:21 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] dmaengine: ioat: removing duplicate code from timeout handler
+Date:   Wed, 22 Apr 2020 22:25:53 +0300
+Message-Id: <1587583557-4113-1-git-send-email-leonid.ravich@dell.com>
+X-Mailer: git-send-email 1.9.3
+In-Reply-To: <20200416170628.16196-2-leonid.ravich@dell.com>
+References: <20200416170628.16196-2-leonid.ravich@dell.com>
+X-Sentrion-Hostname: mailuogwprd51.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_06:2020-04-22,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=531 clxscore=1015
+ impostorscore=0 suspectscore=13 spamscore=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220145
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
+ suspectscore=13 mlxlogscore=597 impostorscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 5:23 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
->
-> Add myself as a SCD30 driver maintainer.
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-> +SENSIRION SCD30 CARBON DIOXIDE SENSOR DRIVER
-> +M:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> +S:     Maintained
-> +F:     drivers/iio/chemical/scd30.h
-> +F:     drivers/iio/chemical/scd30_core.c
-> +F:     drivers/iio/chemical/scd30_i2c.c
-> +F:     drivers/iio/chemical/scd30_serial.c
-> +F:     Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+moving duplicate code from timeout error handling to common
+function.
 
-Broken order. Run
-  scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS --order
-to fix.
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+ drivers/dma/ioat/dma.c | 45 +++++++++++++++++++--------------------------
+ 1 file changed, 19 insertions(+), 26 deletions(-)
 
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 1e0e6c1..da59b28 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -869,6 +869,23 @@ static void check_active(struct ioatdma_chan *ioat_chan)
+ 		mod_timer(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
+ }
+ 
++static void ioat_reboot_chan(struct ioatdma_chan *ioat_chan)
++{
++	spin_lock_bh(&ioat_chan->prep_lock);
++	set_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
++	spin_unlock_bh(&ioat_chan->prep_lock);
++
++	ioat_abort_descs(ioat_chan);
++	dev_warn(to_dev(ioat_chan), "Reset channel...\n");
++	ioat_reset_hw(ioat_chan);
++	dev_warn(to_dev(ioat_chan), "Restart channel...\n");
++	ioat_restart_channel(ioat_chan);
++
++	spin_lock_bh(&ioat_chan->prep_lock);
++	clear_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
++	spin_unlock_bh(&ioat_chan->prep_lock);
++}
++
+ void ioat_timer_event(struct timer_list *t)
+ {
+ 	struct ioatdma_chan *ioat_chan = from_timer(ioat_chan, t, timer);
+@@ -891,19 +908,7 @@ void ioat_timer_event(struct timer_list *t)
+ 
+ 		if (test_bit(IOAT_RUN, &ioat_chan->state)) {
+ 			spin_lock_bh(&ioat_chan->cleanup_lock);
+-			spin_lock_bh(&ioat_chan->prep_lock);
+-			set_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
+-			spin_unlock_bh(&ioat_chan->prep_lock);
+-
+-			ioat_abort_descs(ioat_chan);
+-			dev_warn(to_dev(ioat_chan), "Reset channel...\n");
+-			ioat_reset_hw(ioat_chan);
+-			dev_warn(to_dev(ioat_chan), "Restart channel...\n");
+-			ioat_restart_channel(ioat_chan);
+-
+-			spin_lock_bh(&ioat_chan->prep_lock);
+-			clear_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
+-			spin_unlock_bh(&ioat_chan->prep_lock);
++			ioat_reboot_chan(ioat_chan);
+ 			spin_unlock_bh(&ioat_chan->cleanup_lock);
+ 		}
+ 
+@@ -939,19 +944,7 @@ void ioat_timer_event(struct timer_list *t)
+ 		dev_dbg(to_dev(ioat_chan), "Active descriptors: %d\n",
+ 			ioat_ring_active(ioat_chan));
+ 
+-		spin_lock_bh(&ioat_chan->prep_lock);
+-		set_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
+-		spin_unlock_bh(&ioat_chan->prep_lock);
+-
+-		ioat_abort_descs(ioat_chan);
+-		dev_warn(to_dev(ioat_chan), "Resetting channel...\n");
+-		ioat_reset_hw(ioat_chan);
+-		dev_warn(to_dev(ioat_chan), "Restarting channel...\n");
+-		ioat_restart_channel(ioat_chan);
+-
+-		spin_lock_bh(&ioat_chan->prep_lock);
+-		clear_bit(IOAT_CHAN_DOWN, &ioat_chan->state);
+-		spin_unlock_bh(&ioat_chan->prep_lock);
++		ioat_reboot_chan(ioat_chan);
+ 		spin_unlock_bh(&ioat_chan->cleanup_lock);
+ 		return;
+ 	} else
 -- 
-With Best Regards,
-Andy Shevchenko
+1.9.3
+
