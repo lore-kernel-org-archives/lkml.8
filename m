@@ -2,52 +2,50 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEC7C5518C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A46C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE4812073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3002073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551851;
-	bh=ic5MMHZntN33IMBrTIWsQVmdcrIefTFAyiQjjyVZ7jg=;
+	s=default; t=1587551855;
+	bh=VTe4mnvx5+YzhPhTvVQi6IhlZm9D9rXHch/3VZrzXAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P2qJx3xk8vvXq5TEEOH/NksiY70iaiimE3Sdq0qNM6z7454/UA5+98jss/NJDLFMJ
-	 RbxrzE4MdRXhv8OJmm98cBXqufqiIr/F/e2pZWVih+xHLS/wPU/OMW7bAFuoTHL5D3
-	 XG/++zwFVEGa8dP9VjWUjfkINzsEuDkPey0L/G6g=
+	b=JBofnzoiRnXcOpHBh6Q1ccdGt0XwhW41/pnTgYpDi7DJsWyWmr0qSf+VAp+xWsQmF
+	 NYnpG4DikEbR4D4fSaYc2Rby7IRHp83ZgKOkJPwyTXjs6P4ReTg0cbVKOD6EFqZXI7
+	 ZnI/OIyF8x9eyYmOwgC2lo//2j7tOJwkp+EkkmTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbgDVKha (ORCPT
+        id S1731401AbgDVKhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:37:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58682 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgDVKW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:22:27 -0400
+        id S1729942AbgDVKW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:22:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6156521655;
-        Wed, 22 Apr 2020 10:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76FC72098B;
+        Wed, 22 Apr 2020 10:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550945;
-        bh=ic5MMHZntN33IMBrTIWsQVmdcrIefTFAyiQjjyVZ7jg=;
+        s=default; t=1587550935;
+        bh=VTe4mnvx5+YzhPhTvVQi6IhlZm9D9rXHch/3VZrzXAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FncPvH3lz6DOdZ/8+gCoVafD8iPvctaFHLeGMVYRpMzXRW9uAigEGpmMugUe6xB/T
-         IsITaeogQoZ9TWqyD1mqMjNH5kz0ikelHbU7OAZ3bor4RZokWJa9ujcqNityx3sGgA
-         416qSdPqge1DsXTIxDTyer6dO+dc+4fH8aMrEntk=
+        b=I8ljJFGZl7wcwbeJJpc5WnD1XMOmkEfnMmVAYkZE9OuAJ96wNr2Eyqcrn9G2HgtoO
+         gYgLsHnL9V/64GNjKEUzLiLvuCrh+p6fLSquGYqKLrSxwZDi2igOaIWWhq9W8SnQyK
+         zbL9BXAur7qltxkVAG5VxOviVoFsewe3j+tKZzPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, xinhui pan <xinhui.pan@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 039/166] drm/ttm: flush the fence on the bo after we individualize the reservation object
-Date:   Wed, 22 Apr 2020 11:56:06 +0200
-Message-Id: <20200422095053.101066297@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.6 035/166] afs: Fix race between post-modification dir edit and readdir/d_revalidate
+Date:   Wed, 22 Apr 2020 11:56:02 +0200
+Message-Id: <20200422095052.581470468@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,47 +58,351 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: xinhui pan <xinhui.pan@amd.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 1bbcf69e42fe7fd49b6f4339c970729d0e343753 ]
+commit 2105c2820d366b76f38e6ad61c75771881ecc532 upstream.
 
-As we move the ttm_bo_individualize_resv() upwards, we need flush the
-copied fence too. Otherwise the driver keeps waiting for fence.
+AFS directories are retained locally as a structured file, with lookup
+being effected by a local search of the file contents.  When a modification
+(such as mkdir) happens, the dir file content is modified locally rather
+than redownloading the directory.
 
-run&Kill kfdtest, then perf top.
+The directory contents are accessed in a number of ways, with a number of
+different locks schemes:
 
-  25.53%  [ttm]                     [k] ttm_bo_delayed_delete
-  24.29%  [kernel]                  [k] dma_resv_test_signaled_rcu
-  19.72%  [kernel]                  [k] ww_mutex_lock
+ (1) Download of contents - dvnode->validate_lock/write in afs_read_dir().
 
-Fix: 378e2d5b("drm/ttm: fix ttm_bo_cleanup_refs_or_queue once more")
-Signed-off-by: xinhui pan <xinhui.pan@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/series/72339/
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ (2) Lookup and readdir - dvnode->validate_lock/read in afs_dir_iterate(),
+     downgrading from (1) if necessary.
+
+ (3) d_revalidate of child dentry - dvnode->validate_lock/read in
+     afs_do_lookup_one() downgrading from (1) if necessary.
+
+ (4) Edit of dir after modification - page locks on individual dir pages.
+
+Unfortunately, because (4) uses different locking scheme to (1) - (3),
+nothing protects against the page being scanned whilst the edit is
+underway.  Even download is not safe as it doesn't lock the pages - relying
+instead on the validate_lock to serialise as a whole (the theory being that
+directory contents are treated as a block and always downloaded as a
+block).
+
+Fix this by write-locking dvnode->validate_lock around the edits.  Care
+must be taken in the rename case as there may be two different dirs - but
+they need not be locked at the same time.  In any case, once the lock is
+taken, the directory version must be rechecked, and the edit skipped if a
+later version has been downloaded by revalidation (there can't have been
+any local changes because the VFS holds the inode lock, but there can have
+been remote changes).
+
+Fixes: 63a4681ff39c ("afs: Locally edit directory data for mkdir/create/unlink/...")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/ttm/ttm_bo.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/afs/dir.c       |   91 ++++++++++++++++++++++++++++++++++++-----------------
+ fs/afs/dir_silly.c |   22 ++++++++----
+ 2 files changed, 77 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-index 5df596fb0280c..fe420ca454e0a 100644
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@ -498,8 +498,10 @@ static void ttm_bo_cleanup_refs_or_queue(struct ttm_buffer_object *bo)
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -1275,6 +1275,7 @@ static int afs_mkdir(struct inode *dir,
+ 	struct afs_fs_cursor fc;
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir);
+ 	struct key *key;
++	afs_dataversion_t data_version;
+ 	int ret;
  
- 		dma_resv_unlock(bo->base.resv);
+ 	mode |= S_IFDIR;
+@@ -1295,7 +1296,7 @@ static int afs_mkdir(struct inode *dir,
+ 
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key, true)) {
+-		afs_dataversion_t data_version = dvnode->status.data_version + 1;
++		data_version = dvnode->status.data_version + 1;
+ 
+ 		while (afs_select_fileserver(&fc)) {
+ 			fc.cb_break = afs_calc_vnode_cb_break(dvnode);
+@@ -1316,10 +1317,14 @@ static int afs_mkdir(struct inode *dir,
+ 		goto error_key;
  	}
--	if (bo->base.resv != &bo->base._resv)
-+	if (bo->base.resv != &bo->base._resv) {
-+		ttm_bo_flush_all_fences(bo);
- 		dma_resv_unlock(&bo->base._resv);
+ 
+-	if (ret == 0 &&
+-	    test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
+-		afs_edit_dir_add(dvnode, &dentry->d_name, &iget_data.fid,
+-				 afs_edit_dir_for_create);
++	if (ret == 0) {
++		down_write(&dvnode->validate_lock);
++		if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++		    dvnode->status.data_version == data_version)
++			afs_edit_dir_add(dvnode, &dentry->d_name, &iget_data.fid,
++					 afs_edit_dir_for_create);
++		up_write(&dvnode->validate_lock);
 +	}
  
- error:
- 	kref_get(&bo->list_kref);
--- 
-2.20.1
-
+ 	key_put(key);
+ 	kfree(scb);
+@@ -1360,6 +1365,7 @@ static int afs_rmdir(struct inode *dir,
+ 	struct afs_fs_cursor fc;
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir), *vnode = NULL;
+ 	struct key *key;
++	afs_dataversion_t data_version;
+ 	int ret;
+ 
+ 	_enter("{%llx:%llu},{%pd}",
+@@ -1391,7 +1397,7 @@ static int afs_rmdir(struct inode *dir,
+ 
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key, true)) {
+-		afs_dataversion_t data_version = dvnode->status.data_version + 1;
++		data_version = dvnode->status.data_version + 1;
+ 
+ 		while (afs_select_fileserver(&fc)) {
+ 			fc.cb_break = afs_calc_vnode_cb_break(dvnode);
+@@ -1404,9 +1410,12 @@ static int afs_rmdir(struct inode *dir,
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret == 0) {
+ 			afs_dir_remove_subdir(dentry);
+-			if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++			down_write(&dvnode->validate_lock);
++			if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++			    dvnode->status.data_version == data_version)
+ 				afs_edit_dir_remove(dvnode, &dentry->d_name,
+ 						    afs_edit_dir_for_rmdir);
++			up_write(&dvnode->validate_lock);
+ 		}
+ 	}
+ 
+@@ -1544,10 +1553,15 @@ static int afs_unlink(struct inode *dir,
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret == 0 && !(scb[1].have_status || scb[1].have_error))
+ 			ret = afs_dir_remove_link(dvnode, dentry, key);
+-		if (ret == 0 &&
+-		    test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
+-			afs_edit_dir_remove(dvnode, &dentry->d_name,
+-					    afs_edit_dir_for_unlink);
++
++		if (ret == 0) {
++			down_write(&dvnode->validate_lock);
++			if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++			    dvnode->status.data_version == data_version)
++				afs_edit_dir_remove(dvnode, &dentry->d_name,
++						    afs_edit_dir_for_unlink);
++			up_write(&dvnode->validate_lock);
++		}
+ 	}
+ 
+ 	if (need_rehash && ret < 0 && ret != -ENOENT)
+@@ -1573,6 +1587,7 @@ static int afs_create(struct inode *dir,
+ 	struct afs_status_cb *scb;
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir);
+ 	struct key *key;
++	afs_dataversion_t data_version;
+ 	int ret;
+ 
+ 	mode |= S_IFREG;
+@@ -1597,7 +1612,7 @@ static int afs_create(struct inode *dir,
+ 
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key, true)) {
+-		afs_dataversion_t data_version = dvnode->status.data_version + 1;
++		data_version = dvnode->status.data_version + 1;
+ 
+ 		while (afs_select_fileserver(&fc)) {
+ 			fc.cb_break = afs_calc_vnode_cb_break(dvnode);
+@@ -1618,9 +1633,12 @@ static int afs_create(struct inode *dir,
+ 		goto error_key;
+ 	}
+ 
+-	if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++	down_write(&dvnode->validate_lock);
++	if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++	    dvnode->status.data_version == data_version)
+ 		afs_edit_dir_add(dvnode, &dentry->d_name, &iget_data.fid,
+ 				 afs_edit_dir_for_create);
++	up_write(&dvnode->validate_lock);
+ 
+ 	kfree(scb);
+ 	key_put(key);
+@@ -1648,6 +1666,7 @@ static int afs_link(struct dentry *from,
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir);
+ 	struct afs_vnode *vnode = AFS_FS_I(d_inode(from));
+ 	struct key *key;
++	afs_dataversion_t data_version;
+ 	int ret;
+ 
+ 	_enter("{%llx:%llu},{%llx:%llu},{%pd}",
+@@ -1672,7 +1691,7 @@ static int afs_link(struct dentry *from,
+ 
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key, true)) {
+-		afs_dataversion_t data_version = dvnode->status.data_version + 1;
++		data_version = dvnode->status.data_version + 1;
+ 
+ 		if (mutex_lock_interruptible_nested(&vnode->io_lock, 1) < 0) {
+ 			afs_end_vnode_operation(&fc);
+@@ -1702,9 +1721,12 @@ static int afs_link(struct dentry *from,
+ 		goto error_key;
+ 	}
+ 
+-	if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++	down_write(&dvnode->validate_lock);
++	if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++	    dvnode->status.data_version == data_version)
+ 		afs_edit_dir_add(dvnode, &dentry->d_name, &vnode->fid,
+ 				 afs_edit_dir_for_link);
++	up_write(&dvnode->validate_lock);
+ 
+ 	key_put(key);
+ 	kfree(scb);
+@@ -1732,6 +1754,7 @@ static int afs_symlink(struct inode *dir
+ 	struct afs_status_cb *scb;
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir);
+ 	struct key *key;
++	afs_dataversion_t data_version;
+ 	int ret;
+ 
+ 	_enter("{%llx:%llu},{%pd},%s",
+@@ -1759,7 +1782,7 @@ static int afs_symlink(struct inode *dir
+ 
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key, true)) {
+-		afs_dataversion_t data_version = dvnode->status.data_version + 1;
++		data_version = dvnode->status.data_version + 1;
+ 
+ 		while (afs_select_fileserver(&fc)) {
+ 			fc.cb_break = afs_calc_vnode_cb_break(dvnode);
+@@ -1780,9 +1803,12 @@ static int afs_symlink(struct inode *dir
+ 		goto error_key;
+ 	}
+ 
+-	if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++	down_write(&dvnode->validate_lock);
++	if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++	    dvnode->status.data_version == data_version)
+ 		afs_edit_dir_add(dvnode, &dentry->d_name, &iget_data.fid,
+ 				 afs_edit_dir_for_symlink);
++	up_write(&dvnode->validate_lock);
+ 
+ 	key_put(key);
+ 	kfree(scb);
+@@ -1812,6 +1838,8 @@ static int afs_rename(struct inode *old_
+ 	struct dentry *tmp = NULL, *rehash = NULL;
+ 	struct inode *new_inode;
+ 	struct key *key;
++	afs_dataversion_t orig_data_version;
++	afs_dataversion_t new_data_version;
+ 	bool new_negative = d_is_negative(new_dentry);
+ 	int ret;
+ 
+@@ -1890,9 +1918,6 @@ static int afs_rename(struct inode *old_
+ 
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, orig_dvnode, key, true)) {
+-		afs_dataversion_t orig_data_version;
+-		afs_dataversion_t new_data_version;
+-
+ 		orig_data_version = orig_dvnode->status.data_version + 1;
+ 
+ 		if (orig_dvnode != new_dvnode) {
+@@ -1928,18 +1953,25 @@ static int afs_rename(struct inode *old_
+ 	if (ret == 0) {
+ 		if (rehash)
+ 			d_rehash(rehash);
+-		if (test_bit(AFS_VNODE_DIR_VALID, &orig_dvnode->flags))
+-		    afs_edit_dir_remove(orig_dvnode, &old_dentry->d_name,
+-					afs_edit_dir_for_rename_0);
+-
+-		if (!new_negative &&
+-		    test_bit(AFS_VNODE_DIR_VALID, &new_dvnode->flags))
+-			afs_edit_dir_remove(new_dvnode, &new_dentry->d_name,
+-					    afs_edit_dir_for_rename_1);
++		down_write(&orig_dvnode->validate_lock);
++		if (test_bit(AFS_VNODE_DIR_VALID, &orig_dvnode->flags) &&
++		    orig_dvnode->status.data_version == orig_data_version)
++			afs_edit_dir_remove(orig_dvnode, &old_dentry->d_name,
++					    afs_edit_dir_for_rename_0);
++		if (orig_dvnode != new_dvnode) {
++			up_write(&orig_dvnode->validate_lock);
++
++			down_write(&new_dvnode->validate_lock);
++		}
++		if (test_bit(AFS_VNODE_DIR_VALID, &new_dvnode->flags) &&
++		    orig_dvnode->status.data_version == new_data_version) {
++			if (!new_negative)
++				afs_edit_dir_remove(new_dvnode, &new_dentry->d_name,
++						    afs_edit_dir_for_rename_1);
+ 
+-		if (test_bit(AFS_VNODE_DIR_VALID, &new_dvnode->flags))
+ 			afs_edit_dir_add(new_dvnode, &new_dentry->d_name,
+ 					 &vnode->fid, afs_edit_dir_for_rename_2);
++		}
+ 
+ 		new_inode = d_inode(new_dentry);
+ 		if (new_inode) {
+@@ -1958,6 +1990,7 @@ static int afs_rename(struct inode *old_
+ 		afs_update_dentry_version(&fc, old_dentry, &scb[1]);
+ 		afs_update_dentry_version(&fc, new_dentry, &scb[1]);
+ 		d_move(old_dentry, new_dentry);
++		up_write(&new_dvnode->validate_lock);
+ 		goto error_tmp;
+ 	}
+ 
+--- a/fs/afs/dir_silly.c
++++ b/fs/afs/dir_silly.c
+@@ -21,6 +21,7 @@ static int afs_do_silly_rename(struct af
+ {
+ 	struct afs_fs_cursor fc;
+ 	struct afs_status_cb *scb;
++	afs_dataversion_t dir_data_version;
+ 	int ret = -ERESTARTSYS;
+ 
+ 	_enter("%pd,%pd", old, new);
+@@ -31,7 +32,7 @@ static int afs_do_silly_rename(struct af
+ 
+ 	trace_afs_silly_rename(vnode, false);
+ 	if (afs_begin_vnode_operation(&fc, dvnode, key, true)) {
+-		afs_dataversion_t dir_data_version = dvnode->status.data_version + 1;
++		dir_data_version = dvnode->status.data_version + 1;
+ 
+ 		while (afs_select_fileserver(&fc)) {
+ 			fc.cb_break = afs_calc_vnode_cb_break(dvnode);
+@@ -54,12 +55,15 @@ static int afs_do_silly_rename(struct af
+ 			dvnode->silly_key = key_get(key);
+ 		}
+ 
+-		if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
++		down_write(&dvnode->validate_lock);
++		if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++		    dvnode->status.data_version == dir_data_version) {
+ 			afs_edit_dir_remove(dvnode, &old->d_name,
+ 					    afs_edit_dir_for_silly_0);
+-		if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
+ 			afs_edit_dir_add(dvnode, &new->d_name,
+ 					 &vnode->fid, afs_edit_dir_for_silly_1);
++		}
++		up_write(&dvnode->validate_lock);
+ 	}
+ 
+ 	kfree(scb);
+@@ -181,10 +185,14 @@ static int afs_do_silly_unlink(struct af
+ 				clear_bit(AFS_VNODE_CB_PROMISED, &vnode->flags);
+ 			}
+ 		}
+-		if (ret == 0 &&
+-		    test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags))
+-			afs_edit_dir_remove(dvnode, &dentry->d_name,
+-					    afs_edit_dir_for_unlink);
++		if (ret == 0) {
++			down_write(&dvnode->validate_lock);
++			if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
++			    dvnode->status.data_version == dir_data_version)
++				afs_edit_dir_remove(dvnode, &dentry->d_name,
++						    afs_edit_dir_for_unlink);
++			up_write(&dvnode->validate_lock);
++		}
+ 	}
+ 
+ 	kfree(scb);
 
 
