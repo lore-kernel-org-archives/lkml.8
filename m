@@ -2,78 +2,101 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74E2C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84CEC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C75C8206B9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914B1206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 08:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVIeZ (ORCPT
+        id S1726457AbgDVIf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:34:25 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:57351 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgDVIeY (ORCPT
+        Wed, 22 Apr 2020 04:35:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49916 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725810AbgDVIf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:34:24 -0400
-Received: from [2a02:fe0:c700:2:984c:ac0d:3200:67f3] (port=54865)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <Ywe_C4rlyn@samilands.eu>)
-        id 1jRApo-0005Ce-1u
-        for linux-kernel@vger.kernel.org; Wed, 22 Apr 2020 10:34:20 +0200
-Subject: Re: Fair Pay Initiative: - The Dewa
-To:     linux-kernel@vger.kernel.org
-References: <cefcd5a7-d7e7-f296-94d5-7c3e4f5bc2a3@samilands.eu>
-From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Ywe_C4rlyn@samilands.eu>
-Message-ID: <077e9c84-45b3-cd70-e8f9-6733fcb862ac@samilands.eu>
-Date:   Wed, 22 Apr 2020 10:34:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 04:35:28 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-215-Rc3bmRY2MJO0palgJOyylw-1; Wed, 22 Apr 2020 09:35:24 +0100
+X-MC-Unique: Rc3bmRY2MJO0palgJOyylw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 22 Apr 2020 09:35:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 22 Apr 2020 09:35:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Eric Dumazet' <eric.dumazet@gmail.com>,
+        Nate Karstens <nate.karstens@garmin.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Jeff Layton" <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Changli Gao <xiaosuo@gmail.com>
+Subject: RE: [PATCH 1/4] fs: Implement close-on-fork
+Thread-Topic: [PATCH 1/4] fs: Implement close-on-fork
+Thread-Index: AQHWFv4Vssv9Cm82zkePzv5DmgsrOaiE0vEQ
+Date:   Wed, 22 Apr 2020 08:35:23 +0000
+Message-ID: <39a872f23b16405fb4e4683bf049beef@AcuMS.aculab.com>
+References: <20200420071548.62112-1-nate.karstens@garmin.com>
+ <20200420071548.62112-2-nate.karstens@garmin.com>
+ <36dce9b4-a0bf-0015-f6bc-1006938545b1@gmail.com>
+In-Reply-To: <36dce9b4-a0bf-0015-f6bc-1006938545b1@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <cefcd5a7-d7e7-f296-94d5-7c3e4f5bc2a3@samilands.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And really, when coupled to concepts like Imam, Imam Of The Dewa, it 
-really is our own technologic goals aswell. In places where ALLAH does 
-not work, or G-D, one really should try this instead. (Could be related 
-to linguistic and cultural changes, or symbolworlds as a good 
-psychologist would say.)
+RnJvbTogRXJpYyBEdW1hemV0DQo+IFNlbnQ6IDIwIEFwcmlsIDIwMjAgMTE6MjYNCj4gT24gNC8y
+MC8yMCAxMjoxNSBBTSwgTmF0ZSBLYXJzdGVucyB3cm90ZToNCj4gPiBUaGUgY2xvc2Utb24tZm9y
+ayBmbGFnIGNhdXNlcyB0aGUgZmlsZSBkZXNjcmlwdG9yIHRvIGJlIGNsb3NlZA0KPiA+IGF0b21p
+Y2FsbHkgaW4gdGhlIGNoaWxkIHByb2Nlc3MgYmVmb3JlIHRoZSBjaGlsZCBwcm9jZXNzIHJldHVy
+bnMNCj4gPiBmcm9tIGZvcmsoKS4gSW1wbGVtZW50IHRoaXMgZmVhdHVyZSBhbmQgcHJvdmlkZSBh
+IG1ldGhvZCB0bw0KPiA+IGdldC9zZXQgdGhlIGNsb3NlLW9uLWZvcmsgZmxhZyB1c2luZyBmY250
+bCgyKS4NCj4gPg0KPiA+IFRoaXMgZnVuY3Rpb25hbGl0eSB3YXMgYXBwcm92ZWQgYnkgdGhlIEF1
+c3RpbiBDb21tb24gU3RhbmRhcmRzDQo+ID4gUmV2aXNpb24gR3JvdXAgZm9yIGluY2x1c2lvbiBp
+biB0aGUgbmV4dCByZXZpc2lvbiBvZiB0aGUgUE9TSVgNCj4gPiBzdGFuZGFyZCAoc2VlIGlzc3Vl
+IDEzMTggaW4gdGhlIEF1c3RpbiBHcm91cCBEZWZlY3QgVHJhY2tlcikuDQo+IA0KPiBPaCB3ZWxs
+Li4uIHlldCBhbm90aGVyIGZlYXR1cmUgc2xvd2luZyBkb3duIGEgY3JpdGljYWwgcGF0aC4NCi4u
+Lg0KPiBJIHN1Z2dlc3Qgd2UgZ3JvdXAgdGhlIHR3byBiaXRzIG9mIGEgZmlsZSAoY2xvc2Vfb25f
+ZXhlYywgY2xvc2Vfb25fZm9yaykgdG9nZXRoZXIsDQo+IHNvIHRoYXQgd2UgZG8gbm90IGhhdmUg
+dG8gZGlydHkgdHdvIHNlcGFyYXRlIGNhY2hlIGxpbmVzLg0KPiANCj4gT3RoZXJ3aXNlIHdlIHdp
+bGwgYWRkIHlldCBhbm90aGVyIGNhY2hlIGxpbmUgbWlzcyBhdCBldmVyeSBmaWxlIG9wZW5pbmcv
+Y2xvc2luZyBmb3IgcHJvY2Vzc2VzDQo+IHdpdGggYmlnIGZpbGUgdGFibGVzLg0KDQpIb3cgYWJv
+dXQgb25seSBhbGxvY2F0aW5nIHRoZSAnY2xvc2Ugb24gZm9yaycgYml0bWFwIHRoZSBmaXJzdCB0
+aW1lDQphIHByb2Nlc3Mgc2V0cyBhIGJpdCBpbiBpdD8NCg0KT2ZmIGhhbmQgSSBjYW4ndCBpbWFn
+aW5lIHRoZSB1c2UgY2FzZS4NCkkgdGhvdWdodCBwb3NpeCBhbHdheXMgc2hhcmVkIGZkIHRhYmxl
+cyBhY3Jvc3MgZm9yaygpLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
+aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
+DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-Serene Greetings.
-
-Den 20.04.2020 10:56, skrev Ywe Cærlyn:
-> Something that I find interesting, is that hippie times, turned in 
-> favour of The Dewa, and not really G-d, although it is economically 
-> compatible. Even Bill Gates negating G-d, is much The Dewa, politically.
->
-> And Steve Jobs is known for hindu connections, and the trance culture 
-> I was part of making myself, post-hippe style, was about The Dewa.
->
-> And now it is everything we would want in politics, system design, and 
-> culture.
->
-> I can only strongly suggest using the concept, when referring a 
-> certain transcendence, and a ban on amanita is fully compatible with 
-> science aswell.
->
-> Also for Norway to join EU.
->
-> Serene Greetings,
-> Ywe Cærlyn,
-> The Fair Pay Initiative.
-> https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
->
->
->
->
->
