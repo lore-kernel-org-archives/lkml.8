@@ -2,151 +2,154 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4ADC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F13C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3112077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452242077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587549665;
-	bh=dO0qlpZrROUVq45PrPUtrziJoBZYcrNZEhmnu2i3hh0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1zj5wSJs8r3a/4bRs72AFpLJrRm0Mbxn5nYkaKuXgTGRLOLI53fXfNoqtIPveLcMM
-	 IePutD6Dvl3GHeq6IoInGnVm93ZYhNkL6hUlRfLARZXj5tZwo1MF9EmaoYqFVEAJYC
-	 LEJs6PKXovgzblE4JBSSS5NFDlGKpoHZBsmq/gO0=
+	s=default; t=1587549672;
+	bh=anuWbPfqgDfo6p2fsmQWGGLxhgYgytS189Hd33TfqRc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MWhm0EhB+jS4czycvEXKJ6J9EZh7Etm+0nalB+uh7yBFCFP9qSVpimOxAMZRPu8SC
+	 MoC/WmDcPi1Hf9XLqNotLb1cqC47vVOTEqQXh5/9GSspLpyNNt2N1KPKPhegkxLvSh
+	 ezvNKJDVfRxAODFKKlc3DOiVezNzurofXZ5Q3m1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgDVKBE (ORCPT
+        id S1726755AbgDVKBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbgDVKA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D788720735;
-        Wed, 22 Apr 2020 10:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549655;
-        bh=dO0qlpZrROUVq45PrPUtrziJoBZYcrNZEhmnu2i3hh0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F0LoYoq+XLbLrNeKPcpQceDpsLiVx6M4W0swpuJihpwujcOWMB81WpZG6eIXAaJjY
-         9zuhib+Y5y2b20+yhMfTTPAzYijNwhz9s1veL7E4fLXCtzWpIoWQo96X/yP//kjI/4
-         HysY3t7VRx2/rMGVNlMS5b1J0vAo64VMeHbuyO4E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Wayne Lin <Wayne.Lin@amd.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Lyude Paul <lyude@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 051/100] drm/dp_mst: Fix clearing payload state on topology disable
-Date:   Wed, 22 Apr 2020 11:56:21 +0200
-Message-Id: <20200422095031.997131903@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
-References: <20200422095022.476101261@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Apr 2020 06:01:11 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39389 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgDVKBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:01:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b11so1650262wrs.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 03:01:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hv49bv5UUTZ3NDUvU3H6y8LABTtvq3abK5gLpfIazmY=;
+        b=DZT65FdFVfLmnjdh9+jur5HmgX7lcvrMWPTtr3dYYKLvTtWiWYBIO+jsJ9QqNfNUT3
+         FmFNFb9KFnnoh4OacSoc4DZjUNBhfPT4pFwj9xIZUCKM27XVBa+s10ReVgjyLqsQCel/
+         +On8uxECOh08q3vpX1CnniNsC99q/N6MxgkawrC3blLYMDu1ErTudKP89actNpVYG+Kk
+         7UbaX//Yu9b1JqBn5Qyp6BIICRE7g0g8dDaBFlUnf/Kp/mlnzptAwPRgv6duqXdnWr0l
+         1GNqOPdXO+Els5jSFfjBchs4yAmBXXv9JuSF1i3TplFYqkRA4gu86lZPdH9Q+p0E5FCH
+         +wyg==
+X-Gm-Message-State: AGi0PubUa75XUMSm1eI2AXehzh4cKrJtkD6bDX9rQqK+1m7/5vqZW+xq
+        e6BhaFskrUrpibIFepEf5t4=
+X-Google-Smtp-Source: APiQypIiuScS/JZozmSeu0q3j07Jq+Yay5SsoEJb1EVPXRrptCpSf5QiTX3hMatiXu1EWNZIs5DVag==
+X-Received: by 2002:a5d:4109:: with SMTP id l9mr27977934wrp.300.1587549661685;
+        Wed, 22 Apr 2020 03:01:01 -0700 (PDT)
+Received: from localhost (ip-37-188-130-62.eurotel.cz. [37.188.130.62])
+        by smtp.gmail.com with ESMTPSA id q143sm7479880wme.31.2020.04.22.03.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 03:01:00 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 12:00:59 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: Re: [PATCH RFC 1/2] mm/memory_hotplug: no need to init new pgdat
+ with node_start_pfn
+Message-ID: <20200422100059.GD30312@dhcp22.suse.cz>
+References: <20200416104707.20219-1-david@redhat.com>
+ <20200416104707.20219-2-david@redhat.com>
+ <20200421123011.GE27314@dhcp22.suse.cz>
+ <ac246ba8-9a61-0e0b-3aff-caf78743e81f@redhat.com>
+ <20200421125250.GG27314@dhcp22.suse.cz>
+ <c5b693e0-61b7-ca05-68b5-eb19c517759f@redhat.com>
+ <20200422082101.GC30312@dhcp22.suse.cz>
+ <47046122-ddf7-7a96-28f6-e8d57b356697@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47046122-ddf7-7a96-28f6-e8d57b356697@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+On Wed 22-04-20 10:32:32, David Hildenbrand wrote:
+> On 22.04.20 10:21, Michal Hocko wrote:
+> > On Tue 21-04-20 15:06:20, David Hildenbrand wrote:
+> >> On 21.04.20 14:52, Michal Hocko wrote:
+> >>> On Tue 21-04-20 14:35:12, David Hildenbrand wrote:
+> >>>> On 21.04.20 14:30, Michal Hocko wrote:
+> >>>>> Sorry for the late reply
+> >>>>>
+> >>>>> On Thu 16-04-20 12:47:06, David Hildenbrand wrote:
+> >>>>>> A hotadded node/pgdat will span no pages at all, until memory is moved to
+> >>>>>> the zone/node via move_pfn_range_to_zone() -> resize_pgdat_range - e.g.,
+> >>>>>> when onlining memory blocks. We don't have to initialize the
+> >>>>>> node_start_pfn to the memory we are adding.
+> >>>>>
+> >>>>> You are right that the node is empty at this phase but that is already
+> >>>>> reflected by zero present pages (hmm, I do not see spanned pages to be
+> >>>>> set 0 though). What I am missing here is why this is an improvement. The
+> >>>>> new node is already visible here and I do not see why we hide the
+> >>>>> information we already know.
+> >>>>
+> >>>> "information we already know" - no, not before we online the memory.
+> >>>
+> >>> Is this really the case? All add_memory_resource users operate on a
+> >>> physical memory range.
+> >>
+> >> Having the first add_memory() to magically set node_start_pfn of a hotplugged
+> >> node isn't dangerous, I think we agree on that. It's just completely
+> >> unnecessary here and at least left me confused why this is needed at all-
+> >> because the node start/end pfn is only really touched when
+> >> onlining/offlining memory (when resizing the zone and the pgdat).
+> > 
+> > I do not see any specific problem. It just feels odd to
+> > ignore the start pfn when we have that information. I am little bit
+> > worried that this might kick back. E.g. say we start using the memmaps
+> > from the hotplugged memory then the initial part of the node will never> get online and we would have memmaps outside of the node span. I do not
+> 
+> That's a general issue, which I pointed out as response to Oscars last
+> series. This needs more thought and reworks, especially how
+> node_start_pfn/node_spanned_pages are glued to memory onlining/offlining
+> today.
+> 
+> > see an immediate problem except for the feeling this is odd.
+> 
+> I think it's inconsistent. E.g., start with memory-less/cpu-less node
+> and don't online memory from the kernel immediately.
+> 
+> Hotplug CPU. PGDAT initialized with node_start_pfn=0. Hotplug memory.
+> -> node_start_pfn=0 until memory is actually onlined.
+> 
+> Hotplug memory. PGDAT initialized with node_start_pfn=$VALUE. Hotplug CPU.
+> -> node_start_pfn=$VALUE
+> 
+> Hotplug memory. PGDAT initialized with node_start_pfn=$VALUE. Hotplug
+> CPU. Hotunplug memory.
+> -> node_start_pfn=$VALUE, although there is no memory anymore.
+> 
+> Hotplug memory 1. PGDAT initialized with node_start_pfn=$VALUE. Hotplug
+> memory 2. Hotunplug memory 2.
+> -> node_start_pfn=$VALUE1 instead of $VALUE2.
+> 
+> 
+> Again, because node_start_pfn has absolutely no meaning until memory is
+> actually onlined - today.
+> 
+> > 
+> > That being said I will shut up now and leave it alone.
+> 
+> Is that a nack?
 
-[ Upstream commit 8732fe46b20c951493bfc4dba0ad08efdf41de81 ]
+No it's not. Nor I am going to ack this but I will not stand in the
+way. I would just urge to have as many assumptions you are making and as
+much information in the changelog as possible.
 
-The issues caused by:
-
-commit 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology
-mgr")
-
-Prompted me to take a closer look at how we clear the payload state in
-general when disabling the topology, and it turns out there's actually
-two subtle issues here.
-
-The first is that we're not grabbing &mgr.payload_lock when clearing the
-payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
-lock order is &mgr.payload_lock -> &mgr.lock (because we always want
-&mgr.lock to be the inner-most lock so topology validation always
-works), this makes perfect sense. It also means that -technically- there
-could be racing between someone calling
-drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
-modeset occurring that's modifying the payload state at the same time.
-
-The second is the more obvious issue that Wayne Lin discovered, that
-we're not clearing proposed_payloads when disabling the topology.
-
-I actually can't see any obvious places where the racing caused by the
-first issue would break something, and it could be that some of our
-higher-level locks already prevent this by happenstance, but better safe
-then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
-first grabs &mgr.payload_lock followed by &mgr.lock so that we never
-race when modifying the payload state. Then, we also clear
-proposed_payloads to fix the original issue of enabling a new topology
-with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
-structures, but those are getting destroyed along with the ports anyway.
-
-Changes since v1:
-* Use sizeof(mgr->payloads[0])/sizeof(mgr->proposed_vcpis[0]) instead -
-  vsyrjala
-
-Cc: Sean Paul <sean@poorly.run>
-Cc: Wayne Lin <Wayne.Lin@amd.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200122194321.14953-1-lyude@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index f5229b083f8ea..483bd48467312 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2031,6 +2031,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 	int ret = 0;
- 	struct drm_dp_mst_branch *mstb = NULL;
- 
-+	mutex_lock(&mgr->payload_lock);
- 	mutex_lock(&mgr->lock);
- 	if (mst_state == mgr->mst_state)
- 		goto out_unlock;
-@@ -2093,7 +2094,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 		/* this can fail if the device is gone */
- 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
- 		ret = 0;
--		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
-+		memset(mgr->payloads, 0,
-+		       mgr->max_payloads * sizeof(mgr->payloads[0]));
-+		memset(mgr->proposed_vcpis, 0,
-+		       mgr->max_payloads * sizeof(mgr->proposed_vcpis[0]));
- 		mgr->payload_mask = 0;
- 		set_bit(0, &mgr->payload_mask);
- 		mgr->vcpi_mask = 0;
-@@ -2101,6 +2105,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 
- out_unlock:
- 	mutex_unlock(&mgr->lock);
-+	mutex_unlock(&mgr->payload_lock);
- 	if (mstb)
- 		drm_dp_put_mst_branch_device(mstb);
- 	return ret;
 -- 
-2.20.1
-
-
-
+Michal Hocko
+SUSE Labs
