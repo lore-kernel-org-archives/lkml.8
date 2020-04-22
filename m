@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB82FC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F1CC5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD392070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB0E2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550132;
-	bh=SnoorjqcdVM9MzF835qihNuP4uKqiI1nel2b0rE2vNw=;
+	s=default; t=1587550135;
+	bh=JtG7o5h48XOzSVX3DUWhC8Yos/wnFX6Hq89NJDx6q9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vchLnzV1JHMwBhPzv9jmRl4mInVbIaC1Qbhr/awO1oZWSoLmK95Kj1oiJFQg0VuSR
-	 0Y1qTBAH5ZCS7KG4uov6wK4ZFNsHCXY8/6TNaWKb3Hj8H9RHckn5ym1N+v5jShG8ZT
-	 lcHw9Zf/y3DyavNCla7ncjh1v6VZzcmHN08+97VQ=
+	b=XRrCaUTTu6fEOiIBw8MKNRVlsuoCkr+LCHOQltj6GRUCU6WiZb5YHjedb1jZcULpK
+	 YOOp2IW0HyPyqFmXReuvN+dzdzQcCPYo6tRGTrkBSFY4MLAxlylYwfFKmrP3acBMPc
+	 ll+PZ1qylObqXRucNoTjVVdjBi0UHrC4UBBdI6So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgDVKIv (ORCPT
+        id S1728775AbgDVKIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34694 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728751AbgDVKIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:08:47 -0400
+        id S1728759AbgDVKIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8696E2071E;
-        Wed, 22 Apr 2020 10:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16B812071E;
+        Wed, 22 Apr 2020 10:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550126;
-        bh=SnoorjqcdVM9MzF835qihNuP4uKqiI1nel2b0rE2vNw=;
+        s=default; t=1587550128;
+        bh=JtG7o5h48XOzSVX3DUWhC8Yos/wnFX6Hq89NJDx6q9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z67Cpwz1GY2wwR7JyqC5tYuX88CHtKxlo8GgN87CbLXmnMhgCbw74nNHihZf/ZT0G
-         91NWJDdInj/Z8TtEeJuh0IIeGvubq1KdvMEMV3RZ749VM6zeIV34M+GSrqZjbpcHYU
-         AH8qDhnoS7kzTrmmdnAn7zGX9ZWFK5hQuRka7Bg0=
+        b=OZp4FSlwKnIejXTGoXzFW0Br0ZIuQTsIpu3UhaeFALUH9/3XbkdBTJspDSEXz3yTv
+         fKQ/kM+oJEGxkwmjGHFcZAZG3ZVUDNNE4DeYmqTxtSR9R2W/qCRZLckB1kIcPXTRAp
+         0+e3AvCqlESjBh39aO3nx8W3tEu5k97Z3FaJOCCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/199] efi/x86: Ignore the memory attributes table on i386
-Date:   Wed, 22 Apr 2020 11:55:46 +0200
-Message-Id: <20200422095100.216715434@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 021/199] genirq/irqdomain: Check pointer in irq_domain_alloc_irqs_hierarchy()
+Date:   Wed, 22 Apr 2020 11:55:47 +0200
+Message-Id: <20200422095100.302198001@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -60,75 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-[ Upstream commit dd09fad9d2caad2325a39b766ce9e79cfc690184 ]
+[ Upstream commit 87f2d1c662fa1761359fdf558246f97e484d177a ]
 
-Commit:
+irq_domain_alloc_irqs_hierarchy() has 3 call sites in the compilation unit
+but only one of them checks for the pointer which is being dereferenced
+inside the called function. Move the check into the function. This allows
+for catching the error instead of the following crash:
 
-  3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE initialization common across all architectures")
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+PC is at 0x0
+LR is at gpiochip_hierarchy_irq_domain_alloc+0x11f/0x140
+...
+[<c06c23ff>] (gpiochip_hierarchy_irq_domain_alloc)
+[<c0462a89>] (__irq_domain_alloc_irqs)
+[<c0462dad>] (irq_create_fwspec_mapping)
+[<c06c2251>] (gpiochip_to_irq)
+[<c06c1c9b>] (gpiod_to_irq)
+[<bf973073>] (gpio_irqs_init [gpio_irqs])
+[<bf974048>] (gpio_irqs_exit+0xecc/0xe84 [gpio_irqs])
+Code: bad PC value
 
-moved the call to efi_memattr_init() from ARM specific to the generic
-EFI init code, in order to be able to apply the restricted permissions
-described in that table on x86 as well.
-
-We never enabled this feature fully on i386, and so mapping and
-reserving this table is pointless. However, due to the early call to
-memblock_reserve(), the memory bookkeeping gets confused to the point
-where it produces the splat below when we try to map the memory later
-on:
-
-  ------------[ cut here ]------------
-  ioremap on RAM at 0x3f251000 - 0x3fa1afff
-  WARNING: CPU: 0 PID: 0 at arch/x86/mm/ioremap.c:166 __ioremap_caller ...
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.20.0 #48
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-  EIP: __ioremap_caller.constprop.0+0x249/0x260
-  Code: 90 0f b7 05 4e 38 40 de 09 45 e0 e9 09 ff ff ff 90 8d 45 ec c6 05 ...
-  EAX: 00000029 EBX: 00000000 ECX: de59c228 EDX: 00000001
-  ESI: 3f250fff EDI: 00000000 EBP: de3edf20 ESP: de3edee0
-  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00200296
-  CR0: 80050033 CR2: ffd17000 CR3: 1e58c000 CR4: 00040690
-  Call Trace:
-   ioremap_cache+0xd/0x10
-   ? old_map_region+0x72/0x9d
-   old_map_region+0x72/0x9d
-   efi_map_region+0x8/0xa
-   efi_enter_virtual_mode+0x260/0x43b
-   start_kernel+0x329/0x3aa
-   i386_start_kernel+0xa7/0xab
-   startup_32_smp+0x164/0x168
-  ---[ end trace e15ccf6b9f356833 ]---
-
-Let's work around this by disregarding the memory attributes table
-altogether on i386, which does not result in a loss of functionality
-or protection, given that we never consumed the contents.
-
-Fixes: 3a6b6c6fb23667fa ("efi: Make EFI_MEMORY_ATTRIBUTES_TABLE ... ")
-Tested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200304165917.5893-1-ardb@kernel.org
-Link: https://lore.kernel.org/r/20200308080859.21568-21-ardb@kernel.org
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200306174720.82604-1-alexander.sverdlin@nokia.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/irq/irqdomain.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index f50072b51aefb..b39b7e6d4e4dc 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -550,7 +550,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
- 		}
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index b269ae16b10cd..0d54f8256b9f4 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1372,6 +1372,11 @@ int irq_domain_alloc_irqs_hierarchy(struct irq_domain *domain,
+ 				    unsigned int irq_base,
+ 				    unsigned int nr_irqs, void *arg)
+ {
++	if (!domain->ops->alloc) {
++		pr_debug("domain->ops->alloc() is NULL\n");
++		return -ENOSYS;
++	}
++
+ 	return domain->ops->alloc(domain, irq_base, nr_irqs, arg);
+ }
+ 
+@@ -1409,11 +1414,6 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+ 			return -EINVAL;
  	}
  
--	if (efi_enabled(EFI_MEMMAP))
-+	if (!IS_ENABLED(CONFIG_X86_32) && efi_enabled(EFI_MEMMAP))
- 		efi_memattr_init();
- 
- 	/* Parse the EFI Properties table if it exists */
+-	if (!domain->ops->alloc) {
+-		pr_debug("domain->ops->alloc() is NULL\n");
+-		return -ENOSYS;
+-	}
+-
+ 	if (realloc && irq_base >= 0) {
+ 		virq = irq_base;
+ 	} else {
 -- 
 2.20.1
 
