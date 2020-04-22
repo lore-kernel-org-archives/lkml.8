@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45CDC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436E9C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB9520774
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5602076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553404;
-	bh=x8S4j1AKPDX8Tcy3wit8RvIVRrO7ULq6y5vs+Y272sw=;
+	s=default; t=1587553413;
+	bh=wM3LJ0wa+yf3/wyfk7WPwpnk96PUqDGpDpM9BiOype4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJAqw5RTwLcDcO/gq2zRKE2ysNRU5jTcXgG8zDJ6PoIuZw73goavcSRpzGC0BGA/2
-	 Cmrub//7yj3cNY2FcS7Gind9ep5K7vzyAHUg+KUg7iO+UWwNUsLROG8gv5ubxRVNEq
-	 g89okJBPE70al5ttpwHHGIon9g4pmArJZ//DCxyo=
+	b=aOap+ACTKBh0kYcSZF0nnGPl+F0SRLQ+xSr2WbmaK4MDDmTs/LEOlB42tRixGANR8
+	 +l0vXmlEPBWOLGzaw5BclHvoLT+2ZdTRyglCq71975kXQ7gK+DhDa5Rq+urlDeLS1G
+	 WvzwwwGtuNCYbS2Et2tvRulkGyihuKKJzm3XI5xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732475AbgDVLDX (ORCPT
+        id S1732479AbgDVLDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 07:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46946 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 07:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgDVKAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:00 -0400
+        id S1726539AbgDVJ7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:59:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B99F2077D;
-        Wed, 22 Apr 2020 09:59:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D41C42077D;
+        Wed, 22 Apr 2020 09:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549599;
-        bh=x8S4j1AKPDX8Tcy3wit8RvIVRrO7ULq6y5vs+Y272sw=;
+        s=default; t=1587549592;
+        bh=wM3LJ0wa+yf3/wyfk7WPwpnk96PUqDGpDpM9BiOype4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9F5UJPLCJNAy6MRjBXXXNGLYsZjp/HCN0+iSvQ5xhUdGGtorAbiMmWl14JGmH298
-         CY3wkVj7n/BsYImnl9Eg02sm7KTJOI9ymYXhm8HFDdQUk39gozal4fkWgEICd9aTJo
-         MIKs7Uly5lu3uBsLwIv28CE8lMBR+KmMSS4jOhxU=
+        b=d0wIfv48ZU6a2e69H43YUr3hk8PaaIVTmEIyTqoBZzFubyRFj6AuK2rHuJqKgk/Z1
+         6DfbpgdVzqGfiJxpKcegdmxWhFKI/hUjIGJiIx1vBf2tWVD1T0FeXy7d7b28umlEPx
+         vFXSTYh9YYPRch1Gjwp8KYFZAXlf8n/3u6hD4He0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 030/100] ath9k: Handle txpower changes even when TPC is disabled
-Date:   Wed, 22 Apr 2020 11:56:00 +0200
-Message-Id: <20200422095028.270207232@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 4.4 027/100] KEYS: reaching the keys quotas correctly
+Date:   Wed, 22 Apr 2020 11:55:57 +0200
+Message-Id: <20200422095027.750789793@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
 References: <20200422095022.476101261@linuxfoundation.org>
@@ -59,57 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
 
-commit 968ae2caad0782db5dbbabb560d3cdefd2945d38 upstream.
+commit 2e356101e72ab1361821b3af024d64877d9a798d upstream.
 
-When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
-reconfigure HW's maximum txpower.
+Currently, when we add a new user key, the calltrace as below:
 
-This fixes 0dBm txpower setting when user attaches to an interface for
-the first time with the following scenario:
+add_key()
+  key_create_or_update()
+    key_alloc()
+    __key_instantiate_and_link
+      generic_key_instantiate
+        key_payload_reserve
+          ......
 
-ieee80211_do_open()
-    ath9k_add_interface()
-        ath9k_set_txpower() /* Set TX power with not yet initialized
-                               sc->hw->conf.power_level */
+Since commit a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly"),
+we can reach max bytes/keys in key_alloc, but we forget to remove this
+limit when we reserver space for payload in key_payload_reserve. So we
+can only reach max keys but not max bytes when having delta between plen
+and type->def_datalen. Remove this limit when instantiating the key, so we
+can keep consistent with key_alloc.
 
-    ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
-                             raise IEEE80211_CONF_CHANGE_POWER */
+Also, fix the similar problem in keyctl_chown_key().
 
-    ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
-
-This issue can be reproduced with the following:
-
-  $ modprobe -r ath9k
-  $ modprobe ath9k
-  $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
-  $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
-  $ killall wpa_supplicant
-  $ iw dev /* TX power goes back to calibrated value and subsequent
-              calls will be fine */
-
-Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
-Cc: stable@vger.kernel.org
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 0b77f5bfb45c ("keys: make the keyring quotas controllable through /proc/sys")
+Fixes: a08bf91ce28e ("KEYS: allow reaching the keys quotas exactly")
+Cc: stable@vger.kernel.org # 5.0.x
+Cc: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ security/keys/key.c    |    2 +-
+ security/keys/keyctl.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/main.c
-+++ b/drivers/net/wireless/ath/ath9k/main.c
-@@ -1437,6 +1437,9 @@ static int ath9k_config(struct ieee80211
- 		ath_chanctx_set_channel(sc, ctx, &hw->conf.chandef);
- 	}
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -376,7 +376,7 @@ int key_payload_reserve(struct key *key,
+ 		spin_lock(&key->user->lock);
  
-+	if (changed & IEEE80211_CONF_CHANGE_POWER)
-+		ath9k_set_txpower(sc, NULL);
-+
- 	mutex_unlock(&sc->mutex);
- 	ath9k_ps_restore(sc);
+ 		if (delta > 0 &&
+-		    (key->user->qnbytes + delta >= maxbytes ||
++		    (key->user->qnbytes + delta > maxbytes ||
+ 		     key->user->qnbytes + delta < key->user->qnbytes)) {
+ 			ret = -EDQUOT;
+ 		}
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -853,8 +853,8 @@ long keyctl_chown_key(key_serial_t id, u
+ 				key_quota_root_maxbytes : key_quota_maxbytes;
  
+ 			spin_lock(&newowner->lock);
+-			if (newowner->qnkeys + 1 >= maxkeys ||
+-			    newowner->qnbytes + key->quotalen >= maxbytes ||
++			if (newowner->qnkeys + 1 > maxkeys ||
++			    newowner->qnbytes + key->quotalen > maxbytes ||
+ 			    newowner->qnbytes + key->quotalen <
+ 			    newowner->qnbytes)
+ 				goto quota_overrun;
 
 
