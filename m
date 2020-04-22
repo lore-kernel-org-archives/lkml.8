@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA07C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AC9C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982C820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D382071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550318;
-	bh=nlNAtfmE+7sDz1jRnaVYI4GkYHewHV8jPnDsjl9aIu0=;
+	s=default; t=1587550324;
+	bh=KayCI43e+4ERiv+6sE/YoxckOz7w6rEHuoGhGcslfVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PkUfSa5dsmX4MlHnbCy1bi3+EVjfZWoW51wUCkJ7oRsG4WH8cmKA0TPm6ddUBwI0Z
-	 UL/2XDGhdYO04cVjPwMbB/hLTOGps3hEqEya5uO0nG5oCPcP/d0mybEZzN/WzE3eyU
-	 o0zNYM6QVS+XwsLTQm9hAxwI0SqWfukyjptIlwy4=
+	b=mNj50mEgBo6qbTIwAvefbrq0kt2B9hkc0Vx2Sm2DZiYlHQwVCeNZV7YQyFqVOZVOI
+	 KItE3Mam2OAqC865m40tFbCzahRvtVg6+jCBWf/PAANwwh1tmNwI1PDW8qrSmgVJ7v
+	 fs5FRa4/7GHsQb+Yrjn+2Fbh0phdwE83MDjzbKtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgDVKL5 (ORCPT
+        id S1729284AbgDVKMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:11:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729222AbgDVKLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:11:38 -0400
+        id S1729243AbgDVKLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DF012075A;
-        Wed, 22 Apr 2020 10:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 174EC2071E;
+        Wed, 22 Apr 2020 10:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550297;
-        bh=nlNAtfmE+7sDz1jRnaVYI4GkYHewHV8jPnDsjl9aIu0=;
+        s=default; t=1587550307;
+        bh=KayCI43e+4ERiv+6sE/YoxckOz7w6rEHuoGhGcslfVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UBedhuleAVhNbBtdgzsrzxfPi6OqfLAXW0kooXefC9yRyBytu2OzU96T9a5136s4+
-         G30a1PIAEDQF7YsLOOhSaNgxJER3FTGtvRNM8oEAMrG/+yy3F7xumnWo9YCa/rWU01
-         MhDOcHOIGca80cBJunIL2StKVeOTzCuDNUGFokAo=
+        b=uo/KC+BSITg6Vl4fGe95IwzVj9DRe8ZMboVcsMoq6GgO6epruVL6w0U3aRhKJnfJi
+         O1zTfsEgxJXaPJNZAOdrd65O7OL34c4lz52fdRKIQY0SZERWb6xD74xZe/s5qzOn0X
+         b6llP3wgkPnFIqL336TAsVl/nR/YAMmkUefjOyUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 088/199] powerpc/64/tm: Dont let userspace set regs->trap via sigreturn
-Date:   Wed, 22 Apr 2020 11:56:54 +0200
-Message-Id: <20200422095106.887852619@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 092/199] scsi: mpt3sas: Fix kernel panic observed on soft HBA unplug
+Date:   Wed, 22 Apr 2020 11:56:58 +0200
+Message-Id: <20200422095107.284026133@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -58,64 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 
-commit c7def7fbdeaa25feaa19caf4a27c5d10bd8789e4 upstream.
+commit cc41f11a21a51d6869d71e525a7264c748d7c0d7 upstream.
 
-In restore_tm_sigcontexts() we take the trap value directly from the
-user sigcontext with no checking:
+Generic protection fault type kernel panic is observed when user performs
+soft (ordered) HBA unplug operation while IOs are running on drives
+connected to HBA.
 
-	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
+When user performs ordered HBA removal operation, the kernel calls PCI
+device's .remove() call back function where driver is flushing out all the
+outstanding SCSI IO commands with DID_NO_CONNECT host byte and also unmaps
+sg buffers allocated for these IO commands.
 
-This means we can be in the kernel with an arbitrary regs->trap value.
+However, in the ordered HBA removal case (unlike of real HBA hot removal),
+HBA device is still alive and hence HBA hardware is performing the DMA
+operations to those buffers on the system memory which are already unmapped
+while flushing out the outstanding SCSI IO commands and this leads to
+kernel panic.
 
-Although that's not immediately problematic, there is a risk we could
-trigger one of the uses of CHECK_FULL_REGS():
+Don't flush out the outstanding IOs from .remove() path in case of ordered
+removal since HBA will be still alive in this case and it can complete the
+outstanding IOs. Flush out the outstanding IOs only in case of 'physical
+HBA hot unplug' where there won't be any communication with the HBA.
 
-	#define CHECK_FULL_REGS(regs)	BUG_ON(regs->trap & 1)
+During shutdown also it is possible that HBA hardware can perform DMA
+operations on those outstanding IO buffers which are completed with
+DID_NO_CONNECT by the driver from .shutdown(). So same above fix is applied
+in shutdown path as well.
 
-It can also cause us to unnecessarily save non-volatile GPRs again in
-save_nvgprs(), which shouldn't be problematic but is still wrong.
+It is safe to drop the outstanding commands when HBA is inaccessible such
+as when permanent PCI failure happens, when HBA is in non-operational
+state, or when someone does a real HBA hot unplug operation. Since driver
+knows that HBA is inaccessible during these cases, it is safe to drop the
+outstanding commands instead of waiting for SCSI error recovery to kick in
+and clear these outstanding commands.
 
-It's also possible it could trick the syscall restart machinery, which
-relies on regs->trap not being == 0xc00 (see 9a81c16b5275 ("powerpc:
-fix double syscall restarts")), though I haven't been able to make
-that happen.
-
-Finally it doesn't match the behaviour of the non-TM case, in
-restore_sigcontext() which zeroes regs->trap.
-
-So change restore_tm_sigcontexts() to zero regs->trap.
-
-This was discovered while testing Nick's upcoming rewrite of the
-syscall entry path. In that series the call to save_nvgprs() prior to
-signal handling (do_notify_resume()) is removed, which leaves the
-low-bit of regs->trap uncleared which can then trigger the FULL_REGS()
-WARNs in setup_tm_sigcontexts().
-
-Fixes: 2b0a576d15e0 ("powerpc: Add new transactional memory state to the signal context")
-Cc: stable@vger.kernel.org # v3.9+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200401023836.3286664-1-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/1585302763-23007-1-git-send-email-sreekanth.reddy@broadcom.com
+Fixes: c666d3be99c0 ("scsi: mpt3sas: wait for and flush running commands on shutdown/unload")
+Cc: stable@vger.kernel.org #v4.14.174+
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/signal_64.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -469,8 +469,10 @@ static long restore_tm_sigcontexts(struc
- 	err |= __get_user(tsk->thread.ckpt_regs.ccr,
- 			  &sc->gp_regs[PT_CCR]);
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -8280,8 +8280,8 @@ static void scsih_remove(struct pci_dev
  
-+	/* Don't allow userspace to set the trap value */
-+	regs->trap = 0;
-+
- 	/* These regs are not checkpointed; they can go in 'regs'. */
--	err |= __get_user(regs->trap, &sc->gp_regs[PT_TRAP]);
- 	err |= __get_user(regs->dar, &sc->gp_regs[PT_DAR]);
- 	err |= __get_user(regs->dsisr, &sc->gp_regs[PT_DSISR]);
- 	err |= __get_user(regs->result, &sc->gp_regs[PT_RESULT]);
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
+@@ -8354,8 +8354,8 @@ scsih_shutdown(struct pci_dev *pdev)
+ 
+ 	ioc->remove_host = 1;
+ 
+-	mpt3sas_wait_for_commands_to_complete(ioc);
+-	_scsih_flush_running_cmds(ioc);
++	if (!pci_device_is_present(pdev))
++		_scsih_flush_running_cmds(ioc);
+ 
+ 	_scsih_fw_event_cleanup_queue(ioc);
+ 
 
 
