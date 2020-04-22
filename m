@@ -2,80 +2,166 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08E7C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F0DC55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA9EE2071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587516609;
-	bh=bF7X9h26ISAZy0y8EdjOKnsOs24egAoS183uGUzNkmw=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=UwdWz6zGFrQg4rpBcAHJSk/oWnJUVcBu0YpQIxLE5Fx5A6Qgz5M4V126/TiMZy0YG
-	 fC2sIDzU0uHgKyiHMuS9nPF5kAy3AQVNa5ZYSpg4w2o+Nw/qrD6Cw2rsX/DTwJe044
-	 Q9zYoPkNY82WOjCmNqMjzbKHyWvT67QUG2BnYBXw=
+	by mail.kernel.org (Postfix) with ESMTP id 56DB12070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgDVAuJ (ORCPT
+        id S1726359AbgDVAxc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42390 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 20:53:32 -0400
+Received: from mga09.intel.com ([134.134.136.24]:52603 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgDVAuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:50:08 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 087D02070B;
-        Wed, 22 Apr 2020 00:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587516608;
-        bh=bF7X9h26ISAZy0y8EdjOKnsOs24egAoS183uGUzNkmw=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=FHKSEzZYJriFNaeXlgiLofnNxLG2IBj7Y9yYcZbdKeX0pJ5Kg13MuZPPih3jeRgWT
-         L52QEt9VbtHWQuRPpT/r9Jc6+tNVwpodXMREih72C0twWl2KdifAQddOp4hEjASf+i
-         g4tyJwyHpZCNzF7xBGwqMiFTTzr6CwQIZviWIFEM=
-Date:   Tue, 21 Apr 2020 20:50:06 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     dsterba@suse.cz, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.6 051/129] btrfs: handle NULL roots in
- btrfs_put/btrfs_grab_fs_root
-Message-ID: <20200422005006.GU1809@sasha-vm>
-References: <20200415113445.11881-1-sashal@kernel.org>
- <20200415113445.11881-51-sashal@kernel.org>
- <20200415132224.GB5920@suse.cz>
+        id S1726012AbgDVAxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:53:32 -0400
+IronPort-SDR: EKI54qKrr30rVClxbdzn2R6r6SktghpvXfjaDFOE9vu9esEhZapSN3QL0xXG8eqRxBldXJhm/N
+ OrtgV69SIJiQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 17:53:31 -0700
+IronPort-SDR: 6BvZNWKAkfEmtMuPX9NJM/DT2T0OL58dZHnYXUjIma0xZO8x1qj0CkCR3Q2GnadwpmmFhzZvUf
+ sQJMrcy45FuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
+   d="scan'208";a="334451596"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga001.jf.intel.com with ESMTP; 21 Apr 2020 17:53:30 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 21 Apr 2020 17:53:30 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 21 Apr 2020 17:53:30 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 21 Apr 2020 17:53:29 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
+ Wed, 22 Apr 2020 08:53:26 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wA=
+Date:   Wed, 22 Apr 2020 00:53:25 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+In-Reply-To: <20200421235442.GO11945@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200415132224.GB5920@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 03:22:24PM +0200, David Sterba wrote:
->On Wed, Apr 15, 2020 at 07:33:26AM -0400, Sasha Levin wrote:
->> From: Josef Bacik <josef@toxicpanda.com>
->>
->> [ Upstream commit 4cdfd93002cb84471ed85b4999cd38077a317873 ]
->>
->> We want to use this for dropping all roots, and in some error cases we
->> may not have a root, so handle this to make the cleanup code easier.
->> Make btrfs_grab_fs_root the same so we can use it in cases where the
->> root may not exist (like the quota root).
->
->This is another patch from the preparatory series, not needed for
->stable. Please drop it, thanks.
+> From: Jason Gunthorpe
+> Sent: Wednesday, April 22, 2020 7:55 AM
+> 
+> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
+> > The actual code is independent of the stage 2 driver code submission that
+> adds
+> > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code
+> series will
+> > support dedicated workqueue on a guest with no vIOMMU.
+> >
+> > A new device type "mdev" is introduced for the idxd driver. This allows the
+> wq
+> > to be dedicated to the usage of a VFIO mediated device (mdev). Once the
+> work
+> > queue (wq) is enabled, an uuid generated by the user can be added to the
+> wq
+> > through the uuid sysfs attribute for the wq.  After the association, a mdev
+> can
+> > be created using this UUID. The mdev driver code will associate the uuid
+> and
+> > setup the mdev on the driver side. When the create operation is successful,
+> the
+> > uuid can be passed to qemu. When the guest boots up, it should discover a
+> DSA
+> > device when doing PCI discovery.
+> 
+> I'm feeling really skeptical that adding all this PCI config space and
+> MMIO BAR emulation to the kernel just to cram this into a VFIO
+> interface is a good idea, that kind of stuff is much safer in
+> userspace.
+> 
+> Particularly since vfio is not really needed once a driver is using
+> the PASID stuff. We already have general code for drivers to use to
+> attach a PASID to a mm_struct - and using vfio while disabling all the
+> DMA/iommu config really seems like an abuse.
 
-Dropped, thanks!
+Well, this series is for virtualizing idxd device to VMs, instead of supporting
+SVA for bare metal processes. idxd implements a hardware-assisted 
+mediated device technique called Intel Scalable I/O Virtualization, which
+allows each Assignable Device Interface (ADI, e.g. a work queue) tagged 
+with an unique PASID to ensure fine-grained DMA isolation when those 
+ADIs are assigned to different VMs. For this purpose idxd utilizes the VFIO 
+mdev framework and IOMMU aux-domain extension. Bare metal SVA will
+be enabled for idxd later by using the general SVA code that you mentioned.
+Both paths will co-exist in the end so there is no such case of disabling
+DMA/iommu config.
 
--- 
-Thanks,
-Sasha
+Thanks
+Kevin
+
+> 
+> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
+> seems a lot simpler and saner kernel wise.
+> 
+> > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
+> > interrupts for the guest. This preserves MSIX for host usages and also
+> allows a
+> > significantly larger number of interrupt vectors for guest usage.
+> 
+> I never did get a reply to my earlier remarks on the IMS patches.
+> 
+> The concept of a device specific addr/data table format for MSI is not
+> Intel specific. This should be general code. We have a device that can
+> use this kind of kernel capability today.
+> 
+> Jason
