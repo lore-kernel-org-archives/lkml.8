@@ -2,102 +2,146 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D473CC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A28C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A039C20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587584569;
-	bh=VcBeU1021myRjcRg5O2qICZa7SkpUdjklF/ABgfD7nw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gwv6bOaujxPYU5Gkj361TNiUC8uV8o6zZd0+sfq7BTsFCW/DHtbS9GP904qahCcA3
-	 MfPa5t59yew8ZAxdDgnLXhvhhV39LdNXfmI8ymZLJpzPrBJrmiK/PSlXoo87YQkswO
-	 rJJpOVSkP/i+YmneSdqccUBx7UjPDfNcgCqBSI2I=
+	by mail.kernel.org (Postfix) with ESMTP id 2C3FF20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 19:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EckCc9k8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgDVTmt (ORCPT
+        id S1726323AbgDVTqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:42:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44342 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbgDVTms (ORCPT
+        Wed, 22 Apr 2020 15:46:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41844 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726079AbgDVTqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:42:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j4so3250789otr.11;
-        Wed, 22 Apr 2020 12:42:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H+xYHNUN8NpwWICu1ZzL9vzjHv/h/QGUDSeS/fpG3ug=;
-        b=CqSlvyKm8EsAor7l+Zv5/zsuuuNdp03WjTUTJ1xhVcwJKucJM9NHdtNedCKFmxDozt
-         qmy2xHRY1K8pYPGubDC3ObBudHOMkqhiI7UqHi72kNGwH1VVyRTB+dOR1SCmrjHDlqxg
-         qkLWJjqm4SFRaoKR8Xn8kWP2Pj2DGFPwWCsGMNCLazsYntOFAw4sB08rHLqmzANw/i0d
-         q4NbTeGsq4AN6TKW1fXulgSVphU5Bmm1SjMVk2pJE3/y081Us6SfMVJEtJBdht5YrySG
-         GPPlzFfEqN9cbTGlfQKkb3Z7b87HL0C2l1JMgLE2adwQLZ3X3kTuVQ8qK5UNTUw3v6G3
-         s2Ig==
-X-Gm-Message-State: AGi0PuZQwVe0gY2r/zj9+k6jh3bwTBNyZ4xgR2i/x5YIUrktCPvBPlgf
-        4Ug1sljfa/JD1D73jySmWA==
-X-Google-Smtp-Source: APiQypIAC27fXYzhwwR1murVCsIEyDWyoJ33c1WBjH8aheZV10QcVH827SMvx4BBrBuyijKmXH6PSg==
-X-Received: by 2002:a9d:23a3:: with SMTP id t32mr555321otb.333.1587584567424;
-        Wed, 22 Apr 2020 12:42:47 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q142sm42070oic.44.2020.04.22.12.42.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 12:42:46 -0700 (PDT)
-Received: (nullmailer pid 8669 invoked by uid 1000);
-        Wed, 22 Apr 2020 19:42:45 -0000
-Date:   Wed, 22 Apr 2020 14:42:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Alistair Francis <alistair@alistair23.me>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org,
-        anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
-        Alistair Francis <alistair@alistair23.me>
-Subject: Re: [PATCH v4 1/3] dt-bindings: net: bluetooth: Add
- rtl8723bs-bluetooth
-Message-ID: <20200422194245.GA8411@bogus>
-References: <20200422035333.1118351-1-alistair@alistair23.me>
+        Wed, 22 Apr 2020 15:46:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587584777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bz3/wnwvPYrqLraYmQKr5kAw4lnPaAd0IDA6hfhqLJ8=;
+        b=EckCc9k8OVadqZDyiRwqNa5VBTkLQn1nOLnw1t3Il+WDoFoIwpOLsoabjJkUyPHGdVP9dN
+        HNoii0rAPOwcc/WpnTb1qy6JQjnfLVyw5eeXn6bZZVeHERAhAaBSnZS097uHZunjRczU+f
+        VsDOTYludNznqzUIl525uGkdkgZooSM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-353-fAo_F7r5Oj6tBd3ZC9FM_A-1; Wed, 22 Apr 2020 15:46:13 -0400
+X-MC-Unique: fAo_F7r5Oj6tBd3ZC9FM_A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63BF7800685;
+        Wed, 22 Apr 2020 19:46:11 +0000 (UTC)
+Received: from treble (unknown [10.10.115.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 146175C1D4;
+        Wed, 22 Apr 2020 19:46:06 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 14:46:05 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+Message-ID: <20200422194605.n77t2wtx5fomxpyd@treble>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+ <20200422164037.7edd21ea@thinkpad>
+ <20200422172126.743908f5@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200422035333.1118351-1-alistair@alistair23.me>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200422172126.743908f5@thinkpad>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 20:53:31 -0700, Alistair Francis wrote:
-> From: Vasily Khoruzhick <anarsoul@gmail.com>
+On Wed, Apr 22, 2020 at 05:21:26PM +0200, Gerald Schaefer wrote:
+> > Sorry, just noticed this. Heiko will return next month, and I'm not
+> > really familiar with s390 livepatching. Adding Vasily, he might
+> > have some more insight.
+> > 
+> > So, I might be completely wrong here, but using s390_kernel_write()
+> > for writing to anything other than 1:1 mapped kernel, should go
+> > horribly wrong, as that runs w/o DAT. It would allow to bypass
+> > DAT write protection, which I assume is why you want to use it,
+> > but it should not work on module text section, as that would be
+> > in vmalloc space and not 1:1 mapped kernel memory.
+> > 
+> > Not quite sure how to test / trigger this, did this really work for
+> > you on s390?
 > 
-> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
-> 
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> ---
->  .../bindings/net/realtek-bluetooth.yaml       | 54 +++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
-> 
+> OK, using s390_kernel_write() as default write function for module
+> relocation seems to work fine for me, so apparently I am missing /
+> mixing up something. Sorry for the noise, please ignore my concern.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Hi Gerald,
 
-Documentation/devicetree/bindings/net/realtek-bluetooth.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/net/realtek-bluetooth.yaml#
+I think you were right.  Joe found the below panic with his klp-convert
+tests.
 
-See https://patchwork.ozlabs.org/patch/1274671
+Your test was probably the early module loading case (normal relocations
+before write protection), rather than the late case.  Not sure why that
+would work, but calling s390_kernel_write() late definitely seems to be
+broken.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Is there some other way to write vmalloc'ed s390 text without using
+module_disable_ro()?
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+[   50.294476] Unable to handle kernel pointer dereference in virtual kernel address space
+[   50.294479] Failing address: 000003ff8015b000 TEID: 000003ff8015b407
+[   50.294480] Fault in home space mode while using kernel ASCE.
+[   50.294483] AS:000000006cef0007 R3:000000007e2c4007 S:0000000003ccb800 P:0000 00000257321d
+[   50.294557] Oops: 0004 ilc:3 [#1] SMP
+[   50.294561] Modules linked in: test_klp_convert1(K+) test_klp_convert_mod ghash_s390 prng xts aes_s390 des_s390 libdes sha512_s390 vmur zcrypt_cex4 ip_tables xfs libcrc32c dasd_fba_mod qeth_l2 dasd_eckd_mod dasd_mod qeth lcs ctcm qdio cc
+wgroup fsm dm_mirror dm_region_hash dm_log dm_mod pkey zcrypt [last unloaded: test_klp_atomic_replace]
+[   50.294576] CPU: 0 PID: 1743 Comm: modprobe Tainted: G              K   5.6.0 + #2
+[   50.294579] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+[   50.294583] Krnl PSW : 0704e00180000000 000000006bf6be0a (apply_rela+0x2ba/0x 4e0)
+[   50.294589]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI: 0 EA:3
+[   50.294684] Krnl GPRS: 000003ff80147010 000003e0001b9588 000003ff8015c168 000 003ff8015b19a
+[   50.294686]            000003ff8015b07c 0d10e310100a0004 000003ff80147010 000 00000000000a0
+[   50.294687]            000003ff8015e588 000003ff8015e5e8 000003ff8015d300 000 0003b00000014
+[   50.294698]            000000007a663000 000000006c6bbb80 000003e0009a7918 000 003e0009a78b8
+[   50.294707] Krnl Code: 000000006bf6bdf8: e350d0080004        lg      %r5,8(%r 13)
+[   50.294707]            000000006bf6bdfe: e34010080008        ag      %r4,8(%r 1)
+[   50.294707]           #000000006bf6be04: e340a2000008        ag      %r4,512( %r10)
+[   50.294707]           >000000006bf6be0a: e35040000024        stg     %r5,0(%r 4)
+[   50.294707]            000000006bf6be10: c050007c6136        larl    %r5,0000 00006cef807c
+[   50.294707]            000000006bf6be16: e35050000012        lt      %r5,0(%r 5)
+[   50.294707]            000000006bf6be1c: a78400a6            brc     8,000000 006bf6bf68
+[   50.294707]            000000006bf6be20: a55e07f1            llilh   %r5,2033
+01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 01.
+01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 00.
+[   50.295369] Call Trace:
+[   50.295372]  [<000000006bf6be0a>] apply_rela+0x2ba/0x4e0
+[   50.295376]  [<000000006bf6c5c8>] apply_relocate_add+0xe0/0x138
+[   50.295378]  [<000000006c0229a0>] klp_apply_section_relocs+0xe8/0x128
+[   50.295380]  [<000000006c022b4c>] klp_apply_object_relocs+0x9c/0xd0
+[   50.295382]  [<000000006c022bb0>] klp_init_object_loaded+0x30/0x138
+[   50.295384]  [<000000006c023052>] klp_enable_patch+0x39a/0x870
+[   50.295387]  [<000003ff8015b0da>] test_klp_convert_init+0x22/0x50 [test_klp_convert1]
+[   50.295389]  [<000000006bf54838>] do_one_initcall+0x40/0x1f0
+[   50.295391]  [<000000006c04d610>] do_init_module+0x70/0x280
+[   50.295392]  [<000000006c05002a>] load_module+0x1aba/0x1d10
+[   50.295394]  [<000000006c0504c4>] __do_sys_finit_module+0xa4/0xe8
+[   50.295416]  [<000000006c6b5742>] system_call+0x2aa/0x2c8
+[   50.295416] Last Breaking-Event-Address:
+[   50.295418]  [<000000006c6b6aa0>] __s390_indirect_jump_r4+0x0/0xc
+[   50.295421] Kernel panic - not syncing: Fatal exception: panic_on_oops
 
-Please check and re-submit.
+-- 
+Josh
+
