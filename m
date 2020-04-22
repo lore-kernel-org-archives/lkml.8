@@ -2,76 +2,84 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C50C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD597C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A37B32076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="pqGPYYI6"
+	by mail.kernel.org (Postfix) with ESMTP id 997882076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 23:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgDVXJo (ORCPT
+        id S1726435AbgDVXLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:09:44 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:44301 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgDVXJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:09:44 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 5ed688f5;
-        Wed, 22 Apr 2020 22:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=OZjfePK0HjGa7K40j3VsVBNVeW8=; b=pqGPYY
-        I6OfH9mtLpwBzieGqQLl5mWJ5oYrOyRdSfepMvLVLZJcKB03nJlST6tuTqdGjOId
-        nYD6iUk+MtVnyEeJBsycLkELMFep7VUnldTCipZJyPjnYuqCJSojHxbSx/XqTntb
-        H0Ze9QMgIkz7rS63WXeB2papPpPr5zNl+6+4cmGoewuMM+x2O7QZtPYwh6TfmSb7
-        h21KdBIR+emjEZXInBgRRPuiJlqX+uj70iZVWBP38Bgp4s/Gf3couQN2ED5/EONC
-        XGxGnb71rQZPuIUdHAQShjAQsdN+RpdamZem0hOmaDbe4S+iaAJEqRmx1Xry8xu4
-        NU+pmYwF9DZoUg1Q==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id caee6694 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 22 Apr 2020 22:58:45 +0000 (UTC)
-Received: by mail-io1-f50.google.com with SMTP id z2so4358104iol.11;
-        Wed, 22 Apr 2020 16:09:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZOz0mJmPoABOjBkqz9XsdQLXj5sQ16cNw9Ua/3Kt1+7gGYKFHb
-        3miO10PtbB5UgAqQSk3/OMc8xCF1Hr150Wm353k=
-X-Google-Smtp-Source: APiQypJXmmE/5uCkig09fHm1CEMbQRCNqkZvWR+p7JrW4J4CdSWRYWSdK8h/04PbRd7vzbEJL5Wh2LnLdC3VVxp8o/Q=
-X-Received: by 2002:a02:b88e:: with SMTP id p14mr744905jam.36.1587596980023;
- Wed, 22 Apr 2020 16:09:40 -0700 (PDT)
+        Wed, 22 Apr 2020 19:11:47 -0400
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:39872 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgDVXLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 19:11:47 -0400
+Received: by mail-pg1-f172.google.com with SMTP id o10so1884524pgb.6;
+        Wed, 22 Apr 2020 16:11:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VgodplEC7ajdBNrlyzFg2CSQ/6ap7hDD5IEkP8m53O8=;
+        b=Q8cDJxo2QBrUfbAjK677orgbMGqof38VEBCj5rWdoVLR0cXLVpNLKVisqj3zwXy3kZ
+         jgXXD9DYHdfR5vpbQg/8pYPbc6ohqnhIaIRWMl1EetVAjR2Nx6Of/Izb+HJ8mi5tPqub
+         AR4puc+2lsQomhDHdB1tmz+tNceTduMKHgPhu856o0bfbvVAI6bh5cJCnaSXztpMo2PW
+         FKWZM5l5ZcLgN/OwQr2y9BZMb6f36izu8sgagbqatAs+45O07Jb4CsdK3zP1kxZiNMzc
+         kZhBT9zMocPV09q4tR9mPFglGJUk24oQY4hc7PLaYdf2HKlv14y9MJF5qIjr8i6YS8gA
+         aWJA==
+X-Gm-Message-State: AGi0PuaeWToxZrTJlIvYcAL82gDU9FimFDVo6drZfFpoUjcEHX7AKyPZ
+        cu6DwZ3H6pp6q25/L11kNpFxq1ZtdbA=
+X-Google-Smtp-Source: APiQypL2lsr0pC3V9CassJAzt/eBy0ApidEdFXosKyUCf5QRzZT8s9N/aX1FPBozJ61x0A0MRnEB9A==
+X-Received: by 2002:a62:dd4e:: with SMTP id w75mr903817pff.221.1587597104550;
+        Wed, 22 Apr 2020 16:11:44 -0700 (PDT)
+Received: from [100.124.12.67] ([104.129.198.228])
+        by smtp.gmail.com with ESMTPSA id b1sm548368pfa.202.2020.04.22.16.11.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 16:11:43 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] scsi; ufs: add device descriptor for Host
+ Performance Booster
+To:     huobean@gmail.com, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200416203126.1210-1-beanhuo@micron.com>
+ <20200416203126.1210-2-beanhuo@micron.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <6e092ac1-7e7d-3f12-8c81-b88369f1f621@acm.org>
+Date:   Wed, 22 Apr 2020 16:11:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200420075711.2385190-1-Jason@zx2c4.com> <20200422200344.239462-1-Jason@zx2c4.com>
- <20200422223925.GA96474@gmail.com>
-In-Reply-To: <20200422223925.GA96474@gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 22 Apr 2020 17:09:29 -0600
-X-Gmail-Original-Message-ID: <CAHmME9q4qyUiR5o4BiCKYrOvfpBbOpag+m2+dE+dSPqm0M5Jhw@mail.gmail.com>
-Message-ID: <CAHmME9q4qyUiR5o4BiCKYrOvfpBbOpag+m2+dE+dSPqm0M5Jhw@mail.gmail.com>
-Subject: Re: [PATCH crypto-stable v2] crypto: arch - limit simd usage to 4k chunks
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200416203126.1210-2-beanhuo@micron.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 4:39 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> Can you split the nhpoly1305 changes into a separate patch?  They're a bit
-> different from the rest of this patch, which is fixing up the crypto library
-> interface that's new in v5.5.  The nhpoly1305 changes apply to v5.0 and don't
-> have anything to do with the crypto library interface, and they're also a bit
-> different since they replace PAGE_SIZE with 4K rather than unlimited with 4K.
+On 4/16/20 1:31 PM, huobean@gmail.com wrote:
+> +	if (desc_buf[DEVICE_DESC_PARAM_UFS_FEAT] & 0x80) {
 
-Good point about the nhpoly change not being part of the library
-interface and thus backportable differently. I'll split that out and
-send a v3 shortly.
+Please introduce a symbolic name instead of using the number 0x80 directly.
 
-Jason
+> +		hba->dev_info.hpb_control_mode =
+> +			desc_buf[DEVICE_DESC_PARAM_HPB_CTRL_MODE];
+> +		hba->dev_info.hpb_ver =
+> +			(u16) (desc_buf[DEVICE_DESC_PARAM_HPB_VER] << 8) |
+> +			desc_buf[DEVICE_DESC_PARAM_HPB_VER + 1];
+
+Please use get_unaligned_be16() instead of open-coding it.
+
+Thanks,
+
+Bart.
