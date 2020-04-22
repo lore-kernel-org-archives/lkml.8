@@ -2,252 +2,116 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A04C55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D9CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA0B21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880D22082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dEkvVyei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgDVSCV (ORCPT
+        id S1726922AbgDVSCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:02:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6621 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbgDVSCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:02:22 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5294 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726476AbgDVSCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 14:02:20 -0400
-IronPort-SDR: UHXE8homXZKg3uC6yeJPG2VSMbcqYXtYFeeXL2xYgiccxLmBrPeb6v/BSTvt2lAKTPLM2YPB2c
- btz7nqMOXF4w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:02:20 -0700
-IronPort-SDR: m+fSS6FIxeYJJZwBfE8+FxbDRay69pS7zGtu7zBN6zdg+FSKAmSxFkkyuk7CWR7eKeaLe6WuVC
- qQ/xnj+vPmsw==
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="259154007"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.209.117.35])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 11:02:19 -0700
-Message-ID: <a469461526d99ce504295bf18b0ac31346fe4fa9.camel@linux.intel.com>
-Subject: Re: [PATCH 9/9] module: Reorder functions
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Jessica Yu <jeyu@kernel.org>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com
-Date:   Wed, 22 Apr 2020 11:02:17 -0700
-In-Reply-To: <CAMj1kXHHrH7CUTS854xNnWpqj8mFNdZ9gfW7fgNxmueno-ZegQ@mail.gmail.com>
-References: <20200415210452.27436-1-kristen@linux.intel.com>
-         <20200415210452.27436-10-kristen@linux.intel.com>
-         <CAMj1kXGbh=0nC_6SGTWjKeDPdwBrEW0_vRbjDzWyqqjY_88S7Q@mail.gmail.com>
-         <57fcb4a823003e955b63e81085b7d18a2ac0c139.camel@linux.intel.com>
-         <00b0ea7c94e298e12bc3bfcc1c780dc78056c463.camel@linux.intel.com>
-         <CAMj1kXHHrH7CUTS854xNnWpqj8mFNdZ9gfW7fgNxmueno-ZegQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+X-UUID: ffaa157022074406a23ae358582cbbb0-20200423
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Wd/MOGLi3v8IcIouicrcERfGp8lHo02kJWYXWlv+S1A=;
+        b=dEkvVyeidV4pAvuX74tJ5sxMxMUhqa/vNIPLbHk3HKgyaqsGFelkmcyzogkGqgs5DwOCa67/MULKBy0Yud3tcsxqupahgtlGjnl3kyUvqoUvTnBBF0hbA4ZpqiapDhNWHRXHdL/cjqKT+GGxk1zdXAfRLFAPZaxZ50kivUappgw=;
+X-UUID: ffaa157022074406a23ae358582cbbb0-20200423
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1603115986; Thu, 23 Apr 2020 02:02:16 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Apr 2020 02:02:06 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Apr 2020 02:02:05 +0800
+From:   <sean.wang@mediatek.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <andriy.shevchenko@linux.intel.com>,
+        <mika.westerberg@linux.intel.com>, <sr@denx.de>, <arnd@arndb.de>,
+        <matthias.bgg@gmail.com>, <tthayer@opensource.altera.com>
+CC:     <linux-mediatek@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>,
+        Steven Liu <steven.liu@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v3] tty: serial: don't do termios for BTIF
+Date:   Thu, 23 Apr 2020 02:02:08 +0800
+Message-ID: <cc41ea10be9ab96568f0371784e3b9f8d9f434b9.1587577548.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-22 at 18:22 +0200, Ard Biesheuvel wrote:
-> On Mon, 20 Apr 2020 at 19:59, Kristen Carlson Accardi
-> <kristen@linux.intel.com> wrote:
-> > On Mon, 2020-04-20 at 10:56 -0700, Kristen Carlson Accardi wrote:
-> > > On Mon, 2020-04-20 at 14:01 +0200, Ard Biesheuvel wrote:
-> > > > On Wed, 15 Apr 2020 at 23:07, Kristen Carlson Accardi
-> > > > <kristen@linux.intel.com> wrote:
-> > > > > If a module has functions split out into separate text
-> > > > > sections
-> > > > > (i.e. compiled with the -ffunction-sections flag), reorder
-> > > > > the
-> > > > > functions to provide some code diversification to modules.
-> > > > > 
-> > > > 
-> > > > Is that the only prerequisite? I.e., is it sufficient for
-> > > > another
-> > > > architecture to add -ffunction-sections to the module CFLAGS to
-> > > > get
-> > > > this functionality? (assuming it defines CONFIG_FG_KASLR=y)
-> > > 
-> > > I think it would work for modules. I've not tested this of
-> > > course. It
-> > > might not make sense for some architectures (like 32 bit), but it
-> > > would
-> > > probably work.
-> > > 
-> > > > > Signed-off-by: Kristen Carlson Accardi <
-> > > > > kristen@linux.intel.com>
-> > > > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > > > ---
-> > > > >  kernel/module.c | 82
-> > > > > +++++++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 82 insertions(+)
-> > > > > 
-> > > > > diff --git a/kernel/module.c b/kernel/module.c
-> > > > > index 646f1e2330d2..e432ec5f6df4 100644
-> > > > > --- a/kernel/module.c
-> > > > > +++ b/kernel/module.c
-> > > > > @@ -53,6 +53,8 @@
-> > > > >  #include <linux/bsearch.h>
-> > > > >  #include <linux/dynamic_debug.h>
-> > > > >  #include <linux/audit.h>
-> > > > > +#include <linux/random.h>
-> > > > > +#include <asm/setup.h>
-> > > > >  #include <uapi/linux/module.h>
-> > > > >  #include "module-internal.h"
-> > > > > 
-> > > > > @@ -2370,6 +2372,83 @@ static long get_offset(struct module
-> > > > > *mod,
-> > > > > unsigned int *size,
-> > > > >         return ret;
-> > > > >  }
-> > > > > 
-> > > > > +/*
-> > > > > + * shuffle_text_list()
-> > > > > + * Use a Fisher Yates algorithm to shuffle a list of text
-> > > > > sections.
-> > > > > + */
-> > > > > +static void shuffle_text_list(Elf_Shdr **list, int size)
-> > > > > +{
-> > > > > +       int i;
-> > > > > +       unsigned int j;
-> > > > > +       Elf_Shdr *temp;
-> > > > > +
-> > > > > +       for (i = size - 1; i > 0; i--) {
-> > > > > +               /*
-> > > > > +                * pick a random index from 0 to i
-> > > > > +                */
-> > > > > +               get_random_bytes(&j, sizeof(j));
-> > > > > +               j = j % (i + 1);
-> > > > > +
-> > > > > +               temp = list[i];
-> > > > > +               list[i] = list[j];
-> > > > > +               list[j] = temp;
-> > > > > +       }
-> > > > > +}
-> > > > > +
-> > > > > +/*
-> > > > > + * randomize_text()
-> > > > > + * Look through the core section looking for executable code
-> > > > > sections.
-> > > > > + * Store sections in an array and then shuffle the sections
-> > > > > + * to reorder the functions.
-> > > > > + */
-> > > > > +static void randomize_text(struct module *mod, struct
-> > > > > load_info
-> > > > > *info)
-> > > > > +{
-> > > > > +       int i;
-> > > > > +       int num_text_sections = 0;
-> > > > > +       Elf_Shdr **text_list;
-> > > > > +       int size = 0;
-> > > > > +       int max_sections = info->hdr->e_shnum;
-> > > > > +       unsigned int sec = find_sec(info, ".text");
-> > > > > +
-> > > > > +       if (sec == 0)
-> > > > > +               return;
-> > > > > +
-> > > > > +       text_list = kmalloc_array(max_sections,
-> > > > > sizeof(*text_list),
-> > > > > GFP_KERNEL);
-> > > > > +       if (text_list == NULL)
-> > > > > +               return;
-> > > > > +
-> > > > > +       for (i = 0; i < max_sections; i++) {
-> > > > > +               Elf_Shdr *shdr = &info->sechdrs[i];
-> > > > > +               const char *sname = info->secstrings + shdr-
-> > > > > > sh_name;
-> > > > > +
-> > > > > +               if (!(shdr->sh_flags & SHF_ALLOC) ||
-> > > > > +                   !(shdr->sh_flags & SHF_EXECINSTR) ||
-> > > > > +                   strstarts(sname, ".init"))
-> > > > > +                       continue;
-> > > > > +
-> > > > > +               text_list[num_text_sections] = shdr;
-> > > > > +               num_text_sections++;
-> > > > > +       }
-> > > > > +
-> > > > > +       shuffle_text_list(text_list, num_text_sections);
-> > > > > +
-> > > > > +       for (i = 0; i < num_text_sections; i++) {
-> > > > > +               Elf_Shdr *shdr = text_list[i];
-> > > > > +
-> > > > > +               /*
-> > > > > +                * get_offset has a section index for it's
-> > > > > last
-> > > > > +                * argument, that is only used by
-> > > > > arch_mod_section_prepend(),
-> > > > > +                * which is only defined by parisc. Since
-> > > > > this
-> > > > > this
-> > > > > type
-> > > > > +                * of randomization isn't supported on
-> > > > > parisc, we
-> > > > > can
-> > > > > +                * safely pass in zero as the last argument,
-> > > > > as
-> > > > > it
-> > > > > is
-> > > > > +                * ignored.
-> > > > > +                */
-> > > > > +               shdr->sh_entsize = get_offset(mod, &size,
-> > > > > shdr,
-> > > > > 0);
-> > > > > +       }
-> > > > > +
-> > > > > +       kfree(text_list);
-> > > > > +}
-> > > > > +
-> > > > >  /* Lay out the SHF_ALLOC sections in a way not dissimilar to
-> > > > > how
-> > > > > ld
-> > > > >     might -- code, read-only data, read-write data, small
-> > > > > data.  Tally
-> > > > >     sizes, and place the offsets into sh_entsize fields: high
-> > > > > bit
-> > > > > means it
-> > > > > @@ -2460,6 +2539,9 @@ static void layout_sections(struct
-> > > > > module
-> > > > > *mod, struct load_info *info)
-> > > > >                         break;
-> > > > >                 }
-> > > > >         }
-> > > > > +
-> > > > > +       if (IS_ENABLED(CONFIG_FG_KASLR) && kaslr_enabled())
-> > > > 
-> > > > kaslr_enabled() only exists [as a function] on x86
-> > > 
-> > > CONFIG_FG_KASLR is dependant on x86_64. If people really think
-> > > there
-> > > is
-> > > value in having the module randomization not dependent on the
-> > > kernel
-> > > randomization it can be changed to a different config option -
-> > > but I
-> > > am
-> > > not sure that there is a ton of value in the module randomization
-> > > on
-> > > it's own.
-> 
-> I think there is. The modules are a sizable attack surface, and made
-> up of drivers for a large part, many of which are not as carefully
-> reviewed as core code. Also, as I pointed out, the ELF loading trick
-> from the decompressor is simply infeasible on arm64, given that there
-> is no decompressor in the first place.
-
-I can make a separate config option for modules so that you can enable
-this separately from the main kernel text randomization. I'll make that
-change for v2.
-
+RnJvbTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KDQpCbHVldG9vdGggSW50
+ZXJmYWNlIChCVElGKSBpcyBkZXNpZ25lZCBkZWRpY2F0ZWRseSBmb3IgTWVkaWFUZWsgU09DIHdp
+dGgNCkJUIGluIG9yZGVyIHRvIGJlIGluc3RlYWQgb2YgdGhlIFVBUlQgaW50ZXJmYWNlIGJldHdl
+ZW4gQlQgbW9kdWxlIGFuZCBIb3N0DQpDUFUsIGFuZCBub3QgZXhwb3J0ZWQgdG8gdXNlciBzcGFj
+ZSB0byBhY2Nlc3MuDQoNCkFzIHRoZSBVQVJUIGRlc2lnbiwgQlRJRiB3aWxsIGJlIGFuIEFQQiBz
+bGF2ZSBhbmQgY2FuIHRyYW5zbWl0IG9yIHJlY2VpdmUNCmRhdGEgYnkgTUNVIGFjY2VzcywgYnV0
+IGRvZXNuJ3QgcHJvdmlkZSB0ZXJtaW9zIGZ1bmN0aW9uIGxpa2UgYmF1ZHJhdGUgYW5kDQpmbG93
+IGNvbnRyb2wgc2V0dXAuDQoNCkV2ZW4gTENSIG9uIG9mZnNldCAweEMgdGhhdCBpcyBqdXN0IGEg
+RkFLRUxDUg0KYS4gSWYgRkFLRUxDUls3XSBpcyBlcXVhbGVkIHRvIDEsIFJCUigweDAwKSwgVEhS
+KDB4MDApLCBJRVIoMHgwNCkNCiAgIHdpbGwgbm90IGJlIHJlYWRhYmxlL3dyaXRhYmxlLg0KDQpi
+LiBJZiBGQUtFTENSIGlzIGVxdWFsZWQgdG8gMHhCRiwgUkJSKDB4MDApLCBUSFIoMHgwMCksIElF
+UigweDA0KSwNCiAgIElJUigweDA4KSwgYW5kIExTUigweDE0KSB3aWxsIG5vdCBiZSByZWFkYWJs
+ZS93cml0YWJsZS4NCg0KU28gYWRkaW5nIGEgbmV3IGNhcGFiaWxpdHkgJ1VBUlRfQ0FQX05USU8n
+IGZvciB0aGUgdW51c3VhbCB1bnN1cHBvcnRlZA0KY2FzZS4NCg0KRml4ZXM6IDFjMTZhZTY1ZTI1
+MCAoInNlcmlhbDogODI1MDogb2Y6IEFkZCBuZXcgcG9ydCB0eXBlIGZvciBNZWRpYVRlayBCVElG
+IGNvbnRyb2xsZXIgb24gTVQ3NjIyLzIzIFNvQyIpDQpDYzogU3RldmVuIExpdSA8c3RldmVuLmxp
+dUBtZWRpYXRlay5jb20+DQpTdWdnZXN0ZWQtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5kcml5LnNo
+ZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KU2lnbmVkLW9mZi1ieTogU2VhbiBXYW5nIDxzZWFu
+LndhbmdAbWVkaWF0ZWsuY29tPg0KU2lnbmVkLW9mZi1ieTogUnlkZXIgTGVlIDxyeWRlci5sZWVA
+bWVkaWF0ZWsuY29tPg0KDQotLQ0KdjEtPnYyOg0Kbm8gY2hhbmdlIG9uIHRlcm1pb3MtPmNfY2Zs
+YWcgYW5kIHJlZmluZSBjb21taXQgbWVzc2FnZQ0KDQp2Mi0+djM6DQpjaGFuZ2UgdGhlIG5hbWlu
+ZyBmcm9tIE5NT0QgdG8gTlRJTyBhcyBUSU8gaXMgYSB3ZWxsIGVzdGFibGlzaGVkIHByZWZpeA0K
+Zm9yIHRlcm1pb3MgSU9DVExzLg0KLS0tDQogZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MC5o
+ICAgICAgfCAxICsNCiBkcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwX3BvcnQuYyB8IDUgKysr
+Ky0NCiAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy90dHkvc2VyaWFsLzgyNTAvODI1MC5oIGIvZHJpdmVycy90dHkv
+c2VyaWFsLzgyNTAvODI1MC5oDQppbmRleCAzM2FkOWQ2ZGU1MzIuLjIzNGQ4ZGI0NzBjMCAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTAuaA0KKysrIGIvZHJpdmVycy90
+dHkvc2VyaWFsLzgyNTAvODI1MC5oDQpAQCAtODIsNiArODIsNyBAQCBzdHJ1Y3Qgc2VyaWFsODI1
+MF9jb25maWcgew0KICNkZWZpbmUgVUFSVF9DQVBfTUlOSQkoMSA8PCAxNykJLyogTWluaSBVQVJU
+IG9uIEJDTTI4M1ggZmFtaWx5IGxhY2tzOg0KIAkJCQkJICogU1RPUCBQQVJJVFkgRVBBUiBTUEFS
+IFdMRU41IFdMRU42DQogCQkJCQkgKi8NCisjZGVmaW5lIFVBUlRfQ0FQX05USU8JKDEgPDwgMTgp
+CS8qIFVBUlQgZG9lc24ndCBkbyB0ZXJtaW9zICovDQogDQogI2RlZmluZSBVQVJUX0JVR19RVU9U
+CSgxIDw8IDApCS8qIFVBUlQgaGFzIGJ1Z2d5IHF1b3QgTFNCICovDQogI2RlZmluZSBVQVJUX0JV
+R19UWEVOCSgxIDw8IDEpCS8qIFVBUlQgaGFzIGJ1Z2d5IFRYIElJUiBzdGF0dXMgKi8NCmRpZmYg
+LS1naXQgYS9kcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwX3BvcnQuYyBiL2RyaXZlcnMvdHR5
+L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jDQppbmRleCAwMzI1ZjJlNTNiNzQuLmFiYzk3NGI0MTEz
+ZiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvdHR5L3NlcmlhbC84MjUwLzgyNTBfcG9ydC5jDQorKysg
+Yi9kcml2ZXJzL3R0eS9zZXJpYWwvODI1MC84MjUwX3BvcnQuYw0KQEAgLTI4Niw3ICsyODYsNyBA
+QCBzdGF0aWMgY29uc3Qgc3RydWN0IHNlcmlhbDgyNTBfY29uZmlnIHVhcnRfY29uZmlnW10gPSB7
+DQogCQkudHhfbG9hZHN6CT0gMTYsDQogCQkuZmNyCQk9IFVBUlRfRkNSX0VOQUJMRV9GSUZPIHwN
+CiAJCQkJICBVQVJUX0ZDUl9DTEVBUl9SQ1ZSIHwgVUFSVF9GQ1JfQ0xFQVJfWE1JVCwNCi0JCS5m
+bGFncwkJPSBVQVJUX0NBUF9GSUZPLA0KKwkJLmZsYWdzCQk9IFVBUlRfQ0FQX0ZJRk8gfCBVQVJU
+X0NBUF9OVElPLA0KIAl9LA0KIAlbUE9SVF9OUENNXSA9IHsNCiAJCS5uYW1lCQk9ICJOdXZvdG9u
+IDE2NTUwIiwNCkBAIC0yNTQ0LDYgKzI1NDQsOSBAQCBzZXJpYWw4MjUwX2RvX3NldF90ZXJtaW9z
+KHN0cnVjdCB1YXJ0X3BvcnQgKnBvcnQsIHN0cnVjdCBrdGVybWlvcyAqdGVybWlvcywNCiAJdW5z
+aWduZWQgbG9uZyBmbGFnczsNCiAJdW5zaWduZWQgaW50IGJhdWQsIHF1b3QsIGZyYWMgPSAwOw0K
+IA0KKwlpZiAodXAtPmNhcGFiaWxpdGllcyAmIFVBUlRfQ0FQX05USU8pDQorCQlyZXR1cm47DQor
+DQogCWlmICh1cC0+Y2FwYWJpbGl0aWVzICYgVUFSVF9DQVBfTUlOSSkgew0KIAkJdGVybWlvcy0+
+Y19jZmxhZyAmPSB+KENTVE9QQiB8IFBBUkVOQiB8IFBBUk9ERCB8IENNU1BBUik7DQogCQlpZiAo
+KHRlcm1pb3MtPmNfY2ZsYWcgJiBDU0laRSkgPT0gQ1M1IHx8DQotLSANCjIuMjUuMQ0K
 
