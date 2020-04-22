@@ -2,47 +2,47 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C568EC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1758BC55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F34620857
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66E42087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgDVMwP (ORCPT
+        id S1726991AbgDVMwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:52:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:53033 "EHLO mga05.intel.com"
+        Wed, 22 Apr 2020 08:52:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:14544 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgDVMwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726913AbgDVMwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 08:52:09 -0400
-IronPort-SDR: 3VocZ3jGWHyq+oAUxImSUNS9lv4vBBVqKEa9Pt5QCRr5rCV3o7ggsTpu6HInEgwRZYAUkh/gLQ
- Xbf2/xgjhgTA==
+IronPort-SDR: qF6TRgyjzOgeltMuNLlriR6h1aggkk4cNiqKlP2pDwvQsC5Ty1IldQ6TK+ZxuNgP2oGm5RhfEP
+ KK9oJCoMZCBw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 05:52:07 -0700
-IronPort-SDR: uC5juspmPi+ZQdRcAzt6K/2LJ+P7SxJlNddzsBZG+6fhOb3T4uiu23u3k3qDx/XrbicxvCbLRP
- Z8xZpfsCXLDg==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 05:52:09 -0700
+IronPort-SDR: XVfy5RVeVikMWBN9wW4aU8hHFd6TBhcaIz4OwSlXwIKp6JH3urB/5okv8Ps2mQRTLHk0iw62Dm
+ cVyhuI2+Rv3Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
-   d="scan'208";a="456497062"
+   d="scan'208";a="245966348"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Apr 2020 05:52:05 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 22 Apr 2020 05:52:07 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 9D7FC881; Wed, 22 Apr 2020 15:52:03 +0300 (EEST)
+        id B1D618D4; Wed, 22 Apr 2020 15:52:03 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Joe Perches <joe@perches.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 4/7] kernel.h: Split out min()/max() et al helpers
-Date:   Wed, 22 Apr 2020 15:51:58 +0300
-Message-Id: <20200422125201.37618-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 6/7] kernel.h: Split out panic and oops helpers
+Date:   Wed, 22 Apr 2020 15:52:00 +0300
+Message-Id: <20200422125201.37618-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
 References: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
@@ -54,8 +54,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 kernel.h is being used as a dump for all kinds of stuff for a long time.
-Here is the attempt to start cleaning it up by splitting out min()/max()
-et al helpers.
+Here is the attempt to start cleaning it up by splitting out panic and
+oops helpers.
 
 At the same time convert users in header and lib folder to use new header.
 Though for time being include new header back to kernel.h to avoid twisted
@@ -63,471 +63,354 @@ indirected includes for existing users.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v4: rebase on latest kernel
- include/linux/blkdev.h    |   1 +
- include/linux/bvec.h      |   6 +-
- include/linux/jiffies.h   |   3 +-
- include/linux/kernel.h    | 142 +------------------------------------
- include/linux/minmax.h    | 145 ++++++++++++++++++++++++++++++++++++++
- include/linux/nodemask.h  |   2 +-
- include/linux/uaccess.h   |   1 +
- kernel/range.c            |   3 +-
- lib/find_bit.c            |   1 +
- lib/hexdump.c             |   1 +
- lib/math/rational.c       |   2 +-
- lib/math/reciprocal_div.c |   1 +
- 12 files changed, 162 insertions(+), 146 deletions(-)
- create mode 100644 include/linux/minmax.h
+v4: new patch
+ arch/x86/include/asm/desc.h    |  1 +
+ arch/x86/kernel/setup.c        |  1 +
+ include/asm-generic/bug.h      |  3 +-
+ include/linux/kernel.h         | 67 +-----------------------------
+ include/linux/ktime.h          |  2 +
+ include/linux/panic.h          | 75 ++++++++++++++++++++++++++++++++++
+ include/linux/panic_notifier.h | 12 ++++++
+ include/linux/thread_info.h    |  1 +
+ kernel/kexec_core.c            |  1 +
+ kernel/panic.c                 |  1 +
+ kernel/rcu/tree.c              |  2 +
+ kernel/trace/trace.c           |  1 +
+ lib/errseq.c                   |  1 +
+ 13 files changed, 101 insertions(+), 67 deletions(-)
+ create mode 100644 include/linux/panic.h
+ create mode 100644 include/linux/panic_notifier.h
 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 32868fbedc9e9..e39853ebf9c21 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -11,6 +11,7 @@
- #include <linux/genhd.h>
- #include <linux/list.h>
- #include <linux/llist.h>
-+#include <linux/minmax.h>
- #include <linux/timer.h>
- #include <linux/workqueue.h>
- #include <linux/pagemap.h>
-diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-index a81c13ac19728..56d4dec749263 100644
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@ -7,10 +7,14 @@
- #ifndef __LINUX_BVEC_ITER_H
- #define __LINUX_BVEC_ITER_H
+diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
+index 68a99d2a5f335..ac3878ac07091 100644
+--- a/arch/x86/include/asm/desc.h
++++ b/arch/x86/include/asm/desc.h
+@@ -9,6 +9,7 @@
+ #include <asm/irq_vectors.h>
+ #include <asm/cpu_entry_area.h>
  
++#include <linux/debug_locks.h>
+ #include <linux/smp.h>
+ #include <linux/percpu.h>
+ 
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index a3767e74c758c..821960a2b412d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -13,6 +13,7 @@
+ #include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
+ #include <linux/memblock.h>
++#include <linux/panic_notifier.h>
+ #include <linux/pci.h>
+ #include <linux/root_dev.h>
+ #include <linux/sfi.h>
+diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+index 384b5c835ced3..d3ae3e5b3643e 100644
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -16,7 +16,8 @@
+ #endif
+ 
+ #ifndef __ASSEMBLY__
 -#include <linux/kernel.h>
- #include <linux/bug.h>
- #include <linux/errno.h>
-+#include <linux/limits.h>
-+#include <linux/minmax.h>
- #include <linux/mm.h>
-+#include <linux/types.h>
-+
-+struct page;
++#include <linux/panic.h>
++#include <linux/printk.h>
  
- /*
-  * was unsigned short, but we might as well be ready for > 64kB I/O pages
-diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
-index fed6ba96c5278..5e13f801c9021 100644
---- a/include/linux/jiffies.h
-+++ b/include/linux/jiffies.h
-@@ -3,8 +3,9 @@
- #define _LINUX_JIFFIES_H
+ #ifdef CONFIG_BUG
  
- #include <linux/cache.h>
-+#include <linux/limits.h>
- #include <linux/math64.h>
--#include <linux/kernel.h>
-+#include <linux/minmax.h>
- #include <linux/types.h>
- #include <linux/time.h>
- #include <linux/timex.h>
 diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 899302e2b7554..cbdbfe81a535c 100644
+index 8a0e5ed1b905a..cd83a57c1b244 100644
 --- a/include/linux/kernel.h
 +++ b/include/linux/kernel.h
-@@ -11,6 +11,7 @@
- #include <linux/compiler.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/minmax.h>
+@@ -13,6 +13,7 @@
+ #include <linux/math.h>
+ #include <linux/minmax.h>
  #include <linux/typecheck.h>
++#include <linux/panic.h>
  #include <linux/printk.h>
  #include <linux/build_bug.h>
-@@ -831,147 +832,6 @@ ftrace_vprintk(const char *fmt, va_list ap)
- static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
- #endif /* CONFIG_TRACING */
  
--/*
-- * min()/max()/clamp() macros must accomplish three things:
-- *
-- * - avoid multiple evaluations of the arguments (so side-effects like
-- *   "x++" happen only once) when non-constant.
-- * - perform strict type-checking (to generate warnings instead of
-- *   nasty runtime surprises). See the "unnecessary" pointer comparison
-- *   in __typecheck().
-- * - retain result as a constant expressions when called with only
-- *   constant expressions (to avoid tripping VLA warnings in stack
-- *   allocation usage).
-- */
--#define __typecheck(x, y) \
--		(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+@@ -76,7 +77,6 @@
+ #define lower_32_bits(n) ((u32)(n))
+ 
+ struct completion;
+-struct pt_regs;
+ struct user;
+ 
+ #ifdef CONFIG_PREEMPT_VOLUNTARY
+@@ -159,15 +159,6 @@ void __might_fault(const char *file, int line);
+ static inline void might_fault(void) { }
+ #endif
+ 
+-extern struct atomic_notifier_head panic_notifier_list;
+-extern long (*panic_blink)(int state);
+-__printf(1, 2)
+-void panic(const char *fmt, ...) __noreturn __cold;
+-void nmi_panic(struct pt_regs *regs, const char *msg);
+-extern void oops_enter(void);
+-extern void oops_exit(void);
+-void print_oops_end_marker(void);
+-extern int oops_may_print(void);
+ void do_exit(long error_code) __noreturn;
+ void complete_and_exit(struct completion *, long) __noreturn;
+ 
+@@ -360,34 +351,7 @@ extern unsigned int sysctl_oops_all_cpu_backtrace;
+ #endif /* CONFIG_SMP */
+ 
+ extern void bust_spinlocks(int yes);
+-extern int panic_timeout;
+-extern unsigned long panic_print;
+-extern int panic_on_oops;
+-extern int panic_on_unrecovered_nmi;
+-extern int panic_on_io_nmi;
+-extern int panic_on_warn;
+-extern int sysctl_panic_on_rcu_stall;
+-extern int sysctl_panic_on_stackoverflow;
+ 
+-extern bool crash_kexec_post_notifiers;
 -
 -/*
-- * This returns a constant expression while determining if an argument is
-- * a constant expression, most importantly without evaluating the argument.
-- * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
+- * panic_cpu is used for synchronizing panic() and crash_kexec() execution. It
+- * holds a CPU number which is executing panic() currently. A value of
+- * PANIC_CPU_INVALID means no CPU has entered panic() or crash_kexec().
 - */
--#define __is_constexpr(x) \
--	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
--
--#define __no_side_effects(x, y) \
--		(__is_constexpr(x) && __is_constexpr(y))
--
--#define __safe_cmp(x, y) \
--		(__typecheck(x, y) && __no_side_effects(x, y))
--
--#define __cmp(x, y, op)	((x) op (y) ? (x) : (y))
--
--#define __cmp_once(x, y, unique_x, unique_y, op) ({	\
--		typeof(x) unique_x = (x);		\
--		typeof(y) unique_y = (y);		\
--		__cmp(unique_x, unique_y, op); })
--
--#define __careful_cmp(x, y, op) \
--	__builtin_choose_expr(__safe_cmp(x, y), \
--		__cmp(x, y, op), \
--		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
--
--/**
-- * min - return minimum of two values of the same or compatible types
-- * @x: first value
-- * @y: second value
-- */
--#define min(x, y)	__careful_cmp(x, y, <)
--
--/**
-- * max - return maximum of two values of the same or compatible types
-- * @x: first value
-- * @y: second value
-- */
--#define max(x, y)	__careful_cmp(x, y, >)
--
--/**
-- * min3 - return minimum of three values
-- * @x: first value
-- * @y: second value
-- * @z: third value
-- */
--#define min3(x, y, z) min((typeof(x))min(x, y), z)
--
--/**
-- * max3 - return maximum of three values
-- * @x: first value
-- * @y: second value
-- * @z: third value
-- */
--#define max3(x, y, z) max((typeof(x))max(x, y), z)
--
--/**
-- * min_not_zero - return the minimum that is _not_ zero, unless both are zero
-- * @x: value1
-- * @y: value2
-- */
--#define min_not_zero(x, y) ({			\
--	typeof(x) __x = (x);			\
--	typeof(y) __y = (y);			\
--	__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
--
--/**
-- * clamp - return a value clamped to a given range with strict typechecking
-- * @val: current value
-- * @lo: lowest allowable value
-- * @hi: highest allowable value
-- *
-- * This macro does strict typechecking of @lo/@hi to make sure they are of the
-- * same type as @val.  See the unnecessary pointer comparisons.
-- */
--#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+-extern atomic_t panic_cpu;
+-#define PANIC_CPU_INVALID	-1
 -
 -/*
-- * ..and if you can't take the strict
-- * types, you can specify one yourself.
-- *
-- * Or not use min/max/clamp at all, of course.
+- * Only to be used by arch init code. If the user over-wrote the default
+- * CONFIG_PANIC_TIMEOUT, honor it.
 - */
+-static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
+-{
+-	if (panic_timeout == arch_default_timeout)
+-		panic_timeout = timeout;
+-}
+ extern const char *print_tainted(void);
+ enum lockdep_ok {
+ 	LOCKDEP_STILL_OK,
+@@ -414,35 +378,6 @@ extern enum system_states {
+ 	SYSTEM_SUSPEND,
+ } system_state;
+ 
+-/* This cannot be an enum because some may be used in assembly source. */
+-#define TAINT_PROPRIETARY_MODULE	0
+-#define TAINT_FORCED_MODULE		1
+-#define TAINT_CPU_OUT_OF_SPEC		2
+-#define TAINT_FORCED_RMMOD		3
+-#define TAINT_MACHINE_CHECK		4
+-#define TAINT_BAD_PAGE			5
+-#define TAINT_USER			6
+-#define TAINT_DIE			7
+-#define TAINT_OVERRIDDEN_ACPI_TABLE	8
+-#define TAINT_WARN			9
+-#define TAINT_CRAP			10
+-#define TAINT_FIRMWARE_WORKAROUND	11
+-#define TAINT_OOT_MODULE		12
+-#define TAINT_UNSIGNED_MODULE		13
+-#define TAINT_SOFTLOCKUP		14
+-#define TAINT_LIVEPATCH			15
+-#define TAINT_AUX			16
+-#define TAINT_RANDSTRUCT		17
+-#define TAINT_FLAGS_COUNT		18
 -
--/**
-- * min_t - return minimum of two values, using the specified type
-- * @type: data type to use
-- * @x: first value
-- * @y: second value
-- */
--#define min_t(type, x, y)	__careful_cmp((type)(x), (type)(y), <)
+-struct taint_flag {
+-	char c_true;	/* character printed when tainted */
+-	char c_false;	/* character printed when not tainted */
+-	bool module;	/* also show as a per-module taint flag */
+-};
 -
--/**
-- * max_t - return maximum of two values, using the specified type
-- * @type: data type to use
-- * @x: first value
-- * @y: second value
-- */
--#define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
+-extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
 -
--/**
-- * clamp_t - return a value clamped to a given range using a given type
-- * @type: the type of variable to use
-- * @val: current value
-- * @lo: minimum allowable value
-- * @hi: maximum allowable value
-- *
-- * This macro does no typechecking and uses temporary variables of type
-- * @type to make all the comparisons.
-- */
--#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
--
--/**
-- * clamp_val - return a value clamped to a given range using val's type
-- * @val: current value
-- * @lo: minimum allowable value
-- * @hi: maximum allowable value
-- *
-- * This macro does no typechecking and uses temporary variables of whatever
-- * type the input argument @val is.  This is useful when @val is an unsigned
-- * type and @lo and @hi are literals that will otherwise be assigned a signed
-- * integer type.
-- */
--#define clamp_val(val, lo, hi) clamp_t(typeof(val), val, lo, hi)
--
--
- /**
-  * swap - swap values of @a and @b
-  * @a: first value
-diff --git a/include/linux/minmax.h b/include/linux/minmax.h
+ extern const char hex_asc[];
+ #define hex_asc_lo(x)	hex_asc[((x) & 0x0f)]
+ #define hex_asc_hi(x)	hex_asc[((x) & 0xf0) >> 4]
+diff --git a/include/linux/ktime.h b/include/linux/ktime.h
+index 42d2e6ac35f29..c7aa465a85f77 100644
+--- a/include/linux/ktime.h
++++ b/include/linux/ktime.h
+@@ -24,6 +24,8 @@
+ #include <linux/time.h>
+ #include <linux/jiffies.h>
+ 
++#include <asm/bug.h>
++
+ /* Nanosecond scalar representation for kernel time values */
+ typedef s64	ktime_t;
+ 
+diff --git a/include/linux/panic.h b/include/linux/panic.h
 new file mode 100644
-index 0000000000000..bfd6ad8229147
+index 0000000000000..a06e775a5c37f
 --- /dev/null
-+++ b/include/linux/minmax.h
-@@ -0,0 +1,145 @@
++++ b/include/linux/panic.h
+@@ -0,0 +1,75 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MINMAX_H
-+#define _LINUX_MINMAX_H
++#ifndef _LINUX_PANIC_H
++#define _LINUX_PANIC_H
++
++#include <linux/types.h>
++
++struct pt_regs;
++
++extern long (*panic_blink)(int state);
++__printf(1, 2)
++void panic(const char *fmt, ...) __noreturn __cold;
++void nmi_panic(struct pt_regs *regs, const char *msg);
++extern void oops_enter(void);
++extern void oops_exit(void);
++void print_oops_end_marker(void);
++extern int oops_may_print(void);
++
++extern int panic_timeout;
++extern unsigned long panic_print;
++extern int panic_on_oops;
++extern int panic_on_unrecovered_nmi;
++extern int panic_on_io_nmi;
++extern int panic_on_warn;
++
++extern int sysctl_panic_on_rcu_stall;
++extern int sysctl_panic_on_stackoverflow;
 +
 +/*
-+ * min()/max()/clamp() macros must accomplish three things:
-+ *
-+ * - avoid multiple evaluations of the arguments (so side-effects like
-+ *   "x++" happen only once) when non-constant.
-+ * - perform strict type-checking (to generate warnings instead of
-+ *   nasty runtime surprises). See the "unnecessary" pointer comparison
-+ *   in __typecheck().
-+ * - retain result as a constant expressions when called with only
-+ *   constant expressions (to avoid tripping VLA warnings in stack
-+ *   allocation usage).
++ * panic_cpu is used for synchronizing panic() and crash_kexec() execution. It
++ * holds a CPU number which is executing panic() currently. A value of
++ * PANIC_CPU_INVALID means no CPU has entered panic() or crash_kexec().
 + */
-+#define __typecheck(x, y) \
-+	(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
++extern atomic_t panic_cpu;
++#define PANIC_CPU_INVALID	-1
 +
 +/*
-+ * This returns a constant expression while determining if an argument is
-+ * a constant expression, most importantly without evaluating the argument.
-+ * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
++ * Only to be used by arch init code. If the user over-wrote the default
++ * CONFIG_PANIC_TIMEOUT, honor it.
 + */
-+#define __is_constexpr(x) \
-+	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
++static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
++{
++	if (panic_timeout == arch_default_timeout)
++		panic_timeout = timeout;
++}
 +
-+#define __no_side_effects(x, y) \
-+		(__is_constexpr(x) && __is_constexpr(y))
++/* This cannot be an enum because some may be used in assembly source. */
++#define TAINT_PROPRIETARY_MODULE	0
++#define TAINT_FORCED_MODULE		1
++#define TAINT_CPU_OUT_OF_SPEC		2
++#define TAINT_FORCED_RMMOD		3
++#define TAINT_MACHINE_CHECK		4
++#define TAINT_BAD_PAGE			5
++#define TAINT_USER			6
++#define TAINT_DIE			7
++#define TAINT_OVERRIDDEN_ACPI_TABLE	8
++#define TAINT_WARN			9
++#define TAINT_CRAP			10
++#define TAINT_FIRMWARE_WORKAROUND	11
++#define TAINT_OOT_MODULE		12
++#define TAINT_UNSIGNED_MODULE		13
++#define TAINT_SOFTLOCKUP		14
++#define TAINT_LIVEPATCH			15
++#define TAINT_AUX			16
++#define TAINT_RANDSTRUCT		17
++#define TAINT_FLAGS_COUNT		18
 +
-+#define __safe_cmp(x, y) \
-+		(__typecheck(x, y) && __no_side_effects(x, y))
++struct taint_flag {
++	char c_true;	/* character printed when tainted */
++	char c_false;	/* character printed when not tainted */
++	bool module;	/* also show as a per-module taint flag */
++};
 +
-+#define __cmp(x, y, op)	((x) op (y) ? (x) : (y))
++extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
 +
-+#define __cmp_once(x, y, unique_x, unique_y, op) ({	\
-+		typeof(x) unique_x = (x);		\
-+		typeof(y) unique_y = (y);		\
-+		__cmp(unique_x, unique_y, op); })
++#endif	/* _LINUX_PANIC_H */
+diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
+new file mode 100644
+index 0000000000000..41e32483d7a7b
+--- /dev/null
++++ b/include/linux/panic_notifier.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_PANIC_NOTIFIERS_H
++#define _LINUX_PANIC_NOTIFIERS_H
 +
-+#define __careful_cmp(x, y, op) \
-+	__builtin_choose_expr(__safe_cmp(x, y), \
-+		__cmp(x, y, op), \
-+		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
++#include <linux/notifier.h>
++#include <linux/types.h>
 +
-+/**
-+ * min - return minimum of two values of the same or compatible types
-+ * @x: first value
-+ * @y: second value
-+ */
-+#define min(x, y)	__careful_cmp(x, y, <)
++extern struct atomic_notifier_head panic_notifier_list;
 +
-+/**
-+ * max - return maximum of two values of the same or compatible types
-+ * @x: first value
-+ * @y: second value
-+ */
-+#define max(x, y)	__careful_cmp(x, y, >)
++extern bool crash_kexec_post_notifiers;
 +
-+/**
-+ * min3 - return minimum of three values
-+ * @x: first value
-+ * @y: second value
-+ * @z: third value
-+ */
-+#define min3(x, y, z) min((typeof(x))min(x, y), z)
-+
-+/**
-+ * max3 - return maximum of three values
-+ * @x: first value
-+ * @y: second value
-+ * @z: third value
-+ */
-+#define max3(x, y, z) max((typeof(x))max(x, y), z)
-+
-+/**
-+ * min_not_zero - return the minimum that is _not_ zero, unless both are zero
-+ * @x: value1
-+ * @y: value2
-+ */
-+#define min_not_zero(x, y) ({			\
-+	typeof(x) __x = (x);			\
-+	typeof(y) __y = (y);			\
-+	__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
-+
-+/**
-+ * clamp - return a value clamped to a given range with strict typechecking
-+ * @val: current value
-+ * @lo: lowest allowable value
-+ * @hi: highest allowable value
-+ *
-+ * This macro does strict typechecking of @lo/@hi to make sure they are of the
-+ * same type as @val.  See the unnecessary pointer comparisons.
-+ */
-+#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
-+
-+/*
-+ * ..and if you can't take the strict
-+ * types, you can specify one yourself.
-+ *
-+ * Or not use min/max/clamp at all, of course.
-+ */
-+
-+/**
-+ * min_t - return minimum of two values, using the specified type
-+ * @type: data type to use
-+ * @x: first value
-+ * @y: second value
-+ */
-+#define min_t(type, x, y)	__careful_cmp((type)(x), (type)(y), <)
-+
-+/**
-+ * max_t - return maximum of two values, using the specified type
-+ * @type: data type to use
-+ * @x: first value
-+ * @y: second value
-+ */
-+#define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
-+
-+/**
-+ * clamp_t - return a value clamped to a given range using a given type
-+ * @type: the type of variable to use
-+ * @val: current value
-+ * @lo: minimum allowable value
-+ * @hi: maximum allowable value
-+ *
-+ * This macro does no typechecking and uses temporary variables of type
-+ * @type to make all the comparisons.
-+ */
-+#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
-+
-+/**
-+ * clamp_val - return a value clamped to a given range using val's type
-+ * @val: current value
-+ * @lo: minimum allowable value
-+ * @hi: maximum allowable value
-+ *
-+ * This macro does no typechecking and uses temporary variables of whatever
-+ * type the input argument @val is.  This is useful when @val is an unsigned
-+ * type and @lo and @hi are literals that will otherwise be assigned a signed
-+ * integer type.
-+ */
-+#define clamp_val(val, lo, hi) clamp_t(typeof(val), val, lo, hi)
-+
-+#endif	/* _LINUX_MINMAX_H */
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index 27e7fa36f707f..7f38399cc9fe7 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -90,9 +90,9 @@
-  * for such situations. See below and CPUMASK_ALLOC also.
-  */
++#endif	/* _LINUX_PANIC_NOTIFIERS_H */
+diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
+index e93e249a4e9bf..7a3033aef28cd 100644
+--- a/include/linux/thread_info.h
++++ b/include/linux/thread_info.h
+@@ -35,6 +35,7 @@ enum {
+ 	GOOD_STACK,
+ };
  
--#include <linux/kernel.h>
- #include <linux/threads.h>
- #include <linux/bitmap.h>
-+#include <linux/minmax.h>
- #include <linux/numa.h>
++#include <asm/bug.h>
+ #include <asm/thread_info.h>
  
- typedef struct { DECLARE_BITMAP(bits, MAX_NUMNODES); } nodemask_t;
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 8a215c5c1aed8..cb11957a017f6 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -3,6 +3,7 @@
- #define __LINUX_UACCESS_H__
- 
- #include <linux/instrumented.h>
-+#include <linux/minmax.h>
+ #ifdef __KERNEL__
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index ba1d91e868ca7..077fcf31d5ce9 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -28,6 +28,7 @@
+ #include <linux/suspend.h>
+ #include <linux/device.h>
+ #include <linux/freezer.h>
++#include <linux/panic_notifier.h>
+ #include <linux/pfn.h>
+ #include <linux/pm.h>
+ #include <linux/cpu.h>
+diff --git a/kernel/panic.c b/kernel/panic.c
+index ec6d7d788ce75..f28a7478e0161 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -23,6 +23,7 @@
+ #include <linux/reboot.h>
+ #include <linux/delay.h>
+ #include <linux/kexec.h>
++#include <linux/panic_notifier.h>
  #include <linux/sched.h>
- #include <linux/thread_info.h>
- 
-diff --git a/kernel/range.c b/kernel/range.c
-index d84de6766472d..56435f96da73b 100644
---- a/kernel/range.c
-+++ b/kernel/range.c
-@@ -2,8 +2,9 @@
- /*
-  * Range add and subtract
-  */
--#include <linux/kernel.h>
+ #include <linux/sysrq.h>
  #include <linux/init.h>
-+#include <linux/minmax.h>
-+#include <linux/printk.h>
- #include <linux/sort.h>
- #include <linux/string.h>
- #include <linux/range.h>
-diff --git a/lib/find_bit.c b/lib/find_bit.c
-index 49f875f1baf7e..4a8751010d59f 100644
---- a/lib/find_bit.c
-+++ b/lib/find_bit.c
-@@ -16,6 +16,7 @@
- #include <linux/bitmap.h>
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 6d39485f7f517..8611f400acd91 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -32,6 +32,8 @@
  #include <linux/export.h>
- #include <linux/kernel.h>
-+#include <linux/minmax.h>
- 
- #if !defined(find_next_bit) || !defined(find_next_zero_bit) ||			\
- 	!defined(find_next_bit_le) || !defined(find_next_zero_bit_le) ||	\
-diff --git a/lib/hexdump.c b/lib/hexdump.c
-index 147133f8eb2fc..9301578f98e8c 100644
---- a/lib/hexdump.c
-+++ b/lib/hexdump.c
-@@ -7,6 +7,7 @@
+ #include <linux/completion.h>
+ #include <linux/moduleparam.h>
++#include <linux/panic.h>
++#include <linux/panic_notifier.h>
+ #include <linux/percpu.h>
+ #include <linux/notifier.h>
+ #include <linux/cpu.h>
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8d2b988126250..f23b6ae084b5c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -39,6 +39,7 @@
+ #include <linux/slab.h>
  #include <linux/ctype.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
-+#include <linux/minmax.h>
- #include <linux/export.h>
- #include <asm/unaligned.h>
- 
-diff --git a/lib/math/rational.c b/lib/math/rational.c
-index 31fb27db2deb5..d8e985850d10c 100644
---- a/lib/math/rational.c
-+++ b/lib/math/rational.c
-@@ -11,7 +11,7 @@
- #include <linux/rational.h>
- #include <linux/compiler.h>
- #include <linux/export.h>
--#include <linux/kernel.h>
-+#include <linux/minmax.h>
+ #include <linux/init.h>
++#include <linux/panic_notifier.h>
+ #include <linux/poll.h>
+ #include <linux/nmi.h>
+ #include <linux/fs.h>
+diff --git a/lib/errseq.c b/lib/errseq.c
+index 81f9e33aa7e72..93e9b94358dc6 100644
+--- a/lib/errseq.c
++++ b/lib/errseq.c
+@@ -3,6 +3,7 @@
+ #include <linux/bug.h>
+ #include <linux/atomic.h>
+ #include <linux/errseq.h>
++#include <linux/log2.h>
  
  /*
-  * calculate best rational approximation for a given fraction
-diff --git a/lib/math/reciprocal_div.c b/lib/math/reciprocal_div.c
-index bf043258fa008..32436dd4171e9 100644
---- a/lib/math/reciprocal_div.c
-+++ b/lib/math/reciprocal_div.c
-@@ -4,6 +4,7 @@
- #include <asm/div64.h>
- #include <linux/reciprocal_div.h>
- #include <linux/export.h>
-+#include <linux/minmax.h>
- 
- /*
-  * For a description of the algorithm please have a look at
+  * An errseq_t is a way of recording errors in one place, and allowing any
 -- 
 2.26.1
 
