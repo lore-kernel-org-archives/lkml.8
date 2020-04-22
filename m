@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BC3C5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372A8C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D90920775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8EB20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551004;
-	bh=Pk3LH+KtmLOnF31lo8mARZysIUUWRRZBhV3Ch4KKeVI=;
+	s=default; t=1587551008;
+	bh=xnctP96IABKORGoIgvVEM+OiiZ2hWkTGMixUA2d1amo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aF5rsBXvGzU56aP3OcToIvivmr2jwgYSSK4ixUEDLFLgRAyic0KVJwcC5CC/Pla2U
-	 yzWzyKb/uhDsKKzdCbODipFg21MoxK8+9OJwQIbTsS77D/bpvm/JLnb3chxu+e5Y32
-	 yhHi3LWS62/Sfz/vljPo+8xgp/9l+Z8+5cTbbwQ0=
+	b=tNfAeNEl+DCDTmupWqJeh26aCYsF0PhJGSTk0fzNGCGKx2Us9w+PHa4r6zObRUZF2
+	 0Od61CdDx1yJx7isTCHtpbE1TCRdTZtVw6uw6UEyZZw4p8N4mHECwor3vLYm8m+c8L
+	 B1/2JzfqQbfMBhQI4/1h0O12mtB38h2oxCVoApzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbgDVKXX (ORCPT
+        id S1730337AbgDVKX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59468 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730273AbgDVKXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:03 -0400
+        id S1729604AbgDVKXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:23:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BB3C215A4;
-        Wed, 22 Apr 2020 10:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA5B2076E;
+        Wed, 22 Apr 2020 10:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550982;
-        bh=Pk3LH+KtmLOnF31lo8mARZysIUUWRRZBhV3Ch4KKeVI=;
+        s=default; t=1587550987;
+        bh=xnctP96IABKORGoIgvVEM+OiiZ2hWkTGMixUA2d1amo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G5b/Sp0HBiqzYEj/YvJyVZ8Xtq6vOXidOAPO1ixEIFTDZoKh+1kGJBhcldZt8S74B
-         GmKEJbtJbhIoQPw7lTwC6LrEjR22J0ygj2Pi+9pXdxVHT7wHXjXBcATLgwbyJZwdw4
-         LrSWYsGLlf8o3aaoj7xjdKl6+6SAISTWXIobIMlY=
+        b=lEuDxhOTvSAeGsGsjCWQs9au5nkYzqiNY9bMIuLqCr06TF+kW8F8VhLyaB1k90FiN
+         eEo6cmkHf01KugduOcbO27/L0lK6prAc49vWiqK6AMGHzkJH98L6W8DNeLtZ4DVrio
+         HUOtumm6e6y6fNMQzthWQdGdQ8C/ZvI8Jxjn7CEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 052/166] f2fs: fix to avoid use-after-free in f2fs_write_multi_pages()
-Date:   Wed, 22 Apr 2020 11:56:19 +0200
-Message-Id: <20200422095054.595424518@linuxfoundation.org>
+        stable@vger.kernel.org, Yixin Zhang <yixin.zhang@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 054/166] dmaengine: idxd: reflect shadow copy of traffic class programming
+Date:   Wed, 22 Apr 2020 11:56:21 +0200
+Message-Id: <20200422095054.762310621@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,56 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-[ Upstream commit 95978caa138948054e06d00bfc3432b518699f1b ]
+[ Upstream commit a1fcaf07ec718bb1f11e29e952c9a4cb733d57a5 ]
 
-In compress cluster, if physical block number is less than logic
-page number, race condition will cause use-after-free issue as
-described below:
+The traffic class are set to -1 at initialization until the user programs
+them. If the user choose not to, the driver will program appropriate
+defaults. The driver also needs to update the shadowed copies of the values
+after doing the programming.
 
-- f2fs_write_compressed_pages
- - fio.page = cic->rpages[0];
- - f2fs_outplace_write_data
-					- f2fs_compress_write_end_io
-					 - kfree(cic->rpages);
-					 - kfree(cic);
- - fio.page = cic->rpages[1];
-
-f2fs_write_multi_pages+0xfd0/0x1a98
-f2fs_write_data_pages+0x74c/0xb5c
-do_writepages+0x64/0x108
-__writeback_single_inode+0xdc/0x4b8
-writeback_sb_inodes+0x4d0/0xa68
-__writeback_inodes_wb+0x88/0x178
-wb_writeback+0x1f0/0x424
-wb_workfn+0x2f4/0x574
-process_one_work+0x210/0x48c
-worker_thread+0x2e8/0x44c
-kthread+0x110/0x120
-ret_from_fork+0x10/0x18
-
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
+Reported-by: Yixin Zhang <yixin.zhang@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/158386263076.10898.4586509576813094559.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/idxd/device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index c847523ab4a2e..927db1205bd81 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -845,7 +845,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index ada69e722f84a..f6f49f0f6fae2 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -584,11 +584,11 @@ static void idxd_group_flags_setup(struct idxd_device *idxd)
+ 		struct idxd_group *group = &idxd->groups[i];
  
- 		blkaddr = datablock_addr(dn.inode, dn.node_page,
- 							dn.ofs_in_node);
--		fio.page = cic->rpages[i];
-+		fio.page = cc->rpages[i];
- 		fio.old_blkaddr = blkaddr;
- 
- 		/* cluster header */
+ 		if (group->tc_a == -1)
+-			group->grpcfg.flags.tc_a = 0;
++			group->tc_a = group->grpcfg.flags.tc_a = 0;
+ 		else
+ 			group->grpcfg.flags.tc_a = group->tc_a;
+ 		if (group->tc_b == -1)
+-			group->grpcfg.flags.tc_b = 1;
++			group->tc_b = group->grpcfg.flags.tc_b = 1;
+ 		else
+ 			group->grpcfg.flags.tc_b = group->tc_b;
+ 		group->grpcfg.flags.use_token_limit = group->use_token_limit;
 -- 
 2.20.1
 
