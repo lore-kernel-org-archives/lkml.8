@@ -2,78 +2,70 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DDAC5518B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AADC54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB36D2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587578943;
-	bh=DbXSxiXMHu9tU9vMTNParw5iSEIHMpG8ZCFcfxstLUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sz1Q6iy2jJrlr0wHcdpZIJk0QgV20X5S0GfScDafRmbtRS17EsTDQezDGEiOT7nUM
-	 DBOwwVGPINO2hw4OEIluMCyYSuLfuAYTEO2R2WOsiPyteYMUQkvJG3Uc4Pm3ESYRwe
-	 f7PpeRrtawhSbhUdECo/Qea0E0AF8dPG0YbtAf0g=
+	by mail.kernel.org (Postfix) with ESMTP id 4FD262082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 18:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgDVSJD (ORCPT
+        id S1726477AbgDVSMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgDVSJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:09:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4867B2076E;
-        Wed, 22 Apr 2020 18:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587578942;
-        bh=DbXSxiXMHu9tU9vMTNParw5iSEIHMpG8ZCFcfxstLUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y12gr1v8W3Cp5my1PFVQOqrT0SNBpbvuG4iD9FgpkkdHHdSLfpRXKfi0+6uOMVdWV
-         dKVWetYESo596O1mJfxXE8Tkhhozi1bUCryhNmRDCs1TiAsHMY/3CF7hvaTANkoKoh
-         FVDAUp8UhagDM3QQ8E2ewFDBizGrQFbskObzXK9Q=
-Date:   Wed, 22 Apr 2020 20:09:00 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     sean.wang@mediatek.com
-Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, sr@denx.de, arnd@arndb.de,
-        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
-        linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v3] tty: serial: don't do termios for BTIF
-Message-ID: <20200422180900.GA3454664@kroah.com>
-References: <cc41ea10be9ab96568f0371784e3b9f8d9f434b9.1587577548.git.sean.wang@mediatek.com>
+        Wed, 22 Apr 2020 14:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbgDVSMg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:12:36 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBACC03C1AA;
+        Wed, 22 Apr 2020 11:12:35 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jRJrM-0006NN-SH; Wed, 22 Apr 2020 20:12:32 +0200
+Date:   Wed, 22 Apr 2020 20:12:32 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Daniel Wagner <wagi@monom.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [ANNOUNCE] v5.6.4-rt3
+Message-ID: <20200422181232.a33sfm6udmy2zcvy@linutronix.de>
+References: <20200416164510.kbrklqahdng5uhij@linutronix.de>
+ <20200422173359.inlikfugjzsjyyp6@beryllium.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cc41ea10be9ab96568f0371784e3b9f8d9f434b9.1587577548.git.sean.wang@mediatek.com>
+In-Reply-To: <20200422173359.inlikfugjzsjyyp6@beryllium.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 02:02:08AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On 2020-04-22 19:33:59 [+0200], Daniel Wagner wrote:
+> Hi Sebastian,
+
+Hi Daniel,
+
+> On Thu, Apr 16, 2020 at 06:45:10PM +0200, Sebastian Andrzej Siewior wrote:
+> > I'm pleased to announce the v5.6.4-rt3 patch set.
 > 
-> Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
-> BT in order to be instead of the UART interface between BT module and Host
-> CPU, and not exported to user space to access.
+> Finally solved my lab setup issue (NFS wants to use TCP per default now) and
+> all looks good. The fallout on rt-tests-migrate was a configuration bug on my
+> side. All rt-tests work and pass on my three system (Beaglebone Black 32bit,
+> RPi3 64bit and old x86_64 Core2 Duo CPU E8400 box in 64bit mode).
+
+So there is no backtrace of any kind in any configuration (bug or no
+bug)?
+
+> The only thing I've observed was higher latency numbers in sigwaittest but
+> that could be anything.
 > 
-> As the UART design, BTIF will be an APB slave and can transmit or receive
-> data by MCU access, but doesn't provide termios function like baudrate and
-> flow control setup.
+> Thanks,
+> Daniel
 
-Why does it matter?  If the connection isn't exported to userspace, who
-would run those termios functions on the port?
-
-thanks,
-
-greg k-h
+Sebastian
