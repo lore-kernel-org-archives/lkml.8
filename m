@@ -2,52 +2,53 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB75C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5682C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B62B20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9412073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551611;
-	bh=0Bwk4elQb7IThtluvbCA5nWxsrN84PhiQCsnltvzTwg=;
+	s=default; t=1587551613;
+	bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hcQjYjg+cLtuYms8asmCDDjMUqBJR2XNrLZcp99pwEaVDCn7l7VtMGCip9ubqWWMo
-	 SL9PzeSqrzX9iMywugHdy9rBufeFkhHSqk8oPbWdSdQA2z9OqDQHxbu2tY/iBFbG5J
-	 8ylYvwVBvOo1SSsoSCYnPnhrtn5CDkRiojtD9x6E=
+	b=c3gpPwf8AIVGJ000I1p0+8k85vOCfkzNJJNk7OWenc5lsR+e/rRIwoSfBNZ6+HKFl
+	 m7r2M69hxX/n57dqGSiawevCdLPw1nfm7+zkaN3yalI9vOkKWWWUuZ6K9BNz4VVmYL
+	 VoGOAUgZm76jsdQY3/wQaHqcpNNOVT8Dbtj+njUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbgDVKYo (ORCPT
+        id S1731201AbgDVKdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60386 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:33:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730381AbgDVKXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:23:50 -0400
+        id S1730454AbgDVKYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B16D20781;
-        Wed, 22 Apr 2020 10:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98FFC2071E;
+        Wed, 22 Apr 2020 10:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551029;
-        bh=0Bwk4elQb7IThtluvbCA5nWxsrN84PhiQCsnltvzTwg=;
+        s=default; t=1587551084;
+        bh=SyGAg3rZ9yeFpLXHikAhy4J0bskyUaj9d3sDPWmGY00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rHO2RnVwIK7gOMnpIOybawV8RYgDDnUBJut1Fh2byuolvQaiJUN6IsW0cfFboOY63
-         3bXKsAmYNlfOF5tSYk5iQ28xeGjKRAaPDz1iMCJNYW6EAK5KWQA+WMAvm/O6wgsMGO
-         vM6Nk49BZBGNG5xT7WsiPC2RXfs8v/u9/37zwvjo=
+        b=TqmckDZnBb5HqJyK1UZZjpYRuq7sl+eS9AFBg+0Z0qstK2C7Br7avAGDjb6n3k2oI
+         UZn8tNt/0GHgicgNK/GvP2FvXAkLHItLL+se8OxermbjXgEVrrTtVZWsvojDKu5jVn
+         /bVcZBUgRuYi3CjYB6XiIdSWGcNFmJ+tuhalPTkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: [PATCH 5.6 029/166] x86/Hyper-V: Report crash register data when sysctl_record_panic_msg is not set
-Date:   Wed, 22 Apr 2020 11:55:56 +0200
-Message-Id: <20200422095051.833960475@linuxfoundation.org>
+        stable@vger.kernel.org, Martyn Welch <martyn.welch@collabora.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 094/166] um: ubd: Prevent buffer overrun on command completion
+Date:   Wed, 22 Apr 2020 11:57:01 +0200
+Message-Id: <20200422095059.094275557@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,77 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+From: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-commit 040026df7088c56ccbad28f7042308f67bde63df upstream.
+[ Upstream commit 6e682d53fc1ef73a169e2a5300326cb23abb32ee ]
 
-When sysctl_record_panic_msg is not set, the panic will
-not be reported to Hyper-V via hyperv_report_panic_msg().
-So the crash should be reported via hyperv_report_panic().
+On the hypervisor side, when completing commands and the pipe is full,
+we retry writing only the entries that failed, by offsetting
+io_req_buffer, but we don't reduce the number of bytes written, which
+can cause a buffer overrun of io_req_buffer, and write garbage to the
+pipe.
 
-Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200406155331.2105-6-Tianyu.Lan@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Martyn Welch <martyn.welch@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/vmbus_drv.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ arch/um/drivers/ubd_kern.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -48,6 +48,18 @@ static int hyperv_cpuhp_online;
+diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+index 247f95da057b5..eca45ad2166c9 100644
+--- a/arch/um/drivers/ubd_kern.c
++++ b/arch/um/drivers/ubd_kern.c
+@@ -1607,7 +1607,9 @@ int io_thread(void *arg)
+ 		written = 0;
  
- static void *hv_panic_page;
- 
-+/*
-+ * Boolean to control whether to report panic messages over Hyper-V.
-+ *
-+ * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
-+ */
-+static int sysctl_record_panic_msg = 1;
-+
-+static int hyperv_report_reg(void)
-+{
-+	return !sysctl_record_panic_msg || !hv_panic_page;
-+}
-+
- static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
- 			      void *args)
- {
-@@ -61,7 +73,7 @@ static int hyperv_panic_event(struct not
- 	 * the notification here.
- 	 */
- 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
--	    && !hv_panic_page) {
-+	    && hyperv_report_reg()) {
- 		regs = current_pt_regs();
- 		hyperv_report_panic(regs, val);
- 	}
-@@ -79,7 +91,7 @@ static int hyperv_die_event(struct notif
- 	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
- 	 * the notification here.
- 	 */
--	if (!hv_panic_page)
-+	if (hyperv_report_reg())
- 		hyperv_report_panic(regs, val);
- 	return NOTIFY_DONE;
- }
-@@ -1268,13 +1280,6 @@ static void vmbus_isr(void)
- }
- 
- /*
-- * Boolean to control whether to report panic messages over Hyper-V.
-- *
-- * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
-- */
--static int sysctl_record_panic_msg = 1;
--
--/*
-  * Callback from kmsg_dump. Grab as much as possible from the end of the kmsg
-  * buffer and call into Hyper-V to transfer the data.
-  */
+ 		do {
+-			res = os_write_file(kernel_fd, ((char *) io_req_buffer) + written, n);
++			res = os_write_file(kernel_fd,
++					    ((char *) io_req_buffer) + written,
++					    n - written);
+ 			if (res >= 0) {
+ 				written += res;
+ 			}
+-- 
+2.20.1
+
 
 
