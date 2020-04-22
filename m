@@ -7,64 +7,67 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A19C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A480C55185
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CEB2098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3912420784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 12:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgDVMTv (ORCPT
+        id S1727044AbgDVMUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 08:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
+        Wed, 22 Apr 2020 08:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728872AbgDVMRy (ORCPT
+        by vger.kernel.org with ESMTP id S1728825AbgDVMRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 08:17:54 -0400
+        Wed, 22 Apr 2020 08:17:50 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90800C03C1AB;
-        Wed, 22 Apr 2020 05:17:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F9DC03C1A8;
+        Wed, 22 Apr 2020 05:17:50 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jREJr-0007u5-50; Wed, 22 Apr 2020 14:17:35 +0200
+        id 1jREJe-0007gJ-VM; Wed, 22 Apr 2020 14:17:23 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 627A51C04CD;
-        Wed, 22 Apr 2020 14:17:29 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:17:29 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8B9951C0483;
+        Wed, 22 Apr 2020 14:17:17 +0200 (CEST)
+Date:   Wed, 22 Apr 2020 12:17:17 -0000
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf expr: Add expr_ prefix for parse_ctx and parse_id
-Cc:     Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf doc: allow ASCIIDOC_EXTRA to be an argument
+Cc:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Igor Lubashev <ilubashe@akamai.com>,
         Jin Yao <yao.jin@linux.intel.com>,
-        Joe Mario <jmario@redhat.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        John Garry <john.garry@huawei.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, yuzhoujian <yuzhoujian@didichuxing.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200401203340.31402-2-kjain@linux.ibm.com>
-References: <20200401203340.31402-2-kjain@linux.ibm.com>
+In-Reply-To: <20200416162058.201954-2-irogers@google.com>
+References: <20200416162058.201954-2-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158755784901.28353.11635773468936681149.tip-bot2@tip-bot2>
+Message-ID: <158755783715.28353.14013762798615075637.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -80,191 +83,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     aecce63e2b98f28606b063949cca06facf215d6c
-Gitweb:        https://git.kernel.org/tip/aecce63e2b98f28606b063949cca06facf215d6c
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Thu, 02 Apr 2020 02:03:34 +05:30
+Commit-ID:     e9cfa47e687d77d256610b7124d736776f137ea0
+Gitweb:        https://git.kernel.org/tip/e9cfa47e687d77d256610b7124d736776f137ea0
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Thu, 16 Apr 2020 09:20:55 -07:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Thu, 16 Apr 2020 12:19:13 -03:00
+CommitterDate: Sat, 18 Apr 2020 09:05:00 -03:00
 
-perf expr: Add expr_ prefix for parse_ctx and parse_id
+perf doc: allow ASCIIDOC_EXTRA to be an argument
 
-Adding expr_ prefix for parse_ctx and parse_id, to straighten out the
-expr* namespace.
+This will allow parent makefiles to pass values to asciidoc.
 
-There's no functional change.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Igor Lubashev <ilubashe@akamai.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Joe Mario <jmario@redhat.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Jiwei Sun <jiwei.sun@windriver.com>
+Cc: John Garry <john.garry@huawei.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Mackerras <paulus@ozlabs.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20200401203340.31402-2-kjain@linux.ibm.com
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: yuzhoujian <yuzhoujian@didichuxing.com>
+Link: http://lore.kernel.org/lkml/20200416162058.201954-2-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/expr.c       |  4 ++--
- tools/perf/util/expr.c        | 10 +++++-----
- tools/perf/util/expr.h        | 12 ++++++------
- tools/perf/util/expr.y        |  6 +++---
- tools/perf/util/stat-shadow.c |  2 +-
- 5 files changed, 17 insertions(+), 17 deletions(-)
+ tools/perf/Documentation/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 28313e5..ea10fc4 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -6,7 +6,7 @@
- #include <string.h>
- #include <linux/zalloc.h>
+diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+index 31824d5..6e54979 100644
+--- a/tools/perf/Documentation/Makefile
++++ b/tools/perf/Documentation/Makefile
+@@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
+ man7dir=$(mandir)/man7
  
--static int test(struct parse_ctx *ctx, const char *e, double val2)
-+static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
- {
- 	double val;
+ ASCIIDOC=asciidoc
+-ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
++ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
+ ASCIIDOC_HTML = xhtml11
+ MANPAGE_XSL = manpage-normal.xsl
+ XMLTO_EXTRA =
+@@ -59,7 +59,7 @@ HTML_REF = origin/html
  
-@@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	const char **other;
- 	double val;
- 	int i, ret;
--	struct parse_ctx ctx;
-+	struct expr_parse_ctx ctx;
- 	int num_other;
- 
- 	expr__ctx_init(&ctx);
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index fd192dd..c8ccc54 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -11,7 +11,7 @@ extern int expr_debug;
- #endif
- 
- /* Caller must make sure id is allocated */
--void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
-+void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
- {
- 	int idx;
- 
-@@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
- 	ctx->ids[idx].val = val;
- }
- 
--void expr__ctx_init(struct parse_ctx *ctx)
-+void expr__ctx_init(struct expr_parse_ctx *ctx)
- {
- 	ctx->num_ids = 0;
- }
- 
- static int
--__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
-+__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 	      int start)
- {
- 	YY_BUFFER_STATE buffer;
-@@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
- 	return ret;
- }
- 
--int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
-+int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
- {
- 	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
- }
-@@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
- 		     int *num_other)
- {
- 	int err, i = 0, j = 0;
--	struct parse_ctx ctx;
-+	struct expr_parse_ctx ctx;
- 
- 	expr__ctx_init(&ctx);
- 	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index 9377538..b9e53f2 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -5,19 +5,19 @@
- #define EXPR_MAX_OTHER 20
- #define MAX_PARSE_ID EXPR_MAX_OTHER
- 
--struct parse_id {
-+struct expr_parse_id {
- 	const char *name;
- 	double val;
- };
- 
--struct parse_ctx {
-+struct expr_parse_ctx {
- 	int num_ids;
--	struct parse_id ids[MAX_PARSE_ID];
-+	struct expr_parse_id ids[MAX_PARSE_ID];
- };
- 
--void expr__ctx_init(struct parse_ctx *ctx);
--void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
--int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
-+void expr__ctx_init(struct expr_parse_ctx *ctx);
-+void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
-+int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
- int expr__find_other(const char *expr, const char *one, const char ***other,
- 		int *num_other);
- 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 4720cbe..cd17486 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -15,7 +15,7 @@
- %define api.pure full
- 
- %parse-param { double *final_val }
--%parse-param { struct parse_ctx *ctx }
-+%parse-param { struct expr_parse_ctx *ctx }
- %parse-param {void *scanner}
- %lex-param {void* scanner}
- 
-@@ -39,14 +39,14 @@
- 
- %{
- static void expr_error(double *final_val __maybe_unused,
--		       struct parse_ctx *ctx __maybe_unused,
-+		       struct expr_parse_ctx *ctx __maybe_unused,
- 		       void *scanner,
- 		       const char *s)
- {
- 	pr_debug("%s\n", s);
- }
- 
--static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
-+static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
- {
- 	int i;
- 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 03ecb8c..1ad5c5b 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
- 			   struct runtime_stat *st)
- {
- 	print_metric_t print_metric = out->print_metric;
--	struct parse_ctx pctx;
-+	struct expr_parse_ctx pctx;
- 	double ratio, scale;
- 	int i;
- 	void *ctxp = out->ctx;
+ ifdef USE_ASCIIDOCTOR
+ ASCIIDOC = asciidoctor
+-ASCIIDOC_EXTRA = -a compat-mode
++ASCIIDOC_EXTRA += -a compat-mode
+ ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
+ ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
+ ASCIIDOC_HTML = xhtml5
