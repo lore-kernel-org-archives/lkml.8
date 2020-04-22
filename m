@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B233C55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27E0C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1D120787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A1D20784
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552380;
-	bh=ibJuHWG8iZ8mtRieRGrSvn9PjJTXBpR8RyL/CojwMYE=;
+	s=default; t=1587552387;
+	bh=1hYHRaf1AmAgr6p0nm1Jb7dX/9yL1Mu0Pg9f+92y26M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqN/oz/fSvEKKJ8m7RhpfcbTELabjHz4Ce7C5Qh/dKH/hilNx11+9kn/PKBw4F15t
-	 eNhF9oF3JSTp4J4cem2VYE+dzbcGVX0dfdMFnateyaT2SeWXLlEFTLPBV+DRKjY0F3
-	 2T2lNtk5usZhJdenjf1Ila5QOUgwQXQoFSiVvick=
+	b=SwwN9W4cQlLYeZ30xz3AGaz2g2T0g0lAisyQpd/BBWQCcafkcj1WfJS0RQfa90bnH
+	 3yZGT3EztlsWn+uVYHjeY33OGrJOuvJMCVfBWaLSMyXygEPLxlpd8WRbDXV0kw8GgF
+	 chQyctwACVxx5hPIMZ3rtXFd+EvWUg/VVZjgsWLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbgDVKqT (ORCPT
+        id S1731965AbgDVKq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53056 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbgDVKRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:17:04 -0400
+        id S1726050AbgDVKRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:17:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 923C32070B;
-        Wed, 22 Apr 2020 10:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279E02076B;
+        Wed, 22 Apr 2020 10:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550623;
-        bh=ibJuHWG8iZ8mtRieRGrSvn9PjJTXBpR8RyL/CojwMYE=;
+        s=default; t=1587550620;
+        bh=1hYHRaf1AmAgr6p0nm1Jb7dX/9yL1Mu0Pg9f+92y26M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0a5fpGlMMhKpD9mmZLHAFHL3U4PvQpfYm7MfYgLO22LnmY0bt3h+rh7vSX/83cPlj
-         7hLW4B5SmNUMRSCQIsZE7oMNLlMPz4QQtaY2dh1sjDPP3Tudjn11EKaaKsPwGHz3wJ
-         67rQdeKVw5R9Y73+Jhv+8cx7kIDaYmU1Aep/gmMM=
+        b=QewzIikIwrAX2GUQfe6F9zFtqtvKYG1mjjEqZiR/mhmA3L71yhpznTp0pDZY6dmga
+         KaJS6PJx4NkOpDSVZuqwOfL1KeQA3mX39KAuhtHJjPV4RyjYtva8gtc953e5y5OnmI
+         rGba/nJ2SYonFaYIa6mcJP3NcBg7KTXapmYxbJzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.4 026/118] afs: Fix rename operation status delivery
-Date:   Wed, 22 Apr 2020 11:56:27 +0200
-Message-Id: <20200422095036.193509463@linuxfoundation.org>
+Subject: [PATCH 5.4 025/118] afs: Fix decoding of inline abort codes from version 1 status records
+Date:   Wed, 22 Apr 2020 11:56:26 +0200
+Message-Id: <20200422095036.037669270@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -60,117 +60,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-commit b98f0ec91c42d87a70da42726b852ac8d78a3257 upstream.
+commit 3e0d9892c0e7fa426ca6bf921cb4b543ca265714 upstream.
 
-The afs_deliver_fs_rename() and yfs_deliver_fs_rename() functions both only
-decode the second file status returned unless the parent directories are
-different - unfortunately, this means that the xdr pointer isn't advanced
-and the volsync record will be read incorrectly in such an instance.
+If we're decoding an AFSFetchStatus record and we see that the version is 1
+and the abort code is set and we're expecting inline errors, then we store
+the abort code and ignore the remaining status record (which is correct),
+but we don't set the flag to say we got a valid abort code.
 
-Fix this by always decoding the second status into the second
-status/callback block which wasn't being used if the dirs were the same.
+This can affect operation of YFS.RemoveFile2 when removing a file and the
+operation of {,Y}FS.InlineBulkStatus when prospectively constructing or
+updating of a set of inodes during a lookup.
 
-The afs_update_dentry_version() calls that update the directory data
-version numbers on the dentries can then unconditionally use the second
-status record as this will always reflect the state of the destination dir
-(the two records will be identical if the destination dir is the same as
-the source dir)
+Fix this to indicate the reception of a valid abort code.
 
-Fixes: 260a980317da ("[AFS]: Add "directory write" support.")
-Fixes: 30062bd13e36 ("afs: Implement YFS support in the fs client")
+Fixes: a38a75581e6e ("afs: Fix unlink to handle YFS.RemoveFile2 better")
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/afs/dir.c       |   13 +++----------
- fs/afs/fsclient.c  |   12 ++++++------
- fs/afs/yfsclient.c |    8 +++-----
- 3 files changed, 12 insertions(+), 21 deletions(-)
+ fs/afs/fsclient.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -1892,7 +1892,6 @@ static int afs_rename(struct inode *old_
- 	if (afs_begin_vnode_operation(&fc, orig_dvnode, key, true)) {
- 		afs_dataversion_t orig_data_version;
- 		afs_dataversion_t new_data_version;
--		struct afs_status_cb *new_scb = &scb[1];
- 
- 		orig_data_version = orig_dvnode->status.data_version + 1;
- 
-@@ -1904,7 +1903,6 @@ static int afs_rename(struct inode *old_
- 			new_data_version = new_dvnode->status.data_version + 1;
- 		} else {
- 			new_data_version = orig_data_version;
--			new_scb = &scb[0];
- 		}
- 
- 		while (afs_select_fileserver(&fc)) {
-@@ -1912,7 +1910,7 @@ static int afs_rename(struct inode *old_
- 			fc.cb_break_2 = afs_calc_vnode_cb_break(new_dvnode);
- 			afs_fs_rename(&fc, old_dentry->d_name.name,
- 				      new_dvnode, new_dentry->d_name.name,
--				      &scb[0], new_scb);
-+				      &scb[0], &scb[1]);
- 		}
- 
- 		afs_vnode_commit_status(&fc, orig_dvnode, fc.cb_break,
-@@ -1957,13 +1955,8 @@ static int afs_rename(struct inode *old_
- 		 * Note that if we ever implement RENAME_EXCHANGE, we'll have
- 		 * to update both dentries with opposing dir versions.
- 		 */
--		if (new_dvnode != orig_dvnode) {
--			afs_update_dentry_version(&fc, old_dentry, &scb[1]);
--			afs_update_dentry_version(&fc, new_dentry, &scb[1]);
--		} else {
--			afs_update_dentry_version(&fc, old_dentry, &scb[0]);
--			afs_update_dentry_version(&fc, new_dentry, &scb[0]);
--		}
-+		afs_update_dentry_version(&fc, old_dentry, &scb[1]);
-+		afs_update_dentry_version(&fc, new_dentry, &scb[1]);
- 		d_move(old_dentry, new_dentry);
- 		goto error_tmp;
- 	}
 --- a/fs/afs/fsclient.c
 +++ b/fs/afs/fsclient.c
-@@ -988,16 +988,16 @@ static int afs_deliver_fs_rename(struct
- 	if (ret < 0)
- 		return ret;
+@@ -88,6 +88,7 @@ static int xdr_decode_AFSFetchStatus(con
  
--	/* unmarshall the reply once we've received all of it */
-+	/* If the two dirs are the same, we have two copies of the same status
-+	 * report, so we just decode it twice.
-+	 */
- 	bp = call->buffer;
- 	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
- 	if (ret < 0)
- 		return ret;
--	if (call->out_dir_scb != call->out_scb) {
--		ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--		if (ret < 0)
--			return ret;
--	}
-+	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
-+	if (ret < 0)
-+		return ret;
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
+ 	if (abort_code != 0 && inline_error) {
+ 		status->abort_code = abort_code;
++		scb->have_error = true;
+ 		goto good;
+ 	}
  
- 	_leave(" = 0 [done]");
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -1158,11 +1158,9 @@ static int yfs_deliver_fs_rename(struct
- 	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
- 	if (ret < 0)
- 		return ret;
--	if (call->out_dir_scb != call->out_scb) {
--		ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--		if (ret < 0)
--			return ret;
--	}
-+	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
-+	if (ret < 0)
-+		return ret;
- 
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 	_leave(" = 0 [done]");
 
 
