@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C11DC5518A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52068C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEF72073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F98B2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551931;
-	bh=Xiz+dEZ9779N4+AdXfprVfeVCFAdhf6PfQCMpYw4OaE=;
+	s=default; t=1587551934;
+	bh=Z+kFyNN5ev+xESvpZfYsp5aT/excqR2Qxg8XYqwsifY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s2wAnJDOlM+18NtV8vAf8O5NoixdsB7AMZsXxX4v293t218QaScPNf9XlRs2Q/pJW
-	 HaJy73YQOPMhyHR1ZTqaHt+ot30SDFpwEsmKKajNrky61PVr1CefP2RzafBulPxdg/
-	 PQ1jipAUtLOEh9qCJe2673zq4K+12teWNDB4WMYY=
+	b=b8F0HVvWF9dL56x2s5kb384qg9yvOL0Cdu1j0PAXWUBNCdGHRlxEixXDZQjYAj/Af
+	 ocW8VgsoruFucFoh5/AFTjvj5nFVvoFnjpz+FtTIfKyaZCqjSVgurpeg26RujNhqg5
+	 FpCHBbtRkwVsPOtI7RmXns03OwhkAGsTcipR+Lxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731497AbgDVKiu (ORCPT
+        id S1731504AbgDVKix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58220 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:38:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbgDVKVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:21:44 -0400
+        id S1729277AbgDVKVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:21:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D2CC20857;
-        Wed, 22 Apr 2020 10:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACECC20776;
+        Wed, 22 Apr 2020 10:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550903;
-        bh=Xiz+dEZ9779N4+AdXfprVfeVCFAdhf6PfQCMpYw4OaE=;
+        s=default; t=1587550906;
+        bh=Z+kFyNN5ev+xESvpZfYsp5aT/excqR2Qxg8XYqwsifY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghqOZYKxHCQnuEjaoN7NDvciruNIdZluCP5amwO2Cu5YxvjW0sOzVnk3evZjxYNP4
-         bqWqy2hWiSE0aNGtUKT5yIeD+vFPXRk6zg0JKsyXsO7ZsbIwEUJkEOSgW4kdvFQf4r
-         JevhhFn6RI73J/TtIAH9SqXnOLN2Q5MvuKsGi1hc=
+        b=Q5rj5FGxLlGhWX786/mIk46Uat3Pj8mJHdkdBYaynaFGPWz5IGheupz56jQaghhGK
+         o0oneZvi23qiSkwGHZkn4JD3ACiRkUvXB5zArapmJqsojgM3DpNfdFt+8q+0gxDWbh
+         ThQI4JyYqvsuE3nej6LGJNi4QZJigv0LszPR26Nk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 004/166] scsi: sg: add sg_remove_request in sg_common_write
-Date:   Wed, 22 Apr 2020 11:55:31 +0200
-Message-Id: <20200422095048.477652819@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 005/166] ALSA: hda: Honor PM disablement in PM freeze and thaw_noirq ops
+Date:   Wed, 22 Apr 2020 11:55:32 +0200
+Message-Id: <20200422095048.599244508@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
 References: <20200422095047.669225321@linuxfoundation.org>
@@ -60,37 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Bin <huawei.libin@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 849f8583e955dbe3a1806e03ecacd5e71cce0a08 upstream.
+commit 10db5bccc390e8e4bd9fcd1fbd4f1b23f271a405 upstream.
 
-If the dxfer_len is greater than 256M then the request is invalid and we
-need to call sg_remove_request in sg_common_write.
+freeze_noirq and thaw_noirq need to check the PM availability like
+other PM ops.  There are cases where the device got disabled due to
+the error, and the PM operation should be ignored for that.
 
-Link: https://lore.kernel.org/r/1586777361-17339-1-git-send-email-huawei.libin@huawei.com
-Fixes: f930c7043663 ("scsi: sg: only check for dxfer_len greater than 256M")
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Li Bin <huawei.libin@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 3e6db33aaf1d ("ALSA: hda - Set SKL+ hda controller power at freeze() and thaw()")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Link: https://lore.kernel.org/r/20200413082034.25166-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sg.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -793,8 +793,10 @@ sg_common_write(Sg_fd * sfp, Sg_request
- 			"sg_common_write:  scsi opcode=0x%02x, cmd_size=%d\n",
- 			(int) cmnd[0], (int) hp->cmd_len));
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1071,6 +1071,8 @@ static int azx_freeze_noirq(struct devic
+ 	struct azx *chip = card->private_data;
+ 	struct pci_dev *pci = to_pci_dev(dev);
  
--	if (hp->dxfer_len >= SZ_256M)
-+	if (hp->dxfer_len >= SZ_256M) {
-+		sg_remove_request(sfp, srp);
- 		return -EINVAL;
-+	}
++	if (!azx_is_pm_ready(card))
++		return 0;
+ 	if (chip->driver_type == AZX_DRIVER_SKL)
+ 		pci_set_power_state(pci, PCI_D3hot);
  
- 	k = sg_start_req(srp, cmnd);
- 	if (k) {
+@@ -1083,6 +1085,8 @@ static int azx_thaw_noirq(struct device
+ 	struct azx *chip = card->private_data;
+ 	struct pci_dev *pci = to_pci_dev(dev);
+ 
++	if (!azx_is_pm_ready(card))
++		return 0;
+ 	if (chip->driver_type == AZX_DRIVER_SKL)
+ 		pci_set_power_state(pci, PCI_D0);
+ 
 
 
