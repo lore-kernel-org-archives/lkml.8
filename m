@@ -2,147 +2,188 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA75C2BA19
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FA4C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4443920775
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p9vwGiUu"
+	by mail.kernel.org (Postfix) with ESMTP id 0FED92072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 00:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587517059;
+	bh=yF4IerkwF4biRl+OADsB8mxTEQrEvoTbOOESw96+zJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oOYKCFiAOeohteeCME1UZRQp1YMOWLTz4Ih3gSxUATmuEr9vC+wjKWhVzX7XtXRP6
+	 dmPaLMoK0lwm3+AdqxYuobpJEVBVx0ZbYT2M4vgeMWp/5Ee5nqvIwsNbqno7VRb91R
+	 nDDao9xG/SNGbb7Ym148HUSXdbKiw9O0QL7jY5g4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVA5I (ORCPT
+        id S1726432AbgDVA5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726012AbgDVA5H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:57:07 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBF1C0610D5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:57:06 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id p25so184054pfn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Apr 2020 17:57:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gXQ0ZKU9rPACm1NpC5IpEEgnJ67XgjPS3brhHlbPLjM=;
-        b=p9vwGiUuSpsVhM1Y+a097TYl/ukBeFkhuEwwf+3Jq0gA4gZv4VS0+xejL+med599lx
-         bxrZ209gl+eKh4FVuewcX7Iw7bALgT9IIOTFdrQcxUh2NFHDH2pKAQjRzIaWanFbGZo9
-         HI73+YSyNwZZ09iUztxdn5ZTNrxPd0KYxIqMD0po6YcoC5IMSiZGduiMA8T8E2cWH3xH
-         endqfwJ7clFJVmmeAca75o9whMufeY/FgpaswFHamUKg6sNH6u2nbMvObXZMbbezI87f
-         o9Z8wLbkXxqFlqhyQ0Oj1ZT11k8xdKaAmhv2oVOm2mOc2DeKjzshAyO3XI7/436lEIe5
-         NgbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gXQ0ZKU9rPACm1NpC5IpEEgnJ67XgjPS3brhHlbPLjM=;
-        b=K7FVSdBi0dOjXe3o+2CUGoGnvQIZvVejhTqngRdaRAWlSYaLuBITafD5IbiOe3f84E
-         2/+Zo0OzpxZT0+8Y0TYiiSYkfBgThwHFU6P9i0k8x3nBQY7ZbKmh1/t8H+k6tXEXIbiC
-         xh2s5icnSFGb7lQPznQrCVZ/LLlZpA3aWEjXItXBmLQgn7JBx6GvqRAdOi3iSQj8Ppbb
-         s/iL0Itrs/bDU1brz0WYlYe/V0VO8keMfPPiVfVk9Ql32t0sKzt3sFTHAmhyD1pfmFI7
-         MryHWvskvKKIpGxLlSyp5S+LlujoYgRVEOv7sW0cW3ycsr7/PMV1oBjTMKSyVZQZh5Iv
-         d6Cg==
-X-Gm-Message-State: AGi0PuYtmHsFPFw0J3rifjnH+5lguwzHYd3KQcnin/WVtg9rjcQZAjAZ
-        2WVx2ieYqdW5Rj/6cBhcDJUEGA==
-X-Google-Smtp-Source: APiQypLVZE7gp3NghRmYgGoZzrOFnRuX6zY8nsorx9deNubq9GtAB4XwaMmp1KjuurtkClIknMsMjQ==
-X-Received: by 2002:a62:5209:: with SMTP id g9mr18641149pfb.220.1587517025116;
-        Tue, 21 Apr 2020 17:57:05 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id x23sm3330352pgf.32.2020.04.21.17.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 17:57:04 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 17:56:58 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH] platform/chrome: typec: Fix ret value check error
-Message-ID: <20200422005658.GA208993@google.com>
-References: <20200422004151.116323-1-pmalani@chromium.org>
+        Tue, 21 Apr 2020 20:57:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgDVA5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:57:38 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E43952071E;
+        Wed, 22 Apr 2020 00:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587517057;
+        bh=yF4IerkwF4biRl+OADsB8mxTEQrEvoTbOOESw96+zJs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2LUpyG58mgT4D1es6Tuosf3vm8FN9eZ1fsiKVDO4vo3Rk2cfeBjFrVyRYJOwFBgL8
+         bhJIdS1dRXWrj03h8H9GygWayv3vdavMgibz/qfEuLpMZoJ7B5BgV5smmaE68sXTUt
+         /s5ZTXjuCQmg+JLBCYSd/OWDOpklIBKORt/zmiSo=
+Date:   Tue, 21 Apr 2020 20:57:35 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Haren Myneni <haren@us.ibm.com>, Joe Perches <joe@perches.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH AUTOSEL 5.4 52/84] linux/bits.h: add compile time sanity
+ check of GENMASK inputs
+Message-ID: <20200422005735.GW1809@sasha-vm>
+References: <20200415114442.14166-1-sashal@kernel.org>
+ <20200415114442.14166-52-sashal@kernel.org>
+ <20200415194032.GA935@rikard>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200422004151.116323-1-pmalani@chromium.org>
+In-Reply-To: <20200415194032.GA935@rikard>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 15, 2020 at 09:40:32PM +0200, Rikard Falkeborn wrote:
+>On Wed, Apr 15, 2020 at 07:44:09AM -0400, Sasha Levin wrote:
+>> From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+>>
+>> [ Upstream commit 295bcca84916cb5079140a89fccb472bb8d1f6e2 ]
+>>
+>> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
+>> the first argument and the low bit as the second argument.  Mixing them
+>> will return a mask with zero bits set.
+>>
+>> Recent commits show getting this wrong is not uncommon, see e.g.  commit
+>> aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
+>> 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
+>>
+>> To prevent such mistakes from appearing again, add compile time sanity
+>> checking to the arguments of GENMASK() and GENMASK_ULL().  If both
+>> arguments are known at compile time, and the low bit is higher than the
+>> high bit, break the build to detect the mistake immediately.
+>>
+>> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
+>> instead of BUILD_BUG_ON().
+>>
+>> __builtin_constant_p does not evaluate is argument, it only checks if it
+>> is a constant or not at compile time, and __builtin_choose_expr does not
+>> evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
+>> does only evaluate x++ once.
+>>
+>> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+>> available in assembly") made the macros in linux/bits.h available in
+>> assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+>> checks if the file is included in an asm file.
+>>
+>> Due to bugs in GCC versions before 4.9 [0], disable the check if building
+>> with a too old GCC compiler.
+>>
+>> [0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
+>>
+>> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Cc: Haren Myneni <haren@us.ibm.com>
+>> Cc: Joe Perches <joe@perches.com>
+>> Cc: Johannes Berg <johannes@sipsolutions.net>
+>> Cc: lkml <linux-kernel@vger.kernel.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
+>> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  include/linux/bits.h | 22 ++++++++++++++++++++--
+>>  1 file changed, 20 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/bits.h b/include/linux/bits.h
+>> index 669d69441a625..f108302a3121c 100644
+>> --- a/include/linux/bits.h
+>> +++ b/include/linux/bits.h
+>> @@ -18,12 +18,30 @@
+>>   * position @h. For example
+>>   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+>>   */
+>> -#define GENMASK(h, l) \
+>> +#if !defined(__ASSEMBLY__) && \
+>> +	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
+>> +#include <linux/build_bug.h>
+>> +#define GENMASK_INPUT_CHECK(h, l) \
+>> +	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>> +		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
+>> +#else
+>> +/*
+>> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+>> + * disable the input check if that is the case.
+>> + */
+>> +#define GENMASK_INPUT_CHECK(h, l) 0
+>> +#endif
+>> +
+>> +#define __GENMASK(h, l) \
+>>  	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+>>  	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+>> +#define GENMASK(h, l) \
+>> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+>>
+>> -#define GENMASK_ULL(h, l) \
+>> +#define __GENMASK_ULL(h, l) \
+>>  	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+>>  	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+>> +#define GENMASK_ULL(h, l) \
+>> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>>
+>>  #endif	/* __LINUX_BITS_H */
+>> --
+>> 2.20.1
+>>
+>
+>This does not really fix anything, it's compile time prevention, so I
+>don't know how appropriate this is for stable (it was also picked for
+>5.5 and 5.6, but I'm just replying here now, I can ping the other
+>selections if necessary if the patch should be dropped)?
+>
+>Also, for 5.4, it does somewhat depend on commit 8788994376d8
+>("linux/build_bug.h: change type to int"). Without it, there may be a
+>subtle integer promotion issue if sizeof(size_t) > sizeof(unsigned long)
+>(I don't *think* such platform exists, but I don't have a warm a fuzzy
+>feeling about it).
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll drop it from this selection, but ideally I'd like to have it in.
 
-Hi Prashant,
+The codebase is different between Linus's tree and the stable trees, and
+I'm worried that some of these GENMASK issues were fixed upstream and
+not in the stable trees. Getting this patch back would help us fix those
+with minimal risk.
 
-On Tue, Apr 21, 2020 at 05:41:51PM -0700, Prashant Malani wrote:
-> cros_typec_add_partner() returns 0 on success, so check for "ret"
-> instead of "!ret" as an error.
->=20
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Fixes: 9d33ea331032 ("platform/chrome: cros_ec_typec: Register port partn=
-er")
-
-Thanks. Applied for 5.8.
-
-origin/for-kernelci updated.
-
+-- 
 Thanks,
-Benson
-
-> ---
->  drivers/platform/chrome/cros_ec_typec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/c=
-hrome/cros_ec_typec.c
-> index eda57db26f8d..66b8d21092af 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -263,7 +263,7 @@ static void cros_typec_set_port_params_v1(struct cros=
-_typec_data *typec,
-> =20
->  		pd_en =3D resp->enabled & PD_CTRL_RESP_ENABLED_PD_CAPABLE;
->  		ret =3D cros_typec_add_partner(typec, port_num, pd_en);
-> -		if (!ret)
-> +		if (ret)
->  			dev_warn(typec->dev,
->  				 "Failed to register partner on port: %d\n",
->  				 port_num);
-> --=20
-> 2.26.1.301.g55bc3eb7cb9-goog
->=20
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXp+WWgAKCRBzbaomhzOw
-whqjAP9vj3ehlrgYTfe7GbbIZvZJPN5fPnDJFqIiF6HgovzcPQD6As22716OzrWi
-bIJXqW53SM3cskd9BB2jF1cO//7LaAM=
-=ptXK
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
+Sasha
