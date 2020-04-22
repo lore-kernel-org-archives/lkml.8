@@ -2,81 +2,136 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF75DC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043F2C5518C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A556B206D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587547417;
-	bh=KIXbtLYXdqvFRpDylTVVouE4ecbmQXC4DLEhxDnLiqQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=wfpgnoHFtG7neK9OniJSzXKGoI+Pmlt9RoO535XVqtICWLxsrpfzmOnpeHpILCoZA
-	 R6n/70QQ4JJJVq+iYgA/3ABUTZtOY5qDH7t39JVhxmp7+3ely2nlSgXVGH//bALg1L
-	 gyCUXk+FJh4H6vkKXhEugTPmb/uL2HcqKcrNjKCY=
+	by mail.kernel.org (Postfix) with ESMTP id D66E2206D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 09:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="grApRieN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgDVJXh (ORCPT
+        id S1726303AbgDVJYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:23:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVJXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:23:36 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 22 Apr 2020 05:24:17 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20545 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726224AbgDVJYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:24:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587547454;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DMhA18q5o54p19fFpaLKF4OTjlHgtCkpRiehNkdmtk0=;
+        b=grApRieNK+OmW+Ph9h2tR9zU0uKExcWmmISzc/RrgOUdVjDeysh8DaWsu+FczjWWILTAPj
+        WIzMeEmSv0ZlCUw1vFqJ3GxVNUuoG4yjZ7fkrmNMYqjutoOIvIUTxPBxLB0L7SPmoT9jIe
+        BuntuwErSvNNbVZzI/ZjHmqtDlZ+J5g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-bYl2gzczORKSGHhwjavuQw-1; Wed, 22 Apr 2020 05:24:10 -0400
+X-MC-Unique: bYl2gzczORKSGHhwjavuQw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38B5020656;
-        Wed, 22 Apr 2020 09:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587547416;
-        bh=KIXbtLYXdqvFRpDylTVVouE4ecbmQXC4DLEhxDnLiqQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=yRAendzY6ymm0fek+hxJrl3UcbcYiwJc1PuXqmJ2aHooL0fEGEait1WW5A3cWEWDc
-         3ammBbeCxOIOzfGvy+QIl5xHKoKq/8VJtBUvjKhswRhO3cuTnTFqzFRW2pqP6wEkng
-         N4gh2kXS7PF2PCr4tsLpI1VoRpWZ8h7HTBEHXuKU=
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1503B8017FC;
+        Wed, 22 Apr 2020 09:24:08 +0000 (UTC)
+Received: from T590 (ovpn-8-28.pek2.redhat.com [10.72.8.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B2FFB3A8F;
+        Wed, 22 Apr 2020 09:23:56 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 17:23:51 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "hare@suse.de" <hare@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+Message-ID: <20200422092351.GF299948@T590>
+References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+ <20200422012814.GB299948@T590>
+ <HK0P153MB0273B954294B331E20AACB41BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+ <20200422020134.GC299948@T590>
+ <20200422030807.GK17661@paulmck-ThinkPad-P72>
+ <20200422041629.GE299948@T590>
+ <HK0P153MB0273CF2901E193C03C934A47BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200411010143.GF20625@builder.lan>
-References: <1586566362-21450-1-git-send-email-wcheng@codeaurora.org> <1586566362-21450-2-git-send-email-wcheng@codeaurora.org> <20200411010143.GF20625@builder.lan>
-Subject: Re: [PATCH v4 1/2] clk: qcom: gcc: Add USB3 PIPE clock and GDSC for SM8150
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, vinod.koul@linaro.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wesley Cheng <wcheng@codeaurora.org>
-Date:   Wed, 22 Apr 2020 02:23:35 -0700
-Message-ID: <158754741540.132238.1839211437225696725@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HK0P153MB0273CF2901E193C03C934A47BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-04-10 18:01:43)
-> On Fri 10 Apr 17:52 PDT 2020, Wesley Cheng wrote:
->=20
-> > This adds the USB3 PIPE clock and GDSC structures, so
-> > that the USB driver can vote for these resources to be
-> > enabled/disabled when required.  Both are needed for SS
-> > and HS USB paths to operate properly.  The GDSC will
-> > allow the USB system to be brought out of reset, while
-> > the PIPE clock is needed for data transactions between
-> > the PHY and controller.
-> >=20
-> > Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->=20
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->=20
->=20
-> Stephen, let me know when you take this patch and I'll take the dts one.
->=20
+On Wed, Apr 22, 2020 at 04:58:14AM +0000, Dexuan Cui wrote:
+> > From: Ming Lei <ming.lei@redhat.com>
+> > Sent: Tuesday, April 21, 2020 9:16 PM
+> > ...
+> > > > > When we're in storvsc_suspend(), all the userspace processes have been
+> > > > > frozen and all the file systems have been flushed, and there should not
+> > > > > be too much I/O from the kernel space, so IMO scsi_host_block() should
+> > be
+> > > > > pretty fast here.
+> > > >
+> > > > I guess it depends on RCU's implementation, so CC RCU guys.
+> > > >
+> > > > Hello Paul & Josh,
+> > > >
+> > > > Could you clarify that if sysnchronize_rcu becomes quickly during
+> > > > system suspend?
+> > >
+> > > Once you have all but one CPU offlined, it becomes extremely fast, as
+> > > in roughly a no-op (which is an idea of Josh's from back in the day).
+> > > But if there is more than one CPU online, then synchronize_rcu() still
+> > > takes on the order of several to several tens of jiffies.
+> > >
+> > > So, yes, in some portions of system suspend, synchronize_rcu() becomes
+> > > very fast indeed.
+> > 
+> > Hi Paul,
+> > 
+> > Thanks for your clarification.
+> > 
+> > In system suspend path, device is suspended before
+> > suspend_disable_secondary_cpus(),
+> > so I guess synchronize_rcu() is not quick enough even though user space
+> > processes and some kernel threads are frozen.
+> > 
+> > Thanks,
+> > Ming
+> 
+> storvsc_suspend() -> scsi_host_block() is only called in the hibernation
+> path, which is not a hot path at all, so IMHO we don't really care if it
+> takes 10ms or 100ms or even 1s. :-)  BTW, in my test, typically the
 
-Looks like I already applied it and it's merged in Linus' tree.
+Are you sure the 'we' can cover all users?
+
+> scsi_host_block() here takes about 3ms in my 40-vCPU VM.
+
+If more LUNs are added, the time should be increased proportionallly,
+that is why I think scsi_host_block() is bad.
+
+
+Thanks,
+Ming
+
