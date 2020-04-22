@@ -2,103 +2,149 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3F3C38A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA16C55181
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1685F2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD8720706
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 06:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLLZvjTy"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ULKCsgJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgDVGhk (ORCPT
+        id S1726412AbgDVGjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57012 "EHLO
+        Wed, 22 Apr 2020 02:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgDVGhj (ORCPT
+        with ESMTP id S1726041AbgDVGjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 02:37:39 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DF3C03C1A6;
-        Tue, 21 Apr 2020 23:37:39 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a7so504935pju.2;
-        Tue, 21 Apr 2020 23:37:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M3V1L8dUG+LHRmYCPUTMgmjn7UaZHh+VkReKQj/vaHo=;
-        b=VLLZvjTyPjUgrOmfVUzEK98z+a3DuIJzk8YklsxG4duu/ZaQG/OxRt8VGQQoJk5rSq
-         w7PDHAUR5t3p6G6E5k1yyL2g/BJnmWDAzsogEl/KU5MclGkgNEPL4u+ymQ9CzV86Qwsy
-         0DVS6CS9PA+EgKfrysJ1Pol0cTsJA5+L+3fv7IzvAL6fh+PoJ5JNVu+S5fnmoOHeQWDX
-         TAZTS4f/IqI97thaP3pnigLg89b/Gvu1vz/7gT1qkKSgpX1SMizwilKhgqrKOYye0583
-         aM9l8fc9I5Wdv0p0yXEAD0AxRoj9ohgIbIzLiNGTYouJqv4OA1f8sX7e9qzwcHgN+PWS
-         17bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M3V1L8dUG+LHRmYCPUTMgmjn7UaZHh+VkReKQj/vaHo=;
-        b=I2GPHhwX/P8+eNBjwwMTqKWSeIM4cJeB+f6MlPIE6vpqvilpSxCoC5/6ai8ibnAS3/
-         zjiRPmTpEw+m741+MLxGCL3DAWUIhVv0kpKwvNCHw+8sAsqph/atR6IXGuLveQmNffWm
-         S3aRIcrNICTKmGMMU0L4PaHAxvTPBCKzK2T97R6CqcGJIgteJZ7vn6C50w5BbXlyMlzv
-         D4CzFIkH+Kr5aa5u/u5qYnp25WFmmItOfFNohYJOTwExG+t4j1Cl1QyUYpO1hmtgCOFY
-         ES2IupRbEUkT71kpJzeFDq0Lc+iItZATkRFcFuQMP+z66BNshWNZhVF0QmsXU7PBUc3w
-         aagA==
-X-Gm-Message-State: AGi0Pua+HPA5MerrDPP6fzCCPIll4OuVqwXwd8VNivz/QNGJnZZnOdvm
-        /9MozTYXyv46DULCHls90d8=
-X-Google-Smtp-Source: APiQypJPHB6y2FOy7ihkfqvwyGsoDRZ9hscuVvE02808VtIGkZYuLBvWbO5B9VdXZnS6hGVW6chmBA==
-X-Received: by 2002:a17:902:d693:: with SMTP id v19mr26122013ply.9.1587537459292;
-        Tue, 21 Apr 2020 23:37:39 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id n17sm4387026pff.81.2020.04.21.23.37.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Apr 2020 23:37:38 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 15:37:33 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 04/18] mm: memcontrol: move out cgroup swaprate throttling
-Message-ID: <20200422063732.GD6780@js1304-desktop>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-5-hannes@cmpxchg.org>
+        Wed, 22 Apr 2020 02:39:42 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30541C03C1A6;
+        Tue, 21 Apr 2020 23:39:42 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 496W4p1ZTlz9sRN;
+        Wed, 22 Apr 2020 16:39:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587537578;
+        bh=HetjwFcCPllHwYqcVQt5dzRVpiFFvTaW7Z/y3khbovk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ULKCsgJT45PDL/BlotGATp6YVRJ6UMmpNaqtMLhQAoUQh2pJjvRkUFwwIh1pgio1c
+         /qxIVp06NPT+I0bgDx1Qyx6Yq/FIrKI7Ay6u+SqB9tOiclx+p/MCY99IdydLzVEIu3
+         id/SKVgWdVrGtkypkeHQ2HMXjmxPbEXwQY1696/0zRGFPiixofvXFcDBEoRMflvxcK
+         OGHL8Ls3OMhCNeiXmm5QCirFBPDOlQx+Lu80H9xmPBHwlSrehxmYC+ZmW6wrdbMMlh
+         9ecAKQkQWpDyo3aGxqe8+bTP8hRkXlNb1sIMFSFu35Wwe5zyk+nCBq9OyIz6Loz5FO
+         B41bh7ePOYcZQ==
+Date:   Wed, 22 Apr 2020 16:39:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Haren Myneni <haren@linux.ibm.com>
+Subject: linux-next: build failure after merge of the akpm tree
+Message-ID: <20200422163935.5aa93ba5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420221126.341272-5-hannes@cmpxchg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/signed; boundary="Sig_/dS27h1O0JnSRFS7JJdx_l1R";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:11:12PM -0400, Johannes Weiner wrote:
-> The cgroup swaprate throttling is about matching new anon allocations
-> to the rate of available IO when that is being throttled. It's the io
-> controller hooking into the VM, rather than a memory controller thing.
-> 
-> Rename mem_cgroup_throttle_swaprate() to cgroup_throttle_swaprate(),
-> and drop the @memcg argument which is only used to check whether the
-> preceding page charge has succeeded and the fault is proceeding.
-> 
-> We could decouple the call from mem_cgroup_try_charge() here as well,
-> but that would cause unnecessary churn: the following patches convert
-> all callsites to a new charge API and we'll decouple as we go along.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+--Sig_/dS27h1O0JnSRFS7JJdx_l1R
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Hi all,
 
+After merging the akpm tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
+
+arch/powerpc/platforms/powernv/vas-fault.c: In function 'update_csb':
+arch/powerpc/platforms/powernv/vas-fault.c:130:2: error: implicit declarati=
+on of function 'use_mm' [-Werror=3Dimplicit-function-declaration]
+  130 |  use_mm(window->mm);
+      |  ^~~~~~
+arch/powerpc/platforms/powernv/vas-fault.c:142:2: error: implicit declarati=
+on of function 'unuse_mm' [-Werror=3Dimplicit-function-declaration]
+  142 |  unuse_mm(window->mm);
+      |  ^~~~~~~~
+
+Caused by commit
+
+  7fe021a3f1c9 ("kernel: better document the use_mm/unuse_mm API contract")
+
+interacting with commit
+
+  c96c4436aba4 ("powerpc/vas: Update CSB and notify process for fault CRBs")
+
+from the powerpc tree.
+
+I added the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 22 Apr 2020 16:35:23 +1000
+Subject: [PATCH] powerpc/vas: fix up for {un}use_mm() rename
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/powerpc/platforms/powernv/vas-fault.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/platforms/powernv/vas-fault.c b/arch/powerpc/plat=
+forms/powernv/vas-fault.c
+index 25db70be4c9c..266a6ca5e15e 100644
+--- a/arch/powerpc/platforms/powernv/vas-fault.c
++++ b/arch/powerpc/platforms/powernv/vas-fault.c
+@@ -127,7 +127,7 @@ static void update_csb(struct vas_window *window,
+ 		return;
+ 	}
+=20
+-	use_mm(window->mm);
++	kthread_use_mm(window->mm);
+ 	rc =3D copy_to_user(csb_addr, &csb, sizeof(csb));
+ 	/*
+ 	 * User space polls on csb.flags (first byte). So add barrier
+@@ -139,7 +139,7 @@ static void update_csb(struct vas_window *window,
+ 		smp_mb();
+ 		rc =3D copy_to_user(csb_addr, &csb, sizeof(u8));
+ 	}
+-	unuse_mm(window->mm);
++	kthread_unuse_mm(window->mm);
+ 	put_task_struct(tsk);
+=20
+ 	/* Success */
+--=20
+2.25.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dS27h1O0JnSRFS7JJdx_l1R
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6f5qcACgkQAVBC80lX
+0GxE7QgAgDep0KJguHqQoY328f2BUYcc2F3HFkc3ksHyC4LFO5PQyEYD/uwXvGTT
+QyGoPx8vYYUsa6On5PU6gbUicbWlYcsTZ8hmU3wQ0yyVnUtm0aoOdeEv86zanbBW
+ZfAndCQXpU+A5dGDxFa5F9BrmgOXuH7ktH2aDmpIpFLR7Pzt1YL65G/hH5Dim4Mx
+mzBggwT+XlIo+ah3dpGGjJfhfk5/aT36KwCWCsEjsh+qg4B+qYfpdbNbt7KrrpGo
+ItU0D3xB0UVbIpYuAQQ51RjlR+KHqp91Ar9DTpY2Hw9gcBQXDLcU4QxwqbP+TAwC
+LFaZRxtW33PHIuOnGNR0BUeyKTfR9g==
+=iRvE
+-----END PGP SIGNATURE-----
+
+--Sig_/dS27h1O0JnSRFS7JJdx_l1R--
