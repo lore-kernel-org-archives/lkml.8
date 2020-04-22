@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F9CC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15194C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9DD20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55032076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550498;
-	bh=g5K/VIFnX6n9H7X4MvMACtPUJaoWu7dijJCBbR+xAGs=;
+	s=default; t=1587550504;
+	bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKNHf98LlhQYgkZ7l2ZgvSDqs7CbCg1FuSbnfdus6EmxSFKo3tNVxUGS9hEZirBpV
-	 br4YAISxuV9IeZxmRRFAjc+VQjcu2YdvWAzEcBxBjUYDDA6AmaW/AyL/7cwPGos/gr
-	 19uTQM2fP1jjHJNEuRP4Evng3g5j5jXdEk/Bk1Mo=
+	b=z9dbIwqAf6P/Je70IqXlFdQCRdLzZbR5vvFSTtirEaObamBrW23aVJE0pKp1yX2ZV
+	 wtWtMBeC6U/oI3Q4qSDKgms9gPVUrOz7yfPmuBXGaufknhLFOoWgJ5h2n7quU+D8oi
+	 fMXwFMUtA1SM12/UM4YrDZ5Fh1CJBVoXoOcPJ6Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgDVKO4 (ORCPT
+        id S1729626AbgDVKPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729584AbgDVKOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:14:47 -0400
+        id S1729221AbgDVKO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:14:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D227A20575;
-        Wed, 22 Apr 2020 10:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE9192071E;
+        Wed, 22 Apr 2020 10:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550487;
-        bh=g5K/VIFnX6n9H7X4MvMACtPUJaoWu7dijJCBbR+xAGs=;
+        s=default; t=1587550497;
+        bh=8Zkwt3Nxc5a6mdUgf20I8irYrlccMGLwx42I/QawL/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDddXJ4u6QJu/EE3KH3NZRtLwmjKVoYC0/aT1sSABud5qjHniYS908ejQNVKVekzV
-         ISrj52ZkOt3sXTvWhTQVi3gfjAmwg6ELvANQFE9SGfIJLkRmHNEcbpJnvgSTy6IdqO
-         nHTiEuCBhsIIwUuXMQ2Kefx+l6cbn/t5xTjBRy2Y=
+        b=iUhFWSawIlg85+gWj+WFiBcZDj0q6ItpQT+DLgz8+PnICKgCs1okkXFoQlnw66sno
+         BWewKJ+Y9sLSYXjl0w/hR/NgzJql/hmqVwRyD/xs/hXlXfOkrkb2Z3xvOnrWgdKoTC
+         68c4ru0cToWp8nx/CCh6SmAVDTqxXj3K49kqAeF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ritesh Harjani <riteshh@linux.ibm.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/64] ext4: do not commit super on read-only bdev
-Date:   Wed, 22 Apr 2020 11:57:20 +0200
-Message-Id: <20200422095019.367269935@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 40/64] percpu_counter: fix a data race at vm_committed_as
+Date:   Wed, 22 Apr 2020 11:57:24 +0200
+Message-Id: <20200422095020.115861367@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095008.799686511@linuxfoundation.org>
 References: <20200422095008.799686511@linuxfoundation.org>
@@ -61,48 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit c96e2b8564adfb8ac14469ebc51ddc1bfecb3ae2 ]
+[ Upstream commit 7e2345200262e4a6056580f0231cccdaffc825f3 ]
 
-Under some circumstances we may encounter a filesystem error on a
-read-only block device, and if we try to save the error info to the
-superblock and commit it, we'll wind up with a noisy error and
-backtrace, i.e.:
+"vm_committed_as.count" could be accessed concurrently as reported by
+KCSAN,
 
-[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
-------------[ cut here ]------------
-generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
-WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
-...
+ BUG: KCSAN: data-race in __vm_enough_memory / percpu_counter_add_batch
 
-To avoid this, commit the error info in the superblock only if the
-block device is writable.
+ write to 0xffffffff9451c538 of 8 bytes by task 65879 on cpu 35:
+  percpu_counter_add_batch+0x83/0xd0
+  percpu_counter_add_batch at lib/percpu_counter.c:91
+  __vm_enough_memory+0xb9/0x260
+  dup_mm+0x3a4/0x8f0
+  copy_process+0x2458/0x3240
+  _do_fork+0xaa/0x9f0
+  __do_sys_clone+0x125/0x160
+  __x64_sys_clone+0x70/0x90
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Reported-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Link: https://lore.kernel.org/r/4b6e774d-cc00-3469-7abb-108eb151071a@sandeen.net
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+ read to 0xffffffff9451c538 of 8 bytes by task 66773 on cpu 19:
+  __vm_enough_memory+0x199/0x260
+  percpu_counter_read_positive at include/linux/percpu_counter.h:81
+  (inlined by) __vm_enough_memory at mm/util.c:839
+  mmap_region+0x1b2/0xa10
+  do_mmap+0x45c/0x700
+  vm_mmap_pgoff+0xc0/0x130
+  ksys_mmap_pgoff+0x6e/0x300
+  __x64_sys_mmap+0x33/0x40
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The read is outside percpu_counter::lock critical section which results in
+a data race.  Fix it by adding a READ_ONCE() in
+percpu_counter_read_positive() which could also service as the existing
+compiler memory barrier.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Marco Elver <elver@google.com>
+Link: http://lkml.kernel.org/r/1582302724-2804-1-git-send-email-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/percpu_counter.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index cc8c738480e8a..bf949fcc970ab 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -388,7 +388,8 @@ static void save_error_info(struct super_block *sb, const char *func,
- 			    unsigned int line)
+diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+index 4f052496cdfd7..0a4f54dd4737b 100644
+--- a/include/linux/percpu_counter.h
++++ b/include/linux/percpu_counter.h
+@@ -78,9 +78,9 @@ static inline s64 percpu_counter_read(struct percpu_counter *fbc)
+  */
+ static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
  {
- 	__save_error_info(sb, func, line);
--	ext4_commit_super(sb, 1);
-+	if (!bdev_read_only(sb->s_bdev))
-+		ext4_commit_super(sb, 1);
- }
+-	s64 ret = fbc->count;
++	/* Prevent reloads of fbc->count */
++	s64 ret = READ_ONCE(fbc->count);
  
- /*
+-	barrier();		/* Prevent reloads of fbc->count */
+ 	if (ret >= 0)
+ 		return ret;
+ 	return 0;
 -- 
 2.20.1
 
