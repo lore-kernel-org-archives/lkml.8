@@ -2,125 +2,152 @@ Return-Path: <SRS0=eifh=6G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F0EC55185
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4C3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3C22076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41C82076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 15:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZgLK8Xx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgDVPhx (ORCPT
+        id S1726539AbgDVPi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:37:53 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:52667 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgDVPhx (ORCPT
+        Wed, 22 Apr 2020 11:38:29 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49269 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725980AbgDVPi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 11:37:53 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 496l1q1PrBz1qs3y;
-        Wed, 22 Apr 2020 17:37:51 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 496l1q0Hhfz1qqkk;
-        Wed, 22 Apr 2020 17:37:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id L9jfpJQAEmpH; Wed, 22 Apr 2020 17:37:48 +0200 (CEST)
-X-Auth-Info: e0W/HInL22tuuvHdriLQ2n8QzAPQDVvOM5CA7DC8bMM=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 22 Apr 2020 17:37:47 +0200 (CEST)
-Subject: Re: [PATCH v2] mtd: rawnand: denali: add more delays before latching
- incoming data
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org
-References: <20200317071821.9916-1-yamada.masahiro@socionext.com>
- <6093dfab-1e9e-824a-b639-33d340b377f9@denx.de>
- <20200422173600.304c7cf2@xps13>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <95757315-9cf6-fbd8-af2d-3ac39753a757@denx.de>
-Date:   Wed, 22 Apr 2020 17:37:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 22 Apr 2020 11:38:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587569906;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PiL92fiIbjBpTLQbW35VIRjphDmosDAbmsy/SBxdj8A=;
+        b=HZgLK8Xx5NHID5zfIcza5rOJeBwSgoNM0mCDLW4fGJpj3bdOZo1HuIidwQgcMpp0FuslW3
+        hdNOfL83EqA45pAZCuHsk78zO5slqLuAi0p0VIS0o6OEPNTzRZyfr8NHLr/KeTTmSK6a0G
+        wNQWenk4whzyCQZVFUK1nJtWK1qq49g=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-57-MdBGRk-rOB-aKXo9L2SMEQ-1; Wed, 22 Apr 2020 11:38:25 -0400
+X-MC-Unique: MdBGRk-rOB-aKXo9L2SMEQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 14so975967wmo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 08:38:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PiL92fiIbjBpTLQbW35VIRjphDmosDAbmsy/SBxdj8A=;
+        b=CbIeG/Q1BSWc7nWcuSA+CbbSj/wGuiuEL/Ch5jQkTkHGuXAb2rz76qbnvfvxOuxXPY
+         tmykCshCR959/wwsPxfaifE2M+vIH6YlmFmLHQR2o55h0dyKBVzzjjDyEVbmgVnu4Cmh
+         Tweyex0hxTuKAJrcAZL+k9SHoZGIpCl1S2EsdjNiqSok7EgcwznQLM2PTFwoHKq3k1Ke
+         m+qTAwNFj73MpC+hSvT50OwOKsfVxKt61TWijGrFHWAHtJwJYp3/lq9XEt4Q0Htxy+LV
+         tqwvgk15DGQdS/91M82eMVb05BfnyX7MaRdGWMQ6NsEAW3gStEKyQgGRlrnuDIA8jiWg
+         qlig==
+X-Gm-Message-State: AGi0PubJYKaqqLbAKx81dBhXFDrXm0TrE+CgpUD+jiGkK0xVoUm4ljWC
+        pSjuyHLYr2xDfPlACS1Lw+3vewEH84z+o34tgcgoRFK7cldvh+ENlU/8TwRctLmYMIUpWh9rviM
+        dRAs5yVvTjbEJNPXgL9h+s7ST
+X-Received: by 2002:adf:f9c6:: with SMTP id w6mr30700034wrr.341.1587569904125;
+        Wed, 22 Apr 2020 08:38:24 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIgvlNy/lUcsVNmg22dI5WnAMBscXbX3xC6BqCySaQ8n8D9ijTO+vFgaI+M5olv1FwvT8HS0g==
+X-Received: by 2002:adf:f9c6:: with SMTP id w6mr30700009wrr.341.1587569903876;
+        Wed, 22 Apr 2020 08:38:23 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.194.179])
+        by smtp.gmail.com with ESMTPSA id c1sm9125790wrc.4.2020.04.22.08.38.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 08:38:22 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 17:38:20 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 13/23] sched,ion: Convert to sched_set_normal()
+Message-ID: <20200422153820.GK9767@localhost.localdomain>
+References: <20200422112719.826676174@infradead.org>
+ <20200422112831.988065598@infradead.org>
+ <CAKfTPtB8NiKqggZN3v6u=Rdwj4grzRwn1mW31ov0y5ZhDBcvuw@mail.gmail.com>
+ <20200422132923.GK20730@hirez.programming.kicks-ass.net>
+ <CAKfTPtBsFDt8JyxjD39B2YP+kCN9nXWZxnaJys9sz2CjWzd1Zw@mail.gmail.com>
+ <20200422135921.GL20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200422173600.304c7cf2@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422135921.GL20730@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/20 5:36 PM, Miquel Raynal wrote:
-> Hi Marek,
+On 22/04/20 15:59, Peter Zijlstra wrote:
+> On Wed, Apr 22, 2020 at 03:36:22PM +0200, Vincent Guittot wrote:
+> > On Wed, 22 Apr 2020 at 15:29, Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Wed, Apr 22, 2020 at 03:21:45PM +0200, Vincent Guittot wrote:
+> > > > On Wed, 22 Apr 2020 at 13:29, Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > >
+> > > > > In an attempt to take away sched_setscheduler() from modules, change
+> > > > > this into sched_set_normal(.nice = 19).
+> > > > >
+> > > > > Cc: john.stultz@linaro.org
+> > > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > > Reviewed-by: Ingo Molnar <mingo@kernel.org>
+> > > > > ---
+> > > > >  drivers/staging/android/ion/ion_heap.c |    3 ---
+> > > > >  1 file changed, 3 deletions(-)
+> > > > >
+> > > > > --- a/drivers/staging/android/ion/ion_heap.c
+> > > > > +++ b/drivers/staging/android/ion/ion_heap.c
+> > > > > @@ -244,8 +244,6 @@ static int ion_heap_deferred_free(void *
+> > > > >
+> > > > >  int ion_heap_init_deferred_free(struct ion_heap *heap)
+> > > > >  {
+> > > > > -       struct sched_param param = { .sched_priority = 0 };
+> > > > > -
+> > > > >         INIT_LIST_HEAD(&heap->free_list);
+> > > > >         init_waitqueue_head(&heap->waitqueue);
+> > > > >         heap->task = kthread_run(ion_heap_deferred_free, heap,
+> > > > > @@ -255,7 +253,7 @@ int ion_heap_init_deferred_free(struct i
+> > > > >                        __func__);
+> > > > >                 return PTR_ERR_OR_ZERO(heap->task);
+> > > > >         }
+> > > > > -       sched_setscheduler(heap->task, SCHED_IDLE, &param);
+> > > > > +       sched_set_normal(heap->task, 19);
+> > > >
+> > > > Would it make sense to have a sched_set_idle(task) to enable kernel
+> > > > setting SCHED_IDLE task ?
+> > > >
+> > > > SCHED_NORMAL w/ nice 19 and SCHED_IDLE tasks are not treated in the
+> > > > same way when checking for preemption at  wakeup
+> > >
+> > > Yeah, but does it really matter? I did indeed consider it, but got
+> > > lazy. Is there a definite need for IDLE?
+> > 
+> > John is the best to answer this for this driver but SCHED_IDLE will
+> > let other tasks which might be involved in end user interaction like
+> > on Android to run first
 > 
-> Marek Vasut <marex@denx.de> wrote on Wed, 22 Apr 2020 17:29:53 +0200:
+> So I don't much like SCHED_IDLE because it introduces some pretty
+> horrible tail latencies. Consider the IDLE task holding a lock, then the
+> lock waiter will have to wait until the task gets around to running.
 > 
->> On 3/17/20 8:18 AM, Masahiro Yamada wrote:
->>> The Denali IP have several registers to specify how many clock cycles
->>> should be waited between falling/rising signals. You can improve the
->>> NAND access performance by programming these registers with optimized
->>> values.
->>>
->>> Because struct nand_sdr_timings represents the device requirement
->>> in pico seconds, denali_setup_data_interface() computes the register
->>> values by dividing the device timings with the clock period.
->>>
->>> Marek Vasut reported this driver in the latest kernel does not work
->>> on his SOCFPGA board. (The on-board NAND chip is mode 5)
->>>
->>> The suspicious parameter is acc_clks, so this commit relaxes it.
->>>
->>> The Denali NAND Flash Memory Controller User's Guide describes this
->>> register as follows:
->>>
->>>   acc_clks
->>>     signifies the number of bus interface clk_x clock cycles,
->>>     controller should wait from read enable going low to sending
->>>     out a strobe of clk_x for capturing of incoming data.
->>>
->>> Currently, acc_clks is calculated only based on tREA, the delay on the
->>> chip side. This does not include additional delays that come from the
->>> data path on the PCB and in the SoC, load capacity of the pins, etc.
->>>
->>> This relatively becomes a big factor on faster timing modes like mode 5.
->>>
->>> Before supporting the ->setup_data_interface() hook (e.g. Linux 4.12),
->>> the Denali driver hacks acc_clks in a couple of ways [1] [2] to support
->>> the timing mode 5.
->>>
->>> We would not go back to the hard-coded acc_clks, but we need to include
->>> this factor into the delay somehow. Let's say the amount of the additional
->>> delay is 10000 pico sec.
->>>
->>> In the new calculation, acc_clks is determined by timings->tREA_max +
->>> data_setup_on_host.
->>>
->>> Also, prolong the RE# low period to make sure the data hold is met.
->>>
->>> Finally, re-center the data latch timing for extra safety.
->>>
->>> [1] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L276
->>> [2] https://github.com/torvalds/linux/blob/v4.12/drivers/mtd/nand/denali.c#L282
->>>
->>> Reported-by: Marek Vasut <marex@denx.de>
->>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>  
->>
->> I tested it on the AV SoCFPGA, this seems to work, so feel free to apply.
+> It's not unbounded, like a true idle-time scheduler would be, but it can
+> still be pretty horrible. nice19 has some of that too of course, but
+> idle has it worse, esp. also because it begs others to preempt it.
 > 
-> 
-> Great! Thanks a lot for testing, would you mind sending your Tested-by?
+> I should get back to proxy execution I suppose...
 
-Lightly
-Tested-by: Marek Vasut <marex@denx.de>
+Huh, so you really think proxy exec should be default on for kernel
+mutexes...
+
