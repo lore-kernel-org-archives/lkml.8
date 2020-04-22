@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6430AC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280F1C55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43BC320882
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057D020780
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550258;
-	bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
+	s=default; t=1587550261;
+	bh=QxZ8zXJ8KpX3iqu0j8yWWAIOGHgsBEcRzS5kYm1AuSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pdL+8dzmt/OCxWP1hCY/n6JbLS8WOmFthvE4c9C0n6MZ4pR5wMUJcqkkDGhotlvsN
-	 WS/7Fl08ovShjLR1oljHW05iBZsNgd1fp3tqFU69c0iCTuv+sE6Fs0S7feqr54CLm8
-	 M7karVN3XU+vcA4dwsdvdgWpvMb6gx0Eq69IE+00=
+	b=ZpHIMPOzlN41r3JZmST5WYHqQV5pWQhr3X+El51JQHJ/Dhdawt+X4KIqq0GKPDtV8
+	 x/VSuoqPLXau6r3bAb32k9AsRFR980ZmjYgtxyD9y8SjzRZy1R9yNwYcAFaUzxOUcA
+	 nQSdtOps8+qsdOIZkdhv4g02gSvSlB9FVCpY7ODE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgDVKK5 (ORCPT
+        id S1729122AbgDVKK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:10:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbgDVKKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:10:48 -0400
+        id S1729084AbgDVKKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:10:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20AFB2077D;
-        Wed, 22 Apr 2020 10:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D7020575;
+        Wed, 22 Apr 2020 10:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550248;
-        bh=79z7BDql8stYOus3GTROCiSx/mTNrMJNRyoDBHRU8TQ=;
+        s=default; t=1587550250;
+        bh=QxZ8zXJ8KpX3iqu0j8yWWAIOGHgsBEcRzS5kYm1AuSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k6GnO5j5wT5v8kunH3gK4PcNRi9hkYJ8gjyWwR1OnNZVPcy/y4GyRJ+H5xcz6ammB
-         qfjeSDVLjJdE4Ys/sTQ552r7RzYBKpbzTGZ4235MJO3ewpp7bLO4zBkeS4M0eYreye
-         5tC7UHjHp9gyTq8PdFKywB2IE4+2fSbWWSvweZGM=
+        b=y90UIzhCBMaIIprAxErbMPeRQHAltZJH/xk4kQC6Ks7YniYkLrfRkplEtulRk/blT
+         nbX5eFxV3R2nWgSFlL1gFaKskwax4cqdRA6kQEPuLTqfZOaYA6chDZviCFP5zgdfMa
+         jZ3TUEbnj/vDGh4l908hcj6hL8i0Jpe6D40/4QtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Anssi Hannula <anssi.hannula@bitwise.fi>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.14 070/199] tools: gpio: Fix out-of-tree build regression
-Date:   Wed, 22 Apr 2020 11:56:36 +0200
-Message-Id: <20200422095105.183592978@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 071/199] mm: Use fixed constant in page_frag_alloc instead of size + 1
+Date:   Wed, 22 Apr 2020 11:56:37 +0200
+Message-Id: <20200422095105.281754538@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095057.806111593@linuxfoundation.org>
 References: <20200422095057.806111593@linuxfoundation.org>
@@ -61,42 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-commit 82f04bfe2aff428b063eefd234679b2d693228ed upstream.
+commit 8644772637deb121f7ac2df690cbf83fa63d3b70 upstream.
 
-Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
-gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
-instead of the correct $(OUTPUT) for the output directory, breaking
-out-of-tree build (O=xx) with the following error:
+This patch replaces the size + 1 value introduced with the recent fix for 1
+byte allocs with a constant value.
 
-  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
+The idea here is to reduce code overhead as the previous logic would have
+to read size into a register, then increment it, and write it back to
+whatever field was being used. By using a constant we can avoid those
+memory reads and arithmetic operations in favor of just encoding the
+maximum value into the operation itself.
 
-Fix that.
-
-Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
-Cc: <stable@vger.kernel.org>
-Cc: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
-Link: https://lore.kernel.org/r/20200325103154.32235-1-anssi.hannula@bitwise.fi
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 2c2ade81741c ("mm: page_alloc: fix ref bias in page_frag_alloc() for 1-byte allocs")
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/gpio/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_alloc.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../inc
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4325,11 +4325,11 @@ refill:
+ 		/* Even if we own the page, we do not use atomic_set().
+ 		 * This would break get_page_unless_zero() users.
+ 		 */
+-		page_ref_add(page, size);
++		page_ref_add(page, PAGE_FRAG_CACHE_MAX_SIZE);
  
- prepare: $(OUTPUT)include/linux/gpio.h
+ 		/* reset page count bias and offset to start of new frag */
+ 		nc->pfmemalloc = page_is_pfmemalloc(page);
+-		nc->pagecnt_bias = size + 1;
++		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+ 		nc->offset = size;
+ 	}
  
--GPIO_UTILS_IN := $(output)gpio-utils-in.o
-+GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
- $(GPIO_UTILS_IN): prepare FORCE
- 	$(Q)$(MAKE) $(build)=gpio-utils
+@@ -4345,10 +4345,10 @@ refill:
+ 		size = nc->size;
+ #endif
+ 		/* OK, page count is 0, we can safely set it */
+-		set_page_count(page, size + 1);
++		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+ 
+ 		/* reset page count bias and offset to start of new frag */
+-		nc->pagecnt_bias = size + 1;
++		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+ 		offset = size - fragsz;
+ 	}
  
 
 
