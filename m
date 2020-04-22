@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72FBC55189
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542C5C5518A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF5F2076B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB322076B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587550636;
-	bh=p6iHLfGWc6lzRT6HBHDXgJQLfD0vPoGKTYfNKtnRPmI=;
+	s=default; t=1587550642;
+	bh=5na/WFwDdrK9PJ7DFInLy3mYcZl0aIp9tPAA67PlMvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9eDWb/lmjY//4fA9FtMRrthj1Jq3ZQWxJ4ktvRF8auPkYR/m6YnCS6y0YfUnuriR
-	 qPACzsmiYyJdLpCULuopDjkGbtqIDjai4pJgNKLD47jQw5QMzN1mx60paTZVo57IC9
-	 TiU26xcOMLihwFHfy5hJFXHnSMsOiNUBBd38EfkU=
+	b=Nt+WCc/40HevSq3NH2qhvSpQY3ZmdKnoci6yntIZTTlwrTC1s1/z+vSNC7783tgVm
+	 TSVHS0nrHJlP4Tl5eajlyMwqulRFGAAJvI2eaV93IcC6lXhL+L0Pyo4al8M3ORJF9v
+	 qzo9CyONCfHapUQSOxVqRIvCR+dFoYvQBMrngDpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgDVKRP (ORCPT
+        id S1729818AbgDVKRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:17:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52064 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729735AbgDVKQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:21 -0400
+        id S1729130AbgDVKQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F6632076E;
-        Wed, 22 Apr 2020 10:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F51F2076B;
+        Wed, 22 Apr 2020 10:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550581;
-        bh=p6iHLfGWc6lzRT6HBHDXgJQLfD0vPoGKTYfNKtnRPmI=;
+        s=default; t=1587550578;
+        bh=5na/WFwDdrK9PJ7DFInLy3mYcZl0aIp9tPAA67PlMvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i4gsz8VFbmgOiE/j5Ry21wFoRf0qQYt4WTOYugTktvjYELni/yIy3r53BZu4Nlro/
-         uXNBTedNFzOyiccKfT5COHSB6/h7yIhY/ayEAaqm43+1GgAuscmFrtfdeocFWwYoZ2
-         fQhEEQz2adrs3OWC668U5kYGrC9C21eMNFfBvx/o=
+        b=2nhMToSPz9LUYdaE3hBSRy5UrFI/kcAHHLlxPfbiaWjYTHNkptW5Btocmx6Kn5KOS
+         L8sPjTKPO7/Yd2Z1KRMvXXIRSDz50sMKFzvEGsRidDauM9qXiIzZVx1YkXQqysJSbW
+         Wy5ZSBS2yMyntoqCty5xwm0cjZWUa7IxlYpaeA18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Liu Yiding <liuyd.fnst@cn.fujitsu.com>,
-        Slava Bacherikov <slava@bacher09.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@google.com>, Andrii Nakryiko <andriin@fb.com>
-Subject: [PATCH 5.4 010/118] kbuild, btf: Fix dependencies for DEBUG_INFO_BTF
-Date:   Wed, 22 Apr 2020 11:56:11 +0200
-Message-Id: <20200422095033.225297353@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        Roman Gushchin <guro@fb.com>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.4 001/118] ext4: use non-movable memory for superblock readahead
+Date:   Wed, 22 Apr 2020 11:56:02 +0200
+Message-Id: <20200422095031.716688980@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,42 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Slava Bacherikov <slava@bacher09.org>
+From: Roman Gushchin <guro@fb.com>
 
-commit 7d32e69310d67e6b04af04f26193f79dfc2f05c7 upstream.
+commit d87f639258a6a5980183f11876c884931ad93da2 upstream.
 
-Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
-enabled will produce invalid btf file, since gen_btf function in
-link-vmlinux.sh script doesn't handle *.dwo files.
+Since commit a8ac900b8163 ("ext4: use non-movable memory for the
+superblock") buffers for ext4 superblock were allocated using
+the sb_bread_unmovable() helper which allocated buffer heads
+out of non-movable memory blocks. It was necessarily to not block
+page migrations and do not cause cma allocation failures.
 
-Enabling DEBUG_INFO_REDUCED will also produce invalid btf file,
-and using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
+However commit 85c8f176a611 ("ext4: preload block group descriptors")
+broke this by introducing pre-reading of the ext4 superblock.
+The problem is that __breadahead() is using __getblk() underneath,
+which allocates buffer heads out of movable memory.
 
-Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
-Reported-by: Jann Horn <jannh@google.com>
-Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
-Signed-off-by: Slava Bacherikov <slava@bacher09.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: KP Singh <kpsingh@google.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200402204138.408021-1-slava@bacher09.org
+It resulted in page migration failures I've seen on a machine
+with an ext4 partition and a preallocated cma area.
+
+Fix this by introducing sb_breadahead_unmovable() and
+__breadahead_gfp() helpers which use non-movable memory for buffer
+head allocations and use them for the ext4 superblock readahead.
+
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Link: https://lore.kernel.org/r/20200229001411.128010-1-guro@fb.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/Kconfig.debug |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/buffer.c                 |   11 +++++++++++
+ fs/ext4/inode.c             |    2 +-
+ fs/ext4/super.c             |    2 +-
+ include/linux/buffer_head.h |    8 ++++++++
+ 4 files changed, 21 insertions(+), 2 deletions(-)
 
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -223,6 +223,8 @@ config DEBUG_INFO_DWARF4
- config DEBUG_INFO_BTF
- 	bool "Generate BTF typeinfo"
- 	depends on DEBUG_INFO
-+	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
-+	depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
- 	help
- 	  Generate deduplicated BTF type information from DWARF debug info.
- 	  Turning this on expects presence of pahole tool, which will convert
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1337,6 +1337,17 @@ void __breadahead(struct block_device *b
+ }
+ EXPORT_SYMBOL(__breadahead);
+ 
++void __breadahead_gfp(struct block_device *bdev, sector_t block, unsigned size,
++		      gfp_t gfp)
++{
++	struct buffer_head *bh = __getblk_gfp(bdev, block, size, gfp);
++	if (likely(bh)) {
++		ll_rw_block(REQ_OP_READ, REQ_RAHEAD, 1, &bh);
++		brelse(bh);
++	}
++}
++EXPORT_SYMBOL(__breadahead_gfp);
++
+ /**
+  *  __bread_gfp() - reads a specified block and returns the bh
+  *  @bdev: the block_device to read from
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4680,7 +4680,7 @@ make_io:
+ 			if (end > table)
+ 				end = table;
+ 			while (b <= end)
+-				sb_breadahead(sb, b++);
++				sb_breadahead_unmovable(sb, b++);
+ 		}
+ 
+ 		/*
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4283,7 +4283,7 @@ static int ext4_fill_super(struct super_
+ 	/* Pre-read the descriptors into the buffer cache */
+ 	for (i = 0; i < db_count; i++) {
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sb_breadahead(sb, block);
++		sb_breadahead_unmovable(sb, block);
+ 	}
+ 
+ 	for (i = 0; i < db_count; i++) {
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -189,6 +189,8 @@ struct buffer_head *__getblk_gfp(struct
+ void __brelse(struct buffer_head *);
+ void __bforget(struct buffer_head *);
+ void __breadahead(struct block_device *, sector_t block, unsigned int size);
++void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
++		  gfp_t gfp);
+ struct buffer_head *__bread_gfp(struct block_device *,
+ 				sector_t block, unsigned size, gfp_t gfp);
+ void invalidate_bh_lrus(void);
+@@ -319,6 +321,12 @@ sb_breadahead(struct super_block *sb, se
+ 	__breadahead(sb->s_bdev, block, sb->s_blocksize);
+ }
+ 
++static inline void
++sb_breadahead_unmovable(struct super_block *sb, sector_t block)
++{
++	__breadahead_gfp(sb->s_bdev, block, sb->s_blocksize, 0);
++}
++
+ static inline struct buffer_head *
+ sb_getblk(struct super_block *sb, sector_t block)
+ {
 
 
