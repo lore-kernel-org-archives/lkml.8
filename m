@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116A6C55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CAC55189
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7AD220787
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E826F2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Apr 2020 10:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587552393;
-	bh=USHL728CC5BpJX28A7ujeCdhKKJonWU+NgiTGWGo5VA=;
+	s=default; t=1587552399;
+	bh=dAFfcstJg00S/Bt0ciKcvKr/afc1DBg6KrevEqRtYpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uuANp4BYRRKs8KGhR7zoBGxMykqdK7K709X1vW6sd0jsDb+9J3fa+WwkCNw4Sc80J
-	 /lbDvv1tONNghwaWJbEPt8rB/QmddDrxAtt3BBC0+pJMHN/FS5BUoHW9kbAtwXR4tX
-	 4YIsjW8/3b8htJbs1vzvZWpqYPLG6LGqNLCWwjLM=
+	b=z1Z+EF8hqm3hKIn+fB1o4NEvpT0BPX04iH3SuJqycwqyQ82Gh24SjKxuBASjkE6oc
+	 kva2U6ExFBov8Xg8t4znThGNSd6Gdq7mrtDI+Vl0vI0pCS4Fpx+3+fG04UBPq6SvXs
+	 Vsl5qWURtd5K2Sa086NG8qd88hYL+QacGOFQDHJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbgDVKqc (ORCPT
+        id S1731970AbgDVKqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 06:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbgDVKQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:16:58 -0400
+        id S1729783AbgDVKQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:16:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B641E2070B;
-        Wed, 22 Apr 2020 10:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F8EA2076B;
+        Wed, 22 Apr 2020 10:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587550618;
-        bh=USHL728CC5BpJX28A7ujeCdhKKJonWU+NgiTGWGo5VA=;
+        s=default; t=1587550610;
+        bh=dAFfcstJg00S/Bt0ciKcvKr/afc1DBg6KrevEqRtYpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=awMgd1qHndXcdpyAdYbP7VYyGcI4x1CzlV1Mqe8QdnNPb0sYiDNw61q0AzTt8r2dU
-         vdZwZBa5tIjiiXAmq8DUeW/TV0Eon6JWlTR0YRBOqCSWSOZfEANI41f0fzsK9b7A0l
-         VYQXd4XmGGtbY9R1hEHzwVo5cb4QGZV6HY42xvFE=
+        b=R+1foNRFX5/ZKI9y9c///eTa6MjkwTxQIcT6nzuS6o8+QtaCwsKkHAIjbGn+n7wz+
+         8zDf5SZrTIK2sU9a8XIK/PkHKXAocdQoDKODj3PnTovIIcjvYyZT+GVGdF+TxOrdO3
+         c8ke/QU39UYyav0OrPinm4FHs2MA4G2pW85u0j3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.4 024/118] afs: Fix missing XDR advance in xdr_decode_{AFS,YFS}FSFetchStatus()
-Date:   Wed, 22 Apr 2020 11:56:25 +0200
-Message-Id: <20200422095035.778695497@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH 5.4 021/118] x86/Hyper-V: Report crash register data or kmsg before running crash kernel
+Date:   Wed, 22 Apr 2020 11:56:22 +0200
+Message-Id: <20200422095035.165390638@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
 References: <20200422095031.522502705@linuxfoundation.org>
@@ -58,122 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-commit c72057b56f7e24865840a6961d801a7f21d30a5f upstream.
+commit a11589563e96bf262767294b89b25a9d44e7303b upstream.
 
-If we receive a status record that has VNOVNODE set in the abort field,
-xdr_decode_AFSFetchStatus() and xdr_decode_YFSFetchStatus() don't advance
-the XDR pointer, thereby corrupting anything subsequent decodes from the
-same block of data.
+We want to notify Hyper-V when a Linux guest VM crash occurs, so
+there is a record of the crash even when kdump is enabled.   But
+crash_kexec_post_notifiers defaults to "false", so the kdump kernel
+runs before the notifiers and Hyper-V never gets notified.  Fix this by
+always setting crash_kexec_post_notifiers to be true for Hyper-V VMs.
 
-This has the potential to affect AFS.InlineBulkStatus and
-YFS.InlineBulkStatus operation, but probably doesn't since the status
-records are extracted as individual blocks of data and the buffer pointer
-is reset between blocks.
-
-It does affect YFS.RemoveFile2 operation, corrupting the volsync record -
-though that is not currently used.
-
-Other operations abort the entire operation rather than returning an error
-inline, in which case there is no decoding to be done.
-
-Fix this by unconditionally advancing the xdr pointer.
-
-Fixes: 684b0f68cf1c ("afs: Fix AFSFetchStatus decoder to provide OpenAFS compatibility")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Link: https://lore.kernel.org/r/20200406155331.2105-5-Tianyu.Lan@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/afs/fsclient.c  |   14 +++++++++-----
- fs/afs/yfsclient.c |   12 ++++++++----
- 2 files changed, 17 insertions(+), 9 deletions(-)
+ arch/x86/kernel/cpu/mshyperv.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -65,6 +65,7 @@ static int xdr_decode_AFSFetchStatus(con
- 	bool inline_error = (call->operation_ID == afs_FS_InlineBulkStatus);
- 	u64 data_version, size;
- 	u32 type, abort_code;
-+	int ret;
- 
- 	abort_code = ntohl(xdr->abort_code);
- 
-@@ -78,7 +79,7 @@ static int xdr_decode_AFSFetchStatus(con
- 			 */
- 			status->abort_code = abort_code;
- 			scb->have_error = true;
--			return 0;
-+			goto good;
- 		}
- 
- 		pr_warn("Unknown AFSFetchStatus version %u\n", ntohl(xdr->if_version));
-@@ -87,7 +88,7 @@ static int xdr_decode_AFSFetchStatus(con
- 
- 	if (abort_code != 0 && inline_error) {
- 		status->abort_code = abort_code;
--		return 0;
-+		goto good;
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -263,6 +263,16 @@ static void __init ms_hyperv_init_platfo
+ 			cpuid_eax(HYPERV_CPUID_NESTED_FEATURES);
  	}
  
- 	type = ntohl(xdr->type);
-@@ -123,13 +124,16 @@ static int xdr_decode_AFSFetchStatus(con
- 	data_version |= (u64)ntohl(xdr->data_version_hi) << 32;
- 	status->data_version = data_version;
- 	scb->have_status = true;
--
-+good:
-+	ret = 0;
-+advance:
- 	*_bp = (const void *)*_bp + sizeof(*xdr);
--	return 0;
-+	return ret;
- 
- bad:
- 	xdr_dump_bad(*_bp);
--	return afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	ret = afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	goto advance;
- }
- 
- static time64_t xdr_decode_expiry(struct afs_call *call, u32 expiry)
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -186,13 +186,14 @@ static int xdr_decode_YFSFetchStatus(con
- 	const struct yfs_xdr_YFSFetchStatus *xdr = (const void *)*_bp;
- 	struct afs_file_status *status = &scb->status;
- 	u32 type;
-+	int ret;
- 
- 	status->abort_code = ntohl(xdr->abort_code);
- 	if (status->abort_code != 0) {
- 		if (status->abort_code == VNOVNODE)
- 			status->nlink = 0;
- 		scb->have_error = true;
--		return 0;
-+		goto good;
- 	}
- 
- 	type = ntohl(xdr->type);
-@@ -220,13 +221,16 @@ static int xdr_decode_YFSFetchStatus(con
- 	status->size		= xdr_to_u64(xdr->size);
- 	status->data_version	= xdr_to_u64(xdr->data_version);
- 	scb->have_status	= true;
--
-+good:
-+	ret = 0;
-+advance:
- 	*_bp += xdr_size(xdr);
--	return 0;
-+	return ret;
- 
- bad:
- 	xdr_dump_bad(*_bp);
--	return afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	ret = afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	goto advance;
- }
- 
- /*
++	/*
++	 * Hyper-V expects to get crash register data or kmsg when
++	 * crash enlightment is available and system crashes. Set
++	 * crash_kexec_post_notifiers to be true to make sure that
++	 * calling crash enlightment interface before running kdump
++	 * kernel.
++	 */
++	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
++		crash_kexec_post_notifiers = true;
++
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 	if (ms_hyperv.features & HV_X64_ACCESS_FREQUENCY_MSRS &&
+ 	    ms_hyperv.misc_features & HV_FEATURE_FREQUENCY_MSRS_AVAILABLE) {
 
 
