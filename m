@@ -2,148 +2,128 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86293C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A4DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65BA120704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4647217BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eIMON1Le"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ATuZoGTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgDWRAW (ORCPT
+        id S1729798AbgDWRCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:00:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
+        Thu, 23 Apr 2020 13:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729674AbgDWRAV (ORCPT
+        with ESMTP id S1729674AbgDWRCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:00:21 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50901C09B042;
-        Thu, 23 Apr 2020 10:00:20 -0700 (PDT)
+        Thu, 23 Apr 2020 13:02:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A773FC09B042;
+        Thu, 23 Apr 2020 10:02:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SLXXj8i9vi69xcCnNJQ1dfaFIQxrJ+YqvKu0gtVCAnQ=; b=eIMON1LeXDi2bpKRQUdKsX28Z
-        sXPQjqYmJL/INAPNPDWJ4OIROoVRHub4XPPLyxOZuUC4I/Mnnd47yBIFp6nNG0mV5RU1mQMsN1zkD
-        XnxVvCum5qsMvAaSVZRvkbW0axQPcB9pZwGUYqZvoXu2gJ79TG3nBD/z4OSn2VcnsI2GKeaUHNY5S
-        XAphacigPIzIdUnQ9qogMpqRidDg0CVK0OXl/EADqiw7LoC1tnKzv6j+OGlYMwDH2i2bQLV+Zo9it
-        76DOJYBybNHwPa61WElYI+/4ru2Xda0r42mktZuW8/RmmnXfGIHweL5TzvVUbtCKVzccnK7hM3AvE
-        MOWx03tQQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54318)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jRfCr-0007au-Mo; Thu, 23 Apr 2020 18:00:09 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jRfCl-0000rV-JN; Thu, 23 Apr 2020 18:00:03 +0100
-Date:   Thu, 23 Apr 2020 18:00:03 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        Nadav Haklai <nadavh@marvell.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to handle
- RSS tables
-Message-ID: <20200423170003.GT25745@shell.armlinux.org.uk>
-References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
- <20190524100554.8606-4-maxime.chevallier@bootlin.com>
- <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=woeHLzx2UyIQ/D6tJ1KvK2T3SJtwi4BVd49pVJRsTWA=; b=ATuZoGTyc71GfTDwe7WeYFXr9q
+        +WpG5ohuvFc54tA/SLkPuogLnOrIeym1WzQF1KkHX3thClqxLuoXTvhkIz+6+7vt27NDPsTidcAQz
+        9aakKqD4YCXnkPWDraxl9M5BjIxbzIak65UrGHF3yWYVb3rY578OGlqzweZa4qJsGSlt5FdjDu5ax
+        QTblip1z4/5b9WIJi4cC/5hsmzugJnAPFOIG88rHPtFs0gN7sYgtfP99RzlSaSwUTCETiC9j+2dMM
+        Fmtia4VisQQOurt8+ipErRxMouYYiiusb3Gx8BIn/Q4KBaXjtReBO34OZ4ex8r2uhBGWaWO7uzrux
+        /jo/9Gyw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRfFI-0001fB-J5; Thu, 23 Apr 2020 17:02:40 +0000
+Subject: Re: [PATCH v2] io: correct documentation mismatches for io memcpy
+To:     Wang Wenhu <wenhu.wang@vivo.com>, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com
+References: <20200423000945.118231-1-wenhu.wang@vivo.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <84b453cb-886c-2ec6-e562-e300a3cd55d4@infradead.org>
+Date:   Thu, 23 Apr 2020 10:02:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200423000945.118231-1-wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 01:43:02AM +0200, Matteo Croce wrote:
-> On Tue, Apr 14, 2020 at 1:21 AM Maxime Chevallier
-> <maxime.chevallier@bootlin.com> wrote:
-> >
-> > The PPv2 controller has 8 RSS tables that are shared across all ports on
-> > a given PPv2 instance. The previous implementation allocated one table
-> > per port, leaving others unused.
-> >
-> > By using RSS contexts, we can make use of multiple RSS tables per
-> > port, one being the default table (always id 0), the other ones being
-> > used as destinations for flow steering, in the same way as rx rings.
-> >
-> > This commit introduces RSS contexts management in the PPv2 driver. We
-> > always reserve one table per port, allocated when the port is probed.
-> >
-> > The global table list is stored in the struct mvpp2, as it's a global
-> > resource. Each port then maintains a list of indices in that global
-> > table, that way each port can have it's own numbering scheme starting
-> > from 0.
-> >
-> > One limitation that seems unavoidable is that the hashing parameters are
-> > shared across all RSS contexts for a given port. Hashing parameters for
-> > ctx 0 will be applied to all contexts.
-> >
-> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+On 4/22/20 5:09 PM, Wang Wenhu wrote:
+> Minor mismatches exist between funtion documentations and parameter
+> definitions. Also a dash '-' is needed between a function name and
+> its description.
 > 
-> Hi all,
+> Function definitions are as following:
+> static inline void memcpy_fromio(void *buffer,
+> 				 const volatile void __iomem *addr,
+> 				 size_t size)
+> static inline void memcpy_toio(volatile void __iomem *addr, const void *buffer,
+> 			       size_t size)
 > 
-> I noticed that enabling rxhash blocks the RX on my Macchiatobin. It
-> works fine with the 10G ports (the RX rate goes 4x up) but it
-> completely kills the gigabit interface.
-> 
-> # 10G port
-> root@macchiatobin:~# iperf3 -c 192.168.0.2
-> Connecting to host 192.168.0.2, port 5201
-> [  5] local 192.168.0.1 port 42394 connected to 192.168.0.2 port 5201
-> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> [  5]   0.00-1.00   sec   941 MBytes  7.89 Gbits/sec  4030    250 KBytes
-> [  5]   1.00-2.00   sec   933 MBytes  7.82 Gbits/sec  4393    240 KBytes
-> root@macchiatobin:~# ethtool -K eth0 rxhash on
-> root@macchiatobin:~# iperf3 -c 192.168.0.2
-> Connecting to host 192.168.0.2, port 5201
-> [  5] local 192.168.0.1 port 42398 connected to 192.168.0.2 port 5201
-> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> [  5]   0.00-1.00   sec   860 MBytes  7.21 Gbits/sec  428    410 KBytes
-> [  5]   1.00-2.00   sec   859 MBytes  7.20 Gbits/sec  185    563 KBytes
-> 
-> # gigabit port
-> root@macchiatobin:~# iperf3 -c turbo
-> Connecting to host turbo, port 5201
-> [  5] local 192.168.85.42 port 45144 connected to 192.168.85.6 port 5201
-> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> [  5]   0.00-1.00   sec   113 MBytes   948 Mbits/sec    0    407 KBytes
-> [  5]   1.00-2.00   sec   112 MBytes   942 Mbits/sec    0    428 KBytes
-> root@macchiatobin:~# ethtool -K eth2 rxhash on
-> root@macchiatobin:~# iperf3 -c turbo
-> iperf3: error - unable to connect to server: Resource temporarily unavailable
-> 
-> I've bisected and it seems that this commit causes the issue. I tried
-> to revert it on nex-next as a second test, but the code has changed a
-> lot much since, generating too much conflicts.
-> Can you have a look into this?
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 
-This behaviour on eth2 is confirmed here on v5.6.  Turning on rxhash
-appears to prevent eth2 working.
+Hi,
+Sorry to just notice this, but could you also fix up all of
+the kernel-doc notation for memset_io() in the same manner?
 
-Maxime, please look into this regression, thanks.
+thanks.
+
+> ---
+> Changes since v1:
+>  * Dashes added between the function names and their descriptions.
+> 
+>  include/asm-generic/io.h | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+> index d39ac997dda8..b6a9131ec4d4 100644
+> --- a/include/asm-generic/io.h
+> +++ b/include/asm-generic/io.h
+> @@ -1066,10 +1066,10 @@ static inline void memset_io(volatile void __iomem *addr, int value,
+>  #ifndef memcpy_fromio
+>  #define memcpy_fromio memcpy_fromio
+>  /**
+> - * memcpy_fromio	Copy a block of data from I/O memory
+> - * @dst:		The (RAM) destination for the copy
+> - * @src:		The (I/O memory) source for the data
+> - * @count:		The number of bytes to copy
+> + * memcpy_fromio -	Copy a block of data from I/O memory
+> + * @buffer:		The (RAM) destination for the copy
+> + * @addr:		The (I/O memory) source for the data
+> + * @size:		The number of bytes to copy
+>   *
+>   * Copy a block of data from I/O memory.
+>   */
+> @@ -1084,10 +1084,10 @@ static inline void memcpy_fromio(void *buffer,
+>  #ifndef memcpy_toio
+>  #define memcpy_toio memcpy_toio
+>  /**
+> - * memcpy_toio		Copy a block of data into I/O memory
+> - * @dst:		The (I/O memory) destination for the copy
+> - * @src:		The (RAM) source for the data
+> - * @count:		The number of bytes to copy
+> + * memcpy_toio -	Copy a block of data into I/O memory
+> + * @addr:		The (I/O memory) destination for the copy
+> + * @buffer:		The (RAM) source for the data
+> + * @size:		The number of bytes to copy
+>   *
+>   * Copy a block of data to I/O memory.
+>   */
+> 
+
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+~Randy
+
