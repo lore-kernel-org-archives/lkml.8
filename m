@@ -2,102 +2,119 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DFBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A043BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C3420776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7833920767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="unNW3Ga0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="wWrhpOno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgDWSvV (ORCPT
+        id S1728389AbgDWSwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:51:21 -0400
-Received: from 9.mo177.mail-out.ovh.net ([46.105.72.238]:59781 "EHLO
-        9.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgDWSvV (ORCPT
+        Thu, 23 Apr 2020 14:52:23 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:63284 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgDWSwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:51:21 -0400
-X-Greylist: delayed 847 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 14:51:20 EDT
-Received: from player746.ha.ovh.net (unknown [10.110.115.246])
-        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 7D1E312D18D
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:32:37 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player746.ha.ovh.net (Postfix) with ESMTPSA id 0C0B911C624B8;
-        Thu, 23 Apr 2020 18:32:32 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 20:32:31 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] docs: sysctl/kernel: document BPF entries
-Message-ID: <20200423203231.5f682a52@heffalump.sk2.org>
-In-Reply-To: <20200420165949.14dc0752@lwn.net>
-References: <20200315122648.20558-1-steve@sk2.org>
-        <20200420165949.14dc0752@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 23 Apr 2020 14:52:23 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 11492CC76A;
+        Thu, 23 Apr 2020 14:52:20 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=pYU0AMuQlOREd1+6VLkN+ll2Wmw=; b=unNW3G
+        a0fmfK+aImdn2fY4EQSPU9uu9tT0VaYVTfSNbh/0IDBrgQ+i8Ul4QlqCYSOjeBYc
+        KTGaaeeA957jiPuwY2tlDtUIhxR++NLP4/CGBCMd1RX/bWToMt88pkxdHZP4sERl
+        v3WRduVsfUuDF4csGvtoBiKIV7BRmolP35F80=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 0829ACC769;
+        Thu, 23 Apr 2020 14:52:20 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=uCFGMAwTUfy3QWw/Nrw1WO4CjlHOh6AiWtHwO1XyK+c=; b=wWrhpOnobs5viGIBdcx+erqAnz9ARnG7BMjQrVIcpf92OBVxtzlP/axJsTrD6kqowNkI8GlzfYsIZfTMeYOPcGrFW0eeACS5UTQ2Rgq5+LUYwhRw6b6gSgal0KmtDFhAQetXgvwv5Ho6K+QG0YhmFCNmU8Et0SGM78A4V2Utomo=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id DDD5CCC763;
+        Thu, 23 Apr 2020 14:52:16 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 09F152DA0CE0;
+        Thu, 23 Apr 2020 14:52:15 -0400 (EDT)
+Date:   Thu, 23 Apr 2020 14:52:14 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+In-Reply-To: <20200423183055.GB26002@ziepe.ca>
+Message-ID: <nycvar.YSQ.7.76.2004231448020.2671@knanqh.ubzr>
+References: <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com> <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr> <871rofdhtg.fsf@intel.com> <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr> <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org>
+ <nycvar.YSQ.7.76.2004231059170.2671@knanqh.ubzr> <20200423150556.GZ26002@ziepe.ca> <nycvar.YSQ.7.76.2004231109500.2671@knanqh.ubzr> <20200423151624.GA26002@ziepe.ca> <nycvar.YSQ.7.76.2004231128210.2671@knanqh.ubzr> <20200423183055.GB26002@ziepe.ca>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/o1onwjijsn/X1nkA2sVL9pS"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 16088265247455071621
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdelhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgesghdtreerredtjeenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejgeeirdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 8D860ECE-8593-11EA-8543-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/o1onwjijsn/X1nkA2sVL9pS
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Thu, 23 Apr 2020, Jason Gunthorpe wrote:
 
-On Mon, 20 Apr 2020 16:59:49 -0600, Jonathan Corbet <corbet@lwn.net> wrote:
-> On Sun, 15 Mar 2020 13:26:48 +0100
-> Stephen Kitt <steve@sk2.org> wrote:
->=20
-> > Based on the implementation in kernel/bpf/syscall.c,
-> > kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
-> > in bpftool-prog.rst.
-> >=20
-> > Signed-off-by: Stephen Kitt <steve@sk2.org>
-> > ---
-> >=20
-> > Notes:
-> >     This patch is intended for docs-next, but I'd appreciate reviews fr=
-om
-> >     BPF developers. =20
->=20
-> Haven't seen a whole lot of those...it's been a month, so I'll ahead and
-> apply this; it can be fixed up later if need be.
+> On Thu, Apr 23, 2020 at 11:33:33AM -0400, Nicolas Pitre wrote:
+> > > > No. There is no logic in restricting MTD usage based on CRAMFS or 
+> > > > CRAMFS_MTD.
+> > > 
+> > > Ah, I got it backwards, maybe this:
+> > > 
+> > > config CRAMFS
+> > >    depends on MTD if CRAMFS_MTD
+> > > 
+> > > ?
+> > 
+> > Still half-backward. CRAMFS should not depend on either MTD nor
+> > CRAMFS_MTD.
+> 
+> Well, I would view this the same as all the other cases.. the CRAMFS
+> module has an optional ability consume symbols from MTD.  Here that is
+> controlled by another 'CRAMFS_MTD' selection, but it should still
+> settle it out the same way as other cases like this - ie CRAMFS is
+> restricted to m if MTD is m
+> 
+> Arnd's point that kconfig is acyclic does kill it though :(
+> 
+> > It is CRAMFS_MTD that needs both CRAMFS and MTD.
+> > Furthermore CRAMFS_MTD can't be built-in if MTD is modular.
+> 
+> CRAMFS_MTD is a bool feature flag for the CRAMFS tristate - it is
+> CRAMFS that can't be built in if MTD is modular.
 
-Thanks, I=E2=80=99ll start pushing my remaining sysctl doc patches.
+Not exactly. CRAMFS still can be built irrespective of MTD. It is only 
+the XIP part of CRAMFS relying on MTD that is restricted.
 
-Regards,
 
-Stephen
-
---Sig_/o1onwjijsn/X1nkA2sVL9pS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl6h3z8ACgkQgNMC9Yht
-g5yBYxAAnAhijFdCY555e/sspMaOXstZhLe2ieWHr+OE1sZwokukp99cPd8xavzr
-4VvCL/MLTCmxEdiF1u2OWcar5qb1jmNsz3kuvP4lImpranerkN+j4nC0SiNrO9oW
-P76NRx6Zi/vZIRDNPEsoJjp2pl/i00YppayfGEYkT5UxeCOsNfTn3j1zQctWN/6v
-eLGtfkghS+6emGqCcEBoTrhkxxCqiv6VrDpGWNe+tEoseEm1I6NUm/gRqr8i6iM3
-EQzM7w+R8oiSy8JsIJR0ay03IGzUii5b3hkKZLQW/rAm1+MJVRaQaaHYsJn2JdD7
-/418UZwMZAJxZILek6bDNMQF3EHZgO6QbTDLjBPTm6ZeTJqqQEwfJ0DAVDG7sN/6
-MYjXUDrqYhj3XLziu0tf8DkS9ujvzcaLhyYRealessJy6WxFXDfYNt8t7IlbIRY1
-L0U2Euzl8akF5L6p4wfRy0C5ZYWQxgqNvPWhbuX+5DBATA76XIGtFHn5aRDZEMzD
-tSs0pkIre0oIPzD0Q93qVTcmHoIqUIyq3cLG+5mImhveBC4GDKMc6ULXJW2G+CY0
-1saNKu93Xvs6p9iioEE2lC/i0/NRvCfxT4DEfTJWl5nnyz3ZfzZ3gOJJ4CDVqLJZ
-ODgpRYY9+IkLj//4HyR34DE8M2hvQ+L0UYHo/K0qrfHw0Xm2ZhY=
-=6H/Z
------END PGP SIGNATURE-----
-
---Sig_/o1onwjijsn/X1nkA2sVL9pS--
+Nicolas
