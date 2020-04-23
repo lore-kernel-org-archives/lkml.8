@@ -2,126 +2,95 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF54C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54691C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05C72074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3208C2074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgsVLVg2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGETPAGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgDWMgy (ORCPT
+        id S1728339AbgDWMh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:36:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726090AbgDWMgx (ORCPT
+        Thu, 23 Apr 2020 08:37:29 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27770 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726614AbgDWMh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:36:53 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A928BC08E934;
-        Thu, 23 Apr 2020 05:36:53 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 188so6248774wmc.2;
-        Thu, 23 Apr 2020 05:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mi3rnUMPvy/QR3Ps6vsxVuv41qLYHh/uNXwCdOf964o=;
-        b=PgsVLVg2fEE4UgEw5ybsRRcMm8D0szEHNj4jYCN/y3Piw4K0Zvmgpeth5Hjb8gCVI0
-         Y2HAif5w2DxAfImAwIjZYnbyP7fEaBREjKHo0lML6cKH1VCtmlwGLGXxHftgpxo7RyJk
-         5ta54tkpyf8ALl3fGhh7E3u2HGxUH2dYnvxhZ8FMENxzdzOtQmlhJPnxAadF68Z+W+uf
-         V2We74ZXkgSjQP/TIAUvhG6NnMiAjbgwaE6w/Kt2o6aFnsYbbqeZjmXF+ac+tinjBO/U
-         p6YlOnEegbdG2PF+zK/S49wjLppEutcfSgHcBipTrQvS9xAjVt25l7orY3r29/DAPQFs
-         eEMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mi3rnUMPvy/QR3Ps6vsxVuv41qLYHh/uNXwCdOf964o=;
-        b=AJEX3QCfh+BdO/SJSsU6fd+pe8gAHYmfdgPph9hLCcL+0xYgeC9iv2cuMhtr3gw29A
-         69CSsnmLo02w0/m39jVR21ho08JdMdxSVlMDwAXigFn02wVUduu7Xk+cG8xasfg6vF/C
-         v/l53Usc8cNm93UMKmaAGQJW8YgFj3UfYjc9BDZbsuoPGYAZA618fn217CQoI7Dy3xBd
-         2TVevSaMV65aApOn1yuoLYYG4jMaLPo9sW4w0ffeniPxg0zJxpRpjGEmPcr/TWyLqzGY
-         HEHg/EZeJj9cV1iPYXmDwcUS+9LWIzDg9+1aJ2U9M872Z6TDsNXHQ8wsJrKxnTt0TIiP
-         2N9g==
-X-Gm-Message-State: AGi0PuZrXUPYarTT6xRInH1CYEC1O4iEonudktsiIn5n8wB9LA92ukjN
-        Gsfp2zQMBW4R8Mcg4Zee/Os=
-X-Google-Smtp-Source: APiQypLOTc7Zk2kFUmf/qLTme2iOBIANPeVm3oJWV5ReTH48bHyBCwfMNIZwZ1IBZDmEt730DGE/4A==
-X-Received: by 2002:a05:600c:2316:: with SMTP id 22mr3898972wmo.164.1587645412306;
-        Thu, 23 Apr 2020 05:36:52 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 68sm3672991wrm.65.2020.04.23.05.36.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 05:36:51 -0700 (PDT)
-Subject: Re: [PATCH v2 6/9] dt-bindings: media: rkisp1: move rockchip-isp1
- bindings out of staging
-To:     Helen Koike <helen.koike@collabora.com>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        kernel@collabora.com, dafna.hirschfeld@collabora.com,
-        ezequiel@collabora.com, mark.rutland@arm.com,
-        karthik.poduval@gmail.com, kishon@ti.com
-References: <20200403161538.1375908-1-helen.koike@collabora.com>
- <20200403161538.1375908-7-helen.koike@collabora.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <7da8fb4d-018e-894a-884b-760eaf2959e6@gmail.com>
-Date:   Thu, 23 Apr 2020 14:36:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 08:37:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587645447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+XlBFNq2TljiIz7UMQVRidAnnXkCvE8Tn9pzuRMdxJE=;
+        b=KGETPAGZxzZWjKfc9ds35wzFNfCghTI9gsRYfEmHKVPhA8jEOfZz7uHGjxusjElANNaswf
+        3c3QNiFUvHjai6xTFBzDYL1btpbFd5sN+V57r+j+rRo8+udZHW7We48yKnC9xgEWjhnOm4
+        QiS0ZzdwwcshliVDScCzf1Er38c56+0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-RqunHNMFNlqYJD41EtgEXw-1; Thu, 23 Apr 2020 08:37:26 -0400
+X-MC-Unique: RqunHNMFNlqYJD41EtgEXw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F0F61800D51;
+        Thu, 23 Apr 2020 12:37:25 +0000 (UTC)
+Received: from localhost (ovpn-114-230.ams2.redhat.com [10.36.114.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FA8B5D70A;
+        Thu, 23 Apr 2020 12:37:18 +0000 (UTC)
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     virtualization@lists.linux-foundation.org
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Lance Digby <ldigby@redhat.com>
+Subject: [PATCH] virtio-blk: handle block_device_operations callbacks after hot unplug
+Date:   Thu, 23 Apr 2020 13:37:17 +0100
+Message-Id: <20200423123717.139141-1-stefanha@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200403161538.1375908-7-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
-
-make ARCH=arm dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-  CHKDT   Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-  DTC
-Documentation/devicetree/bindings/media/rockchip-isp1.example.dt.yaml
-Documentation/devicetree/bindings/media/rockchip-isp1.example.dts:22.27-99.11:
-Warning (unit_address_vs_reg): /example-0/parent@0: node has a unit
-name, but no reg or ranges property
-  CHECK
-Documentation/devicetree/bindings/media/rockchip-isp1.example.dt.yaml
-
-On 4/3/20 6:15 PM, Helen Koike wrote:
-> Move rkisp1 bindings to Documentation/devicetree/bindings/media
-> 
-> Verified with:
-> make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
-> 
-> V2:
-> - no changes
-> 
->  .../devicetree/bindings/media/rockchip-isp1.yaml                  | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (100%)
-> 
-> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> similarity index 100%
-> rename from drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> rename to Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
+QSB2aXJ0aW9fYmxrIGJsb2NrIGRldmljZSBjYW4gc3RpbGwgYmUgcmVmZXJlbmNlZCBhZnRlciBo
+b3QgdW5wbHVnIGJ5CnVzZXJzcGFjZSBwcm9jZXNzZXMgdGhhdCBob2xkIHRoZSBmaWxlIGRlc2Ny
+aXB0b3IuICBJbiB0aGlzIGNhc2UKdmlydGJsa19nZXRnZW8oKSBjYW4gYmUgaW52b2tlZCBhZnRl
+ciB2aXJ0YmxrX3JlbW92ZSgpIHdhcyBjYWxsZWQuICBGb3IKZXhhbXBsZSwgYSBwcm9ncmFtIHRo
+YXQgaGFzIC9kZXYvdmRiIG9wZW4gY2FuIGNhbGwgaW9jdGwoSERJT19HRVRHRU8pCmFmdGVyIGhv
+dCB1bnBsdWcuCgpGaXggdGhpcyBieSBjbGVhcmluZyB2YmxrLT5kaXNrLT5wcml2YXRlX2RhdGEg
+YW5kIGNoZWNraW5nIHRoYXQgdGhlCnZpcnRpb19ibGsgZHJpdmVyIGluc3RhbmNlIGlzIHN0aWxs
+IGFyb3VuZCBpbiB2aXJ0YmxrX2dldGdlbygpLgoKTm90ZSB0aGF0IHRoZSB2aXJ0YmxrX2dldGdl
+bygpIGZ1bmN0aW9uIGl0c2VsZiBpcyBndWFyYW50ZWVkIHRvIHJlbWFpbgppbiBtZW1vcnkgYWZ0
+ZXIgaG90IHVucGx1ZyBiZWNhdXNlIHRoZSB2aXJ0aW9fYmxrIG1vZHVsZSByZWZjb3VudCBpcwpz
+dGlsbCBoZWxkIHdoaWxlIGEgYmxvY2sgZGV2aWNlIHJlZmVyZW5jZSBleGlzdHMuCgpPcmlnaW5h
+bGx5LWJ5OiBMYW5jZSBEaWdieSA8bGRpZ2J5QHJlZGhhdC5jb20+ClNpZ25lZC1vZmYtYnk6IFN0
+ZWZhbiBIYWpub2N6aSA8c3RlZmFuaGFAcmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2Jsb2NrL3Zp
+cnRpb19ibGsuYyB8IDUgKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYyBiL2RyaXZlcnMvYmxvY2svdmly
+dGlvX2Jsay5jCmluZGV4IDkzNDY4YjdjNjcwMS4uYjUwY2RmMzdhNmY3IDEwMDY0NAotLS0gYS9k
+cml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYworKysgYi9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsu
+YwpAQCAtMzAwLDYgKzMwMCwxMCBAQCBzdGF0aWMgaW50IHZpcnRibGtfZ2V0Z2VvKHN0cnVjdCBi
+bG9ja19kZXZpY2UgKmJkLCBzdHJ1Y3QgaGRfZ2VvbWV0cnkgKmdlbykKIHsKIAlzdHJ1Y3Qgdmly
+dGlvX2JsayAqdmJsayA9IGJkLT5iZF9kaXNrLT5wcml2YXRlX2RhdGE7CiAKKwkvKiBEcml2ZXIg
+aW5zdGFuY2UgaGFzIGJlZW4gcmVtb3ZlZCAqLworCWlmICghdmJsaykKKwkJcmV0dXJuIC1FTk9U
+VFk7CisKIAkvKiBzZWUgaWYgdGhlIGhvc3QgcGFzc2VkIGluIGdlb21ldHJ5IGNvbmZpZyAqLwog
+CWlmICh2aXJ0aW9faGFzX2ZlYXR1cmUodmJsay0+dmRldiwgVklSVElPX0JMS19GX0dFT01FVFJZ
+KSkgewogCQl2aXJ0aW9fY3JlYWQodmJsay0+dmRldiwgc3RydWN0IHZpcnRpb19ibGtfY29uZmln
+LApAQCAtODM1LDYgKzgzOSw3IEBAIHN0YXRpYyB2b2lkIHZpcnRibGtfcmVtb3ZlKHN0cnVjdCB2
+aXJ0aW9fZGV2aWNlICp2ZGV2KQogCXZkZXYtPmNvbmZpZy0+cmVzZXQodmRldik7CiAKIAlyZWZj
+ID0ga3JlZl9yZWFkKCZkaXNrX3RvX2Rldih2YmxrLT5kaXNrKS0+a29iai5rcmVmKTsKKwl2Ymxr
+LT5kaXNrLT5wcml2YXRlX2RhdGEgPSBOVUxMOwogCXB1dF9kaXNrKHZibGstPmRpc2spOwogCXZk
+ZXYtPmNvbmZpZy0+ZGVsX3Zxcyh2ZGV2KTsKIAlrZnJlZSh2YmxrLT52cXMpOwotLSAKMi4yNS4x
+Cgo=
 
