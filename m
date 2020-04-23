@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A174C55194
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13929C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 780D22077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA5020728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgDWXX3 (ORCPT
+        id S1728314AbgDWXXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:23:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48476 "EHLO
+        Thu, 23 Apr 2020 19:23:32 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48442 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728181AbgDWXGb (ORCPT
+        by vger.kernel.org with ESMTP id S1728176AbgDWXGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:31 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bg-Ec; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvL-0004bZ-2G; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-00E6ih-35; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvJ-00E6iM-Os; Fri, 24 Apr 2020 00:06:25 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mike Snitzer" <snitzer@redhat.com>,
-        "Wei Yongjun" <weiyj.lk@gmail.com>
-Date:   Fri, 24 Apr 2020 00:04:44 +0100
-Message-ID: <lsq.1587683028.17766012@decadent.org.uk>
+        "Su Yue" <suy.fnst@cn.fujitsu.com>,
+        "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
+        "Qu Wenruo" <wqu@suse.com>, "David Sterba" <dsterba@suse.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 00:04:40 +0100
+Message-ID: <lsq.1587683028.12048215@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 057/245] dm flakey: return -EINVAL on interval bounds
- error in flakey_ctr()
+Subject: [PATCH 3.16 053/245] btrfs: tree-checker: Check level for leaves
+ and nodes
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,35 +58,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wei Yongjun <weiyj.lk@gmail.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit bff7e067ee518f9ed7e1cbc63e4c9e01670d0b71 upstream.
+commit f556faa46eb4e96d0d0772e74ecf66781e132f72 upstream.
 
-Fix to return error code -EINVAL instead of 0, as is done elsewhere in
-this function.
+Although we have tree level check at tree read runtime, it's completely
+based on its parent level.
+We still need to do accurate level check to avoid invalid tree blocks
+sneak into kernel space.
 
-Fixes: e80d1c805a3b ("dm: do not override error code returned from dm_get_device()")
-Signed-off-by: Wei Yongjun <weiyj.lk@gmail.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+The check itself is simple, for leaf its level should always be 0.
+For nodes its level should be in range [1, BTRFS_MAX_LEVEL - 1].
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Su Yue <suy.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 4.4:
+ - Pass root instead of fs_info to generic_err()
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/md/dm-flakey.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/tree-checker.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -200,11 +200,13 @@ static int flakey_ctr(struct dm_target *
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -447,6 +447,13 @@ static int check_leaf(struct btrfs_root
+ 	u32 nritems = btrfs_header_nritems(leaf);
+ 	int slot;
  
- 	if (!(fc->up_interval + fc->down_interval)) {
- 		ti->error = "Total (up + down) interval is zero";
-+		r = -EINVAL;
- 		goto bad;
- 	}
++	if (btrfs_header_level(leaf) != 0) {
++		generic_err(root, leaf, 0,
++			"invalid level for leaf, have %d expect 0",
++			btrfs_header_level(leaf));
++		return -EUCLEAN;
++	}
++
+ 	/*
+ 	 * Extent buffers from a relocation tree have a owner field that
+ 	 * corresponds to the subvolume tree they are based on. So just from an
+@@ -589,9 +596,16 @@ int btrfs_check_node(struct btrfs_root *
+ 	unsigned long nr = btrfs_header_nritems(node);
+ 	struct btrfs_key key, next_key;
+ 	int slot;
++	int level = btrfs_header_level(node);
+ 	u64 bytenr;
+ 	int ret = 0;
  
- 	if (fc->up_interval + fc->down_interval < fc->up_interval) {
- 		ti->error = "Interval overflow";
-+		r = -EINVAL;
- 		goto bad;
- 	}
- 
++	if (level <= 0 || level >= BTRFS_MAX_LEVEL) {
++		generic_err(root, node, 0,
++			"invalid level for node, have %d expect [1, %d]",
++			level, BTRFS_MAX_LEVEL - 1);
++		return -EUCLEAN;
++	}
+ 	if (nr == 0 || nr > BTRFS_NODEPTRS_PER_BLOCK(root)) {
+ 		btrfs_crit(root->fs_info,
+ "corrupt node: root=%llu block=%llu, nritems too %s, have %lu expect range [1,%zu]",
 
