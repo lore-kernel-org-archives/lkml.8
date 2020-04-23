@@ -2,108 +2,154 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC8FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCADFC55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4F020857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C29C20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:36:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wkr0bymD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M0IdiOuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728246AbgDWOfr (ORCPT
+        id S1728292AbgDWOgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:35:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726138AbgDWOfq (ORCPT
+        Thu, 23 Apr 2020 10:36:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56686 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgDWOgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:35:46 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE6BC08E934
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id u12so5857828uau.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=txoUP4TZL/kX6wzTvIyyPM8Tw98hlNv8TkS19LKzzNo=;
-        b=Wkr0bymDg39KvhwGQedoiURyuP/SArfM/9lbpXIi1kmydOSd5DW7q2QV6F+YHrIzDQ
-         JTwKM1kQFW1Ecz6bwK0sChfkdhZMNRukeEymx9JDsupFdDqi7m2c9kbHgwU1rbDm7JyF
-         RDOjDH5tbRA+5Rrd8iV3L/pXJmss/r1qVJCMM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=txoUP4TZL/kX6wzTvIyyPM8Tw98hlNv8TkS19LKzzNo=;
-        b=iot7vEOBrxxp8OsrrElZnS8JCtgzITnbR4qlY/uIQnmjFncpuWKjdN73gFSbT7k+iZ
-         MmU/l6RrBSHFf7PqO2d0hWS8oxj/T+o4Trrr+WkeTQzBJg6sHXB+g4+7gOJ49TTLkXkk
-         q8rnBoqvQZPQrhwtm9h7mmN9Jj4knJN7ZgkcWqBE5qd2Lf2qwwk7v9vLTx/53jkGVViv
-         fKw4MC6iiQKnZzfXRcWKbGa+1vIowGbmeWvYvWWn7ZCb9+9bqmwuoDDYkhuPFJnNnq5y
-         J2hm4IPUe/egDIqtJndigeRyGc8puulmRYoVUQBPlAlvQTFplKAbd0a90hELHGvPLc53
-         uxvA==
-X-Gm-Message-State: AGi0PuZ6hfZmNUqQp88+81xwiXEW2K80O1k+CWFdQ4VvdsCGgptN3iDi
-        BvbxjLWPd5LpzybmY6XtuIP5XsGjs4Q=
-X-Google-Smtp-Source: APiQypIB12dbMzWQ8pcA/IigZmRYW5AAV1br+Xw42tpDL+YNIAZqe3bKZuULL2qtypHB8I+HqE7qZA==
-X-Received: by 2002:ab0:24d3:: with SMTP id k19mr3934161uan.36.1587652545761;
-        Thu, 23 Apr 2020 07:35:45 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id 204sm748086vka.32.2020.04.23.07.35.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 07:35:45 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id v24so5871991uak.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
-X-Received: by 2002:a67:f5d6:: with SMTP id t22mr1333288vso.73.1587652544353;
- Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 23 Apr 2020 07:35:32 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
-Message-ID: <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
-Subject: Re: [PATCHv2] iommu/arm-smmu: Make remove callback message more informative
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 23 Apr 2020 10:36:44 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NESqx4043325;
+        Thu, 23 Apr 2020 14:36:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
+ content-transfer-encoding : mime-version : subject : message-id : date :
+ cc : to; s=corp-2020-01-29;
+ bh=vhc1qxRXMx+iuW9x2FbtF55Pq5hnzBq07HQyTGBkbI4=;
+ b=M0IdiOuhleGgSwvuxcumRfGfShs+bWWU8BddaDiKGgCPDw8xDeNALaru/oA5jLPbUJv4
+ K28p+Iwq9GCqEU0d0Svz/QuCmf+16GiQ6jzP8XW35seZDKetC2uDbpcqCYVIia/xcmiq
+ 3SBNHz1nM186Am/qu3zQ8CPrXD8i5YOLGqDGNsj4tMel0bV0BxULUqdJG3qiWcH8zLm/
+ /XYQt8SPYNE/Eb/c9MhsGEDbg9pgxItsTyEU6HuSKlvHT7EhtXKcmrwe0YNJJvfj3Wef
+ soFHNnKGs7I3O2H5LuQ1bRumFiuupTdxJGiY+iF6cpceJyv8UjHnTmP1s/pqyy4yGyQk zQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 30grpgwd7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 14:36:41 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NEXfYh016068;
+        Thu, 23 Apr 2020 14:36:41 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30k7qv81my-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 14:36:41 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03NEae1Z028661;
+        Thu, 23 Apr 2020 14:36:40 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Apr 2020 07:36:40 -0700
+From:   Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: [GIT PULL] Please pull first round of NFS server -rc fixes for v5.7
+Message-Id: <AC510313-C744-4F22-82F7-F75F20F4B073@oracle.com>
+Date:   Thu, 23 Apr 2020 10:36:39 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=2 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004230116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=2 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004230116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus-
 
-On Thu, Apr 23, 2020 at 2:55 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Currently on reboot/shutdown, the following messages are
-> displayed on the console as error messages before the
-> system reboots/shutdown as part of remove callback.
->
-> On SC7180:
->
->   arm-smmu 15000000.iommu: removing device with active domains!
->   arm-smmu 5040000.iommu: removing device with active domains!
->
-> Make this error message more informative and less scary.
->
-> Reported-by: Douglas Anderson <dianders@chromium.org>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  drivers/iommu/arm-smmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+As promised, here is the first set of 5.7-rc fixes for NFS server =
+issues.
+These were all unresolved at the time the 5.7 window opened, and needed
+some additional time to ensure they were correctly addressed. They are
+ready now.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+At the moment I know of one more urgent issue regarding the NFS server.
+A fix has been tested and is under review. I expect to send one more
+"5.7-rc fixes" PR, containing this fix (which now consists of 3 =
+patches).
+
+
+The following changes since commit =
+8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.7-rc-1
+
+for you to fetch changes up to 23cf1ee1f1869966b75518c59b5cbda4c6c92450:
+
+  svcrdma: Fix leak of svc_rdma_recv_ctxt objects (2020-04-17 12:40:38 =
+-0400)
+
+----------------------------------------------------------------
+Fixes:
+
+- Address several use-after-free and memory leak bugs
+
+- Prevent a backchannel livelock
+
+----------------------------------------------------------------
+Chuck Lever (3):
+      SUNRPC: Fix backchannel RPC soft lockups
+      svcrdma: Fix trace point use-after-free race
+      svcrdma: Fix leak of svc_rdma_recv_ctxt objects
+
+Vasily Averin (1):
+      nfsd: memory corruption in nfsd4_lock()
+
+Yihao Wu (1):
+      SUNRPC/cache: Fix unsafe traverse caused double-free in =
+cache_purge
+
+ fs/nfsd/nfs4callback.c                     |  4 +++-
+ fs/nfsd/nfs4state.c                        |  2 ++
+ include/linux/sunrpc/svc_rdma.h            |  1 +
+ include/trace/events/rpcrdma.h             | 50 =
+++++++++++++++++++++++++++++++++++++--------------
+ net/sunrpc/cache.c                         |  5 +++--
+ net/sunrpc/svc_xprt.c                      |  5 ++---
+ net/sunrpc/svcsock.c                       |  4 ++++
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  2 ++
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    | 22 ++++++++++++++++++++++
+ net/sunrpc/xprtrdma/svc_rdma_rw.c          |  3 +--
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c      | 29 =
+++++++++++++-----------------
+ net/sunrpc/xprtrdma/svc_rdma_transport.c   |  5 -----
+ net/sunrpc/xprtsock.c                      |  1 +
+ 13 files changed, 89 insertions(+), 44 deletions(-)
+
+--
+Chuck Lever
+
+
+
