@@ -2,216 +2,172 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDB9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B685C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 447D220728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236C520767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Db0Ck2Hu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJAabNre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgDWQmx (ORCPT
+        id S1729762AbgDWQm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:42:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29961 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729407AbgDWQmx (ORCPT
+        Thu, 23 Apr 2020 12:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729407AbgDWQm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:42:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587660171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=odJrFOK+7bivbDZ7ZKaNo+MENCGaQCojnN8HH0MbtLQ=;
-        b=Db0Ck2HuEuXStMSNpiItPm+emlxXImd6TjpYfliuN5lee7ye/uDgh8a8KRfQu9/y50b7nS
-        GIc36A42Flx1nJBu6574R8rfCCq0xxE7hBjn2zt7T0/Ht2aK2j1NYMANK1PV9WazEVkYb0
-        52AdaD8JNdMCXP+L6UsDgNzo2hfjIcQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-uYnyQ5tLMYyrRTydAnFg0Q-1; Thu, 23 Apr 2020 12:42:49 -0400
-X-MC-Unique: uYnyQ5tLMYyrRTydAnFg0Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB72F803786;
-        Thu, 23 Apr 2020 16:42:30 +0000 (UTC)
-Received: from Ruby.redhat.com (ovpn-119-186.rdu2.redhat.com [10.10.119.186])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F7545D9CC;
-        Thu, 23 Apr 2020 16:42:28 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Wayne Lin <Wayne.Lin@amd.com>, Sean Paul <seanpaul@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Wayne Lin <waynelin@amd.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "drm/dp_mst: Remove single tx msg restriction."
-Date:   Thu, 23 Apr 2020 12:42:24 -0400
-Message-Id: <20200423164225.680178-1-lyude@redhat.com>
+        Thu, 23 Apr 2020 12:42:58 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67112C09B041;
+        Thu, 23 Apr 2020 09:42:57 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 18so3219347pfx.6;
+        Thu, 23 Apr 2020 09:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g0Ejxu1wuqWuETn/IJMRXxxZQ/rRlbjvuR8vLOOTtDU=;
+        b=IJAabNre2tTWjnak57Stl3OhpAV/rvj4wnWO1M3yc6RjzjaIAv2BTTo9M3W4aTmQK2
+         1nkfWVe8viMZQMVqM7Ggb5rElkaK6nVmUpmsfxpeUgK85pfnIA+DfPWB+q/rqK80Chqq
+         WcJwZttjVCByfGO7lkWczHDFKgIW1Bwk1huREmPw5O4MxEV0jgx/LXdiG18OFARjhrDT
+         YsPHtvJKMfnHdGqF+CRSEBr+J2T3NTDSlyBxabUTTJE/+LC++HQrs1RLA8mYBOgcg4Q/
+         3vZGSZ7EqishFfz+8E2CZtBRw2Xl7PtKJ7ZjEFKvpE4cZNEkdttNfVYAv19ydSCyCiDi
+         iqLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g0Ejxu1wuqWuETn/IJMRXxxZQ/rRlbjvuR8vLOOTtDU=;
+        b=Kb1rnfx5ybhu9UyHonoueKfpmSRgum/bqbKavU2zC7fhVr7teXEhF2l2CXH7Y5vYRq
+         a2Vw/nvswPT/r8XYfPMPaq5M6a9YANjEqQ2yJeEC0XhqXw1dCY9nofkUypYWXwehVQHo
+         oYHXvi0YaqYpOGtPfHkVEXkjPAJisTZmoICLLSu6RSoMbatq0tl2blljXvng0shARtOa
+         EKbs5prAuX1gQD5FBHUZqzWERzb+7Dp1MZh59h8DD/ce233ovvbZb1KBva0aCzVlPshT
+         TdvN48hb2u5cLFUJ3l3seS5ihZoas8gKG8ie0ScVhrrkBwm6XSHvuqjmXqQneRT0bxFv
+         qLnQ==
+X-Gm-Message-State: AGi0PuZB4Lq/F2z/lEtBV6sn5rZgD6ogrBjnxXEOGb16S3rNx3jIG8If
+        oZdYCIrCYdJwzIKdtk+GHtA=
+X-Google-Smtp-Source: APiQypJw9QQfdKz9HG3qn61Gqz1NLw3POTwQWawknqDpJnDaZVNpc7d2bP1j2+rbgCm0QcU3qf+5fQ==
+X-Received: by 2002:a63:e607:: with SMTP id g7mr4676487pgh.303.1587660176929;
+        Thu, 23 Apr 2020 09:42:56 -0700 (PDT)
+Received: from localhost (176.122.158.71.16clouds.com. [176.122.158.71])
+        by smtp.gmail.com with ESMTPSA id p24sm3061668pff.92.2020.04.23.09.42.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Apr 2020 09:42:56 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     b.zolnierkie@samsung.com, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, akpm@osdl.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v3] console: newport_con: fix an issue about leak related system resources
+Date:   Fri, 24 Apr 2020 00:42:51 +0800
+Message-Id: <20200423164251.3349-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 6bb0942e8f46863a745489cce27efe5be2a3885e.
+A call of the function do_take_over_console() can fail here.
+The corresponding system resources were not released then.
+Thus add a call of iounmap() and release_mem_region()
+together with the check of a failure predicate. and also
+add release_mem_region() on device removal.
 
-Unfortunately it would appear that the rumors we've heard of sideband
-message interleaving not being very well supported are true. On the
-Lenovo ThinkPad Thunderbolt 3 dock that I have, interleaved messages
-appear to just get dropped:
-
-  [drm:drm_dp_mst_wait_tx_reply [drm_kms_helper]] timedout msg send
-  00000000571ddfd0 2 1
-  [dp_mst] txmsg cur_offset=3D2 cur_len=3D2 seqno=3D1 state=3DSENT path_m=
-sg=3D1 dst=3D00
-  [dp_mst] 	type=3DENUM_PATH_RESOURCES contents:
-  [dp_mst] 		port=3D2
-
-DP descriptor for this hub:
-  OUI 90-cc-24 dev-ID SYNA3  HW-rev 1.0 SW-rev 3.12 quirks 0x0008
-
-It would seem like as well that this is a somewhat well known issue in
-the field. From section 5.4.2 of the DisplayPort 2.0 specification:
-
-  There are MST Sink/Branch devices in the field that do not handle
-  interleaved message transactions.
-
-  To facilitate message transaction handling by downstream devices, an
-  MST Source device shall generate message transactions in an atomic
-  manner (i.e., the MST Source device shall not concurrently interleave
-  multiple message transactions). Therefore, an MST Source device shall
-  clear the Message_Sequence_No value in the Sideband_MSG_Header to 0.
-
-  MST Source devices that support field policy updates by way of
-  software should update the policy to forego the generation of
-  interleaved message transactions.
-
-This is a bit disappointing, as features like HDCP require that we send
-a sideband request every ~2 seconds for each active stream. However,
-there isn't really anything in the specification that allows us to
-accurately probe for interleaved messages.
-
-If it ends up being that we -really- need this in the future, we might
-be able to whitelist hubs where interleaving is known to work-or maybe
-try some sort of heuristics. But for now, let's just play it safe and
-not use it.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: 6bb0942e8f46 ("drm/dp_mst: Remove single tx msg restriction.")
-Cc: Wayne Lin <Wayne.Lin@amd.com>
-Cc: Sean Paul <seanpaul@chromium.org>
+Fixes: e86bb8acc0fdc ("[PATCH] VT binding: Make newport_con support binding")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Suggested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 14 ++++++++++++--
- include/drm/drm_dp_mst_helper.h       |  5 +++++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+v2 -> v3:
+	- modify commit tag CC to Cc by Andy's suggestion.
+	- modify Subject 'console: console:' to 'console: newport_con:'
+	  by Bartlomiej's suggestion.
+	- add missing release_mem_region() on error and on device removal
+	  by Bartlomiej's suggestion.
+	- add correct fixes commit, before this patch, add a wrong 'Fixes:
+	  e84de0c6190503 ("MIPS: GIO bus support for SGI IP22/28")'
+	  thanks Bartlomiej again!
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
-dp_mst_topology.c
-index 21f10ceb3d6c..03a1496f6120 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -1205,6 +1205,8 @@ static int drm_dp_mst_wait_tx_reply(struct drm_dp_m=
-st_branch *mstb,
- 		    txmsg->state =3D=3D DRM_DP_SIDEBAND_TX_SENT) {
- 			mstb->tx_slots[txmsg->seqno] =3D NULL;
- 		}
-+		mgr->is_waiting_for_dwn_reply =3D false;
+v1 -> v2:
+	- modify the commit comments. The commit comments have some more
+	  appropriate instructions by Markus'suggestion. here is my first
+	  version commit comments:
+
+	  if do_take_over_console() return an error in the newport_probe(),
+	  due to the io virtual address is not released, it will cause a
+	  leak.
+	 
+ drivers/video/console/newport_con.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
+index 00dddf6e08b0..2d2ee17052e8 100644
+--- a/drivers/video/console/newport_con.c
++++ b/drivers/video/console/newport_con.c
+@@ -32,6 +32,8 @@
+ #include <linux/linux_logo.h>
+ #include <linux/font.h>
+ 
++#define NEWPORT_LEN	0x10000
 +
- 	}
- out:
- 	if (unlikely(ret =3D=3D -EIO) && drm_debug_enabled(DRM_UT_DP)) {
-@@ -1214,6 +1216,7 @@ static int drm_dp_mst_wait_tx_reply(struct drm_dp_m=
-st_branch *mstb,
- 	}
- 	mutex_unlock(&mgr->qlock);
-=20
-+	drm_dp_mst_kick_tx(mgr);
- 	return ret;
- }
-=20
-@@ -2789,9 +2792,11 @@ static void process_single_down_tx_qlock(struct dr=
-m_dp_mst_topology_mgr *mgr)
- 	ret =3D process_single_tx_qlock(mgr, txmsg, false);
- 	if (ret =3D=3D 1) {
- 		/* txmsg is sent it should be in the slots now */
-+		mgr->is_waiting_for_dwn_reply =3D true;
- 		list_del(&txmsg->next);
- 	} else if (ret) {
- 		DRM_DEBUG_KMS("failed to send msg in q %d\n", ret);
-+		mgr->is_waiting_for_dwn_reply =3D false;
- 		list_del(&txmsg->next);
- 		if (txmsg->seqno !=3D -1)
- 			txmsg->dst->tx_slots[txmsg->seqno] =3D NULL;
-@@ -2831,7 +2836,8 @@ static void drm_dp_queue_down_tx(struct drm_dp_mst_=
-topology_mgr *mgr,
- 		drm_dp_mst_dump_sideband_msg_tx(&p, txmsg);
- 	}
-=20
--	if (list_is_singular(&mgr->tx_msg_downq))
-+	if (list_is_singular(&mgr->tx_msg_downq) &&
-+	    !mgr->is_waiting_for_dwn_reply)
- 		process_single_down_tx_qlock(mgr);
- 	mutex_unlock(&mgr->qlock);
- }
-@@ -3823,6 +3829,7 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp=
-_mst_topology_mgr *mgr)
- 	mutex_lock(&mgr->qlock);
- 	txmsg->state =3D DRM_DP_SIDEBAND_TX_RX;
- 	mstb->tx_slots[seqno] =3D NULL;
-+	mgr->is_waiting_for_dwn_reply =3D false;
- 	mutex_unlock(&mgr->qlock);
-=20
- 	wake_up_all(&mgr->tx_waitq);
-@@ -3830,6 +3837,9 @@ static int drm_dp_mst_handle_down_rep(struct drm_dp=
-_mst_topology_mgr *mgr)
- 	return 0;
-=20
- out_clear_reply:
-+	mutex_lock(&mgr->qlock);
-+	mgr->is_waiting_for_dwn_reply =3D false;
-+	mutex_unlock(&mgr->qlock);
- 	if (msg)
- 		memset(msg, 0, sizeof(struct drm_dp_sideband_msg_rx));
- out:
-@@ -4683,7 +4693,7 @@ static void drm_dp_tx_work(struct work_struct *work=
-)
- 	struct drm_dp_mst_topology_mgr *mgr =3D container_of(work, struct drm_d=
-p_mst_topology_mgr, tx_work);
-=20
- 	mutex_lock(&mgr->qlock);
--	if (!list_empty(&mgr->tx_msg_downq))
-+	if (!list_empty(&mgr->tx_msg_downq) && !mgr->is_waiting_for_dwn_reply)
- 		process_single_down_tx_qlock(mgr);
- 	mutex_unlock(&mgr->qlock);
- }
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_hel=
-per.h
-index 2d7c26592c05..96bcf33c03d3 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -592,6 +592,11 @@ struct drm_dp_mst_topology_mgr {
- 	 */
- 	bool payload_id_table_cleared : 1;
-=20
-+	/**
-+	 * @is_waiting_for_dwn_reply: whether we're waiting for a down reply.
-+	 */
-+	bool is_waiting_for_dwn_reply : 1;
+ #define FONT_DATA ((unsigned char *)font_vga_8x16.data)
+ 
+ /* borrowed from fbcon.c */
+@@ -43,6 +45,7 @@
+ static unsigned char *font_data[MAX_NR_CONSOLES];
+ 
+ static struct newport_regs *npregs;
++static unsigned long newport_addr;
+ 
+ static int logo_active;
+ static int topscan;
+@@ -702,7 +705,6 @@ const struct consw newport_con = {
+ static int newport_probe(struct gio_device *dev,
+ 			 const struct gio_device_id *id)
+ {
+-	unsigned long newport_addr;
+ 	int err;
+ 
+ 	if (!dev->resource.start)
+@@ -712,7 +714,7 @@ static int newport_probe(struct gio_device *dev,
+ 		return -EBUSY; /* we only support one Newport as console */
+ 
+ 	newport_addr = dev->resource.start + 0xF0000;
+-	if (!request_mem_region(newport_addr, 0x10000, "Newport"))
++	if (!request_mem_region(newport_addr, NEWPORT_LEN, "Newport"))
+ 		return -ENODEV;
+ 
+ 	npregs = (struct newport_regs *)/* ioremap cannot fail */
+@@ -720,6 +722,11 @@ static int newport_probe(struct gio_device *dev,
+ 	console_lock();
+ 	err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
+ 	console_unlock();
 +
- 	/**
- 	 * @mst_primary: Pointer to the primary/first branch device.
- 	 */
---=20
-2.25.3
++	if (err) {
++		iounmap((void *)npregs);
++		release_mem_region(newport_addr, NEWPORT_LEN);
++	}
+ 	return err;
+ }
+ 
+@@ -727,6 +734,7 @@ static void newport_remove(struct gio_device *dev)
+ {
+ 	give_up_console(&newport_con);
+ 	iounmap((void *)npregs);
++	release_mem_region(newport_addr, NEWPORT_LEN);
+ }
+ 
+ static struct gio_device_id newport_ids[] = {
+-- 
+2.25.0
 
