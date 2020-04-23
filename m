@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DB4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E920C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC2C9206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7B6206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgDWPY0 (ORCPT
+        id S1729158AbgDWPYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:24:26 -0400
+        Thu, 23 Apr 2020 11:24:23 -0400
 Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:16382 "EHLO
         hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgDWPYX (ORCPT
+        with ESMTP id S1729148AbgDWPYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:24:23 -0400
-IronPort-SDR: xmltpFLAp/Ch+C8s6X8ZcWyZXCqxANXQnZqE0QWcc6RZ49diIS4b/bDe03G5OskVamH9rKrp+T
- oq4+l3143FtggGIP63BivpfQMLHDGpoOCuqGoKGHTsDyu5izW0eI3bI1YiNNRYwxSGlHA595Aw
- L9GtxbL4IBGcPwg6gSf4JYXifcX4tzSSFqfVHC4koYUnw/Fm2fHYhrorQTXbRt6CR8JZz04IgN
- 7oGplHLt4QyJZDS0Q8zkTSplBQCDQgLA+K8/LNJAiVr7nCnwYvYm3yO90J2PwYj5ATv9Cmw4CW
- AI8=
+        Thu, 23 Apr 2020 11:24:21 -0400
+IronPort-SDR: 5UHbcRstNnxq4VXDubgGDjVY/rU0l0kD/mq5oGNO+do8IZhEPgMnIAJpSt0K+9iNJYAx4Tyv/3
+ hUhWxgSJyZzK42dujoBNFJ7GzXfCjW6XwLPtAX2vG0g9Oo1hZNS1hPVh6dIP14jvNur084ezTg
+ BNQxfXHpW2iguvKoUz2/cbqCLiYAg/ZawNNQEHlfCpMOaJKrfUCeX00HT4rGsQS1LG6QoVc6YL
+ MbDDCTUXSzHZlDOjeleIAKpDmwrqYLanB/Q+r1C5b+gVntx7t8TsQaljcsiHGgih0ZAIvMXZR8
+ 7U8=
 X-IronPort-AV: E=Sophos;i="5.73,307,1583186400"; 
-   d="scan'208";a="277228202"
+   d="scan'208";a="277228194"
 From:   =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
         <vesa.jaaskelainen@vaisala.com>
 To:     op-tee@lists.trustedfirmware.org,
@@ -40,121 +40,47 @@ Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
         linux-kernel@vger.kernel.org,
         =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
         <vesa.jaaskelainen@vaisala.com>
-Subject: [PATCH 3/3] [RFC] tee: add support for app id for client UUID generation
-Date:   Thu, 23 Apr 2020 18:17:01 +0300
-Message-Id: <20200423151701.111231-4-vesa.jaaskelainen@vaisala.com>
+Subject: [PATCH 2/3] tee: optee: Add support for session login client UUID generation
+Date:   Thu, 23 Apr 2020 18:17:00 +0300
+Message-Id: <20200423151701.111231-3-vesa.jaaskelainen@vaisala.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200423151701.111231-1-vesa.jaaskelainen@vaisala.com>
 References: <20200423151701.111231-1-vesa.jaaskelainen@vaisala.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 23 Apr 2020 15:17:07.0464 (UTC) FILETIME=[409F6880:01D61982]
+X-OriginalArrivalTime: 23 Apr 2020 15:17:07.0386 (UTC) FILETIME=[409381A0:01D61982]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel does not provide common contex for application identifier,
-instead different security frameworks provide own means to define
-application identifier for running process. Code includes place holder for
-such solutions but is left for later implementation.
-
-Open questions:
-
-1. App ID source
-
-How to specify what source is used for app id?
-
-Does it need to be protected on runtime?
-- Should this be Kconfig setting?
-- Cnfigure once during runtime thru sysfs or so?
-- Configure from device tree?
-
-2. Formatting for App ID
-
-Should there be common format? Or common keyword id?
-
-3. How to handle custom App ID sources
-
-Android has own App ID so does Tizen.
-
-Should there be place holder for this where to make local patch?
+Adds support for client UUID generation for OP-TEE. For group based session
+logins membership is verified.
 
 Signed-off-by: Vesa Jääskeläinen <vesa.jaaskelainen@vaisala.com>
 ---
- drivers/tee/tee_core.c | 45 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ drivers/tee/optee/call.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-index 872272bf9dec..df03bd0071da 100644
---- a/drivers/tee/tee_core.c
-+++ b/drivers/tee/tee_core.c
-@@ -125,6 +125,15 @@ static int tee_release(struct inode *inode, struct file *filp)
- 	return 0;
- }
+diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
+index cf2367ba08d6..dbed3f480dc0 100644
+--- a/drivers/tee/optee/call.c
++++ b/drivers/tee/optee/call.c
+@@ -233,9 +233,13 @@ int optee_open_session(struct tee_context *ctx,
+ 	msg_arg->params[1].attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT |
+ 				  OPTEE_MSG_ATTR_META;
+ 	memcpy(&msg_arg->params[0].u.value, arg->uuid, sizeof(arg->uuid));
+-	memcpy(&msg_arg->params[1].u.value, arg->uuid, sizeof(arg->clnt_uuid));
+ 	msg_arg->params[1].u.value.c = arg->clnt_login;
  
-+static const char *tee_session_get_application_id(void)
-+{
-+	return NULL;
-+}
++	rc = tee_session_calc_client_uuid((uuid_t *)&msg_arg->params[1].u.value,
++					  arg->clnt_login, arg->clnt_uuid);
++	if (rc)
++		goto out;
 +
-+static void tee_session_free_application_id(const char *app_id)
-+{
-+}
-+
- /**
-  * uuid_v5() - Calculate UUIDv5
-  * @uuid: Resulting UUID
-@@ -217,6 +226,14 @@ int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
- 	 * For TEEC_LOGIN_GROUP:
- 	 * gid=<gid>
- 	 *
-+	 * For TEEC_LOGIN_APPLICATION:
-+	 * app=<application id>
-+	 *
-+	 * For TEEC_LOGIN_USER_APPLICATION:
-+	 * uid=<uid>:app=<application id>
-+	 *
-+	 * For TEEC_LOGIN_GROUP_APPLICATION:
-+	 * gid=<gid>:app=<application id>
- 	 */
- 
- 	name = kzalloc(TEE_UUID_NS_NAME_SIZE, GFP_KERNEL);
-@@ -240,6 +257,34 @@ int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
- 		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "gid=%x", grp.val);
- 		break;
- 
-+	case TEE_IOCTL_LOGIN_APPLICATION:
-+		application_id = tee_session_get_application_id();
-+		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "app=%s",
-+			  application_id);
-+		tee_session_free_application_id(application_id);
-+		break;
-+
-+	case TEE_IOCTL_LOGIN_USER_APPLICATION:
-+		application_id = tee_session_get_application_id();
-+		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "uid=%x:app=%s",
-+			  current_euid().val, application_id);
-+		tee_session_free_application_id(application_id);
-+		break;
-+
-+	case TEE_IOCTL_LOGIN_GROUP_APPLICATION:
-+		memcpy(&ns_grp, connection_data, sizeof(gid_t));
-+		grp = make_kgid(current_user_ns(), ns_grp);
-+		if (!gid_valid(grp) || !in_egroup_p(grp)) {
-+			rc = -EPERM;
-+			goto out;
-+		}
-+
-+		application_id = tee_session_get_application_id();
-+		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "gid=%x:app=%s",
-+			  grp.val, application_id);
-+		tee_session_free_application_id(application_id);
-+		break;
-+
- 	default:
- 		rc = -EINVAL;
+ 	rc = optee_to_msg_param(msg_arg->params + 2, arg->num_params, param);
+ 	if (rc)
  		goto out;
 -- 
 2.17.1
