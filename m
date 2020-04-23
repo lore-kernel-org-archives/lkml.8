@@ -2,115 +2,103 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D04EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B20BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54FF22077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KE+HmEUN"
+	by mail.kernel.org (Postfix) with ESMTP id 16B6B2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbgDWXTe (ORCPT
+        id S1729826AbgDWXTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:19:34 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17649 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729810AbgDWXTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729805AbgDWXTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:19:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea2226d0001>; Thu, 23 Apr 2020 16:19:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Apr 2020 16:19:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 16:19:21 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 23:19:21 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 23:19:20 +0000
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
- <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
-Date:   Thu, 23 Apr 2020 16:19:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94891216FD;
+        Thu, 23 Apr 2020 23:19:21 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jRl7o-000Ysl-GT; Thu, 23 Apr 2020 19:19:20 -0400
+Message-Id: <20200423231920.393503922@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Thu, 23 Apr 2020 19:18:41 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: [for-linus][PATCH 3/4] tracing: Remove DECLARE_TRACE_NOARGS
+References: <20200423231838.682478056@goodmis.org>
 MIME-Version: 1.0
-In-Reply-To: <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587683949; bh=oU0Wfn+wZyvfbdQdhKn0QkbGqj+n2qkMVpStz95S7M8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=KE+HmEUNg+W7/ykVVaTcd+lF7j8sL6Isr1yR05pKLfbV2Sn5yFho6pQ8dlJOkvy9L
-         7liQmHBwNlRf9ruNAUdJ305CP6B0BPMl3m00ppK5Bu3+ELq9enVY7b00y6cwIQ5aJ6
-         T76XcIaaFRWMhVpiqfhGdet1hASX+UKfAO6oOJlmuV1VsRvPpRB3WRNbSVeqvCzosB
-         fOzIlLSiYjDEAjtSxDNPseayuPSherCpm/Cx5bqDhDZrI7oIgrOvRrAcWkhQO45A0W
-         fN8sjkwvndOBnW02zk3otKTxL0ydL31giLF1IYn+SXuVZWxADDLTvdl6SN8ogE7aTg
-         RB1pVjdAXarIw==
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nikolay Borisov <nborisov@suse.com>
 
-On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +static int chan_capture_kthread_start(void *data)
->> +{
->> +     struct tegra_vi_channel *chan =3D data;
->> +     struct tegra_channel_buffer *buf;
->> +     int err =3D 0;
->> +
->> +     set_freezable();
->> +
->> +     while (1) {
->> +             try_to_freeze();
->> +
->> +             wait_event_interruptible(chan->start_wait,
->> +                                      !list_empty(&chan->capture) ||
->> +                                      kthread_should_stop());
->> +
->> +             if (kthread_should_stop())
->> +                     break;
->> +
->> +             /*
->> +              * Source is not streaming if error is non-zero.
->> +              * So, do not dequeue buffers on capture error.
->> +              */
->> +             if (err)
->> +                     continue;
-> This will result in an endless loop, I suppose it wasn't the intention.
+This macro was intentionally broken so that the kernel code is not
+poluted with such noargs macro used simply as markers. This use case
+can be satisfied by using dummy no inline functions. Just remove it.
 
-no it will not. on error we report vb2_queue_error which will do=20
-streaming stop request.
+Link: http://lkml.kernel.org/r/20200413153246.8511-1-nborisov@suse.com
 
-So thread will be stopped on streaming stop request thru kthread stop signa=
-l
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ include/linux/tracepoint.h | 22 +---------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
+
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 1fb11daa5c53..a1fecf311621 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -156,8 +156,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+  * Note, the proto and args passed in includes "__data" as the first parameter.
+  * The reason for this is to handle the "void" prototype. If a tracepoint
+  * has a "void" prototype, then it is invalid to declare a function
+- * as "(void *, void)". The DECLARE_TRACE_NOARGS() will pass in just
+- * "void *data", where as the DECLARE_TRACE() will pass in "void *data, proto".
++ * as "(void *, void)".
+  */
+ #define __DO_TRACE(tp, proto, args, cond, rcuidle)			\
+ 	do {								\
+@@ -373,25 +372,6 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ # define __tracepoint_string
+ #endif
+ 
+-/*
+- * The need for the DECLARE_TRACE_NOARGS() is to handle the prototype
+- * (void). "void" is a special value in a function prototype and can
+- * not be combined with other arguments. Since the DECLARE_TRACE()
+- * macro adds a data element at the beginning of the prototype,
+- * we need a way to differentiate "(void *data, proto)" from
+- * "(void *data, void)". The second prototype is invalid.
+- *
+- * DECLARE_TRACE_NOARGS() passes "void" as the tracepoint prototype
+- * and "void *__data" as the callback prototype.
+- *
+- * DECLARE_TRACE() passes "proto" as the tracepoint protoype and
+- * "void *__data, proto" as the callback prototype.
+- */
+-#define DECLARE_TRACE_NOARGS(name)					\
+-	__DECLARE_TRACE(name, void, ,					\
+-			cpu_online(raw_smp_processor_id()),		\
+-			void *__data, __data)
+-
+ #define DECLARE_TRACE(name, proto, args)				\
+ 	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
+ 			cpu_online(raw_smp_processor_id()),		\
+-- 
+2.26.1
+
 
