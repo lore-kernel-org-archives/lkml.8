@@ -2,95 +2,137 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D03C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70961C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0533620736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587644219;
-	bh=U5EcyJ4LAn+9tG4HUQGnWOxyVrEOqSnXbGZQjRBnVM4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wTk3KSHJSmDlpQH+NxJA+Tt4l34JE8wNvTiA0RghZwwCi3RjA8jT29OrBqlFLqB3K
-	 jyB5SWoW6HvooGfCG3m5aG/Y72TgCQNj7abZg8NbxyRKeUx4NMt5+dwgLahO06vY1T
-	 RFEAfijcFb761mpNCzmqaY+dB1Cx0zcbHKdXYe80=
+	by mail.kernel.org (Postfix) with ESMTP id 482CD2098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VwLY+oVB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgDWMQ6 (ORCPT
+        id S1726429AbgDWMRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:16:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbgDWMQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:16:57 -0400
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 23 Apr 2020 08:17:23 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31436 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726056AbgDWMRW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 08:17:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587644241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fWoPh1RcOCCX55TwDPH9/kRfVbasvFbEjZucZpZHZug=;
+        b=VwLY+oVB+7rSsK4j7cHKZA4L3U4HzvFqiodEs+rQC4qApv781VCq3KVfzyuAw5lmITHeau
+        xSp0dneQFBrZ50B0dj+TRVemimgrrChjgI7YByjnvnysxhD37DWf8r6VT4zpay/pXzRSS1
+        3yS/vX/DQUJmD1P7d46DE+3LhrcCayc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-ZpQyGlQKPIOL8KVuunTQhg-1; Thu, 23 Apr 2020 08:17:17 -0400
+X-MC-Unique: ZpQyGlQKPIOL8KVuunTQhg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4358020736;
-        Thu, 23 Apr 2020 12:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587644217;
-        bh=U5EcyJ4LAn+9tG4HUQGnWOxyVrEOqSnXbGZQjRBnVM4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YSz9I4Hg0vhedotjh1JhX7J6tShH1/TBbRuE3PJraGlmGq1ybu0HGKWnJBWDZ9Qpd
-         Rior/+hBjaqRsP3a7b9/cLkCxloz5uT2EyzcZk9/0cHma6auWkFQ0D98MLaluhvdF2
-         lf+9XmR8e5S5++ubDqqY6en7mYq0jej/66vlSvqE=
-Received: by mail-io1-f42.google.com with SMTP id u11so6148845iow.4;
-        Thu, 23 Apr 2020 05:16:57 -0700 (PDT)
-X-Gm-Message-State: AGi0PubRlmK4wBWm4X983IrbAx/cjtbDQPGIIU8NFAHEQMFrRP9gWTHV
-        lzSm7KorrRjBYN5ea+Au0tQ56svY1R71m2+WF1M=
-X-Google-Smtp-Source: APiQypJgcYYnNF9+i/ZUlfaQMKdUjHUmKXoDUpPNNGFEVVKm4tNUPY/qiqlS2CrCHCqaVVrHvrBSjOetHLLKQqyKzsg=
-X-Received: by 2002:a6b:ef03:: with SMTP id k3mr3315558ioh.203.1587644216688;
- Thu, 23 Apr 2020 05:16:56 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBD1619057AF;
+        Thu, 23 Apr 2020 12:17:15 +0000 (UTC)
+Received: from krava (ovpn-115-157.ams2.redhat.com [10.36.115.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6EA275C1BD;
+        Thu, 23 Apr 2020 12:17:13 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 14:17:10 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Tommi Rantala <tommi.t.rantala@nokia.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf test session topology: Fix data path
+Message-ID: <20200423121710.GM1136647@krava>
+References: <20200423115341.562782-1-tommi.t.rantala@nokia.com>
 MIME-Version: 1.0
-References: <1587643713-28169-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1587643713-28169-1-git-send-email-zou_wei@huawei.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 23 Apr 2020 14:16:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFdaGNPc284T+2hs4oGjmwnjbvCdD_Y2xfwTfbOygGwyw@mail.gmail.com>
-Message-ID: <CAMj1kXFdaGNPc284T+2hs4oGjmwnjbvCdD_Y2xfwTfbOygGwyw@mail.gmail.com>
-Subject: Re: [PATCH -next] efi/libstub/arm: Make install_memreserve_table static
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423115341.562782-1-tommi.t.rantala@nokia.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 at 14:02, Zou Wei <zou_wei@huawei.com> wrote:
->
-> Fix the following sparse warning:
->
-> drivers/firmware/efi/libstub/arm-stub.c:68:6: warning:
-> symbol 'install_memreserve_table' was not declared. Should it be static?
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> ---
->  drivers/firmware/efi/libstub/arm-stub.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
-> index 99a5cde..8a26cc1 100644
-> --- a/drivers/firmware/efi/libstub/arm-stub.c
-> +++ b/drivers/firmware/efi/libstub/arm-stub.c
-> @@ -65,7 +65,7 @@ static struct screen_info *setup_graphics(void)
->         return si;
->  }
->
-> -void install_memreserve_table(void)
-> +static void install_memreserve_table(void)
->  {
->         struct linux_efi_memreserve *rsv;
->         efi_guid_t memreserve_table_guid = LINUX_EFI_MEMRESERVE_TABLE_GUID;
-> --
-> 2.6.2
->
+On Thu, Apr 23, 2020 at 02:53:40PM +0300, Tommi Rantala wrote:
+> Commit 2d4f27999b88 ("perf data: Add global path holder") missed path
+> conversion in tests/topology.c, causing the "Session topology" testcase
+> to "hang" (waits forever for input from stdin) when doing "ssh $VM perf
+> test".
+> 
+> Can be reproduced by running "cat | perf test topo", and crashed by
+> replacing cat with true:
+> 
+>   $ true | perf test -v topo
+>   40: Session topology                                      :
+>   --- start ---
+>   test child forked, pid 3638
+>   templ file: /tmp/perf-test-QPvAch
+>   incompatible file format
+>   incompatible file format (rerun with -v to learn more)
+>   free(): invalid pointer
+>   test child interrupted
+>   ---- end ----
+>   Session topology: FAILED!
+> 
+> Fixes: 2d4f27999b88 ("perf data: Add global path holder")
+> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
 
-Applied to efi/next, thanks.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+> ---
+>  tools/perf/tests/topology.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+> index 4a800499d7c3..22daf2bdf5fa 100644
+> --- a/tools/perf/tests/topology.c
+> +++ b/tools/perf/tests/topology.c
+> @@ -33,10 +33,8 @@ static int session_write_header(char *path)
+>  {
+>  	struct perf_session *session;
+>  	struct perf_data data = {
+> -		.file      = {
+> -			.path = path,
+> -		},
+> -		.mode      = PERF_DATA_MODE_WRITE,
+> +		.path = path,
+> +		.mode = PERF_DATA_MODE_WRITE,
+>  	};
+>  
+>  	session = perf_session__new(&data, false, NULL);
+> @@ -63,10 +61,8 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>  {
+>  	struct perf_session *session;
+>  	struct perf_data data = {
+> -		.file      = {
+> -			.path = path,
+> -		},
+> -		.mode      = PERF_DATA_MODE_READ,
+> +		.path = path,
+> +		.mode = PERF_DATA_MODE_READ,
+>  	};
+>  	int i;
+>  
+> -- 
+> 2.25.3
+> 
+
