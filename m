@@ -2,160 +2,150 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FD2C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DBC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2C6208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F90214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5M1LLms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgDWF0g (ORCPT
+        id S1726760AbgDWF1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
+        Thu, 23 Apr 2020 01:27:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726122AbgDWF0g (ORCPT
+        by vger.kernel.org with ESMTP id S1726122AbgDWF1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:26:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C007AC03C1AF
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 22:26:35 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jRUNS-0005wG-3M; Thu, 23 Apr 2020 07:26:22 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jRUNQ-0004xB-1a; Thu, 23 Apr 2020 07:26:20 +0200
-Date:   Thu, 23 Apr 2020 07:26:20 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Fengping yu <fengping.yu@mediatek.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        wsd_upstream@mediatek.com, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: add matrix keypad documentation
-Message-ID: <20200423052619.5qi7n7q6ytmrchio@pengutronix.de>
-References: <20200423011958.30521-1-fengping.yu@mediatek.com>
- <20200423011958.30521-2-fengping.yu@mediatek.com>
+        Thu, 23 Apr 2020 01:27:08 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E24AC03C1AB;
+        Wed, 22 Apr 2020 22:27:07 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f8so1910672plt.2;
+        Wed, 22 Apr 2020 22:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5dRfGuiAmG9ezbEhwEm/4CtR44lsDucqUbK7PXbEl8Y=;
+        b=F5M1LLmsBpNN0fDAzQu31LTtIIQODx3f7aCxVlXmDLvGsnGmub9LLb8Jh86o59C0II
+         1P/8Jeuqhoov7oo0U654aVLXuP28nJ6gPHuf3fMG6chzvgRs5/yMdLNEs3Q1nRU0vhEt
+         1XPDILZXi9XIBnRazyV+VsjItkUFsIMht/cfD+/SDZV/g6ZfmHj5tYmtPtcwLVu/IQqU
+         2l6NZRxutaxvloiKPPxGTgOCPUnuioixocy10pqC4bZJxSPswExXdrlibTXIPM/ugqPq
+         i7OoSRwdf9eeBkXujPpqR4Qz9HIOcFTM94ncbDh3tDNUFSTVs6ytMzZ3M36vVdOXndv9
+         ww+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5dRfGuiAmG9ezbEhwEm/4CtR44lsDucqUbK7PXbEl8Y=;
+        b=AmFdId67i8VZ3bZRXDeDvz96da8qFnzJAC0iLo97Iw6ONXtfyq4a/H0GlleJlLOQBt
+         TN5uMmywMtf/Iqkif/SdWaybkQOyEZpi0UaulxDoMy0yBMuwXa2IC/tBkwHlousglDQn
+         vBWp/EGDzgS9UBFua54kO/m/8KfwYPgXDpOxC42WR+p81f4jYJQxVPghq8utg3IfG4Ym
+         jJKLrZ71mHzyhKIquxf+YBKaFjcUnBG8rBk213a5Ot4holHscQEjfmtGmLSd1O0udZuP
+         CgBet/lcD0pNCg73KpmH4J/3GHDdtulyQChC1gG0Dj2lytHkoC+SCuzkP6WTSAWdbdUt
+         5nXw==
+X-Gm-Message-State: AGi0PuZgHE8plJSxag6xb101g91xCHUCqEPloWPJ9cnaGm2Xt4Le9C6N
+        lQbusrunbKVuuOIk96fj204=
+X-Google-Smtp-Source: APiQypKZ1vg3B7CBVKCjT6RRrpVuaJ6pmpVjHiUxcDrwGFDDC+LfEX+3iekDoy33KuMefBsyLY965Q==
+X-Received: by 2002:a17:90a:9a89:: with SMTP id e9mr2548628pjp.108.1587619627027;
+        Wed, 22 Apr 2020 22:27:07 -0700 (PDT)
+Received: from js1304-desktop ([114.206.198.176])
+        by smtp.gmail.com with ESMTPSA id r4sm953199pgi.6.2020.04.22.22.27.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Apr 2020 22:27:06 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 14:27:01 +0900
+From:   Joonsoo Kim <js1304@gmail.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 10/18] mm: memcontrol: switch to native NR_ANON_MAPPED
+ counter
+Message-ID: <20200423052700.GB12538@js1304-desktop>
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-11-hannes@cmpxchg.org>
+ <20200422065151.GJ6780@js1304-desktop>
+ <20200422122818.GB358439@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423011958.30521-2-fengping.yu@mediatek.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:24:53 up 159 days, 20:43, 157 users,  load average: 0.10, 0.06,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200422122818.GB358439@cmpxchg.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fengping,
-
-On 20-04-23 09:19, Fengping yu wrote:
-> From: "fengping.yu" <fengping.yu@mediatek.com>
+On Wed, Apr 22, 2020 at 08:28:18AM -0400, Johannes Weiner wrote:
+> Hello Joonsoo,
 > 
-> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
-> ---
->  .../devicetree/bindings/input/mtk-kpd.txt     | 61 +++++++++++++++++++
-
-Pls don't add new binding docs as .txt instead you should use the new
-yaml schema.
-
-Regards,
-  Marco
-
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mtk-kpd.txt
+> On Wed, Apr 22, 2020 at 03:51:52PM +0900, Joonsoo Kim wrote:
+> > On Mon, Apr 20, 2020 at 06:11:18PM -0400, Johannes Weiner wrote:
+> > > @@ -3768,7 +3761,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
+> > >  
+> > >  static const unsigned int memcg1_stats[] = {
+> > >  	NR_FILE_PAGES,
+> > > -	MEMCG_RSS,
+> > > +	NR_ANON_MAPPED,
+> > >  	MEMCG_RSS_HUGE,
+> > >  	NR_SHMEM,
+> > >  	NR_FILE_MAPPED,
+> > > @@ -5395,7 +5388,12 @@ static int mem_cgroup_move_account(struct page *page,
+> > >  
+> > >  	lock_page_memcg(page);
+> > >  
+> > > -	if (!PageAnon(page)) {
+> > > +	if (PageAnon(page)) {
+> > > +		if (page_mapped(page)) {
+> > 
+> > This page_mapped() check is newly inserted. Could you elaborate more
+> > on why mem_cgroup_charge_statistics() doesn't need this check?
 > 
-> diff --git a/Documentation/devicetree/bindings/input/mtk-kpd.txt b/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> new file mode 100644
-> index 000000000000..8b154a5e2f7d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> @@ -0,0 +1,61 @@
-> +* Mediatek's Keypad Controller device tree binding
-> +
-> +Mediatek's Keypad controller is used to interface a SoC with a matrix-type
-> +keypad device. The keypad controller supports multiple row and column lines.
-> +A key can be placed at each intersection of a unique row and a unique column.
-> +The keypad controller can sense a key-press and key-release and report the
-> +event using a interrupt to the cpu.
-> +
-> +Required properties:
-> +- compatible should contain:
-> +	* "mediatek,kp" for common keypad
-> +	* "mediatek,mt6779-keypad" for specific keypad chip
-> +
-> +- reg: The base address of the Keypad register bank.
-> +
-> +- interrupts: A single interrupt specifier.
-> +
-> +- mediatek,debounce-us: Debounce interval in microseconds, maximum value
-> +  is 256000 microseconds.
-> +
-> +- keypad,num-rows: Number of row lines connected to the keypad controller, it is
-> +	not equal to PCB rows number, instead you should add required value for each IC.
-> +
-> +- keypad,num-columns: Number of column lines connected to the keypad controller,
-> +	it is not equal to PCB columns number, instead you should add required value
-> +	for each IC.
-> +
-> +- linux,keymap: The keymap for keys as described in the binding document
-> +  devicetree/bindings/input/matrix-keymap.txt.
-> +
-> +- pinctrl: Should specify pin control groups used for this controller.
-> +  See ../pinctrl/pinctrl-bindings.txt for details.
-> +
-> +- clocks: Must contain one entry, for the module clock.
-> +  See ../clocks/clock-bindings.txt for details.
-> +
-> +- clock-names: Names of the clocks listed in clocks property in the same order.
-> +
-> +Optional Properties:
-> +- wakeup-source: use any event on keypad as wakeup event.
-> +
-> +Example:
-> +
-> +	keypad: kp@10010000 {
-> +		compatible = "mediatek,kp";
-> +		reg = <0 0x10010000 0 0x1000>;
-> +		wakeup-source;
-> +		interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_FALLING>;
-> +		clocks = <&clk26m>;
-> +		clock-names = "kpd";
-> +	};
-> +
-> +	&keypad {
-> +		mediatek,debounce-us = <32000>;
-> +		keypad,num-rows = <8>;
-> +		keypad,num-columns = <9>;
-> +		linux,keymap = < MATRIX_KEY(0x00, 0x00, KEY_VOLUMEDOWN) >;
-> +		status = "okay";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&kpd_gpios_def_cfg>;
-> +	};
-> -- 
-> 2.18.0
+> MEMCG_RSS extended from when the page was charged until it was
+> uncharged, but NR_ANON_MAPPED is only counted while the page is really
+> mapped into page tables. That starts shortly after we charge and ends
+> shortly before we uncharge, so pages could move between cgroups before
+> or after they are mapped, while they aren't counted in NR_ANON_MAPPED.
+> 
+> So to know that the page is counted, charge_statistics() only needed
+> to know that the page is charged and Anon; move_account() also needs
+> to know that the page is mapped.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Got it!
+
+> 
+> > > @@ -1181,7 +1187,7 @@ void page_add_new_anon_rmap(struct page *page,
+> > >  		/* increment count (starts at -1) */
+> > >  		atomic_set(&page->_mapcount, 0);
+> > >  	}
+> > > -	__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
+> > > +	__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
+> > >  	__page_set_anon_rmap(page, vma, address, 1);
+> > >  }
+> > 
+> > memcg isn't setup yet and accounting isn't applied to proper memcg.
+> > Maybe, it would be applied to root memcg. With this change, we don't
+> > need the mapping to commit the charge so switching the order of
+> > page_add_new_anon_rmap() and mem_cgroup_commit_charge() will solve the
+> > issue.
+> 
+> Good catch, it's that dreaded circular dependency. It's fixed two
+> patches down when I charge anon pages earlier as well. But I'll change
+> the rmap<->commit order in this patch to avoid the temporary bug.
+
+Okay.
+
+> Thanks for your thorough review!
+
+Thanks.
