@@ -6,56 +6,124 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE6CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC408C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655132075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D03E216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbgDWQ6N (ORCPT
+        id S1729834AbgDWQ6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:58:13 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29937 "EHLO mga07.intel.com"
+        Thu, 23 Apr 2020 12:58:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:44234 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729674AbgDWQ6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:58:13 -0400
-IronPort-SDR: uczyJBIVWGe3w7T57uI6CV5S2+Fqu4T90msaLkgqCk8Uj2tnlMjrJAt5LCWGaawwT0TL7LD2ld
- Hbcdaz0QYi/Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:58:12 -0700
-IronPort-SDR: qjpDu3ONHas76ce28A93Rb7S1EH0sU89fRTYk9Dckw1XsVWHZFoWom3tTqGLmt0fqTQNd0rqB0
- Q5Sir5BTrXjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="259488743"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 23 Apr 2020 09:58:12 -0700
-Date:   Thu, 23 Apr 2020 09:58:12 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 9/9] KVM: X86: Set CET feature bits for CPUID
- enumeration
-Message-ID: <20200423165812.GC25564@linux.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-10-weijiang.yang@intel.com>
+        id S1729674AbgDWQ6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:58:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85EE330E;
+        Thu, 23 Apr 2020 09:58:22 -0700 (PDT)
+Received: from [10.37.12.89] (unknown [10.37.12.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B9B73F68F;
+        Thu, 23 Apr 2020 09:57:48 -0700 (PDT)
+Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs
+ in Energy Model
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-5-lukasz.luba@arm.com>
+ <20200423151250.GB65632@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <ff1c8cc5-f64d-6156-7d30-97b8426c6f99@arm.com>
+Date:   Thu, 23 Apr 2020 17:57:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326081847.5870-10-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200423151250.GB65632@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the shortlog, use something like
 
-  KVM: x86: Enable CET virtualization and advertise CET to userspace
 
-It took me a while to find the patch that actually allowed setting CR4.CET
-because I was only scanning the shortlogs :-)
+On 4/23/20 4:12 PM, Daniel Lezcano wrote:
+> On Fri, Apr 10, 2020 at 09:42:04AM +0100, Lukasz Luba wrote:
+>> Add support for other devices that CPUs. The registration function
+>> does not require a valid cpumask pointer and is ready to handle new
+>> devices. Some of the internal structures has been reorganized in order to
+>> keep consistent view (like removing per_cpu pd pointers). To track usage
+>> of the Energy Model structures, they are protected with kref.
+> 
+> Why not add the energy model structure in the struct device directly?
+
+Do you mean this structure?
+https://elixir.bootlin.com/linux/latest/source/include/linux/device.h#L537
+
+and to put something like:
+struct device {
+...
+	struct dev_pm_domain	*pm_domain;
+#ifdef CONFIG_ENERGY_MODEL
+	struct em_perf_domain	*em_pd;
+#endif
+...
+};
+
+> 
+> For instance for the em_cpu_get() function, the cpu id allows to retrieve the
+> cpu device and then from there, the energy model instead of browsing another
+> list. The em_device life cycle will be tied to the struct device.
+
+That would be perfect.
+
+> 
+> Then when the struct device and the em_device are connected, add the debugfs
+> with a struct device list for those which are energy aware, so you end up with
+> a structure:
+> 
+> struct em_device {
+> 	struct device *dev;
+> 	struct list_head em_dev_list;
+> };
+> 
+> (a global single dentry for debugfs to do a recursive delete is enough).
+> 
+> Locks when inspecting and add/removal called from the struct device release
+> function. So no need of an extra refcounting.
+> 
+> Does it make sense?
+> 
+
+Indeed it looks much cleaner/simpler.
+
+I will try to address this idea and get rid of refcounting.
+
+This should be doable in this patch (4/10). In the v7 I will keep your
+ACKs for other patches that you have already commented.
+
+Thank you for your suggestions and review.
+
+Regards,
+Lukasz
+
