@@ -2,436 +2,227 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2216C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D928C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67B421569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587627706;
-	bh=PyWVeFPMVi92BVlRHITfj6DAJSS4R4BXs7p+cnGs0Nc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/xSrwGPljiX69wAZh0Q/El+ZfNEiYuwxy7WSjLUwJHfELAG4OLnJQ3p+yKJOdFEq
-	 N9OxGaI4F0uLrJjZDcszv+eshwrGzkG2G3J3lKQ861IBMNisqLNp//d/r4Z4OBbh9Y
-	 yp3EHWl8oQ0Qphbp0cdrkKvEpVQX2c8a7wOWbOUs=
+	by mail.kernel.org (Postfix) with ESMTP id 4C18D21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JkQNIhdo";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Ry2iLayn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgDWHlq (ORCPT
+        id S1727812AbgDWHlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:41:46 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:33795 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbgDWHlk (ORCPT
+        Thu, 23 Apr 2020 03:41:51 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:63598 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbgDWHln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:41:40 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03N7dV9R000368;
-        Thu, 23 Apr 2020 16:39:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9R000368
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587627580;
-        bh=2uL21BIwaVwy5ZlKAP5x8RgRo+VUSnEZH7H0mEqmtro=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hO1hmCLwP3+43OS/YL2BlKOMgoLKsvHErD+6fZ9YIH5ORyNtfojkuf9yzkE98gMLe
-         WUwSDtd+9JJsfOewpjuZ3oGGjUnhRlXqrSM9Vfz0Rlfr/0r9ds0RCioSwqpXp7auU4
-         GvrIJfBmbKZx/ED43ZC+Z3257cstL5ZtOaN+WIf22CLY4JdYEkGabC5VdOfVJcZo8f
-         9V7C2NgOWOqhAhxgGhZ0ncanBbCYde09PghhM4peHQqbOACHDTXQicQncLqmyawpx5
-         dn0Kl4hW2cWQpOctVKIeXd9nbpZ0gLpDoOmvEul29BIzyY6I0GNuQGfVS8jouPnnCE
-         Zu/BtPRYW2KUQ==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 06/16] kbuild: doc: document the new syntax 'userprogs'
-Date:   Thu, 23 Apr 2020 16:39:19 +0900
-Message-Id: <20200423073929.127521-7-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200423073929.127521-1-masahiroy@kernel.org>
-References: <20200423073929.127521-1-masahiroy@kernel.org>
+        Thu, 23 Apr 2020 03:41:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587627704; x=1619163704;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=4raPVwu4P+GG5bj7qpM1TvIZ532ld1U2BWFJgpbwCpI=;
+  b=JkQNIhdoq7+VpuB5eFhmxaDmPeqi87Dy1E5FRL56nfxvvKrvJ5nnJhb0
+   W2Jp1c1MHPWgf3XMcMr9WkNtqloItTBErcT4vkNfDeW3IUt/8GaBVZ1fU
+   OZXXBTR11YbMWCbPZrwcBheDlOsAsuZIqGKE7rVckOPthNl9rilUg9QUx
+   I6OlNdHbbepmHzCaGdStLI78dXFfNEyxRRIX/GDqP3Hn7HIzPWQpMiP3u
+   FzephA3+Yan/u5TmjGAgtLqpwWKa6p4HDE6uOXVPbsJ+a4AtCJj17QQe0
+   Uiq7EzfWT1C14O0sxczE7Z23CUneLHUQn3ELAxxGRmnAH1VGT1qU2LRJN
+   A==;
+IronPort-SDR: A8ehlZK8A8lbQwhlK9PrIjnYLIvG8wfWK6etsMDz/fgFYGUbikLg2E7xbthIpBNjgwCFTe4Qfv
+ KyguUvsWhmBk/Gfqp+CT4X7Qy+1DyRQt+zaTmq/igR86OIJLGzt1CDInCp8YqvppmKdQEYW/yA
+ fX/bcalmdN0z0xOZA6cVUCmTQFaMItISqCR2YclqrOcwzAmkhinB8q7quwBdE0RQJ4TSxSa5B3
+ VfyKlJRflqujq6Qaq5Oo0WZYPdrkCBNj9eHDqgwj/HLe6yE9k8WKua98t/xgDqdwhko9pG63zB
+ SM4=
+X-IronPort-AV: E=Sophos;i="5.73,306,1583164800"; 
+   d="scan'208";a="140308182"
+Received: from mail-co1nam11lp2175.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.175])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Apr 2020 15:41:43 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DpiA8DwxdijhEm0D9lBWwAqMTPCVmT2Q0mgCcxYyR1lSRnXSzs3Wf8bKRKxU8kDnxUCB0jPz9+INlhTSckebJBn2bCzaSoQUsuF3XNVSXD04A+E8sWJk1Wu9EgqJl82vKhmxG18FOaN06ApzsKkGldHWc5gD2gVBEUxJWJ30M1CNEvj2ZPUEVM4uxXS0flGYLlNWmVBPGpQnfO6Vn9/81xus8nUv07mBG051/egdREPFLweTy4WHI2I2fQqOl2I9pv++E/qp6f/myroDKaLivmjzKNKK/Rd86JGlww9JK6qeSAPTjcjHHVeKGwLyoAq3QYxN2cVMhbdt3z8zB0Xb+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hhhxaXjNRAgmAbOW/v1XaHu2mO6dFUz3exhh2puBDKI=;
+ b=SL2BgNzHLPjSK8tcxoy5rwoKpIzjAq1LfutXdm7mVI/+7PiOfToh951jZP7Itj1GJY93u5l4MFiBMknZ5lwsXZiHdqxO59BnGhJf8VCer6bX6hOXtbyQJjEQL6b/mhGR0nYZrzi7/RxQo6FRgaKQ4ckgVxeYwtxYXPgiGa5mrZLQI089duHY0+rA+fgyV6GajubN0kU65Yxs3cRY0UgsR37redOEeyyC/oP4z9egp9sQM0HzNoUI4Ij3b3o4Ka/esUi3QCi1ARO+ESw+4uhB3rfrpJQv3saHBwZT9A8g1N0KM1jyVMNJ45RVJ7B/YYEGHMzJ73OHW6TiLrTUfvN/Vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hhhxaXjNRAgmAbOW/v1XaHu2mO6dFUz3exhh2puBDKI=;
+ b=Ry2iLaynv1a0LcqolTFIxjdE9E5YDfOwc0ONnFqdtkuKW3No3+RLO7Bt1XILG5fQLwu0xQikL24Emj9EuSZOprMm5AtrNK0uK5e4GpgIdQ6LSS4U3KhRPadX/Q0GEM9o0Lpr+rooE+BdsndCAbFmvmghyBQvdUHUfjHtydrSHvs=
+Received: from BY5PR04MB6900.namprd04.prod.outlook.com (2603:10b6:a03:229::20)
+ by BY5PR04MB6723.namprd04.prod.outlook.com (2603:10b6:a03:226::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
+ 2020 07:41:39 +0000
+Received: from BY5PR04MB6900.namprd04.prod.outlook.com
+ ([fe80::b574:3071:da2f:7606]) by BY5PR04MB6900.namprd04.prod.outlook.com
+ ([fe80::b574:3071:da2f:7606%8]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
+ 07:41:39 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
+        Jan Kara <jack@suse.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] cdrom: factor out a cdrom_multisession helper
+Thread-Topic: [PATCH 4/7] cdrom: factor out a cdrom_multisession helper
+Thread-Index: AQHWGT8IY44ShEkk+0u8Wg6MTkUiVQ==
+Date:   Thu, 23 Apr 2020 07:41:39 +0000
+Message-ID: <BY5PR04MB6900C398609A0F6453134767E7D30@BY5PR04MB6900.namprd04.prod.outlook.com>
+References: <20200423071224.500849-1-hch@lst.de>
+ <20200423071224.500849-5-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [129.253.182.57]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 83d35e9f-e524-45e6-8bc3-08d7e759c29e
+x-ms-traffictypediagnostic: BY5PR04MB6723:
+x-microsoft-antispam-prvs: <BY5PR04MB6723039E28A1D13076A91DEDE7D30@BY5PR04MB6723.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 03827AF76E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6900.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(7416002)(4326008)(33656002)(2906002)(5660300002)(86362001)(7696005)(64756008)(66556008)(316002)(66476007)(66446008)(52536014)(66946007)(186003)(478600001)(76116006)(6506007)(54906003)(55016002)(110136005)(53546011)(26005)(81156014)(71200400001)(9686003)(8676002)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Hp9G9VEGOCFAXOCCSW2n4MerjPaFeXu8rhoDLWGB965AxSqcDQKsEZzkFvebtxR3+0N1Gvcano6oAAUGHCo3TT6K+YhViv1mTITH+iwPlnEEcfpJDPqk+XyM4yMOIjW1BXbUQJnFRTlad/SZAMWVuZ3PgG6/Q0MCCE6//jvpn8wBfkmGSEWSH8XFSw9vfzZaCQ5OnnuZA0s9lsOHpUU+ZbxHvIaNCZws7/+RcL+ZcUTF++fjcabfE4Sj8AFZoY27KKGvB8fAeevJ70i8mpw9flkFbwaX+6vQPtxo8kDV4IdLrJxiEf1AE7rO4rn/uvY9AsUq2e2u3evxNZWFDgaeP3RLPCaJ3REzCNarEtvZhzzM8qG0TH17nZhrHb8qtrT60tcKJAtPx9FNP/QMiR5A4G7gRoN0yfzZR/cZq8pmsYkIMAKuwkLIO0ylMC4DFMI4
+x-ms-exchange-antispam-messagedata: RJqR2+Yji5nz3OKz3zme9MXaA4Ay3njE9wPhshxSnEkZpM8ABgPEg5B3T0B4xsxgYY8Dnu8VX0PIxUw2ext10lKp6HeKCS2/jiXy3i2KX0Bp8qEC5lwiO0sb3qxyiUzZAE2kDwpY26dMmdYBBPDtOQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83d35e9f-e524-45e6-8bc3-08d7e759c29e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 07:41:39.8106
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NcZAqjMHE3SZERycql5MHmxRqSH2vvdH4o/OZALefJYYxz0gbDWAS8/SCFo1vxW6eBJiNjZaqkzalwDv9N2wNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6723
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild now supports the syntax 'userprogs' to compile userspace
-programs for the same architecture as the kernel.
-
-Insert the section '5 Userspace Program support' to explain it.
-
-I copy-pasted '4 Host Program support' and fixed it up.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- Documentation/kbuild/makefiles.rst | 184 +++++++++++++++++++++--------
- 1 file changed, 136 insertions(+), 48 deletions(-)
-
-diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index b80257a03830..251e5431276e 100644
---- a/Documentation/kbuild/makefiles.rst
-+++ b/Documentation/kbuild/makefiles.rst
-@@ -29,31 +29,37 @@ This document describes the Linux kernel Makefiles.
- 	   --- 4.4 Controlling compiler options for host programs
- 	   --- 4.5 When host programs are actually built
- 
--	=== 5 Kbuild clean infrastructure
--
--	=== 6 Architecture Makefiles
--	   --- 6.1 Set variables to tweak the build to the architecture
--	   --- 6.2 Add prerequisites to archheaders:
--	   --- 6.3 Add prerequisites to archprepare:
--	   --- 6.4 List directories to visit when descending
--	   --- 6.5 Architecture-specific boot images
--	   --- 6.6 Building non-kbuild targets
--	   --- 6.7 Commands useful for building a boot image
--	   --- 6.8 Custom kbuild commands
--	   --- 6.9 Preprocessing linker scripts
--	   --- 6.10 Generic header files
--	   --- 6.11 Post-link pass
--
--	=== 7 Kbuild syntax for exported headers
--		--- 7.1 no-export-headers
--		--- 7.2 generic-y
--		--- 7.3 generated-y
--		--- 7.4 mandatory-y
--
--	=== 8 Kbuild Variables
--	=== 9 Makefile language
--	=== 10 Credits
--	=== 11 TODO
-+	=== 5 Userspace Program support
-+	   --- 5.1 Simple Userspace Program
-+	   --- 5.2 Composite Userspace Programs
-+	   --- 5.3 Controlling compiler options for userspace programs
-+	   --- 5.4 When userspace programs are actually built
-+
-+	=== 6 Kbuild clean infrastructure
-+
-+	=== 7 Architecture Makefiles
-+	   --- 7.1 Set variables to tweak the build to the architecture
-+	   --- 7.2 Add prerequisites to archheaders:
-+	   --- 7.3 Add prerequisites to archprepare:
-+	   --- 7.4 List directories to visit when descending
-+	   --- 7.5 Architecture-specific boot images
-+	   --- 7.6 Building non-kbuild targets
-+	   --- 7.7 Commands useful for building a boot image
-+	   --- 7.8 Custom kbuild commands
-+	   --- 7.9 Preprocessing linker scripts
-+	   --- 7.10 Generic header files
-+	   --- 7.11 Post-link pass
-+
-+	=== 8 Kbuild syntax for exported headers
-+		--- 8.1 no-export-headers
-+		--- 8.2 generic-y
-+		--- 8.3 generated-y
-+		--- 8.4 mandatory-y
-+
-+	=== 9 Kbuild Variables
-+	=== 10 Makefile language
-+	=== 11 Credits
-+	=== 12 TODO
- 
- 1 Overview
- ==========
-@@ -732,7 +738,89 @@ Both possibilities are described in the following.
- 	This will tell kbuild to build lxdialog even if not referenced in
- 	any rule.
- 
--5 Kbuild clean infrastructure
-+5 Userspace Program support
-+===========================
-+
-+Just like host programs, Kbuild also supports building userspace executables
-+for the target architecture (i.e. the same architecture as you are building
-+the kernel for).
-+
-+The syntax is quite similar. The difference is to use "userprogs" instead of
-+"hostprogs".
-+
-+5.1 Simple Userspace Program
-+----------------------------
-+
-+	The following line tells kbuild that the program bpf-direct shall be
-+	built for the target architecture.
-+
-+	Example::
-+
-+		userprogs := bpf-direct
-+
-+	Kbuild assumes in the above example that bpf-direct is made from a
-+	single C source file named bpf-direct.c located in the same directory
-+	as the Makefile.
-+
-+5.2 Composite Userspace Programs
-+--------------------------------
-+
-+	Userspace programs can be made up based on composite objects.
-+	The syntax used to define composite objects for userspace programs is
-+	similar to the syntax used for kernel objects.
-+	$(<executable>-objs) lists all objects used to link the final
-+	executable.
-+
-+	Example::
-+
-+		#samples/seccomp/Makefile
-+		userprogs      := bpf-fancy
-+		bpf-fancy-objs := bpf-fancy.o bpf-helper.o
-+
-+	Objects with extension .o are compiled from the corresponding .c
-+	files. In the above example, bpf-fancy.c is compiled to bpf-fancy.o
-+	and bpf-helper.c is compiled to bpf-helper.o.
-+
-+	Finally, the two .o files are linked to the executable, bpf-fancy.
-+	Note: The syntax <executable>-y is not permitted for userspace programs.
-+
-+5.3 Controlling compiler options for userspace programs
-+-------------------------------------------------------
-+
-+	When compiling userspace programs, it is possible to set specific flags.
-+	The programs will always be compiled utilising $(CC) passed
-+	the options specified in $(KBUILD_USERCFLAGS).
-+	To set flags that will take effect for all userspace programs created
-+	in that Makefile, use the variable user-ccflags.
-+
-+	Example::
-+
-+		# samples/seccomp/Makefile
-+		user-ccflags += -I usr/include
-+
-+	To set specific flags for a single file the following construction
-+	is used:
-+
-+	Example::
-+
-+		bpf-helper-ccflags += -I user/include
-+
-+	It is also possible to specify additional options to the linker.
-+
-+	Example::
-+
-+		# net/bpfilter/Makefile
-+		bpfilter_umh-ldflags += -static
-+
-+	When linking bpfilter_umh-ldflags, it will be passed the extra option
-+	-static.
-+
-+5.4 When userspace programs are actually built
-+----------------------------------------------
-+
-+	Same as "When host programs are actually built".
-+
-+6 Kbuild clean infrastructure
- =============================
- 
- "make clean" deletes most generated files in the obj tree where the kernel
-@@ -790,7 +878,7 @@ is not operational at that point.
- Note 2: All directories listed in core-y, libs-y, drivers-y and net-y will
- be visited during "make clean".
- 
--6 Architecture Makefiles
-+7 Architecture Makefiles
- ========================
- 
- The top level Makefile sets up the environment and does the preparation,
-@@ -820,7 +908,7 @@ When kbuild executes, the following steps are followed (roughly):
-    - Preparing initrd images and the like
- 
- 
--6.1 Set variables to tweak the build to the architecture
-+7.1 Set variables to tweak the build to the architecture
- --------------------------------------------------------
- 
-     LDFLAGS
-@@ -967,7 +1055,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	KBUILD_VMLINUX_LIBS together specify all the object files used to
- 	link vmlinux.
- 
--6.2 Add prerequisites to archheaders
-+7.2 Add prerequisites to archheaders
- ------------------------------------
- 
- 	The archheaders: rule is used to generate header files that
-@@ -977,7 +1065,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	architecture itself.
- 
- 
--6.3 Add prerequisites to archprepare
-+7.3 Add prerequisites to archprepare
- ------------------------------------
- 
- 	The archprepare: rule is used to list prerequisites that need to be
-@@ -995,7 +1083,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	generating offset header files.
- 
- 
--6.4 List directories to visit when descending
-+7.4 List directories to visit when descending
- ---------------------------------------------
- 
- 	An arch Makefile cooperates with the top Makefile to define variables
-@@ -1030,7 +1118,7 @@ When kbuild executes, the following steps are followed (roughly):
- 		drivers-$(CONFIG_OPROFILE)  += arch/sparc64/oprofile/
- 
- 
--6.5 Architecture-specific boot images
-+7.5 Architecture-specific boot images
- -------------------------------------
- 
- 	An arch Makefile specifies goals that take the vmlinux file, compress
-@@ -1085,7 +1173,7 @@ When kbuild executes, the following steps are followed (roughly):
- 
- 	When "make" is executed without arguments, bzImage will be built.
- 
--6.6 Building non-kbuild targets
-+7.6 Building non-kbuild targets
- -------------------------------
- 
-     extra-y
-@@ -1108,7 +1196,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	In this example, extra-y is used to list object files that
- 	shall be built, but shall not be linked as part of built-in.a.
- 
--6.7 Commands useful for building a boot image
-+7.7 Commands useful for building a boot image
- ---------------------------------------------
- 
-     Kbuild provides a few macros that are useful when building a
-@@ -1211,7 +1299,7 @@ When kbuild executes, the following steps are followed (roughly):
- 		targets += $(dtb-y)
- 		DTC_FLAGS ?= -p 1024
- 
--6.8 Custom kbuild commands
-+7.8 Custom kbuild commands
- --------------------------
- 
- 	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
-@@ -1241,7 +1329,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	will be displayed with "make KBUILD_VERBOSE=0".
- 
- 
--6.9 Preprocessing linker scripts
-+7.9 Preprocessing linker scripts
- --------------------------------
- 
- 	When the vmlinux image is built, the linker script
-@@ -1274,7 +1362,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	The kbuild infrastructure for `*lds` files is used in several
- 	architecture-specific files.
- 
--6.10 Generic header files
-+7.10 Generic header files
- -------------------------
- 
- 	The directory include/asm-generic contains the header files
-@@ -1283,7 +1371,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	to list the file in the Kbuild file.
- 	See "7.2 generic-y" for further info on syntax etc.
- 
--6.11 Post-link pass
-+7.11 Post-link pass
- -------------------
- 
- 	If the file arch/xxx/Makefile.postlink exists, this makefile
-@@ -1299,7 +1387,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	For example, powerpc uses this to check relocation sanity of
- 	the linked vmlinux file.
- 
--7 Kbuild syntax for exported headers
-+8 Kbuild syntax for exported headers
- ------------------------------------
- 
- The kernel includes a set of headers that is exported to userspace.
-@@ -1319,14 +1407,14 @@ A Kbuild file may be defined under arch/<arch>/include/uapi/asm/ and
- arch/<arch>/include/asm/ to list asm files coming from asm-generic.
- See subsequent chapter for the syntax of the Kbuild file.
- 
--7.1 no-export-headers
-+8.1 no-export-headers
- ---------------------
- 
- 	no-export-headers is essentially used by include/uapi/linux/Kbuild to
- 	avoid exporting specific headers (e.g. kvm.h) on architectures that do
- 	not support it. It should be avoided as much as possible.
- 
--7.2 generic-y
-+8.2 generic-y
- -------------
- 
- 	If an architecture uses a verbatim copy of a header from
-@@ -1356,7 +1444,7 @@ See subsequent chapter for the syntax of the Kbuild file.
- 
- 			#include <asm-generic/termios.h>
- 
--7.3 generated-y
-+8.3 generated-y
- ---------------
- 
- 	If an architecture generates other header files alongside generic-y
-@@ -1370,7 +1458,7 @@ See subsequent chapter for the syntax of the Kbuild file.
- 			#arch/x86/include/asm/Kbuild
- 			generated-y += syscalls_32.h
- 
--7.4 mandatory-y
-+8.4 mandatory-y
- ---------------
- 
- 	mandatory-y is essentially used by include/(uapi/)asm-generic/Kbuild
-@@ -1380,7 +1468,7 @@ See subsequent chapter for the syntax of the Kbuild file.
- 	in arch/$(ARCH)/include/(uapi/)/asm, Kbuild will automatically generate
- 	a wrapper of the asm-generic one.
- 
--8 Kbuild Variables
-+9 Kbuild Variables
- ==================
- 
- The top Makefile exports the following variables:
-@@ -1438,8 +1526,8 @@ The top Makefile exports the following variables:
- 	command.
- 
- 
--9 Makefile language
--===================
-+10 Makefile language
-+====================
- 
- The kernel Makefiles are designed to be run with GNU Make.  The Makefiles
- use only the documented features of GNU Make, but they do use many
-@@ -1458,7 +1546,7 @@ time the left-hand side is used.
- There are some cases where "=" is appropriate.  Usually, though, ":="
- is the right choice.
- 
--10 Credits
-+11 Credits
- ==========
- 
- - Original version made by Michael Elizabeth Chastain, <mailto:mec@shout.net>
-@@ -1466,7 +1554,7 @@ is the right choice.
- - Updates by Sam Ravnborg <sam@ravnborg.org>
- - Language QA by Jan Engelhardt <jengelh@gmx.de>
- 
--11 TODO
-+12 TODO
- =======
- 
- - Describe how kbuild supports shipped files with _shipped.
--- 
-2.25.1
-
+On 2020/04/23 16:15, Christoph Hellwig wrote:=0A=
+> Factor out a version of the CDROMMULTISESSION: ioctl handler that can=0A=
+> be called directly from kernel space.=0A=
+> =0A=
+> Signed-off-by: Christoph Hellwig <hch@lst.de>=0A=
+> ---=0A=
+>  drivers/cdrom/cdrom.c | 41 +++++++++++++++++++++++++----------------=0A=
+>  include/linux/cdrom.h |  2 ++=0A=
+>  2 files changed, 27 insertions(+), 16 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c=0A=
+> index c91d1e138214..06896c07b133 100644=0A=
+> --- a/drivers/cdrom/cdrom.c=0A=
+> +++ b/drivers/cdrom/cdrom.c=0A=
+> @@ -2295,37 +2295,46 @@ static int cdrom_read_cdda(struct cdrom_device_in=
+fo *cdi, __u8 __user *ubuf,=0A=
+>  	return cdrom_read_cdda_old(cdi, ubuf, lba, nframes);	=0A=
+>  }=0A=
+>  =0A=
+> -static int cdrom_ioctl_multisession(struct cdrom_device_info *cdi,=0A=
+> -		void __user *argp)=0A=
+> +int cdrom_multisession(struct cdrom_device_info *cdi,=0A=
+> +		struct cdrom_multisession *info)=0A=
+>  {=0A=
+> -	struct cdrom_multisession ms_info;=0A=
+>  	u8 requested_format;=0A=
+>  	int ret;=0A=
+>  =0A=
+> -	cd_dbg(CD_DO_IOCTL, "entering CDROMMULTISESSION\n");=0A=
+> -=0A=
+>  	if (!(cdi->ops->capability & CDC_MULTI_SESSION))=0A=
+>  		return -ENOSYS;=0A=
+>  =0A=
+> -	if (copy_from_user(&ms_info, argp, sizeof(ms_info)))=0A=
+> -		return -EFAULT;=0A=
+> -=0A=
+> -	requested_format =3D ms_info.addr_format;=0A=
+> +	requested_format =3D info->addr_format;=0A=
+>  	if (requested_format !=3D CDROM_MSF && requested_format !=3D CDROM_LBA)=
+=0A=
+>  		return -EINVAL;=0A=
+> -	ms_info.addr_format =3D CDROM_LBA;=0A=
+> +	info->addr_format =3D CDROM_LBA;=0A=
+>  =0A=
+> -	ret =3D cdi->ops->get_last_session(cdi, &ms_info);=0A=
+> -	if (ret)=0A=
+> -		return ret;=0A=
+> +	ret =3D cdi->ops->get_last_session(cdi, info);=0A=
+> +	if (!ret)=0A=
+> +		sanitize_format(&info->addr, &info->addr_format,=0A=
+> +				requested_format);=0A=
+> +	return ret;=0A=
+> +}=0A=
+> +EXPORT_SYMBOL_GPL(cdrom_multisession);=0A=
+>  =0A=
+> -	sanitize_format(&ms_info.addr, &ms_info.addr_format, requested_format);=
+=0A=
+> +static int cdrom_ioctl_multisession(struct cdrom_device_info *cdi,=0A=
+> +		void __user *argp)=0A=
+> +{=0A=
+> +	struct cdrom_multisession info;=0A=
+> +	int ret;=0A=
+> +=0A=
+> +	cd_dbg(CD_DO_IOCTL, "entering CDROMMULTISESSION\n");=0A=
+>  =0A=
+> -	if (copy_to_user(argp, &ms_info, sizeof(ms_info)))=0A=
+> +	if (copy_from_user(&info, argp, sizeof(info)))=0A=
+> +		return -EFAULT;=0A=
+> +	ret =3D cdrom_multisession(cdi, &info);=0A=
+> +	if (ret)=0A=
+> +		return ret;=0A=
+> +	if (copy_to_user(argp, &info, sizeof(info)))=0A=
+>  		return -EFAULT;=0A=
+>  =0A=
+>  	cd_dbg(CD_DO_IOCTL, "CDROMMULTISESSION successful\n");=0A=
+> -	return 0;=0A=
+> +	return ret;=0A=
+>  }=0A=
+>  =0A=
+>  static int cdrom_ioctl_eject(struct cdrom_device_info *cdi)=0A=
+> diff --git a/include/linux/cdrom.h b/include/linux/cdrom.h=0A=
+> index 008c4d79fa33..8543fa59da72 100644=0A=
+> --- a/include/linux/cdrom.h=0A=
+> +++ b/include/linux/cdrom.h=0A=
+> @@ -94,6 +94,8 @@ struct cdrom_device_ops {=0A=
+>  			       struct packet_command *);=0A=
+>  };=0A=
+>  =0A=
+> +int cdrom_multisession(struct cdrom_device_info *cdi,=0A=
+> +		struct cdrom_multisession *info);=0A=
+>  int cdrom_read_tocentry(struct cdrom_device_info *cdi,=0A=
+>  		struct cdrom_tocentry *entry);=0A=
+>  =0A=
+> =0A=
+=0A=
+Looks OK to me.=0A=
+=0A=
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
