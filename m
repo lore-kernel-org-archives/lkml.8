@@ -2,96 +2,115 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF54C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32711C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4530120728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587652784;
-	bh=8Rw051bY4Yl1adujqLw0ePn/qxSR4Kceq5UQQgrhOxc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wt0H4LA0SGW37DT9d2xJOrq9/iDLkQmzIUTcqsVjj0ZRF1KpAZs9taf97tpRP/C47
-	 9zZgvk7oIC4cX50Jq2mLHL3oHz0o3ttYjt6G0f5VGs0yOVq84fDpf7TYiUuViG2/t6
-	 9+OfqergEAXluiU6oelFPA3HHO48XWFcYwXlU0GQ=
+	by mail.kernel.org (Postfix) with ESMTP id F37CF20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="p8gHEwVQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tayYDuen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgDWOjn (ORCPT
+        id S1728015AbgDWOlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:39:43 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:37360 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDWOjn (ORCPT
+        Thu, 23 Apr 2020 10:41:21 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:54923 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726323AbgDWOlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:39:43 -0400
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 03NEdBvU005174;
-        Thu, 23 Apr 2020 23:39:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 03NEdBvU005174
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587652752;
-        bh=BOj4UmRurC8rIWuQU/ZmKHElncJFocku3VBgXu1RgAA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1hYRHfJGcVtvhI7v3fVw2vGsunw0j1bi0rsj5BrQLs12lPnZHWJ0vKfvmsYAQ8J/L
-         hxF3PcS7OO6EZDxp+agaO0r8aVNgi2E/DEkX4Qc0zL+rMgW1IwONCqmA/zqAMt9wv5
-         UmywdLSZMgjuI/tILQObUROvMy/d6eRJ5QZPM9IaUNHOodZPfp4inQ6znsqD7QYuYM
-         MhGwIGDRp/h8HXrKMTcvrhFHk5+XcK6VDJyBzJTA9lBR+MPTy5QMSr8O4QzvITPm67
-         3kf0hHMKPXwzgeM3PdR4RduKKOKLb0BgCW6AM4uYrRk3/Lu95A0qI0F+aoAuGSKQOJ
-         K3IbgUWZuJPEA==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id u12so5870421uau.10;
-        Thu, 23 Apr 2020 07:39:12 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYndmls2GE6Ol6v2QDwjG7ODl+52Q8UBwkJ2MwIqVq5mNdOY/vH
-        BLxyvN7IZzxqpJgZU71FQHoJpjs4mi+ccV5ERVo=
-X-Google-Smtp-Source: APiQypIwuC0cDKGe0gh6zvueBRX9TXDNtypehZWx7OK3iYNRcYYiiZ2rKufnuNz2HnAdH2/E2wVHXctGE6zkM5SVJJc=
-X-Received: by 2002:a67:3293:: with SMTP id y141mr3518879vsy.54.1587652750987;
- Thu, 23 Apr 2020 07:39:10 -0700 (PDT)
+        Thu, 23 Apr 2020 10:41:20 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 77A2F5C00A6;
+        Thu, 23 Apr 2020 10:41:19 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Thu, 23 Apr 2020 10:41:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=v
+        h1D6eeMXVfJXWiUsvNWHJ/jhwMyhAERGolH522CAwE=; b=p8gHEwVQZgRKCTZPJ
+        viAvj1SZSUJaj/xA5/4hpch16P7qL/8KVcl8bw70qiDBk9r39+ORXO4D3rdwZV0Y
+        dW2l90rWLtrU+urC8zuuTpyKKgXt8/VQs+GsUCV5Rnou54kF4urzityJ9ogwrkjm
+        HiGTEcYXj6bfjhIdjnbPZXUFcJRe7ii4dDJNdXw9r/NfdQd0tN3e/13drcdSoyWk
+        TyDUeITC7+Li81SoShV7DTkZXCAvyjTkZ0pOUfOqfJXhr8h4b7P7/kOCYpvdJvi1
+        uR97VqcSrins1PCezwlCYKIfLOl3F0rZ+bVpXcvfvsD/YknfeQaxUMWMi2cCSZGh
+        ILvMA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=vh1D6eeMXVfJXWiUsvNWHJ/jhwMyhAERGolH522CA
+        wE=; b=tayYDuenZku3a9W1ADF7+fX36A0fnz7VNXQuJNMCd5lK0ABtFU2SvOF13
+        5A5RSsECSbEonjx/624Xvpk8LudYCyk+uaI2CHWZISuPE7semoK5lSb4e5+2fplh
+        GDPrOzmI74xx8xyJHb/Sd3sIm6UwNs2cIRLWRVMAFbeACwsw6N/W4tfiwpKOFANG
+        zzzr9AqaSMkziAPn8IDQwzK0pggohcuy9whrJVwJCZCvmzdpLvkhMWAUuizcdePL
+        A0w8fZjc1sg7wFIpVfEZ6jDL+LQrYErqFiHYcLUJ8C7+dIbb34gmWCYpF1eGUh6r
+        LAOQyDUF48O9EKBpDjpDIfr3Qtzig==
+X-ME-Sender: <xms:D6mhXkQt3SMWKSdmTanoweDDNeFzipjFxhTEGNgIYSHAo_TVouTmSA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdeiiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtugfgjgesthekre
+    dttddtudenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:D6mhXpjhUZfNePk0MPds8rtV8U3-SOJJp265x_W70Rkysui4SZ67nQ>
+    <xmx:D6mhXk4ZDTHNhjxqk7SIMfncSlY54USKjg1cSqVdjRDpGCceU9MS4Q>
+    <xmx:D6mhXmBbyalTwu17lo2c6MINthZ-yHelyIda3wkFRT8n-HPb11OIBg>
+    <xmx:D6mhXnoP3DeRfxiK1qivOOcnEBfxyEr457ekGAMNsktLgE5L4WWoGg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DF2A63065D2F;
+        Thu, 23 Apr 2020 10:41:18 -0400 (EDT)
+Date:   Thu, 23 Apr 2020 16:41:16 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Akira Shimahara <akira215corp@gmail.com>
+Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Changes in w1_therm.c and adding w1_therm.h
+Message-ID: <20200423144116.GA7319@kroah.com>
+References: <20200414170248.299534-1-akira215corp@gmail.com>
 MIME-Version: 1.0
-References: <20200419180445.26722-1-natechancellor@gmail.com> <20200419202128.20571-1-natechancellor@gmail.com>
-In-Reply-To: <20200419202128.20571-1-natechancellor@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 23 Apr 2020 23:38:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT3pt6VoQb3-HtOFJF5JEmaQhjyi+8OSCXu6zQ3oV579A@mail.gmail.com>
-Message-ID: <CAK7LNAT3pt6VoQb3-HtOFJF5JEmaQhjyi+8OSCXu6zQ3oV579A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] kbuild: add CONFIG_LD_IS_LLD
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414170248.299534-1-akira215corp@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 5:21 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> From: Sami Tolvanen <samitolvanen@google.com>
->
-> Similarly to the CC_IS_CLANG config, add LD_IS_LLD to avoid GNU ld
-> specific logic such as ld-version or ld-ifversion and gain the
-> ability to select potential features that depend on the linker at
-> configuration time such as LTO.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> [nc: Reword commit message]
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+On Tue, Apr 14, 2020 at 07:02:48PM +0200, Akira Shimahara wrote:
+> From: Akira SHIMAHARA <akira215corp@gmail.com>
+> 
+> Patch for enhacement of w1_therm module. Added features :
+>  - Bulk read : send one command for all the slaves 
+>  		on the bus to trigger temperature conversion
+>  - Optimized conversion time regarding to device resolution
+>  - Dedicated sysfs entry for powering read,
+>  		resolution set/get, eeprom save/restore
+>  - Alarms settings and reading
+>  - Code optimization to mitigate bus traffic
+>  		(devices information are stored to avoid
+> 		interrogating each device every-time)
+> 
+> Following sysfs entry are added :
+>  - temperature (RO) : return the temperature in 1/1000°
+>  - ext_power (RO) : return the power status of the device
+>  - resolution (RW) : get or set the device resolution (supported devices)
+>  - eeprom (WO) :trigger a save or restore to/from device EEPROM
+>  - alarms (RW) : read or write TH and TL in the device RAM
+>  - therm_bulk_read (RW) : Attribute at master level to trigger 
+>  		bulk read and to survey the progress of devices conversions
+>  - w1_slave has been kept for compatibility
 
+You do not document any of these new sysfs files, why not?
 
-Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+Please add entries to Documentation/ABI/
 
+And for the temp and other issues, shouldn't you use the "default"
+kernel subsystems instead of creating your own api here?
 
--- 
-Best Regards
-Masahiro Yamada
+thanks,
+
+greg k-h
