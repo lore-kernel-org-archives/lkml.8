@@ -2,128 +2,82 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF34C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F44FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD332071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCF72071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgDWP2r (ORCPT
+        id S1729174AbgDWP24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:28:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:42290 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729014AbgDWP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:28:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B5E031B;
-        Thu, 23 Apr 2020 08:28:46 -0700 (PDT)
-Received: from [10.37.12.89] (unknown [10.37.12.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E87B3F6CF;
-        Thu, 23 Apr 2020 08:28:21 -0700 (PDT)
-Subject: Re: [PATCH v6 03/10] PM / EM: update callback structure and add
- device pointer
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-4-lukasz.luba@arm.com>
- <20200423132243.GA65632@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <245720a0-c812-ccc8-235e-6eed6f216e4b@arm.com>
-Date:   Thu, 23 Apr 2020 16:28:18 +0100
+        Thu, 23 Apr 2020 11:28:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:43171 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgDWP24 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:28:56 -0400
+Received: from [192.168.178.29] ([46.223.232.170]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MmUYD-1ijCLP2xNp-00iVJm for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020
+ 17:28:54 +0200
+From:   Erik Rull <webmaster@rdsoftware.de>
+Subject: Huge difference in reserved memory - how to find?
+To:     linux-kernel@vger.kernel.org
+Message-ID: <f7aa4e34-3472-cbaa-8ca9-978472a80935@rdsoftware.de>
+Date:   Thu, 23 Apr 2020 17:28:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Firefox/60.0 SeaMonkey/2.53.1
 MIME-Version: 1.0
-In-Reply-To: <20200423132243.GA65632@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:rzGcRtocErqHMEBlt9++JRuiXFDRZ+aRw7O4NAKnkFmJ3bYKXEB
+ cJyFUxlGIXz27u1vDTxHAmrBUA61DvYV978SIG20X8yrHxC6ACHBKA5qOsY9IEwXpCGctwI
+ sy+UGMr9TomUQBlv6yG1CjqdHcNUA8pIIrfSzLquJ0arg8RH8gGAYre9eFM93rU0jX9/pte
+ euTUjaMTaMWD4GNDKzXgg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:j52MhtoBE+w=:e6oeCUiluIh1kvketDBBtV
+ lHDRyYLZK10b3/y+MUI43tx9FjN2V0PTnqqIJGuycARkDw1AtFZ7HaXTwnDSHKtXcRSTUJbes
+ DbS1BvH+/b8fPPV5NhnXArmFTC3uPhTqyR8I2QQAepl3zEUaAN9vN/l+JyxJOj4YMP/pYGSHl
+ G7df3XLjc9XzZY0Cm+U2FUyF1nfShuG4bqDupgp7NgRV40/CCM6R31JdaziKEyDiX8HXDTED9
+ ksIm64QZvqTCUDbqfQNl5zNPLG6IC08dapdkNXR41qxRTS/EC+oQAxgepBJTycxphUIbDFPvZ
+ /PGEizweFzkIARydMo2gBTp+TAOZKz/kroeTauvjgsZvD0apXXExEd8FwX5kNidM3reoZZDbJ
+ WdYRoXlfzrTCoFntV55bfu9iFx3XRbwd092c4HOQdNBy0sSO5S1tt/XoeplVsVRcJ+zUXQCC7
+ XvhoTGAa4np1wrkbwW5Ay7cx54rDFpycxuTsv4fzu0F6H4F6YJ+aokSZhPg+XVQNlGMI0HpPg
+ 3I/uHId4EQtG6ReYXpriZ3oarzfHsH9tt7cPEWfk+GDu9IAuPI2iz2esKULzz4EE1BtyAbD5H
+ eM+AmD8MtNT8Ic/uxMIIn9FQMnGaD1E5ezX+ZmLI7SsHvQUyHYs9LvUwuLtoGSygh7+UaM+8e
+ 5un7krCAGcQy91kAGasylWmob/WxhGBBQyAg/t/fKlocElmtB0yZsUZVU1ydT9Jd0sS8NU1Ev
+ 81ldDK02wxlehA851Nbi0hcgvq1dhMnqBVfrWNEN6x99uY45MyO6HU4nOhApC8lqchRbu6jR3
+ yxuEsR+VJF5XmeEMy97X0f6jGmAFovgCPu5unu6iw/W52waiKG+PDA+IZtco3W4pkfvtf6p
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Dear all,
 
-On 4/23/20 2:22 PM, Daniel Lezcano wrote:
-> On Fri, Apr 10, 2020 at 09:42:03AM +0100, Lukasz Luba wrote:
->> The Energy Model framework is going to support devices other that CPUs. In
->> order to make this happen change the callback function and add pointer to
->> a device as an argument.
->>
->> Update the related users to use new function and new callback from the
->> Energy Model.
->>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->> ---
-> 
-> [ ... ]
-> 
->> +static struct em_perf_domain *
->> +em_create_pd(struct device *dev, int nr_states, struct em_data_callback *cb,
->> +	     cpumask_t *span)
->>   {
->>   	unsigned long opp_eff, prev_opp_eff = ULONG_MAX;
->>   	unsigned long power, freq, prev_freq = 0;
->> @@ -106,7 +107,7 @@ static struct em_perf_domain *em_create_pd(cpumask_t *span, int nr_states,
->>   		 * lowest performance state of 'cpu' above 'freq' and updates
->>   		 * 'power' and 'freq' accordingly.
->>   		 */
->> -		ret = cb->active_power(&power, &freq, cpu);
->> +		ret = cb->active_power(&power, &freq, dev);
->>   		if (ret) {
->>   			pr_err("pd%d: invalid perf. state: %d\n", cpu, ret);
->>   			goto free_ps_table;
-> 
-> Why are the changes 'cpu' to 'dev' in the patch 4/10 instead of this one ?
+I'm trying to move from 3.4.67 to 4.19 on a rather old Intel CPU and run into
+some memory trouble I do not understand:
 
-The patch 4/10 is quite big and I didn't want to put also this change in
-there. I thought for readability it would be better to have a separate
-patch with self-contained change (or I got your suggestion too strict).
+The point that confuses me is the difference in the following line:
 
-In this patch I just wanted to show more precisely that this function
-callback 'active_power' which is used by 2 users (currently):
-cpufreq/scmi-cpufreq.c and opp/of.c
-is going to change an argument and these files are affected.
+3.4.67:
+[    0.000000] Memory: 235736k/261056k available (4695k kernel code, 24872k
+reserved, 2889k data, 564k init, 0k highmem)
 
-The 4/10 changes a lot lines, while first 3 patches can be treated as
-a preparation for the upcoming major change (4/10).
+4.19.82-rt30:
+[    0.534687] Memory: 165244K/260668K available (9050K kernel code, 821K
+rwdata, 2500K rodata, 808K init, 440K bss, 95424K reserved, 0K cma-reserved, 0K
+highmem)
 
-Thank you for the review.
+Why is so much memory reserved in the 4.19? I would like to understand why and
+how I could reduce that. I need some more space on the system to let my
+application run.
 
-Regards,
-Lukasz
+Thanks a lot!
 
-> 
->> @@ -237,7 +238,7 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
->>   	}
->>   
->>   	/* Create the performance domain and add it to the Energy Model. */
->> -	pd = em_create_pd(span, nr_states, cb);
->> +	pd = em_create_pd(dev, nr_states, cb, span);
->>   	if (!pd) {
->>   		ret = -EINVAL;
->>   		goto unlock;
-> 
+Best regards,
+
+Erik
