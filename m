@@ -2,94 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E88C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B15C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B48682098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587663598;
-	bh=t+8gzm7oQkFYPTBkc7SLcyDzCH3gxXb6wsyucu95k4I=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=PuJ5bIonNXylxR3lsHMB08k1Iup+IQPPc+u9W/QuKDFDjd8nEGc6pkvvKOkXfCsUc
-	 BHUd5NPHuORqmYJ8grdj7731ezAjHWh42yTYuI9zB1B1do8z3ebnOynmYSUK6TkESn
-	 au5nsCBrqBiRfbRq+rHbOWBqnQRoJz9k8n6OQRec=
+	by mail.kernel.org (Postfix) with ESMTP id 0A71220736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NX1C5Isc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbgDWRj6 (ORCPT
+        id S1730019AbgDWRlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbgDWRj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:39:57 -0400
-Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E87020736;
-        Thu, 23 Apr 2020 17:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587663597;
-        bh=t+8gzm7oQkFYPTBkc7SLcyDzCH3gxXb6wsyucu95k4I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UT4uRdUw+vb89bWol3RjgRLWDHVCC8QC8lWaNIEdDGqkiVdGNBuH68r2N+oAooq5F
-         KO+GTpqQw66OrcpSWBoiyWN+Cfjqv4fEUemL9EyJHqw/guLuCu+UTTeELVn6QpCBNH
-         co959Nk3vtcCFSulJjIQY5xiXbCRIZGmmJlWlMnQ=
-Date:   Thu, 23 Apr 2020 12:39:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        =?iso-8859-1?Q?Lu=EDs?= Mendes <luis.p.mendes@gmail.com>,
-        Todd Poynor <toddpoynor@google.com>
-Subject: [GIT PULL] PCI fixes for v5.7
-Message-ID: <20200423173955.GA193359@google.com>
+        Thu, 23 Apr 2020 13:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729917AbgDWRlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:41:02 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD24FC09B042;
+        Thu, 23 Apr 2020 10:41:01 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 188so7323027wmc.2;
+        Thu, 23 Apr 2020 10:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gWv80nzXUhTdWCFgmyjTCUoBOWCYJ0shhaZECz9MPDU=;
+        b=NX1C5IscIq8eq/7t7aqC4WMjLMIwy0TYJXkv81hlXtOf7GAgezW8xB3N+PSUNC4nDL
+         5PNxuRDBeCtnM/2Xb8IYAkefyXNM9TED4TjytiGbv2wdOMKxNlEL44KXM+rAEBq3tFCw
+         EpVcUvYprGVexQv7brmcia+kisIR3akARAx1SFcKsIoVNBjfnULTFrBocFex8JGj7lYJ
+         Ra0b7OB5ZIxBvXVs8Od3sSB/I7tD9MrS3y/U8KFGGFS7YJd+4FOD6+FmeQoj5HkeDuBV
+         Pv7ag4Mj2hz8C/+5aBe3w+KsQliYhuYkPfZMRWiwT/4HsjaK3JK7ICWbGCOsmNnt9fxR
+         ZdDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gWv80nzXUhTdWCFgmyjTCUoBOWCYJ0shhaZECz9MPDU=;
+        b=efwwXqeq8lQwehA6DstKYQuPR28mvLmZaLkB4OmowXxbZ5aBD1jEflZ+EKaJLG+fx4
+         q1CAlI3C7GsDR3CNf5gOW5jzMI2nCwtyLRBJCRKdwKpqoPySlKnBMhPYWAP2ome9vSZZ
+         /dMJafxUL70ly9/Q5OC9/HdZF60iLNIEwLijP3MrGgRu+Dcb3M1RmEewbPt+8feSTbrb
+         1Wr5quVKe56NVlI4CsCUbCSFEYV2pdNG7q6x2jHGDMZ80kaQFxp07rfA3ZaDA8WSF5E5
+         VHrfUnE2dL8XWEDavGbhTJDpJFGK/YqmW2kWWHfqWhGN2N7htAxwAukBw7WhfrYysLM4
+         GvyQ==
+X-Gm-Message-State: AGi0PuZkcodaIRPYGbH4M7lyJHxE19dn5ns4Sl5GPcA7zMkajqs7f6vJ
+        CYQ7RUNrWFnYMECXR0yat5w=
+X-Google-Smtp-Source: APiQypIkxumrWz+ndrMvOJ91zYJzQlX5sVnzAQWpOSbcaM+o3LFMTKXuBlxS10rMdu61zM/gqoUfMQ==
+X-Received: by 2002:a1c:a5c8:: with SMTP id o191mr5451325wme.77.1587663660323;
+        Thu, 23 Apr 2020 10:41:00 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
+        by smtp.gmail.com with ESMTPSA id i25sm4471771wml.43.2020.04.23.10.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 10:40:58 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-sunxi@googlegroups.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Samuel Holland <samuel@sholland.org>, samuel@sholland.org
+Subject: Re: [linux-sunxi] [PATCH v2 1/2] media: cedrus: Program output format during each run
+Date:   Thu, 23 Apr 2020 19:40:57 +0200
+Message-ID: <2018061.irdbgypaU6@jernej-laptop>
+In-Reply-To: <20200422040410.6251-1-samuel@sholland.org>
+References: <20200422040410.6251-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCI fixes:
+Dne sreda, 22. april 2020 ob 06:04:09 CEST je Samuel Holland napisal(a):
+> Previously, the output format was programmed as part of the ioctl()
+> handler. However, this has two problems:
+>=20
+>   1) If there are multiple active streams with different output
+>      formats, the hardware will use whichever format was set last
+>      for both streams. Similary, an ioctl() done in an inactive
+>      context will wrongly affect other active contexts.
+>   2) The registers are written while the device is not actively
+>      streaming. To enable runtime PM tied to the streaming state,
+>      all hardware access needs to be moved inside cedrus_device_run().
+>=20
+> The call to cedrus_dst_format_set() is now placed just before the
+> codec-specific callback that programs the hardware.
+>=20
+> Fixes: 50e761516f2b ("media: platform: Add Cedrus VPU decoder driver")
+> Suggested-by: Jernej =C5=A0krabec <jernej.skrabec@gmail.com>
+> Suggested-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-  - Workaround Apex TPU class code issue that prevents resource
-    assignment (Bjorn Helgaas)
+=46or what is worth:
+Tested-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-  - Update MAINTAINERS to add Rob Herring for native PCI controller
-    drivers (Lorenzo Pieralisi)
+Best regards,
+Jernej
 
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.7-fixes-1
-
-for you to fetch changes up to ef46738cc47adb6f70d548c03bd44508f18e14a5:
-
-  MAINTAINERS: Add Rob Herring and remove Andy Murray as PCI reviewers (2020-04-22 10:53:37 -0500)
-
-----------------------------------------------------------------
-pci-v5.7-fixes-1
-
-----------------------------------------------------------------
-Bjorn Helgaas (1):
-      PCI: Move Apex Edge TPU class quirk to fix BAR assignment
-
-Lorenzo Pieralisi (1):
-      MAINTAINERS: Add Rob Herring and remove Andy Murray as PCI reviewers
-
- MAINTAINERS                          | 2 +-
- drivers/pci/quirks.c                 | 7 +++++++
- drivers/staging/gasket/apex_driver.c | 7 -------
- 3 files changed, 8 insertions(+), 8 deletions(-)
