@@ -2,177 +2,133 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F55DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD3DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2108E2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A89820780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OoxeQq3g"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SJmtTMwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgDWXjE (ORCPT
+        id S1728196AbgDWXuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:39:04 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:46409 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDWXjD (ORCPT
+        Thu, 23 Apr 2020 19:50:40 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1067 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgDWXuj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:39:03 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200423233901epoutp0430ae29ce1f9ce4f8d988bdb0d1e43ffe~IlzlZFS7P1963319633epoutp04d
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 23:39:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200423233901epoutp0430ae29ce1f9ce4f8d988bdb0d1e43ffe~IlzlZFS7P1963319633epoutp04d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587685141;
-        bh=DwFvbvklwud1knopur7E6snit/XRuGA/GMpWgX6E89E=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=OoxeQq3gFSzwo8TVs0+ZCWCGxS0PADf0z9Cni/2MR9QQM4e1gMgoOj7oIh+8R3XZM
-         nSWISfRQt0vP1t5U9eaaIA49jYZ+SpYp+Yk8fc73DQHKJTUbZMfZvvNXRkNKMQe+Rm
-         xWWHmBrHYBxKiXHce0BATEFrjZmn6RmtGRl1UVuA=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200423233900epcas1p1f26cbb4c236494d26d2ca9180b54a607~IlzlCcCYZ1071310713epcas1p1w;
-        Thu, 23 Apr 2020 23:39:00 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 497YfW5xvFzMqYkb; Thu, 23 Apr
-        2020 23:38:59 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        14.13.04544.31722AE5; Fri, 24 Apr 2020 08:38:59 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200423233859epcas1p4ee898a7cdc519b567618d09b44a17aab~IlzjV-68Q0801008010epcas1p4i;
-        Thu, 23 Apr 2020 23:38:59 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200423233859epsmtrp274a2f4452abab82533ff1f153fa2c5ba~IlzjVUiwe0162601626epsmtrp2D;
-        Thu, 23 Apr 2020 23:38:59 +0000 (GMT)
-X-AuditID: b6c32a36-7ffff700000011c0-7a-5ea22713f1c4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        84.FC.25866.21722AE5; Fri, 24 Apr 2020 08:38:58 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200423233858epsmtip1a795924df0995fceec68884604a4c7a4~IlzjMav-73200732007epsmtip1E;
-        Thu, 23 Apr 2020 23:38:58 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Goldwyn Rodrigues'" <rgoldwyn@suse.de>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        "'Hyunchul Lee'" <hyc.lee@gmail.com>,
-        "'Eric Sandeen'" <sandeen@sandeen.net>,
-        "'Sedat Dilek'" <sedat.dilek@gmail.com>
-In-Reply-To: <20200423144411.hmby6ux2utdrqsls@fiona>
-Subject: RE: [ANNOUNCE] exfatprogs-1.0.2 version released
-Date:   Fri, 24 Apr 2020 08:38:58 +0900
-Message-ID: <000101d619c8$5c6e3b90$154ab2b0$@samsung.com>
+        Thu, 23 Apr 2020 19:50:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea2295a0000>; Thu, 23 Apr 2020 16:48:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 16:50:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 16:50:39 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 23:50:39 +0000
+Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 23:50:37 +0000
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+ <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
+ <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
+ <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
+ <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a2672be9-93c1-8363-6c0e-6d43c2bd59bc@nvidia.com>
+Date:   Thu, 23 Apr 2020 16:50:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQK8+4Vt3Hn3JBh+0GBduZqobryGZwI03Iw/AuonTqmmkKCJkA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTURzAO7t3D6PFbVqd7OG6IKX52FzTWzmVihBSEfpgBG1d9LKZe7G7
-        2fODWakb9lCY1baiTTSTdEOt1FJJ6SGVH0p8QFla0dPKzEYo1d2u0r79zv/8/o/zECCiGl6k
-        oFBvpkx6UovzFqO3+mIS4sM3eJSSmgEJMfTqG5+429WPEs87XTzi/GQzhzg9GEs02x+hGbzM
-        DsdLfmZb7Tgns/XxsczplnW56D5tqoYiCyiTmNLnGwoK9WoFvnuPaodKniyRxku3ECm4WE/q
-        KAW+Mys3flehlmmNi4tJrYUJ5ZI0jSempZoMFjMl1hhoswKnjAVao1RiTKBJHW3RqxPyDbqt
-        UokkSc6YB7Sa6uobHONb7HCp/zu/BDwW2kCYAGKb4dC4AwRYhLUDePJatg0sZvgHgENPu3ns
-        YhrAulk/ZyHDM9aEshmdALZNpbDSRwC9PSW8wAYPi4d/5nqCHIHFwfJWOxKQEKwfwKevJriB
-        jTCm0szr2mClcGwLdLqe8AOMYtHQ6RxBAixk4j/u2/ksL4P9l94GfQSLgrcnXQg7kRj+flfP
-        ZZtth/e6GjmsEwGd1rJ554wAut7n2YCA4Z3Q2pDHhsPhp4dtfJYj4fTXLh6rHINTPfOZFQB+
-        8CtYlsFRr48bUBAsBno7E9nwetgxexmwTZfCrzOVXLaKEFaUiVglGp591jd/g6uhrfw7/zzA
-        HSHHcoQcyxEyvuN/s6sAbQQrKCOtU1O01JgU+tItIPgnY5PbgWcgqxdgAoAvEY6Y3EoRlyym
-        j+h6ARQgeITQN35FKRIWkEeOUiaDymTRUnQvkDO3XoVELs83MD9cb1ZJ5UkymYzYnJySLJfh
-        K4X2Ya1ShKlJM1VEUUbKtJDHEYRFloDSzznlfLLJHffCssrfePOL4oHKt7R6baW5OPdCva4v
-        fWDi+FydXVcvb5g9tWe46ZASW6O7M6bOIRpqekc+7Lc6N715V0h2l/o4c9eJc9lzrguLNra7
-        NZMXI9IHu4q8GVF7/Z3lyl8e7sT01M/RN5+vu7edOCj7O8Ot9afVCausOEprSGksYqLJf5n9
-        vnSpAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSnK6Q+qI4gycNVhbX7r9nt9iz9ySL
-        xeVdc9gsJrxdx2TRekXLYt3UEywObB47Z91l99iy+CGTx+bT1R6fN8kFsERx2aSk5mSWpRbp
-        2yVwZUyatIap4IlARdP3D+wNjKd5uxg5OSQETCQW3VvL0sXIxSEksINRYvfWblaIhLTEsRNn
-        mLsYOYBsYYnDh4shap4zSqz8toURpIZNQFfi35/9bCC2iICORPvmqcwgRcwCpxklet6/ZAdJ
-        CAlsZpQ4elYWxOYE2vb1wWIWEFtYwFJi9pwzYDUsAqoSs2ffYAaxeYHin45OZYewBSVOznzC
-        AnIEs4CeRNtGsL3MAvIS29/OYYa4U0Hi59NlrBA3OEkc3LuKCaJGRGJ2ZxvzBEbhWUgmzUKY
-        NAvJpFlIOhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dLzs/dxAiOGS2tHYx7Vn3QO8TI
-        xMF4iFGCg1lJhHfDw3lxQrwpiZVVqUX58UWlOanFhxilOViUxHm/zloYJySQnliSmp2aWpBa
-        BJNl4uCUamAy/1u7tLSZ99jduRqam59KTyw90nev5bY01/+H8/6VHkl5f3b/7tX7vy/nOPpv
-        Wjp7aFKGoOa7PQK3ZBguSE+r3cu0zfPbr92qKU8OWl68HMkV0namflGOMjvLEy0eS/O8q82C
-        Cn+mld3KyCws9Hd4sVnSaX/ypq4lzackp9jv7GrVsWF2S2Cs2S8u8flG3Pav7EePSvJMZOWT
-        25j+KdCgM77Ko7pCt0HLJe4Ir2HkImaf1jXd/R+D3/Qf2hlU47v6W1N5nnh1U6rcp7PvTDkX
-        hFecsdc3+mb0iXVNQPiGmduZfO+LV05jf7qh3ciuVMZ7S/oB6adv7qsXfvC5qZrrt+fmM4/C
-        B877teZ3syixFGckGmoxFxUnAgBYlH5BCAMAAA==
-X-CMS-MailID: 20200423233859epcas1p4ee898a7cdc519b567618d09b44a17aab
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413
-References: <CGME20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413@epcas1p1.samsung.com>
-        <004701d6194c$0d238990$276a9cb0$@samsung.com>
-        <20200423144411.hmby6ux2utdrqsls@fiona>
+In-Reply-To: <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587685722; bh=1rPMThke2vlH4gt1psqR9lA1CdQR51YkE8ZDvPRLlnU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=SJmtTMwzED4NoBMwXhvfF9z6v/Yx8Jy0ZfDBdZXvWgm/4B0a0ZcjYh9pacz344iN9
+         fHprafFWYh5sDeZs7newdr2iKjovIQ74PV0LzzmcHHH8VdVLX509gXO5yHxkv5+EII
+         xw6GiUV3ugiZur1zXenvBjJnKNBNqCrsu0qtL5MVVUGJkzPdGHeOvBFMsjjtn/TLrQ
+         GDalrLDyaRkAm7hL1/jZueTefc3W7B0BGzLTTr/RHFCmjx8SBOFaAitpeNvgE0OPP8
+         djnRwh83QalbObyCcUkkK/aLkdN4Vt/rC+0oRQWRKX1l3dU/JUv6iKAvmaBVKectd5
+         osPaOaGNo6lMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Namjae,
-Hi Goldwyn,
-> 
-> On 17:49 23/04, Namjae Jeon wrote:
-> > This is the second release of exfatprogs since the initial version(1.0.1).
-> > We have received various feedbacks and patches since the previous
-> > release and applied them in this release. Thanks for feedback and patches!
-> >
-> > According to Goldwyn's comments, We renamed the project name from
-> > exfat-utils to exfatprogs. However, There is an opinion that just
-> > renaming the name is not enough. Because the binary names(mkfs.exfat,
-> > fsck.exfat) still are same with ones in current exfat-utils RPM package.
-> >
-> > If that's real problem, We are considering a long jump with 2.0.0 when
-> > adding repair feature.
-> >
-> > Any feedback is welcome!:)
-> 
-> I agree with Eric. We can add "Conflicts" flag to make sure there are conflicting capabilities in
-> packages.
-Okay.
-> 
-> >
-> > The major changes in this release:
-> >  * Rename project name to exfatprogs.
-> >  * label.exfat: Add support for label.exfat to set/get exfat volume label.
-> >  * Replace iconv library by standard C functions mbstowcs() and wcrtomb().
-> >  * Fix the build warnings/errors and add warning options.
-> >  * Fix several bugs(memory leak, wrong endian conversion, zero out
-> > beyond end of file) and cleanup codes
-> >  * Fix issues on big endian system and on 32bit system.
-> >  * Add support for Android build system.
-> >
-> > The git tree is at:
-> >
-> > https://protect2.fireeye.com/url?k=c2ec59b9-9f266c0e-c2edd2f6-0cc47a30
-> > 03e8-e469846ab6add112&q=1&u=https%3A%2F%2Fgithub.com%2Fexfatprogs%2Fex
-> > fatprogs
-> >
-> > The tarballs can be found at:
-> >
-> > https://protect2.fireeye.com/url?k=88473660-d58d03d7-8846bd2f-0cc47a30
-> > 03e8-7bb3906eafbb32bc&q=1&u=https%3A%2F%2Fgithub.com%2Fexfatprogs%2Fex
-> > fatprogs%2Freleases%2Ftag%2F1.0.2
-> >
-> 
-> Can we follow the standard of source tarballs be <projectname>-<version>.tar.gz? In this case, exfat-
-> 1.0.2.tar.gz instead of 1.0.2.tar.gz?
-Ah, When I tried to download it through this link, source tarballs was exfatprogs-1.0.2.tar.gz...
-Am I missing something ?
-> 
-> --
-> Goldwyn
 
+On 4/23/20 4:25 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 24.04.2020 02:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
+>>> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> +static int chan_capture_kthread_start(void *data)
+>>>>> +{
+>>>>> +     struct tegra_vi_channel *chan =3D data;
+>>>>> +     struct tegra_channel_buffer *buf;
+>>>>> +     int err =3D 0;
+>>>>> +
+>>>>> +     set_freezable();
+>>>>> +
+>>>>> +     while (1) {
+>>>>> +             try_to_freeze();
+>>>>> +
+>>>>> +             wait_event_interruptible(chan->start_wait,
+>>>>> + !list_empty(&chan->capture) ||
+>>>>> +                                      kthread_should_stop());
+>>>>> +
+>>>>> +             if (kthread_should_stop())
+>>>>> +                     break;
+>>>>> +
+>>>>> +             /*
+>>>>> +              * Source is not streaming if error is non-zero.
+>>>>> +              * So, do not dequeue buffers on capture error.
+>>>>> +              */
+>>>>> +             if (err)
+>>>>> +                     continue;
+>>>> This will result in an endless loop, I suppose it wasn't the intention=
+.
+>>> no it will not. on error we report vb2_queue_error which will do
+>>> streaming stop request.
+>>>
+>>> So thread will be stopped on streaming stop request thru kthread stop
+>>> signal
+>> To be clear on error it reports vb2 queue error and waits for stop
+>> streaming to happen
+> If thread should exit on error, then it should do it on the actual
+> error. Otherwise it looks very error-prone.
+When v4l2 drivers indicate fatal error through vb2_queue_error, queue=20
+error flag=C2=A0 is set and wakes up all processes waiting on queue along=20
+with polling reporting=C2=A0 EPOLLERR and also reporting error for queuing=
+=20
+and dequeuing buffers. Stream stop will surely happen which stops the=20
+thread.
