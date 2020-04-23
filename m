@@ -2,119 +2,149 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791ADC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A07C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E192075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="Ookat35x"
+	by mail.kernel.org (Postfix) with ESMTP id A98192075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgDWFwO (ORCPT
+        id S1726775AbgDWFyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:52:14 -0400
-Received: from mail-eopbgr70131.outbound.protection.outlook.com ([40.107.7.131]:46945
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgDWFwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:52:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aeAT6XXhd6Arz9gHuldJ37pRye5ImNpN66tliRW93J8iEVAa8ok3w6VruogPo/m1LlarmDXqNW3U2d9RMcRO/IzWfNvu1kCeeBjPxmCcoXTypCw6zpgmlocKctXQhpHX5f0LRC+0JhzcJb6Fb4WxiP1zci7mCvjXtUrhACdWqxO8gFBUAuBVqtLhGzLcDpcghLdAWiRMyCd70lqZjpgPt3douR+N9TVn3sTvZKnSEpedP28nqryefQSJ50SE4vJioNw4yJMa7bPSIwY2fGRIL7j9xwY24RBeuY8iY21ksarPXPK1gVF/73Es3jaM/jRqlV2857gWTpdJemolpoKk1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ROSTFF6AWMXoBzkdYVuN5YLNu4Zp10T9SEOjJ9mKUEU=;
- b=G6r0nOB4x/k0SFPLD28qZ1XABD6nenYmfbZm9dMuY9i/QOyFGy8VxejBVI8COU6mWSgCHmrvboR2do/1Tb4PjM+rexyYYWfmBdPXDYZnxozB4Ri2n2zOlQNypscJcVd6tObKM8AdKHejVqK2fNBHFmOltzJebzsacPx66fvQQNmtKFDDPi8Rn3pgNYSW9EFl8BEkIByn7VFbKOBNDyseFstGdjYivp4VuTGS1q4Yb83Q8Y137gp3167yTeHLpFNivD/diH+vHAvxSE/AfhQlFcLtJCnbC6XujdUoivcZfi4ZaKuOk/07qZPYdkQvZP6WDWMRur5eA1kJWwtw9/P4sA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ROSTFF6AWMXoBzkdYVuN5YLNu4Zp10T9SEOjJ9mKUEU=;
- b=Ookat35xmJT920daPcBuEjHjgyZC20ul4GayZi5zA6lcot96cw/2+7GKkK3S/t8Rcw+WXcSVpp+kK79CRwZUp9UobsY3fSAU1FplbtJg4ANTFcaV5jH0D8WRleMaTK/r7V6Z1h2kAjkC9koacCUZENzfnzjdtBJexlzyDQneqv0=
-Received: from HE1PR0701MB2938.eurprd07.prod.outlook.com (2603:10a6:3:4b::11)
- by HE1PR0701MB2777.eurprd07.prod.outlook.com (2603:10a6:3:99::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.10; Thu, 23 Apr
- 2020 05:52:08 +0000
-Received: from HE1PR0701MB2938.eurprd07.prod.outlook.com
- ([fe80::7877:564:f523:aece]) by HE1PR0701MB2938.eurprd07.prod.outlook.com
- ([fe80::7877:564:f523:aece%10]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
- 05:52:08 +0000
-From:   "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-To:     "jolsa@redhat.com" <jolsa@redhat.com>
-CC:     "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "alexey.budankov@linux.intel.com" <alexey.budankov@linux.intel.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] perf tools: Move zstd_fini() to session deletion
-Thread-Topic: [PATCH 2/4] perf tools: Move zstd_fini() to session deletion
-Thread-Index: AQHWFLtvGkG5I0RKXUCK8vXtPmN80qiBuTkAgASD9IA=
-Date:   Thu, 23 Apr 2020 05:52:08 +0000
-Message-ID: <4845b1020dcd05d2927adced7ad5685437af03c2.camel@nokia.com>
-References: <20200417132330.119407-1-tommi.t.rantala@nokia.com>
-         <20200417132330.119407-2-tommi.t.rantala@nokia.com>
-         <20200420084931.GD718574@krava>
-In-Reply-To: <20200420084931.GD718574@krava>
-Accept-Language: fi-FI, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tommi.t.rantala@nokia.com; 
-x-originating-ip: [131.228.2.15]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 958b1403-04a0-4cc1-6415-08d7e74a75b3
-x-ms-traffictypediagnostic: HE1PR0701MB2777:
-x-microsoft-antispam-prvs: <HE1PR0701MB2777928B709605B16DFE196AB4D30@HE1PR0701MB2777.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 03827AF76E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0701MB2938.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(81156014)(5660300002)(26005)(2906002)(316002)(4744005)(66446008)(7416002)(64756008)(66476007)(66556008)(76116006)(6506007)(66946007)(54906003)(6916009)(478600001)(8676002)(6486002)(2616005)(36756003)(186003)(6512007)(4326008)(8936002)(86362001)(71200400001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bbmwp7P9VmzZDHtM4Lt+p2gz75M1lqefBp5/Q9a1GCKZ0hGoOT3ZJ2NUh3sTNvgJ8OJ+RDLUSOfdvTiw0T3NpDMvPrwYf5qiVy0n7XmdnziiJQrp4oPptjMqTCav4ydupxd0V5p9HQDvE65qRN8JW3CB70GkcqaGgRiLTExd6Vcgs81QkfuB2fdU66kdgvV3zVbnmsIRT8wlo9OvSm9RNPXPRDdVs9B8F2CazOR9ofeDiC6Ly1XVcSQfKX0GTOrjgVpOITUHXtr0F8V6pD3fQeF8aY4VpBoAPRkJR1U+6Y6vcBExhue79JpFyz9JF5/tpre6FELkSdQv30FpWhO2UPjXlKmg1LF8SQJQviVwJTSOSRSax5W8e4TMdi7a4Ex5VIUlN0k2getcWgBDGI2OxBrfTJryt68jrheDlAoCAtcwYieLXS+5BtZ4hwjC7N2t
-x-ms-exchange-antispam-messagedata: NgPRB6rwiLXGEYX0JHbxHuJl698CYcgr+6Bme0eqi3y0SIzCyjCti3qdOBVT16bJMFw0rFqLpfj0EKDJw1J8G7CwRBEh9oxvLPfRi0xzfacp0suIvSQ6bfXw/9KftjEdo1MYHl4STIL/7Q8WvGLK3Ztgv3fPTmGWSfrO+IqnsnFaOWM+3p1DyAGpAOwnri7dFxBoY97g3XNwv+sV5bbXKweOcXcykht6CxBNLn5fpWKwCdudZhRzc+X12xidiBnCtbAWUkqGSNkvtkj6u6PfTIOBrSX6ltQXPni0eq5f7AhDTtqP8NR8517RHtobfF/vYspdq9PtO1ISp9elhp2nENnAFHxD3IodHZXK4ISGRyFQFol7aPXD+8GWoe/3/Zh7xAJY5V2ig9dPHsQNObjOCMadcgDwt5HKKWM+IipY58CHJsyLSSHEpv99Q3004p3buywuyWF4lxRSCEnhlp/GxHmWGBSBZUrqyWNCgwcs03N/P0DISWAwzFoeEOPLku9SucWQ6yQaC/5uhU1s8Jqsscjns09pSyt4G4pnMvZ893L4CTaDOoEzPucy3HYt/OxFoFrfYxdOvYNIb2j5TF4rwrdpXDewgRUsnOENrYC/nPeu5MvuGyNCHe8B2AzHsnNkRsGYZfsmavil8vAUvS6aj0a1g+9rBuko2obFHzL9llyXWYxAYSvajJrYB79jlDouGt0ayojAAxojYwF4+ZMF5wGyj/doUsH0nic1v5gi8lqP5XJwslhcPs20K/mJHqa6DjXabb3iLIdWjQ33MEAgTGSpxqqNa9uOJ4KmIvwGWjQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1F1877822C73674A9541F01269EE2051@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 23 Apr 2020 01:54:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:50371 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgDWFyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 01:54:00 -0400
+IronPort-SDR: eoEl5hik0hhyypfWO1zx2qN+yseWw2sZdKul6MDme1APYt5FBW7B6LDWrG9qw3O51WhBi1+Gkw
+ mhwEqt36i3kA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 22:53:59 -0700
+IronPort-SDR: 1jkKg9WIy60a1ZERGAhk8WqRoWE0s8S6vCMQi2XvnQfFzum74J85wJsaXBLn2OfcC4DSpUpUS2
+ kS3w2L6gYa4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
+   d="scan'208";a="365903246"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 22:53:55 -0700
+Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake
+ metrics
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20200422074809.160248-1-irogers@google.com>
+ <20200422074809.160248-3-irogers@google.com>
+ <20200422143840.GJ608746@tassilo.jf.intel.com>
+ <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
+ <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
+ <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com>
+Message-ID: <cb5fcb4b-3ac6-66b5-9f9e-7943f4a6dadf@linux.intel.com>
+Date:   Thu, 23 Apr 2020 13:53:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 958b1403-04a0-4cc1-6415-08d7e74a75b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 05:52:08.3242
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1wxdoflIkHDXKkii0KMYnARrPIenA9BLjCv/FCbRfCTley6ogkZfI+bsVAzLYyGBj0O2vuM/RZXPLaqf6QI8Q6d6nSQlV4dQqaFom+40isg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0701MB2777
+In-Reply-To: <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA0LTIwIGF0IDEwOjU0ICswMjAwLCBKaXJpIE9sc2Egd3JvdGU6DQo+IE9u
-IEZyaSwgQXByIDE3LCAyMDIwIGF0IDA0OjIzOjI3UE0gKzAzMDAsIFRvbW1pIFJhbnRhbGEgd3Jv
-dGU6DQo+ID4gTW92ZSB6c3RkX2ZpbmkoKSBjYWxsIHRvIHBlcmZfc2Vzc2lvbl9fZGVsZXRlKCks
-IHNvIHRoYXQgd2UgYWx3YXlzDQo+ID4gY2xlYW51cCB0aGUgenN0ZCBzdGF0ZSB3aGVuIGRlbGV0
-aW5nIHRoZSBzZXNzaW9uLg0KPiANCj4gaXQgc2hvbGQgYmUgb3J0aG9nb25hbCB3aXRoIHpzdGRf
-aW5pdCBjYWxscywgd2hpY2gNCj4gYXJlIG5vdCBjdXJyZW50bHkgY2FsbGVkIHdpdGhpbiBwZXJm
-X3Nlc3Npb24gDQo+IA0KPiBJIGd1ZXNzICB6c3RkX2luaXRjb3VsZCBtb3ZlZCB0byBwZXJmX3Nl
-c3Npb25fX25ldywNCj4ganVzdCBuZWVkIHNvbWUgbmljZSB3YXkgdG8gcGFzcyByZWMtPm9wdHMu
-Y29tcF9sZXZlbA0KDQpNYWtlcyBzZW5zZSwgSSdsbCBwb3N0IHYyIGxhdGVyLg0KLVRvbW1pDQoN
-Cg==
+Hi Jiri,
+
+Bisected to this commit which introduced the regression.
+
+26226a97724d ("perf expr: Move expr lexer to flex")
+
+Would you like to look at that?
+
+Thanks
+Jin Yao
+
+On 4/23/2020 9:08 AM, Jin, Yao wrote:
+> 
+> 
+> On 4/23/2020 12:18 AM, Ian Rogers wrote:
+>> On Wed, Apr 22, 2020 at 8:34 AM Ian Rogers <irogers@google.com> wrote:
+>>>
+>>> On Wed, Apr 22, 2020 at 7:38 AM Andi Kleen <ak@linux.intel.com> wrote:
+>>>>
+>>>> On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
+>>>>> Remove over escaping with \\.
+>>>>> Remove extraneous if 1 if 0 == 1 else 0 else 0.
+>>>>
+>>>> So where do these parse errors happen exactly? Some earlier
+>>>> patches introduced them as regressions?
+>>>
+>>> I'll work to track down a Fixes tag. I can repro the Skylakex errors
+>>> without the test in this series, by doing:
+>>>
+>>> $ perf stat -M DRAM_Read_Latency sleep 1
+>>> Error:
+>>> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+>>> for event (cha/event=0x36\,uma
+>>> sk=0x21/).
+>>> /bin/dmesg | grep -i perf may provide additional information.
+>>>
+> 
+> I also think some patches introduced this regression. When we rollback 
+> to commit 61ec07f5917e (perf vendor events intel: Update all the Intel 
+> JSON metrics from TMAM 3.6.), there is no this error on CLX.
+> 
+> Thanks
+> Jin Yao
+> 
+>>> This was just the escaping issue. I'm less clear on the other cascade
+>>> lake issue, and it is a bit more work for me to test on cascade lake.
+>>> What is "if 1 if 0 == 1 else 0 else 0" trying to do? Perhaps hunting
+>>> for the Fixes will let me know, but it looks like a copy-paste error.
+>>>
+>>>> The original metrics worked without parse errors as far as I know.
+>>>
+>>> The skylake issue above repros on 5.2.17 and so it seems like it is
+>>> broken for a while. The test in this series will prevent this in the
+>>> future, but without this patch that test fails.
+>>
+>> The parse errors were introduced with the metrics, so they've never 
+>> worked:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=fd5500989c8f3c3944ac0a144be04bae2506f7ba 
+>>
+>>
+>> I will send out a v2 with Fixes in the commit message but wanted to
+>> wait in case there was any more feedback. In particular the fixes to
+>> the new test and expr parser lex code. The lex code wasn't broken at
+>> the time the metrics were added and should be working again after this
+>> patch set.
+>>
+>> Thanks,
+>> Ian
+>>
+>>>> If it fixes something earlier it would need Fixes: tags.
+>>>
+>>> Working on it. Thanks for the input!
+>>>
+>>> Ian
+>>>
+>>>> -Andi
