@@ -2,116 +2,131 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00120C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A207C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF4620781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F403C20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tXHk9KyW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAZi2qsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgDWNU6 (ORCPT
+        id S1728337AbgDWNVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:20:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
+        Thu, 23 Apr 2020 09:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726753AbgDWNU5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726753AbgDWNVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:20:57 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D751C08E934
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:20:57 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id x2so5461456ilp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:20:57 -0700 (PDT)
+        Thu, 23 Apr 2020 09:21:00 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD5EC08E934;
+        Thu, 23 Apr 2020 06:21:00 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id g74so6236351qke.13;
+        Thu, 23 Apr 2020 06:21:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NgS2H/D6EFVvTgVCCRzMf0kZXkLuo7JGo1bOkKa4VT4=;
-        b=tXHk9KyW4695SjgQh6Gf5ACKijIKr4ExQm2aGyvyaSiH2lLWOJvTiGW1WUVVctTYPX
-         4OFK9aiX6pSBVHNm5vehFA9nFKY49p1yBac9tl+pVVJo7zpt4Ts2/q4/6f//NmZUJhri
-         A4bWwwh0IrvE3QZnOw+sf2r2TSWsPhs+YmPlQ=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9jDk9uM72kgS9oe9Qc0OBhy8P+XuVro261CKYodI12Y=;
+        b=hAZi2qsvxi3D9D5L2q0lMwkYhurG5da4gJ1QOn0YbYqSio7OT8o5b2okqoaCdtRxSR
+         W2NKt4qwnQmmdtRht/T98LvgT6eZqDFyu4E/lG5i/ppaTPPpHRSODueIqbG1tbLoZU+o
+         vmjCn6coOrnsJXBDlE3+QZJHJDrPQ7kWo3AY63e0Iyf9SAU/L6v8lmm/nBTMbOJygRcv
+         k2nXcUoYIJNcRHkOt4e9KayLNapNU9Mh1VciCbQnhtl42lgwab2038oCuBeDV7HftV5m
+         NJt4N4/g2/k1BqKflXCqReHHsg8zIpbwudW6vQzWhNFFGywHwfiIhX8CJG6fb4dmKTIZ
+         yEIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NgS2H/D6EFVvTgVCCRzMf0kZXkLuo7JGo1bOkKa4VT4=;
-        b=lbDHOZIIE8HCAfiEGcOM1qijf+O/ZtJhnuQYvyMlGDWzB4r/ebfxOF+xoSFez3INyx
-         AkhvTy9fYnlArUihGl9PBD4V3wossZJMQguLNbIGtECfcf+UwNtiau9iWEh7U3UoqrDH
-         frQPllZmSpjKO4TEk9IdEAkEj0y91qwkvCcwwu0w5MBsBLmTj8kQnVMQro0rb3I1V7UY
-         Rv7RLcW7RtGMaxyd3v5vLXaGzgZfnIF9Mt/ucoMz3o5ZGz7kP1t+6oUrC5DUzgE01A7T
-         DW9N4ckKQVD6qCcsyjwb1Ui9yMH94fZaJtnDaOukfgDwEHu5+gjZHCEVVYNCIT8lVrPV
-         ypvQ==
-X-Gm-Message-State: AGi0Pub2S6D7l7/f6rzm7WGUNGjRGByOtSBniUDixFBIxX7bUj2l52mZ
-        j54budrStLuKnbNbBwtscE3V9Ae+Mep0WlEekRSdew==
-X-Google-Smtp-Source: APiQypLms0zA6WvQAmVajcVRHgGwKdiDMidAforqu2S1QdJ4CrC95Xeb65YBLvCVe4Hc058EHhVGldBcSMl+12/fOWY=
-X-Received: by 2002:a05:6e02:80e:: with SMTP id u14mr3522969ilm.176.1587648056689;
- Thu, 23 Apr 2020 06:20:56 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9jDk9uM72kgS9oe9Qc0OBhy8P+XuVro261CKYodI12Y=;
+        b=ZrdROy/3lEYssZZLKJNN0diRY8HOjIlbAbfb8573nvr/Sa0kiRIxUQaWGuelA/c6WO
+         s9a8PrhRQtmu/WfV0NIxD+wAslzjsF7tsmjhSTZ+cPvj0C7Haa/xmAnFAVodxTs4Vu9r
+         qT3gDHeR+ONSAb2kVhDTrA6/oVJ9egV500kIDGcuAuBVL+W69iOEvpSA2I0Dw2TVFwgO
+         5wndeUSfmOgtzMYccAFocNqgHaVytUCBdU4qqsQY/IuE7joCrVb2lEjB7HFXJLcHMKas
+         0qBPaIglj6T8EOVkVApH+Wh0oiJNi6dnRtSk3pBBE4dDmRFvhXoupOaTvSlxCHE7/WO1
+         tZHw==
+X-Gm-Message-State: AGi0PuZaQi/ejIJPANQUKKcmrrM287B12sMVugNdrZUk5QdXzb0+QAiN
+        wwJu83mD2VdsYg6vPF4HTPY4qsGoYiU=
+X-Google-Smtp-Source: APiQypJgfBK85X65Dk/jAoq3zjAYB/+9U5ILNxpke+V621W7pE5tIJnaBVxucrV49HaWURu6y15D+w==
+X-Received: by 2002:a37:a955:: with SMTP id s82mr3615351qke.45.1587648059092;
+        Thu, 23 Apr 2020 06:20:59 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id t75sm1480043qke.127.2020.04.23.06.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 06:20:54 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 34A86409A3; Thu, 23 Apr 2020 10:20:52 -0300 (-03)
+Date:   Thu, 23 Apr 2020 10:20:52 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] perf trace: substitute CAP_SYS_ADMIN with
+ CAP_PERFMON in error message
+Message-ID: <20200423132052.GA19437@kernel.org>
+References: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
+ <450d035a-c192-10e5-1c28-664ccae3e46e@linux.intel.com>
 MIME-Version: 1.0
-References: <20200423044050.162093-1-joel@joelfernandes.org> <20200423114008.GB13910@bombadil.infradead.org>
-In-Reply-To: <20200423114008.GB13910@bombadil.infradead.org>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 23 Apr 2020 09:20:45 -0400
-Message-ID: <CAEXW_YTwHApBgUBS1-GBUQ4i7iNHde1k5CxVVEqHPQfAV+51HQ@mail.gmail.com>
-Subject: Re: [RFC] fs: Use slab constructor to initialize conn objects in fsnotify
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <450d035a-c192-10e5-1c28-664ccae3e46e@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 7:40 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Thu, Apr 23, 2020 at 12:40:50AM -0400, Joel Fernandes (Google) wrote:
-> > While reading the famous slab paper [1], I noticed that the conn->lock
-> > spinlock and conn->list hlist in fsnotify code is being initialized
-> > during every object allocation. This seems a good fit for the
-> > constructor within the slab to take advantage of the slab design. Move
-> > the initializtion to that.
->
-> The slab paper was written a number of years ago when CPU caches were
-> not as they are today.  With this patch, every time you allocate a
-> new page, we dirty the entire page, and then the dirty cachelines will
-> gradually fall out of cache as the other objects on the page are not used
-> immediately.  Then, when we actually use one of the objects on the page,
-> we bring those cachelines back in and dirty them again by initialising
-> 'type' and 'obj'.  The two stores to initialise lock and list are almost
-> free when done in fsnotify_attach_connector_to_object(), but are costly
-> when done in a slab constructor.
+Em Wed, Apr 22, 2020 at 05:44:02PM +0300, Alexey Budankov escreveu:
+> 
+> Update error message to mention CAP_PERFMON only. CAP_SYS_ADMIN still
+> works in keeping with user space backward compatibility approach.
 
-Thanks a lot for this reasoning. Basically, you're saying when a slab
-allocates a page, it would construct all objects which end up dirtying
-the entire page before the object is even allocated. That makes sense.
+This will confuse users that build the latest perf to use in older
+systems where CAP_PERFMON isn't available, probably we need to, in these
+cases, check for the existence of CAP_PERFMON to provide a better
+warning message, something like:
 
-There's one improvement (although probably verys small) that the paper mentions:
-Also according to the paper you referenced, the instruction cache is
-what would also benefit. Those spinlock and hlist initialization
-instructions wouldn't cost L1 I-cache footprint for every allocation.
+  You need CAP_ADMIN or update your kernel and libcap to one that supports
+  CAP_PERFMON.
 
-> There are very few places where a slab constructor is justified with a
-> modern CPU.  We've considered removing the functionality before.
+For systems without CAP_PERFMON, while mentioning only CAP_PERFMON for
+systems where it is present, right?
+ 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 55eda54240fb..39d43ad02f30 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -288,7 +288,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  	      perf_cap__capable(CAP_SYS_ADMIN))) {
+>  		pr_err("ftrace only works for %s!\n",
+>  #ifdef HAVE_LIBCAP_SUPPORT
+> -		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
+> +		"users with the CAP_PERFMON capability"
+>  #else
+>  		"root"
+>  #endif
+> -- 
+> 2.24.1
+> 
 
-I see, thanks again for the insights.
+-- 
 
- - Joel
-
->
-> > @@ -479,8 +479,6 @@ static int fsnotify_attach_connector_to_object(fsnotify_connp_t *connp,
-> >       conn = kmem_cache_alloc(fsnotify_mark_connector_cachep, GFP_KERNEL);
-> >       if (!conn)
-> >               return -ENOMEM;
-> > -     spin_lock_init(&conn->lock);
-> > -     INIT_HLIST_HEAD(&conn->list);
-> >       conn->type = type;
-> >       conn->obj = connp;
-> >       /* Cache fsid of filesystem containing the object */
-> > --
-> > 2.26.1.301.g55bc3eb7cb9-goog
+- Arnaldo
