@@ -2,116 +2,185 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4F6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A17CC55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2C8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587648136;
-	bh=IKXBRkDWDrrigKvetf7fvdM1FdYDfijxd2V4hL9aqZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AKrGwXwTIdJZnQfmGLH0LzEkUvZV/+LM+E9/sKzeu6Nn6ctUVEr63fBelv2wvPWM4
-	 sp+KFB4QiKyr59jKLYrL/xs3wX7ZyDF9g43fCiHFKky9FA7WxVM5bEff/D3a8x/mWP
-	 mXDEhdCWV6w0dgGqgNu3DmGxxoNEFyYe1f6aCLDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7F0A420781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgDWNWP (ORCPT
+        id S1728458AbgDWNWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:22:15 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44125 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbgDWNWN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:22:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d17so6800453wrg.11;
-        Thu, 23 Apr 2020 06:22:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iuq6pBRpV7QPrN7TD8s7GlKdVuT8Rr6JcPkVbP2MpI0=;
-        b=lV4MAxxosL9zDQLgP9WYOiOj2gaOdh3izALQKSMs61nHjt8K+sjKA1UZxQD+DpuEoC
-         7SHfvHmRGkeXrkxOOLe2hMDf+62IhAsefH2U/DeZHGauCDNKKDtRbhnZ/ar5itsZ7vE+
-         gKpgzm2ocdhyZKQnjFurGMUO8CPnOp1HqqpUwMcJQqSZFScdmppObN9RKVFqyYfd/OvQ
-         zW5G7bXT96AFhMTZ6C7b4sq8cGcQnCG+fZ04VEkSH0837WA2NULq6LBWRI9rOXxZxNtJ
-         8HQUr+gjFAC5mNvYuBFZdfO7bH0ieu/y6pP3CwKVOTDEjV/eekDF38foYYr4l7w+8c/d
-         r1RA==
-X-Gm-Message-State: AGi0Pubky7IW14786yQSvY836Pynit0b/Zib/xQfVbl2UBQMOcLfhLCD
-        Olgx0gVFP5BYESzvwyY3LKw=
-X-Google-Smtp-Source: APiQypIEZxPpWwZO1dJPmZJRXbxGHGkpj0uIQN9V5WBHqfcSsT+C5L1UlHcfMdotuTpqLaVZIGAXig==
-X-Received: by 2002:a05:6000:4:: with SMTP id h4mr5088646wrx.386.1587648131443;
-        Thu, 23 Apr 2020 06:22:11 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b22sm11963106wmj.1.2020.04.23.06.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 06:22:10 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 13:22:08 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Split hyperv-tlfs.h into generic and arch
- specific files
-Message-ID: <20200423132208.i522jqpevglruhur@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200422195737.10223-1-mikelley@microsoft.com>
+        Thu, 23 Apr 2020 09:22:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2845 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727104AbgDWNWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:22:36 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 633546DCDA01EE0B70F5;
+        Thu, 23 Apr 2020 21:22:26 +0800 (CST)
+Received: from huawei.com (10.67.174.156) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
+ 21:22:17 +0800
+From:   ChenTao <chentao107@huawei.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <georgi.djakov@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <chentao107@huawei.com>
+Subject: [PATCH-next v2] interconnect: qcom: Move the static keyword to the front of declaration
+Date:   Thu, 23 Apr 2020 21:21:42 +0800
+Message-ID: <20200423132142.45174-1-chentao107@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422195737.10223-1-mikelley@microsoft.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.156]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 12:57:33PM -0700, Michael Kelley wrote:
-> This series splits hyperv-tlfs.h into architecture independent and
-> architecture specific files so that the arch independent portion can
-> be shared between the x86/x64 and ARM64 code for Hyper-V.  While the
-> Hyper-V team has not released a version of the TLFS document that
-> clearly specifies which portions of the interface are arch independent,
-> we can make a fairly good assessment based on implementation work done
-> to support Linux guests on Hyper-V on ARM64, and on private communication
-> with the Hyper-V team.  Definitions are considered arch independent if
-> they are implemented by Hyper-V on both architectures (x86/x64 and ARM64),
-> even if they are currently needed by Linux code only on one architecture.
-> 
-> Many definitions in hyperv-tlfs.h have historically contained "X64" in the
-> name, which doesn't make sense for architecture independent definitions.
-> While many of the occurrences of "X64" have already been removed, some
-> still remain in definitions that should be arch independent. The
-> split removes the "X64" from the definitions so that the arch
-> independent hyper-tlfs.h has no occurrences of "X64". However, to
-> keep this patch set separate from a wider change in the names, aliases
-> are added in the x86/x64 specific hyperv-tlfs.h so that existing code
-> continues to compile.  The definitions can be fixed throughout the code
-> in a more incremental fashion in separate patches, and then the aliases
-> can be removed.
-> 
-> Where it is not clear if definitions are arch independent, they have been
-> kept in the x86/x64 specific file. The Hyper-V team is aiming to have a
-> version of the TLFS document covering ARM64 by the end of calendar 2020,
-> so additional definitions may be moved into the arch independent portion
-> after the new TLFS document is released.
-> 
-> The first two patches in the series clean up the existing hyperv-tlfs.h
-> file a bit by removing duplicate or unnecessary definitions so they are
-> not propagated across the split. The third patch does the split, and the
-> fourth patch adds new definitions that are needed on ARM64 but are generic.
-> 
-> These changes have no functional impact.
-> 
-> These patches are built against linux-next-20200415
+Fix the following warning:
 
-Applied to hyperv-next. Thanks.
+Move the static keyword to the front of declaration of sdm845_icc_osm_l3
+sdm845_aggre1_noc sc7180_icc_osm_l3 sdm845_aggre2_noc sdm845_config_noc
+sdm845_dc_noc sdm845_gladiator_noc sdm845_mem_noc sdm845_mmss_noc and
+sdm845_system_noc, resolve the following compiler warning that can be
+when building with warnings enabled (W=1):
 
-Wei.
+drivers/interconnect/qcom/osm-l3.c:81:1: warning:
+ const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
+drivers/interconnect/qcom/osm-l3.c:94:1: warning:
+ const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
+drivers/interconnect/qcom/sdm845.c:195:1: warning:
+ const static struct qcom_icc_desc sdm845_aggre1_noc = {
+drivers/interconnect/qcom/sdm845.c:223:1: warning:
+ const static struct qcom_icc_desc sdm845_aggre2_noc = {
+drivers/interconnect/qcom/sdm845.c:284:1: warning:
+ const static struct qcom_icc_desc sdm845_config_noc = {
+drivers/interconnect/qcom/sdm845.c:300:1: warning:
+ const static struct qcom_icc_desc sdm845_dc_noc = {
+drivers/interconnect/qcom/sdm845.c:318:1: warning:
+ const static struct qcom_icc_desc sdm845_gladiator_noc = {
+drivers/interconnect/qcom/sdm845.c:353:1: warning:
+ const static struct qcom_icc_desc sdm845_mem_noc = {
+drivers/interconnect/qcom/sdm845.c:387:1: warning:
+ const static struct qcom_icc_desc sdm845_mmss_noc = {
+drivers/interconnect/qcom/sdm845.c:433:1: warning:
+ const static struct qcom_icc_desc sdm845_system_noc = {
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: ChenTao <chentao107@huawei.com>
+---
+v1->v2:
+- add the same warning from osm-l3.c
+
+ drivers/interconnect/qcom/osm-l3.c |  4 ++--
+ drivers/interconnect/qcom/sdm845.c | 16 ++++++++--------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+index a03c6d6833df..96fb9ff5ff2e 100644
+--- a/drivers/interconnect/qcom/osm-l3.c
++++ b/drivers/interconnect/qcom/osm-l3.c
+@@ -78,7 +78,7 @@ static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
+ 	[SLAVE_OSM_L3] = &sdm845_osm_l3,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_icc_osm_l3 = {
++static const struct qcom_icc_desc sdm845_icc_osm_l3 = {
+ 	.nodes = sdm845_osm_l3_nodes,
+ 	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
+ };
+@@ -91,7 +91,7 @@ static struct qcom_icc_node *sc7180_osm_l3_nodes[] = {
+ 	[SLAVE_OSM_L3] = &sc7180_osm_l3,
+ };
+ 
+-const static struct qcom_icc_desc sc7180_icc_osm_l3 = {
++static const struct qcom_icc_desc sc7180_icc_osm_l3 = {
+ 	.nodes = sc7180_osm_l3_nodes,
+ 	.num_nodes = ARRAY_SIZE(sc7180_osm_l3_nodes),
+ };
+diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+index b013b80caa45..f6c7b969520d 100644
+--- a/drivers/interconnect/qcom/sdm845.c
++++ b/drivers/interconnect/qcom/sdm845.c
+@@ -192,7 +192,7 @@ static struct qcom_icc_node *aggre1_noc_nodes[] = {
+ 	[SLAVE_ANOC_PCIE_A1NOC_SNOC] = &qns_pcie_a1noc_snoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_aggre1_noc = {
++static const struct qcom_icc_desc sdm845_aggre1_noc = {
+ 	.nodes = aggre1_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(aggre1_noc_nodes),
+ 	.bcms = aggre1_noc_bcms,
+@@ -220,7 +220,7 @@ static struct qcom_icc_node *aggre2_noc_nodes[] = {
+ 	[SLAVE_SERVICE_A2NOC] = &srvc_aggre2_noc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_aggre2_noc = {
++static const struct qcom_icc_desc sdm845_aggre2_noc = {
+ 	.nodes = aggre2_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(aggre2_noc_nodes),
+ 	.bcms = aggre2_noc_bcms,
+@@ -281,7 +281,7 @@ static struct qcom_icc_node *config_noc_nodes[] = {
+ 	[SLAVE_SERVICE_CNOC] = &srvc_cnoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_config_noc = {
++static const struct qcom_icc_desc sdm845_config_noc = {
+ 	.nodes = config_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(config_noc_nodes),
+ 	.bcms = config_noc_bcms,
+@@ -297,7 +297,7 @@ static struct qcom_icc_node *dc_noc_nodes[] = {
+ 	[SLAVE_MEM_NOC_CFG] = &qhs_memnoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_dc_noc = {
++static const struct qcom_icc_desc sdm845_dc_noc = {
+ 	.nodes = dc_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(dc_noc_nodes),
+ 	.bcms = dc_noc_bcms,
+@@ -315,7 +315,7 @@ static struct qcom_icc_node *gladiator_noc_nodes[] = {
+ 	[SLAVE_SERVICE_GNOC] = &srvc_gnoc,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_gladiator_noc = {
++static const struct qcom_icc_desc sdm845_gladiator_noc = {
+ 	.nodes = gladiator_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(gladiator_noc_nodes),
+ 	.bcms = gladiator_noc_bcms,
+@@ -350,7 +350,7 @@ static struct qcom_icc_node *mem_noc_nodes[] = {
+ 	[SLAVE_EBI1] = &ebi,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_mem_noc = {
++static const struct qcom_icc_desc sdm845_mem_noc = {
+ 	.nodes = mem_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(mem_noc_nodes),
+ 	.bcms = mem_noc_bcms,
+@@ -384,7 +384,7 @@ static struct qcom_icc_node *mmss_noc_nodes[] = {
+ 	[SLAVE_CAMNOC_UNCOMP] = &qns_camnoc_uncomp,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_mmss_noc = {
++static const struct qcom_icc_desc sdm845_mmss_noc = {
+ 	.nodes = mmss_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(mmss_noc_nodes),
+ 	.bcms = mmss_noc_bcms,
+@@ -430,7 +430,7 @@ static struct qcom_icc_node *system_noc_nodes[] = {
+ 	[SLAVE_TCU] = &xs_sys_tcu_cfg,
+ };
+ 
+-const static struct qcom_icc_desc sdm845_system_noc = {
++static const struct qcom_icc_desc sdm845_system_noc = {
+ 	.nodes = system_noc_nodes,
+ 	.num_nodes = ARRAY_SIZE(system_noc_nodes),
+ 	.bcms = system_noc_bcms,
+-- 
+2.17.1
+
