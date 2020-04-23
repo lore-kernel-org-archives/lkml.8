@@ -2,111 +2,131 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765BFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AEEC55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52521208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587651682;
-	bh=dkcU0t+EplZWMUkU5I1QLEqbHzCXqQKPnyuulGisQ08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wUYuhbTFO8fzoQkPg621hm3qKjGNn0d6kD+kWxR+FY5W6CwmiDeiwYxnkFJei3reh
-	 ckgq7SRPNciz0Z+yqGfuPZVzqG9RHnt7Ry2rm/VRwo2mnxDcWxZmb/6kJYcRXKHRM2
-	 pF5RhiaU0xW9DJTyCBesS3iD8HCiwdiNL4X1pLeM=
+	by mail.kernel.org (Postfix) with ESMTP id 30B6E2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="klmTfyA2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgDWOVV (ORCPT
+        id S1728794AbgDWOVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbgDWOVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:21:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F3B52087E;
-        Thu, 23 Apr 2020 14:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587651677;
-        bh=dkcU0t+EplZWMUkU5I1QLEqbHzCXqQKPnyuulGisQ08=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vTpj5dnpot5l8IgBBpDcnobHQoHK5BEt9bczU88GBK0oxDc1xiJwYIkQVYaCqwk0q
-         jRm/p3jWJ324cTVBLYTAE251lVxBm0HKsf9HaFRgcEL7UrKqnfsbsl0c104d98CI50
-         dqqDIS3XNVOUmBX36MHZWXFnGdxGbUMUIWC1a79w=
-Date:   Thu, 23 Apr 2020 15:21:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the sound-asoc tree
-Message-ID: <20200423142114.GJ4808@sirena.org.uk>
-References: <20200423155539.4492a0cc@canb.auug.org.au>
- <20200423113041.GI4808@sirena.org.uk>
- <20200423230400.2cb1a285@canb.auug.org.au>
+        Thu, 23 Apr 2020 10:21:25 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59946 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbgDWOVW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:21:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NELH5H077840;
+        Thu, 23 Apr 2020 09:21:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587651677;
+        bh=iv9QmrfUf+R9zgNjHtl/3SGXqaJSQlBgGn3Q0gmfZdE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=klmTfyA2gsQzOAcRcXmctVPJgEasRZQxp3eg7jv5uhIEfoYdQMJ4MmVvrJLms2dv4
+         WYMuL6aalcdNqZb0/RRoFHLu37keDcpOEj8Vejrwa8vboVUDr78GeLqdFoOY0zQ1y+
+         GMz4mp1dMCo10So6FJJDa4uCMb/ZPMFj4G8s3qwA=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NELH1r054035;
+        Thu, 23 Apr 2020 09:21:17 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Apr 2020 09:21:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 23 Apr 2020 09:21:17 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NELGvg002935;
+        Thu, 23 Apr 2020 09:21:17 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Richard Cochran <richardcochran@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v5 03/10] net: ethernet: ti: cpts: move tc mult update in cpts_fifo_read()
+Date:   Thu, 23 Apr 2020 17:20:15 +0300
+Message-ID: <20200423142022.10538-4-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200423142022.10538-1-grygorii.strashko@ti.com>
+References: <20200423142022.10538-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5cSRzy0VGBWAML+b"
-Content-Disposition: inline
-In-Reply-To: <20200423230400.2cb1a285@canb.auug.org.au>
-X-Cookie: This unit... must... survive.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Now CPTS driver .adjfreq() generates request to read CPTS current time
+(CPTS_EV_PUSH) with intention to process all pending event using previous
+frequency adjustment values before switching to the new ones. So
+CPTS_EV_PUSH works as a marker to switch to the new frequency adjustment
+values. Current code assumes that all job is done in .adjfreq(), but after
+enabling IRQ this will not be true any more.
 
---5cSRzy0VGBWAML+b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hence save new frequency adjustment values (mult) and perform actual freq
+adjustment in cpts_fifo_read() immediately after CPTS_EV_PUSH is received.
 
-On Thu, Apr 23, 2020 at 11:04:00PM +1000, Stephen Rothwell wrote:
-> On Thu, 23 Apr 2020 12:30:41 +0100 Mark Brown <broonie@kernel.org> wrote:
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+---
+ drivers/net/ethernet/ti/cpts.c | 8 ++++++--
+ drivers/net/ethernet/ti/cpts.h | 1 +
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-> > It looks like this is triggered by PowerPC not including
-> > drivers/firmware - there are missing dependencies but it works for other
-> > all*configs since the dependencies all get built in those.  It would be
-> > helpful if PowerPC were fixed to include the firmware directory to
-> > improve coverage.
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index f40a864d8c36..a2974b542bed 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -165,6 +165,10 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
+ 		case CPTS_EV_PUSH:
+ 			WRITE_ONCE(cpts->cur_timestamp, lo);
+ 			timecounter_read(&cpts->tc);
++			if (cpts->mult_new) {
++				cpts->cc.mult = cpts->mult_new;
++				cpts->mult_new = 0;
++			}
+ 			break;
+ 		case CPTS_EV_TX:
+ 			if (cpts_match_tx_ts(cpts, event)) {
+@@ -228,9 +232,9 @@ static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+ 
+ 	spin_lock_irqsave(&cpts->lock, flags);
+ 
+-	cpts_update_cur_time(cpts, CPTS_EV_PUSH);
++	cpts->mult_new = neg_adj ? mult - diff : mult + diff;
+ 
+-	cpts->cc.mult = neg_adj ? mult - diff : mult + diff;
++	cpts_update_cur_time(cpts, CPTS_EV_PUSH);
+ 
+ 	spin_unlock_irqrestore(&cpts->lock, flags);
+ 
+diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
+index 32ecd1ce4d3b..421630049ee7 100644
+--- a/drivers/net/ethernet/ti/cpts.h
++++ b/drivers/net/ethernet/ti/cpts.h
+@@ -116,6 +116,7 @@ struct cpts {
+ 	unsigned long ov_check_period;
+ 	struct sk_buff_head txq;
+ 	u64 cur_timestamp;
++	u32 mult_new;
+ };
+ 
+ void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
+-- 
+2.17.1
 
-> $ git grep drivers/firmware 'arch/*/*Kconfig*'
-> arch/arm/Kconfig:source "drivers/firmware/Kconfig"
-> arch/arm64/Kconfig:source "drivers/firmware/Kconfig"
-> arch/ia64/Kconfig:source "drivers/firmware/Kconfig"
-> arch/mips/Kconfig:source "drivers/firmware/Kconfig"
-> arch/x86/Kconfig:source "drivers/firmware/Kconfig"
-
-> so, sure, it works for some architectures.  We would need someone to do
-> the work to make sure that adding drivers/firmware to all the others
-> does not break other stuff.  Until then, please add the needed
-> dependencies.
-
-I am doing that but that still doesn't mean that the architectures
-shouldn't be updated - to me this is like the architectures that don't
-implement standard APIs, we should fix the issues they bring up but it'd
-be a lot less noisy to sidestep the issue.
-
---5cSRzy0VGBWAML+b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6hpFkACgkQJNaLcl1U
-h9BA6Af+I+z0/uHCaM4nJAyL74UcrJgDaHatvsURmLfbU5NRt8ZMzq2fihSh9XTg
-mVh7u47QPw0YQNVcLzvXeIjkDYX1eGOH2QSYbLyLoa0+VKOU+iJs5oqP5fE+sOyb
-hfwd7dVNIXuqE7jhF4xsc6/iHMI8E+ANlHEyO85ofAJ/qBiJ9bbDMhA2flpUKjX0
-ELKVuh9Y1YpORn5l/Xg4FDo2Xe7BBK0BItIafDD8WNk5M/JuDUQQ1lv2G61IGQnH
-0OGRPyn7LqO4PS+LO9hxpJZClAry9xnl3ofKRPZczCAL4uyoUr047nRmV5ziXcz5
-r/iIfOgXDt+s65hKE9GbLWrdv3Ethw==
-=8hG7
------END PGP SIGNATURE-----
-
---5cSRzy0VGBWAML+b--
