@@ -2,180 +2,202 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16BBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AE9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA40B21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F4821569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgDWHvZ (ORCPT
+        id S1727879AbgDWHv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 23 Apr 2020 03:51:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:15587 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727850AbgDWHvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 03:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgDWHtn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:49:43 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A027DC03C1AF;
-        Thu, 23 Apr 2020 00:49:43 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWc2-0008JS-8Y; Thu, 23 Apr 2020 09:49:34 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D8AE81C0244;
-        Thu, 23 Apr 2020 09:49:33 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 07:49:33 -0000
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Constify 'struct elf *' parameters
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+IronPort-SDR: zfJQnbgWlJ9P/yHgngSLguC0w6uAKYh6VJR8ts/mrx8n2b3uoxppx8nIiwq36irAsc+/dFBmLR
+ XtF/6hdy7E7Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 00:51:24 -0700
+IronPort-SDR: VZJ3h40CylMLMY4yzOF4dRiVGNw6kRdB1xKBOyS/9OL5eXseuoUuNTl2pA+bAdWCUxoG/qWyb1
+ stSML4Hfoe5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,306,1583222400"; 
+   d="scan'208";a="365930195"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Apr 2020 00:51:19 -0700
+Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake
+ metrics
+To:     Ian Rogers <irogers@google.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200422103205.61900-2-mingo@kernel.org>
-References: <20200422103205.61900-2-mingo@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20200422074809.160248-1-irogers@google.com>
+ <20200422074809.160248-3-irogers@google.com>
+ <20200422143840.GJ608746@tassilo.jf.intel.com>
+ <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
+ <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
+ <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com>
+ <cb5fcb4b-3ac6-66b5-9f9e-7943f4a6dadf@linux.intel.com>
+ <CAP-5=fXVF_ExxVuiivF0JY3MwgxrQZqyFoPwn-p7DPf6Gbdh0g@mail.gmail.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <abec8f03-ecb5-9bfe-c8ab-2c6d2aad2a60@linux.intel.com>
+Date:   Thu, 23 Apr 2020 15:51:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Message-ID: <158762817342.28353.2046272086047746312.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAP-5=fXVF_ExxVuiivF0JY3MwgxrQZqyFoPwn-p7DPf6Gbdh0g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the objtool/core branch of tip:
+Hi Ian,
 
-Commit-ID:     894e48cada64ec384873fad4fe1b0d0c7de31a29
-Gitweb:        https://git.kernel.org/tip/894e48cada64ec384873fad4fe1b0d0c7de31a29
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 22 Apr 2020 12:32:03 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 23 Apr 2020 08:34:18 +02:00
+On 4/23/2020 2:09 PM, Ian Rogers wrote:
+> On Wed, Apr 22, 2020 at 10:54 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
+>>
+>> Hi Jiri,
+>>
+>> Bisected to this commit which introduced the regression.
+>>
+>> 26226a97724d ("perf expr: Move expr lexer to flex")
+>>
+>> Would you like to look at that?
+> 
+> Hi Jin,
+> 
+> that commit breaks parsing of things like ','. See fixes in this patch
+> set such as:
+> https://lore.kernel.org/lkml/20200422220430.254014-5-irogers@google.com/
+> Fixing the lex issues then exposes other bugs that need to be
+> corrected in the json. I've added Fixes to the commit message of:
+> https://lore.kernel.org/lkml/20200422220430.254014-3-irogers@google.com/
+> https://lore.kernel.org/lkml/20200422220430.254014-4-irogers@google.com/
+> and would be glad of a review. If we can land:
+> https://lore.kernel.org/lkml/20200422220430.254014-12-irogers@google.com/
+> then expr as the source of parse errors can go away :-) The next
+> problem is the parse events code, but some of that logic is dependent
+> on the machine it is running on. It'd be good to add a test that
+> parsed events code can handle the events in metrics too, filtering out
+> things like duration_time that are special to metrics.
+> 
+> Thanks,
+> Ian
+> 
 
-objtool: Constify 'struct elf *' parameters
+Only with the fix 
+"https://lore.kernel.org/lkml/20200422220430.254014-5-irogers@google.com/" 
+(without other json modifications), the issue was still there.
 
-In preparation to parallelize certain parts of objtool, map out which uses
-of various data structures are read-only vs. read-write.
+localhost:~ # perf stat -M DRAM_Read_Latency
+event syntax error: 
+'../event=0x36,,umask=0x21/,cha/event=0x35,cha_0/event=0x0/}:W,duration_time'
+                                   \___ parser error
 
-As a first step constify 'struct elf' pointer passing, most of the secondary
-uses of it in find_symbol_*() methods are read-only.
+  Usage: perf stat [<options>] [<command>]
 
-Also, while at it, better group the 'struct elf' handling methods in elf.h.
+     -M, --metrics <metric/metric group list>
+                           monitor specified metrics or metric groups 
+(separated by ,)
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200422103205.61900-2-mingo@kernel.org
----
- tools/objtool/elf.c | 10 +++++-----
- tools/objtool/elf.h | 20 ++++++++++----------
- 2 files changed, 15 insertions(+), 15 deletions(-)
+So you added other commits which changed the json to let the parse work. 
+But I don't know if we have to do with this way because it should be a 
+regression issue.
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index f26bb3e..fab5534 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -127,7 +127,7 @@ static int symbol_by_offset(const void *key, const struct rb_node *node)
- 	return 0;
- }
- 
--struct section *find_section_by_name(struct elf *elf, const char *name)
-+struct section *find_section_by_name(const struct elf *elf, const char *name)
- {
- 	struct section *sec;
- 
-@@ -217,7 +217,7 @@ struct symbol *find_func_containing(struct section *sec, unsigned long offset)
- 	return NULL;
- }
- 
--struct symbol *find_symbol_by_name(struct elf *elf, const char *name)
-+struct symbol *find_symbol_by_name(const struct elf *elf, const char *name)
- {
- 	struct symbol *sym;
- 
-@@ -228,7 +228,7 @@ struct symbol *find_symbol_by_name(struct elf *elf, const char *name)
- 	return NULL;
- }
- 
--struct rela *find_rela_by_dest_range(struct elf *elf, struct section *sec,
-+struct rela *find_rela_by_dest_range(const struct elf *elf, struct section *sec,
- 				     unsigned long offset, unsigned int len)
- {
- 	struct rela *rela, *r = NULL;
-@@ -257,7 +257,7 @@ struct rela *find_rela_by_dest_range(struct elf *elf, struct section *sec,
- 	return NULL;
- }
- 
--struct rela *find_rela_by_dest(struct elf *elf, struct section *sec, unsigned long offset)
-+struct rela *find_rela_by_dest(const struct elf *elf, struct section *sec, unsigned long offset)
- {
- 	return find_rela_by_dest_range(elf, sec, offset, 1);
- }
-@@ -769,7 +769,7 @@ int elf_rebuild_rela_section(struct section *sec)
- 	return 0;
- }
- 
--int elf_write(struct elf *elf)
-+int elf_write(const struct elf *elf)
- {
- 	struct section *sec;
- 	Elf_Scn *s;
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index 2811d04..a55bcde 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -114,22 +114,22 @@ static inline u32 rela_hash(struct rela *rela)
- }
- 
- struct elf *elf_read(const char *name, int flags);
--struct section *find_section_by_name(struct elf *elf, const char *name);
-+struct section *elf_create_section(struct elf *elf, const char *name, size_t entsize, int nr);
-+struct section *elf_create_rela_section(struct elf *elf, struct section *base);
-+void elf_add_rela(struct elf *elf, struct rela *rela);
-+int elf_write(const struct elf *elf);
-+void elf_close(struct elf *elf);
-+
-+struct section *find_section_by_name(const struct elf *elf, const char *name);
- struct symbol *find_func_by_offset(struct section *sec, unsigned long offset);
- struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
--struct symbol *find_symbol_by_name(struct elf *elf, const char *name);
-+struct symbol *find_symbol_by_name(const struct elf *elf, const char *name);
- struct symbol *find_symbol_containing(struct section *sec, unsigned long offset);
--struct rela *find_rela_by_dest(struct elf *elf, struct section *sec, unsigned long offset);
--struct rela *find_rela_by_dest_range(struct elf *elf, struct section *sec,
-+struct rela *find_rela_by_dest(const struct elf *elf, struct section *sec, unsigned long offset);
-+struct rela *find_rela_by_dest_range(const struct elf *elf, struct section *sec,
- 				     unsigned long offset, unsigned int len);
- struct symbol *find_func_containing(struct section *sec, unsigned long offset);
--struct section *elf_create_section(struct elf *elf, const char *name, size_t
--				   entsize, int nr);
--struct section *elf_create_rela_section(struct elf *elf, struct section *base);
- int elf_rebuild_rela_section(struct section *sec);
--int elf_write(struct elf *elf);
--void elf_close(struct elf *elf);
--void elf_add_rela(struct elf *elf, struct rela *rela);
- 
- #define for_each_sec(file, sec)						\
- 	list_for_each_entry(sec, &file->elf->sections, list)
+In my opinion, we'd better fix the issue in 26226a97724d ("perf expr: 
+Move expr lexer to flex") and try not to change the json if possible.
+
+Thanks
+Jin Yao
+
+>> Thanks
+>> Jin Yao
+>>
+>> On 4/23/2020 9:08 AM, Jin, Yao wrote:
+>>>
+>>>
+>>> On 4/23/2020 12:18 AM, Ian Rogers wrote:
+>>>> On Wed, Apr 22, 2020 at 8:34 AM Ian Rogers <irogers@google.com> wrote:
+>>>>>
+>>>>> On Wed, Apr 22, 2020 at 7:38 AM Andi Kleen <ak@linux.intel.com> wrote:
+>>>>>>
+>>>>>> On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
+>>>>>>> Remove over escaping with \\.
+>>>>>>> Remove extraneous if 1 if 0 == 1 else 0 else 0.
+>>>>>>
+>>>>>> So where do these parse errors happen exactly? Some earlier
+>>>>>> patches introduced them as regressions?
+>>>>>
+>>>>> I'll work to track down a Fixes tag. I can repro the Skylakex errors
+>>>>> without the test in this series, by doing:
+>>>>>
+>>>>> $ perf stat -M DRAM_Read_Latency sleep 1
+>>>>> Error:
+>>>>> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+>>>>> for event (cha/event=0x36\,uma
+>>>>> sk=0x21/).
+>>>>> /bin/dmesg | grep -i perf may provide additional information.
+>>>>>
+>>>
+>>> I also think some patches introduced this regression. When we rollback
+>>> to commit 61ec07f5917e (perf vendor events intel: Update all the Intel
+>>> JSON metrics from TMAM 3.6.), there is no this error on CLX.
+>>>
+>>> Thanks
+>>> Jin Yao
+>>>
+>>>>> This was just the escaping issue. I'm less clear on the other cascade
+>>>>> lake issue, and it is a bit more work for me to test on cascade lake.
+>>>>> What is "if 1 if 0 == 1 else 0 else 0" trying to do? Perhaps hunting
+>>>>> for the Fixes will let me know, but it looks like a copy-paste error.
+>>>>>
+>>>>>> The original metrics worked without parse errors as far as I know.
+>>>>>
+>>>>> The skylake issue above repros on 5.2.17 and so it seems like it is
+>>>>> broken for a while. The test in this series will prevent this in the
+>>>>> future, but without this patch that test fails.
+>>>>
+>>>> The parse errors were introduced with the metrics, so they've never
+>>>> worked:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=fd5500989c8f3c3944ac0a144be04bae2506f7ba
+>>>>
+>>>>
+>>>> I will send out a v2 with Fixes in the commit message but wanted to
+>>>> wait in case there was any more feedback. In particular the fixes to
+>>>> the new test and expr parser lex code. The lex code wasn't broken at
+>>>> the time the metrics were added and should be working again after this
+>>>> patch set.
+>>>>
+>>>> Thanks,
+>>>> Ian
+>>>>
+>>>>>> If it fixes something earlier it would need Fixes: tags.
+>>>>>
+>>>>> Working on it. Thanks for the input!
+>>>>>
+>>>>> Ian
+>>>>>
+>>>>>> -Andi
