@@ -2,210 +2,121 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB507C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A03DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1FD220781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78D82084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Igt/Akh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgDWIlE (ORCPT
+        id S1726849AbgDWIl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:41:04 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2840 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgDWIlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:41:03 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4D94C6AD35676552E2D7;
-        Thu, 23 Apr 2020 16:41:00 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
- 16:40:54 +0800
-Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
-To:     Xin Long <lucien.xin@gmail.com>
-References: <20200421143149.45108-1-yuehaibing@huawei.com>
- <20200422093344.GY13121@gauss3.secunet.de>
- <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
- <CADvbK_cEgKCEGRJU1v=FAdFNoh3TzD+cZLiKUtsMLHJh3JqOfg@mail.gmail.com>
- <02a56d2c-8d27-f53a-d9e3-c25bd03677c8@huawei.com>
- <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
-CC:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        davem <davem@davemloft.net>, <kuba@kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jamal Hadi Salim <hadi@cyberus.ca>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <b392a477-2ab5-1045-a18c-4df915f78001@huawei.com>
-Date:   Thu, 23 Apr 2020 16:40:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 23 Apr 2020 04:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWIl2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 04:41:28 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D62BC03C1AF
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 01:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VvCgmpRO1TIV6jLSYYC9IwKA1wKGvUUGkl/XDJDIM9Q=; b=Igt/Akh3jfYnuGPuEjw0bOoN2e
+        onVVx4h+2alkA3V9MFZlYUED0NgJGUE1xRCRM/4ovv+wyPBOhe+8egMYlI0ovJycoU1xXkhohR43O
+        fhR90WCHYC/REGQVRF7/D1CEfBhDoONvGilwI5Q2V2C9KXAwysLxuhsz7AO4ntiC0j0DJwmA4ACgV
+        kfYBI3ZgdUd+H94c8ZyjvYp7Dt3nVg7SqtWex4CyEljJ9A+ilBmTmyskL2sWLmi3FDllyUxVJoEml
+        2uPeWyznGObI+MwBG7D0AyAzbk9FU1Mml91IeZBIwKujnUN8tdlfW78bFPb/Y+Mo4rXMdnnLMXtAh
+        FvqrdIFg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRXQ5-0002kA-Hq; Thu, 23 Apr 2020 08:41:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03772306099;
+        Thu, 23 Apr 2020 10:41:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E0A1220BE0448; Thu, 23 Apr 2020 10:41:14 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 10:41:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc:     dave.hansen@linux.intel.com, luto@kernel.org, tglx@linutronix.de,
+        x86@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mm/cpa: Flush direct map alias during cpa
+Message-ID: <20200423084114.GS20713@hirez.programming.kicks-ass.net>
+References: <20200423031355.23955-1-rick.p.edgecombe@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423031355.23955-1-rick.p.edgecombe@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/23 14:37, Xin Long wrote:
-> On Thu, Apr 23, 2020 at 10:26 AM Yuehaibing <yuehaibing@huawei.com> wrote:
->>
->> On 2020/4/22 23:41, Xin Long wrote:
->>> On Wed, Apr 22, 2020 at 8:18 PM Yuehaibing <yuehaibing@huawei.com> wrote:
->>>>
->>>> On 2020/4/22 17:33, Steffen Klassert wrote:
->>>>> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
->>>>>> While update xfrm policy as follow:
->>>>>>
->>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>  priority 1 mark 0 mask 0x10
->>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>  priority 2 mark 0 mask 0x00
->>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
->>>>>>  priority 2 mark 0 mask 0x10
->>>>>>
->>>>>> We get this warning:
->>>>>>
->>>>>> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
->>>>>> Kernel panic - not syncing: panic_on_warn set ...
->>>>>> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
->>>>>> Call Trace:
->>>>>> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
->>>>>>  xfrm_policy_inexact_insert+0x70/0x330
->>>>>>  xfrm_policy_insert+0x1df/0x250
->>>>>>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
->>>>>>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
->>>>>>  netlink_rcv_skb+0x4c/0x120
->>>>>>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
->>>>>>  netlink_unicast+0x1b3/0x270
->>>>>>  netlink_sendmsg+0x350/0x470
->>>>>>  sock_sendmsg+0x4f/0x60
->>>>>>
->>>>>> Policy C and policy A has the same mark.v and mark.m, so policy A is
->>>>>> matched in first round lookup while updating C. However policy C and
->>>>>> policy B has same mark and priority, which also leads to matched. So
->>>>>> the WARN_ON is triggered.
->>>>>>
->>>>>> xfrm policy lookup should only be matched when the found policy has the
->>>>>> same lookup keys (mark.v & mark.m) no matter priority.
->>>>>>
->>>>>> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
->>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>>> ---
->>>>>>  net/xfrm/xfrm_policy.c | 16 +++++-----------
->>>>>>  1 file changed, 5 insertions(+), 11 deletions(-)
->>>>>>
->>>>>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
->>>>>> index 297b2fd..67d0469 100644
->>>>>> --- a/net/xfrm/xfrm_policy.c
->>>>>> +++ b/net/xfrm/xfrm_policy.c
->>>>>> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
->>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>>>>>                                 struct xfrm_policy *pol)
->>>>>>  {
->>>>>> -    u32 mark = policy->mark.v & policy->mark.m;
->>>>>> -
->>>>>> -    if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->>>>>> -            return true;
->>>>>> -
->>>>>> -    if ((mark & pol->mark.m) == pol->mark.v &&
->>>>>> -        policy->priority == pol->priority)
->>>>>
->>>>> If you remove the priority check, you can't insert policies with matching
->>>>> mark and different priorities anymore. This brings us back the old bug.
->>>>
->>>> Yes, this is true.
->>>>
->>>>>
->>>>> I plan to apply the patch from Xin Long, this seems to be the right way
->>>>> to address this problem.
->>>>
->>>> That still brings an issue, update like this:
->>>>
->>>> policy A (mark.v = 1, mark.m = 0, priority = 1)
->>>> policy B (mark.v = 1, mark.m = 0, priority = 1)
->>>>
->>>> A and B will all in the list.
->>> I think this is another issue even before:
->>> 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and
->>> different priorities")
->>>
->>>>
->>>> So should do this:
->>>>
->>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->>>>                                    struct xfrm_policy *pol)
->>>>  {
->>>> -       u32 mark = policy->mark.v & policy->mark.m;
->>>> -
->>>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
->>>> -               return true;
->>>> -
->>>> -       if ((mark & pol->mark.m) == pol->mark.v &&
->>>> +       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
->>>>             policy->priority == pol->priority)
->>>>                 return true;
->>> "mark.v & mark.m" looks weird to me, it should be:
->>> ((something & mark.m) == mark.v)
->>>
->>> So why should we just do this here?:
->>> (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m &&
->>>  policy->priority == pol->priority)
->>
->>
->> This leads to this issue:
->>
->>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000005
->>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000003
->>
->> the two policies will be in list, which should not be allowed.
-> I think these are two different policies.
-> For instance:
-> mark = 0x1234567b will match the 1st one only.
-> mark = 0x1234567d will match the 2st one only
-> 
-> So these should have been allowed, no?
+On Wed, Apr 22, 2020 at 08:13:55PM -0700, Rick Edgecombe wrote:
+> Change cpa_flush() to always flush_tlb_all(), as it previously did. As an
+> optimization, cpa_flush() was changed to optionally only flush the range
+> in "struct cpa_data *data" if it was small enough. However, this range
+> does not include any direct map aliases changed in cpa_process_alias().
+> So small set_memory_() calls that touch that alias don't get the direct
+> map changes flushed. This situation can happen when the virtual address
+> taking variants are passed an address in vmalloc or modules space.
 
-If mark = 0x12345671, it may match different policy depends on the order of inserting,
+Wouldn't something like so make more sense?
 
-ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
-tmpl src 192.168.2.10 dst 192.168.1.20 proto esp mode tunnel mark 0x00000001 mask 0x00000005
-
-ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
-tmpl src 192.168.2.100 dst 192.168.1.100 proto esp mode beet mark 0x00000001 mask 0x00000003
-
-In fact, your case should use different priority to match.
-
-> 
-> I'm actually confused now.
-> does the mask work against its own value, or the other value?
-> as 'A == (mark.v&mark.m)' and '(A & mark.m) == mark.v' are different things.
-> 
-> This can date back to Jamal's xfrm by MARK:
-> 
-> https://lwn.net/Articles/375829/
-> 
-> where it does 'm->v & m->m' in xfrm_mark_get() and
-> 'policy->mark.v & policy->mark.m' in xfrm_policy_insert() while
-> it does '(A & pol->mark.m) == pol->mark.v' in other places.
-> 
-> Now I'm thinking 'm->v & m->m' is meaningless, by which if we get
-> a value != m->v, it means this mark can never be matched by any.
-> 
->   policy A (mark.v = 1, mark.m = 0, priority = 1)
->   policy B (mark.v = 1, mark.m = 0, priority = 1)
-> 
-> So probably we should avoid this case by check m->v == (m->v & m->m)
-> when adding a new policy.
-> 
-> wdyt?
-> 
-
+---
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 59eca6a94ce7..b8c55a2e402d 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -43,7 +43,8 @@ struct cpa_data {
+ 	unsigned long	pfn;
+ 	unsigned int	flags;
+ 	unsigned int	force_split		: 1,
+-			force_static_prot	: 1;
++			force_static_prot	: 1,
++			force_flush_all		: 1;
+ 	struct page	**pages;
+ };
+ 
+@@ -355,10 +356,10 @@ static void cpa_flush(struct cpa_data *data, int cache)
+ 		return;
+ 	}
+ 
+-	if (cpa->numpages <= tlb_single_page_flush_ceiling)
+-		on_each_cpu(__cpa_flush_tlb, cpa, 1);
+-	else
++	if (cpa->force_flush_all || cpa->numpages > tlb_single_page_flush_ceiling)
+ 		flush_tlb_all();
++	else
++		on_each_cpu(__cpa_flush_tlb, cpa, 1);
+ 
+ 	if (!cache)
+ 		return;
+@@ -1598,6 +1599,8 @@ static int cpa_process_alias(struct cpa_data *cpa)
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
+ 
++		cpa->force_flush_all = 1;
++
+ 		ret = __change_page_attr_set_clr(&alias_cpa, 0);
+ 		if (ret)
+ 			return ret;
+@@ -1618,6 +1621,7 @@ static int cpa_process_alias(struct cpa_data *cpa)
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
+ 
++		cpa->force_flush_all = 1;
+ 		/*
+ 		 * The high mapping range is imprecise, so ignore the
+ 		 * return value.
