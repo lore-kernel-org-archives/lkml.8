@@ -2,124 +2,124 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E40C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486CBC55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C712074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOmfqeMh"
+	by mail.kernel.org (Postfix) with ESMTP id 30B912074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgDWBKO (ORCPT
+        id S1726432AbgDWBLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:10:14 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28303 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgDWBKO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:10:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587604212;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gpmF7iLJaKAhFgik0YYBKvZq2mUVWcZ8e1b5KXEpW50=;
-        b=SOmfqeMhf/1fZXurLWVsDyzoExXmG4YFvPXyx2xASAbxafAAuKm3c0rUjLjmyd0ypqBiB1
-        aLeb6NIH7YMTgliE1xTgY1fPmCLPnCR8kUgEtoJSmBPqQtNY5xd+rzZz3ddpV1dWlAllJR
-        Fmly3BWj8oQNWD4GZYu1gHdJC1HDQTs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-B2P9V75uPF6XHblE7rVSvA-1; Wed, 22 Apr 2020 21:10:09 -0400
-X-MC-Unique: B2P9V75uPF6XHblE7rVSvA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DB4F1005510;
-        Thu, 23 Apr 2020 01:10:08 +0000 (UTC)
-Received: from redhat.com (ovpn-112-171.phx2.redhat.com [10.3.112.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFA465D9E2;
-        Thu, 23 Apr 2020 01:10:05 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 21:10:03 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
- early
-Message-ID: <20200423011003.GA20432@redhat.com>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
- <20200420175751.GA13807@redhat.com>
- <20200420182516.6awwwbvoen62gwbr@treble>
- <20200420190141.GB13807@redhat.com>
- <20200420191117.wrjauayeutkpvkwd@treble>
+        Wed, 22 Apr 2020 21:11:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52020 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725846AbgDWBLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:11:44 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C09FABA25A97303C4DB4;
+        Thu, 23 Apr 2020 09:11:36 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.7) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
+ 09:11:29 +0800
+Subject: Re: [PATCH v5 0/6] implement KASLR for powerpc/fsl_booke/64
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
+CC:     <linux-kernel@vger.kernel.org>, <zhaohongjiang@huawei.com>,
+        <dja@axtens.net>
+References: <20200330022023.3691-1-yanaijie@huawei.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <f9f35d6c-28fe-3527-64f1-0806511cd20d@huawei.com>
+Date:   Thu, 23 Apr 2020 09:11:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420191117.wrjauayeutkpvkwd@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200330022023.3691-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.7]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 02:11:17PM -0500, Josh Poimboeuf wrote:
-> On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
-> > > > ... apply_relocations() is also iterating over the section headers (the
-> > > > diff context doesn't show it here, but i is an incrementing index over
-> > > > sechdrs[]).
-> > > > 
-> > > > So if there is more than one KLP relocation section, we'll process them
-> > > > multiple times.  At least the x86 relocation code will detect this and
-> > > > fail the module load with an invalid relocation (existing value not
-> > > > zero).
-> > > 
-> > > Ah, yes, good catch!
-> > > 
-> > 
-> > The same test case passed with a small modification to push the foreach
-> > KLP section part to a kernel/livepatch/core.c local function and
-> > exposing the klp_resolve_symbols() + apply_relocate_add() for a given
-> > section to kernel/module.c.  Something like following...
-> 
-> I came up with something very similar, though I named them
-> klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
-> argument order a bit (module first).  Since it sounds like you have a
-> test, could you try this one?
-> 
-> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> index 533359e48c39..fb1a3de39726 100644
-> --- a/include/linux/livepatch.h
-> +++ b/include/linux/livepatch.h
-> 
-> [ ... snip ... ]
-> 
-> @@ -245,10 +245,10 @@ static inline void klp_update_patch_state(struct task_struct *task) {}
->  static inline void klp_copy_process(struct task_struct *child) {}
->  
->  static inline
-> -int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> -			  const char *shstrtab, const char *strtab,
-> -			  unsigned int symindex, struct module *pmod,
-> -			  const char *objname)
-> +int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
-> +			     const char *shstrtab, const char *strtab,
-> +			     unsigned int symindex, unsigned int secindex,
-> +			     const char *objname);
-                                                ^^
-Whoops, stray semicolon in !CONFIG_LIVEPATCH case.  I found it by
-botching my cross-compiling .config, but the build-bot might find it
-when you push your branch.
+Hi Michael,
 
->  {
->  	return 0;
->  }
+What's the status of this series?
 
--- Joe
+Thanks,
+Jason
+
+ÔÚ 2020/3/30 10:20, Jason Yan Ð´µÀ:
+> This is a try to implement KASLR for Freescale BookE64 which is based on
+> my earlier implementation for Freescale BookE32:
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718&state=*
+> 
+> The implementation for Freescale BookE64 is similar as BookE32. One
+> difference is that Freescale BookE64 set up a TLB mapping of 1G during
+> booting. Another difference is that ppc64 needs the kernel to be
+> 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+> it 64K-aligned. This can save some code to creat another TLB map at
+> early boot. The disadvantage is that we only have about 1G/64K = 16384
+> slots to put the kernel in.
+> 
+>      KERNELBASE
+> 
+>            64K                     |--> kernel <--|
+>             |                      |              |
+>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>          |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+>          +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+>          |                         |                        1G
+>          |----->   offset    <-----|
+> 
+>                                kernstart_virt_addr
+> 
+> I'm not sure if the slot numbers is enough or the design has any
+> defects. If you have some better ideas, I would be happy to hear that.
+> 
+> Thank you all.
+> 
+> v4->v5:
+>    Fix "-Werror=maybe-uninitialized" compile error.
+>    Fix typo "similar as" -> "similar to".
+> v3->v4:
+>    Do not define __kaslr_offset as a fixed symbol. Reference __run_at_load and
+>      __kaslr_offset by symbol instead of magic offsets.
+>    Use IS_ENABLED(CONFIG_PPC32) instead of #ifdef CONFIG_PPC32.
+>    Change kaslr-booke32 to kaslr-booke in index.rst
+>    Switch some instructions to 64-bit.
+> v2->v3:
+>    Fix build error when KASLR is disabled.
+> v1->v2:
+>    Add __kaslr_offset for the secondary cpu boot up.
+> 
+> Jason Yan (6):
+>    powerpc/fsl_booke/kaslr: refactor kaslr_legal_offset() and
+>      kaslr_early_init()
+>    powerpc/fsl_booke/64: introduce reloc_kernel_entry() helper
+>    powerpc/fsl_booke/64: implement KASLR for fsl_booke64
+>    powerpc/fsl_booke/64: do not clear the BSS for the second pass
+>    powerpc/fsl_booke/64: clear the original kernel if randomized
+>    powerpc/fsl_booke/kaslr: rename kaslr-booke32.rst to kaslr-booke.rst
+>      and add 64bit part
+> 
+>   Documentation/powerpc/index.rst               |  2 +-
+>   .../{kaslr-booke32.rst => kaslr-booke.rst}    | 35 ++++++-
+>   arch/powerpc/Kconfig                          |  2 +-
+>   arch/powerpc/kernel/exceptions-64e.S          | 23 +++++
+>   arch/powerpc/kernel/head_64.S                 | 13 +++
+>   arch/powerpc/kernel/setup_64.c                |  3 +
+>   arch/powerpc/mm/mmu_decl.h                    | 23 +++--
+>   arch/powerpc/mm/nohash/kaslr_booke.c          | 91 +++++++++++++------
+>   8 files changed, 147 insertions(+), 45 deletions(-)
+>   rename Documentation/powerpc/{kaslr-booke32.rst => kaslr-booke.rst} (59%)
+> 
 
