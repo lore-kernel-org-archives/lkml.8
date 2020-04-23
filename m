@@ -1,134 +1,94 @@
-Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=nwpL=6I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD3DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C651C55186
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A89820780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4D520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Apr 2020 00:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SJmtTMwz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HS3L0RvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgDWXuk (ORCPT
+        id S1728148AbgDXAAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:50:40 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1067 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgDWXuj (ORCPT
+        Thu, 23 Apr 2020 20:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgDXAAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:50:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea2295a0000>; Thu, 23 Apr 2020 16:48:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Apr 2020 16:50:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 16:50:39 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 23:50:39 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 23:50:37 +0000
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
- <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
- <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
- <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
- <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <a2672be9-93c1-8363-6c0e-6d43c2bd59bc@nvidia.com>
-Date:   Thu, 23 Apr 2020 16:50:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Apr 2020 20:00:16 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3D3C09B043
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 17:00:15 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b2so8100489ljp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 17:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3AO2zDYw2OTrVTsEOf9qOCAlkKJ6vVvcI1aCDMu2ZHI=;
+        b=HS3L0RvS4J2AHu7yfa/WS299UPIfdIbz/WFwgftGS6ioGesdU8JDJpiCx8KTLRhzpA
+         Sfr0mHYtsT0QNWyBvlx8aWk4NH51uEI07Sr1zkBRpg2pGcz3a3lRSpCoqLAgwInRrt2P
+         J2Jv3rZreCwePGwxg5ozt4xBt6eUBnW1Am+tGXtZBNVX8gRgNeIyGZE6gjHpmMmjMR7a
+         OqPZfZcjampppdtDZ8OBwmW1hsnnK++hHZHP2GyH0qVPUsaBj5DiTrxhcwv6AWkYBiO8
+         FSfcdCtwihfWI8gehyCoCkUNA6Y7H9x6+q9r5a3ae6cNP056qNWkhKgJrrrI2dzM2wch
+         SRZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3AO2zDYw2OTrVTsEOf9qOCAlkKJ6vVvcI1aCDMu2ZHI=;
+        b=A3ZyIaN/37Lpb+YXb0YH2i6o2VQTQMS6QeCk2vg04MptGnnpXsiU1fk0yt58KZGd78
+         GjXBgDsVQ340m1uQMYjEA9BRehAUn3FOrAQ1l0zqMjuz6ziuUesVSRAWrQAf7XHy4lF0
+         fqi5AXEQ17U8e4ztCG25Nvnvd/n9FKQza68cqOrOFT9HwCh5abFFLLRh2joDCww48Tsf
+         BXtd3rxaoBTbiWWwpaSlVwNEbq1GKOUQBM3w3rfshPm9QZ1fRU4RPFDvULYaxSRb7M2m
+         R4CA5xYYrz9PL2RWFmKsYbXrD6669ylXsEiBHrk2UXmm1MMF8NNr0oOF02S1LxjBWlaO
+         yQNQ==
+X-Gm-Message-State: AGi0Pua7udtSy3yzp7TWDdPdnevWAKGWDAz7qSzBYPaoy7GEaym8gsbT
+        Q5cX6iZJRTqAf+Kl1gCR1Q1MNV8PvTz0f75b1+qnwiniSAA=
+X-Google-Smtp-Source: APiQypK+4462/UiJw2zVslTXnFJSdEZhNkC9wnzz+Q8zSaEjmCsx8aWyreNA0I93TTjbrrEaBN7JVQiJAfn44Wb6CKA=
+X-Received: by 2002:a2e:87d3:: with SMTP id v19mr3762634ljj.176.1587686413751;
+ Thu, 23 Apr 2020 17:00:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587685722; bh=1rPMThke2vlH4gt1psqR9lA1CdQR51YkE8ZDvPRLlnU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=SJmtTMwzED4NoBMwXhvfF9z6v/Yx8Jy0ZfDBdZXvWgm/4B0a0ZcjYh9pacz344iN9
-         fHprafFWYh5sDeZs7newdr2iKjovIQ74PV0LzzmcHHH8VdVLX509gXO5yHxkv5+EII
-         xw6GiUV3ugiZur1zXenvBjJnKNBNqCrsu0qtL5MVVUGJkzPdGHeOvBFMsjjtn/TLrQ
-         GDalrLDyaRkAm7hL1/jZueTefc3W7B0BGzLTTr/RHFCmjx8SBOFaAitpeNvgE0OPP8
-         djnRwh83QalbObyCcUkkK/aLkdN4Vt/rC+0oRQWRKX1l3dU/JUv6iKAvmaBVKectd5
-         osPaOaGNo6lMg==
+References: <lsq.1587683027.831233700@decadent.org.uk>
+In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 24 Apr 2020 01:59:47 +0200
+Message-ID: <CAG48ez0nyLsyAeLJXEnCnhkh26EnZGnam1cyd84a5LoFcEyMiw@mail.gmail.com>
+Subject: Re: [PATCH 3.16 000/245] 3.16.83-rc1 review
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 24, 2020 at 1:03 AM Ben Hutchings <ben@decadent.org.uk> wrote:
+> This is the start of the stable review cycle for the 3.16.83 release.
+> There are 245 patches in this series, which will be posted as responses
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue Apr 28 18:00:00 UTC 2020.
+> Anything received after that time might be too late.
 
-On 4/23/20 4:25 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 24.04.2020 02:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
->>> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> +static int chan_capture_kthread_start(void *data)
->>>>> +{
->>>>> +     struct tegra_vi_channel *chan =3D data;
->>>>> +     struct tegra_channel_buffer *buf;
->>>>> +     int err =3D 0;
->>>>> +
->>>>> +     set_freezable();
->>>>> +
->>>>> +     while (1) {
->>>>> +             try_to_freeze();
->>>>> +
->>>>> +             wait_event_interruptible(chan->start_wait,
->>>>> + !list_empty(&chan->capture) ||
->>>>> +                                      kthread_should_stop());
->>>>> +
->>>>> +             if (kthread_should_stop())
->>>>> +                     break;
->>>>> +
->>>>> +             /*
->>>>> +              * Source is not streaming if error is non-zero.
->>>>> +              * So, do not dequeue buffers on capture error.
->>>>> +              */
->>>>> +             if (err)
->>>>> +                     continue;
->>>> This will result in an endless loop, I suppose it wasn't the intention=
-.
->>> no it will not. on error we report vb2_queue_error which will do
->>> streaming stop request.
->>>
->>> So thread will be stopped on streaming stop request thru kthread stop
->>> signal
->> To be clear on error it reports vb2 queue error and waits for stop
->> streaming to happen
-> If thread should exit on error, then it should do it on the actual
-> error. Otherwise it looks very error-prone.
-When v4l2 drivers indicate fatal error through vb2_queue_error, queue=20
-error flag=C2=A0 is set and wakes up all processes waiting on queue along=20
-with polling reporting=C2=A0 EPOLLERR and also reporting error for queuing=
-=20
-and dequeuing buffers. Stream stop will surely happen which stops the=20
-thread.
+Can you please add backports of the following patches? I asked for
+that in <https://lore.kernel.org/stable/CAG48ez29d-JJOw8XMp1Z=7sDj8Kvmt+9KXC9-ux-0OBhUP02Xg@mail.gmail.com/>,
+but I guess that fell through the cracks somehow.
+
+8019ad13ef7f64be44d4f892af9c840179009254 "futex: Fix inode life-time issue"
+8d67743653dce5a0e7aa500fcccb237cde7ad88e "futex: Unbreak futex hashing"
+
+Can those still go into 3.16.83, or is it too late for that now?
