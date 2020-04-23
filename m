@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7B2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08DFC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B394A20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDFA20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgDWXLB (ORCPT
+        id S1729212AbgDWXLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50292 "EHLO
+        Thu, 23 Apr 2020 19:11:04 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50278 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728588AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728584AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkve-0004rl-1a; Fri, 24 Apr 2020 00:06:46 +0100
+        id 1jRkve-0004lg-21; Fri, 24 Apr 2020 00:06:46 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkva-00E70M-13; Fri, 24 Apr 2020 00:06:42 +0100
+        id 1jRkvV-00E6wE-Vo; Fri, 24 Apr 2020 00:06:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jens Axboe" <axboe@fb.com>, "Davidlohr Bueso" <dave@stgolabs.ne>,
-        "Davidlohr Bueso" <dbueso@suse.de>
-Date:   Fri, 24 Apr 2020 00:07:18 +0100
-Message-ID: <lsq.1587683028.407504257@decadent.org.uk>
+        "Pablo Neira Ayuso" <pablo@netfilter.org>,
+        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
+        "Florian Westphal" <fw@strlen.de>
+Date:   Fri, 24 Apr 2020 00:06:46 +0100
+Message-ID: <lsq.1587683028.298975339@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 211/245] blktrace: re-write setting q->blk_trace
+Subject: [PATCH 3.16 179/245] netfilter: arp_tables: init netns pointer in
+ xt_tgdtor_param struct
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,84 +57,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Davidlohr Bueso <dave@stgolabs.ne>
+From: Florian Westphal <fw@strlen.de>
 
-commit cdea01b2bf98affb7e9c44530108a4a28535eee8 upstream.
+commit 212e7f56605ef9688d0846db60c6c6ec06544095 upstream.
 
-This is really about simplifying the double xchg patterns into
-a single cmpxchg, with the same logic. Other than the immediate
-cleanup, there are some subtleties this change deals with:
+An earlier commit (1b789577f655060d98d20e,
+"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
+fixed missing net initialization for arptables, but turns out it was
+incomplete.  We can get a very similar struct net NULL deref during
+error unwinding:
 
-(i) While the load of the old bt is fully ordered wrt everything,
-ie:
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
+ xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
+ cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
+ translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
+ do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
+ do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
 
-        old_bt = xchg(&q->blk_trace, bt);             [barrier]
-        if (old_bt)
-	     (void) xchg(&q->blk_trace, old_bt);    [barrier]
+Also init the netns pointer in xt_tgdtor_param struct.
 
-blk_trace could still be changed between the xchg and the old_bt
-load. Note that this description is merely theoretical and afaict
-very small, but doing everything in a single context with cmpxchg
-closes this potential race.
-
-(ii) Ordering guarantees are obviously kept with cmpxchg.
-
-(iii) Gets rid of the hacky-by-nature (void)xchg pattern.
-
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-eviewed-by: Jeff Moyer <jmoyer@redhat.com>
-Signed-off-by: Jens Axboe <axboe@fb.com>
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+[bwh: Backported to 3.16:
+ - __arpt_unregister_table() has not been split out of
+   arpt_unregister_table()
+ - Add "net" parameter to arpt_unregister_table() and update its only
+   caller in arptable_filter.c]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/trace/blktrace.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
-
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -448,7 +448,7 @@ int do_blk_trace_setup(struct request_qu
- 		       struct block_device *bdev,
- 		       struct blk_user_trace_setup *buts)
+--- a/include/linux/netfilter_arp/arp_tables.h
++++ b/include/linux/netfilter_arp/arp_tables.h
+@@ -51,7 +51,7 @@ extern void *arpt_alloc_initial_table(co
+ extern struct xt_table *arpt_register_table(struct net *net,
+ 					    const struct xt_table *table,
+ 					    const struct arpt_replace *repl);
+-extern void arpt_unregister_table(struct xt_table *table);
++extern void arpt_unregister_table(struct net *, struct xt_table *table);
+ extern unsigned int arpt_do_table(struct sk_buff *skb,
+ 				  unsigned int hook,
+ 				  const struct net_device *in,
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -602,12 +602,13 @@ static inline int check_entry_size_and_h
+ 	return 0;
+ }
+ 
+-static inline void cleanup_entry(struct arpt_entry *e)
++static void cleanup_entry(struct arpt_entry *e, struct net *net)
  {
--	struct blk_trace *old_bt, *bt = NULL;
-+	struct blk_trace *bt = NULL;
- 	struct dentry *dir = NULL;
- 	int ret, i;
+ 	struct xt_tgdtor_param par;
+ 	struct xt_entry_target *t;
  
-@@ -532,11 +532,8 @@ int do_blk_trace_setup(struct request_qu
- 	bt->trace_state = Blktrace_setup;
+ 	t = arpt_get_target(e);
++	par.net      = net;
+ 	par.target   = t->u.kernel.target;
+ 	par.targinfo = t->data;
+ 	par.family   = NFPROTO_ARP;
+@@ -706,7 +707,7 @@ static int translate_table(struct net *n
+ 		xt_entry_foreach(iter, entry0, newinfo->size) {
+ 			if (i-- == 0)
+ 				break;
+-			cleanup_entry(iter);
++			cleanup_entry(iter, net);
+ 		}
+ 		return ret;
+ 	}
+@@ -1051,7 +1052,7 @@ static int __do_replace(struct net *net,
+ 	/* Decrease module usage counts and free resource */
+ 	loc_cpu_old_entry = oldinfo->entries[raw_smp_processor_id()];
+ 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
  
- 	ret = -EBUSY;
--	old_bt = xchg(&q->blk_trace, bt);
--	if (old_bt) {
--		(void) xchg(&q->blk_trace, old_bt);
-+	if (cmpxchg(&q->blk_trace, NULL, bt))
- 		goto err;
--	}
+ 	xt_free_table_info(oldinfo);
+ 	if (copy_to_user(counters_ptr, counters,
+@@ -1118,7 +1119,7 @@ static int do_replace(struct net *net, c
  
- 	if (atomic_inc_return(&blk_probes_ref) == 1)
- 		blk_register_tracepoints();
-@@ -1550,7 +1547,7 @@ static int blk_trace_remove_queue(struct
- static int blk_trace_setup_queue(struct request_queue *q,
- 				 struct block_device *bdev)
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1431,7 +1432,7 @@ static int compat_do_replace(struct net
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1708,7 +1709,7 @@ out:
+ 	return ERR_PTR(ret);
+ }
+ 
+-void arpt_unregister_table(struct xt_table *table)
++void arpt_unregister_table(struct net *net, struct xt_table *table)
  {
--	struct blk_trace *old_bt, *bt = NULL;
-+	struct blk_trace *bt = NULL;
- 	int ret = -ENOMEM;
+ 	struct xt_table_info *private;
+ 	void *loc_cpu_entry;
+@@ -1720,7 +1721,7 @@ void arpt_unregister_table(struct xt_tab
+ 	/* Decrease module usage counts and free resources */
+ 	loc_cpu_entry = private->entries[raw_smp_processor_id()];
+ 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 	if (private->number > private->initial_entries)
+ 		module_put(table_owner);
+ 	xt_free_table_info(private);
+--- a/net/ipv4/netfilter/arptable_filter.c
++++ b/net/ipv4/netfilter/arptable_filter.c
+@@ -54,7 +54,7 @@ static int __net_init arptable_filter_ne
  
- 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
-@@ -1566,12 +1563,9 @@ static int blk_trace_setup_queue(struct
+ static void __net_exit arptable_filter_net_exit(struct net *net)
+ {
+-	arpt_unregister_table(net->ipv4.arptable_filter);
++	arpt_unregister_table(net, net->ipv4.arptable_filter);
+ }
  
- 	blk_trace_setup_lba(bt, bdev);
- 
--	old_bt = xchg(&q->blk_trace, bt);
--	if (old_bt != NULL) {
--		(void)xchg(&q->blk_trace, old_bt);
--		ret = -EBUSY;
-+	ret = -EBUSY;
-+	if (cmpxchg(&q->blk_trace, NULL, bt))
- 		goto free_bt;
--	}
- 
- 	if (atomic_inc_return(&blk_probes_ref) == 1)
- 		blk_register_tracepoints();
+ static struct pernet_operations arptable_filter_net_ops = {
 
