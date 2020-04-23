@@ -2,173 +2,354 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7828BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5EEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7592074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B58A2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:27:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="quR0lZjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgDWM0r (ORCPT
+        id S1728188AbgDWM1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52870 "EHLO
+        Thu, 23 Apr 2020 08:27:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbgDWM0q (ORCPT
+        by vger.kernel.org with ESMTP id S1726105AbgDWM1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:26:46 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C6BC08E859;
-        Thu, 23 Apr 2020 05:26:46 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRawD-0005GT-Pq; Thu, 23 Apr 2020 14:26:41 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 68F581C0244;
-        Thu, 23 Apr 2020 14:26:41 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 12:26:41 -0000
-From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Cleanup pgprot_4k_2_large() and pgprot_large_2_4k()
-Cc:     Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200408152745.1565832-4-hch@lst.de>
-References: <20200408152745.1565832-4-hch@lst.de>
+        Thu, 23 Apr 2020 08:27:51 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8B8C08E859;
+        Thu, 23 Apr 2020 05:27:50 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id t12so4192583edw.3;
+        Thu, 23 Apr 2020 05:27:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3YODsxHKh3+gYik4nxqvD1Fs/lq1MAv8RtUoSUQEtQ0=;
+        b=quR0lZjJMJ76yrAFa03h3aKM/vVQyQ01lr2A8i0ktFJ4AgwbXxrJSeDPGXUZYXHNV3
+         tczIuArHrKUqsWmqma2TlKaZp3ArO1dFwfsNfgmJB/H7O8GLPtDKaDGykUVVO2xIOupm
+         +/5OZayOQBsGgw5oqeUeNrDF75V8PKiIve3iSjOVAN1BcDyE7vk5YV5ZvKMzcliI3IcP
+         AE1fb+LF4P0bJcTpQzu8SxAhEnvQVgE2LwNDzFQVYHgs9Tf/fvk4365eYwOJJpTNQ+Ki
+         4x00m4vOW1kOr4L53qz9N8Ju1qGGYP3PPGCt0XpOYPHMC5DIgC55flwg+1u14Yz1x328
+         RpHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3YODsxHKh3+gYik4nxqvD1Fs/lq1MAv8RtUoSUQEtQ0=;
+        b=OhK2E2GvffXIz1blGjdZNOxWiauIY1DZzOtirNfkeB9h4tZA66775Rw/BkJ4eGpI2A
+         3wuxEFjrOEmwKrJU+mHHaC97LM2SoXsLKyrOOWCcT07RwSrQh8DozrUAJMe/SlAw3fWG
+         ucr6NpXwHA8LPUjc6OSF4dsBUAZ5VCawWMJNVOiFTE5ADA6rmhFoOpWiEYfn/BXNKkvj
+         qpjRRS6zuiBd/g/e8u3WE7lPr5ynJnHK0Dx/qMW0O7C94b7VNhTTVdKmdZy1FWW9Ku/I
+         Ypk8hollzLsMbCA+62rsh5cKTxRb4lwmxzYHZTCqhT3Czp9j22ibhWNBWXLPf8Dim35m
+         4nbg==
+X-Gm-Message-State: AGi0PuYdsJWv6JCBnU66EUwmqhdecBK6ZlAAoZbPnWMMYi0VoF3kmD8S
+        vvA4J1dPuUizAaTDZHm19WOYaCAHYocpbV3iHoE=
+X-Google-Smtp-Source: APiQypKKiCmIvPP3hDfQ1tDIv8YbGVkm6z5WzLXKuGfV/VtSBQdgzeb6EdpEXHKL9RFD33VT85N0wH3zsk6exq3Jx8U=
+X-Received: by 2002:a50:f288:: with SMTP id f8mr2477116edm.337.1587644869194;
+ Thu, 23 Apr 2020 05:27:49 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158764480102.28353.2171209150662834670.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200420232624.9127-1-michael@walle.cc> <20200420232624.9127-3-michael@walle.cc>
+In-Reply-To: <20200420232624.9127-3-michael@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 23 Apr 2020 15:27:38 +0300
+Message-ID: <CA+h21hrLf+L1Aa8mY-qCfPWY3bVLVMFCCLx_Af66EhRRX5f6Fg@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next 3/3] net: phy: mscc: use phy_package_shared
+To:     Michael Walle <michael@walle.cc>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mm branch of tip:
+Hi Michael,
 
-Commit-ID:     d073569363d9f076a568ce8c31250d332ccf33ce
-Gitweb:        https://git.kernel.org/tip/d073569363d9f076a568ce8c31250d332ccf33ce
-Author:        Christoph Hellwig <hch@lst.de>
-AuthorDate:    Wed, 08 Apr 2020 17:27:44 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 23 Apr 2020 11:31:52 +02:00
+On Tue, 21 Apr 2020 at 02:28, Michael Walle <michael@walle.cc> wrote:
+>
+> Use the new phy_package_shared common storage to ease the package
+> initialization and to access the global registers.
+>
+> This was only compile-time tested!
+>
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
 
-x86/mm: Cleanup pgprot_4k_2_large() and pgprot_large_2_4k()
+I happen to have a board with a VSC8514 PHY. For this driver, only the "Fast
+Link Failure Indication" feature seems to be configured via
+phy_base_write/__phy_package_write. Functionally I can't test it, because the
+GPIO9 pin is not wired on my board. But I could at least check that the value
+that should be written can be read back from all PHYs in the package:
 
-Make use of lower level helpers that operate on the raw protection
-values to make the code a little easier to understand, and to also
-avoid extra conversions in a few callers.
+Microsemi GE VSC8514 SyncE 0000:00:00.3:10: reading 0x400f from
+MSCC_PHY_MAC_CFG_FASTLINK
+swp0: PHY [0000:00:00.3:10] driver [Microsemi GE VSC8514 SyncE] (irq=POLL)
+Microsemi GE VSC8514 SyncE 0000:00:00.3:11: reading 0x400f from
+MSCC_PHY_MAC_CFG_FASTLINK
+0000:00:00.5 swp1: PHY [0000:00:00.3:11] driver [Microsemi GE VSC8514
+SyncE] (irq=POLL)
+Microsemi GE VSC8514 SyncE 0000:00:00.3:12: reading 0x400f from
+MSCC_PHY_MAC_CFG_FASTLINK
+0000:00:00.5 swp2: PHY [0000:00:00.3:12] driver [Microsemi GE VSC8514
+SyncE] (irq=POLL)
+Microsemi GE VSC8514 SyncE 0000:00:00.3:13: reading 0x400f from
+MSCC_PHY_MAC_CFG_FASTLINK
+0000:00:00.5 swp3: PHY [0000:00:00.3:13] driver [Microsemi GE VSC8514
+SyncE] (irq=POLL)
 
-[ Qian: Fix a wrongly placed bracket in the original submission.
-  Reported and fixed by Qian Cai <cai@lca.pw>. Details in second
-  Link: below. ]
+So assuming that the feature worked before, it looks like there is no
+regression. Of course, the PHY still passes traffic just fine.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200408152745.1565832-4-hch@lst.de
-Link: https://lkml.kernel.org/r/1ED37D02-125F-4919-861A-371981581D9E@lca.pw
----
- arch/x86/include/asm/pgtable_types.h | 26 +++++++++++++-------------
- arch/x86/mm/init_64.c                |  2 +-
- arch/x86/mm/pgtable.c                |  8 ++------
- 3 files changed, 16 insertions(+), 20 deletions(-)
+So you can add my:
 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 75fe903..a3b78d8 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -488,24 +488,24 @@ static inline pgprot_t cachemode2pgprot(enum page_cache_mode pcm)
- {
- 	return __pgprot(cachemode2protval(pcm));
- }
--static inline pgprot_t pgprot_4k_2_large(pgprot_t pgprot)
-+static inline unsigned long protval_4k_2_large(unsigned long val)
- {
--	pgprotval_t val = pgprot_val(pgprot);
--	pgprot_t new;
--
--	pgprot_val(new) = (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
-+	return (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
- 		((val & _PAGE_PAT) << (_PAGE_BIT_PAT_LARGE - _PAGE_BIT_PAT));
--	return new;
-+}
-+static inline pgprot_t pgprot_4k_2_large(pgprot_t pgprot)
-+{
-+	return __pgprot(protval_4k_2_large(pgprot_val(pgprot)));
-+}
-+static inline unsigned long protval_large_2_4k(unsigned long val)
-+{
-+	return (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
-+		((val & _PAGE_PAT_LARGE) >>
-+		 (_PAGE_BIT_PAT_LARGE - _PAGE_BIT_PAT));
- }
- static inline pgprot_t pgprot_large_2_4k(pgprot_t pgprot)
- {
--	pgprotval_t val = pgprot_val(pgprot);
--	pgprot_t new;
--
--	pgprot_val(new) = (val & ~(_PAGE_PAT | _PAGE_PAT_LARGE)) |
--			  ((val & _PAGE_PAT_LARGE) >>
--			   (_PAGE_BIT_PAT_LARGE - _PAGE_BIT_PAT));
--	return new;
-+	return __pgprot(protval_large_2_4k(pgprot_val(pgprot)));
- }
- 
- 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 3b289c2..9a497ba 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -367,7 +367,7 @@ static void __init __init_extra_mapping(unsigned long phys, unsigned long size,
- 	pgprot_t prot;
- 
- 	pgprot_val(prot) = pgprot_val(PAGE_KERNEL_LARGE) |
--		pgprot_val(pgprot_4k_2_large(cachemode2pgprot(cache)));
-+		protval_4k_2_large(cachemode2protval(cache));
- 	BUG_ON((phys & ~PMD_MASK) || (size & ~PMD_MASK));
- 	for (; size; phys += PMD_SIZE, size -= PMD_SIZE) {
- 		pgd = pgd_offset_k((unsigned long)__va(phys));
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 7bd2c3a..c54d1d0 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -706,11 +706,9 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
- 	if (pud_present(*pud) && !pud_huge(*pud))
- 		return 0;
- 
--	prot = pgprot_4k_2_large(prot);
--
- 	set_pte((pte_t *)pud, pfn_pte(
- 		(u64)addr >> PAGE_SHIFT,
--		__pgprot(pgprot_val(prot) | _PAGE_PSE)));
-+		__pgprot(protval_4k_2_large(pgprot_val(prot)) | _PAGE_PSE)));
- 
- 	return 1;
- }
-@@ -738,11 +736,9 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
- 	if (pmd_present(*pmd) && !pmd_huge(*pmd))
- 		return 0;
- 
--	prot = pgprot_4k_2_large(prot);
--
- 	set_pte((pte_t *)pmd, pfn_pte(
- 		(u64)addr >> PAGE_SHIFT,
--		__pgprot(pgprot_val(prot) | _PAGE_PSE)));
-+		__pgprot(protval_4k_2_large(pgprot_val(prot)) | _PAGE_PSE)));
- 
- 	return 1;
- }
+Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+
+>  drivers/net/phy/mscc/mscc.h      |  1 -
+>  drivers/net/phy/mscc/mscc_main.c | 99 ++++++++++----------------------
+>  2 files changed, 29 insertions(+), 71 deletions(-)
+>
+> diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+> index 030bf8b600df..acdd8ee61a39 100644
+> --- a/drivers/net/phy/mscc/mscc.h
+> +++ b/drivers/net/phy/mscc/mscc.h
+> @@ -353,7 +353,6 @@ struct vsc8531_private {
+>         const struct vsc85xx_hw_stat *hw_stats;
+>         u64 *stats;
+>         int nstats;
+> -       bool pkg_init;
+>         /* For multiple port PHYs; the MDIO address of the base PHY in the
+>          * package.
+>          */
+> diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+> index 5391acdece05..382b56064de9 100644
+> --- a/drivers/net/phy/mscc/mscc_main.c
+> +++ b/drivers/net/phy/mscc/mscc_main.c
+> @@ -691,27 +691,23 @@ static int vsc85xx_eee_init_seq_set(struct phy_device *phydev)
+>  /* phydev->bus->mdio_lock should be locked when using this function */
+>  static int phy_base_write(struct phy_device *phydev, u32 regnum, u16 val)
+>  {
+> -       struct vsc8531_private *priv = phydev->priv;
+> -
+>         if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
+>                 dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
+>                 dump_stack();
+>         }
+>
+> -       return __mdiobus_write(phydev->mdio.bus, priv->base_addr, regnum, val);
+> +       return __phy_package_write(phydev, regnum, val);
+>  }
+>
+>  /* phydev->bus->mdio_lock should be locked when using this function */
+>  static int phy_base_read(struct phy_device *phydev, u32 regnum)
+>  {
+> -       struct vsc8531_private *priv = phydev->priv;
+> -
+>         if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
+>                 dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
+>                 dump_stack();
+>         }
+>
+> -       return __mdiobus_read(phydev->mdio.bus, priv->base_addr, regnum);
+> +       return __phy_package_read(phydev, regnum);
+>  }
+>
+>  /* bus->mdio_lock should be locked when using this function */
+> @@ -1287,65 +1283,36 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
+>         return ret;
+>  }
+>
+> -/* Check if one PHY has already done the init of the parts common to all PHYs
+> - * in the Quad PHY package.
+> - */
+> -static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
+> +static void vsc8584_get_base_addr(struct phy_device *phydev)
+>  {
+> -       struct mii_bus *bus = phydev->mdio.bus;
+> -       struct vsc8531_private *vsc8531;
+> -       struct phy_device *phy;
+> -       int i, addr;
+> -
+> -       /* VSC8584 is a Quad PHY */
+> -       for (i = 0; i < 4; i++) {
+> -               vsc8531 = phydev->priv;
+> -
+> -               if (reversed)
+> -                       addr = vsc8531->base_addr - i;
+> -               else
+> -                       addr = vsc8531->base_addr + i;
+> -
+> -               phy = mdiobus_get_phy(bus, addr);
+> -               if (!phy)
+> -                       continue;
+> +       struct vsc8531_private *vsc8531 = phydev->priv;
+> +       u16 val, addr;
+>
+> -               if ((phy->phy_id & phydev->drv->phy_id_mask) !=
+> -                   (phydev->drv->phy_id & phydev->drv->phy_id_mask))
+> -                       continue;
+> +       mutex_lock(&phydev->mdio.bus->mdio_lock);
+> +       __phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
+>
+> -               vsc8531 = phy->priv;
+> +       addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
+> +       addr >>= PHY_CNTL_4_ADDR_POS;
+>
+> -               if (vsc8531 && vsc8531->pkg_init)
+> -                       return true;
+> -       }
+> +       val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
+>
+> -       return false;
+> +       if (val & PHY_ADDR_REVERSED)
+> +               vsc8531->base_addr = phydev->mdio.addr + addr;
+> +       else
+> +               vsc8531->base_addr = phydev->mdio.addr - addr;
+> +       mutex_unlock(&phydev->mdio.bus->mdio_lock);
+>  }
+>
+>  static int vsc8584_config_init(struct phy_device *phydev)
+>  {
+>         struct vsc8531_private *vsc8531 = phydev->priv;
+> -       u16 addr, val;
+>         int ret, i;
+> +       u16 val;
+>
+>         phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
+>
+>         mutex_lock(&phydev->mdio.bus->mdio_lock);
+>
+> -       __mdiobus_write(phydev->mdio.bus, phydev->mdio.addr,
+> -                       MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
+> -       addr = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
+> -                             MSCC_PHY_EXT_PHY_CNTL_4);
+> -       addr >>= PHY_CNTL_4_ADDR_POS;
+> -
+> -       val = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
+> -                            MSCC_PHY_ACTIPHY_CNTL);
+> -       if (val & PHY_ADDR_REVERSED)
+> -               vsc8531->base_addr = phydev->mdio.addr + addr;
+> -       else
+> -               vsc8531->base_addr = phydev->mdio.addr - addr;
+> -
+>         /* Some parts of the init sequence are identical for every PHY in the
+>          * package. Some parts are modifying the GPIO register bank which is a
+>          * set of registers that are affecting all PHYs, a few resetting the
+> @@ -1359,7 +1326,7 @@ static int vsc8584_config_init(struct phy_device *phydev)
+>          * do the correct init sequence for all PHYs that are package-critical
+>          * in this pre-init function.
+>          */
+> -       if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0)) {
+> +       if (phy_package_init_once(phydev)) {
+>                 /* The following switch statement assumes that the lowest
+>                  * nibble of the phy_id_mask is always 0. This works because
+>                  * the lowest nibble of the PHY_ID's below are also 0.
+> @@ -1388,8 +1355,6 @@ static int vsc8584_config_init(struct phy_device *phydev)
+>                         goto err;
+>         }
+>
+> -       vsc8531->pkg_init = true;
+> -
+>         phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
+>                        MSCC_PHY_PAGE_EXTENDED_GPIO);
+>
+> @@ -1427,7 +1392,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
+>
+>         /* Disable SerDes for 100Base-FX */
+>         ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
+> -                         PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
+> +                         PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
+> +                         PROC_CMD_FIBER_DISABLE |
+>                           PROC_CMD_READ_MOD_WRITE_PORT |
+>                           PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_100BASE_FX);
+>         if (ret)
+> @@ -1435,7 +1401,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
+>
+>         /* Disable SerDes for 1000Base-X */
+>         ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
+> -                         PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
+> +                         PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
+> +                         PROC_CMD_FIBER_DISABLE |
+>                           PROC_CMD_READ_MOD_WRITE_PORT |
+>                           PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_1000BASE_X);
+>         if (ret)
+> @@ -1750,26 +1717,14 @@ static int vsc8514_config_init(struct phy_device *phydev)
+>  {
+>         struct vsc8531_private *vsc8531 = phydev->priv;
+>         unsigned long deadline;
+> -       u16 val, addr;
+>         int ret, i;
+> +       u16 val;
+>         u32 reg;
+>
+>         phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
+>
+>         mutex_lock(&phydev->mdio.bus->mdio_lock);
+>
+> -       __phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
+> -
+> -       addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
+> -       addr >>= PHY_CNTL_4_ADDR_POS;
+> -
+> -       val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
+> -
+> -       if (val & PHY_ADDR_REVERSED)
+> -               vsc8531->base_addr = phydev->mdio.addr + addr;
+> -       else
+> -               vsc8531->base_addr = phydev->mdio.addr - addr;
+> -
+>         /* Some parts of the init sequence are identical for every PHY in the
+>          * package. Some parts are modifying the GPIO register bank which is a
+>          * set of registers that are affecting all PHYs, a few resetting the
+> @@ -1781,11 +1736,9 @@ static int vsc8514_config_init(struct phy_device *phydev)
+>          * do the correct init sequence for all PHYs that are package-critical
+>          * in this pre-init function.
+>          */
+> -       if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0))
+> +       if (phy_package_init_once(phydev))
+>                 vsc8514_config_pre_init(phydev);
+>
+> -       vsc8531->pkg_init = true;
+> -
+>         phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
+>                        MSCC_PHY_PAGE_EXTENDED_GPIO);
+>
+> @@ -1991,6 +1944,9 @@ static int vsc8514_probe(struct phy_device *phydev)
+>
+>         phydev->priv = vsc8531;
+>
+> +       vsc8584_get_base_addr(phydev);
+> +       devm_phy_package_join(&phydev->mdio.dev, phydev, vsc8531->base_addr);
+> +
+>         vsc8531->nleds = 4;
+>         vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
+>         vsc8531->hw_stats = vsc85xx_hw_stats;
+> @@ -2046,6 +2002,9 @@ static int vsc8584_probe(struct phy_device *phydev)
+>
+>         phydev->priv = vsc8531;
+>
+> +       vsc8584_get_base_addr(phydev);
+> +       devm_phy_package_join(&phydev->mdio.dev, phydev, vsc8531->base_addr);
+> +
+>         vsc8531->nleds = 4;
+>         vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
+>         vsc8531->hw_stats = vsc8584_hw_stats;
+> --
+> 2.20.1
+>
+
+Thanks,
+-Vladimir
