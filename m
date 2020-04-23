@@ -2,1300 +2,839 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EA4C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37798C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C3B2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE17220736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:25:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnGHOFJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgDWLYP (ORCPT
+        id S1728060AbgDWLZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:24:15 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35270 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbgDWLYO (ORCPT
+        Thu, 23 Apr 2020 07:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727069AbgDWLZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:24:14 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jRZxb-0003xn-Dv; Thu, 23 Apr 2020 11:24:03 +0000
-Date:   Thu, 23 Apr 2020 13:24:01 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: Re: [PATCH v2 2/7] loopfs: implement loopfs
-Message-ID: <20200423112401.ipzmsyicabwajpn2@wittgenstein>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
- <20200422145437.176057-3-christian.brauner@ubuntu.com>
- <20200422215213.GB31944@mail.hallyn.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200422215213.GB31944@mail.hallyn.com>
+        Thu, 23 Apr 2020 07:25:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEE5C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 04:25:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id ay1so2242591plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 04:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hFP1sb+AkEzd69kMoBeukaHCUG2rW3IxDIEaszuy72M=;
+        b=mnGHOFJobbt1ke0RdVIEK7gFAhPjB6OPZ95vqBD0xMjECBx2kp/qBdALVE3+DPj48u
+         LtyUjcK/XL/BRzLFFzfXnHV/8eGRdghKCGsBIIFIT1rTVnoMJwsNQBykDghdufLIUtq5
+         2vigjkOraFHCBW3hthlJL2lyitMxJMvq0l0hT8dN0AW2YsUrLAeVvi1214W15SLTjtig
+         /cpcxHojHlizUTuwRyAbEYYfhpRnhAZM3qjN46OeJ1lyy21ceobOTc+iLbeC8siS+S4o
+         llOn9ygwsaPgC5NwE5FJ4HC1uXRHLRpQMnRuxLG6YAtB/GOtzkGYUTw5w812GS3n+8K4
+         9ggw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hFP1sb+AkEzd69kMoBeukaHCUG2rW3IxDIEaszuy72M=;
+        b=EQIfAizjWpEwEhEPJGOa7qvBD/2gIe0VY5GFDe2MBNxnCA6a0AcHULxEvuQqzkLwm5
+         mrVeaulhKUHU0twgJesNYUnxJxvIjmCNss6Z9AIBiPIE+GBQSS8AjPyNZAgx86e4/Ebx
+         qo+ExWa/H2mcsNy0CQjX1bqW51C68ySonOF1jKc3O4TUxW1uY3UifvCdNpzi70EpI1qf
+         0kLiELEtPp1ZTUDBysG6i+KbFE22KjDEAbaUxbHaD40lZiyQvbixKJIHQUID16vJYVsz
+         o4hRcY2aUBJiRmRp5z7Il+6LAFSPxX3bO8QlaHvf41HbTy6g2Y5xcl7hcN4VHbn/r7qy
+         tH9A==
+X-Gm-Message-State: AGi0PuZvWp4JyHGCm+s8B9x8a4KmYCbV2Wd7Oyhf66Fm/7LAW7+v8czK
+        AEv4Egp6byu6t3txmZqrzTU=
+X-Google-Smtp-Source: APiQypLIqLeIrRPQ0RYpcZ57TF87gH42FSci4a6LhONM54q7g52Mmvt6S2Dm1d7zuLR4aiFzEe74xA==
+X-Received: by 2002:a17:90b:3115:: with SMTP id gc21mr258398pjb.183.1587641100647;
+        Thu, 23 Apr 2020 04:25:00 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:5d0:2c5c:20df:5fba:2801:163b])
+        by smtp.gmail.com with ESMTPSA id g43sm2082783pje.22.2020.04.23.04.24.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Apr 2020 04:25:00 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     lee.jones@linaro.org, matthias.bgg@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: [PATCH v9] mfd: mt6360: add pmic mt6360 driver
+Date:   Thu, 23 Apr 2020 19:24:52 +0800
+Message-Id: <1587641093-25441-1-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:52:13PM -0500, Serge Hallyn wrote:
-> On Wed, Apr 22, 2020 at 04:54:32PM +0200, Christian Brauner wrote:
-> > This implements loopfs, a loop device filesystem. It takes inspiration
-> > from the binderfs filesystem I implemented about two years ago and with
-> > which we had overall good experiences so far. Parts of it are also
-> > based on [3] but it's mostly a new, imho cleaner approach.
-> > 
-> > Loopfs allows to create private loop devices instances to applications
-> > for various use-cases. It covers the use-case that was expressed on-list
-> > and in-person to get programmatic access to private loop devices for
-> > image building in sandboxes. An illustration for this is provided in
-> > [4].
-> > 
-> > Also loopfs is intended to provide loop devices to privileged and
-> > unprivileged containers which has been a frequent request from various
-> > major tools (Chromium, Kubernetes, LXD, Moby/Docker, systemd). I'm
-> > providing a non-exhaustive list of issues and requests (cf. [5]) around
-> > this feature mainly to illustrate that I'm not making the use-cases up.
-> > Currently none of this can be done safely since handing a loop device
-> > from the host into a container means that the container can see anything
-> > that the host is doing with that loop device and what other containers
-> > are doing with that device too. And (bind-)mounting devtmpfs inside of
-> > containers is not secure at all so also not an option (though sometimes
-> > done out of despair apparently).
-> > 
-> > The workloads people run in containers are supposed to be indiscernible
-> > from workloads run on the host and the tools inside of the container are
-> > supposed to not be required to be aware that they are running inside a
-> > container apart from containerization tools themselves. This is
-> > especially true when running older distros in containers that did exist
-> > before containers were as ubiquitous as they are today. With loopfs user
-> > can call mount -o loop and in a correctly setup container things work
-> > the same way they would on the host. The filesystem representation
-> > allows us to do this in a very simple way. At container setup, a
-> > container manager can mount a private instance of loopfs somehwere, e.g.
-> > at /dev/loopfs and then bind-mount or symlink /dev/loopfs/loop-control
-> > to /dev/loop-control, pre allocate and symlink the number of standard
-> > devices into their standard location and have a service file or rules in
-> > place that symlink additionally allocated loop devices through losetup
-> > into place as well.
-> > With the new syscall interception logic this is also possible for
-> > unprivileged containers. In these cases when a user calls mount -o loop
-> > <image> <mountpoint> it will be possible to completely setup the loop
-> > device in the container. The final mount syscall is handled through
-> > syscall interception which we already implemented and released in
-> > earlier kernels (see [1] and [2]) and is actively used in production
-> > workloads. The mount is often rewritten to a fuse binary to provide safe
-> > access for unprivileged containers.
-> > 
-> > Loopfs also allows the creation of hidden/detached dynamic loop devices
-> > and associated mounts which also was a often issued request. With the
-> > old mount api this can be achieved by creating a temporary loopfs and
-> > stashing a file descriptor to the mount point and the loop-control
-> > device and immediately unmounting the loopfs instance.  With the new
-> > mount api a detached mount can be created directly (i.e. a mount not
-> > visible anywhere in the filesystem). New loop devices can then be
-> > allocated and configured. They can be mounted through
-> > /proc/self/<fd>/<nr> with the old mount api or by using the fd directly
-> > with the new mount api. Combined with a mount namespace this allows for
-> > fully auto-cleaned up loop devices on program crash. This ties back to
-> > various use-cases and is illustrated in [4].
-> > 
-> > The filesystem representation requires the standard boilerplate
-> > filesystem code we know from other tiny filesystems. And all of
-> > the loopfs code is hidden under a config option that defaults to false.
-> > This specifically means, that none of the code even exists when users do
-> > not have any use-case for loopfs.
-> > In addition, the loopfs code does not alter how loop devices behave at
-> > all, i.e. there are no changes to any existing workloads and I've taken
-> > care to ifdef all loopfs specific things out.
-> > 
-> > Each loopfs mount is a separate instance. As such loop devices created
-> > in one instance are independent of loop devices created in another
-> > instance. This specifically entails that loop devices are only visible
-> > in the loopfs instance they belong to.
-> > 
-> > The number of loop devices available in loopfs instances are
-> > hierarchically limited through /proc/sys/user/max_loop_devices via the
-> > ucount infrastructure (Thanks to David Rheinsberg for pointing out that
-> > missing piece.). An administrator could e.g. set
-> > echo 3 > /proc/sys/user/max_loop_devices at which point any loopfs
-> > instance mounted by uid x can only create 3 loop devices no matter how
-> > many loopfs instances they mount. This limit applies hierarchically to
-> > all user namespaces.
-> 
-> Hm, info->device_count is per loopfs mount, though, right?  I don't
-> see where this gets incremented for all of a user's loopfs mounts
-> when one adds a loopdev?
-> 
-> I'm sure I'm missing something obvious...
+Add mfd driver for mt6360 pmic chip include
+Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
 
-Hm, I think you might be mixing up the two limits? device_count
-corresponds to the "max" mount option and is not involved in enforcing
-hierarchical limits. The global restriction is enforced through
-inc_ucount() which tracks by the uid of the mounter of the superblock.
-If the same user mounts multiple loopfs instances in the same namespace
-the ucount infra will enforce his quota across all loopfs instances.
+Signed-off-by: Gene Chen <gene_chen@richtek.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mfd/Kconfig        |  12 ++
+ drivers/mfd/Makefile       |   1 +
+ drivers/mfd/mt6360-core.c  | 425 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/mt6360.h | 240 +++++++++++++++++++++++++
+ 4 files changed, 678 insertions(+)
+ create mode 100644 drivers/mfd/mt6360-core.c
+ create mode 100644 include/linux/mfd/mt6360.h
 
-> 
-> > In addition, loopfs has a "max" mount option which allows to set a limit
-> > on the number of loop devices for a given loopfs instance. This is
-> > mainly to cover use-cases where a single loopfs mount is shared as a
-> > bind-mount between multiple parties that are prevented from creating
-> > other loopfs mounts and is equivalent to the semantics of the binderfs
-> > and devpts "max" mount option.
-> > 
-> > Note that in __loop_clr_fd() we now need not just check whether bdev is
-> > valid but also whether bdev->bd_disk is valid. This wasn't necessary
-> > before because in order to call LOOP_CLR_FD the loop device would need
-> > to be open and thus bdev->bd_disk was guaranteed to be allocated. For
-> > loopfs loop devices we allow callers to simply unlink them just as we do
-> > for binderfs binder devices and we do also need to account for the case
-> > where a loopfs superblock is shutdown while backing files might still be
-> > associated with some loop devices. In such cases no bd_disk device will
-> > be attached to bdev. This is not in itself noteworthy it's more about
-> > documenting the "why" of the added bdev->bd_disk check for posterity.
-> > 
-> > [1]: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-> > [2]: fb3c5386b382 ("seccomp: add SECCOMP_USER_NOTIF_FLAG_CONTINUE")
-> > [3]: https://lore.kernel.org/lkml/1401227936-15698-1-git-send-email-seth.forshee@canonical.com
-> > [4]: https://gist.github.com/brauner/dcaf15e6977cc1bfadfb3965f126c02f
-> > [5]: https://github.com/kubernetes-sigs/kind/issues/1333
-> >      https://github.com/kubernetes-sigs/kind/issues/1248
-> >      https://lists.freedesktop.org/archives/systemd-devel/2017-August/039453.html
-> >      https://chromium.googlesource.com/chromiumos/docs/+/master/containers_and_vms.md#loop-mount
-> >      https://gitlab.com/gitlab-com/support-forum/issues/3732
-> >      https://github.com/moby/moby/issues/27886
-> >      https://twitter.com/_AkihiroSuda_/status/1249664478267854848
-> >      https://serverfault.com/questions/701384/loop-device-in-a-linux-container
-> >      https://discuss.linuxcontainers.org/t/providing-access-to-loop-and-other-devices-in-containers/1352
-> >      https://discuss.concourse-ci.org/t/exposing-dev-loop-devices-in-privileged-mode/813
-> > Cc: Jens Axboe <axboe@kernel.dk>
-> > Cc: Steve Barber <smbarber@google.com>
-> > Cc: Filipe Brandenburger <filbranden@gmail.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Benjamin Elder <bentheelder@google.com>
-> > Cc: Seth Forshee <seth.forshee@canonical.com>
-> > Cc: Stéphane Graber <stgraber@ubuntu.com>
-> > Cc: Tom Gundersen <teg@jklm.no>
-> > Cc: Serge Hallyn <serge@hallyn.com>
-> 
-> Reviewed-by: Serge Hallyn <serge@hallyn.com>
-> 
-> > Cc: Tejun Heo <tj@kernel.org>
-> > Cc: Christian Kellner <ckellner@redhat.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Dylan Reid <dgreid@google.com>
-> > Cc: David Rheinsberg <david.rheinsberg@gmail.com>
-> > Cc: Akihiro Suda <suda.kyoto@gmail.com>
-> > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v2 */
-> > - David Rheinsberg <david.rheinsberg@gmail.com> /
-> >   Christian Brauner <christian.brauner@ubuntu.com>:
-> >   - Correctly cleanup loop devices that are in-use after the loopfs
-> >     instance has been shut down. This is important for some use-cases
-> >     that David pointed out where they effectively create a loopfs
-> >     instance, allocate devices and drop unnecessary references to it.
-> > - Christian Brauner <christian.brauner@ubuntu.com>:
-> >   - Replace lo_loopfs_i inode member in struct loop_device with a custom
-> >     struct lo_info pointer which is only allocated for loopfs loop
-> >     devices.
-> > ---
-> >  MAINTAINERS                    |   5 +
-> >  drivers/block/Kconfig          |   4 +
-> >  drivers/block/Makefile         |   1 +
-> >  drivers/block/loop.c           | 200 ++++++++++---
-> >  drivers/block/loop.h           |  12 +-
-> >  drivers/block/loopfs/Makefile  |   3 +
-> >  drivers/block/loopfs/loopfs.c  | 494 +++++++++++++++++++++++++++++++++
-> >  drivers/block/loopfs/loopfs.h  |  36 +++
-> >  include/linux/user_namespace.h |   3 +
-> >  include/uapi/linux/magic.h     |   1 +
-> >  kernel/ucount.c                |   3 +
-> >  11 files changed, 721 insertions(+), 41 deletions(-)
-> >  create mode 100644 drivers/block/loopfs/Makefile
-> >  create mode 100644 drivers/block/loopfs/loopfs.c
-> >  create mode 100644 drivers/block/loopfs/loopfs.h
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index b816a453b10e..560b37a65bce 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -9957,6 +9957,11 @@ W:	http://www.avagotech.com/support/
-> >  F:	drivers/message/fusion/
-> >  F:	drivers/scsi/mpt3sas/
-> >  
-> > +LOOPFS FILE SYSTEM
-> > +M:	Christian Brauner <christian.brauner@ubuntu.com>
-> > +S:	Supported
-> > +F:	drivers/block/loopfs/
-> > +
-> >  LSILOGIC/SYMBIOS/NCR 53C8XX and 53C1010 PCI-SCSI drivers
-> >  M:	Matthew Wilcox <willy@infradead.org>
-> >  L:	linux-scsi@vger.kernel.org
-> > diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-> > index 025b1b77b11a..d7ff37d795ad 100644
-> > --- a/drivers/block/Kconfig
-> > +++ b/drivers/block/Kconfig
-> > @@ -214,6 +214,10 @@ config BLK_DEV_LOOP
-> >  
-> >  	  Most users will answer N here.
-> >  
-> > +config BLK_DEV_LOOPFS
-> > +	bool "Loopback device virtual filesystem support"
-> > +	depends on BLK_DEV_LOOP=y
-> > +
-> >  config BLK_DEV_LOOP_MIN_COUNT
-> >  	int "Number of loop devices to pre-create at init time"
-> >  	depends on BLK_DEV_LOOP
-> > diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-> > index 795facd8cf19..7052be26aa8b 100644
-> > --- a/drivers/block/Makefile
-> > +++ b/drivers/block/Makefile
-> > @@ -36,6 +36,7 @@ obj-$(CONFIG_XEN_BLKDEV_BACKEND)	+= xen-blkback/
-> >  obj-$(CONFIG_BLK_DEV_DRBD)     += drbd/
-> >  obj-$(CONFIG_BLK_DEV_RBD)     += rbd.o
-> >  obj-$(CONFIG_BLK_DEV_PCIESSD_MTIP32XX)	+= mtip32xx/
-> > +obj-$(CONFIG_BLK_DEV_LOOPFS)	+= loopfs/
-> >  
-> >  obj-$(CONFIG_BLK_DEV_RSXX) += rsxx/
-> >  obj-$(CONFIG_ZRAM) += zram/
-> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> > index da693e6a834e..52f7583dd17d 100644
-> > --- a/drivers/block/loop.c
-> > +++ b/drivers/block/loop.c
-> > @@ -81,6 +81,10 @@
-> >  
-> >  #include "loop.h"
-> >  
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +#include "loopfs/loopfs.h"
-> > +#endif
-> > +
-> >  #include <linux/uaccess.h>
-> >  
-> >  static DEFINE_IDR(loop_index_idr);
-> > @@ -1115,6 +1119,24 @@ loop_init_xfer(struct loop_device *lo, struct loop_func_table *xfer,
-> >  	return err;
-> >  }
-> >  
-> > +static void loop_remove(struct loop_device *lo)
-> > +{
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	loopfs_remove(lo);
-> > +#endif
-> > +	del_gendisk(lo->lo_disk);
-> > +	blk_cleanup_queue(lo->lo_queue);
-> > +	blk_mq_free_tag_set(&lo->tag_set);
-> > +	put_disk(lo->lo_disk);
-> > +	kfree(lo);
-> > +}
-> > +
-> > +static inline void __loop_remove(struct loop_device *lo)
-> > +{
-> > +	idr_remove(&loop_index_idr, lo->lo_number);
-> > +	loop_remove(lo);
-> > +}
-> > +
-> >  static int __loop_clr_fd(struct loop_device *lo, bool release)
-> >  {
-> >  	struct file *filp = NULL;
-> > @@ -1164,7 +1186,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
-> >  	}
-> >  	set_capacity(lo->lo_disk, 0);
-> >  	loop_sysfs_exit(lo);
-> > -	if (bdev) {
-> > +	if (bdev && bdev->bd_disk) {
-> >  		bd_set_size(bdev, 0);
-> >  		/* let user-space know about this change */
-> >  		kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
-> > @@ -1174,7 +1196,7 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
-> >  	module_put(THIS_MODULE);
-> >  	blk_mq_unfreeze_queue(lo->lo_queue);
-> >  
-> > -	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
-> > +	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev && bdev->bd_disk;
-> >  	lo_number = lo->lo_number;
-> >  	loop_unprepare_queue(lo);
-> >  out_unlock:
-> > @@ -1213,7 +1235,12 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
-> >  	lo->lo_flags = 0;
-> >  	if (!part_shift)
-> >  		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
-> > -	lo->lo_state = Lo_unbound;
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	if (loopfs_wants_remove(lo))
-> > +		__loop_remove(lo);
-> > +	else
-> > +#endif
-> > +		lo->lo_state = Lo_unbound;
-> >  	mutex_unlock(&loop_ctl_mutex);
-> >  
-> >  	/*
-> > @@ -1259,6 +1286,74 @@ static int loop_clr_fd(struct loop_device *lo)
-> >  	return __loop_clr_fd(lo, false);
-> >  }
-> >  
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +int loopfs_rundown_locked(struct loop_device *lo)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (WARN_ON_ONCE(!loopfs_device(lo)))
-> > +		return -EINVAL;
-> > +
-> > +	ret = mutex_lock_killable(&loop_ctl_mutex);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (lo->lo_state != Lo_unbound || atomic_read(&lo->lo_refcnt) > 0) {
-> > +		ret = -EBUSY;
-> > +	} else {
-> > +		/*
-> > +		 * Since the device is unbound it has no associated backing
-> > +		 * file and we can safely set Lo_rundown to prevent it from
-> > +		 * being found. Actual cleanup happens during inode eviction.
-> > +		 */
-> > +		lo->lo_state = Lo_rundown;
-> > +		ret = 0;
-> > +	}
-> > +
-> > +	mutex_unlock(&loop_ctl_mutex);
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * loopfs_evict_locked() - remove loop device or mark inactive
-> > + * @lo:	loopfs loop device
-> > + *
-> > + * This function will remove a loop device. If it has no users
-> > + * and is bound the backing file will be cleaned up. If the loop
-> > + * device has users it will be marked for auto cleanup.
-> > + * This function is only called when a loopfs instance is shutdown
-> > + * when all references to it from this loopfs instance have been
-> > + * dropped. If there are still any references to it cleanup will
-> > + * happen in lo_release().
-> > + */
-> > +void loopfs_evict_locked(struct loop_device *lo)
-> > +{
-> > +	struct lo_loopfs *lo_info;
-> > +	struct inode *lo_inode;
-> > +
-> > +	WARN_ON_ONCE(!loopfs_device(lo));
-> > +
-> > +	mutex_lock(&loop_ctl_mutex);
-> > +	lo_info = lo->lo_info;
-> > +	lo_inode = lo_info->lo_inode;
-> > +	lo_info->lo_inode = NULL;
-> > +	lo_info->lo_flags |= LOOPFS_FLAGS_INACTIVE;
-> > +
-> > +	if (atomic_read(&lo->lo_refcnt) > 0) {
-> > +		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
-> > +	} else {
-> > +		lo->lo_state = Lo_rundown;
-> > +		lo->lo_disk->private_data = NULL;
-> > +		lo_inode->i_private = NULL;
-> > +
-> > +		mutex_unlock(&loop_ctl_mutex);
-> > +		__loop_clr_fd(lo, false);
-> > +		return;
-> > +	}
-> > +	mutex_unlock(&loop_ctl_mutex);
-> > +}
-> > +#endif /* CONFIG_BLK_DEV_LOOPFS */
-> > +
-> >  static int
-> >  loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
-> >  {
-> > @@ -1842,7 +1937,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
-> >  
-> >  	if (lo->lo_flags & LO_FLAGS_AUTOCLEAR) {
-> >  		if (lo->lo_state != Lo_bound)
-> > -			goto out_unlock;
-> > +			goto out_remove;
-> >  		lo->lo_state = Lo_rundown;
-> >  		mutex_unlock(&loop_ctl_mutex);
-> >  		/*
-> > @@ -1860,6 +1955,12 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
-> >  		blk_mq_unfreeze_queue(lo->lo_queue);
-> >  	}
-> >  
-> > +out_remove:
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	if (lo->lo_state != Lo_bound && loopfs_wants_remove(lo))
-> > +		__loop_remove(lo);
-> > +#endif
-> > +
-> >  out_unlock:
-> >  	mutex_unlock(&loop_ctl_mutex);
-> >  }
-> > @@ -1878,6 +1979,11 @@ static const struct block_device_operations lo_fops = {
-> >   * And now the modules code and kernel interface.
-> >   */
-> >  static int max_loop;
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +unsigned long max_devices;
-> > +#else
-> > +static unsigned long max_devices;
-> > +#endif
-> >  module_param(max_loop, int, 0444);
-> >  MODULE_PARM_DESC(max_loop, "Maximum number of loop devices");
-> >  module_param(max_part, int, 0444);
-> > @@ -2006,7 +2112,7 @@ static const struct blk_mq_ops loop_mq_ops = {
-> >  	.complete	= lo_complete_rq,
-> >  };
-> >  
-> > -static int loop_add(struct loop_device **l, int i)
-> > +static int loop_add(struct loop_device **l, int i, struct inode *inode)
-> >  {
-> >  	struct loop_device *lo;
-> >  	struct gendisk *disk;
-> > @@ -2096,7 +2202,17 @@ static int loop_add(struct loop_device **l, int i)
-> >  	disk->private_data	= lo;
-> >  	disk->queue		= lo->lo_queue;
-> >  	sprintf(disk->disk_name, "loop%d", i);
-> > +
-> >  	add_disk(disk);
-> > +
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	err = loopfs_add(lo, inode, disk_devt(disk));
-> > +	if (err) {
-> > +		__loop_remove(lo);
-> > +		goto out;
-> > +	}
-> > +#endif
-> > +
-> >  	*l = lo;
-> >  	return lo->lo_number;
-> >  
-> > @@ -2112,36 +2228,41 @@ static int loop_add(struct loop_device **l, int i)
-> >  	return err;
-> >  }
-> >  
-> > -static void loop_remove(struct loop_device *lo)
-> > -{
-> > -	del_gendisk(lo->lo_disk);
-> > -	blk_cleanup_queue(lo->lo_queue);
-> > -	blk_mq_free_tag_set(&lo->tag_set);
-> > -	put_disk(lo->lo_disk);
-> > -	kfree(lo);
-> > -}
-> > +struct find_free_cb_data {
-> > +	struct loop_device **l;
-> > +	struct inode *inode;
-> > +};
-> >  
-> >  static int find_free_cb(int id, void *ptr, void *data)
-> >  {
-> >  	struct loop_device *lo = ptr;
-> > -	struct loop_device **l = data;
-> > +	struct find_free_cb_data *cb_data = data;
-> >  
-> > -	if (lo->lo_state == Lo_unbound) {
-> > -		*l = lo;
-> > -		return 1;
-> > -	}
-> > -	return 0;
-> > +	if (lo->lo_state != Lo_unbound)
-> > +		return 0;
-> > +
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	if (!loopfs_access(cb_data->inode, lo))
-> > +		return 0;
-> > +#endif
-> > +
-> > +	*cb_data->l = lo;
-> > +	return 1;
-> >  }
-> >  
-> > -static int loop_lookup(struct loop_device **l, int i)
-> > +static int loop_lookup(struct loop_device **l, int i, struct inode *inode)
-> >  {
-> >  	struct loop_device *lo;
-> >  	int ret = -ENODEV;
-> >  
-> >  	if (i < 0) {
-> >  		int err;
-> > +		struct find_free_cb_data cb_data = {
-> > +			.l = &lo,
-> > +			.inode = inode,
-> > +		};
-> >  
-> > -		err = idr_for_each(&loop_index_idr, &find_free_cb, &lo);
-> > +		err = idr_for_each(&loop_index_idr, &find_free_cb, &cb_data);
-> >  		if (err == 1) {
-> >  			*l = lo;
-> >  			ret = lo->lo_number;
-> > @@ -2152,6 +2273,11 @@ static int loop_lookup(struct loop_device **l, int i)
-> >  	/* lookup and return a specific i */
-> >  	lo = idr_find(&loop_index_idr, i);
-> >  	if (lo) {
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +		if (!loopfs_access(inode, lo))
-> > +			return -EACCES;
-> > +#endif
-> > +
-> >  		*l = lo;
-> >  		ret = lo->lo_number;
-> >  	}
-> > @@ -2166,9 +2292,9 @@ static struct kobject *loop_probe(dev_t dev, int *part, void *data)
-> >  	int err;
-> >  
-> >  	mutex_lock(&loop_ctl_mutex);
-> > -	err = loop_lookup(&lo, MINOR(dev) >> part_shift);
-> > +	err = loop_lookup(&lo, MINOR(dev) >> part_shift, NULL);
-> >  	if (err < 0)
-> > -		err = loop_add(&lo, MINOR(dev) >> part_shift);
-> > +		err = loop_add(&lo, MINOR(dev) >> part_shift, NULL);
-> >  	if (err < 0)
-> >  		kobj = NULL;
-> >  	else
-> > @@ -2192,15 +2318,15 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
-> >  	ret = -ENOSYS;
-> >  	switch (cmd) {
-> >  	case LOOP_CTL_ADD:
-> > -		ret = loop_lookup(&lo, parm);
-> > +		ret = loop_lookup(&lo, parm, file_inode(file));
-> >  		if (ret >= 0) {
-> >  			ret = -EEXIST;
-> >  			break;
-> >  		}
-> > -		ret = loop_add(&lo, parm);
-> > +		ret = loop_add(&lo, parm, file_inode(file));
-> >  		break;
-> >  	case LOOP_CTL_REMOVE:
-> > -		ret = loop_lookup(&lo, parm);
-> > +		ret = loop_lookup(&lo, parm, file_inode(file));
-> >  		if (ret < 0)
-> >  			break;
-> >  		if (lo->lo_state != Lo_unbound) {
-> > @@ -2212,14 +2338,13 @@ static long loop_control_ioctl(struct file *file, unsigned int cmd,
-> >  			break;
-> >  		}
-> >  		lo->lo_disk->private_data = NULL;
-> > -		idr_remove(&loop_index_idr, lo->lo_number);
-> > -		loop_remove(lo);
-> > +		__loop_remove(lo);
-> >  		break;
-> >  	case LOOP_CTL_GET_FREE:
-> > -		ret = loop_lookup(&lo, -1);
-> > +		ret = loop_lookup(&lo, -1, file_inode(file));
-> >  		if (ret >= 0)
-> >  			break;
-> > -		ret = loop_add(&lo, -1);
-> > +		ret = loop_add(&lo, -1, file_inode(file));
-> >  	}
-> >  	mutex_unlock(&loop_ctl_mutex);
-> >  
-> > @@ -2246,7 +2371,6 @@ MODULE_ALIAS("devname:loop-control");
-> >  static int __init loop_init(void)
-> >  {
-> >  	int i, nr;
-> > -	unsigned long range;
-> >  	struct loop_device *lo;
-> >  	int err;
-> >  
-> > @@ -2285,10 +2409,10 @@ static int __init loop_init(void)
-> >  	 */
-> >  	if (max_loop) {
-> >  		nr = max_loop;
-> > -		range = max_loop << part_shift;
-> > +		max_devices = max_loop << part_shift;
-> >  	} else {
-> >  		nr = CONFIG_BLK_DEV_LOOP_MIN_COUNT;
-> > -		range = 1UL << MINORBITS;
-> > +		max_devices = 1UL << MINORBITS;
-> >  	}
-> >  
-> >  	err = misc_register(&loop_misc);
-> > @@ -2301,13 +2425,13 @@ static int __init loop_init(void)
-> >  		goto misc_out;
-> >  	}
-> >  
-> > -	blk_register_region(MKDEV(LOOP_MAJOR, 0), range,
-> > +	blk_register_region(MKDEV(LOOP_MAJOR, 0), max_devices,
-> >  				  THIS_MODULE, loop_probe, NULL, NULL);
-> >  
-> >  	/* pre-create number of devices given by config or max_loop */
-> >  	mutex_lock(&loop_ctl_mutex);
-> >  	for (i = 0; i < nr; i++)
-> > -		loop_add(&lo, i);
-> > +		loop_add(&lo, i, NULL);
-> >  	mutex_unlock(&loop_ctl_mutex);
-> >  
-> >  	printk(KERN_INFO "loop: module loaded\n");
-> > @@ -2329,14 +2453,10 @@ static int loop_exit_cb(int id, void *ptr, void *data)
-> >  
-> >  static void __exit loop_exit(void)
-> >  {
-> > -	unsigned long range;
-> > -
-> > -	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
-> > -
-> >  	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
-> >  	idr_destroy(&loop_index_idr);
-> >  
-> > -	blk_unregister_region(MKDEV(LOOP_MAJOR, 0), range);
-> > +	blk_unregister_region(MKDEV(LOOP_MAJOR, 0), max_devices);
-> >  	unregister_blkdev(LOOP_MAJOR, "loop");
-> >  
-> >  	misc_deregister(&loop_misc);
-> > diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-> > index af75a5ee4094..6fed746b6124 100644
-> > --- a/drivers/block/loop.h
-> > +++ b/drivers/block/loop.h
-> > @@ -17,6 +17,10 @@
-> >  #include <linux/kthread.h>
-> >  #include <uapi/linux/loop.h>
-> >  
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +#include "loopfs/loopfs.h"
-> > +#endif
-> > +
-> >  /* Possible states of device */
-> >  enum {
-> >  	Lo_unbound,
-> > @@ -62,6 +66,9 @@ struct loop_device {
-> >  	struct request_queue	*lo_queue;
-> >  	struct blk_mq_tag_set	tag_set;
-> >  	struct gendisk		*lo_disk;
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	struct lo_loopfs	*lo_info;
-> > +#endif
-> >  };
-> >  
-> >  struct loop_cmd {
-> > @@ -89,6 +96,9 @@ struct loop_func_table {
-> >  }; 
-> >  
-> >  int loop_register_transfer(struct loop_func_table *funcs);
-> > -int loop_unregister_transfer(int number); 
-> > +int loop_unregister_transfer(int number);
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +extern unsigned long max_devices;
-> > +#endif
-> >  
-> >  #endif
-> > diff --git a/drivers/block/loopfs/Makefile b/drivers/block/loopfs/Makefile
-> > new file mode 100644
-> > index 000000000000..87ec703b662e
-> > --- /dev/null
-> > +++ b/drivers/block/loopfs/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +loopfs-y			:= loopfs.o
-> > +obj-$(CONFIG_BLK_DEV_LOOPFS)	+= loopfs.o
-> > diff --git a/drivers/block/loopfs/loopfs.c b/drivers/block/loopfs/loopfs.c
-> > new file mode 100644
-> > index 000000000000..b3461c72b6e7
-> > --- /dev/null
-> > +++ b/drivers/block/loopfs/loopfs.c
-> > @@ -0,0 +1,494 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#include <linux/fs.h>
-> > +#include <linux/fs_parser.h>
-> > +#include <linux/fsnotify.h>
-> > +#include <linux/genhd.h>
-> > +#include <linux/init.h>
-> > +#include <linux/list.h>
-> > +#include <linux/magic.h>
-> > +#include <linux/major.h>
-> > +#include <linux/miscdevice.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mount.h>
-> > +#include <linux/namei.h>
-> > +#include <linux/sched.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/seq_file.h>
-> > +
-> > +#include "../loop.h"
-> > +#include "loopfs.h"
-> > +
-> > +#define FIRST_INODE 1
-> > +#define SECOND_INODE 2
-> > +#define INODE_OFFSET 3
-> > +
-> > +enum loopfs_param {
-> > +	Opt_max,
-> > +};
-> > +
-> > +const struct fs_parameter_spec loopfs_fs_parameters[] = {
-> > +	fsparam_u32("max",	Opt_max),
-> > +	{}
-> > +};
-> > +
-> > +struct loopfs_mount_opts {
-> > +	int max;
-> > +};
-> > +
-> > +struct loopfs_info {
-> > +	kuid_t root_uid;
-> > +	kgid_t root_gid;
-> > +	unsigned long device_count;
-> > +	struct dentry *control_dentry;
-> > +	struct loopfs_mount_opts mount_opts;
-> > +};
-> > +
-> > +static inline struct loopfs_info *LOOPFS_SB(const struct super_block *sb)
-> > +{
-> > +	return sb->s_fs_info;
-> > +}
-> > +
-> > +struct super_block *loopfs_i_sb(const struct inode *inode)
-> > +{
-> > +	if (inode && inode->i_sb->s_magic == LOOPFS_SUPER_MAGIC)
-> > +		return inode->i_sb;
-> > +
-> > +	return NULL;
-> > +}
-> > +
-> > +bool loopfs_device(const struct loop_device *lo)
-> > +{
-> > +	return lo->lo_info != NULL;
-> > +}
-> > +
-> > +struct user_namespace *loopfs_ns(const struct loop_device *lo)
-> > +{
-> > +	if (loopfs_device(lo)) {
-> > +		struct super_block *sb;
-> > +
-> > +		sb = loopfs_i_sb(lo->lo_info->lo_inode);
-> > +		if (sb)
-> > +			return sb->s_user_ns;
-> > +	}
-> > +
-> > +	return &init_user_ns;
-> > +}
-> > +
-> > +bool loopfs_access(const struct inode *first, struct loop_device *lo)
-> > +{
-> > +	return loopfs_device(lo) &&
-> > +	       loopfs_i_sb(first) == loopfs_i_sb(lo->lo_info->lo_inode);
-> > +}
-> > +
-> > +bool loopfs_wants_remove(const struct loop_device *lo)
-> > +{
-> > +	return lo->lo_info && (lo->lo_info->lo_flags & LOOPFS_FLAGS_INACTIVE);
-> > +}
-> > +
-> > +/**
-> > + * loopfs_add - allocate inode from super block of a loopfs mount
-> > + * @lo:		loop device for which we are creating a new device entry
-> > + * @ref_inode:	inode from wich the super block will be taken
-> > + * @device_nr:  device number of the associated disk device
-> > + *
-> > + * This function creates a new device node for @lo.
-> > + * Minor numbers are limited and tracked globally. The
-> > + * function will stash a struct loop_device for the specific loop
-> > + * device in i_private of the inode.
-> > + * It will go on to allocate a new inode from the super block of the
-> > + * filesystem mount, stash a struct loop_device in its i_private field
-> > + * and attach a dentry to that inode.
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + */
-> > +int loopfs_add(struct loop_device *lo, struct inode *ref_inode, dev_t device_nr)
-> > +{
-> > +	int ret;
-> > +	char name[DISK_NAME_LEN];
-> > +	struct super_block *sb;
-> > +	struct loopfs_info *info;
-> > +	struct dentry *root, *dentry;
-> > +	struct inode *inode;
-> > +	struct lo_loopfs *lo_info;
-> > +
-> > +	sb = loopfs_i_sb(ref_inode);
-> > +	if (!sb)
-> > +		return 0;
-> > +
-> > +	if (MAJOR(device_nr) != LOOP_MAJOR)
-> > +		return -EINVAL;
-> > +
-> > +	lo_info = kzalloc(sizeof(struct lo_loopfs), GFP_KERNEL);
-> > +	if (!lo_info) {
-> > +		ret = -ENOMEM;
-> > +		goto err;
-> > +	}
-> > +
-> > +	info = LOOPFS_SB(sb);
-> > +	if ((info->device_count + 1) > info->mount_opts.max) {
-> > +		ret = -ENOSPC;
-> > +		goto err;
-> > +	}
-> > +
-> > +	lo_info->lo_ucount = inc_ucount(sb->s_user_ns,
-> > +					info->root_uid, UCOUNT_LOOP_DEVICES);
-> > +	if (!lo_info->lo_ucount) {
-> > +		ret = -ENOSPC;
-> > +		goto err;
-> > +	}
-> > +
-> > +	if (snprintf(name, sizeof(name), "loop%d", lo->lo_number) >= sizeof(name)) {
-> > +		ret = -EINVAL;
-> > +		goto err;
-> > +	}
-> > +
-> > +	inode = new_inode(sb);
-> > +	if (!inode) {
-> > +		ret = -ENOMEM;
-> > +		goto err;
-> > +	}
-> > +
-> > +	/*
-> > +	 * The i_fop field will be set to the correct fops by the device layer
-> > +	 * when the loop device in this loopfs instance is opened.
-> > +	 */
-> > +	inode->i_ino = MINOR(device_nr) + INODE_OFFSET;
-> > +	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
-> > +	inode->i_uid = info->root_uid;
-> > +	inode->i_gid = info->root_gid;
-> > +	init_special_inode(inode, S_IFBLK | 0600, device_nr);
-> > +
-> > +	root = sb->s_root;
-> > +	inode_lock(d_inode(root));
-> > +	/* look it up */
-> > +	dentry = lookup_one_len(name, root, strlen(name));
-> > +	if (IS_ERR(dentry)) {
-> > +		inode_unlock(d_inode(root));
-> > +		iput(inode);
-> > +		ret = PTR_ERR(dentry);
-> > +		goto err;
-> > +	}
-> > +
-> > +	if (d_really_is_positive(dentry)) {
-> > +		/* already exists */
-> > +		dput(dentry);
-> > +		inode_unlock(d_inode(root));
-> > +		iput(inode);
-> > +		ret = -EEXIST;
-> > +		goto err;
-> > +	}
-> > +
-> > +	d_instantiate(dentry, inode);
-> > +	fsnotify_create(d_inode(root), dentry);
-> > +	inode_unlock(d_inode(root));
-> > +
-> > +	lo_info->lo_inode = inode;
-> > +	lo->lo_info = lo_info;
-> > +	inode->i_private = lo;
-> > +	info->device_count++;
-> > +
-> > +	return 0;
-> > +
-> > +err:
-> > +	if (lo_info->lo_ucount)
-> > +		dec_ucount(lo_info->lo_ucount, UCOUNT_LOOP_DEVICES);
-> > +	kfree(lo_info);
-> > +	return ret;
-> > +}
-> > +
-> > +void loopfs_remove(struct loop_device *lo)
-> > +{
-> > +	struct lo_loopfs *lo_info = lo->lo_info;
-> > +	struct inode *inode;
-> > +	struct super_block *sb;
-> > +	struct dentry *root, *dentry;
-> > +
-> > +	if (!lo_info)
-> > +		return;
-> > +
-> > +	inode = lo_info->lo_inode;
-> > +	if (!inode || !S_ISBLK(inode->i_mode) || imajor(inode) != LOOP_MAJOR)
-> > +		goto out;
-> > +
-> > +	sb = loopfs_i_sb(inode);
-> > +	lo_info->lo_inode = NULL;
-> > +
-> > +	/*
-> > +	 * The root dentry is always the parent dentry since we don't allow
-> > +	 * creation of directories.
-> > +	 */
-> > +	root = sb->s_root;
-> > +
-> > +	inode_lock(d_inode(root));
-> > +	dentry = d_find_any_alias(inode);
-> > +	if (dentry && simple_positive(dentry)) {
-> > +		simple_unlink(d_inode(root), dentry);
-> > +		d_delete(dentry);
-> > +	}
-> > +	dput(dentry);
-> > +	inode_unlock(d_inode(root));
-> > +	LOOPFS_SB(sb)->device_count--;
-> > +
-> > +out:
-> > +	if (lo_info->lo_ucount)
-> > +		dec_ucount(lo_info->lo_ucount, UCOUNT_LOOP_DEVICES);
-> > +	kfree(lo->lo_info);
-> > +	lo->lo_info = NULL;
-> > +}
-> > +
-> > +static void loopfs_fs_context_free(struct fs_context *fc)
-> > +{
-> > +	struct loopfs_mount_opts *ctx = fc->fs_private;
-> > +
-> > +	kfree(ctx);
-> > +}
-> > +
-> > +/**
-> > + * loopfs_loop_ctl_create - create a new loop-control device
-> > + * @sb: super block of the loopfs mount
-> > + *
-> > + * This function creates a new loop-control device node in the loopfs mount
-> > + * referred to by @sb.
-> > + *
-> > + * Return: 0 on success, negative errno on failure
-> > + */
-> > +static int loopfs_loop_ctl_create(struct super_block *sb)
-> > +{
-> > +	struct dentry *dentry;
-> > +	struct inode *inode = NULL;
-> > +	struct dentry *root = sb->s_root;
-> > +	struct loopfs_info *info = sb->s_fs_info;
-> > +
-> > +	if (info->control_dentry)
-> > +		return 0;
-> > +
-> > +	inode = new_inode(sb);
-> > +	if (!inode)
-> > +		return -ENOMEM;
-> > +
-> > +	inode->i_ino = SECOND_INODE;
-> > +	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
-> > +	init_special_inode(inode, S_IFCHR | 0600,
-> > +			   MKDEV(MISC_MAJOR, LOOP_CTRL_MINOR));
-> > +	/*
-> > +	 * The i_fop field will be set to the correct fops by the device layer
-> > +	 * when the loop-control device in this loopfs instance is opened.
-> > +	 */
-> > +	inode->i_uid = info->root_uid;
-> > +	inode->i_gid = info->root_gid;
-> > +
-> > +	dentry = d_alloc_name(root, "loop-control");
-> > +	if (!dentry) {
-> > +		iput(inode);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	info->control_dentry = dentry;
-> > +	d_add(dentry, inode);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static inline bool is_loopfs_control_device(const struct dentry *dentry)
-> > +{
-> > +	return LOOPFS_SB(dentry->d_sb)->control_dentry == dentry;
-> > +}
-> > +
-> > +static int loopfs_rename(struct inode *old_dir, struct dentry *old_dentry,
-> > +			 struct inode *new_dir, struct dentry *new_dentry,
-> > +			 unsigned int flags)
-> > +{
-> > +	if (is_loopfs_control_device(old_dentry) ||
-> > +	    is_loopfs_control_device(new_dentry))
-> > +		return -EPERM;
-> > +
-> > +	return simple_rename(old_dir, old_dentry, new_dir, new_dentry, flags);
-> > +}
-> > +
-> > +static int loopfs_unlink(struct inode *dir, struct dentry *dentry)
-> > +{
-> > +	int ret;
-> > +	struct loop_device *lo;
-> > +
-> > +	if (is_loopfs_control_device(dentry))
-> > +		return -EPERM;
-> > +
-> > +	lo = d_inode(dentry)->i_private;
-> > +	ret = loopfs_rundown_locked(lo);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return simple_unlink(dir, dentry);
-> > +}
-> > +
-> > +static const struct inode_operations loopfs_dir_inode_operations = {
-> > +	.lookup = simple_lookup,
-> > +	.rename = loopfs_rename,
-> > +	.unlink = loopfs_unlink,
-> > +};
-> > +
-> > +static void loopfs_evict_inode(struct inode *inode)
-> > +{
-> > +	struct loop_device *lo = inode->i_private;
-> > +
-> > +	clear_inode(inode);
-> > +
-> > +	if (lo && S_ISBLK(inode->i_mode) && imajor(inode) == LOOP_MAJOR) {
-> > +		loopfs_evict_locked(lo);
-> > +		LOOPFS_SB(inode->i_sb)->device_count--;
-> > +		inode->i_private = NULL;
-> > +	}
-> > +}
-> > +
-> > +static int loopfs_show_options(struct seq_file *seq, struct dentry *root)
-> > +{
-> > +	struct loopfs_info *info = LOOPFS_SB(root->d_sb);
-> > +
-> > +	if (info->mount_opts.max <= max_devices)
-> > +		seq_printf(seq, ",max=%d", info->mount_opts.max);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void loopfs_put_super(struct super_block *sb)
-> > +{
-> > +	struct loopfs_info *info = sb->s_fs_info;
-> > +
-> > +	sb->s_fs_info = NULL;
-> > +	kfree(info);
-> > +}
-> > +
-> > +static const struct super_operations loopfs_super_ops = {
-> > +	.evict_inode    = loopfs_evict_inode,
-> > +	.show_options	= loopfs_show_options,
-> > +	.statfs         = simple_statfs,
-> > +	.put_super	= loopfs_put_super,
-> > +};
-> > +
-> > +static int loopfs_fill_super(struct super_block *sb, struct fs_context *fc)
-> > +{
-> > +	struct loopfs_info *info;
-> > +	struct loopfs_mount_opts *ctx = fc->fs_private;
-> > +	struct inode *inode = NULL;
-> > +
-> > +	sb->s_blocksize = PAGE_SIZE;
-> > +	sb->s_blocksize_bits = PAGE_SHIFT;
-> > +
-> > +	sb->s_iflags &= ~SB_I_NODEV;
-> > +	sb->s_iflags |= SB_I_NOEXEC;
-> > +	sb->s_magic = LOOPFS_SUPER_MAGIC;
-> > +	sb->s_op = &loopfs_super_ops;
-> > +	sb->s_time_gran = 1;
-> > +
-> > +	sb->s_fs_info = kzalloc(sizeof(struct loopfs_info), GFP_KERNEL);
-> > +	if (!sb->s_fs_info)
-> > +		return -ENOMEM;
-> > +	info = sb->s_fs_info;
-> > +
-> > +	info->root_gid = make_kgid(sb->s_user_ns, 0);
-> > +	if (!gid_valid(info->root_gid))
-> > +		info->root_gid = GLOBAL_ROOT_GID;
-> > +	info->root_uid = make_kuid(sb->s_user_ns, 0);
-> > +	if (!uid_valid(info->root_uid))
-> > +		info->root_uid = GLOBAL_ROOT_UID;
-> > +	info->mount_opts.max = ctx->max;
-> > +
-> > +	inode = new_inode(sb);
-> > +	if (!inode)
-> > +		return -ENOMEM;
-> > +
-> > +	inode->i_ino = FIRST_INODE;
-> > +	inode->i_fop = &simple_dir_operations;
-> > +	inode->i_mode = S_IFDIR | 0755;
-> > +	inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
-> > +	inode->i_op = &loopfs_dir_inode_operations;
-> > +	set_nlink(inode, 2);
-> > +
-> > +	sb->s_root = d_make_root(inode);
-> > +	if (!sb->s_root)
-> > +		return -ENOMEM;
-> > +
-> > +	return loopfs_loop_ctl_create(sb);
-> > +}
-> > +
-> > +static int loopfs_fs_context_get_tree(struct fs_context *fc)
-> > +{
-> > +	return get_tree_nodev(fc, loopfs_fill_super);
-> > +}
-> > +
-> > +static int loopfs_fs_context_parse_param(struct fs_context *fc,
-> > +					 struct fs_parameter *param)
-> > +{
-> > +	int opt;
-> > +	struct loopfs_mount_opts *ctx = fc->fs_private;
-> > +	struct fs_parse_result result;
-> > +
-> > +	opt = fs_parse(fc, loopfs_fs_parameters, param, &result);
-> > +	if (opt < 0)
-> > +		return opt;
-> > +
-> > +	switch (opt) {
-> > +	case Opt_max:
-> > +		if (result.uint_32 > max_devices)
-> > +			return invalfc(fc, "Bad value for '%s'", param->key);
-> > +
-> > +		ctx->max = result.uint_32;
-> > +		break;
-> > +	default:
-> > +		return invalfc(fc, "Unsupported parameter '%s'", param->key);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int loopfs_fs_context_reconfigure(struct fs_context *fc)
-> > +{
-> > +	struct loopfs_mount_opts *ctx = fc->fs_private;
-> > +	struct loopfs_info *info = LOOPFS_SB(fc->root->d_sb);
-> > +
-> > +	info->mount_opts.max = ctx->max;
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct fs_context_operations loopfs_fs_context_ops = {
-> > +	.free		= loopfs_fs_context_free,
-> > +	.get_tree	= loopfs_fs_context_get_tree,
-> > +	.parse_param	= loopfs_fs_context_parse_param,
-> > +	.reconfigure	= loopfs_fs_context_reconfigure,
-> > +};
-> > +
-> > +static int loopfs_init_fs_context(struct fs_context *fc)
-> > +{
-> > +	struct loopfs_mount_opts *ctx = fc->fs_private;
-> > +
-> > +	ctx = kzalloc(sizeof(struct loopfs_mount_opts), GFP_KERNEL);
-> > +	if (!ctx)
-> > +		return -ENOMEM;
-> > +
-> > +	ctx->max = max_devices;
-> > +
-> > +	fc->fs_private = ctx;
-> > +
-> > +	fc->ops = &loopfs_fs_context_ops;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct file_system_type loop_fs_type = {
-> > +	.name			= "loop",
-> > +	.init_fs_context	= loopfs_init_fs_context,
-> > +	.parameters		= loopfs_fs_parameters,
-> > +	.kill_sb		= kill_litter_super,
-> > +	.fs_flags		= FS_USERNS_MOUNT,
-> > +};
-> > +
-> > +int __init init_loopfs(void)
-> > +{
-> > +	init_user_ns.ucount_max[UCOUNT_LOOP_DEVICES] = 255;
-> > +	return register_filesystem(&loop_fs_type);
-> > +}
-> > +
-> > +module_init(init_loopfs);
-> > +MODULE_AUTHOR("Christian Brauner <christian.brauner@ubuntu.com>");
-> > +MODULE_DESCRIPTION("Loop device filesystem");
-> > diff --git a/drivers/block/loopfs/loopfs.h b/drivers/block/loopfs/loopfs.h
-> > new file mode 100644
-> > index 000000000000..2ee114aa3fa9
-> > --- /dev/null
-> > +++ b/drivers/block/loopfs/loopfs.h
-> > @@ -0,0 +1,36 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef _LINUX_LOOPFS_FS_H
-> > +#define _LINUX_LOOPFS_FS_H
-> > +
-> > +#include <linux/errno.h>
-> > +#include <linux/fs.h>
-> > +#include <linux/magic.h>
-> > +#include <linux/user_namespace.h>
-> > +
-> > +struct loop_device;
-> > +
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +
-> > +#define LOOPFS_FLAGS_INACTIVE (1 << 0)
-> > +
-> > +struct lo_loopfs {
-> > +	struct ucounts *lo_ucount;
-> > +	struct inode *lo_inode;
-> > +	int lo_flags;
-> > +};
-> > +
-> > +extern struct super_block *loopfs_i_sb(const struct inode *inode);
-> > +extern bool loopfs_device(const struct loop_device *lo);
-> > +extern struct user_namespace *loopfs_ns(const struct loop_device *lo);
-> > +extern bool loopfs_access(const struct inode *first, struct loop_device *lo);
-> > +extern int loopfs_add(struct loop_device *lo, struct inode *ref_inode,
-> > +		      dev_t device_nr);
-> > +extern void loopfs_remove(struct loop_device *lo);
-> > +extern bool loopfs_wants_remove(const struct loop_device *lo);
-> > +extern void loopfs_evict_locked(struct loop_device *lo);
-> > +extern int loopfs_rundown_locked(struct loop_device *lo);
-> > +
-> > +#endif
-> > +
-> > +#endif /* _LINUX_LOOPFS_FS_H */
-> > diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
-> > index 6ef1c7109fc4..04a4891765c0 100644
-> > --- a/include/linux/user_namespace.h
-> > +++ b/include/linux/user_namespace.h
-> > @@ -49,6 +49,9 @@ enum ucount_type {
-> >  #ifdef CONFIG_INOTIFY_USER
-> >  	UCOUNT_INOTIFY_INSTANCES,
-> >  	UCOUNT_INOTIFY_WATCHES,
-> > +#endif
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	UCOUNT_LOOP_DEVICES,
-> >  #endif
-> >  	UCOUNT_COUNTS,
-> >  };
-> > diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-> > index d78064007b17..0817d093a012 100644
-> > --- a/include/uapi/linux/magic.h
-> > +++ b/include/uapi/linux/magic.h
-> > @@ -75,6 +75,7 @@
-> >  #define BINFMTFS_MAGIC          0x42494e4d
-> >  #define DEVPTS_SUPER_MAGIC	0x1cd1
-> >  #define BINDERFS_SUPER_MAGIC	0x6c6f6f70
-> > +#define LOOPFS_SUPER_MAGIC	0x6c6f6f71
-> >  #define FUTEXFS_SUPER_MAGIC	0xBAD1DEA
-> >  #define PIPEFS_MAGIC            0x50495045
-> >  #define PROC_SUPER_MAGIC	0x9fa0
-> > diff --git a/kernel/ucount.c b/kernel/ucount.c
-> > index 11b1596e2542..fb0f6394a8bb 100644
-> > --- a/kernel/ucount.c
-> > +++ b/kernel/ucount.c
-> > @@ -73,6 +73,9 @@ static struct ctl_table user_table[] = {
-> >  #ifdef CONFIG_INOTIFY_USER
-> >  	UCOUNT_ENTRY("max_inotify_instances"),
-> >  	UCOUNT_ENTRY("max_inotify_watches"),
-> > +#endif
-> > +#ifdef CONFIG_BLK_DEV_LOOPFS
-> > +	UCOUNT_ENTRY("max_loop_devices"),
-> >  #endif
-> >  	{ }
-> >  };
-> > -- 
-> > 2.26.1
+changelogs between v1 & v2
+- include missing header file
+
+changelogs between v2 & v3
+- add changelogs
+
+changelogs between v3 & v4
+- fix Kconfig description
+- replace mt6360_pmu_info with mt6360_pmu_data
+- replace probe with probe_new
+- remove unnecessary irq_chip variable
+- remove annotation
+- replace MT6360_MFD_CELL with OF_MFD_CELL
+
+changelogs between v4 & v5
+- remove unnecessary parse dt function
+- use devm_i2c_new_dummy_device
+- add base-commit message
+
+changelogs between v5 & v6
+- review return value
+- remove i2c id_table
+- use GPL license v2
+
+changelogs between v6 & v7
+- add author description
+- replace MT6360_REGMAP_IRQ_REG by REGMAP_IRQ_REG_LINE
+- remove mt6360-private.h
+
+changelogs between v7 & v8
+- fix kbuild auto reboot by include interrupt header
+
+changelogs between v8 & v9
+- fix GPL license out of date
+- add commit message about Acked-for-MFD-by
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2b20329..0f8c341 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -857,6 +857,18 @@ config MFD_MAX8998
+ 	  additional drivers must be enabled in order to use the functionality
+ 	  of the device.
+ 
++config MFD_MT6360
++	tristate "Mediatek MT6360 SubPMIC"
++	select MFD_CORE
++	select REGMAP_I2C
++	select REGMAP_IRQ
++	depends on I2C
++	help
++	  Say Y here to enable MT6360 PMU/PMIC/LDO functional support.
++	  PMU part includes Charger, Flashlight, RGB LED
++	  PMIC part includes 2-channel BUCKs and 2-channel LDOs
++	  LDO part includes 4-channel LDOs
++
+ config MFD_MT6397
+ 	tristate "MediaTek MT6397 PMIC Support"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index b83f172..8c35816 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -238,6 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
++obj-$(CONFIG_MFD_MT6360)	+= mt6360-core.o
+ mt6397-objs	:= mt6397-core.o mt6397-irq.o
+ obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
+diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+new file mode 100644
+index 0000000..9bb63e0
+--- /dev/null
++++ b/drivers/mfd/mt6360-core.c
+@@ -0,0 +1,425 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020 MediaTek Inc.
++ *
++ * Author: Gene Chen <gene_chen@richtek.com>
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/version.h>
++
++#include <linux/mfd/mt6360.h>
++
++/* reg 0 -> 0 ~ 7 */
++#define MT6360_CHG_TREG_EVT		(4)
++#define MT6360_CHG_AICR_EVT		(5)
++#define MT6360_CHG_MIVR_EVT		(6)
++#define MT6360_PWR_RDY_EVT		(7)
++/* REG 1 -> 8 ~ 15 */
++#define MT6360_CHG_BATSYSUV_EVT		(9)
++#define MT6360_FLED_CHG_VINOVP_EVT	(11)
++#define MT6360_CHG_VSYSUV_EVT		(12)
++#define MT6360_CHG_VSYSOV_EVT		(13)
++#define MT6360_CHG_VBATOV_EVT		(14)
++#define MT6360_CHG_VBUSOV_EVT		(15)
++/* REG 2 -> 16 ~ 23 */
++/* REG 3 -> 24 ~ 31 */
++#define MT6360_WD_PMU_DET		(25)
++#define MT6360_WD_PMU_DONE		(26)
++#define MT6360_CHG_TMRI			(27)
++#define MT6360_CHG_ADPBADI		(29)
++#define MT6360_CHG_RVPI			(30)
++#define MT6360_OTPI			(31)
++/* REG 4 -> 32 ~ 39 */
++#define MT6360_CHG_AICCMEASL		(32)
++#define MT6360_CHGDET_DONEI		(34)
++#define MT6360_WDTMRI			(35)
++#define MT6360_SSFINISHI		(36)
++#define MT6360_CHG_RECHGI		(37)
++#define MT6360_CHG_TERMI		(38)
++#define MT6360_CHG_IEOCI		(39)
++/* REG 5 -> 40 ~ 47 */
++#define MT6360_PUMPX_DONEI		(40)
++#define MT6360_BAT_OVP_ADC_EVT		(41)
++#define MT6360_TYPEC_OTP_EVT		(42)
++#define MT6360_ADC_WAKEUP_EVT		(43)
++#define MT6360_ADC_DONEI		(44)
++#define MT6360_BST_BATUVI		(45)
++#define MT6360_BST_VBUSOVI		(46)
++#define MT6360_BST_OLPI			(47)
++/* REG 6 -> 48 ~ 55 */
++#define MT6360_ATTACH_I			(48)
++#define MT6360_DETACH_I			(49)
++#define MT6360_QC30_STPDONE		(51)
++#define MT6360_QC_VBUSDET_DONE		(52)
++#define MT6360_HVDCP_DET		(53)
++#define MT6360_CHGDETI			(54)
++#define MT6360_DCDTI			(55)
++/* REG 7 -> 56 ~ 63 */
++#define MT6360_FOD_DONE_EVT		(56)
++#define MT6360_FOD_OV_EVT		(57)
++#define MT6360_CHRDET_UVP_EVT		(58)
++#define MT6360_CHRDET_OVP_EVT		(59)
++#define MT6360_CHRDET_EXT_EVT		(60)
++#define MT6360_FOD_LR_EVT		(61)
++#define MT6360_FOD_HR_EVT		(62)
++#define MT6360_FOD_DISCHG_FAIL_EVT	(63)
++/* REG 8 -> 64 ~ 71 */
++#define MT6360_USBID_EVT		(64)
++#define MT6360_APWDTRST_EVT		(65)
++#define MT6360_EN_EVT			(66)
++#define MT6360_QONB_RST_EVT		(67)
++#define MT6360_MRSTB_EVT		(68)
++#define MT6360_OTP_EVT			(69)
++#define MT6360_VDDAOV_EVT		(70)
++#define MT6360_SYSUV_EVT		(71)
++/* REG 9 -> 72 ~ 79 */
++#define MT6360_FLED_STRBPIN_EVT		(72)
++#define MT6360_FLED_TORPIN_EVT		(73)
++#define MT6360_FLED_TX_EVT		(74)
++#define MT6360_FLED_LVF_EVT		(75)
++#define MT6360_FLED2_SHORT_EVT		(78)
++#define MT6360_FLED1_SHORT_EVT		(79)
++/* REG 10 -> 80 ~ 87 */
++#define MT6360_FLED2_STRB_EVT		(80)
++#define MT6360_FLED1_STRB_EVT		(81)
++#define MT6360_FLED2_STRB_TO_EVT	(82)
++#define MT6360_FLED1_STRB_TO_EVT	(83)
++#define MT6360_FLED2_TOR_EVT		(84)
++#define MT6360_FLED1_TOR_EVT		(85)
++/* REG 11 -> 88 ~ 95 */
++/* REG 12 -> 96 ~ 103 */
++#define MT6360_BUCK1_PGB_EVT		(96)
++#define MT6360_BUCK1_OC_EVT		(100)
++#define MT6360_BUCK1_OV_EVT		(101)
++#define MT6360_BUCK1_UV_EVT		(102)
++/* REG 13 -> 104 ~ 111 */
++#define MT6360_BUCK2_PGB_EVT		(104)
++#define MT6360_BUCK2_OC_EVT		(108)
++#define MT6360_BUCK2_OV_EVT		(109)
++#define MT6360_BUCK2_UV_EVT		(110)
++/* REG 14 -> 112 ~ 119 */
++#define MT6360_LDO1_OC_EVT		(113)
++#define MT6360_LDO2_OC_EVT		(114)
++#define MT6360_LDO3_OC_EVT		(115)
++#define MT6360_LDO5_OC_EVT		(117)
++#define MT6360_LDO6_OC_EVT		(118)
++#define MT6360_LDO7_OC_EVT		(119)
++/* REG 15 -> 120 ~ 127 */
++#define MT6360_LDO1_PGB_EVT		(121)
++#define MT6360_LDO2_PGB_EVT		(122)
++#define MT6360_LDO3_PGB_EVT		(123)
++#define MT6360_LDO5_PGB_EVT		(125)
++#define MT6360_LDO6_PGB_EVT		(126)
++#define MT6360_LDO7_PGB_EVT		(127)
++
++static const struct regmap_irq mt6360_pmu_irqs[] =  {
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_TREG_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_AICR_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_MIVR_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_PWR_RDY_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_BATSYSUV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED_CHG_VINOVP_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_VSYSUV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_VSYSOV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_VBATOV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_VBUSOV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_WD_PMU_DET, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_WD_PMU_DONE, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_TMRI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_ADPBADI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_RVPI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_OTPI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_AICCMEASL, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHGDET_DONEI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_WDTMRI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_SSFINISHI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_RECHGI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_TERMI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_IEOCI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_PUMPX_DONEI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHG_TREG_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BAT_OVP_ADC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_TYPEC_OTP_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_ADC_WAKEUP_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_ADC_DONEI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BST_BATUVI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BST_VBUSOVI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BST_OLPI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_ATTACH_I, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_DETACH_I, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_QC30_STPDONE, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_QC_VBUSDET_DONE, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_HVDCP_DET, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHGDETI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_DCDTI, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FOD_DONE_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FOD_OV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHRDET_UVP_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHRDET_OVP_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_CHRDET_EXT_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FOD_LR_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FOD_HR_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FOD_DISCHG_FAIL_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_USBID_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_APWDTRST_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_EN_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_QONB_RST_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_MRSTB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_OTP_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_VDDAOV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_SYSUV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED_STRBPIN_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED_TORPIN_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED_TX_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED_LVF_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED2_SHORT_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED1_SHORT_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED2_STRB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED1_STRB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED2_STRB_TO_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED1_STRB_TO_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED2_TOR_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_FLED1_TOR_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_PGB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_OV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK1_UV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_PGB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_OV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_BUCK2_UV_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO1_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO2_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO3_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO5_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO6_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO7_OC_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO1_PGB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO2_PGB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO3_PGB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO5_PGB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO6_PGB_EVT, 8),
++	REGMAP_IRQ_REG_LINE(MT6360_LDO7_PGB_EVT, 8),
++};
++
++static int mt6360_pmu_handle_post_irq(void *irq_drv_data)
++{
++	struct mt6360_pmu_data *mpd = irq_drv_data;
++
++	return regmap_update_bits(mpd->regmap,
++		MT6360_PMU_IRQ_SET, MT6360_IRQ_RETRIG, MT6360_IRQ_RETRIG);
++}
++
++static struct regmap_irq_chip mt6360_pmu_irq_chip = {
++	.irqs = mt6360_pmu_irqs,
++	.num_irqs = ARRAY_SIZE(mt6360_pmu_irqs),
++	.num_regs = MT6360_PMU_IRQ_REGNUM,
++	.mask_base = MT6360_PMU_CHG_MASK1,
++	.status_base = MT6360_PMU_CHG_IRQ1,
++	.ack_base = MT6360_PMU_CHG_IRQ1,
++	.init_ack_masked = true,
++	.use_ack = true,
++	.handle_post_irq = mt6360_pmu_handle_post_irq,
++};
++
++static const struct regmap_config mt6360_pmu_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = MT6360_PMU_MAXREG,
++};
++
++static const struct resource mt6360_adc_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_ADC_DONEI, "adc_donei"),
++};
++
++static const struct resource mt6360_chg_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TREG_EVT, "chg_treg_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_PWR_RDY_EVT, "pwr_rdy_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_BATSYSUV_EVT, "chg_batsysuv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSUV_EVT, "chg_vsysuv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSOV_EVT, "chg_vsysov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBATOV_EVT, "chg_vbatov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBUSOV_EVT, "chg_vbusov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_AICCMEASL, "chg_aiccmeasl"),
++	DEFINE_RES_IRQ_NAMED(MT6360_WDTMRI, "wdtmri"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_RECHGI, "chg_rechgi"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TERMI, "chg_termi"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_IEOCI, "chg_ieoci"),
++	DEFINE_RES_IRQ_NAMED(MT6360_PUMPX_DONEI, "pumpx_donei"),
++	DEFINE_RES_IRQ_NAMED(MT6360_ATTACH_I, "attach_i"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHRDET_EXT_EVT, "chrdet_ext_evt"),
++};
++
++static const struct resource mt6360_led_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED_CHG_VINOVP_EVT, "fled_chg_vinovp_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED_LVF_EVT, "fled_lvf_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_SHORT_EVT, "fled2_short_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_SHORT_EVT, "fled1_short_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_STRB_TO_EVT, "fled2_strb_to_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_STRB_TO_EVT, "fled1_strb_to_evt"),
++};
++
++static const struct resource mt6360_pmic_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_PGB_EVT, "buck1_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OC_EVT, "buck1_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OV_EVT, "buck1_ov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_UV_EVT, "buck1_uv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_PGB_EVT, "buck2_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OC_EVT, "buck2_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OV_EVT, "buck2_ov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_UV_EVT, "buck2_uv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_OC_EVT, "ldo6_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_OC_EVT, "ldo7_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_PGB_EVT, "ldo6_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_PGB_EVT, "ldo7_pgb_evt"),
++};
++
++static const struct resource mt6360_ldo_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_OC_EVT, "ldo1_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_OC_EVT, "ldo2_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_OC_EVT, "ldo3_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_OC_EVT, "ldo5_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_PGB_EVT, "ldo1_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_PGB_EVT, "ldo2_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_PGB_EVT, "ldo3_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_PGB_EVT, "ldo5_pgb_evt"),
++};
++
++static const struct mfd_cell mt6360_devs[] = {
++	OF_MFD_CELL("mt6360_adc", mt6360_adc_resources,
++		    NULL, 0, 0, "mediatek,mt6360_adc"),
++	OF_MFD_CELL("mt6360_chg", mt6360_chg_resources,
++		    NULL, 0, 0, "mediatek,mt6360_chg"),
++	OF_MFD_CELL("mt6360_led", mt6360_led_resources,
++		    NULL, 0, 0, "mediatek,mt6360_led"),
++	OF_MFD_CELL("mt6360_pmic", mt6360_pmic_resources,
++		    NULL, 0, 0, "mediatek,mt6360_pmic"),
++	OF_MFD_CELL("mt6360_ldo", mt6360_ldo_resources,
++		    NULL, 0, 0, "mediatek,mt6360_ldo"),
++	OF_MFD_CELL("mt6360_tcpc", NULL,
++		    NULL, 0, 0, "mediatek,mt6360_tcpc"),
++};
++
++static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
++	MT6360_PMU_SLAVEID,
++	MT6360_PMIC_SLAVEID,
++	MT6360_LDO_SLAVEID,
++	MT6360_TCPC_SLAVEID,
++};
++
++static int mt6360_pmu_probe(struct i2c_client *client)
++{
++	struct mt6360_pmu_data *mpd;
++	unsigned int reg_data;
++	int i, ret;
++
++	mpd = devm_kzalloc(&client->dev, sizeof(*mpd), GFP_KERNEL);
++	if (!mpd)
++		return -ENOMEM;
++
++	mpd->dev = &client->dev;
++	i2c_set_clientdata(client, mpd);
++
++	mpd->regmap = devm_regmap_init_i2c(client, &mt6360_pmu_regmap_config);
++	if (IS_ERR(mpd->regmap)) {
++		dev_err(&client->dev, "Failed to register regmap\n");
++		return PTR_ERR(mpd->regmap);
++	}
++
++	ret = regmap_read(mpd->regmap, MT6360_PMU_DEV_INFO, &reg_data);
++	if (ret) {
++		dev_err(&client->dev, "Device not found\n");
++		return ret;
++	}
++
++	mpd->chip_rev = reg_data & CHIP_REV_MASK;
++	if (mpd->chip_rev != CHIP_VEN_MT6360) {
++		dev_err(&client->dev, "Device not supported\n");
++		return -ENODEV;
++	}
++
++	mt6360_pmu_irq_chip.irq_drv_data = mpd;
++	ret = devm_regmap_add_irq_chip(&client->dev, mpd->regmap, client->irq,
++				       IRQF_TRIGGER_FALLING, 0,
++				       &mt6360_pmu_irq_chip, &mpd->irq_data);
++	if (ret) {
++		dev_err(&client->dev, "Failed to add Regmap IRQ Chip\n");
++		return ret;
++	}
++
++	mpd->i2c[0] = client;
++	for (i = 1; i < MT6360_SLAVE_MAX; i++) {
++		mpd->i2c[i] = devm_i2c_new_dummy_device(&client->dev,
++							client->adapter,
++							mt6360_slave_addr[i]);
++		if (IS_ERR(mpd->i2c[i])) {
++			dev_err(&client->dev,
++				"Failed to get new dummy I2C device for address 0x%x",
++				mt6360_slave_addr[i]);
++			return PTR_ERR(mpd->i2c[i]);
++		}
++		i2c_set_clientdata(mpd->i2c[i], mpd);
++	}
++
++	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
++				   mt6360_devs, ARRAY_SIZE(mt6360_devs), NULL,
++				   0, regmap_irq_get_domain(mpd->irq_data));
++	if (ret) {
++		dev_err(&client->dev,
++			"Failed to register subordinate devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int __maybe_unused mt6360_pmu_suspend(struct device *dev)
++{
++	struct i2c_client *i2c = to_i2c_client(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(i2c->irq);
++
++	return 0;
++}
++
++static int __maybe_unused mt6360_pmu_resume(struct device *dev)
++{
++
++	struct i2c_client *i2c = to_i2c_client(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(i2c->irq);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(mt6360_pmu_pm_ops,
++			 mt6360_pmu_suspend, mt6360_pmu_resume);
++
++static const struct of_device_id __maybe_unused mt6360_pmu_of_id[] = {
++	{ .compatible = "mediatek,mt6360_pmu", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
++
++static struct i2c_driver mt6360_pmu_driver = {
++	.driver = {
++		.pm = &mt6360_pmu_pm_ops,
++		.of_match_table = of_match_ptr(mt6360_pmu_of_id),
++	},
++	.probe_new = mt6360_pmu_probe,
++};
++module_i2c_driver(mt6360_pmu_driver);
++
++MODULE_AUTHOR("Gene Chen <gene_chen@richtek.com>");
++MODULE_DESCRIPTION("MT6360 PMU I2C Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
+new file mode 100644
+index 0000000..ea13040
+--- /dev/null
++++ b/include/linux/mfd/mt6360.h
+@@ -0,0 +1,240 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2020 MediaTek Inc.
++ */
++
++#ifndef __MT6360_H__
++#define __MT6360_H__
++
++#include <linux/regmap.h>
++
++enum {
++	MT6360_SLAVE_PMU = 0,
++	MT6360_SLAVE_PMIC,
++	MT6360_SLAVE_LDO,
++	MT6360_SLAVE_TCPC,
++	MT6360_SLAVE_MAX,
++};
++
++#define MT6360_PMU_SLAVEID	(0x34)
++#define MT6360_PMIC_SLAVEID	(0x1A)
++#define MT6360_LDO_SLAVEID	(0x64)
++#define MT6360_TCPC_SLAVEID	(0x4E)
++
++struct mt6360_pmu_data {
++	struct i2c_client *i2c[MT6360_SLAVE_MAX];
++	struct device *dev;
++	struct regmap *regmap;
++	struct regmap_irq_chip_data *irq_data;
++	unsigned int chip_rev;
++};
++
++/* PMU register defininition */
++#define MT6360_PMU_DEV_INFO			(0x00)
++#define MT6360_PMU_CORE_CTRL1			(0x01)
++#define MT6360_PMU_RST1				(0x02)
++#define MT6360_PMU_CRCEN			(0x03)
++#define MT6360_PMU_RST_PAS_CODE1		(0x04)
++#define MT6360_PMU_RST_PAS_CODE2		(0x05)
++#define MT6360_PMU_CORE_CTRL2			(0x06)
++#define MT6360_PMU_TM_PAS_CODE1			(0x07)
++#define MT6360_PMU_TM_PAS_CODE2			(0x08)
++#define MT6360_PMU_TM_PAS_CODE3			(0x09)
++#define MT6360_PMU_TM_PAS_CODE4			(0x0A)
++#define MT6360_PMU_IRQ_IND			(0x0B)
++#define MT6360_PMU_IRQ_MASK			(0x0C)
++#define MT6360_PMU_IRQ_SET			(0x0D)
++#define MT6360_PMU_SHDN_CTRL			(0x0E)
++#define MT6360_PMU_TM_INF			(0x0F)
++#define MT6360_PMU_I2C_CTRL			(0x10)
++#define MT6360_PMU_CHG_CTRL1			(0x11)
++#define MT6360_PMU_CHG_CTRL2			(0x12)
++#define MT6360_PMU_CHG_CTRL3			(0x13)
++#define MT6360_PMU_CHG_CTRL4			(0x14)
++#define MT6360_PMU_CHG_CTRL5			(0x15)
++#define MT6360_PMU_CHG_CTRL6			(0x16)
++#define MT6360_PMU_CHG_CTRL7			(0x17)
++#define MT6360_PMU_CHG_CTRL8			(0x18)
++#define MT6360_PMU_CHG_CTRL9			(0x19)
++#define MT6360_PMU_CHG_CTRL10			(0x1A)
++#define MT6360_PMU_CHG_CTRL11			(0x1B)
++#define MT6360_PMU_CHG_CTRL12			(0x1C)
++#define MT6360_PMU_CHG_CTRL13			(0x1D)
++#define MT6360_PMU_CHG_CTRL14			(0x1E)
++#define MT6360_PMU_CHG_CTRL15			(0x1F)
++#define MT6360_PMU_CHG_CTRL16			(0x20)
++#define MT6360_PMU_CHG_AICC_RESULT		(0x21)
++#define MT6360_PMU_DEVICE_TYPE			(0x22)
++#define MT6360_PMU_QC_CONTROL1			(0x23)
++#define MT6360_PMU_QC_CONTROL2			(0x24)
++#define MT6360_PMU_QC30_CONTROL1		(0x25)
++#define MT6360_PMU_QC30_CONTROL2		(0x26)
++#define MT6360_PMU_USB_STATUS1			(0x27)
++#define MT6360_PMU_QC_STATUS1			(0x28)
++#define MT6360_PMU_QC_STATUS2			(0x29)
++#define MT6360_PMU_CHG_PUMP			(0x2A)
++#define MT6360_PMU_CHG_CTRL17			(0x2B)
++#define MT6360_PMU_CHG_CTRL18			(0x2C)
++#define MT6360_PMU_CHRDET_CTRL1			(0x2D)
++#define MT6360_PMU_CHRDET_CTRL2			(0x2E)
++#define MT6360_PMU_DPDN_CTRL			(0x2F)
++#define MT6360_PMU_CHG_HIDDEN_CTRL1		(0x30)
++#define MT6360_PMU_CHG_HIDDEN_CTRL2		(0x31)
++#define MT6360_PMU_CHG_HIDDEN_CTRL3		(0x32)
++#define MT6360_PMU_CHG_HIDDEN_CTRL4		(0x33)
++#define MT6360_PMU_CHG_HIDDEN_CTRL5		(0x34)
++#define MT6360_PMU_CHG_HIDDEN_CTRL6		(0x35)
++#define MT6360_PMU_CHG_HIDDEN_CTRL7		(0x36)
++#define MT6360_PMU_CHG_HIDDEN_CTRL8		(0x37)
++#define MT6360_PMU_CHG_HIDDEN_CTRL9		(0x38)
++#define MT6360_PMU_CHG_HIDDEN_CTRL10		(0x39)
++#define MT6360_PMU_CHG_HIDDEN_CTRL11		(0x3A)
++#define MT6360_PMU_CHG_HIDDEN_CTRL12		(0x3B)
++#define MT6360_PMU_CHG_HIDDEN_CTRL13		(0x3C)
++#define MT6360_PMU_CHG_HIDDEN_CTRL14		(0x3D)
++#define MT6360_PMU_CHG_HIDDEN_CTRL15		(0x3E)
++#define MT6360_PMU_CHG_HIDDEN_CTRL16		(0x3F)
++#define MT6360_PMU_CHG_HIDDEN_CTRL17		(0x40)
++#define MT6360_PMU_CHG_HIDDEN_CTRL18		(0x41)
++#define MT6360_PMU_CHG_HIDDEN_CTRL19		(0x42)
++#define MT6360_PMU_CHG_HIDDEN_CTRL20		(0x43)
++#define MT6360_PMU_CHG_HIDDEN_CTRL21		(0x44)
++#define MT6360_PMU_CHG_HIDDEN_CTRL22		(0x45)
++#define MT6360_PMU_CHG_HIDDEN_CTRL23		(0x46)
++#define MT6360_PMU_CHG_HIDDEN_CTRL24		(0x47)
++#define MT6360_PMU_CHG_HIDDEN_CTRL25		(0x48)
++#define MT6360_PMU_BC12_CTRL			(0x49)
++#define MT6360_PMU_CHG_STAT			(0x4A)
++#define MT6360_PMU_RESV1			(0x4B)
++#define MT6360_PMU_TYPEC_OTP_TH_SEL_CODEH	(0x4E)
++#define MT6360_PMU_TYPEC_OTP_TH_SEL_CODEL	(0x4F)
++#define MT6360_PMU_TYPEC_OTP_HYST_TH		(0x50)
++#define MT6360_PMU_TYPEC_OTP_CTRL		(0x51)
++#define MT6360_PMU_ADC_BAT_DATA_H		(0x52)
++#define MT6360_PMU_ADC_BAT_DATA_L		(0x53)
++#define MT6360_PMU_IMID_BACKBST_ON		(0x54)
++#define MT6360_PMU_IMID_BACKBST_OFF		(0x55)
++#define MT6360_PMU_ADC_CONFIG			(0x56)
++#define MT6360_PMU_ADC_EN2			(0x57)
++#define MT6360_PMU_ADC_IDLE_T			(0x58)
++#define MT6360_PMU_ADC_RPT_1			(0x5A)
++#define MT6360_PMU_ADC_RPT_2			(0x5B)
++#define MT6360_PMU_ADC_RPT_3			(0x5C)
++#define MT6360_PMU_ADC_RPT_ORG1			(0x5D)
++#define MT6360_PMU_ADC_RPT_ORG2			(0x5E)
++#define MT6360_PMU_BAT_OVP_TH_SEL_CODEH		(0x5F)
++#define MT6360_PMU_BAT_OVP_TH_SEL_CODEL		(0x60)
++#define MT6360_PMU_CHG_CTRL19			(0x61)
++#define MT6360_PMU_VDDASUPPLY			(0x62)
++#define MT6360_PMU_BC12_MANUAL			(0x63)
++#define MT6360_PMU_CHGDET_FUNC			(0x64)
++#define MT6360_PMU_FOD_CTRL			(0x65)
++#define MT6360_PMU_CHG_CTRL20			(0x66)
++#define MT6360_PMU_CHG_HIDDEN_CTRL26		(0x67)
++#define MT6360_PMU_CHG_HIDDEN_CTRL27		(0x68)
++#define MT6360_PMU_RESV2			(0x69)
++#define MT6360_PMU_USBID_CTRL1			(0x6D)
++#define MT6360_PMU_USBID_CTRL2			(0x6E)
++#define MT6360_PMU_USBID_CTRL3			(0x6F)
++#define MT6360_PMU_FLED_CFG			(0x70)
++#define MT6360_PMU_RESV3			(0x71)
++#define MT6360_PMU_FLED1_CTRL			(0x72)
++#define MT6360_PMU_FLED_STRB_CTRL		(0x73)
++#define MT6360_PMU_FLED1_STRB_CTRL2		(0x74)
++#define MT6360_PMU_FLED1_TOR_CTRL		(0x75)
++#define MT6360_PMU_FLED2_CTRL			(0x76)
++#define MT6360_PMU_RESV4			(0x77)
++#define MT6360_PMU_FLED2_STRB_CTRL2		(0x78)
++#define MT6360_PMU_FLED2_TOR_CTRL		(0x79)
++#define MT6360_PMU_FLED_VMIDTRK_CTRL1		(0x7A)
++#define MT6360_PMU_FLED_VMID_RTM		(0x7B)
++#define MT6360_PMU_FLED_VMIDTRK_CTRL2		(0x7C)
++#define MT6360_PMU_FLED_PWSEL			(0x7D)
++#define MT6360_PMU_FLED_EN			(0x7E)
++#define MT6360_PMU_FLED_Hidden1			(0x7F)
++#define MT6360_PMU_RGB_EN			(0x80)
++#define MT6360_PMU_RGB1_ISNK			(0x81)
++#define MT6360_PMU_RGB2_ISNK			(0x82)
++#define MT6360_PMU_RGB3_ISNK			(0x83)
++#define MT6360_PMU_RGB_ML_ISNK			(0x84)
++#define MT6360_PMU_RGB1_DIM			(0x85)
++#define MT6360_PMU_RGB2_DIM			(0x86)
++#define MT6360_PMU_RGB3_DIM			(0x87)
++#define MT6360_PMU_RESV5			(0x88)
++#define MT6360_PMU_RGB12_Freq			(0x89)
++#define MT6360_PMU_RGB34_Freq			(0x8A)
++#define MT6360_PMU_RGB1_Tr			(0x8B)
++#define MT6360_PMU_RGB1_Tf			(0x8C)
++#define MT6360_PMU_RGB1_TON_TOFF		(0x8D)
++#define MT6360_PMU_RGB2_Tr			(0x8E)
++#define MT6360_PMU_RGB2_Tf			(0x8F)
++#define MT6360_PMU_RGB2_TON_TOFF		(0x90)
++#define MT6360_PMU_RGB3_Tr			(0x91)
++#define MT6360_PMU_RGB3_Tf			(0x92)
++#define MT6360_PMU_RGB3_TON_TOFF		(0x93)
++#define MT6360_PMU_RGB_Hidden_CTRL1		(0x94)
++#define MT6360_PMU_RGB_Hidden_CTRL2		(0x95)
++#define MT6360_PMU_RESV6			(0x97)
++#define MT6360_PMU_SPARE1			(0x9A)
++#define MT6360_PMU_SPARE2			(0xA0)
++#define MT6360_PMU_SPARE3			(0xB0)
++#define MT6360_PMU_SPARE4			(0xC0)
++#define MT6360_PMU_CHG_IRQ1			(0xD0)
++#define MT6360_PMU_CHG_IRQ2			(0xD1)
++#define MT6360_PMU_CHG_IRQ3			(0xD2)
++#define MT6360_PMU_CHG_IRQ4			(0xD3)
++#define MT6360_PMU_CHG_IRQ5			(0xD4)
++#define MT6360_PMU_CHG_IRQ6			(0xD5)
++#define MT6360_PMU_QC_IRQ			(0xD6)
++#define MT6360_PMU_FOD_IRQ			(0xD7)
++#define MT6360_PMU_BASE_IRQ			(0xD8)
++#define MT6360_PMU_FLED_IRQ1			(0xD9)
++#define MT6360_PMU_FLED_IRQ2			(0xDA)
++#define MT6360_PMU_RGB_IRQ			(0xDB)
++#define MT6360_PMU_BUCK1_IRQ			(0xDC)
++#define MT6360_PMU_BUCK2_IRQ			(0xDD)
++#define MT6360_PMU_LDO_IRQ1			(0xDE)
++#define MT6360_PMU_LDO_IRQ2			(0xDF)
++#define MT6360_PMU_CHG_STAT1			(0xE0)
++#define MT6360_PMU_CHG_STAT2			(0xE1)
++#define MT6360_PMU_CHG_STAT3			(0xE2)
++#define MT6360_PMU_CHG_STAT4			(0xE3)
++#define MT6360_PMU_CHG_STAT5			(0xE4)
++#define MT6360_PMU_CHG_STAT6			(0xE5)
++#define MT6360_PMU_QC_STAT			(0xE6)
++#define MT6360_PMU_FOD_STAT			(0xE7)
++#define MT6360_PMU_BASE_STAT			(0xE8)
++#define MT6360_PMU_FLED_STAT1			(0xE9)
++#define MT6360_PMU_FLED_STAT2			(0xEA)
++#define MT6360_PMU_RGB_STAT			(0xEB)
++#define MT6360_PMU_BUCK1_STAT			(0xEC)
++#define MT6360_PMU_BUCK2_STAT			(0xED)
++#define MT6360_PMU_LDO_STAT1			(0xEE)
++#define MT6360_PMU_LDO_STAT2			(0xEF)
++#define MT6360_PMU_CHG_MASK1			(0xF0)
++#define MT6360_PMU_CHG_MASK2			(0xF1)
++#define MT6360_PMU_CHG_MASK3			(0xF2)
++#define MT6360_PMU_CHG_MASK4			(0xF3)
++#define MT6360_PMU_CHG_MASK5			(0xF4)
++#define MT6360_PMU_CHG_MASK6			(0xF5)
++#define MT6360_PMU_QC_MASK			(0xF6)
++#define MT6360_PMU_FOD_MASK			(0xF7)
++#define MT6360_PMU_BASE_MASK			(0xF8)
++#define MT6360_PMU_FLED_MASK1			(0xF9)
++#define MT6360_PMU_FLED_MASK2			(0xFA)
++#define MT6360_PMU_FAULTB_MASK			(0xFB)
++#define MT6360_PMU_BUCK1_MASK			(0xFC)
++#define MT6360_PMU_BUCK2_MASK			(0xFD)
++#define MT6360_PMU_LDO_MASK1			(0xFE)
++#define MT6360_PMU_LDO_MASK2			(0xFF)
++#define MT6360_PMU_MAXREG			(MT6360_PMU_LDO_MASK2)
++
++/* MT6360_PMU_IRQ_SET */
++#define MT6360_PMU_IRQ_REGNUM	(MT6360_PMU_LDO_IRQ2 - MT6360_PMU_CHG_IRQ1 + 1)
++#define MT6360_IRQ_RETRIG	BIT(2)
++
++#define CHIP_VEN_MASK				(0xF0)
++#define CHIP_VEN_MT6360				(0x50)
++#define CHIP_REV_MASK				(0x0F)
++
++#endif /* __MT6360_H__ */
+-- 
+2.7.4
+
