@@ -2,105 +2,199 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B2FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1459C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A1120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA14C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IKMTdZ84"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LV6aRByS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgDWNY7 (ORCPT
+        id S1727970AbgDWN1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:24:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28808 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726224AbgDWNY6 (ORCPT
+        Thu, 23 Apr 2020 09:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726224AbgDWN1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:24:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587648297;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RuDyAj20bmjbvYj7VsEeP7XEemVCDcYopHSDDueemOo=;
-        b=IKMTdZ841e3eRC6MqAXGGG083JUfn7NQC/xNrOs017m6jk9jMYSbYTsVEk6j0/C6F1None
-        m4dU9LJ0hZpPcV3zXLQ+Xmnw1DixrFh6B/GhaIJJK1uwo90HWPnoUJ+H4zg5M9D4rj7gvR
-        goWPbIvPQF1Zlx0BWMJEC++gbbCntv0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22--jOYvudAO7eUPhq-S7CEWA-1; Thu, 23 Apr 2020 09:24:53 -0400
-X-MC-Unique: -jOYvudAO7eUPhq-S7CEWA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC00380B70F;
-        Thu, 23 Apr 2020 13:24:51 +0000 (UTC)
-Received: from krava (ovpn-115-157.ams2.redhat.com [10.36.115.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52D1C619C0;
-        Thu, 23 Apr 2020 13:24:48 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 15:24:46 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Thu, 23 Apr 2020 09:27:38 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BD1C08E934;
+        Thu, 23 Apr 2020 06:27:37 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 20so6283845qkl.10;
+        Thu, 23 Apr 2020 06:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PBO/huwjMgg9NnrGSfkA1Ck3Vxe5Dau0BkIUNgPRhxE=;
+        b=LV6aRByS0/NKmV185YEDPXdiDtbivnTwqfmJouFe8IxgAJE+z4jQW2cfV+y5iiH9OO
+         Tg4t3sMjHFfneJ2+7pZSoA9Lfz8FgrA98+sO2Ei1ZhFnfVGxYnh/m+Pcp/m+bR+nlgDi
+         TU62x0veRql012jdd9qvVV1NjNu1FZc1Nc+KLIYOxkOrOIq57mRltosgIK0f/uylmuI6
+         3K6wDcig7lcqqG+jQdnmWS2Fs/rXtooUuJS8CKwp5prgDB0sI8VJz4QnZBiCoXhBCSoD
+         INRByZxsFz6ZkXfVcqWtVuBU0WqW6nJaiLDCCrF4nzCEcceT3oMD5+fZgF6Z5JC4mQmp
+         X02Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PBO/huwjMgg9NnrGSfkA1Ck3Vxe5Dau0BkIUNgPRhxE=;
+        b=AGO7jV2uMghcZvJzsLKYNZy6Y9+V74lxtPSKfoWf6ri/djC8gU7d97SpjLgPlVmL8H
+         srohSxdRTdiD+PyZii+ljQBF3d/L8Ghy/2IneXwi1p1JH040R47I8mAVYmCLVXuWfNqr
+         qePknMyooAm+3zCByHHSM6l4yo/6T5oLPJ78N9WUZlojPaFRrNSEA32p3pAY7AnHaEdW
+         wkhMaiY7bkB45gi3UtdChknjlZnyv0cwnWlLyRPDOJHi6OrfhnDYoRafUEv6xFXpQUE8
+         6Qw9N/DCZLMZUCJbSAQh7eYHdV5YgdC9SkzF7gUvdqQ0+jGMjnLeW2A4lARUE8/G+iYv
+         T+Ew==
+X-Gm-Message-State: AGi0PuaDAb8jAwwPG+A5A1W58FsHZRBN0+MbnYME5pefp/4HdcWvxhrz
+        VqmAadGQ4H8PK2qolytqiPUGjLTWBoI=
+X-Google-Smtp-Source: APiQypJn93NmNkcmfJ+58vnwklwfEHHiRtLig5NvBMRtXxVXK3rVk8GVLq4gz/4gx8gQi9EwKfmEEw==
+X-Received: by 2002:a37:67c4:: with SMTP id b187mr3712421qkc.296.1587648456625;
+        Thu, 23 Apr 2020 06:27:36 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id h23sm1505818qkk.90.2020.04.23.06.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 06:27:35 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9F48C409A3; Thu, 23 Apr 2020 10:27:33 -0300 (-03)
+Date:   Thu, 23 Apr 2020 10:27:33 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Joe Mario <jmario@redhat.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 3/3] perf stat: Add --metrics-file option
-Message-ID: <20200423132446.GN1136647@krava>
-References: <20200421181337.988681-1-jolsa@kernel.org>
- <20200421181337.988681-4-jolsa@kernel.org>
- <20200421183615.GD608746@tassilo.jf.intel.com>
- <20200421185252.GA962614@krava>
- <20200421200630.GG608746@tassilo.jf.intel.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH v2 3/4] perf tool: make Perf tool aware of SELinux access
+ control
+Message-ID: <20200423132733.GC19437@kernel.org>
+References: <66f2975b-4a69-b428-7dc5-d9aa40b3c673@linux.intel.com>
+ <7459371d-2ec8-4700-13b6-09b73998cc7c@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200421200630.GG608746@tassilo.jf.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <7459371d-2ec8-4700-13b6-09b73998cc7c@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 01:06:30PM -0700, Andi Kleen wrote:
-> > > Also there are some asserts that can be triggered by expressions. I think
-> > > you should fix those too and convert them to errors.
-> > 
-> > do you have some details on this? examples of those failures?
+Em Wed, Apr 22, 2020 at 05:45:34PM +0300, Alexey Budankov escreveu:
 > 
-> At a minimum 
+> Implement SELinux sysfs check to see if the system is in enforcing
+> mode and print warning message with pointers to check audit logs.
 > 
-> /* Caller must make sure id is allocated */
-> void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
-> {
->         int idx;
->         assert(ctx->num_ids < MAX_PARSE_ID);
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  tools/perf/util/cloexec.c |  4 ++--
+>  tools/perf/util/evsel.c   | 40 +++++++++++++++++++++++----------------
+>  2 files changed, 26 insertions(+), 18 deletions(-)
 > 
+> diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
+> index a12872f2856a..9c8ec816261b 100644
+> --- a/tools/perf/util/cloexec.c
+> +++ b/tools/perf/util/cloexec.c
+> @@ -65,7 +65,7 @@ static int perf_flag_probe(void)
+>  		return 1;
+>  	}
+>  
+> -	WARN_ONCE(err != EINVAL && err != EBUSY,
+> +	WARN_ONCE(err != EINVAL && err != EBUSY && err != EACCES,
+>  		  "perf_event_open(..., PERF_FLAG_FD_CLOEXEC) failed with unexpected error %d (%s)\n",
+>  		  err, str_error_r(err, sbuf, sizeof(sbuf)));
+>  
+> @@ -83,7 +83,7 @@ static int perf_flag_probe(void)
+>  	if (fd >= 0)
+>  		close(fd);
+>  
+> -	if (WARN_ONCE(fd < 0 && err != EBUSY,
+> +	if (WARN_ONCE(fd < 0 && err != EBUSY && err != EACCES,
+>  		      "perf_event_open(..., 0) failed unexpectedly with error %d (%s)\n",
+>  		      err, str_error_r(err, sbuf, sizeof(sbuf))))
+>  		return -1;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 9fa92649adb4..82492ca12405 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2514,32 +2514,40 @@ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
+>  			      int err, char *msg, size_t size)
+>  {
+>  	char sbuf[STRERR_BUFSIZE];
+> -	int printed = 0;
+> +	int printed = 0, enforced = 0;
+>  
+>  	switch (err) {
+>  	case EPERM:
+>  	case EACCES:
+> +		printed += scnprintf(msg + printed, size - printed,
+> +			"Access to performance monitoring and observability operations is limited.\n");
+> +
+> +		if (!sysfs__read_int("fs/selinux/enforce", &enforced)) {
+> +			if (enforced) {
+> +				printed += scnprintf(msg + printed, size - printed,
+> +					"Enforced MAC policy settings (SELinux) can limit access to performance\n"
+> +					"monitoring and observability operations. Inspect system audit records for\n"
+> +					"more perf_event access control information and adjusting the policy.\n");
+> +			}
+> +		}
+> +
+>  		if (err == EPERM)
+> -			printed = scnprintf(msg, size,
+> -				"No permission to enable %s event.\n\n",
+> +			printed += scnprintf(msg, size,
+> +				"No permission to enable %s event.\n",
+>  				perf_evsel__name(evsel));
+
+This removal of a newline doesn't seem necessary to this patch.
+  
+>  		return scnprintf(msg + printed, size - printed,
+> -		 "You may not have permission to collect %sstats.\n\n"
+> -		 "Consider tweaking /proc/sys/kernel/perf_event_paranoid,\n"
+> -		 "which controls use of the performance events system by\n"
+> -		 "unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).\n\n"
+> -		 "The current value is %d:\n\n"
+> +		 "Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open\n"
+> +		 "access to performance monitoring and observability operations for users\n"
+> +		 "without CAP_PERFMON capability. perf_event_paranoid setting is %d:\n"
+
+Here we need as well to check if the kernel/libcap supports CAP_PERFMON
+to provide a better error message.
+
+>  		 "  -1: Allow use of (almost) all events by all users\n"
+>  		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
+> -		 ">= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
+> -		 "      Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN\n"
+> -		 ">= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
+> -		 ">= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN\n\n"
+> -		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
+> -		 "	kernel.perf_event_paranoid = -1\n" ,
+> -				 target->system_wide ? "system-wide " : "",
+> -				 perf_event_paranoid());
+> +		 ">= 0: Disallow raw and ftrace function tracepoint access\n"
+> +		 ">= 1: Disallow CPU event access\n"
+> +		 ">= 2: Disallow kernel profiling\n"
+> +		 "To make the adjusted perf_event_paranoid setting permanent preserve it\n"
+> +		 "in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)",
+> +		 perf_event_paranoid());
+>  	case ENOENT:
+>  		return scnprintf(msg, size, "The %s event is not supported.",
+>  				 perf_evsel__name(evsel));
+> -- 
+> 2.24.1
 > 
-> -Andi
 > 
 
-I did it and then I realized this is already caught in the parsing
-code (expr.y) with this check:
+-- 
 
-        if (ctx->num_ids + 1 >= EXPR_MAX_OTHER) {
-                pr_err("failed: way too many variables\n");
-                YYABORT;
-        }
-
-so that assert can stay there and shouldn't be ever hit
-
-jirka
-
+- Arnaldo
