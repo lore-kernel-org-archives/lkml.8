@@ -2,132 +2,196 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D30C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5AFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D04A21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F54214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:54:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HSnjqWp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgDWHvY (ORCPT
+        id S1726445AbgDWHyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37846 "EHLO
+        Thu, 23 Apr 2020 03:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgDWHto (ORCPT
+        with ESMTP id S1725562AbgDWHyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:49:44 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081B9C08C5F2;
-        Thu, 23 Apr 2020 00:49:43 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWc2-0008Jq-OI; Thu, 23 Apr 2020 09:49:34 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 58D411C0450;
-        Thu, 23 Apr 2020 09:49:34 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 07:49:33 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Also consider .entry.text as noinstr
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416115119.525037514@infradead.org>
-References: <20200416115119.525037514@infradead.org>
+        Thu, 23 Apr 2020 03:54:04 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0417BC03C1AB
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:54:04 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j14so3963253lfg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4UEOdXwxEm6LM9DNvnfZm1b3ROrLaqHjn0hz9sIJcG0=;
+        b=HSnjqWp/6qALA+mTUDwmajzvAkmImFFkRkVElj1CcoJnHeBkUqmj8M269JuUj7VxwP
+         IE9WFiYC2WVF51462BBD5QcmrMpiJDvBGyY+nds/loi04iOEB/39HrWg6weyIOY+mwCW
+         mBucRmf/Fh8xf6Q5ZKPOLnGKtCwqvjl7Y7nTfAfiT/BB/cjlXhXS5oMJeV9Jga1Zkc2M
+         NxVcPXgtJs/k6+6AhqrEgl4TUEtUTut+q7cVRm44M2RHRYgfK5ZEqHdSx205CUG6gTlh
+         eNkmMsa9VkySIOuKNGSsQpcfGpZXeaH+Pq0wBEkG2cZSoorSDDeUL/xXxqcXM+nSaiXL
+         A5dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4UEOdXwxEm6LM9DNvnfZm1b3ROrLaqHjn0hz9sIJcG0=;
+        b=UbTCENTgLsGGj6BMWmXG1g9DlAgRWY4cWNz1aN14RaJTTU5pPQxGIPVUdax72m1tHY
+         Z0RGlWK5rOxKtteiYvtqSNHN9y/9y6QLPZa08sfZYUGB5HubZkW0WPBOLjUw6oNE2Axf
+         J36inRabIgCTMyvczwu/DB60r2+RESjrpxDGEzWbujE5FkCH1bu8kATJA6wiyeWCnRIi
+         ABQGMRbTEfyU33OZO6jRbtKDkCrYNQn+bnEKbs3RD3uxOoClmV/NchvWHulrg6ozr996
+         lARN29NRAR+7FK+BcRP5vO++w4ual2ndwpIFpB8PrJAP9UGrHA0NYAC6LBq8lWazftJU
+         BFUQ==
+X-Gm-Message-State: AGi0PuYT6lYEoSbuvxCFGn8vMrICdBS59Rg8jLK+dHnoG8hEVBRPw+OP
+        jzcXzVdcId/3Es5QH7zLNlN+SH5hAJ4+uta9Y4xjKcSx15PRzw==
+X-Google-Smtp-Source: APiQypKrl1JJiWs2QGieTdGaz/MFZsBlr4BPgyd5GnMJ1EmOHaWBJt7et4F+l23ntDj8Wl8ea9hRxWe0kRUpzTtYHvw=
+X-Received: by 2002:ac2:4da7:: with SMTP id h7mr1565819lfe.95.1587628442305;
+ Thu, 23 Apr 2020 00:54:02 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158762817396.28353.10539514652564906695.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200422095031.522502705@linuxfoundation.org>
+In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 23 Apr 2020 13:23:50 +0530
+Message-ID: <CA+G9fYvzMkSyzQzsBeHgc1ps9s_SDnU3qz8fAXEwD-U=8xDNiQ@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/118] 5.4.35-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the objtool/core branch of tip:
+On Wed, 22 Apr 2020 at 15:53, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.35 release.
+> There are 118 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.35-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Commit-ID:     0cc9ac8db0b447922d9af77916cd7941fc784b64
-Gitweb:        https://git.kernel.org/tip/0cc9ac8db0b447922d9af77916cd7941fc784b64
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 25 Mar 2020 17:18:17 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 22 Apr 2020 10:53:51 +02:00
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-objtool: Also consider .entry.text as noinstr
+Summary
+------------------------------------------------------------------------
 
-Consider all of .entry.text as noinstr. This gets us coverage across
-the PTI boundary. While we could add everything .noinstr.text into
-.entry.text that would bloat the amount of code in the user mapping.
+kernel: 5.4.35-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 186764443bf32f12e07093aaff52dd4a25231781
+git describe: v5.4.34-119-g186764443bf3
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.34-119-g186764443bf3
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200416115119.525037514@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- tools/objtool/check.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+No regressions (compared to build v5.4.34)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 0d9f9cf..f2a8427 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -266,7 +266,8 @@ static int decode_instructions(struct objtool_file *file)
- 		    strncmp(sec->name, ".discard.", 9))
- 			sec->text = true;
- 
--		if (!strcmp(sec->name, ".noinstr.text"))
-+		if (!strcmp(sec->name, ".noinstr.text") ||
-+		    !strcmp(sec->name, ".entry.text"))
- 			sec->noinstr = true;
- 
- 		for (offset = 0; offset < sec->len; offset += insn->len) {
-@@ -2071,7 +2072,7 @@ static inline const char *call_dest_name(struct instruction *insn)
- static int validate_call(struct instruction *insn, struct insn_state *state)
- {
- 	if (state->noinstr && state->instr <= 0 &&
--	    (!insn->call_dest || insn->call_dest->sec != insn->sec)) {
-+	    (!insn->call_dest || !insn->call_dest->sec->noinstr)) {
- 		WARN_FUNC("call to %s() leaves .noinstr.text section",
- 				insn->sec, insn->offset, call_dest_name(insn));
- 		return 1;
-@@ -2558,11 +2559,16 @@ static int validate_vmlinux_functions(struct objtool_file *file)
- 	int warnings = 0;
- 
- 	sec = find_section_by_name(file->elf, ".noinstr.text");
--	if (!sec)
--		return 0;
-+	if (sec) {
-+		warnings += validate_section(file, sec);
-+		warnings += validate_unwind_hints(file, sec);
-+	}
- 
--	warnings += validate_section(file, sec);
--	warnings += validate_unwind_hints(file, sec);
-+	sec = find_section_by_name(file->elf, ".entry.text");
-+	if (sec) {
-+		warnings += validate_section(file, sec);
-+		warnings += validate_unwind_hints(file, sec);
-+	}
- 
- 	return warnings;
- }
+No fixes (compared to build v5.4.34)
+
+Ran 37179 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* perf
+* kvm-unit-tests
+* libgpiod
+* ltp-cve-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* libhugetlbfs
+* ltp-containers-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* v4l2-compliance
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
