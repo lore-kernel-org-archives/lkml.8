@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAF9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81B3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0611E2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC612077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgDWXSC (ORCPT
+        id S1728649AbgDWXSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:18:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49094 "EHLO
+        Thu, 23 Apr 2020 19:18:04 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49102 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728286AbgDWXGj (ORCPT
+        by vger.kernel.org with ESMTP id S1728287AbgDWXGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:39 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvQ-0004g8-97; Fri, 24 Apr 2020 00:06:32 +0100
+        id 1jRkvQ-0004gE-GB; Fri, 24 Apr 2020 00:06:32 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvO-00E6n8-T1; Fri, 24 Apr 2020 00:06:30 +0100
+        id 1jRkvP-00E6nJ-10; Fri, 24 Apr 2020 00:06:31 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Felipe Balbi" <felipe.balbi@linux.intel.com>,
-        "Heikki Krogerus" <heikki.krogerus@linux.intel.com>
-Date:   Fri, 24 Apr 2020 00:05:28 +0100
-Message-ID: <lsq.1587683028.990331724@decadent.org.uk>
+        "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
+        "Felipe Balbi" <felipe.balbi@linux.intel.com>
+Date:   Fri, 24 Apr 2020 00:05:30 +0100
+Message-ID: <lsq.1587683028.608558908@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 101/245] usb: dwc3: pci: add Intel Kabylake PCI ID
+Subject: [PATCH 3.16 103/245] usb: dwc3: pci: add Intel Cannonlake PCI IDs
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +57,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 4491ed5042f0419b22a4b08331adb54af31e2caa upstream.
+commit 682179592e48fa66056fbad1a86604be4992f885 upstream.
 
-Intel Kabylake PCH has the same DWC3 than Intel
-Sunrisepoint. Add the new ID to the supported devices.
+Intel Cannonlake PCH has the same DWC3 than Intel
+Sunrisepoint. Add the new IDs to the supported devices.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 [bwh: Backported to 3.16: adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/dwc3/dwc3-pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 --- a/drivers/usb/dwc3/dwc3-pci.c
 +++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -36,6 +36,7 @@
- #define PCI_DEVICE_ID_INTEL_BXT		0x0aaa
- #define PCI_DEVICE_ID_INTEL_BXT_M	0x1aaa
+@@ -38,6 +38,8 @@
  #define PCI_DEVICE_ID_INTEL_APL		0x5aaa
-+#define PCI_DEVICE_ID_INTEL_KBP		0xa2b0
+ #define PCI_DEVICE_ID_INTEL_KBP		0xa2b0
+ #define PCI_DEVICE_ID_INTEL_GLK		0x31aa
++#define PCI_DEVICE_ID_INTEL_CNPLP	0x9dee
++#define PCI_DEVICE_ID_INTEL_CNPH	0xa36e
  
  struct dwc3_pci {
  	struct device		*dev;
-@@ -197,6 +198,7 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BXT), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BXT_M), },
+@@ -201,6 +203,8 @@ static const struct pci_device_id dwc3_p
  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_APL), },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_KBP), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_KBP), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_GLK), },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CNPLP), },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CNPH), },
  	{  }	/* Terminating Entry */
  };
  MODULE_DEVICE_TABLE(pci, dwc3_pci_id_table);
