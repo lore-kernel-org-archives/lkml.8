@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E06C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FD2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 559BA2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D6C20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbgDWXOQ (ORCPT
+        id S1729504AbgDWXOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:14:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49910 "EHLO
+        Thu, 23 Apr 2020 19:14:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49834 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728466AbgDWXGt (ORCPT
+        by vger.kernel.org with ESMTP id S1728444AbgDWXGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:49 -0400
+        Thu, 23 Apr 2020 19:06:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvV-0004id-C1; Fri, 24 Apr 2020 00:06:37 +0100
+        id 1jRkvU-0004hp-Ev; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-00E6s1-QP; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvR-00E6pi-Iv; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Jens Axboe" <axboe@fb.com>, "Jan Kara" <jack@suse.cz>,
-        "Tejun Heo" <tj@kernel.org>,
-        "Bart Van Assche" <bart.vanassche@sandisk.com>
-Date:   Fri, 24 Apr 2020 00:06:24 +0100
-Message-ID: <lsq.1587683028.385675408@decadent.org.uk>
+        "Peter Shier" <pshier@google.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Jacob Xu" <jacobhxu@google.com>,
+        "Eric Biggers" <ebiggers@kernel.org>,
+        "Jim Mattson" <jmattson@google.com>
+Date:   Fri, 24 Apr 2020 00:06:00 +0100
+Message-ID: <lsq.1587683028.442053405@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 157/245] kobject: Export kobject_get_unless_zero()
+Subject: [PATCH 3.16 133/245] kvm: x86: Host feature SSBD doesn't imply
+ guest feature SPEC_CTRL_SSBD
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,53 +59,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Jim Mattson <jmattson@google.com>
 
-commit c70c176ff8c3ff0ac6ef9a831cd591ea9a66bd1a upstream.
+commit 396d2e878f92ec108e4293f1c77ea3bc90b414ff upstream.
 
-Make the function available for outside use and fortify it against NULL
-kobject.
+The host reports support for the synthetic feature X86_FEATURE_SSBD
+when any of the three following hardware features are set:
+  CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31]
+  CPUID.80000008H:EBX.AMD_SSBD[bit 24]
+  CPUID.80000008H:EBX.VIRT_SSBD[bit 25]
 
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Bart Van Assche <bart.vanassche@sandisk.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@fb.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Either of the first two hardware features implies the existence of the
+IA32_SPEC_CTRL MSR, but CPUID.80000008H:EBX.VIRT_SSBD[bit 25] does
+not. Therefore, CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31] should only be
+set in the guest if CPUID.(EAX=7,ECX=0):EDX.SSBD[bit 31] or
+CPUID.80000008H:EBX.AMD_SSBD[bit 24] is set on the host.
+
+Fixes: 0c54914d0c52a ("KVM: x86: use Intel speculation bugs and features as derived in generic x86 code")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Jacob Xu <jacobhxu@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16: adjust indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/kobject.h | 2 ++
- lib/kobject.c           | 5 ++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/kvm/cpuid.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/linux/kobject.h
-+++ b/include/linux/kobject.h
-@@ -107,6 +107,8 @@ extern int __must_check kobject_rename(s
- extern int __must_check kobject_move(struct kobject *, struct kobject *);
- 
- extern struct kobject *kobject_get(struct kobject *kobj);
-+extern struct kobject * __must_check kobject_get_unless_zero(
-+						struct kobject *kobj);
- extern void kobject_put(struct kobject *kobj);
- 
- extern const void *kobject_namespace(struct kobject *kobj);
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -581,12 +581,15 @@ struct kobject *kobject_get(struct kobje
- 	return kobj;
- }
- 
--static struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj)
-+struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj)
- {
-+	if (!kobj)
-+		return NULL;
- 	if (!kref_get_unless_zero(&kobj->kref))
- 		kobj = NULL;
- 	return kobj;
- }
-+EXPORT_SYMBOL(kobject_get_unless_zero);
- 
- /*
-  * kobject_cleanup - free kobject resources.
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -400,7 +400,8 @@ static inline int __do_cpuid_ent(struct
+ 				entry->edx |= F(SPEC_CTRL);
+ 			if (boot_cpu_has(X86_FEATURE_STIBP))
+ 				entry->edx |= F(INTEL_STIBP);
+-			if (boot_cpu_has(X86_FEATURE_SSBD))
++			if (boot_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
++			    boot_cpu_has(X86_FEATURE_AMD_SSBD))
+ 				entry->edx |= F(SPEC_CTRL_SSBD);
+ 			/*
+ 			 * We emulate ARCH_CAPABILITIES in software even
 
