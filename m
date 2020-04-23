@@ -2,78 +2,101 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B32CC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B91C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C1121569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587624249;
-	bh=863mETzaq75o/iPk8dqOZNMgv+NHhYcqlH4fv5yor2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Mpv1Jwg66PXcIiYJo77ojVIvukD+gXFUhdGrLIjSIsIf8A2mw+VPWUKL7upPQ8GNg
-	 AkIRRhBmr2/z04E5A40SjhovY3peS5COkTmXIL8Nmz85T415PvVTjdHOrfD1H02LZm
-	 NZOPOWdaiivfW1Kvhuh6ElxzW4Z8Y9Rtj5/8gVA8=
+	by mail.kernel.org (Postfix) with ESMTP id 8F41521569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgDWGoH (ORCPT
+        id S1726728AbgDWGqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgDWGoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:44:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF6E20736;
-        Thu, 23 Apr 2020 06:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587624245;
-        bh=863mETzaq75o/iPk8dqOZNMgv+NHhYcqlH4fv5yor2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BWnhBRXgYWOkwJC6pJrNels+6EEqh9wgRjiTmxrPbErr9x0vGUMYeJqG00BX8YoF9
-         gOzE6u893FcIKArZRQeJ4WV2F5LYJBoPUEo6P746+WnNerdVOaGqzNf0GOMW94LcSf
-         BSNVuErXumYeDZ8WjH/wez7SIA0Wa4UGg1YAFCmo=
-Date:   Thu, 23 Apr 2020 08:44:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        baolin.wang@linaro.org, kstewart@linuxfoundation.org,
-        tglx@linutronix.de, bradleybolen@gmail.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, anrao@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 5.5.18 0/2] Fix for long operation cmds busy detection
-Message-ID: <20200423064403.GB3488526@kroah.com>
-References: <1587573178-30326-1-git-send-email-skomatineni@nvidia.com>
+        Thu, 23 Apr 2020 02:46:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35460 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726032AbgDWGqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:46:20 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4BC04130DCD682959441;
+        Thu, 23 Apr 2020 14:46:15 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Apr 2020 14:46:08 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <rrichter@marvell.com>, <bp@alien8.de>, <mchehab@kernel.org>,
+        <tony.luck@intel.com>, <james.morse@arm.com>
+CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] EDAC, thunderx: Make some symbols static
+Date:   Thu, 23 Apr 2020 14:52:24 +0800
+Message-ID: <1587624744-97240-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587573178-30326-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 09:32:56AM -0700, Sowjanya Komatineni wrote:
-> This series is to backport the upstream patches that fixes busy detection
-> for long operation mmc commands by implementing Tegra specific timeout
-> callback to switch between finite and infinite HW busy detection wait
-> modes.
-> 
-> 
-> Sowjanya Komatineni (2):
->   sdhci: tegra: Implement Tegra specific set_timeout callback
->   sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
-> 
->  drivers/mmc/host/sdhci-tegra.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
+Fix the following sparse warning:
 
-5.5.y is end-of-life, no one should be using it anymore, nor can I add
-any more patches to it, sorry.
+drivers/edac/thunderx_edac.c:1281:22: warning: symbol 'ocx_dfs_ents'
+was not declared. Should it be static?
+drivers/edac/thunderx_edac.c:1922:22: warning: symbol 'l2c_tad_dfs_ents'
+was not declared. Should it be static?
+drivers/edac/thunderx_edac.c:1928:22: warning: symbol 'l2c_cbc_dfs_ents'
+was not declared. Should it be static?
+drivers/edac/thunderx_edac.c:1934:22: warning: symbol 'l2c_mci_dfs_ents'
+was not declared. Should it be static?
 
-greg k-h
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/edac/thunderx_edac.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/edac/thunderx_edac.c b/drivers/edac/thunderx_edac.c
+index 34be60f..4af9744 100644
+--- a/drivers/edac/thunderx_edac.c
++++ b/drivers/edac/thunderx_edac.c
+@@ -1278,7 +1278,7 @@ OCX_DEBUGFS_ATTR(lne23_badcnt, OCX_LNE_BAD_CNT(23));
+ 
+ OCX_DEBUGFS_ATTR(com_int, OCX_COM_INT_W1S);
+ 
+-struct debugfs_entry *ocx_dfs_ents[] = {
++static struct debugfs_entry *ocx_dfs_ents[] = {
+ 	&debugfs_tlk0_ecc_ctl,
+ 	&debugfs_tlk1_ecc_ctl,
+ 	&debugfs_tlk2_ecc_ctl,
+@@ -1919,19 +1919,19 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq, void *irq_id)
+ 
+ L2C_DEBUGFS_ATTR(tad_int, L2C_TAD_INT_W1S);
+ 
+-struct debugfs_entry *l2c_tad_dfs_ents[] = {
++static struct debugfs_entry *l2c_tad_dfs_ents[] = {
+ 	&debugfs_tad_int,
+ };
+ 
+ L2C_DEBUGFS_ATTR(cbc_int, L2C_CBC_INT_W1S);
+ 
+-struct debugfs_entry *l2c_cbc_dfs_ents[] = {
++static struct debugfs_entry *l2c_cbc_dfs_ents[] = {
+ 	&debugfs_cbc_int,
+ };
+ 
+ L2C_DEBUGFS_ATTR(mci_int, L2C_MCI_INT_W1S);
+ 
+-struct debugfs_entry *l2c_mci_dfs_ents[] = {
++static struct debugfs_entry *l2c_mci_dfs_ents[] = {
+ 	&debugfs_mci_int,
+ };
+ 
+-- 
+2.6.2
+
