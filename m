@@ -2,152 +2,110 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82318C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30523C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4702073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0054220784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587675270;
+	bh=Z2kbebwq8Q0QlBboMLPWtnkVj9pDsV4a9O/CCn91B7M=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=ex5SNZ1g+sZ/Wu3OrMPh1BMl7sj82dPjvEExipeNtK+He2TRxjhrBgJA9vSKAUJgD
+	 3RXrS2vHiR/dREfzZu6l+RiJrOUrTtwq/pziOIOpGS4QM9nruA4mFYv0YTBsJP6kt7
+	 wk966RX9hJdwnA1jvN/8Na4L9LqnB8a4VD/rRHnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgDWUvv (ORCPT
+        id S1726482AbgDWUy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:51:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39758 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726081AbgDWUvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:51:50 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NKWDaj103561
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 16:51:50 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrc66r6t-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 16:51:49 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 23 Apr 2020 21:51:10 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 21:51:07 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NKpiSY61276258
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 20:51:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 314FCA4040;
-        Thu, 23 Apr 2020 20:51:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65B82A4053;
-        Thu, 23 Apr 2020 20:51:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.178.107])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 20:51:43 +0000 (GMT)
-Subject: Re: [PATCH] ima: Allow imasig requirement to be satisfied by EVM
- portable signatures
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Date:   Thu, 23 Apr 2020 16:51:42 -0400
-In-Reply-To: <20200421092418.25151-1-roberto.sassu@huawei.com>
-References: <20200421092418.25151-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042320-0008-0000-0000-00000376466D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042320-0009-0000-0000-00004A9814D5
-Message-Id: <1587675102.5610.66.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_15:2020-04-23,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 spamscore=0 impostorscore=0
- clxscore=1015 adultscore=0 phishscore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230148
+        Thu, 23 Apr 2020 16:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgDWUy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 16:54:28 -0400
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B0F2073A;
+        Thu, 23 Apr 2020 20:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587675268;
+        bh=Z2kbebwq8Q0QlBboMLPWtnkVj9pDsV4a9O/CCn91B7M=;
+        h=From:To:Subject:Date:From;
+        b=mXfSuoHrfrz1NeFYSE6i39ry/uDNoLTbiiYfz81+dWa4svz1yOa551SJ+fIJlq1Sm
+         2uUHT3zEQ6n1yd4x2R/Q14PA5PAzgj5vIo7/8r/yM4tgD45vWUQtUNFbt9Bw8s8OkZ
+         Na2RW07AWH60lvbbKkEfcnFT15kROMAd+DGPzOIc=
+From:   zanussi@kernel.org
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 0/2] Linux v4.19.115-rt49-rc1
+Date:   Thu, 23 Apr 2020 15:54:24 -0500
+Message-Id: <cover.1587675252.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-21 at 11:24 +0200, Roberto Sassu wrote:
-> System administrators can require that all accessed files have a signature
-> by specifying appraise_type=imasig in a policy rule.
-> 
-> Currently, only IMA signatures satisfy this requirement. However, also EVM
-> portable signatures can satisfy it. Metadata, including security.ima, are
-> signed and cannot change.
+From: Tom Zanussi <zanussi@kernel.org>
 
-Please expand this paragraph with a short comparison of the security
-guarantees provided by EVM immutable, portable signatures versus ima-
-sig.
+Dear RT Folks,
 
-> 
-> This patch helps in the scenarios where system administrators want to
-> enforce this restriction but only EVM portable signatures are available.
+This is the RT stable review cycle of patch 4.19.115-rt49-rc1.
 
-Yes, I agree it "helps", but we still need to address the ability of
-setting/removing security.ima, which isn't possible with an IMA
-signature.  This sounds like we need to define an immutable file hash.
- What do you think?
+Please scream at me if I messed something up. Please test the patches
+too.
 
-> The patch makes the following changes:
-> 
-> file xattr types:
-> security.ima: IMA_XATTR_DIGEST/IMA_XATTR_DIGEST_NG
-> security.evm: EVM_XATTR_PORTABLE_DIGSIG
-> 
-> execve(), mmap(), open() behavior (with appraise_type=imasig):
-> before: denied (file without IMA signature, imasig requirement not met)
-> after: allowed (file with EVM portable signature, imasig requirement met)
-> 
-> open(O_WRONLY) behavior (without appraise_type=imasig):
-> before: allowed (file without IMA signature, not immutable)
-> after: denied (file with EVM portable signature, immutable)
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->  security/integrity/ima/ima_appraise.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index a9649b04b9f1..69a6a958f811 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -219,12 +219,16 @@ static int xattr_verify(enum ima_hooks func, struct integrity_iint_cache *iint,
->  		hash_start = 1;
->  		/* fall through */
->  	case IMA_XATTR_DIGEST:
-> -		if (iint->flags & IMA_DIGSIG_REQUIRED) {
-> -			*cause = "IMA-signature-required";
-> -			*status = INTEGRITY_FAIL;
-> -			break;
-> +		if (*status != INTEGRITY_PASS_IMMUTABLE) {
-> +			if (iint->flags & IMA_DIGSIG_REQUIRED) {
-> +				*cause = "IMA-signature-required";
-> +				*status = INTEGRITY_FAIL;
-> +				break;
-> +			}
-> +			clear_bit(IMA_DIGSIG, &iint->atomic_flags);
-> +		} else {
-> +			set_bit(IMA_DIGSIG, &iint->atomic_flags);
->  		}
-> -		clear_bit(IMA_DIGSIG, &iint->atomic_flags);
->  		if (xattr_len - sizeof(xattr_value->type) - hash_start >=
->  				iint->ima_hash->length)
->  			/*
+The -rc release will be uploaded to kernel.org and will be deleted
+when the final release is out. This is just a review release (or
+release candidate).
 
-Nice!
+The pre-releases will not be pushed to the git repository, only the
+final release is.
 
-Mimi
+If all goes well, this patch will be converted to the next main
+release on 2020-04-27.
+
+To build 4.19.115-rt49-rc1 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.115.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.115-rt49-rc1.patch.xz
+
+You can also build from 4.19.115-rt48 by applying the incremental patch:
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/incr/patch-4.19.115-rt48-rt49-rc1.patch.xz
+
+
+Enjoy,
+
+-- Tom
+
+
+Tom Zanussi (1):
+  Linux 4.19.115-rt49-rc1
+
+Zhang Xiao (1):
+  tasklet: Address a race resulting in double-enqueue
+
+ include/linux/interrupt.h | 5 ++++-
+ kernel/softirq.c          | 6 +++++-
+ localversion-rt           | 2 +-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
 
