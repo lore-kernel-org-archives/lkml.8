@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1469EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2F4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3D0E20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC4F20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgDWXMr (ORCPT
+        id S1729372AbgDWXM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:12:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50036 "EHLO
+        Thu, 23 Apr 2020 19:12:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50032 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728491AbgDWXGv (ORCPT
+        by vger.kernel.org with ESMTP id S1728493AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvZ-0004nA-3R; Fri, 24 Apr 2020 00:06:41 +0100
+        id 1jRkvX-0004m9-OQ; Fri, 24 Apr 2020 00:06:39 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvV-00E6vs-I2; Fri, 24 Apr 2020 00:06:37 +0100
+        id 1jRkvU-00E6uc-4V; Fri, 24 Apr 2020 00:06:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Daniel Drake" <drake@endlessm.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Jian-Hong Pan" <jian-hong@endlessm.com>
-Date:   Fri, 24 Apr 2020 00:06:42 +0100
-Message-ID: <lsq.1587683028.937529137@decadent.org.uk>
+        "Radoslaw Tyl" <radoslawx.tyl@intel.com>,
+        "Paul Menzel" <pmenzel@molgen.mpg.de>,
+        "Jeff Kirsher" <jeffrey.t.kirsher@intel.com>
+Date:   Fri, 24 Apr 2020 00:06:33 +0100
+Message-ID: <lsq.1587683028.507107809@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 175/245] platform/x86: asus-wmi: Fix keyboard
- brightness cannot be set to 0
+Subject: [PATCH 3.16 166/245] ixgbevf: Remove limit of 10 entries for
+ unicast filter list
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,38 +57,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Radoslaw Tyl <radoslawx.tyl@intel.com>
 
-commit 176a7fca81c5090a7240664e3002c106d296bf31 upstream.
+commit aa604651d523b1493988d0bf6710339f3ee60272 upstream.
 
-Some of ASUS laptops like UX431FL keyboard backlight cannot be set to
-brightness 0. According to ASUS' information, the brightness should be
-0x80 ~ 0x83. This patch fixes it by following the logic.
+Currently, though the FDB entry is added to VF, it does not appear in
+RAR filters. VF driver only allows to add 10 entries. Attempting to add
+another causes an error. This patch removes limitation and allows use of
+all free RAR entries for the FDB if needed.
 
-Fixes: e9809c0b9670 ("asus-wmi: add keyboard backlight support")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
+Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
+Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/platform/x86/asus-wmi.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -386,13 +386,7 @@ static void kbd_led_update(struct work_s
+--- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
++++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+@@ -1465,11 +1465,6 @@ static int ixgbevf_write_uc_addr_list(st
+ 	struct ixgbe_hw *hw = &adapter->hw;
+ 	int count = 0;
  
- 	asus = container_of(work, struct asus_wmi, kbd_led_work);
- 
--	/*
--	 * bits 0-2: level
--	 * bit 7: light on/off
--	 */
--	if (asus->kbd_led_wk > 0)
--		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+-	if ((netdev_uc_count(netdev)) > 10) {
+-		pr_err("Too many unicast filters - No Space\n");
+-		return -ENOSPC;
+-	}
 -
-+	ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
- 	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
- }
- 
+ 	if (!netdev_uc_empty(netdev)) {
+ 		struct netdev_hw_addr *ha;
+ 		netdev_for_each_uc_addr(ha, netdev) {
 
