@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9EEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AABC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D410E20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3062077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgDWXQK (ORCPT
+        id S1729152AbgDWXQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:16:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49560 "EHLO
+        Thu, 23 Apr 2020 19:16:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49540 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728391AbgDWXGq (ORCPT
+        by vger.kernel.org with ESMTP id S1728377AbgDWXGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:46 -0400
+        Thu, 23 Apr 2020 19:06:45 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-0004hN-8v; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvT-0004hN-Kk; Fri, 24 Apr 2020 00:06:35 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-00E6px-OO; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvS-00E6qm-52; Fri, 24 Apr 2020 00:06:34 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Pablo Neira Ayuso" <pablo@netfilter.org>,
-        "Florian Westphal" <fw@strlen.de>
-Date:   Fri, 24 Apr 2020 00:06:03 +0100
-Message-ID: <lsq.1587683028.493962966@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "edes" <edes@gmx.net>, "Johan Hovold" <johan@kernel.org>
+Date:   Fri, 24 Apr 2020 00:06:13 +0100
+Message-ID: <lsq.1587683028.712935328@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 136/245] netfilter: ebtables: convert BUG_ONs to WARN_ONs
+Subject: [PATCH 3.16 146/245] USB: core: add endpoint-blacklist quirk
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,105 +55,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Florian Westphal <fw@strlen.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit fc6a5d0601c5ac1d02f283a46f60b87b2033e5ca upstream.
+commit 73f8bda9b5dc1c69df2bc55c0cbb24461a6391a9 upstream.
 
-All of these conditions are not fatal and should have
-been WARN_ONs from the get-go.
+Add a new device quirk that can be used to blacklist endpoints.
 
-Convert them to WARN_ONs and bail out.
+Since commit 3e4f8e21c4f2 ("USB: core: fix check for duplicate
+endpoints") USB core ignores any duplicate endpoints found during
+descriptor parsing.
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+In order to handle devices where the first interfaces with duplicate
+endpoints are the ones that should have their endpoints ignored, we need
+to add a blacklist.
+
+Tested-by: edes <edes@gmx.net>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200203153830.26394-2-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/bridge/netfilter/ebtables.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ drivers/usb/core/config.c  | 11 +++++++++++
+ drivers/usb/core/quirks.c  | 32 ++++++++++++++++++++++++++++++++
+ drivers/usb/core/usb.h     |  3 +++
+ include/linux/usb/quirks.h |  3 +++
+ 4 files changed, 49 insertions(+)
 
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -1603,7 +1603,8 @@ static int compat_match_to_user(struct e
- 	int off = ebt_compat_match_offset(match, m->match_size);
- 	compat_uint_t msize = m->match_size - off;
- 
--	BUG_ON(off >= m->match_size);
-+	if (WARN_ON(off >= m->match_size))
-+		return -EINVAL;
- 
- 	if (copy_to_user(cm->u.name, match->name,
- 	    strlen(match->name) + 1) || put_user(msize, &cm->match_size))
-@@ -1630,7 +1631,8 @@ static int compat_target_to_user(struct
- 	int off = xt_compat_target_offset(target);
- 	compat_uint_t tsize = t->target_size - off;
- 
--	BUG_ON(off >= t->target_size);
-+	if (WARN_ON(off >= t->target_size))
-+		return -EINVAL;
- 
- 	if (copy_to_user(cm->u.name, target->name,
- 	    strlen(target->name) + 1) || put_user(tsize, &cm->match_size))
-@@ -1858,7 +1860,8 @@ static int ebt_buf_add(struct ebt_entrie
- 	if (state->buf_kern_start == NULL)
- 		goto count_only;
- 
--	BUG_ON(state->buf_kern_offset + sz > state->buf_kern_len);
-+	if (WARN_ON(state->buf_kern_offset + sz > state->buf_kern_len))
-+		return -EINVAL;
- 
- 	memcpy(state->buf_kern_start + state->buf_kern_offset, data, sz);
- 
-@@ -1871,7 +1874,8 @@ static int ebt_buf_add_pad(struct ebt_en
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -222,6 +222,7 @@ static int usb_parse_endpoint(struct dev
+ 		struct usb_host_interface *ifp, int num_ep,
+ 		unsigned char *buffer, int size)
  {
- 	char *b = state->buf_kern_start;
- 
--	BUG_ON(b && state->buf_kern_offset > state->buf_kern_len);
-+	if (WARN_ON(b && state->buf_kern_offset > state->buf_kern_len))
-+		return -EINVAL;
- 
- 	if (b != NULL && sz > 0)
- 		memset(b + state->buf_kern_offset, 0, sz);
-@@ -1949,8 +1953,10 @@ static int compat_mtw_from_user(struct c
- 	pad = XT_ALIGN(size_kern) - size_kern;
- 
- 	if (pad > 0 && dst) {
--		BUG_ON(state->buf_kern_len <= pad);
--		BUG_ON(state->buf_kern_offset - (match_size + off) + size_kern > state->buf_kern_len - pad);
-+		if (WARN_ON(state->buf_kern_len <= pad))
-+			return -EINVAL;
-+		if (WARN_ON(state->buf_kern_offset - (match_size + off) + size_kern > state->buf_kern_len - pad))
-+			return -EINVAL;
- 		memset(dst + size_kern, 0, pad);
++	struct usb_device *udev = to_usb_device(ddev);
+ 	unsigned char *buffer0 = buffer;
+ 	struct usb_endpoint_descriptor *d;
+ 	struct usb_host_endpoint *endpoint;
+@@ -263,6 +264,16 @@ static int usb_parse_endpoint(struct dev
+ 		goto skip_to_next_endpoint_or_interface_descriptor;
  	}
- 	return off + match_size;
-@@ -2001,7 +2007,8 @@ static int ebt_size_mwt(struct compat_eb
- 		if (ret < 0)
- 			return ret;
  
--		BUG_ON(ret < match32->match_size);
-+		if (WARN_ON(ret < match32->match_size))
-+			return -EINVAL;
- 		growth += ret - match32->match_size;
- 		growth += ebt_compat_entry_padsize();
++	/* Ignore blacklisted endpoints */
++	if (udev->quirks & USB_QUIRK_ENDPOINT_BLACKLIST) {
++		if (usb_endpoint_is_blacklisted(udev, ifp, d)) {
++			dev_warn(ddev, "config %d interface %d altsetting %d has a blacklisted endpoint with address 0x%X, skipping\n",
++					cfgno, inum, asnum,
++					d->bEndpointAddress);
++			goto skip_to_next_endpoint_or_interface_descriptor;
++		}
++	}
++
+ 	endpoint = &ifp->endpoint[ifp->desc.bNumEndpoints];
+ 	++ifp->desc.bNumEndpoints;
  
-@@ -2116,7 +2123,8 @@ static int size_entry_mwt(struct ebt_ent
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -318,6 +318,38 @@ static const struct usb_device_id usb_am
+ 	{ }  /* terminating entry must be last */
+ };
  
- 	startoff = state->buf_user_offset - startoff;
++/*
++ * Entries for blacklisted endpoints that should be ignored when parsing
++ * configuration descriptors.
++ *
++ * Matched for devices with USB_QUIRK_ENDPOINT_BLACKLIST.
++ */
++static const struct usb_device_id usb_endpoint_blacklist[] = {
++	{ }
++};
++
++bool usb_endpoint_is_blacklisted(struct usb_device *udev,
++		struct usb_host_interface *intf,
++		struct usb_endpoint_descriptor *epd)
++{
++	const struct usb_device_id *id;
++	unsigned int address;
++
++	for (id = usb_endpoint_blacklist; id->match_flags; ++id) {
++		if (!usb_match_device(udev, id))
++			continue;
++
++		if (!usb_match_one_id_intf(udev, intf, id))
++			continue;
++
++		address = id->driver_info;
++		if (address == epd->bEndpointAddress)
++			return true;
++	}
++
++	return false;
++}
++
+ static bool usb_match_any_interface(struct usb_device *udev,
+ 				    const struct usb_device_id *id)
+ {
+--- a/drivers/usb/core/usb.h
++++ b/drivers/usb/core/usb.h
+@@ -29,6 +29,9 @@ extern int usb_deauthorize_device(struct
+ extern int usb_authorize_device(struct usb_device *);
+ extern void usb_detect_quirks(struct usb_device *udev);
+ extern void usb_detect_interface_quirks(struct usb_device *udev);
++extern bool usb_endpoint_is_blacklisted(struct usb_device *udev,
++		struct usb_host_interface *intf,
++		struct usb_endpoint_descriptor *epd);
+ extern int usb_remove_device(struct usb_device *udev);
  
--	BUG_ON(*total < startoff);
-+	if (WARN_ON(*total < startoff))
-+		return -EINVAL;
- 	*total -= startoff;
- 	return 0;
- }
-@@ -2246,7 +2254,8 @@ static int compat_do_replace(struct net
- 	state.buf_kern_len = size64;
+ extern int usb_get_device_descriptor(struct usb_device *dev,
+--- a/include/linux/usb/quirks.h
++++ b/include/linux/usb/quirks.h
+@@ -62,4 +62,7 @@
+ /* Hub needs extra delay after resetting its port. */
+ #define USB_QUIRK_HUB_SLOW_RESET		BIT(14)
  
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
--	BUG_ON(ret < 0);	/* parses same data again */
-+	if (WARN_ON(ret < 0))
-+		goto out_unlock;
- 
- 	vfree(entries_tmp);
- 	tmp.entries_size = size64;
++/* device has blacklisted endpoints */
++#define USB_QUIRK_ENDPOINT_BLACKLIST		BIT(15)
++
+ #endif /* __LINUX_USB_QUIRKS_H */
 
