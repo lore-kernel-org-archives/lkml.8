@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A199DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD8DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88C9520780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C81E20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgDWXNG (ORCPT
+        id S1728647AbgDWXNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:13:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50064 "EHLO
+        Thu, 23 Apr 2020 19:13:25 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50060 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728501AbgDWXGv (ORCPT
+        by vger.kernel.org with ESMTP id S1728503AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvY-0004mo-QQ; Fri, 24 Apr 2020 00:06:40 +0100
+        id 1jRkva-0004lu-7I; Fri, 24 Apr 2020 00:06:42 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-00E6vG-KR; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvY-00E6yG-9T; Fri, 24 Apr 2020 00:06:40 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jiri Kosina" <jkosina@suse.cz>,
-        "Fabian Henneke" <fabian.henneke@gmail.com>
-Date:   Fri, 24 Apr 2020 00:06:36 +0100
-Message-ID: <lsq.1587683028.201707401@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Mao Wenan" <maowenan@huawei.com>
+Date:   Fri, 24 Apr 2020 00:07:09 +0100
+Message-ID: <lsq.1587683028.46595066@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 169/245] hidraw: Return EPOLLOUT from hidraw_poll
+Subject: [PATCH 3.16 202/245] net: sonic: return NETDEV_TX_OK if failed to
+ map buffer
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,35 +56,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Fabian Henneke <fabian.henneke@gmail.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-commit 378b80370aa1fe50f9c48a3ac8af3e416e73b89f upstream.
+commit 6e1cdedcf0362fed3aedfe051d46bd7ee2a85fe1 upstream.
 
-Always return EPOLLOUT from hidraw_poll when a device is connected.
-This is safe since writes are always possible (but will always block).
+NETDEV_TX_BUSY really should only be used by drivers that call
+netif_tx_stop_queue() at the wrong moment. If dma_map_single() is
+failed to map tx DMA buffer, it might trigger an infinite loop.
+This patch use NETDEV_TX_OK instead of NETDEV_TX_BUSY, and change
+printk to pr_err_ratelimited.
 
-hidraw does not support non-blocking writes and instead always calls
-blocking backend functions on write requests. Hence, so far, a call to
-poll never returned EPOLLOUT, which confuses tools like socat.
-
-Signed-off-by: Fabian Henneke <fabian.henneke@gmail.com>
-In-reply-to: <CA+hv5qkyis03CgYTWeWX9cr0my-d2Oe+aZo+mjmWRXgjrGqyrw@mail.gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-[bwh: Backported to 3.16: s/EPOLL/POLL/]
+Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hid/hidraw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/natsemi/sonic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -265,7 +265,7 @@ static unsigned int hidraw_poll(struct f
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -221,9 +221,9 @@ static int sonic_send_packet(struct sk_b
  
- 	poll_wait(file, &list->hidraw->wait, wait);
- 	if (list->head != list->tail)
--		return POLLIN | POLLRDNORM;
-+		return POLLIN | POLLRDNORM | POLLOUT;
- 	if (!list->hidraw->exist)
- 		return POLLERR | POLLHUP;
- 	return 0;
+ 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
+ 	if (!laddr) {
+-		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
++		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
+ 		dev_kfree_skb(skb);
+-		return NETDEV_TX_BUSY;
++		return NETDEV_TX_OK;
+ 	}
+ 
+ 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
 
