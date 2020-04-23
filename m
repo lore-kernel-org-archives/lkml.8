@@ -7,44 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CA8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1C3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA14221707
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB2921582
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgDWHuG (ORCPT
+        id S1727072AbgDWHt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37936 "EHLO
+        Thu, 23 Apr 2020 03:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgDWHt7 (ORCPT
+        with ESMTP id S1726965AbgDWHt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:49:59 -0400
+        Thu, 23 Apr 2020 03:49:56 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB67EC03C1AB;
-        Thu, 23 Apr 2020 00:49:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D0EDC08E934;
+        Thu, 23 Apr 2020 00:49:55 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWcK-0008Tn-O5; Thu, 23 Apr 2020 09:49:52 +0200
+        id 1jRWcJ-0008WD-Ip; Thu, 23 Apr 2020 09:49:51 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 03C831C0450;
-        Thu, 23 Apr 2020 09:49:46 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 07:49:45 -0000
-From:   "tip-bot2 for Julien Thierry" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 981B31C04CF;
+        Thu, 23 Apr 2020 09:49:48 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 07:49:48 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Ignore empty alternatives
-Cc:     Julien Thierry <jthierry@redhat.com>,
+Subject: [tip: objtool/core] objtool: Fix 32bit cross builds
+Cc:     youling257@gmail.com,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158762818561.28353.83133455956874916.tip-bot2@tip-bot2>
+Message-ID: <158762818821.28353.10396771197870031810.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,44 +58,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     7170cf47d16f1ba29eca07fd818870b7af0a93a5
-Gitweb:        https://git.kernel.org/tip/7170cf47d16f1ba29eca07fd818870b7af0a93a5
-Author:        Julien Thierry <jthierry@redhat.com>
-AuthorDate:    Fri, 27 Mar 2020 15:28:41 
+Commit-ID:     963d5669171adcd59b45cad58fab81bbd599c3c8
+Gitweb:        https://git.kernel.org/tip/963d5669171adcd59b45cad58fab81bbd599c3c8
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 20 Apr 2020 10:33:32 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 22 Apr 2020 10:53:49 +02:00
 
-objtool: Ignore empty alternatives
+objtool: Fix 32bit cross builds
 
-The .alternatives section can contain entries with no original
-instructions. Objtool will currently crash when handling such an entry.
+Apparently there's people doing 64bit builds on 32bit machines.
 
-Just skip that entry, but still give a warning to discourage useless
-entries.
-
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Fixes: 74b873e49d92 ("objtool: Optimize find_rela_by_dest_range()")
+Reported-by: youling257@gmail.com
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/objtool/check.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/objtool/elf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5b67d61..efb9640 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -905,6 +905,12 @@ static int add_special_section_alts(struct objtool_file *file)
- 		}
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index ebbb10c..0b79c23 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -99,7 +99,7 @@ static inline u32 sec_offset_hash(struct section *sec, unsigned long offset)
+ 	offset &= OFFSET_STRIDE_MASK;
  
- 		if (special_alt->group) {
-+			if (!special_alt->orig_len) {
-+				WARN_FUNC("empty alternative entry",
-+					  orig_insn->sec, orig_insn->offset);
-+				continue;
-+			}
-+
- 			ret = handle_group_alt(file, special_alt, orig_insn,
- 					       &new_insn);
- 			if (ret)
+ 	ol = offset;
+-	oh = offset >> 32;
++	oh = (offset >> 16) >> 16;
+ 
+ 	__jhash_mix(ol, oh, idx);
+ 
