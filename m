@@ -2,103 +2,198 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321D2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA7C55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 105DB20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E157720781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="2R5fmG17"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Fn2d1x+/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5O3GV4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgDWUes (ORCPT
+        id S1726373AbgDWUgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgDWUer (ORCPT
+        Thu, 23 Apr 2020 16:36:54 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:59747 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbgDWUgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:34:47 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D0EC09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:34:45 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v2so2805551plp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lAZLvgUscRE4/uWVi5RrbkZoz5M8Eu/oXCjzKRnqlSA=;
-        b=2R5fmG17hWkeAurRHdMXiGPKZ4ZFUN7BUElkzTs+N6osWMzA8Fc3arF4hZn1/iNEQX
-         XTnz+E1OPTR8p/AywK8peZM0ZWWjwLP9abn773JK/UllNoKAfCovo+83dmKHAtv2nPgc
-         KvAzkSEbAU+wrWoRdYTTTj48sikHnuQcOHvA70ktqOzNdfaiplzxX8kEIDsogjS2G4QL
-         WWCFepAdUVTYNaHLfmVk5KuGIFuvJYBcOL2jTU0Fo9JLOHb7e265jmplB4hGbDMgQRwr
-         u5zJ10BQzNHGhNI2xpDh0rwPjiPxfoVJt3Dl2Tr+vqV+GZuS3fsaJHqqcqMSOYrGjhcK
-         fPZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lAZLvgUscRE4/uWVi5RrbkZoz5M8Eu/oXCjzKRnqlSA=;
-        b=hwdEaOrYm11mFtpW8qKJIlRwr62dujO7BF+GLoxsumc7OS7JmTZaoppeEt9J4PicFu
-         XkkUCE7Qw2RZsOExYI7t5plUjHdYlwzzJ+wiIq19lSSTZk1ARXxliub/77Vb+keYRNCG
-         XXPMe5ddPjFhPgte4fNNgq2dFeSOT0E2Dzkxi2mz4aWzfKEBItJJYhfXhB4+fC8/A9W0
-         e+Y0M3/VpDcYgFfZCDJwTSPrzoPNfaWm1Lewezd/PW7jLEEsv+J7k9Av6XasNcdvN6aG
-         26u+tW1izNUXCfe19ZkwHx8gDjRiND2B2eyi29a5Pm+vaTAWNk9TJZMSrF0CwOb/63Tk
-         b3tg==
-X-Gm-Message-State: AGi0PuZbgdFfnvK0wRcjD+FWh12CKPRbUAp1xqJo72wPHtz9pzAnGAUU
-        ZWEm2j8EAxu7OszhHOAUUwzYImkke7FJbQ==
-X-Google-Smtp-Source: APiQypLn+IYcd37nChbfNJ2MjfbSkY+RHfaNofUDTl6fpj9ZG+4vm2WpiQdjVS8Lz5J//GuY0Lfb6A==
-X-Received: by 2002:a17:90a:df15:: with SMTP id gp21mr2708249pjb.2.1587674085328;
-        Thu, 23 Apr 2020 13:34:45 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id a15sm3155897pju.3.2020.04.23.13.34.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 13:34:44 -0700 (PDT)
-Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
- in one go
-To:     Jesse Barnes <jsbarnes@google.com>,
-        Doug Anderson <dianders@chromium.org>
-Cc:     Salman Qazi <sqazi@google.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
+        Thu, 23 Apr 2020 16:36:53 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4725158030B;
+        Thu, 23 Apr 2020 16:36:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 23 Apr 2020 16:36:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Iubs+KISuHQ9VGeGg+cCp2xJSoU
+        PuYVrphsLXiw5SFg=; b=Fn2d1x+/36iC3PGOTy5Cp2hHxpxTsbZXqEhCoWSU6fC
+        Bh2uGjm8NzjGSIGOhUdI6jIFnaNlWlK/KNK0SO5YgDVKAzn9T8T4ClUJFkXWcI/L
+        SrSHQwn+ywvkFIfMqeLT0tGOBnOJCf3GhECZDwsJXcOOkFJEZ5PO3Hg2TEHxt0Ji
+        XXCiuCgBhfrNpF+Q4qgbmo0zisCBtKA1VkhzWKnI3UD+PuwtHOjrTI/5OtSrja0W
+        0xNGXCJ8ebZmLgh5iBcj0TUAG6xzsfP58vDHg4dtrP2Je050KddpO2V/+DEw4INi
+        HTrBFJ8cS/EHw4cjf9yqCM3mqKMdTGT34HW7z+GoIEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Iubs+K
+        ISuHQ9VGeGg+cCp2xJSoUPuYVrphsLXiw5SFg=; b=X5O3GV4KFSkNBZXwi0gXe/
+        Az/rwjNsPXRiOZeR/DIobQrkLfux9vKSBPW2Q7Wch/uG7VG9fPmUEU8Kyi30iPJx
+        6rZFq866Z4AieJ/VQuUcLR0mV0pZLLxlv3ciLBDB/NhY/AvDjNVAvMjJxXjdCS6K
+        u41z1fKpjs0erRbydhTf6J8lDzfZB7FSCFB8idsmUzAcZtLjWHuo6bbN3Dpzw+lv
+        Xc1y1zz0vGYrNGmVPq0/4/8tCV+p/V1vxI12KqIjNELt9KhmHqpZLjuh1WSuMbeZ
+        mWk/VcSn4C4MRsWk0RVAApy8MoL8ZK52EhiDYG9eBvoyLIChI6lqSRyqMDdlQG7g
+        ==
+X-ME-Sender: <xms:XfyhXtOzOOFFqaB2EmGtuUz4AXihlYYhfPH3NPly7o2BbKivw_911Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:XfyhXkMYXTgP_dAi3mHrR2OLJMQgltfV-ZrcUbSZbYi-eyL9XqlWvQ>
+    <xmx:XfyhXnRz3tzFqWtdmt2KW_Iy-oRzKWX5FUFdLIFvNbNly0q4eowTmw>
+    <xmx:XfyhXuBpYPyCR1QitUY5OuM1TQtkKBdD8mz-YseHbvORsD3x-nC7Qg>
+    <xmx:YfyhXklTjVJsrJRboZpeYnKPAGn0Xr4Sox5XlaeG8MS2WPQdNjQpdg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CD893328005E;
+        Thu, 23 Apr 2020 16:36:44 -0400 (EDT)
+Date:   Thu, 23 Apr 2020 22:36:42 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tony Lindgren <tony@atomide.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
-References: <20200206101833.GA20943@ming.t460p>
- <20200206211222.83170-1-sqazi@google.com>
- <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org>
- <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
- <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org>
- <CAKUOC8X=fzXjt=5qZ+tkq3iKnu7NHhPfT_t0JyzcmZg49ZEq4A@mail.gmail.com>
- <CAD=FV=WgfAgHSuDRXSUWFUV8CB3tPq7HG0+E7q2fRQniiJwa1w@mail.gmail.com>
- <CAJmaN=m4sPCUjS1oy3yOavjN2wcwhMWvZE9sVehySuhibTmABQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <016647fc-1d7b-7127-68aa-044d4230a22d@kernel.dk>
-Date:   Thu, 23 Apr 2020 14:34:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Ralf Baechle <ralf@linux-mips.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Message-ID: <20200423203642.35ms4aarnv65tfp5@gilmour.lan>
+References: <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
+ <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
+ <20200421141543.GU37466@atomide.com>
+ <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
+ <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
+ <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
+ <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
+ <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com>
+ <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com>
+ <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJmaN=m4sPCUjS1oy3yOavjN2wcwhMWvZE9sVehySuhibTmABQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="goo77pyirkr5psgn"
+Content-Disposition: inline
+In-Reply-To: <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/20 2:13 PM, Jesse Barnes wrote:
-> Jens, Bart, Ming, any update here?  Or is this already applied (I didn't check)?
 
-No updates on my end. I was expecting that a v2 would be posted after
-all the discussion on it, but that doesn't seem to be the case.
+--goo77pyirkr5psgn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jens Axboe
+On Thu, Apr 23, 2020 at 05:45:55PM +0200, H. Nikolaus Schaller wrote:
+> > Am 23.04.2020 um 17:00 schrieb Neil Armstrong <narmstrong@baylibre.com>:
+> >> One thing we can learn is that "core" seems to be a de facto standard=
+=20
+> >> for the core clock-name. An alternative "gpu" is used by nvidia,gk20a.=
+txt.
+> >=20
+> > Usually IPs needs a few clocks:
+> > - pclk or apb or reg: the clock clocking the "slave" bus to serve the r=
+egisters
+> > - axi or bus or ahb: the bus clocking the the "master" bus to get data =
+=66rom system memory
+> > - core: the actual clock feeding the GPU logic
+>=20
+> And the sgx544 seems to have two such clocks.
+>=20
+> > Sometimes you have a single clock for slave and master bus.
+> >=20
+> > But you can also have separate clocks for shader cores, .. this depends=
+ on the IP and it's architecture.
+> > The IP can also have memories with separate clocks, etc...
+>=20
+> Indeed.
+>=20
+> > But all these clocks can be source by an unique clock on a SoC, but dif=
+ferent on another
+> > SoC, this is why it's important to list them all, even optional.
+> >=20
+> > You'll certainly have at least a reset signal, and a power domain, thes=
+e should exist and be optional.
+>=20
+> Well, they exist only as hints in block diagrams of some SoC data
+> sheets (so we do not know if they represent the imagination
+> definitions) and the current driver code doesn't make use of it. Still
+> the gpu core works.
+>=20
+> So I do not see any urgent need to add a complete list to the bindings
+> now.
+>=20
+> Unless some special SoC integration makes use of them. Then it is IMHO
+> easier to extend the bindings by a follow-up patch than now thinking
+> about all potential options and bloating the bindings with things we
+> (the open source community) doesn't and can't know.
+>=20
+> My goal is to keep the bindings as minimalistic as possible. And reset
+> lines and power domains are (at least for those we have in the works)
+> not needed to make working systems.
+>=20
+> Therefore, for clocks I also would start with a minimalistic approach
+> for a single optional GPU core clock and leave out reset and power
+> completely.
 
+Like I said above, the DT is considered an ABI and you'll have to
+maintain backward compatibility (ie, newer kernel running with older
+DT). Therefore, you won't be able to require a new clock, reset or
+power-domain later on for example.
+
+I guess the question I'm really asking is: since you don't really know
+how the hardware is integrated at the moment, why should we have that
+discussion *now*. It's really not suprising that you don't know yet, so
+I'm not sure why we need to rush in the bindings.
+
+Maxime
+
+--goo77pyirkr5psgn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqH8WgAKCRDj7w1vZxhR
+xevnAQDosUT6nmUX0+zNQOj7IKsbVGpyycJhdLX1FoaJiEMTHgD/SWTr0aPp/w2C
+TCfnfiPupaeG8u9JV8QMCk/a58o6Xw8=
+=ygqv
+-----END PGP SIGNATURE-----
+
+--goo77pyirkr5psgn--
