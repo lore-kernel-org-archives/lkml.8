@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3336C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BF9C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD4120780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C2C2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgDWXOz (ORCPT
+        id S1729208AbgDWXOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:14:55 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49792 "EHLO
+        Thu, 23 Apr 2020 19:14:51 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49782 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728440AbgDWXGs (ORCPT
+        by vger.kernel.org with ESMTP id S1728435AbgDWXGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-0004iO-DF; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvS-0004hJ-DJ; Fri, 24 Apr 2020 00:06:34 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-00E6qD-S2; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvP-00E6nm-JO; Fri, 24 Apr 2020 00:06:31 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andrew Lunn" <andrew@lunn.ch>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "Russell King" <rmk+kernel@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Fri, 24 Apr 2020 00:06:06 +0100
-Message-ID: <lsq.1587683028.54027644@decadent.org.uk>
+        "Leo Yan" <leo.yan@linaro.org>,
+        "Jeffrey Hugo" <jeffrey.l.hugo@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 00:05:36 +0100
+Message-ID: <lsq.1587683028.125073704@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 139/245] mod_devicetable: fix PHY module format
+Subject: [PATCH 3.16 109/245] tty: serial: msm_serial: Fix lockup for
+ sysrq and oops
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,42 +57,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Leo Yan <leo.yan@linaro.org>
 
-commit d2ed49cf6c13e379c5819aa5ac20e1f9674ebc89 upstream.
+commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e upstream.
 
-When a PHY is probed, if the top bit is set, we end up requesting a
-module with the string "mdio:-10101110000000100101000101010001" -
-the top bit is printed to a signed -1 value. This leads to the module
-not being loaded.
+As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
+has mentioned the uart driver might cause recursive locking between
+normal printing and the kernel debugging facilities (e.g. sysrq and
+oops).  In the commit it gave out suggestion for fixing recursive
+locking issue: "The solution is to avoid locking in the sysrq case
+and trylock in the oops_in_progress case."
 
-Fix the module format string and the macro generating the values for
-it to ensure that we only print unsigned types and the top bit is
-always 0/1. We correctly end up with
-"mdio:10101110000000100101000101010001".
+This patch follows the suggestion (also used the exactly same code with
+other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
+issue, this can avoid stuck caused by deadlock and print out log for
+sysrq and oops.
 
-Fixes: 8626d3b43280 ("phylib: Support phy module autoloading")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/mod_devicetable.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/msm_serial.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -497,9 +497,9 @@ struct platform_device_id {
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -857,6 +857,7 @@ static void msm_console_write(struct con
+ 	struct msm_port *msm_port;
+ 	int num_newlines = 0;
+ 	bool replaced = false;
++	int locked = 1;
  
- #define MDIO_MODULE_PREFIX	"mdio:"
+ 	BUG_ON(co->index < 0 || co->index >= UART_NR);
  
--#define MDIO_ID_FMT "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d"
-+#define MDIO_ID_FMT "%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u"
- #define MDIO_ID_ARGS(_id) \
--	(_id)>>31, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1,	\
-+	((_id)>>31) & 1, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1, \
- 	((_id)>>27) & 1, ((_id)>>26) & 1, ((_id)>>25) & 1, ((_id)>>24) & 1, \
- 	((_id)>>23) & 1, ((_id)>>22) & 1, ((_id)>>21) & 1, ((_id)>>20) & 1, \
- 	((_id)>>19) & 1, ((_id)>>18) & 1, ((_id)>>17) & 1, ((_id)>>16) & 1, \
+@@ -869,7 +870,13 @@ static void msm_console_write(struct con
+ 			num_newlines++;
+ 	count += num_newlines;
+ 
+-	spin_lock(&port->lock);
++	if (port->sysrq)
++		locked = 0;
++	else if (oops_in_progress)
++		locked = spin_trylock(&port->lock);
++	else
++		spin_lock(&port->lock);
++
+ 	if (msm_port->is_uartdm)
+ 		reset_dm_count(port, count);
+ 
+@@ -906,7 +913,9 @@ static void msm_console_write(struct con
+ 		msm_write(port, *bf, msm_port->is_uartdm ? UARTDM_TF : UART_TF);
+ 		i += num_chars;
+ 	}
+-	spin_unlock(&port->lock);
++
++	if (locked)
++		spin_unlock(&port->lock);
+ }
+ 
+ static int __init msm_console_setup(struct console *co, char *options)
 
