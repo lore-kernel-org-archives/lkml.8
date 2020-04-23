@@ -2,293 +2,327 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5D6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8F9C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 307C220706
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7ED20706
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgDWSOI (ORCPT
+        id S1730178AbgDWSPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:14:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39222 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730042AbgDWSOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:14:08 -0400
-IronPort-SDR: l/7nngsIIVOzXWyCodYSfKqDTL7iKCxDIr+ZMQozLdpLwrX6bxXloDM2kDe/ePf92Sd8AGE9VC
- uYb6UL4AnrBg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 11:14:07 -0700
-IronPort-SDR: n6O+tei/TZKssUMSN1ddj46BDAlluaZsK7sDuMgWxXnWgll3uW2NOCcxZNgJKsyPhgKsOczBbu
- Wrdg2O7ag1nQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="274315244"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 23 Apr 2020 11:14:07 -0700
-Date:   Thu, 23 Apr 2020 11:14:06 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 7/9] KVM: X86: Add userspace access interface for CET
- MSRs
-Message-ID: <20200423181406.GK17824@linux.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-8-weijiang.yang@intel.com>
+        Thu, 23 Apr 2020 14:15:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41750 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730042AbgDWSPm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 14:15:42 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NI1wmG118103;
+        Thu, 23 Apr 2020 14:15:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrc62mp2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 14:15:33 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03NI2cmQ120063;
+        Thu, 23 Apr 2020 14:15:33 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrc62mna-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 14:15:33 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03NIEZKV003340;
+        Thu, 23 Apr 2020 18:15:32 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01dal.us.ibm.com with ESMTP id 30fs67ecft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 18:15:32 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NIFUKj59441528
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 18:15:30 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8B39E13607D;
+        Thu, 23 Apr 2020 18:15:30 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACED6136053;
+        Thu, 23 Apr 2020 18:15:29 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.199.36.226])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 18:15:29 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id E98C92E3026; Thu, 23 Apr 2020 23:45:23 +0530 (IST)
+Date:   Thu, 23 Apr 2020 23:45:23 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
+        ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
+        pratik.r.sampat@gmail.com
+Subject: Re: [PATCH v8 1/1] powerpc/powernv: Introduce support and parsing
+ for self-save API
+Message-ID: <20200423181523.GA15514@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200423105557.29108-1-psampat@linux.ibm.com>
+ <20200423105557.29108-2-psampat@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200326081847.5870-8-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200423105557.29108-2-psampat@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_13:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 lowpriorityscore=0 spamscore=0 impostorscore=0
+ clxscore=1015 adultscore=0 phishscore=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:18:44PM +0800, Yang Weijiang wrote:
-> +#define CET_MSR_RSVD_BITS_1  GENMASK(1, 0)
-> +#define CET_MSR_RSVD_BITS_2  GENMASK(9, 6)
+On Thu, Apr 23, 2020 at 04:25:57PM +0530, Pratik Rajesh Sampat wrote:
+> This commit introduces and leverages the Self save API. The difference
+> between self-save and self-restore is that the value to be saved for the
+> SPR does not need to be passed to the call.
+> 
+> Add the new Self Save OPAL API call in the list of OPAL calls.
+> 
+> The device tree is parsed looking for the property "ibm,opal-self-save"
+> If self-save is supported then for all SPRs self-save is invoked for all
+> P9 supported registers. In the case self-save fails corresponding
+> self-restore call is invoked as a fallback.
+> 
+> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+
+
+
+
+A suggestion from the bisectability point of view though.
+
+Since in this patch you are also invoking self_save API for a new SPR,
+namely PTCR which was previously not present, I would suggest that you
+move the PTCR changes to a different patch.
+
+Otherwise, the patchset looks good to me
+
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+
+> ---
+>  arch/powerpc/include/asm/opal-api.h        |  3 +-
+>  arch/powerpc/include/asm/opal.h            |  1 +
+>  arch/powerpc/platforms/powernv/idle.c      | 73 ++++++++++++++++++----
+>  arch/powerpc/platforms/powernv/opal-call.c |  1 +
+>  4 files changed, 64 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+> index 1dffa3cb16ba..7ba698369083 100644
+> --- a/arch/powerpc/include/asm/opal-api.h
+> +++ b/arch/powerpc/include/asm/opal-api.h
+> @@ -214,7 +214,8 @@
+>  #define OPAL_SECVAR_GET				176
+>  #define OPAL_SECVAR_GET_NEXT			177
+>  #define OPAL_SECVAR_ENQUEUE_UPDATE		178
+> -#define OPAL_LAST				178
+> +#define OPAL_SLW_SELF_SAVE_REG			181
+> +#define OPAL_LAST				181
+> 
+>  #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+>  #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+> index 9986ac34b8e2..a370b0e8d899 100644
+> --- a/arch/powerpc/include/asm/opal.h
+> +++ b/arch/powerpc/include/asm/opal.h
+> @@ -204,6 +204,7 @@ int64_t opal_handle_hmi2(__be64 *out_flags);
+>  int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
+>  int64_t opal_unregister_dump_region(uint32_t id);
+>  int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
+> +int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
+>  int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
+>  int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
+>  int64_t opal_pci_get_pbcq_tunnel_bar(uint64_t phb_id, uint64_t *addr);
+> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+> index 78599bca66c2..ada7ece24521 100644
+> --- a/arch/powerpc/platforms/powernv/idle.c
+> +++ b/arch/powerpc/platforms/powernv/idle.c
+> @@ -32,6 +32,11 @@
+>  #define P9_STOP_SPR_MSR 2000
+>  #define P9_STOP_SPR_PSSCR      855
+> 
+> +/* Caching the self-save functionality, lpcr, ptcr support */
+> +DEFINE_STATIC_KEY_FALSE(self_save_available);
+> +DEFINE_STATIC_KEY_FALSE(is_lpcr_self_save);
+> +DEFINE_STATIC_KEY_FALSE(is_ptcr_self_save);
 > +
-> +static bool cet_check_msr_write(struct kvm_vcpu *vcpu,
-
-s/cet_check_msr_write/is_cet_msr_valid
-
-Otherwise the polarity of the return value isn't obvious.
-
-> +				struct msr_data *msr,
-
-Unnecessary newline.
-
-> +				u64 mask)
-
-s/mask/rsvd_bits
-
+>  static u32 supported_cpuidle_states;
+>  struct pnv_idle_states_t *pnv_idle_states;
+>  int nr_pnv_idle_states;
+> @@ -61,6 +66,35 @@ static bool deepest_stop_found;
+> 
+>  static unsigned long power7_offline_type;
+> 
+> +/*
+> + * Cache support for SPRs that support self-save as well as kernel save restore
+> + * so that kernel does not duplicate efforts in saving and restoring SPRs
+> + */
+> +static void cache_spr_self_save_support(u64 sprn)
 > +{
-> +	u64 data = msr->data;
-> +	u32 high_word = data >> 32;
-> +
-> +	if (data & mask)
-> +		return false;
-> +
-> +	if (!is_64_bit_mode(vcpu) && high_word)
-> +		return false;
-
-As I called out before, this is wrong.  AFAIK, the CPU never depends on
-WRMSR to prevent loading bits 63:32, software can simply do WRMSR and then
-transition back to 32-bit mode.  Yes, the shadow stack itself is 32 bits,
-but the internal value is still 64 bits.  This is backed up by the CALL
-pseudocode:
-
-  IF ShadowStackEnabled(CPL)
-    IF (EFER.LMA and DEST(CodeSegmentSelector).L) = 0
-      (* If target is legacy or compatibility mode then the SSP must be in low 4GB *)
-      IF (SSP & 0xFFFFFFFF00000000 != 0)
-        THEN #GP(0); FI;
-  FI;
-
-as well as RDSSP:
-
-  IF CPL = 3
-    IF CR4.CET & IA32_U_CET.SH_STK_EN
-      IF (operand size is 64 bit)
-        THEN
-          Dest ← SSP;
-        ELSE
-          Dest ← SSP[31:0];
-      FI;
-    FI;
-  ELSE
-
-> +
-> +	return true;
-> +}
-> +
-> +static bool cet_check_ssp_msr_access(struct kvm_vcpu *vcpu,
-> +				     struct msr_data *msr)
-
-Similar to above, the polarity of the return isn't obvious.  Maybe
-is_cet_ssp_msr_accessible()?
-
-I'd prefer to pass in @index, passing the full @msr makes it look like
-this helper might also check msr->data.
-
-> +{
-> +	u32 index = msr->index;
-> +
-> +	if (!boot_cpu_has(X86_FEATURE_SHSTK))
-> +		return false;
-> +
-> +	if (!msr->host_initiated &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> +		return false;
-> +
-> +	if (index == MSR_IA32_INT_SSP_TAB)
-> +		return true;
-> +
-> +	if (index == MSR_IA32_PL3_SSP) {
-> +		if (!(supported_xss & XFEATURE_MASK_CET_USER))
-> +			return false;
-> +	} else if (!(supported_xss & XFEATURE_MASK_CET_KERNEL)) {
-> +		return false;
+> +	switch (sprn) {
+> +	case SPRN_LPCR:
+> +		static_branch_enable(&is_lpcr_self_save);
+> +		break;
+> +	case SPRN_PTCR:
+> +		static_branch_enable(&is_ptcr_self_save);
+> +		break;
 > +	}
-
-	if (index == MSR_IA32_PL3_SSP)
-		return supported_xss & XFEATURE_MASK_CET_USER;
-
-	/* MSR_IA32_PL[0-2]_SSP */
-	return supported_xss & XFEATURE_MASK_CET_KERNEL;
-> +
-> +	return true;
 > +}
 > +
-> +static bool cet_check_ctl_msr_access(struct kvm_vcpu *vcpu,
-
-is_cet_ctl_msr_accessible?
-
-> +				     struct msr_data *msr)
+> +static int pnv_save_one_spr(u64 pir, u64 sprn, u64 val)
 > +{
-> +	u32 index = msr->index;
+> +	if (static_branch_likely(&self_save_available)) {
+> +		int rc = opal_slw_self_save_reg(pir, sprn);
 > +
-> +	if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
-> +	    !boot_cpu_has(X86_FEATURE_IBT))
-> +		return false;
-> +
-> +	if (!msr->host_initiated &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-> +		return false;
-> +
-> +	if (index == MSR_IA32_U_CET) {
-> +		if (!(supported_xss & XFEATURE_MASK_CET_USER))
-> +			return false;
-> +	} else if (!(supported_xss & XFEATURE_MASK_CET_KERNEL)) {
-> +		return false;
+> +		if (!rc) {
+> +			cache_spr_self_save_support(sprn);
+> +			return rc;
+> +		}
 > +	}
-
-Same as above:
-
-	if (index == MSR_IA32_U_CET)
-		return supported_xss & XFEATURE_MASK_CET_USER;
-
-	return supported_xss & XFEATURE_MASK_CET_KERNEL;
-> +
-> +	return true;
+> +	return opal_slw_set_reg(pir, sprn, val);
 > +}
->  /*
->   * Reads an msr value (of 'msr_index') into 'pdata'.
->   * Returns 0 on success, non-0 otherwise.
-> @@ -1941,6 +2026,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		else
->  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
->  		break;
-> +	case MSR_IA32_S_CET:
-> +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		msr_info->data = vmcs_readl(GUEST_S_CET);
-> +		break;
-> +	case MSR_IA32_INT_SSP_TAB:
-> +		if (!cet_check_ssp_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-> +		break;
-> +	case MSR_IA32_U_CET:
-> +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		vmx_get_xsave_msr(msr_info);
-> +		break;
-> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> +		if (!cet_check_ssp_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		vmx_get_xsave_msr(msr_info);
-> +		break;
->  	case MSR_TSC_AUX:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> @@ -2197,6 +2302,34 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		else
->  			vmx->pt_desc.guest.addr_a[index / 2] = data;
->  		break;
-> +	case MSR_IA32_S_CET:
-> +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		if (!cet_check_msr_write(vcpu, msr_info, CET_MSR_RSVD_BITS_2))
-> +			return 1;
-> +		vmcs_writel(GUEST_S_CET, data);
-> +		break;
-> +	case MSR_IA32_INT_SSP_TAB:
-> +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		if (!is_64_bit_mode(vcpu))
-
-This is wrong, the SDM explicitly calls out the !64 case:
-
-  IA32_INTERRUPT_SSP_TABLE_ADDR (64 bits; 32 bits on processors that do not
-  support Intel 64 architecture).
-
-> +			return 1;
-> +		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
-> +		break;
-> +	case MSR_IA32_U_CET:
-> +		if (!cet_check_ctl_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		if (!cet_check_msr_write(vcpu, msr_info, CET_MSR_RSVD_BITS_2))
-> +			return 1;
-> +		vmx_set_xsave_msr(msr_info);
-> +		break;
-> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> +		if (!cet_check_ssp_msr_access(vcpu, msr_info))
-> +			return 1;
-> +		if (!cet_check_msr_write(vcpu, msr_info, CET_MSR_RSVD_BITS_1))
-> +			return 1;
-> +		vmx_set_xsave_msr(msr_info);
-> +		break;
->  	case MSR_TSC_AUX:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 9654d779bdab..9e89ee6a09e1 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1229,6 +1229,10 @@ static const u32 msrs_to_save_all[] = {
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
 > +
-> +	MSR_IA32_XSS, MSR_IA32_U_CET, MSR_IA32_S_CET,
-> +	MSR_IA32_PL0_SSP, MSR_IA32_PL1_SSP, MSR_IA32_PL2_SSP,
-> +	MSR_IA32_PL3_SSP, MSR_IA32_INT_SSP_TAB,
->  };
->  
->  static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
-> @@ -1504,6 +1508,13 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
->  		 * invokes 64-bit SYSENTER.
->  		 */
->  		data = get_canonical(data, vcpu_virt_addr_bits(vcpu));
-> +		break;
-> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> +	case MSR_IA32_U_CET:
-> +	case MSR_IA32_S_CET:
-> +	case MSR_IA32_INT_SSP_TAB:
-> +		if (is_noncanonical_address(data, vcpu))
-
-IMO the canonical check belongs in cet_check_msr_write().  The above checks
-are for MSRs that are common to VMX and SVM, i.e. the common check saves
-having to duplicate the logic.  If SVM picks up CET support, then they'll
-presumably want to share all of the checks, not just the canonical piece.
-
-> +			return 1;
+>  static int pnv_save_sprs_for_deep_states(void)
+>  {
+>  	int cpu;
+> @@ -72,6 +106,7 @@ static int pnv_save_sprs_for_deep_states(void)
+>  	 * same across all cpus.
+>  	 */
+>  	uint64_t lpcr_val	= mfspr(SPRN_LPCR);
+> +	uint64_t ptcr_val	= mfspr(SPRN_PTCR);
+>  	uint64_t hid0_val	= mfspr(SPRN_HID0);
+>  	uint64_t hid1_val	= mfspr(SPRN_HID1);
+>  	uint64_t hid4_val	= mfspr(SPRN_HID4);
+> @@ -84,30 +119,34 @@ static int pnv_save_sprs_for_deep_states(void)
+>  		uint64_t pir = get_hard_smp_processor_id(cpu);
+>  		uint64_t hsprg0_val = (uint64_t)paca_ptrs[cpu];
+> 
+> -		rc = opal_slw_set_reg(pir, SPRN_HSPRG0, hsprg0_val);
+> +		rc = pnv_save_one_spr(pir, SPRN_HSPRG0, hsprg0_val);
+>  		if (rc != 0)
+>  			return rc;
+> 
+> -		rc = opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
+> +		rc = pnv_save_one_spr(pir, SPRN_LPCR, lpcr_val);
+>  		if (rc != 0)
+>  			return rc;
+> 
+> +		/*
+> +		 * No need to check for failure, if firmware fails to save then
+> +		 * kernel handles save-restore for PTCR
+> +		 */
+> +		pnv_save_one_spr(pir, SPRN_PTCR, ptcr_val);
+> +
+>  		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
+> -			rc = opal_slw_set_reg(pir, P9_STOP_SPR_MSR, msr_val);
+> +			rc = pnv_save_one_spr(pir, P9_STOP_SPR_MSR, msr_val);
+>  			if (rc)
+>  				return rc;
+> 
+> -			rc = opal_slw_set_reg(pir,
+> +			rc = pnv_save_one_spr(pir,
+>  					      P9_STOP_SPR_PSSCR, psscr_val);
+> -
+>  			if (rc)
+>  				return rc;
+>  		}
+> 
+>  		/* HIDs are per core registers */
+>  		if (cpu_thread_in_core(cpu) == 0) {
+> -
+> -			rc = opal_slw_set_reg(pir, SPRN_HMEER, hmeer_val);
+> +			rc = pnv_save_one_spr(pir, SPRN_HMEER, hmeer_val);
+>  			if (rc != 0)
+>  				return rc;
+> 
+> @@ -658,7 +697,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>  		mmcr0		= mfspr(SPRN_MMCR0);
 >  	}
->  
->  	msr.data = data;
+>  	if ((psscr & PSSCR_RL_MASK) >= pnv_first_spr_loss_level) {
+> -		sprs.lpcr	= mfspr(SPRN_LPCR);
+> +		if (!static_branch_unlikely(&is_lpcr_self_save))
+> +			sprs.lpcr	= mfspr(SPRN_LPCR);
+>  		sprs.hfscr	= mfspr(SPRN_HFSCR);
+>  		sprs.fscr	= mfspr(SPRN_FSCR);
+>  		sprs.pid	= mfspr(SPRN_PID);
+> @@ -672,7 +712,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>  		sprs.mmcr1	= mfspr(SPRN_MMCR1);
+>  		sprs.mmcr2	= mfspr(SPRN_MMCR2);
+> 
+> -		sprs.ptcr	= mfspr(SPRN_PTCR);
+> +		if (!static_branch_unlikely(&is_ptcr_self_save))
+> +			sprs.ptcr	= mfspr(SPRN_PTCR);
+>  		sprs.rpr	= mfspr(SPRN_RPR);
+>  		sprs.tscr	= mfspr(SPRN_TSCR);
+>  		if (!firmware_has_feature(FW_FEATURE_ULTRAVISOR))
+> @@ -756,7 +797,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>  		goto core_woken;
+> 
+>  	/* Per-core SPRs */
+> -	mtspr(SPRN_PTCR,	sprs.ptcr);
+> +	if (!static_branch_unlikely(&is_ptcr_self_save))
+> +		mtspr(SPRN_PTCR,	sprs.ptcr);
+>  	mtspr(SPRN_RPR,		sprs.rpr);
+>  	mtspr(SPRN_TSCR,	sprs.tscr);
+> 
+> @@ -777,7 +819,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>  	atomic_unlock_and_stop_thread_idle();
+> 
+>  	/* Per-thread SPRs */
+> -	mtspr(SPRN_LPCR,	sprs.lpcr);
+> +	if (!static_branch_unlikely(&is_lpcr_self_save))
+> +		mtspr(SPRN_LPCR,	sprs.lpcr);
+>  	mtspr(SPRN_HFSCR,	sprs.hfscr);
+>  	mtspr(SPRN_FSCR,	sprs.fscr);
+>  	mtspr(SPRN_PID,		sprs.pid);
+> @@ -956,8 +999,10 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
+>  	 * Program the LPCR via stop-api only if the deepest stop state
+>  	 * can lose hypervisor context.
+>  	 */
+> -	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT)
+> -		opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
+> +	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT) {
+> +		if (!static_branch_unlikely(&is_lpcr_self_save))
+> +			opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
+> +	}
+>  }
+> 
+>  /*
+> @@ -1298,6 +1343,8 @@ static int pnv_parse_cpuidle_dt(void)
+>  		}
+>  		for (i = 0; i < nr_idle_states; i++)
+>  			pnv_idle_states[i].psscr_mask = temp_u64[i];
+> +		if (of_property_read_bool(np, "ibm,opal-self-save"))
+> +			static_branch_enable(&self_save_available);
+>  	}
+> 
+>  	/*
+> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+> index 5cd0f52d258f..11e0ceb90de0 100644
+> --- a/arch/powerpc/platforms/powernv/opal-call.c
+> +++ b/arch/powerpc/platforms/powernv/opal-call.c
+> @@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
+>  OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
+>  OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
+>  OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
+> +OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
+>  OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
+>  OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
+>  OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
 > -- 
-> 2.17.2
+> 2.17.1
 > 
