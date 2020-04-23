@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1993C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD63CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE7020780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9857F20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgDWXRC (ORCPT
+        id S1729662AbgDWXRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:17:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49372 "EHLO
+        Thu, 23 Apr 2020 19:17:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49324 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728346AbgDWXGn (ORCPT
+        by vger.kernel.org with ESMTP id S1728333AbgDWXGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:43 -0400
+        Thu, 23 Apr 2020 19:06:42 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvT-0004i3-1b; Fri, 24 Apr 2020 00:06:35 +0100
+        id 1jRkvQ-0004gH-Td; Fri, 24 Apr 2020 00:06:33 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvQ-00E6og-Lw; Fri, 24 Apr 2020 00:06:32 +0100
+        id 1jRkvP-00E6nT-65; Fri, 24 Apr 2020 00:06:31 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Sterba" <dsterba@suse.com>,
-        "Lu Fengqi" <lufq.fnst@cn.fujitsu.com>
-Date:   Fri, 24 Apr 2020 00:05:47 +0100
-Message-ID: <lsq.1587683028.711032763@decadent.org.uk>
+        "Felipe Balbi" <felipe.balbi@linux.intel.com>
+Date:   Fri, 24 Apr 2020 00:05:32 +0100
+Message-ID: <lsq.1587683028.746271206@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 120/245] btrfs: Remove redundant btrfs_release_path
- from btrfs_unlink_subvol
+Subject: [PATCH 3.16 105/245] usb: dwc3: pci: add support for Comet Lake
+ PCH ID
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,32 +55,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
 
-commit 5b7d687ad5913a56b6a8788435d7a53990b4176d upstream.
+commit 7ae622c978db6b2e28b4fced6ecd2a174492059d upstream.
 
-Although it is safe to call this on already released paths with no locks
-held or extent buffers, removing the redundant btrfs_release_path is
-reasonable.
+This patch simply adds a new PCI Device ID
 
-Signed-off-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 3.16 as dependency of commit d49d3287e74f
- "btrfs: fix invalid removal of root ref"]
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+[bwh: Backported to 3.16:
+ - No properties support
+ - Adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/inode.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/usb/dwc3/dwc3-pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4031,7 +4031,6 @@ int btrfs_unlink_subvol(struct btrfs_tra
- 
- 		leaf = path->nodes[0];
- 		btrfs_item_key_to_cpu(leaf, &key, path->slots[0]);
--		btrfs_release_path(path);
- 		index = key.offset;
- 	}
- 	btrfs_release_path(path);
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -37,6 +37,7 @@
+ #define PCI_DEVICE_ID_INTEL_BXT_M	0x1aaa
+ #define PCI_DEVICE_ID_INTEL_APL		0x5aaa
+ #define PCI_DEVICE_ID_INTEL_KBP		0xa2b0
++#define PCI_DEVICE_ID_INTEL_CMLH	0x02ee
+ #define PCI_DEVICE_ID_INTEL_GLK		0x31aa
+ #define PCI_DEVICE_ID_INTEL_CNPLP	0x9dee
+ #define PCI_DEVICE_ID_INTEL_CNPH	0xa36e
+@@ -197,6 +198,7 @@ static const struct pci_device_id dwc3_p
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BSW), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BYT), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_MRFLD), },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CMLH), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTLP), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTH), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BXT), },
 
