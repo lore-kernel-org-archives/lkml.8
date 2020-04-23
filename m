@@ -2,116 +2,119 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40B2C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52122C55189
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE4402076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:39:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mj30sjvr"
+	by mail.kernel.org (Postfix) with ESMTP id 396C72075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgDWAjh (ORCPT
+        id S1726363AbgDWAoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 20:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbgDWAjg (ORCPT
+        Wed, 22 Apr 2020 20:44:19 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:48805 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgDWAoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 20:39:36 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A824AC03C1AA;
-        Wed, 22 Apr 2020 17:39:34 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t11so3318661lfe.4;
-        Wed, 22 Apr 2020 17:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5fl4A7nRdQONkc+Ns32BwHf/X7YnX+et/nIg9JJL2zU=;
-        b=Mj30sjvrkHvbKMqqfHKFNV5+YQEGBrwRZ0z+4T3vXh7n5MBP9x3dRJ6j2LmHioOge6
-         QYB43T4G4zJsbQVQ7BH3EqooNVpHMppSpitVpDBQztmzTnG24oBhFVzD/pbnt9ghXCDO
-         lIPvj3hYEECgw/yZYPuNE0KHnYN0oFHy/bnaLJb8G8jh4Pwt0ER9hkd3ECRaHkHJU+iO
-         goBbHo0eb/KFYdoDWis9mS1esjCM8LF+3/iN/bWJpmfHjiEIUFmfqjNzVq6UTTEZbD6/
-         cq6F+gZvE/nYHjEyGeNUuF/JF95Q6/HLQv3qf/7y4paceeOPZpHl3Ev/446VWEv+B+4b
-         IBCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5fl4A7nRdQONkc+Ns32BwHf/X7YnX+et/nIg9JJL2zU=;
-        b=B87NbZIbLKiuUTURFThhvs2SMWre10Crw9wz3hG1Bs8BKWXK3WKVm50fOqqhAiWFUl
-         cB9HP0mQjRg7R+ecQlB6M9ok6+98q6OVHlFrRMXnbljFf6i6ojTWiQoH2DhfhDZ+TZO4
-         q3zy61dkeJq7NBFd+LCl5RSL1e3u64sYQACr3iBnuDSFkj+dudjnW/Ks4f2Bol6kOHGv
-         v8rhIAmvRMpsfm3cr7pD8RoMM7WX63ZWt+X0YzuLqF8ZpCxNA6OLoolgDIBtbZ+CFOuv
-         ZUUaxE7ZJscdT0FszfJh9SlSMHYFKd0xLDO7KQw/1JmVEVtJL5n+6TVQKdWmMfJT+KbA
-         xyMg==
-X-Gm-Message-State: AGi0PuZnda7WPPp9FrmtYyhvgGZAUU5dNUaI33ktEiSxlWZ7rpStzno1
-        SdZuZw2bEko4R3wB129TEUXCz8DdoGY=
-X-Google-Smtp-Source: APiQypKEnU1zF7+eWCBcmj0qvCVqLKmZHMNFwVXoZaQrmlJkac50VlkAbDcbpHZOQ6d2aDNMPqqV1g==
-X-Received: by 2002:a19:c3c5:: with SMTP id t188mr718181lff.199.1587602373144;
-        Wed, 22 Apr 2020 17:39:33 -0700 (PDT)
-Received: from [172.16.20.20] ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id t19sm502360lfl.53.2020.04.22.17.39.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Apr 2020 17:39:32 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH 0/3] Bluetooth: hci_qca: add support for QCA9377
-From:   Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <D965D634-A881-43E0-B9F8-DF4679BB9C6D@holtmann.org>
-Date:   Thu, 23 Apr 2020 04:39:24 +0400
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6103BC70-F2AC-4CA5-BF6F-152466AEEBD1@gmail.com>
-References: <20200421081656.9067-1-christianshewitt@gmail.com>
- <D965D634-A881-43E0-B9F8-DF4679BB9C6D@holtmann.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-X-Mailer: Apple Mail (2.3445.104.14)
+        Wed, 22 Apr 2020 20:44:18 -0400
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 40A4B100002;
+        Thu, 23 Apr 2020 00:44:10 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 17:44:07 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     Mark Wielaard <mark@klomp.org>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mtk.manpages@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-man@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] fs: pipe2: Support O_SPECIFIC_FD
+Message-ID: <20200423004407.GB161058@localhost>
+References: <cover.1587531463.git.josh@joshtriplett.org>
+ <2bb2e92c688b97247f644fe8220054d6c6b66b65.1587531463.git.josh@joshtriplett.org>
+ <877dy7ikyh.fsf@mid.deneb.enyo.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877dy7ikyh.fsf@mid.deneb.enyo.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 22, 2020 at 05:44:38PM +0200, Florian Weimer wrote:
+> * Josh Triplett:
+> > This allows the caller of pipe2 to specify one or both file descriptors
+> > rather than having them automatically use the lowest available file
+> > descriptor. The caller can specify either file descriptor as -1 to
+> > allow that file descriptor to use the lowest available.
+> >
+> > Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+> > ---
+> >  fs/pipe.c | 16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/pipe.c b/fs/pipe.c
+> > index 16fb72e9abf7..4681a0d1d587 100644
+> > --- a/fs/pipe.c
+> > +++ b/fs/pipe.c
+> > @@ -936,19 +936,19 @@ static int __do_pipe_flags(int *fd, struct file **files, int flags)
+> >  	int error;
+> >  	int fdw, fdr;
+> >  
+> > -	if (flags & ~(O_CLOEXEC | O_NONBLOCK | O_DIRECT))
+> > +	if (flags & ~(O_CLOEXEC | O_NONBLOCK | O_DIRECT | O_SPECIFIC_FD))
+> >  		return -EINVAL;
+> >  
+> >  	error = create_pipe_files(files, flags);
+> >  	if (error)
+> >  		return error;
+> >  
+> > -	error = get_unused_fd_flags(flags);
+> > +	error = get_specific_unused_fd_flags(fd[0], flags);
+> >  	if (error < 0)
+> >  		goto err_read_pipe;
+> >  	fdr = error;
+> >  
+> > -	error = get_unused_fd_flags(flags);
+> > +	error = get_specific_unused_fd_flags(fd[1], flags);
+> >  	if (error < 0)
+> >  		goto err_fdr;
+> >  	fdw = error;
+> > @@ -969,7 +969,11 @@ static int __do_pipe_flags(int *fd, struct file **files, int flags)
+> >  int do_pipe_flags(int *fd, int flags)
+> >  {
+> >  	struct file *files[2];
+> > -	int error = __do_pipe_flags(fd, files, flags);
+> > +	int error;
+> > +
+> > +	if (flags & O_SPECIFIC_FD)
+> > +		return -EINVAL;
+> > +	error = __do_pipe_flags(fd, files, flags);
+> >  	if (!error) {
+> >  		fd_install(fd[0], files[0]);
+> >  		fd_install(fd[1], files[1]);
+> > @@ -987,6 +991,10 @@ static int do_pipe2(int __user *fildes, int flags)
+> >  	int fd[2];
+> >  	int error;
+> >  
+> > +	if (flags & O_SPECIFIC_FD)
+> > +		if (copy_from_user(fd, fildes, sizeof(fd)))
+> > +			return -EFAULT;
+> > +
+> >  	error = __do_pipe_flags(fd, files, flags);
+> >  	if (!error) {
+> >  		if (unlikely(copy_to_user(fildes, fd, sizeof(fd)))) {
+> 
+> Mark, I think this will need (or at least benefit from) some valgrind
+> changes.
 
-> On 22 Apr 2020, at 9:39 pm, Marcel Holtmann <marcel@holtmann.org> =
-wrote:
->=20
-> Hi Christian,
->=20
->> This series adds a new compatible for the QCA9377 BT device that is =
-found
->> in many Android TV box devices, makes minor changes to allow =
-max-speed
->> values for the device to be read from device-tree, and updates =
-bindings
->> to reflect those changes.
->>=20
->> Christian Hewitt (3):
->> dt-bindings: net: bluetooth: Add device tree bindings for QCA9377
->> Bluetooth: hci_qca: add compatible for QCA9377
->> Bluetooth: hci_qca: allow max-speed to be set for QCA9377 devices
->>=20
->> .../bindings/net/qualcomm-bluetooth.txt         |  5 +++++
->> drivers/bluetooth/hci_qca.c                     | 17 =
-++++++++++-------
->> 2 files changed, 15 insertions(+), 7 deletions(-)
->=20
-> the series doesn=E2=80=99t apply cleanly against bluetooth-next tree. =
-Can you please respin it.
+Yes, this makes pipe2 read the memory of its first argument from
+userspace, if and only if its second argument contains the O_SPECIFIC_FD
+flag.
 
-Ahh, it was based on 5.7-rc1, will do, thanks.
-
-Christian=
+- Josh Triplett
