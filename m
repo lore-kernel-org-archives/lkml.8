@@ -2,262 +2,556 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284F7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B398C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC22B2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2AD92077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=buslov.dev header.i=@buslov.dev header.b="NlzyLWlN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mw96Fpxe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgDWLO3 (ORCPT
+        id S1728029AbgDWLPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41606 "EHLO
+        Thu, 23 Apr 2020 07:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727895AbgDWLO2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727862AbgDWLPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:14:28 -0400
-X-Greylist: delayed 78691 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Apr 2020 04:14:28 PDT
-Received: from mail.buslov.dev (mail.buslov.dev [IPv6:2001:19f0:5001:2e3f:5400:1ff:feed:a259])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E64C035494;
-        Thu, 23 Apr 2020 04:14:28 -0700 (PDT)
-Received: from vlad-x1g6.mellanox.com (unknown [IPv6:2a01:d0:40b3:9801:fec2:781d:de90:e768])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.buslov.dev (Postfix) with ESMTPSA id 58C7A208FF;
-        Thu, 23 Apr 2020 14:14:24 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=buslov.dev; s=2019;
-        t=1587640465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wZX69rGx5ZsrkgUhdo+rnn/ONVvytgKtcCaPJguT/HU=;
-        b=NlzyLWlNiSG1rxS8YMEd0zTDwu9nw6OXxvM2dZy1JDtt+5Lk1kQXRgaWkYEKQrFVQ5f3Yy
-        IyWlUAc/rjExKG2k7iktLVhfbKfiE0I93jVv48oxt0rIF8ApDdNsbBEKlE3Ucd6UhSK5gt
-        KNunmhcaYBtN/Pc5KKPaqpDdsIAtwWiAGjVbKg21lHlDvL5FmBVn+OOE9r/pwot6C3F1BH
-        n9PX7f++QTjnlLaqh4xSifyvFWILwXpG9vRWpiVL1RAhfSmoBKeoU3gfX0BgfcXyrGguRM
-        pDcCOz+Q/2Jf9ymPEpgBf3uEl1VD+kII2Cez3SCxKvrzIfd5zT5+MhcERl15bA==
-References: <20200418011211.31725-5-Po.Liu@nxp.com> <20200422024852.23224-1-Po.Liu@nxp.com> <20200422024852.23224-2-Po.Liu@nxp.com> <877dy7bqo7.fsf@buslov.dev> <VE1PR04MB6496969AB18E17938671FA6092D30@VE1PR04MB6496.eurprd04.prod.outlook.com> <871roebqbe.fsf@buslov.dev> <VE1PR04MB6496AAA71717BBAD4C4CE2BC92D30@VE1PR04MB6496.eurprd04.prod.outlook.com> <VE1PR04MB6496F4805BCF53AF5889CB3892D30@VE1PR04MB6496.eurprd04.prod.outlook.com>
-User-agent: mu4e 1.4.1; emacs 26.3
-From:   Vlad Buslov <vlad@buslov.dev>
-To:     Po Liu <po.liu@nxp.com>
-Cc:     Vlad Buslov <vlad@buslov.dev>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes\@intel.com" <vinicius.gomes@intel.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "Vladimir Oltean" <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "michael.chan\@broadcom.com" <michael.chan@broadcom.com>,
-        "vishal\@chelsio.com" <vishal@chelsio.com>,
-        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
-        "leon\@kernel.org" <leon@kernel.org>,
-        "jiri\@mellanox.com" <jiri@mellanox.com>,
-        "idosch\@mellanox.com" <idosch@mellanox.com>,
-        "alexandre.belloni\@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver\@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "kuba\@kernel.org" <kuba@kernel.org>,
-        "jhs\@mojatatu.com" <jhs@mojatatu.com>,
-        "xiyou.wangcong\@gmail.com" <xiyou.wangcong@gmail.com>,
-        "simon.horman\@netronome.com" <simon.horman@netronome.com>,
-        "pablo\@netfilter.org" <pablo@netfilter.org>,
-        "moshe\@mellanox.com" <moshe@mellanox.com>,
-        "m-karicheri2\@ti.com" <m-karicheri2@ti.com>,
-        "andre.guedes\@linux.intel.com" <andre.guedes@linux.intel.com>,
-        "stephen\@networkplumber.org" <stephen@networkplumber.org>
-Subject: Re: [EXT] Re: [v3,net-next  1/4] net: qos: introduce a gate control flow action
-In-reply-to: <VE1PR04MB6496F4805BCF53AF5889CB3892D30@VE1PR04MB6496.eurprd04.prod.outlook.com>
-Message-ID: <87wo66sbc0.fsf@buslov.dev>
-Date:   Thu, 23 Apr 2020 14:14:39 +0300
+        Thu, 23 Apr 2020 07:15:38 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BF0C035494;
+        Thu, 23 Apr 2020 04:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gkR8NvhW2LD02NLRfludhHvMbSAtpn6ukWm0M0tScz8=; b=Mw96FpxeYalQOzMV9Od9h8dpR0
+        oDafizWD+QsBefHlGXK8BY0K/dp3HcoXVBbPtViHyxMB8o4h5EhVdPev7FKJKmko/oGx5pELFDoO3
+        OASG8Nbjnj8fdeaF0L5AF19lMuXOjoaCaOa12MtRoicncDK02urG42dZpuWD5spNMlzEn1BiKLieJ
+        q1mun7g4oLIhagELPJ+A/MPNoI4a8KFOBF+0r/7u5S0OuHrlRFQw+mcnR6CtUVS1K40LCyZGVr0g/
+        OjkzjYKVmTTTqgE/oL8MIFKJ0rnZHhBgPegm1PbTkCNMFi3mU3A61rhv8FHe+oZTCiBhz1ZpGvVou
+        KKUfeQrg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRZpG-0008LX-K7; Thu, 23 Apr 2020 11:15:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7DFE0300739;
+        Thu, 23 Apr 2020 13:15:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 651E523D3AA98; Thu, 23 Apr 2020 13:15:24 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 13:15:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [tip: objtool/core] objtool: Support multiple stack_op per
+ instruction
+Message-ID: <20200423111524.GS20730@hirez.programming.kicks-ass.net>
+References: <20200327152847.15294-11-jthierry@redhat.com>
+ <158762818246.28353.13419513995701103731.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Type: text/plain
-Authentication-Results: ORIGINATING;
-        auth=pass smtp.auth=vlad@buslov.dev smtp.mailfrom=vlad@buslov.dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158762818246.28353.13419513995701103731.tip-bot2@tip-bot2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 23, 2020 at 07:49:42AM -0000, tip-bot2 for Julien Thierry wrote:
 
-On Thu 23 Apr 2020 at 12:15, Po Liu <po.liu@nxp.com> wrote:
-> Hi Vlad Buslov,
->
->> > >> > +static enum hrtimer_restart gate_timer_func(struct hrtimer *timer)
->> {
->> > >> > +     struct gate_action *gact = container_of(timer, struct
->> gate_action,
->> > >> > +                                             hitimer);
->> > >> > +     struct tcf_gate_params *p = get_gate_param(gact);
->> > >> > +     struct tcfg_gate_entry *next;
->> > >> > +     ktime_t close_time, now;
->> > >> > +
->> > >> > +     spin_lock(&gact->entry_lock);
->> > >> > +
->> > >> > +     next = rcu_dereference_protected(gact->next_entry,
->> > >> > +
->> > >> > + lockdep_is_held(&gact->entry_lock));
->> > >> > +
->> > >> > +     /* cycle start, clear pending bit, clear total octets */
->> > >> > +     gact->current_gate_status = next->gate_state ?
->> > >> GATE_ACT_GATE_OPEN : 0;
->> > >> > +     gact->current_entry_octets = 0;
->> > >> > +     gact->current_max_octets = next->maxoctets;
->> > >> > +
->> > >> > +     gact->current_close_time = ktime_add_ns(gact-
->> > >current_close_time,
->> > >> > +                                             next->interval);
->> > >> > +
->> > >> > +     close_time = gact->current_close_time;
->> > >> > +
->> > >> > +     if (list_is_last(&next->list, &p->entries))
->> > >> > +             next = list_first_entry(&p->entries,
->> > >> > +                                     struct tcfg_gate_entry, list);
->> > >> > +     else
->> > >> > +             next = list_next_entry(next, list);
->> > >> > +
->> > >> > +     now = gate_get_time(gact);
->> > >> > +
->> > >> > +     if (ktime_after(now, close_time)) {
->> > >> > +             ktime_t cycle, base;
->> > >> > +             u64 n;
->> > >> > +
->> > >> > +             cycle = p->tcfg_cycletime;
->> > >> > +             base = ns_to_ktime(p->tcfg_basetime);
->> > >> > +             n = div64_u64(ktime_sub_ns(now, base), cycle);
->> > >> > +             close_time = ktime_add_ns(base, (n + 1) * cycle);
->> > >> > +     }
->> > >> > +
->> > >> > +     rcu_assign_pointer(gact->next_entry, next);
->> > >> > +     spin_unlock(&gact->entry_lock);
->> > >>
->> > >> I have couple of question about synchronization here:
->> > >>
->> > >> - Why do you need next_entry to be rcu pointer? It is only assigned
->> > >> here with entry_lock protection and in init code before action is
->> > >> visible to concurrent users. I don't see any unlocked rcu-protected
->> > >> readers here that could benefit from it.
->> > >>
->> > >> - Why create dedicated entry_lock instead of using already existing
->> > >> per- action tcf_lock?
->> > >
->> > > Will try to use the tcf_lock for verification.
->
-> I think I added entry_lock was that I can't get the tc_action common parameter in this  timer function. If I insist to use the tcf_lock, I have to move the hrtimer to struct tcf_gate which has tc_action common.
-> What do you think?
+> diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+> index 7ce8650..199b408 100644
+> --- a/tools/objtool/arch/x86/decode.c
+> +++ b/tools/objtool/arch/x86/decode.c
+> @@ -80,13 +80,15 @@ unsigned long arch_jump_destination(struct instruction *insn)
+>  int arch_decode_instruction(struct elf *elf, struct section *sec,
+>  			    unsigned long offset, unsigned int maxlen,
+>  			    unsigned int *len, enum insn_type *type,
+> -			    unsigned long *immediate, struct stack_op *op)
+> +			    unsigned long *immediate,
+> +			    struct list_head *ops_list)
+>  {
+>  	struct insn insn;
+>  	int x86_64, sign;
+>  	unsigned char op1, op2, rex = 0, rex_b = 0, rex_r = 0, rex_w = 0,
+>  		      rex_x = 0, modrm = 0, modrm_mod = 0, modrm_rm = 0,
+>  		      modrm_reg = 0, sib = 0;
+> +	struct stack_op *op;
+>  
+>  	x86_64 = is_x86_64(elf);
+>  	if (x86_64 == -1)
+> @@ -127,6 +129,10 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
+>  	if (insn.sib.nbytes)
+>  		sib = insn.sib.bytes[0];
+>  
+> +	op = calloc(1, sizeof(*op));
+> +	if (!op)
+> +		return -1;
+> +
+>  	switch (op1) {
+>  
+>  	case 0x1:
+> @@ -488,6 +494,11 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
+>  
+>  	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
+>  
+> +	if (*type == INSN_STACK)
+> +		list_add_tail(&op->list, ops_list);
+> +	else
+> +		free(op);
+> +
+>  	return 0;
+>  }
 
-Well, if you use tcf_lock instead of rcu to sync with fastpath, the you
-don't need to implement struct gate_action as standalone object pointed
-to by rcu pointer from base structure that includes tc_action common.
-All the necessary data can be included in tcf_gate structure directly
-and used from both timer and action fastpath. See pedit for example of
-action that doesn't use rcu for fastpath.
+So I was playing around with the intra-function thing, trying to address
+Josh's comments from last time, but that also got me staring at this
+again because it adds yet another type with a stack-op.
 
->
->> > > The thoughts came from that the timer period arrived then check
->> > > through the list and then update next time would take much more
->> time.
->> > > Action function would be busy when traffic. So use a separate lock
->> > > here for
->> > >
->> > >>
->> > >> > +
->> > >> > +     hrtimer_set_expires(&gact->hitimer, close_time);
->> > >> > +
->> > >> > +     return HRTIMER_RESTART;
->> > >> > +}
->> > >> > +
->> > >> > +static int tcf_gate_act(struct sk_buff *skb, const struct tc_action *a,
->> > >> > +                     struct tcf_result *res) {
->> > >> > +     struct tcf_gate *g = to_gate(a);
->> > >> > +     struct gate_action *gact;
->> > >> > +     int action;
->> > >> > +
->> > >> > +     tcf_lastuse_update(&g->tcf_tm);
->> > >> > +     bstats_cpu_update(this_cpu_ptr(g->common.cpu_bstats), skb);
->> > >> > +
->> > >> > +     action = READ_ONCE(g->tcf_action);
->> > >> > +     rcu_read_lock();
->> > >>
->> > >> Action fastpath is already rcu read lock protected, you don't need
->> > >> to manually obtain it.
->> > >
->> > > Will be removed.
->> > >
->> > >>
->> > >> > +     gact = rcu_dereference_bh(g->actg);
->> > >> > +     if (unlikely(gact->current_gate_status & GATE_ACT_PENDING))
->> > >> > + {
->> > >>
->> > >> Can't current_gate_status be concurrently modified by timer callback?
->> > >> This function doesn't use entry_lock to synchronize with timer.
->> > >
->> > > Will try tcf_lock either.
->> > >
->> > >>
->> > >> > +             rcu_read_unlock();
->> > >> > +             return action;
->> > >> > +     }
->> > >> > +
->> > >> > +     if (!(gact->current_gate_status & GATE_ACT_GATE_OPEN))
->> > >>
->> > >> ...and here
->> > >>
->> > >> > +             goto drop;
->> > >> > +
->> > >> > +     if (gact->current_max_octets >= 0) {
->> > >> > +             gact->current_entry_octets += qdisc_pkt_len(skb);
->> > >> > +             if (gact->current_entry_octets >
->> > >> > + gact->current_max_octets) {
->> > >>
->> > >> here also.
->> > >>
->> > >> > +
->> > >> > + qstats_overlimit_inc(this_cpu_ptr(g->common.cpu_qstats));
->> > >>
->> > >> Please use tcf_action_inc_overlimit_qstats() and other wrappers for
->> > stats.
->> > >> Otherwise it will crash if user passes
->> > TCA_ACT_FLAGS_NO_PERCPU_STATS
->> > >> flag.
->> > >
->> > > The tcf_action_inc_overlimit_qstats() can't show limit counts in tc
->> > > show
->> > command. Is there anything need to do?
->> >
->> > What do you mean? Internally tcf_action_inc_overlimit_qstats() just
->> > calls qstats_overlimit_inc, if cpu_qstats percpu counter is not NULL:
->> >
->> >
->> >         if (likely(a->cpu_qstats)) {
->> >                 qstats_overlimit_inc(this_cpu_ptr(a->cpu_qstats));
->> >                 return;
->> >         }
->> >
->> > Is there a subtle bug somewhere in this function?
->> 
->> Sorry, I updated using the tcf_action_*, and the counting is ok. I moved
->> back to the qstats_overlimit_inc() because tcf_action_* () include the
->> spin_lock(&a->tcfa_lock).
->> I would update to  tcf_action_* () increate.
->> 
->> >
->> > >
->> > > Br,
->> > > Po Liu
->> 
->> Thanks a lot.
->> 
->> Br,
->> Po Liu
->
-> Thanks a lot.
->
-> Br,
-> Po Liu
+How do people feel about something like so?
 
+---
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -77,6 +77,17 @@ unsigned long arch_jump_destination(stru
+ 	return insn->offset + insn->len + insn->immediate;
+ }
+ 
++#define PUSH_OP(op) \
++({ \
++	list_add_tail(&op->list, ops_list); \
++	NULL; \
++})
++
++#define ADD_OP(op) \
++	if (!(op = calloc(1, sizeof(*op)))) \
++		return -1; \
++	else for (; op; op = PUSH_OP(op))
++
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+ 			    unsigned int *len, enum insn_type *type,
+@@ -88,7 +99,7 @@ int arch_decode_instruction(struct elf *
+ 	unsigned char op1, op2, rex = 0, rex_b = 0, rex_r = 0, rex_w = 0,
+ 		      rex_x = 0, modrm = 0, modrm_mod = 0, modrm_rm = 0,
+ 		      modrm_reg = 0, sib = 0;
+-	struct stack_op *op;
++	struct stack_op *op = NULL;
+ 
+ 	x86_64 = is_x86_64(elf);
+ 	if (x86_64 == -1)
+@@ -129,10 +140,6 @@ int arch_decode_instruction(struct elf *
+ 	if (insn.sib.nbytes)
+ 		sib = insn.sib.bytes[0];
+ 
+-	op = calloc(1, sizeof(*op));
+-	if (!op)
+-		return -1;
+-
+ 	switch (op1) {
+ 
+ 	case 0x1:
+@@ -141,10 +148,12 @@ int arch_decode_instruction(struct elf *
+ 
+ 			/* add/sub reg, %rsp */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_ADD;
+-			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = CFI_SP;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_ADD;
++				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = CFI_SP;
++			}
+ 		}
+ 		break;
+ 
+@@ -152,9 +161,11 @@ int arch_decode_instruction(struct elf *
+ 
+ 		/* push reg */
+ 		*type = INSN_STACK;
+-		op->src.type = OP_SRC_REG;
+-		op->src.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
+-		op->dest.type = OP_DEST_PUSH;
++		ADD_OP(op) {
++			op->src.type = OP_SRC_REG;
++			op->src.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
++			op->dest.type = OP_DEST_PUSH;
++		}
+ 
+ 		break;
+ 
+@@ -162,9 +173,11 @@ int arch_decode_instruction(struct elf *
+ 
+ 		/* pop reg */
+ 		*type = INSN_STACK;
+-		op->src.type = OP_SRC_POP;
+-		op->dest.type = OP_DEST_REG;
+-		op->dest.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
++		ADD_OP(op) {
++			op->src.type = OP_SRC_POP;
++			op->dest.type = OP_DEST_REG;
++			op->dest.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
++		}
+ 
+ 		break;
+ 
+@@ -172,8 +185,10 @@ int arch_decode_instruction(struct elf *
+ 	case 0x6a:
+ 		/* push immediate */
+ 		*type = INSN_STACK;
+-		op->src.type = OP_SRC_CONST;
+-		op->dest.type = OP_DEST_PUSH;
++		ADD_OP(op) {
++			op->src.type = OP_SRC_CONST;
++			op->dest.type = OP_DEST_PUSH;
++		}
+ 		break;
+ 
+ 	case 0x70 ... 0x7f:
+@@ -188,11 +203,13 @@ int arch_decode_instruction(struct elf *
+ 		if (modrm == 0xe4) {
+ 			/* and imm, %rsp */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_AND;
+-			op->src.reg = CFI_SP;
+-			op->src.offset = insn.immediate.value;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = CFI_SP;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_AND;
++				op->src.reg = CFI_SP;
++				op->src.offset = insn.immediate.value;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = CFI_SP;
++			}
+ 			break;
+ 		}
+ 
+@@ -205,11 +222,13 @@ int arch_decode_instruction(struct elf *
+ 
+ 		/* add/sub imm, %rsp */
+ 		*type = INSN_STACK;
+-		op->src.type = OP_SRC_ADD;
+-		op->src.reg = CFI_SP;
+-		op->src.offset = insn.immediate.value * sign;
+-		op->dest.type = OP_DEST_REG;
+-		op->dest.reg = CFI_SP;
++		ADD_OP(op) {
++			op->src.type = OP_SRC_ADD;
++			op->src.reg = CFI_SP;
++			op->src.offset = insn.immediate.value * sign;
++			op->dest.type = OP_DEST_REG;
++			op->dest.reg = CFI_SP;
++		}
+ 		break;
+ 
+ 	case 0x89:
+@@ -217,10 +236,12 @@ int arch_decode_instruction(struct elf *
+ 
+ 			/* mov %rsp, reg */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_REG;
+-			op->src.reg = CFI_SP;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = op_to_cfi_reg[modrm_rm][rex_b];
++			ADD_OP(op) {
++				op->src.type = OP_SRC_REG;
++				op->src.reg = CFI_SP;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = op_to_cfi_reg[modrm_rm][rex_b];
++			}
+ 			break;
+ 		}
+ 
+@@ -228,10 +249,12 @@ int arch_decode_instruction(struct elf *
+ 
+ 			/* mov reg, %rsp */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_REG;
+-			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = CFI_SP;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_REG;
++				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = CFI_SP;
++			}
+ 			break;
+ 		}
+ 
+@@ -242,21 +265,25 @@ int arch_decode_instruction(struct elf *
+ 
+ 			/* mov reg, disp(%rbp) */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_REG;
+-			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+-			op->dest.type = OP_DEST_REG_INDIRECT;
+-			op->dest.reg = CFI_BP;
+-			op->dest.offset = insn.displacement.value;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_REG;
++				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
++				op->dest.type = OP_DEST_REG_INDIRECT;
++				op->dest.reg = CFI_BP;
++				op->dest.offset = insn.displacement.value;
++			}
+ 
+ 		} else if (rex_w && !rex_b && modrm_rm == 4 && sib == 0x24) {
+ 
+ 			/* mov reg, disp(%rsp) */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_REG;
+-			op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
+-			op->dest.type = OP_DEST_REG_INDIRECT;
+-			op->dest.reg = CFI_SP;
+-			op->dest.offset = insn.displacement.value;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_REG;
++				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
++				op->dest.type = OP_DEST_REG_INDIRECT;
++				op->dest.reg = CFI_SP;
++				op->dest.offset = insn.displacement.value;
++			}
+ 		}
+ 
+ 		break;
+@@ -266,22 +293,26 @@ int arch_decode_instruction(struct elf *
+ 
+ 			/* mov disp(%rbp), reg */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_REG_INDIRECT;
+-			op->src.reg = CFI_BP;
+-			op->src.offset = insn.displacement.value;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
++			ADD_OP(op) {
++				op->src.type = OP_SRC_REG_INDIRECT;
++				op->src.reg = CFI_BP;
++				op->src.offset = insn.displacement.value;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
++			}
+ 
+ 		} else if (rex_w && !rex_b && sib == 0x24 &&
+ 			   modrm_mod != 3 && modrm_rm == 4) {
+ 
+ 			/* mov disp(%rsp), reg */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_REG_INDIRECT;
+-			op->src.reg = CFI_SP;
+-			op->src.offset = insn.displacement.value;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
++			ADD_OP(op) {
++				op->src.type = OP_SRC_REG_INDIRECT;
++				op->src.reg = CFI_SP;
++				op->src.offset = insn.displacement.value;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
++			}
+ 		}
+ 
+ 		break;
+@@ -290,27 +321,31 @@ int arch_decode_instruction(struct elf *
+ 		if (sib == 0x24 && rex_w && !rex_b && !rex_x) {
+ 
+ 			*type = INSN_STACK;
+-			if (!insn.displacement.value) {
+-				/* lea (%rsp), reg */
+-				op->src.type = OP_SRC_REG;
+-			} else {
+-				/* lea disp(%rsp), reg */
+-				op->src.type = OP_SRC_ADD;
+-				op->src.offset = insn.displacement.value;
++			ADD_OP(op) {
++				if (!insn.displacement.value) {
++					/* lea (%rsp), reg */
++					op->src.type = OP_SRC_REG;
++				} else {
++					/* lea disp(%rsp), reg */
++					op->src.type = OP_SRC_ADD;
++					op->src.offset = insn.displacement.value;
++				}
++				op->src.reg = CFI_SP;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
+ 			}
+-			op->src.reg = CFI_SP;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = op_to_cfi_reg[modrm_reg][rex_r];
+ 
+ 		} else if (rex == 0x48 && modrm == 0x65) {
+ 
+ 			/* lea disp(%rbp), %rsp */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_ADD;
+-			op->src.reg = CFI_BP;
+-			op->src.offset = insn.displacement.value;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = CFI_SP;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_ADD;
++				op->src.reg = CFI_BP;
++				op->src.offset = insn.displacement.value;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = CFI_SP;
++			}
+ 
+ 		} else if (rex == 0x49 && modrm == 0x62 &&
+ 			   insn.displacement.value == -8) {
+@@ -322,11 +357,13 @@ int arch_decode_instruction(struct elf *
+ 			 * stack realignment.
+ 			 */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_ADD;
+-			op->src.reg = CFI_R10;
+-			op->src.offset = -8;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = CFI_SP;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_ADD;
++				op->src.reg = CFI_R10;
++				op->src.offset = -8;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = CFI_SP;
++			}
+ 
+ 		} else if (rex == 0x49 && modrm == 0x65 &&
+ 			   insn.displacement.value == -16) {
+@@ -338,11 +375,13 @@ int arch_decode_instruction(struct elf *
+ 			 * stack realignment.
+ 			 */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_ADD;
+-			op->src.reg = CFI_R13;
+-			op->src.offset = -16;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = CFI_SP;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_ADD;
++				op->src.reg = CFI_R13;
++				op->src.offset = -16;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = CFI_SP;
++			}
+ 		}
+ 
+ 		break;
+@@ -350,8 +389,10 @@ int arch_decode_instruction(struct elf *
+ 	case 0x8f:
+ 		/* pop to mem */
+ 		*type = INSN_STACK;
+-		op->src.type = OP_SRC_POP;
+-		op->dest.type = OP_DEST_MEM;
++		ADD_OP(op) {
++			op->src.type = OP_SRC_POP;
++			op->dest.type = OP_DEST_MEM;
++		}
+ 		break;
+ 
+ 	case 0x90:
+@@ -361,15 +402,19 @@ int arch_decode_instruction(struct elf *
+ 	case 0x9c:
+ 		/* pushf */
+ 		*type = INSN_STACK;
+-		op->src.type = OP_SRC_CONST;
+-		op->dest.type = OP_DEST_PUSHF;
++		ADD_OP(op) {
++			op->src.type = OP_SRC_CONST;
++			op->dest.type = OP_DEST_PUSHF;
++		}
+ 		break;
+ 
+ 	case 0x9d:
+ 		/* popf */
+ 		*type = INSN_STACK;
+-		op->src.type = OP_SRC_POPF;
+-		op->dest.type = OP_DEST_MEM;
++		ADD_OP(op) {
++			op->src.type = OP_SRC_POPF;
++			op->dest.type = OP_DEST_MEM;
++		}
+ 		break;
+ 
+ 	case 0x0f:
+@@ -405,15 +450,19 @@ int arch_decode_instruction(struct elf *
+ 
+ 			/* push fs/gs */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_CONST;
+-			op->dest.type = OP_DEST_PUSH;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_CONST;
++				op->dest.type = OP_DEST_PUSH;
++			}
+ 
+ 		} else if (op2 == 0xa1 || op2 == 0xa9) {
+ 
+ 			/* pop fs/gs */
+ 			*type = INSN_STACK;
+-			op->src.type = OP_SRC_POP;
+-			op->dest.type = OP_DEST_MEM;
++			ADD_OP(op) {
++				op->src.type = OP_SRC_POP;
++				op->dest.type = OP_DEST_MEM;
++			}
+ 		}
+ 
+ 		break;
+@@ -427,7 +476,8 @@ int arch_decode_instruction(struct elf *
+ 		 * pop bp
+ 		 */
+ 		*type = INSN_STACK;
+-		op->dest.type = OP_DEST_LEAVE;
++		ADD_OP(op)
++			op->dest.type = OP_DEST_LEAVE;
+ 
+ 		break;
+ 
+@@ -449,12 +499,14 @@ int arch_decode_instruction(struct elf *
+ 	case 0xcf: /* iret */
+ 		*type = INSN_EXCEPTION_RETURN;
+ 
+-		/* add $40, %rsp */
+-		op->src.type = OP_SRC_ADD;
+-		op->src.reg = CFI_SP;
+-		op->src.offset = 5*8;
+-		op->dest.type = OP_DEST_REG;
+-		op->dest.reg = CFI_SP;
++		ADD_OP(op) {
++			/* add $40, %rsp */
++			op->src.type = OP_SRC_ADD;
++			op->src.reg = CFI_SP;
++			op->src.offset = 5*8;
++			op->dest.type = OP_DEST_REG;
++			op->dest.reg = CFI_SP;
++		}
+ 		break;
+ 
+ 	case 0xca: /* retf */
+@@ -504,11 +556,6 @@ int arch_decode_instruction(struct elf *
+ 
+ 	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
+ 
+-	if (*type == INSN_STACK || *type == INSN_EXCEPTION_RETURN)
+-		list_add_tail(&op->list, ops_list);
+-	else
+-		free(op);
+-
+ 	return 0;
+ }
+ 
