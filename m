@@ -2,102 +2,174 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ED3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C570C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 151FA214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086DF206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MIWxKE/q"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="L1nG+W+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgDWPOJ (ORCPT
+        id S1729054AbgDWPQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50742 "EHLO
+        Thu, 23 Apr 2020 11:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728551AbgDWPOI (ORCPT
+        by vger.kernel.org with ESMTP id S1729009AbgDWPQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:14:08 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D58FC08ED7D
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:14:08 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so6970252wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:14:08 -0700 (PDT)
+        Thu, 23 Apr 2020 11:16:26 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F4BC09B041
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:16:26 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g74so6679949qke.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v46Ikk3Jz0r+b0XX/bOEpsMp0yxP+bghxd3vH+HYhPc=;
-        b=MIWxKE/qjLCX/xGHYA9pPPU0BNfKH43CNGFsg6DeK/Mru9tvWVDKwiaZOn1XHjMoVE
-         i4PYlH8O7bplYaTQeMICT+fzY8fnWvVzPWCE5yQuez2xPFjAeqSQYiNf0Uh7R/Wo38Lg
-         Z6hX1p59FRmd8cXRcaKNBTpSFrbXarSJk9IonBz+osP259UyeH0oOSynqm+2NZi2Ahkn
-         mHD1tRQfsYU56pVs27oV5Y7kgyFt8LHsXNWTr7pGFlFyAJIxKMc0HJpPsylF6zrtlQY4
-         5pwVLUZ8W5eDfGynjFnJROYgC6aT3odwPB41c02RsLfkH8QAoKuW6rYRcLWEg9G1cGkc
-         OQaQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=RuwvuXrV7STsC2XSTWZguPreMY6qFyucfZMv6dyCZ9g=;
+        b=L1nG+W+9ij6Dmdui58Miqo8Hh4qEFLkqwCmLJxQxFoePYWrMwKGNzaxr4E80FZkNCe
+         hQY0MtIjCD3biwbp2usIhc/bG/mliQ/SqZ0McDel88WUP76y2ZGdmL7PMNp0PaHNo0rl
+         MKaRM6WGmnlovhV+jkviMk0Md8xSeIBeyYs3Jhj1MboZsVxSy5Z6KFdWQkuMOmJMkHPs
+         xPJ9WRJzN1iFHYZg9vn/CoYF58u7O3qGIJsDg9NbskJH9YenhnG+h/m1F2YovvkdJuHM
+         TlIy/oK9hmHrgClqupcDFQjiLPAX4CZbEe2orbnKjAJwMTc7eueUgAjkgMriugvWA7bZ
+         9BvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v46Ikk3Jz0r+b0XX/bOEpsMp0yxP+bghxd3vH+HYhPc=;
-        b=i8zpbEJ7Ws+Uh6zkgVMlLwu7AK49jyfus3yenUuHqNGIDuIlhxKmDsr8Gk04511h0S
-         HxnnFJe2GvE0U69n/wUmIaGSYCS0pKJ/mlAi1MJVn6dM5cZVt3FTIvGJNEY4mBt2zX3j
-         HvKOco0zyxouWwMZwQJhKo4DXwOI0RyJVpcA3TjfZJ/RLj/dfK4Jd2Gm27UyGSibOjzh
-         0l1onqhziwkXRWUqG5J1FTYl6jkkQwbGjrPtPmVrktymDw1y307kOtryKdXx7A1xcF+Y
-         hrw5LMc6FEnVV8cBnxYSB+rB9WaazGH27DfTWNGIl25N/GNODTM7W/0SRs1as12HVesD
-         FJnw==
-X-Gm-Message-State: AGi0PuZhnhQLM6/6adeqxkVbKkKrL8z69lLVfOK+/BA/U5kvVPWVAOnX
-        ZczDtvO2JN4c9bMcHc2gP3Wz37+b320=
-X-Google-Smtp-Source: APiQypKEu5s0OhD4gtUwKlNwoPw/ork7gNul9QoWfqC2s5n+wpnmvRh1OKW8lXO0WhhFY70e5NcqhA==
-X-Received: by 2002:a1c:64c5:: with SMTP id y188mr4587343wmb.130.1587654846044;
-        Thu, 23 Apr 2020 08:14:06 -0700 (PDT)
-Received: from linaro.org ([37.167.216.250])
-        by smtp.gmail.com with ESMTPSA id x18sm4083518wrs.11.2020.04.23.08.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 08:14:05 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 17:14:00 +0200
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v6 05/10] PM / EM: remove em_register_perf_domain
-Message-ID: <20200423151400.GC65632@linaro.org>
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-6-lukasz.luba@arm.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RuwvuXrV7STsC2XSTWZguPreMY6qFyucfZMv6dyCZ9g=;
+        b=XRgESZ+XcVFqHiAFixJxmmqIINAWOtvC5Z0YXA+NR6CD0aTTeB4Ynp+virTg57pHbA
+         RLL9Rvl/KOEXAE25zP7WfSyc1gNtU1LFHT48pSpZ5tr3IyUVSshg75uOtuOWf31z4HEP
+         NmQGHJnDUEC0CrQIuKAE88ZY8gof04Cf7MzrVl1oNLvlZlOwghND1w3ZmFFw5ajlEx6s
+         mR3Jqdrxfxdl6KHKByiPZmEacLRyTZiIcTexblcdm4s4uRdTx925q8ewOwHYD4GCw68F
+         /h1BRC46jOXNLTGmhSTHr8rlGhhtcmA3JhHNe7s6athggNrXnq809Cw2/FwkJDyhQIfR
+         b6yw==
+X-Gm-Message-State: AGi0PuZCI1/TbfEqYzIlce03DoSvIO5PfhW+UihA7dczQTqNRxmma8DT
+        1RwldMxp/N8r8VZWzIjPRtIg1w==
+X-Google-Smtp-Source: APiQypJiqOT4fipFLUGohNv7Deb1s+6ID4GDzmCNpgpgqR/iKAnZEgmnnLbZQ13uR71Jym2saStjag==
+X-Received: by 2002:a37:9dd6:: with SMTP id g205mr4268266qke.9.1587654985482;
+        Thu, 23 Apr 2020 08:16:25 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id a22sm1663046qko.81.2020.04.23.08.16.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Apr 2020 08:16:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jRdaS-0003hD-Gu; Thu, 23 Apr 2020 12:16:24 -0300
+Date:   Thu, 23 Apr 2020 12:16:24 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+Message-ID: <20200423151624.GA26002@ziepe.ca>
+References: <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com>
+ <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr>
+ <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
+ <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr>
+ <871rofdhtg.fsf@intel.com>
+ <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr>
+ <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org>
+ <nycvar.YSQ.7.76.2004231059170.2671@knanqh.ubzr>
+ <20200423150556.GZ26002@ziepe.ca>
+ <nycvar.YSQ.7.76.2004231109500.2671@knanqh.ubzr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200410084210.24932-6-lukasz.luba@arm.com>
+In-Reply-To: <nycvar.YSQ.7.76.2004231109500.2671@knanqh.ubzr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:42:05AM +0100, Lukasz Luba wrote:
-> Remove old function em_register_perf_domain which is no longer needed.
-> There is em_dev_register_perf_domain that covers old use cases and new as
-> well.
+On Thu, Apr 23, 2020 at 11:11:46AM -0400, Nicolas Pitre wrote:
+> On Thu, 23 Apr 2020, Jason Gunthorpe wrote:
 > 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> > On Thu, Apr 23, 2020 at 11:01:40AM -0400, Nicolas Pitre wrote:
+> > > On Wed, 22 Apr 2020, Randy Dunlap wrote:
+> > > 
+> > > > On 4/22/20 2:13 PM, Nicolas Pitre wrote:
+> > > > > On Wed, 22 Apr 2020, Jani Nikula wrote:
+> > > > > 
+> > > > >> On Tue, 21 Apr 2020, Nicolas Pitre <nico@fluxnic.net> wrote:
+> > > > >>> This is really a conditional dependency. That's all this is about.
+> > > > >>> So why not simply making it so rather than fooling ourselves? All that 
+> > > > >>> is required is an extension that would allow:
+> > > > >>>
+> > > > >>> 	depends on (expression) if (expression)
+> > > > >>>
+> > > > >>> This construct should be obvious even without reading the doc, is 
+> > > > >>> already used extensively for other things already, and is flexible 
+> > > > >>> enough to cover all sort of cases in addition to this particular one.
+> > > > >>
+> > > > >> Okay, you convinced me. Now you only need to convince whoever is doing
+> > > > >> the actual work of implementing this stuff. ;)
+> > > > > 
+> > > > > What about this:
+> > > > > 
+> > > > > Subject: [PATCH] kconfig: allow for conditional dependencies
+> > > > > 
+> > > > > This might appear to be a strange concept, but sometimes we want
+> > > > > a dependency to be conditionally applied. One such case is currently
+> > > > > expressed with:
+> > > > > 
+> > > > > 	depends on FOO || !FOO
+> > > > > 
+> > > > > This pattern is strange enough to give one's pause. Given that it is
+> > > > > also frequent, let's make the intent more obvious with some syntaxic 
+> > > > > sugar by effectively making dependencies optionally conditional.
+> > > > > This also makes the kconfig language more uniform.
+> > > > > 
+> > > > > Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > If we must do something here, I prefer this one.
+> > > > 
+> > > > Nicolas, would you do another example, specifically for
+> > > > CRAMFS_MTD in fs/cramfs/Kconfig, please?
+> > > 
+> > > I don't see how that one can be helped. The MTD dependency is not 
+> > > optional.
+> > 
+> > Could it be done as 
+> > 
+> > config MTD
+> >    depends on CRAMFS if CRAMFS_MTD
+> > 
+> > ?
+> 
+> No. There is no logic in restricting MTD usage based on CRAMFS or 
+> CRAMFS_MTD.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Ah, I got it backwards, maybe this:
+
+config CRAMFS
+   depends on MTD if CRAMFS_MTD
+
+?
+
+Jason
