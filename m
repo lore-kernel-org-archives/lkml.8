@@ -7,51 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F039C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD88FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D36021582
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F5A21D7D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587627700;
-	bh=/JWvupmEMySxDqYIYZIYncvR2Q8mmZsljXsYjNOnvIg=;
+	s=default; t=1587627702;
+	bh=Zwe8ywmgwukJ9SoiIbrMmRvto7RWfgYb+g4VjG1HyaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rs89a7hQF0Dyhco3lkhuVk/+Mo8pERMPU3QMeo4s96poszS+17YeBWpKyYeRD5eK
-	 pBrd1CHI09c3Awg+cof3gthu4kZOzUxYYdODtFJ5ICtrq4u+wl7KIUoaJi7NXU98QV
-	 kIlbb5tcVY/4oW2HxnFbbJZC6O0Drvs+iHILTbXo=
+	b=dtVH1F0cCCKQlbVHTtE8eArDPeS3LdJ824dDfa0CiAMD+ZA+j+hNZqquAXagWHW2Z
+	 x3btec35qf5Rskxf48aJ+m4CLc5qNP1ZSGySrWwVzzKqOzv5e1M9NIUO8mWgJOPVf3
+	 bAOt6zY1pIpBRyaEaWHUWGFbGZUrHVvRGFuK6gwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgDWHlj (ORCPT
+        id S1727780AbgDWHll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:41:39 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:31862 "EHLO
+        Thu, 23 Apr 2020 03:41:41 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:33701 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgDWHkf (ORCPT
+        with ESMTP id S1726790AbgDWHlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:40:35 -0400
+        Thu, 23 Apr 2020 03:41:37 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03N7dV9N000368;
-        Thu, 23 Apr 2020 16:39:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9N000368
+        by conuserg-10.nifty.com with ESMTP id 03N7dV9P000368;
+        Thu, 23 Apr 2020 16:39:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9P000368
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587627574;
-        bh=LAmTf3avyguNhJLnR/j7TVLMdgz9CQZK990PrBeMhx4=;
+        s=dec2015msa; t=1587627577;
+        bh=mNS7qQakks7vv7rluiZ6sy2TT3u/Yp/y0uXOfjW+ff0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSs+1vgXqBRAkGhPA8eINQND3Yn3h3DtPWIMZsni9ragUGcGyzFInzKyQzOgPwj++
-         t/6Zn74uvLNxz0xoKXv9ZLiRXjPGrpwwJhlHI5R370DTaF/8peZy7BlJt488ShbDKJ
-         2iGcIVC943qxlVMRtCZJZX8d2u9Y400/LFJDuj6riX+Pgepq5jThP/0jS+LvL/htcS
-         3rBViAksHx4UOAcJhURudlp2ncwDiysmcG6lWfX1ZxPHfU0j88pgC5JZ0hVjpqnIYw
-         VsARbonJsLwaja8ArPmH08KXCpu8OiiI0zZyIg1PzYPZGUW6NBioyaVqT3B/Gl/4WX
-         wcJns61R/pDpw==
+        b=vgX24GzV3a5gSzU8pqBzK0uUPmBoq73gXEZoV5t08/+yMcChrq6uP7MLHhdRwGGPc
+         UWKvR0/hvVQCXVFtYvZMmDoPZQ/cwJ9mDXpvEU300Nv0iI9sU5civP4dV2/hkMVLAd
+         FK3BuYRHjhBFQa1B+oUmnNtjb8ARPuZe15DK2bHR9pfUVqUOIyrDpfQwSS0YaEk3Us
+         q6/fi3DlDwocFmaIOowfh119DbojAG/bzBarEoAk6yIvb/41VnjUiic1yir+KsK4p0
+         yG0QRj3cc7yMSM3LycQICnWyH8UcXZJq1ixs6BeZA2jNqtJYewteyupK7yviIoCJZc
+         GujOc7Bj6SMyA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 02/16] Revert "objtool: Skip samples subdirectory"
-Date:   Thu, 23 Apr 2020 16:39:15 +0900
-Message-Id: <20200423073929.127521-3-masahiroy@kernel.org>
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 04/16] net: bpfilter: use 'userprogs' syntax to build bpfilter_umh
+Date:   Thu, 23 Apr 2020 16:39:17 +0900
+Message-Id: <20200423073929.127521-5-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200423073929.127521-1-masahiroy@kernel.org>
 References: <20200423073929.127521-1-masahiroy@kernel.org>
@@ -62,28 +70,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 8728497895794d1f207a836e02dae762ad175d56.
+The user mode helper should be compiled for the same architecture as
+the kernel.
 
-This directory contains no object.
+This Makefile reuses the 'hostprogs' syntax by overriding HOSTCC with CC.
 
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Now that Kbuild provides the syntax 'userprogs', use it to fix the
+Makefile mess.
+
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- samples/Makefile | 1 -
- 1 file changed, 1 deletion(-)
+ net/bpfilter/Makefile | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/samples/Makefile b/samples/Makefile
-index f8f847b4f61f..5ce50ef0f2b2 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for Linux samples code
--OBJECT_FILES_NON_STANDARD := y
+diff --git a/net/bpfilter/Makefile b/net/bpfilter/Makefile
+index 36580301da70..6ee650c6badb 100644
+--- a/net/bpfilter/Makefile
++++ b/net/bpfilter/Makefile
+@@ -3,17 +3,14 @@
+ # Makefile for the Linux BPFILTER layer.
+ #
  
- obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
- obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
+-hostprogs := bpfilter_umh
++userprogs := bpfilter_umh
+ bpfilter_umh-objs := main.o
+-KBUILD_HOSTCFLAGS += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
+-HOSTCC := $(CC)
++user-ccflags += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
+ 
+-ifeq ($(CONFIG_BPFILTER_UMH), y)
+-# builtin bpfilter_umh should be compiled with -static
++# builtin bpfilter_umh should be linked with -static
+ # since rootfs isn't mounted at the time of __init
+ # function is called and do_execv won't find elf interpreter
+-KBUILD_HOSTLDFLAGS += -static
+-endif
++bpfilter_umh-ldflags += -static
+ 
+ $(obj)/bpfilter_umh_blob.o: $(obj)/bpfilter_umh
+ 
 -- 
 2.25.1
 
