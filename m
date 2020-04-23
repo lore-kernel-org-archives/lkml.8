@@ -2,99 +2,86 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57D0C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E778C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8430120CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:48:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZUrI6YC"
+	by mail.kernel.org (Postfix) with ESMTP id EAF3E20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgDWKsW (ORCPT
+        id S1727855AbgDWKsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727814AbgDWKsV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:48:21 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D72C035494;
-        Thu, 23 Apr 2020 03:48:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so6296320wrx.4;
-        Thu, 23 Apr 2020 03:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uuN7SEmlSjuk+Gnycj0hvsm+gRKwErsOSGKcMr+0EhQ=;
-        b=CZUrI6YCFd+njEqy/2DIIl4dtBH1jKqNXw/SKMpVQS2gayA3J/aktDz5duwVPUyy7K
-         4piDfz7MuxJZ6WBrTb5zhDPW+hWbY6j2ahbeq3Ytai2f0mfqQC90UzUNWnjXqyDTNmMF
-         gxzdMkwSEOZM4M8tKSO1ypJ7fbVkaCpX8yM10NEs67DuhAIa14UlfuIsaLr2pEDidPfO
-         15Zar997tKXzi0t+rM+VIttTsNrBvKQaxkwiowGG3/lXje7tr1hAOZv9wVGhytoP1q8I
-         Rr6SbNpd7J5kV9IoPiyPzt2Zqsq+eM72HZEnCRoa/m1EOdC60lixUq1DIu4HNBR7gdkO
-         Dg/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uuN7SEmlSjuk+Gnycj0hvsm+gRKwErsOSGKcMr+0EhQ=;
-        b=pfan0yG4m9Rk9RogsBW5onH3ZpLhEHSLdSj28o8S7tTvzGxUtmo75M8vQM9Wo7ADvV
-         k6Cg5SehisCHJlIuTI9w2J2BT/PW1Kw8SBUUZcGjOp4XDQboFaaeYuuZoz4lDOWmc1Ob
-         1gpClLXSx+ZRCKxKG+9rv+ociRt+sXkwiiCpXLfwv7hlC/iq6YXzk9DW1szF05t+5u5u
-         O/BBdkiCbafysYpBASf+EpdTdtMV6U77QI7jew4Oe194nnPlnOSYjHwHP3DHxB7EL6nz
-         tKdoN/Ufum4SJ8wtsd98SZunbkQbRxJn8pCaNSHiFZz/aytE0dxpnON74X/T+0LHJ3rj
-         Cw7w==
-X-Gm-Message-State: AGi0Puby/MntTZ1uFt4r8zSlg/vaBNVUCTmB2toYgxOwVxN88/MUVevt
-        khaD9rRMde/MArYhypKJfWE=
-X-Google-Smtp-Source: APiQypK4ida8yQjISROyeOUjx9VZqo05aKQK380fTUucftS7WRI/tOewVY4IqlyW87KeC+6GZ/qExQ==
-X-Received: by 2002:a5d:5085:: with SMTP id a5mr4523790wrt.394.1587638898409;
-        Thu, 23 Apr 2020 03:48:18 -0700 (PDT)
-Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
-        by smtp.gmail.com with ESMTPSA id t20sm10182007wmi.2.2020.04.23.03.48.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 03:48:17 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Zhu Yanjun <yanjunz@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] RDMA/rxe: check for error
-Date:   Thu, 23 Apr 2020 11:48:13 +0100
-Message-Id: <20200423104813.20484-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 23 Apr 2020 06:48:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36930 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727815AbgDWKs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:48:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 82A42AC84;
+        Thu, 23 Apr 2020 10:48:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 6E4CB1E1293; Thu, 23 Apr 2020 12:48:27 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 12:48:27 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [RFC] fs: Use slab constructor to initialize conn objects in
+ fsnotify
+Message-ID: <20200423104827.GD3737@quack2.suse.cz>
+References: <20200423044050.162093-1-joel@joelfernandes.org>
+ <20200423044518.GA162422@google.com>
+ <CAOQ4uxgifK_XTkJO69-hQvR4xQGPgHNGKJPv6-MNgHcQat5UBQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxgifK_XTkJO69-hQvR4xQGPgHNGKJPv6-MNgHcQat5UBQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rxe_create_mmap_info() returns either NULL or an error value in ERR_PTR
-and we only checked for NULL after return. We should be using
-IS_ERR_OR_NULL to check for both.
+On Thu 23-04-20 08:24:23, Amir Goldstein wrote:
+> On Thu, Apr 23, 2020 at 7:45 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > On Thu, Apr 23, 2020 at 12:40:50AM -0400, Joel Fernandes (Google) wrote:
+> > > While reading the famous slab paper [1], I noticed that the conn->lock
+> > > spinlock and conn->list hlist in fsnotify code is being initialized
+> > > during every object allocation. This seems a good fit for the
+> > > constructor within the slab to take advantage of the slab design. Move
+> > > the initializtion to that.
+> > >
+> > >        spin_lock_init(&conn->lock);
+> > >        INIT_HLIST_HEAD(&conn->list);
+> > >
+> > > [1] https://pdfs.semanticscholar.org/1acc/3a14da69dd240f2fbc11d00e09610263bdbd.pdf
+> > >
+> >
+> > The commit message could be better. Just to clarify, doing it this way is
+> > more efficient because the object will only have its spinlock init and hlist
+> > init happen during object construction, not object allocation.
+> >
+> 
+> This change may be correct, but completely unjustified IMO.
+> conn objects are very rarely allocated, from user syscall path only.
+> I see no reason to micro optimize this.
+> 
+> Perhaps there is another justification to do this, but not efficiency.
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- drivers/infiniband/sw/rxe/rxe_queue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the suggestion Joel but I agree with Amir here. In principle
+using constructor is correct however it puts initialization of object in
+two places which makes the code harder to follow and the allocation of
+connector does not happen frequently enough for optimizing out these two
+stores to matter in any tangible way.
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_queue.c b/drivers/infiniband/sw/rxe/rxe_queue.c
-index ff92704de32f..ef438ce4fcfa 100644
---- a/drivers/infiniband/sw/rxe/rxe_queue.c
-+++ b/drivers/infiniband/sw/rxe/rxe_queue.c
-@@ -45,7 +45,7 @@ int do_mmap_info(struct rxe_dev *rxe, struct mminfo __user *outbuf,
- 
- 	if (outbuf) {
- 		ip = rxe_create_mmap_info(rxe, buf_size, udata, buf);
--		if (!ip)
-+		if (IS_ERR_OR_NULL(ip))
- 			goto err1;
- 
- 		err = copy_to_user(outbuf, &ip->info, sizeof(ip->info));
+								Honza
 -- 
-2.11.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
