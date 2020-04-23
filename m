@@ -2,108 +2,114 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4C0C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC242C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B81BE21835
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587641355;
-	bh=GLlc36Uzd9tq03rZItAwzH28jaEo5ZcpHGyvduOR2A0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IvOBealJuWH2NFLT8wzxSZyF/XHANkQ9yxkZ7RXuRTIdWIlcRs9bBfiVx3peXkK4b
-	 +bpaNuikZV4Ty+vd+s+E+YjkGIOrP+Apvv3ZeHvtamKsbbtYatYl5WciWLmk6CB1yV
-	 AyqEsmZqDd6j1awRmN0OrPaebKFuAPaKLYSIzecA=
+	by mail.kernel.org (Postfix) with ESMTP id 92E1120736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K1U3VKju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgDWL3O (ORCPT
+        id S1728133AbgDWL3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgDWL3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:29:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 23 Apr 2020 07:29:20 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57195 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728092AbgDWL3T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:29:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587641358;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SjM7KaiBYriqKkcfDY1yHbo7APq5KrXwowHweSnF8pk=;
+        b=K1U3VKjuKsREwtfZr3D5xVLgVRr66AogImoS1vjB4gNZyu3Tg93fAXdT+SCSbJOPSCfjQO
+        CnIqDkig/aZq7Ng9+xNpGKD1ZBfkcMWfYRFhmIl4vliL6/aqWbe6VxYPJC/Am2Zhu7dB0r
+        iOKrmLuTDQ4cDGV/eJUOOvNChymS5do=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-CMYBw69wO6G0YAkXP-ehCA-1; Thu, 23 Apr 2020 07:29:14 -0400
+X-MC-Unique: CMYBw69wO6G0YAkXP-ehCA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7120820736;
-        Thu, 23 Apr 2020 11:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587641352;
-        bh=GLlc36Uzd9tq03rZItAwzH28jaEo5ZcpHGyvduOR2A0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2UfGZuQCnr47rkAUJssPrBDRMExOsOBUUr0CuLJo6mJx9nyJv6MMYUvhnKJoL+Vua
-         9Wh/S1YtwuHrLDjruOSyXA344ONMBut+uKlZLIF2zhiFvO8wnKdR1hE82NG7KEuMOt
-         GnbEpGteOvxHw9Aka5yptbzP0plKT0e1K0kHzKZw=
-Date:   Thu, 23 Apr 2020 13:29:10 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ivan Safonov <insafonov@gmail.com>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        devel@driverdev.osuosl.org, Puranjay Mohan <puranjay12@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Saurav Girepunje <saurav.girepunje@gmail.com>
-Subject: Re: [PATCH] staging:r8188eu: avoid skb_clone for amsdu to msdu
- conversion
-Message-ID: <20200423112910.GA3768232@kroah.com>
-References: <20200418084112.3723-1-insafonov@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E3728005B7;
+        Thu, 23 Apr 2020 11:29:11 +0000 (UTC)
+Received: from krava (unknown [10.40.196.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 844091053B1E;
+        Thu, 23 Apr 2020 11:29:07 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 13:29:05 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 01/11] perf expr: unlimited escaped characters in a
+ symbol
+Message-ID: <20200423112905.GG1136647@krava>
+References: <20200422220430.254014-1-irogers@google.com>
+ <20200422220430.254014-2-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200418084112.3723-1-insafonov@gmail.com>
+In-Reply-To: <20200422220430.254014-2-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 18, 2020 at 11:41:12AM +0300, Ivan Safonov wrote:
-> skb clones use same data buffer, so tail of one skb is corrupted by beginning of next skb.
-
-Please properly wrap your changelog text at the correct column (72).
-
-Also, your subject: line does not have the correct driver name :(
-
+On Wed, Apr 22, 2020 at 03:04:20PM -0700, Ian Rogers wrote:
+> Current expression allows 2 escaped '-,=' characters. However, some
+> metrics require more, for example Haswell DRAM_BW_Use.
 > 
-> Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+> Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  drivers/staging/rtl8188eu/core/rtw_recv.c | 19 ++++++-------------
->  1 file changed, 6 insertions(+), 13 deletions(-)
+>  tools/perf/util/expr.l | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/staging/rtl8188eu/core/rtw_recv.c b/drivers/staging/rtl8188eu/core/rtw_recv.c
-> index d4278361e002..a036ef104198 100644
-> --- a/drivers/staging/rtl8188eu/core/rtw_recv.c
-> +++ b/drivers/staging/rtl8188eu/core/rtw_recv.c
-> @@ -1525,21 +1525,14 @@ static int amsdu_to_msdu(struct adapter *padapter, struct recv_frame *prframe)
->  
->  		/* Allocate new skb for releasing to upper layer */
->  		sub_skb = dev_alloc_skb(nSubframe_Length + 12);
-> -		if (sub_skb) {
-> -			skb_reserve(sub_skb, 12);
-> -			skb_put_data(sub_skb, pdata, nSubframe_Length);
-> -		} else {
-> -			sub_skb = skb_clone(prframe->pkt, GFP_ATOMIC);
-> -			if (sub_skb) {
-> -				sub_skb->data = pdata;
-> -				sub_skb->len = nSubframe_Length;
-> -				skb_set_tail_pointer(sub_skb, nSubframe_Length);
-> -			} else {
-> -				DBG_88E("skb_clone() Fail!!! , nr_subframes=%d\n", nr_subframes);
-> -				break;
-> -			}
-> +		if (!sub_skb) {
-> +			DBG_88E("dev_alloc_skb() Fail!!! , nr_subframes=%d\n", nr_subframes);
-> +			break;
->  		}
->  
-> +		skb_reserve(sub_skb, 12);
-> +		skb_put_data(sub_skb, pdata, nSubframe_Length);
-> +
+> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> index 2582c2464938..95bcf3629edf 100644
+> --- a/tools/perf/util/expr.l
+> +++ b/tools/perf/util/expr.l
+> @@ -73,7 +73,7 @@ number		[0-9]+
+>  sch		[-,=]
+>  spec		\\{sch}
+>  sym		[0-9a-zA-Z_\.:@]+
+> -symbol		{spec}*{sym}*{spec}*{sym}*
+> +symbol		({spec}|{sym})+
 
-Have you tested this?
+yep, much better ;-)
 
 thanks,
+jirka
 
-greg k-h
+>  
+>  %%
+>  	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
+> -- 
+> 2.26.2.303.gf8c07b1a785-goog
+> 
+
