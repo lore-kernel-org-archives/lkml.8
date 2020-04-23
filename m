@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AAAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE815C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A63722077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7132077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbgDWXZ1 (ORCPT
+        id S1730064AbgDWXZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:25:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48192 "EHLO
+        Thu, 23 Apr 2020 19:25:30 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48182 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728083AbgDWXG2 (ORCPT
+        by vger.kernel.org with ESMTP id S1728069AbgDWXG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvI-0004ZW-7j; Fri, 24 Apr 2020 00:06:24 +0100
+        id 1jRkvI-0004Zn-Nl; Fri, 24 Apr 2020 00:06:24 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvH-00E6f9-OA; Fri, 24 Apr 2020 00:06:23 +0100
+        id 1jRkvI-00E6fY-06; Fri, 24 Apr 2020 00:06:24 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Chao Yu" <yuchao0@huawei.com>, "Jan Kara" <jack@suse.cz>
-Date:   Fri, 24 Apr 2020 00:04:00 +0100
-Message-ID: <lsq.1587683028.17394596@decadent.org.uk>
+        "Chris Mason" <clm@fb.com>,
+        "Wang Shilong" <wangsl.fnst@cn.fujitsu.com>,
+        "David Sterba" <dsterba@suse.cz>
+Date:   Fri, 24 Apr 2020 00:04:05 +0100
+Message-ID: <lsq.1587683028.457178399@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 013/245] quota: fix wrong condition in
- is_quota_modification()
+Subject: [PATCH 3.16 018/245] Btrfs: fix wrong max inline data size limit
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,44 +56,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Wang Shilong <wangsl.fnst@cn.fujitsu.com>
 
-commit 6565c182094f69e4ffdece337d395eb7ec760efc upstream.
+commit c01a5c074c0f6f85a3b02e39432b9e5576ab51de upstream.
 
-Quoted from
-commit 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
+inline data is stored from offset of @disk_bytenr in
+struct btrfs_file_extent_item. So substracting total
+size of struct btrfs_file_extent_item is wrong, fix it.
 
-" At LSF we decided that if we truncate up from isize we shouldn't trim
-  fallocated blocks that were fallocated with KEEP_SIZE and are past the
- new i_size.  This patch fixes ext4 to do this. "
-
-And generic/092 of fstest have covered this case for long time, however
-is_quota_modification() didn't adjust based on that rule, so that in
-below condition, we will lose to quota block change:
-- fallocate blocks beyond EOF
-- remount
-- truncate(file_path, file_size)
-
-Fix it.
-
-Link: https://lore.kernel.org/r/20190911093650.35329-1-yuchao0@huawei.com
-Fixes: 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Wang Shilong <wangsl.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.cz>
+Signed-off-by: Chris Mason <clm@fb.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/quotaops.h | 2 +-
+ fs/btrfs/ctree.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -21,7 +21,7 @@ static inline struct quota_info *sb_dqop
- /* i_mutex must being held */
- static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
- {
--	return (ia->ia_valid & ATTR_SIZE && ia->ia_size != inode->i_size) ||
-+	return (ia->ia_valid & ATTR_SIZE) ||
- 		(ia->ia_valid & ATTR_UID && !uid_eq(ia->ia_uid, inode->i_uid)) ||
- 		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
- }
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -394,7 +394,7 @@ struct btrfs_header {
+ #define BTRFS_LEAF_DATA_SIZE(r) (__BTRFS_LEAF_DATA_SIZE(r->leafsize))
+ #define BTRFS_MAX_INLINE_DATA_SIZE(r) (BTRFS_LEAF_DATA_SIZE(r) - \
+ 					sizeof(struct btrfs_item) - \
+-					sizeof(struct btrfs_file_extent_item))
++					offsetof(struct btrfs_file_extent_item, disk_bytenr))
+ #define BTRFS_MAX_XATTR_SIZE(r)	(BTRFS_LEAF_DATA_SIZE(r) - \
+ 				 sizeof(struct btrfs_item) -\
+ 				 sizeof(struct btrfs_dir_item))
 
