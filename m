@@ -6,97 +6,178 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D8EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EABCC55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE8220728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46FE120767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgDWQ3S (ORCPT
+        id S1729737AbgDWQ3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:29:18 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:39929 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729527AbgDWQ3R (ORCPT
+        Thu, 23 Apr 2020 12:29:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46184 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729419AbgDWQ3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:29:17 -0400
-Received: (qmail 1763 invoked by uid 500); 23 Apr 2020 12:29:15 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 23 Apr 2020 12:29:15 -0400
-Date:   Thu, 23 Apr 2020 12:29:15 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Oliver Neukum <oneukum@suse.com>
-cc:     Pete Zaitcev <zaitcev@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com>,
-        <andreyknvl@google.com>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in usblp_bulk_read
-In-Reply-To: <1587640413.23108.7.camel@suse.com>
-Message-ID: <Pine.LNX.4.44L0.2004231213260.20147-100000@netrider.rowland.org>
+        Thu, 23 Apr 2020 12:29:43 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jRejK-0000ME-Gj; Thu, 23 Apr 2020 16:29:38 +0000
+Date:   Thu, 23 Apr 2020 18:29:37 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        Steve Barber <smbarber@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Filipe Brandenburger <filbranden@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Benjamin Elder <bentheelder@google.com>,
+        Akihiro Suda <suda.kyoto@gmail.com>
+Subject: Re: [PATCH v2 2/7] loopfs: implement loopfs
+Message-ID: <20200423162937.qvald26s7fqpqnjv@wittgenstein>
+References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
+ <20200422145437.176057-3-christian.brauner@ubuntu.com>
+ <20200422215213.GB31944@mail.hallyn.com>
+ <20200423112401.ipzmsyicabwajpn2@wittgenstein>
+ <20200423161717.GB12201@mail.hallyn.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200423161717.GB12201@mail.hallyn.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020, Oliver Neukum wrote:
-
-> Am Donnerstag, den 23.04.2020, 00:10 -0500 schrieb Pete Zaitcev:
+On Thu, Apr 23, 2020 at 11:17:17AM -0500, Serge Hallyn wrote:
+> On Thu, Apr 23, 2020 at 01:24:01PM +0200, Christian Brauner wrote:
+> > On Wed, Apr 22, 2020 at 04:52:13PM -0500, Serge Hallyn wrote:
+> > > On Wed, Apr 22, 2020 at 04:54:32PM +0200, Christian Brauner wrote:
+> > > > This implements loopfs, a loop device filesystem. It takes inspiration
+> > > > from the binderfs filesystem I implemented about two years ago and with
+> > > > which we had overall good experiences so far. Parts of it are also
+> > > > based on [3] but it's mostly a new, imho cleaner approach.
+> > > > 
+> > > > Loopfs allows to create private loop devices instances to applications
+> > > > for various use-cases. It covers the use-case that was expressed on-list
+> > > > and in-person to get programmatic access to private loop devices for
+> > > > image building in sandboxes. An illustration for this is provided in
+> > > > [4].
+> > > > 
+> > > > Also loopfs is intended to provide loop devices to privileged and
+> > > > unprivileged containers which has been a frequent request from various
+> > > > major tools (Chromium, Kubernetes, LXD, Moby/Docker, systemd). I'm
+> > > > providing a non-exhaustive list of issues and requests (cf. [5]) around
+> > > > this feature mainly to illustrate that I'm not making the use-cases up.
+> > > > Currently none of this can be done safely since handing a loop device
+> > > > from the host into a container means that the container can see anything
+> > > > that the host is doing with that loop device and what other containers
+> > > > are doing with that device too. And (bind-)mounting devtmpfs inside of
+> > > > containers is not secure at all so also not an option (though sometimes
+> > > > done out of despair apparently).
+> > > > 
+> > > > The workloads people run in containers are supposed to be indiscernible
+> > > > from workloads run on the host and the tools inside of the container are
+> > > > supposed to not be required to be aware that they are running inside a
+> > > > container apart from containerization tools themselves. This is
+> > > > especially true when running older distros in containers that did exist
+> > > > before containers were as ubiquitous as they are today. With loopfs user
+> > > > can call mount -o loop and in a correctly setup container things work
+> > > > the same way they would on the host. The filesystem representation
+> > > > allows us to do this in a very simple way. At container setup, a
+> > > > container manager can mount a private instance of loopfs somehwere, e.g.
+> > > > at /dev/loopfs and then bind-mount or symlink /dev/loopfs/loop-control
+> > > > to /dev/loop-control, pre allocate and symlink the number of standard
+> > > > devices into their standard location and have a service file or rules in
+> > > > place that symlink additionally allocated loop devices through losetup
+> > > > into place as well.
+> > > > With the new syscall interception logic this is also possible for
+> > > > unprivileged containers. In these cases when a user calls mount -o loop
+> > > > <image> <mountpoint> it will be possible to completely setup the loop
+> > > > device in the container. The final mount syscall is handled through
+> > > > syscall interception which we already implemented and released in
+> > > > earlier kernels (see [1] and [2]) and is actively used in production
+> > > > workloads. The mount is often rewritten to a fuse binary to provide safe
+> > > > access for unprivileged containers.
+> > > > 
+> > > > Loopfs also allows the creation of hidden/detached dynamic loop devices
+> > > > and associated mounts which also was a often issued request. With the
+> > > > old mount api this can be achieved by creating a temporary loopfs and
+> > > > stashing a file descriptor to the mount point and the loop-control
+> > > > device and immediately unmounting the loopfs instance.  With the new
+> > > > mount api a detached mount can be created directly (i.e. a mount not
+> > > > visible anywhere in the filesystem). New loop devices can then be
+> > > > allocated and configured. They can be mounted through
+> > > > /proc/self/<fd>/<nr> with the old mount api or by using the fd directly
+> > > > with the new mount api. Combined with a mount namespace this allows for
+> > > > fully auto-cleaned up loop devices on program crash. This ties back to
+> > > > various use-cases and is illustrated in [4].
+> > > > 
+> > > > The filesystem representation requires the standard boilerplate
+> > > > filesystem code we know from other tiny filesystems. And all of
+> > > > the loopfs code is hidden under a config option that defaults to false.
+> > > > This specifically means, that none of the code even exists when users do
+> > > > not have any use-case for loopfs.
+> > > > In addition, the loopfs code does not alter how loop devices behave at
+> > > > all, i.e. there are no changes to any existing workloads and I've taken
+> > > > care to ifdef all loopfs specific things out.
+> > > > 
+> > > > Each loopfs mount is a separate instance. As such loop devices created
+> > > > in one instance are independent of loop devices created in another
+> > > > instance. This specifically entails that loop devices are only visible
+> > > > in the loopfs instance they belong to.
+> > > > 
+> > > > The number of loop devices available in loopfs instances are
+> > > > hierarchically limited through /proc/sys/user/max_loop_devices via the
+> > > > ucount infrastructure (Thanks to David Rheinsberg for pointing out that
+> > > > missing piece.). An administrator could e.g. set
+> > > > echo 3 > /proc/sys/user/max_loop_devices at which point any loopfs
+> > > > instance mounted by uid x can only create 3 loop devices no matter how
+> > > > many loopfs instances they mount. This limit applies hierarchically to
+> > > > all user namespaces.
+> > > 
+> > > Hm, info->device_count is per loopfs mount, though, right?  I don't
+> > > see where this gets incremented for all of a user's loopfs mounts
+> > > when one adds a loopdev?
+> > > 
+> > > I'm sure I'm missing something obvious...
 > > 
-> > I do not agree with this kind of workaround. The model we're following
-> > is for usb_kill_urb() to cancel the transfer. The usblp invokes it
-> > through usb_kill_anchored_urbs() and usblp_unlink_urbs(), as seen
-> > above. There can be no timer hitting anything once it returns.
+> > Hm, I think you might be mixing up the two limits? device_count
+> > corresponds to the "max" mount option and is not involved in enforcing
+> > hierarchical limits. The global restriction is enforced through
+> > inc_ucount() which tracks by the uid of the mounter of the superblock.
+> > If the same user mounts multiple loopfs instances in the same namespace
+> > the ucount infra will enforce his quota across all loopfs instances.
 > 
-> Right. It seems to me that the problem is not killing an existing
-> transfer but a failure to check in case of new transfers whether
-> the device has been disconnected.
+> Well I'm trying to understand what the point of the max mount option
+> is :)  I can just do N mounts to get N*max mounts to work around it?
+> But meanwhile if I have a daemon mounting isos over loopdevs to extract
+> some files (bc I never heard of bsdtar :), I risk more spurious failures
+> due to hitting max?
 > 
-> > 1104 is kzalloc for struct usblp.
-> > 
-> > > > Freed by task 12266:
-> > > >  save_stack+0x1b/0x80 mm/kasan/common.c:72
-> > > >  set_track mm/kasan/common.c:80 [inline]
-> > > >  kasan_set_free_info mm/kasan/common.c:337 [inline]
-> > > >  __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
-> > > >  slab_free_hook mm/slub.c:1444 [inline]
-> > > >  slab_free_freelist_hook mm/slub.c:1477 [inline]
-> > > >  slab_free mm/slub.c:3034 [inline]
-> > > >  kfree+0xd5/0x300 mm/slub.c:3995
-> > > >  usblp_disconnect.cold+0x24/0x29 drivers/usb/class/usblp.c:1380
-> > > >  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
-> > > >  __device_release_driver drivers/base/dd.c:1137 [inline]
-> > > >  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1168
-> > > >  bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
-> > 
-> > 1380 is an inlined call to usblp_cleanup, which is just
-> > a bunch of kfree.
-> 
-> But that must never happen while while the device is open.
-> If that ever happens something is wrong with usblp->used.
-> 
-> > The bug report is still a bug report, but I'm pretty sure the
-> > culprit is the emulated HCD and/or the gadget layer. Unfortunately,
-> > I'm not up to speed in that subsystem. Maybe Alan can look at it?
-> 
-> I doubt it. Operation by a timer triggering a timeout must work.
+> If you think we need it, that's fine - it just has the odor of something
+> more trouble than it's worth.
 
-The timer is not the issue.  usb_kill_anchored_urbs() waits until all 
-the URBs have completed, and those completions happen when the timer 
-fires.
+Maybe I'm making too much of this and you're right. My use-case was
+sharing the same loopfs superblock with locked down parties. But I guess
+that we can handle that case with the ucount infra too. And since I'm
+the only one who thinks it might be useful I'll drop it from this
+patchset. If we have a need for it we can readd it later. Sound ok?
 
-The only suspicious thing I see is that usblp_resume() calls 
-handle_bidir() without first acquiring any mutex.  But resume shouldn't 
-race with disconnect.
-
-The only other place where read URBs get submitted is under
-usblp_read(), which does acquire the mutex and checks for disconnection
-while holding it.
-
-So I'm baffled.
-
-Alan Stern
-
+Christian
