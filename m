@@ -2,176 +2,224 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61F5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A212C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B82A20736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2B420736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ucJERNhR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgDWRex (ORCPT
+        id S1729966AbgDWRgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:34:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:32507 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729879AbgDWRew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:34:52 -0400
-IronPort-SDR: RND1g0Ee7IMRsBKx1Pwp/5ML+umHkz5IwRabNBaukWPyV6I2MGmo63xTQAQQTFaSDqhLYMv3aW
- AqywtyVVvTnQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 10:34:51 -0700
-IronPort-SDR: LdsGU0KqTWZLYY2Opbsopap7RtiKwFrI72w+nQN9mdgFoDjia0qw0vyUrgj0vo7PC6M4tU4+Sa
- WHKKq1/ojUrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="456991546"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Apr 2020 10:34:50 -0700
-Date:   Thu, 23 Apr 2020 10:34:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 5/9] KVM: X86: Refresh CPUID once guest XSS MSR
- changes
-Message-ID: <20200423173450.GJ17824@linux.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-6-weijiang.yang@intel.com>
+        Thu, 23 Apr 2020 13:36:04 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38004 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729858AbgDWRgD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:36:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NHSvpo187694;
+        Thu, 23 Apr 2020 17:35:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=3S9ajz9TJAapFD3cdc1EsovmQ50Uk8rdsK/sJjag/DE=;
+ b=ucJERNhRM2ZJgr3l5XlpwGNw1Y5KTgmHDDERWOcFoUzcbCwjtab81MpCp81fuZE9mYa+
+ /lyaBYVMCrIF35An0w3Ot05LzosJ7X+gMAosGFMdKUtSBeCuv8i+XBdtRr+JiyOOwbPI
+ HbALG/FbXj/jzuyVTh8DCcRVo4EIokBH6hWXIynyLJCiUgL2/zXEo+/Vy8cOW4NSJdeL
+ gHp4dqhP6g4Op0ZrFUFR4NOUuwtgwqcs/nZdZGOVnidzqj5qZZwm1CXdSgHmJU2xYryx
+ lEpXC5xQtMucxZGi2w8Gpg5E71G8rz+VCd3v/zK9e+Hz+OoM6h159dtdMsftVjfUhBG+ kw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30k7qe2qrq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 17:35:41 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NHRZPD046952;
+        Thu, 23 Apr 2020 17:35:41 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30k7qvha97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 17:35:41 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03NHZbud024696;
+        Thu, 23 Apr 2020 17:35:37 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Apr 2020 10:35:36 -0700
+Date:   Thu, 23 Apr 2020 20:35:27 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Vesa =?iso-8859-1?B?SuTkc2tlbORpbmVu?= 
+        <vesa.jaaskelainen@vaisala.com>
+Cc:     op-tee@lists.trustedfirmware.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] tee: add support for session's client UUID generation
+Message-ID: <20200423173527.GP2682@kadam>
+References: <20200423151701.111231-1-vesa.jaaskelainen@vaisala.com>
+ <20200423151701.111231-2-vesa.jaaskelainen@vaisala.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200326081847.5870-6-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200423151701.111231-2-vesa.jaaskelainen@vaisala.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=2 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004230136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9600 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=2 mlxlogscore=999 phishscore=0
+ impostorscore=0 mlxscore=0 clxscore=1011 malwarescore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:18:42PM +0800, Yang Weijiang wrote:
-> CPUID(0xd, 1) reports the current required storage size of
-> XCR0 | XSS, when guest updates the XSS, it's necessary to update
-> the CPUID leaf, otherwise guest will fetch old state size, and
-> results to some WARN traces during guest running.
-> 
-> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/cpuid.c            | 21 ++++++++++++++++++---
->  arch/x86/kvm/x86.c              |  9 +++++++--
->  3 files changed, 26 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 24c90ea5ddbd..2c944ad99692 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -650,6 +650,7 @@ struct kvm_vcpu_arch {
->  
->  	u64 xcr0;
->  	u64 guest_supported_xcr0;
-> +	u64 guest_supported_xss;
->  	u32 guest_xstate_size;
->  
->  	struct kvm_pio_request pio;
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 78d461be2102..25e9a11291b3 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -95,9 +95,24 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->  	}
->  
->  	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
-> -	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
-> -		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
-> -		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
-> +	if (best) {
-> +		if (best->eax & (F(XSAVES) | F(XSAVEC))) {
-
-Please use cpuid_entry_has() to preserve the automagic register lookup and
-compile-time assertions that are provided.  E.g. I don't know off the top
-of my whether %eax is the correct register, and I don't want to know :-).
-
-> +			u64 xstate = vcpu->arch.xcr0 | vcpu->arch.ia32_xss;
+On Thu, Apr 23, 2020 at 06:16:59PM +0300, Vesa Jääskeläinen wrote:
+> +static int uuid_v5(uuid_t *uuid, const uuid_t *ns, const void *name,
+> +		   size_t size)
+> +{
+> +	unsigned char hash[SHA1_DIGEST_SIZE];
+> +	struct crypto_shash *shash = NULL;
+> +	struct shash_desc *desc = NULL;
+> +	int rc;
 > +
-> +			best->ebx = xstate_required_size(xstate, true);
-> +		}
-> +
-> +		if (best->eax & F(XSAVES)) {
-
-Same thing here.
-
-> +			vcpu->arch.guest_supported_xss =
-> +			(best->ecx | ((u64)best->edx << 32)) & supported_xss;
-
-The indentation is funky, I'm guessing you're trying to squeak in less than
-80 chars.  Maybe this?
-
-		if (!cpuid_entry_has(best, X86_FEATURE_XSAVES)) {
-			best->ecx = 0;
-			best->edx = 0;
-		}
-
-		 vcpu->arch.guest_supported_xss =
-			(((u64)best->edx << 32) | best->ecx) & supported_xss;
-
-Nit: my preference is to have the high half first, x86 is little endian
-(the xcr0 code is "wrong" :-D).  For me, this also makes it more obvious
-that the effective size is a u64.
-
-> +		} else {
-> +			best->ecx = 0;
-> +			best->edx = 0;
-> +			vcpu->arch.guest_supported_xss = 0;
-> +		}
-> +	} else {
-> +		vcpu->arch.guest_supported_xss = 0;
+> +	shash = crypto_alloc_shash("sha1", 0, 0);
+> +	if (IS_ERR(shash)) {
+> +		rc = PTR_ERR(shash);
+> +		pr_err("shash(sha1) allocation failed\n");
+> +		return rc;
 > +	}
->  
->  	/*
->  	 * The existing code assumes virtual address is 48-bit or 57-bit in the
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 90acdbbb8a5a..51ecb496d47d 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2836,9 +2836,12 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		 * IA32_XSS[bit 8]. Guests have to use RDMSR/WRMSR rather than
->  		 * XSAVES/XRSTORS to save/restore PT MSRs.
->  		 */
-> -		if (data & ~supported_xss)
-> +		if (data & ~vcpu->arch.guest_supported_xss)
->  			return 1;
-> -		vcpu->arch.ia32_xss = data;
-> +		if (vcpu->arch.ia32_xss != data) {
-> +			vcpu->arch.ia32_xss = data;
-> +			kvm_update_cpuid(vcpu);
+> +
+> +	desc = kzalloc(sizeof(*desc) + crypto_shash_descsize(shash),
+> +		       GFP_KERNEL);
+> +	if (IS_ERR(desc)) {
+
+
+kzalloc() returns NULL on error.
+
+> +		rc = PTR_ERR(desc);
+> +		goto out;
+
+Please choose a label name so that we can tell what the goto will do
+like "goto free_shash;".
+
+> +	}
+> +
+> +	desc->tfm = shash;
+> +
+> +	rc = crypto_shash_init(desc);
+> +	if (rc < 0)
+> +		goto out2;
+> +
+> +	rc = crypto_shash_update(desc, (const u8 *)ns, sizeof(*ns));
+> +	if (rc < 0)
+> +		goto out2;
+> +
+> +	rc = crypto_shash_update(desc, (const u8 *)name, size);
+> +	if (rc < 0)
+> +		goto out2;
+> +
+> +	rc = crypto_shash_final(desc, hash);
+> +	if (rc < 0)
+> +		goto out2;
+> +
+> +	memcpy(uuid->b, hash, UUID_SIZE);
+> +
+> +	/* Tag for version 5 */
+> +	uuid->b[6] = (hash[6] & 0x0F) | 0x50;
+> +	uuid->b[8] = (hash[8] & 0x3F) | 0x80;
+> +
+> +out2:
+> +	kfree(desc);
+> +
+> +out:
+> +	crypto_free_shash(shash);
+> +	return rc;
+> +}
+> +
+> +int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
+> +				 const u8 connection_data[TEE_IOCTL_UUID_LEN])
+> +{
+> +	const char *application_id = NULL;
+> +	gid_t ns_grp = (gid_t)-1;
+> +	kgid_t grp = INVALID_GID;
+> +	char *name = NULL;
+> +	int rc;
+> +
+> +	if (connection_method == TEE_IOCTL_LOGIN_PUBLIC) {
+> +		/* Nil UUID to be passed to TEE environment */
+> +		uuid_copy(uuid, &uuid_null);
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * In Linux environment client UUID is based on UUIDv5.
+> +	 *
+> +	 * Determine client UUID with following semantics for 'name':
+> +	 *
+> +	 * For TEEC_LOGIN_USER:
+> +	 * uid=<uid>
+> +	 *
+> +	 * For TEEC_LOGIN_GROUP:
+> +	 * gid=<gid>
+> +	 *
+> +	 */
+> +
+> +	name = kzalloc(TEE_UUID_NS_NAME_SIZE, GFP_KERNEL);
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	switch (connection_method) {
+> +	case TEE_IOCTL_LOGIN_USER:
+> +		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "uid=%x",
+> +			  current_euid().val);
+
+It doesn't make sense to use sCnprintf() instead of snprintf() if we're
+not going to preserve the error code.  Probably it's better to preserve
+the error code actually so we can avoid the strlen(name) later on.
+
+> +		break;
+> +
+> +	case TEE_IOCTL_LOGIN_GROUP:
+> +		memcpy(&ns_grp, connection_data, sizeof(gid_t));
+> +		grp = make_kgid(current_user_ns(), ns_grp);
+> +		if (!gid_valid(grp) || !in_egroup_p(grp)) {
+> +			rc = -EPERM;
+> +			goto out;
 > +		}
->  		break;
->  	case MSR_SMI_COUNT:
->  		if (!msr_info->host_initiated)
-> @@ -9635,6 +9638,8 @@ int kvm_arch_hardware_setup(void)
->  
->  	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
->  		supported_xss = 0;
-> +	else
-> +		supported_xss = host_xss & KVM_SUPPORTED_XSS;
+> +
+> +		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "gid=%x", grp.val);
+> +		break;
+> +
+> +	default:
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	rc = uuid_v5(uuid, &tee_client_uuid_ns, name, strlen(name));
+> +out:
+> +	kfree(name);
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(tee_session_calc_client_uuid);
 
-Silly nit: I'd prefer to invert the check, e.g.
+regards,
+dan carpenter
 
-	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
-		supported_xss = host_xss & KVM_SUPPORTED_XSS;
-	else
-		supported_xss = 0;
-
->  
->  	cr4_reserved_bits = kvm_host_cr4_reserved_bits(&boot_cpu_data);
->  
-> -- 
-> 2.17.2
-> 
