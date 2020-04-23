@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A188CC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84ADC55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889D620784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5F320784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgDWXXq (ORCPT
+        id S1729140AbgDWXYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:23:46 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48382 "EHLO
+        Thu, 23 Apr 2020 19:24:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48336 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727890AbgDWXGa (ORCPT
+        by vger.kernel.org with ESMTP id S1728158AbgDWXGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:30 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-0004an-8U; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvJ-0004aY-MG; Fri, 24 Apr 2020 00:06:25 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-00E6hK-3A; Fri, 24 Apr 2020 00:06:25 +0100
+        id 1jRkvI-00E6h0-Om; Fri, 24 Apr 2020 00:06:24 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Sterba" <dsterba@suse.com>,
+        "Liu Bo" <bo.li.liu@oracle.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
-        "Nikolay Borisov" <nborisov@suse.com>,
-        "Qu Wenruo" <quwenruo.btrfs@gmx.com>
-Date:   Fri, 24 Apr 2020 00:04:27 +0100
-Message-ID: <lsq.1587683028.314449038@decadent.org.uk>
+        "Filipe Manana" <fdmanana@suse.com>
+Date:   Fri, 24 Apr 2020 00:04:23 +0100
+Message-ID: <lsq.1587683028.658516569@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 040/245] btrfs: Add sanity check for EXTENT_DATA when
- reading out leaf
+Subject: [PATCH 3.16 036/245] Btrfs: fix emptiness check for dirtied
+ extent buffers at check_leaf()
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,185 +58,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 40c3c40947324d9f40bf47830c92c59a9bbadf4a upstream.
+commit f177d73949bf758542ca15a1c1945bd2e802cc65 upstream.
 
-Add extra checks for item with EXTENT_DATA type.  This checks the
-following thing:
+We can not simply use the owner field from an extent buffer's header to
+get the id of the respective tree when the extent buffer is from a
+relocation tree. When we create the root for a relocation tree we leave
+(on purpose) the owner field with the same value as the subvolume's tree
+root (we do this at ctree.c:btrfs_copy_root()). So we must ignore extent
+buffers from relocation trees, which have the BTRFS_HEADER_FLAG_RELOC
+flag set, because otherwise we will always consider the extent buffer
+as not being the root of the tree (the root of original subvolume tree
+is always different from the root of the respective relocation tree).
 
-0) Key offset
-   All key offsets must be aligned to sectorsize.
-   Inline extent must have 0 for key offset.
+This lead to assertion failures when running with the integrity checker
+enabled (CONFIG_BTRFS_FS_CHECK_INTEGRITY=y) such as the following:
 
-1) Item size
-   Uncompressed inline file extent size must match item size.
-   (Compressed inline file extent has no information about its on-disk size.)
-   Regular/preallocated file extent size must be a fixed value.
+[  643.393409] BTRFS critical (device sdg): corrupt leaf, non-root leaf's nritems is 0: block=38506496, root=260, slot=0
+[  643.397609] BTRFS info (device sdg): leaf 38506496 total ptrs 0 free space 3995
+[  643.407075] assertion failed: 0, file: fs/btrfs/disk-io.c, line: 4078
+[  643.408425] ------------[ cut here ]------------
+[  643.409112] kernel BUG at fs/btrfs/ctree.h:3419!
+[  643.409773] invalid opcode: 0000 [#1] PREEMPT SMP
+[  643.410447] Modules linked in: dm_flakey dm_mod crc32c_generic btrfs xor raid6_pq ppdev psmouse acpi_cpufreq parport_pc evdev parport tpm_tis tpm_tis_core pcspkr serio_raw i2c_piix4 sg tpm i2c_core button processor loop autofs4 ext4 crc16 jbd2 mbcache sr_mod cdrom sd_mod ata_generic virtio_scsi ata_piix libata virtio_pci virtio_ring scsi_mod virtio e1000 floppy
+[  643.414356] CPU: 11 PID: 32726 Comm: btrfs Not tainted 4.8.0-rc8-btrfs-next-35+ #1
+[  643.414356] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.1-0-gb3ef39f-prebuilt.qemu-project.org 04/01/2014
+[  643.414356] task: ffff880145e95b00 task.stack: ffff88014826c000
+[  643.414356] RIP: 0010:[<ffffffffa0352759>]  [<ffffffffa0352759>] assfail.constprop.41+0x1c/0x1e [btrfs]
+[  643.414356] RSP: 0018:ffff88014826fa28  EFLAGS: 00010292
+[  643.414356] RAX: 0000000000000039 RBX: ffff88014e2d7c38 RCX: 0000000000000001
+[  643.414356] RDX: ffff88023f4d2f58 RSI: ffffffff81806c63 RDI: 00000000ffffffff
+[  643.414356] RBP: ffff88014826fa28 R08: 0000000000000001 R09: 0000000000000000
+[  643.414356] R10: ffff88014826f918 R11: ffffffff82f3c5ed R12: ffff880172910000
+[  643.414356] R13: ffff880233992230 R14: ffff8801a68a3310 R15: fffffffffffffff8
+[  643.414356] FS:  00007f9ca305e8c0(0000) GS:ffff88023f4c0000(0000) knlGS:0000000000000000
+[  643.414356] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  643.414356] CR2: 00007f9ca3071000 CR3: 000000015d01b000 CR4: 00000000000006e0
+[  643.414356] Stack:
+[  643.414356]  ffff88014826fa50 ffffffffa02d655a 000000000000000a ffff88014e2d7c38
+[  643.414356]  0000000000000000 ffff88014826faa8 ffffffffa02b72f3 ffff88014826fab8
+[  643.414356]  00ffffffa03228e4 0000000000000000 0000000000000000 ffff8801bbd4e000
+[  643.414356] Call Trace:
+[  643.414356]  [<ffffffffa02d655a>] btrfs_mark_buffer_dirty+0xdf/0xe5 [btrfs]
+[  643.414356]  [<ffffffffa02b72f3>] btrfs_copy_root+0x18a/0x1d1 [btrfs]
+[  643.414356]  [<ffffffffa0322921>] create_reloc_root+0x72/0x1ba [btrfs]
+[  643.414356]  [<ffffffffa03267c2>] btrfs_init_reloc_root+0x7b/0xa7 [btrfs]
+[  643.414356]  [<ffffffffa02d9e44>] record_root_in_trans+0xdf/0xed [btrfs]
+[  643.414356]  [<ffffffffa02db04e>] btrfs_record_root_in_trans+0x50/0x6a [btrfs]
+[  643.414356]  [<ffffffffa030ad2b>] create_subvol+0x472/0x773 [btrfs]
+[  643.414356]  [<ffffffffa030b406>] btrfs_mksubvol+0x3da/0x463 [btrfs]
+[  643.414356]  [<ffffffffa030b406>] ? btrfs_mksubvol+0x3da/0x463 [btrfs]
+[  643.414356]  [<ffffffff810781ac>] ? preempt_count_add+0x65/0x68
+[  643.414356]  [<ffffffff811a6e97>] ? __mnt_want_write+0x62/0x77
+[  643.414356]  [<ffffffffa030b55d>] btrfs_ioctl_snap_create_transid+0xce/0x187 [btrfs]
+[  643.414356]  [<ffffffffa030b67d>] btrfs_ioctl_snap_create+0x67/0x81 [btrfs]
+[  643.414356]  [<ffffffffa030ecfd>] btrfs_ioctl+0x508/0x20dd [btrfs]
+[  643.414356]  [<ffffffff81293e39>] ? __this_cpu_preempt_check+0x13/0x15
+[  643.414356]  [<ffffffff81155eca>] ? handle_mm_fault+0x976/0x9ab
+[  643.414356]  [<ffffffff81091300>] ? arch_local_irq_save+0x9/0xc
+[  643.414356]  [<ffffffff8119a2b0>] vfs_ioctl+0x18/0x34
+[  643.414356]  [<ffffffff8119a8e8>] do_vfs_ioctl+0x581/0x600
+[  643.414356]  [<ffffffff814b9552>] ? entry_SYSCALL_64_fastpath+0x5/0xa8
+[  643.414356]  [<ffffffff81093fe9>] ? trace_hardirqs_on_caller+0x17b/0x197
+[  643.414356]  [<ffffffff8119a9be>] SyS_ioctl+0x57/0x79
+[  643.414356]  [<ffffffff814b9565>] entry_SYSCALL_64_fastpath+0x18/0xa8
+[  643.414356]  [<ffffffff81091b08>] ? trace_hardirqs_off_caller+0x3f/0xaa
+[  643.414356] Code: 89 83 88 00 00 00 31 c0 5b 41 5c 41 5d 5d c3 55 89 f1 48 c7 c2 98 bc 35 a0 48 89 fe 48 c7 c7 05 be 35 a0 48 89 e5 e8 13 46 dd e0 <0f> 0b 55 89 f1 48 c7 c2 9f d3 35 a0 48 89 fe 48 c7 c7 7a d5 35
+[  643.414356] RIP  [<ffffffffa0352759>] assfail.constprop.41+0x1c/0x1e [btrfs]
+[  643.414356]  RSP <ffff88014826fa28>
+[  643.468267] ---[ end trace 6a1b3fb1a9d7d6e3 ]---
 
-2) Every member of regular file extent item
-   Including alignment for bytenr and offset, possible value for
-   compression/encryption/type.
+This can be easily reproduced by running xfstests with the integrity
+checker enabled.
 
-3) Type/compression/encode must be one of the valid values.
-
-This should be the most comprehensive and strict check in the context
-of btrfs_item for EXTENT_DATA.
-
-Signed-off-by: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ switch to BTRFS_FILE_EXTENT_TYPES, similar to what
-  BTRFS_COMPRESS_TYPES does ]
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 4.4:
- - Use root->sectorsize instead of root->fs_info->sectorsize
- - Adjust filename]
+Fixes: 1ba98d086fe3 (Btrfs: detect corruption when non-root leaf has zero item)
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Liu Bo <bo.li.liu@oracle.com>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/ctree.h   |   1 +
- fs/btrfs/disk-io.c | 103 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
+ fs/btrfs/disk-io.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -874,6 +874,7 @@ struct btrfs_balance_item {
- #define BTRFS_FILE_EXTENT_INLINE 0
- #define BTRFS_FILE_EXTENT_REG 1
- #define BTRFS_FILE_EXTENT_PREALLOC 2
-+#define BTRFS_FILE_EXTENT_TYPES	2
- 
- struct btrfs_file_extent_item {
- 	/*
 --- a/fs/btrfs/disk-io.c
 +++ b/fs/btrfs/disk-io.c
-@@ -513,6 +513,100 @@ static int check_tree_block_fsid(struct
- 		   btrfs_header_level(eb) == 0 ? "leaf" : "node",\
- 		   reason, btrfs_header_bytenr(eb), root->objectid, slot)
+@@ -521,7 +521,15 @@ static noinline int check_leaf(struct bt
+ 	u32 nritems = btrfs_header_nritems(leaf);
+ 	int slot;
  
-+static int check_extent_data_item(struct btrfs_root *root,
-+				  struct extent_buffer *leaf,
-+				  struct btrfs_key *key, int slot)
-+{
-+	struct btrfs_file_extent_item *fi;
-+	u32 sectorsize = root->sectorsize;
-+	u32 item_size = btrfs_item_size_nr(leaf, slot);
-+
-+	if (!IS_ALIGNED(key->offset, sectorsize)) {
-+		CORRUPT("unaligned key offset for file extent",
-+			leaf, root, slot);
-+		return -EUCLEAN;
-+	}
-+
-+	fi = btrfs_item_ptr(leaf, slot, struct btrfs_file_extent_item);
-+
-+	if (btrfs_file_extent_type(leaf, fi) > BTRFS_FILE_EXTENT_TYPES) {
-+		CORRUPT("invalid file extent type", leaf, root, slot);
-+		return -EUCLEAN;
-+	}
-+
+-	if (nritems == 0) {
 +	/*
-+	 * Support for new compression/encrption must introduce incompat flag,
-+	 * and must be caught in open_ctree().
++	 * Extent buffers from a relocation tree have a owner field that
++	 * corresponds to the subvolume tree they are based on. So just from an
++	 * extent buffer alone we can not find out what is the id of the
++	 * corresponding subvolume tree, so we can not figure out if the extent
++	 * buffer corresponds to the root of the relocation tree or not. So skip
++	 * this check for relocation trees.
 +	 */
-+	if (btrfs_file_extent_compression(leaf, fi) > BTRFS_COMPRESS_TYPES) {
-+		CORRUPT("invalid file extent compression", leaf, root, slot);
-+		return -EUCLEAN;
-+	}
-+	if (btrfs_file_extent_encryption(leaf, fi)) {
-+		CORRUPT("invalid file extent encryption", leaf, root, slot);
-+		return -EUCLEAN;
-+	}
-+	if (btrfs_file_extent_type(leaf, fi) == BTRFS_FILE_EXTENT_INLINE) {
-+		/* Inline extent must have 0 as key offset */
-+		if (key->offset) {
-+			CORRUPT("inline extent has non-zero key offset",
-+				leaf, root, slot);
-+			return -EUCLEAN;
-+		}
-+
-+		/* Compressed inline extent has no on-disk size, skip it */
-+		if (btrfs_file_extent_compression(leaf, fi) !=
-+		    BTRFS_COMPRESS_NONE)
-+			return 0;
-+
-+		/* Uncompressed inline extent size must match item size */
-+		if (item_size != BTRFS_FILE_EXTENT_INLINE_DATA_START +
-+		    btrfs_file_extent_ram_bytes(leaf, fi)) {
-+			CORRUPT("plaintext inline extent has invalid size",
-+				leaf, root, slot);
-+			return -EUCLEAN;
-+		}
++	if (nritems == 0 && !btrfs_header_flag(leaf, BTRFS_HEADER_FLAG_RELOC)) {
+ 		struct btrfs_root *check_root;
+ 
+ 		key.objectid = btrfs_header_owner(leaf);
+@@ -549,6 +557,9 @@ static noinline int check_leaf(struct bt
+ 		return 0;
+ 	}
+ 
++	if (nritems == 0)
 +		return 0;
-+	}
 +
-+	/* Regular or preallocated extent has fixed item size */
-+	if (item_size != sizeof(*fi)) {
-+		CORRUPT(
-+		"regluar or preallocated extent data item size is invalid",
-+			leaf, root, slot);
-+		return -EUCLEAN;
-+	}
-+	if (!IS_ALIGNED(btrfs_file_extent_ram_bytes(leaf, fi), sectorsize) ||
-+	    !IS_ALIGNED(btrfs_file_extent_disk_bytenr(leaf, fi), sectorsize) ||
-+	    !IS_ALIGNED(btrfs_file_extent_disk_num_bytes(leaf, fi), sectorsize) ||
-+	    !IS_ALIGNED(btrfs_file_extent_offset(leaf, fi), sectorsize) ||
-+	    !IS_ALIGNED(btrfs_file_extent_num_bytes(leaf, fi), sectorsize)) {
-+		CORRUPT(
-+		"regular or preallocated extent data item has unaligned value",
-+			leaf, root, slot);
-+		return -EUCLEAN;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Common point to switch the item-specific validation.
-+ */
-+static int check_leaf_item(struct btrfs_root *root,
-+			   struct extent_buffer *leaf,
-+			   struct btrfs_key *key, int slot)
-+{
-+	int ret = 0;
-+
-+	switch (key->type) {
-+	case BTRFS_EXTENT_DATA_KEY:
-+		ret = check_extent_data_item(root, leaf, key, slot);
-+		break;
-+	}
-+	return ret;
-+}
-+
- static noinline int check_leaf(struct btrfs_root *root,
- 			       struct extent_buffer *leaf)
- {
-@@ -568,9 +662,13 @@ static noinline int check_leaf(struct bt
- 	 * 1) key order
- 	 * 2) item offset and size
- 	 *    No overlap, no hole, all inside the leaf.
-+	 * 3) item content
-+	 *    If possible, do comprehensive sanity check.
-+	 *    NOTE: All checks must only rely on the item data itself.
- 	 */
- 	for (slot = 0; slot < nritems; slot++) {
- 		u32 item_end_expected;
-+		int ret;
- 
- 		btrfs_item_key_to_cpu(leaf, &key, slot);
- 
-@@ -613,6 +711,11 @@ static noinline int check_leaf(struct bt
- 			return -EUCLEAN;
- 		}
- 
-+		/* Check if the item size and content meet other criteria */
-+		ret = check_leaf_item(root, leaf, &key, slot);
-+		if (ret < 0)
-+			return ret;
-+
- 		prev_key.objectid = key.objectid;
- 		prev_key.type = key.type;
- 		prev_key.offset = key.offset;
+ 	/* Check the 0 item */
+ 	if (btrfs_item_offset_nr(leaf, 0) + btrfs_item_size_nr(leaf, 0) !=
+ 	    BTRFS_LEAF_DATA_SIZE(root)) {
 
