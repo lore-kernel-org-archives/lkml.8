@@ -2,176 +2,197 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16492C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AEFC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D966E20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81BD20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="3ZIgSWJd";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="3ZIgSWJd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iu7dtUoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgDWOA6 (ORCPT
+        id S1728209AbgDWOBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:00:58 -0400
-Received: from mail-db8eur05on2054.outbound.protection.outlook.com ([40.107.20.54]:6222
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727053AbgDWOA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:00:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9MRb3gbTmtCQQK0j7veDIM4UdM9WBxhcJB8zbHGwiJA=;
- b=3ZIgSWJdfe44i/u+g4IGUTHpwQHq4AjO0MohAivZRaNjMX1XEr71UrQ56SWaQ29Gb4rog+U+Qq6Z2Mo8SIbC3C3wIO//G5vxUlpmmOBiJj9ZZRYnsI2Gk4DIkr2umxdOmwjJSGXwJteeauhKs/FBB7/AZRXtgeQmsm7CzwTWf34=
-Received: from AM6PR10CA0024.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:89::37)
- by AM6PR08MB4850.eurprd08.prod.outlook.com (2603:10a6:20b:d2::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
- 2020 14:00:53 +0000
-Received: from AM5EUR03FT037.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:89:cafe::fc) by AM6PR10CA0024.outlook.office365.com
- (2603:10a6:209:89::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
- Transport; Thu, 23 Apr 2020 14:00:53 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT037.mail.protection.outlook.com (10.152.17.241) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.19 via Frontend Transport; Thu, 23 Apr 2020 14:00:51 +0000
-Received: ("Tessian outbound ecb846ece464:v53"); Thu, 23 Apr 2020 14:00:51 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 96e461477285.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4BD63D90-4310-46D5-87F0-FC38EC3E8929.1;
-        Thu, 23 Apr 2020 14:00:46 +0000
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 96e461477285.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 23 Apr 2020 14:00:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G0nBmDJwui8waPp08//dmraiRyWHdmAH4wwlXQpCYlOhHcdDC6KUstGJsZn2WWSNGFGEIn45jXCVhxjopEBBpdDzC+LuVMmMUyy7t4aFoU2b+J4yFbPLjcCzmOBX67iIXTz16eVZDTV+Wij+Fe07Nwy5gy2rLLDhsMp3xDTkfS50LBY3zU7f3G1qND7OjRfpkgF4p3WcGZT5rI63M2Ll/rZHQTNy3pTMz2F0cPdV512dMW4CoXxpMrJqklwXlBRuGTIvQ56biXZckcZiHywsOnAJPtE+IeiPQqV3QIvBw+VWs5PNt/UAdef6wacxhJYcX9+OghXTUAt9c49RWiI3QA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9MRb3gbTmtCQQK0j7veDIM4UdM9WBxhcJB8zbHGwiJA=;
- b=ZOnuQRcGFfs9F7G9bfoELTk6m2/yOnKrS+xu2hyz4ed71WXRTrLeJdjeN+mLnakGd22ePDbua8BK0himBWAYWgTTWs5CuJyKoSYvRWdnZeH2Qj2SUwEaSVlmKuE0pUV6I0ZlOctq6TiCHmkQkWk5nbLG2b0127/Bnt0Kjo+e/qTnUr96KTDOL7szjiO5OtxrXMxFopfcXvsRmhvCNuo8rXbU9X7qUfLyXJsMKg7B3udDOjeuHBt5CNEyfiEdEaoBu/+60TI/D5j7+5Apl+D2Kn9gy2Ajgcok7cPoYhq4f2o9p4Bdvqc0fRxR+GBKBusOUkmaqZFMkodp99K953pXzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9MRb3gbTmtCQQK0j7veDIM4UdM9WBxhcJB8zbHGwiJA=;
- b=3ZIgSWJdfe44i/u+g4IGUTHpwQHq4AjO0MohAivZRaNjMX1XEr71UrQ56SWaQ29Gb4rog+U+Qq6Z2Mo8SIbC3C3wIO//G5vxUlpmmOBiJj9ZZRYnsI2Gk4DIkr2umxdOmwjJSGXwJteeauhKs/FBB7/AZRXtgeQmsm7CzwTWf34=
-Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com (2603:10a6:4:a0::12)
- by DB6SPR00MB2420.eurprd08.prod.outlook.com (2603:10a6:4:b6::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
- 2020 14:00:44 +0000
-Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com
- ([fe80::b959:1879:c050:3117]) by DB6PR0802MB2533.eurprd08.prod.outlook.com
- ([fe80::b959:1879:c050:3117%8]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
- 14:00:44 +0000
-From:   Hadar Gat <Hadar.Gat@arm.com>
-To:     Zou Wei <zou_wei@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: RE: [PATCH -next] hwrng: cctrng - Make some symbols static
-Thread-Topic: [PATCH -next] hwrng: cctrng - Make some symbols static
-Thread-Index: AQHWGWjayJXlqMKiXkeFpuo52WhbG6iGu/cg
-Date:   Thu, 23 Apr 2020 14:00:44 +0000
-Message-ID: <DB6PR0802MB2533C82FFC907FDFF331C312E9D30@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-References: <1587644481-38192-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1587644481-38192-1-git-send-email-zou_wei@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: d7f83074-0ce2-4f4d-8b1c-6c4d721df6d8.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-x-originating-ip: [31.154.167.229]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 690569e7-00b5-4097-b27c-08d7e78ebbae
-x-ms-traffictypediagnostic: DB6SPR00MB2420:|AM6PR08MB4850:
-X-Microsoft-Antispam-PRVS: <AM6PR08MB485041578B47E24E2E1C96E5E9D30@AM6PR08MB4850.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:1227;OLM:1227;
-x-forefront-prvs: 03827AF76E
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0802MB2533.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(346002)(39860400002)(86362001)(55016002)(316002)(52536014)(8676002)(66476007)(66556008)(64756008)(66446008)(110136005)(478600001)(54906003)(8936002)(76116006)(66946007)(7696005)(4326008)(81156014)(71200400001)(186003)(5660300002)(33656002)(9686003)(26005)(2906002)(6506007);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: o53DCDnfgtqbfQY9sHuUm00kd8bRvqn7QzvNx0VNaX6wHPSEI8PBB5IRDoaYNhYGgVj/9LjfP9t/xb7rDHq5YUfFg5stUf7S6o7TyxswFs1OI3HnqIGdJ4qiu2CZ902tYurCFBWVM7LnQl0Ziqk/YNy92laJf9sWueNZPTFM898sJjqK0KG8J+5YDmePa+vlmfz6BmL36MX535kmA3GD57knU+HvXoMay78Ptmd1tuFm+gwtwspileBSdJQSjbNW+unKU8zFRGrLIZnrljh8E85C3Q46hiqnyRoP6qUU7jy4+bY8YCZwxOb2A8wu6hNogtfAOWePi4Q8inv/krC74hfzBv/jgu70ZNN68w/JFhKzyeQ19AVJpG0ZlH/E5b94Na6x8jX8jYXNzoGlp+mM63QQME6yt8OPKine/vRLaVr4o51JzOfuhG7dl9iQfOmc
-x-ms-exchange-antispam-messagedata: PA+T2Orl+zOHittARXY4OmKWY7C4YeeVpRSe3B9q5RB08xpS5yAhnIlOH+FR44aUr73AUZaVpADoHbf1afFSKqKbXvMRV1l0DxpANrlKgosaVybNjPA063aKk6F2q95L4343I2Nl0K8iMq5qeAQo6A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 23 Apr 2020 10:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727053AbgDWOBK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:01:10 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFCCEC08E934;
+        Thu, 23 Apr 2020 07:01:08 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id p13so2869778qvt.12;
+        Thu, 23 Apr 2020 07:01:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jXDe/IW3FrJSTh/vYqQdoYVT3ff45aX6yw/T7/hZptk=;
+        b=iu7dtUoy9t4K29l/5Fa0WXwcHbdLxNAOu6c6/jCTjdv3xq9eXlSIxixzt8w5mEFsxN
+         KC0G83TpOICG32Xo63toL6NpMBDn2TuVBuLN2yii3sMwHDzya6QDByhQKjZ/muR9YpGc
+         8+tfz2tvWNFIM4I9MKBmw8m2Gz/1ZrixFjpp43aTJH1kWgSYv81aJPb/lcvWTijf9lYH
+         S/JoaqNYe+EMHPZMG9aM2uZn1+AQK7c/tu/ygL6q/VC0hvJ2P6rXz64N/jAXF19xWqWg
+         sVOQLr2wy0Rb4C8l7fMdTv4JXjtEm/NRhgbBtNw5M2JXQYJeKabD5JOzPT0XCxF1GDOD
+         4TXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jXDe/IW3FrJSTh/vYqQdoYVT3ff45aX6yw/T7/hZptk=;
+        b=Dvsm0amh2EVTo2LKk3c423tA56kSwtYzasSkj87DNG/Ki5frbIsbFfUT+/xeSNQCfP
+         HTx0DqG2b+EqZe4pgVn1qszyhiIBsORVdGIl1ip1LGxrc7qmrZ1blrZ9K+f0CsTcAwXh
+         dHANemVfEJtOP3Xt6Yxp8PWD+y85XLDDxTpSHNCjPvnp7j7PAxaeU3P3hG1udpSK5FHW
+         fxyqsJiycaJbSgWcTxyS6vOb6nUUDYLREItBg/S1kfVUPeC3N9Fy8cJTKVT96Uq6Sexs
+         Mn13GGndPj+D0M6ohNwPivCo8E6+J21kPsay/s08aYO4XxX2kZqhes4q4Ic6kR30495o
+         P0OA==
+X-Gm-Message-State: AGi0PuayUfPH8Q7hPX7E+/0gYVH6fIsmc53gFbJU4EHzYfvw4QwSymBN
+        xvo8iUB5r9blXlJaIBi1L3dugzL7rcU=
+X-Google-Smtp-Source: APiQypK69MjOG3v2c5KK/21f3EG5cCkaefsv8EQvpuOcgfuWAWhlx2xjHR8F7WI/Pz/4jMDbUxuH8g==
+X-Received: by 2002:a05:6214:18c9:: with SMTP id cy9mr4243800qvb.35.1587650467052;
+        Thu, 23 Apr 2020 07:01:07 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id i56sm1841572qte.6.2020.04.23.07.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 07:01:06 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7DC42409A3; Thu, 23 Apr 2020 11:01:02 -0300 (-03)
+Date:   Thu, 23 Apr 2020 11:01:02 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf-probe: Check address correctness by map instead
+ of _etext
+Message-ID: <20200423140102.GF19437@kernel.org>
+References: <158763965400.30755.14484569071233923742.stgit@devnote2>
+ <158763967332.30755.4922496724365529088.stgit@devnote2>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6SPR00MB2420
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Hadar.Gat@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT037.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(346002)(39860400002)(46966005)(47076004)(55016002)(316002)(36906005)(356005)(82740400003)(70206006)(8676002)(81156014)(478600001)(70586007)(52536014)(82310400002)(110136005)(54906003)(7696005)(8936002)(81166007)(450100002)(4326008)(186003)(86362001)(5660300002)(33656002)(6506007)(9686003)(336012)(26005)(2906002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: b40bbd44-92d2-430b-8b46-08d7e78eb7ad
-X-Forefront-PRVS: 03827AF76E
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Kr8EJCC3yNLS7JhBuoK9/am3yyPdQh+MGcWNsWDsgeFJHziWsG0nRCyo2TYHK7I96qaRJS34dncS6rT4VRca2L75A1sSI9yfX/Hcdtx40+w3VqMjO9LWGJCMwPG/f6I6xp3StvWYtv7C0/Iwb+Tk1U/cNFgfVOjM8xWF9gtcsVKuNh63+qN8a4LRBY+HA89CkL3xYugawhtyLPxq0hiPANEC4RrTQBhdvOfThOIGYVP3paCHrUVrKgFdhOPEg/S2zZ1xfVijIKUO8NxJDoV0uvjR/7hyJkrV2BvRaaBIyBynzSu+xDwHxckaTJyLb9+lJUi9RvRGpUJ2qh3mlZOSIHOQxLOyceGZM0boNR8iP/a6kN2ljh6OHMw/Ce3GXRjS7zTNGo6J0JX9vndsWTI982eXggCUVTJs6wQtqLsoqmXtZFXBaWAPt8LYK1DBWEt04aNbjM8YG6ZalI15QffAnv3EqLanrrtN+KjOuimT/4zSMfysvOry3r/9QSZ34P1NugpWhn0wmQkFct4MqkOdiA==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 14:00:51.5505
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 690569e7-00b5-4097-b27c-08d7e78ebbae
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4850
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158763967332.30755.4922496724365529088.stgit@devnote2>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFpvdSBXZWkgPHpvdV93ZWlA
-aHVhd2VpLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIDIzIEFwcmlsIDIwMjAgMTU6MjENCj4gDQo+
-IEZpeCB0aGUgZm9sbG93aW5nIHNwYXJzZSB3YXJuaW5nczoNCj4gDQo+IGRyaXZlcnMvY2hhci9o
-d19yYW5kb20vY2N0cm5nLmM6MzE2OjY6IHdhcm5pbmc6IHN5bWJvbA0KPiAnY2NfdHJuZ19jb21w
-d29ya19oYW5kbGVyJyB3YXMgbm90IGRlY2xhcmVkLiBTaG91bGQgaXQgYmUgc3RhdGljPw0KPiBk
-cml2ZXJzL2NoYXIvaHdfcmFuZG9tL2NjdHJuZy5jOjQ1MTo2OiB3YXJuaW5nOiBzeW1ib2wNCj4g
-J2NjX3Rybmdfc3RhcnR3b3JrX2hhbmRsZXInIHdhcyBub3QgZGVjbGFyZWQuIFNob3VsZCBpdCBi
-ZSBzdGF0aWM/DQo+IA0KPiBSZXBvcnRlZC1ieTogSHVsayBSb2JvdCA8aHVsa2NpQGh1YXdlaS5j
-b20+DQo+IFNpZ25lZC1vZmYtYnk6IFpvdSBXZWkgPHpvdV93ZWlAaHVhd2VpLmNvbT4NCj4gLS0t
-DQo+ICBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL2NjdHJuZy5jIHwgNCArKy0tDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvY2hhci9od19yYW5kb20vY2N0cm5nLmMNCj4gYi9kcml2ZXJzL2NoYXIvaHdf
-cmFuZG9tL2NjdHJuZy5jIGluZGV4IGU4MjcxNmMuLjNmZjM3YTYgMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvY2hhci9od19yYW5kb20vY2N0cm5nLmMNCj4gKysrIGIvZHJpdmVycy9jaGFyL2h3X3Jh
-bmRvbS9jY3RybmcuYw0KPiBAQCAtMzEzLDcgKzMxMyw3IEBAIHN0YXRpYyB2b2lkIGNjX3Rybmdf
-aHdfdHJpZ2dlcihzdHJ1Y3QgY2N0cm5nX2RydmRhdGENCj4gKmRydmRhdGEpDQo+ICAJY2NfdHJu
-Z19lbmFibGVfcm5kX3NvdXJjZShkcnZkYXRhKTsNCj4gIH0NCj4gDQo+IC12b2lkIGNjX3Rybmdf
-Y29tcHdvcmtfaGFuZGxlcihzdHJ1Y3Qgd29ya19zdHJ1Y3QgKncpDQo+ICtzdGF0aWMgdm9pZCBj
-Y190cm5nX2NvbXB3b3JrX2hhbmRsZXIoc3RydWN0IHdvcmtfc3RydWN0ICp3KQ0KPiAgew0KPiAg
-CXUzMiBpc3IgPSAwOw0KPiAgCXUzMiBlaHJfdmFsaWQgPSAwOw0KPiBAQCAtNDQ4LDcgKzQ0OCw3
-IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBjY19pc3IoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KPiAg
-CXJldHVybiBJUlFfSEFORExFRDsNCj4gIH0NCj4gDQo+IC12b2lkIGNjX3Rybmdfc3RhcnR3b3Jr
-X2hhbmRsZXIoc3RydWN0IHdvcmtfc3RydWN0ICp3KQ0KPiArc3RhdGljIHZvaWQgY2NfdHJuZ19z
-dGFydHdvcmtfaGFuZGxlcihzdHJ1Y3Qgd29ya19zdHJ1Y3QgKncpDQo+ICB7DQo+ICAJc3RydWN0
-IGNjdHJuZ19kcnZkYXRhICpkcnZkYXRhID0NCj4gIAkJCWNvbnRhaW5lcl9vZih3LCBzdHJ1Y3Qg
-Y2N0cm5nX2RydmRhdGEsIHN0YXJ0d29yayk7DQo+IC0tDQo+IDIuNi4yDQoNCkFja2VkLWJ5OiBI
-YWRhciBHYXQgPGhhZGFyLmdhdEBhcm0uY29tPg0KDQo=
+Em Thu, Apr 23, 2020 at 08:01:13PM +0900, Masami Hiramatsu escreveu:
+> Since commit 03db8b583d1c ("perf tools: Fix maps__find_symbol_by_name()")
+> introduced map address range check in maps__find_symbol_by_name(),
+> we can not get "_etext" from kernel map because _etext is placed
+> on the edge of the kernel .text section (= kernel map in perf.)
+> 
+> To fix this issue, this checks the address correctness
+> by map address range information (map->start and map->end)
+> instead of using _etext address.
+> 
+> This can cause an error if the target inlined function is
+> embedded in both __init function and normal function.
+> 
+> For exaample, request_resource() is a normal function but also
+> embedded in __init reserve_setup(). In this case, the probe point
+> in reserve_setup() must be skipped. However, without this fix,
+> it failes to setup all probe points.
+> ================
+>   # ./perf probe -v request_resource
+>   probe-definition(0): request_resource
+>   symbol:request_resource file:(null) line:0 offset:0 return:0 lazy:(null)
+>   0 arguments
+>   Looking at the vmlinux_path (8 entries long)
+>   Using /usr/lib/debug/lib/modules/5.5.17-200.fc31.x86_64/vmlinux for symbols
+>   Open Debuginfo file: /usr/lib/debug/lib/modules/5.5.17-200.fc31.x86_64/vmlinux
+>   Try to find probe point from debuginfo.
+>   Matched function: request_resource [15e29ad]
+>   found inline addr: 0xffffffff82fbf892
+>   Probe point found: reserve_setup+204
+>   found inline addr: 0xffffffff810e9790
+>   Probe point found: request_resource+0
+>   Found 2 probe_trace_events.
+>   Opening /sys/kernel/debug/tracing//kprobe_events write=1
+>   Opening /sys/kernel/debug/tracing//README write=0
+>   Writing event: p:probe/request_resource _text+33290386
+>   Failed to write event: Invalid argument
+>     Error: Failed to add events. Reason: Invalid argument (Code: -22)
+> ================
+> 
+> With this fix,
+> 
+> ================
+>   # ./perf probe request_resource
+>   reserve_setup is out of .text, skip it.
+>   Added new events:
+>     (null):(null)        (on request_resource)
+
+But what is this (null):(null) probe? Confusing :-)
+
+Thanks for working on this!
+
+- Arnaldo
+
+>     probe:request_resource (on request_resource)
+> 
+>   You can now use it in all perf tools, such as:
+> 
+>   	perf record -e probe:request_resource -aR sleep 1
+> 
+> ================
+> 
+> Fixes: 03db8b583d1c ("perf tools: Fix maps__find_symbol_by_name()")
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  tools/perf/util/probe-event.c |   25 +++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index f75df63309be..a5387e03e365 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -236,21 +236,22 @@ static void clear_probe_trace_events(struct probe_trace_event *tevs, int ntevs)
+>  static bool kprobe_blacklist__listed(unsigned long address);
+>  static bool kprobe_warn_out_range(const char *symbol, unsigned long address)
+>  {
+> -	u64 etext_addr = 0;
+> -	int ret;
+> -
+> -	/* Get the address of _etext for checking non-probable text symbol */
+> -	ret = kernel_get_symbol_address_by_name("_etext", &etext_addr,
+> -						false, false);
+> +	struct map *map;
+> +	bool ret = false;
+>  
+> -	if (ret == 0 && etext_addr < address)
+> -		pr_warning("%s is out of .text, skip it.\n", symbol);
+> -	else if (kprobe_blacklist__listed(address))
+> +	map = kernel_get_module_map(NULL);
+> +	if (map) {
+> +		ret = address <= map->start || map->end < address;
+> +		if (ret)
+> +			pr_warning("%s is out of .text, skip it.\n", symbol);
+> +		map__put(map);
+> +	}
+> +	if (!ret && kprobe_blacklist__listed(address)) {
+>  		pr_warning("%s is blacklisted function, skip it.\n", symbol);
+> -	else
+> -		return false;
+> +		ret = true;
+> +	}
+>  
+> -	return true;
+> +	return ret;
+>  }
+>  
+>  /*
+> 
+
+-- 
+
+- Arnaldo
