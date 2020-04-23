@@ -2,82 +2,93 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B678C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC78C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4243620776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346472084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587635953;
+	bh=h0cEpFyyTV9DIslKZvNsTAoxOPb/8EK4/m+d0jhEsZw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nkX/jFBdCw2Wbhi+MGwADukA69FLWBCNcr+G99F21+D7CN3YF5Zvef/FN56MmB09p
+	 5iIawGrVwUCsN+yxgR8YvLSDQMGIhnFSdt9l2Dby6MwqSoH4giNNFQ7fUuYVIKuMFh
+	 QWUgfpfztuHTO4CM9fwGhugjE+rpRmR9RbcfnWyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgDWJ5p (ORCPT
+        id S1726903AbgDWJ7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:57:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46348 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726364AbgDWJ5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:57:44 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EFD916E0DFCF0956272C;
-        Thu, 23 Apr 2020 17:57:41 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 23 Apr 2020 17:57:34 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix potential use-after-free issue
-Date:   Thu, 23 Apr 2020 17:57:33 +0800
-Message-ID: <20200423095733.7733-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 23 Apr 2020 05:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbgDWJ7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 05:59:12 -0400
+Received: from pobox.suse.cz (unknown [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2583320776;
+        Thu, 23 Apr 2020 09:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587635951;
+        bh=h0cEpFyyTV9DIslKZvNsTAoxOPb/8EK4/m+d0jhEsZw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=mPzDOmfNMHch49qxZ6670ViWhek75QlHoYknXGyv0HzFtVpaMX6oSBnDFNvw+fOUv
+         faDBVd/Kp+qO8ntHsLErzLvOHMuvoZfmWouAXkrIzHnL2lsQwzdoCgH4EpqEfeDHee
+         YyB8W9SchtJ41Ny3gi+vPpE/WhC+kvXEd6VvxpeE=
+Date:   Thu, 23 Apr 2020 11:59:07 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+cc:     syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Julian Squires <julian@cipht.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, andreyknvl@google.com,
+        gregkh@linuxfoundation.org, ingrassia@epigenesys.com,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com, Ping Cheng <pingc@wacom.com>,
+        pinglinux@gmail.com, killertofu@gmail.com
+Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
+In-Reply-To: <Pine.LNX.4.44L0.2004221058240.20574-100000@netrider.rowland.org>
+Message-ID: <nycvar.YFH.7.76.2004231157160.19713@cbobk.fhfr.pm>
+References: <Pine.LNX.4.44L0.2004221058240.20574-100000@netrider.rowland.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In error path of f2fs_read_multi_pages(), it should let last referrer
-release decompress io context memory, otherwise, other referrer will
-cause use-after-free issue.
+On Wed, 22 Apr 2020, Alan Stern wrote:
 
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/data.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> > Jiri, you should know: Are HID drivers supposed to work okay when the
+> > ->close callback is issued after (or concurrently with) the ->stop
+> > callback?
+> 
+> No response.  
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 4adf28bdd022..48a622b95b76 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2208,16 +2208,16 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 					page->index, for_write);
- 			if (IS_ERR(bio)) {
- 				ret = PTR_ERR(bio);
--				bio = NULL;
- 				dic->failed = true;
- 				if (refcount_sub_and_test(dic->nr_cpages - i,
--							&dic->ref))
-+							&dic->ref)) {
- 					f2fs_decompress_end_io(dic->rpages,
- 							cc->cluster_size, true,
- 							false);
--				f2fs_free_dic(dic);
-+					f2fs_free_dic(dic);
-+				}
- 				f2fs_put_dnode(&dn);
--				*bio_ret = bio;
-+				*bio_ret = NULL;
- 				return ret;
- 			}
- 		}
+Sorry, I've been a bit swamped recently. Thanks a lot for taking care of 
+this.
+
+> I'll assume that strange callback orderings should be supported.  Let's 
+> see if the patch below fixes the race in usbhid.
+
+Unfortunately I don't believe the supportability of this is fully defined. 
+I have tried to quickly go over the few major drivers and didn't find 
+anything relying various orderings, but I might have easily missed some 
+case.
+
+So unless we have a programatic way to check it, the patch you created for 
+mutual exclusion is a good bandaid I believe.
+
+Thanks again Alan, I'll push it to Linus for 5.7.
+
 -- 
-2.18.0.rc1
+Jiri Kosina
+SUSE Labs
 
