@@ -2,133 +2,130 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28811C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6E0C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B752076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:06:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dnch9q0m"
+	by mail.kernel.org (Postfix) with ESMTP id 5AEA020857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587661642;
+	bh=yw9wJXzgI852NvRxPmOyJyXU9gysczH5+gd8R6BRqdg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=mxLDq7giTu0uT2Ukt9o/9IMxmwev9NVQr1wqdu3T4/+dnYCMD2twYXO3mW0PpPdUb
+	 yoZ4bNeRA4UEcmISSx1LHQaBjdZhisqJtwgCOxHhcjpRmcU3uU/X4sLHoXfyZc+3YC
+	 ZNduiUcJrxCTZgQzQliHyqsmU/1c5+unsX8EjjHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgDWRGe (ORCPT
+        id S1729860AbgDWRHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:06:34 -0400
-Received: from mout.gmx.net ([212.227.15.15]:50883 "EHLO mout.gmx.net"
+        Thu, 23 Apr 2020 13:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbgDWRGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:06:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587661582;
-        bh=EFoet2sHsrazKCmeWq8vS35/INWJasHQ6ZT4FP4XYU4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=dnch9q0mkeSfLR4few9AuYLgos2XArTckfDtAuHpcBMDe2iweCUaYVCkvJj3o+vJv
-         tWSDBaolaygXczlgr30SLanetzWIDHChi2n4BZuuUhcETQug7Wrv1G4m143fV05F9q
-         lquS3NvLwBycEWuvPJsYNy4BLfYkOHO+oerTluPM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MAfYw-1jL5jZ28bY-00B4pr; Thu, 23 Apr 2020 19:06:22 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: vt6656: Add formula to the vnt_rf_addpower function
-Date:   Thu, 23 Apr 2020 19:05:57 +0200
-Message-Id: <20200423170557.10401-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        id S1729840AbgDWRHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:07:21 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E0BB2076C;
+        Thu, 23 Apr 2020 17:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587661640;
+        bh=yw9wJXzgI852NvRxPmOyJyXU9gysczH5+gd8R6BRqdg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jRBGlpIAOMr0aJEhtE9qf9xmylLTnD1+54cwHWFclX7d4jCcl2dYjP2Ky/QQ44gSB
+         cw+8hXorBVHvZRIKuHFLtZExR5YTTmPk8/qfasQtq4F55wkr9CzeWvU9INQJntPHzP
+         74k2wAD7i4pxKssLvx8nwPa1cqjoK93h+egLbs1w=
+Date:   Thu, 23 Apr 2020 12:07:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans De Goede <hdegoede@redhat.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 0/9] PM: sleep: core: Rearrange the handling of driver
+ power management flags
+Message-ID: <20200423170718.GA190576@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:s2AKSwgBK6pKD3g1eM4Bf+xszXJ9QKNoSOSezgVCvS4kM2XcSqJ
- nN68RR/IcoxzfUpdNl0RGPyQd1xyrgCsst4dfMwflujnurgogkYv+II1wxqDWDh3WUDIX5k
- TFLIyS28KY+PNZlsR/PjG/QkaZL3triFrK6Y7uT1h9Hdn9MLkZYiKACStZOVyvtMUVtYXCK
- b4+yfZczxdxWMa0NlCo6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dYCPScnRMmA=:Tq0A2oVNVggqE3mrj40uLf
- 6aHPsR1KuQSBgEU3kql6zw8l2TnpTfTqnG2bgdre+mXOf0iIebkWQbrgqE78+ao7YNzTRcScO
- +m2KxQCKYOaBfYiT/not5athP5TdKqmKJFjFWX7u2XFYK/lzEyy+vog4QSDsFv3Pggm+g+KfX
- PM0v9NnHYM1x1TS1uScM6m7FkoHiBLuZg13l23t+Cx5zgdEEZAq/UoEdAgRdYDiGaupia4m/R
- 2xmjpPvc3LXXM5wNIStuVfii00GpjpSS6d2Ay520xFiIbSykP4oWk0MHWWJ9zgNOQDiLFJ8Z9
- /hdOHKQYhn0ZFDQSSVDLnapSZRwy81iHuw4rD34G6E+804W7IqRRWYu2LC8cBQEPCIjS4XKCT
- 9SQeCN1DGQJIiFidtcHzCr2+FDhzztfyjGKX5syz/w2MeZkQD1Nr0tFlvsjwTDGz5FXu6V/gE
- dEfmu/HTr5C4VBThisBLpYiVQYTgajVviLYuh7TgAWJQoi31pDrBh118AqLrYQFs6LAsdOfHP
- szC96wCae0H+2SfEDH17hqnmE5PYZOzJi0/7QRAsAWTqT1WznHHY/4+yOhTkp+uQVwFe7HwDq
- uMikVJoloycxkBjjZJc7nZj500DqE94+qi8bPTgwr1icNl8P5eLMuvQukTMabGhduGsb6HID6
- 1mGaW6LhIPR3lnVI8Io93KjI6XiG+OregTVipHuqBp1hhULvB2DxXZkZd2dyl771vOhmLhOkX
- xPJTofHPWqGf5jfzMxooNYGzaL53K6kYQEIPUmDNuQvi7Ma4Lpg03QzSMXg4SMu1cXcoKXFeb
- ilonWabYVg0kOKe1Z3TgZ+8FA760FBH87bb9MWQ6pSNbcXXC4zLB4lv7pk2DjFJyx4UENZLqF
- FTKI8LUr2+1qbbpsayDkoNncydLrNTFCBbqGng8dGN9sVWwrtYFBmZYPlgAhuFQnrfAQ1QboG
- fJrOUmU+xCU4yy/gqxBLPc6Rpt6uanBk1NOHclF5AEn8dYQ3NFGHiNUh1zKTipMak8lFWCFhF
- Oi6gDkty7g/WsVKp7I2mlopWrrGMJ2RNfmUZmGxiSbE7gQA/eEA3S3eqo7wk+JjD051LB2vDO
- hennND5Dp9Wu3pAuKdmPP0K2F/mPxXYCLupTBaaif+M92raZh6pzvDclC2WQfBowN4EZNUi0g
- r8+VAx8itx/ZmzX0kIzX8JnVIkNOIiYOXW/Xyy8NhZ0U6D05GpIWrP7OUrSNrMrSEug6Anx27
- 7IR1n1U51bK6w0tYd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5673945.BT02kTCndr@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a formula to calculate the return value of the vnt_rf_addpower
-function instead of the "if" statement with literal values for every
-case.
+On Sat, Apr 18, 2020 at 06:23:08PM +0200, Rafael J. Wysocki wrote:
+> Hi,
+> 
+> This is an update including some fixes and extra patches based on the
+> continuation of the discussion [1].
+> 
+> On Friday, April 10, 2020 5:46:27 PM CEST Rafael J. Wysocki wrote:
+> > Hi Alan,
+> > 
+> > Following our recent discussion regarding the DPM_FLAG_* family of flags [1],
+> > I have decided to follow some of your recommendations and make changes to the
+> > core code handling those flags.
+> > 
+> > The purpose of this is basically to make the code more consistent internally,
+> > easier to follow and better documented.
+> > 
+> > First of all, patch [1/7] changes the PM core to skip driver-level "late"
+> > and "noirq" suspend callbacks for devices with SMART_SUSPEND set if they are
+> > still runtime-suspended during the "late" system-wide suspend phase (without
+> > the patch it does that only if subsystem-level late/noirq/early suspend/resume
+> > callbacks are not present for the device, which is demonstrably inconsistent)
+> > and updates the resume part of the code accordingly (it doesn't need to check
+> > whether or not the subsystem-level callbacks are present any more).
+> > 
+> > The next patch, [2/7], is purely cosmetic and its only purpose is to reduce
+> > the LOC number and move related pieces of code closer to each other.
+> 
+> The first two patches have not changed.
+> 
+> > Patch [3/7] changes the PM core so that it doesn't skip any subsystem-level
+> > callbacks during system-wide resume (without the patch they may be skipped in
+> > the "early resume" and "resume" phases due to LEAVE_SUSPENDED being set which
+> > may be problematic) and to always run the driver's ->resume callback if the
+> > corresponding subsystem-level callback is not present (without the patch it
+> > may be skipped if LEAVE_SUSPENDED is set) to let it reverse the changes made
+> > by the driver's ->suspend callback (which always runs too) if need be.
+> 
+> The difference between this one and patch [3/9] in the v2 is the fixed
+> definition of dev_pm_may_skip_resume(), renamed to dev_pm_skip_resume() by
+> one of the next patches.
+> 
+> Patch [4/9] changes the handling of the power.may_skip_resume flag to set it
+> to 'true' by default and updates the subsystems aware of it to clear it when
+> they don't want devices to stay in suspend.
+> 
+> > Patches [4-6/7] rename one function in the PM core and two driver PM flags to
+> > make their names better reflect their purpose.
+> 
+> These are patches [5/9] and [7-8/9] in the v2 and patch [6/9] renames
+> dev_pm_smart_suspend_and_suspended() to dev_pm_skip_suspend().
+> 
+> > Finally, patch [7/7] updates the documentation of the driver PM flags to
+> > reflect the new code flows.
+> 
+> This patch [9/9] now and it has been updated to reflect the new code changes.
+> 
+> The pm-sleep-core branch:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+>   pm-sleep-core
+> 
+> contains the v2 now.
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
-Changelog v1 -> v2
-- Change the type of "base" variable from s32 to int as Dan Carpenter
-  suggested.
-- Remove the "--" postoperator and replace with (base - 1) as Dan
-  Carpenter suggested. Also, as this expression has a minus before the
-  parenthesis, remove it an apply the minus operator changing the sign of
-  "base" and literal "1".
+For the drivers/pci parts:
 
- drivers/staging/vt6656/rf.c | 20 +++-----------------
- 1 file changed, 3 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
-index 06fa8867cfa3..612fd4a59f8a 100644
-=2D-- a/drivers/staging/vt6656/rf.c
-+++ b/drivers/staging/vt6656/rf.c
-@@ -538,28 +538,14 @@ int vnt_rf_write_embedded(struct vnt_private *priv, =
-u32 data)
-
- static u8 vnt_rf_addpower(struct vnt_private *priv)
- {
-+	int base;
- 	s32 rssi =3D -priv->current_rssi;
-
- 	if (!rssi)
- 		return 7;
-
--	if (priv->rf_type =3D=3D RF_VT3226D0) {
--		if (rssi < -70)
--			return 9;
--		else if (rssi < -65)
--			return 7;
--		else if (rssi < -60)
--			return 5;
--	} else {
--		if (rssi < -80)
--			return 9;
--		else if (rssi < -75)
--			return 7;
--		else if (rssi < -70)
--			return 5;
--	}
--
--	return 0;
-+	base =3D (priv->rf_type =3D=3D RF_VT3226D0) ? -60 : -70;
-+	return (rssi < base) ? ((rssi - base + 1) / -5) * 2 + 5 : 0;
- }
-
- /* Set Tx power by power level and rate */
-=2D-
-2.20.1
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
