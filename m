@@ -2,98 +2,151 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2363C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410E9C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAE92073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1682A2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oRYryNCl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IhCQdgX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgDWUko (ORCPT
+        id S1726435AbgDWUm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
+        Thu, 23 Apr 2020 16:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgDWUko (ORCPT
+        with ESMTP id S1725877AbgDWUm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:40:44 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B65FC09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:40:44 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id p7so1700612ybo.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GiAggMTdEI+PSkFEvICFsKzD8PMWNxu1XhigoAo8ZFk=;
-        b=oRYryNCltzBR3y9BL1s+jCUMyN9XWGhlvZ9oUn9+pG6V3VAcQ1F2Fa7hy6KTQMdPcW
-         6nmtEUOW3SO6xJcZgPo3iDPRoNjaAXcIqFXSxf5+vH+YPSmfhaz24EMF510kpbixaOmw
-         TmUo9nKPZo7qkJyMKY7/Uq0L9Ik53muTIGFQTaHus8WKQvNVIjCNYfaLVDmAjyP1uAZ7
-         JkpAqlbEGHfKesLKISlS1Dt1BbzCK9mwNFaESPfnbPJun0mVkY7snd5DxCpRmB2Gl3NV
-         TPhkssL2/QHq0TgXR2wkYTox51FI4TWsB+c87jNU0n9cRKn+rVujbTn3CMuFQT3FIisG
-         015w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GiAggMTdEI+PSkFEvICFsKzD8PMWNxu1XhigoAo8ZFk=;
-        b=aroMV0MfoV2VL3XDpgSVYhFZDKOp6PdaXaVatviWt0+3wju/iSp6LDHijw9OE0dM4n
-         DmbxFRWAFU8A2OJlYc/P3GilKTueqlG7JgR5BEybwVLGVeILupLBLIw1Z/SMTBy0/SxV
-         sAq1/4+X95Z5kBfYOnkJ3QfosB9pQaT3fOYua96qiJ1QYaNarsLy9jDrVfjLt9CrRyFB
-         hxYyjag79HnGPzT92F4I/nw/yIMyNgYicknnqrvU89LDEYaX7A1jxxh+v7QarLb6D8Dz
-         IH02HQDjg9tOeiyc4mWVyhHUeOEN56oQzlzi1coJDkZvzVIMLb3blgY5lWuvz0xq3FgD
-         HLxA==
-X-Gm-Message-State: AGi0PuZp8FFG1/3fX3VaUzFMZz7Q4CVFTl7VHVIMVUfu/mgfTOy+P/Jg
-        O6F6YL8NT2Ihx/7kayqdMa/0UC7wWFbfs9pyPxeE0g==
-X-Google-Smtp-Source: APiQypKe47D7DaKEuIi8C1WVF0Ns073XtAG6vWerLoivJWqWnBs2788wmfmGlFru+F19EXnmArWGEg6XCUwbqZ8WuAk=
-X-Received: by 2002:a25:4d04:: with SMTP id a4mr9734046ybb.153.1587674443304;
- Thu, 23 Apr 2020 13:40:43 -0700 (PDT)
+        Thu, 23 Apr 2020 16:42:56 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DAEC09B042;
+        Thu, 23 Apr 2020 13:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=nJLSDGN5VY8xtXJ36BBTvatwr9Gu5FO1bsWGt3pWVi0=; b=IhCQdgX+d7fMn24cC4Sw1CdfzY
+        PtZCU6+PS7X24P8ln/X+tthGWSIP/ZXh7ecDD5CMnEP9uWiQd4HwIELGXgmaU0By/DVBfV+uRn0Zm
+        n6BRCG0WdMWlKepAeJaDmIWlmR1Mznmo4hofGUy438Tsa+ZAYhDzTaaWKp5x8OxYQvKYPVhVxVNIm
+        RGZS1eW0pfVDC57wenXBRd4HqTgHQz51P4sYwToBrMU6yCxQ4kUPNF5dKrU82TRwtDv/2Rfe1ia0r
+        a/WfkJhpuAebfWCeWfwNwp6sQheN6XBjA0lR5ZrOn7L8g92eUEgdUm0FxfwhjHHQ7GYUhdZXclZyv
+        OA7U+C1w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRigI-0000Td-NL; Thu, 23 Apr 2020 20:42:46 +0000
+Subject: Re: [PATCH] firmware_loader: re-export fw_fallback_config into
+ firmware_loader's own namespace
+To:     "Luis R. Rodriguez" <mcgrof@kernel.org>, gregkh@linuxfoundation.org
+Cc:     akpm@linux-foundation.org, josh@joshtriplett.org,
+        rishabhb@codeaurora.org, kubakici@wp.pl, maco@android.com,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, linux-wireless@vger.kernel.org,
+        keescook@chromium.org, shuah@kernel.org, mfuzzey@parkeon.com,
+        zohar@linux.vnet.ibm.com, dhowells@redhat.com,
+        pali.rohar@gmail.com, tiwai@suse.de, arend.vanspriel@broadcom.com,
+        zajec5@gmail.com, nbroeking@me.com, markivx@codeaurora.org,
+        broonie@kernel.org, dmitry.torokhov@gmail.com, dwmw2@infradead.org,
+        torvalds@linux-foundation.org, Abhay_Salunke@dell.com,
+        jewalt@lgsinnovations.com, cantabile.desu@gmail.com, ast@fb.com,
+        andresx7@gmail.com, dan.rue@linaro.org, brendanhiggins@google.com,
+        yzaikin@google.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20200423203140.19510-1-mcgrof@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3b9dcfdc-a9bf-5a52-7fcf-1a3ea4826147@infradead.org>
+Date:   Thu, 23 Apr 2020 13:42:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200206101833.GA20943@ming.t460p> <20200206211222.83170-1-sqazi@google.com>
- <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org> <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
- <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org> <CAKUOC8X=fzXjt=5qZ+tkq3iKnu7NHhPfT_t0JyzcmZg49ZEq4A@mail.gmail.com>
- <CAD=FV=WgfAgHSuDRXSUWFUV8CB3tPq7HG0+E7q2fRQniiJwa1w@mail.gmail.com>
- <CAJmaN=m4sPCUjS1oy3yOavjN2wcwhMWvZE9sVehySuhibTmABQ@mail.gmail.com> <016647fc-1d7b-7127-68aa-044d4230a22d@kernel.dk>
-In-Reply-To: <016647fc-1d7b-7127-68aa-044d4230a22d@kernel.dk>
-From:   Salman Qazi <sqazi@google.com>
-Date:   Thu, 23 Apr 2020 13:40:31 -0700
-Message-ID: <CAKUOC8V_4Xz7ft_UBE-EO=ZQ00o_-TceaSawAMax97-DQs-93w@mail.gmail.com>
-Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
- in one go
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Jesse Barnes <jsbarnes@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200423203140.19510-1-mcgrof@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I had posted a version on Feb 7th, but I guess I neglected to
-explicitly label it as v2.  I am sorry I am not well-acquainted with
-the processes here.
+On 4/23/20 1:31 PM, Luis R. Rodriguez wrote:
+> From: Luis Chamberlain <mcgrof@kernel.org>
+> 
+> Christoph's recent patch "firmware_loader: remove unused exports", which
+> is not merged upstream yet, removed two exported symbols. One is fine to
+> remove since only built-in code uses it but the other is incorrect.
+> 
+> If CONFIG_FW_LOADER=m so the firmware_loader is modular but
+> CONFIG_FW_LOADER_USER_HELPER=y we fail at mostpost with:
+> 
+> ERROR: modpost: "fw_fallback_config" [drivers/base/firmware_loader/firmware_class.ko] undefined!
+> 
+> This happens because the variable fw_fallback_config is built into the
+> kernel if CONFIG_FW_LOADER_USER_HELPER=y always, so we need to grant
+> access to the firmware loader module by exporting it.
+> 
+> Instead of just exporting it as we used to, take advantage of the new
+> kernel symbol namespacing functionality, and export the symbol only to
+> the firmware loader private namespace. This would prevent misuses from
+> other drivers and makes it clear the goal is to keep this private to
+> the firmware loader alone.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Fixes: "firmware_loader: remove unused exports"
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-On Thu, Apr 23, 2020 at 1:34 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 4/23/20 2:13 PM, Jesse Barnes wrote:
-> > Jens, Bart, Ming, any update here?  Or is this already applied (I didn't check)?
->
-> No updates on my end. I was expecting that a v2 would be posted after
-> all the discussion on it, but that doesn't seem to be the case.
->
-> --
-> Jens Axboe
->
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+thanks.
+
+> ---
+>  drivers/base/firmware_loader/fallback.c       | 3 +++
+>  drivers/base/firmware_loader/fallback_table.c | 1 +
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+> index 1e9c96e3ed63..d9ac7296205e 100644
+> --- a/drivers/base/firmware_loader/fallback.c
+> +++ b/drivers/base/firmware_loader/fallback.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/umh.h>
+>  #include <linux/sysctl.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/module.h>
+>  
+>  #include "fallback.h"
+>  #include "firmware.h"
+> @@ -17,6 +18,8 @@
+>   * firmware fallback mechanism
+>   */
+>  
+> +MODULE_IMPORT_NS(FIRMWARE_LOADER_PRIVATE);
+> +
+>  extern struct firmware_fallback_config fw_fallback_config;
+>  
+>  /* These getters are vetted to use int properly */
+> diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
+> index 0a737349f78f..46a731dede6f 100644
+> --- a/drivers/base/firmware_loader/fallback_table.c
+> +++ b/drivers/base/firmware_loader/fallback_table.c
+> @@ -21,6 +21,7 @@ struct firmware_fallback_config fw_fallback_config = {
+>  	.loading_timeout = 60,
+>  	.old_timeout = 60,
+>  };
+> +EXPORT_SYMBOL_NS_GPL(fw_fallback_config, FIRMWARE_LOADER_PRIVATE);
+>  
+>  #ifdef CONFIG_SYSCTL
+>  struct ctl_table firmware_config_table[] = {
+> 
+
+
+-- 
+~Randy
