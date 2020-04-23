@@ -2,116 +2,192 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF23C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8F6C55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F81320706
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A2420781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l+QdGwrB"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="j7pfI9HR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbgDWQqJ (ORCPT
+        id S1729825AbgDWQrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:46:09 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46692 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729756AbgDWQqI (ORCPT
+        Thu, 23 Apr 2020 12:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729661AbgDWQrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:46:08 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NGjuEx113868;
-        Thu, 23 Apr 2020 11:45:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587660356;
-        bh=tKDw8OQZcIMisiTxBsvq0HEhQVuhSJ2oL6rRmaHita8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=l+QdGwrB0y4GleuBqdWCjgG1tj8QsW+HOWJHHSOadCt+SpoMek1G42USrUoiSf0NV
-         iTrIb47oFnBM0pFEFyiOggQ3ts0eLCK+QzrfoohfmlhIR3QDN2uLZsEQzAjUBsKwkB
-         eFkGAyXm0Muj8xZhp9jgcuDUxeD+jEcQlXHOUL4E=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03NGjuDL123655
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Apr 2020 11:45:56 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Apr 2020 11:45:55 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Apr 2020 11:45:55 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NGjtIm012635;
-        Thu, 23 Apr 2020 11:45:55 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <afd@ti.com>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net 2/2] net: phy: DP83TC811: Fix WoL in config init to be disabled
-Date:   Thu, 23 Apr 2020 11:39:47 -0500
-Message-ID: <20200423163947.18313-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200423163947.18313-1-dmurphy@ti.com>
-References: <20200423163947.18313-1-dmurphy@ti.com>
+        Thu, 23 Apr 2020 12:47:22 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE421C09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id m2so5300428lfo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
+        b=j7pfI9HRuHbfl6xDZAoT1l4rmuUPF/dN6vFtceByAi7aVXx7F1IhQrRueEZwe2jLz1
+         LPlirCZaXLDgzEX7pBzBcH8BRbSUtwv0Fr/Xr7mNnYMI5n+kQPaevi4KoW9j2YpIE//B
+         4gbwSpLKTsk8a6DjpzFLCRYnmZfFffJuXd7sHUWBrzm2DdCAF+LnMir8CtAVeZNUPhEU
+         o5wYq8dSbv5PpSnJvBS+3XV8BSWMUTvt8MM/+jOXHe9XtwOMnpE3dECt2rI/zXksJFfP
+         1kIeQP0cTexZxF2UhgelMN3dbj6HEeRfpwsJgbRgWYigveFkQHwaL2ZSdpLI9edvCOU1
+         jdbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
+        b=iERMm86kr2TZp7s1AIdfok+7ihOsYAgjiVUqWdv9i6ag5S1GKcOBeEKCSqlHlGOzFU
+         R1a6byIgknXa2e+d8FZsrVoCb52XEJ1oRTIAP7nINto2ffx3qnDT+8FYR/NaN3UUYZz9
+         Feg9zL2xljqLzCqd80xRXDEMP7+aYxF6LjVuhZiTaUoBT69fyeMNPvxMle+T7j06a0Dm
+         f3akeJFlni42qMuwPoN2Hq8oKluYd55ntAQZtd/jdj0iqZ+tHnwdROBCZP9KrvX3DcBO
+         1fnb7wsB5HQjCNQX5SrjOZf5oy64RKj/A8spBoVl+oo4aoBF5VuzOYcoFI69sioNyKWR
+         DfIg==
+X-Gm-Message-State: AGi0PubndTIS+rQfd5RbxzEFHKGoEbXJO78dzdxX9q9wqXvwGeO5zjUf
+        4fBJolcp7TNGSjBjfOuT88twVN7yNUV026krTnNRTQ==
+X-Google-Smtp-Source: APiQypKp4PYv8DT/PLr79QV23nUX9UW1aERR5j0Oo8O7FXjU4ESHU6c7LwMtVWsMkh3FTpEclvzAGKWNG5gZgbFgNds=
+X-Received: by 2002:ac2:4853:: with SMTP id 19mr2882072lfy.171.1587660440070;
+ Thu, 23 Apr 2020 09:47:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1587607101-31914-1-git-send-email-alan.mikhak@sifive.com> <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Thu, 23 Apr 2020 09:47:08 -0700
+Message-ID: <CABEDWGw4CYgQ9uiaig+C9UifSz24W7oOiVva+G0zbBXitcMtPg@mail.gmail.com>
+Subject: Re: [PATCH v2][next] dmaengine: dw-edma: Check MSI descriptor before copying
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>, "maz@kernel.org" <maz@kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WoL feature should be disabled when config_init is called and the
-feature should turned on or off  when set_wol is called.
+On Thu, Apr 23, 2020 at 2:28 AM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+>
+> On Thu, Apr 23, 2020 at 2:58:21, Alan Mikhak <alan.mikhak@sifive.com>
+> wrote:
+>
+> > From: Alan Mikhak <alan.mikhak@sifive.com>
+> >
+> > Modify dw_edma_irq_request() to check if a struct msi_desc entry exists
+> > before copying the contents of its struct msi_msg pointer.
+> >
+> > Without this sanity check, __get_cached_msi_msg() crashes when invoked by
+> > dw_edma_irq_request() running on a Linux-based PCIe endpoint device. MSI
+> > interrupt are not received by PCIe endpoint devices. If irq_get_msi_desc()
+> > returns null, then there is no cached struct msi_msg to be copied.
+> >
+> > This patch depends on the following patch:
+> > [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
+> > https://urldefense.com/v3/__https://patchwork.kernel.org/patch/11491757/__;!!A4F2R9G_pg!L_vf_Tml7Ca4sWVvZp5crRCp7YsMj6B93G9cMAO8Dj3w9I0MArjwuwNKtDz9rr0RlpXiqPg$
+> >
+> > Rebased on linux-next which has above patch applied.
+> >
+> > Fixes: Build error with config x86_64-randconfig-f003-20200422
+> > Fixes: Build error with config s390-allmodconfig
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
+> >  1 file changed, 10 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index db401eb11322..306ab50462be 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/dmaengine.h>
+> >  #include <linux/err.h>
+> >  #include <linux/interrupt.h>
+> > +#include <linux/irq.h>
+> >  #include <linux/dma/edma.h>
+> >  #include <linux/dma-mapping.h>
+> >
+> > @@ -773,6 +774,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >       u32 rd_mask = 1;
+> >       int i, err = 0;
+> >       u32 ch_cnt;
+> > +     int irq;
+> >
+> >       ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
+> >
+> > @@ -781,16 +783,16 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >
+> >       if (dw->nr_irqs == 1) {
+> >               /* Common IRQ shared among all channels */
+> > -             err = request_irq(dw->ops->irq_vector(dev, 0),
+> > -                               dw_edma_interrupt_common,
+> > +             irq = dw->ops->irq_vector(dev, 0);
+> > +             err = request_irq(irq, dw_edma_interrupt_common,
+> >                                 IRQF_SHARED, dw->name, &dw->irq[0]);
+> >               if (err) {
+> >                       dw->nr_irqs = 0;
+> >                       return err;
+> >               }
+> >
+> > -             get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
+> > -                                &dw->irq[0].msi);
+> > +             if (irq_get_msi_desc(irq))
+> > +                     get_cached_msi_msg(irq, &dw->irq[0].msi);
+> >       } else {
+> >               /* Distribute IRQs equally among all channels */
+> >               int tmp = dw->nr_irqs;
+> > @@ -804,7 +806,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >               dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
+> >
+> >               for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
+> > -                     err = request_irq(dw->ops->irq_vector(dev, i),
+> > +                     irq = dw->ops->irq_vector(dev, i);
+> > +                     err = request_irq(irq,
+> >                                         i < *wr_alloc ?
+> >                                               dw_edma_interrupt_write :
+> >                                               dw_edma_interrupt_read,
+> > @@ -815,8 +818,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+> >                               return err;
+> >                       }
+> >
+> > -                     get_cached_msi_msg(dw->ops->irq_vector(dev, i),
+> > -                                        &dw->irq[i].msi);
+> > +                     if (irq_get_msi_desc(irq))
+> > +                             get_cached_msi_msg(irq, &dw->irq[i].msi);
+> >               }
+> >
+> >               dw->nr_irqs = i;
+> > --
+> > 2.7.4
+>
+>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
-In addition updated the calls to modify the registers to use the set_bit
-and clear_bit function calls.
+Thanks Gustavo for the Ack.
 
-Fixes: 6d749428788b ("net: phy: DP83TC811: Introduce support for the
-DP83TC811 phy")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83tc811.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+FYI, I first considered adding an ops function to decouple dw-edma-core.c
+from struct msi_msg. However, in a separate use case that I have in mind,
+dw-edma would run on a host system having Synopsys DesignWare PCI eDMA
+hardware on the host-side. In this use case, the host system eDMA engines
+may be used in conjunction with an endpoint device also having the same
+eDMA hardware. In this use case, dw-edma running on the host would need
+to call get_cached_msi_msg() just in case the host has an msi_msg cached
+from the endpoint device. As a result, I opted to not add a new ops
+function.
 
-diff --git a/drivers/net/phy/dp83tc811.c b/drivers/net/phy/dp83tc811.c
-index 06f08832ebcd..48dcd2649272 100644
---- a/drivers/net/phy/dp83tc811.c
-+++ b/drivers/net/phy/dp83tc811.c
-@@ -139,10 +139,11 @@ static int dp83811_set_wol(struct phy_device *phydev,
- 			value &= ~DP83811_WOL_SECURE_ON;
- 		}
- 
--		value |= (DP83811_WOL_EN | DP83811_WOL_INDICATION_SEL |
--			  DP83811_WOL_CLR_INDICATION);
--		phy_write_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
--			      value);
-+		value |= DP83811_WOL_EN | DP83811_WOL_INDICATION_SEL |
-+			 DP83811_WOL_CLR_INDICATION;
-+
-+		phy_set_bits_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
-+				 value);
- 	} else {
- 		phy_clear_bits_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
- 				   DP83811_WOL_EN);
-@@ -292,8 +293,8 @@ static int dp83811_config_init(struct phy_device *phydev)
- 
- 	value = DP83811_WOL_MAGIC_EN | DP83811_WOL_SECURE_ON | DP83811_WOL_EN;
- 
--	return phy_write_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
--	      value);
-+	return phy_clear_bits_mmd(phydev, DP83811_DEVADDR, MII_DP83811_WOL_CFG,
-+				  value);
- }
- 
- static int dp83811_phy_reset(struct phy_device *phydev)
--- 
-2.25.1
+Regards,
+Alan
 
+>
+>
