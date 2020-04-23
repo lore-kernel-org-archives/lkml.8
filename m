@@ -2,134 +2,124 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D71C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E40C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67F452074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C712074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOmfqeMh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgDWBI6 (ORCPT
+        id S1726403AbgDWBKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:08:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:53834 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbgDWBI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:08:58 -0400
-IronPort-SDR: 7IaR5+f27Z9/Ios7pnrWEAaTUU2Hx6rUqTEo2jJJTbabpg0b5nWNAn67rQRm8YL9vpPi0zhT7c
- xS+G/U7ll90A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 18:08:57 -0700
-IronPort-SDR: Q+SkkfqshQqK1FqTjpGmXe2ftkCsBLCLBPI9Gdflx82m3SnOLJQOBKTgwI7WL8HAAdWeHY70dE
- 4y8ydrOOboxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="365849379"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 18:08:53 -0700
-Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake
- metrics
-To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-References: <20200422074809.160248-1-irogers@google.com>
- <20200422074809.160248-3-irogers@google.com>
- <20200422143840.GJ608746@tassilo.jf.intel.com>
- <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
- <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com>
-Date:   Thu, 23 Apr 2020 09:08:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 21:10:14 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28303 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725846AbgDWBKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:10:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587604212;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gpmF7iLJaKAhFgik0YYBKvZq2mUVWcZ8e1b5KXEpW50=;
+        b=SOmfqeMhf/1fZXurLWVsDyzoExXmG4YFvPXyx2xASAbxafAAuKm3c0rUjLjmyd0ypqBiB1
+        aLeb6NIH7YMTgliE1xTgY1fPmCLPnCR8kUgEtoJSmBPqQtNY5xd+rzZz3ddpV1dWlAllJR
+        Fmly3BWj8oQNWD4GZYu1gHdJC1HDQTs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-B2P9V75uPF6XHblE7rVSvA-1; Wed, 22 Apr 2020 21:10:09 -0400
+X-MC-Unique: B2P9V75uPF6XHblE7rVSvA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DB4F1005510;
+        Thu, 23 Apr 2020 01:10:08 +0000 (UTC)
+Received: from redhat.com (ovpn-112-171.phx2.redhat.com [10.3.112.171])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFA465D9E2;
+        Thu, 23 Apr 2020 01:10:05 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 21:10:03 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH v2 2/9] livepatch: Apply vmlinux-specific KLP relocations
+ early
+Message-ID: <20200423011003.GA20432@redhat.com>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <83eb0be61671eab05e2d7bcd0aa848f6e20087b0.1587131959.git.jpoimboe@redhat.com>
+ <20200420175751.GA13807@redhat.com>
+ <20200420182516.6awwwbvoen62gwbr@treble>
+ <20200420190141.GB13807@redhat.com>
+ <20200420191117.wrjauayeutkpvkwd@treble>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420191117.wrjauayeutkpvkwd@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/23/2020 12:18 AM, Ian Rogers wrote:
-> On Wed, Apr 22, 2020 at 8:34 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Wed, Apr 22, 2020 at 7:38 AM Andi Kleen <ak@linux.intel.com> wrote:
->>>
->>> On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
->>>> Remove over escaping with \\.
->>>> Remove extraneous if 1 if 0 == 1 else 0 else 0.
->>>
->>> So where do these parse errors happen exactly? Some earlier
->>> patches introduced them as regressions?
->>
->> I'll work to track down a Fixes tag. I can repro the Skylakex errors
->> without the test in this series, by doing:
->>
->> $ perf stat -M DRAM_Read_Latency sleep 1
->> Error:
->> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
->> for event (cha/event=0x36\,uma
->> sk=0x21/).
->> /bin/dmesg | grep -i perf may provide additional information.
->>
-
-I also think some patches introduced this regression. When we rollback 
-to commit 61ec07f5917e (perf vendor events intel: Update all the Intel 
-JSON metrics from TMAM 3.6.), there is no this error on CLX.
-
-Thanks
-Jin Yao
-
->> This was just the escaping issue. I'm less clear on the other cascade
->> lake issue, and it is a bit more work for me to test on cascade lake.
->> What is "if 1 if 0 == 1 else 0 else 0" trying to do? Perhaps hunting
->> for the Fixes will let me know, but it looks like a copy-paste error.
->>
->>> The original metrics worked without parse errors as far as I know.
->>
->> The skylake issue above repros on 5.2.17 and so it seems like it is
->> broken for a while. The test in this series will prevent this in the
->> future, but without this patch that test fails.
+On Mon, Apr 20, 2020 at 02:11:17PM -0500, Josh Poimboeuf wrote:
+> On Mon, Apr 20, 2020 at 03:01:41PM -0400, Joe Lawrence wrote:
+> > > > ... apply_relocations() is also iterating over the section headers (the
+> > > > diff context doesn't show it here, but i is an incrementing index over
+> > > > sechdrs[]).
+> > > > 
+> > > > So if there is more than one KLP relocation section, we'll process them
+> > > > multiple times.  At least the x86 relocation code will detect this and
+> > > > fail the module load with an invalid relocation (existing value not
+> > > > zero).
+> > > 
+> > > Ah, yes, good catch!
+> > > 
+> > 
+> > The same test case passed with a small modification to push the foreach
+> > KLP section part to a kernel/livepatch/core.c local function and
+> > exposing the klp_resolve_symbols() + apply_relocate_add() for a given
+> > section to kernel/module.c.  Something like following...
 > 
-> The parse errors were introduced with the metrics, so they've never worked:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=fd5500989c8f3c3944ac0a144be04bae2506f7ba
+> I came up with something very similar, though I named them
+> klp_apply_object_relocs() and klp_apply_section_relocs() and changed the
+> argument order a bit (module first).  Since it sounds like you have a
+> test, could you try this one?
 > 
-> I will send out a v2 with Fixes in the commit message but wanted to
-> wait in case there was any more feedback. In particular the fixes to
-> the new test and expr parser lex code. The lex code wasn't broken at
-> the time the metrics were added and should be working again after this
-> patch set.
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index 533359e48c39..fb1a3de39726 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
 > 
-> Thanks,
-> Ian
+> [ ... snip ... ]
 > 
->>> If it fixes something earlier it would need Fixes: tags.
->>
->> Working on it. Thanks for the input!
->>
->> Ian
->>
->>> -Andi
+> @@ -245,10 +245,10 @@ static inline void klp_update_patch_state(struct task_struct *task) {}
+>  static inline void klp_copy_process(struct task_struct *child) {}
+>  
+>  static inline
+> -int klp_write_relocations(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+> -			  const char *shstrtab, const char *strtab,
+> -			  unsigned int symindex, struct module *pmod,
+> -			  const char *objname)
+> +int klp_apply_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
+> +			     const char *shstrtab, const char *strtab,
+> +			     unsigned int symindex, unsigned int secindex,
+> +			     const char *objname);
+                                                ^^
+Whoops, stray semicolon in !CONFIG_LIVEPATCH case.  I found it by
+botching my cross-compiling .config, but the build-bot might find it
+when you push your branch.
+
+>  {
+>  	return 0;
+>  }
+
+-- Joe
+
