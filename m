@@ -2,196 +2,114 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7ACC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778BAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 098FC2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F902075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:39:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tzapb9QQ"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GWvb0Ms4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgDWPi5 (ORCPT
+        id S1729295AbgDWPjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:38:57 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:35653 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729077AbgDWPi4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:38:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587656335; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=BRAibgfRj7aiNJ9xmqPaKVlJBsIulp+Nf9+VhQlrZxs=; b=tzapb9QQlWvJBkgBB8CsSF0CfvMKIU1811Id9e1k/HtHCnU92ym8OxXHDFmB5e8H+FoaKddo
- zoQtNhpeukSfiR5Gcdd896V4GWIijnlLe0iBnrmjMUgjuU5H8RL/MF/aWx1dl4m8iOzT0JRe
- QHrkQcvay4gUSOr9+jbfhAe2TH4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea1b685.7fe2f589ca78-smtp-out-n04;
- Thu, 23 Apr 2020 15:38:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E09A5C44792; Thu, 23 Apr 2020 15:38:42 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E71B2C433D2;
-        Thu, 23 Apr 2020 15:38:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E71B2C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 23 Apr 2020 09:38:38 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/9] drm/msm/a6xx: add A640/A650 to gpulist
-Message-ID: <20200423153837.GB15079@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200421234127.27965-1-jonathan@marek.ca>
- <20200421234127.27965-5-jonathan@marek.ca>
+        Thu, 23 Apr 2020 11:39:21 -0400
+Received: from mout.gmx.net ([212.227.15.15]:37171 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgDWPjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:39:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1587656348;
+        bh=tVK9wHiOkp+HiJDasb5SXHVH2+WN8NOIYB+YERfKM2Q=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=GWvb0Ms4UUk6kdlp/H1p0bUqoyWCpOnrpdbfcbSi9FW0otuyiMcsHuuRd/1JSnI/i
+         6mGbvzSx6G0pEccZSZ1gJ8RNPdSrbqP4nGK9Vehr9ddvcx/HmOT4EcJlLuPf3pLDOd
+         HdfkymzpEUveOZaRIMmAH1L3fQpBTcIhKIGzRc2k=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1M8ykW-1jXfY53sUI-006Aja; Thu, 23 Apr 2020 17:39:08 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] staging: vt6656: Check the return value of vnt_control_out_* calls
+Date:   Thu, 23 Apr 2020 17:38:34 +0200
+Message-Id: <20200423153836.5582-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421234127.27965-5-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ez+aTspjR2dwAdEjcGrDYLjesRrwRUyke9QkGrpBfCvigvJ043Z
+ qS0MkZ/xtlErRc4ca1V8ECZk9HZrm8qDs4EzJvkk5jC+N9Mgd7l3SFyRR2jNE19yl+HEe4L
+ KROKFC14FAW5tefsb2dIdQ8ujwPjmmtZGMxL8F309qwl3Jte8rM5VMvYfSDy9ICQifGdZ0b
+ Ho4fZmLSm76L34RFkhuAQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lu4RGMyXhlA=:dTwuxiosGMrAjqHWh5IGMk
+ BFVKJDbE8Ks+3EiWIJZT8O9+DxVpMEqGfH33ti4lzgGi4q2+I664jobM1JW+W69uEsjhV6hv3
+ 8Q6vVbFPwbVu1o/IbUb/t2wdf3NbZUcSIrNeReN5tyahlMJi44ivp22uAXEDF4DDtTTgGaf/e
+ +lSnYZtymMLzIPAVa2j8i+9YCImdZojmjA+aOjQ+xyL+GWujFRSncVK+bl84TcFrXNmifmRNK
+ +1UfQ8mB/tQbLpPw2Fn/mCdpwzD9t+5k+PYuffuTlOvP7gJ1+PFbziI5b6FZ5e9b/t23rcHdt
+ NsJmAY30YT6OiMlivAyBGjF5k1uDUmwn6EoC5xfyfRjCyhjGblBGhAFb2LIRHP47gt6XF7Duv
+ HGZjJpIQnYZy60cR5suDWd1jxEWHkGrvGl29gJ1lzExokaAQpGdaY7YllYOXb2KKDtqwYn2lj
+ 3ZIKvXygN56md2ltKUDemalaRukKG8caA4qtim4D408mjzXAUtWjS6h0b5NFTv4ztaVKtw16Z
+ MoytBmNQJZfLJ9fV+tIr5g9k8/hf0ADUz5GT4hYXuxmOLq/GAWqZB4D8yCY0oRZLzorPRTeR8
+ vLsgzbP+24jgLIkQ2qhiRTbfKDAIDIDY3r9z3RyWE6kLcKC+ZDMiGJT8WnQdfBy4TtT8SdQIj
+ BDIviYEQhxGVajgpaLShLniUDPWR+jUyOn47Dv8KBVUEsf5zscWVrL9LWGfSfnSNmtmyDkl9G
+ QBoewJ//+TEGNXB3cxdxZRld2jsCb/VPhUtSFE1+xKcUF+5GZTzRgvv2cCWkLHxurA9LHf5ND
+ lxICoUxIyJdXu6RlA3ZC4XVttm+ICWm7irLdGu28k7f3oT5Fo9mzRX7xEOTmL56LD0aiw47wL
+ p19WwaWUATHaPvkfdbuV66by/xcYLjCdorK1iss4zCCcsmm5qrSO9WvUz8mwrZ7ysfq2UMji3
+ hoGrEQfa2aR2S6i84GF1zDSNPrBYlbSo5t5P1UsD2hSlc8YdJ/GLDPE09NMx0vNK7ordRLlvH
+ 8BHNwJKibEVWfHIffCZst0GAClZGB56BK64q/avDX+KsbNDWTEAKbEvX7smcMvkpanlQP+vjM
+ ENCq6OSvh4X6cQRItG60gX2oiUV/TZ6Zkoj/KuVrB2lQZCI3/XZhmSO+mWqYPbjKCquphLic4
+ eFenVdJHK7ep295Ns+EVe9FxBOvcXGrZ19M+hAe/iLTRkFXzTha9EvnlNzLZU8fms/snA8mhy
+ 01mo2rkBxULu9AVmF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 07:41:22PM -0400, Jonathan Marek wrote:
-> Add Adreno 640 and 650 GPU info to the gpulist.
-> 
+This patch series checks the return value of vnt_control_out_* function
+calls.
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+The first patch checks the return value and when necessary modify the
+function prototype to be able to return the new checked error code.
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/adreno/adreno_device.c | 24 ++++++++++++++++++++++
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c    |  2 +-
->  drivers/gpu/drm/msm/adreno/adreno_gpu.h    | 10 +++++++++
->  3 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> index cb3a6e597d76..1156f72532a4 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -189,6 +189,30 @@ static const struct adreno_info gpulist[] = {
->  		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
->  		.init = a6xx_gpu_init,
->  		.zapfw = "a630_zap.mdt",
-> +	}, {
-> +		.rev = ADRENO_REV(6, 4, 0, ANY_ID),
-> +		.revn = 640,
-> +		.name = "A640",
-> +		.fw = {
-> +			[ADRENO_FW_SQE] = "a630_sqe.fw",
-> +			[ADRENO_FW_GMU] = "a640_gmu.bin",
-> +		},
-> +		.gmem = SZ_1M,
-> +		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-> +		.init = a6xx_gpu_init,
-> +		.zapfw = "a640_zap.mdt",
-> +	}, {
-> +		.rev = ADRENO_REV(6, 5, 0, ANY_ID),
-> +		.revn = 650,
-> +		.name = "A650",
-> +		.fw = {
-> +			[ADRENO_FW_SQE] = "a650_sqe.fw",
-> +			[ADRENO_FW_GMU] = "a650_gmu.bin",
-> +		},
-> +		.gmem = SZ_1M + SZ_128K,
-> +		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-> +		.init = a6xx_gpu_init,
-> +		.zapfw = "a650_zap.mdt",
->  	},
->  };
->  
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 1d5c43c22269..a7647eaacc7a 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -197,7 +197,7 @@ int adreno_get_param(struct msm_gpu *gpu, uint32_t param, uint64_t *value)
->  		*value = adreno_gpu->gmem;
->  		return 0;
->  	case MSM_PARAM_GMEM_BASE:
-> -		*value = 0x100000;
-> +		*value = !adreno_is_a650(adreno_gpu) ? 0x100000 : 0;
+The second patch removes the documentation of functions that their
+prototype has changed as the function names are clear enought. Also,
+the actual documentation is not correct in all cases.
 
-This will likely be 0 from here on out. This is okay for now, but we might need
-to consider adding the gmem base to the GPU list to avoid some ugly
-conditionals.
+Changelog v1 -> v2
+- Remove the function's documentation instead of fix them as suggested
+  Malcolm Priestley.
 
->  		return 0;
->  	case MSM_PARAM_CHIP_ID:
->  		*value = adreno_gpu->rev.patchid |
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> index 9ff4e550e7bd..88ae1b2813ef 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> @@ -237,6 +237,16 @@ static inline int adreno_is_a630(struct adreno_gpu *gpu)
->         return gpu->revn == 630;
->  }
->  
-> +static inline int adreno_is_a640(struct adreno_gpu *gpu)
-> +{
-> +       return gpu->revn == 640;
-> +}
-> +
-> +static inline int adreno_is_a650(struct adreno_gpu *gpu)
-> +{
-> +       return gpu->revn == 650;
-> +}
-> +
->  int adreno_get_param(struct msm_gpu *gpu, uint32_t param, uint64_t *value);
->  const struct firmware *adreno_request_fw(struct adreno_gpu *adreno_gpu,
->  		const char *fwname);
-> -- 
-> 2.26.1
-> 
+Changelog v2 -> v3
+- Rebase against the staging-next branch of Greg's staging tree.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Oscar Carter (2):
+  staging: vt6656: Check the return value of vnt_control_out_* calls
+  staging: vt6656: Remove functions' documentation
+
+ drivers/staging/vt6656/baseband.c |  35 +++---
+ drivers/staging/vt6656/baseband.h |   4 +-
+ drivers/staging/vt6656/card.c     | 176 +++++++++++-------------------
+ drivers/staging/vt6656/card.h     |  18 +--
+ drivers/staging/vt6656/mac.c      | 128 +++++++---------------
+ drivers/staging/vt6656/mac.h      |  26 ++---
+ drivers/staging/vt6656/power.c    |  22 ++--
+ drivers/staging/vt6656/power.h    |   2 +-
+ 8 files changed, 156 insertions(+), 255 deletions(-)
+
+=2D-
+2.20.1
+
