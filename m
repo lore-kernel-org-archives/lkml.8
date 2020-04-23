@@ -2,123 +2,111 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFE0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BD7C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C103C20704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5654120704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+TLKuAs"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dMZkObjQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgDWKP5 (ORCPT
+        id S1726960AbgDWKUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726593AbgDWKP4 (ORCPT
+        Thu, 23 Apr 2020 06:20:16 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18649 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgDWKUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:15:56 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F65EC08E859
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 03:15:56 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b11so6160468wrs.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 03:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Skhk4DHSP6S49ay3YbxbGVfdsBzay3NHmVMdnxxjSrE=;
-        b=I+TLKuAs2kcILC8r2y31+Fs6kHHC22w89oNz8ZAuEz7a/NwAHyHRhH49lQ99XqFuuo
-         R3IhyHzvFan0ZxMjjmeJfK6vIg83WNw9iTLpInlpuRh0PdnRrn0QvWtkQOg44kqgRhvV
-         6DE3DLosEbf6c35JWsxRezJggy2MUC2ISZmcIDlEBwPlnlZnKh5IFCFfY5isGVsrhkSe
-         AhshvpJ43SI2JP/9sqEtpMJfPwKQBtcEIfCfOo9Ifjn3Uc+GWmZyiKDrdDwhi1TlvmcU
-         OlaVa8Mi7yl+XSaQD426NmRdLYTQGFvtCyaSwMijaGAre7Qrmkw3FVmrCfkp2xlHM9CH
-         1ndg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Skhk4DHSP6S49ay3YbxbGVfdsBzay3NHmVMdnxxjSrE=;
-        b=IAfCb0rgNncHhllstT0sdHPO4b99KDcgRwZLPR3lJQ6/OkndwWcfPwxblAnea4O0Ka
-         4KTQtqDfHgEkoC6hbGJti1x5H3rv+Tl+d6R6mBpCq2/1q1Zr8EBLiYKI+H/bqy5dbCGW
-         3EcwRwxKAiZ8630Gf9bbfcLfbRB/gQ4xYAU3MOlQvn2AnYH3M0jIOjrSDWc7jN7M4xWO
-         OxDh5l3yBp6CYNnkj5Ujeny3x/egAptlbw3gSLiq4cX0AVkvh2LNfEYfBZU9BzMteJH4
-         +UONs/CyVK56O90iGuizFHubLSFUKkpjypAQSQrwi4djh/iJdo2uXw1I6aA+QtwcPHmL
-         0Jwg==
-X-Gm-Message-State: AGi0PuY1CYmhitM+jqPtJ42vRp/mkH6xLiSN067cCIXawNRidKw5l557
-        VX7eUCA0ItlWQbJqWCarXCJjlIWdcBgEO/8nb2110w==
-X-Google-Smtp-Source: APiQypI1r8e48tHFF0GT3T2PTE6IsJMo2BsxP2K03RKXkKpfdHnZXkmcBMVOlUzUr6+GY2um2U8mlX8yVowKNlWzFZk=
-X-Received: by 2002:a5d:6887:: with SMTP id h7mr4078989wru.365.1587636954682;
- Thu, 23 Apr 2020 03:15:54 -0700 (PDT)
+        Thu, 23 Apr 2020 06:20:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea16b630000>; Thu, 23 Apr 2020 03:18:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 03:20:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 03:20:08 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 10:20:07 +0000
+Received: from [10.26.73.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 10:20:02 +0000
+Subject: Re: [PATCH 4.4 000/100] 4.4.220-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200422095022.476101261@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <f37865f7-f90e-f092-172d-56903c0cd219@nvidia.com>
+Date:   Thu, 23 Apr 2020 11:20:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200414160758.v1.1.Idab9dcdc7da549ed1fd5c66341fb8baffaee8d10@changeid>
- <84DFB53F-C60A-48D3-AC01-2C9C87BA805D@holtmann.org>
-In-Reply-To: <84DFB53F-C60A-48D3-AC01-2C9C87BA805D@holtmann.org>
-From:   Archie Pusaka <apusaka@google.com>
-Date:   Thu, 23 Apr 2020 18:15:43 +0800
-Message-ID: <CAJQfnxE_-8u_f2R9Twnn0v+tuLYu1bXmLLC_C9T_JrZ-otJxCA@mail.gmail.com>
-Subject: Re: [PATCH v1] Bluetooth: L2CAP: add support for waiting
- disconnection resp
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Archie Pusaka <apusaka@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200422095022.476101261@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587637092; bh=vMEs/3hl+8egeKKl17HsCAB3Ev994FgGsO4KeDNjmtc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dMZkObjQQdyTvDohncKXWENusyZx4CaX8PO51BQxkSiypIGd9aE9/2kOaR1+4+N1Z
+         jy1K6UPJ1ZRIvyghsMg9Acz0I7RAtE5cOKN0lb50moVkUz0vNGEznmcFCwM7kOkOot
+         keQ7Yeu9qjqMADtqfd9ixEdrSbz3JeAMLunknQYN99RcnU7wbw/KVUfzDgXEj5Nm/n
+         FvMlyWRWRxlZaA1sD+UlkMQHwbyPqFrijNR4w5WZWNxOYc8hp+3vyMPtV7zKE/aAji
+         LzPun2RXzTt0G3d4hKvzBH+TJ4Fbyr5xN1Op7/gPuUiOqyxrqApKI/Hokl4gVIw3Dm
+         0eHgqOceq3xWA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
 
-Let me write a test for that.
+On 22/04/2020 10:55, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.220 release.
+> There are 100 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.220-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-However, I cannot seem to run l2cap-tester properly.
-On raspberry pi, all of the tests failed to initiate.
-On chromeOS, all BREDR tests pass (before and after the change), but
-all LE tests timed out on init stage (before and after the change).
+All tests are passing for Tegra
 
-I need to find out what went wrong when I execute those tests first.
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    16 tests:	16 pass, 0 fail
 
-Thanks,
-Archie
+Linux version:	4.4.220-rc1-gacb152478366
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
 
+Cheers
+Jon
 
-On Thu, 23 Apr 2020 at 01:42, Marcel Holtmann <marcel@holtmann.org> wrote:
->
-> Hi Archie,
->
-> > Whenever we disconnect a L2CAP connection, we would immediately
-> > report a disconnection event (EPOLLHUP) to the upper layer, without
-> > waiting for the response of the other device.
-> >
-> > This patch offers an option to wait until we receive a disconnection
-> > response before reporting disconnection event, by using the "how"
-> > parameter in l2cap_sock_shutdown(). Therefore, upper layer can opt
-> > to wait for disconnection response by shutdown(sock, SHUT_WR).
-> >
-> > This can be used to enforce proper disconnection order in HID,
-> > where the disconnection of the interrupt channel must be complete
-> > before attempting to disconnect the control channel.
-> >
-> > Signed-off-by: Archie Pusaka <apusaka@chromium.org>
-> > ---
-> >
-> > net/bluetooth/l2cap_sock.c | 30 +++++++++++++++++++++++-------
-> > 1 file changed, 23 insertions(+), 7 deletions(-)
->
-> the patch looks fine to me. Do we have something in l2cap-tester or l2test that we can verify this with before I apply it.
->
-> Regards
->
-> Marcel
->
+-- 
+nvpublic
