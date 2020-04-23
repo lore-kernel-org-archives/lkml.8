@@ -2,138 +2,115 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C1FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05975C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3051B20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YC4VUDJv"
+	by mail.kernel.org (Postfix) with ESMTP id CABD820780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587671395;
+	bh=NdIcmjR1rpCMGh8Dhza7SRrZXqT4odEC+7YzykSaSFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EQdoHxAOddBMj0epjq2Y28lNBUPKpHNazGrAShVbXO8zAKr5BYUPc608LVKpAEW8F
+	 UHnodt43a1cqett4Mu65Ur+52rCADsw1tyn8Ah2E86ve4P6UrxF0cWcJWwpTfB619R
+	 n6EfqMLTpzc9uUvd2rilsGovzInDgEPaL2qMOhXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgDWTtu (ORCPT
+        id S1727807AbgDWTtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:49:50 -0400
-Received: from mail-eopbgr30076.outbound.protection.outlook.com ([40.107.3.76]:64642
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726116AbgDWTtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:49:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F/EGZokF+8TbeLKwBwhCBcznldoclQdmjnrH6UTKzax0W8PrwCEPRvKNMR/6EUDYxz8y/AjiRGcIU0bEENiQZ06VJ3gN4blGJMkDeRgckdGqO08kJE9FohRGlYFLAH0OE4JHKlpWsGNgtvzZuE1mtYTpwvVTRFNfHrk8dsvNIZS84pfQcMJx7HtGKatLUv4WK2syDm/UTJQGT6fJVcyUQd7nq7kHvJm89tm2rMa5dMr/Wt6alVWUJ9w1/T1Yj23HqhpjDfO9Btk+zEr72oqGv5RiIJ4JoAT4BHm5Q+W8RUipib23kKsmsEWhjPasxosyBUyTHzUp79TUJxYn0bq01A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rzvQLkO/xld9TcDTkwpHyIBcJ5JZG1r9RwFegksu4tc=;
- b=lpF+xVec/+VPWofBNjGNyQeooG4YPDlg9qgQ+SmvIrBAa9OKCws4BmGPdv4zLWwhiflQmoJ9SAb05HrzlwhoOXiiFTlB4VPwbc93PtB4ic4Gz+eHkz8Iutq4nGGXo8FwkbthEWn1Chw8mW7WXdXsQW/zu9wwf7iZUy4y7JNdw1Jt+zrmml/RLiswnw6yMx57aPYlaGvySnesIXrJ4GhEM3Ova/dxIqVfrPFV0ibybAWK1akZTDg8apWR5DTvfz4+F7ekLyjeR8eefOLIQTfwq3PkaOZHYTU7+kO7OCyN6STvgdlHz59iFIV3TFwaxv95m9Eit+oiLvnqBV6JHUwBNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rzvQLkO/xld9TcDTkwpHyIBcJ5JZG1r9RwFegksu4tc=;
- b=YC4VUDJvLbVubbOwCfDMRRelHE7CvzdMnZhhYVOgtQrSvNdvUA/kVUeIRr0OoBSa6IIQqmjwYyz9CbDbiOlO6cP4K2HbtA/7LCz15l/YgtkEN8JXFCAscExTtMQECdgHLy61yKxaH7aaMrFk2XtYyWPtARO3tmB/AOE3AvPXRZs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB6864.eurprd05.prod.outlook.com (2603:10a6:800:18d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
- 2020 19:49:44 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
- 19:49:44 +0000
-Date:   Thu, 23 Apr 2020 16:49:41 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Megha Dey <megha.dey@linux.intel.com>, maz@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
-        KVM list <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200423194941.GG13640@mellanox.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
- <CAPcyv4hGX5jCzag8oQVUZ6Eq9GvZYLN_6kmBAgQMbrBbNzJ0yg@mail.gmail.com>
+        Thu, 23 Apr 2020 15:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgDWTtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 15:49:53 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 464002076C;
+        Thu, 23 Apr 2020 19:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587671393;
+        bh=NdIcmjR1rpCMGh8Dhza7SRrZXqT4odEC+7YzykSaSFU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HnakBwVgRpRxEczGalqm5FmpNfotCzFm5qxdCkh6YSxtIKNFyvkpgqlFhvkGWuu81
+         0Ttxk9coS5iU0AM59Mtz+scJ2GegLCIdJQAnVwKOqSK/jZevHdBqd/ZEZdi022cLQ+
+         TImpW8U28qDWoUCqD020ADRwNlyCpg3+Urcj0sfY=
+Date:   Thu, 23 Apr 2020 12:49:52 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix quota_sync failure due to
+ f2fs_lock_op
+Message-ID: <20200423194952.GA99191@google.com>
+References: <20200409173056.229855-1-jaegeuk@kernel.org>
+ <77e9f2e6-f3f3-8ca9-e6b5-3d57c4d2acc5@huawei.com>
+ <20200416213946.GA196168@google.com>
+ <fd8b116a-7830-809c-70a4-a3a12da1eb14@huawei.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4hGX5jCzag8oQVUZ6Eq9GvZYLN_6kmBAgQMbrBbNzJ0yg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR12CA0005.namprd12.prod.outlook.com
- (2603:10b6:208:a8::18) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR12CA0005.namprd12.prod.outlook.com (2603:10b6:208:a8::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 19:49:43 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRhqv-0007Qv-1Z; Thu, 23 Apr 2020 16:49:41 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6c1c6805-27c7-4618-9885-08d7e7bf7852
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6864:|VI1PR05MB6864:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB68642978D0C435E4D26606EACFD30@VI1PR05MB6864.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 03827AF76E
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(9746002)(9786002)(86362001)(6916009)(33656002)(5660300002)(54906003)(8936002)(81156014)(7416002)(478600001)(316002)(26005)(52116002)(36756003)(2906002)(2616005)(186003)(66556008)(4326008)(8676002)(66946007)(66476007)(4744005)(1076003)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: G4BKlTir9utjQof5cK/oslejjp3p/Il7VAEAxorU5mOcIJzYCHsYSR0Q5cVtHOHg7qJE1KGEmR0FaYJ6rtspcDH+eBao1tgmHsROXcd709QzzpwIFGlOiN4UKjLMAT2VnP1+ziG5Snj+9AQuLwH2upLzeAxbWfRje2vDNpUl9ZFzS7qb8w5lqgueT1RtHxcQBEmcKfbr37QlHWouIU50o35EXej2J/HEk2sALfqEmXFeFPk8CUN8N4xx6tmflGU3nvR/Oc6+oVOwBp70sFD9Yj2Udrbh4vCOM+KIBsB2TFiyfziW9dNwMlje6QIHCtS/rM3kHpeaMqDG3f4YsG+Row1SLIYfdIbtnRkYMrAdblMMjpOnWIYrVXmlwdLiEmbqhqizWXYFpmJAGcWNDutnSxcj17YEJyLz23vYu6Ckup6IKHov9ESOWkq8vnikytigivcoo6w+PsFtWDj77+5758Rue+RUSL4ytROJzkM9pOjrq+m/gELafALBXEPXadNI
-X-MS-Exchange-AntiSpam-MessageData: II9LNYqnxYZsIEhP7A7xLL4CSGTLq4DeqSqKOkOlks7Mv6v7nmYeQv9sUfo8kwkaXd/DhCyWpOEneOEf4ghkoU9T6YLvRGzbzNDY+H6hx8WpqGUJkrVNo7UwcnjBKXJQYlAy709+C263g8iDS4ilmQ==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c1c6805-27c7-4618-9885-08d7e7bf7852
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 19:49:44.4550
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FQ8MP1TWp8zNZlFkZqoibUtlubZPm/AOjyLpAyfTZBDrv7SuKwykQag9DMjOkoWGZdJBVlzLUlEmaA0wIxDFWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6864
+In-Reply-To: <fd8b116a-7830-809c-70a4-a3a12da1eb14@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 12:17:50PM -0700, Dan Williams wrote:
+On 04/23, Chao Yu wrote:
+> On 2020/4/17 5:39, Jaegeuk Kim wrote:
+> > f2fs_quota_sync() uses f2fs_lock_op() before flushing dirty pages, but
+> > f2fs_write_data_page() returns EAGAIN.
+> > Likewise dentry blocks, we can just bypass getting the lock, since quota
+> > blocks are also maintained by checkpoint.
+> > 
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> > v2:
+> >  - fix multipage write case
+> > 
+> >  fs/f2fs/compress.c | 2 +-
+> >  fs/f2fs/data.c     | 4 ++--
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> > index df7b2d15eacde..faaa358289010 100644
+> > --- a/fs/f2fs/compress.c
+> > +++ b/fs/f2fs/compress.c
+> > @@ -985,7 +985,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+> >  	loff_t psize;
+> >  	int i, err;
+> >  
+> > -	if (!f2fs_trylock_op(sbi))
+> > +	if (!IS_NOQUOTA(inode) && !f2fs_trylock_op(sbi))
+> >  		return -EAGAIN;
+> 
+> I encounter deadlock..
+> 
+> Should call f2fs_unlock_op() for non-quota compressed inode later.
 
-> Per Megha's follow-up can you send the details about that other device
-> and help clear a path for a device-specific MSI addr/data table
-> format. Ever since HMM I've been sensitive, perhaps overly-sensitive,
-> to claims about future upstream users. The fact that you have an
-> additional use case is golden for pushing this into a common area and
-> validating the scope of the proposed API.
+Could you elaborate a bit?
 
-I think I said it at plumbers, but yes, we are interested in this, and
-would like dynamic MSI-like interrupts available to the driver (what
-Intel calls IMS)
-
-It is something easy enough to illustrate with any RDMA device really,
-just open a MR against the addr and use RDMA_WRITE to trigger the
-data. It should trigger a Linux IRQ. Nothing else should be needed.
-
-Jason
+> 
+> Thanks,
+> 
+> >  
+> >  	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
+> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > index accd28728642a..5c8d3823d7593 100644
+> > --- a/fs/f2fs/data.c
+> > +++ b/fs/f2fs/data.c
+> > @@ -2656,8 +2656,8 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+> >  			f2fs_available_free_memory(sbi, BASE_CHECK))))
+> >  		goto redirty_out;
+> >  
+> > -	/* Dentry blocks are controlled by checkpoint */
+> > -	if (S_ISDIR(inode->i_mode)) {
+> > +	/* Dentry/quota blocks are controlled by checkpoint */
+> > +	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
+> >  		fio.need_lock = LOCK_DONE;
+> >  		err = f2fs_do_write_data_page(&fio);
+> >  		goto done;
+> > 
