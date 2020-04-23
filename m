@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCCCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E5CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 897B720784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E49F20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgDWXYw (ORCPT
+        id S1730027AbgDWXYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:24:52 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48270 "EHLO
+        Thu, 23 Apr 2020 19:24:54 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48264 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726173AbgDWXG3 (ORCPT
+        by vger.kernel.org with ESMTP id S1728126AbgDWXG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:29 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-0004aF-C5; Fri, 24 Apr 2020 00:06:25 +0100
+        id 1jRkvJ-0004aR-Kv; Fri, 24 Apr 2020 00:06:25 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvI-00E6gM-Ev; Fri, 24 Apr 2020 00:06:24 +0100
+        id 1jRkvI-00E6gk-Lm; Fri, 24 Apr 2020 00:06:24 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Josef Bacik" <jbacik@fb.com>,
         "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
-        "David Sterba" <dsterba@suse.com>, "Chris Mason" <clm@fb.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Omar Sandoval" <osandov@fb.com>
-Date:   Fri, 24 Apr 2020 00:04:15 +0100
-Message-ID: <lsq.1587683028.177362028@decadent.org.uk>
+        "Liu Bo" <bo.li.liu@oracle.com>, "David Sterba" <dsterba@suse.com>
+Date:   Fri, 24 Apr 2020 00:04:20 +0100
+Message-ID: <lsq.1587683028.231159933@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 028/245] Btrfs: fix em leak in find_first_block_group
+Subject: [PATCH 3.16 033/245] Btrfs: improve check_node to avoid reading
+ corrupted nodes
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,31 +57,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josef Bacik <jbacik@fb.com>
+From: Liu Bo <bo.li.liu@oracle.com>
 
-commit 187ee58c62c1d0d238d3dc4835869d33e1869906 upstream.
+commit 6b722c1747d533ac6d4df110dc8233db46918b65 upstream.
 
-We need to call free_extent_map() on the em we look up.
+We need to check items in a node to make sure that we're reading
+a valid one, otherwise we could get various crashes while processing
+delayed_refs.
 
-Signed-off-by: Josef Bacik <jbacik@fb.com>
-Reviewed-by: Omar Sandoval <osandov@fb.com>
+Signed-off-by: Liu Bo <bo.li.liu@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Chris Mason <clm@fb.com>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/extent-tree.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/disk-io.c | 32 ++++++++++++++++++++++++++++----
+ 1 file changed, 28 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -8587,6 +8587,7 @@ static int find_first_block_group(struct
- 			} else {
- 				ret = 0;
- 			}
-+			free_extent_map(em);
- 			goto out;
- 		}
- 		path->slots[0]++;
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -508,9 +508,10 @@ static int check_tree_block_fsid(struct
+ }
+ 
+ #define CORRUPT(reason, eb, root, slot)				\
+-	btrfs_crit(root->fs_info, "corrupt leaf, %s: block=%llu,"	\
+-		   "root=%llu, slot=%d", reason,			\
+-	       btrfs_header_bytenr(eb),	root->objectid, slot)
++	btrfs_crit(root->fs_info, "corrupt %s, %s: block=%llu,"	\
++		   " root=%llu, slot=%d",			\
++		   btrfs_header_level(eb) == 0 ? "leaf" : "node",\
++		   reason, btrfs_header_bytenr(eb), root->objectid, slot)
+ 
+ static noinline int check_leaf(struct btrfs_root *root,
+ 			       struct extent_buffer *leaf)
+@@ -601,6 +602,10 @@ static noinline int check_leaf(struct bt
+ static int check_node(struct btrfs_root *root, struct extent_buffer *node)
+ {
+ 	unsigned long nr = btrfs_header_nritems(node);
++	struct btrfs_key key, next_key;
++	int slot;
++	u64 bytenr;
++	int ret = 0;
+ 
+ 	if (nr == 0 || nr > BTRFS_NODEPTRS_PER_BLOCK(root)) {
+ 		btrfs_crit(root->fs_info,
+@@ -608,7 +613,26 @@ static int check_node(struct btrfs_root
+ 			   node->start, root->objectid, nr);
+ 		return -EIO;
+ 	}
+-	return 0;
++
++	for (slot = 0; slot < nr - 1; slot++) {
++		bytenr = btrfs_node_blockptr(node, slot);
++		btrfs_node_key_to_cpu(node, &key, slot);
++		btrfs_node_key_to_cpu(node, &next_key, slot + 1);
++
++		if (!bytenr) {
++			CORRUPT("invalid item slot", node, root, slot);
++			ret = -EIO;
++			goto out;
++		}
++
++		if (btrfs_comp_cpu_keys(&key, &next_key) >= 0) {
++			CORRUPT("bad key order", node, root, slot);
++			ret = -EIO;
++			goto out;
++		}
++	}
++out:
++	return ret;
+ }
+ 
+ static int btree_readpage_end_io_hook(struct btrfs_io_bio *io_bio,
 
