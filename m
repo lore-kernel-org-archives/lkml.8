@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158ECC55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D9DC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE7692077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBDC2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgDWCZ7 (ORCPT
+        id S1726671AbgDWC0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:25:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:33065 "EHLO mga06.intel.com"
+        Wed, 22 Apr 2020 22:26:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33067 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbgDWCZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:25:55 -0400
-IronPort-SDR: s26WKoNGj5W2M59TxkXILsFSB1Je+Uj1rJbxRAskXpvlmonW0liYBYoSenEARcxjoD6lINeAwy
- dYLGgqx0cdoA==
+        id S1726593AbgDWC0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 22:26:00 -0400
+IronPort-SDR: i70pUQgADsbrDYLQ4Bh5sIuKyU04zlTLzoRRYl9Pv/EDnZWNA1La6nFinqFOSVXinSlVqClG/N
+ RUmjbLOUohBw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 19:25:55 -0700
-IronPort-SDR: IWz/jX4EuR4wSESpckY98nIQ4T88r/8JDElm83svD7uN6k3ik1kR72U4AaC3BiaZDIM/NW4FKc
- vU/CnIn3QrSg==
+IronPort-SDR: oB3KKJgN9AQTijfc1cV6lgRQhpSpEjBpSgpDWQYRur6awFonFIcrhzg3jvnBC3QbpqwrR+LD8/
+ iSWA8uflepOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="259273970"
+   d="scan'208";a="259273961"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 19:25:54 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -42,9 +41,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
         Peter Shier <pshier@google.com>
-Subject: [PATCH 13/13] KVM: VMX: Use vmx_get_rflags() to query RFLAGS in vmx_interrupt_blocked()
-Date:   Wed, 22 Apr 2020 19:25:50 -0700
-Message-Id: <20200423022550.15113-14-sean.j.christopherson@intel.com>
+Subject: [PATCH 10/13] KVM: x86: WARN on injected+pending exception even in nested case
+Date:   Wed, 22 Apr 2020 19:25:47 -0700
+Message-Id: <20200423022550.15113-11-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200423022550.15113-1-sean.j.christopherson@intel.com>
 References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
@@ -55,28 +54,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use vmx_get_rflags() instead of manually reading vmcs.GUEST_RFLAGS when
-querying RFLAGS.IF so that multiple checks against interrupt blocking in
-a single run loop only require a single VMREAD.
+WARN if a pending exception is coincident with an injected exception
+before calling check_nested_events() so that the WARN will fire even if
+inject_pending_event() bails early because check_nested_events() detects
+the conflict.  Bailing early isn't problematic (quite the opposite), but
+suppressing the WARN is undesirable as it could mask a bug elsewhere in
+KVM.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/x86.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 68b3748b5383..9c4dd481b588 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4537,7 +4537,7 @@ bool vmx_interrupt_blocked(struct kvm_vcpu *vcpu)
- 	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
- 		return false;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 6af873b7e0ae..7c49a7dc601f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7693,6 +7693,9 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+ 			kvm_x86_ops.set_irq(vcpu);
+ 	}
  
--	return !(vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) ||
-+	return !(vmx_get_rflags(vcpu) & X86_EFLAGS_IF) ||
- 	       (vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
- 		(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
- }
++	WARN_ON_ONCE(vcpu->arch.exception.injected &&
++		     vcpu->arch.exception.pending);
++
+ 	/*
+ 	 * Call check_nested_events() even if we reinjected a previous event
+ 	 * in order for caller to determine if it should require immediate-exit
+@@ -7711,7 +7714,6 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
+ 					vcpu->arch.exception.has_error_code,
+ 					vcpu->arch.exception.error_code);
+ 
+-		WARN_ON_ONCE(vcpu->arch.exception.injected);
+ 		vcpu->arch.exception.pending = false;
+ 		vcpu->arch.exception.injected = true;
+ 
 -- 
 2.26.0
 
