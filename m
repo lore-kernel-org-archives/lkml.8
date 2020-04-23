@@ -2,226 +2,158 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F9FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1944C55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7612075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:37:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dry+sH7t"
+	by mail.kernel.org (Postfix) with ESMTP id 9AEDC2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgDWPg7 (ORCPT
+        id S1729266AbgDWPiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:36:59 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39735 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729018AbgDWPg7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:36:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587656217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=E23T/oKddWGo20e8Sy98c42LsNfH3cMjAg49nwFeKKI=;
-        b=Dry+sH7tFeLuKlHFFaPz7PpwcbD6hPT+KuoRNn5HRHGC/Uhzl4gPizNHGp9jw4swsWywcu
-        eHZH8lJp8jw9oaoEnx3WzJfgLA4bv0ifpss0dqUMNU+vwwl4WQaYQA00urbBzpMb/Wf9kn
-        p3ZJdBc928Zt9PQhP8vDoELAkgNtC44=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-uhXV4b82MrCICvxSQoHEFw-1; Thu, 23 Apr 2020 11:36:55 -0400
-X-MC-Unique: uhXV4b82MrCICvxSQoHEFw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1608D872FE1;
-        Thu, 23 Apr 2020 15:36:53 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-29.rdu2.redhat.com [10.10.116.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 54DD610016DA;
-        Thu, 23 Apr 2020 15:36:52 +0000 (UTC)
-Subject: Re: [PATCH 2/2] KVM: x86: check_nested_events if there is an
- injectable NMI
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com, wei.huang2@amd.com
-References: <20200414201107.22952-1-cavery@redhat.com>
- <20200414201107.22952-3-cavery@redhat.com>
- <20200423144209.GA17824@linux.intel.com>
-From:   Cathy Avery <cavery@redhat.com>
-Message-ID: <467c5c66-8890-02ba-2e9a-c28365d9f2c6@redhat.com>
-Date:   Thu, 23 Apr 2020 11:36:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 23 Apr 2020 11:38:02 -0400
+Received: from muru.com ([72.249.23.125]:51076 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729201AbgDWPiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:38:02 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id A080A8022;
+        Thu, 23 Apr 2020 15:38:47 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 08:37:56 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200423153756.GE37466@atomide.com>
+References: <20200421232752.3070-1-tony@atomide.com>
+ <20200423114326.GQ18608@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20200423144209.GA17824@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423114326.GQ18608@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/20 10:42 AM, Sean Christopherson wrote:
-> On Tue, Apr 14, 2020 at 04:11:07PM -0400, Cathy Avery wrote:
->> With NMI intercept moved to check_nested_events there is a race
->> condition where vcpu->arch.nmi_pending is set late causing
-> How is nmi_pending set late?  The KVM_{G,S}ET_VCPU_EVENTS paths can't s=
-et
-> it because the current KVM_RUN thread holds the mutex, and the only oth=
-er
-> call to process_nmi() is in the request path of vcpu_enter_guest, which=
- has
-> already executed.
+* Johan Hovold <johan@kernel.org> [200423 11:44]:
+> Hi Tony,
+> 
+> On Tue, Apr 21, 2020 at 04:27:48PM -0700, Tony Lindgren wrote:
+> > Hi all,
+> > 
+> > Here's v4 set of n_gsm serdev support patches, and the related protocol
+> > driver for the modem found on Motorola Mapphone phones and tablets
+> > like droid4.
+> > 
+> > This series only adds basic character device support for the serdev
+> > driver. Other serdev consumer drivers for specific devices will be
+> > posted separately.
+> 
+> I'm still missing an architectural (design) overview here -- reviewer
+> time is a scarce resource.
 
-You will have to forgive me as I am new to KVM and any help would be=20
-most appreciated.=C2=A0 This is what I noticed when an NMI intercept is=20
-processed when it was implemented in check_nested_events.
+OK, so for this series it would be roughly:
 
-When check_nested_events is called from inject_pending_event ...=20
-check_nested_events needs to have already been called (kvm_vcpu_running=20
-with vcpu->arch.nmi_pending =3D 1)=C2=A0 to set up the NMI intercept and =
-set=20
-svm->nested.exit_required. Otherwise we do not exit from the second=20
-checked_nested_events call ( code below ) with a return of -EBUSY which=20
-allows us to immediately vmexit.
+1. Allow serdev drivers configure and use n_gsm for TS 27.010
 
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Call check_nested_eve=
-nts() even if we reinjected a previous=20
-event
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * in order for caller t=
-o determine if it should require=20
-immediate-exit
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * from L2 to L1 due to =
-pending L1 events which require exit
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * from L2 to L1.
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+2. Add support for a motorola modem with a custom protocol on
+   top of TS 27.010 with only chardev support initially
 
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (is_guest_mode(vcpu) && kv=
-m_x86_ops.check_nested_events) {
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 r =3D kvm_x86_ops.check_nested_events(vcpu);
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (r !=3D 0)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=
- r;
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+3. Start adding TS 27.010 channel specific device drivers as
+   regular Linux device drivers later on
 
-Unfortunately when=C2=A0 kvm_vcpu_running is called vcpu->arch.nmi_pendin=
-g is=20
-not yet set.
+> I also suggested earlier that you include, at least as an RFC, one or
+> more of your child-device drivers so that we can see how this ends up
+> being used in the end (including an example devicetree).
 
-Here is the trace snippet ( with some debug ) without the second call to=20
-check_nested_events.
+Well I left that out intentionally to keep the series smaller. But yeah,
+I guess that part is really what people want. I'll add a basic GNSS
+driver for the next version.
 
-Thanks,
+> Some high-level comments until then:
+> 
+> I'm not sure that a plain chardev interface for the mux channels is the
+> right interface. The n_gsm ldisc exposes tty devices and I think your
+> serdev adaptation should continue to do that.
 
-Cathy
+That's what I started with, but was not happy at all because of the
+custom motorola protocol layer on top of TS 27.010.
 
-qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168269: kvm_entry: vcpu =
-0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168271: kvm_exit:=
- reason EXIT_MSR=20
-rip 0x405371 info 1 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168272: kvm_neste=
-d_vmexit: rip=20
-405371 reason EXIT_MSR info1 1 info2 0 int_info 0 int_info_err 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168273: kvm_apic:=
- apic_write=20
-APIC_ICR2 =3D 0x0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168274: kvm_apic:=
- apic_write=20
-APIC_ICR =3D 0x44400
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168275: kvm_apic_=
-ipi: dst 0 vec 0=20
-(NMI|physical|assert|edge|self)
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168277: kvm_apic_=
-accept_irq: apicid=20
-0 vec 0 (NMI|edge)
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168278: kvm_msr: =
-msr_write 830 =3D 0x44400
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168279: bprint:=20
-svm_check_nested_events:=C2=A0 svm_check_nested_events reinj =3D 0, exit_=
-req =3D 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168279: bprint:=20
-svm_check_nested_events:=C2=A0 svm_check_nested_events nmi pending =3D 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168279: bputs: vc=
-pu_enter_guest:=C2=A0=20
-inject_pending_event 1
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168279: bprint:=20
-svm_check_nested_events: svm_check_nested_events reinj =3D 0, exit_req =3D=
- 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168279: bprint:=20
-svm_check_nested_events: svm_check_nested_events nmi pending =3D 1
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168280: bprint: s=
-vm_nmi_allowed:=20
-svm_nmi_allowed ret 1
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168280: bputs: sv=
-m_inject_nmi:=20
-svm_inject_nmi
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168280: bprint: v=
-cpu_enter_guest:=C2=A0=20
-nmi_pending 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168281: kvm_entry=
-: vcpu 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168282: kvm_exit:=
- reason EXIT_NMI=20
-rip 0x405373 info 1 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168284: kvm_neste=
-d_vmexit_inject:=20
-reason EXIT_NMI info1 1 info2 0 int_info 0 int_info_err 0
- =C2=A0qemu-system-x86-2029=C2=A0 [040]=C2=A0=C2=A0 232.168285: kvm_entry=
-: vcpu 0
+A generic n_gsm serdev driver should work easily though. Roughly, the
+n_gsm serdev driver(s) wanting to use just the n_gsm tty devices would
+just call the n_gsm config functions only, and configure no custom
+callbacks. Maybe some flag is needed for n_gsm tty. This needs to
+be checked again though as I have not done that for a while.
 
+Then for the custom n_gsm serdev implementations, like this modem,
+we have packet data from n_gsm. I don't think stuffing the packet data
+back into tty devices helps for these cases.
 
->> the execution of check_nested_events to not setup correctly
->> for nested.exit_required. A second call to check_nested_events
->> allows the injectable nmi to be detected in time in order to
->> require immediate exit from L2 to L1.
->>
->> Signed-off-by: Cathy Avery <cavery@redhat.com>
->> ---
->>   arch/x86/kvm/x86.c | 15 +++++++++++----
->>   1 file changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 027dfd278a97..ecfafcd93536 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -7734,10 +7734,17 @@ static int inject_pending_event(struct kvm_vcp=
-u *vcpu)
->>   		vcpu->arch.smi_pending =3D false;
->>   		++vcpu->arch.smi_count;
->>   		enter_smm(vcpu);
->> -	} else if (vcpu->arch.nmi_pending && kvm_x86_ops.nmi_allowed(vcpu)) =
-{
->> -		--vcpu->arch.nmi_pending;
->> -		vcpu->arch.nmi_injected =3D true;
->> -		kvm_x86_ops.set_nmi(vcpu);
->> +	} else if (vcpu->arch.nmi_pending) {
->> +		if (is_guest_mode(vcpu) && kvm_x86_ops.check_nested_events) {
->> +			r =3D kvm_x86_ops.check_nested_events(vcpu);
->> +			if (r !=3D 0)
->> +				return r;
->> +		}
->> +		if (kvm_x86_ops.nmi_allowed(vcpu)) {
->> +			--vcpu->arch.nmi_pending;
->> +			vcpu->arch.nmi_injected =3D true;
->> +			kvm_x86_ops.set_nmi(vcpu);
->> +		}
->>   	} else if (kvm_cpu_has_injectable_intr(vcpu)) {
->>   		/*
->>   		 * Because interrupts can be injected asynchronously, we are
->> --=20
->> 2.20.1
->>
+> On that note; you're not actually adding general TS 27.010 serdev
+> support, but rather some hooks and a custom driver and interface (mfd +
+> /dev/motmdmN) for one particular modem.
 
+A generic n_gsm serdev driver would just use a subset of these same
+functions.
+
+> I'd rather see a generic implementation which can be used with other
+> modems and that continues to expose a /dev/gsmttyN interface to which we
+> could attach serdev clients instead (and not create a motmdm serdev
+> replica of sorts).
+
+Yeah this should be doable quite easily actually without really any of
+the motorola driver code. It's a separate driver though, and not
+usable for this case because of the custom layer.
+
+> I know the location of this driver has been up for discussion already,
+> but drivers/tty/serdev/protocol still isn't right (e.g. we don't have an
+> drivers/i2c/protocol directory where we stuff random i2c client
+> drivers).
+
+Argh, the location of driver again.. So we do have the custom motorola
+layer to deal with on top of TS 27.010, but the custom handling is
+contained within the driver. So maybe just drivers/serial for the
+custom driver then.
+
+> It's an mfd + custom chardev driver for a modem and related to n_gsm
+> (even more if you add generic serdev support). Currently, drivers/mfd or
+> drivers/misc appear to be better choices. Otherwise, n_gsm lives in
+> drivers/tty since it's a line discipline, but it could be moved to a new
+> drivers/modem if needed (cf. the bluetooth hci ldisc).
+
+The n_gsm suport is not limited to modems only. Probably best to
+not move it. And I'd avoid drivers/modem until we actually have three
+similar use cases based on the late David "Mr.Bus" Brownell rule of
+thumb :)
+
+> Last, it seems you've based the serdev-ngsm-motmdm.c chardev
+> implementation on a more or less verbatim copy of drivers/gnss/core.c.
+> I'd appreciate if you could mention that in the file header and
+> reproduce the copyright notice if you end up keeping that interface.
+
+Oh yes indeed, thanks for pointing that out. I'll add it to the next
+version. The chardev code is for sure based on drivers/gnss.
+
+To explain my ignorance, I added the chardev support initially as an
+experiment to see if I can handle the motorola packet layer better
+that way compared to the n_gsm ttys and userspace handling. It ended
+up working quite nicely, so I kept it but then I accidentally left
+out references to the source. Sorry about that.
+
+Regards,
+
+Tony
