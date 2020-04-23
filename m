@@ -2,131 +2,140 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16612C5518A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50A8C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15512073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926732073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:15:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hh6jrlt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgDWDPg (ORCPT
+        id S1726757AbgDWDPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 23:15:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:65105 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgDWDPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 23:15:35 -0400
-IronPort-SDR: g7+6MnpDz1jAi6OLmj+ims+bVJhkiwqaLgyhvhPlLbsGKTkB/JWwGo8cpT6YXv62NqLGvYHTfG
- N/GGJgy/yStw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 20:15:35 -0700
-IronPort-SDR: aT9HbTHEvbkCPkbeTpAzsOmK36jErh2gicUvCbEKj/zp5cRYQzWWJx03QqJ+/Z4nzvL0M2UG1d
- w8tSBYRnoQ2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="292146112"
-Received: from rpedgeco-mobl.amr.corp.intel.com (HELO localhost.intel.com) ([10.255.231.66])
-  by orsmga008.jf.intel.com with ESMTP; 22 Apr 2020 20:15:33 -0700
-From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
-To:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, x86@kernel.org, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, linux-kernel@vger.kernel.org
-Cc:     Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH] x86/mm/cpa: Flush direct map alias during cpa
-Date:   Wed, 22 Apr 2020 20:13:55 -0700
-Message-Id: <20200423031355.23955-1-rick.p.edgecombe@intel.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 22 Apr 2020 23:15:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgDWDPs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 23:15:48 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C976C03C1AA;
+        Wed, 22 Apr 2020 20:15:48 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id w2so3230122edx.4;
+        Wed, 22 Apr 2020 20:15:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cxsx7utk7++1Wvv+Y9Ze+APMY5I4SIalD834TlR6uYg=;
+        b=hh6jrlt/msqEqx/ARg0lwpjPhcrympZFisWyBBcykRn/+/HhwXcmfEoY2+YP0u47Yq
+         Ud3Y5H54K6EPPJwtcLKPc24tNAHeqRBtw79NcFeUJXfMmNIitS6HiHImGzZkF8ygibOQ
+         V2GzTew3BWfa7bzFp25BIGaPgse/Xfbkc9Y+5mk4GXui256E2GC0zm5BIPGEbCHyeAZQ
+         eEcervtyqY2rOVsu3sJ8edjDHO18QZQR4XO4yQsPpsdgQKJQD5Vkcg4AO8SSjJ14ic/X
+         K6i9uNeSfc/lxEUKDn50xsur7nXLQD4ty1bushKSMAv67GBHldpaCbEk7n4O6Ttzreux
+         7y2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cxsx7utk7++1Wvv+Y9Ze+APMY5I4SIalD834TlR6uYg=;
+        b=NEnC+f0QP4H04ABCpbOzN0al4ejUyUB+dk2ID1nU9/BD+lcOMcXvZTL8X387NcCrTh
+         inm3lGzhBcu5QsXySbpyAhzdKbK0o7cjsrYpSBbRYX1AELO8F8fvfJiahUp7TFe4Io3y
+         1m4k+oUF8Invv4xh+t9h/DOT4naQeBWoYt5s8b542KBosAQfkJ2NHaB0uRBra2myTu+N
+         uIxYGNl+Sr657voYRY5Fd2dqjNRHPT5VdVhEaDvhvmNpFWdI597YHWRwSAoEdPERQTvd
+         5X2s0iLJiLdqRLowK1wpoeKipwVJ83Cwp9TNKD7Hl35bhsm57tWtEsg7KbJpozNiVmll
+         XWSw==
+X-Gm-Message-State: AGi0PuZYSomBCg5P4Vo2t8/Y5MEyDkEPrJ1SBtYc8QHanLlYXJxPGlBJ
+        YupSvEqCV9t6apIfuOviU5Dqs/A6
+X-Google-Smtp-Source: APiQypJRHUysfsJxvtHghejmUkPFpdgYm2y6xvPxt/EEgHyVePhNxUknpC3IaLtoXtO311aSaLdSOg==
+X-Received: by 2002:a50:85c4:: with SMTP id q4mr1082462edh.147.1587611746367;
+        Wed, 22 Apr 2020 20:15:46 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id dk19sm187042edb.66.2020.04.22.20.15.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 20:15:45 -0700 (PDT)
+Subject: Re: [PATCH net-next v5 1/4] dt-bindings: net: phy: Add support for
+ NXP TJA11xx
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+References: <20200422092456.24281-1-o.rempel@pengutronix.de>
+ <20200422092456.24281-2-o.rempel@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <b47f742d-e79a-11c8-6d39-db27dced28b8@gmail.com>
+Date:   Wed, 22 Apr 2020 20:15:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200422092456.24281-2-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change cpa_flush() to always flush_tlb_all(), as it previously did. As an
-optimization, cpa_flush() was changed to optionally only flush the range
-in "struct cpa_data *data" if it was small enough. However, this range
-does not include any direct map aliases changed in cpa_process_alias().
-So small set_memory_() calls that touch that alias don't get the direct
-map changes flushed. This situation can happen when the virtual address
-taking variants are passed an address in vmalloc or modules space.
 
-The issue was verified by creating a sequence like:
-/* Allocate something in vmalloc */
-void *ptr = vmalloc();
-/* Set vmalloc addr and direct map alias as not present */
-set_memory_np((unsigned long)ptr, num_pages);
-/* Try to read from direct map alias */
-printk("%d\n", *(int*)page_address(vmalloc_to_page(ptr));
 
-Which successfully read from the direct mapped page now set as not
-present.
+On 4/22/2020 2:24 AM, Oleksij Rempel wrote:
+> Document the NXP TJA11xx PHY bindings.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>   .../devicetree/bindings/net/nxp,tja11xx.yaml  | 61 +++++++++++++++++++
+>   1 file changed, 61 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> new file mode 100644
+> index 0000000000000..42be0255512b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP TJA11xx PHY
+> +
+> +maintainers:
+> +  - Andrew Lunn <andrew@lunn.ch>
+> +  - Florian Fainelli <f.fainelli@gmail.com>
+> +  - Heiner Kallweit <hkallweit1@gmail.com>
 
-There is usually some flushing that happens before the PTE is set in this
-operation, which covers up that the alias doesn't actually get flushed
-after it's changed. So to reproduce, set_memory_np() was also tweaked to
-touch the address right before it clears its PTE. This loads the old value
-in the TLB to simulate a state that could happen in real life for a number
-of reasons.
+I would have expected to have you listed as a maintainer of this 
+binding, but fair enough.
 
-Note this issue does not extend to cases where the set_memory_() calls are
-passed a direct map address, or page array, etc, as the primary target. In
-those cases the direct map would be flushed.
+> +
+> +description:
+> +  Bindings for NXP TJA11xx automotive PHYs
+> +
+> +allOf:
+> +  - $ref: ethernet-phy.yaml#
+> +
+> +patternProperties:
+> +  "^ethernet-phy@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      Some packages have multiple PHYs. Secondary PHY should be defines as
 
-Fixes: 935f583 ("x86/mm/cpa: Optimize cpa_flush_array() TLB invalidation")
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
----
-
-Besides the flushing that happens in most cases before the PTE is changed,
-the other thing that covers this up is that stale TLB hits around RO->RW
-CPA's would be silently fixed by the spurious fault fixer. It looks like
-some of the set_memory_uc() calls can operate on vmapped memory addresses
-though. So this would miss the flush of the UC attribute on the direct map.
-
-So there isn't any confirmed bug, but it seems like we should be flushing
-these, and there possibly is one around cache attributes.
-
- arch/x86/mm/pat/set_memory.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
-
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index c4aedd00c1ba..9b6d2854b842 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -331,15 +331,6 @@ static void cpa_flush_all(unsigned long cache)
- 	on_each_cpu(__cpa_flush_all, (void *) cache, 1);
- }
- 
--static void __cpa_flush_tlb(void *data)
--{
--	struct cpa_data *cpa = data;
--	unsigned int i;
--
--	for (i = 0; i < cpa->numpages; i++)
--		__flush_tlb_one_kernel(fix_addr(__cpa_addr(cpa, i)));
--}
--
- static void cpa_flush(struct cpa_data *data, int cache)
- {
- 	struct cpa_data *cpa = data;
-@@ -352,10 +343,7 @@ static void cpa_flush(struct cpa_data *data, int cache)
- 		return;
- 	}
- 
--	if (cpa->numpages <= tlb_single_page_flush_ceiling)
--		on_each_cpu(__cpa_flush_tlb, cpa, 1);
--	else
--		flush_tlb_all();
-+	flush_tlb_all();
- 
- 	if (!cache)
- 		return;
+should be defined as a subnode.
 -- 
-2.20.1
-
+Florian
