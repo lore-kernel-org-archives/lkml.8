@@ -2,135 +2,114 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5904C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207DAC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E85214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587652293;
-	bh=lI3x3Wgxq/DlxqjieCrseB2CoKABPYFIihFQcs7uAuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vh34MlxEcvFcBgAQpXvt+xNxNUsDq0G7BpjhBVkiL3/yYbvGi1qnvddh2OeFYyION
-	 tqXNS5wEe0s9DEQoOJcjuJlEsBj3y+0C/FeA7y1gZkUeiTW7ZH6NvnsQAU4+BwT36i
-	 nOIcKAZIdEhPn/w22X+iPPK1A52DZ1LkqM0+ZAbo=
+	by mail.kernel.org (Postfix) with ESMTP id E61B220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:31:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="dJcp7coC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgDWObd (ORCPT
+        id S1728213AbgDWObh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgDWObc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:31:32 -0400
-Received: from localhost (unknown [117.99.83.91])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33AF020728;
-        Thu, 23 Apr 2020 14:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587652292;
-        bh=lI3x3Wgxq/DlxqjieCrseB2CoKABPYFIihFQcs7uAuo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fRY+2kfDUSjwGHmBG3P90xdDtebN6Az+VfjTLoi322j7th4zLubnSAoTZtg00p35q
-         bX1IFR1EU3Kup5TwP2TnQNn+JjmeYQY6J9F2Vm41UYl5DoiS2en+iR8Bj6iZcy+8+e
-         1Nlm3C+PJAgLj1MAYEpM7AIV9qZycz6NUMIAdw9o=
-Date:   Thu, 23 Apr 2020 20:01:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 3/5] usb: xhci: Add support for Renesas controller
- with memory
-Message-ID: <20200423143127.GK72691@vkoul-mobl>
-References: <20200414164152.2786474-1-vkoul@kernel.org>
- <20200414164152.2786474-4-vkoul@kernel.org>
- <f61fbae0-28c5-c7ad-383f-2017a9e8597d@linux.intel.com>
+        Thu, 23 Apr 2020 10:31:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgDWObf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:31:35 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F491C09B040
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:31:35 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id i5so5875442uaq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W6zpFn1zJVrYQizk9f7+ghPBLR7OHw9eoL9Fn3H2lbA=;
+        b=dJcp7coCzFdfdbkaEsBKqU3CIF7bXl3qmif1RGgpbk4rfIPYRnaH3M4coOmrH7v7tz
+         vZY+9NQ+38MKGaIAbfDmJsvL//NhG0o1svW52qxQH68xocUvRdHcgSEu1xmzT1MctZ8Y
+         z7bjlvCQR6sCr+JkorL0wNtOzOl1lTedp+fyRGvhz3QrDZg154Ou814jLRD6eNDXMUKu
+         lDQg9w218VNTx8ipNLtlfudR7TGhq+LkQw9eyvZmqkrfyw+QaeB962JUVEbTOTgD3Ino
+         5XmrW7tUjUz7cbbIE3IkG9z6NAZbtVP9IWy1IiRiSUeTzNZqS8256q8OD8wT6Zqp3s/J
+         g6Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W6zpFn1zJVrYQizk9f7+ghPBLR7OHw9eoL9Fn3H2lbA=;
+        b=K3uVX+1Xa/aRqMgQzK3lMFpWHA+AR9o9o1R2DilXc5nEutixLollhPgspnYu9CGoW8
+         hJ3GwwhajvxrAPAUcuDadJ5vLl53Ebp0sKZiDyLLLpJxmNDsX2sRXzhFMDmt5zJTyrJ+
+         D4RYXpRdPGLO0svM8tVh6Ao0WTVl6hMmVDPln+pOq6BvUaoBSmlKcQ8WUlCKJJR6do8P
+         vmDmMYrwXqzltURbev/2x1ta2uDr8xY/Z/jQR0euuYCACBk6U3lQsXR8N3VTDoMu24tj
+         vANM1aOF8jpoizlXmw1QQqGzJJLgAU23C613n+1iJe7y0E05gAzbHy9RZVMkBwd2uEqD
+         +pPw==
+X-Gm-Message-State: AGi0PuY27dDToxkejW3c0scgfdKYpG9jnt3B6tRaNUyRQyRKtYwgLlpI
+        3JkThfhPn5ub33+slCw7GG8Ij0IlLtvS8gSDIFnoQA==
+X-Google-Smtp-Source: APiQypLj7+UHWWr7l19cHjaedxQUwCnANkyx2Oxglcx9VhHQg+KFxhHNZ0hR6id8hEFLijzaPhwicBS2Wc3omEh9rnY=
+X-Received: by 2002:a67:4242:: with SMTP id p63mr3000372vsa.159.1587652294393;
+ Thu, 23 Apr 2020 07:31:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f61fbae0-28c5-c7ad-383f-2017a9e8597d@linux.intel.com>
+References: <20200423125757.14057-1-sudipm.mukherjee@gmail.com>
+In-Reply-To: <20200423125757.14057-1-sudipm.mukherjee@gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 23 Apr 2020 20:01:10 +0530
+Message-ID: <CAHLCerOTruxM_nJHVhjqq--gczi_MQRWGQN2zKF_BXpaz02ovw@mail.gmail.com>
+Subject: Re: [PATCH] thermal: ti-soc-thermal: avoid dereferencing ERR_PTR
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-04-20, 17:07, Mathias Nyman wrote:
-> On 14.4.2020 19.41, Vinod Koul wrote:
-> > Some rensas controller like uPD720201 and uPD720202 need firmware to be
-> > loaded. Add these devices in table and invoke renesas firmware loader
-> > functions to check and load the firmware into device memory when
-> > required.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/usb/host/xhci-pci.c | 33 +++++++++++++++++++++++++++++++++
-> >  drivers/usb/host/xhci.h     |  1 +
-> >  2 files changed, 34 insertions(+)
-> > 
-> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > index b6c2f5c530e3..11521e2e1720 100644
-> > --- a/drivers/usb/host/xhci-pci.c
-> > +++ b/drivers/usb/host/xhci-pci.c
-> > @@ -15,6 +15,7 @@
-> >  
-> >  #include "xhci.h"
-> >  #include "xhci-trace.h"
-> > +#include "xhci-pci.h"
-> >  
-> >  #define SSIC_PORT_NUM		2
-> >  #define SSIC_PORT_CFG2		0x880c
-> > @@ -328,6 +329,21 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> >  	int retval;
-> >  	struct xhci_hcd *xhci;
-> >  	struct usb_hcd *hcd;
-> > +	struct xhci_driver_data *driver_data;
-> > +
-> > +	driver_data = (struct xhci_driver_data *)id->driver_data;
-> > +
-> > +	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
-> > +		retval = renesas_xhci_pci_probe(dev, id);
-> > +		switch (retval) {
-> > +		case 0: /* fw check success, continue */
-> > +			break;
-> > +		case 1: /* fw will be loaded by async load */
-> > +			return 0;
-> 
-> This is no longer true, right?
+On Thu, Apr 23, 2020 at 6:27 PM Sudip Mukherjee
+<sudipm.mukherjee@gmail.com> wrote:
+>
+> On error the function ti_bandgap_get_sensor_data() returns the error
+> code in ERR_PTR() but we only checked if the return value is NULL or
+> not. And, so we can dereference a error code inside ERR_PTR.
 
-Correct.
+Typo, s/a error/an error/
 
-> To me it looks like renesas_xhci_pci_probe() returns 0 on success, both if
-> firmware was already running or if successfully loaded, and negative on error
+I see other uses of ti_bandgap_set_sensor_data() in the same file that
+could use similar checks.
 
-Yes now it does that and I will update this part..
-> 
-> While changing this the function name "renesas_xhci_pci_probe()" should be
-> changed as well. This isn't anymore a separate firmware loading driver, just a
-> a lot of renesas firmware loading code.
-> 
-> You could call renesas_xhci_check_request_fw() directly instead:
-> 
-> 	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
-> 		retval = renesas_xhci_check_request_fw(dev, id);
-> 		if (retval)
-> 			return retval;
-> 	}
+e.g. ti_thermal_unregister_cpu_cooling, possibly
+ti_thermal_report_sensor_temperature?
 
-Yes I can remove this layer and directly invoke the internal function..
+>
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-Thanks for the comments
 
--- 
-~Vinod
+> ---
+>  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> index d3e959d01606..1e2bf1f22dd1 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> @@ -196,7 +196,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
+>
+>         data = ti_bandgap_get_sensor_data(bgp, id);
+>
+> -       if (data && data->ti_thermal) {
+> +       if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
+>                 if (data->our_zone)
+>                         thermal_zone_device_unregister(data->ti_thermal);
+>         }
+> --
+> 2.11.0
+>
