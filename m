@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A048C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4F4C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDAF21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6153E21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgDWHuT (ORCPT
+        id S1727123AbgDWHuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37916 "EHLO
+        Thu, 23 Apr 2020 03:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgDWHt4 (ORCPT
+        with ESMTP id S1726958AbgDWHt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 03:49:56 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06344C02C444;
-        Thu, 23 Apr 2020 00:49:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63C3C08ED7D;
+        Thu, 23 Apr 2020 00:49:55 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWcF-0008Pv-Tk; Thu, 23 Apr 2020 09:49:48 +0200
+        id 1jRWcC-0008QC-D2; Thu, 23 Apr 2020 09:49:44 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5E9AA1C04CF;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E0DA91C0450;
         Thu, 23 Apr 2020 09:49:42 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 07:49:41 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Date:   Thu, 23 Apr 2020 07:49:42 -0000
+From:   "tip-bot2 for Julien Thierry" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Better handle IRET
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: objtool/core] objtool: Support multiple stack_op per instruction
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416115118.631224674@infradead.org>
-References: <20200416115118.631224674@infradead.org>
+In-Reply-To: <20200327152847.15294-11-jthierry@redhat.com>
+References: <20200327152847.15294-11-jthierry@redhat.com>
 MIME-Version: 1.0
-Message-ID: <158762818197.28353.4981047285388283765.tip-bot2@tip-bot2>
+Message-ID: <158762818246.28353.13419513995701103731.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,170 +63,253 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     b746046238bb99b8f703c79f6d95357428fb6476
-Gitweb:        https://git.kernel.org/tip/b746046238bb99b8f703c79f6d95357428fb6476
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Thu, 02 Apr 2020 10:15:51 +02:00
+Commit-ID:     65ea47dcf4f936987a5fbf839c97acea00f4f196
+Gitweb:        https://git.kernel.org/tip/65ea47dcf4f936987a5fbf839c97acea00f4f196
+Author:        Julien Thierry <jthierry@redhat.com>
+AuthorDate:    Fri, 27 Mar 2020 15:28:47 
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 22 Apr 2020 10:53:50 +02:00
 
-objtool: Better handle IRET
+objtool: Support multiple stack_op per instruction
 
-Teach objtool a little more about IRET so that we can avoid using the
-SAVE/RESTORE annotation. In particular, make the weird corner case in
-insn->restore go away.
+Instruction sets can include more or less complex operations which might
+not fit the currently defined set of stack_ops.
 
-The purpose of that corner case is to deal with the fact that
-UNWIND_HINT_RESTORE lands on the instruction after IRET, but that
-instruction can end up being outside the basic block, consider:
+Combining more than one stack_op provides more flexibility to describe
+the behaviour of an instruction. This also reduces the need to define
+new stack_ops specific to a single instruction set.
 
-	if (cond)
-		sync_core()
-	foo();
+Allow instruction decoders to generate multiple stack_op per
+instruction.
 
-Then the hint will land on foo(), and we'll encounter the restore
-hint without ever having seen the save hint.
-
-By teaching objtool about the arch specific exception frame size, and
-assuming that any IRET in an STT_FUNC symbol is an exception frame
-sized POP, we can remove the use of save/restore hints for this code.
-
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200416115118.631224674@infradead.org
+Link: https://lkml.kernel.org/r/20200327152847.15294-11-jthierry@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/include/asm/processor.h |  2 --
- tools/objtool/arch.h             |  1 +
- tools/objtool/arch/x86/decode.c  | 14 ++++++++++++--
- tools/objtool/check.c            | 29 ++++++++++++++++-------------
- 4 files changed, 29 insertions(+), 17 deletions(-)
+ tools/objtool/arch.h            |  4 +-
+ tools/objtool/arch/x86/decode.c | 13 +++++-
+ tools/objtool/check.c           | 74 +++++++++++++++++++-------------
+ tools/objtool/check.h           |  2 +-
+ 4 files changed, 62 insertions(+), 31 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 3bcf27c..3eeaaeb 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -727,7 +727,6 @@ static inline void sync_core(void)
- 	unsigned int tmp;
- 
- 	asm volatile (
--		UNWIND_HINT_SAVE
- 		"mov %%ss, %0\n\t"
- 		"pushq %q0\n\t"
- 		"pushq %%rsp\n\t"
-@@ -737,7 +736,6 @@ static inline void sync_core(void)
- 		"pushq %q0\n\t"
- 		"pushq $1f\n\t"
- 		"iretq\n\t"
--		UNWIND_HINT_RESTORE
- 		"1:"
- 		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
- #endif
 diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index f9883c4..55396df 100644
+index a9a50a2..f9883c4 100644
 --- a/tools/objtool/arch.h
 +++ b/tools/objtool/arch.h
-@@ -19,6 +19,7 @@ enum insn_type {
- 	INSN_CALL,
- 	INSN_CALL_DYNAMIC,
- 	INSN_RETURN,
-+	INSN_EXCEPTION_RETURN,
- 	INSN_CONTEXT_SWITCH,
- 	INSN_STACK,
- 	INSN_BUG,
+@@ -64,6 +64,7 @@ struct op_src {
+ struct stack_op {
+ 	struct op_dest dest;
+ 	struct op_src src;
++	struct list_head list;
+ };
+ 
+ struct instruction;
+@@ -73,7 +74,8 @@ void arch_initial_func_cfi_state(struct cfi_state *state);
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+ 			    unsigned int *len, enum insn_type *type,
+-			    unsigned long *immediate, struct stack_op *op);
++			    unsigned long *immediate,
++			    struct list_head *ops_list);
+ 
+ bool arch_callee_saved_reg(unsigned char reg);
+ 
 diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index 199b408..3273638 100644
+index 7ce8650..199b408 100644
 --- a/tools/objtool/arch/x86/decode.c
 +++ b/tools/objtool/arch/x86/decode.c
-@@ -446,9 +446,19 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- 		*type = INSN_RETURN;
- 		break;
+@@ -80,13 +80,15 @@ unsigned long arch_jump_destination(struct instruction *insn)
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+ 			    unsigned int *len, enum insn_type *type,
+-			    unsigned long *immediate, struct stack_op *op)
++			    unsigned long *immediate,
++			    struct list_head *ops_list)
+ {
+ 	struct insn insn;
+ 	int x86_64, sign;
+ 	unsigned char op1, op2, rex = 0, rex_b = 0, rex_r = 0, rex_w = 0,
+ 		      rex_x = 0, modrm = 0, modrm_mod = 0, modrm_rm = 0,
+ 		      modrm_reg = 0, sib = 0;
++	struct stack_op *op;
  
-+	case 0xcf: /* iret */
-+		*type = INSN_EXCEPTION_RETURN;
-+
-+		/* add $40, %rsp */
-+		op->src.type = OP_SRC_ADD;
-+		op->src.reg = CFI_SP;
-+		op->src.offset = 5*8;
-+		op->dest.type = OP_DEST_REG;
-+		op->dest.reg = CFI_SP;
-+		break;
-+
- 	case 0xca: /* retf */
- 	case 0xcb: /* retf */
--	case 0xcf: /* iret */
- 		*type = INSN_CONTEXT_SWITCH;
- 		break;
+ 	x86_64 = is_x86_64(elf);
+ 	if (x86_64 == -1)
+@@ -127,6 +129,10 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 	if (insn.sib.nbytes)
+ 		sib = insn.sib.bytes[0];
  
-@@ -494,7 +504,7 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
++	op = calloc(1, sizeof(*op));
++	if (!op)
++		return -1;
++
+ 	switch (op1) {
+ 
+ 	case 0x1:
+@@ -488,6 +494,11 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
  
  	*immediate = insn.immediate.nbytes ? insn.immediate.value : 0;
  
--	if (*type == INSN_STACK)
-+	if (*type == INSN_STACK || *type == INSN_EXCEPTION_RETURN)
- 		list_add_tail(&op->list, ops_list);
- 	else
- 		free(op);
++	if (*type == INSN_STACK)
++		list_add_tail(&op->list, ops_list);
++	else
++		free(op);
++
+ 	return 0;
+ }
+ 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 9e854fd..781b3a3 100644
+index e06a891..9e854fd 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -2065,15 +2065,14 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
-  * tools/objtool/Documentation/stack-validation.txt.
-  */
- static int validate_branch(struct objtool_file *file, struct symbol *func,
--			   struct instruction *first, struct insn_state state)
-+			   struct instruction *insn, struct insn_state state)
+@@ -260,6 +260,7 @@ static int decode_instructions(struct objtool_file *file)
+ 			}
+ 			memset(insn, 0, sizeof(*insn));
+ 			INIT_LIST_HEAD(&insn->alts);
++			INIT_LIST_HEAD(&insn->stack_ops);
+ 			clear_insn_state(&insn->state);
+ 
+ 			insn->sec = sec;
+@@ -269,7 +270,7 @@ static int decode_instructions(struct objtool_file *file)
+ 						      sec->len - offset,
+ 						      &insn->len, &insn->type,
+ 						      &insn->immediate,
+-						      &insn->stack_op);
++						      &insn->stack_ops);
+ 			if (ret)
+ 				goto err;
+ 
+@@ -754,6 +755,7 @@ static int handle_group_alt(struct objtool_file *file,
+ 		}
+ 		memset(fake_jump, 0, sizeof(*fake_jump));
+ 		INIT_LIST_HEAD(&fake_jump->alts);
++		INIT_LIST_HEAD(&fake_jump->stack_ops);
+ 		clear_insn_state(&fake_jump->state);
+ 
+ 		fake_jump->sec = special_alt->new_sec;
+@@ -1452,10 +1454,11 @@ static bool has_valid_stack_frame(struct insn_state *state)
+ 	return false;
+ }
+ 
+-static int update_insn_state_regs(struct instruction *insn, struct insn_state *state)
++static int update_insn_state_regs(struct instruction *insn,
++				  struct insn_state *state,
++				  struct stack_op *op)
  {
- 	struct alternative *alt;
--	struct instruction *insn, *next_insn;
-+	struct instruction *next_insn;
- 	struct section *sec;
- 	u8 visited;
- 	int ret;
+ 	struct cfi_reg *cfa = &state->cfa;
+-	struct stack_op *op = &insn->stack_op;
  
--	insn = first;
- 	sec = insn->sec;
+ 	if (cfa->base != CFI_SP)
+ 		return 0;
+@@ -1545,9 +1548,9 @@ static void restore_reg(struct insn_state *state, unsigned char reg)
+  *   41 5d			pop    %r13
+  *   c3				retq
+  */
+-static int update_insn_state(struct instruction *insn, struct insn_state *state)
++static int update_insn_state(struct instruction *insn, struct insn_state *state,
++			     struct stack_op *op)
+ {
+-	struct stack_op *op = &insn->stack_op;
+ 	struct cfi_reg *cfa = &state->cfa;
+ 	struct cfi_reg *regs = state->regs;
  
- 	if (insn->alt_group && list_empty(&insn->alts)) {
-@@ -2126,16 +2125,6 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 				}
+@@ -1561,7 +1564,7 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
+ 	}
  
- 				if (!save_insn->visited) {
--					/*
--					 * Oops, no state to copy yet.
--					 * Hopefully we can reach this
--					 * instruction from another branch
--					 * after the save insn has been
--					 * visited.
--					 */
--					if (insn == first)
--						return 0;
+ 	if (state->type == ORC_TYPE_REGS || state->type == ORC_TYPE_REGS_IRET)
+-		return update_insn_state_regs(insn, state);
++		return update_insn_state_regs(insn, state, op);
+ 
+ 	switch (op->dest.type) {
+ 
+@@ -1898,6 +1901,42 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
+ 	return 0;
+ }
+ 
++static int handle_insn_ops(struct instruction *insn, struct insn_state *state)
++{
++	struct stack_op *op;
++
++	list_for_each_entry(op, &insn->stack_ops, list) {
++		int res;
++
++		res = update_insn_state(insn, state, op);
++		if (res)
++			return res;
++
++		if (op->dest.type == OP_DEST_PUSHF) {
++			if (!state->uaccess_stack) {
++				state->uaccess_stack = 1;
++			} else if (state->uaccess_stack >> 31) {
++				WARN_FUNC("PUSHF stack exhausted",
++					  insn->sec, insn->offset);
++				return 1;
++			}
++			state->uaccess_stack <<= 1;
++			state->uaccess_stack  |= state->uaccess;
++		}
++
++		if (op->src.type == OP_SRC_POPF) {
++			if (state->uaccess_stack) {
++				state->uaccess = state->uaccess_stack & 1;
++				state->uaccess_stack >>= 1;
++				if (state->uaccess_stack == 1)
++					state->uaccess_stack = 0;
++			}
++		}
++	}
++
++	return 0;
++}
++
+ static bool insn_state_match(struct instruction *insn, struct insn_state *state)
+ {
+ 	struct insn_state *state1 = &insn->state, *state2 = state;
+@@ -2198,29 +2237,8 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			return 0;
+ 
+ 		case INSN_STACK:
+-			if (update_insn_state(insn, &state))
++			if (handle_insn_ops(insn, &state))
+ 				return 1;
 -
- 					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
- 						  sec, insn->offset);
- 					return 1;
-@@ -2228,6 +2217,20 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 
+-			if (insn->stack_op.dest.type == OP_DEST_PUSHF) {
+-				if (!state.uaccess_stack) {
+-					state.uaccess_stack = 1;
+-				} else if (state.uaccess_stack >> 31) {
+-					WARN_FUNC("PUSHF stack exhausted", sec, insn->offset);
+-					return 1;
+-				}
+-				state.uaccess_stack <<= 1;
+-				state.uaccess_stack  |= state.uaccess;
+-			}
+-
+-			if (insn->stack_op.src.type == OP_SRC_POPF) {
+-				if (state.uaccess_stack) {
+-					state.uaccess = state.uaccess_stack & 1;
+-					state.uaccess_stack >>= 1;
+-					if (state.uaccess_stack == 1)
+-						state.uaccess_stack = 0;
+-				}
+-			}
+-
  			break;
  
-+		case INSN_EXCEPTION_RETURN:
-+			if (handle_insn_ops(insn, &state))
-+				return 1;
-+
-+			/*
-+			 * This handles x86's sync_core() case, where we use an
-+			 * IRET to self. All 'normal' IRET instructions are in
-+			 * STT_NOTYPE entry symbols.
-+			 */
-+			if (func)
-+				break;
-+
-+			return 0;
-+
- 		case INSN_CONTEXT_SWITCH:
- 			if (func && (!next_insn || !next_insn->hint)) {
- 				WARN_FUNC("unsupported instruction in callable function",
+ 		case INSN_STAC:
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index f0ce8ff..2c55f75 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -42,7 +42,7 @@ struct instruction {
+ 	struct rela *jump_table;
+ 	struct list_head alts;
+ 	struct symbol *func;
+-	struct stack_op stack_op;
++	struct list_head stack_ops;
+ 	struct insn_state state;
+ 	struct orc_entry orc;
+ };
