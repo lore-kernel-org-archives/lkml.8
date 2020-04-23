@@ -2,271 +2,113 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F097C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3073C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B352076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D254A20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="OVK4+lyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgDWPo1 (ORCPT
+        id S1729410AbgDWPpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:44:27 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:51990 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbgDWPo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:44:26 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5208B201496;
-        Thu, 23 Apr 2020 17:44:24 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2623D200015;
-        Thu, 23 Apr 2020 17:44:18 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 80A58402D2;
-        Thu, 23 Apr 2020 23:44:10 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        leonard.crestez@nxp.com, linux@rempel-privat.de, peng.fan@nxp.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: firmware: imx: Move system control into dt-binding headfile
-Date:   Thu, 23 Apr 2020 23:35:48 +0800
-Message-Id: <1587656148-24581-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 23 Apr 2020 11:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729139AbgDWPpK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:45:10 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D5CC09B040
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:45:10 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 145so3118200pfw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sHxljxjTpk2oBVN9jqQPNFsunhe5JYr63Xg+w6BjEk0=;
+        b=OVK4+lyUyi3K2XxNxns66uFwMhNrBdcne/S7/UEjlw0E22jAQTHxvEqLBeqPOAPxFK
+         X+jjDj0hqNMQkWzrHiZfGWnwvGlMB24GNj07YjCI2D3rKZ+5K+DDH+ZhzWUfOxvMYHc+
+         bbZBn3S1ZiSTV5hTJmxP8lKXGmBJdbONugF2Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sHxljxjTpk2oBVN9jqQPNFsunhe5JYr63Xg+w6BjEk0=;
+        b=jTObNV3jnOQXlEnQmOznJO8A/wSpJzttEvaGHnK1tWvS3/DHlq2qX/Lv8ZkvsZT0us
+         Dj48JylvMCKzqtfyaQPIWtRoXxORrz9xmUI7TQnpyz4n70mFvaFO/eVMLCLunzOxwsLl
+         bI+bb7z7fFbPU/MgzV+r8T3zUL0WsqZEPAKTZJEevMVWYouCj6fJsjH18oJTYULiwhxM
+         VcSPom7zZxuQeIPrYLakSFYQHfu/VmS5IHfwVpgWT83DO1mZIz+kbtTgFbcn/FfcVD+W
+         1kOh2QloO2ae+lNUiqLb0CZfoDuCowDMc8En4zDItKa9HWdNytu3bwNihaezz48e2ADE
+         OQCQ==
+X-Gm-Message-State: AGi0PuYJedGq7SbAA6KhxKFUA+7OsZS53Rr/51yhzdkQHNOTdvj+OW2n
+        Kf38XpZMBa+MSObfQ4Q0OqgdfDzDtDw=
+X-Google-Smtp-Source: APiQypL2rXvy7qGsCVugJpqQ0AJTu54mjBe+WV8wdzmBABoHEz5ipyihDvyYwh/78HYmZ4bBDKu+Ww==
+X-Received: by 2002:a63:7805:: with SMTP id t5mr4611238pgc.141.1587656709247;
+        Thu, 23 Apr 2020 08:45:09 -0700 (PDT)
+Received: from localhost (2001-44b8-111e-5c00-7979-720a-9390-aec6.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:7979:720a:9390:aec6])
+        by smtp.gmail.com with ESMTPSA id u15sm2645383pjm.47.2020.04.23.08.45.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 08:45:08 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, kasan-dev@googlegroups.com
+Cc:     dvyukov@google.com, christophe.leroy@c-s.fr,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v3 0/3] Fix some incompatibilites between KASAN and FORTIFY_SOURCE
+Date:   Fri, 24 Apr 2020 01:45:00 +1000
+Message-Id: <20200423154503.5103-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8 SoCs DTS file needs system control macro definitions, so move them
-into dt-binding headfile, then include/linux/firmware/imx/types.h can be
-removed and those drivers using it should be changed accordingly.
+3 KASAN self-tests fail on a kernel with both KASAN and FORTIFY_SOURCE:
+memchr, memcmp and strlen. I have observed this on x86 and powerpc.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- squash all patches in previous series to one to avoid build break
-	  with bisect.
----
- drivers/firmware/imx/imx-scu.c          |  1 -
- drivers/thermal/imx_sc_thermal.c        |  2 +-
- include/dt-bindings/firmware/imx/rsrc.h | 84 +++++++++++++++++++++++++++++++++
- include/linux/firmware/imx/sci.h        |  1 -
- include/linux/firmware/imx/types.h      | 65 -------------------------
- 5 files changed, 85 insertions(+), 68 deletions(-)
- delete mode 100644 include/linux/firmware/imx/types.h
+When FORTIFY_SOURCE is on, a number of functions are replaced with
+fortified versions, which attempt to check the sizes of the
+operands. However, these functions often directly invoke __builtin_foo()
+once they have performed the fortify check.
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index f71eaa5..f3340fa 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -8,7 +8,6 @@
-  */
- 
- #include <linux/err.h>
--#include <linux/firmware/imx/types.h>
- #include <linux/firmware/imx/ipc.h>
- #include <linux/firmware/imx/sci.h>
- #include <linux/interrupt.h>
-diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
-index b2b68c9..b01d28e 100644
---- a/drivers/thermal/imx_sc_thermal.c
-+++ b/drivers/thermal/imx_sc_thermal.c
-@@ -3,9 +3,9 @@
-  * Copyright 2018-2020 NXP.
-  */
- 
-+#include <dt-bindings/firmware/imx/rsrc.h>
- #include <linux/err.h>
- #include <linux/firmware/imx/sci.h>
--#include <linux/firmware/imx/types.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
-index 4e61f64..51906b9 100644
---- a/include/dt-bindings/firmware/imx/rsrc.h
-+++ b/include/dt-bindings/firmware/imx/rsrc.h
-@@ -547,4 +547,88 @@
- #define IMX_SC_R_ATTESTATION		545
- #define IMX_SC_R_LAST			546
- 
-+/*
-+ * Defines for SC PM CLK
-+ */
-+#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
-+#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
-+#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
-+#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
-+#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
-+#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
-+#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
-+#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
-+#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
-+#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
-+#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
-+#define IMX_SC_PM_CLK_PLL		4	/* PLL */
-+#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
-+
-+/*
-+ * Defines for SC CONTROL
-+ */
-+#define IMX_SC_C_TEMP                       0U
-+#define IMX_SC_C_TEMP_HI                    1U
-+#define IMX_SC_C_TEMP_LOW                   2U
-+#define IMX_SC_C_PXL_LINK_MST1_ADDR         3U
-+#define IMX_SC_C_PXL_LINK_MST2_ADDR         4U
-+#define IMX_SC_C_PXL_LINK_MST_ENB           5U
-+#define IMX_SC_C_PXL_LINK_MST1_ENB          6U
-+#define IMX_SC_C_PXL_LINK_MST2_ENB          7U
-+#define IMX_SC_C_PXL_LINK_SLV1_ADDR         8U
-+#define IMX_SC_C_PXL_LINK_SLV2_ADDR         9U
-+#define IMX_SC_C_PXL_LINK_MST_VLD           10U
-+#define IMX_SC_C_PXL_LINK_MST1_VLD          11U
-+#define IMX_SC_C_PXL_LINK_MST2_VLD          12U
-+#define IMX_SC_C_SINGLE_MODE                13U
-+#define IMX_SC_C_ID                         14U
-+#define IMX_SC_C_PXL_CLK_POLARITY           15U
-+#define IMX_SC_C_LINESTATE                  16U
-+#define IMX_SC_C_PCIE_G_RST                 17U
-+#define IMX_SC_C_PCIE_BUTTON_RST            18U
-+#define IMX_SC_C_PCIE_PERST                 19U
-+#define IMX_SC_C_PHY_RESET                  20U
-+#define IMX_SC_C_PXL_LINK_RATE_CORRECTION   21U
-+#define IMX_SC_C_PANIC                      22U
-+#define IMX_SC_C_PRIORITY_GROUP             23U
-+#define IMX_SC_C_TXCLK                      24U
-+#define IMX_SC_C_CLKDIV                     25U
-+#define IMX_SC_C_DISABLE_50                 26U
-+#define IMX_SC_C_DISABLE_125                27U
-+#define IMX_SC_C_SEL_125                    28U
-+#define IMX_SC_C_MODE                       29U
-+#define IMX_SC_C_SYNC_CTRL0                 30U
-+#define IMX_SC_C_KACHUNK_CNT                31U
-+#define IMX_SC_C_KACHUNK_SEL                32U
-+#define IMX_SC_C_SYNC_CTRL1                 33U
-+#define IMX_SC_C_DPI_RESET                  34U
-+#define IMX_SC_C_MIPI_RESET                 35U
-+#define IMX_SC_C_DUAL_MODE                  36U
-+#define IMX_SC_C_VOLTAGE                    37U
-+#define IMX_SC_C_PXL_LINK_SEL               38U
-+#define IMX_SC_C_OFS_SEL                    39U
-+#define IMX_SC_C_OFS_AUDIO                  40U
-+#define IMX_SC_C_OFS_PERIPH                 41U
-+#define IMX_SC_C_OFS_IRQ                    42U
-+#define IMX_SC_C_RST0                       43U
-+#define IMX_SC_C_RST1                       44U
-+#define IMX_SC_C_SEL0                       45U
-+#define IMX_SC_C_CALIB0                     46U
-+#define IMX_SC_C_CALIB1                     47U
-+#define IMX_SC_C_CALIB2                     48U
-+#define IMX_SC_C_IPG_DEBUG                  49U
-+#define IMX_SC_C_IPG_DOZE                   50U
-+#define IMX_SC_C_IPG_WAIT                   51U
-+#define IMX_SC_C_IPG_STOP                   52U
-+#define IMX_SC_C_IPG_STOP_MODE              53U
-+#define IMX_SC_C_IPG_STOP_ACK               54U
-+#define IMX_SC_C_SYNC_CTRL                  55U
-+#define IMX_SC_C_OFS_AUDIO_ALT              56U
-+#define IMX_SC_C_DSP_BYP                    57U
-+#define IMX_SC_C_CLK_GEN_EN                 58U
-+#define IMX_SC_C_INTF_SEL                   59U
-+#define IMX_SC_C_RXC_DLY                    60U
-+#define IMX_SC_C_TIMER_SEL                  61U
-+#define IMX_SC_C_LAST                       62U
-+
- #endif /* __DT_BINDINGS_RSCRC_IMX_H */
-diff --git a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
-index 17ba4e4..3fa418a 100644
---- a/include/linux/firmware/imx/sci.h
-+++ b/include/linux/firmware/imx/sci.h
-@@ -11,7 +11,6 @@
- #define _SC_SCI_H
- 
- #include <linux/firmware/imx/ipc.h>
--#include <linux/firmware/imx/types.h>
- 
- #include <linux/firmware/imx/svc/misc.h>
- #include <linux/firmware/imx/svc/pm.h>
-diff --git a/include/linux/firmware/imx/types.h b/include/linux/firmware/imx/types.h
-deleted file mode 100644
-index 8082110..0000000
---- a/include/linux/firmware/imx/types.h
-+++ /dev/null
-@@ -1,65 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
--/*
-- * Copyright (C) 2016 Freescale Semiconductor, Inc.
-- * Copyright 2017~2018 NXP
-- *
-- * Header file containing types used across multiple service APIs.
-- */
--
--#ifndef _SC_TYPES_H
--#define _SC_TYPES_H
--
--/*
-- * This type is used to indicate a control.
-- */
--enum imx_sc_ctrl {
--	IMX_SC_C_TEMP = 0,
--	IMX_SC_C_TEMP_HI = 1,
--	IMX_SC_C_TEMP_LOW = 2,
--	IMX_SC_C_PXL_LINK_MST1_ADDR = 3,
--	IMX_SC_C_PXL_LINK_MST2_ADDR = 4,
--	IMX_SC_C_PXL_LINK_MST_ENB = 5,
--	IMX_SC_C_PXL_LINK_MST1_ENB = 6,
--	IMX_SC_C_PXL_LINK_MST2_ENB = 7,
--	IMX_SC_C_PXL_LINK_SLV1_ADDR = 8,
--	IMX_SC_C_PXL_LINK_SLV2_ADDR = 9,
--	IMX_SC_C_PXL_LINK_MST_VLD = 10,
--	IMX_SC_C_PXL_LINK_MST1_VLD = 11,
--	IMX_SC_C_PXL_LINK_MST2_VLD = 12,
--	IMX_SC_C_SINGLE_MODE = 13,
--	IMX_SC_C_ID = 14,
--	IMX_SC_C_PXL_CLK_POLARITY = 15,
--	IMX_SC_C_LINESTATE = 16,
--	IMX_SC_C_PCIE_G_RST = 17,
--	IMX_SC_C_PCIE_BUTTON_RST = 18,
--	IMX_SC_C_PCIE_PERST = 19,
--	IMX_SC_C_PHY_RESET = 20,
--	IMX_SC_C_PXL_LINK_RATE_CORRECTION = 21,
--	IMX_SC_C_PANIC = 22,
--	IMX_SC_C_PRIORITY_GROUP = 23,
--	IMX_SC_C_TXCLK = 24,
--	IMX_SC_C_CLKDIV = 25,
--	IMX_SC_C_DISABLE_50 = 26,
--	IMX_SC_C_DISABLE_125 = 27,
--	IMX_SC_C_SEL_125 = 28,
--	IMX_SC_C_MODE = 29,
--	IMX_SC_C_SYNC_CTRL0 = 30,
--	IMX_SC_C_KACHUNK_CNT = 31,
--	IMX_SC_C_KACHUNK_SEL = 32,
--	IMX_SC_C_SYNC_CTRL1 = 33,
--	IMX_SC_C_DPI_RESET = 34,
--	IMX_SC_C_MIPI_RESET = 35,
--	IMX_SC_C_DUAL_MODE = 36,
--	IMX_SC_C_VOLTAGE = 37,
--	IMX_SC_C_PXL_LINK_SEL = 38,
--	IMX_SC_C_OFS_SEL = 39,
--	IMX_SC_C_OFS_AUDIO = 40,
--	IMX_SC_C_OFS_PERIPH = 41,
--	IMX_SC_C_OFS_IRQ = 42,
--	IMX_SC_C_RST0 = 43,
--	IMX_SC_C_RST1 = 44,
--	IMX_SC_C_SEL0 = 45,
--	IMX_SC_C_LAST
--};
--
--#endif /* _SC_TYPES_H */
+This breaks things in 2 ways:
+
+ - the three function calls are technically dead code, and can be
+   eliminated. When __builtin_ versions are used, the compiler can detect
+   this.
+
+ - Using __builtins may bypass KASAN checks if the compiler decides to
+   inline it's own implementation as sequence of instructions, rather than
+   emit a function call that goes out to a KASAN-instrumented
+   implementation.
+
+The patches address each reason in turn. Finally, test_memcmp used a
+stack array without explicit initialisation, which can sometimes break
+too, so fix that up.
+
+v3: resend with Reviewed-bys, hopefully for inclusion in 5.8.
+
+v2: - some cleanups, don't mess with arch code as I missed some wrinkles.
+    - add stack array init (patch 3)
+
+Daniel Axtens (3):
+  kasan: stop tests being eliminated as dead code with FORTIFY_SOURCE
+  string.h: fix incompatibility between FORTIFY_SOURCE and KASAN
+  kasan: initialise array in kasan_memcmp test
+
+ include/linux/string.h | 60 +++++++++++++++++++++++++++++++++---------
+ lib/test_kasan.c       | 32 +++++++++++++---------
+ 2 files changed, 68 insertions(+), 24 deletions(-)
+
 -- 
-2.7.4
+2.20.1
 
