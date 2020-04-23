@@ -2,168 +2,137 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F881C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACEEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C43020715
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:51:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AFFUb/gO"
+	by mail.kernel.org (Postfix) with ESMTP id 835BC20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgDWQvA (ORCPT
+        id S1729768AbgDWQxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:51:00 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16536 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729673AbgDWQvA (ORCPT
+        Thu, 23 Apr 2020 12:53:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48282 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729673AbgDWQxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:51:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ea1c6fe0000>; Thu, 23 Apr 2020 09:49:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 Apr 2020 09:50:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 09:50:59 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 16:50:59 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 16:50:58 +0000
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
- <ae6dfd6b-4b0b-db73-54cf-a16e59476f38@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <3115a959-045e-7b27-94fb-a11a8b5f4a6a@nvidia.com>
-Date:   Thu, 23 Apr 2020 09:50:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <ae6dfd6b-4b0b-db73-54cf-a16e59476f38@xs4all.nl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587660543; bh=dej+/NPj9Zi1pabB1YDOATDwcPgl93oxjqVQvLEgeFI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=AFFUb/gOdvlNFh1DMRIVqsHEiu2OxZA7yamw8sGomynyNEQHjU2gdH4D/+rYuHqzW
-         GIE8dqx8IYgzpyoX8l8Xq9wTvP0fkBgIqmSUWljq4BsBGCshvTvhd4DDHKLOz2zvZs
-         dCFHPknwxPg2f4a/rXS/H6paMn9MbEc4DsdqHaeok/pVCehqLD0knLBkIh4DbpiRwt
-         juF5SVtaW6gsd9UosilztfUhUIxEx4gWkpM5qQUCpVc7iDEavnuhMEEMXGZuh7thla
-         G7AeWdL8aB6c99SkEIgPAIrzhVYcDr6dpiunAdtX5Kx3iSSgXoGfJHOwWLbDMK93tx
-         0ep0Na2OjP/IQ==
+        Thu, 23 Apr 2020 12:53:09 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NGXJta147070
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:53:08 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jspv5u5w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:53:07 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 23 Apr 2020 17:52:29 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 Apr 2020 17:52:26 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NGptFe53805508
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 16:51:55 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 754D2A4065;
+        Thu, 23 Apr 2020 16:53:02 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2AA4A405B;
+        Thu, 23 Apr 2020 16:53:01 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.178.107])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 16:53:01 +0000 (GMT)
+Subject: Re: [PATCH 3/5] ima: Fix ima digest hash table key calculation
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Thu, 23 Apr 2020 12:53:01 -0400
+In-Reply-To: <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
+References: <20200325161116.7082-1-roberto.sassu@huawei.com>
+         <20200325161116.7082-3-roberto.sassu@huawei.com>
+         <1587588987.5165.20.camel@linux.ibm.com>
+         <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042316-0008-0000-0000-000003762A0D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042316-0009-0000-0000-00004A97F7F0
+Message-Id: <1587660781.5610.15.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_12:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-04-23 at 10:21 +0000, Roberto Sassu wrote:
+> > Hi Roberto, Krsysztof,
+> > 
+> > On Wed, 2020-03-25 at 17:11 +0100, Roberto Sassu wrote:
+> > > From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+> > >
+> > > Function hash_long() accepts unsigned long, while currently only one byte
+> > > is passed from ima_hash_key(), which calculates a key for ima_htable.
+> > Use
+> > > more bytes to avoid frequent collisions.
+> > >
+> > > Length of the buffer is not explicitly passed as a function parameter,
+> > > because this function expects a digest whose length is greater than the
+> > > size of unsigned long.
+> > 
+> > Somehow I missed the original report of this problem https://lore.kern
+> > el.org/patchwork/patch/674684/.  This patch is definitely better, but
+> > how many unique keys are actually being used?  Is it anywhere near
+> > IMA_MEASURE_HTABLE_SIZE(512)?
+> 
+> I did a small test (with 1043 measurements):
+> 
+> slots: 250, max depth: 9 (without the patch)
+> slots: 448, max depth: 7 (with the patch)
 
-On 4/23/20 12:48 AM, Hans Verkuil wrote:
-> External email: Use caution opening links or attachments
->
->
-> On 22/04/2020 08:18, Sowjanya Komatineni wrote:
->> Tegra210 contains a powerful Video Input (VI) hardware controller
->> which can support up to 6 MIPI CSI camera sensors.
->>
->> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->> capture from an external camera sensor connected to CSI or from
->> built-in test pattern generator.
->>
->> Tegra210 supports built-in test pattern generator from CSI to VI.
->>
->> This patch adds a v4l2 capture driver with media interface for
->> Tegra210 built-in CSI to VI test pattern generator.
->>
->> This patch includes TPG support only and all the video pipeline
->> configuration happens through the video device node.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/staging/media/Kconfig          |    2 +
->>   drivers/staging/media/Makefile         |    1 +
->>   drivers/staging/media/tegra/Kconfig    |   13 +
->>   drivers/staging/media/tegra/Makefile   |    8 +
->>   drivers/staging/media/tegra/TODO       |   10 +
->>   drivers/staging/media/tegra/common.h   |  262 ++++++++
->>   drivers/staging/media/tegra/csi.c      |  606 +++++++++++++++++
->>   drivers/staging/media/tegra/csi.h      |  149 +++++
->>   drivers/staging/media/tegra/tegra210.c |  709 ++++++++++++++++++++
->>   drivers/staging/media/tegra/tegra210.h |  190 ++++++
->>   drivers/staging/media/tegra/vi.c       | 1132 ++++++++++++++++++++++++++++++++
->>   drivers/staging/media/tegra/vi.h       |   83 +++
->>   drivers/staging/media/tegra/video.c    |  153 +++++
->>   drivers/staging/media/tegra/video.h    |   34 +
->>   14 files changed, 3352 insertions(+)
->>   create mode 100644 drivers/staging/media/tegra/Kconfig
->>   create mode 100644 drivers/staging/media/tegra/Makefile
->>   create mode 100644 drivers/staging/media/tegra/TODO
->>   create mode 100644 drivers/staging/media/tegra/common.h
->>   create mode 100644 drivers/staging/media/tegra/csi.c
->>   create mode 100644 drivers/staging/media/tegra/csi.h
->>   create mode 100644 drivers/staging/media/tegra/tegra210.c
->>   create mode 100644 drivers/staging/media/tegra/tegra210.h
->>   create mode 100644 drivers/staging/media/tegra/vi.c
->>   create mode 100644 drivers/staging/media/tegra/vi.h
->>   create mode 100644 drivers/staging/media/tegra/video.c
->>   create mode 100644 drivers/staging/media/tegra/video.h
-> With 'make menuconfig' I get this:
->
-> scripts/kconfig/mconf  Kconfig
->
-> WARNING: unmet direct dependencies detected for TEGRA_HOST1X
->    Depends on [n]: HAS_IOMEM [=y] && (ARCH_TEGRA || ARM && COMPILE_TEST [=y])
->    Selected by [y]:
->    - VIDEO_TEGRA [=y] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && (ARCH_TEGRA || COMPILE_TEST [=y])
->
-> This is an x86_64 build with COMPILE_TEST set. I can provide my full .config if you need it.
->
-> CONFIG_TEGRA_HOST1X=y
-> CONFIG_VIDEO_TEGRA=y
->
-> Regards,
->
->          Hans
+448 out of 512 slots are used.
 
-Hi Hans,
+> 
+> Then, I increased the number of bits to 10:
+> 
+> slots: 251, max depth: 9 (without the patch)
+> slots: 660, max depth: 4 (with the patch)
 
-In v7, changed Kconfig to remove ARM. But looks like we should limit
+660 out of 1024 slots are used.
 
-TEGRA_HOST1X also limits compile to ARM only so running VIDEO_TEGRA on 
-x86_64 shows above warning.
+I wonder if there is any benefit to hashing a digest, instead of just
+using the first bits. 
 
-We should limit compile to ARM for CONFIG_VIDEO_TEGRA.
+> 
+> > Do we need a new securityfs entry to display the number used?
+> 
+> Probably it is useful only if the administrator can decide the number of slots.
 
-Will update CONFIG_VIDEO_TEGRA dependency to use ARM && COMPILE_TEST 
-like I had in previous version. Sorry about this.
+The securityfs suggestion was just a means for triggering the above
+debugging info you provided.  Could you provide another patch with the
+debugging info?
 
+thanks,
 
-Also, I see some changes went into latest linux-next staging media 
-Kconfig, So, will have my patches on top of today's linux-next.
-
-Thanks
-
-Sowjanya
-
+Mimi
 
