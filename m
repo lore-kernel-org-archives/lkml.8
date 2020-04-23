@@ -4,70 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82E6C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B17FC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E0B20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABB82077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgDWC0k (ORCPT
+        id S1726722AbgDWC0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:26:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51406 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726724AbgDWC0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:26:37 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 24870E7B8AC50BD116A2;
-        Thu, 23 Apr 2020 10:26:35 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 23 Apr 2020 10:26:27 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
-        <john.fastabend@gmail.com>, <kpsingh@chromium.org>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] bpf: Make bpf_link_fops static
-Date:   Thu, 23 Apr 2020 10:32:40 +0800
-Message-ID: <1587609160-117806-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Wed, 22 Apr 2020 22:26:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43423 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgDWCZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 22:25:58 -0400
+IronPort-SDR: 2+yn6XKlbhBdQS6FMbEsWqg7o6buTuxg2T1jynp5suzR+oxkzm//quX/zShXSWp03XrtpCat2H
+ 28VXC/zfTyng==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 19:25:54 -0700
+IronPort-SDR: bOGXL2Q6vtAyfC1m2AyNtPmwIxm00w36xy+ihcBTehjipx0n8wB3g2BfYwq6uZi9O+N2vNUGcX
+ 3+R6r5JgOYcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
+   d="scan'208";a="259273944"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 19:25:54 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Subject: [PATCH 05/13] KVM: nVMX: Move nested_exit_on_nmi() to nested.h
+Date:   Wed, 22 Apr 2020 19:25:42 -0700
+Message-Id: <20200423022550.15113-6-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200423022550.15113-1-sean.j.christopherson@intel.com>
+References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
+Expose nested_exit_on_nmi() for use by vmx_nmi_allowed() in a future
+patch.
 
-kernel/bpf/syscall.c:2289:30: warning: symbol 'bpf_link_fops' was not declared. Should it be static?
+No functional change intended.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- kernel/bpf/syscall.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/nested.c | 5 -----
+ arch/x86/kvm/vmx/nested.h | 5 +++++
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 8608d6e..fcb80e1 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2286,7 +2286,7 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 63cf339a13ac..40b2427f35b7 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -698,11 +698,6 @@ static bool nested_exit_intr_ack_set(struct kvm_vcpu *vcpu)
+ 		VM_EXIT_ACK_INTR_ON_EXIT;
  }
- #endif
  
--const struct file_operations bpf_link_fops = {
-+static const struct file_operations bpf_link_fops = {
- #ifdef CONFIG_PROC_FS
- 	.show_fdinfo	= bpf_link_show_fdinfo,
- #endif
+-static bool nested_exit_on_nmi(struct kvm_vcpu *vcpu)
+-{
+-	return nested_cpu_has_nmi_exiting(get_vmcs12(vcpu));
+-}
+-
+ static int nested_vmx_check_apic_access_controls(struct kvm_vcpu *vcpu,
+ 					  struct vmcs12 *vmcs12)
+ {
+diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+index 1514ff4db77f..7d7475549b9f 100644
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -225,6 +225,11 @@ static inline bool nested_cpu_has_save_preemption_timer(struct vmcs12 *vmcs12)
+ 	    VM_EXIT_SAVE_VMX_PREEMPTION_TIMER;
+ }
+ 
++static inline bool nested_exit_on_nmi(struct kvm_vcpu *vcpu)
++{
++	return nested_cpu_has_nmi_exiting(get_vmcs12(vcpu));
++}
++
+ /*
+  * In nested virtualization, check if L1 asked to exit on external interrupts.
+  * For most existing hypervisors, this will always return true.
 -- 
-2.6.2
+2.26.0
 
