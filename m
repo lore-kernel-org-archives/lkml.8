@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8050CC55198
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B41BC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F68F20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46FFD20704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DpLPKwlM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e12bR+Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbgDWQ0Z (ORCPT
+        id S1729687AbgDWQ0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
+        Thu, 23 Apr 2020 12:26:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729615AbgDWQ0U (ORCPT
+        by vger.kernel.org with ESMTP id S1729662AbgDWQ0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:26:20 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2260EC09B043
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:26:20 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so2718653pjb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:26:20 -0700 (PDT)
+        Thu, 23 Apr 2020 12:26:14 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 454EAC09B041
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:26:14 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z1so1511209pfn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:26:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Fs+VyUYiQhHLqjr9qU6M46uht+we4DMR37Sq8mHOUJg=;
-        b=DpLPKwlMZsLZnxIioolM8ptTrEbItSx7IHdh1uPs+5fsxWGMGiV+5LduIaSEo0UdUH
-         lfewHcUPuCS2CaHrmBVsSnkGCWg/Y04/Hd85eHRDtEqVH1g+b5xaPV0zWfvc0d0aJOmW
-         t+u2CkySUhgOQJfywp7JUZRfHAv1W7wSiwO2c=
+        bh=t+az60ThGdIE96zHd3j4C+YFzxV2ee2icRXc48MtdSg=;
+        b=e12bR+ZpXLVjEEpan9cAEWHV4kDr8Z7MZkqcd7f2suEPYFg8jvkfNyq70AOvFiT7wa
+         4R/XyzA6cL0T1vpLIg314Ii0SKalB98Q4CK9r4ofREWXmfxZDtzOTMdjCYn1ytmbKmiX
+         ZkpDOzjkjb2l8hrkAs+QCG1FNUaXWUvOjEhEc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Fs+VyUYiQhHLqjr9qU6M46uht+we4DMR37Sq8mHOUJg=;
-        b=JitS8xpcWfRxlpYAcd8yICorTbfHgQHk5RXDzWVYV1DC+lmVw92IijK/++NAIuTmCU
-         ETWJF6oc+6d4Gs5HQ3aK0/xxYwGz9FOZhgQO4MsRCTS22AyPfsIAQug8M/IgDWWrBk/e
-         lAiL7NrkLFzpwyHZKvpB6aPy5UnQyOhTJKEDg97PFiV0ipaMAX0JcO9qMNxrHkdC5ngq
-         /dBg/PBinoUSzP5+8/eEkQJKWdpnzHf38LEFJ6hPghIcT5BLblZKQ2QGffn63N96trzT
-         x4KwBMAtiJVqwck21Xz/U31nrOpIQF84Nm+jxokWLhJmEDNwUqqW5TZen2YWEMR1bPoT
-         UsqQ==
-X-Gm-Message-State: AGi0Pubb8Uegk7851veud40ydRGkpPbNHXgs6KOk+BxVnjPDGgbUwM3O
-        OfwcwWprLc7K1lqsvDkBk1ALMA==
-X-Google-Smtp-Source: APiQypKJjjilIFJnRl4OpyzS4YRq70Qi1utK3lHOL5ENRwaojLCeKCJCNTxUDY7zc6N7YPo9khOOyw==
-X-Received: by 2002:a17:90a:f68d:: with SMTP id cl13mr1559548pjb.107.1587659179681;
-        Thu, 23 Apr 2020 09:26:19 -0700 (PDT)
+        bh=t+az60ThGdIE96zHd3j4C+YFzxV2ee2icRXc48MtdSg=;
+        b=K+FVEHl0jIcIdYTrDbfmy1RYv1CmN5tGDskvpndUWo71dPWrO4XzmxEQTICanJ9jud
+         FHcE325OFvUZ0ZcvSJi/dCRYKLbrlmQtEax9mZTOjeDTKnvICNmN5Jt6ooXaz+/4a8hV
+         pnQFApu8q/IoKv9L+Mz4PK5H3S1gBIqYTeGdM3KEKI7dZnTVNM91nqpdQUj64I+HhUC3
+         OY2G2UmiVJ9Qs3xJ3sdjGILpPqWC7kZlKzfUzo0bfPMW5cwBX0GSwoio5PdZyokLgEJk
+         vRxBqv6L9KU1W6pb+tCZkgo2TLxzaPl+IVpxC4eBZdLLyF676lxwvofpUOt1TTUZx28X
+         d7cg==
+X-Gm-Message-State: AGi0PuYoaoFD0wKQFfpXiP+UAYZSCoEGZNpT94mBOpKzgFzse+bEWecz
+        2avSkSIyG50F/evRbOujBS28GQ==
+X-Google-Smtp-Source: APiQypKjcxU1Aq1NSUI9ytZOpl3JXA96PEo792irFM8Rg9bStYDnDS9zclolWyNi4CYW+A0kSTRQDw==
+X-Received: by 2002:aa7:9709:: with SMTP id a9mr4779536pfg.166.1587659173796;
+        Thu, 23 Apr 2020 09:26:13 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d12sm2841927pfq.36.2020.04.23.09.26.18
+        by smtp.gmail.com with ESMTPSA id d12sm2841927pfq.36.2020.04.23.09.26.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 09:26:18 -0700 (PDT)
+        Thu, 23 Apr 2020 09:26:13 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
@@ -67,10 +67,12 @@ Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
         robdclark@chromium.org, jernej.skrabec@siol.net, jonas@kwiboo.se,
         bjorn.andersson@linaro.org,
         Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/6] arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
-Date:   Thu, 23 Apr 2020 09:25:48 -0700
-Message-Id: <20200423092431.v3.6.I89df9b6094549b8149aa8b8347f7401c678055b0@changeid>
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/6] dt-bindings: display: Add hpd-gpios to panel-common bindings
+Date:   Thu, 23 Apr 2020 09:25:44 -0700
+Message-Id: <20200423092431.v3.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 In-Reply-To: <20200423162548.129661-1-dianders@chromium.org>
 References: <20200423162548.129661-1-dianders@chromium.org>
@@ -81,14 +83,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have the HPD line hooked up to the bridge chip.  Add it as
-suggested in the patch ("dt-bindings: drm/bridge: ti-sn65dsi86:
-Document no-hpd").
+In the cases where there is no connector in a system there's no great
+place to put "hpd-gpios".  As per discussion [1] the best place to put
+it is in the panel.  Add this to the device tree bindings.
 
-NOTE: this patch isn't expected to have any effect but just keeps us
-cleaner for the future.  Currently the driver in Linux just assumes
-that nobody has HPD hooked up.  This change allows us to later
-implement HPD support in the driver without messing up sdm845-cheza.
+[1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
@@ -96,24 +95,28 @@ Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
 Changes in v3: None
 Changes in v2:
-- ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
+- ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
 
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/display/panel/panel-common.yaml     | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9070be43a309..5938f8b2aa2f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -548,6 +548,8 @@ sn65dsi86_bridge: bridge@2d {
- 		clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
- 		clock-names = "refclk";
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+index ed051ba12084..e9a04a3a4f5f 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+@@ -96,6 +96,12 @@ properties:
+       (hot plug detect) signal, but the signal isn't hooked up so we should
+       hardcode the max delay from the panel spec when powering up the panel.
  
-+		no-hpd;
++  hpd-gpios:
++    maxItems: 1
++    description:
++      If Hot Plug Detect (HPD) is connected to a GPIO in the system rather
++      than a dedicated HPD pin the pin can be specified here.
 +
- 		ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+   # Control I/Os
+ 
+   # Many display panels can be controlled through pins driven by GPIOs. The nature
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
