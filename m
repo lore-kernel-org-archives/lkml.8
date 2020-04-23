@@ -2,33 +2,32 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D735C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A384C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE36820780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D72820780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgDWXG5 (ORCPT
+        id S1728768AbgDWXHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:06:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49306 "EHLO
+        Thu, 23 Apr 2020 19:07:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49674 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728322AbgDWXGm (ORCPT
+        by vger.kernel.org with ESMTP id S1728407AbgDWXGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:42 -0400
+        Thu, 23 Apr 2020 19:06:47 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-0004gk-Ae; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvU-0004hX-E1; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvP-00E6nc-B4; Fri, 24 Apr 2020 00:06:31 +0100
+        id 1jRkvR-00E6pT-Fe; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Felipe Balbi" <felipe.balbi@linux.intel.com>
-Date:   Fri, 24 Apr 2020 00:05:34 +0100
-Message-ID: <lsq.1587683028.850979724@decadent.org.uk>
+        "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Jiri Slaby" <jslaby@suse.com>
+Date:   Fri, 24 Apr 2020 00:05:57 +0100
+Message-ID: <lsq.1587683028.301840929@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 107/245] usb: dwc3: pci: add support for TigerLake
- Devices
+Subject: [PATCH 3.16 130/245] tty: link tty and port before configuring it
+ as console
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,37 +57,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit b3649dee5fbb0f6585010e6e9313dfcbb075b22b upstream.
+commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
 
-This patch adds the necessary PCI ID for TGP-LP devices.
+There seems to be a race condition in tty drivers and I could see on
+many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+do 'tty->port->itty = tty' even though tty->port is NULL.
+'tty->port' will be set by the driver and if the driver has not yet done
+it before we open the tty device we can get to this situation. By adding
+some extra debug prints, I noticed that:
 
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-[bwh: Backported to 3.16:
- - No properties support
- - Adjust context, indentation]
+6.650130: uart_add_one_port
+6.663849: register_console
+6.664846: tty_open
+6.674391: tty_init_dev
+6.675456: tty_port_link_device
+
+uart_add_one_port() registers the console, as soon as it registers, the
+userspace tries to use it and that leads to tty_open() but
+uart_add_one_port() has not yet done tty_port_link_device() and so
+tty->port is not yet configured when control reaches tty_init_dev().
+
+Further look into the code and tty_port_link_device() is done by
+uart_add_one_port(). After registering the console uart_add_one_port()
+will call tty_port_register_device_attr_serdev() and
+tty_port_link_device() is called from this.
+
+Call add tty_port_link_device() before uart_configure_port() is done and
+add a check in tty_port_link_device() so that it only links the port if
+it has not been done yet.
+
+Suggested-by: Jiri Slaby <jslaby@suse.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/serial_core.c | 1 +
+ drivers/tty/tty_port.c           | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -43,6 +43,7 @@
- #define PCI_DEVICE_ID_INTEL_CNPH	0xa36e
- #define PCI_DEVICE_ID_INTEL_ICLLP	0x34ee
- #define PCI_DEVICE_ID_INTEL_EHLLP	0x4b7e
-+#define PCI_DEVICE_ID_INTEL_TGPLP	0xa0ee
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2639,6 +2639,7 @@ int uart_add_one_port(struct uart_driver
+ 		lockdep_set_class(&uport->lock, &port_lock_key);
+ 	}
  
- struct dwc3_pci {
- 	struct device		*dev;
-@@ -211,6 +212,7 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CNPH), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICLLP), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_EHLLP), },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGPLP), },
- 	{  }	/* Terminating Entry */
- };
- MODULE_DEVICE_TABLE(pci, dwc3_pci_id_table);
++	tty_port_link_device(port, drv->tty_driver, uport->line);
+ 	uart_configure_port(drv, state, uport);
+ 
+ 	/*
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -49,7 +49,8 @@ void tty_port_link_device(struct tty_por
+ {
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	driver->ports[index] = port;
++	if (!driver->ports[index])
++		driver->ports[index] = port;
+ }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
+ 
 
