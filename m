@@ -2,175 +2,111 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF18C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA67C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFFE520704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:21:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AKG4xUX9"
+	by mail.kernel.org (Postfix) with ESMTP id B4FDB216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgDWQVw (ORCPT
+        id S1729642AbgDWQWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:21:52 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:47718 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729557AbgDWQVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:21:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587658911; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=/ec5W44u9De0++LHrjQhntfIZazSbxcz9iOGmXSVsp0=; b=AKG4xUX994njuWBBlBSeD/kOakC3RUpmFhmrK6Y/poR1pq1oA52QCwZU/SigzlL0zlr+Z2Mv
- cNv8cOqKeRubLRLwQ/tVZGLjhViO1DT2sD0aKRc4mYkQwADBKpux0UVkjtTM+zn3mBLJLo6z
- dfG+517C8xg5OtZn7EIlzePYXs8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea1c08f.7f92d0109650-smtp-out-n01;
- Thu, 23 Apr 2020 16:21:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4E982C44788; Thu, 23 Apr 2020 16:21:34 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48D2DC433BA;
-        Thu, 23 Apr 2020 16:21:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48D2DC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 23 Apr 2020 10:21:30 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 8/9] drm/msm/a6xx: enable GMU log
-Message-ID: <20200423162130.GA23271@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200421234127.27965-1-jonathan@marek.ca>
- <20200421234127.27965-9-jonathan@marek.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421234127.27965-9-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 23 Apr 2020 12:22:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20646 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729477AbgDWQWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:22:08 -0400
+IronPort-SDR: daDRwMEVdYKP8z3z5u2+kbDy209qVdnZqImId1ARU4I02xw7Sj1rjjNRN0Eht3aHcw8IKEiQAo
+ L4KH5xWue2Qw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:22:07 -0700
+IronPort-SDR: pj0Y69wd4xhPZUL8O7agmF9d049aFDa29eVS+FtC4Ct+GxciTXL40ScRSE4MuzZ9LrtneqtnH0
+ E1E4L2J/QIng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="274283346"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 23 Apr 2020 09:22:03 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v3 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Fri, 24 Apr 2020 00:21:11 +0800
+Message-Id: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 07:41:26PM -0400, Jonathan Marek wrote:
-> This is required for a650 to work.
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c     | 15 +++++++++++++++
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.h     |  1 +
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h |  4 ++++
->  3 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 60ed5360fd8a..f24e436daafe 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -201,6 +201,12 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
->  	u32 val;
->  
->  	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
-> +
-> +	/* Set the log wptr index
-> +	 * note: downstream saves the value in poweroff and restores it here
-> +	 */
-> +	gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_RESP, 0);
-> +
->  	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 0);
->  
->  	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, val,
-> @@ -740,6 +746,9 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
->  
->  	gmu_write(gmu, REG_A6XX_GMU_HFI_SFR_ADDR, chipid);
->  
-> +	gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_MSG,
-> +		  gmu->log.iova | (gmu->log.size / SZ_4K - 1));
-> +
->  	/* Set up the lowest idle level on the GMU */
->  	a6xx_gmu_power_config(gmu);
->  
-> @@ -1046,6 +1055,7 @@ static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu)
->  	msm_gem_kernel_put(gmu->icache.obj, gmu->aspace, false);
->  	msm_gem_kernel_put(gmu->dcache.obj, gmu->aspace, false);
->  	msm_gem_kernel_put(gmu->dummy.obj, gmu->aspace, false);
-> +	msm_gem_kernel_put(gmu->log.obj, gmu->aspace, false);
->  
->  	gmu->aspace->mmu->funcs->detach(gmu->aspace->mmu);
->  	msm_gem_address_space_put(gmu->aspace);
-> @@ -1450,6 +1460,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
->  	if (ret)
->  		goto err_memory;
->  
-> +	/* Allocate memory for the GMU log region */
-> +	ret = a6xx_gmu_memory_alloc(gmu, &gmu->log, SZ_4K, 0);
-> +	if (ret)
-> +		goto err_memory;
-> +
->  	/* Map the GMU registers */
->  	gmu->mmio = a6xx_gmu_get_mmio(pdev, "gmu");
->  	if (IS_ERR(gmu->mmio)) {
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> index aed02b2b7659..be65720f32cf 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-> @@ -61,6 +61,7 @@ struct a6xx_gmu {
->  	struct a6xx_gmu_bo icache;
->  	struct a6xx_gmu_bo dcache;
->  	struct a6xx_gmu_bo dummy;
-> +	struct a6xx_gmu_bo log;
->  
->  	int nr_clocks;
->  	struct clk_bulk_data *clocks;
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> index b4357ea550ec..176ae94d9fe6 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
-> @@ -205,6 +205,10 @@ static inline uint32_t A6XX_GMU_GPU_NAP_CTRL_SID(uint32_t val)
->  
->  #define REG_A6XX_GPU_GMU_CX_GMU_CX_FAL_INTF			0x000050f0
->  
-> +#define REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_MSG			0x00005100
-> +
-> +#define REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_RESP			0x00005101
-> +
->  #define REG_A6XX_GMU_BOOT_KMD_LM_HANDSHAKE			0x000051f0
->  
->  #define REG_A6XX_GMU_LLM_GLM_SLEEP_CTRL				0x00005157
-> -- 
-> 2.26.1
-> 
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
+
+NAND controller also supports in-built HW ECC engine.
+
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
+
+Thank you very much Boris and Hauke for the reviews and suggestions.
+---
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function  
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+ 
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add YAML for Nand Flash Controller support
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  61 ++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 705 +++++++++++++++++++++
+ 4 files changed, 775 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
+
