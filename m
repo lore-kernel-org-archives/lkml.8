@@ -2,148 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5A6C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7383C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E192074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:52:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qE2OfZI2"
+	by mail.kernel.org (Postfix) with ESMTP id B83BC21835
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgDWOwr (ORCPT
+        id S1728905AbgDWOzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726380AbgDWOwr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:52:47 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCD6C08E934;
-        Thu, 23 Apr 2020 07:52:47 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t16so2439098plo.7;
-        Thu, 23 Apr 2020 07:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XXa44dRejUVD9khGbpB7Lq0g9wT1bE7Lq11QXvftrgA=;
-        b=qE2OfZI2wUVvj77T4PFS0pvS8DTwl271ADgwm6nQaDeGBfGTNSVgYanwxrIvfw4rAI
-         J58hPTNIqmjrHrUpsIOY6RtbFoJGIgscCA41U8MGHAHQTPoudHOATd9n32TM7IoqKprO
-         7s/TmDNACHiujN3hfikbHxN8ZlKxSGsqz2Ql/+u5h8BPgBFgL19XhinLPzl2rW8Nh1ZQ
-         G/HIyN4hEzJHAz/4ZmhJE3bAvpQqzlXcYv0qngMoe68yFw0BvvR8Am6znPtWDs2jnPQO
-         w/px3lOq3k9fN2N+okO6iwWf0bdu1nGSw3QjAMDkoovNlS16b3D6r2yGbnlV7bXlHBZl
-         4aIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XXa44dRejUVD9khGbpB7Lq0g9wT1bE7Lq11QXvftrgA=;
-        b=oihQQ+JOFBLI2z7XH6Tt6N0YQvbA58dJUN1ochJS8KOsUL7leK6qLARivz6fgOCCdU
-         wHPtjTxysZ2St37eM47+xbx/kFlbWIgQWDSXv0s2KyjgLb8G4AMWQ6UF35z+4CA9b++E
-         mqwpNETs8hAfN0SPgTbW1p8c06fX1N6+D6PSk8nFE6gzi3TB/YvlmGBEg4krbCz5e/mW
-         LGnQh3VFC7ryNynopDfgtbZtPKliTjwzmIJpgd32bJrc6L7gNcGK8beKBo94LU/Q2MtJ
-         Z3yj7/cfW0dgth/NpoEKauogjUr4P/eGtQxy2erlDzGeHoDTb04/1ab8cLxNINSuGqbQ
-         R4tQ==
-X-Gm-Message-State: AGi0PuY2fLG5Vi/R2cnR4xeJPfQKIGJXN98p4DqIsbZ4tmyj4gW7L0H7
-        R8SA1BHjJvU+iuGmFWzt+X0=
-X-Google-Smtp-Source: APiQypJpH6Jh81nSVTNgvgCANJgQ3DPA4JhoZAwMB7qvMzGPSlAcC3qmZOotUwN/EekORxapq5Vkgw==
-X-Received: by 2002:a17:90a:2f64:: with SMTP id s91mr1147538pjd.30.1587653566730;
-        Thu, 23 Apr 2020 07:52:46 -0700 (PDT)
-Received: from localhost ([176.122.158.71])
-        by smtp.gmail.com with ESMTPSA id r189sm2319896pgr.31.2020.04.23.07.52.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 07:52:46 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 22:52:40 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1] fbdev: sm712fb: fix an issue about iounmap for a
- wrong address
-Message-ID: <20200423145239.GC1562@nuc8i5>
-References: <bb6ba7c9-ad92-9c54-e1c4-91d2f7d0f5f8@web.de>
+        Thu, 23 Apr 2020 10:55:22 -0400
+Received: from sandeen.net ([63.231.237.45]:36514 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728787AbgDWOzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:55:22 -0400
+Received: from [10.0.0.4] (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id F19D1323C1B;
+        Thu, 23 Apr 2020 09:54:49 -0500 (CDT)
+Subject: Re: [ANNOUNCE] exfatprogs-1.0.2 version released
+To:     'Goldwyn Rodrigues' <rgoldwyn@suse.de>,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     'LKML' <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, 'Hyunchul Lee' <hyc.lee@gmail.com>,
+        'Sedat Dilek' <sedat.dilek@gmail.com>
+References: <CGME20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413@epcas1p1.samsung.com>
+ <004701d6194c$0d238990$276a9cb0$@samsung.com>
+ <20200423144411.hmby6ux2utdrqsls@fiona>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <cc26e48f-afef-1db9-c8f1-213733318592@sandeen.net>
+Date:   Thu, 23 Apr 2020 09:55:20 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200423144411.hmby6ux2utdrqsls@fiona>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bb6ba7c9-ad92-9c54-e1c4-91d2f7d0f5f8@web.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 02:14:48PM +0200, Markus Elfring wrote:
-> > the sfb->fb->screen_base is not save the value get by iounmap() when
-> > the chip id is 0x720.
+On 4/23/20 9:44 AM, 'Goldwyn Rodrigues' wrote:
+> Hi Namjae,
+
+...
+
+>> The git tree is at:
+>>       https://github.com/exfatprogs/exfatprogs
+>>
+>> The tarballs can be found at:
+>>       https://github.com/exfatprogs/exfatprogs/releases/tag/1.0.2
+>>
 > 
-> I suggest to improve this change description.
-> How did you determine relevant differences for the mentioned chip model?
->
-Read and check its codes。
+> Can we follow the standard of source tarballs be
+> <projectname>-<version>.tar.gz? In this case, exfat-1.0.2.tar.gz
+> instead of 1.0.2.tar.gz?
 
-smtcfb_pci_probe() --> smtc_map_smem()
+better yet exfatprogs-1.0.2.tar.gz :)
 
-smtcfb_pci_probe()
-switch (sfb->chip_id) {
-        case 0x710:
-        case 0x712:
-		sfb->lfb = ioremap(mmio_base, mmio_addr);
-	case 0x720:
-		sfb->dp_regs = ioremap(mmio_base, 0x00200000 + smem_size);
-                sfb->lfb = sfb->dp_regs + 0x00200000;
-	}
-smtc_map_smem()
-	sfb->fb->screen_base = sfb->lfb;
+Thanks,
+-Eric
 
-
-smtcfb_pci_remove() --> smtc_unmap_smem()
-
-smtc_unmap_smem()
-	iounmap(sfb->fb->screen_base);
-
-> 
-> > so iounmap() for address sfb->fb->screen_base is not right.
-> 
-> Will another imperative wording become helpful here?
-> 
-yes, this is why need to change this code.
-
-> 
-> …
-> > +++ b/drivers/video/fbdev/sm712fb.c
-> > @@ -1429,6 +1429,8 @@  static int smtc_map_smem(struct smtcfb_info *sfb,
-> >  static void smtc_unmap_smem(struct smtcfb_info *sfb)
-> >  {
-> >  	if (sfb && sfb->fb->screen_base) {
-> > +		if (sfb->chip_id == 0x720)
-> > +			sfb->fb->screen_base -= 0x00200000;
-> >  		iounmap(sfb->fb->screen_base);
-> 
-> How do you think about to use descriptive identifiers for
-> the shown constants?
->
-These two constants are originally in the driver, I don't know enough
-about its meaning, There are a lot of constants in this driver. If I
-replace it with the macro, I worry that the name of the macro may not
-be accurate.
-
-> Would you like to clarify any related software analysis approaches?
->
-just read coedes and check it.
-
-> Regards,
-> Markus
