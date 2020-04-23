@@ -2,134 +2,116 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9DCC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DEFC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E659120857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649E120857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="XEFUD4/V";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="MMaYNHsU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfBGHPK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgDWPBq (ORCPT
+        id S1728978AbgDWPF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:01:46 -0400
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:52188 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDWPBp (ORCPT
+        Thu, 23 Apr 2020 11:05:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728551AbgDWPF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:01:45 -0400
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id E9F5A635E6;
-        Thu, 23 Apr 2020 11:01:41 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=78u2ohdjhWZpEjVtdjYFeCagL0w=; b=XEFUD4
-        /Vin0OUbZukrHXwDy/uagnYbGpqMVSNGc+aAKuiXJr6KBs303Ho9VYA7J7DtWjfh
-        KWf/mC92uG2Ga9plWYmPdOCqqnfHjwIKzS+pDH0lCqjOnlP4XfNbrJmJ8LgYdgbc
-        GAF/jdkC3Kx8FZdoO6LikRd/xoW4b693oxsvU=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id DE7BB635E5;
-        Thu, 23 Apr 2020 11:01:41 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=4m4VwhMDCjaTm3eIC1ZXQR+cuWglIVYffGluXSzqGHk=; b=MMaYNHsUWptKS/65H7qstSyjNHA2GOOvwQyk9lV07T67vyTonML++rScUg0EVu9OPEmyH2pMc1QrnfIAHeNEmOgyRRCagcchAubMD2AOrBdWH+u7z/BXIgEAxhncD9eoadGmQqLU6KJcOI2f5RFbr/61ix6fTPupqctNiThtiQE=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 5B129635E3;
-        Thu, 23 Apr 2020 11:01:41 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 629C32DA0C9D;
-        Thu, 23 Apr 2020 11:01:40 -0400 (EDT)
-Date:   Thu, 23 Apr 2020 11:01:40 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-In-Reply-To: <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org>
-Message-ID: <nycvar.YSQ.7.76.2004231059170.2671@knanqh.ubzr>
-References: <20200417011146.83973-1-saeedm@mellanox.com> <CAK7LNAQZd_LUyA2V_pCvMTr_201nSX1Nm0TDw5kOeNV64rOfpA@mail.gmail.com> <nycvar.YSQ.7.76.2004181509030.2671@knanqh.ubzr> <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
- <87v9lu1ra6.fsf@intel.com> <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com> <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr> <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com> <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr>
- <871rofdhtg.fsf@intel.com> <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr> <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 23 Apr 2020 11:05:26 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09202C08E934;
+        Thu, 23 Apr 2020 08:05:26 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g6so3014917pgs.9;
+        Thu, 23 Apr 2020 08:05:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YHcF20Pivw8z3/ND3mH4iQQaNlvKu4UnK2vOPdbQVJA=;
+        b=FfBGHPK7wd3f4BANvXku7COH9+t7ONn4xwNP0pCwrDxGoSAjfB+kx+Ba2EjlFV+MQx
+         6JOKBdD69hIcNz+Lx0mdmGb4L7e8Z3Rq71Pmu08iUZaKD09/qI2P1Ufw4/8/ycV6U4VO
+         PYJdNt4VGItxq7kJAlDRpz8DxoOvOjDhWktDup3jVleZ4Tocp5zsDz+ATnQEvpnMPrFv
+         6UEd4Uu0xASl247ScxZsDPwy0zvKJ5ofx0Kry678mnDgEpnZIyVvLHVS+0I1TJnXgyd4
+         CoHNMAjjymhKxRZJCFoGWt0v/1M/GTR7iKdgHZ4H2MWSIDwfojhh/OEdjCh/55XlfHZZ
+         iOaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YHcF20Pivw8z3/ND3mH4iQQaNlvKu4UnK2vOPdbQVJA=;
+        b=U7y9lY6dEOi34YPEJ868aDV5mWj7UhGs61gepVITmSXMHy2YGowgHkLVAnN1aLRf5I
+         2Ag5Bt9PGPJ8T5Ek3XDJiZG6Z0uSgXbEFaUzDpscB/jxw3SGNe/xACG3eQaLYxp4M+QY
+         Sz1vP+F2pNEDNYmQva6fnzXEHDaRVPN8F+PhAmnPD8QZvtLycS7dKPxXlviMTd6dzO+g
+         r/yMIfuuDJiJJYV+LQQ/SBldGqI0+uHidDLq+Tzzg/VZOSBTf0eY9MsEaA+AaxXn8DIi
+         RF2H1QzVG1hlR7gJuAwo/H0zXdPkagRc0OLoeZ13AzSCnngr+cOlpiMVmbWi/Q8tKMLm
+         1S6w==
+X-Gm-Message-State: AGi0PuayJ2KkNkQ4aufo/sdqUgJ4VCRPf8b754WzmfrJMq9us+FdKNmD
+        l4nEmvfxym7ta64tXvJcogLP8ROwyAcXTsmFez0=
+X-Google-Smtp-Source: APiQypLZf74LwPBpTYXTJ9GR4vXb1ctcANv6Y0o2lRSo2eTWzHdfq22mdOYPLt5ZSvJ/rqzQ1KHuwiCeFT/95uxbJt4=
+X-Received: by 2002:a63:5511:: with SMTP id j17mr4281090pgb.4.1587654325529;
+ Thu, 23 Apr 2020 08:05:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 56E794D4-8573-11EA-B31B-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
+References: <CGME20200423142637eucas1p2ea543e281d96c75aa4292b49756f2146@eucas1p2.samsung.com>
+ <20200423142627.1820-1-zhengdejin5@gmail.com> <081f8192-1708-80ff-6eef-885d72bdf5c5@samsung.com>
+In-Reply-To: <081f8192-1708-80ff-6eef-885d72bdf5c5@samsung.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 23 Apr 2020 18:05:18 +0300
+Message-ID: <CAHp75Vd8kC6ub-=pwe3QtdZ=FBqka3F1bbHea6__G5_Vm_ybcQ@mail.gmail.com>
+Subject: Re: [PATCH v2] console: console: Complete exception handling in newport_probe()
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, FlorianSchandinat@gmx.de,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, Randy Dunlap wrote:
+On Thu, Apr 23, 2020 at 5:55 PM Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
 
-> On 4/22/20 2:13 PM, Nicolas Pitre wrote:
-> > On Wed, 22 Apr 2020, Jani Nikula wrote:
-> > 
-> >> On Tue, 21 Apr 2020, Nicolas Pitre <nico@fluxnic.net> wrote:
-> >>> This is really a conditional dependency. That's all this is about.
-> >>> So why not simply making it so rather than fooling ourselves? All that 
-> >>> is required is an extension that would allow:
-> >>>
-> >>> 	depends on (expression) if (expression)
-> >>>
-> >>> This construct should be obvious even without reading the doc, is 
-> >>> already used extensively for other things already, and is flexible 
-> >>> enough to cover all sort of cases in addition to this particular one.
-> >>
-> >> Okay, you convinced me. Now you only need to convince whoever is doing
-> >> the actual work of implementing this stuff. ;)
-> > 
-> > What about this:
-> > 
-> > ----- >8
-> > Subject: [PATCH] kconfig: allow for conditional dependencies
-> > 
-> > This might appear to be a strange concept, but sometimes we want
-> > a dependency to be conditionally applied. One such case is currently
-> > expressed with:
-> > 
-> > 	depends on FOO || !FOO
-> > 
-> > This pattern is strange enough to give one's pause. Given that it is
-> > also frequent, let's make the intent more obvious with some syntaxic 
-> > sugar by effectively making dependencies optionally conditional.
-> > This also makes the kconfig language more uniform.
-> > 
-> > Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-> 
-> Hi,
-> 
-> If we must do something here, I prefer this one.
-> 
-> Nicolas, would you do another example, specifically for
-> CRAMFS_MTD in fs/cramfs/Kconfig, please?
+> > +     if (err)
+> > +             iounmap((void *)npregs);
+>
+> Looks OK but while you are at it, could you please also add missing
+> release_mem_region() on error and on device removal:
+>
+>         newport_addr = dev->resource.start + 0xF0000;
+>         if (!request_mem_region(newport_addr, 0x10000, "Newport"))
+>                 return -ENODEV;
+>
+>         npregs = (struct newport_regs *)/* ioremap cannot fail */
+>                 ioremap(newport_addr, sizeof(struct newport_regs));
+>         console_lock();
+>         err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
+>         console_unlock();
+>         return err;
+> }
+>
+> static void newport_remove(struct gio_device *dev)
+> {
+>         give_up_console(&newport_con);
+>         iounmap((void *)npregs);
+> }
+>
+> ?
 
-I don't see how that one can be helped. The MTD dependency is not 
-optional.
+Don't you think that proper solution is rather switch to memremap()?
 
+> >       return err;
+> >  }
 
-Nicolas
+-- 
+With Best Regards,
+Andy Shevchenko
