@@ -2,265 +2,141 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9766DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34897C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792CD20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1137220780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587684138;
+	bh=ogXWs905hfZL7YwX8Y6fHJMaPvE8RYHg9lf4bzA7z00=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cELF4AzBqrfMVc+X8JL2mK1vDyP2O21C56N0aSzqvyHa83HL8R3BRGrLFpBeOLAvA
+	 1sYyO8xsrMDN2Wbad/+HeEhcz+ZuHdKzqMGPLSVr8dWVg0SbquPJnytIwVCLXScP0U
+	 cBD9v69EYiAhzOIVqp9/dHXKYFKLVWs55lscO/v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgDWXWC (ORCPT
+        id S1729820AbgDWXWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:22:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48486 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728184AbgDWXGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:32 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-0004b0-Ia; Fri, 24 Apr 2020 00:06:26 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-00E6hj-BN; Fri, 24 Apr 2020 00:06:25 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Apr 2020 19:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729442AbgDWXWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:22:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341B321655;
+        Thu, 23 Apr 2020 23:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587684135;
+        bh=ogXWs905hfZL7YwX8Y6fHJMaPvE8RYHg9lf4bzA7z00=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vbJGNbylllhl5pMU+Eiot4VCrVrc1l5+WQKFy8Skgr4nLRVi4umB401L885ZX7p+G
+         enK/o2lUcebWVgxZ248CCKjQ80z8+hLZMGWj825MiEy5AhlCVzFVPdugc0Z8LPAlA+
+         e/Ax1ARjdNohF2atHV2J3116KjvDIK1gDcr1dvn0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        luto@kernel.org
+Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v10 03/18] x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+Date:   Thu, 23 Apr 2020 19:21:52 -0400
+Message-Id: <20200423232207.5797-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200423232207.5797-1-sashal@kernel.org>
+References: <20200423232207.5797-1-sashal@kernel.org>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Sterba" <dsterba@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Su Yue" <suy.fnst@cn.fujitsu.com>,
-        "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
-        "Nikolay Borisov" <nborisov@suse.com>, "Qu Wenruo" <wqu@suse.com>
-Date:   Fri, 24 Apr 2020 00:04:32 +0100
-Message-ID: <lsq.1587683028.237450494@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 045/245] btrfs: tree-checker: Add checker for dir item
-In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
+From: Andy Lutomirski <luto@kernel.org>
 
-------------------
+This is temporary.  It will allow the next few patches to be tested
+incrementally.
 
-From: Qu Wenruo <wqu@suse.com>
+Setting unsafe_fsgsbase is a root hole.  Don't do it.
 
-commit ad7b0368f33cffe67fecd302028915926e50ef7e upstream.
-
-Add checker for dir item, for key types DIR_ITEM, DIR_INDEX and
-XATTR_ITEM.
-
-This checker does comprehensive checks for:
-
-1) dir_item header and its data size
-   Against item boundary and maximum name/xattr length.
-   This part is mostly the same as old verify_dir_item().
-
-2) dir_type
-   Against maximum file types, and against key type.
-   Since XATTR key should only have FT_XATTR dir item, and normal dir
-   item type should not have XATTR key.
-
-   The check between key->type and dir_type is newly introduced by this
-   patch.
-
-3) name hash
-   For XATTR and DIR_ITEM key, key->offset is name hash (crc32c).
-   Check the hash of the name against the key to ensure it's correct.
-
-   The name hash check is only found in btrfs-progs before this patch.
-
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Su Yue <suy.fnst@cn.fujitsu.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 4.4: BTRFS_MAX_XATTR_SIZE() takes a root instead of an
- fs_info, and yields a value of type size_t instead of unsigned int]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/tree-checker.c | 141 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 141 insertions(+)
+ .../admin-guide/kernel-parameters.txt         |  3 +++
+ arch/x86/kernel/cpu/common.c                  | 24 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -30,6 +30,7 @@
- #include "tree-checker.h"
- #include "disk-io.h"
- #include "compression.h"
-+#include "hash.h"
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index f2a93c8679e88..79753f97ecbc8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3033,6 +3033,9 @@
+ 	no5lvl		[X86-64] Disable 5-level paging mode. Forces
+ 			kernel to use 4-level paging instead.
  
- #define CORRUPT(reason, eb, root, slot)					\
- 	btrfs_crit(root->fs_info,					\
-@@ -176,6 +177,141 @@ static int check_csum_item(struct btrfs_
++	unsafe_fsgsbase	[X86] Allow FSGSBASE instructions.  This will be
++			replaced with a nofsgsbase flag.
++
+ 	no_console_suspend
+ 			[HW] Never suspend the console
+ 			Disable suspending of consoles during suspend and
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index bed0cb83fe245..4224760c74e27 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -418,6 +418,22 @@ static void __init setup_cr_pinning(void)
+ 	static_key_enable(&cr_pinning.key);
  }
  
- /*
-+ * Customized reported for dir_item, only important new info is key->objectid,
-+ * which represents inode number
-+ */
-+__printf(4, 5)
-+static void dir_item_err(const struct btrfs_root *root,
-+			 const struct extent_buffer *eb, int slot,
-+			 const char *fmt, ...)
-+{
-+	struct btrfs_key key;
-+	struct va_format vaf;
-+	va_list args;
-+
-+	btrfs_item_key_to_cpu(eb, &key, slot);
-+	va_start(args, fmt);
-+
-+	vaf.fmt = fmt;
-+	vaf.va = &args;
-+
-+	btrfs_crit(root->fs_info,
-+	"corrupt %s: root=%llu block=%llu slot=%d ino=%llu, %pV",
-+		btrfs_header_level(eb) == 0 ? "leaf" : "node", root->objectid,
-+		btrfs_header_bytenr(eb), slot, key.objectid, &vaf);
-+	va_end(args);
-+}
-+
-+static int check_dir_item(struct btrfs_root *root,
-+			  struct extent_buffer *leaf,
-+			  struct btrfs_key *key, int slot)
-+{
-+	struct btrfs_dir_item *di;
-+	u32 item_size = btrfs_item_size_nr(leaf, slot);
-+	u32 cur = 0;
-+
-+	di = btrfs_item_ptr(leaf, slot, struct btrfs_dir_item);
-+	while (cur < item_size) {
-+		char namebuf[max(BTRFS_NAME_LEN, XATTR_NAME_MAX)];
-+		u32 name_len;
-+		u32 data_len;
-+		u32 max_name_len;
-+		u32 total_size;
-+		u32 name_hash;
-+		u8 dir_type;
-+
-+		/* header itself should not cross item boundary */
-+		if (cur + sizeof(*di) > item_size) {
-+			dir_item_err(root, leaf, slot,
-+		"dir item header crosses item boundary, have %lu boundary %u",
-+				cur + sizeof(*di), item_size);
-+			return -EUCLEAN;
-+		}
-+
-+		/* dir type check */
-+		dir_type = btrfs_dir_type(leaf, di);
-+		if (dir_type >= BTRFS_FT_MAX) {
-+			dir_item_err(root, leaf, slot,
-+			"invalid dir item type, have %u expect [0, %u)",
-+				dir_type, BTRFS_FT_MAX);
-+			return -EUCLEAN;
-+		}
-+
-+		if (key->type == BTRFS_XATTR_ITEM_KEY &&
-+		    dir_type != BTRFS_FT_XATTR) {
-+			dir_item_err(root, leaf, slot,
-+		"invalid dir item type for XATTR key, have %u expect %u",
-+				dir_type, BTRFS_FT_XATTR);
-+			return -EUCLEAN;
-+		}
-+		if (dir_type == BTRFS_FT_XATTR &&
-+		    key->type != BTRFS_XATTR_ITEM_KEY) {
-+			dir_item_err(root, leaf, slot,
-+			"xattr dir type found for non-XATTR key");
-+			return -EUCLEAN;
-+		}
-+		if (dir_type == BTRFS_FT_XATTR)
-+			max_name_len = XATTR_NAME_MAX;
-+		else
-+			max_name_len = BTRFS_NAME_LEN;
-+
-+		/* Name/data length check */
-+		name_len = btrfs_dir_name_len(leaf, di);
-+		data_len = btrfs_dir_data_len(leaf, di);
-+		if (name_len > max_name_len) {
-+			dir_item_err(root, leaf, slot,
-+			"dir item name len too long, have %u max %u",
-+				name_len, max_name_len);
-+			return -EUCLEAN;
-+		}
-+		if (name_len + data_len > BTRFS_MAX_XATTR_SIZE(root)) {
-+			dir_item_err(root, leaf, slot,
-+			"dir item name and data len too long, have %u max %zu",
-+				name_len + data_len,
-+				BTRFS_MAX_XATTR_SIZE(root));
-+			return -EUCLEAN;
-+		}
-+
-+		if (data_len && dir_type != BTRFS_FT_XATTR) {
-+			dir_item_err(root, leaf, slot,
-+			"dir item with invalid data len, have %u expect 0",
-+				data_len);
-+			return -EUCLEAN;
-+		}
-+
-+		total_size = sizeof(*di) + name_len + data_len;
-+
-+		/* header and name/data should not cross item boundary */
-+		if (cur + total_size > item_size) {
-+			dir_item_err(root, leaf, slot,
-+		"dir item data crosses item boundary, have %u boundary %u",
-+				cur + total_size, item_size);
-+			return -EUCLEAN;
-+		}
-+
-+		/*
-+		 * Special check for XATTR/DIR_ITEM, as key->offset is name
-+		 * hash, should match its name
-+		 */
-+		if (key->type == BTRFS_DIR_ITEM_KEY ||
-+		    key->type == BTRFS_XATTR_ITEM_KEY) {
-+			read_extent_buffer(leaf, namebuf,
-+					(unsigned long)(di + 1), name_len);
-+			name_hash = btrfs_name_hash(namebuf, name_len);
-+			if (key->offset != name_hash) {
-+				dir_item_err(root, leaf, slot,
-+		"name hash mismatch with key, have 0x%016x expect 0x%016llx",
-+					name_hash, key->offset);
-+				return -EUCLEAN;
-+			}
-+		}
-+		cur += total_size;
-+		di = (struct btrfs_dir_item *)((void *)di + total_size);
-+	}
-+	return 0;
-+}
-+
 +/*
-  * Common point to switch the item-specific validation.
++ * Temporary hack: FSGSBASE is unsafe until a few kernel code paths are
++ * updated. This allows us to get the kernel ready incrementally.
++ *
++ * Once all the pieces are in place, these will go away and be replaced with
++ * a nofsgsbase chicken flag.
++ */
++static bool unsafe_fsgsbase;
++
++static __init int setup_unsafe_fsgsbase(char *arg)
++{
++	unsafe_fsgsbase = true;
++	return 1;
++}
++__setup("unsafe_fsgsbase", setup_unsafe_fsgsbase);
++
+ /*
+  * Protection Keys are not available in 32-bit mode.
   */
- static int check_leaf_item(struct btrfs_root *root,
-@@ -191,6 +327,11 @@ static int check_leaf_item(struct btrfs_
- 	case BTRFS_EXTENT_CSUM_KEY:
- 		ret = check_csum_item(root, leaf, key, slot);
- 		break;
-+	case BTRFS_DIR_ITEM_KEY:
-+	case BTRFS_DIR_INDEX_KEY:
-+	case BTRFS_XATTR_ITEM_KEY:
-+		ret = check_dir_item(root, leaf, key, slot);
-+		break;
- 	}
- 	return ret;
- }
+@@ -1478,6 +1494,14 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	setup_smap(c);
+ 	setup_umip(c);
+ 
++	/* Enable FSGSBASE instructions if available. */
++	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
++		if (unsafe_fsgsbase)
++			cr4_set_bits(X86_CR4_FSGSBASE);
++		else
++			clear_cpu_cap(c, X86_FEATURE_FSGSBASE);
++	}
++
+ 	/*
+ 	 * The vendor-specific functions might have changed features.
+ 	 * Now we do "generic changes."
+-- 
+2.20.1
 
