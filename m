@@ -2,117 +2,106 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C54CC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962CEC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C327208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ul6jLq0D"
+	by mail.kernel.org (Postfix) with ESMTP id 7BF00208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgDWFzp (ORCPT
+        id S1726479AbgDWF5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725867AbgDWFzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:55:45 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D59E5C03C1AB;
-        Wed, 22 Apr 2020 22:55:44 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49763d2KYbz9sSX;
-        Thu, 23 Apr 2020 15:55:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587621341;
-        bh=slE228bClNFBb83vj8nkcvqe88aB0x2HgjApDnwqDoU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ul6jLq0DC9C1EL9+E+ndxnkCq2sQ0st7NiprWGMl8brdrxeg9dbkYOjOrj9/zOSJ1
-         zmvfCr9PovcpS5bmKBcum9vIrz3rFAWcY33KeiVHHwGZF0p5dU1RM6GQ3afkoKqyIk
-         Zpd23r+VB0/TZpGje1kuFQAqCzGVA1OLH0HtETbnyf0NwLnODaAhe/6QlxqVqO/LY8
-         zEAOSI6nNK5ZPg/DiCNwjJaV6NTjNwxl7F4FNhu4OslDFVGu6v2AN3/R4lOTN/r5ZC
-         p1rnQ3nLK4d1UiwfsVOZ3Bz08Pet/XdOZlJ00E07JHbNZAACHEunCGIt2nbC2EVBWu
-         5frrln34uBU1Q==
-Date:   Thu, 23 Apr 2020 15:55:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: linux-next: build failure after merge of the sound-asoc tree
-Message-ID: <20200423155539.4492a0cc@canb.auug.org.au>
+        Thu, 23 Apr 2020 01:57:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15586 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgDWF5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 01:57:41 -0400
+IronPort-SDR: Xmj4ccdnJ+aC3spofX+ICKWUACpKa4aph2Dmw14QYPca7dCcerk0vlHQk/E/1k6reQSGO9S4oC
+ wqPNPsTNBdNQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 22:57:41 -0700
+IronPort-SDR: ejDVh1zgi7oy/DpflGw3T9rYQg4ba8uEkByvioeoGK7V4VDJqnLN1m14ZQi7+kcx49k+a7vYcp
+ UAC8mZg8SZPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
+   d="scan'208";a="456786339"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga005.fm.intel.com with ESMTP; 22 Apr 2020 22:57:39 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v2] mm/swapfile.c: simplify the scan loop in scan_swap_map_slots()
+In-Reply-To: <20200422214111.19370-1-richard.weiyang@gmail.com> (Wei Yang's
+        message of "Wed, 22 Apr 2020 21:41:11 +0000")
+References: <20200422214111.19370-1-richard.weiyang@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Date:   Thu, 23 Apr 2020 13:57:34 +0800
+Message-ID: <87d07y2181.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bl+rCNpls8skX6+7ip7ufDf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bl+rCNpls8skX6+7ip7ufDf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Wei Yang <richard.weiyang@gmail.com> writes:
 
-Hi all,
+> After commit c60aa176c6de8 ("swapfile: swap allocation cycle if
+> nonrot"), swap allocation is cyclic. Current approach is done with two
+> separate loop on the upper and lower half. This looks a little
+> redundant.
 
-After merging the sound-asoc tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+I can understand that the redundant code doesn't smell good.  But I
+don't think the new code is easier to be understood than the original
+one.
 
-ld: sound/soc/sof/imx/imx8.o: in function `.imx8_run':
-imx8.c:(.text.imx8_run+0x40): undefined reference to `.imx_sc_misc_set_cont=
-rol'
-ld: imx8.c:(.text.imx8_run+0xac): undefined reference to `.imx_sc_pm_cpu_st=
-art'
-ld: sound/soc/sof/imx/imx8.o: in function `.imx8x_run':
-imx8.c:(.text.imx8x_run+0x40): undefined reference to `.imx_sc_misc_set_con=
-trol'
-ld: imx8.c:(.text.imx8x_run+0xa8): undefined reference to `.imx_sc_misc_set=
-_control'
-ld: imx8.c:(.text.imx8x_run+0x108): undefined reference to `.imx_sc_misc_se=
-t_control'
-ld: imx8.c:(.text.imx8x_run+0x168): undefined reference to `.imx_sc_misc_se=
-t_control'
-ld: imx8.c:(.text.imx8x_run+0x1cc): undefined reference to `.imx_sc_pm_cpu_=
-start'
-ld: sound/soc/sof/imx/imx8.o: in function `.imx8_probe':
-imx8.c:(.text.imx8_probe+0x2c8): undefined reference to `.imx_scu_get_handl=
-e'
+> From another point of view, the loop iterates [lowest_bit, highest_bit]
+> range starting with (offset + 1) but except scan_base. So we can
+> simplify the loop with condition (next_offset() != scan_base) by
+> introducing next_offset() which makes sure offset fit in that range
+> with correct order.
+>
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> CC: Hugh Dickins <hughd@google.com>
+> CC: "Huang, Ying" <ying.huang@intel.com>
+>
+> ---
+> v2:
+>   * return scan_base if the lower part is eaten
+>   * only start over when iterating on the upper part
+> ---
+>  mm/swapfile.c | 31 ++++++++++++++-----------------
+>  1 file changed, 14 insertions(+), 17 deletions(-)
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index f903e5a165d5..0005a4a1c1b4 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -729,6 +729,19 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+>  	}
+>  }
+>  
+> +static unsigned long next_offset(struct swap_info_struct *si,
+> +				unsigned long *offset, unsigned long scan_base)
+> +{
+> +	/* only start over when iterating on the upper part */
+> +	if (++(*offset) > si->highest_bit && *offset > scan_base) {
+> +		*offset = si->lowest_bit;
+> +		/* someone has eaten the lower part */
+> +		if (si->lowest_bit >= scan_base)
+> +			return scan_base;
+> +	}
 
-Presumably caused by (one of) commits
+if "offset > si->highest_bit" is true and "offset < scan_base" is true,
+scan_base need to be returned.
 
-  fe17e6cdc0fe ("ASoC: SOF: imx8: Fix randbuild error")
-  cb0312f61c3e ("ASoC: SOF: imx: fix undefined reference issue")
+Again, the new code doesn't make it easier to find this kind of issues.
 
-I just removed the COMPILE_TEST from SND_SOC_SOF_IMX_TOPLEVEL for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bl+rCNpls8skX6+7ip7ufDf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6hLdsACgkQAVBC80lX
-0GwlDAf9Hc41iMLQhH/rt1Gh5f5yR2JT/gyNDU8+wX+1Ybwb1YjVSRswQHM+8GPA
-EddyYrSs6QlI8VI1TZtLEJ4y4cIh5yL3AUbu5oYEby+mMZPk893Ywp6hEgw8F5ua
-FT25sQ9CzBccpvzFkj3PZ8fMPfVa/wc3igXCcO1vvHQLDYD2RJoRve+qaucTmreF
-IMce/S9ovjIVVC+tdBWGT+PNuvwOBQP5FeRCGmNWzNr9JxrFXzbF0deIJUUC2cE7
-vnJWxo434D5Nr50UM/60gzvxouAGMCuU21tyWbywOXkO8RrTBp1wxR3VSj0CFVWz
-a/eRsQqYdejCsT+4Kr7RRIMvmWOzww==
-=r0bR
------END PGP SIGNATURE-----
-
---Sig_/bl+rCNpls8skX6+7ip7ufDf--
+Best Regards,
+Huang, Ying
