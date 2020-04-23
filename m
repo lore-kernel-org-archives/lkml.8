@@ -2,108 +2,135 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0303BC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DC5C55194
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F882076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03692076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rT7iEze1"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PJ1n/7Eg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgDWRrm (ORCPT
+        id S1730237AbgDWRru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730216AbgDWRrk (ORCPT
+        Thu, 23 Apr 2020 13:47:50 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:43459 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729936AbgDWRqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:47:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D586BC09B042;
-        Thu, 23 Apr 2020 10:47:39 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so7499229wmh.0;
-        Thu, 23 Apr 2020 10:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s7IbTs24rsRNhpZKr45UIa67diIJ2j3hIHeW1sPPTHg=;
-        b=rT7iEze1HALDl6lvpSUzL8kQ9itum3Z2XzfNcB2XoIEDVCBM/j6/M7zr6uN213LHUZ
-         YPYTt0ivYzYSF6YneI4BMvUwFVX7iEc9dxIja6Z4QObAUcaSpzyxGXz6vc7hl2fzkrQD
-         R9BSc6JnDVw/7JsvxiMy0WjdfVS++akr/2p7eA02ylWNjpXat6zFTDhrZ2kGyVS30m0C
-         fn1diPgUwWhu9n+CSUoJBhA40Gv7vM4IZZHJOL6B4l6qmbvTXyfW0+MsY2+3J+lPRkTp
-         +ENdEpaKAoskWaicO76h7c0+S+IfLzGYHPCpE0GR798uEQawjTlUTuSuk1smrO08DO73
-         Ss0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s7IbTs24rsRNhpZKr45UIa67diIJ2j3hIHeW1sPPTHg=;
-        b=BobVN+r92DCJAIOnYcr5sUIdY6pVegRvT4Jfst1AEvGLAyJKhVm7PVZTz2PpdLu02s
-         Z63LJqlLRY2GhVn3JNehVl0QtgtZbC8s6hoAgx5rlbwZZH/qaxIUL3gv7VmQIbt9BWRv
-         5uveOuwAafT9xgxrfQaUnnXtXjALCwVregDoexEu5FPelEwHZhUtOEJBHs9++9r5muHi
-         bnLvVPWp607zZS2e02eiFpRHncrUo5VARJz8tndAJRxIOn9lInrzgTAOrfaKDP8d535k
-         z0dbq//c07eZwvm9t3NcvZUi20gYfQtqh9y7VMYIhkxh792PScWfOH7RDJUmhlJz7fu7
-         /84Q==
-X-Gm-Message-State: AGi0PuYoWjQZ//hE6mj7PveGf5lCcGwsus7w/ioj1vpcKmJmFhiRyzdB
-        ClZ1nyqnBv+i2yAUU7/VKc4=
-X-Google-Smtp-Source: APiQypJw5ok5IF/3P0V2C6qsbqky8PzsWdgQGR5qKWG2iHmneXc96Vsz7zLQC9ZR9/+p6Grpp62Rng==
-X-Received: by 2002:a1c:b70a:: with SMTP id h10mr5429318wmf.172.1587664058540;
-        Thu, 23 Apr 2020 10:47:38 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net. [194.152.20.232])
-        by smtp.gmail.com with ESMTPSA id x18sm4631951wmi.29.2020.04.23.10.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 10:47:37 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thu, 23 Apr 2020 13:46:31 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A663D23059;
+        Thu, 23 Apr 2020 19:46:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587663988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O32DELDjRU5+PMHK61TCvsZ+IJXO1DNHAkIMR41h4Oo=;
+        b=PJ1n/7EgcJLAWKllqdtS8BMBKT55xIpWjQlXcYxh9Eok1bVCDNOKdGnH4MZXJBsM6U+N2s
+        9mG6HXl7ETEWm0Ep2pbfj1Sy7QazALi84QMnt5G33HHrNCeoVhYKaBuyYGB87HsTECRBg0
+        iafM9nI115GkTJ22DlVwvkV6TV+sF80=
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-sunxi@googlegroups.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>, samuel@sholland.org
-Subject: Re: [linux-sunxi] [PATCH v2 2/2] media: cedrus: Implement runtime PM
-Date:   Thu, 23 Apr 2020 19:47:36 +0200
-Message-ID: <3048039.44csPzL39Z@jernej-laptop>
-In-Reply-To: <20200422040410.6251-2-samuel@sholland.org>
-References: <20200422040410.6251-1-samuel@sholland.org> <20200422040410.6251-2-samuel@sholland.org>
+        Michael Walle <michael@walle.cc>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of the child device
+Date:   Thu, 23 Apr 2020 19:45:29 +0200
+Message-Id: <20200423174543.17161-3-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200423174543.17161-1-michael@walle.cc>
+References: <20200423174543.17161-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: A663D23059
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.997];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[26];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,walle.cc,arm.com];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sreda, 22. april 2020 ob 06:04:10 CEST je Samuel Holland napisal(a):
-> This allows the VE clocks and PLL_VE to be disabled most of the time.
-> A runtime PM reference is held while streaming.
->=20
-> Originally-by: Jernej =C5=A0krabec <jernej.skrabec@gmail.com>
+Commit cdfee5623290 ("driver core: initialize a default DMA mask for
+platform device") initialize the DMA of a platform device. But if the
+parent doesn't have a dma_mask set, for example if it's an I2C device,
+the dma_mask of the child platform device will be set to zero again.
+Which leads to many "DMA mask not set" warnings, if the MFD cell has the
+of_compatible property set.
 
-I guess this could be SOB? Either way I'm fine.
+[    1.877937] sl28cpld-pwm sl28cpld-pwm: DMA mask not set
+[    1.883282] sl28cpld-pwm sl28cpld-pwm.0: DMA mask not set
+[    1.888795] sl28cpld-gpio sl28cpld-gpio: DMA mask not set
 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->=20
-> v2: moved PM reference to cedrus_{start,stop}_streaming, based on an
->     earlier patch by Jernej Skrabec. Removes the need for autosuspend.
->     I tested this with running 2x v4l2-request-test in parallel.
->=20
+Thus don't overwrite the dma_mask of the children. Instead set the
+dma_mask of the platform device.
 
-I tested previous and this patch with LibreELEC and I didn't noticed any=20
-regressions:
+Signed-off-by: Michael Walle <michael@walle.cc>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/mfd/mfd-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested-by: Jernej Skrabec <jernej.skrabec@siol.net>
-
-Best regards,
-Jernej
-
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index f5a73af60dd4..e735565969b3 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -138,7 +138,7 @@ static int mfd_add_device(struct device *parent, int id,
+ 
+ 	pdev->dev.parent = parent;
+ 	pdev->dev.type = &mfd_dev_type;
+-	pdev->dev.dma_mask = parent->dma_mask;
++	pdev->platform_dma_mask = parent->dma_mask ? *parent->dma_mask : 0;
+ 	pdev->dev.dma_parms = parent->dma_parms;
+ 	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
+ 
+-- 
+2.20.1
 
