@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02441C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3F7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD80A20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F262077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbgDWXPx (ORCPT
+        id S1729617AbgDWXQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:15:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49648 "EHLO
+        Thu, 23 Apr 2020 19:16:15 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49572 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728399AbgDWXGq (ORCPT
+        by vger.kernel.org with ESMTP id S1728390AbgDWXGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:46 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-0004h9-Ei; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvS-0004hY-Ra; Fri, 24 Apr 2020 00:06:35 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-00E6pP-Eu; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvS-00E6rA-DH; Fri, 24 Apr 2020 00:06:34 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Charles Keepax" <ckeepax@opensource.cirrus.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Shengjiu Wang" <shengjiu.wang@nxp.com>
-Date:   Fri, 24 Apr 2020 00:05:56 +0100
-Message-ID: <lsq.1587683028.756541500@decadent.org.uk>
+        "Pengcheng Yang" <yangpc@wangsu.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Fri, 24 Apr 2020 00:06:18 +0100
+Message-ID: <lsq.1587683028.447677336@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 129/245] ASoC: wm8962: fix lambda value
+Subject: [PATCH 3.16 151/245] tcp: fix "old stuff" D-SACK causing SACK to
+ be treated as D-SACK
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,41 +57,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Pengcheng Yang <yangpc@wangsu.com>
 
-commit 556672d75ff486e0b6786056da624131679e0576 upstream.
+commit c9655008e7845bcfdaac10a1ed8554ec167aea88 upstream.
 
-According to user manual, it is required that FLL_LAMBDA > 0
-in all cases (Integer and Franctional modes).
+When we receive a D-SACK, where the sequence number satisfies:
+	undo_marker <= start_seq < end_seq <= prior_snd_una
+we consider this is a valid D-SACK and tcp_is_sackblock_valid()
+returns true, then this D-SACK is discarded as "old stuff",
+but the variable first_sack_index is not marked as negative
+in tcp_sacktag_write_queue().
 
-Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+If this D-SACK also carries a SACK that needs to be processed
+(for example, the previous SACK segment was lost), this SACK
+will be treated as a D-SACK in the following processing of
+tcp_sacktag_write_queue(), which will eventually lead to
+incorrect updates of undo_retrans and reordering.
+
+Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/soc/codecs/wm8962.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_input.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2795,7 +2795,7 @@ static int fll_factors(struct _fll_div *
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -1713,8 +1713,11 @@ tcp_sacktag_write_queue(struct sock *sk,
+ 		}
  
- 	if (target % Fref == 0) {
- 		fll_div->theta = 0;
--		fll_div->lambda = 0;
-+		fll_div->lambda = 1;
- 	} else {
- 		gcd_fll = gcd(target, fratio * Fref);
+ 		/* Ignore very old stuff early */
+-		if (!after(sp[used_sacks].end_seq, prior_snd_una))
++		if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
++			if (i == 0)
++				first_sack_index = -1;
+ 			continue;
++		}
  
-@@ -2865,7 +2865,7 @@ static int wm8962_set_fll(struct snd_soc
- 		return -EINVAL;
+ 		used_sacks++;
  	}
- 
--	if (fll_div.theta || fll_div.lambda)
-+	if (fll_div.theta)
- 		fll1 |= WM8962_FLL_FRAC;
- 
- 	/* Stop the FLL while we reconfigure */
 
