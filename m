@@ -4,145 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F29C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82E6C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB60820776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E0B20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgDWC0h (ORCPT
+        id S1726756AbgDWC0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 Apr 2020 22:26:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51406 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726724AbgDWC0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 22:26:37 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43426 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgDWCZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:25:58 -0400
-IronPort-SDR: XzJtcZ5c2jLyXtvR8d3V5EXIugLSSvqY6G5NDAtatXg/CjBKeC9qt471wipd4nGragA1v0ExMD
- TB7zN+oi9SyA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 19:25:55 -0700
-IronPort-SDR: 5obXN5J3zVIVFquFwCMy3RWEsX06NRvCPuM9JfSHd23MjFR/Dbtycx3vsPh9PJh3eIOcoEi3sR
- zC3hSFyGnWGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="259273951"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 19:25:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Subject: [PATCH 07/13] KVM: VMX: Split out architectural interrupt/NMI blocking checks
-Date:   Wed, 22 Apr 2020 19:25:44 -0700
-Message-Id: <20200423022550.15113-8-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200423022550.15113-1-sean.j.christopherson@intel.com>
-References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 24870E7B8AC50BD116A2;
+        Thu, 23 Apr 2020 10:26:35 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Apr 2020 10:26:27 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
+        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
+        <john.fastabend@gmail.com>, <kpsingh@chromium.org>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] bpf: Make bpf_link_fops static
+Date:   Thu, 23 Apr 2020 10:32:40 +0800
+Message-ID: <1587609160-117806-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the architectural (non-KVM specific) interrupt/NMI blocking checks
-to a separate helper so that they can be used in a future patch by
-vmx_check_nested_events().
+Fix the following sparse warning:
 
-No functional change intended.
+kernel/bpf/syscall.c:2289:30: warning: symbol 'bpf_link_fops' was not declared. Should it be static?
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 41 +++++++++++++++++++++++++----------------
- arch/x86/kvm/vmx/vmx.h |  2 ++
- 2 files changed, 27 insertions(+), 16 deletions(-)
+ kernel/bpf/syscall.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c7bb9d90d441..50c726a21feb 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4511,34 +4511,43 @@ void vmx_set_nmi_mask(struct kvm_vcpu *vcpu, bool masked)
- 	}
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 8608d6e..fcb80e1 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2286,7 +2286,7 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
  }
+ #endif
  
--static bool vmx_nmi_allowed(struct kvm_vcpu *vcpu)
-+bool vmx_nmi_blocked(struct kvm_vcpu *vcpu)
- {
--	if (to_vmx(vcpu)->nested.nested_run_pending)
--		return false;
--
- 	if (is_guest_mode(vcpu) && nested_exit_on_nmi(vcpu))
-+		return false;
-+
-+	if (!enable_vnmi && to_vmx(vcpu)->loaded_vmcs->soft_vnmi_blocked)
- 		return true;
- 
--	if (!enable_vnmi &&
--	    to_vmx(vcpu)->loaded_vmcs->soft_vnmi_blocked)
--		return false;
--
--	return	!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
--		  (GUEST_INTR_STATE_MOV_SS | GUEST_INTR_STATE_STI
--		   | GUEST_INTR_STATE_NMI));
-+	return (vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
-+		(GUEST_INTR_STATE_MOV_SS | GUEST_INTR_STATE_STI |
-+		 GUEST_INTR_STATE_NMI));
- }
- 
--static bool vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
-+static bool vmx_nmi_allowed(struct kvm_vcpu *vcpu)
- {
- 	if (to_vmx(vcpu)->nested.nested_run_pending)
- 		return false;
- 
-+	return !vmx_nmi_blocked(vcpu);
-+}
-+
-+bool vmx_interrupt_blocked(struct kvm_vcpu *vcpu)
-+{
- 	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
--		return true;
-+		return false;
- 
--	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
--		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
--			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
-+	return !(vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) ||
-+	       (vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
-+		(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
-+}
-+
-+static bool vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
-+{
-+	if (to_vmx(vcpu)->nested.nested_run_pending)
-+		return false;
-+
-+	return !vmx_interrupt_blocked(vcpu);
- }
- 
- static int vmx_set_tss_addr(struct kvm *kvm, unsigned int addr)
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index edfb739e5907..b5e773267abe 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -344,6 +344,8 @@ void vmx_set_segment(struct kvm_vcpu *vcpu, struct kvm_segment *var, int seg);
- u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa);
- void update_exception_bitmap(struct kvm_vcpu *vcpu);
- void vmx_update_msr_bitmap(struct kvm_vcpu *vcpu);
-+bool vmx_nmi_blocked(struct kvm_vcpu *vcpu);
-+bool vmx_interrupt_blocked(struct kvm_vcpu *vcpu);
- bool vmx_get_nmi_mask(struct kvm_vcpu *vcpu);
- void vmx_set_nmi_mask(struct kvm_vcpu *vcpu, bool masked);
- void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu);
+-const struct file_operations bpf_link_fops = {
++static const struct file_operations bpf_link_fops = {
+ #ifdef CONFIG_PROC_FS
+ 	.show_fdinfo	= bpf_link_show_fdinfo,
+ #endif
 -- 
-2.26.0
+2.6.2
 
