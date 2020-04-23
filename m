@@ -2,105 +2,84 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D17AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89782C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 646012076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GhZ71I2h"
+	by mail.kernel.org (Postfix) with ESMTP id 665212076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDWK35 (ORCPT
+        id S1727049AbgDWKcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:29:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27272 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727014AbgDWK34 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:29:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587637795;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v9AXR8INu2V1rXzlem4kdzH7dLRNBQB5Vc6BL374Yjc=;
-        b=GhZ71I2hOUzwRtJgGDWbEfDU3Z7FVPVvQb84chqU2Zw40V2wceOTxe1COUIz5IpAq1uRyU
-        4jmso28+otRGkE2tJg7CvmtY0tctMymJTs5BoI6VR1fB3TLA5cay1mICkSGERIturST7PP
-        2KwKeaZqQeqwg4YuDfOX50r+Tda0/s0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-OkCP4SNCOAuopXw77MfKQQ-1; Thu, 23 Apr 2020 06:29:48 -0400
-X-MC-Unique: OkCP4SNCOAuopXw77MfKQQ-1
-Received: by mail-wr1-f69.google.com with SMTP id x15so2655631wrn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 03:29:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v9AXR8INu2V1rXzlem4kdzH7dLRNBQB5Vc6BL374Yjc=;
-        b=Zf7tg25QIHWPLUKmUCln988EBYES+WhBqkULMJNQs+SEfOZCsmcgjGFcVgyndqMmpz
-         uli+gsSeeDbNkkKXdpue+JeRKZxR6NMqLEekomdsWSbwqQUqkfp3k0SojgNCNgc+ItTd
-         OAKiwW8vCxaxmARzDHfVgeSFwBpRZnY1oIjH2w7yrQVKpVs5Bt2xAq/0NzzpekmvAyoL
-         UlbKTrqB+jIbFXyABkPj2JONbUeEu32udvuDiDgjL2esfOLxUE92JfU1Bu6oZE7TtnoR
-         ys3Q1K3kfsvCQHP3JwXLhQNGuRwj5oYFzTylnck7NTVO5M9KP/WJW0HnryqiYUbkDDxi
-         31+A==
-X-Gm-Message-State: AGi0PubZ7xGtS/IIIWgMj5UINpPagjy5y4NkFZf35NZCInwXqHr5FNM1
-        UaFZIMSdiCXbjZt+EyeJlKhGBGSbboyPit4uBcs0ILZaXgwI8yD4qOPpmi1VeVRXU/qPLqdDhU4
-        n7GYzqPSw0QR0DHock/HYgE9I
-X-Received: by 2002:adf:a3d5:: with SMTP id m21mr4322769wrb.54.1587637787646;
-        Thu, 23 Apr 2020 03:29:47 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIKDKQY6xB5YBU0fXjYucgfv1RSNisE2zdI//PsRQUExilnMvDayNiGTxi7DsmMMZbDdNW2ow==
-X-Received: by 2002:adf:a3d5:: with SMTP id m21mr4322755wrb.54.1587637787471;
-        Thu, 23 Apr 2020 03:29:47 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id x13sm3273966wmc.5.2020.04.23.03.29.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 03:29:46 -0700 (PDT)
-Subject: Re: [PATCH v2 5/5] KVM: VMX: Handle preemption timer fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
- <1587632507-18997-6-git-send-email-wanpengli@tencent.com>
- <99d81fa5-dc37-b22f-be1e-4aa0449e6c26@redhat.com>
- <CANRm+CyyKwFoSns31gK=_v0j1VQrOwDhgTqWZOLZS9iGZeC3Gw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ce15ea08-4d5d-6e7b-9413-b5fcf1309697@redhat.com>
-Date:   Thu, 23 Apr 2020 12:29:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 06:32:16 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4641 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbgDWKcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:32:15 -0400
+IronPort-SDR: XoMvfqoXksFUn2hasl/uqQQGlt+7qs015ZYwg0/ihw5Kx6hK7QVu3jaQMBwSHdXp5O5w30y+sT
+ McyKaIJMdzGQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 03:32:15 -0700
+IronPort-SDR: Tbx4AP8Zju7uVt+bsFFBuorEKEDp+DufEyq0utUZQmn5wkfXhsC5SmipnzOBUDHfLSF+NGOyYH
+ O/V5r9IH1k5g==
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="247718369"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 03:32:10 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 158F7204C6; Thu, 23 Apr 2020 13:32:08 +0300 (EEST)
+Date:   Thu, 23 Apr 2020 13:32:08 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/29] staging: media: ipu3: use vmap instead of
+ reimplementing it
+Message-ID: <20200423103207.GO5381@paasikivi.fi.intel.com>
+References: <20200414131348.444715-1-hch@lst.de>
+ <20200414131348.444715-5-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CANRm+CyyKwFoSns31gK=_v0j1VQrOwDhgTqWZOLZS9iGZeC3Gw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414131348.444715-5-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 11:56, Wanpeng Li wrote:
->> Please re-evaluate if this is needed (or which parts are needed) after
->> cleaning up patch 4.  Anyway again---this is already better, I don't
->> like the duplicated code but at least I can understand what's going on.
-> Except the apic_lvtt_tscdeadline(apic) check, others are duplicated,
-> what do you think about apic_lvtt_tscdeadline(apic) check?
+On Tue, Apr 14, 2020 at 03:13:23PM +0200, Christoph Hellwig wrote:
+> Just use vmap instead of messing with vmalloc internals.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-We have to take a look again after you clean up patch 4.  My hope is to
-reuse the slowpath code as much as possible, by introducing some
-optimizations here and there.
+Thanks!
 
-Paolo
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
+-- 
+Sakari Ailus
