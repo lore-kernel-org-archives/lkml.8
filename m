@@ -2,118 +2,74 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69178C55189
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959B0C55189
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A552071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3252084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDWBrs (ORCPT
+        id S1726468AbgDWBsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:47:48 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:7901 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbgDWBrr (ORCPT
+        Wed, 22 Apr 2020 21:48:01 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:8078 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgDWBsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:47:47 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 21:47:47 EDT
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 22 Apr 2020 18:32:40 -0700
-Received: from [10.62.16.246] (unknown [10.62.16.246])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 8A28AB1660;
-        Wed, 22 Apr 2020 21:32:42 -0400 (EDT)
-Reply-To: <ganb@vmware.com>
-Subject: Re: Re: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
- handler
-To:     Joerg Roedel <jroedel@suse.de>, Mike Stunes <mstunes@vmware.com>
-CC:     Joerg Roedel <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-41-joro@8bytes.org>
- <A7DF63B4-6589-4386-9302-6B7F8BE0D9BA@vmware.com>
- <20200415155302.GD21899@suse.de>
-From:   Bo Gan <ganb@vmware.com>
-Message-ID: <1a164e55-19dd-a20b-6837-9f425cfac100@vmware.com>
-Date:   Wed, 22 Apr 2020 18:33:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 22 Apr 2020 21:48:01 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85ea0f3c1dcb-100bb; Thu, 23 Apr 2020 09:47:46 +0800 (CST)
+X-RM-TRANSID: 2ee85ea0f3c1dcb-100bb
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [172.20.144.8] (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95ea0f3c0372-2da74;
+        Thu, 23 Apr 2020 09:47:46 +0800 (CST)
+X-RM-TRANSID: 2ee95ea0f3c0372-2da74
+Subject: Re: [PATCH v2] net: ethernet: ixp4xx: Add error handling
+ inixp4xx_eth_probe()
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     khalasa@piap.pl, davem@davemloft.net, linus.walleij@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200422010922.17728-1-tangbin@cmss.chinamobile.com>
+ <20200422172149.787fdc3c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <348c8e5a-8328-3a14-03a4-c25a67f53c34@cmss.chinamobile.com>
+Date:   Thu, 23 Apr 2020 09:49:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200415155302.GD21899@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200422172149.787fdc3c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: ganb@vmware.com does not
- designate permitted sender hosts)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/20 8:53 AM, Joerg Roedel wrote:
-> Hi Mike,
-> 
-> On Tue, Apr 14, 2020 at 07:03:44PM +0000, Mike Stunes wrote:
->> set_memory_decrypted needs to check the return value. I see it
->> consistently return ENOMEM. I've traced that back to split_large_page
->> in arch/x86/mm/pat/set_memory.c.
-> 
-> I agree that the return code needs to be checked. But I wonder why this
-> happens. The split_large_page() function returns -ENOMEM when
-> alloc_pages() fails. Do you boot the guest with minal RAM assigned?
-> 
-> Regards,
-> 
-> 	Joerg
-> 
+Hi, Jackub:
 
-I just want to add some context around this. The call path that lead to 
-the failure is like the following:
+On 2020/4/23 8:21, Jakub Kicinski wrote:
+> On Wed, 22 Apr 2020 09:09:22 +0800 Tang Bin wrote:
+>> The function ixp4xx_eth_probe() does not perform sufficient error
+>> checking after executing devm_ioremap_resource(), which can result
+>> in crashes if a critical error path is encountered.
+>>
+>> Fixes: f458ac479777 ("ARM/net: ixp4xx: Pass ethernet physical base as resource")
+>>
+> No extra lines, between the tags, though, please.
 
-	__alloc_pages_slowpath
-	__alloc_pages_nodemask
-	alloc_pages_current
-	alloc_pages
-	split_large_page
-	__change_page_attr
-	__change_page_attr_set_clr
-	__set_memory_enc_dec
-	set_memory_decrypted
-	sev_es_init_ghcbs
-	trap_init   -> before mm_init (in init/main.c)
-	start_kernel
-	x86_64_start_reservations
-	x86_64_start_kernel
-	secondary_startup_64
+Got it, thanks for your guidance, I'll fix it and send v3 for you.
 
-At this time, mem_init hasn't been called yet (which would be called by 
-mm_init). Thus, the free pages are still owned by memblock. It's in 
-mem_init (x86/mm/init_64.c) that memblock_free_all gets called and free 
-pages are released.
+Thanks,
 
-During testing, I've also noticed that debug_pagealloc=1 will make the 
-issue disappear. That's because with debug_pagealloc=1, 
-probe_page_size_mask in x86/mm/init.c will not allow large pages 
-(2M/1G). Therefore, no split_large_page would happen. Similarly, if CPU 
-doesn't have X86_FEATURE_PSE, there won't be large pages either.
+Tang Bin
 
-Any thoughts? Maybe split_large_page should get pages from memblock at 
-early boot?
+>
+>> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-Bo
+
