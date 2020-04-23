@@ -2,103 +2,114 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30541C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D8EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DB12098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0n8gvqB"
+	by mail.kernel.org (Postfix) with ESMTP id 0D4E220857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgDWPKw (ORCPT
+        id S1729027AbgDWPLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:10:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24319 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728551AbgDWPKv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:10:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587654650;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6IQojHe4J/6k3qfeiWdzY68BgNr3d6Bt4ImpMFFIpDM=;
-        b=g0n8gvqByRemSBNfL6MVXTSX6Yw7iUXQlgGd0QuTFAD11wAj3IxeJ9xn1OfAX9PYG86J3D
-        60UdX+5m03ITp+6vJZ+Aufj4xbuU/pYise8dKOv5HToca9q2+M/vTlXd2jqwJs6I+6VxyW
-        hhKFyisIrIzv+TlWrS4U49hlNEE4LaE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-478-3yHZFWMCNTWl8-_Wf4Mnew-1; Thu, 23 Apr 2020 11:10:49 -0400
-X-MC-Unique: 3yHZFWMCNTWl8-_Wf4Mnew-1
-Received: by mail-wm1-f71.google.com with SMTP id u11so2461792wmc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:10:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6IQojHe4J/6k3qfeiWdzY68BgNr3d6Bt4ImpMFFIpDM=;
-        b=gpHEo/Hw0rqXiy+HNiIlI8hndjaZpBFxLjJ6EZHZKYQqzv4mQXmNfiz/j0VIQdzIbP
-         7hdA3P7jSHn1IRSTWzGQNauKWM6ofJ6Nvq0IzAg46E2orHAhCLZQeGVZ8ytrn4+cCAuO
-         t1sv7O0jxOj/xdDP9gvJkQvWvo+RlU3xSQ+lI8gTaReHNUvofRS9rtIah2tFI/ICSoLJ
-         hHgUvgI/2M1V4Rq7wr8lvOpDeSEm6wXwYUAndzEWXmYfoaMmflPFboCmvrgdWEDP54x/
-         T/bQn+fx5L9OAh3eFpDKDmP0704yfnfXQgqPd4Ny/LNB2RnMHvCxO7STYaxMuLQ25CBt
-         0BqA==
-X-Gm-Message-State: AGi0Pubx1basDVpEeBC656YuNX2V7NP46y3T2OVg0uT+ECnJifQ68yoJ
-        R3avIHK51Sgq2Vh4S/oTypan4kyduYemOQze2f0JMhubS6aS9/PnBSkm7oCNYBjsRswqkY7P7TH
-        yDOLOC+th4XTIlTpwmqZ8GI9s
-X-Received: by 2002:a1c:4989:: with SMTP id w131mr4817219wma.137.1587654647739;
-        Thu, 23 Apr 2020 08:10:47 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJBRJkol6+EEfdoUivoCv0K3f//jt7ca68U8BmQbf6RxQwuLwAzr8W2Z3WR0idg+KG9HTTMhQ==
-X-Received: by 2002:a1c:4989:: with SMTP id w131mr4817197wma.137.1587654647460;
-        Thu, 23 Apr 2020 08:10:47 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id d7sm3994249wrn.78.2020.04.23.08.10.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 08:10:46 -0700 (PDT)
-Subject: Re: [PATCH 2/2] KVM: x86: check_nested_events if there is an
- injectable NMI
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Cathy Avery <cavery@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com, wei.huang2@amd.com
-References: <20200414201107.22952-1-cavery@redhat.com>
- <20200414201107.22952-3-cavery@redhat.com>
- <20200423144209.GA17824@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ae2d4f5d-cb96-f63a-7742-a7f46ad0d1a8@redhat.com>
-Date:   Thu, 23 Apr 2020 17:10:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200423144209.GA17824@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 23 Apr 2020 11:11:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:7786 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728878AbgDWPLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:11:09 -0400
+IronPort-SDR: qmhTyGdma6TSDTJPaMUpBA6AUK/oNqjF6sctKZ31ZB3mNaT4ysNTWxI3cruqZr7syBz4vrOp2R
+ dX1Xhfdq2TTA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 08:11:09 -0700
+IronPort-SDR: QnRayIgAKGfmlnKTyhzY0L+WOqM8WoAEe0d9ufajWMtOqpIEB4qpTwFsjukQ9c+jzp2creFDI1
+ y6YovfyU61ZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="456942526"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Apr 2020 08:11:08 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX104.amr.corp.intel.com ([169.254.4.76]) with mapi id 14.03.0439.000;
+ Thu, 23 Apr 2020 08:11:07 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "rajatja@google.com" <rajatja@google.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "fred@fredlawl.com" <fred@fredlawl.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use AER
+Thread-Topic: [PATCH v2 1/2] PCI/AER: Allow Native AER Host Bridges to use
+ AER
+Thread-Index: AQHWF186RsEJQYVN9kSvtTlNVZfJFaiGNtcAgAESlIA=
+Date:   Thu, 23 Apr 2020 15:11:06 +0000
+Message-ID: <4f044eca9f9f4cfc413c850046112b870e85e8d7.camel@intel.com>
+References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
+         <1587418630-13562-2-git-send-email-jonathan.derrick@intel.com>
+         <9f8c2a62-e67d-2869-db11-4644b69815f4@linux.intel.com>
+In-Reply-To: <9f8c2a62-e67d-2869-db11-4644b69815f4@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.1.180]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <58623EF43F5A224F8FEED983CF0887B6@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 16:42, Sean Christopherson wrote:
-> On Tue, Apr 14, 2020 at 04:11:07PM -0400, Cathy Avery wrote:
->> With NMI intercept moved to check_nested_events there is a race
->> condition where vcpu->arch.nmi_pending is set late causing
-> How is nmi_pending set late?  The KVM_{G,S}ET_VCPU_EVENTS paths can't set
-> it because the current KVM_RUN thread holds the mutex, and the only other
-> call to process_nmi() is in the request path of vcpu_enter_guest, which has
-> already executed.
-> 
-
-I think the actual cause is priority inversion between NMI and
-interrupts, because NMI is added last in patch 1.
-
-Paolo
-
+SGkgU2F0aHlhbmFyYXlhbmFuLA0KDQpPbiBXZWQsIDIwMjAtMDQtMjIgYXQgMTU6NDggLTA3MDAs
+IEt1cHB1c3dhbXksIFNhdGh5YW5hcmF5YW5hbiB3cm90ZToNCj4gDQo+IE9uIDQvMjAvMjAgMjoz
+NyBQTSwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4gU29tZSBwbGF0Zm9ybXMgaGF2ZSBhIG1peCBv
+ZiBwb3J0cyB3aG9zZSBjYXBhYmlsaXRpZXMgY2FuIGJlIG5lZ290aWF0ZWQNCj4gPiBieSBfT1ND
+LCBhbmQgc29tZSBwb3J0cyB3aGljaCBhcmUgbm90IGRlc2NyaWJlZCBieSBBQ1BJIGFuZCBpbnN0
+ZWFkDQo+ID4gbWFuYWdlZCBieSBOYXRpdmUgZHJpdmVycy4gVGhlIGV4aXN0aW5nIEZpcm13YXJl
+LUZpcnN0IEhFU1QgbW9kZWwgY2FuDQo+ID4gaW5jb3JyZWN0bHkgdGFnIHRoZXNlIE5hdGl2ZSwg
+Tm9uLUFDUEkgcG9ydHMgYXMgRmlybXdhcmUtRmlyc3QgbWFuYWdlZA0KPiA+IHBvcnRzIGJ5IGFk
+dmVydGlzaW5nIHRoZSBIRVNUIEdsb2JhbCBGbGFnIGFuZCBtYXRjaGluZyB0aGUgdHlwZSBhbmQN
+Cj4gPiBjbGFzcyBvZiB0aGUgcG9ydCAoYWVyX2hlc3RfcGFyc2UpLg0KPiBJcyB0aGVyZSBhIHJl
+YWwgdXNlIGNhc2UgZm9yIG1peGVkIG1vZGUgKG9uZSBob3N0IGJyaWRnZSBpbiBGRiBtb2RlIGFu
+ZA0KPiBhbm90aGVyIGluIG5hdGl2ZSk/DQoNCkludGVsJ3MgVk1EIGV4cG9zZXMgUENJZSBzZWdt
+ZW50cyBjb250YWluaW5nIFJvb3QgUG9ydHMgYW5kIEJyaWRnZXMgYW5kDQpvdGhlciBEUEMgY29u
+c3VtZXJzLiBUaGVzZSBleHRyYSBQQ0llIGRvbWFpbnMgYXJlbid0IGRlc2NyaWJlZCBieSBBQ1BJ
+Lg0KVGhlcmUgaGF2ZSBiZWVuIGEgZmV3IHZlcnNpb25zIHdoZXJlIERQQyB3b24ndCBiaW5kIGR1
+ZSB0byBwbGF0Zm9ybSdzDQpIRVNUIGNvbmZpZ3VyYXRpb24uDQoNCj4gPiBJZiB0aGUgcG9ydCBy
+ZXF1ZXN0cyBOYXRpdmUgQUVSIHRocm91Z2ggdGhlIEhvc3QgQnJpZGdlJ3MgY2FwYWJpbGl0eQ0K
+PiA+IHNldHRpbmdzLCB0aGUgQUVSIGRyaXZlciBzaG91bGQgaG9ub3IgdGhvc2Ugc2V0dGluZ3Mg
+YW5kIGFsbG93IHRoZSBwb3J0DQo+ID4gdG8gYmluZC4gVGhpcyBwYXRjaCBjaGFuZ2VzIHRoZSBk
+ZWZpbml0aW9uIG9mIEZpcm13YXJlLUZpcnN0IHRvIGV4Y2x1ZGUNCj4gPiBwb3J0cyB3aG9zZSBI
+b3N0IEJyaWRnZXMgcmVxdWVzdCBOYXRpdmUgQUVSLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEpvbiBEZXJyaWNrIDxqb25hdGhhbi5kZXJyaWNrQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAg
+IGRyaXZlcnMvcGNpL3BjaWUvYWVyLmMgfCAzICsrKw0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDMg
+aW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wY2llL2Fl
+ci5jIGIvZHJpdmVycy9wY2kvcGNpZS9hZXIuYw0KPiA+IGluZGV4IGY0Mjc0ZDMuLjMwZmJkMWYg
+MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvcGNpZS9hZXIuYw0KPiA+ICsrKyBiL2RyaXZl
+cnMvcGNpL3BjaWUvYWVyLmMNCj4gPiBAQCAtMzE0LDYgKzMxNCw5IEBAIGludCBwY2llX2Flcl9n
+ZXRfZmlybXdhcmVfZmlyc3Qoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gPiAgIAlpZiAocGNpZV9w
+b3J0c19uYXRpdmUpDQo+ID4gICAJCXJldHVybiAwOw0KPiA+ICAgDQo+ID4gKwlpZiAocGNpX2Zp
+bmRfaG9zdF9icmlkZ2UoZGV2LT5idXMpLT5uYXRpdmVfYWVyKQ0KPiA+ICsJCXJldHVybiAwOw0K
+PiA+ICsNCj4gPiAgIAlpZiAoIWRldi0+X19hZXJfZmlybXdhcmVfZmlyc3RfdmFsaWQpDQo+ID4g
+ICAJCWFlcl9zZXRfZmlybXdhcmVfZmlyc3QoZGV2KTsNCj4gPiAgIAlyZXR1cm4gZGV2LT5fX2Fl
+cl9maXJtd2FyZV9maXJzdDsNCj4gPiANCg==
