@@ -2,107 +2,102 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DC3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DDAC55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494AC20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC6F20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dT9sTplG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZ7AsC2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgDWMEE (ORCPT
+        id S1728325AbgDWMEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:04:04 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36493 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbgDWMEE (ORCPT
+        Thu, 23 Apr 2020 08:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728104AbgDWMEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:04:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587643442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=th6AxKoTCfO0iA5vCPuzT5zetLWmthfeuCbadO7Iw+A=;
-        b=dT9sTplGWdnRBdJYh8vAUmSHdEavSsI/bCC5GYI1m86LwolXdVBzYIDoyyX/h7dTiDrCUj
-        PHDsvFRwHNTNzFZszlIakTF8npeM55eOQRcPieP+Fqx4nWj0e0iw58j0mKNG01pnMnWrCI
-        ivpA+7ewxrUhiaStGqxOTSOzd5EFX7w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-5-3pUoS6cxOMyeRRNAnsibWA-1; Thu, 23 Apr 2020 08:03:59 -0400
-X-MC-Unique: 3pUoS6cxOMyeRRNAnsibWA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47D6618C8C0D;
-        Thu, 23 Apr 2020 12:03:57 +0000 (UTC)
-Received: from krava (ovpn-115-157.ams2.redhat.com [10.36.115.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B39D35D710;
-        Thu, 23 Apr 2020 12:03:54 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 14:03:51 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3] perf record: add dummy event during system wide
- synthesis
-Message-ID: <20200423120318.GK1136647@krava>
-References: <20200422173615.59436-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422173615.59436-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 23 Apr 2020 08:04:47 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28BCC08E859;
+        Thu, 23 Apr 2020 05:04:45 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u127so6274917wmg.1;
+        Thu, 23 Apr 2020 05:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7pzWOwtxsf/GOJdSTrWttvSQWG+r/olQojnay9bW+7g=;
+        b=fZ7AsC2IwJojBrtLDXRKj0pALBcuMU0gc3Qg1+hQzeewCZsDGdRVVBCq4RU+Apu0cb
+         ceZK/rvlGABb/08T1r/08kfRynVhCJrv8hxV+kU+ZLGQaDq93TmWVEaptU9QulaXURyZ
+         QpynrAVNUk/l2zlyJ1uyX9ZtPT8pEd3jyg3Ins/nitXL1K66AABtc1tl7wRLLxLvnihn
+         ktYa7O27l82IbpULBLwj6mQLvZAyFM3J5qOENkta8YwOgO/PHw8OKlfh8LwjbnmahGRc
+         aT+Sa7aVdU8tLE/iM0FVmhp0riHUc9qoxOOnnWGwexdzeS8gqakLIxuVUTMW6FbOJjVY
+         Hjig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7pzWOwtxsf/GOJdSTrWttvSQWG+r/olQojnay9bW+7g=;
+        b=dlvDkxbVasLzNFtIBPWczRSYMSlBJAKPBdnGuCpqZe9Z3mSUhz+JC7PeEpwPfvHZK7
+         IGg6Z/Fj86JmBQfmoJW7UFdpVh9RYvCRYcxw81dov5tPewjGSRRVwVAZ4EOntvJI5xfZ
+         Z/fGcTpoMjJizEcmcieOjaIfE3YrC5xRULbX9uFUTCJufAXyHEqyFVxlZQ9ICPjszg4E
+         xsT9lQB9grcAzfJ40To06/YtavW8Vhc2b+UHgty4b75K9MPwPTJoquBAYzBJuNngtBmD
+         7/5uqJv06fqdoNW9rV5COVMkS4gLI2usgn6V20qykUTdSL9O69LQZXe05rqvKAEot7QL
+         0kPA==
+X-Gm-Message-State: AGi0PuaZzmiKZ0olVrJTUwtM2OdMjxnhEbWOA5hvunkJhA/dATUmOAfI
+        SLSNmZplbrE7w1+s+7k+UWI=
+X-Google-Smtp-Source: APiQypLYuV6w/fTD9Hyy7FfkqSrG9k2dll4pxQZ16rn70tPxFyw2C+RYY2W0PBwQksmoaC1llzpM3A==
+X-Received: by 2002:a1c:f416:: with SMTP id z22mr3889087wma.32.1587643483498;
+        Thu, 23 Apr 2020 05:04:43 -0700 (PDT)
+Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
+        by smtp.gmail.com with ESMTPSA id g15sm3432761wrp.96.2020.04.23.05.04.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Apr 2020 05:04:42 -0700 (PDT)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] IB/rdmavt: return proper error code
+Date:   Thu, 23 Apr 2020 13:04:34 +0100
+Message-Id: <20200423120434.19304-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:36:15AM -0700, Ian Rogers wrote:
-> During the processing of /proc during event synthesis new processes may
-> start. Add a dummy event if /proc is to be processed, to capture mmaps
-> for starting processes. This reuses the existing logic for
-> initial-delay.
-> 
-> v3 fixes the attr test of test-record-C0
+The function rvt_create_mmap_info() can return either NULL or an error
+in ERR_PTR(). Check properly for both the error type and return the
+error code accordingly.
 
-SNIP
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ drivers/infiniband/sw/rdmavt/cq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +config2=0
-> +branch_sample_type=0
-> +sample_regs_user=0
-> +sample_stack_user=0
-> diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/attr/test-record-C0
-> index 93818054ae20..317730b906dd 100644
-> --- a/tools/perf/tests/attr/test-record-C0
-> +++ b/tools/perf/tests/attr/test-record-C0
-> @@ -9,6 +9,14 @@ cpu=0
->  # no enable on exec for CPU attached
->  enable_on_exec=0
->  
-> -# PERF_SAMPLE_IP | PERF_SAMPLE_TID PERF_SAMPLE_TIME | # PERF_SAMPLE_PERIOD
-> +# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-> +# PERF_SAMPLE_ID | PERF_SAMPLE_PERIOD
->  # + PERF_SAMPLE_CPU added by -C 0
-> -sample_type=391
-> +sample_type=455
-
-aah, so because now there's 2 events now, so PERF_SAMPLE_ID was added
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
+diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
+index 5724cbbe38b1..326b1e6b362d 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -248,8 +248,8 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	 */
+ 	if (udata && udata->outlen >= sizeof(__u64)) {
+ 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+-		if (!cq->ip) {
+-			err = -ENOMEM;
++		if (IS_ERR_OR_NULL(cq->ip)) {
++			err = cq->ip ? PTR_ERR(cq->ip) : -ENOMEM;
+ 			goto bail_wc;
+ 		}
+ 
+-- 
+2.11.0
 
