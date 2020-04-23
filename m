@@ -2,125 +2,108 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870A4C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC8FC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66FD220857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4F020857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vf8Ep7dr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wkr0bymD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgDWOfs (ORCPT
+        id S1728246AbgDWOfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726458AbgDWOfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 10:35:47 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF2CC08ED7D;
-        Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x17so6379125wrt.5;
-        Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726138AbgDWOfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:35:46 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE6BC08E934
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id u12so5857828uau.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=x6IGIVHimLN6wXXRyErAIS+MRNtXI4hH2CwyG6Xff30=;
-        b=vf8Ep7drlVFpFPiDnXCutY0TNWGrNo8Xncv2udOcbey1cXFppOGy4CONEDFgH3iI/j
-         cPG+bOr+DeXb9D5cEFTkQ/ApdoEGgKqnH0Mfdj3rMaYdt3PTzrGkZrqpN9M0jfx2jxK7
-         +JtJBwVUMmkszV9SZkHhv/V3keBtmCQt6INjSdmLaGrUaF71Dfw3ph0q02qvZDqa7xjG
-         sDXh9fdNg/3xYeeQ04KaI9+jlD5B2UVwz9eDT4sQKg4gQrQe+CDLnuHIi6e0iploviqL
-         CWzqSckSWzdDxZ7qCmtwoLGia8OJL2fNk/KGo7+B6nJnlch+YdQNE9a0nlwCv7DfSFvO
-         hMaA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=txoUP4TZL/kX6wzTvIyyPM8Tw98hlNv8TkS19LKzzNo=;
+        b=Wkr0bymDg39KvhwGQedoiURyuP/SArfM/9lbpXIi1kmydOSd5DW7q2QV6F+YHrIzDQ
+         JTwKM1kQFW1Ecz6bwK0sChfkdhZMNRukeEymx9JDsupFdDqi7m2c9kbHgwU1rbDm7JyF
+         RDOjDH5tbRA+5Rrd8iV3L/pXJmss/r1qVJCMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=x6IGIVHimLN6wXXRyErAIS+MRNtXI4hH2CwyG6Xff30=;
-        b=VJKUBldEpK7IztpBN9wQt9kMjggaRpf8ru5RlxCEUfm9z3hGzp7vTyAvfxiS+ya0tD
-         4TjqcagQiWsBopD0tuv+4117VOz6bNqIfrvgKL5y3B/lA6Ah+zgNueb35YOtgjZ0pGLq
-         gaBNf5Ewo5d8blwGkS5xNt+oT2niUQd8TzfB50fUfiKnT76BDAAiJTrNBr6E3aSMbGOj
-         7F9arKNjQQpjKz86QJ/EmpAlK3vnrWoZfJstComeZJKGBcYQP+EhWro/Slnout22bdgE
-         0CCTsYqtqcoR3niUelLzmUAsPz5xpXsRPyTXECL2Xyct2+YkFAX/1lHWt77JNISOsiMp
-         nqEA==
-X-Gm-Message-State: AGi0PuarU7ABaCOFnfIPPd6AhoQ4PYiO0U5kQxq6jDHlPjGHr27HMCl+
-        WSHV3gyUq6xWP9ifiEJZvxxOoUCufgOGbQ==
-X-Google-Smtp-Source: APiQypLIUH9cLSTf94KBbNXeLc8HmzzTpjl+Y2L4JZrTFpsXOzsPlyUs45ikzIJWhNEC7Yfw6+4rqg==
-X-Received: by 2002:adf:eecc:: with SMTP id a12mr5225266wrp.112.1587652544894;
-        Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
-Received: from net.saheed (563BD1A4.dsl.pool.telekom.hu. [86.59.209.164])
-        by smtp.gmail.com with ESMTPSA id c20sm4420321wmd.36.2020.04.23.07.35.42
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=txoUP4TZL/kX6wzTvIyyPM8Tw98hlNv8TkS19LKzzNo=;
+        b=iot7vEOBrxxp8OsrrElZnS8JCtgzITnbR4qlY/uIQnmjFncpuWKjdN73gFSbT7k+iZ
+         MmU/l6RrBSHFf7PqO2d0hWS8oxj/T+o4Trrr+WkeTQzBJg6sHXB+g4+7gOJ49TTLkXkk
+         q8rnBoqvQZPQrhwtm9h7mmN9Jj4knJN7ZgkcWqBE5qd2Lf2qwwk7v9vLTx/53jkGVViv
+         fKw4MC6iiQKnZzfXRcWKbGa+1vIowGbmeWvYvWWn7ZCb9+9bqmwuoDDYkhuPFJnNnq5y
+         J2hm4IPUe/egDIqtJndigeRyGc8puulmRYoVUQBPlAlvQTFplKAbd0a90hELHGvPLc53
+         uxvA==
+X-Gm-Message-State: AGi0PuZ6hfZmNUqQp88+81xwiXEW2K80O1k+CWFdQ4VvdsCGgptN3iDi
+        BvbxjLWPd5LpzybmY6XtuIP5XsGjs4Q=
+X-Google-Smtp-Source: APiQypIB12dbMzWQ8pcA/IigZmRYW5AAV1br+Xw42tpDL+YNIAZqe3bKZuULL2qtypHB8I+HqE7qZA==
+X-Received: by 2002:ab0:24d3:: with SMTP id k19mr3934161uan.36.1587652545761;
+        Thu, 23 Apr 2020 07:35:45 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id 204sm748086vka.32.2020.04.23.07.35.44
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
-Subject: Re: [PATCH] docs: Fix WARNING - Title underline too short
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, Stephen Kitt <steve@sk2.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masanari Iida <standby24x7@gmail.com>,
-        Eric Biggers <ebiggers@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20200423114517.18074-1-refactormyself@users.noreply.github.com>
- <20200423070230.3fd863ba@lwn.net>
-From:   Saheed Bolarinwa <refactormyself@gmail.com>
-Message-ID: <41072c85-7157-a3b8-17b5-9b4ab38f14ca@gmail.com>
-Date:   Thu, 23 Apr 2020 15:35:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 07:35:45 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id v24so5871991uak.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
+X-Received: by 2002:a67:f5d6:: with SMTP id t22mr1333288vso.73.1587652544353;
+ Thu, 23 Apr 2020 07:35:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200423070230.3fd863ba@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200423095531.9868-1-saiprakash.ranjan@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 23 Apr 2020 07:35:32 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
+Message-ID: <CAD=FV=W=d=KrTwgMOO-ukFc7ZhkE92qGYumUEDrtjmhQOpdWbg@mail.gmail.com>
+Subject: Re: [PATCHv2] iommu/arm-smmu: Make remove callback message more informative
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 4/23/20 3:02 PM, Jonathan Corbet wrote:
-> On Thu, 23 Apr 2020 13:45:17 +0200
-> Bolarinwa Olayemi Saheed <refactormyself@gmail.com> wrote:
+On Thu, Apr 23, 2020 at 2:55 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
->> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
->>
->> There were two instances of "Title underline too short" and they were
->> increased to match the title text.
->>
->> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
->> ---
->>   Documentation/admin-guide/sysctl/kernel.rst | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
-> These warnings are caused by a patch entering linux-next via the -mm tree;
-> Randy has already sent a patch to fix them.
+> Currently on reboot/shutdown, the following messages are
+> displayed on the console as error messages before the
+> system reboots/shutdown as part of remove callback.
 >
-> [Next time you might want to examine the recipient list a bit; this patch
-> was broadcast a bit more widely than was really necessary.]
+> On SC7180:
 >
+>   arm-smmu 15000000.iommu: removing device with active domains!
+>   arm-smmu 5040000.iommu: removing device with active domains!
 >
+> Make this error message more informative and less scary.
+>
+> Reported-by: Douglas Anderson <dianders@chromium.org>
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  drivers/iommu/arm-smmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Noted, sorry about that.
-
-Thank you.
-
-Saheed
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
