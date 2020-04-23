@@ -2,162 +2,123 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E6EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301E3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9B42075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LUADqTn/"
+	by mail.kernel.org (Postfix) with ESMTP id 0350820704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgDWTYI (ORCPT
+        id S1728645AbgDWT3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgDWTYI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:24:08 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF56C09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:24:08 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 7so3932810pjo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WPYdNIZiW2wlSf4+Ub9IiFcK437hBCn7oo/oGCWqW7o=;
-        b=LUADqTn/aOcQPDNN0HhsE5ocsphRiy6BwPeu3kxHtPYTYxfvDuYZnBojhzbIG9qF//
-         BOmJvGSbFQOxI8hRHea4757zL4VfC2iuw+C6z6z9Bedj+/x81+AmsQdmMSOx+aTGbvNj
-         jja1BHlZCgC5SSRTTjN2alDx28LrjPsRMEb38=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WPYdNIZiW2wlSf4+Ub9IiFcK437hBCn7oo/oGCWqW7o=;
-        b=hpt7GDfX8KMlkfV5O0hscfq2tzizp/OgCCyCk7h4Ls49lq/lFo2RFqRM4BIW7r00D+
-         Ilcqy23TGZJjNwP0UeBYI19MU9OJyXPRC2wxm8GmB6uCSUjagIX1KfZUwxcFWXUzEe9C
-         KWJNC5dhl+a5CZ1NzywFKCM1cliIQzjruG+0nqnHL9l0E+orKkSyt1q3jztH+OI3wC59
-         wEKNzO1ptZGhGK6kMJKa6hXy6cViur06FDmGkGel3iiUwy6bcHtnpLdN813SPdKemufu
-         ZfmvUxmroa6ubrZkgu4kT1WAW3clnDwtDbQYPVWMMDacbE92QkAcArx3kWubWxdWfpWG
-         V0wg==
-X-Gm-Message-State: AGi0PuahCaAI884IKHGmJyyl6ftyeIl9TDWy8bHNyTGarMXMZgOv7vpj
-        LZAKRu7nxzJg+5Mq7P59utxLpg==
-X-Google-Smtp-Source: APiQypJZk74uGhsPcYlIl8PSuhy3pu0nJKqpy4TPmEplMdcaHBNjpzGbOaUTi+GMACEUOqsV5xLUXg==
-X-Received: by 2002:a17:902:788e:: with SMTP id q14mr5233333pll.72.1587669847180;
-        Thu, 23 Apr 2020 12:24:07 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c4sm2958661pgg.17.2020.04.23.12.24.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 12:24:06 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 12:24:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Apr 23 (objtool warnings)
-Message-ID: <202004231222.8A28DE1@keescook>
-References: <20200423174104.239dffab@canb.auug.org.au>
- <1239aab1-84b4-02c3-a819-2c35dfa67a1c@infradead.org>
- <20200423152921.shhjokjka7pwuyqr@treble>
+        Thu, 23 Apr 2020 15:29:51 -0400
+Received: from mga06.intel.com ([134.134.136.31]:25783 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbgDWT3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 15:29:50 -0400
+IronPort-SDR: Nj8NgsSRhingzpTN1eOvUtCOj6qbSsjTFMxUJm75sA3vW0UY7Cg6Jlyuz1mYNEtdAgCEStcuOj
+ v3RPSeE7gqPA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 12:29:49 -0700
+IronPort-SDR: KzWojmJAkf/lkpLHYRt7XLtZwsTxIm8RHEbrgOSD59bodrbmiQU9aeYoGu/27ygUoUVkQwTTJk
+ Fumy4Jk7pgnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="430444528"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 23 Apr 2020 12:29:49 -0700
+Date:   Thu, 23 Apr 2020 12:29:49 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Nadav Amit <namit@cs.technion.ac.il>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] kvm: x86: Use KVM_DEBUGREG_NEED_RELOAD instead
+ of KVM_DEBUGREG_BP_ENABLED
+Message-ID: <20200423192949.GO17824@linux.intel.com>
+References: <20200416101509.73526-1-xiaoyao.li@intel.com>
+ <20200416101509.73526-3-xiaoyao.li@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423152921.shhjokjka7pwuyqr@treble>
+In-Reply-To: <20200416101509.73526-3-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 10:29:21AM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 23, 2020 at 07:59:31AM -0700, Randy Dunlap wrote:
-> > On 4/23/20 12:41 AM, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Changes since 20200422:
-> > > 
-> > 
-> > on x86_64:
+On Thu, Apr 16, 2020 at 06:15:08PM +0800, Xiaoyao Li wrote:
+> Once any #BP enabled in DR7, it will set KVM_DEBUGREG_BP_ENABLED, which
+> leads to reload DRn before every VM entry even if none of DRn changed.
 > 
-> More truncation of functions by CONFIG_USBAN_TRAP.  Kees?
+> Drop KVM_DEBUGREG_BP_ENABLED flag and set KVM_DEBUGREG_NEED_RELOAD flag
+> for the cases that DRn need to be reloaded instead, to avoid unnecessary
+> DRn reload.
 
-Looks like another randconfig with CONFIG_UBSAN_ALIGNMENT=y
+Loading DRs on every VM-Enter _is_ necessary if there are breakpoints
+enabled for the guest.  The hardware DR values are not "stable", e.g. they
+are loaded with the host's values immediately after saving the guest's
+value (if DR_EXITING is disabled) in vcpu_enter_guest(), notably iff the
+host has an active/enabled breakpoint.  My bet is that DRs can be changed
+from interrupt context as well.
 
-I will test this and see if my proposed Kconfig change solves it.
+Loading DRs for the guest (not necessarily the same as the guest's DRs) is
+necessary if a breakpoint is enabled so that the #DB is actually hit in
+guest.  It's a similar concept to instructions that consume MSR values,
+e.g. SYSCALL, RDTSCP, etc..., even if KVM intercepts the MSR/DR, hardware
+still needs the correct value so that the guest behavior is correct.
 
--Kees
-
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 3 +--
+>  arch/x86/kvm/x86.c              | 4 ++--
+>  2 files changed, 3 insertions(+), 4 deletions(-)
 > 
-> > drivers/target/target_core_xcopy.o: warning: objtool: target_xcopy_do_work()+0x6dd: unreachable instruction
-> 
-> 0000000000000170 <target_xcopy_read_source>:
->      170:	55                   	push   %rbp
->      171:	48 89 e5             	mov    %rsp,%rbp
->      174:	48 81 ec 40 03 00 00 	sub    $0x340,%rsp
->      17b:	65 48 8b 0c 25 28 00 	mov    %gs:0x28,%rcx
->      182:	00 00 
->      184:	48 89 4d f8          	mov    %rcx,-0x8(%rbp)
->      188:	31 c9                	xor    %ecx,%ecx
->      18a:	83 e2 07             	and    $0x7,%edx
->      18d:	75 34                	jne    1c3 <target_xcopy_read_source+0x53>
->      18f:	48 89 f0             	mov    %rsi,%rax
->      192:	83 e0 07             	and    $0x7,%eax
->      195:	75 2c                	jne    1c3 <target_xcopy_read_source+0x53>
->      197:	48 8d 95 d0 fc ff ff 	lea    -0x330(%rbp),%rdx
->      19e:	b9 65 00 00 00       	mov    $0x65,%ecx
->      1a3:	48 c7 c6 00 00 00 00 	mov    $0x0,%rsi
-> 			1a6: R_X86_64_32S	.rodata.str1.1
->      1aa:	48 89 d7             	mov    %rdx,%rdi
->      1ad:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
-> 			1b0: R_X86_64_32S	.bss+0x560
->      1b4:	f3 48 ab             	rep stos %rax,%es:(%rdi)
->      1b7:	48 8d bd 48 ff ff ff 	lea    -0xb8(%rbp),%rdi
->      1be:	e8 00 00 00 00       	callq  1c3 <target_xcopy_read_source+0x53>
-> 			1bf: R_X86_64_PLT32	__init_swait_queue_head-0x4
->      1c3:	0f 0b                	ud2    
->      1c5:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
->      1cc:	00 00 00 00 
-> 
-> > net/mac80211/rx.o: warning: objtool: __ieee80211_check_fast_rx_iface()+0x79: unreachable instruction
-> 
-> 0000000000007be0 <ieee80211_check_fast_rx>:
->     7be0:	40 f6 c7 07          	test   $0x7,%dil
->     7be4:	75 44                	jne    7c2a <ieee80211_check_fast_rx+0x4a>
->     7be6:	48 8b 57 50          	mov    0x50(%rdi),%rdx
->     7bea:	48 89 d0             	mov    %rdx,%rax
->     7bed:	83 e0 07             	and    $0x7,%eax
->     7bf0:	75 3c                	jne    7c2e <ieee80211_check_fast_rx+0x4e>
->     7bf2:	55                   	push   %rbp
->     7bf3:	b9 06 00 00 00       	mov    $0x6,%ecx
->     7bf8:	48 89 e5             	mov    %rsp,%rbp
->     7bfb:	48 83 ec 38          	sub    $0x38,%rsp
->     7bff:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
->     7c03:	48 89 f7             	mov    %rsi,%rdi
->     7c06:	f3 48 ab             	rep stos %rax,%es:(%rdi)
->     7c09:	48 8b 82 d8 03 00 00 	mov    0x3d8(%rdx),%rax
->     7c10:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
->     7c14:	8b 82 68 0f 00 00    	mov    0xf68(%rdx),%eax
->     7c1a:	89 45 d8             	mov    %eax,-0x28(%rbp)
->     7c1d:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
-> 			7c20: R_X86_64_32S	rfc1042_header
->     7c24:	a8 03                	test   $0x3,%al
->     7c26:	75 04                	jne    7c2c <ieee80211_check_fast_rx+0x4c>
->     7c28:	0f 0b                	ud2    
->     7c2a:	0f 0b                	ud2    
->     7c2c:	0f 0b                	ud2    
->     7c2e:	0f 0b                	ud2    
-> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index f465c76e6e5a..87e2d020351e 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -509,9 +509,8 @@ struct kvm_pmu {
+>  struct kvm_pmu_ops;
+>  
+>  enum {
+> -	KVM_DEBUGREG_BP_ENABLED = 1,
+> +	KVM_DEBUGREG_NEED_RELOAD = 1,
+>  	KVM_DEBUGREG_WONT_EXIT = 2,
+> -	KVM_DEBUGREG_NEED_RELOAD = 4,
+>  };
+>  
+>  struct kvm_mtrr_range {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index cce926658d10..71264df64001 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1086,9 +1086,8 @@ static void kvm_update_dr7(struct kvm_vcpu *vcpu)
+>  	else
+>  		dr7 = vcpu->arch.dr7;
+>  	kvm_x86_ops.set_dr7(vcpu, dr7);
+> -	vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_BP_ENABLED;
+>  	if (dr7 & DR7_BP_EN_MASK)
+> -		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_BP_ENABLED;
+> +		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_NEED_RELOAD;
+>  }
+>  
+>  static u64 kvm_dr6_fixed(struct kvm_vcpu *vcpu)
+> @@ -1128,6 +1127,7 @@ static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
+>  		break;
+>  	}
+>  
+> +	vcpu->arch.switch_db_regs |= KVM_DEBUGREG_NEED_RELOAD;
+>  	return 0;
+>  }
+>  
 > -- 
-> Josh
+> 2.20.1
 > 
-
--- 
-Kees Cook
