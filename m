@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D46BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903AAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83AE920780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F4420780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgDWXHF (ORCPT
+        id S1728726AbgDWXHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 23 Apr 2020 19:07:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49410 "EHLO
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49356 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728354AbgDWXGo (ORCPT
+        by vger.kernel.org with ESMTP id S1728345AbgDWXGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:44 -0400
+        Thu, 23 Apr 2020 19:06:43 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvT-0004hJ-E2; Fri, 24 Apr 2020 00:06:35 +0100
+        id 1jRkvS-0004hN-Ep; Fri, 24 Apr 2020 00:06:34 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-00E6qr-6X; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvP-00E6nw-Oj; Fri, 24 Apr 2020 00:06:31 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>, "edes" <edes@gmx.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Fri, 24 Apr 2020 00:06:14 +0100
-Message-ID: <lsq.1587683028.780444147@decadent.org.uk>
+        "Maor Gottlieb" <maorg@mellanox.com>,
+        "Doug Ledford" <dledford@redhat.com>,
+        "Parav Pandit" <parav@mellanox.com>,
+        "Leon Romanovsky" <leonro@mellanox.com>
+Date:   Fri, 24 Apr 2020 00:05:38 +0100
+Message-ID: <lsq.1587683028.748862993@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 147/245] USB: quirks: blacklist duplicate ep on Sound
- Devices USBPre2
+Subject: [PATCH 3.16 111/245] IB/mlx4: Follow mirror sequence of device
+ add during device removal
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,144 +58,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Parav Pandit <parav@mellanox.com>
 
-commit bdd1b147b8026df0e4260b387026b251d888ed01 upstream.
+commit 89f988d93c62384758b19323c886db917a80c371 upstream.
 
-This device has a broken vendor-specific altsetting for interface 1,
-where endpoint 0x85 is declared as an isochronous endpoint despite being
-used by interface 2 for audio capture.
+Current code device add sequence is:
 
-Device Descriptor:
-  bLength                18
-  bDescriptorType         1
-  bcdUSB               2.00
-  bDeviceClass          239 Miscellaneous Device
-  bDeviceSubClass         2
-  bDeviceProtocol         1 Interface Association
-  bMaxPacketSize0        64
-  idVendor           0x0926
-  idProduct          0x0202
-  bcdDevice            1.00
-  iManufacturer           1 Sound Devices
-  iProduct                2 USBPre2
-  iSerial                 3 [...]
-  bNumConfigurations      1
+ib_register_device()
+ib_mad_init()
+init_sriov_init()
+register_netdev_notifier()
 
-[...]
+Therefore, the remove sequence should be,
 
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        1
-      bAlternateSetting       3
-      bNumEndpoints           2
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass      0
-      bInterfaceProtocol      0
-      iInterface              0
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x85  EP 5 IN
-        bmAttributes            5
-          Transfer Type            Isochronous
-          Synch Type               Asynchronous
-          Usage Type               Data
-        wMaxPacketSize     0x0126  1x 294 bytes
-        bInterval               1
+unregister_netdev_notifier()
+close_sriov()
+mad_cleanup()
+ib_unregister_device()
 
-[...]
+However it is not above.
+Hence, make do above remove sequence.
 
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        2
-      bAlternateSetting       1
-      bNumEndpoints           1
-      bInterfaceClass         1 Audio
-      bInterfaceSubClass      2 Streaming
-      bInterfaceProtocol      0
-      iInterface              0
-      AudioStreaming Interface Descriptor:
-        bLength                 7
-        bDescriptorType        36
-        bDescriptorSubtype      1 (AS_GENERAL)
-        bTerminalLink           4
-        bDelay                  1 frames
-        wFormatTag         0x0001 PCM
-      AudioStreaming Interface Descriptor:
-        bLength                26
-        bDescriptorType        36
-        bDescriptorSubtype      2 (FORMAT_TYPE)
-        bFormatType             1 (FORMAT_TYPE_I)
-        bNrChannels             2
-        bSubframeSize           2
-        bBitResolution         16
-        bSamFreqType            6 Discrete
-        tSamFreq[ 0]         8000
-        tSamFreq[ 1]        16000
-        tSamFreq[ 2]        24000
-        tSamFreq[ 3]        32000
-        tSamFreq[ 4]        44100
-        tSamFreq[ 5]        48000
-      Endpoint Descriptor:
-        bLength                 9
-        bDescriptorType         5
-        bEndpointAddress     0x85  EP 5 IN
-        bmAttributes            5
-          Transfer Type            Isochronous
-          Synch Type               Asynchronous
-          Usage Type               Data
-        wMaxPacketSize     0x0126  1x 294 bytes
-        bInterval               4
-        bRefresh                0
-        bSynchAddress           0
-        AudioStreaming Endpoint Descriptor:
-          bLength                 7
-          bDescriptorType        37
-          bDescriptorSubtype      1 (EP_GENERAL)
-          bmAttributes         0x01
-            Sampling Frequency
-          bLockDelayUnits         2 Decoded PCM samples
-          wLockDelay         0x0000
-
-Since commit 3e4f8e21c4f2 ("USB: core: fix check for duplicate
-endpoints") USB core ignores any duplicate endpoints found during
-descriptor parsing, but in this case we need to ignore the first
-instance in order to avoid breaking the audio capture interface.
-
-Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
-Reported-by: edes <edes@gmx.net>
-Tested-by: edes <edes@gmx.net>
-Link: https://lore.kernel.org/r/20200201105829.5682c887@acme7.acmenet
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200203153830.26394-3-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+[bwh: Backported to 3.16: No need to call mlx4_ib_diag_cleanup()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/core/quirks.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -206,6 +206,10 @@ static const struct usb_device_id usb_qu
- 	{ USB_DEVICE(0x0904, 0x6103), .driver_info =
- 			USB_QUIRK_LINEAR_FRAME_INTR_BINTERVAL },
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -2372,15 +2372,16 @@ static void mlx4_ib_remove(struct mlx4_d
+ 	ibdev->ib_active = false;
+ 	flush_workqueue(wq);
  
-+	/* Sound Devices USBPre2 */
-+	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
-+			USB_QUIRK_ENDPOINT_BLACKLIST },
+-	mlx4_ib_close_sriov(ibdev);
+-	mlx4_ib_mad_cleanup(ibdev);
+-	ib_unregister_device(&ibdev->ib_dev);
+ 	if (ibdev->iboe.nb.notifier_call) {
+ 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
+ 			pr_warn("failure unregistering notifier\n");
+ 		ibdev->iboe.nb.notifier_call = NULL;
+ 	}
+ 
++	mlx4_ib_close_sriov(ibdev);
++	mlx4_ib_mad_cleanup(ibdev);
++	ib_unregister_device(&ibdev->ib_dev);
 +
- 	/* Keytouch QWERTY Panel keyboard */
- 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
-@@ -325,6 +329,7 @@ static const struct usb_device_id usb_am
-  * Matched for devices with USB_QUIRK_ENDPOINT_BLACKLIST.
-  */
- static const struct usb_device_id usb_endpoint_blacklist[] = {
-+	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
- 	{ }
- };
- 
+ 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
+ 			      ibdev->steer_qpn_count);
+ 	kfree(ibdev->ib_uc_qpns_bitmap);
 
