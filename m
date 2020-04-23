@@ -2,338 +2,141 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFEAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783E1C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54DF4208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5332C2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TSszIBoL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A7KbWzNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgDWOWN (ORCPT
+        id S1728714AbgDWOW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:22:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35968 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbgDWOVe (ORCPT
+        Thu, 23 Apr 2020 10:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728015AbgDWOW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:21:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NELTen082022;
-        Thu, 23 Apr 2020 09:21:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587651689;
-        bh=WcqRaWOjaolgErTKqmfljY3G2kI3q7wljD/Bz7S+SIc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TSszIBoLVRJ9LnbCtseWTY7o7TC4meCSj7DAtKkyI0i6pZyWgZGVpj9aYhRcmjy1L
-         sVzqQGFypxIgtx5AKFsPVEI8Ad1/3YHBuNY3JUpak95s5fIFSi0Yn5xtaBo/DLpPE1
-         /kdYVkz2RVLdNQWMpsvBIQ1IduZ07gQ5vfsZp33w=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03NELT9M029610
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Apr 2020 09:21:29 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Apr 2020 09:21:28 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Apr 2020 09:21:28 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NELRMV028236;
-        Thu, 23 Apr 2020 09:21:28 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v5 06/10] net: ethernet: ti: cpts: move tx timestamp processing to ptp worker only
-Date:   Thu, 23 Apr 2020 17:20:18 +0300
-Message-ID: <20200423142022.10538-7-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200423142022.10538-1-grygorii.strashko@ti.com>
-References: <20200423142022.10538-1-grygorii.strashko@ti.com>
+        Thu, 23 Apr 2020 10:22:26 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15285C08ED7D
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:22:26 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id e17so3247605ybq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cWWfNltpIdiww9JMz4KcVCbcQVu3qR2i6dEP2PEQbfE=;
+        b=A7KbWzNe8gI2FaXWn2zfmmU7bz0SGqZhlk488ySyuetMclPuuLa0W+uny3B56WFwtw
+         YcRm7YBHh86git1zG0oaInuRvUhm5FL4qjQEJnbkTYM16siz6I+gSHDMZ9/HLUs3QB/f
+         mFZ9vv8atBfuHLgXy6g9kV5MOnYCb7P2WiFTsoShdeafMdbJsAhj+LrNZTosjGn5h/EX
+         pnPtxFtYKQpKuyXDXsy75GrdhQfJkLeU2XPcTXl299lmHMSBRIbGQ71f2+ytCmI6k9w3
+         8tJPOE3t9NaTZWUWG4IpwTwwl3klHRJRbO4TARMjSHZS/4tOrdLVSh6eM1DzzhgzQ0VV
+         0lhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cWWfNltpIdiww9JMz4KcVCbcQVu3qR2i6dEP2PEQbfE=;
+        b=rgTysXLWQA0IdsK4QetAfI2T5E4AVxZaDKiY0NyjC1ISGZ3CKLrp0WdK5y063luymU
+         M+15Ifx6BksshAG/g/k7Tgh6lo65DFWhx0kdDgzEuRGDNjvsfwbujMwKQSsIivtrUnxx
+         ZdkAjkPfp1IIaJdFf6+Voq5pppRE1N8wL1iis31cjvc3IqlrlBi6fvms24A49/lMSIKE
+         LH8RDhEece+iHdXCjpiyDZobwLPdvF84/4Tsv7Sh0kybTG9fYIOptwIViikLl9JaH/NJ
+         n/7eY4Yilej8ohHwywhins16ZlMm4lHQWMkgBnVByYD7sViFGsbV9YbrhL3vWSsbnslG
+         bQ7w==
+X-Gm-Message-State: AGi0PuZc4B1yAX5bXUxBnQ5HdR/N4Z8KPrlFFV+fTMSDGN91Wz8x7sEo
+        5VjuZ1HVLbrHwRv1wcnV5kEqDym+ixaGR3dEwQAAgA==
+X-Google-Smtp-Source: APiQypIOO5KsEv8kMjXVqNo7ZloiHHlUiiLnW+/IItRglQZI2L+0MFgcmJQWvTWQ3C4TTY4/WYdyYPaHLtAsiMP+H0g=
+X-Received: by 2002:a5b:9cb:: with SMTP id y11mr7273198ybq.177.1587651744893;
+ Thu, 23 Apr 2020 07:22:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200422220430.254014-1-irogers@google.com> <20200422220430.254014-12-irogers@google.com>
+ <20200423112847.GF1136647@krava>
+In-Reply-To: <20200423112847.GF1136647@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 23 Apr 2020 07:22:13 -0700
+Message-ID: <CAP-5=fVwfu0s8Sqhs7+aTqN1Gh2SaEu=feOEQssSu9MB+7hk8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] perf test: add expr test for pmu metrics
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the tx timestamp processing happens from different contexts - softirq
-and thread/PTP worker. Enabling IRQ will add one more hard_irq context.
-This makes over all defered TX timestamp processing and locking
-overcomplicated. Move tx timestamp processing to PTP worker always instead.
+On Thu, Apr 23, 2020 at 4:29 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, Apr 22, 2020 at 03:04:30PM -0700, Ian Rogers wrote:
+>
+> SNIP
+>
+> > +
+> > +static int pmu_tests(void)
+> > +{
+> > +     struct pmu_events_map *map;
+> > +     struct pmu_event *pe;
+> > +     int i, j, k;
+> > +     const char **ids;
+> > +     int idnum;
+> > +     int ret = 0;
+> > +     struct expr_parse_ctx ctx;
+> > +     double result;
+> > +
+> > +     i = 0;
+> > +     for (;;) {
+> > +             map = &pmu_events_map[i++];
+> > +             if (!map->table) {
+> > +                     map = NULL;
+> > +                     break;
+> > +             }
+> > +             j = 0;
+> > +             for (;;) {
+> > +                     pe = &map->table[j++];
+> > +                     if (!pe->name && !pe->metric_group && !pe->metric_name)
+> > +                             break;
+> > +                     if (!pe->metric_expr)
+> > +                             continue;
+>
+> so we go throught all the metrics for the current cpu
+> and test the parsing on them.. great!
 
-napi_rx->cpts_tx_timestamp
- if ptp_packet then
-    push to txq
-    ptp_schedule_worker()
+It's not just the current CPU (such as skylake) it is every map
+(skylake, cascade lake, etc), but this only works for the architecture
+that jevents built.
+If jevents built all architectures then this could check them as well.
+Perhaps there should be a jevents test suite, but I think even then
+this test has value.
+A worthy addition to this is checking that the events within the
+expression parse, but this is good progress and worth landing.
 
-do_aux_work->cpts_overflow_check
- cpts_process_events()
+Thanks,
+Ian
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
----
- drivers/net/ethernet/ti/cpts.c | 165 +++++++++++++++++++--------------
- 1 file changed, 94 insertions(+), 71 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index 6efb809d58ed..55ba6b425fb5 100644
---- a/drivers/net/ethernet/ti/cpts.c
-+++ b/drivers/net/ethernet/ti/cpts.c
-@@ -21,6 +21,8 @@
- #include "cpts.h"
- 
- #define CPTS_SKB_TX_WORK_TIMEOUT 1 /* jiffies */
-+#define CPTS_SKB_RX_TX_TMO 100 /*ms */
-+#define CPTS_EVENT_RX_TX_TIMEOUT (100) /* ms */
- 
- struct cpts_skb_cb_data {
- 	u32 skb_mtype_seqid;
-@@ -92,46 +94,6 @@ static void cpts_purge_txq(struct cpts *cpts)
- 		dev_dbg(cpts->dev, "txq cleaned up %d\n", removed);
- }
- 
--static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
--{
--	struct sk_buff *skb, *tmp;
--	bool found = false;
--	u32 mtype_seqid;
--
--	mtype_seqid = event->high &
--		      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
--		       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
--		       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
--
--	/* no need to grab txq.lock as access is always done under cpts->lock */
--	skb_queue_walk_safe(&cpts->txq, skb, tmp) {
--		struct skb_shared_hwtstamps ssh;
--		struct cpts_skb_cb_data *skb_cb =
--					(struct cpts_skb_cb_data *)skb->cb;
--
--		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
--			memset(&ssh, 0, sizeof(ssh));
--			ssh.hwtstamp = ns_to_ktime(event->timestamp);
--			skb_tstamp_tx(skb, &ssh);
--			found = true;
--			__skb_unlink(skb, &cpts->txq);
--			dev_consume_skb_any(skb);
--			dev_dbg(cpts->dev, "match tx timestamp mtype_seqid %08x\n",
--				mtype_seqid);
--			break;
--		}
--
--		if (time_after(jiffies, skb_cb->tmo)) {
--			/* timeout any expired skbs over 1s */
--			dev_dbg(cpts->dev, "expiring tx timestamp from txq\n");
--			__skb_unlink(skb, &cpts->txq);
--			dev_consume_skb_any(skb);
--		}
--	}
--
--	return found;
--}
--
- /*
-  * Returns zero if matching event type was found.
-  */
-@@ -151,7 +113,6 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 		}
- 
- 		event = list_first_entry(&cpts->pool, struct cpts_event, list);
--		event->tmo = jiffies + 2;
- 		event->high = hi;
- 		event->low = lo;
- 		event->timestamp = timecounter_cyc2time(&cpts->tc, event->low);
-@@ -169,14 +130,10 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 			}
- 			break;
- 		case CPTS_EV_TX:
--			if (cpts_match_tx_ts(cpts, event)) {
--				/* if the new event matches an existing skb,
--				 * then don't queue it
--				 */
--				break;
--			}
--			/* fall through */
- 		case CPTS_EV_RX:
-+			event->tmo = jiffies +
-+				msecs_to_jiffies(CPTS_EVENT_RX_TX_TIMEOUT);
-+
- 			list_del_init(&event->list);
- 			list_add_tail(&event->list, &cpts->events);
- 			break;
-@@ -297,6 +254,84 @@ static int cpts_ptp_enable(struct ptp_clock_info *ptp,
- 	return -EOPNOTSUPP;
- }
- 
-+static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
-+{
-+	struct sk_buff_head txq_list;
-+	struct sk_buff *skb, *tmp;
-+	unsigned long flags;
-+	bool found = false;
-+	u32 mtype_seqid;
-+
-+	mtype_seqid = event->high &
-+		      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
-+		       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
-+		       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
-+
-+	__skb_queue_head_init(&txq_list);
-+
-+	spin_lock_irqsave(&cpts->txq.lock, flags);
-+	skb_queue_splice_init(&cpts->txq, &txq_list);
-+	spin_unlock_irqrestore(&cpts->txq.lock, flags);
-+
-+	skb_queue_walk_safe(&txq_list, skb, tmp) {
-+		struct skb_shared_hwtstamps ssh;
-+		struct cpts_skb_cb_data *skb_cb =
-+					(struct cpts_skb_cb_data *)skb->cb;
-+
-+		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
-+			memset(&ssh, 0, sizeof(ssh));
-+			ssh.hwtstamp = ns_to_ktime(event->timestamp);
-+			skb_tstamp_tx(skb, &ssh);
-+			found = true;
-+			__skb_unlink(skb, &txq_list);
-+			dev_consume_skb_any(skb);
-+			dev_dbg(cpts->dev, "match tx timestamp mtype_seqid %08x\n",
-+				mtype_seqid);
-+			break;
-+		}
-+
-+		if (time_after(jiffies, skb_cb->tmo)) {
-+			/* timeout any expired skbs over 1s */
-+			dev_dbg(cpts->dev, "expiring tx timestamp from txq\n");
-+			__skb_unlink(skb, &txq_list);
-+			dev_consume_skb_any(skb);
-+		}
-+	}
-+
-+	spin_lock_irqsave(&cpts->txq.lock, flags);
-+	skb_queue_splice(&txq_list, &cpts->txq);
-+	spin_unlock_irqrestore(&cpts->txq.lock, flags);
-+
-+	return found;
-+}
-+
-+static void cpts_process_events(struct cpts *cpts)
-+{
-+	struct list_head *this, *next;
-+	struct cpts_event *event;
-+	LIST_HEAD(events_free);
-+	unsigned long flags;
-+	LIST_HEAD(events);
-+
-+	spin_lock_irqsave(&cpts->lock, flags);
-+	list_splice_init(&cpts->events, &events);
-+	spin_unlock_irqrestore(&cpts->lock, flags);
-+
-+	list_for_each_safe(this, next, &events) {
-+		event = list_entry(this, struct cpts_event, list);
-+		if (cpts_match_tx_ts(cpts, event) ||
-+		    time_after(jiffies, event->tmo)) {
-+			list_del_init(&event->list);
-+			list_add(&event->list, &events_free);
-+		}
-+	}
-+
-+	spin_lock_irqsave(&cpts->lock, flags);
-+	list_splice_tail(&events, &cpts->events);
-+	list_splice_tail(&events_free, &cpts->pool);
-+	spin_unlock_irqrestore(&cpts->lock, flags);
-+}
-+
- static long cpts_overflow_check(struct ptp_clock_info *ptp)
- {
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
-@@ -305,17 +340,20 @@ static long cpts_overflow_check(struct ptp_clock_info *ptp)
- 	u64 ns;
- 
- 	spin_lock_irqsave(&cpts->lock, flags);
--
- 	cpts_update_cur_time(cpts, -1, NULL);
-+	spin_unlock_irqrestore(&cpts->lock, flags);
- 
- 	ns = timecounter_read(&cpts->tc);
- 
-+	cpts_process_events(cpts);
-+
-+	spin_lock_irqsave(&cpts->txq.lock, flags);
- 	if (!skb_queue_empty(&cpts->txq)) {
- 		cpts_purge_txq(cpts);
- 		if (!skb_queue_empty(&cpts->txq))
- 			delay = CPTS_SKB_TX_WORK_TIMEOUT;
- 	}
--	spin_unlock_irqrestore(&cpts->lock, flags);
-+	spin_unlock_irqrestore(&cpts->txq.lock, flags);
- 
- 	dev_dbg(cpts->dev, "cpts overflow check at %lld\n", ns);
- 	return (long)delay;
-@@ -409,19 +447,6 @@ static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb,
- 			break;
- 		}
- 	}
--
--	if (ev_type == CPTS_EV_TX && !ns) {
--		struct cpts_skb_cb_data *skb_cb =
--				(struct cpts_skb_cb_data *)skb->cb;
--		/* Not found, add frame to queue for processing later.
--		 * The periodic FIFO check will handle this.
--		 */
--		skb_get(skb);
--		/* get the timestamp for timeouts */
--		skb_cb->tmo = jiffies + msecs_to_jiffies(100);
--		__skb_queue_tail(&cpts->txq, skb);
--		ptp_schedule_worker(cpts->clock, 0);
--	}
- 	spin_unlock_irqrestore(&cpts->lock, flags);
- 
- 	return ns;
-@@ -455,9 +480,7 @@ EXPORT_SYMBOL_GPL(cpts_rx_timestamp);
- void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
- {
- 	struct cpts_skb_cb_data *skb_cb = (struct cpts_skb_cb_data *)skb->cb;
--	struct skb_shared_hwtstamps ssh;
- 	int ret;
--	u64 ns;
- 
- 	if (!(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
- 		return;
-@@ -471,12 +494,12 @@ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
- 	dev_dbg(cpts->dev, "%s mtype seqid %08x\n",
- 		__func__, skb_cb->skb_mtype_seqid);
- 
--	ns = cpts_find_ts(cpts, skb, CPTS_EV_TX, skb_cb->skb_mtype_seqid);
--	if (!ns)
--		return;
--	memset(&ssh, 0, sizeof(ssh));
--	ssh.hwtstamp = ns_to_ktime(ns);
--	skb_tstamp_tx(skb, &ssh);
-+	/* Always defer TX TS processing to PTP worker */
-+	skb_get(skb);
-+	/* get the timestamp for timeouts */
-+	skb_cb->tmo = jiffies + msecs_to_jiffies(CPTS_SKB_RX_TX_TMO);
-+	skb_queue_tail(&cpts->txq, skb);
-+	ptp_schedule_worker(cpts->clock, 0);
- }
- EXPORT_SYMBOL_GPL(cpts_tx_timestamp);
- 
--- 
-2.17.1
-
+> thanks,
+> jirka
+>
