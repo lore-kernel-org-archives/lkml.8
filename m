@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2F4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC72BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC4F20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B131F20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgDWXM7 (ORCPT
+        id S1729081AbgDWXM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:12:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50032 "EHLO
+        Thu, 23 Apr 2020 19:12:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50016 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728493AbgDWXGv (ORCPT
+        by vger.kernel.org with ESMTP id S1728498AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvX-0004m9-OQ; Fri, 24 Apr 2020 00:06:39 +0100
+        id 1jRkvT-0004if-Jp; Fri, 24 Apr 2020 00:06:35 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-00E6uc-4V; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvR-00E6pB-9V; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Radoslaw Tyl" <radoslawx.tyl@intel.com>,
-        "Paul Menzel" <pmenzel@molgen.mpg.de>,
-        "Jeff Kirsher" <jeffrey.t.kirsher@intel.com>
-Date:   Fri, 24 Apr 2020 00:06:33 +0100
-Message-ID: <lsq.1587683028.507107809@decadent.org.uk>
+        "Christoph Paasch" <cpaasch@apple.com>,
+        "Soheil Hassas Yeganeh" <soheil@google.com>,
+        "Neal Cardwell" <ncardwell@google.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        "Jason Baron" <jbaron@akamai.com>
+Date:   Fri, 24 Apr 2020 00:05:53 +0100
+Message-ID: <lsq.1587683028.868791916@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 166/245] ixgbevf: Remove limit of 10 entries for
- unicast filter list
+Subject: [PATCH 3.16 126/245] tcp: do not send empty skb from tcp_write_xmit()
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,36 +59,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Radoslaw Tyl <radoslawx.tyl@intel.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit aa604651d523b1493988d0bf6710339f3ee60272 upstream.
+commit 1f85e6267caca44b30c54711652b0726fadbb131 upstream.
 
-Currently, though the FDB entry is added to VF, it does not appear in
-RAR filters. VF driver only allows to add 10 entries. Attempting to add
-another causes an error. This patch removes limitation and allows use of
-all free RAR entries for the FDB if needed.
+Backport of commit fdfc5c8594c2 ("tcp: remove empty skb from
+write queue in error cases") in linux-4.14 stable triggered
+various bugs. One of them has been fixed in commit ba2ddb43f270
+("tcp: Don't dequeue SYN/FIN-segments from write-queue"), but
+we still have crashes in some occasions.
 
-Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
-Signed-off-by: Radoslaw Tyl <radoslawx.tyl@intel.com>
-Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Root-cause is that when tcp_sendmsg() has allocated a fresh
+skb and could not append a fragment before being blocked
+in sk_stream_wait_memory(), tcp_write_xmit() might be called
+and decide to send this fresh and empty skb.
+
+Sending an empty packet is not only silly, it might have caused
+many issues we had in the past with tp->packets_out being
+out of sync.
+
+Fixes: c65f7f00c587 ("[TCP]: Simplify SKB data portion allocation with NETIF_F_SG.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Christoph Paasch <cpaasch@apple.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 5 -----
- 1 file changed, 5 deletions(-)
+ net/ipv4/tcp_output.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-+++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
-@@ -1465,11 +1465,6 @@ static int ixgbevf_write_uc_addr_list(st
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	int count = 0;
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1992,6 +1992,14 @@ static bool tcp_write_xmit(struct sock *
+ 		    unlikely(tso_fragment(sk, skb, limit, mss_now, gfp)))
+ 			break;
  
--	if ((netdev_uc_count(netdev)) > 10) {
--		pr_err("Too many unicast filters - No Space\n");
--		return -ENOSPC;
--	}
--
- 	if (!netdev_uc_empty(netdev)) {
- 		struct netdev_hw_addr *ha;
- 		netdev_for_each_uc_addr(ha, netdev) {
++		/* Argh, we hit an empty skb(), presumably a thread
++		 * is sleeping in sendmsg()/sk_stream_wait_memory().
++		 * We do not want to send a pure-ack packet and have
++		 * a strange looking rtx queue with empty packet(s).
++		 */
++		if (TCP_SKB_CB(skb)->end_seq == TCP_SKB_CB(skb)->seq)
++			break;
++
+ 		TCP_SKB_CB(skb)->when = tcp_time_stamp;
+ 
+ 		if (unlikely(tcp_transmit_skb(sk, skb, 1, gfp)))
 
