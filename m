@@ -1,102 +1,73 @@
 Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FD7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B104CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E31920728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D9320857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587652942;
+	bh=CYZLO9WrZrZcw2q8PvdB8YO8JajOtg0740bTwyOhLiM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pxqiTkbaMT4Jmw1M3LK8yRATWx0ry5pTuY8SnENPKOHFf4pRNeQ1cnXYvdRChYpoI
+	 XFGQvTbr/xKKqErbeDpVqgKOlGPKyko5jfCv3d/LNtlKeOmYXsNSBd15ukEpC/Qz5D
+	 f6QJFJZAUgolg/ACFawbFToLusJqypuR0T67+frE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgDWOmK (ORCPT
+        id S1728510AbgDWOmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:42:10 -0400
-Received: from mga14.intel.com ([192.55.52.115]:40291 "EHLO mga14.intel.com"
+        Thu, 23 Apr 2020 10:42:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbgDWOmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:42:10 -0400
-IronPort-SDR: Y5r+AXxd6Q4bljWGySnDoehbm4Qk+E05YC0Tnr7TxtArcGnn9oD0ccZBw9ZCLYjMMBzrI2Mj/N
- V9D9BEjssB9g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 07:42:09 -0700
-IronPort-SDR: heL70kamjV8fP3qeZ86FGQrHpl921Z+ulj0rEDtSvkjoGH+G/3HYAUI3tYQm05YAwuf90SuGC7
- tAtBeguRjE7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="430344560"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 23 Apr 2020 07:42:09 -0700
-Date:   Thu, 23 Apr 2020 07:42:09 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Cathy Avery <cavery@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com, wei.huang2@amd.com
-Subject: Re: [PATCH 2/2] KVM: x86: check_nested_events if there is an
- injectable NMI
-Message-ID: <20200423144209.GA17824@linux.intel.com>
-References: <20200414201107.22952-1-cavery@redhat.com>
- <20200414201107.22952-3-cavery@redhat.com>
+        id S1726963AbgDWOmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:42:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4582F20728;
+        Thu, 23 Apr 2020 14:42:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587652939;
+        bh=CYZLO9WrZrZcw2q8PvdB8YO8JajOtg0740bTwyOhLiM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Eib8PQrX5NECv3nCRjI8ICs14Oopj+g17btTalxraE8Cd7A64Hk7thYdV3N0oMkMc
+         IgSHGVc/N80EZyuIBoAtEDWIZQxfyVbwgy0DJPvP9YbTDjxWDRLv30wPEocBVzUQo1
+         ghkgkFeRE1NiKYBEmQPiLxGMy/4YYq1FrEFNwDRw=
+Date:   Thu, 23 Apr 2020 16:42:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     xujialu <xujialu@vimux.org>
+Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        akpm@linux-foundation.org, mchehab+huawei@kernel.org,
+        corbet@lwn.net
+Subject: Re: [PATCH] scripts: gtags_files_generator.sh
+Message-ID: <20200423144217.GA7622@kroah.com>
+References: <20200423103801.GA3730892@kroah.com>
+ <20200423143642.11788-1-xujialu@vimux.org>
+ <20200423143642.11788-2-xujialu@vimux.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414201107.22952-3-cavery@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200423143642.11788-2-xujialu@vimux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 04:11:07PM -0400, Cathy Avery wrote:
-> With NMI intercept moved to check_nested_events there is a race
-> condition where vcpu->arch.nmi_pending is set late causing
+On Thu, Apr 23, 2020 at 10:36:42PM +0800, xujialu wrote:
+> A script for generating gtags.files after compilation.
 
-How is nmi_pending set late?  The KVM_{G,S}ET_VCPU_EVENTS paths can't set
-it because the current KVM_RUN thread holds the mutex, and the only other
-call to process_nmi() is in the request path of vcpu_enter_guest, which has
-already executed.
+That's a very short description, why isn't that also in the tool itself,
+how is anyone going to know what it is, or how to use it?
 
-> the execution of check_nested_events to not setup correctly
-> for nested.exit_required. A second call to check_nested_events
-> allows the injectable nmi to be detected in time in order to
-> require immediate exit from L2 to L1.
-> 
-> Signed-off-by: Cathy Avery <cavery@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 027dfd278a97..ecfafcd93536 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7734,10 +7734,17 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
->  		vcpu->arch.smi_pending = false;
->  		++vcpu->arch.smi_count;
->  		enter_smm(vcpu);
-> -	} else if (vcpu->arch.nmi_pending && kvm_x86_ops.nmi_allowed(vcpu)) {
-> -		--vcpu->arch.nmi_pending;
-> -		vcpu->arch.nmi_injected = true;
-> -		kvm_x86_ops.set_nmi(vcpu);
-> +	} else if (vcpu->arch.nmi_pending) {
-> +		if (is_guest_mode(vcpu) && kvm_x86_ops.check_nested_events) {
-> +			r = kvm_x86_ops.check_nested_events(vcpu);
-> +			if (r != 0)
-> +				return r;
-> +		}
-> +		if (kvm_x86_ops.nmi_allowed(vcpu)) {
-> +			--vcpu->arch.nmi_pending;
-> +			vcpu->arch.nmi_injected = true;
-> +			kvm_x86_ops.set_nmi(vcpu);
-> +		}
->  	} else if (kvm_cpu_has_injectable_intr(vcpu)) {
->  		/*
->  		 * Because interrupts can be injected asynchronously, we are
-> -- 
-> 2.20.1
-> 
+And this says what it is, but not _why_ it would be useful at all,
+please document that here.
+
+thanks,
+
+greg k-h
