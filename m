@@ -2,187 +2,126 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96365C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C228C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C00C215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F1320715
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U7wNYsYb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="rexKojhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgDWGJY (ORCPT
+        id S1726813AbgDWGKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:09:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725562AbgDWGJY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:09:24 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF084C03C1AB
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 23:09:23 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id h205so2547927ybg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 23:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lrE4KKFTdzZAODRsf0iRvpS449bChhBAlCxKgsDfMv4=;
-        b=U7wNYsYb7GLwNYtEY39aq//g5FCqhxwzUssRFVir5TOdM9g1tzUbYksuV+2kWI+n2y
-         iZpJQoqKhffNiNfQB5A7iA0Mql17gEw3jbshKx8ad4y8dINipu4h3olXN+uiv97GlVER
-         XP0HtaM/mScXUVJYRVJw80lB/ilvNSRb8na7DfKIQfPwIRGmQdxb7zmQabbHPgwBzkFz
-         gbF25bxGJSGNBU1B1IbgMcy2Ef0ZKMACFZuAD4RJ/+EW8i0ri7z72YuHPTIbS/BHK6qz
-         55NXdLL9cPiun1Q7doJ8AcdVH1xyqXMFT59aJStdYJDZCwMmH4ETswD2a5Fce9JfYhLU
-         w4sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lrE4KKFTdzZAODRsf0iRvpS449bChhBAlCxKgsDfMv4=;
-        b=ieyczLxDodboQvfarWmPoOzW6ZhVycYfofTu4+B1BEzHObe7KGalpOrsF5XkEVLvhd
-         vN1qR4rlaf39TzsPFSUMEvq+uHKC/Mrs7mjtVqdlyblCw4oKLzjCG6SiUq9t4c3YgRnE
-         rDlb3SfNT7/mS7D64wYPcs9DRHMqXzggfsGeyHEEXfiIIIchjDiCjXa5znEq6FEiBA6z
-         uDmVoIzW7CZPTg9B/4nG3cOPL1U8tEz/c6k/P/e1EXfxe7HxsDwkDXYqPdy/Tx1O/kCy
-         BbhOBtTT+nDs8Cd01nkwf96Qix1c9ibDysZPcF9ofpW3gGKsZ8ph79/qcq8RirijXHZD
-         Wb1g==
-X-Gm-Message-State: AGi0PuZhT8YFZuaEhi2EKxswuPdFtsVaRPWf6ZRQh4IOKJmQsIuMzo9n
-        xdj+mJOjq8oc5p8rmH2JyLT17wtdMRch0RwNwGCF6g==
-X-Google-Smtp-Source: APiQypLd8bChmUKTyL6TkmgbOYfrCSG+TdAeNavHsinwPWlRtsg1zAbaCqnaUSFP4YmuqDbX/UDcTVTRScX6X8BeY7o=
-X-Received: by 2002:a5b:9cb:: with SMTP id y11mr4252129ybq.177.1587622162585;
- Wed, 22 Apr 2020 23:09:22 -0700 (PDT)
+        Thu, 23 Apr 2020 02:10:15 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38869 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgDWGKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:10:14 -0400
+Received: from [IPv6:2601:646:8600:3281:2dc6:4436:b0b:d574] ([IPv6:2601:646:8600:3281:2dc6:4436:b0b:d574])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 03N68l0t1936638
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Wed, 22 Apr 2020 23:08:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 03N68l0t1936638
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020032201; t=1587622131;
+        bh=qcwWHmAYuKK9NDnuYiBmOsdGFELE+uhJI1KsTVUwtAk=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=rexKojhVR8+sBYcf0j09kqGZjlyvJ6k58iw6qKKQ2hWBt5XhlZxW8zeT73wGXKSHz
+         P9ZF24INPir9d/LsnmcLPa6f/rXDrIK9rYTgVzw7f0GsQF3us+vnCXlesWTCdKMQGx
+         8KrFKl0sd4icdkcqU/WE/vefxLO/loPbhdPeFE5fCo65Y7bS629SFA93hkHCitkxL9
+         CrKR55OBy6SwUlirswJ7SuHyRaRuLSR/WL9qp5NTqDx2or6l+pQezb73w2IAkEuAHN
+         7BJ5BxIbbJGMJgOpjIer8u20haIZdwyxxgHhQgiYGkM/YrS7sk/0ACRumPP2kcpmdH
+         dQNhpCbn0+3Ag==
+Date:   Wed, 22 Apr 2020 23:08:40 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200422173630.8351-1-luke.r.nels@gmail.com>
+References: <20200422173630.8351-1-luke.r.nels@gmail.com>
 MIME-Version: 1.0
-References: <20200422074809.160248-1-irogers@google.com> <20200422074809.160248-3-irogers@google.com>
- <20200422143840.GJ608746@tassilo.jf.intel.com> <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
- <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
- <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com> <cb5fcb4b-3ac6-66b5-9f9e-7943f4a6dadf@linux.intel.com>
-In-Reply-To: <cb5fcb4b-3ac6-66b5-9f9e-7943f4a6dadf@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 22 Apr 2020 23:09:11 -0700
-Message-ID: <CAP-5=fXVF_ExxVuiivF0JY3MwgxrQZqyFoPwn-p7DPf6Gbdh0g@mail.gmail.com>
-Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake metrics
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH bpf v2 1/2] bpf, x86_32: Fix incorrect encoding in BPF_LDX zero-extension
+To:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org
+CC:     Brian Gerst <brgerst@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>, Wang YanQing <udknight@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <57BB877E-685A-4FC8-945C-3E1F30CF5926@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:54 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
+On April 22, 2020 10:36:29 AM PDT, Luke Nelson <lukenels@cs=2Ewashington=2E=
+edu> wrote:
+>The current JIT uses the following sequence to zero-extend into the
+>upper 32 bits of the destination register for BPF_LDX BPF_{B,H,W},
+>when the destination register is not on the stack:
 >
-> Hi Jiri,
+>  EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
 >
-> Bisected to this commit which introduced the regression.
+>The problem is that C7 /0 encodes a MOV instruction that requires a
+>4-byte
+>immediate; the current code emits only 1 byte of the immediate=2E This
+>means that the first 3 bytes of the next instruction will be treated as
+>the rest of the immediate, breaking the stream of instructions=2E
 >
-> 26226a97724d ("perf expr: Move expr lexer to flex")
+>This patch fixes the problem by instead emitting "xor dst_hi,dst_hi"
+>to clear the upper 32 bits=2E This fixes the problem and is more
+>efficient
+>than using MOV to load a zero immediate=2E
 >
-> Would you like to look at that?
+>This bug may not be currently triggerable as BPF_REG_AX is the only
+>register not stored on the stack and the verifier uses it in a limited
+>way, and the verifier implements a zero-extension optimization=2E But the
+>JIT should avoid emitting incorrect encodings regardless=2E
+>
+>Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
+>Signed-off-by: Xi Wang <xi=2Ewang@gmail=2Ecom>
+>Signed-off-by: Luke Nelson <luke=2Er=2Enels@gmail=2Ecom>
+>---
+>v1 -> v2: Updated commit message to better reflect the bug=2E
+>          (H=2E Peter Anvin and Brian Gerst)
+>---
+> arch/x86/net/bpf_jit_comp32=2Ec | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+>diff --git a/arch/x86/net/bpf_jit_comp32=2Ec
+>b/arch/x86/net/bpf_jit_comp32=2Ec
+>index 4d2a7a764602=2E=2Ecc9ad3892ea6 100644
+>--- a/arch/x86/net/bpf_jit_comp32=2Ec
+>+++ b/arch/x86/net/bpf_jit_comp32=2Ec
+>@@ -1854,7 +1854,9 @@ static int do_jit(struct bpf_prog *bpf_prog, int
+>*addrs, u8 *image,
+> 					      STACK_VAR(dst_hi));
+> 					EMIT(0x0, 4);
+> 				} else {
+>-					EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
+>+					/* xor dst_hi,dst_hi */
+>+					EMIT2(0x33,
+>+					      add_2reg(0xC0, dst_hi, dst_hi));
+> 				}
+> 				break;
+> 			case BPF_DW:
 
-Hi Jin,
-
-that commit breaks parsing of things like ','. See fixes in this patch
-set such as:
-https://lore.kernel.org/lkml/20200422220430.254014-5-irogers@google.com/
-Fixing the lex issues then exposes other bugs that need to be
-corrected in the json. I've added Fixes to the commit message of:
-https://lore.kernel.org/lkml/20200422220430.254014-3-irogers@google.com/
-https://lore.kernel.org/lkml/20200422220430.254014-4-irogers@google.com/
-and would be glad of a review. If we can land:
-https://lore.kernel.org/lkml/20200422220430.254014-12-irogers@google.com/
-then expr as the source of parse errors can go away :-) The next
-problem is the parse events code, but some of that logic is dependent
-on the machine it is running on. It'd be good to add a test that
-parsed events code can handle the events in metrics too, filtering out
-things like duration_time that are special to metrics.
-
-Thanks,
-Ian
-
-> Thanks
-> Jin Yao
->
-> On 4/23/2020 9:08 AM, Jin, Yao wrote:
-> >
-> >
-> > On 4/23/2020 12:18 AM, Ian Rogers wrote:
-> >> On Wed, Apr 22, 2020 at 8:34 AM Ian Rogers <irogers@google.com> wrote:
-> >>>
-> >>> On Wed, Apr 22, 2020 at 7:38 AM Andi Kleen <ak@linux.intel.com> wrote:
-> >>>>
-> >>>> On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
-> >>>>> Remove over escaping with \\.
-> >>>>> Remove extraneous if 1 if 0 == 1 else 0 else 0.
-> >>>>
-> >>>> So where do these parse errors happen exactly? Some earlier
-> >>>> patches introduced them as regressions?
-> >>>
-> >>> I'll work to track down a Fixes tag. I can repro the Skylakex errors
-> >>> without the test in this series, by doing:
-> >>>
-> >>> $ perf stat -M DRAM_Read_Latency sleep 1
-> >>> Error:
-> >>> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
-> >>> for event (cha/event=0x36\,uma
-> >>> sk=0x21/).
-> >>> /bin/dmesg | grep -i perf may provide additional information.
-> >>>
-> >
-> > I also think some patches introduced this regression. When we rollback
-> > to commit 61ec07f5917e (perf vendor events intel: Update all the Intel
-> > JSON metrics from TMAM 3.6.), there is no this error on CLX.
-> >
-> > Thanks
-> > Jin Yao
-> >
-> >>> This was just the escaping issue. I'm less clear on the other cascade
-> >>> lake issue, and it is a bit more work for me to test on cascade lake.
-> >>> What is "if 1 if 0 == 1 else 0 else 0" trying to do? Perhaps hunting
-> >>> for the Fixes will let me know, but it looks like a copy-paste error.
-> >>>
-> >>>> The original metrics worked without parse errors as far as I know.
-> >>>
-> >>> The skylake issue above repros on 5.2.17 and so it seems like it is
-> >>> broken for a while. The test in this series will prevent this in the
-> >>> future, but without this patch that test fails.
-> >>
-> >> The parse errors were introduced with the metrics, so they've never
-> >> worked:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=fd5500989c8f3c3944ac0a144be04bae2506f7ba
-> >>
-> >>
-> >> I will send out a v2 with Fixes in the commit message but wanted to
-> >> wait in case there was any more feedback. In particular the fixes to
-> >> the new test and expr parser lex code. The lex code wasn't broken at
-> >> the time the metrics were added and should be working again after this
-> >> patch set.
-> >>
-> >> Thanks,
-> >> Ian
-> >>
-> >>>> If it fixes something earlier it would need Fixes: tags.
-> >>>
-> >>> Working on it. Thanks for the input!
-> >>>
-> >>> Ian
-> >>>
-> >>>> -Andi
+Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
