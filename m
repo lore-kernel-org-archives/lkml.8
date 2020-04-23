@@ -2,145 +2,135 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB94C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B19EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257B220767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584DF20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:11:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VmiJV0EN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgDWTKj (ORCPT
+        id S1728181AbgDWTLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:10:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23904 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727896AbgDWTKj (ORCPT
+        Thu, 23 Apr 2020 15:11:35 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:37045 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgDWTLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:10:39 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NJ2RNc084082
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 15:10:38 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmuapg74-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 15:10:37 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 23 Apr 2020 20:09:48 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 20:09:46 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NJAWch58720378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 19:10:32 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5EC5F11C0A7;
-        Thu, 23 Apr 2020 19:10:32 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47E0E11C09F;
-        Thu, 23 Apr 2020 19:10:31 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.178.107])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 19:10:31 +0000 (GMT)
-Subject: Re: [PATCH] ima: Fix return value of ima_write_policy()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Thu, 23 Apr 2020 15:10:30 -0400
-In-Reply-To: <baf2fd326f5043538390254304b85e41@huawei.com>
-References: <20200421090442.22693-1-roberto.sassu@huawei.com>
-         <1587609266.5165.58.camel@linux.ibm.com>
-         <baf2fd326f5043538390254304b85e41@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042319-4275-0000-0000-000003C5753F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042319-4276-0000-0000-000038DB00E0
-Message-Id: <1587669030.5610.43.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_13:2020-04-23,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
- impostorscore=0 mlxscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230144
+        Thu, 23 Apr 2020 15:11:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587669094; x=1619205094;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+cVjfYAvD3unz6/hlGHc2ikrQ4gswyF1rlxFN2YivHk=;
+  b=VmiJV0ENqhfTJ/daRhsW+T80el7COvVR7Uhp2LtMcEJZpSYMT5IXqtHz
+   DUEYWJFcOcYBf41dIjeSpyv4F3fjVefWNjiwLcTKYPYUKhMRExIRdeXyP
+   Bbjh5/gLCVmQjS9KafatDH8qywv+4C6rEmheECLPk6DFPNIKvCsRa+7Yp
+   wCDB9cvEBG3QhBBMQ1QFgBwwqOSOBEbAFPJrxAIS99gAZhJVgeDifGGCt
+   EMxvb+x+ZWYAM3Cbsy2CIi09scX1n2K1mLIpZJh7cG7puKf43twCDH1SN
+   ZbaUX6BON4M2mM/zJXCO3DlGKeaQ8WQM3zlBRwAk+zTFVg1g6daqYQeFA
+   A==;
+IronPort-SDR: iHfHgFDexiVhSHmxfaViEIXRiY8e+MXC3cnM/YGOy+vDxVWcImOZAZIYrQttPmt3uHYNLLJcFL
+ jxAuIt1KC+YK+zpfveo0gNWmghvYTxZMV6LcyNQzQdPyZixq8/MGJko/t4piTy6d4dGxiCHq0o
+ iFy0lrW3pOzrn8XaCxR645jX3RMfvpQrWtAXQXv1wRsq3Y2zWUaZpxzrVxAcCQkwshYUqbcm8C
+ KS9GmqBZZXfTxttS/z0nW+ZG6Cb0Z/a5oeOb4VBGvUwJM5P7ExJ1Bs1Hu9Zb7UNr3zoWv9pikX
+ Nag=
+X-IronPort-AV: E=Sophos;i="5.73,307,1583218800"; 
+   d="scan'208";a="73628295"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Apr 2020 12:11:33 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 Apr 2020 12:11:34 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 23 Apr 2020 12:11:33 -0700
+Date:   Thu, 23 Apr 2020 21:11:31 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Po Liu <Po.Liu@nxp.com>, "David S. Miller" <davem@davemloft.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Vinicius Costa Gomes" <vinicius.gomes@intel.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        <michael.chan@broadcom.com>, <vishal@chelsio.com>,
+        <saeedm@mellanox.com>, <leon@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        <simon.horman@netronome.com>, <pablo@netfilter.org>,
+        <moshe@mellanox.com>, Murali Karicheri <m-karicheri2@ti.com>,
+        Andre Guedes <andre.guedes@linux.intel.com>,
+        "Stephen Hemminger" <stephen@networkplumber.org>
+Subject: Re: [v3,net-next 1/4] net: qos: introduce a gate control flow action
+Message-ID: <20200423191131.c257srsnicyrhol6@ws.localdomain>
+References: <20200418011211.31725-5-Po.Liu@nxp.com>
+ <20200422024852.23224-1-Po.Liu@nxp.com>
+ <20200422024852.23224-2-Po.Liu@nxp.com>
+ <20200422191910.gacjlviegrjriwcx@ws.localdomain>
+ <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CA+h21hrZiRq2-8Dx31X_rwgJ2Lkp6eF9H7M3cOyiBAWs0_xxhw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-23 at 09:39 +0000, Roberto Sassu wrote:
-> > On Tue, 2020-04-21 at 11:04 +0200, Roberto Sassu wrote:
-> > > Return datalen instead of zero if there is a rule to appraise the policy
-> > > but that rule is not enforced.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 19f8a84713edc ("ima: measure and appraise the IMA policy itself")
-> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > > ---
-> > >  security/integrity/ima/ima_fs.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/security/integrity/ima/ima_fs.c
-> > b/security/integrity/ima/ima_fs.c
-> > > index a71e822a6e92..2c2ea814b954 100644
-> > > --- a/security/integrity/ima/ima_fs.c
-> > > +++ b/security/integrity/ima/ima_fs.c
-> > > @@ -340,6 +340,8 @@ static ssize_t ima_write_policy(struct file *file,
-> > const char __user *buf,
-> > >  				    1, 0);
-> > >  		if (ima_appraise & IMA_APPRAISE_ENFORCE)
-> > >  			result = -EACCES;
-> > > +		else
-> > > +			result = datalen;
-> > 
-> > In all other cases, where the IMA_APPRAISE_ENFORCE is not enabled we
-> > allow the action.  Here we prevent loading the policy, but don't
-> > return an error.  One option, as you did, is return some indication
-> > that the policy was not loaded.  Another option would be to allow
-> > loading the policy in LOG or FIX mode, but I don't think that would be
-> > productive.  Perhaps differentiate between the LOG and FIX modes from
-> > the OFF mode.  For the LOG and FIX modes, perhaps return -EACCES as
-> > well.  For the OFF case, loading a policy with appraise rules should
-> > not be permitted.
-> 
-> In LOG or FIX mode, loading a policy with absolute path will succeed.
-
-Yes
-
-> Maybe we should just keep the same behavior also when the policy
-> is directly written to securityfs.
-
-The purpose of LOG mode is to learn about the filesystem behavior in
-order to label it properly.  FIX mode is for re-calculating and fixing
-existing file hashes.  If we permit directly writing the policy to
-securityfs, even if the existing policy requires the policy to be
-signed, then it is behaving differently than it would in enforcing
-mode.  I'm ok with that, as long as the error message is emitted.
-
-> Ok for the OFF mode, but probably this should be a separate patch.
-
-Agreed
-
-Mimi
-
-> 
-> > >  	} else {
-> > >  		result = ima_parse_add_rule(data);
-> > >  	}
-> 
+On 22.04.2020 22:28, Vladimir Oltean wrote:
+>> >> tc qdisc add dev eth0 ingress
+>> >
+>> >> tc filter add dev eth0 parent ffff: protocol ip \
+>> >           flower src_ip 192.168.0.20 \
+>> >           action gate index 2 clockid CLOCK_TAI \
+>> >           sched-entry open 200000000 -1 8000000 \
+>> >           sched-entry close 100000000 -1 -1
+>>
+>> First of all, it is a long time since I read the 802.1Qci and when I did
+>> it, it was a draft. So please let me know if I'm completly off here.
+>>
+>> I know you are focusing on the gate control in this patch serie, but I
+>> assume that you later will want to do the policing and flow-meter as
+>> well. And it could make sense to consider how all of this work
+>> toghether.
+>>
+>> A common use-case for the policing is to have multiple rules pointing at
+>> the same policing instance. Maybe you want the sum of the traffic on 2
+>> ports to be limited to 100mbit. If you specify such action on the
+>> individual rule (like done with the gate), then you can not have two
+>> rules pointing at the same policer instance.
+>>
+>> Long storry short, have you considered if it would be better to do
+>> something like:
+>>
+>>    tc filter add dev eth0 parent ffff: protocol ip \
+>>             flower src_ip 192.168.0.20 \
+>>             action psfp-id 42
+>>
+>> And then have some other function to configure the properties of psfp-id
+>> 42?
+>>
+>>
+>> /Allan
+>>
+>
+>It is very good that you brought it up though, since in my opinion too
+>it is a rather important aspect, and it seems that the fact this
+>feature is already designed-in was a bit too subtle.
+>
+>"psfp-id" is actually his "index" argument.
+Ahh.. Thanks for clarifying, I missed this point completly.
 
