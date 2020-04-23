@@ -2,96 +2,140 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D4FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB03C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE2D20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419982084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f+hLv/O8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt7Qw0nr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgDWI7z (ORCPT
+        id S1726697AbgDWJB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48882 "EHLO
+        Thu, 23 Apr 2020 05:01:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWI7z (ORCPT
+        with ESMTP id S1725854AbgDWJB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:59:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5932FC03C1AF
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 01:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FslEljpf0Qls1zpokxi+kAyLc7T9TEQnExUjq1hOBc4=; b=f+hLv/O867JLig1vEuHlSpjIrH
-        SdGYwQ3AZuc9qm8Sj/zRmjlnQc4o7tsH5EBrV6AC9TRxDIsYPFTDtYz5DzARh2lTQHGmlIVzrSeV9
-        aekNBjgAs5/oNvndIjGDJ6fi+Ce49F928IcX4SwQe7BmTtACAkyuxoYv+0TweEY8HwXFUl8gWCZsg
-        38wpdFy1EnJk0yJOk4aYDRvPb3IO2d70pzpz9nVlWBHODFMEi0B93cBo/humNDnCQMCRx5nZOfeTu
-        OT/kl5Z9e7ObxbWosVHy/6JdgVVtsEUyamSmHSw9kvVuRf+mllnGwHqGwgIGMd2o+AqtY7Yv6DE/n
-        DvIQMbtg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRXhr-000632-Vi; Thu, 23 Apr 2020 08:59:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5B55D3010C4;
-        Thu, 23 Apr 2020 10:59:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 473BA21420DB1; Thu, 23 Apr 2020 10:59:38 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 10:59:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>, qais.yousef@arm.com,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        bsegall@google.com, mgorman@suse.de
-Subject: Re: [PATCH 10/23] sched,mmc: Convert to sched_set_fifo*()
-Message-ID: <20200423085938.GV20713@hirez.programming.kicks-ass.net>
-References: <20200422112719.826676174@infradead.org>
- <20200422112831.811655681@infradead.org>
- <CAPDyKFo+qCZU=snj==4CFRfL9R0KLcG2RMYeFW_BMX=-Mo5rtg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFo+qCZU=snj==4CFRfL9R0KLcG2RMYeFW_BMX=-Mo5rtg@mail.gmail.com>
+        Thu, 23 Apr 2020 05:01:58 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E93C03C1AF;
+        Thu, 23 Apr 2020 02:01:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a7so2244237pju.2;
+        Thu, 23 Apr 2020 02:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lqQCA6uU2hlxAoFKS3Zl8BZd61e4Kf8xSgvVI/JGqC4=;
+        b=Nt7Qw0nrmkNGLxtXMTEV5uYLLipfjl9h0i6pjbj/rQ5IrdUvVnE05yKMFte/E8X3gA
+         v1ALEt/A9Q3qCfCyONPh2D2n7JlxUthelFPP/npXXozrmg46aM5BCpSXcZ14+D8PYNNR
+         ohXxRhnTfXw0rOmY/i2f5QlSPSUFKmNG69HZS9PwS0uE5UeTFpk4VpcEEkHp6bbw/wgM
+         32emtYxbXl6ZqkHeHp/U1nHsBtvbjrEd7nJVNWvC+AIB5ZRLew6yut1rqRwSsOqeDjx8
+         t2Mdo33+eOkOxS+01/D29GVQhpBosV42glNCcF6dOb6+/Hl02IGJNxmKdT0d1lIFOX3i
+         8JfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lqQCA6uU2hlxAoFKS3Zl8BZd61e4Kf8xSgvVI/JGqC4=;
+        b=I142TcMwprwhQiG1lFuhbdY6bm9vB5KSwu8j3a+baf5sfANIP4GLBhkmcw+8y4IWws
+         Mi2LC+1qf3Jsy0vfd67ht2mm391z14xUIDw+CvTt67hvIH0zOV1tNyFwbQ7MNw66h8Wf
+         2BVoJv0rf2PT0wFEP7RgY95BSZHf9JJdy7sXHu6RGV8dTAIo1UUNNRg4Pv8GBn0amHs8
+         Ls0LAkh7jBhGMgaiOyXpr8mA40e9YEJuMHEy2KDWn4WtBf8GkmpM1D8B5tKRk4bvlUsN
+         eMfre/7AtzXX4E7kkXaqns3+n8F+OTgmCsWMudx9sCSArTKIE968rEvADfvVHzg4R8Tz
+         pImA==
+X-Gm-Message-State: AGi0PubjSdAmTbkbgneXDR/rPcZmtSFeTj8Rh8SD2A67HMiQMTLAdMCO
+        STBymervjSQD0fnb6o96tMGBQApI
+X-Google-Smtp-Source: APiQypLV0DFMc3aCMJ+cJGdiGtokrQ/ZJbvaGZyluabiyAKYwRb9+7mcocgS5ufUqx/Tv5wjJUYD5g==
+X-Received: by 2002:a17:902:7886:: with SMTP id q6mr2823565pll.237.1587632517257;
+        Thu, 23 Apr 2020 02:01:57 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id w28sm1574204pgc.26.2020.04.23.02.01.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Apr 2020 02:01:56 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Subject: [PATCH v2 0/5] KVM: VMX: Tscdeadline timer emulation fastpath
+Date:   Thu, 23 Apr 2020 17:01:42 +0800
+Message-Id: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 06:59:35PM +0200, Ulf Hansson wrote:
-> On Wed, 22 Apr 2020 at 13:29, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Because SCHED_FIFO is a broken scheduler model (see previous patches)
-> > take away the priority field, the kernel can't possibly make an
-> > informed decision.
-> >
-> > In this case, use fifo_low, because it only cares about being above
-> > SCHED_NORMAL. Effectively no change in behaviour.
-> >
-> > Cc: ulf.hansson@linaro.org
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Ingo Molnar <mingo@kernel.org>
-> 
-> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+IPI and Timer cause the main vmexits in cloud environment observation, 
+after single target IPI fastpath, let's optimize tscdeadline timer 
+latency by introducing tscdeadline timer emulation fastpath, it will 
+skip various KVM related checks when possible. i.e. after vmexit due 
+to tscdeadline timer emulation, handle it and vmentry immediately 
+without checking various kvm stuff when possible. 
 
-Thanks!
+Testing on SKX Server.
 
-> FYI: I am slowly moving towards removing the entire kthread for the
-> sdio_irq_thread(). It shouldn't be too far off to be posted, one or
-> two kernel releases or so.
+cyclictest in guest(w/o mwait exposed, adaptive advance lapic timer is default -1):
 
-Moving over to regular threaded interrupts? Anyway, cool, if these
-series collide it's easy enough to drop this patch on the floor if it
-turns out obsolete.
+5632.75ns -> 4559.25ns, 19%
+
+kvm-unit-test/vmexit.flat:
+
+w/o APICv, w/o advance timer:
+tscdeadline_immed: 4780.75 -> 3851    19.4%
+tscdeadline:       7474    -> 6528.5  12.7%
+
+w/o APICv, w/ adaptive advance timer default -1:
+tscdeadline_immed: 4845.75 -> 3930.5  18.9%
+tscdeadline:       6048    -> 5871.75    3%
+
+w/ APICv, w/o avanced timer:
+tscdeadline_immed: 2919    -> 2467.75 15.5%
+tscdeadline:       5661.75 -> 5188.25  8.4%
+
+w/ APICv, w/ adaptive advance timer default -1:
+tscdeadline_immed: 3018.5  -> 2561    15.2%
+tscdeadline:       4663.75 -> 4537     2.7%
+
+Tested-by: Haiwei Li <lihaiwei@tencent.com>
+Cc: Haiwei Li <lihaiwei@tencent.com>
+
+v1 -> v2:
+ * move more stuff from vmx.c to lapic.c
+ * remove redundant checking
+ * check more conditions to bail out CONT_RUN
+ * not break AMD
+ * not handle LVTT sepecial
+ * cleanup codes
+
+Wanpeng Li (5):
+  KVM: LAPIC: Introduce interrupt delivery fastpath
+  KVM: X86: Introduce need_cancel_enter_guest helper
+  KVM: VMX: Introduce generic fastpath handler
+  KVM: X86: TSCDEADLINE MSR emulation fastpath
+  KVM: VMX: Handle preemption timer fastpath
+
+ arch/x86/include/asm/kvm_host.h |  2 +
+ arch/x86/kvm/lapic.c            | 98 +++++++++++++++++++++++++++++++++++++++--
+ arch/x86/kvm/lapic.h            |  2 +
+ arch/x86/kvm/svm/avic.c         |  5 +++
+ arch/x86/kvm/svm/svm.c          |  1 +
+ arch/x86/kvm/svm/svm.h          |  1 +
+ arch/x86/kvm/vmx/vmx.c          | 69 ++++++++++++++++++++++++-----
+ arch/x86/kvm/x86.c              | 42 ++++++++++++++----
+ arch/x86/kvm/x86.h              |  1 +
+ 9 files changed, 199 insertions(+), 22 deletions(-)
+
+-- 
+2.7.4
+
