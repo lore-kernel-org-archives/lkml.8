@@ -2,105 +2,90 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAB3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED65AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C6320781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD0620781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BZAU2ZE5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YelSMpK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbgDWQsI (ORCPT
+        id S1729687AbgDWQsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37332 "EHLO
+        Thu, 23 Apr 2020 12:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729687AbgDWQsH (ORCPT
+        by vger.kernel.org with ESMTP id S1729716AbgDWQsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:48:07 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4924C09B044
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:48:06 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g12so7272188wmh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:48:06 -0700 (PDT)
+        Thu, 23 Apr 2020 12:48:19 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DA0C09B041;
+        Thu, 23 Apr 2020 09:48:19 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id m18so7187175otq.9;
+        Thu, 23 Apr 2020 09:48:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oeW7DpwK6OFjCBKNQLrqnMbfGJLDE0OYjEBqgEog0ow=;
-        b=BZAU2ZE5Ne/lQJ9uzrq8Y6uSMWk2RcQiCd+b+CVY3yzxGoOUoDmU1pFRzaKcLc3JOA
-         hb9PbGSk3EG61c2VuKMh6n9nVdeCeKdREDewxGx/cfMu7d/fdgQ5NJjOQfO8cyEYmuWy
-         Ck60HvH+uctNWqEGuN32PGsDQZnbPrP5HSsiWC+kJeuFNkdgdMmQ3iqrZGNADnBi2Mo8
-         MfqCco6iumadOLg9jIS/GhZufVO/mUhu+P3cgkrAhO/w96tB6Yvmf7fIEbLSelHxAs4q
-         RM24gcZ/PnV/LQr9mWTKhfYKOuDyTFtT3m0wjORsqAndwMtN7yTnUaW/M18X37gEhghl
-         oEGQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=bh0M22ljnn7wAk7TqVlJbCHIzOAS6jwjmvuWuteywQk=;
+        b=YelSMpK6UYl4wPJ243K10x9IaOyTRkHv04jg6GMmVYSYzCjHGEdcllHqBdt3QukHub
+         2q+L3FbWwosVkRLfyrCESZWhbj93LY9/YnIL/y9wSV2JqYgCCrY+4w6q6M/55LVPmVCc
+         g8tE+1nxihdEbF2U8hHui3YW8EAMo9xAGCk+EeGoP5Qy0QKDXHelRjv/fFw6WnmxEE07
+         tq4SOpyb39RERQ0cI06PhpWP7akf3lEY1rjuCklFTKci+wpgmVO63/UkkQwK7pzrx8OP
+         Ufn9UCy0YB7Q1LXGNka5UaMLHhdcpmBgSc/6RrmuS2m35fOO763dmqtK9++c1QKkfYFz
+         15xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oeW7DpwK6OFjCBKNQLrqnMbfGJLDE0OYjEBqgEog0ow=;
-        b=sEsUN+IzBI89T1Y0aZZbOy5oZEu9dO7GbwL+oGFO+2ELEUiv013JrE5R1u+Fw+LRbX
-         3bhp6WjIx2duVApTIAwUEajjVVtP3ZNbChjtruR84cTqNKbQZfwNA4b+kk6Natw1ATSh
-         Ic+JoWSEpZjAjcrTNLDX2+GQWP/Pdtg+fLvVKPXBh8AGQqwqP7hZSVahJU8DrN/bajkF
-         SBGduqcrCiPIKjDoKIY/3wV/0o60DhQBiGeRseAUReNz7AhQxrOhutHEEnReOAnQ6BKm
-         2Npr6NSkAFiR6yYvxs2QCH0COl2wppQPtZGP3m75ASaiOeInUwXlkm4M3WbFHZTPEaJO
-         EgDw==
-X-Gm-Message-State: AGi0PuaASWdsIRSQccm2rl78rhxpJ6BlomxtEw/go5CDhJQWleAE5XrR
-        kTsMl6b62CZ5FHq4eZnV7kjG8w==
-X-Google-Smtp-Source: APiQypL1N3VJZzRRWP+PtS/fdnZb1T66+D/zjqtbVIUR8pO7XtbEvjwXmID9KnBgg0fgEaDYfwzw+Q==
-X-Received: by 2002:a1c:ac44:: with SMTP id v65mr5176929wme.33.1587660485234;
-        Thu, 23 Apr 2020 09:48:05 -0700 (PDT)
-Received: from linaro.org ([37.167.216.250])
-        by smtp.gmail.com with ESMTPSA id a20sm4857880wra.26.2020.04.23.09.48.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 09:48:04 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 18:47:59 +0200
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v6 08/10] OPP: refactor dev_pm_opp_of_register_em() and
- update related drivers
-Message-ID: <20200423164759.GF65632@linaro.org>
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-9-lukasz.luba@arm.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bh0M22ljnn7wAk7TqVlJbCHIzOAS6jwjmvuWuteywQk=;
+        b=H88RcYG8auttTYUauSz5cTqbGMTMv1YIs38yPvqf38Q3bpvodh9YzzhvNyNrLCrgy2
+         N2B0rNK9ta80jObnfjUV6TBSoPpDyIhBO9ed1NikOcVUCZGB3Athsj4/HIv6dMpTMobE
+         ZekwiojFv9i+E2jvKR6m0y4HfJYy6v5Jz2miK3ppLFzUULDNAgI/fQgSY1q8dJKH6iJ2
+         47KJsdosjOcRuTNy2mKBIdC5ritTZ21bj6XdHpjUejOvxg0XjPjeak3ybrIk0hPkKxF0
+         BdQX9VZ/b3rFJrbVK/CjZSwY6O/I/o4dCJmSWhkE/6MtqbmW6PHZtrOqQwr/IalpmkS0
+         avsg==
+X-Gm-Message-State: AGi0PuYQBGPUVzJ3OeNFENYmrwzNnP5Y2CAM0oIkBMtvRvYG0md6LnWB
+        1Ee+0rvc5R4wkWSfxAvOpto=
+X-Google-Smtp-Source: APiQypIDjXakw5+CsR051thcbpc5b4wm1P7FVM+FxdlZiT46LPYnOIQIo9zN5hsgv9IT+eMJKXZ6wg==
+X-Received: by 2002:a05:6830:1d62:: with SMTP id l2mr2441949oti.316.1587660498522;
+        Thu, 23 Apr 2020 09:48:18 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id w24sm799343oor.47.2020.04.23.09.48.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Apr 2020 09:48:17 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 09:48:16 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] kbuild: use $(CC_VERSION_TEXT) to evaluate
+ CC_IS_GCC and CC_IS_CLANG
+Message-ID: <20200423164816.GA12996@ubuntu-s3-xlarge-x86>
+References: <20200423142354.312088-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200410084210.24932-9-lukasz.luba@arm.com>
+In-Reply-To: <20200423142354.312088-1-masahiroy@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:42:08AM +0100, Lukasz Luba wrote:
-> The Energy Model framework supports not only CPU devices. Drop the CPU
-> specific interface with cpumask and add struct device. Add also a return
-> value, user might use it. This new interface provides easy way to create
-> a simple Energy Model, which then might be used by e.g. thermal subsystem.
->
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+On Thu, Apr 23, 2020 at 11:23:51PM +0900, Masahiro Yamada wrote:
+> The result of '$(CC) --version | head -n 1' is already computed by the
+> top Makefile, and stored in the environment variable, CC_VERSION_TEXT.
+> 
+> 'echo' is probably less expensive than the two commands $(CC) and
+> 'head' although this optimization is not noticeable level.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
