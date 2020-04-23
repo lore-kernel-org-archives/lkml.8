@@ -3,191 +3,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356A7C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8EFC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 146F52077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BC72074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgDWMdV (ORCPT
+        id S1728277AbgDWMgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:33:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32778 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726540AbgDWMdU (ORCPT
+        Thu, 23 Apr 2020 08:36:03 -0400
+Received: from esgaroth.petrovitsch.at ([78.47.184.11]:3302 "EHLO
+        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgDWMgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:33:20 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NBXEdf071449
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:33:19 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jspuw191-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:33:18 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Thu, 23 Apr 2020 13:32:38 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 13:32:35 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NCW3EU64749952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 12:32:03 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B086A4051;
-        Thu, 23 Apr 2020 12:33:11 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB711A404D;
-        Thu, 23 Apr 2020 12:33:10 +0000 (GMT)
-Received: from thinkpad (unknown [9.145.19.192])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 12:33:10 +0000 (GMT)
-Date:   Thu, 23 Apr 2020 14:33:09 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-In-Reply-To: <20200422194605.n77t2wtx5fomxpyd@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <20200422164037.7edd21ea@thinkpad>
- <20200422172126.743908f5@thinkpad>
- <20200422194605.n77t2wtx5fomxpyd@treble>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 23 Apr 2020 08:36:01 -0400
+Received: from [10.68.100.236] (h10-gesig.woeg.acw.at [217.116.178.11] (may be forged))
+        (authenticated bits=0)
+        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id 03NCY9Ht015917
+        (version=TLSv1 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO);
+        Thu, 23 Apr 2020 14:34:10 +0200
+Subject: Re: [PATCH 1/4] fs: Implement close-on-fork
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "Karstens, Nate" <Nate.Karstens@garmin.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Changli Gao <xiaosuo@gmail.com>
+References: <20200420071548.62112-1-nate.karstens@garmin.com>
+ <20200420071548.62112-2-nate.karstens@garmin.com>
+ <fa6c5c9c7c434f878c94a7c984cd43ba@garmin.com>
+ <20200422154356.GU5820@bombadil.infradead.org>
+ <6ed7bd08892b4311b70636658321904f@garmin.com>
+ <97f05204-a27c-7cc8-429a-edcf6eebaa11@petrovitsch.priv.at>
+ <337320db094d4426a621858fa0f6d7fd@AcuMS.aculab.com>
+From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
+X-Pep-Version: 2.0
+Message-ID: <f3640ed9-d846-9cbd-7690-53da5ff1473a@petrovitsch.priv.at>
+Date:   Thu, 23 Apr 2020 12:34:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042312-0008-0000-0000-0000037601EF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042312-0009-0000-0000-00004A97CEF4
-Message-Id: <20200423141834.234ed0bc@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
- spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230092
+In-Reply-To: <337320db094d4426a621858fa0f6d7fd@AcuMS.aculab.com>
+Content-Type: multipart/mixed;
+ boundary="------------985EBFE9F348F8C36FCBAAF1"
+Content-Language: en-US
+X-DCC-wuwien-Metrics: esgaroth.tuxoid.at 1290; Body=22 Fuz1=22 Fuz2=22
+X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 14:46:05 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+This is a multi-part message in MIME format.
+--------------985EBFE9F348F8C36FCBAAF1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Apr 22, 2020 at 05:21:26PM +0200, Gerald Schaefer wrote:
-> > > Sorry, just noticed this. Heiko will return next month, and I'm not
-> > > really familiar with s390 livepatching. Adding Vasily, he might
-> > > have some more insight.
-> > > 
-> > > So, I might be completely wrong here, but using s390_kernel_write()
-> > > for writing to anything other than 1:1 mapped kernel, should go
-> > > horribly wrong, as that runs w/o DAT. It would allow to bypass
-> > > DAT write protection, which I assume is why you want to use it,
-> > > but it should not work on module text section, as that would be
-> > > in vmalloc space and not 1:1 mapped kernel memory.
-> > > 
-> > > Not quite sure how to test / trigger this, did this really work for
-> > > you on s390?
-> > 
-> > OK, using s390_kernel_write() as default write function for module
-> > relocation seems to work fine for me, so apparently I am missing /
-> > mixing up something. Sorry for the noise, please ignore my concern.
-> 
-> Hi Gerald,
-> 
-> I think you were right.  Joe found the below panic with his klp-convert
-> tests.
-> 
-> Your test was probably the early module loading case (normal relocations
-> before write protection), rather than the late case.  Not sure why that
-> would work, but calling s390_kernel_write() late definitely seems to be
-> broken.
-> 
-> Is there some other way to write vmalloc'ed s390 text without using
-> module_disable_ro()?
-> 
-> [   50.294476] Unable to handle kernel pointer dereference in virtual kernel address space
-> [   50.294479] Failing address: 000003ff8015b000 TEID: 000003ff8015b407
-> [   50.294480] Fault in home space mode while using kernel ASCE.
-> [   50.294483] AS:000000006cef0007 R3:000000007e2c4007 S:0000000003ccb800 P:0000 00000257321d
-> [   50.294557] Oops: 0004 ilc:3 [#1] SMP
-> [   50.294561] Modules linked in: test_klp_convert1(K+) test_klp_convert_mod ghash_s390 prng xts aes_s390 des_s390 libdes sha512_s390 vmur zcrypt_cex4 ip_tables xfs libcrc32c dasd_fba_mod qeth_l2 dasd_eckd_mod dasd_mod qeth lcs ctcm qdio cc
-> wgroup fsm dm_mirror dm_region_hash dm_log dm_mod pkey zcrypt [last unloaded: test_klp_atomic_replace]
-> [   50.294576] CPU: 0 PID: 1743 Comm: modprobe Tainted: G              K   5.6.0 + #2
-> [   50.294579] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
-> [   50.294583] Krnl PSW : 0704e00180000000 000000006bf6be0a (apply_rela+0x2ba/0x 4e0)
-> [   50.294589]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI: 0 EA:3
-> [   50.294684] Krnl GPRS: 000003ff80147010 000003e0001b9588 000003ff8015c168 000 003ff8015b19a
-> [   50.294686]            000003ff8015b07c 0d10e310100a0004 000003ff80147010 000 00000000000a0
-> [   50.294687]            000003ff8015e588 000003ff8015e5e8 000003ff8015d300 000 0003b00000014
-> [   50.294698]            000000007a663000 000000006c6bbb80 000003e0009a7918 000 003e0009a78b8
-> [   50.294707] Krnl Code: 000000006bf6bdf8: e350d0080004        lg      %r5,8(%r 13)
-> [   50.294707]            000000006bf6bdfe: e34010080008        ag      %r4,8(%r 1)
-> [   50.294707]           #000000006bf6be04: e340a2000008        ag      %r4,512( %r10)
-> [   50.294707]           >000000006bf6be0a: e35040000024        stg     %r5,0(%r 4)
-> [   50.294707]            000000006bf6be10: c050007c6136        larl    %r5,0000 00006cef807c
-> [   50.294707]            000000006bf6be16: e35050000012        lt      %r5,0(%r 5)
-> [   50.294707]            000000006bf6be1c: a78400a6            brc     8,000000 006bf6bf68
-> [   50.294707]            000000006bf6be20: a55e07f1            llilh   %r5,2033
-> 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 01.
-> 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 00.
-> [   50.295369] Call Trace:
-> [   50.295372]  [<000000006bf6be0a>] apply_rela+0x2ba/0x4e0
-> [   50.295376]  [<000000006bf6c5c8>] apply_relocate_add+0xe0/0x138
-> [   50.295378]  [<000000006c0229a0>] klp_apply_section_relocs+0xe8/0x128
-> [   50.295380]  [<000000006c022b4c>] klp_apply_object_relocs+0x9c/0xd0
-> [   50.295382]  [<000000006c022bb0>] klp_init_object_loaded+0x30/0x138
-> [   50.295384]  [<000000006c023052>] klp_enable_patch+0x39a/0x870
-> [   50.295387]  [<000003ff8015b0da>] test_klp_convert_init+0x22/0x50 [test_klp_convert1]
-> [   50.295389]  [<000000006bf54838>] do_one_initcall+0x40/0x1f0
-> [   50.295391]  [<000000006c04d610>] do_init_module+0x70/0x280
-> [   50.295392]  [<000000006c05002a>] load_module+0x1aba/0x1d10
-> [   50.295394]  [<000000006c0504c4>] __do_sys_finit_module+0xa4/0xe8
-> [   50.295416]  [<000000006c6b5742>] system_call+0x2aa/0x2c8
-> [   50.295416] Last Breaking-Event-Address:
-> [   50.295418]  [<000000006c6b6aa0>] __s390_indirect_jump_r4+0x0/0xc
-> [   50.295421] Kernel panic - not syncing: Fatal exception: panic_on_oops
-> 
+Hi all!
 
-Hi Josh,
+On 22/04/2020 16:55, David Laight wrote:
+> From: Bernd Petrovitsch
+>> Sent: 22 April 2020 17:32
+> ...
+>> Apart from that, system() is a PITA even on
+>> single/non-threaded apps.
+>=20
+> Not only that, it is bloody dangerous because (typically)
+> shell is doing post substitution syntax analysis.
 
-this is strange. While I would have expected an exception similar to
-this, it really should have happened on the "sturg" instruction which
-does the DAT-off store in s390_kernel_write(), and certainly not with
-an ID of 0004 (protection). However, in your case, it happens on a
-normal store instruction, with 0004 indicating a protection exception.
+I actually meant exactly that with PITA;-)
 
-This is more like what I would expect e.g. in the case where you do
-_not_ use the s390_kernel_write() function for RO module text patching,
-but rather normal memory access. So I am pretty sure that this is not
-related to the s390_kernel_write(), but some other issue, maybe some
-place left where you still use normal memory access?
+> If you need to run an external process you need to generate
+> an arv[] array containing the parameters.
 
-There is also some good news. While thinking about how to use "sturg"
-for vmalloc addresses, I came up with the idea to use "lra" (load
-real address) before that. Then I found out that we already do exactly
-that in the inline assembly, so all should be fine. Well, maybe the
-comment for s390_kernel_write() could be improved...
+FullACK. That is usually similar trivial ...
 
-Vasily also found out that we apparently already use s390_kernel_write()
-for module text, for alternatives, so I guess we can safely assume that
-it should work fine in principle.
+MfG,
+	Bernd
+--=20
+There is no cloud, just other people computers.
+-- https://static.fsf.org/nosvn/stickers/thereisnocloud.svg
 
-Regards,
-Gerald
+--------------985EBFE9F348F8C36FCBAAF1
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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3D=3D
+=3DGX6K
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------985EBFE9F348F8C36FCBAAF1--
