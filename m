@@ -2,170 +2,128 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AE7C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAFAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5832076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE962076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="EH6jkrcT"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="hbn8rC7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgDWJdX (ORCPT
+        id S1726879AbgDWJeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:33:23 -0400
-Received: from mail-eopbgr1410134.outbound.protection.outlook.com ([40.107.141.134]:37409
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbgDWJdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:33:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BrFZI+M0A8udvYPgBR1orh9eZhTwAYNsPWKdlzl1F/4l5ZLYusqmNOkDOJ/7m4Tsl656fgP/+Uv8Z6UhHcuG4HTTY1hV6gsTPz2cGOF3Yifw+HdCTNzU4ijCNBJ3pRPgblmDniel2qRSLczZyoSwmKsspR5qhtBgydnHfOClNG/LwLbc7ujPqYrzf6Z9/na/HbhASaR9jVZqLkPBDmtz7sYWrzWnQudgIhDapvBFDATGR67imq4CJWW0PiPN5R1LBONL/AhvMm9ncvrCHL9KvMLf5gpI96cepOLZsGvThq9qXBLUWVhOAUsmcLs1YAXcMVc+ikqUh0AE7SPDLaIAvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JVXmxWRS1Rq9LbIKtBBqMDVoi5gQUJu2eWiF27Fmb6M=;
- b=Gw5Ex+GKaFwFh169lenG/k3If8RdHIRsDoxI5TPfCEf8tkX4DFVZtu29d3HWBcjmUU9IxiYOZm+q4qHF3ozyeNPX2Vkiqe9QEi6N2csAFA/ZCt3cMy3mYhUeIKkMPJNxnRt42lH4jJlyOHU31UT6vVJ7CqF+nCyzSIMbmm+DjDrSaF6uHXM11OntpuPpjV2fwiLYktdREiCkn9SlCR3XZzZnsQsoQTDvuCtmtSL5dTy4RQevVpx6M4hP0ORNQSPyLhGIdmLHmNPgLxPeYm85QgHV+pATitB1cyDH707kdvMJ7veG52cLxn5QyA7dx6HGSDzPQUUZqCes6UwqJwRTSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Thu, 23 Apr 2020 05:34:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgDWJd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 05:33:59 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E18C03C1AF
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:33:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j2so5998781wrs.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JVXmxWRS1Rq9LbIKtBBqMDVoi5gQUJu2eWiF27Fmb6M=;
- b=EH6jkrcTvRSPHAitUnXlEQaq4xb6aBVY6GgO5szKGEAY1VqmYHEF3QIqvnljj+3kGlAx/ATU15wT90ELgcSYueJeve4XJ2F+SZkn+ntUOxCl508nenmr3lnhC3xPxzBtEQpOHGaoPV+qqjGIVDKwhSl0G5DL9i7rI4pFW8isULc=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB5165.jpnprd01.prod.outlook.com (20.179.187.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2937.13; Thu, 23 Apr 2020 09:33:17 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
- 09:33:17 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fbsLxV6IFtdG2LNGT6zdYoqNQS370sKL9v/GEGQmQ/w=;
+        b=hbn8rC7CPaSlyBy2AH47CanlFTLMexJyaletxkZVqBcVucwl8JY/FWy06vvZ91usqe
+         quOVoT8earv00ZDJvLUGmmf1pi2VH07Avdj/IciIFs00XtsydigbxQO6LlpvYGTkk7Ja
+         sN6Gb0mcDRrPHKehrS6NRZYRUCV5sTyy8AApc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fbsLxV6IFtdG2LNGT6zdYoqNQS370sKL9v/GEGQmQ/w=;
+        b=nHLWSanLH7WTG1+IrcTVj3gRHt74r6MoVDxY97Vrep3/bPLBaz2ViDTzP3pDcmgnP3
+         FEav7Z/d1/uOYr3VQ58Lh2fNk1kXj7texF3hc7vImS4ya1fYO3FOHzxUsgtl5ZkMS3uN
+         8Nr6Np/aam83GPp5FHcNl6suWC+ZrNADuvDlDJL4HKC56qYk4quC4xrj6s0sF/7rg2zU
+         KdIej0D9DvECDYJb+/dTHMVjuCrw+0a5UWY2vXYOu2zuWniPtjXax+32GAqzTKtdUnUF
+         yMyXpESH5kZbUH2F6xEcN6x3AwydChJx/CHrD8k016OFtCCFLUVt+pAVbHx+mzr+b4SR
+         scyQ==
+X-Gm-Message-State: AGi0PuZuNmxyhkGD3jy2jYPc8qkMnWkOR8Ws/bErJJinS0MCAAyI0hN1
+        0vlVPXzopryOqt3jVX3hdV7amZ2VoiMwwQ==
+X-Google-Smtp-Source: APiQypIlTuDZ6piEeJMK2z3Z3CMwSvww2D0Ql7Pogo8VDyO9+HIkqmRTtn/Kc1yX95GKcZLmUB2bNA==
+X-Received: by 2002:a5d:5646:: with SMTP id j6mr4092051wrw.207.1587634438291;
+        Thu, 23 Apr 2020 02:33:58 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
+        by smtp.gmail.com with ESMTPSA id l16sm2865951wrp.91.2020.04.23.02.33.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 02:33:57 -0700 (PDT)
+Subject: Re: [PATCH v4 4/7] kernel.h: Split out min()/max() et al helpers
+To:     Joe Perches <joe@perches.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v3 2/3] driver core: Use dev_warn() instead of dev_WARN()
- for deferred_probe_timeout warnings
-Thread-Topic: [PATCH v3 2/3] driver core: Use dev_warn() instead of dev_WARN()
- for deferred_probe_timeout warnings
-Thread-Index: AQHWGOU70+TFUkow3UqLZ0sOeOMv7KiGcj4Q
-Date:   Thu, 23 Apr 2020 09:33:17 +0000
-Message-ID: <TYAPR01MB454456FA2EEBC3A989BC8B5BD8D30@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <20200422203245.83244-1-john.stultz@linaro.org>
- <20200422203245.83244-3-john.stultz@linaro.org>
-In-Reply-To: <20200422203245.83244-3-john.stultz@linaro.org>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 02ced91a-5d2a-4faa-0f26-08d7e7695a92
-x-ms-traffictypediagnostic: TYAPR01MB5165:
-x-microsoft-antispam-prvs: <TYAPR01MB516522F89812AEB0E26081E6D8D30@TYAPR01MB5165.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 03827AF76E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(7416002)(66946007)(4326008)(66446008)(9686003)(55016002)(66556008)(76116006)(64756008)(66476007)(71200400001)(33656002)(52536014)(86362001)(5660300002)(8676002)(81156014)(7696005)(55236004)(26005)(186003)(8936002)(316002)(478600001)(6506007)(110136005)(2906002)(54906003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zwyLe5tSEYNqjQ0yoFo0euUBmIEFobgItiGhSiobEa/EBL+otlLAPQd7ouf1c8/xpogu9RIVUdGZevCthMo1UKbT8l/6kz3Rtq0mZebCwtj8tNl2nhtXnoBywVJEe89YbtuzyjoT9thBUuV+36Wdv+INI66JYlD12XTgXOSwQNXZMO1eF+Ts5cm9RrN1VXN2LnaTndULUny7QFQOQNfW1zvDt1I69oaR7bS8SJVEJ1VCINJeNPV1UlDppTUBwFyg0U4iiudYLNpUeR+M1lTLCjZAGDua9JJMkah++kLVnJDMKplVyEIW9IA2Z8Irg4LOj9upZQKifHg0a3kc/4HxXNVskAb4E+UQHxLhXHTbDWMwIUGCIj2NJJ1nFZU4uoNSj+/vu0oHRUD9+G9Vu26olkTZa/K7FcJdQV8XTlJqohyyP/hSDZev0TYwxh5h8o84
-x-ms-exchange-antispam-messagedata: XmU6O57zphrxY1YM+L/EL1VoTeek+KcjKcYq+2gLhdhCaf2y8n+C5Q96fbinKMEFKm6Y3s6LGfORAvnoyTCvGAzIc9XQMA203UbLCTmmR9MvQeq4SJ0B4Q8iFrhASeP968+OuktCYAJt59nquCaYUA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200422125201.37618-1-andriy.shevchenko@linux.intel.com>
+ <20200422125201.37618-4-andriy.shevchenko@linux.intel.com>
+ <5b413a379b8bba39fb75469699b7fd0d50d67e96.camel@perches.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <94bec618-5e06-e72b-45a5-29318e09a29a@rasmusvillemoes.dk>
+Date:   Thu, 23 Apr 2020 11:33:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02ced91a-5d2a-4faa-0f26-08d7e7695a92
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 09:33:17.1159
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H0zMO+j0LLoEgZmuP1qIYY/J9qggJpTo8TzirChX/mwI5x659XJibNF8XN4NGUp3OvVC6KdPJuLHVK/3q7SwfzFvCMPR4S3Hna42Pc5URf2BkDAiOsHcn4QTq7Y3G45U
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5165
+In-Reply-To: <5b413a379b8bba39fb75469699b7fd0d50d67e96.camel@perches.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On 22/04/2020 16.52, Joe Perches wrote:
+> On Wed, 2020-04-22 at 15:51 +0300, Andy Shevchenko wrote:
 
-> From: John Stultz, Sent: Thursday, April 23, 2020 5:33 AM
->=20
-> In commit c8c43cee29f6 ("driver core: Fix
-> driver_deferred_probe_check_state() logic") and following
-> changes the logic was changes slightly so that if there is no
-> driver to match whats found in the dtb, we wait the sepcified
-> seconds for modules to be loaded by userland, and then timeout,
-> where as previously we'd print "ignoring dependency for device,
-> assuming no driver" and immediately return -ENODEV after
-> initcall_done.
->=20
-> However, in the timeout case (which previously existed but was
-> practicaly un-used without a boot argument), the timeout message
-> uses dev_WARN(). This means folks are now seeing a big backtrace
-> in their boot logs if there a entry in their dts that doesn't
-> have a driver.
->=20
-> To fix this, lets use dev_warn(), instead of dev_WARN() to match
-> the previous error path.
->=20
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Basil Eljuse <Basil.Eljuse@arm.com>
-> Cc: Ferry Toth <fntoth@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Anders Roxell <anders.roxell@linaro.org>
-> Cc: netdev <netdev@vger.kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state(=
-) logic")
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
+>> At the same time convert users in header and lib folder to use new header.
+>> Though for time being include new header back to kernel.h to avoid twisted
+>> indirected includes for existing users.
+> 
+> Yeah, that's the difficult bit and it could make
+> using precompiled headers very cumbersome.
 
-Thank you for the patch!
+You mentioned precompiled headers last time as well, but you haven't
+demonstrated that using those is either feasible or advantageous - and
+if at some distant future time it turns out that they are a good idea,
+it's not really any more difficult at that time to do a
+linux/kitchen_sink.h that includes whatever common set of headers seems
+to provide a reasonable speedup.
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Meanwhile, the sheer size of the headers that gets pulled into each and
+every TU currently slows down the build:
 
-Best regards,
-Yoshihiro Shimoda
+https://wildmoose.dk/header-bloat/
 
+so anything that reduces the size of common headers like kernel.h will
+improve build times (the slowdown is "death by a thousand cuts", hence
+so will any individual improvement be hard or impossible to measure by
+itself - that doesn't mean it's not worth doing them). Of course, the
+include of minmax.h (et al) from kernel.h must be removed, but that's
+the kind of thing that can easily take a couple of cycles to get done,
+unlike the damage that adding #include <linux/foo.h> to bar.h
+immediately causes.
+
+> I'd rather make #include <linux/kernel.h>" _more_
+> common or even used as the mandatory first #include
+> for all kernel .c files.
+
+No. Please no.
+
+> That would also ensure that common kernel facilities
+> are not duplicated or have naming conflicts with other
+> files.
+
+What? People duplicate functionality because they're not aware it
+already exists, forcing an #include of a declaration of some function
+doesn't make any developer know about it.
+
+Rasmus
