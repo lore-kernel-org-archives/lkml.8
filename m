@@ -2,192 +2,105 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8F6C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAB3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82A2420781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C6320781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="j7pfI9HR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BZAU2ZE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgDWQrW (ORCPT
+        id S1729762AbgDWQsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
+        Thu, 23 Apr 2020 12:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729661AbgDWQrW (ORCPT
+        by vger.kernel.org with ESMTP id S1729687AbgDWQsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:47:22 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE421C09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id m2so5300428lfo.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:47:21 -0700 (PDT)
+        Thu, 23 Apr 2020 12:48:07 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4924C09B044
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:48:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g12so7272188wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:48:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
-        b=j7pfI9HRuHbfl6xDZAoT1l4rmuUPF/dN6vFtceByAi7aVXx7F1IhQrRueEZwe2jLz1
-         LPlirCZaXLDgzEX7pBzBcH8BRbSUtwv0Fr/Xr7mNnYMI5n+kQPaevi4KoW9j2YpIE//B
-         4gbwSpLKTsk8a6DjpzFLCRYnmZfFffJuXd7sHUWBrzm2DdCAF+LnMir8CtAVeZNUPhEU
-         o5wYq8dSbv5PpSnJvBS+3XV8BSWMUTvt8MM/+jOXHe9XtwOMnpE3dECt2rI/zXksJFfP
-         1kIeQP0cTexZxF2UhgelMN3dbj6HEeRfpwsJgbRgWYigveFkQHwaL2ZSdpLI9edvCOU1
-         jdbw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oeW7DpwK6OFjCBKNQLrqnMbfGJLDE0OYjEBqgEog0ow=;
+        b=BZAU2ZE5Ne/lQJ9uzrq8Y6uSMWk2RcQiCd+b+CVY3yzxGoOUoDmU1pFRzaKcLc3JOA
+         hb9PbGSk3EG61c2VuKMh6n9nVdeCeKdREDewxGx/cfMu7d/fdgQ5NJjOQfO8cyEYmuWy
+         Ck60HvH+uctNWqEGuN32PGsDQZnbPrP5HSsiWC+kJeuFNkdgdMmQ3iqrZGNADnBi2Mo8
+         MfqCco6iumadOLg9jIS/GhZufVO/mUhu+P3cgkrAhO/w96tB6Yvmf7fIEbLSelHxAs4q
+         RM24gcZ/PnV/LQr9mWTKhfYKOuDyTFtT3m0wjORsqAndwMtN7yTnUaW/M18X37gEhghl
+         oEGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tRcc4dh6p+YiX6AX0x9LFumoCa/KOTeSvRHxboIV+LM=;
-        b=iERMm86kr2TZp7s1AIdfok+7ihOsYAgjiVUqWdv9i6ag5S1GKcOBeEKCSqlHlGOzFU
-         R1a6byIgknXa2e+d8FZsrVoCb52XEJ1oRTIAP7nINto2ffx3qnDT+8FYR/NaN3UUYZz9
-         Feg9zL2xljqLzCqd80xRXDEMP7+aYxF6LjVuhZiTaUoBT69fyeMNPvxMle+T7j06a0Dm
-         f3akeJFlni42qMuwPoN2Hq8oKluYd55ntAQZtd/jdj0iqZ+tHnwdROBCZP9KrvX3DcBO
-         1fnb7wsB5HQjCNQX5SrjOZf5oy64RKj/A8spBoVl+oo4aoBF5VuzOYcoFI69sioNyKWR
-         DfIg==
-X-Gm-Message-State: AGi0PubndTIS+rQfd5RbxzEFHKGoEbXJO78dzdxX9q9wqXvwGeO5zjUf
-        4fBJolcp7TNGSjBjfOuT88twVN7yNUV026krTnNRTQ==
-X-Google-Smtp-Source: APiQypKp4PYv8DT/PLr79QV23nUX9UW1aERR5j0Oo8O7FXjU4ESHU6c7LwMtVWsMkh3FTpEclvzAGKWNG5gZgbFgNds=
-X-Received: by 2002:ac2:4853:: with SMTP id 19mr2882072lfy.171.1587660440070;
- Thu, 23 Apr 2020 09:47:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oeW7DpwK6OFjCBKNQLrqnMbfGJLDE0OYjEBqgEog0ow=;
+        b=sEsUN+IzBI89T1Y0aZZbOy5oZEu9dO7GbwL+oGFO+2ELEUiv013JrE5R1u+Fw+LRbX
+         3bhp6WjIx2duVApTIAwUEajjVVtP3ZNbChjtruR84cTqNKbQZfwNA4b+kk6Natw1ATSh
+         Ic+JoWSEpZjAjcrTNLDX2+GQWP/Pdtg+fLvVKPXBh8AGQqwqP7hZSVahJU8DrN/bajkF
+         SBGduqcrCiPIKjDoKIY/3wV/0o60DhQBiGeRseAUReNz7AhQxrOhutHEEnReOAnQ6BKm
+         2Npr6NSkAFiR6yYvxs2QCH0COl2wppQPtZGP3m75ASaiOeInUwXlkm4M3WbFHZTPEaJO
+         EgDw==
+X-Gm-Message-State: AGi0PuaASWdsIRSQccm2rl78rhxpJ6BlomxtEw/go5CDhJQWleAE5XrR
+        kTsMl6b62CZ5FHq4eZnV7kjG8w==
+X-Google-Smtp-Source: APiQypL1N3VJZzRRWP+PtS/fdnZb1T66+D/zjqtbVIUR8pO7XtbEvjwXmID9KnBgg0fgEaDYfwzw+Q==
+X-Received: by 2002:a1c:ac44:: with SMTP id v65mr5176929wme.33.1587660485234;
+        Thu, 23 Apr 2020 09:48:05 -0700 (PDT)
+Received: from linaro.org ([37.167.216.250])
+        by smtp.gmail.com with ESMTPSA id a20sm4857880wra.26.2020.04.23.09.48.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 09:48:04 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 18:47:59 +0200
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v6 08/10] OPP: refactor dev_pm_opp_of_register_em() and
+ update related drivers
+Message-ID: <20200423164759.GF65632@linaro.org>
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-9-lukasz.luba@arm.com>
 MIME-Version: 1.0
-References: <1587607101-31914-1-git-send-email-alan.mikhak@sifive.com> <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
-In-Reply-To: <DM5PR12MB1276642553DDD5AF85B65E01DAD30@DM5PR12MB1276.namprd12.prod.outlook.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Thu, 23 Apr 2020 09:47:08 -0700
-Message-ID: <CABEDWGw4CYgQ9uiaig+C9UifSz24W7oOiVva+G0zbBXitcMtPg@mail.gmail.com>
-Subject: Re: [PATCH v2][next] dmaengine: dw-edma: Check MSI descriptor before copying
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>, "maz@kernel.org" <maz@kernel.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410084210.24932-9-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 2:28 AM Gustavo Pimentel
-<Gustavo.Pimentel@synopsys.com> wrote:
+On Fri, Apr 10, 2020 at 09:42:08AM +0100, Lukasz Luba wrote:
+> The Energy Model framework supports not only CPU devices. Drop the CPU
+> specific interface with cpumask and add struct device. Add also a return
+> value, user might use it. This new interface provides easy way to create
+> a simple Energy Model, which then might be used by e.g. thermal subsystem.
 >
-> On Thu, Apr 23, 2020 at 2:58:21, Alan Mikhak <alan.mikhak@sifive.com>
-> wrote:
->
-> > From: Alan Mikhak <alan.mikhak@sifive.com>
-> >
-> > Modify dw_edma_irq_request() to check if a struct msi_desc entry exists
-> > before copying the contents of its struct msi_msg pointer.
-> >
-> > Without this sanity check, __get_cached_msi_msg() crashes when invoked by
-> > dw_edma_irq_request() running on a Linux-based PCIe endpoint device. MSI
-> > interrupt are not received by PCIe endpoint devices. If irq_get_msi_desc()
-> > returns null, then there is no cached struct msi_msg to be copied.
-> >
-> > This patch depends on the following patch:
-> > [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-> > https://urldefense.com/v3/__https://patchwork.kernel.org/patch/11491757/__;!!A4F2R9G_pg!L_vf_Tml7Ca4sWVvZp5crRCp7YsMj6B93G9cMAO8Dj3w9I0MArjwuwNKtDz9rr0RlpXiqPg$
-> >
-> > Rebased on linux-next which has above patch applied.
-> >
-> > Fixes: Build error with config x86_64-randconfig-f003-20200422
-> > Fixes: Build error with config s390-allmodconfig
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > ---
-> >  drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
-> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > index db401eb11322..306ab50462be 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/dmaengine.h>
-> >  #include <linux/err.h>
-> >  #include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> >  #include <linux/dma/edma.h>
-> >  #include <linux/dma-mapping.h>
-> >
-> > @@ -773,6 +774,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >       u32 rd_mask = 1;
-> >       int i, err = 0;
-> >       u32 ch_cnt;
-> > +     int irq;
-> >
-> >       ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
-> >
-> > @@ -781,16 +783,16 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >
-> >       if (dw->nr_irqs == 1) {
-> >               /* Common IRQ shared among all channels */
-> > -             err = request_irq(dw->ops->irq_vector(dev, 0),
-> > -                               dw_edma_interrupt_common,
-> > +             irq = dw->ops->irq_vector(dev, 0);
-> > +             err = request_irq(irq, dw_edma_interrupt_common,
-> >                                 IRQF_SHARED, dw->name, &dw->irq[0]);
-> >               if (err) {
-> >                       dw->nr_irqs = 0;
-> >                       return err;
-> >               }
-> >
-> > -             get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
-> > -                                &dw->irq[0].msi);
-> > +             if (irq_get_msi_desc(irq))
-> > +                     get_cached_msi_msg(irq, &dw->irq[0].msi);
-> >       } else {
-> >               /* Distribute IRQs equally among all channels */
-> >               int tmp = dw->nr_irqs;
-> > @@ -804,7 +806,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >               dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
-> >
-> >               for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
-> > -                     err = request_irq(dw->ops->irq_vector(dev, i),
-> > +                     irq = dw->ops->irq_vector(dev, i);
-> > +                     err = request_irq(irq,
-> >                                         i < *wr_alloc ?
-> >                                               dw_edma_interrupt_write :
-> >                                               dw_edma_interrupt_read,
-> > @@ -815,8 +818,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
-> >                               return err;
-> >                       }
-> >
-> > -                     get_cached_msi_msg(dw->ops->irq_vector(dev, i),
-> > -                                        &dw->irq[i].msi);
-> > +                     if (irq_get_msi_desc(irq))
-> > +                             get_cached_msi_msg(irq, &dw->irq[i].msi);
-> >               }
-> >
-> >               dw->nr_irqs = i;
-> > --
-> > 2.7.4
->
->
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 
-Thanks Gustavo for the Ack.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-FYI, I first considered adding an ops function to decouple dw-edma-core.c
-from struct msi_msg. However, in a separate use case that I have in mind,
-dw-edma would run on a host system having Synopsys DesignWare PCI eDMA
-hardware on the host-side. In this use case, the host system eDMA engines
-may be used in conjunction with an endpoint device also having the same
-eDMA hardware. In this use case, dw-edma running on the host would need
-to call get_cached_msi_msg() just in case the host has an msi_msg cached
-from the endpoint device. As a result, I opted to not add a new ops
-function.
-
-Regards,
-Alan
-
->
->
