@@ -2,376 +2,205 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA59C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20DDC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F9A21569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA86C215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hkIguouR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="eCmCf3EC";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="AOXLn4t8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgDWHlH (ORCPT
+        id S1727056AbgDWHlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:41:07 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:45559 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgDWHkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:40:37 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4978Nf2L8Zz9twkp;
-        Thu, 23 Apr 2020 09:40:34 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hkIguouR; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id azaWpSan6ISQ; Thu, 23 Apr 2020 09:40:34 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4978Nf13ybz9twkn;
-        Thu, 23 Apr 2020 09:40:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1587627634; bh=MpTmQJ4zYNO0G1Sd1KpHv+2jnU1Isfgy/wCPvmwET88=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hkIguouRGdSkiHAiHo0RDH1XsuOeWxLD7VYysU4IRfV5Z8E6FvpgV0WuOOSRX1rSt
-         G2PjL1vRDgC0oEzIDiaPqn4clTIAgrJEEbz0V92GntC3ztQIKi9FWqOONgZ60C9L6T
-         pVrR/W48RmQbBRGsOsgRroFprOxld7yVoKu6suP4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 377A38B7EA;
-        Thu, 23 Apr 2020 09:40:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id a4qF4jLoALPJ; Thu, 23 Apr 2020 09:40:35 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6D6038B772;
-        Thu, 23 Apr 2020 09:40:34 +0200 (CEST)
-Subject: Re: [PATCH crypto-stable v3 1/2] crypto: arch/lib - limit simd usage
- to 4k chunks
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-References: <20200422200344.239462-1-Jason@zx2c4.com>
- <20200422231854.675965-1-Jason@zx2c4.com>
- <CAMj1kXHV=ryaFmj0jhQVGBd31nfHs7q5RtSyu7dY6GdEJJsr7A@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <beb32f2b-f16a-d235-f2a5-026b32dbc5b8@c-s.fr>
-Date:   Thu, 23 Apr 2020 09:40:16 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Apr 2020 03:41:11 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:19762 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbgDWHlE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:41:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587627664; x=1619163664;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=0/POSmkwr2oHePniK8x5FMw8VXx3cYejE6zS1/IRdm8=;
+  b=eCmCf3ECZY2dA6aCFjEBpdp5IyFhE2konlEnlQ0bcDwn+1LYMmeeuZsM
+   3rZxV2Ngd4UsXVaJXySMhvC8dYjtc0cPMdvv/qMc1ybgKK0OCiqgc16nE
+   Xi93ab5ty5jEzHpUYX9FGJjovbTedFnWJTFkawbitoyvtzjBQ1xffP3qi
+   J4x4QimKQdlgTteMszE7jjrtCLKgsSg+mYavyU5szg5WCEPSXNl+9d77k
+   Yl8alvK5KdA7ndSiO7aaj156L/JhUWmmCAW1hIcaqRPSmmnk4bYrmYtZZ
+   G8WtS+xgbP3kSzrgHP6sKUmjA+FZw9w7lT7ebGdjYJJhwtEK9kda8bMqf
+   Q==;
+IronPort-SDR: 6yD7o0yDf+bDk7LQ0MgAeNYGgdEbCpOnLnV1mG1HHEnTJ0aqUiCGVwO9wO0a2kpSFB7Q3aw56f
+ 0hEA+HjzPaaQ44QPSk4+GUkMCwo8u5f91WLRvu+Wsi80OXUVDZD/b257JY6hIAoERhfQbb+CKE
+ WgZzcpspMjPt3gkkMd/64k2USiSJKrOGXkvmBx09XDxDKPiaJs9v2jCWUi3F43D/0UORp3pfVB
+ LZ5t73q3rNAXbv7noZRf8aBxLuUyzXGPPhkmFSWBZ4jegimiLlybd4zhe4u3lRHXgoPFs+MCjz
+ fbM=
+X-IronPort-AV: E=Sophos;i="5.73,306,1583164800"; 
+   d="scan'208";a="136261975"
+Received: from mail-co1nam11lp2174.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.174])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Apr 2020 15:41:03 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cYNoQoNhAc661BSoXh0KMib653uCP1X/dj1hFBOL64UlEz2CkAZ1fCC8+Jxjkb1Sgua9bI9Gso+PJoJdO6Zaf4zJvawuimtVQQGwXkGM7/6vtkzIgfDbBAPhV6yQLccYOYqak0yzxtnf34VCemOAPnuyBHpvp2Hbz/S9HzohwajMEDW7HV7ijku7jkeoftDi9u0Q+o/VjpE8uDXyUy9/vQCPYPCkS5FEuZNh7Spp7AxNrjxOjnTGVwR4lCMScfj6HvDiFNqQi2vyW0R5Awp8Vm6yWBflhPb58cy6RWXgsBzouTs7npWOgCJLuHNclWZJLsGrmbIjwo6uOdQi7QP54Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7AOcDA8Y/zPRjhgsa5GexEZnArT1QaWtZlVNJyQiFls=;
+ b=aQqheUvYdY2+IlWkOTi5lePA7m3VCmVQqyCbFx0WmGtcJx288533iYiAh6J32C9BETdvF68xQlIH6AUuWZWw/XlFaprWf2JsJFMK8xO8B9k7DDdgAPSp/66aWyNS6NOM47+Na3l0WrmxCleGKM5q3WYVLI/JbayyS7aH2KtGtwBjZmHUEKbZa5ZtetqOTwcm5/zvWVmOWZqO6oejj5ETkQWgF8RWxikxLH9UZY74IrN4A0d/Cg29bK2hvtXqgNYLvrN8O+uQ8jXcUDkTd7A5LUaKRPMsG23hfJ7QMzPs2KSPBeAcz/lHhcpcISH4Bx09J3tkQczb3dQZ5HuU82EI8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7AOcDA8Y/zPRjhgsa5GexEZnArT1QaWtZlVNJyQiFls=;
+ b=AOXLn4t81EPO6jMcJvXZhwrezg8e5iMlgdiD9fcFRkLxdAdSsVIYgQjaabJPWOnXfJNXDywmjT4RrmshjJ0oMXtSCb1vrf/KMM2r21zw1QevbOXA+WtmAjlY4Yk1uG5BA9v2wWC5DReppRLJwB6bNR+xQChgNPgXOCCpESSPUgo=
+Received: from BY5PR04MB6900.namprd04.prod.outlook.com (2603:10b6:a03:229::20)
+ by BY5PR04MB7076.namprd04.prod.outlook.com (2603:10b6:a03:222::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Thu, 23 Apr
+ 2020 07:41:02 +0000
+Received: from BY5PR04MB6900.namprd04.prod.outlook.com
+ ([fe80::b574:3071:da2f:7606]) by BY5PR04MB6900.namprd04.prod.outlook.com
+ ([fe80::b574:3071:da2f:7606%8]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
+ 07:41:02 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
+        Jan Kara <jack@suse.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/7] ide-cd: rename cdrom_read_tocentry
+Thread-Topic: [PATCH 2/7] ide-cd: rename cdrom_read_tocentry
+Thread-Index: AQHWGT798MX6FeAfwkaUCw/6MK5hLg==
+Date:   Thu, 23 Apr 2020 07:41:02 +0000
+Message-ID: <BY5PR04MB6900BB75766839E435B5B472E7D30@BY5PR04MB6900.namprd04.prod.outlook.com>
+References: <20200423071224.500849-1-hch@lst.de>
+ <20200423071224.500849-3-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [129.253.182.57]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: adcd9026-56e1-4081-da2c-08d7e759ac8a
+x-ms-traffictypediagnostic: BY5PR04MB7076:
+x-microsoft-antispam-prvs: <BY5PR04MB7076E793264C657A79FB3C86E7D30@BY5PR04MB7076.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 03827AF76E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6900.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(366004)(39860400002)(136003)(376002)(396003)(52536014)(8936002)(66476007)(33656002)(7416002)(5660300002)(81156014)(86362001)(316002)(64756008)(66556008)(186003)(66446008)(8676002)(110136005)(66946007)(26005)(4326008)(76116006)(9686003)(54906003)(6506007)(55016002)(53546011)(2906002)(7696005)(478600001)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2Tpt/vmBwyiG7VQNbuGE5wIGajeBzdPPQ6cM7bg0P9AA559hAUd/VEvzBu4FcsxV+O//q1WDoTBRS0XDK7Bx0XovxuybxIyLMoWd9bqBm95VVk3qGN2WcwzNV+/VoI/GSDicHGl0GbwHaU7M124bAl9t+rLuPsI4OOS3h6OsMNPYAuJh9x+wXHoZnOSwbyIZc76vf7IDhEXjR7RSlt6EYhMQ6HUZDSAyLdJKZIkeAEgDjZjV41HboSkfZJ8MIxMPWs4mzNk8QR12NcmuFoj2en062vY3Vno0zfxeA+oVjB4RSiobAsQO42aQKkfccsWIj7vMDJh2r9rA8Rs+p6NEpPaBjJAuVMowHzV03aL2x3uphibOUBejvMFFfrmdoPmRk/X6u4aJksU9wfbooCCGMQmpCDaMuPipmV0TtSPso3C95INw+nSJqDG1EaeiVvVj
+x-ms-exchange-antispam-messagedata: Lb/dUtv5wdiRRN0o7yk+jafDh9KVMSGoiLAKWsoj69fy+XYgyFLMJ/38brBNXx0ysuLVSzG0qNpZnxm0kb6Vwn1060FamJLz//R1bOPMBDwh048LShhdTfeHaxUTzhD6XspWCmWel5L+uuxpKobNig==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXHV=ryaFmj0jhQVGBd31nfHs7q5RtSyu7dY6GdEJJsr7A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: adcd9026-56e1-4081-da2c-08d7e759ac8a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 07:41:02.6582
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guvGmuu9Fkv1PbbZFbTqvWSgODOKSiUbAbAa950MMSC/c0+2RA5g06810Kzqup1pIWKYl8rMhg2b9sYGWGkzcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 23/04/2020 à 09:18, Ard Biesheuvel a écrit :
-> FYI: you shouldn't cc stable@vger.kernel.org directly on your patches,
-> or add the cc: line. Only patches that are already in Linus' tree
-> should be sent there.
-> 
-> Also, the fixes tags are really quite sufficient. In fact, it is
-> actually rather difficult these days to prevent something from being
-> taken into -stable if the bots notice that it applies cleanly.
-
-According to Kernel Documentation, 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html :
-
-
-Patches that fix a severe bug in a released kernel should be directed 
-toward the stable maintainers by putting a line like this:
-
-Cc: stable@vger.kernel.org
-
-into the sign-off area of your patch (note, NOT an email recipient). You 
-should also read Documentation/process/stable-kernel-rules.rst in 
-addition to this file.
-
-
-Isn't it correct anymore ?
-
-Christophe
-
-
-> 
-> On Thu, 23 Apr 2020 at 01:19, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->>
->> The initial Zinc patchset, after some mailing list discussion, contained
->> code to ensure that kernel_fpu_enable would not be kept on for more than
->> a 4k chunk, since it disables preemption. The choice of 4k isn't totally
->> scientific, but it's not a bad guess either, and it's what's used in
->> both the x86 poly1305, blake2s, and nhpoly1305 code already (in the form
->> of PAGE_SIZE, which this commit corrects to be explicitly 4k for the
->> former two).
->>
->> Ard did some back of the envelope calculations and found that
->> at 5 cycles/byte (overestimate) on a 1ghz processor (pretty slow), 4k
->> means we have a maximum preemption disabling of 20us, which Sebastian
->> confirmed was probably a good limit.
->>
->> Unfortunately the chunking appears to have been left out of the final
->> patchset that added the glue code. So, this commit adds it back in.
->>
->> Fixes: 84e03fa39fbe ("crypto: x86/chacha - expose SIMD ChaCha routine as library function")
->> Fixes: b3aad5bad26a ("crypto: arm64/chacha - expose arm64 ChaCha routine as library function")
->> Fixes: a44a3430d71b ("crypto: arm/chacha - expose ARM ChaCha routine as library function")
->> Fixes: d7d7b8535662 ("crypto: x86/poly1305 - wire up faster implementations for kernel")
->> Fixes: f569ca164751 ("crypto: arm64/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
->> Fixes: a6b803b3ddc7 ("crypto: arm/poly1305 - incorporate OpenSSL/CRYPTOGAMS NEON implementation")
->> Fixes: ed0356eda153 ("crypto: blake2s - x86_64 SIMD implementation")
->> Cc: Eric Biggers <ebiggers@google.com>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> 
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> 
-> Thanks for cleaning this up
-> 
->> ---
->> Changes v2->v3:
->>   - [Eric] Split nhpoly1305 changes into separate commit, since it's not
->>     related to the library interface.
->>
->> Changes v1->v2:
->>   - [Ard] Use explicit 4k chunks instead of PAGE_SIZE.
->>   - [Eric] Prefer do-while over for (;;).
->>
->>   arch/arm/crypto/chacha-glue.c        | 14 +++++++++++---
->>   arch/arm/crypto/poly1305-glue.c      | 15 +++++++++++----
->>   arch/arm64/crypto/chacha-neon-glue.c | 14 +++++++++++---
->>   arch/arm64/crypto/poly1305-glue.c    | 15 +++++++++++----
->>   arch/x86/crypto/blake2s-glue.c       | 10 ++++------
->>   arch/x86/crypto/chacha_glue.c        | 14 +++++++++++---
->>   arch/x86/crypto/poly1305_glue.c      | 13 ++++++-------
->>   7 files changed, 65 insertions(+), 30 deletions(-)
->>
->> diff --git a/arch/arm/crypto/chacha-glue.c b/arch/arm/crypto/chacha-glue.c
->> index 6fdb0ac62b3d..59da6c0b63b6 100644
->> --- a/arch/arm/crypto/chacha-glue.c
->> +++ b/arch/arm/crypto/chacha-glue.c
->> @@ -91,9 +91,17 @@ void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
->>                  return;
->>          }
->>
->> -       kernel_neon_begin();
->> -       chacha_doneon(state, dst, src, bytes, nrounds);
->> -       kernel_neon_end();
->> +       do {
->> +               unsigned int todo = min_t(unsigned int, bytes, SZ_4K);
->> +
->> +               kernel_neon_begin();
->> +               chacha_doneon(state, dst, src, todo, nrounds);
->> +               kernel_neon_end();
->> +
->> +               bytes -= todo;
->> +               src += todo;
->> +               dst += todo;
->> +       } while (bytes);
->>   }
->>   EXPORT_SYMBOL(chacha_crypt_arch);
->>
->> diff --git a/arch/arm/crypto/poly1305-glue.c b/arch/arm/crypto/poly1305-glue.c
->> index ceec04ec2f40..13cfef4ae22e 100644
->> --- a/arch/arm/crypto/poly1305-glue.c
->> +++ b/arch/arm/crypto/poly1305-glue.c
->> @@ -160,13 +160,20 @@ void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
->>                  unsigned int len = round_down(nbytes, POLY1305_BLOCK_SIZE);
->>
->>                  if (static_branch_likely(&have_neon) && do_neon) {
->> -                       kernel_neon_begin();
->> -                       poly1305_blocks_neon(&dctx->h, src, len, 1);
->> -                       kernel_neon_end();
->> +                       do {
->> +                               unsigned int todo = min_t(unsigned int, len, SZ_4K);
->> +
->> +                               kernel_neon_begin();
->> +                               poly1305_blocks_neon(&dctx->h, src, todo, 1);
->> +                               kernel_neon_end();
->> +
->> +                               len -= todo;
->> +                               src += todo;
->> +                       } while (len);
->>                  } else {
->>                          poly1305_blocks_arm(&dctx->h, src, len, 1);
->> +                       src += len;
->>                  }
->> -               src += len;
->>                  nbytes %= POLY1305_BLOCK_SIZE;
->>          }
->>
->> diff --git a/arch/arm64/crypto/chacha-neon-glue.c b/arch/arm64/crypto/chacha-neon-glue.c
->> index 37ca3e889848..af2bbca38e70 100644
->> --- a/arch/arm64/crypto/chacha-neon-glue.c
->> +++ b/arch/arm64/crypto/chacha-neon-glue.c
->> @@ -87,9 +87,17 @@ void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
->>              !crypto_simd_usable())
->>                  return chacha_crypt_generic(state, dst, src, bytes, nrounds);
->>
->> -       kernel_neon_begin();
->> -       chacha_doneon(state, dst, src, bytes, nrounds);
->> -       kernel_neon_end();
->> +       do {
->> +               unsigned int todo = min_t(unsigned int, bytes, SZ_4K);
->> +
->> +               kernel_neon_begin();
->> +               chacha_doneon(state, dst, src, todo, nrounds);
->> +               kernel_neon_end();
->> +
->> +               bytes -= todo;
->> +               src += todo;
->> +               dst += todo;
->> +       } while (bytes);
->>   }
->>   EXPORT_SYMBOL(chacha_crypt_arch);
->>
->> diff --git a/arch/arm64/crypto/poly1305-glue.c b/arch/arm64/crypto/poly1305-glue.c
->> index e97b092f56b8..f33ada70c4ed 100644
->> --- a/arch/arm64/crypto/poly1305-glue.c
->> +++ b/arch/arm64/crypto/poly1305-glue.c
->> @@ -143,13 +143,20 @@ void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
->>                  unsigned int len = round_down(nbytes, POLY1305_BLOCK_SIZE);
->>
->>                  if (static_branch_likely(&have_neon) && crypto_simd_usable()) {
->> -                       kernel_neon_begin();
->> -                       poly1305_blocks_neon(&dctx->h, src, len, 1);
->> -                       kernel_neon_end();
->> +                       do {
->> +                               unsigned int todo = min_t(unsigned int, len, SZ_4K);
->> +
->> +                               kernel_neon_begin();
->> +                               poly1305_blocks_neon(&dctx->h, src, todo, 1);
->> +                               kernel_neon_end();
->> +
->> +                               len -= todo;
->> +                               src += todo;
->> +                       } while (len);
->>                  } else {
->>                          poly1305_blocks(&dctx->h, src, len, 1);
->> +                       src += len;
->>                  }
->> -               src += len;
->>                  nbytes %= POLY1305_BLOCK_SIZE;
->>          }
->>
->> diff --git a/arch/x86/crypto/blake2s-glue.c b/arch/x86/crypto/blake2s-glue.c
->> index 06ef2d4a4701..6737bcea1fa1 100644
->> --- a/arch/x86/crypto/blake2s-glue.c
->> +++ b/arch/x86/crypto/blake2s-glue.c
->> @@ -32,16 +32,16 @@ void blake2s_compress_arch(struct blake2s_state *state,
->>                             const u32 inc)
->>   {
->>          /* SIMD disables preemption, so relax after processing each page. */
->> -       BUILD_BUG_ON(PAGE_SIZE / BLAKE2S_BLOCK_SIZE < 8);
->> +       BUILD_BUG_ON(SZ_4K / BLAKE2S_BLOCK_SIZE < 8);
->>
->>          if (!static_branch_likely(&blake2s_use_ssse3) || !crypto_simd_usable()) {
->>                  blake2s_compress_generic(state, block, nblocks, inc);
->>                  return;
->>          }
->>
->> -       for (;;) {
->> +       do {
->>                  const size_t blocks = min_t(size_t, nblocks,
->> -                                           PAGE_SIZE / BLAKE2S_BLOCK_SIZE);
->> +                                           SZ_4K / BLAKE2S_BLOCK_SIZE);
->>
->>                  kernel_fpu_begin();
->>                  if (IS_ENABLED(CONFIG_AS_AVX512) &&
->> @@ -52,10 +52,8 @@ void blake2s_compress_arch(struct blake2s_state *state,
->>                  kernel_fpu_end();
->>
->>                  nblocks -= blocks;
->> -               if (!nblocks)
->> -                       break;
->>                  block += blocks * BLAKE2S_BLOCK_SIZE;
->> -       }
->> +       } while (nblocks);
->>   }
->>   EXPORT_SYMBOL(blake2s_compress_arch);
->>
->> diff --git a/arch/x86/crypto/chacha_glue.c b/arch/x86/crypto/chacha_glue.c
->> index b412c21ee06e..22250091cdbe 100644
->> --- a/arch/x86/crypto/chacha_glue.c
->> +++ b/arch/x86/crypto/chacha_glue.c
->> @@ -153,9 +153,17 @@ void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
->>              bytes <= CHACHA_BLOCK_SIZE)
->>                  return chacha_crypt_generic(state, dst, src, bytes, nrounds);
->>
->> -       kernel_fpu_begin();
->> -       chacha_dosimd(state, dst, src, bytes, nrounds);
->> -       kernel_fpu_end();
->> +       do {
->> +               unsigned int todo = min_t(unsigned int, bytes, SZ_4K);
->> +
->> +               kernel_fpu_begin();
->> +               chacha_dosimd(state, dst, src, todo, nrounds);
->> +               kernel_fpu_end();
->> +
->> +               bytes -= todo;
->> +               src += todo;
->> +               dst += todo;
->> +       } while (bytes);
->>   }
->>   EXPORT_SYMBOL(chacha_crypt_arch);
->>
->> diff --git a/arch/x86/crypto/poly1305_glue.c b/arch/x86/crypto/poly1305_glue.c
->> index 6dfec19f7d57..dfe921efa9b2 100644
->> --- a/arch/x86/crypto/poly1305_glue.c
->> +++ b/arch/x86/crypto/poly1305_glue.c
->> @@ -91,8 +91,8 @@ static void poly1305_simd_blocks(void *ctx, const u8 *inp, size_t len,
->>          struct poly1305_arch_internal *state = ctx;
->>
->>          /* SIMD disables preemption, so relax after processing each page. */
->> -       BUILD_BUG_ON(PAGE_SIZE < POLY1305_BLOCK_SIZE ||
->> -                    PAGE_SIZE % POLY1305_BLOCK_SIZE);
->> +       BUILD_BUG_ON(SZ_4K < POLY1305_BLOCK_SIZE ||
->> +                    SZ_4K % POLY1305_BLOCK_SIZE);
->>
->>          if (!static_branch_likely(&poly1305_use_avx) ||
->>              (len < (POLY1305_BLOCK_SIZE * 18) && !state->is_base2_26) ||
->> @@ -102,8 +102,8 @@ static void poly1305_simd_blocks(void *ctx, const u8 *inp, size_t len,
->>                  return;
->>          }
->>
->> -       for (;;) {
->> -               const size_t bytes = min_t(size_t, len, PAGE_SIZE);
->> +       do {
->> +               const size_t bytes = min_t(size_t, len, SZ_4K);
->>
->>                  kernel_fpu_begin();
->>                  if (IS_ENABLED(CONFIG_AS_AVX512) && static_branch_likely(&poly1305_use_avx512))
->> @@ -113,11 +113,10 @@ static void poly1305_simd_blocks(void *ctx, const u8 *inp, size_t len,
->>                  else
->>                          poly1305_blocks_avx(ctx, inp, bytes, padbit);
->>                  kernel_fpu_end();
->> +
->>                  len -= bytes;
->> -               if (!len)
->> -                       break;
->>                  inp += bytes;
->> -       }
->> +       } while (len);
->>   }
->>
->>   static void poly1305_simd_emit(void *ctx, u8 mac[POLY1305_DIGEST_SIZE],
->> --
->> 2.26.2
->>
+On 2020/04/23 16:15, Christoph Hellwig wrote:=0A=
+> Give the cdrom_read_tocentry function and ide_ prefix to not conflict=0A=
+> with the soon to be added generic function.=0A=
+> =0A=
+> Signed-off-by: Christoph Hellwig <hch@lst.de>=0A=
+> ---=0A=
+>  drivers/ide/ide-cd.c | 14 +++++++-------=0A=
+>  1 file changed, 7 insertions(+), 7 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/ide/ide-cd.c b/drivers/ide/ide-cd.c=0A=
+> index 40e124eb918a..7f17f8303988 100644=0A=
+> --- a/drivers/ide/ide-cd.c=0A=
+> +++ b/drivers/ide/ide-cd.c=0A=
+> @@ -1034,8 +1034,8 @@ static int cdrom_read_capacity(ide_drive_t *drive, =
+unsigned long *capacity,=0A=
+>  	return 0;=0A=
+>  }=0A=
+>  =0A=
+> -static int cdrom_read_tocentry(ide_drive_t *drive, int trackno, int msf_=
+flag,=0A=
+> -				int format, char *buf, int buflen)=0A=
+> +static int ide_cdrom_read_tocentry(ide_drive_t *drive, int trackno,=0A=
+> +		int msf_flag, int format, char *buf, int buflen)=0A=
+>  {=0A=
+>  	unsigned char cmd[BLK_MAX_CDB];=0A=
+>  =0A=
+> @@ -1104,7 +1104,7 @@ int ide_cd_read_toc(ide_drive_t *drive)=0A=
+>  				     sectors_per_frame << SECTOR_SHIFT);=0A=
+>  =0A=
+>  	/* first read just the header, so we know how long the TOC is */=0A=
+> -	stat =3D cdrom_read_tocentry(drive, 0, 1, 0, (char *) &toc->hdr,=0A=
+> +	stat =3D ide_cdrom_read_tocentry(drive, 0, 1, 0, (char *) &toc->hdr,=0A=
+>  				    sizeof(struct atapi_toc_header));=0A=
+>  	if (stat)=0A=
+>  		return stat;=0A=
+> @@ -1121,7 +1121,7 @@ int ide_cd_read_toc(ide_drive_t *drive)=0A=
+>  		ntracks =3D MAX_TRACKS;=0A=
+>  =0A=
+>  	/* now read the whole schmeer */=0A=
+> -	stat =3D cdrom_read_tocentry(drive, toc->hdr.first_track, 1, 0,=0A=
+> +	stat =3D ide_cdrom_read_tocentry(drive, toc->hdr.first_track, 1, 0,=0A=
+>  				  (char *)&toc->hdr,=0A=
+>  				   sizeof(struct atapi_toc_header) +=0A=
+>  				   (ntracks + 1) *=0A=
+> @@ -1141,7 +1141,7 @@ int ide_cd_read_toc(ide_drive_t *drive)=0A=
+>  		 * Heiko Ei=DFfeldt.=0A=
+>  		 */=0A=
+>  		ntracks =3D 0;=0A=
+> -		stat =3D cdrom_read_tocentry(drive, CDROM_LEADOUT, 1, 0,=0A=
+> +		stat =3D ide_cdrom_read_tocentry(drive, CDROM_LEADOUT, 1, 0,=0A=
+>  					   (char *)&toc->hdr,=0A=
+>  					   sizeof(struct atapi_toc_header) +=0A=
+>  					   (ntracks + 1) *=0A=
+> @@ -1181,7 +1181,7 @@ int ide_cd_read_toc(ide_drive_t *drive)=0A=
+>  =0A=
+>  	if (toc->hdr.first_track !=3D CDROM_LEADOUT) {=0A=
+>  		/* read the multisession information */=0A=
+> -		stat =3D cdrom_read_tocentry(drive, 0, 0, 1, (char *)&ms_tmp,=0A=
+> +		stat =3D ide_cdrom_read_tocentry(drive, 0, 0, 1, (char *)&ms_tmp,=0A=
+>  					   sizeof(ms_tmp));=0A=
+>  		if (stat)=0A=
+>  			return stat;=0A=
+> @@ -1195,7 +1195,7 @@ int ide_cd_read_toc(ide_drive_t *drive)=0A=
+>  =0A=
+>  	if (drive->atapi_flags & IDE_AFLAG_TOCADDR_AS_BCD) {=0A=
+>  		/* re-read multisession information using MSF format */=0A=
+> -		stat =3D cdrom_read_tocentry(drive, 0, 1, 1, (char *)&ms_tmp,=0A=
+> +		stat =3D ide_cdrom_read_tocentry(drive, 0, 1, 1, (char *)&ms_tmp,=0A=
+>  					   sizeof(ms_tmp));=0A=
+>  		if (stat)=0A=
+>  			return stat;=0A=
+> =0A=
+=0A=
+Looks OK to me.=0A=
+=0A=
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
