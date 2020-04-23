@@ -2,82 +2,137 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F376C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3198C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F248420728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C25E20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1yAor3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgDWQDQ (ORCPT
+        id S1729640AbgDWQEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:03:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:53254 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbgDWQDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:03:15 -0400
-IronPort-SDR: dh7p7s7kzozyeliPqsuZ9H2tkrRyzZlXF5sHlx5aWy4lQoneAXrGMmrq7WP1Alj0ipSUC0VQTJ
- 4K0c/+EGEzAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:03:14 -0700
-IronPort-SDR: BWfWAWVku/R6kPBuOGhh/PJ7WQmTfNHytD5ZZWwL8ycBOU2zOO7wKB4NCrEaLZ90vliB+BFpsw
- PJG5HKkmnrqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="335010776"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 23 Apr 2020 09:03:14 -0700
-Date:   Thu, 23 Apr 2020 09:03:14 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 0/9] Introduce support for guest CET feature
-Message-ID: <20200423160314.GE17824@linux.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
+        Thu, 23 Apr 2020 12:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729257AbgDWQEB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:04:01 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F8AC09B040;
+        Thu, 23 Apr 2020 09:04:01 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x15so3180130pfa.1;
+        Thu, 23 Apr 2020 09:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QRRSRzv3ELZyPDBdtIE45poUqjMQaq7ox4Jm7P7/zG8=;
+        b=R1yAor3At9e+xtBhUr6dlgl7zNXUVenScXyHMgcn6IEG2US+/UvODrE8lbtPt/gLs/
+         fbWEVj/JWvpO34kH3WTmFqm02fkOHuQ7PhIiONd8EUu3SW3XtYCNPbk92Xa4fdfbrRE1
+         PXQd0r0F2W4Fp10i4ld1cmfne4gSHWf8NyMjtGLwvuq4GJmQJABiDyvshdytsc4Dk0Rx
+         e//SCLAP6/rdoNEqY0IdCqIT3FibTx1vI72kTE3eLnhpUYI2ZreFg08S9YtkGEs0zhOt
+         WX9FXySSlDXshp0yLq17w2rYTW0o1mmx/y55DH11xOJlY8NmfYyv7tfqjERP5kVDnBrD
+         Eccw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QRRSRzv3ELZyPDBdtIE45poUqjMQaq7ox4Jm7P7/zG8=;
+        b=TVIeVzzejAOOiRRSoz4/GvNBmr5n75ABs+uF/NIo/cF4b3z+CngP+2xcfu0HXoPN4O
+         gw3GWY1e5GxoaCfNEHMIxVlcDrZuNx464YMIY6HTgDL3jT8r55Mgq1IYOujjzo3zXf5X
+         iMgry4kzJyhwxE03G5YmSpIVIT2XtMuA8aakiZ7/YpNUUtbo+FPTbL7le01odsE39v4S
+         mVYyiSMapgsvQvAUZyvrhDTbiKgPrGTM/YvyByT9Ao8+bqywZX/jMhKXTO3kUPmRFpC9
+         cfh+vKW4gKHw/kxpPhCxagCPzHKg7I7BIzM48OUR0KiTAjH4J6Ub7syT1sBfGHKjyo0w
+         fSLQ==
+X-Gm-Message-State: AGi0Pua+3BR7Q1XoCz2myIeaDcqmDzHUuyfJn6MeyNrAbwM+d1lB3mJM
+        A0NH/FWcDNXqArm9nKELxg0=
+X-Google-Smtp-Source: APiQypJNoUyWvf19ibvNaStq1WA8/4V2tFh9qQrvtbqG8Us89/iEAV2d0p9Nj6pt/PJyn6r+TTHe8Q==
+X-Received: by 2002:aa7:82d4:: with SMTP id f20mr4501737pfn.253.1587657840767;
+        Thu, 23 Apr 2020 09:04:00 -0700 (PDT)
+Received: from localhost (176.122.158.71.16clouds.com. [176.122.158.71])
+        by smtp.gmail.com with ESMTPSA id a200sm2867954pfa.201.2020.04.23.09.03.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Apr 2020 09:04:00 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 00:03:56 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, FlorianSchandinat@gmx.de,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] console: console: Complete exception handling in
+ newport_probe()
+Message-ID: <20200423160356.GA2538@nuc8i5>
+References: <20200423142627.1820-1-zhengdejin5@gmail.com>
+ <CAHp75Vf1_SMk=_WDUrB97BGR6K6EXOdtgQ92=hTyMdVUoyWQiw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326081847.5870-1-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAHp75Vf1_SMk=_WDUrB97BGR6K6EXOdtgQ92=hTyMdVUoyWQiw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:18:37PM +0800, Yang Weijiang wrote:
-> Control-flow Enforcement Technology (CET) provides protection against
-> Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
-> sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
+On Thu, Apr 23, 2020 at 05:52:09PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 23, 2020 at 5:26 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+> >
+> > A call of the function do_take_over_console() can fail here.
+> > The corresponding system resources were not released then.
+> > Thus add a call of the function iounmap() together with the check
+> > of a failure predicate.
 > 
-> KVM needs to update to enable guest CET feature.
-> This patchset implements CET related CPUID/XSAVES enumeration, MSRs
-> and vmentry/vmexit configuration etc.so that guest kernel can setup CET
-> runtime infrastructure based on them. Some CET MSRs and related feature
-> flags used reference the definitions in kernel patchset.
+> ...
 > 
-> CET kernel patches are here:
-> https://lkml.org/lkml/2020/2/5/593
-> https://lkml.org/lkml/2020/2/5/604
+> > CC: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> Use Cc: Better to read.
+>
+I will pay attention to the next submission, thanks.
 
-...
+> ...
+> 
+> > v1 -> v2:
+> >         - modify the commit comments by Markus'suggestion.
+> 
+> What suggestion? You need to be clear in changelog what exactly has
+> been done without looking to any previous mail.
+>
+The commit comments have some more appropriate instructions by
+Markus'suggestion. here is my first version commit comments:
 
-> - This patch serial is built on top of below branch and CET kernel patches
->   for seeking xsaves support:
->   https://git.kernel.org/pub/scm/virt/kvm/kvm.git/log/?h=cpu-caps
+if do_take_over_console() return an error in the newport_probe(),
+due to the io virtual address is not released, it will cause a leak.
 
-Can you provide the full code in a branch/tag somewhere?  The CET patches
-are in turn dependent on XSAVES enabling[*], and those don't apply cleanly
-on the cpu-caps branch.
+Thnaks!
 
-It might make sense to also rebase to kvm/queue?  Though that's not a
-requirement by any means, e.g. don't bother if the CET patches are going to
-be respun soon.
-
-https://lkml.kernel.org/r/20200328164307.17497-1-yu-cheng.yu@intel.com
+> ...
+> 
+> >         console_lock();
+> >         err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
+> >         console_unlock();
+> > +
+> > +       if (err)
+> > +               iounmap((void *)npregs);
+> >         return err;
+> >  }
+> 
+> I have briefly looked at the code (it is actually quite old one!), and
+> I think this is half-baked solution, besides the fact of missed
+> __iomem annotation and useless explicit casting.
+> The proper one seems to switch to memremap() and do memunmap() here.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
