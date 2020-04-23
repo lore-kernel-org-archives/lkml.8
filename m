@@ -2,117 +2,74 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B439C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045A8C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 487B72076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:04:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T3Q9H+56"
+	by mail.kernel.org (Postfix) with ESMTP id D4DD52076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgDWNEF (ORCPT
+        id S1728566AbgDWNFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:04:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60375 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbgDWNEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:04:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 497HYt01bMz9sRN;
-        Thu, 23 Apr 2020 23:04:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587647043;
-        bh=RsqDktuMMP2UgufhCx84QjzJaJ3BCDZnFMhqrYgH1i8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=T3Q9H+56rirN9jDvJka9cRS5NRtrWdc/QPTAW3cBRZ8CBsf0PD1RHVZOlmS+ufW4m
-         vH43guW8YFopRrfDLPApSP7nuIwdE85NWG9/Es8jsQNJq+wfprxwgi3A80Ay5gyHAn
-         tx42rHpVBUSyENQSZFhqy5mBaag5lx+KDnm79yN91lq5YkYpi9Z8JVY2xsJhEhdOXE
-         0as+13FvAAKy/o7FEEQhS6/aAB9DK77f4+6irtIZ9t1hsTOVBAAzftBVqb5bFSt6s+
-         QEVga1M6QhZnAUPLcT22hE/qr/6E5ZOYlbeKnDbRV/a2dXnU66e2ZP4DlCtk14MLhY
-         fUcOoOMGR6A8w==
-Date:   Thu, 23 Apr 2020 23:04:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the sound-asoc tree
-Message-ID: <20200423230400.2cb1a285@canb.auug.org.au>
-In-Reply-To: <20200423113041.GI4808@sirena.org.uk>
-References: <20200423155539.4492a0cc@canb.auug.org.au>
-        <20200423113041.GI4808@sirena.org.uk>
+        Thu, 23 Apr 2020 09:05:10 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47525 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbgDWNFI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:05:08 -0400
+Received: by mail-io1-f72.google.com with SMTP id v23so5567004ioj.14
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:05:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=mDeCiJymVJtdQweAH4ZMSfwDQZ44U0uHTCRHrn44daU=;
+        b=jE7+HcapxRuM7zuAVgOqfaeS2OVETv7Ac3PIXrv5UeZZJF1uaYTGQhT+nja+gvZB1v
+         MQx2crNRXjuqubfqRwnh7fUFrHiQ22hG6STsD8EAPvdvQBDK0yUSWfTJQjwfbmR8+XWw
+         DxfjrNFUhJxDR9DSZCFILOCSqqZ8w/fTpf8I8eH7sxo5xMd50BmrlO9A3cg8sRoDFvIq
+         XHbBaOLOXI2Piiee/010i3pY2wcp9DDdr6XRWB6B9IdumBqI8KnM+FN9XkRTx+SDSBGf
+         9yz5ZcR8PwcCdFNrNyXC9SN+X7kgOtEAEVybj7ScC+yxtpg9ykmDVWMXOUgtnT3E/2SI
+         MfLg==
+X-Gm-Message-State: AGi0PubkIK0RNQiJNA8iS+M112mL5QN18WYMeY4Kw7xLaj6+xt1c3y5R
+        eUZXfwTKiQ/C975fp9pq+B3/39JvgZiZhAeRMP2GSMcNj17+
+X-Google-Smtp-Source: APiQypKXyqz/JlzpTAggRql5Ts4MQd1Yv7aMiN6XtgTUti0YG9yIBcvxI2iQdzYPdf5loOr0vwEuoAe/wokm4kEL4FbCdg+q2dxO
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/me9ky4T/dLNjtXpiU+noB5h";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a5d:9354:: with SMTP id i20mr3491302ioo.207.1587647105465;
+ Thu, 23 Apr 2020 06:05:05 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 06:05:05 -0700
+In-Reply-To: <1587645997.23108.9.camel@suse.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c0064305a3f4e57b@google.com>
+Subject: Re: general protection fault in go7007_usb_probe
+From:   syzbot <syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, hverkuil-cisco@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org, oneukum@suse.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/me9ky4T/dLNjtXpiU+noB5h
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi Mark,
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-On Thu, 23 Apr 2020 12:30:41 +0100 Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Apr 23, 2020 at 03:55:39PM +1000, Stephen Rothwell wrote:
->=20
-> > Presumably caused by (one of) commits =20
->=20
-> >   fe17e6cdc0fe ("ASoC: SOF: imx8: Fix randbuild error")
-> >   cb0312f61c3e ("ASoC: SOF: imx: fix undefined reference issue") =20
->=20
-> > I just removed the COMPILE_TEST from SND_SOC_SOF_IMX_TOPLEVEL for today=
-. =20
->=20
-> It looks like this is triggered by PowerPC not including
-> drivers/firmware - there are missing dependencies but it works for other
-> all*configs since the dependencies all get built in those.  It would be
-> helpful if PowerPC were fixed to include the firmware directory to
-> improve coverage.
+Reported-and-tested-by: syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com
 
-$ git grep drivers/firmware 'arch/*/*Kconfig*'
-arch/arm/Kconfig:source "drivers/firmware/Kconfig"
-arch/arm64/Kconfig:source "drivers/firmware/Kconfig"
-arch/ia64/Kconfig:source "drivers/firmware/Kconfig"
-arch/mips/Kconfig:source "drivers/firmware/Kconfig"
-arch/x86/Kconfig:source "drivers/firmware/Kconfig"
+Tested on:
 
-so, sure, it works for some architectures.  We would need someone to do
-the work to make sure that adding drivers/firmware to all the others
-does not break other stuff.  Until then, please add the needed
-dependencies.
+commit:         e9010320 usb: cdns3: gadget: make a bunch of functions sta..
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bd14feb44652cfaf
+dashboard link: https://syzkaller.appspot.com/bug?extid=cabfa4b5b05ff6be4ef0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1396d5bfe00000
 
-Thanks.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/me9ky4T/dLNjtXpiU+noB5h
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6hkkAACgkQAVBC80lX
-0Gw/vgf/RCdmmZnXRnDInT2vsf1nlf2B3qr9OvydGkxsoxbQepgegAkwiwYAyAy1
-BnL/J0xhUHrH6pR1b+OfSOe/dNPtLbvAdpUE7aHDZ6/NiwCZCtbNc7+8iNwfhEz9
-bTL0j4Pb+BT0zE/dKtDZSZgi5DblRNdKhEPB9VlTLwqDidJza3iAPOK2ze6yuB4r
-dPVY/qT1xxpdLPng7K8zIVMtCiHiRAx8xPK0I2Tcqy/Qs8b9xqczqtYZgeC1KX14
-vwEKXc4+vVvP8lG7Z6nGxpoSPF2z68G31z3IXx0Bk6suHUb6PX61Qcy+s4exSKlf
-sY8twW9/duwIua7Lmygok5k7LtN8yw==
-=w+zl
------END PGP SIGNATURE-----
-
---Sig_/me9ky4T/dLNjtXpiU+noB5h--
+Note: testing is done by a robot and is best-effort only.
