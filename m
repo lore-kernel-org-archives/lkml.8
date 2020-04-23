@@ -2,148 +2,175 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59828C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF18C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1332168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFE520704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ejyAs5SS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AKG4xUX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgDWQVh (ORCPT
+        id S1729629AbgDWQVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729453AbgDWQVg (ORCPT
+        Thu, 23 Apr 2020 12:21:52 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:47718 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729557AbgDWQVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:21:36 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C006DC09B041
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:21:36 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id o127so7027598iof.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dYg/Ll+qg4QpigLgy5DOhsXWYPV1sUDJ8jqzISmIC90=;
-        b=ejyAs5SSEEUZV6b3rk7cXp0gczcL9ZTsm6K686uWlzOJqIcMX1O8adPp4vconsSXro
-         r3Zfqv9BiJx+x2zUdof1oE8nxMVjPyZHxz4VzWuhSYq0oLMIbJ+0ISGQgfyp/KNoKXmh
-         2xgxC2U0reRe+AkZ0zNG+fQx2tALFOhbtxOJ7NuHySb8DSXgpG9GvCaQDIVHS5YPqcbk
-         MysnBNy6Gc3A8wUhlXizR12M/yLnLFvkEvtYTkMUWSuwbBTt33u0cJutmWCwRiEqMP/V
-         J+5mmVz+RD7la72OKvDrNt/2gc3gXXH3xJsia946HmdeUgMsN+gkfSztaS8Ij3zhQVCy
-         ss4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dYg/Ll+qg4QpigLgy5DOhsXWYPV1sUDJ8jqzISmIC90=;
-        b=guDfhKhvkVyFthUK2YpQkLOuk98Gxn6/n+AbbEmowG99xjcK0a7JIJCwn0X/7Zk/kT
-         ZBsJ5BjohBXIG4t+pSHLUUarKZt4QDOwVnzTLhuUxJutzd4omEGW/nUI3f7Vu52yfMNS
-         CzhMU8HpCoOKWz45nEYDrJyMqdb9BeSpx66DUgBKO7H4CbrwmMH49bFfs0RWJXx2LA+0
-         fAwvIRTqprpMkfOS/JBf5lw6PYS85iNwEIZnNoHvg4BrYBSKK9STYEWXY9O7TJdpofjG
-         I4lLEThINmg2m9Qhc2wd+3327Cv15dHZq7VP7q6gO59HhMgjVz5qJMDKKvpLj3MxPEdK
-         yHug==
-X-Gm-Message-State: AGi0PuZx4OASzXTtr8+djYxoZCHhUw44kIBC2bqmcnLWfZxkjH35x/0b
-        yIx9dkiyv5cay7D/qO1bppl+YImwaO5ryKBwFth5nQ==
-X-Google-Smtp-Source: APiQypJTaVn5mWlpWUQYcA5tRzISVbu6xu6H2hxPoP0m12Cpto0wOQZg8sIgsplgSNQwBzoCJg+pWI4sZ15S7Ddgmwg=
-X-Received: by 2002:a02:6f4b:: with SMTP id b11mr3933217jae.39.1587658894355;
- Thu, 23 Apr 2020 09:21:34 -0700 (PDT)
+        Thu, 23 Apr 2020 12:21:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587658911; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=/ec5W44u9De0++LHrjQhntfIZazSbxcz9iOGmXSVsp0=; b=AKG4xUX994njuWBBlBSeD/kOakC3RUpmFhmrK6Y/poR1pq1oA52QCwZU/SigzlL0zlr+Z2Mv
+ cNv8cOqKeRubLRLwQ/tVZGLjhViO1DT2sD0aKRc4mYkQwADBKpux0UVkjtTM+zn3mBLJLo6z
+ dfG+517C8xg5OtZn7EIlzePYXs8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea1c08f.7f92d0109650-smtp-out-n01;
+ Thu, 23 Apr 2020 16:21:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4E982C44788; Thu, 23 Apr 2020 16:21:34 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48D2DC433BA;
+        Thu, 23 Apr 2020 16:21:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48D2DC433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 23 Apr 2020 10:21:30 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 8/9] drm/msm/a6xx: enable GMU log
+Message-ID: <20200423162130.GA23271@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
+        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200421234127.27965-1-jonathan@marek.ca>
+ <20200421234127.27965-9-jonathan@marek.ca>
 MIME-Version: 1.0
-References: <20200422220430.254014-1-irogers@google.com> <20200422220430.254014-12-irogers@google.com>
- <20200423112847.GF1136647@krava> <CAP-5=fVwfu0s8Sqhs7+aTqN1Gh2SaEu=feOEQssSu9MB+7hk8Q@mail.gmail.com>
- <0edf66da-bedf-c5e9-aa2b-e9073a2d0203@huawei.com>
-In-Reply-To: <0edf66da-bedf-c5e9-aa2b-e9073a2d0203@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 23 Apr 2020 09:21:23 -0700
-Message-ID: <CAP-5=fWTgdQ-RC-CtyEPKFvOPfbANajgT61+4k6-7S9poaNEog@mail.gmail.com>
-Subject: Re: [PATCH v2 11/11] perf test: add expr test for pmu metrics
-To:     John Garry <john.garry@huawei.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421234127.27965-9-jonathan@marek.ca>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 8:11 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 23/04/2020 15:22, Ian Rogers wrote:
-> > On Thu, Apr 23, 2020 at 4:29 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >>
-> >> On Wed, Apr 22, 2020 at 03:04:30PM -0700, Ian Rogers wrote:
-> >>
-> >> SNIP
-> >>
-> >>> +
-> >>> +static int pmu_tests(void)
-> >>> +{
-> >>> +     struct pmu_events_map *map;
-> >>> +     struct pmu_event *pe;
-> >>> +     int i, j, k;
-> >>> +     const char **ids;
-> >>> +     int idnum;
-> >>> +     int ret = 0;
-> >>> +     struct expr_parse_ctx ctx;
-> >>> +     double result;
-> >>> +
-> >>> +     i = 0;
-> >>> +     for (;;) {
-> >>> +             map = &pmu_events_map[i++];
-> >>> +             if (!map->table) {
-> >>> +                     map = NULL;
-> >>> +                     break;
-> >>> +             }
-> >>> +             j = 0;
-> >>> +             for (;;) {
-> >>> +                     pe = &map->table[j++];
-> >>> +                     if (!pe->name && !pe->metric_group && !pe->metric_name)
-> >>> +                             break;
-> >>> +                     if (!pe->metric_expr)
-> >>> +                             continue;
-> >>
-> >> so we go throught all the metrics for the current cpu
-> >> and test the parsing on them.. great!
-> >
-> > It's not just the current CPU (such as skylake) it is every map
-> > (skylake, cascade lake, etc), but this only works for the architecture
-> > that jevents built.
-> > If jevents built all architectures then this could check them as well.
-> > Perhaps there should be a jevents test suite, but I think even then
-> > this test has value.
->
-> note: there is test__pmu_events(), which verifies that some test events
-> generated in pmu-events.c are as expected, and also verifies that we
-> create PMU events aliases as expected (for those test events). Nothing
-> is done for metrics, ATM.
+On Tue, Apr 21, 2020 at 07:41:26PM -0400, Jonathan Marek wrote:
+> This is required for a650 to work.
 
-Thanks John, that sounds like the right place to start.
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-Ian
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c     | 15 +++++++++++++++
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.h     |  1 +
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h |  4 ++++
+>  3 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> index 60ed5360fd8a..f24e436daafe 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> @@ -201,6 +201,12 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
+>  	u32 val;
+>  
+>  	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
+> +
+> +	/* Set the log wptr index
+> +	 * note: downstream saves the value in poweroff and restores it here
+> +	 */
+> +	gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_RESP, 0);
+> +
+>  	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 0);
+>  
+>  	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, val,
+> @@ -740,6 +746,9 @@ static int a6xx_gmu_fw_start(struct a6xx_gmu *gmu, unsigned int state)
+>  
+>  	gmu_write(gmu, REG_A6XX_GMU_HFI_SFR_ADDR, chipid);
+>  
+> +	gmu_write(gmu, REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_MSG,
+> +		  gmu->log.iova | (gmu->log.size / SZ_4K - 1));
+> +
+>  	/* Set up the lowest idle level on the GMU */
+>  	a6xx_gmu_power_config(gmu);
+>  
+> @@ -1046,6 +1055,7 @@ static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu)
+>  	msm_gem_kernel_put(gmu->icache.obj, gmu->aspace, false);
+>  	msm_gem_kernel_put(gmu->dcache.obj, gmu->aspace, false);
+>  	msm_gem_kernel_put(gmu->dummy.obj, gmu->aspace, false);
+> +	msm_gem_kernel_put(gmu->log.obj, gmu->aspace, false);
+>  
+>  	gmu->aspace->mmu->funcs->detach(gmu->aspace->mmu);
+>  	msm_gem_address_space_put(gmu->aspace);
+> @@ -1450,6 +1460,11 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+>  	if (ret)
+>  		goto err_memory;
+>  
+> +	/* Allocate memory for the GMU log region */
+> +	ret = a6xx_gmu_memory_alloc(gmu, &gmu->log, SZ_4K, 0);
+> +	if (ret)
+> +		goto err_memory;
+> +
+>  	/* Map the GMU registers */
+>  	gmu->mmio = a6xx_gmu_get_mmio(pdev, "gmu");
+>  	if (IS_ERR(gmu->mmio)) {
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> index aed02b2b7659..be65720f32cf 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> @@ -61,6 +61,7 @@ struct a6xx_gmu {
+>  	struct a6xx_gmu_bo icache;
+>  	struct a6xx_gmu_bo dcache;
+>  	struct a6xx_gmu_bo dummy;
+> +	struct a6xx_gmu_bo log;
+>  
+>  	int nr_clocks;
+>  	struct clk_bulk_data *clocks;
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
+> index b4357ea550ec..176ae94d9fe6 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.xml.h
+> @@ -205,6 +205,10 @@ static inline uint32_t A6XX_GMU_GPU_NAP_CTRL_SID(uint32_t val)
+>  
+>  #define REG_A6XX_GPU_GMU_CX_GMU_CX_FAL_INTF			0x000050f0
+>  
+> +#define REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_MSG			0x00005100
+> +
+> +#define REG_A6XX_GPU_GMU_CX_GMU_PWR_COL_CP_RESP			0x00005101
+> +
+>  #define REG_A6XX_GMU_BOOT_KMD_LM_HANDSHAKE			0x000051f0
+>  
+>  #define REG_A6XX_GMU_LLM_GLM_SLEEP_CTRL				0x00005157
+> -- 
+> 2.26.1
+> 
 
-> Thanks,
-> John
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
