@@ -2,139 +2,118 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C594C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6218CC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D32F2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9AA21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgDWGib (ORCPT
+        id S1726692AbgDWGlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:38:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54346 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgDWGib (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:38:31 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jRVV3-0002HD-PO; Thu, 23 Apr 2020 06:38:18 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     yhchuang@realtek.com, kvalo@codeaurora.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] iopoll: Introduce read_poll_timeout_atomic macro
-Date:   Thu, 23 Apr 2020 14:38:09 +0800
-Message-Id: <20200423063811.2636-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Apr 2020 02:41:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:42266 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgDWGlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:41:20 -0400
+IronPort-SDR: 6jRoIPJAbcIrMJVXbgDd7zTpESDY2g/F2AEzq9TjlhZnysEjfDX9EW8zJkOSPSGlgCGXYjeQcP
+ T/ZDYFRCDplw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 23:41:19 -0700
+IronPort-SDR: 8PpPekKEOHoT+2vPHBXDsmC5DN9uBSNC5Jr88gOiRf/DzsJsNkrEdnZJGgTx6ra3YMfe7DJSwj
+ qWeHu4BovbVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
+   d="scan'208";a="255888898"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
+  by orsmga003.jf.intel.com with ESMTP; 22 Apr 2020 23:41:17 -0700
+Subject: Re: [PATCH -next] mmc: sdhci-pci-o2micro: Make some symbols static
+To:     Zou Wei <zou_wei@huawei.com>, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1587624199-96926-1-git-send-email-zou_wei@huawei.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <6f04980f-6f0b-8028-82b5-860321508e69@intel.com>
+Date:   Thu, 23 Apr 2020 09:40:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1587624199-96926-1-git-send-email-zou_wei@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like read_poll_timeout, an atomic variant for multiple parameter read
-function can be useful.
+On 23/04/20 9:43 am, Zou Wei wrote:
+> Fix the following sparse warning:
+> 
+> drivers/mmc/host/sdhci-pci-o2micro.c:497:6: warning: symbol
+> 'sdhci_pci_o2_set_clock' was not declared. Should it be static?
+> drivers/mmc/host/sdhci-pci-o2micro.c:512:5: warning: symbol
+> 'sdhci_pci_o2_probe_slot' was not declared. Should it be static?
+> drivers/mmc/host/sdhci-pci-o2micro.c:581:5: warning: symbol
+> 'sdhci_pci_o2_probe' was not declared. Should it be static?
+> drivers/mmc/host/sdhci-pci-o2micro.c:786:5: warning: symbol
+> 'sdhci_pci_o2_resume' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
 
-Will be used by a later patch.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- include/linux/iopoll.h | 62 +++++++++++++++++++++++++++++-------------
- 1 file changed, 43 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
-index cb20c733b15a..bc89ac625f26 100644
---- a/include/linux/iopoll.h
-+++ b/include/linux/iopoll.h
-@@ -57,6 +57,48 @@
- 	(cond) ? 0 : -ETIMEDOUT; \
- })
- 
-+/**
-+ * read_poll_timeout_atomic - Periodically poll an address until a condition is
-+ * 				met or a timeout occurs
-+ * @op: accessor function (takes @addr as its only argument)
-+ * @addr: Address to poll
-+ * @val: Variable to read the value into
-+ * @cond: Break condition (usually involving @val)
-+ * @delay_us: Time to udelay between reads in us (0 tight-loops).  Should
-+ *            be less than ~10us since udelay is used (see
-+ *            Documentation/timers/timers-howto.rst).
-+ * @timeout_us: Timeout in us, 0 means never timeout
-+ * @delay_before_read: if it is true, delay @delay_us before read.
-+ *
-+ * Returns 0 on success and -ETIMEDOUT upon a timeout. In either
-+ * case, the last read value at @args is stored in @val.
-+ *
-+ * When available, you'll probably want to use one of the specialized
-+ * macros defined below rather than this macro directly.
-+ */
-+#define read_poll_timeout_atomic(op, val, cond, delay_us, timeout_us, \
-+					delay_before_read, args...) \
-+({ \
-+	u64 __timeout_us = (timeout_us); \
-+	unsigned long __delay_us = (delay_us); \
-+	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
-+	if (delay_before_read && __delay_us) \
-+		udelay(__delay_us); \
-+	for (;;) { \
-+		(val) = op(args); \
-+		if (cond) \
-+			break; \
-+		if (__timeout_us && \
-+		    ktime_compare(ktime_get(), __timeout) > 0) { \
-+			(val) = op(args); \
-+			break; \
-+		} \
-+		if (__delay_us) \
-+			udelay(__delay_us); \
-+	} \
-+	(cond) ? 0 : -ETIMEDOUT; \
-+})
-+
- /**
-  * readx_poll_timeout - Periodically poll an address until a condition is met or a timeout occurs
-  * @op: accessor function (takes @addr as its only argument)
-@@ -96,25 +138,7 @@
-  * macros defined below rather than this macro directly.
-  */
- #define readx_poll_timeout_atomic(op, addr, val, cond, delay_us, timeout_us) \
--({ \
--	u64 __timeout_us = (timeout_us); \
--	unsigned long __delay_us = (delay_us); \
--	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
--	for (;;) { \
--		(val) = op(addr); \
--		if (cond) \
--			break; \
--		if (__timeout_us && \
--		    ktime_compare(ktime_get(), __timeout) > 0) { \
--			(val) = op(addr); \
--			break; \
--		} \
--		if (__delay_us) \
--			udelay(__delay_us);	\
--	} \
--	(cond) ? 0 : -ETIMEDOUT; \
--})
--
-+	read_poll_timeout_atomic(op, val, cond, delay_us, timeout_us, false, addr)
- 
- #define readb_poll_timeout(addr, val, cond, delay_us, timeout_us) \
- 	readx_poll_timeout(readb, addr, val, cond, delay_us, timeout_us)
--- 
-2.17.1
+> ---
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index fa81050..e2a8468 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -494,7 +494,7 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+>  	}
+>  }
+>  
+> -void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
+> +static void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
+>  {
+>  	u16 clk;
+>  
+> @@ -509,7 +509,7 @@ void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
+>  	sdhci_o2_enable_clk(host, clk);
+>  }
+>  
+> -int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+> +static int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+>  {
+>  	struct sdhci_pci_chip *chip;
+>  	struct sdhci_host *host;
+> @@ -578,7 +578,7 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+>  	return 0;
+>  }
+>  
+> -int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
+> +static int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
+>  {
+>  	int ret;
+>  	u8 scratch;
+> @@ -783,7 +783,7 @@ int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> -int sdhci_pci_o2_resume(struct sdhci_pci_chip *chip)
+> +static int sdhci_pci_o2_resume(struct sdhci_pci_chip *chip)
+>  {
+>  	sdhci_pci_o2_probe(chip);
+>  	return sdhci_pci_resume_host(chip);
+> 
 
