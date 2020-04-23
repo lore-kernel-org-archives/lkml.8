@@ -2,196 +2,158 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96672C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1459DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D0620781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tv1q4y4F"
+	by mail.kernel.org (Postfix) with ESMTP id F193D20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgDWHqh (ORCPT
+        id S1726953AbgDWHr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgDWHqh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:46:37 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF59C03C1AF
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:46:35 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id u6so5162792ljl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j4NxmKsBHTz6gYyauKIZjiC6fMYuhV3vv9EHXAmn6hY=;
-        b=tv1q4y4FdeEKCuJ9FuDTHqWJ9x0mqHvVo3pFNBPrkAls04wqqrv2i/UTy+FKxcvhyj
-         T1Qt2MYG8VO94JQyKsrPxh73IhYtk4zkp4LoJ41un5o6gSC/0oJrefSvaq78Czo/hbN0
-         GR4W+7JrmK7e6jLTDi/ArGq146l3bju22RAdR7dWBK9S4NV1lNfzDVGDWsMvyX/CoMV1
-         lZxskYPYSq535yAjL+8WuqNqSOvphOcjvaYGSr/OeV9XFYSzO6/5pVBJlp4IQpEBhfN4
-         Xbr8nZpyCwj+NdwHNUJ624dVuSUCJtJW+t06ig8QZ2PlN5iT1eoIo1mHsfdFX0+nef/y
-         ZS4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j4NxmKsBHTz6gYyauKIZjiC6fMYuhV3vv9EHXAmn6hY=;
-        b=cJcJVuH2IcVOmFxFd8XuwBaw+RdaINqgwB1CN+lAeJxuJNUzrZWDB4y/T6HpMF+ckg
-         h/CxYWxB+mxqvbb71/qt3zP25/4ViGRzMAnl1dIX/9PSt6MWC4uD41QFVHCvP39gb8Ka
-         0lOtCHXrc3/45OaIS8T2BgWkQj1Owf3oERZujj6kRQCYwcYtU6UX4UvvNWyCJzEapNt1
-         FGhqAp9xve2xKRevgejwIRkbXpfgaOoKpoUoSPbPA5cg9YXbuwdY2hyvbKr6utNu/Iqj
-         fvbk9VQ+buiDZotKR7Q6ufS95qvu+l/YOP6Wjj2trP0n29qXLr9qYKjhOwzx1TeL1hbH
-         eNEw==
-X-Gm-Message-State: AGi0PuawjNKcfaZ5aMoX7nIZs5E+kB52sxhjWVwooKMywvMoe9DWb9Xu
-        XVJcZxwSRPuPEAHDgdDVEU5JfIZD4pq95A+BvGqwAnlY0x0C3A==
-X-Google-Smtp-Source: APiQypInqUm6r2HKtqH7wmzEyhd8ssB9/VrFtHcQxoRwylbQ4mdJYQBN5ls4FKP3EwVU0VcOBIQa63T7KPwlXx1XX24=
-X-Received: by 2002:a2e:9018:: with SMTP id h24mr1537378ljg.217.1587627994170;
- Thu, 23 Apr 2020 00:46:34 -0700 (PDT)
+        Thu, 23 Apr 2020 03:47:29 -0400
+Received: from mga07.intel.com ([134.134.136.100]:64699 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbgDWHr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:47:28 -0400
+IronPort-SDR: 4OUUcQHIIKsiOGwvPAP8zmx8ioWZllOaiYAW/wJPNjjCRI5CEWTu/g28Ya0NtD7sznzisg/B6l
+ KWb0Z0TAV8LA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 00:47:27 -0700
+IronPort-SDR: xebuX4Zqh2Fzs8VKrVMTXlJ1UMcv1KriaDNTvXrXAHOnRuQgYvCSjXW9IpM+PKHsaq1g09075h
+ aWGqFgg+JwGw==
+X-IronPort-AV: E=Sophos;i="5.73,306,1583222400"; 
+   d="scan'208";a="255903604"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 00:47:16 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id B6BA22080B; Thu, 23 Apr 2020 10:47:13 +0300 (EEST)
+Date:   Thu, 23 Apr 2020 10:47:13 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Luis Oliveira <lolivei@synopsys.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH 3/4] media: ov5647: Add support for non-continuous clock
+ mode
+Message-ID: <20200423074713.GK5381@paasikivi.fi.intel.com>
+References: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
+ <c3189c80ac27d67e814509d44a864f8164971efb.1586759968.git.roman.kovalivskyi@globallogic.com>
 MIME-Version: 1.0
-References: <20200422095047.669225321@linuxfoundation.org>
-In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 23 Apr 2020 13:16:22 +0530
-Message-ID: <CA+G9fYt+DmKn-h_XoG1TseqP7J5BxgrwQPNqyaL+htn40qLo9w@mail.gmail.com>
-Subject: Re: [PATCH 5.6 000/166] 5.6.7-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3189c80ac27d67e814509d44a864f8164971efb.1586759968.git.roman.kovalivskyi@globallogic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 at 15:55, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.6.7 release.
-> There are 166 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.7-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Roman,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On Mon, Apr 13, 2020 at 12:17:46PM +0300, Roman Kovalivskyi wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> 
+> The driver was only supporting continuous clock mode
+> although this was not stated anywhere.
+> Non-continuous clock saves a small amount of power and
+> on some SoCs is easier to interface with.
+> 
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+> ---
+>  drivers/media/i2c/ov5647.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
+> index c39e3d20e3ef..8a1a515388e0 100644
+> --- a/drivers/media/i2c/ov5647.c
+> +++ b/drivers/media/i2c/ov5647.c
+> @@ -44,6 +44,7 @@
+>  #define PWDN_ACTIVE_DELAY_MS	20
+>  
+>  #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
+> +#define MIPI_CTRL00_LINE_SYNC_ENABLE		BIT(4)
+>  #define MIPI_CTRL00_BUS_IDLE			BIT(2)
+>  #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
+>  
+> @@ -95,6 +96,7 @@ struct ov5647 {
+>  	int				power_count;
+>  	struct clk			*xclk;
+>  	struct gpio_desc		*pwdn;
+> +	unsigned int			flags;
+>  };
+>  
+>  static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
+> @@ -269,9 +271,15 @@ static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
+>  
+>  static int ov5647_stream_on(struct v4l2_subdev *sd)
+>  {
+> +	struct ov5647 *ov5647 = to_state(sd);
+> +	u8 val = MIPI_CTRL00_BUS_IDLE;
+>  	int ret;
+>  
+> -	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, MIPI_CTRL00_BUS_IDLE);
+> +	if (ov5647->flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)
+> +		val |= MIPI_CTRL00_CLOCK_LANE_GATE |
+> +		       MIPI_CTRL00_LINE_SYNC_ENABLE;
+> +
+> +	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, val);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -568,7 +576,7 @@ static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
+>  	.open = ov5647_open,
+>  };
+>  
+> -static int ov5647_parse_dt(struct device_node *np)
+> +static int ov5647_parse_dt(struct device_node *np, struct ov5647 *sensor)
+>  {
+>  	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
 
-Summary
-------------------------------------------------------------------------
+The bus type should be set to V4L2_MBUS_CSI2_DPHY here; 0 is just for
+compatibility with the old heuristics.
 
-kernel: 5.6.7-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.6.y
-git commit: 0c5e841761a8a86b28a132964a4418cc9970cc82
-git describe: v5.6.6-168-g0c5e841761a8
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.6-168-g0c5e841761a8
+>  	struct device_node *ep;
+> @@ -581,6 +589,9 @@ static int ov5647_parse_dt(struct device_node *np)
+>  
+>  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
+>  
+> +	if (!ret)
+> +		sensor->flags = bus_cfg.bus.mipi_csi2.flags;
+> +
+>  	of_node_put(ep);
+>  	return ret;
+>  }
+> @@ -599,7 +610,7 @@ static int ov5647_probe(struct i2c_client *client)
+>  		return -ENOMEM;
+>  
+>  	if (IS_ENABLED(CONFIG_OF) && np) {
+> -		ret = ov5647_parse_dt(np);
+> +		ret = ov5647_parse_dt(np, sensor);
+>  		if (ret) {
+>  			dev_err(dev, "DT parsing error: %d\n", ret);
+>  			return ret;
 
-No regressions (compared to build v5.6.6)
+-- 
+Kind regards,
 
-No fixes (compared to build v5.6.6)
-
-Ran 36818 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libgpiod
-* linux-log-parser
-* ltp-containers-tests
-* ltp-ipc-tests
-* ltp-sched-tests
-* perf
-* libhugetlbfs
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-mm-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* kselftest/net
-* kselftest/networking
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* v4l2-compliance
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Sakari Ailus
