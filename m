@@ -2,99 +2,104 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960F1C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A726C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78D9D2074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8290B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgDWGg6 (ORCPT
+        id S1726834AbgDWGhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:36:58 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57016 "EHLO huawei.com"
+        Thu, 23 Apr 2020 02:37:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53014 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725562AbgDWGg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:36:58 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6D733A5B66683E8B1864;
-        Thu, 23 Apr 2020 14:36:56 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
- 14:36:52 +0800
-Subject: Re: [PATCH 1/2] net/x25: Fix x25_neigh refcnt leak when x25_connect()
- fails
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-x25@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1587618822-13544-1-git-send-email-xiyuyang19@fudan.edu.cn>
-CC:     <yuanxzhang@fudan.edu.cn>, <kjlu@umn.edu>,
-        Xin Tan <tanxin.ctf@gmail.com>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <8636fc9a-001a-9d48-087b-7f243527cd99@huawei.com>
-Date:   Thu, 23 Apr 2020 14:36:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        id S1725562AbgDWGhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:37:13 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 63D5C9B22542436B0BDB;
+        Thu, 23 Apr 2020 14:37:10 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Apr 2020 14:37:00 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>
+CC:     <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] mmc: sdhci-pci-o2micro: Make some symbols static
+Date:   Thu, 23 Apr 2020 14:43:19 +0800
+Message-ID: <1587624199-96926-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-In-Reply-To: <1587618822-13544-1-git-send-email-xiyuyang19@fudan.edu.cn>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/23 13:13, Xiyu Yang wrote:
-> x25_connect() invokes x25_get_neigh(), which returns a reference of the
-> specified x25_neigh object to "x25->neighbour" with increased refcnt.
-> 
-> When x25_connect() returns, local variable "x25" and "x25->neighbour"
-> become invalid, so the refcount should be decreased to keep refcount
-> balanced.
-> 
-> The reference counting issue happens in one exception handling path of
-> x25_connect(). When sock state is not TCP_ESTABLISHED and its flags
-> include O_NONBLOCK, the function forgets to decrease the refcnt
-> increased by x25_get_neigh(), causing a refcnt leak.
-> 
-> Fix this issue by jumping to "out_put_neigh" label when x25_connect()
-> fails.
-> 
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> ---
->  net/x25/af_x25.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-> index d5b09bbff375..e6571c56209b 100644
-> --- a/net/x25/af_x25.c
-> +++ b/net/x25/af_x25.c
-> @@ -816,7 +816,7 @@ static int x25_connect(struct socket *sock, struct sockaddr *uaddr,
->  	/* Now the loop */
->  	rc = -EINPROGRESS;
->  	if (sk->sk_state != TCP_ESTABLISHED && (flags & O_NONBLOCK))
-> -		goto out;
-> +		goto out_put_neigh;
+Fix the following sparse warning:
 
-This seems not right, see
+drivers/mmc/host/sdhci-pci-o2micro.c:497:6: warning: symbol
+'sdhci_pci_o2_set_clock' was not declared. Should it be static?
+drivers/mmc/host/sdhci-pci-o2micro.c:512:5: warning: symbol
+'sdhci_pci_o2_probe_slot' was not declared. Should it be static?
+drivers/mmc/host/sdhci-pci-o2micro.c:581:5: warning: symbol
+'sdhci_pci_o2_probe' was not declared. Should it be static?
+drivers/mmc/host/sdhci-pci-o2micro.c:786:5: warning: symbol
+'sdhci_pci_o2_resume' was not declared. Should it be static?
 
-commit e21dba7a4df4 ("net/x25: fix nonblocking connect")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/mmc/host/sdhci-pci-o2micro.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
->  
->  	rc = x25_wait_for_connection_establishment(sk);
->  	if (rc)
-> 
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+index fa81050..e2a8468 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -494,7 +494,7 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+ 	}
+ }
+ 
+-void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
++static void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
+ {
+ 	u16 clk;
+ 
+@@ -509,7 +509,7 @@ void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	sdhci_o2_enable_clk(host, clk);
+ }
+ 
+-int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
++static int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+ {
+ 	struct sdhci_pci_chip *chip;
+ 	struct sdhci_host *host;
+@@ -578,7 +578,7 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
+ 	return 0;
+ }
+ 
+-int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
++static int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
+ {
+ 	int ret;
+ 	u8 scratch;
+@@ -783,7 +783,7 @@ int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-int sdhci_pci_o2_resume(struct sdhci_pci_chip *chip)
++static int sdhci_pci_o2_resume(struct sdhci_pci_chip *chip)
+ {
+ 	sdhci_pci_o2_probe(chip);
+ 	return sdhci_pci_resume_host(chip);
+-- 
+2.6.2
 
