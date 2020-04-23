@@ -2,129 +2,114 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AE1C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C986EC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB6C20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A366620781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K8nCnasd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgDWMBY (ORCPT
+        id S1728280AbgDWMBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:01:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13307 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727822AbgDWMBX (ORCPT
+        Thu, 23 Apr 2020 08:01:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728105AbgDWMBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:01:23 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NBXDom071350
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:01:22 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jspuv11r-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:01:22 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Thu, 23 Apr 2020 13:01:14 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 13:01:11 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NC1FlJ63373404
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 12:01:15 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6DA2A4055;
-        Thu, 23 Apr 2020 12:01:15 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29D1BA405B;
-        Thu, 23 Apr 2020 12:01:15 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.4.105])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 12:01:15 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, gor@linux.ibm.com,
-        cohuck@redhat.com, david@redhat.com,
-        kbuild test robot <lkp@intel.com>,
-        Philipp Rudo <prudo@linux.ibm.com>
-Subject: [PATCH v1 1/1] s390/protvirt: fix compilation issue
-Date:   Thu, 23 Apr 2020 14:01:14 +0200
-X-Mailer: git-send-email 2.25.3
+        Thu, 23 Apr 2020 08:01:45 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B4FC035494
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 05:01:43 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id z16so5356557uae.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 05:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6RVs2stJFURA5obC9tinkDwdWMYjzoWbL6NDUAFkfJc=;
+        b=K8nCnasdq2dphiiwitIx4wTqF8rQ2vHosaLRf0I6j4X1Auyesyc9LQa9sJBSOE8LXn
+         RUiDGK+PF23YstAv8BfimoXZsEIdg4UDm84WK7IVAST1dINvmZj5lUuZhI+icMUxnCN3
+         llC8msaMa7N6K3+fqtVUNkfrKzgLK/ke2MlOmZXJ7NeX8jcmHGIzHDsVmbC4RZTG01Fb
+         /UI3vyzuKTtA3h4txojoGIH1ROGhobBzTpCfydyfrP4FUzrGev3IwU1HEq0bymCwPf0i
+         SPL5sF+Jc8u2qU/fwuAnr/TsCOPd6Pn0PhcsFfNsl2fHYJpyOz5rHMvNjnUZwO+TUhRk
+         yG9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6RVs2stJFURA5obC9tinkDwdWMYjzoWbL6NDUAFkfJc=;
+        b=E+YDl+Ux80Ntuo/2TGZaDWSc189mgo0AEhHT1XigTlxLiuElQoFNzwDgP2RmdCYWQa
+         oxGe27m6UZsMTU7a38hY1jYIolp8PuR1jxMPt1R0zSpuXiTNpMugtOwNY5I/2MRxHGAq
+         /NzhxqoXGDzpwc9voEmAJ5+3IkHyGrc5LtyPguWsZXl+QExCkz+IIVSNio496bulGbhH
+         rihKBZs2BdUmpLkSg17RqwT4w7LrMXTMlBQc0sq33HuNujugcu30HOnQIF2NEByOB3x8
+         232KnGX+89ADkIAffaOjpgFSPdmX1FDtf1jdWA3yVX0fRKIvM83ZSuyvQnDgwBJE8hPb
+         Dr2w==
+X-Gm-Message-State: AGi0Pub+SETeoHQTw8R19ntykqXaJa3shADxuRs4zipAuKEWiCWlBjjU
+        g0dPmYWMTFGxKglMNP09tnUu6/JHuJgj9XJN+cFdEQ==
+X-Google-Smtp-Source: APiQypLAE/dZqg6TS0myimYufru0Tg8JlRJ/jTb/tyV3d5Gxm1RzbIMIW9jjrAJmVkv4Gv29z7oZ5rYJSBMsmcAsEGo=
+X-Received: by 2002:a67:ead1:: with SMTP id s17mr2598171vso.200.1587643301378;
+ Thu, 23 Apr 2020 05:01:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042312-0028-0000-0000-000003FD8FB9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042312-0029-0000-0000-000024C35A9B
-Message-Id: <20200423120114.2027410-1-imbrenda@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
- spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0 suspectscore=1
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230092
+References: <20200422112719.826676174@infradead.org> <20200422112831.811655681@infradead.org>
+ <CAPDyKFo+qCZU=snj==4CFRfL9R0KLcG2RMYeFW_BMX=-Mo5rtg@mail.gmail.com> <20200423085938.GV20713@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200423085938.GV20713@hirez.programming.kicks-ass.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 23 Apr 2020 14:01:05 +0200
+Message-ID: <CAPDyKFo0AX9EycOdxLKQxMbOUsnLri=OqWi3o991feqc6_Q26g@mail.gmail.com>
+Subject: Re: [PATCH 10/23] sched,mmc: Convert to sched_set_fifo*()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>, qais.yousef@arm.com,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Benjamin Segall <bsegall@google.com>, mgorman@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel fails to compile with CONFIG_PROTECTED_VIRTUALIZATION_GUEST
-set but CONFIG_KVM unset.
+On Thu, 23 Apr 2020 at 10:59, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Apr 22, 2020 at 06:59:35PM +0200, Ulf Hansson wrote:
+> > On Wed, 22 Apr 2020 at 13:29, Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > Because SCHED_FIFO is a broken scheduler model (see previous patches)
+> > > take away the priority field, the kernel can't possibly make an
+> > > informed decision.
+> > >
+> > > In this case, use fifo_low, because it only cares about being above
+> > > SCHED_NORMAL. Effectively no change in behaviour.
+> > >
+> > > Cc: ulf.hansson@linaro.org
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Reviewed-by: Ingo Molnar <mingo@kernel.org>
+> >
+> > Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+>
+> Thanks!
+>
+> > FYI: I am slowly moving towards removing the entire kthread for the
+> > sdio_irq_thread(). It shouldn't be too far off to be posted, one or
+> > two kernel releases or so.
+>
+> Moving over to regular threaded interrupts? Anyway, cool, if these
+> series collide it's easy enough to drop this patch on the floor if it
+> turns out obsolete.
 
-This patch fixes the issue by making the needed variable always available.
+In principle, the only reason for the kthread is that we need it for
+polling - for hosts that don't support SDIO irqs. So, I am thinking of
+replacing the kthread with a workqueue, as we already have one for
+hosts that are using non-threaded IRQs.
 
-Fixes: a0f60f8431999bf5 ("s390/protvirt: Add sysfs firmware interface for Ultravisor information")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Philipp Rudo <prudo@linux.ibm.com>
-Suggested-by: Philipp Rudo <prudo@linux.ibm.com>
-CC: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- arch/s390/boot/uv.c   | 2 --
- arch/s390/kernel/uv.c | 3 ++-
- 2 files changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
-index 8fde561f1d07..f887a479cdc7 100644
---- a/arch/s390/boot/uv.c
-+++ b/arch/s390/boot/uv.c
-@@ -7,9 +7,7 @@
- #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
- int __bootdata_preserved(prot_virt_guest);
- #endif
--#if IS_ENABLED(CONFIG_KVM)
- struct uv_info __bootdata_preserved(uv_info);
--#endif
- 
- void uv_query_info(void)
- {
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index c86d654351d1..4c0677fc8904 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -23,10 +23,11 @@
- int __bootdata_preserved(prot_virt_guest);
- #endif
- 
-+struct uv_info __bootdata_preserved(uv_info);
-+
- #if IS_ENABLED(CONFIG_KVM)
- int prot_virt_host;
- EXPORT_SYMBOL(prot_virt_host);
--struct uv_info __bootdata_preserved(uv_info);
- EXPORT_SYMBOL(uv_info);
- 
- static int __init prot_virt_setup(char *val)
--- 
-2.25.3
-
+Kind regards
+Uffe
