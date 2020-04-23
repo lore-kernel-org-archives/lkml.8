@@ -2,126 +2,95 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C228C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C341C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F1320715
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:10:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="rexKojhV"
+	by mail.kernel.org (Postfix) with ESMTP id 00E3C2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgDWGKP (ORCPT
+        id S1726829AbgDWGK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:10:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38869 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgDWGKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:10:14 -0400
-Received: from [IPv6:2601:646:8600:3281:2dc6:4436:b0b:d574] ([IPv6:2601:646:8600:3281:2dc6:4436:b0b:d574])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 03N68l0t1936638
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 22 Apr 2020 23:08:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 03N68l0t1936638
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020032201; t=1587622131;
-        bh=qcwWHmAYuKK9NDnuYiBmOsdGFELE+uhJI1KsTVUwtAk=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=rexKojhVR8+sBYcf0j09kqGZjlyvJ6k58iw6qKKQ2hWBt5XhlZxW8zeT73wGXKSHz
-         P9ZF24INPir9d/LsnmcLPa6f/rXDrIK9rYTgVzw7f0GsQF3us+vnCXlesWTCdKMQGx
-         8KrFKl0sd4icdkcqU/WE/vefxLO/loPbhdPeFE5fCo65Y7bS629SFA93hkHCitkxL9
-         CrKR55OBy6SwUlirswJ7SuHyRaRuLSR/WL9qp5NTqDx2or6l+pQezb73w2IAkEuAHN
-         7BJ5BxIbbJGMJgOpjIer8u20haIZdwyxxgHhQgiYGkM/YrS7sk/0ACRumPP2kcpmdH
-         dQNhpCbn0+3Ag==
-Date:   Wed, 22 Apr 2020 23:08:40 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200422173630.8351-1-luke.r.nels@gmail.com>
-References: <20200422173630.8351-1-luke.r.nels@gmail.com>
+        Thu, 23 Apr 2020 02:10:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:56130 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgDWGK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:10:27 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B47E6227A81; Thu, 23 Apr 2020 08:10:23 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 08:10:23 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        intel-gfx@lists.freedesktop.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH hmm 5/5] mm/hmm: remove the customizable pfn format
+ from hmm_range_fault
+Message-ID: <20200423061023.GA9856@lst.de>
+References: <0-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com> <5-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com> <20200422060329.GD22366@lst.de> <20200422123911.GV26002@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH bpf v2 1/2] bpf, x86_32: Fix incorrect encoding in BPF_LDX zero-extension
-To:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org
-CC:     Brian Gerst <brgerst@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Xi Wang <xi.wang@gmail.com>, Wang YanQing <udknight@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   hpa@zytor.com
-Message-ID: <57BB877E-685A-4FC8-945C-3E1F30CF5926@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422123911.GV26002@ziepe.ca>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On April 22, 2020 10:36:29 AM PDT, Luke Nelson <lukenels@cs=2Ewashington=2E=
-edu> wrote:
->The current JIT uses the following sequence to zero-extend into the
->upper 32 bits of the destination register for BPF_LDX BPF_{B,H,W},
->when the destination register is not on the stack:
->
->  EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
->
->The problem is that C7 /0 encodes a MOV instruction that requires a
->4-byte
->immediate; the current code emits only 1 byte of the immediate=2E This
->means that the first 3 bytes of the next instruction will be treated as
->the rest of the immediate, breaking the stream of instructions=2E
->
->This patch fixes the problem by instead emitting "xor dst_hi,dst_hi"
->to clear the upper 32 bits=2E This fixes the problem and is more
->efficient
->than using MOV to load a zero immediate=2E
->
->This bug may not be currently triggerable as BPF_REG_AX is the only
->register not stored on the stack and the verifier uses it in a limited
->way, and the verifier implements a zero-extension optimization=2E But the
->JIT should avoid emitting incorrect encodings regardless=2E
->
->Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
->Signed-off-by: Xi Wang <xi=2Ewang@gmail=2Ecom>
->Signed-off-by: Luke Nelson <luke=2Er=2Enels@gmail=2Ecom>
->---
->v1 -> v2: Updated commit message to better reflect the bug=2E
->          (H=2E Peter Anvin and Brian Gerst)
->---
-> arch/x86/net/bpf_jit_comp32=2Ec | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
->diff --git a/arch/x86/net/bpf_jit_comp32=2Ec
->b/arch/x86/net/bpf_jit_comp32=2Ec
->index 4d2a7a764602=2E=2Ecc9ad3892ea6 100644
->--- a/arch/x86/net/bpf_jit_comp32=2Ec
->+++ b/arch/x86/net/bpf_jit_comp32=2Ec
->@@ -1854,7 +1854,9 @@ static int do_jit(struct bpf_prog *bpf_prog, int
->*addrs, u8 *image,
-> 					      STACK_VAR(dst_hi));
-> 					EMIT(0x0, 4);
-> 				} else {
->-					EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
->+					/* xor dst_hi,dst_hi */
->+					EMIT2(0x33,
->+					      add_2reg(0xC0, dst_hi, dst_hi));
-> 				}
-> 				break;
-> 			case BPF_DW:
+On Wed, Apr 22, 2020 at 09:39:11AM -0300, Jason Gunthorpe wrote:
+> > Nice callchain from hell..  Unfortunately such "code listings" tend to
+> > get out of date very quickly, so I'm not sure it is worth keeping in
+> > the code.  What would be really worthile is consolidating the two
+> > different sets of defines (NVIF_VMM_PFNMAP_V0_ vs NVKM_VMM_PFN_)
+> > to make the code a little easier to follow.
+> 
+> I was mainly concerned that this function is using hmm properly,
+> becuase it sure looks like it is just forming the CPU physical address
+> into a HW specific data. But it turns out it is just an internal data
+> for some other code and the dma_map is impossibly far away
+> 
+> It took forever to find, I figured I'd leave a hint for the next poor
+> soul that has to look at this.. 
+> 
+> Also, I think it shows there is no 'performance' argument here, if
+> this path needs more performance the above should be cleaned
+> before we abuse hmm_range_fault.
+> 
+> Put it in the commit message instead?
 
-Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Yes, the graph itself sounds reasonable for the commit log as a point
+of time information.
+
+> > >  	npages = (range->end - range->start) >> PAGE_SHIFT;
+> > >  	for (i = 0; i < npages; ++i) {
+> > >  		struct page *page;
+> > >  
+> > > +		if (!(range->hmm_pfns[i] & HMM_PFN_VALID)) {
+> > > +			ioctl_addr[i] = 0;
+> > >  			continue;
+> > > +		}
+> > 
+> > Can't we rely on the caller pre-zeroing the array?
+> 
+> This ends up as args.phys in nouveau_svm_fault - I didn't see a
+> zeroing?
+> 
+> I think it makes sense that this routine fully sets the output array
+> and does not assume pre-initialize
+
+Ok.
