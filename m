@@ -2,90 +2,131 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21ABC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CB3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B90442076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4D12076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="huOywNO4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IA27skT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgDWJX0 (ORCPT
+        id S1726783AbgDWJZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:23:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWJXZ (ORCPT
+        Thu, 23 Apr 2020 05:25:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59601 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725884AbgDWJZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:23:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84767C03C1AF;
-        Thu, 23 Apr 2020 02:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wSczomJfGQBW2henWhZVVO4Oy56D/opsLQ1kvUxuKsA=; b=huOywNO4EwZNUmQYmCNW9ackGa
-        pynSho+JFOEC3v90M9YBjSU3jJeFzck36IXLCPBzoc2K7TipFfroiQADoCilSrhPKTopODTDz+M7G
-        hGHmO6eaEUK2+Ea2IZGJQ2/vhg8z/eUsAAcjSrXkAdF1vZqG20wewe+W2L5NCA2oCnIyDB8evUUOu
-        1YE1o9ct1xsoIB3Rz9EkcT8+8esQilAWROqEEqcQZTaJwgeR5nRsVbWdxOIyBP8wQ5rFHBRcHlznT
-        plfccN/8L5jGy3At/rOypMx/Gf2WQat++ejIzGP3SuRjfOKCe7MgkRZAZzl3XmtqDL4YbhLcfutUz
-        PCbSPGDw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRY4i-0007WP-DB; Thu, 23 Apr 2020 09:23:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D863530477A;
-        Thu, 23 Apr 2020 11:23:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BE80E20C02CD2; Thu, 23 Apr 2020 11:23:14 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 11:23:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     tglx@linutronix.de, pbonzini@redhat.com, bigeasy@linutronix.de,
-        rostedt@goodmis.org, torvalds@linux-foundation.org,
-        will@kernel.org, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 3/5] rcuwait: Introduce prepare_to and finish_rcuwait
-Message-ID: <20200423092314.GQ20730@hirez.programming.kicks-ass.net>
-References: <20200422040739.18601-1-dave@stgolabs.net>
- <20200422040739.18601-4-dave@stgolabs.net>
+        Thu, 23 Apr 2020 05:25:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587633905;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=do8zJdc7I4uHXHEben8lWabWs6HgpJn+cw0sGKbh2zc=;
+        b=IA27skT5UHBBlazwPOyGuCxq3BNUM2Iv84uGXyrC4Py7l7I1QcZNdL7QfNhZ9J3QZBBo8d
+        WU3mbJEzu+izGEAu+jRMvcCvBBU/AmfCnYAblQCNrtfUZJxLAAoGqAz2hK+hBQSV4vM+aR
+        Ct8gxxncjgW4JfuaPwAJu/tByWABTNE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-ekMwkEZ0PtmWCLZr-fo10w-1; Thu, 23 Apr 2020 05:25:04 -0400
+X-MC-Unique: ekMwkEZ0PtmWCLZr-fo10w-1
+Received: by mail-wr1-f72.google.com with SMTP id m5so2554093wru.15
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:25:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=do8zJdc7I4uHXHEben8lWabWs6HgpJn+cw0sGKbh2zc=;
+        b=YVM1TLSUFyuk4HE3auIA1WJ8v/f2aUAizRyCRSSY1OFCRMCkLGalp+FDk6/EAKCX3t
+         LmwHOb19zPMBq2wX7RduC8GLEY04bhjIrozsIlzMY3SInE2mmj6WgxGSBnsE/lqNpe1z
+         qwTCBI2uqaTBiiEI3Msw7PHPv64Oy+GNManBdHMJN17cCNzi1H3OKpw7cQlGxK5S0vkV
+         tDrRGHKl8+lj2/xayKbSCEyTgDOIbqt4lxbKTF9h7mmKgCGo0UFDdrF/8n48jOaDD82a
+         Oz5wl4vPV8rCEDZ8Nkq3fl8Stax2Ssszgu4wVmq4KNPLmbZneHTfv6cVlftH5rwNEqLQ
+         IeoA==
+X-Gm-Message-State: AGi0PuaNarrSegvymqj5YP1FSrO+pUJBkAcFZ9UyyD2YgbZFtNKJ8k3p
+        nCi/zEaumdu/i7qBT3IxOaraFIia6kzt0bzZRB9pTNBL6AurY9DR39hDqPfi5ZFdSL6E0IDnTKM
+        37xx9kfZf4VwsGAje0gCIcI99
+X-Received: by 2002:adf:f648:: with SMTP id x8mr3763901wrp.257.1587633902901;
+        Thu, 23 Apr 2020 02:25:02 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKfSJ+2+dBWEkydp4auYku0fYvTDUrKMch6QWddxKWBQoac935UdKFUm+uuf3gEakhZSfBc3w==
+X-Received: by 2002:adf:f648:: with SMTP id x8mr3763873wrp.257.1587633902615;
+        Thu, 23 Apr 2020 02:25:02 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:d0a0:f143:e9e4:2926? ([2001:b07:6468:f312:d0a0:f143:e9e4:2926])
+        by smtp.gmail.com with ESMTPSA id t16sm3114627wrb.8.2020.04.23.02.25.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 02:25:02 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] KVM: LAPIC: Introduce interrupt delivery fastpath
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
+ <1587632507-18997-2-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <09cba36c-61d8-e660-295d-af54ceb36036@redhat.com>
+Date:   Thu, 23 Apr 2020 11:25:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422040739.18601-4-dave@stgolabs.net>
+In-Reply-To: <1587632507-18997-2-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 09:07:37PM -0700, Davidlohr Bueso wrote:
-
-> +static inline void prepare_to_rcuwait(struct rcuwait *w)
+On 23/04/20 11:01, Wanpeng Li wrote:
+> +static void fast_deliver_interrupt(struct kvm_lapic *apic, int vector)
 > +{
-> +	rcu_assign_pointer(w->task, current);
+> +	struct kvm_vcpu *vcpu = apic->vcpu;
+> +
+> +	kvm_lapic_clear_vector(vector, apic->regs + APIC_TMR);
+> +
+> +	if (vcpu->arch.apicv_active) {
+> +		if (kvm_x86_ops.pi_test_and_set_pir_on(vcpu, vector))
+> +			return;
+> +
+> +		kvm_x86_ops.sync_pir_to_irr(vcpu);
+> +	} else {
+> +		kvm_lapic_set_irr(vector, apic);
+> +		if (kvm_cpu_has_injectable_intr(vcpu)) {
+> +			if (kvm_x86_ops.interrupt_allowed(vcpu)) {
+> +				kvm_queue_interrupt(vcpu,
+> +					kvm_cpu_get_interrupt(vcpu), false);
+> +				kvm_x86_ops.set_irq(vcpu);
+> +			} else
+> +				kvm_x86_ops.enable_irq_window(vcpu);
+> +		}
+> +	}
 > +}
 > +
-> +static inline void finish_rcuwait(struct rcuwait *w)
-> +{
-> +	WRITE_ONCE(w->task, NULL);
 
-I think that wants to be:
+Ok, got it now.  The problem is that deliver_posted_interrupt goes through
 
-	rcu_assign_pointer(w->task, NULL);
+        if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
+                kvm_vcpu_kick(vcpu);
 
-There is a special case in rcu_assign_pointer() that looses the barrier,
-but it will keep the __rcu sparse people happy. That is w->task is
-__rcu, and WRITE_ONCE ignores that etc.. blah.
+Would it help to make the above
 
-The alternative is using RCU_INIT_POINTER() I suppose.
+        if (vcpu != kvm_get_running_vcpu() &&
+	    !kvm_vcpu_trigger_posted_interrupt(vcpu, false))
+                kvm_vcpu_kick(vcpu);
 
-> +	__set_current_state(TASK_RUNNING);
-> +}
+?  If that is enough for the APICv case, it's good enough.
+
+Paolo
+
