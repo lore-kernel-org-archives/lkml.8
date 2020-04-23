@@ -2,126 +2,144 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D19C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE14C55189
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B160920787
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A712098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgDWBgG (ORCPT
+        id S1726535AbgDWBgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:36:06 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:37050 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgDWBgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:36:04 -0400
-Received: by mail-il1-f200.google.com with SMTP id v9so3917661iln.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 18:36:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=FurOsJafTUjOU7htoinTVNM+xvVe0P4gX8irUYQlJoI=;
-        b=ih4sjuJ8d5IpSeozgAVjKqeNKaW4nMrYhWFcMEESLTK5mSfT00uNIFx99mFsMEMW83
-         abZZSS5UXsst9qNP0Ggpq0mRL81j4KwT1+FLL2Ks6OALF4cArL/4vEO7FXxQUOgroAKG
-         YacQuU3924sXaLmc5Rip5OpvxQS/VKEB4y/ZRhbZEoHWyqMrw+GzAZ7L747tkbMLjeCl
-         +6yikEHWdVBV9I7+CKlmElKnemwviz/MXaGgVLSipuBLBoBOb8Ib33e2VwSehTQ2seY0
-         tPqk4yxTRKUNmIV8sdDxr1NXtcJjPv965WycC68VG9gPr1b6dkh8AsmjTKMUYK+SdN3b
-         1bJQ==
-X-Gm-Message-State: AGi0PuZIxXOnifwgF3GM9ZSoKqiqscN2Y0Mf8MWB2AOQKCUt6uCW5a8V
-        mlLs8D/j1qKQfMJE6Y5x79CbGKavosRdeQAL8DtZN5BbxvEh
-X-Google-Smtp-Source: APiQypLxwT9vIB8z1xbpNZFZYJtukGXqrgEPUjrPuRJFkBzGiQ0BPObrAusrWakDQBgEMUE0AvWRr3C89uTip5icnivgbFUMyGN9
+        Wed, 22 Apr 2020 21:36:43 -0400
+Received: from mail.hallyn.com ([178.63.66.53]:53178 "EHLO mail.hallyn.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbgDWBgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:36:42 -0400
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id AFB809D0; Wed, 22 Apr 2020 20:36:39 -0500 (CDT)
+Date:   Wed, 22 Apr 2020 20:36:39 -0500
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        David Rheinsberg <david.rheinsberg@gmail.com>,
+        Tom Gundersen <teg@jklm.no>,
+        Christian Kellner <ckellner@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+        Steve Barber <smbarber@google.com>,
+        Dylan Reid <dgreid@google.com>,
+        Filipe Brandenburger <filbranden@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Benjamin Elder <bentheelder@google.com>,
+        Akihiro Suda <suda.kyoto@gmail.com>
+Subject: Re: [PATCH v2 6/7] loopfs: start attaching correct namespace during
+ loop_add()
+Message-ID: <20200423013639.GB2982@mail.hallyn.com>
+References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
+ <20200422145437.176057-7-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5109:: with SMTP id f9mr1539650iob.125.1587605763890;
- Wed, 22 Apr 2020 18:36:03 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 18:36:03 -0700
-In-Reply-To: <Pine.LNX.4.44L0.2004222111060.7643-100000@netrider.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000099a4f005a3eb458b@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422145437.176057-7-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Apr 22, 2020 at 04:54:36PM +0200, Christian Brauner wrote:
+> Tag loop devices with the namespace the loopfs instance was mounted in.
+> This has the consequence that loopfs devices carry the correct sysfs
+> permissions for all their core files. All other devices files will
+> continue to be correctly owned by the initial namespaces. Here is sample
+> output:
+> 
+> root@b1:~# mount -t loop loop /mnt
+> root@b1:~# ln -sf /mnt/loop-control /dev/loop-control
+> root@b1:~# losetup -f
+> /dev/loop8
+> root@b1:~# ln -sf /mnt/loop8 /dev/loop8
+> root@b1:~# ls -al /sys/class/block/loop8
+> lrwxrwxrwx 1 root root 0 Apr  7 13:06 /sys/class/block/loop8 -> ../../devices/virtual/block/loop8
+> root@b1:~# ls -al /sys/class/block/loop8/
+> total 0
+> drwxr-xr-x  9 root   root       0 Apr  7 13:06 .
+> drwxr-xr-x 18 nobody nogroup    0 Apr  7 13:07 ..
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 alignment_offset
+> lrwxrwxrwx  1 nobody nogroup    0 Apr  7 13:07 bdi -> ../../bdi/7:8
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 capability
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 dev
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 discard_alignment
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 events
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 events_async
+> -rw-r--r--  1 root   root    4096 Apr  7 13:06 events_poll_msecs
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 ext_range
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 hidden
+> drwxr-xr-x  2 nobody nogroup    0 Apr  7 13:07 holders
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 inflight
+> drwxr-xr-x  2 nobody nogroup    0 Apr  7 13:07 integrity
+> drwxr-xr-x  3 nobody nogroup    0 Apr  7 13:07 mq
+> drwxr-xr-x  2 root   root       0 Apr  7 13:06 power
+> drwxr-xr-x  3 nobody nogroup    0 Apr  7 13:07 queue
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 range
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 removable
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 ro
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 size
+> drwxr-xr-x  2 nobody nogroup    0 Apr  7 13:07 slaves
+> -r--r--r--  1 root   root    4096 Apr  7 13:06 stat
+> lrwxrwxrwx  1 nobody nogroup    0 Apr  7 13:07 subsystem -> ../../../../class/block
+> drwxr-xr-x  2 root   root       0 Apr  7 13:06 trace
+> -rw-r--r--  1 root   root    4096 Apr  7 13:06 uevent
+> root@b1:~#
+> 
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-syzbot has tested the proposed patch but the reproducer still triggered crash:
-WARNING in usbhid_raw_request/usb_submit_urb
+I was a *bit* worried about not taking a reference to the
+user namespace, but it doesn't look like the chain of
+loop_remove() -> del_gendisk() -> device_del() will allow any later
+access through sysfs, so I guess it's fine.
 
-usb 5-1: Ep 0 disabled: 2 0
-------------[ cut here ]------------
-usb 5-1: BOGUS urb xfer, pipe 2 != type 2
-WARNING: CPU: 0 PID: 6371 at drivers/usb/core/urb.c:482 usb_submit_urb+0xa41/0x1390 drivers/usb/core/urb.c:482
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 6371 Comm: syz-executor.4 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- panic+0x2aa/0x6e1 kernel/panic.c:221
- __warn.cold+0x2f/0x30 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:usb_submit_urb+0xa41/0x1390 drivers/usb/core/urb.c:482
-Code: 84 49 04 00 00 e8 7f 89 dd fd 4c 89 ef e8 87 59 17 ff 41 89 d8 44 89 e1 4c 89 f2 48 89 c6 48 c7 c7 c0 dd 3b 86 e8 27 1a b2 fd <0f> 0b e8 58 89 dd fd 0f b6 6c 24 08 bb 86 03 00 00 48 c7 c6 20 df
-RSP: 0018:ffff8881be9afb30 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff812974dd RDI: ffffed1037d35f58
-RBP: 0000000000000000 R08: ffff8881d41fe200 R09: ffffed103b64439f
-R10: ffffed103b64439e R11: ffff8881db221cf3 R12: 0000000000000002
-R13: ffff8881cf1390a8 R14: ffff8881d8fb8e88 R15: ffff8881d89b8e00
- usb_start_wait_urb+0x108/0x4c0 drivers/usb/core/message.c:58
- usb_internal_control_msg drivers/usb/core/message.c:102 [inline]
- usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:153
- usbhid_set_raw_report drivers/hid/usbhid/hid-core.c:917 [inline]
- usbhid_raw_request+0x225/0x620 drivers/hid/usbhid/hid-core.c:1265
- hid_hw_raw_request include/linux/hid.h:1079 [inline]
- hidraw_send_report+0x296/0x500 drivers/hid/hidraw.c:151
- hidraw_ioctl+0x620/0xaf0 drivers/hid/hidraw.c:422
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
- do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c849
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa679711c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fa6797126d4 RCX: 000000000045c849
-RDX: 00000000200000c0 RSI: 0000000080404806 RDI: 0000000000000006
-RBP: 000000000076bfa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000335 R14: 00000000004c59df R15: 000000000076bfac
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
 
-
-Tested on:
-
-commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1120236fe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1799b3bfe00000
-
+> ---
+> /* v2 */
+> unchanged
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - Adapted commit message otherwise unchanged.
+> ---
+>  drivers/block/loop.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 8e21d4b33e01..2dc53bad4b48 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -2212,6 +2212,10 @@ static int loop_add(struct loop_device **l, int i, struct inode *inode)
+>  	disk->private_data	= lo;
+>  	disk->queue		= lo->lo_queue;
+>  	sprintf(disk->disk_name, "loop%d", i);
+> +#ifdef CONFIG_BLK_DEV_LOOPFS
+> +	if (loopfs_i_sb(inode))
+> +		disk->user_ns = loopfs_i_sb(inode)->s_user_ns;
+> +#endif
+>  
+>  	add_disk(disk);
+>  
+> -- 
+> 2.26.1
