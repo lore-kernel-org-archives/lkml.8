@@ -2,82 +2,103 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D61DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03E7C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46FC82073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940012073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgDWUqZ (ORCPT
+        id S1726550AbgDWUr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:46:25 -0400
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:46996 "EHLO
+        Thu, 23 Apr 2020 16:47:28 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:23878 "EHLO
         smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgDWUqZ (ORCPT
+        with ESMTP id S1725934AbgDWUr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:46:25 -0400
-Received: from localhost.localdomain ([93.22.149.4])
+        Thu, 23 Apr 2020 16:47:28 -0400
+Received: from [192.168.42.210] ([93.22.149.4])
         by mwinf5d27 with ME
-        id WLmM2200505vvQD03LmMKL; Thu, 23 Apr 2020 22:46:23 +0200
-X-ME-Helo: localhost.localdomain
+        id WLnQ2200T05vvQD03LnRRT; Thu, 23 Apr 2020 22:47:26 +0200
+X-ME-Helo: [192.168.42.210]
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 23 Apr 2020 22:46:23 +0200
+X-ME-Date: Thu, 23 Apr 2020 22:47:26 +0200
 X-ME-IP: 93.22.149.4
+Subject: Re: [PATCH] ipw2x00: Remove a memory allocation failure log message
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        stas.yakovlev@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200423075825.18206-1-christophe.jaillet@wanadoo.fr>
+ <5868418d-88b0-3694-2942-5988ab15bdcb@cogentembedded.com>
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     satishkh@cisco.com, sebaddel@cisco.com, kartilak@cisco.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] scsi: fnic: Use kmalloc instead of vmalloc for a small memory allocation
-Date:   Thu, 23 Apr 2020 22:46:20 +0200
-Message-Id: <20200423204620.26395-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+Message-ID: <3c80ef48-57a8-b414-6cf1-6c255a46f6be@wanadoo.fr>
+Date:   Thu, 23 Apr 2020 22:47:25 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <5868418d-88b0-3694-2942-5988ab15bdcb@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'struct fc_trace_flag_type' is just a few bytes long. There is no need
-to allocate such a structure with vmalloc. Using kmalloc instead.
+Le 23/04/2020 à 11:46, Sergei Shtylyov a écrit :
+> Hello!
+>
+> On 23.04.2020 10:58, Christophe JAILLET wrote:
+>
+>> Axe a memory allocation failure log message. This message is useless and
+>> incorrect (vmalloc is not used here for the memory allocation)
+>>
+>> This has been like that since the very beginning of this driver in
+>> commit 43f66a6ce8da ("Add ipw2200 wireless driver.")
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 ++---
+>>   1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c 
+>> b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+>> index 60b5e08dd6df..30c4f041f565 100644
+>> --- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+>> +++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+>> @@ -3770,10 +3770,9 @@ static int ipw_queue_tx_init(struct ipw_priv 
+>> *priv,
+>>       struct pci_dev *dev = priv->pci_dev;
+>>         q->txb = kmalloc_array(count, sizeof(q->txb[0]), GFP_KERNEL);
+>> -    if (!q->txb) {
+>> -        IPW_ERROR("vmalloc for auxiliary BD structures failed\n");
+>> +    if (!q->txb)
+>>           return -ENOMEM;
+>> -    }
+>> +
+>
+>    No need for this extra empty line.
 
-While at it, axe a useless test when freeing the memory.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/scsi/fnic/fnic_debugfs.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+That's right, sorry about that.
 
-diff --git a/drivers/scsi/fnic/fnic_debugfs.c b/drivers/scsi/fnic/fnic_debugfs.c
-index 13f7d88d6e57..8d6ce3470594 100644
---- a/drivers/scsi/fnic/fnic_debugfs.c
-+++ b/drivers/scsi/fnic/fnic_debugfs.c
-@@ -58,8 +58,7 @@ int fnic_debugfs_init(void)
- 						fnic_trace_debugfs_root);
- 
- 	/* Allocate memory to structure */
--	fc_trc_flag = (struct fc_trace_flag_type *)
--		vmalloc(sizeof(struct fc_trace_flag_type));
-+	fc_trc_flag = kmalloc(sizeof(*fc_trc_flag), GFP_KERNEL);
- 
- 	if (fc_trc_flag) {
- 		fc_trc_flag->fc_row_file = 0;
-@@ -87,8 +86,7 @@ void fnic_debugfs_terminate(void)
- 	debugfs_remove(fnic_trace_debugfs_root);
- 	fnic_trace_debugfs_root = NULL;
- 
--	if (fc_trc_flag)
--		vfree(fc_trc_flag);
-+	kfree(fc_trc_flag);
- }
- 
- /*
--- 
-2.20.1
+Can it be fixed when/if the patch is applied, or should I send a V2?
+If a V2 is required, should kcalloc be used, as pointed out by Joe Perches?
+(personally, If the code works fine as-is, I don't think it is required, 
+but it can't hurt)
+
+CJ
+
+>
+>>         q->bd =
+>>           pci_alloc_consistent(dev, sizeof(q->bd[0]) * count, 
+>> &q->q.dma_addr);
+>
+> MBR, Sergei
+>
+>
 
