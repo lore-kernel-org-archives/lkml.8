@@ -2,95 +2,102 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB2CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E574AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9BE720728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD34920728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbgDWQju (ORCPT
+        id S1729707AbgDWQkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:39:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51293 "EHLO mga09.intel.com"
+        Thu, 23 Apr 2020 12:40:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:63456 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbgDWQjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:39:49 -0400
-IronPort-SDR: homFFEGGG4utyNlcGxcrHDBREt3vAhqeGUjVpe4go6ljd27h5WGLNvdLAus3YGuaF/FS8ajEFN
- EpiNfKxxMR7g==
+        id S1729690AbgDWQka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:40:30 -0400
+IronPort-SDR: Y7ST5mk+gOS7WLDxLzZzkCfqCUEeRXhthLaO+DEsriSFoTsjDvumnBYq/98xogwPOXXK8KwCRe
+ j/Og6LLNxn4A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:39:49 -0700
-IronPort-SDR: boS1UWXK/pG63LvSnmxRtSBoGCn3Bs55q91PEJzZeMSGS0vdOyGeKt9j4Ex/PQAp4u5rxzpe/7
- df5nRD/YyltA==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:40:29 -0700
+IronPort-SDR: RvtqLlC+SPSst880mSvesTs0je541inKc3w5VF7v7avh8diVfRiHu11gpSKeoqjZ88XibKYtfi
+ ZTBCyarl8PWg==
 X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="256043220"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 23 Apr 2020 09:39:49 -0700
-Date:   Thu, 23 Apr 2020 09:39:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v11 1/9] KVM: VMX: Introduce CET VMX fields and flags
-Message-ID: <20200423163948.GA25564@linux.intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
- <20200326081847.5870-2-weijiang.yang@intel.com>
+   d="scan'208";a="430386003"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.72.195]) ([10.254.72.195])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:40:29 -0700
+Subject: Re: [PATCH 0/2] x86/resctrl: Support wider MBM counters
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     kuo-lang.tseng@intel.com, mingo@redhat.com, babu.moger@amd.com,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1585763047.git.reinette.chatre@intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <f1820861-9ecb-d685-be3d-accd0047126d@intel.com>
+Date:   Thu, 23 Apr 2020 09:40:27 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326081847.5870-2-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <cover.1585763047.git.reinette.chatre@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:18:38PM +0800, Yang Weijiang wrote:
-> If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored
-> from below VMCS fields at VM-Exit:
->   HOST_S_CET
->   HOST_SSP
->   HOST_INTR_SSP_TABLE
+Hi Thomas and Borislav,
+
+On 4/1/2020 10:51 AM, Reinette Chatre wrote:
+> Memory Bandwidth Monitoring (MBM) is an Intel Resource Director
+> Technology (RDT) feature that tracks Total and Local bandwidth
+> generated which misses the L3 cache.
 > 
-> If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded
-> from below VMCS fields at VM-Entry:
->   GUEST_S_CET
->   GUEST_SSP
->   GUEST_INTR_SSP_TABLE
+> The original Memory Bandwidth Monitoring (MBM) architectural
+> definition defines counters of up to 62 bits and the first-generation
+> MBM implementation uses 24 bit counters. Software is required to poll
+> at 1 second or faster to ensure that data is retrieved before a counter
+> rollover occurs more than once under worst conditions.
 > 
-> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
+> As system bandwidths scale the software requirement is maintained with
+> the introduction of a per-resource enumerable MBM counter width.
+> 
+> This series adds support for the new enumerable MBM counter width.
+> 
+> Details about the feature can be found in Chapter 9 of the most
+> recent Intel ISE available from
+> https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
+> 
+> Reinette Chatre (2):
+>   x86/resctrl: Maintain MBM counter width per resource
+>   x86/resctrl: Support CPUID enumeration of MBM counter width
+> 
+>  arch/x86/include/asm/processor.h          |  1 +
+>  arch/x86/kernel/cpu/common.c              |  5 +++++
+>  arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  8 ++++---
+>  arch/x86/kernel/cpu/resctrl/internal.h    | 15 ++++++++++---
+>  arch/x86/kernel/cpu/resctrl/monitor.c     | 27 ++++++++++++++++-------
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c    |  2 +-
+>  6 files changed, 43 insertions(+), 15 deletions(-)
+> 
 
-...
 
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index 5e090d1f03f8..e938bc6c37aa 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -94,6 +94,7 @@
->  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
->  #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
->  #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
-> +#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
->  
->  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
->  
-> @@ -107,6 +108,7 @@
->  #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
->  #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
->  #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
-> +#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
+Would it be possible to consider this for inclusion in v5.8?
 
-I think it probably make senses to drop HOST/GUEST from the controls,
-i.e. VM_{ENTER,EXIT}_LOAD_CET_STATE.  The SDM doesn't qualify them with
-guest vs. host, nor does KVM qualify any of the other entry/exit controls
-that are effective guest vs. host.
+Thank you
+
+Reinette
+
+ps. Upon your consideration I am planning to follow up with same
+the question for the next resctrl new feature series available
+at:https://lore.kernel.org/lkml/cover.1586801373.git.reinette.chatre@intel.com/
+
+You could view outstanding resctrl changes at branch resctrl/next of
+https://github.com/rchatre/linux.git
+
