@@ -2,253 +2,136 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBFAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00997C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A3F206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587654992;
-	bh=BPs/00NrlitbnL8DkJPmf9DeXitCXbJVKNgZJM3GgQQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jiJM8ZHsxJO3AAw8JvghnNDDD7syC3pM+uyIjoDLQMkpCYWhuRvJM1mJ8S8LgAAxt
-	 8KaRmSn4EOzy2IDMuPcbrikqeCL3n3wihThcRqmT7Dc9IIdkWM3J+7hv8eLdQX3G7z
-	 8rkc3sE5RYrmXm2VwEcqH0YDDGsgp1REyoohoKz4=
+	by mail.kernel.org (Postfix) with ESMTP id DDC6D206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgDWPQb (ORCPT
+        id S1729096AbgDWPSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:16:31 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:55307 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgDWPQa (ORCPT
+        Thu, 23 Apr 2020 11:18:16 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:55247 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbgDWPSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:16:30 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 03NFFnuG003464;
-        Fri, 24 Apr 2020 00:15:50 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03NFFnuG003464
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587654950;
-        bh=JIgpTCwvImM/7c3SgxFwgMS59DmVqHtEAWWh3ROG+Gc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SRdn3NqYbRcLP87XmAw1+nOFq5nscaSfasoENACzdwLaQq9MzultJjcJIaGPkbD56
-         uGy/Wgm5AVB+gqGFBICMrjG563VkkgEsYBEncaKu+jCYgyS6zT4ILuqIkNoEHljCUs
-         79854k3qpssyOREzW/RiXGSR1CsMQ8BtlAnoglJ98AkYZqQAjvx2nbjoXofeM5YgUJ
-         xRJAo01SP3QPTRqn3msGnk7roz3bhlqmaIw/9Nb7Cp0z+rmEAI1VTMWr87Rp5ot7O9
-         TWTbtw6TOyMJ8Su9F048rWjIV+5gmCUWJNDYpQ4LKTo+y1DOSpRLE5o8l0CBxuE5VC
-         Sx8rQndUGjktA==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id g10so6027207uae.5;
-        Thu, 23 Apr 2020 08:15:50 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua02bu2589bUueMaZFCQm+5SwtsAgtXApm3mVIt8pkFQLi1sbhI
-        wGPBwSmxhTbQJgBkvuxKCxwjEAwmtSlw8FIqtZE=
-X-Google-Smtp-Source: APiQypJx5+++PBEd7BfwDp7BnFNQeoY/8MBP53JiljBGqJhpXq2fFSOAaSuejQ4XUBcBnTcF+eFJYIMaOVaiQeS9BH0=
-X-Received: by 2002:ab0:2e84:: with SMTP id f4mr3597611uaa.121.1587654949095;
- Thu, 23 Apr 2020 08:15:49 -0700 (PDT)
+        Thu, 23 Apr 2020 11:18:15 -0400
+Received: from mail-lj1-f178.google.com ([209.85.208.178]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M8QNs-1jW1KP2LNw-004Qo8 for <linux-kernel@vger.kernel.org>; Thu, 23 Apr
+ 2020 17:18:13 +0200
+Received: by mail-lj1-f178.google.com with SMTP id y4so6614597ljn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:18:13 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYsN5JIj1v9n/myXB9bIaUrt5ZrQV7cFLysqmvbYHM2treRh9w4
+        d7XFULTwDHyePX1+qHqEU5Vq+xWdUeCdmTokKmY=
+X-Google-Smtp-Source: APiQypJZExUtcD94RDruX3xk8SuY1awdgvcATE7ZOMREsLTA2azO4fgL4AgWM4ZPRu8nw8wtzLgPpXRvAVCqNgtH2QE=
+X-Received: by 2002:a05:651c:107a:: with SMTP id y26mr2746346ljm.80.1587655093051;
+ Thu, 23 Apr 2020 08:18:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200423073929.127521-1-masahiroy@kernel.org> <20200423073929.127521-4-masahiroy@kernel.org>
-In-Reply-To: <20200423073929.127521-4-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 24 Apr 2020 00:15:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASpLsw5SUasmpwQ++yyXJi714HDOfEo4=O5SywwYQxtQA@mail.gmail.com>
-Message-ID: <CAK7LNASpLsw5SUasmpwQ++yyXJi714HDOfEo4=O5SywwYQxtQA@mail.gmail.com>
-Subject: Re: [PATCH 03/16] kbuild: add infrastructure to build userspace programs
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     bpf <bpf@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 Apr 2020 17:17:57 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2rtR9y15Vx1Vgsv2xpaQyf7eNgV8JsCCOYaWTWZhMNAg@mail.gmail.com>
+Message-ID: <CAK8P3a2rtR9y15Vx1Vgsv2xpaQyf7eNgV8JsCCOYaWTWZhMNAg@mail.gmail.com>
+Subject: [GIT PULL] ARM: soc fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:8gBhmzVpdf9N0xHV/DQ/VXWjr69L23itMPGzosYrx7lC2g9klDO
+ xdWRB/4Tgebp60EvwFCM+R+wAmDTBm4rRSiKwBS5aClgfGFV24molaW2ua6SxLptvkVvXhm
+ cP/0Vo7gzfacSR1aFo9Y6WfCroPGAjr7+fLH7g4qNmtEyWzEKtz9xu8R0EDm5O15R+91Z4V
+ B//0jHsOEdPsJzNjnqCoQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Ev6dD7dqRQ0=:3X5hZnOKJDQ14q4sRUYItt
+ DbKfYzKNR7KPM9Fa2Gfi8ymQNXbOGJqZOTMwLhpxNy42sxD2aLBmr6SlblslwJJk06bIL9LzH
+ ktZlnkKSfTeUv2jCTn8kPF3tgliZW1orGbJR5nYEmThQFavEHSGCKlHeP44s+dd7r1ssdr7PO
+ 4KENlNLtn8oVQa6GnvzWpmZ5rHD51KPHST5I1rb8YGbepUnXiRltn0UFn9F3P5mLF138eUTaf
+ /J36LM3MbQRXmIDpYYMDYfTwvKNOyYkAAAAMMJsTF+efNYbtaksZhzrG7c+19qQQbVTMLkLTD
+ bsDuTveWFJsErKY2b+cXQV6S1oQOEny7p58VDlt5zY2ixX66yjMiT9+t8yRYcz2ON0++KYy7I
+ cB58x8AFQbWzfJKLMu3udc4pmZvVKSx8b9z/gY7b84m2MPD8ug5mBoJ9q5yPixIkQwNEuKeH/
+ 0SgXIFnzrXg44mh01Wz4gf5bFcYtfcmhP6rZDQ46Xm19FsVnwGOOY5MIO445x2VbR81saScy+
+ X9ldvMePz0rS9NrRZpJXBD1sbOoJZ8tx+dwvKOGvupHOAqxD5WvKufPKIVroN6HZD2vmwk0Hj
+ aejuOG8+ohsEurAdi1V7pIW/cYbZOdx6ZsRVgfejNEY62l1y3hTCvicNpY8kkX0iPFOdbnsiO
+ pQbuvGjrLkygNzOXB3Fs61Hn5tFbcjMwVPTSDUmKoaJH9m3AfPesNszMPz+DQzWiBhjBQk+RY
+ FJ+QLihfwQyufKuEzwX/I/16Hzdv9LBiecSS9XUjesiGxmMdIqF6rjjgbL25zUR0pbycWEwfi
+ qLJFvRuwRD06O0lK/8I8X4OyIKmh5eh/bOxwWoQcRgTBgQK3AM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 4:40 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Kbuild supports the infrastructure to build host programs, but there
-> was no support to build userspace programs for the target architecture
-> (i.e. the same architecture as the kernel).
->
-> Sam Ravnborg worked on this a long time ago.
->
->   https://lkml.org/lkml/2014/7/13/154
->
-> But, it was not merged. One problem at that time was, there was no
-> good way to know whether $(CC) can link standalone programs. In fact,
-> pre-built kernel.org toolchains [1] do not provide libc.
->
-> Now, we can handle this cleanly because the compiler capability is
-> evaluated at the Kconfig time. If $(CC) cannot link standalone programs,
-> the relevant options are hidden by 'depends on CC_CAN_LINK'.
->
-> The implementation just mimics scripts/Makefile.host
->
-> The userspace programs are compiled with the same flags as the host
-> programs. In addition, it uses -m32 or -m64 if it is found in
-> $(KBUILD_CFLAGS).
->
-> This new syntax has at least two usecases.
->
-> - Sample programs
->
->   Several userspace programs under samples/ include UAPI headers
->   installed in usr/include. Most of them were previously built for
->   the host architecture just to use 'hostprogs' syntax.
->
->   However, 'make headers' always works for the target architecture.
->   This caused the arch mismatch in cross-compiling. To fix this
->   distortion, sample code should be built for the target architecture.
->
-> - Bpfilter
->
->   net/bpfilter/Makefile compiles bpfilter_umh as the user mode helper,
->   and embeds it into the kernel code. Currently, it overrides HOSTCC
->   with CC to use the 'hostprogs' syntax. This hack should go away.
->
-> [1]: https://mirrors.edge.kernel.org/pub/tools/crosstool/
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  Makefile                   | 11 +++++++---
->  scripts/Makefile.build     |  5 +++++
->  scripts/Makefile.clean     |  2 +-
->  scripts/Makefile.userprogs | 44 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 58 insertions(+), 4 deletions(-)
->  create mode 100644 scripts/Makefile.userprogs
->
-> diff --git a/Makefile b/Makefile
-> index 49b2709ff44e..f20597820131 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -406,9 +406,11 @@ else
->  HOSTCC = gcc
->  HOSTCXX        = g++
->  endif
-> -KBUILD_HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 \
-> -               -fomit-frame-pointer -std=gnu89 $(HOST_LFS_CFLAGS) \
-> -               $(HOSTCFLAGS)
-> +
-> +export KBUILD_USERCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
-> +                             -O2 -fomit-frame-pointer -std=gnu89
-> +
-> +KBUILD_HOSTCFLAGS   := $(KBUILD_USERCFLAGS) $(HOST_LFS_CFLAGS) $(HOSTCFLAGS)
->  KBUILD_HOSTCXXFLAGS := -Wall -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
->  KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
->  KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
-> @@ -937,6 +939,9 @@ ifeq ($(CONFIG_RELR),y)
->  LDFLAGS_vmlinux        += --pack-dyn-relocs=relr
->  endif
->
-> +# Align the bit size of userspace programs with the kernel
-> +KBUILD_USERCFLAGS += $(filter -m32 -m64, $(KBUILD_CFLAGS))
-> +
->  # make the checker run with the right architecture
->  CHECKFLAGS += --arch=$(ARCH)
->
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 9fcbfac15d1d..94f2f7016172 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -50,6 +50,11 @@ ifneq ($(hostprogs)$(hostcxxlibs-y)$(hostcxxlibs-m),)
->  include scripts/Makefile.host
->  endif
->
-> +# Do not include userprogs rules unless needed
-> +ifneq ($(userprogs),)
-> +include scripts/Makefile.userprogs
-> +endif
-> +
->  ifndef obj
->  $(warning kbuild: Makefile.build is included improperly)
->  endif
-> diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
-> index 075f0cc2d8d7..e2c76122319d 100644
-> --- a/scripts/Makefile.clean
-> +++ b/scripts/Makefile.clean
-> @@ -29,7 +29,7 @@ subdir-ymn    := $(addprefix $(obj)/,$(subdir-ymn))
->
->  __clean-files  := $(extra-y) $(extra-m) $(extra-)       \
->                    $(always) $(always-y) $(always-m) $(always-) $(targets) $(clean-files)   \
-> -                  $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) \
-> +                  $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) $(userprogs) \
->                    $(hostcxxlibs-y) $(hostcxxlibs-m)
->
->  __clean-files   := $(filter-out $(no-clean-files), $(__clean-files))
-> diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-> new file mode 100644
-> index 000000000000..0d987085819b
-> --- /dev/null
-> +++ b/scripts/Makefile.userprogs
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Build userspace programs for the target system
-> +#
-> +
-> +userprogs      := $(sort $(userprogs))
-> +
-> +# Executables compiled from a single .c file
-> +user-csingle   := $(foreach m, $(userprogs), $(if $($(m)-objs),,$(m)))
-> +
-> +# C executables linked based on several .o files
-> +user-cmulti    := $(foreach m, $(userprogs), $(if $($(m)-objs),$(m)))
-> +
-> +# Object (.o) files compiled from .c files
-> +user-cobjs     := $(foreach m, $(userprogs), $($(m)-objs))
-> +
-> +user-csingle   := $(addprefix $(obj)/, $(user-csingle))
-> +user-cmulti    := $(addprefix $(obj)/, $(user-cmulti))
-> +user-cobjs     := $(addprefix $(obj)/, $(user-cobjs))
-> +
-> +user_c_flags   = -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(user-ccflags) \
-> +                       $($(target-stem)-ccflags)
-> +
-> +# Create an executable from a single .c file
-> +quiet_cmd_user_cc_c = CC [U]  $@
-> +      cmd_user_cc_c = $(CC) $(user_c_flags) -o $@ $<
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-                  $($(target-stem)-ldlibs)
+are available in the Git repository at:
 
-is needed here too.
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
 
+for you to fetch changes up to f42ae4cd4cae92408bffec2c0a4c110447e908e0:
 
+  Merge tag 'arm-soc/for-5.7/devicetree-fixes' of
+https://github.com/Broadcom/stblinux into arm/fixes (2020-04-23
+17:12:48 +0200)
 
-> +$(user-csingle): $(obj)/%: $(src)/%.c FORCE
-> +       $(call if_changed_dep,user_cc_c)
-> +
-> +# Link an executable based on list of .o files
-> +quiet_cmd_user_ld = LD [U]  $@
-> +      cmd_user_ld = $(CC) -o $@ $(addprefix $(obj)/, $($(target-stem)-objs)) \
-> +                      $($(target-stem)-ldlibs)
-> +$(user-cmulti): FORCE
-> +       $(call if_changed,user_ld)
-> +$(call multi_depend, $(user-cmulti), , -objs)
-> +
-> +# Create .o file from a .c file
-> +quiet_cmd_user_cc_o_c = CC [U]  $@
-> +      cmd_user_cc_o_c = $(CC) $(user_c_flags) -c -o $@ $<
-> +$(user-cobjs): $(obj)/%.o: $(src)/%.c FORCE
-> +       $(call if_changed_dep,user_cc_o_c)
-> +
-> +targets += $(user-csingle) $(user-cmulti) $(user-cobjs)
-> --
-> 2.25.1
->
+----------------------------------------------------------------
+ARM: SoC fixes
 
+A few smaller fixes for v5.7-rc3: The majority are fixes for bugs I found
+after restarting my randconfig build testing that had been dormant for
+a while.
 
--- 
-Best Regards
-Masahiro Yamada
+On the Nokia N950/N9 phone, a DT fix is required to address a boot
+regression.
+
+For the bcm283x (Raspberry Pi), two DT fixes address minor issues.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+----------------------------------------------------------------
+Aaro Koskinen (1):
+      ARM: dts: OMAP3: disable RNG on N950/N9
+
+Ahmad Fatoum (1):
+      ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=y
+
+Arnd Bergmann (8):
+      drivers: soc: xilinx: fix firmware driver Kconfig dependency
+      soc: fsl: dpio: fix incorrect pointer conversions
+      soc: fsl: dpio: avoid stack usage warning
+      soc: tegra: fix tegra_pmc_get_suspend_mode definition
+      soc: imx8: select SOC_BUS
+      Merge tag 'omap-for-v5.6/fixes-rc7-signed' of
+git://git.kernel.org/.../tmlind/linux-omap into arm/fixes
+      Merge tag 'zynqmp-soc-for-v5.7-rc3' of
+https://github.com/Xilinx/linux-xlnx into arm/fixes
+      Merge tag 'arm-soc/for-5.7/devicetree-fixes' of
+https://github.com/Broadcom/stblinux into arm/fixes
+
+Florian Fainelli (1):
+      Merge tag 'tags/bcm2835-dt-fixes-2020-03-27' into devicetree/fixes
+
+Jason Yan (1):
+      firmware: xilinx: make firmware_debugfs_root static
+
+Nicolas Saenz Julienne (2):
+      ARM: dts: bcm283x: Add cells encoding format to firmware bus
+      ARM: dts: bcm283x: Disable dsi0 node
+
+ arch/arm/boot/dts/bcm2835-rpi.dtsi     |  3 +++
+ arch/arm/boot/dts/bcm283x.dtsi         |  1 +
+ arch/arm/boot/dts/omap3-n950-n9.dtsi   |  5 +++++
+ arch/arm/mach-imx/Makefile             |  2 ++
+ drivers/firmware/xilinx/zynqmp-debug.c |  2 +-
+ drivers/soc/fsl/dpio/dpio-service.c    | 19 ++++++++++++++-----
+ drivers/soc/fsl/dpio/qbman-portal.c    |  6 ++----
+ drivers/soc/imx/Kconfig                |  1 +
+ drivers/soc/xilinx/Kconfig             |  4 ++--
+ include/soc/tegra/pmc.h                | 15 +++++++++------
+ 10 files changed, 40 insertions(+), 18 deletions(-)
