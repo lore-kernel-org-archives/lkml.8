@@ -2,103 +2,140 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F090EC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05420C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3FA82073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D980520857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j482jQhM"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nyHeleDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgDWDRW (ORCPT
+        id S1726785AbgDWDRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 23:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52138 "EHLO
+        Wed, 22 Apr 2020 23:17:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgDWDRV (ORCPT
+        with ESMTP id S1726002AbgDWDRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 23:17:21 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40695C03C1AA;
-        Wed, 22 Apr 2020 20:17:21 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id k22so3228187eds.6;
-        Wed, 22 Apr 2020 20:17:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aR+qXvnJ8+GuNzazGRLZb5Q+H9sJRFcwSA5eXi7K0rA=;
-        b=j482jQhMRy70zAMZaavtaLmHBPl0M0Jyqr1aQtFlysTQw8lmqM+QlyAObcdcKa68ai
-         bWdxVuSIsogrBwVKsm3bAuiS8yLfGI4rpFLlu2pvikciAA2vsHYYMnj+UjvO+wNKNzvI
-         aTwcLf38za8rPz55hTVmRF/xY7KS3fYJLwCMFWvdpz49RjoRkBJgNZPsmZgbIsH7YN3L
-         OvhMlD/DXxue4DcougAMTANS4TDWV4t9f3Clf53PPu4iKH5/x9yxLn/c6Ks6QXzRw8lg
-         BCRqhqFk/Dnl21DyGdNWY+pucZjtTlw/0mrTl6QhWTKOFyTwhgiqRWdTZe31fPoqNgjS
-         16NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aR+qXvnJ8+GuNzazGRLZb5Q+H9sJRFcwSA5eXi7K0rA=;
-        b=Wf3a3vycRUJjkaR1FT4IKkI2efqhOftPkrkeIu72hwKatmRh61sPfgCHdrBukZG7RB
-         Uj1VRxnZLr9jl3JnTqZgy9CKaVHhUbChFLtuG82JNcbxra8gXPz7r7vpHZN8p9zFvI0T
-         SU7+Evgit0wRWmbvI4nBdJdvZa23tUSEYD86t7iJXmCmymO2HspVePciT/T/5Vo/ImV2
-         vgeZLIltvwh2FTNlKnS9IWfn1TlVax6spN7PHysT1BjWVkNFmiSqJNjHkeyXOuGT5Mtv
-         TwCtZXL+UE0XG1pgMBGoE9feEtBKucauWSiUpbZzxhZbBw67gOMWbFTdwIV2oo5oUGR2
-         sZ7A==
-X-Gm-Message-State: AGi0PuaIqm6Q8Aj1sVG9BjzyaIcRBTHjeNObljrEhshmbnxTHWBOebnR
-        lrUfPC+HeHLUnaU3zGc6HVhYba3b
-X-Google-Smtp-Source: APiQypIvfd/8p99rOL+LDEasXibI5N7USA0uZxAd/qUfBVLZxGUnJ1fDPg2E14LwjfypUXn95E+VWQ==
-X-Received: by 2002:a50:a985:: with SMTP id n5mr1180165edc.338.1587611839699;
-        Wed, 22 Apr 2020 20:17:19 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id du16sm256270ejc.92.2020.04.22.20.17.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 20:17:19 -0700 (PDT)
-Subject: Re: [PATCH net-next v5 2/4] net: phy: tja11xx: add initial TJA1102
- support
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-References: <20200422092456.24281-1-o.rempel@pengutronix.de>
- <20200422092456.24281-3-o.rempel@pengutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <264beb18-522b-3608-49d1-3c17a3c79c59@gmail.com>
-Date:   Wed, 22 Apr 2020 20:17:15 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Wed, 22 Apr 2020 23:17:36 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F0CC03C1AA;
+        Wed, 22 Apr 2020 20:17:36 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4972Y52cnLz9sSd;
+        Thu, 23 Apr 2020 13:17:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587611851;
+        bh=fPDIGwXG/O4qiqrUxCx7mK5RkR0Hcw3uGWDBx9Czdpo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nyHeleDwAgVoKB4YEW03uvm1lWxrzgQh9rVFnjAjW6gswWO934SsC5+uFr5DXsSCf
+         SC6Gik2GTym6KqqY8MFEJLCMBncDRjwCCx+7Ot6ypatGgT1n3MjTB7ei9sDtkoUdWf
+         6h0iOGWiYUf78URbWzBft+FxNuvTpU5jjn9wKIXRFJpEhDY4Ace9ySok7r6z9m7Nop
+         BA2elb6XKODKSQxyTFNdB34gUC5tic1WCQGu6tVtgQB0ssuiELHRVbUfryDgSbreh1
+         ysBZ/8QH+gISoCU8ASs1+ZMlXz/IVjqT8+H1J9FPZz3iF70hCyD1LmYL63FiYv09aZ
+         uE0rDSsPi4MrA==
+Date:   Thu, 23 Apr 2020 13:17:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: linux-next: manual merge of the drm-misc tree with the
+ drm-misc-fixes tree
+Message-ID: <20200423131727.1e0f2d9f@canb.auug.org.au>
+In-Reply-To: <c299b6d5-a786-1620-2863-8814a1242cf8@ti.com>
+References: <20200421115241.704f2fbf@canb.auug.org.au>
+        <c299b6d5-a786-1620-2863-8814a1242cf8@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200422092456.24281-3-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/AMvG1A0w1rTbKJfBVJzBQUh";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/AMvG1A0w1rTbKJfBVJzBQUh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 4/22/2020 2:24 AM, Oleksij Rempel wrote:
-> TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
-> Both PHYs are similar but have different amount of functionality. For
-> example PHY 1 has no PHY ID and no health monitor.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On Tue, 21 Apr 2020 09:10:25 +0300 Tomi Valkeinen <tomi.valkeinen@ti.com> w=
+rote:
+>
+> On 21/04/2020 04:52, Stephen Rothwell wrote:
+> >=20
+> > Today's linux-next merge of the drm-misc tree got a conflict in:he drm-=
+misc tree with the drm-misc-fixes tree
+> >=20
+> >    drivers/gpu/drm/tidss/tidss_encoder.c
+> >=20
+> > between commit:
+> >=20
+> >    9da67433f64e ("drm/tidss: fix crash related to accessing freed memor=
+y")
+> >=20
+> > from the drm-misc-fixes tree and commit:
+> >=20
+> >    b28ad7deb2f2 ("drm/tidss: Use simple encoder")
+> >=20
+> > from the drm-misc tree.
+> >=20
+> > I fixed it up (I just used the latter version of this file) and can =20
+>=20
+> We need to use "drm/tidss: fix crash related to accessing freed memory" v=
+ersion.
+>=20
+> > carry the fix as necessary. This is now fixed as far as linux-next is
+> > concerned, but any non trivial conflicts should be mentioned to your
+> > upstream maintainer when your tree is submitted for merging.  You may
+> > also want to consider cooperating with the maintainer of the conflicting
+> > tree to minimise any particularly complex conflicts. =20
+>=20
+> I have fixed this with drm-misc's dim tool, so I presume the conflict goe=
+s away when drm-misc-fixes=20
+> is merged to drm-fixes, and drm-fixes is then at some point merged to drm=
+-misc-next.
+>=20
+> It was a bit bad timing with the "drm/tidss: Use simple encoder", which r=
+emoves the plumbing I=20
+> needed to implement the fix. So I effectively revert the "drm/tidss: Use =
+simple encoder".
+>=20
+>   Tomi
+>=20
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+This is now a conflict between the drm and drm-misc-fixes trees.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/AMvG1A0w1rTbKJfBVJzBQUh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6hCMcACgkQAVBC80lX
+0Gx1HQf/ZbE+upiUXsPewgi3i1246+n4LMTaWEPrQRqedXUrDaUQco9CjpsFokVn
+bvFHf5ZAtypMb7s9vAcLiniS4TCvDcZX1ouP2ACafaz8iQ3GauxlywggjuAkO4iz
+HD5uoOcRVoELlEffWurIWO6FPx+2u4WOVz8vgwNthN2Krgc7a3BrxLJNi4uvKpVp
+Tat/nquI1FznqxZOuLpR2a7NHXgVOD0ZIqX0CToEZY6uQ+OWjQZybESkaevRJrsw
+Ru4wdq4BLHm24Gqgvypfh92ckMF9+CPbQgdw5i+2+y4X3b6pVhgKKrWOwfKHMm2+
+xy0ceQXNkz4ds3Hpv6w6g4g8OTARTA==
+=pewb
+-----END PGP SIGNATURE-----
+
+--Sig_/AMvG1A0w1rTbKJfBVJzBQUh--
