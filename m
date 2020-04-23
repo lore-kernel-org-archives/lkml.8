@@ -2,207 +2,142 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C154C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D959C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31B92098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCA420728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ROYvWIGT"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="X7lfJqmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgDWPXC (ORCPT
+        id S1729135AbgDWPXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:23:02 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59129 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729013AbgDWPXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:23:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587655380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=i7iFOYOmmS/LbCdQbSLcBAQAHAEAS8jTJdGBKjzk/kY=;
-        b=ROYvWIGT5tb9LHfpXBCQ26Xh5Mme3qkSRQdSb7VO5K6yoaMIQPaAnZaJfkX49QgvQ5wLTq
-        DN/jTv00HOYMxidu5pPfIORdLodgz4Ev0EnxFFZAPkHlsZR8Ni+xU6hEQ4oWXcrk0R1ZQh
-        5rb9YzI6VV6fqD/Xhno9lNTRsLIcPT8=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-kib3Q57wPk27M25v3_G5ng-1; Thu, 23 Apr 2020 11:22:57 -0400
-X-MC-Unique: kib3Q57wPk27M25v3_G5ng-1
-Received: by mail-qv1-f70.google.com with SMTP id d2so6403210qve.11
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:22:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i7iFOYOmmS/LbCdQbSLcBAQAHAEAS8jTJdGBKjzk/kY=;
-        b=UxDvWwGth7dZghmGp4t6CURE6tY9t429Qch8IPTUymCnUPdzEsNZt0OAfwpzxPlpC4
-         tNM4Mvu8cpLYPWOwi2BfXErhN84RT/qVoJCpe+64dMLJCtwoL4/jFiGJi0FYIPA98KKh
-         iU4oj68dyQus3VNfWtuNCxnIUtsanLHMgDwfhbYIA7viEI+sNNwlZn/0oYQGIqWenRKj
-         wU9GoBZw+s01WzFAMba+GRcAOgH4domSpVuJdyji6ozftJg3PGoU+jJtVLYmc2Zxi5G1
-         WAi5bEwdaI3dUblTVVtS8+nBcvfEzX+Hf6V9pniisJqq/Ku2TX3n8Y9iNxHWn5E9fr5c
-         sBqw==
-X-Gm-Message-State: AGi0Pub+3a7xkPLZv44Dmf5GWbXNNLOM2v9vCeqK4Xh5S5m8trhPQDXN
-        JW/geFLZ3Y9w9oG7MTIeePWIK8pJzvWrnF/hwtaOs3u+eI0x7vymGrcqXsF8hiLYDe2PJ8Qvlkf
-        Y1JFodMNnlOPxHZL2Bk6X4F0B
-X-Received: by 2002:ac8:6753:: with SMTP id n19mr4564952qtp.353.1587655376572;
-        Thu, 23 Apr 2020 08:22:56 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ66H90IP6JPiDFyLFxwW3u6P5r9glVplzra9UyPP1kFhsPvhNCJkQNjXboygVCyzIm3bEeHw==
-X-Received: by 2002:ac8:6753:: with SMTP id n19mr4564920qtp.353.1587655376185;
-        Thu, 23 Apr 2020 08:22:56 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id w27sm1923604qtc.18.2020.04.23.08.22.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 08:22:55 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 11:22:53 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v8 00/14] KVM: Dirty ring interface
-Message-ID: <20200423152253.GB3596@xz-x1>
-References: <20200331190000.659614-1-peterx@redhat.com>
- <20200422185155.GA3596@xz-x1>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D877A3B@SHSMSX104.ccr.corp.intel.com>
+        Thu, 23 Apr 2020 11:23:51 -0400
+Received: from mout.web.de ([212.227.15.4]:41205 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729024AbgDWPXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:23:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587655411;
+        bh=M4+W1USca9HVX4Azy30pfv+90wRipbT6lbsENz2hjLE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=X7lfJqmckIqrzVGF8Ua8MYRnMuAHeg7JRJc3NiXdXXZDdvsLJslU1gyRhusrShVWM
+         QwG+JhBkfsdkJ1mA4n1GWJOUoQGIWOwWaLD1QoWesfmq/oqVhjz5Se35l0W+uvX7G/
+         OeVTU2JoNoggBqkRSigX5yaPwxZruirJARcvxhtc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.69.235]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LtFAh-1j3cSW1x8N-012lEi; Thu, 23
+ Apr 2020 17:23:31 +0200
+Subject: Re: console: Complete exception handling in newport_probe()
+To:     Dejin Zheng <zhengdejin5@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Ralf_B=c3=a4chle?= <ralf@linux-mips.org>,
+        =?UTF-8?Q?Thomas_Bogend=c3=b6rfer?= <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <c62ec54f-348b-2eae-59eb-374dde4d49ad@web.de>
+ <20200423142909.GB1562@nuc8i5>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <f054f00c-b813-e0c2-fe2e-30ccdec1ff46@web.de>
+Date:   Thu, 23 Apr 2020 17:23:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200423142909.GB1562@nuc8i5>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D877A3B@SHSMSX104.ccr.corp.intel.com>
+Content-Language: en-US
+X-Provags-ID: V03:K1:I25rebWPlVXPKQRAe55ebCQcs7veEq7l6aFHkXrgRw7EUlk9SwD
+ HgMOlxkXVFe9XYv/FIdjuIJV8fhn6BItJ02BaMHD92JBxUWd1xGyycKcI2Z/Q5ldqeCmgXw
+ 7dXbBhC8v7ddRXO2YSf78ATIXoAYemzl1Zx4KwGFb30cTVPZndDhV5tByiH+w728LF7wA+y
+ /BcsiBgtPYMHCGzbMoABA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OXXHy57w/qU=:6qxJ8NG+o0pbnqSZCEl215
+ 4d+khhyja+zyuz1vcTiizHh/q7uob/WMBIgfqcF+BUMdsyR1Za3+E3cIq1sn/wJut/8iP8Q4d
+ lW21wgVA17HbIBO4sKVk3hGJfT34B26XamcnxKVcMEovAfPBgmsEviu+b4DSm5cJOOsuzxs79
+ efWE8tkraY8TetcCqX/oGl61h/RYajFPt9Ejxr5RHTFVwGNN/cCncV397eVU39dQiTGyR+Qy0
+ rZ/KywoluAI2Se/yAYOlXqaZXGkv2ZQUOfG7fz/j1pj5yLjMI/sOF4UveG/KKFt1ZyE3BHIEk
+ 8oLrK9+bv52eRgBhrVCDnDnXK8QTg/9l9KunAoL8YzKgujwiJuUFwSASj1tAFt2KKkEb2uBKF
+ VSQbq2leQxo4+i865JDBUji5B8pVHMsxZo3m0HNeTgXgy57aDh4oow7A3IvB8UT2z0WY16hkF
+ QVDC71DThevQp5qRwhu3olLx7qWLdWWu/X4FHuSBCEqPDyR8mpfF0IRJwxipUnTTiZIc1xHIf
+ XEaXLu410qnBIfDi5SeEz4wVrRTpV3v03e03nGB+3Jxc0DXAQcL7WQLRC7m49RBjlNmg+rXjJ
+ 78Svc6IvYsrC9G1IOt8sdNGbWruYzDCHDj7EbRlpE8++b1t65eVrjlD3xw2ZtdNUHTw0RTIrr
+ Fy5AsujnAhPIbRbRMLfgc6KO8JXDyEBwY/Suhle/4gLzL7D/xH71GbuB/BUkB6iRy2T+qXTO9
+ o/zzaDE52l8jDYInr4TmSKKEt1rIdm8EfKk5JtdEQfhR/Jurq8d995sffEgrzt8t+Dt87FWkv
+ fz918D9e3j78anlwGUgpu1YjDsIpFio7Y4xsjdFgr7Ixizin7Zehozjp/sEBB65Z+SYSF7/uX
+ 0MqqmLzZmEPIz/MfOevJ8djJaEEXeYRTI5QW0GvXFRhEB5sDtWAUxTnrPT09VbssE8a8yaD0N
+ OGbBzE9+KjlrVCjFiQPk5Kg7j8MbeBPXOUGBZXNqX2WwLgXFOeXOHPzewg41MRlT7C5WP/dLD
+ h7zqJR+qwjtbfUHkncwO604PnqY0hwQXyTw1QiYgdtxzm47TTf6E8/waOZU5+KotnaokeJkcZ
+ olEp88R7mVAo7NMzKUBG7YHyjXX8VZ0i2aXwRdN0q15ZMIsGxsj89Ir0Z9a1lIMqEB5xxVyfj
+ /FnoacgZtSBQ8hB6qk6XxoqjhFyq//oAHkrLq/vm8fwXmRHlM3SRsmue3t3HFHCdZ71y9fmvF
+ Cd2bbOH7uI70yEW/h
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 06:28:43AM +0000, Tian, Kevin wrote:
-> > From: Peter Xu <peterx@redhat.com>
-> > Sent: Thursday, April 23, 2020 2:52 AM
-> > 
-> > Hi,
-> > 
-> > TL;DR: I'm thinking whether we should record pure GPA/GFN instead of
-> > (slot_id,
-> > slot_offset) tuple for dirty pages in kvm dirty ring to unbind kvm_dirty_gfn
-> > with memslots.
-> > 
-> > (A slightly longer version starts...)
-> > 
-> > The problem is that binding dirty tracking operations to KVM memslots is a
-> > restriction that needs synchronization to memslot changes, which further
-> > needs
-> > synchronization across all the vcpus because they're the consumers of
-> > memslots.
-> > E.g., when we remove a memory slot, we need to flush all the dirty bits
-> > correctly before we do the removal of the memslot.  That's actually an
-> > known
-> > defect for QEMU/KVM [1] (I bet it could be a defect for many other
-> > hypervisors...) right now with current dirty logging.  Meanwhile, even if we
-> > fix it, that procedure is not scale at all, and error prone to dead locks.
-> > 
-> > Here memory removal is really an (still corner-cased but relatively) important
-> > scenario to think about for dirty logging comparing to memory additions &
-> > movings.  Because memory addition will always have no initial dirty page,
-> > and
-> > we don't really move RAM a lot (or do we ever?!) for a general VM use case.
-> > 
-> > Then I went a step back to think about why we need these dirty bit
-> > information
-> > after all if the memslot is going to be removed?
-> > 
-> > There're two cases:
-> > 
-> >   - When the memslot is going to be removed forever, then the dirty
-> > information
-> >     is indeed meaningless and can be dropped, and,
-> > 
-> >   - When the memslot is going to be removed but quickly added back with
-> > changed
-> >     size, then we need to keep those dirty bits because it's just a commmon
-> > way
-> >     to e.g. punch an MMIO hole in an existing RAM region (here I'd confess I
-> >     feel like using "slot_id" to identify memslot is really unfriendly syscall
-> >     design for things like "hole punchings" in the RAM address space...
-> >     However such "punch hold" operation is really needed even for a common
-> >     guest for either system reboots or device hotplugs, etc.).
-> 
-> why would device hotplug punch a hole in an existing RAM region? 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/scripts/coccinelle/free/iounmap.cocci
+>>
+>> How do you think about to extend presented software analysis approaches?
+>>
+> Sorry, I am not familiar with it, I don't know.
 
-I thought it could happen because I used to trace the KVM ioctls and see the
-memslot changes during driver loading.  But later when I tried to hotplug a
-device I do see that it won't...  The new MMIO regions are added only into
-0xfe000000 for a virtio-net:
+Do you find the comments helpful at the beginning of this SmPL script?
 
-  00000000fe000000-00000000fe000fff (prio 0, i/o): virtio-pci-common
-  00000000fe001000-00000000fe001fff (prio 0, i/o): virtio-pci-isr
-  00000000fe002000-00000000fe002fff (prio 0, i/o): virtio-pci-device
-  00000000fe003000-00000000fe003fff (prio 0, i/o): virtio-pci-notify
-  00000000fe840000-00000000fe84002f (prio 0, i/o): msix-table
-  00000000fe840800-00000000fe840807 (prio 0, i/o): msix-pba
+Would you like to let any more source code analysis tools help you
+to find remaining update candidates?
 
-Does it mean that device plugging is guaranteed to not trigger RAM changes?  I
-am really curious about what cases we need to consider in which we need to keep
-the dirty bits for a memory removal, and if system reset is the only case, then
-it could be even easier (because we might be able to avoid the sync in memory
-removal but do that once in a sys reset hook)...
-
-> 
-> > 
-> > The real scenario we want to cover for dirty tracking is the 2nd one.
-> > 
-> > If we can track dirty using raw GPA, the 2nd scenario is solved itself.
-> > Because we know we'll add those memslots back (though it might be with a
-> > different slot ID), then the GPA value will still make sense, which means we
-> > should be able to avoid any kind of synchronization for things like memory
-> > removals, as long as the userspace is aware of that.
-> 
-> A curious question. What about the backing storage of the affected GPA 
-> is changed after adding back? Is recorded dirty info for previous backing 
-> storage still making sense for the newer one?
-
-It's the case of a permanent removal, plus another addition iiuc.  Then the
-worst case is we get some extra dirty bits set on that new memory region, but
-IMHO that's benigh (we'll migrate some extra pages even they could be zero pages).
-
-Thanks,
-
-> 
-> Thanks
-> Kevin
-> 
-> > 
-> > With that, when we fetch the dirty bits, we lookup the memslot dynamically,
-> > drop bits if the memslot does not exist on that address (e.g., permanent
-> > removals), and use whatever memslot is there for that guest physical
-> > address.
-> > Though we for sure still need to handle memory move, that the userspace
-> > needs
-> > to still take care of dirty bit flushing and sync for a memory move, however
-> > that's merely not happening so nothing to take care about either.
-> > 
-> > Does this makes sense?  Comments greatly welcomed..
-> > 
-> > Thanks,
-> > 
-> > [1] https://lists.gnu.org/archive/html/qemu-devel/2020-03/msg08361.html
-> > 
-> > --
-> > Peter Xu
-> 
-
--- 
-Peter Xu
-
+Regards,
+Markus
