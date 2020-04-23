@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B1AC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46864C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21562077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AB820784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgDWXOV (ORCPT
+        id S1729497AbgDWXOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:14:21 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49914 "EHLO
+        Thu, 23 Apr 2020 19:14:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49904 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728467AbgDWXGt (ORCPT
+        by vger.kernel.org with ESMTP id S1728458AbgDWXGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvY-0004lP-Bg; Fri, 24 Apr 2020 00:06:40 +0100
+        id 1jRkvU-0004i7-8S; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvX-00E6xV-KO; Fri, 24 Apr 2020 00:06:39 +0100
+        id 1jRkvR-00E6pd-HW; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Fri, 24 Apr 2020 00:07:02 +0100
-Message-ID: <lsq.1587683028.306053127@decadent.org.uk>
+        "Shuah Khan" <skhan@linuxfoundation.org>,
+        "Suwan Kim" <suwan.kim027@gmail.com>,
+        "Marek Marczykowski-=?UTF-8?Q?G=C3=B3recki?=" 
+        <marmarek@invisiblethingslab.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 00:05:59 +0100
+Message-ID: <lsq.1587683028.873025428@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 195/245] USB: serial: io_edgeport: add missing
- active-port sanity check
+Subject: [PATCH 3.16 132/245] usbip: Fix error path of vhci_recv_ret_submit()
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,64 +58,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Suwan Kim <suwan.kim027@gmail.com>
 
-commit 1568c58d11a7c851bd09341aeefd6a1c308ac40d upstream.
+commit aabb5b833872524eaf28f52187e5987984982264 upstream.
 
-The driver receives the active port number from the device, but never
-made sure that the port number was valid. This could lead to a
-NULL-pointer dereference or memory corruption in case a device sends
-data for an invalid port.
+If a transaction error happens in vhci_recv_ret_submit(), event
+handler closes connection and changes port status to kick hub_event.
+Then hub tries to flush the endpoint URBs, but that causes infinite
+loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
+"vhci_priv" in vhci_urb_dequeue() was already released by
+vhci_recv_ret_submit() before a transmission error occurred. Thus,
+vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
+continuously calls vhci_urb_dequeue().
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+The root cause of this issue is that vhci_recv_ret_submit()
+terminates early without giving back URB when transaction error
+occurs in vhci_recv_ret_submit(). That causes the error URB to still
+be linked at endpoint list without “vhci_priv".
+
+So, in the case of transaction error in vhci_recv_ret_submit(),
+unlink URB from the endpoint, insert proper error code in
+urb->status and give back URB.
+
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Tested-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20191213023055.19933-3-suwan.kim027@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/io_edgeport.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/staging/usbip/vhci_rx.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -1666,7 +1666,8 @@ static void edge_break(struct tty_struct
- static void process_rcvd_data(struct edgeport_serial *edge_serial,
- 				unsigned char *buffer, __u16 bufferLength)
- {
--	struct device *dev = &edge_serial->serial->dev->dev;
-+	struct usb_serial *serial = edge_serial->serial;
-+	struct device *dev = &serial->dev->dev;
- 	struct usb_serial_port *port;
- 	struct edgeport_port *edge_port;
- 	__u16 lastBufferLength;
-@@ -1771,9 +1772,8 @@ static void process_rcvd_data(struct edg
+--- a/drivers/staging/usbip/vhci_rx.c
++++ b/drivers/staging/usbip/vhci_rx.c
+@@ -88,16 +88,21 @@ static void vhci_recv_ret_submit(struct
+ 	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
  
- 			/* spit this data back into the tty driver if this
- 			   port is open */
--			if (rxLen) {
--				port = edge_serial->serial->port[
--							edge_serial->rxPort];
-+			if (rxLen && edge_serial->rxPort < serial->num_ports) {
-+				port = serial->port[edge_serial->rxPort];
- 				edge_port = usb_get_serial_port_data(port);
- 				if (edge_port && edge_port->open) {
- 					dev_dbg(dev, "%s - Sending %d bytes to TTY for port %d\n",
-@@ -1783,8 +1783,8 @@ static void process_rcvd_data(struct edg
- 							rxLen);
- 					edge_port->port->icount.rx += rxLen;
- 				}
--				buffer += rxLen;
- 			}
-+			buffer += rxLen;
- 			break;
+ 	/* recv transfer buffer */
+-	if (usbip_recv_xbuff(ud, urb) < 0)
+-		return;
++	if (usbip_recv_xbuff(ud, urb) < 0) {
++		urb->status = -EPROTO;
++		goto error;
++	}
  
- 		case EXPECT_HDR3:	/* Expect 3rd byte of status header */
-@@ -1819,6 +1819,8 @@ static void process_rcvd_status(struct e
- 	__u8 code = edge_serial->rxStatusCode;
+ 	/* recv iso_packet_descriptor */
+-	if (usbip_recv_iso(ud, urb) < 0)
+-		return;
++	if (usbip_recv_iso(ud, urb) < 0) {
++		urb->status = -EPROTO;
++		goto error;
++	}
  
- 	/* switch the port pointer to the one being currently talked about */
-+	if (edge_serial->rxPort >= edge_serial->serial->num_ports)
-+		return;
- 	port = edge_serial->serial->port[edge_serial->rxPort];
- 	edge_port = usb_get_serial_port_data(port);
- 	if (edge_port == NULL) {
+ 	/* restore the padding in iso packets */
+ 	usbip_pad_iso(ud, urb);
+ 
++error:
+ 	if (usbip_dbg_flag_vhci_rx)
+ 		usbip_dump_urb(urb);
+ 
 
