@@ -2,152 +2,90 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F53C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456BDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7912C20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F302077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgDWLLc (ORCPT
+        id S1727951AbgDWLNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:11:32 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35822 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726805AbgDWLLc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:11:32 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0TwQiqf0_1587640283;
-Received: from 30.27.118.66(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwQiqf0_1587640283)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 23 Apr 2020 19:11:25 +0800
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
- <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
- <20200422154543.2efba3dd.cohuck@redhat.com>
- <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
- <20200422180403.03f60b0c.cohuck@redhat.com>
- <5e1e126d-f1b0-196c-594b-4289d0afb9a8@linux.alibaba.com>
- <20200423123901.72a4c6a4.cohuck@redhat.com>
- <71344f73-c34f-a373-49d1-5d839c6be5f6@linux.alibaba.com>
- <1d73b700-4a20-3d7a-66d1-29b5afa03f4d@de.ibm.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <9a477117-7295-c4f4-097f-bfb146670435@linux.alibaba.com>
-Date:   Thu, 23 Apr 2020 19:11:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1d73b700-4a20-3d7a-66d1-29b5afa03f4d@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Apr 2020 07:13:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52312 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbgDWLNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:13:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5B198B08C;
+        Thu, 23 Apr 2020 11:13:47 +0000 (UTC)
+Message-ID: <1587640413.23108.7.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in usblp_bulk_read
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Pete Zaitcev <zaitcev@redhat.com>, Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Thu, 23 Apr 2020 13:13:33 +0200
+In-Reply-To: <20200423001036.41324bd4@suzdal.zaitcev.lan>
+References: <00000000000046503905a3cec366@google.com>
+         <20200422032323.8536-1-hdanton@sina.com>
+         <20200423001036.41324bd4@suzdal.zaitcev.lan>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am Donnerstag, den 23.04.2020, 00:10 -0500 schrieb Pete Zaitcev:
+> 
+> I do not agree with this kind of workaround. The model we're following
+> is for usb_kill_urb() to cancel the transfer. The usblp invokes it
+> through usb_kill_anchored_urbs() and usblp_unlink_urbs(), as seen
+> above. There can be no timer hitting anything once it returns.
+
+Right. It seems to me that the problem is not killing an existing
+transfer but a failure to check in case of new transfers whether
+the device has been disconnected.
+
+> 1104 is kzalloc for struct usblp.
+> 
+> > > Freed by task 12266:
+> > >  save_stack+0x1b/0x80 mm/kasan/common.c:72
+> > >  set_track mm/kasan/common.c:80 [inline]
+> > >  kasan_set_free_info mm/kasan/common.c:337 [inline]
+> > >  __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
+> > >  slab_free_hook mm/slub.c:1444 [inline]
+> > >  slab_free_freelist_hook mm/slub.c:1477 [inline]
+> > >  slab_free mm/slub.c:3034 [inline]
+> > >  kfree+0xd5/0x300 mm/slub.c:3995
+> > >  usblp_disconnect.cold+0x24/0x29 drivers/usb/class/usblp.c:1380
+> > >  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
+> > >  __device_release_driver drivers/base/dd.c:1137 [inline]
+> > >  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1168
+> > >  bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
+> 
+> 1380 is an inlined call to usblp_cleanup, which is just
+> a bunch of kfree.
+
+But that must never happen while while the device is open.
+If that ever happens something is wrong with usblp->used.
+
+> The bug report is still a bug report, but I'm pretty sure the
+> culprit is the emulated HCD and/or the gadget layer. Unfortunately,
+> I'm not up to speed in that subsystem. Maybe Alan can look at it?
+
+I doubt it. Operation by a timer triggering a timeout must work.
+
+	Regards
+		Oliver
 
 
-On 2020/4/23 19:00, Christian Borntraeger wrote:
-> 
-> 
-> On 23.04.20 12:58, Tianjia Zhang wrote:
->>
->>
->> On 2020/4/23 18:39, Cornelia Huck wrote:
->>> On Thu, 23 Apr 2020 11:01:43 +0800
->>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
->>>
->>>> On 2020/4/23 0:04, Cornelia Huck wrote:
->>>>> On Wed, 22 Apr 2020 17:58:04 +0200
->>>>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
->>>>>    
->>>>>> On 22.04.20 15:45, Cornelia Huck wrote:
->>>>>>> On Wed, 22 Apr 2020 20:58:04 +0800
->>>>>>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
->>>>>>>       
->>>>>>>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->>>>>>>> structure. Earlier than historical reasons, many kvm-related function
->>>>>>>
->>>>>>> s/Earlier than/For/ ?
->>>>>>>       
->>>>>>>> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
->>>>>>>> This patch does a unified cleanup of these remaining redundant parameters.
->>>>>>>>
->>>>>>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->>>>>>>> ---
->>>>>>>>     arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
->>>>>>>>     1 file changed, 22 insertions(+), 15 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->>>>>>>> index e335a7e5ead7..d7bb2e7a07ff 100644
->>>>>>>> --- a/arch/s390/kvm/kvm-s390.c
->>>>>>>> +++ b/arch/s390/kvm/kvm-s390.c
->>>>>>>> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->>>>>>>>         return rc;
->>>>>>>>     }
->>>>>>>>     -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>>>>>>> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->>>>>>>>     {
->>>>>>>> +    struct kvm_run *kvm_run = vcpu->run;
->>>>>>>>         struct runtime_instr_cb *riccb;
->>>>>>>>         struct gs_cb *gscb;
->>>>>>>>     @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>>>>>>>             }
->>>>>>>>             if (vcpu->arch.gs_enabled) {
->>>>>>>>                 current->thread.gs_cb = (struct gs_cb *)
->>>>>>>> -                        &vcpu->run->s.regs.gscb;
->>>>>>>> +                        &kvm_run->s.regs.gscb;
->>>>>>>
->>>>>>> Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
->>>>>>> it. (It seems they amount to at least as much as the changes advertised
->>>>>>> in the patch description.)
->>>>>>>
->>>>>>> Other opinions?
->>>>>>
->>>>>> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
->>>>>> function parameter list into the variable declaration)? Not sure if this is better.
->>>>>>    
->>>>>
->>>>> There's more in this patch that I cut... but I think just moving
->>>>> kvm_run from the parameter list would be much less disruptive.
->>>>>     
->>>>
->>>> I think there are two kinds of code(`vcpu->run->` and `kvm_run->`), but
->>>> there will be more disruptive, not less.
->>>
->>> I just fail to see the benefit; sure, kvm_run-> is convenient, but the
->>> current code is just fine, and any rework should be balanced against
->>> the cost (e.g. cluttering git annotate).
->>>
->>
->> cluttering git annotate ? Does it mean Fix xxxx ("comment"). Is it possible to solve this problem by splitting this patch?
-> 
-> No its about breaking git blame (and bugfix backports) for just a cosmetic improvement.
-> And I agree with Conny: the cost is higher than the benefit.
-> 
-
-I will make a fix in the v3 version. Help to see if there are problems 
-with the next few patches.
-
-Thanks,
-Tianjia
