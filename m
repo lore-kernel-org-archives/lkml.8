@@ -2,170 +2,167 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E96CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADBEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6D72076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E2E20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:44:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="fUl7Rnsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgDWTmx (ORCPT
+        id S1726510AbgDWTo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:42:53 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:44078 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgDWTmv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:42:51 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jRhkI-0007IC-E3; Thu, 23 Apr 2020 13:42:50 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jRhkH-00022D-GR; Thu, 23 Apr 2020 13:42:50 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
-        <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-Date:   Thu, 23 Apr 2020 14:39:41 -0500
-In-Reply-To: <87ftcv1nqe.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Wed, 22 Apr 2020 11:36:41 -0500")
-Message-ID: <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 23 Apr 2020 15:44:58 -0400
+Received: from mail-eopbgr30079.outbound.protection.outlook.com ([40.107.3.79]:15757
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726060AbgDWTo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 15:44:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i4ZM3i5j0KTs/SJnr4NyHuFwqnSnSwbXN/kvvSlA+fRNXZGMcqbUHKRsipEy+gOVu8Uy2nJttVUzQ3aqp11pOctkQkTyciMZXxUcV3xpwqfhqXIKZ5Vofsn5GuV/2p4SrOLbBVTHxA7X67NVFlaTvl+xnhmueakvOgvaUydD3LyVPgn261CNfBF3AjaqjJeEQN7uCRXvDfVXratKci5q8yFmYXianqQhlc2UeVHCRgeDONGbYsHK5RxownqqbCjWP3b9D1BvnxuVLE6dPUvqjsrOUpY/gAHrKoEESnQ93i2S+MWQGBswz6ht9RYcBdrvIfrdlr5SxAMqC4IXE3bXeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bb8MHrPnz7ro9tAT91kKIX0+HAVCqvHVd2q5BdVU1YE=;
+ b=iQqZsMD/atGmb8tInsrMrSm5coVpVKUMvDN2T6oVZlU3gGjbAcuj0iZTQOGlOMuL5Imd6TZIwjrbd0McO3pxJ8Qh5ZvFb0GifFvI7jpprMzVcBruTf6zK3Plo7/SsBbHl88dxFL992n+AytoH2jfPaC+rM5CukLwTw/FET8uDwkf1T5JFiHiGiXUKImTr7xnhWlwpJ20eLV18bjgonZELzdJorKCDyLiMl+YnumCrA+F99LO4OeORCjlsnkOJXNUlIEyb+HUkS/FX+YMldp2cTknFopfUvdbRivLXPZOcw/0T1Uw8sN3bYMjR4+64ee4oJ4buLOqkcMlySJvuRIPYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bb8MHrPnz7ro9tAT91kKIX0+HAVCqvHVd2q5BdVU1YE=;
+ b=fUl7Rnsc2J1seniLStP9/05Fkqu2/C1sHIJGUFiYD6funX5a72lyt9s8slTlhtbL4hESJD9C1ulMKmZYpeaz0CTY3oL1uq6dxOYN4TMEtkzR+HUcfeej11BeC/9U/4k3c4wny8dfF1opEmeLIwMZJWjMgoGFd7R7ptaGHD6BRO8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB6864.eurprd05.prod.outlook.com (2603:10a6:800:18d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
+ 2020 19:44:51 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
+ 19:44:51 +0000
+Date:   Thu, 23 Apr 2020 16:44:47 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "Dey, Megha" <megha.dey@linux.intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200423194447.GF13640@mellanox.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR02CA0006.namprd02.prod.outlook.com
+ (2603:10b6:207:3c::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jRhkH-00022D-GR;;;mid=<87wo66vvnm.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19+p1OI9uD+ggl4NnOJQC9jcVE7p3h3y1M=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid exactly
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0006.namprd02.prod.outlook.com (2603:10b6:207:3c::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 19:44:51 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRhmB-0007Nj-QB; Thu, 23 Apr 2020 16:44:47 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b638f078-0179-4ff9-ef58-08d7e7bec9ce
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6864:|VI1PR05MB6864:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB6864D7E39C188F62907AEB33CFD30@VI1PR05MB6864.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 03827AF76E
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(9746002)(9786002)(86362001)(6916009)(33656002)(966005)(5660300002)(8936002)(81156014)(7416002)(478600001)(316002)(26005)(52116002)(36756003)(2906002)(2616005)(186003)(66556008)(4326008)(8676002)(66946007)(66476007)(1076003)(24400500001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zIov0yGLtszge3FwMpb0PHRZoBOp3ez5Rldeh1h28cuczRS9yjwO4eFUfGuj2uM9I1zsnpszknCRfJgkKtwHnsgWbA3luJXNimG6FLe/w1aTiojdZjRBjjEG4AfAOHGcwFSICR3pxGyQdeo0g0l3lzCFeqR25J4aOZDgUgKuvOAYZ8YfjKM8WziVjaAdFbfBx29p150BKv8a9HCKn9X1fNNVoZT3+zJHaOq7dLgFjF5V0FwIXsj8Jh810m4wjqVPZkMySqw8Bpz0A0MdTQAIWdlDj4Lm87lqlmbpzN7Jobgs7u7DmGWYDMo8WTwegYBcgYunG4k4E4g2wqjZOw1aEPzzMNB8U0sglqNdWqa/ufh9zV3wuGMvNEoNPNx9evwooytwDIiLsOs6lkVDwUKePh5hXAQbiGwHMMZOnBpkqMwcGWrbaORTAp947HQA9pafY30JOM6BGUMx58DWxp84YOkuN57d02oVS9Ny9XwVna1PBz6RtNuw94jOWvTtTIp9amtSPPWt6BlnyNM5sTCHYNsHIq6yxk/e+3Xqe4AQofaPY0wgIghRxs1ImNtlAZ/u25M9SS84lvM05mm8vcDuDg==
+X-MS-Exchange-AntiSpam-MessageData: Piq+HwZAKA6FSqiGfzzJJyvYm9L1rVHl6LrJvhiPRpk80xEKsvuxYYwOQgFY/l6SwPACb3x6p13J6CXHMIix1MFXfl4k8mR8kAfJqCrllWd0LRmA7HaQNAFitYOdxi2161bTi4UosgIB5jnRhB52RQ==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b638f078-0179-4ff9-ef58-08d7e7bec9ce
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 19:44:51.3188
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0gdmxLUVTleRKVey1pBiR3kMhazutDo4wERH66kOZclaOoWyxoIduT5HLXv5UUkjQg+9AMq3aB+9JBvNH8HhRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6864
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> > > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
+> > > interrupts for the guest. This preserves MSIX for host usages and also allows a
+> > > significantly larger number of interrupt vectors for guest usage.
+> > 
+> > I never did get a reply to my earlier remarks on the IMS patches.
+> > 
+> > The concept of a device specific addr/data table format for MSI is not
+> > Intel specific. This should be general code. We have a device that can
+> > use this kind of kernel capability today.
+> 
+> I am sorry if I did not address your comments earlier.
 
-When the thread group leader changes during exec and the old leaders
-thread is reaped proc_flush_pid will flush the dentries for the entire
-process because the leader still has it's original pid.
+It appears noboy from Intel bothered to answer anyone else on that RFC
+thread:
 
-Fix this by exchanging the pids in an rcu safe manner,
-and wrapping the code to do that up in a helper exchange_tids.
+https://lore.kernel.org/lkml/1568338328-22458-1-git-send-email-megha.dey@linux.intel.com/
 
-When I removed switch_exec_pids and introduced this behavior
-in d73d65293e3e ("[PATCH] pidhash: kill switch_exec_pids") there
-really was nothing that cared as flushing happened with
-the cached dentry and de_thread flushed both of them on exec.
+However, it seems kind of moot as I see now that this verion of IMS
+bears almost no resemblance to the original RFC.
 
-This lack of fully exchanging pids became a problem a few months later
-when I introduced 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry
-flush on exit optimization").  Which overlooked the de_thread case
-was no longer swapping pids, and I was looking up proc dentries
-by task->pid.
+That said, the similiarity to platform-msi was striking, does this new
+version harmonize with that?
 
-The current behavior isn't properly a bug as everything in proc will
-continue to work correctly just a little bit less efficiently.  Fix
-this just so there are no little surprise corner cases waiting to bite
-people.
+> The present IMS code is quite generic, most of the code is in the drivers/
+> folder. We basically introduce 2 APIS: allocate and free IMS interrupts and
+> a IMS IRQ domain to allocate these interrupts from. These APIs are
+> architecture agnostic.
+>
+> We also introduce a new IMS IRQ domain which is architecture specific. This
+> is because IMS generates interrupts only in the remappable format, hence
+> interrupt remapping should be enabled for IMS. Currently, the interrupt
+> remapping code is only available for Intel and AMD and I don’t see anything
+> for ARM.
 
--- Oleg points out this could be an issue in next_tgid in proc where
-   has_group_leader_pid is called, and reording some of the assignments
-   should fix that.
+I don't understand these remarks though - IMS is simply the mapping of
+a MemWr addr/data pair to a Linux IRQ number? Why does this intersect
+with remapping?
 
--- Oleg points out this will break the 10 year old hack in __exit_signal.c
->	/*
->	 * This can only happen if the caller is de_thread().
->	 * FIXME: this is the temporary hack, we should teach
->	 * posix-cpu-timers to handle this case correctly.
->	 */
->	if (unlikely(has_group_leader_pid(tsk)))
->		posix_cpu_timers_exit_group(tsk);
+AFAIK, any platform that supports MSI today should have the inherent
+HW capability to support IMS.
 
-The code in next_tgid has been changed to use PIDTYPE_TGID,
-and the posix cpu timers code has been fixed so it does not
-need the 10 year old hack, so this should be safe to merge
-now.
+> Also, could you give more details on the device that could use IMS? Do you
+> have some driver code already? We could then see if and how the current IMS
+> code could be made more generic.
 
-Fixes: 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry flush on exit optimization").
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
----
- fs/exec.c           |  5 +----
- include/linux/pid.h |  1 +
- kernel/pid.c        | 16 ++++++++++++++++
- 3 files changed, 18 insertions(+), 4 deletions(-)
+We have several devices of interest, our NICs have very flexible PCI,
+so it is no problem to take the MemWR addr/data from someplace other
+than the MSI tables.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 06b4c550af5d..9b60f927afd7 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1186,11 +1186,8 @@ static int de_thread(struct task_struct *tsk)
- 
- 		/* Become a process group leader with the old leader's pid.
- 		 * The old leader becomes a thread of the this thread group.
--		 * Note: The old leader also uses this pid until release_task
--		 *       is called.  Odd but simple and correct.
- 		 */
--		tsk->pid = leader->pid;
--		change_pid(tsk, PIDTYPE_PID, task_pid(leader));
-+		exchange_tids(tsk, leader);
- 		transfer_pid(leader, tsk, PIDTYPE_TGID);
- 		transfer_pid(leader, tsk, PIDTYPE_PGID);
- 		transfer_pid(leader, tsk, PIDTYPE_SID);
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index cc896f0fc4e3..2159ffca63fc 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -102,6 +102,7 @@ extern void attach_pid(struct task_struct *task, enum pid_type);
- extern void detach_pid(struct task_struct *task, enum pid_type);
- extern void change_pid(struct task_struct *task, enum pid_type,
- 			struct pid *pid);
-+extern void exchange_tids(struct task_struct *task, struct task_struct *old);
- extern void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			 enum pid_type);
- 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index c835b844aca7..4ece32d8791a 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -363,6 +363,22 @@ void change_pid(struct task_struct *task, enum pid_type type,
- 	attach_pid(task, type);
- }
- 
-+void exchange_tids(struct task_struct *ntask, struct task_struct *otask)
-+{
-+	/* pid_links[PIDTYPE_PID].next is always NULL */
-+	struct pid *npid = READ_ONCE(ntask->thread_pid);
-+	struct pid *opid = READ_ONCE(otask->thread_pid);
-+
-+	rcu_assign_pointer(opid->tasks[PIDTYPE_PID].first, &ntask->pid_links[PIDTYPE_PID]);
-+	rcu_assign_pointer(npid->tasks[PIDTYPE_PID].first, &otask->pid_links[PIDTYPE_PID]);
-+	rcu_assign_pointer(ntask->thread_pid, opid);
-+	rcu_assign_pointer(otask->thread_pid, npid);
-+	WRITE_ONCE(ntask->pid_links[PIDTYPE_PID].pprev, &opid->tasks[PIDTYPE_PID].first);
-+	WRITE_ONCE(otask->pid_links[PIDTYPE_PID].pprev, &npid->tasks[PIDTYPE_PID].first);
-+	WRITE_ONCE(ntask->pid, pid_nr(opid));
-+	WRITE_ONCE(otask->pid, pid_nr(npid));
-+}
-+
- /* transfer_pid is an optimization of attach_pid(new), detach_pid(old) */
- void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			   enum pid_type type)
--- 
-2.20.1
+For this we want to have some way to allocate Linux IRQs dynamically
+and get a addr/data pair to trigger them.
 
+Our NIC devices are also linked to our ARM SOC family, so I'd expect
+our ARM's to also be able to provide these APIs as the platform.
+
+Jason
