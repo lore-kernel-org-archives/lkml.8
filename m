@@ -2,93 +2,116 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC78C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87931C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346472084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587635953;
-	bh=h0cEpFyyTV9DIslKZvNsTAoxOPb/8EK4/m+d0jhEsZw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nkX/jFBdCw2Wbhi+MGwADukA69FLWBCNcr+G99F21+D7CN3YF5Zvef/FN56MmB09p
-	 5iIawGrVwUCsN+yxgR8YvLSDQMGIhnFSdt9l2Dby6MwqSoH4giNNFQ7fUuYVIKuMFh
-	 QWUgfpfztuHTO4CM9fwGhugjE+rpRmR9RbcfnWyw=
+	by mail.kernel.org (Postfix) with ESMTP id 623632076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z/dVk1Aj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgDWJ7M (ORCPT
+        id S1726490AbgDWKCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgDWJ7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:59:12 -0400
-Received: from pobox.suse.cz (unknown [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2583320776;
-        Thu, 23 Apr 2020 09:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587635951;
-        bh=h0cEpFyyTV9DIslKZvNsTAoxOPb/8EK4/m+d0jhEsZw=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=mPzDOmfNMHch49qxZ6670ViWhek75QlHoYknXGyv0HzFtVpaMX6oSBnDFNvw+fOUv
-         faDBVd/Kp+qO8ntHsLErzLvOHMuvoZfmWouAXkrIzHnL2lsQwzdoCgH4EpqEfeDHee
-         YyB8W9SchtJ41Ny3gi+vPpE/WhC+kvXEd6VvxpeE=
-Date:   Thu, 23 Apr 2020 11:59:07 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-cc:     syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Julian Squires <julian@cipht.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, andreyknvl@google.com,
-        gregkh@linuxfoundation.org, ingrassia@epigenesys.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com, Ping Cheng <pingc@wacom.com>,
-        pinglinux@gmail.com, killertofu@gmail.com
-Subject: Re: KASAN: use-after-free Read in usbhid_close (3)
-In-Reply-To: <Pine.LNX.4.44L0.2004221058240.20574-100000@netrider.rowland.org>
-Message-ID: <nycvar.YFH.7.76.2004231157160.19713@cbobk.fhfr.pm>
-References: <Pine.LNX.4.44L0.2004221058240.20574-100000@netrider.rowland.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 23 Apr 2020 06:02:11 -0400
+Received: from mail-eopbgr150049.outbound.protection.outlook.com ([40.107.15.49]:15621
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725863AbgDWKCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:02:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QDiVinCM3WcwpmakFi79F1Sab5qPgLH0n8zr97O2DQbVa2pkVwk44lpzqBpOHxnVNgdyAQqAc12Fyt0GnBWQXn1cw2tPZnVPk7P09GzJCW4htrIzdp2fPrQjfba2oKjPD3ijU2XdsB4MH9F0SfEePUPwPuzd6EwAUggS8IRK+dVfalf4zQAtr9B/D4xm5/ORL4Z4lvQBQmCI3X++7w+J4L/PEdMLu8gIU5tqNTTTFg5ZbXPMX+ehc4rwRvRban7hrtGrjX0k50TuhjZFvBnmDmkcmTfFTcaQT80Rv6gn9BvO2nV/gkzl3vnvfAYMV913bi4rdNh0SQ3TsJZlHLYQ8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pMQt660BLVzDqkGMpNs+cPVtVPVVG47FWBE384a/Kak=;
+ b=HqGZf+gEf4qzGkNBFjDxJ8P0jn9LZ0zF3FZ9UtE/DcRtlYRdB7QU6rVd6stkEV56bvzlCHAmlauISzDvokBlZ5pWk4hsNQkiwC1y3/oSth1AhnLT5eNvePcam6pln+uzROUs2jVVbviXohU/mzfKV6G+J9Ky+Tlw8IXhcfN+sDNCoEtyuapk5tFKht3qDQw0+NwZ+d/8GIklfzoUHiMiJcqlGPVdXN1YCGL9z8JxqFuqXGF3FrtU4twcWgYKNky8v7sLAaNXDpWzdvkILFjCJxl7T9Ek6NylQZvANTZp0inVaqrTgG0MG9AUjl7EJdJfbX9/8imYl00OffvT/59+Dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pMQt660BLVzDqkGMpNs+cPVtVPVVG47FWBE384a/Kak=;
+ b=Z/dVk1AjDnDGVbwCXuSgUDptWlZpAYxbB3LIb9+S26umEd1+xJ9V1zPdQcVNYHLwg70pA9fSWVIma/G9yh6FxYhCSMfi5YDHpFVhz9nLtNdRXe+VQZdtySJF2Bo4QPeH+7wpIk77dz6qiOGDtTLeOmzp1i9TMP5Qd7yG3IyR9WI=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4853.eurprd04.prod.outlook.com (2603:10a6:20b:8::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Thu, 23 Apr
+ 2020 10:02:08 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::d9f7:5527:e89d:1ae3]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::d9f7:5527:e89d:1ae3%7]) with mapi id 15.20.2921.032; Thu, 23 Apr 2020
+ 10:02:08 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/4] firmware: imx: scu-pd: fix cm40 power domain
+Thread-Topic: [PATCH 1/4] firmware: imx: scu-pd: fix cm40 power domain
+Thread-Index: AQHWGT35VS4Ec8+XLk2j+LeMphRmTqiGed4g
+Date:   Thu, 23 Apr 2020 10:02:07 +0000
+Message-ID: <AM6PR04MB4966F959C6B5BF0154AE097880D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1587625174-32668-1-git-send-email-peng.fan@nxp.com>
+ <1587625174-32668-2-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1587625174-32668-2-git-send-email-peng.fan@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 73c99456-876e-49a6-b5c7-08d7e76d6227
+x-ms-traffictypediagnostic: AM6PR04MB4853:|AM6PR04MB4853:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB4853A2BB1825E12FDFE2BFA680D30@AM6PR04MB4853.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 03827AF76E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(39860400002)(396003)(366004)(346002)(55016002)(110136005)(33656002)(2906002)(8676002)(8936002)(81156014)(54906003)(9686003)(4744005)(5660300002)(478600001)(4326008)(71200400001)(316002)(86362001)(26005)(6506007)(44832011)(66946007)(52536014)(7696005)(186003)(66446008)(64756008)(66556008)(66476007)(76116006);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uX0DkNPOxvrnIdc0knavpiVJSyXKS6bSFKV8dddij6aJftU8rJzj+T4oWCTlFcNrqmlz9z6UNrbpJTiROQJPCReKPrRXUTHOxx2NRAWn4lJFkxQXr42QFfxk93IiaLL62ijKSorWvwyWqf5M5P0MLI+K6HZupR9OK3IGY6K7+ln8ktKL9xcdP62OdhsNv2a4h3F4WW3AYhxHWtJ9Kh/4WVssFrQlYLOBf9jkJQKC5f17xcWbHRpRUKR3l5qLFpFMzH6BhksS11pr1aqqNIiox3j8F45ItDigVJ/kOmZeXCRYJecvVasC8CqhuiK8YFX27Ii92/CoyJzfXYvns5dTDeRbLWe8rwcTjXlXekmG+n4/GH+OSUevYoLFpjBOSHmHDmLIaKZ0cPjT8ZeUtnfPBq3M6G3rMOqz871Xy0HmogrhDbk8LxoNGtMIi8dxGPxv
+x-ms-exchange-antispam-messagedata: n5M0V4OySkAi4Q8d7N3V/MZmULriayv2BKEtL7zEkW/87RnkaLytm8MOCwvusXpppIpkE+mVsIsbuGgtUJ3PKPBSYrB9gAEfNP+ba1c7UjsXyGG4UJM7bZTpftZaEiBmfUyXjEeUBLQ3OYmL+XR/nQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73c99456-876e-49a6-b5c7-08d7e76d6227
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 10:02:07.9572
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c+waojMn5NTNO2TOW0aZ7tNCwlyRrkD5aJzgAvarhQ0tOXWQgGfLk3xi3AW5uQWLLYj370GWFHnyEQPD0tXL0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4853
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, Alan Stern wrote:
-
-> > Jiri, you should know: Are HID drivers supposed to work okay when the
-> > ->close callback is issued after (or concurrently with) the ->stop
-> > callback?
-> 
-> No response.  
-
-Sorry, I've been a bit swamped recently. Thanks a lot for taking care of 
-this.
-
-> I'll assume that strange callback orderings should be supported.  Let's 
-> see if the patch below fixes the race in usbhid.
-
-Unfortunately I don't believe the supportability of this is fully defined. 
-I have tried to quickly go over the few major drivers and didn't find 
-anything relying various orderings, but I might have easily missed some 
-case.
-
-So unless we have a programatic way to check it, the patch you created for 
-mutual exclusion is a good bandaid I believe.
-
-Thanks again Alan, I'll push it to Linus for 5.7.
-
--- 
-Jiri Kosina
-SUSE Labs
-
+PiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIEFw
+cmlsIDIzLCAyMDIwIDM6MDAgUE0NCj4gDQo+IFRoZSBwb3N0Zml4IG5lZWRzIHRvIGJlIGZhbHNl
+LiBBbG91Z2h0IGNvbXBpbGVyIHVzZSAwIGZvciBwb3N0Zml4IG5vdywgYW5kIHRha2UNCj4gc3Rh
+cnRfZnJvbSBhcyAwLCBpdCBpcyBiZXR0ZXIgd2UgYWRkIGV4cGxpY2l0IGZhbHNlIHRvIHBvc3Rm
+aXguDQo+IA0KPiBGaXhlczogNzA1ZGNjYTkxZDBhKCJmaXJtd2FyZTogaW14OiBzY3UtcGQ6IGFk
+ZCBwb3dlciBkb21haW4gZm9yIEkyQyBhbmQNCj4gSU5UTVVYIGluIENNNDAgU1MiKQ0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERv
+bmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg==
