@@ -2,104 +2,203 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AABC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D15C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2040208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C8C208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587627732;
-	bh=V3iPccgK+vl/32LMP8x53D6ueRG0X7Rmd/LXz306oiA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OLaoQ/7WNsv3v0DHpejA+Kq4PKMHj1STcJjbgL9+fW0zx0n52vnvgkBqc3k+oJoBv
-	 naqYzqQqBiuHGWxkrbbg/QAdP3xLrjFDrjZ+lvjkLavoJoWu4OQuaykEO8L0dYlH4x
-	 MIlkuRnnVUTAu8HyO6jKogZz5aLPyh+j9eqzpW2w=
+	s=default; t=1587627736;
+	bh=aJn229xEQdpNFNmggF7eNpc9MWQIN+6KnpY4VUDGxh8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=C3XTBchjwABpmBAlfun1kGX8lQbqoMYJR9FTef7vRNyAJDFlejj73x7gfTpXTIKle
+	 aNzzP1+XTuJ/OeD7mFsLVov505d3NYcqqpAU/grEQ6M7msu9HEVZ8BbazjvHeU637n
+	 xH2JIeRBQE3Hmy8/DlZWymh152lqXZhUBqdRHrLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgDWHmM (ORCPT
+        id S1727846AbgDWHmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:42:12 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:31739 "EHLO
+        Thu, 23 Apr 2020 03:42:15 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:34844 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgDWHkb (ORCPT
+        with ESMTP id S1725854AbgDWHmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:40:31 -0400
+        Thu, 23 Apr 2020 03:42:13 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03N7dV9S000368;
-        Thu, 23 Apr 2020 16:39:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9S000368
+        by conuserg-10.nifty.com with ESMTP id 03N7dV9L000368;
+        Thu, 23 Apr 2020 16:39:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9L000368
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587627581;
-        bh=YToMVALGZ0JNA1/v+fELxUiPiJLJ9MUFCjYJs4uH7Do=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/pln6ZqRmDgm/Bssq1alNkuc3Z6L+0VRdRpDBSRfM6rnylBKkpq4N0FhnZAHaBKQ
-         09d4dGS1RK79D/dxytzaPXHkugwYmcLh0hfnxdlEMCRtGa0CW+r71QZodx9ox2jEGd
-         B/QE/aSCu3/paRvfEhFpPYcJClh8DomUcQgr+0futox9bKYhrpUwpUlQi+BtXI+PTs
-         InMpNzc7xM+x36FYrtaQRwJ4N4i7ESf5cQbZFRxr27525RtaDOwQm4ooWQR0EYsHI0
-         gLhz3pin+fwgPhwIGuvcIfLLWiUC9iFQLYZ5tpCbhf3MKrJnRgeoaUFpWBhsseUilu
-         01mlRhbtRxh6g==
+        s=dec2015msa; t=1587627573;
+        bh=EYsJ2uRz3WzlUm4V0pOlApP3srqM3AzplJXKFcPvEZc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YP/cvFIDqNzUc1LGLrpWHugU6378NxtI+s6jypZfvWr37vn0c2PyraGPlREaAqEnQ
+         FC1fPQYiietJ+VjRm+QAa2UHsfgcqar1R4Y8TA7XJVvbfqBD5wafX0GIrmnV5pHmHh
+         8q5jt3rWU7dnCSGSZ6CCjGpaYlwCjjUKfj+RanMm/ZTFwZeY/4AKlUmyBZpsFcYdS1
+         zSX7an90gnGH+1EzAWoWJLkNef6Aq6rRejTbRIHliWScMURQ7y5lDCp3gkCI9qUiNU
+         0XISVVH5T4wiwolwemmrDutqkAe8H17XGYnW/Q8jrBhvoUUYbV1xExyHCGSZ7YmSk8
+         O0kUSWi3KCBuA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 07/16] samples: uhid: fix warnings in uhid-example
-Date:   Thu, 23 Apr 2020 16:39:20 +0900
-Message-Id: <20200423073929.127521-8-masahiroy@kernel.org>
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Christian Brauner <christian@brauner.io>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Song Liu <songliubraving@fb.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Yonghong Song <yhs@fb.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 00/16] kbuild: support 'userprogs' syntax
+Date:   Thu, 23 Apr 2020 16:39:13 +0900
+Message-Id: <20200423073929.127521-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200423073929.127521-1-masahiroy@kernel.org>
-References: <20200423073929.127521-1-masahiroy@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
 
-Fix warnings seen when building for 32-bit architecture.
+Several Makefiles use 'hostprogs' for building the code for
+the host architecture is not appropriate.
 
-Use "%xd" for arguments of type size_t to fix the warnings.
+This is just because Kbuild does not provide the syntax to do it.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+This series introduce 'userprogs' syntax and use it from
+sample and bpf Makefiles.
 
-This is the same as Sam's patch in 2014.
-https://lkml.org/lkml/2014/7/13/152
+Sam worked on this in 2014.
+https://lkml.org/lkml/2014/7/13/154
+
+He used 'uapiprogs-y' but I just thought the meaning of
+"UAPI programs" is unclear.
+
+Naming is one the most difficult parts of this.
+
+I chose 'userprogs'.
+Anothor choice I had in my mind was 'targetprogs'.
+
+If you can test this series quickly by
+'make allmodconfig samples/'
+
+When building objects for userspace, [U] is displayed.
+
+masahiro@oscar:~/workspace/linux$ make allmodconfig samples/
+  [snip]
+  AR      samples/vfio-mdev/built-in.a
+  CC [M]  samples/vfio-mdev/mtty.o
+  CC [M]  samples/vfio-mdev/mdpy.o
+  CC [M]  samples/vfio-mdev/mdpy-fb.o
+  CC [M]  samples/vfio-mdev/mbochs.o
+  AR      samples/mei/built-in.a
+  CC [U]  samples/mei/mei-amt-version
+  CC [U]  samples/auxdisplay/cfag12864b-example
+  CC [M]  samples/configfs/configfs_sample.o
+  CC [M]  samples/connector/cn_test.o
+  CC [U]  samples/connector/ucon
+  CC [M]  samples/ftrace/ftrace-direct.o
+  CC [M]  samples/ftrace/ftrace-direct-too.o
+  CC [M]  samples/ftrace/ftrace-direct-modify.o
+  CC [M]  samples/ftrace/sample-trace-array.o
+  CC [U]  samples/hidraw/hid-example
+  CC [M]  samples/hw_breakpoint/data_breakpoint.o
+  CC [M]  samples/kdb/kdb_hello.o
+  CC [M]  samples/kfifo/bytestream-example.o
+  CC [M]  samples/kfifo/dma-example.o
+  CC [M]  samples/kfifo/inttype-example.o
+  CC [M]  samples/kfifo/record-example.o
+  CC [M]  samples/kobject/kobject-example.o
+  CC [M]  samples/kobject/kset-example.o
+  CC [M]  samples/kprobes/kprobe_example.o
+  CC [M]  samples/kprobes/kretprobe_example.o
+  CC [M]  samples/livepatch/livepatch-sample.o
+  CC [M]  samples/livepatch/livepatch-shadow-mod.o
+  CC [M]  samples/livepatch/livepatch-shadow-fix1.o
+  CC [M]  samples/livepatch/livepatch-shadow-fix2.o
+  CC [M]  samples/livepatch/livepatch-callbacks-demo.o
+  CC [M]  samples/livepatch/livepatch-callbacks-mod.o
+  CC [M]  samples/livepatch/livepatch-callbacks-busymod.o
+  CC [M]  samples/rpmsg/rpmsg_client_sample.o
+  CC [U]  samples/seccomp/bpf-fancy.o
+  CC [U]  samples/seccomp/bpf-helper.o
+  LD [U]  samples/seccomp/bpf-fancy
+  CC [U]  samples/seccomp/dropper
+  CC [U]  samples/seccomp/bpf-direct
+  CC [U]  samples/seccomp/user-trap
+  CC [U]  samples/timers/hpet_example
+  CC [M]  samples/trace_events/trace-events-sample.o
+  CC [M]  samples/trace_printk/trace-printk.o
+  CC [U]  samples/uhid/uhid-example
+  CC [M]  samples/v4l/v4l2-pci-skeleton.o
+  CC [U]  samples/vfs/test-fsmount
+  CC [U]  samples/vfs/test-statx
+samples/vfs/test-statx.c:24:15: warning: ‘struct foo’ declared inside parameter list will not be visible outside of this definition or declaration
+   24 | #define statx foo
+      |               ^~~
+  CC [U]  samples/watchdog/watchdog-simple
+  AR      samples/built-in.a
 
 
- samples/uhid/uhid-example.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/samples/uhid/uhid-example.c b/samples/uhid/uhid-example.c
-index b72d645ce828..015cb06a241e 100644
---- a/samples/uhid/uhid-example.c
-+++ b/samples/uhid/uhid-example.c
-@@ -165,7 +165,7 @@ static int uhid_write(int fd, const struct uhid_event *ev)
- 		fprintf(stderr, "Cannot write to uhid: %m\n");
- 		return -errno;
- 	} else if (ret != sizeof(*ev)) {
--		fprintf(stderr, "Wrong size written to uhid: %ld != %lu\n",
-+		fprintf(stderr, "Wrong size written to uhid: %zd != %zu\n",
- 			ret, sizeof(ev));
- 		return -EFAULT;
- 	} else {
-@@ -236,7 +236,7 @@ static int event(int fd)
- 		fprintf(stderr, "Cannot read uhid-cdev: %m\n");
- 		return -errno;
- 	} else if (ret != sizeof(ev)) {
--		fprintf(stderr, "Invalid size read from uhid-dev: %ld != %lu\n",
-+		fprintf(stderr, "Invalid size read from uhid-dev: %zd != %zu\n",
- 			ret, sizeof(ev));
- 		return -EFAULT;
- 	}
+Masahiro Yamada (15):
+  Documentation: kbuild: fix the section title format
+  Revert "objtool: Skip samples subdirectory"
+  kbuild: add infrastructure to build userspace programs
+  net: bpfilter: use 'userprogs' syntax to build bpfilter_umh
+  samples: seccomp: build sample programs for target architecture
+  kbuild: doc: document the new syntax 'userprogs'
+  samples: uhid: build sample program for target architecture
+  samples: hidraw: build sample program for target architecture
+  samples: connector: build sample program for target architecture
+  samples: vfs: build sample programs for target architecture
+  samples: pidfd: build sample program for target architecture
+  samples: mei: build sample program for target architecture
+  samples: auxdisplay: use 'userprogs' syntax
+  samples: timers: use 'userprogs' syntax
+  samples: watchdog: use 'userprogs' syntax
+
+Sam Ravnborg (1):
+  samples: uhid: fix warnings in uhid-example
+
+ Documentation/kbuild/makefiles.rst | 185 +++++++++++++++++++++--------
+ Makefile                           |  11 +-
+ net/bpfilter/Makefile              |  11 +-
+ samples/Kconfig                    |  26 +++-
+ samples/Makefile                   |   5 +-
+ samples/auxdisplay/Makefile        |  11 +-
+ samples/connector/Makefile         |  12 +-
+ samples/hidraw/Makefile            |   9 +-
+ samples/mei/Makefile               |   9 +-
+ samples/pidfd/Makefile             |   8 +-
+ samples/seccomp/Makefile           |  42 +------
+ samples/timers/Makefile            |  17 +--
+ samples/uhid/.gitignore            |   2 +
+ samples/uhid/Makefile              |   9 +-
+ samples/uhid/uhid-example.c        |   4 +-
+ samples/vfs/Makefile               |  11 +-
+ samples/watchdog/Makefile          |  10 +-
+ scripts/Makefile.build             |   5 +
+ scripts/Makefile.clean             |   2 +-
+ scripts/Makefile.userprogs         |  44 +++++++
+ 20 files changed, 258 insertions(+), 175 deletions(-)
+ create mode 100644 samples/uhid/.gitignore
+ create mode 100644 scripts/Makefile.userprogs
+
 -- 
 2.25.1
 
