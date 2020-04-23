@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2BFC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74F9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E71320784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27492087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgDWX0M (ORCPT
+        id S1730101AbgDWX0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:26:12 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48128 "EHLO
+        Thu, 23 Apr 2020 19:26:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48136 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726632AbgDWXG0 (ORCPT
+        by vger.kernel.org with ESMTP id S1727065AbgDWXG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:26 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvH-0004ZM-U9; Fri, 24 Apr 2020 00:06:24 +0100
+        id 1jRkvH-0004ZI-SB; Fri, 24 Apr 2020 00:06:23 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvH-00E6ea-HE; Fri, 24 Apr 2020 00:06:23 +0100
+        id 1jRkvH-00E6eG-EB; Fri, 24 Apr 2020 00:06:23 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,13 +36,14 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Kalle Valo" <kvalo@codeaurora.org>,
-        "qize wang" <wangqize888888888@gmail.com>
-Date:   Fri, 24 Apr 2020 00:03:53 +0100
-Message-ID: <lsq.1587683028.452712027@decadent.org.uk>
+        "Wen Huang" <huangwenabc@gmail.com>,
+        "kbuild test robot" <lkp@intel.com>
+Date:   Fri, 24 Apr 2020 00:03:49 +0100
+Message-ID: <lsq.1587683028.742018254@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 006/245] mwifiex: Fix heap overflow in
- mmwifiex_process_tdls_action_frame()
+Subject: [PATCH 3.16 002/245] libertas: Fix two buffer overflows at
+ parsing bss descriptor
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,157 +57,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: qize wang <wangqize888888888@gmail.com>
+From: Wen Huang <huangwenabc@gmail.com>
 
-commit 1e58252e334dc3f3756f424a157d1b7484464c40 upstream.
+commit e5e884b42639c74b5b57dc277909915c0aefc8bb upstream.
 
-mwifiex_process_tdls_action_frame() without checking
-the incoming tdls infomation element's vality before use it,
-this may cause multi heap buffer overflows.
+add_ie_rates() copys rates without checking the length
+in bss descriptor from remote AP.when victim connects to
+remote attacker, this may trigger buffer overflow.
+lbs_ibss_join_existing() copys rates without checking the length
+in bss descriptor from remote IBSS node.when victim connects to
+remote attacker, this may trigger buffer overflow.
+Fix them by putting the length check before performing copy.
 
-Fix them by putting vality check before use it.
+This fix addresses CVE-2019-14896 and CVE-2019-14897.
+This also fix build warning of mixed declarations and code.
 
-IE is TLV struct, but ht_cap and  ht_oper aren’t TLV struct.
-the origin marvell driver code is wrong:
-
-memcpy(&sta_ptr->tdls_cap.ht_oper, pos,....
-memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,...
-
-Fix the bug by changing pos(the address of IE) to
-pos+2 ( the address of IE value ).
-
-Signed-off-by: qize wang <wangqize888888888@gmail.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Wen Huang <huangwenabc@gmail.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename, context]
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/tdls.c | 70 +++++++++++++++++++--
- 1 file changed, 64 insertions(+), 6 deletions(-)
+ drivers/net/wireless/libertas/cfg.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/wireless/mwifiex/tdls.c
-+++ b/drivers/net/wireless/mwifiex/tdls.c
-@@ -847,59 +847,117 @@ void mwifiex_process_tdls_action_frame(s
+--- a/drivers/net/wireless/libertas/cfg.c
++++ b/drivers/net/wireless/libertas/cfg.c
+@@ -272,6 +272,10 @@ add_ie_rates(u8 *tlv, const u8 *ie, int
+ 	int hw, ap, ap_max = ie[1];
+ 	u8 hw_rate;
  
- 		switch (*pos) {
- 		case WLAN_EID_SUPP_RATES:
-+			if (pos[1] > 32)
-+				return;
- 			sta_ptr->tdls_cap.rates_len = pos[1];
- 			for (i = 0; i < pos[1]; i++)
- 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
- 			break;
++	if (ap_max > MAX_RATES) {
++		lbs_deb_assoc("invalid rates\n");
++		return tlv;
++	}
+ 	/* Advance past IE header */
+ 	ie += 2;
  
- 		case WLAN_EID_EXT_SUPP_RATES:
-+			if (pos[1] > 32)
-+				return;
- 			basic = sta_ptr->tdls_cap.rates_len;
-+			if (pos[1] > 32 - basic)
-+				return;
- 			for (i = 0; i < pos[1]; i++)
- 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
- 			sta_ptr->tdls_cap.rates_len += pos[1];
- 			break;
- 		case WLAN_EID_HT_CAPABILITY:
--			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,
-+			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
-+				return;
-+			if (pos[1] != sizeof(struct ieee80211_ht_cap))
-+				return;
-+			/* copy the ie's value into ht_capb*/
-+			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
- 			       sizeof(struct ieee80211_ht_cap));
- 			sta_ptr->is_11n_enabled = 1;
- 			break;
- 		case WLAN_EID_HT_OPERATION:
--			memcpy(&sta_ptr->tdls_cap.ht_oper, pos,
-+			if (pos > end -
-+			    sizeof(struct ieee80211_ht_operation) - 2)
-+				return;
-+			if (pos[1] != sizeof(struct ieee80211_ht_operation))
-+				return;
-+			/* copy the ie's value into ht_oper*/
-+			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
- 			       sizeof(struct ieee80211_ht_operation));
- 			break;
- 		case WLAN_EID_BSS_COEX_2040:
-+			if (pos > end - 3)
-+				return;
-+			if (pos[1] != 1)
-+				return;
- 			sta_ptr->tdls_cap.coex_2040 = pos[2];
- 			break;
- 		case WLAN_EID_EXT_CAPABILITY:
-+			if (pos > end - sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] < sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] > 8)
-+				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
- 			       sizeof(struct ieee_types_header) +
- 			       min_t(u8, pos[1], 8));
- 			break;
- 		case WLAN_EID_RSN:
-+			if (pos > end - sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] < sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] > IEEE_MAX_IE_SIZE -
-+			    sizeof(struct ieee_types_header))
-+				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
- 			       sizeof(struct ieee_types_header) +
- 			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
- 				     sizeof(struct ieee_types_header)));
- 			break;
- 		case WLAN_EID_QOS_CAPA:
-+			if (pos > end - 3)
-+				return;
-+			if (pos[1] != 1)
-+				return;
- 			sta_ptr->tdls_cap.qos_info = pos[2];
- 			break;
- 		case WLAN_EID_VHT_OPERATION:
--			if (priv->adapter->is_hw_11ac_capable)
--				memcpy(&sta_ptr->tdls_cap.vhtoper, pos,
-+			if (priv->adapter->is_hw_11ac_capable) {
-+				if (pos > end -
-+				    sizeof(struct ieee80211_vht_operation) - 2)
-+					return;
-+				if (pos[1] !=
-+				    sizeof(struct ieee80211_vht_operation))
-+					return;
-+				/* copy the ie's value into vhtoper*/
-+				memcpy(&sta_ptr->tdls_cap.vhtoper, pos + 2,
- 				       sizeof(struct ieee80211_vht_operation));
-+			}
- 			break;
- 		case WLAN_EID_VHT_CAPABILITY:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos,
-+				if (pos > end -
-+				    sizeof(struct ieee80211_vht_cap) - 2)
-+					return;
-+				if (pos[1] != sizeof(struct ieee80211_vht_cap))
-+					return;
-+				/* copy the ie's value into vhtcap*/
-+				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
- 				       sizeof(struct ieee80211_vht_cap));
- 				sta_ptr->is_11ac_enabled = 1;
- 			}
- 			break;
- 		case WLAN_EID_AID:
--			if (priv->adapter->is_hw_11ac_capable)
-+			if (priv->adapter->is_hw_11ac_capable) {
-+				if (pos > end - 4)
-+					return;
-+				if (pos[1] != 2)
-+					return;
- 				sta_ptr->tdls_cap.aid =
- 					      le16_to_cpu(*(__le16 *)(pos + 2));
-+			}
-+			break;
- 		default:
- 			break;
- 		}
+@@ -1785,6 +1789,9 @@ static int lbs_ibss_join_existing(struct
+ 	struct cmd_ds_802_11_ad_hoc_join cmd;
+ 	u8 preamble = RADIO_PREAMBLE_SHORT;
+ 	int ret = 0;
++	int hw, i;
++	u8 rates_max;
++	u8 *rates;
+ 
+ 	lbs_deb_enter(LBS_DEB_CFG80211);
+ 
+@@ -1845,9 +1852,12 @@ static int lbs_ibss_join_existing(struct
+ 	if (!rates_eid) {
+ 		lbs_add_rates(cmd.bss.rates);
+ 	} else {
+-		int hw, i;
+-		u8 rates_max = rates_eid[1];
+-		u8 *rates = cmd.bss.rates;
++		rates_max = rates_eid[1];
++		if (rates_max > MAX_RATES) {
++			lbs_deb_join("invalid rates");
++			goto out;
++		}
++		rates = cmd.bss.rates;
+ 		for (hw = 0; hw < ARRAY_SIZE(lbs_rates); hw++) {
+ 			u8 hw_rate = lbs_rates[hw].bitrate / 5;
+ 			for (i = 0; i < rates_max; i++) {
 
