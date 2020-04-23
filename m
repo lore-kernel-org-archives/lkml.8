@@ -2,33 +2,32 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8FAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C238AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943602077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D9B2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgDWXRd (ORCPT
+        id S1729321AbgDWXRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:17:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49258 "EHLO
+        Thu, 23 Apr 2020 19:17:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49214 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728314AbgDWXGl (ORCPT
+        by vger.kernel.org with ESMTP id S1728303AbgDWXGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:41 -0400
+        Thu, 23 Apr 2020 19:06:40 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvQ-0004fv-Fq; Fri, 24 Apr 2020 00:06:32 +0100
+        id 1jRkvP-0004fi-PR; Fri, 24 Apr 2020 00:06:31 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvO-00E6mt-Nr; Fri, 24 Apr 2020 00:06:30 +0100
+        id 1jRkvO-00E6mQ-8u; Fri, 24 Apr 2020 00:06:30 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
-        "Felipe Balbi" <balbi@ti.com>
-Date:   Fri, 24 Apr 2020 00:05:25 +0100
-Message-ID: <lsq.1587683028.548533786@decadent.org.uk>
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Russell King" <rmk+kernel@armlinux.org.uk>
+Date:   Fri, 24 Apr 2020 00:05:19 +0100
+Message-ID: <lsq.1587683028.908662902@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 098/245] usb: dwc3: pci: add support for Intel
- Sunrise Point PCH
+Subject: [PATCH 3.16 092/245] gpiolib: fix up emulated open drain outputs
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,38 +56,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 84a2b61b6eb94036093531cdabc448dddfbae45a upstream.
+commit 256efaea1fdc4e38970489197409a26125ee0aaa upstream.
 
-Add PCI IDs for Intel Sunrise Point PCH.
+gpiolib has a corner case with open drain outputs that are emulated.
+When such outputs are outputting a logic 1, emulation will set the
+hardware to input mode, which will cause gpiod_get_direction() to
+report that it is in input mode. This is different from the behaviour
+with a true open-drain output.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Felipe Balbi <balbi@ti.com>
-[bwh: Backported to 3.16: adjust context]
+Unify the semantics here.
+
+Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpio/gpiolib.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -31,6 +31,8 @@
- #define PCI_DEVICE_ID_INTEL_BYT		0x0f37
- #define PCI_DEVICE_ID_INTEL_MRFLD	0x119e
- #define PCI_DEVICE_ID_INTEL_BSW		0x22B7
-+#define PCI_DEVICE_ID_INTEL_SPTLP	0x9d30
-+#define PCI_DEVICE_ID_INTEL_SPTH	0xa130
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -273,6 +273,14 @@ int gpiod_get_direction(const struct gpi
+ 	chip = gpiod_to_chip(desc);
+ 	offset = gpio_chip_hwgpio(desc);
  
- struct dwc3_pci {
- 	struct device		*dev;
-@@ -187,6 +189,8 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BSW), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BYT), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_MRFLD), },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTLP), },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTH), },
- 	{  }	/* Terminating Entry */
- };
- MODULE_DEVICE_TABLE(pci, dwc3_pci_id_table);
++	/*
++	 * Open drain emulation using input mode may incorrectly report
++	 * input here, fix that up.
++	 */
++	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags) &&
++	    test_bit(FLAG_IS_OUT, &desc->flags))
++		return 0;
++
+ 	if (!chip->get_direction)
+ 		return status;
+ 
 
