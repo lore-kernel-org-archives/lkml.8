@@ -2,95 +2,105 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D1BC55189
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D629C5518B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B062D2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="czkNk+sm"
+	by mail.kernel.org (Postfix) with ESMTP id 72D222075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587607279;
+	bh=rPCd1og6nfhkKfcWYDRZ6FarHvOP8abCxpVvyMguys4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QLKxeUb8X74UD5nDswqYKf5FKipaH30Nhjl27h9s+NW0O7XRKM6eStv1IgwdYd22j
+	 aeLjMRqszYrFBVi//9b8P21PYec0gN0ynFPJYlo9/Djv5C7waEhqs8jVfObVCAYH+9
+	 Mca8KK7fu8BLgNlAkg9brR69TmeWRt3soBKDkJxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgDWB70 (ORCPT
+        id S1726476AbgDWCBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgDWB70 (ORCPT
+        Wed, 22 Apr 2020 22:01:18 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:55269 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgDWCBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:59:26 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BDC5C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 18:59:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HhOesuEDxibfK6S65js7amlCplnHInNR5VyiDvIuF4g=; b=czkNk+smvOu1E/3PuI9KKGloew
-        qzx6uhdq/lK9HujSyydA+abTHL3ctT0kIfMhgpbP2COqLcsNmf/UG29OxMsAJHtJHjTXZ6wiF29f9
-        cYKnIVtzIC9lRhuczHj3v4VmD8Ap4pdlK4xCyyZGPcdUupzDKmnhlvH3JdoQmAJyeU01+aWywksi8
-        bPRxZmlEqE4Wy46wiCC8jz88l4YeKTQni4kAewldndXgSeKwmddy0hwweP0+x05EwNEicaIYGLHGg
-        uVw8nh1dow367QtERsMonyp2pg14F0MWYvCEdg7B6ujdtErND+YC476UfBTCb9M4EZnBi+wQ6F8Sn
-        EKtHzYoQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRR93-0006gc-8R; Thu, 23 Apr 2020 01:59:17 +0000
-Date:   Wed, 22 Apr 2020 18:59:17 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH v5 10/10] mmap locking API: rename mmap_sem to mmap_lock
-Message-ID: <20200423015917.GA13910@bombadil.infradead.org>
-References: <20200422001422.232330-1-walken@google.com>
- <20200422001422.232330-11-walken@google.com>
- <20200422015829.GR5820@bombadil.infradead.org>
- <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
+        Wed, 22 Apr 2020 22:01:17 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 03N20sDr027698;
+        Thu, 23 Apr 2020 11:00:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 03N20sDr027698
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587607255;
+        bh=ISn1zcDbqD2LVlnbauksd8MruLENNun6WMcR58P2qcI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LZ2hy/m3kyAspFf0n8gbMqzG8q4/ENsAcC6y5X0tdE4JTA71wFtqCu14vIQPS6koh
+         bqA4kNA/0drF4SSyQBZDo5r7chGkgod2Cft6VW2XTgFMxwqXCLkUcrku7IxZxBzNTm
+         o2stTctbF5u/gzU/8GW8SHhbxyXdksJEysZB+f2g70znIIYxnCepCovSLn0WTO7fIM
+         2io+52tVX+/On4MmDF/H1/qhJxD+COeuDYqtV+lhWUbjAQ1B+qMaKBle42WIeaQPdV
+         e+9bPOi4SciFKMyjpEJqzQ7Ut4OqASVeOJr/YBtnKXQvW+M7Ah5bo78GESV28fND8O
+         0Fh5Q4H/Ik5Rw==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id t8so4149226uap.3;
+        Wed, 22 Apr 2020 19:00:55 -0700 (PDT)
+X-Gm-Message-State: AGi0PubpXU8+nChOB5qI0KFcE6ZqAxyf8G2Hr2WLIglNjvkITKoOkY4y
+        5KMX9L01kZQ/ZIT4A8AOeR5HZ22fNLY3vy468/k=
+X-Google-Smtp-Source: APiQypKRgU7oPWeRAT900AuP/QQ6Sr147jDjr+iq+LfPL1juv5V1gaXnJ4FqIKsaY6bSqjdDXnBMPKQ5GXKMoNZv7lQ=
+X-Received: by 2002:a67:6542:: with SMTP id z63mr1467003vsb.179.1587607254226;
+ Wed, 22 Apr 2020 19:00:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
+References: <20200423014919.31713-1-masahiroy@kernel.org>
+In-Reply-To: <20200423014919.31713-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 23 Apr 2020 11:00:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ-5aKSn0J81NMey5+nTis8LZT_mv+bYbndx99SBf_w6w@mail.gmail.com>
+Message-ID: <CAK7LNAQ-5aKSn0J81NMey5+nTis8LZT_mv+bYbndx99SBf_w6w@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: kbuild: fix the section title format
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 03:54:32PM -0700, Michel Lespinasse wrote:
-> On Tue, Apr 21, 2020 at 6:58 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Tue, Apr 21, 2020 at 05:14:22PM -0700, Michel Lespinasse wrote:
-> > > Rename the mmap_sem field to mmap_lock. Any new uses of this lock
-> >
-> > Shouldn't some of these be folded into the previous patch?
-> 
-> So, I didn't do it because previous patch only handled rwsem_is_locked
-> call sites. I leaned towards adding as few new API functions as
-> possible until we figure out exactly what is required.
-> 
-> That said, I agree it seems reasonable to split mmap_assert_locked()
-> into mmap_assert_read_locked() and mmap_assert_write_locked(), and
-> convert the lockdep asserts to use these instead.
+On Thu, Apr 23, 2020 at 10:49 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Make it consistent with the other sections.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-Just add mmap_assert_write_locked() -- some of these places can be called
-with the rwsem held for either read or write; it doesn't matter which.
-Others need it held for write.  There aren't any places (that I'm aware
-of) that need to assert that it's held for read, and not held for write.
+Applied to linux/fixes.
 
-> I'm not sure we need to do it right away though; we are at least not
-> losing any test coverage with the existing version of the patchset...
 
-It seems like a better way to remove users of the term 'mmap_sem' than
-just converting them to use the new 'mmap_lock'.
+
+>  Documentation/kbuild/makefiles.rst | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+> index 04d5c01a2e99..b80257a03830 100644
+> --- a/Documentation/kbuild/makefiles.rst
+> +++ b/Documentation/kbuild/makefiles.rst
+> @@ -1241,7 +1241,8 @@ When kbuild executes, the following steps are followed (roughly):
+>         will be displayed with "make KBUILD_VERBOSE=0".
+>
+>
+> ---- 6.9 Preprocessing linker scripts
+> +6.9 Preprocessing linker scripts
+> +--------------------------------
+>
+>         When the vmlinux image is built, the linker script
+>         arch/$(ARCH)/kernel/vmlinux.lds is used.
+> --
+> 2.25.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
