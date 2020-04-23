@@ -2,109 +2,444 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032A8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C493C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D65652084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:57:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+tlLNe/"
+	by mail.kernel.org (Postfix) with ESMTP id 1E27F20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgDWJ5F (ORCPT
+        id S1726910AbgDWJ5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:57:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726364AbgDWJ5D (ORCPT
+        Thu, 23 Apr 2020 05:57:43 -0400
+Received: from segapp02.wistron.com ([103.200.3.19]:64930 "EHLO
+        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725884AbgDWJ5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:57:03 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C732AC03C1AF;
-        Thu, 23 Apr 2020 02:57:02 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id b13so5037529oti.3;
-        Thu, 23 Apr 2020 02:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zpVZ9ErILW2s2TLRWRMEyXqH+tdaxrwrClR4yhCM63A=;
-        b=f+tlLNe/7c5lNj49h+TjMXRdhQ6FJTks90I9bWP/RWG3yICYZkFf5leNgGYdDJpHrP
-         et9KkypWu5hmk1DznoYL+UTLXVCeH6bFPyApKyEqvRpcn46PX7qtoLFDCDkUXgsfvO9E
-         WioFpPjShvrB6p/oqBw5KzFpjWBIIoJGbu/S4Kq2TG3avvjgypfRZheaV/BDf/HAREQH
-         JkhrQ7AJEm00NTAkktuoo11RTXqICuWTyLv+wZZgFc2q1MFs5ULW/DZUbxJnp8+utvJK
-         2eabLgfMUM0jsPtzrefE/XbSRz1gFFDE6/VMbdobwOptxQlk2q2WWYOsmnGX7XpjjmRC
-         Q8Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zpVZ9ErILW2s2TLRWRMEyXqH+tdaxrwrClR4yhCM63A=;
-        b=UohfVu1mTTUTJMSm8ja00PK715L41pv9KwjDc2784C/aCcvw+RcAEJUXFEtIBXJBU7
-         cbQQcwrCSnICKpPZWjn4tZOeNOY8ek5QCTQgoPmFQJU5t/hl4g1ECc+LpIvCqei2fK2b
-         3XA10z+Cy2s+Av9NKmw0myNgSckutmOvHIoaWM/HZkt/3eF3RNQmmNLGszPTUgHJ6yJE
-         Cz+2zXohFDhiNfYt2OOhF8I8LH2kUlYirPoK9MkIXHNkdqvc6GBKvNdCTZaZWdefoQgl
-         tqDiRSS1jj2W+sBhpuiGd7lI1jivQnH9x54WBlhoHHIOIANASpE7G70mfkIJQCZsiPyj
-         YhHA==
-X-Gm-Message-State: AGi0PuYIwuciP8ZMBLaRgWlBPAwfQuQP0woWjjVVFNewvwKJ14pS9K+v
-        wlsztFY6pROJeuoFCjW6tTSBhwu0C1TqloJt0cU=
-X-Google-Smtp-Source: APiQypL4Y08BAWHfAY/2dYCM7ExuzW0M0wfbUZ+BIhhJm+lWHaDHhlM/7TKnj9MZBb+5KburSX2TNh1aizfyolz0rxc=
-X-Received: by 2002:aca:2801:: with SMTP id 1mr2200732oix.141.1587635822199;
- Thu, 23 Apr 2020 02:57:02 -0700 (PDT)
+        Thu, 23 Apr 2020 05:57:43 -0400
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 05:57:41 EDT
+Received: from EXCHAPP04.whq.wistron (unverified [10.37.38.27]) by TWNHUMSW4.wistron.com
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdeb49446cbc0a816721910@TWNHUMSW4.wistron.com>;
+ Thu, 23 Apr 2020 17:52:36 +0800
+Received: from EXCHAPP01.whq.wistron (10.37.38.24) by EXCHAPP04.whq.wistron
+ (10.37.38.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 23 Apr
+ 2020 17:52:33 +0800
+Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP01.whq.wistron
+ (10.37.38.24) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Thu, 23 Apr 2020 17:52:33 +0800
+From:   Ben Pai <Ben_Pai@wistron.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <Claire_Ku@wistron.com>, <Andy_YF_Wang@wistron.com>,
+        <wangat@tw.ibm.com>, Ben Pai <Ben_Pai@wistron.com>
+Subject: [PATCH v1] ARM: dts: aspeed: mihawk: add aliases for i2c
+Date:   Thu, 23 Apr 2020 17:52:30 +0800
+Message-ID: <20200423095230.7622-1-Ben_Pai@wistron.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
- <1587632507-18997-6-git-send-email-wanpengli@tencent.com> <99d81fa5-dc37-b22f-be1e-4aa0449e6c26@redhat.com>
-In-Reply-To: <99d81fa5-dc37-b22f-be1e-4aa0449e6c26@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 23 Apr 2020 17:56:51 +0800
-Message-ID: <CANRm+CyyKwFoSns31gK=_v0j1VQrOwDhgTqWZOLZS9iGZeC3Gw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] KVM: VMX: Handle preemption timer fastpath
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: DF640E53D713C7A34CBE175353B2BE73D2DAA46F479D4A5F1E5646AC6EFC3D5A2000:8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 at 17:40, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 23/04/20 11:01, Wanpeng Li wrote:
-> > +bool kvm_lapic_expired_hv_timer_fast(struct kvm_vcpu *vcpu)
-> > +{
-> > +     struct kvm_lapic *apic = vcpu->arch.apic;
-> > +     struct kvm_timer *ktimer = &apic->lapic_timer;
-> > +
-> > +     if (!apic_lvtt_tscdeadline(apic) ||
-> > +             !ktimer->hv_timer_in_use ||
-> > +             atomic_read(&ktimer->pending))
-> > +             return 0;
-> > +
-> > +     WARN_ON(swait_active(&vcpu->wq));
-> > +     cancel_hv_timer(apic);
-> > +
-> > +     ktimer->expired_tscdeadline = ktimer->tscdeadline;
-> > +     kvm_inject_apic_timer_irqs_fast(vcpu);
-> > +
-> > +     return 1;
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_lapic_expired_hv_timer_fast);
->
-> Please re-evaluate if this is needed (or which parts are needed) after
-> cleaning up patch 4.  Anyway again---this is already better, I don't
-> like the duplicated code but at least I can understand what's going on.
+Set the bus id for each mux channel to avoid switching channels
+multiple times
 
-Except the apic_lvtt_tscdeadline(apic) check, others are duplicated,
-what do you think about apic_lvtt_tscdeadline(apic) check?
+Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 293 +++++++++++++++++++-
+ 1 file changed, 289 insertions(+), 4 deletions(-)
 
-    Wanpeng
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+index f7e935ede919..0f8550f158f5 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+@@ -8,6 +8,52 @@
+ 	model = "Mihawk BMC";
+ 	compatible = "ibm,mihawk-bmc", "aspeed,ast2500";
+ 
++	aliases {
++		i2c215 = &bus6_mux215;
++		i2c216 = &bus6_mux216;
++		i2c217 = &bus6_mux217;
++		i2c218 = &bus6_mux218;
++		i2c219 = &bus6_mux219;
++		i2c220 = &bus6_mux220;
++		i2c221 = &bus6_mux221;
++		i2c222 = &bus6_mux222;
++		i2c223 = &bus7_mux223;
++		i2c224 = &bus7_mux224;
++		i2c225 = &bus7_mux225;
++		i2c226 = &bus7_mux226;
++		i2c227 = &bus7_mux227;
++		i2c228 = &bus7_mux228;
++		i2c229 = &bus7_mux229;
++		i2c230 = &bus7_mux230;
++		i2c231 = &bus9_mux231;
++		i2c232 = &bus9_mux232;
++		i2c233 = &bus9_mux233;
++		i2c234 = &bus9_mux234;
++		i2c235 = &bus9_mux235;
++		i2c236 = &bus9_mux236;
++		i2c237 = &bus9_mux237;
++		i2c238 = &bus9_mux238;
++		i2c239 = &bus10_mux239;
++		i2c240 = &bus10_mux240;
++		i2c241 = &bus10_mux241;
++		i2c242 = &bus10_mux242;
++		i2c243 = &bus10_mux243;
++		i2c244 = &bus10_mux244;
++		i2c245 = &bus10_mux245;
++		i2c246 = &bus10_mux246;
++		i2c247 = &bus12_mux247;
++		i2c248 = &bus12_mux248;
++		i2c249 = &bus12_mux249;
++		i2c250 = &bus12_mux250;
++		i2c251 = &bus13_mux251;
++		i2c252 = &bus13_mux252;
++		i2c253 = &bus13_mux253;
++		i2c254 = &bus13_mux254;
++		i2c255 = &bus13_mux255;
++		i2c256 = &bus13_mux256;
++		i2c257 = &bus13_mux257;
++		i2c258 = &bus13_mux258;
++	};
+ 
+ 	chosen {
+ 		stdout-path = &uart5;
+@@ -630,6 +676,54 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		reg = <0x70>;
++
++		bus6_mux215: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		bus6_mux216: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		bus6_mux217: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		bus6_mux218: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++
++		bus6_mux219: i2c@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <4>;
++		};
++
++		bus6_mux220: i2c@5 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <5>;
++		};
++
++		bus6_mux221: i2c@6 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <6>;
++		};
++
++		bus6_mux222: i2c@7 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <7>;
++		};
+ 	};
+ 
+ };
+@@ -644,6 +738,54 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		reg = <0x70>;
++
++		bus7_mux223: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		bus7_mux224: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		bus7_mux225: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		bus7_mux226: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++
++		bus7_mux227: i2c@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <4>;
++		};
++
++		bus7_mux228: i2c@5 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <5>;
++		};
++
++		bus7_mux229: i2c@6 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <6>;
++		};
++
++		bus7_mux230: i2c@7 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <7>;
++		};
+ 	};
+ 
+ };
+@@ -684,6 +826,30 @@
+ 		i2c-mux-idle-disconnect;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++
++		bus9_mux231: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		bus9_mux232: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		bus9_mux233: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		bus9_mux234: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
+ 	};
+ 
+ 	pca9545@71 {
+@@ -695,6 +861,30 @@
+ 		i2c-mux-idle-disconnect;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++
++		bus9_mux235: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		bus9_mux236: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		bus9_mux237: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		bus9_mux238: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
+ 	};
+ };
+ 
+@@ -725,6 +915,30 @@
+ 		i2c-mux-idle-disconnect;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++
++		bus10_mux239: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		bus10_mux240: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		bus10_mux241: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		bus10_mux242: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
+ 	};
+ 
+ 	pca9545@71 {
+@@ -736,6 +950,30 @@
+ 		i2c-mux-idle-disconnect;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++
++		bus10_mux243: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		bus10_mux244: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		bus10_mux245: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		bus10_mux246: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
+ 	};
+ };
+ 
+@@ -796,7 +1034,7 @@
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 
+-		i2c@0 {
++		bus12_mux247: i2c@0 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
+@@ -807,7 +1045,7 @@
+ 			};
+ 		};
+ 
+-		i2c@1 {
++		bus12_mux248: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
+@@ -818,7 +1056,7 @@
+ 			};
+ 		};
+ 
+-		i2c@2 {
++		bus12_mux249: i2c@2 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <2>;
+@@ -829,7 +1067,7 @@
+ 			};
+ 		};
+ 
+-		i2c@3 {
++		bus12_mux250: i2c@3 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <3>;
+@@ -857,6 +1095,53 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		reg = <0x70>;
++		bus13_mux251: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		bus13_mux252: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		bus13_mux253: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		bus13_mux254: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++
++		bus13_mux255: i2c@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <4>;
++		};
++
++		bus13_mux256: i2c@5 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <5>;
++		};
++
++		bus13_mux257: i2c@6 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <6>;
++		};
++
++		bus13_mux258: i2c@7 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <7>;
++		};
+ 	};
+ };
+ 
+-- 
+2.17.1
+
