@@ -2,95 +2,99 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54691C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A65C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3208C2074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EB62074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGETPAGZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAzJ/voy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgDWMh3 (ORCPT
+        id S1728345AbgDWMkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:37:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27770 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726614AbgDWMh3 (ORCPT
+        Thu, 23 Apr 2020 08:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726117AbgDWMkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:37:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587645447;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+XlBFNq2TljiIz7UMQVRidAnnXkCvE8Tn9pzuRMdxJE=;
-        b=KGETPAGZxzZWjKfc9ds35wzFNfCghTI9gsRYfEmHKVPhA8jEOfZz7uHGjxusjElANNaswf
-        3c3QNiFUvHjai6xTFBzDYL1btpbFd5sN+V57r+j+rRo8+udZHW7We48yKnC9xgEWjhnOm4
-        QiS0ZzdwwcshliVDScCzf1Er38c56+0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-RqunHNMFNlqYJD41EtgEXw-1; Thu, 23 Apr 2020 08:37:26 -0400
-X-MC-Unique: RqunHNMFNlqYJD41EtgEXw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F0F61800D51;
-        Thu, 23 Apr 2020 12:37:25 +0000 (UTC)
-Received: from localhost (ovpn-114-230.ams2.redhat.com [10.36.114.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FA8B5D70A;
-        Thu, 23 Apr 2020 12:37:18 +0000 (UTC)
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     virtualization@lists.linux-foundation.org
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Lance Digby <ldigby@redhat.com>
-Subject: [PATCH] virtio-blk: handle block_device_operations callbacks after hot unplug
-Date:   Thu, 23 Apr 2020 13:37:17 +0100
-Message-Id: <20200423123717.139141-1-stefanha@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 23 Apr 2020 08:40:33 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E444C08E934
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 05:40:33 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id f8so2301601plt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 05:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0+ryOLHPjjzdQGdX/eoLm2N7/nB+E1jdBn6VNAC44V8=;
+        b=FAzJ/voykvElRMGRs01wUk5MBYseZO0gmLJsT0R4h54+gQUDI7uTMRnnbJTgO0jDvS
+         a1BUwao5OE9t7nQiTmrP6dg6ctlgrO+WPA380CqOzv+A2uHtkP0+69O6g8gHODHKA5Im
+         48he4tXIAvLmZ/VihYX5yVmK5JGgNYxwF/HiVCQDO+UADytgMv7/GbDtG+WNpPegUAX7
+         Fq3d0+RZQQrVKVga6JBKaKXufoh3LCTMzsEL4gv/7fl9+lc2EE0XURwNdVun7HvU3JiT
+         KGrAwjpqQbAYcVeH4alLFUYV6BQ6i1CvTnH0on11JadJymQZ79aubp7pbnC1ZvOhrGAt
+         B0Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0+ryOLHPjjzdQGdX/eoLm2N7/nB+E1jdBn6VNAC44V8=;
+        b=ZWitm7WbW9oZHWvmUolzXffAQlbjaHn8mmYXHcFKrXO2zZJUttnoiBk6zy50GxpEOE
+         FsHdSAQ7CpxElAa/2m9RYJzvtS6mom1UZXcFisCHyvc/rUtJVXdk3pC0qpEKXotb83cN
+         faFVrPxO48XHJpqn+gUMFVScaHy6XbHav9+37PwQYWE9TJAxXY1qcNBG9kv/jmcYFlsk
+         3+xH4bNcAMRmph/q6Jkbq/DumOrj5MoSCuP1KZBmAOO4ZIHwe6SwWJ2X1CewpZQ+hGiS
+         5SKZp8qvKFg35sXW8BT2n+gGnPp8BGctAgAyAKxuZpdVvgtvEqeqtPxxFs8ZxC4tBWGK
+         RMhg==
+X-Gm-Message-State: AGi0PuaGGavczcFhpqmqAJO12fTqlQZcZDIdeNZEkd7PCoIfxOYzpHbA
+        4AcqUABxif7KoEecduZzreY=
+X-Google-Smtp-Source: APiQypJGmqa65SxFjvfg7jYXfEUkhBqiJvCOnURrL/IHmmT/jcuCuGGzAPqOoKniUOXZsAsQBcIcRg==
+X-Received: by 2002:a17:90a:4fc5:: with SMTP id q63mr430093pjh.70.1587645632615;
+        Thu, 23 Apr 2020 05:40:32 -0700 (PDT)
+Received: from localhost.localdomain ([122.181.63.84])
+        by smtp.gmail.com with ESMTPSA id u8sm2248237pjy.16.2020.04.23.05.40.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Apr 2020 05:40:32 -0700 (PDT)
+From:   Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+To:     bp@alien8.de, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com
+Cc:     Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] x86: fix build warning int-to-pointer-cast 
+Date:   Thu, 23 Apr 2020 18:09:46 +0530
+Message-Id: <1587645588-7130-1-git-send-email-vamshi.k.sthambamkadi@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QSB2aXJ0aW9fYmxrIGJsb2NrIGRldmljZSBjYW4gc3RpbGwgYmUgcmVmZXJlbmNlZCBhZnRlciBo
-b3QgdW5wbHVnIGJ5CnVzZXJzcGFjZSBwcm9jZXNzZXMgdGhhdCBob2xkIHRoZSBmaWxlIGRlc2Ny
-aXB0b3IuICBJbiB0aGlzIGNhc2UKdmlydGJsa19nZXRnZW8oKSBjYW4gYmUgaW52b2tlZCBhZnRl
-ciB2aXJ0YmxrX3JlbW92ZSgpIHdhcyBjYWxsZWQuICBGb3IKZXhhbXBsZSwgYSBwcm9ncmFtIHRo
-YXQgaGFzIC9kZXYvdmRiIG9wZW4gY2FuIGNhbGwgaW9jdGwoSERJT19HRVRHRU8pCmFmdGVyIGhv
-dCB1bnBsdWcuCgpGaXggdGhpcyBieSBjbGVhcmluZyB2YmxrLT5kaXNrLT5wcml2YXRlX2RhdGEg
-YW5kIGNoZWNraW5nIHRoYXQgdGhlCnZpcnRpb19ibGsgZHJpdmVyIGluc3RhbmNlIGlzIHN0aWxs
-IGFyb3VuZCBpbiB2aXJ0YmxrX2dldGdlbygpLgoKTm90ZSB0aGF0IHRoZSB2aXJ0YmxrX2dldGdl
-bygpIGZ1bmN0aW9uIGl0c2VsZiBpcyBndWFyYW50ZWVkIHRvIHJlbWFpbgppbiBtZW1vcnkgYWZ0
-ZXIgaG90IHVucGx1ZyBiZWNhdXNlIHRoZSB2aXJ0aW9fYmxrIG1vZHVsZSByZWZjb3VudCBpcwpz
-dGlsbCBoZWxkIHdoaWxlIGEgYmxvY2sgZGV2aWNlIHJlZmVyZW5jZSBleGlzdHMuCgpPcmlnaW5h
-bGx5LWJ5OiBMYW5jZSBEaWdieSA8bGRpZ2J5QHJlZGhhdC5jb20+ClNpZ25lZC1vZmYtYnk6IFN0
-ZWZhbiBIYWpub2N6aSA8c3RlZmFuaGFAcmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2Jsb2NrL3Zp
-cnRpb19ibGsuYyB8IDUgKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykKCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYyBiL2RyaXZlcnMvYmxvY2svdmly
-dGlvX2Jsay5jCmluZGV4IDkzNDY4YjdjNjcwMS4uYjUwY2RmMzdhNmY3IDEwMDY0NAotLS0gYS9k
-cml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYworKysgYi9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsu
-YwpAQCAtMzAwLDYgKzMwMCwxMCBAQCBzdGF0aWMgaW50IHZpcnRibGtfZ2V0Z2VvKHN0cnVjdCBi
-bG9ja19kZXZpY2UgKmJkLCBzdHJ1Y3QgaGRfZ2VvbWV0cnkgKmdlbykKIHsKIAlzdHJ1Y3Qgdmly
-dGlvX2JsayAqdmJsayA9IGJkLT5iZF9kaXNrLT5wcml2YXRlX2RhdGE7CiAKKwkvKiBEcml2ZXIg
-aW5zdGFuY2UgaGFzIGJlZW4gcmVtb3ZlZCAqLworCWlmICghdmJsaykKKwkJcmV0dXJuIC1FTk9U
-VFk7CisKIAkvKiBzZWUgaWYgdGhlIGhvc3QgcGFzc2VkIGluIGdlb21ldHJ5IGNvbmZpZyAqLwog
-CWlmICh2aXJ0aW9faGFzX2ZlYXR1cmUodmJsay0+dmRldiwgVklSVElPX0JMS19GX0dFT01FVFJZ
-KSkgewogCQl2aXJ0aW9fY3JlYWQodmJsay0+dmRldiwgc3RydWN0IHZpcnRpb19ibGtfY29uZmln
-LApAQCAtODM1LDYgKzgzOSw3IEBAIHN0YXRpYyB2b2lkIHZpcnRibGtfcmVtb3ZlKHN0cnVjdCB2
-aXJ0aW9fZGV2aWNlICp2ZGV2KQogCXZkZXYtPmNvbmZpZy0+cmVzZXQodmRldik7CiAKIAlyZWZj
-ID0ga3JlZl9yZWFkKCZkaXNrX3RvX2Rldih2YmxrLT5kaXNrKS0+a29iai5rcmVmKTsKKwl2Ymxr
-LT5kaXNrLT5wcml2YXRlX2RhdGEgPSBOVUxMOwogCXB1dF9kaXNrKHZibGstPmRpc2spOwogCXZk
-ZXYtPmNvbmZpZy0+ZGVsX3Zxcyh2ZGV2KTsKIAlrZnJlZSh2YmxrLT52cXMpOwotLSAKMi4yNS4x
-Cgo=
+Please review.
+
+Changes in v3:
+ Copied kstrtoul & _kstrtoul correctly from lib/kstrtox.c to boot code
+ as suggested by Borislav petkov <bp@alien8.de>
+
+Changes in v2:
+ On 32 bit, if supplied physical address overflow acpi_rsdp pointer
+ return 0 from get_cmdline_acpi_rsdp()
+ as suggested by Borislav Petkov <bp@alien8.de>
+
+Changes in v1:
+ Supressed build warning through Makefile change
+
+Thank you!
+
+Vamshi K Sthambamkadi (2):
+  x86: add kstrtoul() converter func to boot code
+  x86: fix build warning int-to-pointer-cast
+
+ arch/x86/boot/compressed/acpi.c |  6 +++---
+ arch/x86/boot/string.c          | 43 +++++++++++++++++++++++++++++++++++++++++
+ arch/x86/boot/string.h          |  1 +
+ 3 files changed, 47 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
 
