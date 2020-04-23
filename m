@@ -2,155 +2,110 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0235C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0056C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3DA2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:41:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbYLdPIs"
+	by mail.kernel.org (Postfix) with ESMTP id AA4C62075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgDWClq (ORCPT
+        id S1726543AbgDWCor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgDWClp (ORCPT
+        Wed, 22 Apr 2020 22:44:47 -0400
+Received: from mgwkm03.jp.fujitsu.com ([202.219.69.170]:30664 "EHLO
+        mgwkm03.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgDWCor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:41:45 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3572AC03C1AB;
-        Wed, 22 Apr 2020 19:41:45 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u127so4871127wmg.1;
-        Wed, 22 Apr 2020 19:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+E1Vpl6owsWhbt4oEdMFH6LpaqhM5KtB6JWE9dlZYRY=;
-        b=DbYLdPIsz5Ec24KSUtplycQbYhICIHFOjMX+ccSHDmiHKcEKTQ25ZcSr142eSm2zI/
-         B5hzTgrN1a5XdBUvc/zfkFX7APm3YAw6T48wbriQvyiNa34E6BIYJgAU2WmqQQCMYKLV
-         K6FBLeLekyMO/nUnHANBCHhZsIYumwS+jpV+TkO+Kk5g0QDNbPUOgXq37ULQ1LS2XAcw
-         pUxUBlrkpHJI7Dra8vLb9qdvqfwrHEVYqLpZdbUoEiG7hl+cQbY0ReYYzIpWK6aLtpba
-         sZKaOgzKHf1mSpuxB9UukvpnjLZT4Ub7ypyISs8UcZdJckZfgOb+7WJsBNwvzWRuVPws
-         RzDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+E1Vpl6owsWhbt4oEdMFH6LpaqhM5KtB6JWE9dlZYRY=;
-        b=TlRIcy53wvcwTY36rLF1lET5BBs3cfhNNIgOYUVPSFii9aperzKlF8OWI9bCToFd4d
-         uTZzkGaqDewFFam/iF0bKmXhRbYb6igMIAQ2ArWEPbeC4f9DPFhVscgJBKPrvaMuByxa
-         vWlukiHErTfkWGG1+QjiHZmy2TTwNfdFYzNaNSuKyTO077qSEwyO8j6bTJWG25rP1shC
-         JsJEKVcGCgLDltRyKh/z16272eUKdDMkOC0nK8ZhP60iCYEnCXdcN9pLs2XsX6xCv4Oq
-         szmlXGHz+NiBEHa1bfOjgqlLsY3CZ0S3BgeuKqLQ6hUoAfT8E4YICql2suhfr6JpkBHf
-         5vUA==
-X-Gm-Message-State: AGi0PuZatZBk2qqAV6sZVvrxIV9SC1+6wdW8Qcgtzzg4sSfTqGl4DtTv
-        CrzOeMxn5fUlkkOHSxCUaHLiLkQvbfu8nJ3ONQQ=
-X-Google-Smtp-Source: APiQypK9iUilhdAbGX59xP93IoiPJ6rBlFwjxn/QZMGOU3aqLLfvq8hkALLx+OCpN9j0RV9HCUU1SJVZFgdHY9iDVYk=
-X-Received: by 2002:a1c:3b0a:: with SMTP id i10mr1516959wma.26.1587609703900;
- Wed, 22 Apr 2020 19:41:43 -0700 (PDT)
+        Wed, 22 Apr 2020 22:44:47 -0400
+X-Greylist: delayed 671 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 22:44:44 EDT
+Received: from kw-mxq.gw.nic.fujitsu.com (unknown [192.168.231.130]) by mgwkm03.jp.fujitsu.com with smtp
+         id 0abc_3579_5544f71c_4878_43bc_a3de_fa2088113603;
+        Thu, 23 Apr 2020 11:33:27 +0900
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+        by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id BF869AC00FD;
+        Thu, 23 Apr 2020 11:33:26 +0900 (JST)
+Received: from [10.133.121.138] (VPC-Y08P0560080.g01.fujitsu.local [10.133.121.138])
+        by m3050.s.css.fujitsu.com (Postfix) with ESMTP id A3A30403;
+        Thu, 23 Apr 2020 11:33:26 +0900 (JST)
+Subject: Re: [PATCH V10 04/11] Documentation/dax: Update Usage section
+To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+References: <20200422212102.3757660-1-ira.weiny@intel.com>
+ <20200422212102.3757660-5-ira.weiny@intel.com>
+From:   Yasunori Goto <y-goto@fujitsu.com>
+Message-ID: <2282176d-60c5-0e4b-3cf9-7a7682de380d@fujitsu.com>
+Date:   Thu, 23 Apr 2020 11:33:26 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200422051529.30757-1-zhang.lyra@gmail.com> <CAJZ5v0ikL3avFomZVqtBhfEjeauN-5ZUm9kZwzG=Vo+Ks0AiyA@mail.gmail.com>
- <CAAfSe-sVEEPOrq_ZzB1z59uXTfhmNh=+U_QvgaTcd4U1=9Tfvg@mail.gmail.com> <CAJZ5v0jxnSUDqVpaHo6ECQdr6bpe2WHEhV+uDL_=BAJQC9fA9w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jxnSUDqVpaHo6ECQdr6bpe2WHEhV+uDL_=BAJQC9fA9w@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Thu, 23 Apr 2020 10:41:07 +0800
-Message-ID: <CAAfSe-uv7fh5Wf7zXLOu0_5wZ2fNQHd3QJ7LWWZvciexvUgivw@mail.gmail.com>
-Subject: Re: [PATCH] PM: sleep: call devfreq_suspend/resume and
- cpufreq_suspend/resume in pairs.
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Vincent Wang <vincent.wang@unisoc.com>,
-        Samer Xie <samer.xie@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200422212102.3757660-5-ira.weiny@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 at 22:21, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Apr 22, 2020 at 1:19 PM Chunyan Zhang <zhang.lyra@gmail.com> wrot=
-e:
-> >
-> > Hi Rafael,
-> >
-> > (Behalf Of Vincent Wang)
-> >
-> > Thanks for your comments, please see my answers below.
-> >
-> > On Wed, 22 Apr 2020 at 17:05, Rafael J. Wysocki <rafael@kernel.org> wro=
-te:
-> > >
-> > > On Wed, Apr 22, 2020 at 7:15 AM Chunyan Zhang <zhang.lyra@gmail.com> =
-wrote:
-> > > >
-> > > > From: Vincent Wang <vincent.wang@unisoc.com>
-> > > >
-> > > > If dpm_prepare() fails in dpm_suspend_start(), dpm_suspend() can't =
-be
-> > > > called.
-> > >
-> > > That's correct.
-> > >
-> > > > And then, devfreq_suspend() and cpufreq_suspend() will not be
-> > > > called in the suspend flow.
-> > >
-> > > Right.
-> > >
-> > > > But in the resiume flow, devfreq_resume() and cpufreq_resume() will
-> > > > be called.
-> > >
-> > > Right, and they are expected to cope with the situation.
-> > >
-> > > > This patch will ensure that devfreq_suspend/devfreq_resume and
-> > > > cpufreq_suspend/cpufreq_resume are called in pairs.
-> > >
-> > > So why is it better to do this than to make devfreq_resume() meet the
-> > > expectations?
-> >
-> > Yes=EF=BC=8Cwe found an issue with cpufreq schedutil governor on kernel=
-4.14,
-> > and I think the issue should haven't been changed on the latest
-> > version of kernel.
-> >
-> > In the function dpm_suspend_start(), dpm_suspend() would not be
-> > exceuted if return error from device_prepare() [1]. So
-> > cpufreq_cpufreq() will not be called,
->
-> I guess you mean cpufreq_suspend().
->
-> That should be OK .
->
-> > then cpufreq_remove_update_util_hook() will not be called either, and s=
-o
-> > cpufreq_update_util_data will not be NULL.
-> >
-> > In the dpm resume flow, sugov_start() will be called, in which
-> > sg_cpu.update_util will be set to 0.
->
-> Which code patch does this?
->
-> Surely not cpufreq_resume(), because that checks cpufreq_suspended which
-> cannot be set if cpufreq_suspend() has not been called (because it is the=
- only
-> place setting cpufreq_suspended).
+Hello,
 
-Right, I saw that, then there's no issue indeed. I just need to
-backport the patch which added checking of cpufreq_suspended to
-cpufreq_resume.
+I'm trying use your patch now, and I have a small comment in this document.
 
-Thanks for your review!
+On 2020/04/23 6:20, ira.weiny@intel.com wrote:
+
+> +To clarify inheritance here are 3 examples:
+> +
+> +Example A:
+> +
+> +mkdir -p a/b/c
+> +xfs_io 'chattr +x' a
+
+Probably, "-c" is necessary here.
+
+xfs_io -c 'chattr +x' a
+
+
+> +mkdir a/b/c/d
+> +mkdir a/e
+> +
+> +	dax: a,e
+> +	no dax: b,c,d
+> +
+> +Example B:
+> +
+> +mkdir a
+> +xfs_io 'chattr +x' a
+ditto
+> +mkdir -p a/b/c/d
+> +
+> +	dax: a,b,c,d
+> +	no dax:
+> +
+> +Example C:
+> +
+> +mkdir -p a/b/c
+> +xfs_io 'chattr +x' c
+ditto
+> +mkdir a/b/c/d
+> +
+> +	dax: c,d
+> +	no dax: a,b
+> +
+> +
+
+---
+
+Yasunori Goto
+
