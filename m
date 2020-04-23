@@ -2,132 +2,162 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127D9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3F3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD65220728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1082220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgDWQhH (ORCPT
+        id S1729689AbgDWQhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:37:07 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:35865 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729446AbgDWQhG (ORCPT
+        Thu, 23 Apr 2020 12:37:36 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41200 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729446AbgDWQhg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:37:06 -0400
-Received: (qmail 2431 invoked by uid 500); 23 Apr 2020 12:37:05 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 23 Apr 2020 12:37:05 -0400
-Date:   Thu, 23 Apr 2020 12:37:05 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-In-Reply-To: <00000000000099a4f005a3eb458b@google.com>
-Message-ID: <Pine.LNX.4.44L0.2004231235560.20147-100000@netrider.rowland.org>
+        Thu, 23 Apr 2020 12:37:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d24so2556392pll.8;
+        Thu, 23 Apr 2020 09:37:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=br9/LwqtnbGmKBWFw4TNRCW1diyiAINb0Mjvmd0b2kg=;
+        b=UdSwy1MgeNNsav1aTRPwhMDgfk31r4tbUhvv+5LfXeTuEdZCVJ8I55tumpEUn1t7pU
+         4eLfATvcLHq9wTgqtpRVq8wNa4Ea8GDKns5K7zYH6KkdJnbTX0A8g+hYtXs9egyRcgv1
+         m9ISaz1v8mWr4ZYc6HhpoqCX4RjGQeBtz0b16nykl0pzNt4aYuiSeG1bruBVns/LmptD
+         ka8wUFu1QLO0ElKvjgLjQcLoxtR85ITjlO2r8fFLW4Rts4KzTZDbrcaE/xYAPwApllOj
+         lX+ktgaKa9kIz1LIjWVy5mSyizMoIlDs9YLwQz2R0Sgul/JtMcppI8DHLgzH47nm3+yU
+         fGQA==
+X-Gm-Message-State: AGi0PuYIlCochgUk9ehOniWlm+6HBMf+3bnZzjQop+8hTE11au4IlRlv
+        dsw8hmzhLpWsqLu+1oG8zpg=
+X-Google-Smtp-Source: APiQypLppeneOJYmadAENAmOGLqG9q7ggz3SIM23BMCXkROCwJMeo+psXucBZUDdztyAKgvEOmJHkg==
+X-Received: by 2002:a17:902:b709:: with SMTP id d9mr4486836pls.118.1587659854793;
+        Thu, 23 Apr 2020 09:37:34 -0700 (PDT)
+Received: from [100.124.9.89] ([104.129.198.55])
+        by smtp.gmail.com with ESMTPSA id c3sm2975513pfa.160.2020.04.23.09.37.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 09:37:33 -0700 (PDT)
+Subject: Re: [PATCH] scsi: storvsc: Fix a panic in the hibernation procedure
+To:     Dexuan Cui <decui@microsoft.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@lst.de" <hch@lst.de>, "hare@suse.de" <hare@suse.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        Balsundar P <Balsundar.P@microchip.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>
+References: <1587514644-47058-1-git-send-email-decui@microsoft.com>
+ <1b6de3b0-4e0c-4b46-df1a-db531bd2c888@acm.org>
+ <HK0P153MB027395755C14233F09A8F352BFD20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+ <c55d643c-c13f-70f1-7a44-608f94fbfd5f@acm.org>
+ <HK0P153MB02737524F120829405C6DE68BFD30@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <ade7f096-4a09-4d4e-753a-f9e4acb7b550@acm.org>
+Date:   Thu, 23 Apr 2020 09:37:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <HK0P153MB02737524F120829405C6DE68BFD30@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, syzbot wrote:
-
-> Hello,
+On 4/23/20 12:04 AM, Dexuan Cui wrote:
+> It looks the sd suspend callbacks are only for the I/O from the disk, e.g.
+> from the file system that lives in some partition of some disk.
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered crash:
-> WARNING in usbhid_raw_request/usb_submit_urb
+> The panic I'm seeing is not from sd. I think it's from a kernel thread
+> that tries to detect the status of the SCSI CDROM. This is the snipped
+> messages (the full version is at https://lkml.org/lkml/2020/4/10/47): here
+> the suspend callbacks of the sd, sr and scsi_bus_type.pm have been called,
+> and later the storvsc LLD's suspend callback is also called, but
+> sr_block_check_events() can still try to submit SCSI commands to storvsc:
 > 
-> usb 5-1: Ep 0 disabled: 2 0
+> [   11.668741] sr 0:0:0:1: bus quiesce
+> [   11.668804] sd 0:0:0:0: bus quiesce
+> [   11.698082] scsi target0:0:0: bus quiesce
+> [   11.703296] scsi host0: bus quiesce
+> [   11.781730] hv_storvsc bf78936f-7d8f-45ce-ab03-6c341452e55d: noirq bus quiesce
+> [   11.796479] hv_netvsc dda5a2be-b8b8-4237-b330-be8a516a72c0: noirq bus quiesce
+> [   11.804042] BUG: kernel NULL pointer dereference, address: 0000000000000090
+> [   11.804996] Workqueue: events_freezable_power_ disk_events_workfn
+> [   11.804996] RIP: 0010:storvsc_queuecommand+0x261/0x714 [hv_storvsc]
+> [   11.804996] Call Trace:
+> [   11.804996]  scsi_queue_rq+0x593/0xa10
+> [   11.804996]  blk_mq_dispatch_rq_list+0x8d/0x510
+> [   11.804996]  blk_mq_sched_dispatch_requests+0xed/0x170
+> [   11.804996]  __blk_mq_run_hw_queue+0x55/0x110
+> [   11.804996]  __blk_mq_delay_run_hw_queue+0x141/0x160
+> [   11.804996]  blk_mq_sched_insert_request+0xc3/0x170
+> [   11.804996]  blk_execute_rq+0x4b/0xa0
+> [   11.804996]  __scsi_execute+0xeb/0x250
+> [   11.804996]  sr_check_events+0x9f/0x270 [sr_mod]
+> [   11.804996]  cdrom_check_events+0x1a/0x30 [cdrom]
+> [   11.804996]  sr_block_check_events+0xcc/0x110 [sr_mod]
+> [   11.804996]  disk_check_events+0x68/0x160
+> [   11.804996]  process_one_work+0x20c/0x3d0
+> [   11.804996]  worker_thread+0x2d/0x3e0
+> [   11.804996]  kthread+0x10c/0x130
+> [   11.804996]  ret_from_fork+0x35/0x40
+> 
+> It looks the issue is: scsi_bus_freeze() -> ... -> scsi_dev_type_suspend ->
+> scsi_device_quiesce() does not guarantee the device is totally quiescent:
 
-This means that URB submission raced with usb_ep0_reinit().  Let's try 
-to find out how.
+During hibernation processes are frozen before devices are quiesced. 
+freeze_processes() calls try_to_freeze_tasks() and that function in turn 
+calls freeze_workqueues_begin() and freeze_workqueues_busy(). 
+freeze_workqueues_busy() freezes all freezable workqueues including 
+system_freezable_power_efficient_wq, the workqueue from which 
+check_events functions are called. Some time after freezable workqueues 
+are frozen dpm_suspend(PMSG_FREEZE) is called. That last call triggers 
+the pm_ops.freeze callbacks, including the pm_ops.freeze callbacks 
+defined in the SCSI core.
 
-Alan Stern
+The above trace seems to indicate that freezing workqueues has not 
+happened before devices were frozen. How about doing the following to 
+retrieve more information about what is going on?
+* Enable CONFIG_PM_DEBUG in the kernel configuration.
+* Run echo 1 > /sys/power/pm_print_times and echo 1 > 
+/sys/power/pm_debug_messages before hibernation starts.
 
-#syz test: https://github.com/google/kasan.git 0fa84af8
+>> Documentation/driver-api/device_link.rst: "By default, the driver core
+>> only enforces dependencies between devices that are borne out of a
+>> parent/child relationship within the device hierarchy: When suspending,
+>> resuming or shutting down the system, devices are ordered based on this
+>> relationship, i.e. children are always suspended before their parent,
+>> and the parent is always resumed before its children." Is there a single
+>> storvsc_drv instance for all SCSI devices supported by storvsc_drv? Has
+>> it been considered to make storvsc_drv the parent device of all SCSI
+>> devices created by the storvsc driver?
+> 
+> Yes, I think so:
+> 
+> root@localhost:~# ls -rtl  /sys/bus/vmbus/devices/9be03cb2-d37b-409f-b09b-81059b4f6943/host3/target3:0:0/3:0:0:0/driver
+> lrwxrwxrwx 1 root root 0 Apr 22 01:10 /sys/bus/vmbus/devices/9be03cb2-d37b-409f-b09b-81059b4f6943/host3/target3:0:0/3:0:0:0/driver -> ../../../../../../../../../../bus/scsi/drivers/sd
+> 
+> Here the driver of /sys/bus/vmbus/devices/9be03cb2-d37b-409f-b09b-81059b4f6943
+> is storvsc, which creates host3/target3:0:0/3:0:0:0.
+> 
+> So it looks there is no ordering issue.
 
-Index: usb-devel/drivers/usb/core/hub.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/hub.c
-+++ usb-devel/drivers/usb/core/hub.c
-@@ -4440,6 +4440,7 @@ void usb_ep0_reinit(struct usb_device *u
- 	usb_disable_endpoint(udev, 0 + USB_DIR_IN, true);
- 	usb_disable_endpoint(udev, 0 + USB_DIR_OUT, true);
- 	usb_enable_endpoint(udev, &udev->ep0, true);
-+	udev->alan1 = 0;
- }
- EXPORT_SYMBOL_GPL(usb_ep0_reinit);
- 
-@@ -4471,6 +4472,7 @@ static int hub_set_address(struct usb_de
- 		update_devnum(udev, devnum);
- 		/* Device now using proper address. */
- 		usb_set_device_state(udev, USB_STATE_ADDRESS);
-+		udev->alan1 = 1;
- 		usb_ep0_reinit(udev);
- 	}
- 	return retval;
-@@ -4838,6 +4840,7 @@ hub_port_init(struct usb_hub *hub, struc
- 		else
- 			dev_warn(&udev->dev, "Using ep0 maxpacket: %d\n", i);
- 		udev->ep0.desc.wMaxPacketSize = cpu_to_le16(i);
-+		udev->alan1 = 2;
- 		usb_ep0_reinit(udev);
- 	}
- 
-@@ -5226,6 +5229,7 @@ static void hub_port_connect(struct usb_
- loop_disable:
- 		hub_port_disable(hub, port1, 1);
- loop:
-+		udev->alan1 = 3;
- 		usb_ep0_reinit(udev);
- 		release_devnum(udev);
- 		hub_free_dev(udev);
-@@ -5766,6 +5770,7 @@ static int usb_reset_and_verify_device(s
- 
- 		/* ep0 maxpacket size may change; let the HCD know about it.
- 		 * Other endpoints will be handled by re-enumeration. */
-+		udev->alan1 = 4;
- 		usb_ep0_reinit(udev);
- 		ret = hub_port_init(parent_hub, udev, port1, i);
- 		if (ret >= 0 || ret == -ENOTCONN || ret == -ENODEV)
-Index: usb-devel/drivers/usb/core/urb.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/urb.c
-+++ usb-devel/drivers/usb/core/urb.c
-@@ -204,8 +204,12 @@ int usb_urb_ep_type_check(const struct u
- 	const struct usb_host_endpoint *ep;
- 
- 	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
--	if (!ep)
-+	if (!ep) {
-+		dev_info(&urb->dev->dev, "Ep %d disabled: %d\n",
-+			usb_pipeendpoint(urb->pipe),
-+			urb->dev->alan1);
- 		return -EINVAL;
-+	}
- 	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
- 		return -EINVAL;
- 	return 0;
-Index: usb-devel/include/linux/usb.h
-===================================================================
---- usb-devel.orig/include/linux/usb.h
-+++ usb-devel/include/linux/usb.h
-@@ -629,6 +629,7 @@ struct usb3_lpm_parameters {
-  * usb_set_device_state().
-  */
- struct usb_device {
-+	int		alan1;
- 	int		devnum;
- 	char		devpath[16];
- 	u32		route;
+Right, I had overlooked the code in storvsc_probe() that associates SCSI 
+devices with storvsc_drv.
 
+Bart.
