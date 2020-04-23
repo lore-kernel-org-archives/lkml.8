@@ -2,101 +2,118 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EA5C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A3C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A953B2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9DC2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvdmeSTm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7szCwfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgDWM6B (ORCPT
+        id S1728507AbgDWM7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:58:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
+        Thu, 23 Apr 2020 08:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728286AbgDWM6A (ORCPT
+        by vger.kernel.org with ESMTP id S1726685AbgDWM7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:58:00 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B4AC08E934;
-        Thu, 23 Apr 2020 05:57:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u127so6448123wmg.1;
-        Thu, 23 Apr 2020 05:57:59 -0700 (PDT)
+        Thu, 23 Apr 2020 08:59:41 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9869FC08E934;
+        Thu, 23 Apr 2020 05:59:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w20so6125854ljj.0;
+        Thu, 23 Apr 2020 05:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dqaGCrrGdtqTHr8h7W7rgZUN4zoILX85Lt2ArDxobAw=;
-        b=WvdmeSTm03f4OQVBbZ1iK+jbVgf/wF81xLfrlniB7emB2YICETx8QKNrBHjJ3D6B9S
-         /kT220mEN9AJvYfMSrpreaeEy/xx6N3MHR3M8VBv44C1pQdCGOgVmWFPxZFaSEuLv1/p
-         E4qk3+3tx+fACOucmXS+CoQzszk7ghP6MFuAjxXE1P7trrwLmBcLaPv2a2iSzAQERh53
-         CfbJmFQcQxfS6lUrjZ7mp87/3hJaDeYj1cErhJKhxoyzwDwkCMZQxbIlbOs+5ug72kkB
-         aj1dUEhlyHaTL58Br7RnRA3TGbkQihUatFh7dsfmq9SxzjAFh1VoBG6P/rVrEw09vhV9
-         WXsQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=TN99Pfmiq67M57+79MTqUBODg0E96SLf0DqAJRctnww=;
+        b=Y7szCwfP00+3Qlg7PqYuLdN9pvRAG5rPi36oGFARP6hAxfks6vJ0kpRHrizJgIrHF6
+         +UOlyB/xifKw9H7Mjcps0orGTWKYpMe+b2jXNBXalqRLyO+qFvL0kNCGGKNEIlLQfsM1
+         oxn6EQdGdDVBxeI9tubCehhS8YIpVcsdHyMNNsl7VNii6OWYy2gs4q8qujKja7ACMQH3
+         +j9/D7IpTgAJjwqSf/ppkZdnLthHFH1bdNwPS0d+FQJ9yeceJiubSx+RXkt4dD48AIE5
+         e+HAEFNT5/Ij1cmwM3z4eePkajZhzY43MbZNCpqFobUCWnSIoaYlfJtP+82uIDyVhNVY
+         EljQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dqaGCrrGdtqTHr8h7W7rgZUN4zoILX85Lt2ArDxobAw=;
-        b=IpC24l/tAOtchxTShUBvlBD8Btwwm3eGgGCFkmavfyswTTnN7n0tjirNVVo8JU6rSf
-         TNZkQZROYDgrNXHGQ92RqcMKzn0ZVsFG095T6rlhYCc1GPOI9YGsvd5VAVENlmMiUUic
-         q+QSigCtSse5GFrl06ex3dkLIgMsLFsrdk+6uobLmeydTZ96kEcBF/Hr0Lhv7Xt9B3Ox
-         jln6LGuwZbm+4TDQXru9ClO5f1h5YcuQaBZ6b4+DkS8Hu8keoS4M6DpFziArRWqVvYeq
-         mSJpxUnMnk50GBiPa6eAyGa/wiEr4P5PoGdES7o95i/jSn+wlZChijYTkZzG9U8YpbF5
-         LUGQ==
-X-Gm-Message-State: AGi0PuZ1/bkZ++VwCBWS5XuSSaKbXM3Srfv8NFaCmGesTNzhIvslSN5n
-        8ptEznObhuGqS4NoIzy5ufM=
-X-Google-Smtp-Source: APiQypJo4EyDiMeYphl9h0zQtMu+AdWMwzAH0KkyGB6bL0c5tSeXt3hvIJunfcz2O6eUi0LXihVJGA==
-X-Received: by 2002:a05:600c:2314:: with SMTP id 20mr3951028wmo.35.1587646678480;
-        Thu, 23 Apr 2020 05:57:58 -0700 (PDT)
-Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
-        by smtp.gmail.com with ESMTPSA id 185sm4051252wmc.32.2020.04.23.05.57.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 05:57:57 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] thermal: ti-soc-thermal: avoid dereferencing ERR_PTR
-Date:   Thu, 23 Apr 2020 13:57:57 +0100
-Message-Id: <20200423125757.14057-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=TN99Pfmiq67M57+79MTqUBODg0E96SLf0DqAJRctnww=;
+        b=t25YQdXVk2EHIHVj7IOKMUirqmtSBBfBE8bnKVUIyabg8B+Tqb42RahQAxLJHHlUFU
+         nL9f4dra+bKME7YeqKquJy/sIhOKDqWxDw8r4I1udgw/833ZDG0UwzBuizroY+YX6s2c
+         hkrUS7vwlVD9buMcgCeu2xzFlhyz+EOkBeN8rKmhhbdn8Bwwi8YK1vVVjP+Dsprh/dbE
+         4df4nxKvnCiZi7KwSifk01QkfP4QGeSu8ix2X0dWySMlMmYSXBX0EqpPkpAmZZBKjPXB
+         RtFggnj0bTmeo1kJM9peeNmmidgnCxRdCALupkRIfxmc3hBdOeKaK0ZHaBsWyqTviRn4
+         eDwA==
+X-Gm-Message-State: AGi0PubYuxxy7FcthNNqgvVz4A8Wu7A6SIcd0fP60Cg7gmuD+yV2i/3D
+        ufP67GfFByF8UPGUeOFvHok=
+X-Google-Smtp-Source: APiQypJvxNBM10jzGJWdYX4cOhGpXVsnIxYhehXKPyLCRAfn/4qjISIb1q3Uqffmq65KRop51bILWQ==
+X-Received: by 2002:a2e:a58d:: with SMTP id m13mr2348976ljp.164.1587646778073;
+        Thu, 23 Apr 2020 05:59:38 -0700 (PDT)
+Received: from [192.168.86.24] ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id q19sm1709346ljj.84.2020.04.23.05.59.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 05:59:36 -0700 (PDT)
+Subject: Re: [PATCH 2/3] dt-bindings: regulator: Add document bindings for
+ max77826
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+ <20200413164440.1138178-3-iskren.chernev@gmail.com>
+ <20200420205501.GA6828@bogus>
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+Message-ID: <f9b5d68d-536b-5806-573b-9dafb848f46f@gmail.com>
+Date:   Thu, 23 Apr 2020 15:59:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200420205501.GA6828@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On error the function ti_bandgap_get_sensor_data() returns the error
-code in ERR_PTR() but we only checked if the return value is NULL or
-not. And, so we can dereference a error code inside ERR_PTR.
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 4/20/20 11:55 PM, Rob Herring wrote:
+> On Mon, Apr 13, 2020 at 07:44:39PM +0300, Iskren Chernev wrote:
+>> +    patternProperties:
+>> +      "^LDO([1-9]|1[0-5])$":
+>> +        type: object
+>> +        allOf:
+>> +          - $ref: regulator.yaml#
+>> +
+>> +      "^BUCK|BUCKBOOST$":
+>> +        type: object
+>> +        allOf:
+>> +          - $ref: regulator.yaml#
+>> +
+>> +      additionalProperties: false
+>
+> You are defining a property called 'additionalProperties'. This one
+> should be dropped because additionalProperties doesn't work with a $ref.
+>
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index d3e959d01606..1e2bf1f22dd1 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -196,7 +196,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
- 
- 	data = ti_bandgap_get_sensor_data(bgp, id);
- 
--	if (data && data->ti_thermal) {
-+	if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
- 		if (data->our_zone)
- 			thermal_zone_device_unregister(data->ti_thermal);
- 	}
--- 
-2.11.0
+I got the idea from mps,mpq7920.yaml. It has additionalProperties in the
+exact same places that I do. Also bd718(28|37|47).yaml seem to use
+additionalProperties inside patternProperties. Shall I modify it as well?
+
+I couldn't find the core schema for this yaml:
+http://devicetree.org/meta-schemas/core.yaml (gives 404).  Is there a way
+to verify the validity of the yaml?
+
+Also, this patch is already merged in linux-next. I guess I shall submit
+a new patch with the fixes standalone?
 
