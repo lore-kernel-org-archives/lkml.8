@@ -2,161 +2,135 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9748C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E0DC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 964B22087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="W9Z2Sq4/"
+	by mail.kernel.org (Postfix) with ESMTP id 83DD82098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587654553;
+	bh=3XM5u8fRGtkUVzS6W19Lz1rJZWxKjOjDDFjU2BkBQj0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Rj+est5q0GtXJ3yAmYEzwsGs/YxsuMRR2Dt0t1S6HqKPrlDBo1uebvgTpQ2ddVPr8
+	 IBeGjK35uQ1CSI9a+wVFuGNgnwaRxuIepUjCFtm/Rtx05s8Az74PdpxlAQVHTg7MuB
+	 grhytRcBqugNrk+Sk3Z3ZBhmhZ9XgKuRIXkN/bRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgDWPF7 (ORCPT
+        id S1728995AbgDWPJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728878AbgDWPF7 (ORCPT
+        Thu, 23 Apr 2020 11:09:12 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:31201 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728921AbgDWPJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:05:59 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08945C09B040
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:05:59 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id w18so3026164qvs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zc2RuJG+E2+4TamJRI8Bv/UYisP7AVTkwnNZjUmbgck=;
-        b=W9Z2Sq4/1SQQqjT4ehzpodampIzNO11tWTR2bOJ5Scxv7AoliJfPHi6YEJJzz2u/B+
-         BJOCWEFn7b1OwSecxvRATeV2vfj74grYnlYtbgDT3D2O2Ik/pvxDgUnoMSknT9diq8hm
-         fw5Nv/O2M8WKsUmp4k5JgRQY9U0TwL4t8eUR0MhvJo0L4O5WE85ck4BTCrjxBNs2ec3m
-         Lq5qvMNOwcQyuPky1TXPtT6/kFhuwjSHzh8SQTEcytYtSsSw4eb2IDtuqFDv5X4tI16P
-         alF+8PnqZgPdaJubC0iDV/pQkk1OdPkAi1SYRdxZyctq0Squpr23MmtOucFrJuXBgMHr
-         KlYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zc2RuJG+E2+4TamJRI8Bv/UYisP7AVTkwnNZjUmbgck=;
-        b=eMwmL53+ZZywAVs4u58E3z5d36nMazuJbBXudTyNBE0vEPZtbp/2olE0/mursLzRCJ
-         IkL8j5oYpVNNZ6LZ7qBzinIED6+rhzZDkYyfCS8c1vNP1cQ6O8E42IEpvG6oKxh0V7lF
-         tE8pApY4n2tvvwU/dFlAjt6UK2sOQ1O3hsD+qi8JzXKd4sRUvLtrScGerSz+wyD4OTnO
-         u3ylPO6hqLyuLfSVEonozhwdQ4XuWUm5IbcdMDA9ip4z9dPQlmOG3K3HsojYtrT3sOyI
-         jNrA9lwLI4SYIqXMXAIZr7nPuisSwbn6ORAoRznvWq3mrXP38wnLRvEu2cPc4YudMnVX
-         0ZxA==
-X-Gm-Message-State: AGi0Pubj5C5UFar1QHORGGm/FK4vSOCKyf+EwFWcJzVdEQRb91M2sMf4
-        k4dLBH4Sp5V0fAyE7rzGphHBvg==
-X-Google-Smtp-Source: APiQypJKp5yz55pfWs4zALFblkF3bu5PrTjuV4Sybqnw2ul0xRXyMtBn4EEnV1Tzf7oUBdkQI2pMNA==
-X-Received: by 2002:ad4:44ab:: with SMTP id n11mr4639727qvt.235.1587654358068;
-        Thu, 23 Apr 2020 08:05:58 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id p24sm1910939qtp.59.2020.04.23.08.05.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 08:05:57 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jRdQL-0003UI-0h; Thu, 23 Apr 2020 12:05:57 -0300
-Date:   Thu, 23 Apr 2020 12:05:57 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-Message-ID: <20200423150556.GZ26002@ziepe.ca>
-References: <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com>
- <87v9lu1ra6.fsf@intel.com>
- <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com>
- <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr>
- <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
- <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr>
- <871rofdhtg.fsf@intel.com>
- <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr>
- <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org>
- <nycvar.YSQ.7.76.2004231059170.2671@knanqh.ubzr>
+        Thu, 23 Apr 2020 11:09:12 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 03NF8iBQ018040;
+        Fri, 24 Apr 2020 00:08:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 03NF8iBQ018040
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587654525;
+        bh=+DlzjDpib8laCDy2JUu2OfEgSqg9h54FYVo2uotXvMI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NPgDDsojOl7j2yH2Q1/NnhLkkhuYhMPihzu/fKk48UqeMXvvSzvv2Q0i7VuOt7FAr
+         xIpzIl0mx460wO8PERYk4EBNabwPoHROCPFQ4e4IpPvXaI3NReLEjmmtUSlwJIHeFY
+         k5vZPCnofo9sH+bQtg17V708AMbqGzmYgHxd6sjfOVjpm3K/2YeOc1+r/1HUa7wwKV
+         zyFOf6KU6zUm8swBeBqlzNfcWN+XveMSR3wEPywLINM4i4Phu5f2r8GjA3D+O9lTqh
+         iQw2cvdwJwiBr1tgBUdgInJmXFeKVlrj3AmknvTDYpf2wWTccLfgpY17nMc482n06w
+         UfltsRIs98vVg==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id i5so6009872uaq.1;
+        Thu, 23 Apr 2020 08:08:44 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaSp0NSRz0FcuMmo20IJQvaGMU3UBbYkXd7Tshsbuep4HpJt9C0
+        ob/UImLKoV8uJrYHkQ22ZzFHs6QRgul7uWBO+HI=
+X-Google-Smtp-Source: APiQypIRMJX5auFftzRo3peuQH5roT/wqAq0thBDMbVxeUrJ/YnIr+N1ra1Ide1tPXEE5bafv8C+vQy2G+0+9j/C5lA=
+X-Received: by 2002:a9f:28c5:: with SMTP id d63mr3463972uad.25.1587654523415;
+ Thu, 23 Apr 2020 08:08:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.2004231059170.2671@knanqh.ubzr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200422185708.6363-1-robh@kernel.org>
+In-Reply-To: <20200422185708.6363-1-robh@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 24 Apr 2020 00:08:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS_HtT6sZtKEVDGZjbG=hyZKf4Oy1sZ3JNfmewdDgCgYA@mail.gmail.com>
+Message-ID: <CAK7LNAS_HtT6sZtKEVDGZjbG=hyZKf4Oy1sZ3JNfmewdDgCgYA@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: Fix command line length limit calling dt-mk-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:01:40AM -0400, Nicolas Pitre wrote:
-> On Wed, 22 Apr 2020, Randy Dunlap wrote:
-> 
-> > On 4/22/20 2:13 PM, Nicolas Pitre wrote:
-> > > On Wed, 22 Apr 2020, Jani Nikula wrote:
-> > > 
-> > >> On Tue, 21 Apr 2020, Nicolas Pitre <nico@fluxnic.net> wrote:
-> > >>> This is really a conditional dependency. That's all this is about.
-> > >>> So why not simply making it so rather than fooling ourselves? All that 
-> > >>> is required is an extension that would allow:
-> > >>>
-> > >>> 	depends on (expression) if (expression)
-> > >>>
-> > >>> This construct should be obvious even without reading the doc, is 
-> > >>> already used extensively for other things already, and is flexible 
-> > >>> enough to cover all sort of cases in addition to this particular one.
-> > >>
-> > >> Okay, you convinced me. Now you only need to convince whoever is doing
-> > >> the actual work of implementing this stuff. ;)
-> > > 
-> > > What about this:
-> > > 
-> > > Subject: [PATCH] kconfig: allow for conditional dependencies
-> > > 
-> > > This might appear to be a strange concept, but sometimes we want
-> > > a dependency to be conditionally applied. One such case is currently
-> > > expressed with:
-> > > 
-> > > 	depends on FOO || !FOO
-> > > 
-> > > This pattern is strange enough to give one's pause. Given that it is
-> > > also frequent, let's make the intent more obvious with some syntaxic 
-> > > sugar by effectively making dependencies optionally conditional.
-> > > This also makes the kconfig language more uniform.
-> > > 
-> > > Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-> > 
-> > Hi,
-> > 
-> > If we must do something here, I prefer this one.
-> > 
-> > Nicolas, would you do another example, specifically for
-> > CRAMFS_MTD in fs/cramfs/Kconfig, please?
-> 
-> I don't see how that one can be helped. The MTD dependency is not 
-> optional.
+On Thu, Apr 23, 2020 at 3:57 AM Rob Herring <robh@kernel.org> wrote:
+>
+> As the number of schemas has increased, we're starting to hit the error
+> "execvp: /bin/sh: Argument list too long". This is due to passing all the
+> schema files on the command line to dt-mk-schema. It currently is only
+> with out of tree builds and is intermittent depending on the file path
+> lengths.
+>
+> Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
+> hitting this proplem more likely since the example validation now always
+> gets the full list of schemas.
+>
+> Fix this by passing the schema file list in a pipe and using xargs. We end
+> up doing the find twice, but the time is insignificant compared to the
+> dt-mk-schema time.
+>
+> Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Could it be done as 
 
-config MTD
-   depends on CRAMFS if CRAMFS_MTD
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
 
-?
 
-Jason
+> ---
+>  Documentation/devicetree/bindings/Makefile | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+> index 87c76bdabfe6..7782d9985082 100644
+> --- a/Documentation/devicetree/bindings/Makefile
+> +++ b/Documentation/devicetree/bindings/Makefile
+> @@ -14,16 +14,18 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+>  # Use full schemas when checking %.example.dts
+>  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+>
+> +find_cmd = find $(srctree)/$(src) \( -name '*.yaml' ! \
+> +               -name 'processed-schema*' ! \
+> +               -name '*.example.dt.yaml' \)
+> +
+>  quiet_cmd_mk_schema = SCHEMA  $@
+> -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
+> +      cmd_mk_schema = rm -f $@ ; \
+> +                      $(if $(DT_MK_SCHEMA_FLAGS), \
+> +                           echo $(real-prereqs), \
+> +                           $(find_cmd)) | \
+> +                      xargs $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) >> $@
+>
+> -DT_DOCS = $(addprefix $(src)/, \
+> -       $(shell \
+> -       cd $(srctree)/$(src) && \
+> -       find * \( -name '*.yaml' ! \
+> -               -name 'processed-schema*' ! \
+> -               -name '*.example.dt.yaml' \) \
+> -       ))
+> +DT_DOCS = $(shell $(find_cmd) | sed -e 's|^$(srctree)/||')
+>
+>  DT_SCHEMA_FILES ?= $(DT_DOCS)
+>
+> --
+> 2.20.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
