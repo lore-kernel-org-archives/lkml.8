@@ -2,106 +2,117 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF56CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A005AC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A02320736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8209220736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tg9MY5If"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FGotfNib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgDWSD1 (ORCPT
+        id S1730114AbgDWSF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729901AbgDWSD0 (ORCPT
+        Thu, 23 Apr 2020 14:05:57 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58162 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729901AbgDWSF5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:03:26 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD3FC09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:03:26 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 72so7698304otu.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:03:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=2/La/wL+coGvWMbmb0Ahh27fgATuogd6ONJOHlv/dXo=;
-        b=Tg9MY5IfCmtOyZv1E5YaI5u48Aa0GMq/n5vgn6qgR8RcoRuTAN1Qo1NsHyK/nMM3Gy
-         qMdC3Bhh6992NB/VIAeWF7jbJu0LzSYmftkF1HfzL9aJ+waynEJ9J2rNGG0E0TMIrCqj
-         0AzADq5Sj6hhv/qw2Bl/rUgD/qXP34J3I9S0FfmYz2+oQrXX+KZ6Gk7mMjzkalhLh5f1
-         zo4Jx7tsl8G9t9Gq5EPJQq73lyDrZXMHDPiontp3cJTfRD0GmPz9IV62njpsNqQstTnn
-         G/M7E+Q7xyhDE1qHGtBGMLzOZzqfPg09sCNweKst45W1nP7dmbNwsPa1R1eKARjN04K5
-         pxQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=2/La/wL+coGvWMbmb0Ahh27fgATuogd6ONJOHlv/dXo=;
-        b=ECVOwceSYa8cez6DIWj67URVma4p4j/x3q8pigg5V5DbcAgOf4u6fyWER9vVFVHnDz
-         nmxuS7/ieXtNEUh+wKZ29PrLDVLCJlh9SJ1WRKjP2MgsR5kWKFnPwhgH87EgMV0f8f57
-         r2TG376zA3d3p+rQEqnTccdTB1tcOIcBVnBuMFopCmMgZLdhV/KSMJqCbtw5xIHIlDMw
-         u/0tAgiKc/GSFu3eLcjGyVm9hZHfaFs7E6i3WL1WhZ2S8WXJU77upSf7DxmsQIAAMPds
-         512Ev6wZJOKorF7NhN2W38bL9qYkrbwnZwgf50/NszrnaYZ4CJXfaEqJ/Vb+1lT7qwSp
-         yfYg==
-X-Gm-Message-State: AGi0Pub6QRaIwx9lNcFAQqtl2lA9hfKwDYmujGYDBRaWRxYbawmp3nbS
-        USZO/wSY/LEOkAQWZXJUqW+9NfuNl6E=
-X-Google-Smtp-Source: APiQypJlwGEDo4ccJA0eOVTEQHvZXXtJkUFC/LyKTI7ERYuXNAKD6DnV8AQGRPy0ysr79IcclNc3pw==
-X-Received: by 2002:aca:2b0a:: with SMTP id i10mr4075605oik.22.1587665005382;
-        Thu, 23 Apr 2020 11:03:25 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id g13sm767144otk.62.2020.04.23.11.03.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 11:03:24 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 11:03:23 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     YueHaibing <yuehaibing@huawei.com>, sanyog.r.kale@intel.com,
-        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] soundwire: intel: Make sdw_intel_init static
-Message-ID: <20200423180323.GA18440@ubuntu-s3-xlarge-x86>
-References: <20200410115708.27708-1-yuehaibing@huawei.com>
- <20200420071212.GV72691@vkoul-mobl>
+        Thu, 23 Apr 2020 14:05:57 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NI5l5p005744;
+        Thu, 23 Apr 2020 13:05:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587665147;
+        bh=mMaO8t1Eqao/J6mtLde2dOBedpV17ybTny2HZzC7JxY=;
+        h=From:To:CC:Subject:Date;
+        b=FGotfNibqGvKapww+9XkCnFPum7qyEFRO+3Lr2RtKQajWJJC1AtH5csD2x4ktFPsk
+         Hvl/AOb2mpj1tsqbeTkKPW24463op5xqnIlj0Vc4OtrZMQIJoqXokdiMYIlHqCe5Ak
+         w32Cwr65Z2BBRwx8nJ8iRFZjuFZJlRSCkbvUQIt0=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03NI5lZt097577
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Apr 2020 13:05:47 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Apr 2020 13:05:46 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 23 Apr 2020 13:05:46 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NI5jw4008985;
+        Thu, 23 Apr 2020 13:05:46 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Dave Gerlach <d-gerlach@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 0/5] soc: ti: add k3 platforms chipid module driver
+Date:   Thu, 23 Apr 2020 21:05:40 +0300
+Message-ID: <20200423180545.13707-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200420071212.GV72691@vkoul-mobl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 12:42:12PM +0530, Vinod Koul wrote:
-> On 10-04-20, 19:57, YueHaibing wrote:
-> > Fix sparse warning:
-> > 
-> > drivers/soundwire/intel_init.c:193:6: warning:
-> >  symbol 'sdw_intel_init' was not declared. Should it be static?
-> 
-> Applied, thanks
-> 
-> -- 
-> ~Vinod
+Hi All,
 
-Why was this applied? It replaces one warning with another (that is
-actually visible during a normal kernel build):
+This series introduces TI K3 Multicore SoC platforms chipid module driver
+which provides identification support of the TI K3 SoCs (family, revision)
+and register this information with the SoC bus. It is available under
+/sys/devices/soc0/ for user space, and can be checked, where needed,
+in Kernel using soc_device_match().
+It is also required for introducing support for new revisions of
+K3 AM65x/J721E SoCs.
 
-$ make -j$(nproc) -s allyesconfig drivers/soundwire/intel_init.o
-drivers/soundwire/intel_init.c:193:14: warning: ‘sdw_intel_init’ defined
-but not used [-Wunused-function]
- static void *sdw_intel_init(acpi_handle *parent_handle,
-               ^~~~~~~~~~~~~~
+Example J721E:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments K3 J721E SoC
+  J721E
+  SR1.0
 
-Cheers,
-Nathan
+Example AM65x:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments AM654 Base Board
+  AM65X
+  SR1.0
+
+Grygorii Strashko (5):
+  dt-bindings: soc: ti: add binding for k3 platforms chipid module
+  soc: ti: add k3 platforms chipid module driver
+  arm64: arch_k3: enable chipid driver
+  arm64: dts: ti: k3-am65-wakeup: add k3 platforms chipid module node
+  arm64: dts: ti: k3-j721e-mcu-wakeup: add k3 platforms chipid module
+    node
+
+ .../bindings/soc/ti/k3-socinfo.yaml           |  40 ++++++
+ arch/arm64/Kconfig.platforms                  |   1 +
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |   5 +
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |   5 +
+ drivers/soc/ti/Kconfig                        |  10 ++
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/k3-socinfo.c                   | 135 ++++++++++++++++++
+ 7 files changed, 197 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+ create mode 100644 drivers/soc/ti/k3-socinfo.c
+
+-- 
+2.17.1
+
