@@ -2,112 +2,80 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F832C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F80C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E30F62077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnA8a2Vg"
+	by mail.kernel.org (Postfix) with ESMTP id A5D942077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgDWXQR (ORCPT
+        id S1729420AbgDWXQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729136AbgDWXQK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:16:10 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3D6C09B042;
-        Thu, 23 Apr 2020 16:16:09 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so5158231ljj.11;
-        Thu, 23 Apr 2020 16:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8qJvmaPgFPJLMzlBpUP3e9FdupJ5/GzejZ+T8BwXEys=;
-        b=gnA8a2Vgx6uioCmpFLX58qJhmVK19TlagkIB+2WPTaUf15MUkyJ41BmhrQ3Afmj9bI
-         AvYygrPnfA6E/yvPbqI4YC38L65vkD9YY6BkVGLVVBx8qzo4nsUiYXGuXBncD/dWQslY
-         Fk6Chfe7sHpRjG4lx79QEXfU02cgaLmkiW7VBPRuaa2KiJdptJmTLhYcjhteyW40M6aw
-         m2BGG1O7wvWC9+XqkTVFiPZ7uKRt/acY2w/pOwVytTDv1aGQzsJs3OL9zTd92vfNA41h
-         3LLPSSTjyae4BmWu7ggMe5daEbcZk39Bv0bz0dXJm9VGnbGJAE4hyWNa+fCt2qOjBiAq
-         znWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8qJvmaPgFPJLMzlBpUP3e9FdupJ5/GzejZ+T8BwXEys=;
-        b=J9yyvtuhOTB+v3gWs63lx/fe6M3ujJSgTbi6JIuU16uyQDswWCpT5vqO6gltmj4tjP
-         QpyK+w1SQevjTPbccmSpNlahYO7qztlk3WuzP/H0P/pYOrLFHYIq/NLOOukHQQs76EiA
-         6TElIRC65pmvJUMIQMSQn7e5czbQwBNI8OxplnLMQHkPCwJUFhymnYeV8E8KZNT13VOY
-         NTgzlSoaNtp1B926RMszHmD2+6Tr5GFzcItLXG2kRO6dc6iAAZd+Y/Mdg71fv5XXUigr
-         x9FeWGP9I6d0m/jvKW95aqgPLUKo3YTmJTYW65z2D3Oi6dUhyue+ldb0buIjjAYFFHnF
-         MmCA==
-X-Gm-Message-State: AGi0PuY4zEyH2/yB59AhEOf5m9FVpeqMTO4uHtjbuEtEa/qhmQIXQAnB
-        /I72yniDwyRz8KZVa99mfkAa8fbp
-X-Google-Smtp-Source: APiQypJhoG1u4KBT0Y3dIF1unc2wCeJ4aWSgoyLf6n7IGDCtJ6EDz2jCTp7jf1nKNef4dy5fuTgutQ==
-X-Received: by 2002:a05:651c:2002:: with SMTP id s2mr3564032ljo.285.1587683767789;
-        Thu, 23 Apr 2020 16:16:07 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id r2sm209644ljm.8.2020.04.23.16.16.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 16:16:07 -0700 (PDT)
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
-Date:   Fri, 24 Apr 2020 02:16:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Apr 2020 19:16:21 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49978 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729136AbgDWXQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:16:20 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 05CB11A0187;
+        Fri, 24 Apr 2020 01:16:18 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 82F641A01A5;
+        Fri, 24 Apr 2020 01:16:14 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D951F402C7;
+        Fri, 24 Apr 2020 07:16:09 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, ben.dooks@codethink.co.uk,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] firmware: imx: make sure MU irq can wake up system from suspend mode
+Date:   Fri, 24 Apr 2020 07:07:10 +0800
+Message-Id: <1587683231-18468-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-22.04.2020 09:18, Sowjanya Komatineni пишет:
-> +static int chan_capture_kthread_start(void *data)
-> +{
-> +	struct tegra_vi_channel *chan = data;
-> +	struct tegra_channel_buffer *buf;
-> +	int err = 0;
-> +
-> +	set_freezable();
-> +
-> +	while (1) {
-> +		try_to_freeze();
-> +
-> +		wait_event_interruptible(chan->start_wait,
-> +					 !list_empty(&chan->capture) ||
-> +					 kthread_should_stop());
-> +
-> +		if (kthread_should_stop())
-> +			break;
-> +
-> +		/*
-> +		 * Source is not streaming if error is non-zero.
-> +		 * So, do not dequeue buffers on capture error.
-> +		 */
-> +		if (err)
-> +			continue;
+IRQF_NO_SUSPEND flag is set for MU IRQ of IPC work, but with this
+flag set, IRQD_WAKEUP_ARMED flag will NOT be set during
+suspend_device_irq() phase, then when MU IRQ arrives, it will NOT
+wake up system from suspend.
 
-This will result in an endless loop, I suppose it wasn't the intention.
+To fix this issue, pm_system_wakeup() is called in general MU IRQ
+handler to make sure system can be waked up when MU IRQ arrives.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/firmware/imx/imx-scu-irq.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/firmware/imx/imx-scu-irq.c b/drivers/firmware/imx/imx-scu-irq.c
+index db655e8..d9dcc20 100644
+--- a/drivers/firmware/imx/imx-scu-irq.c
++++ b/drivers/firmware/imx/imx-scu-irq.c
+@@ -10,6 +10,7 @@
+ #include <linux/firmware/imx/ipc.h>
+ #include <linux/firmware/imx/sci.h>
+ #include <linux/mailbox_client.h>
++#include <linux/suspend.h>
+ 
+ #define IMX_SC_IRQ_FUNC_ENABLE	1
+ #define IMX_SC_IRQ_FUNC_STATUS	2
+@@ -91,6 +92,7 @@ static void imx_scu_irq_work_handler(struct work_struct *work)
+ 		if (!irq_status)
+ 			continue;
+ 
++		pm_system_wakeup();
+ 		imx_scu_irq_notifier_call_chain(irq_status, &i);
+ 	}
+ }
+-- 
+2.7.4
+
