@@ -2,202 +2,134 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BA4C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D71C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB372075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EXGLr7yo"
+	by mail.kernel.org (Postfix) with ESMTP id 67F452074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgDWA57 (ORCPT
+        id S1726173AbgDWBI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 20:57:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726021AbgDWA57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 20:57:59 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D128C03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:57:57 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so2056907pfn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a2tyd36y2uEBXJHo8BrX3WP4rk+2WUCthbbsOwyGFY8=;
-        b=EXGLr7yotOZFeroLTaEgBQfGyx14dknJdBBakeNlJDnAwWBkNBeA1CgC7AZbOeP4FI
-         3ACr7TeXBbbakI5rFdHMzkhlcAaG4DSDD2B2Cl3lomfTy8pEk3DUwKF9zgryzo94/7o6
-         yuA2iwOhAeX3bKjX0Zwxctg8SndS+ausQrK4Ku1ERNJ6L5ZJ3lCTwEulyu9RfPLwjo3U
-         G+Z6xli2Zj9edg8QHoCbJZARqAJziifFlskh4j50QURMTF9BufULYkXDUzE5Qd1FMLjT
-         QwW7pqDva60he7Vmc8oBV9xH+aZOANh2anG9OcjhyMbCybCHxkslkdc9byWz4lr5dA5S
-         CgRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a2tyd36y2uEBXJHo8BrX3WP4rk+2WUCthbbsOwyGFY8=;
-        b=kVQ9BFcWFy61q1dBhkckcQIwJ7UtyhOZb1k2eL0D6F1n+1ii2mWfeocThRahUaBUQ/
-         LMQqRzWp16chiFFUatp433bzs2k+/F3LbnwRFCGHf0QARuDyyWVCQpYGLYZep/8uXnT5
-         KAUrMF6Wl40A54NhxNH/bugRyRqHIXgv7G7mzo1sJ6gPZk69YItvLViznIbq2mpg2ObW
-         4Aq/iRNlJA2ZkmYVDrw3lUHuJLFLjGdKS0OXaKvAuR6MBUzXPwsYcRBp9UfqyczO08fu
-         ddsc8tPYLcMWhtSvOPY93b2SDeheniPDr9k8fFb4ZXvGuWdJtpzHbtfKbG2L34mXVXfy
-         Av7g==
-X-Gm-Message-State: AGi0PuZgKxj68tyvY3jKuVFYtuaLuKHLfP7tviuC70dyLqCSGuSCJdPJ
-        cv7L6RfusJ2i911sz7dPTX6YGA==
-X-Google-Smtp-Source: APiQypJp5JqB2scsWxIk+15J7WKWXfVRUvd+pWW1ljCqwR+yvB+JVSsNZV2yXfn7a6gNX4qzl8tX+w==
-X-Received: by 2002:a63:3502:: with SMTP id c2mr1644084pga.276.1587603476606;
-        Wed, 22 Apr 2020 17:57:56 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a200sm699680pfa.201.2020.04.22.17.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 17:57:55 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 17:58:23 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     agross@kernel.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org
-Subject: Re: [PATCH v2 6/6] remoteproc: qcom: Add notification types to SSR
-Message-ID: <20200423005823.GN1868936@builder.lan>
-References: <1586389003-26675-1-git-send-email-sidgup@codeaurora.org>
- <1586389003-26675-7-git-send-email-sidgup@codeaurora.org>
+        Wed, 22 Apr 2020 21:08:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:53834 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbgDWBI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:08:58 -0400
+IronPort-SDR: 7IaR5+f27Z9/Ios7pnrWEAaTUU2Hx6rUqTEo2jJJTbabpg0b5nWNAn67rQRm8YL9vpPi0zhT7c
+ xS+G/U7ll90A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 18:08:57 -0700
+IronPort-SDR: Q+SkkfqshQqK1FqTjpGmXe2ftkCsBLCLBPI9Gdflx82m3SnOLJQOBKTgwI7WL8HAAdWeHY70dE
+ 4y8ydrOOboxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
+   d="scan'208";a="365849379"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 18:08:53 -0700
+Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake
+ metrics
+To:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20200422074809.160248-1-irogers@google.com>
+ <20200422074809.160248-3-irogers@google.com>
+ <20200422143840.GJ608746@tassilo.jf.intel.com>
+ <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
+ <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com>
+Date:   Thu, 23 Apr 2020 09:08:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586389003-26675-7-git-send-email-sidgup@codeaurora.org>
+In-Reply-To: <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 08 Apr 16:36 PDT 2020, Siddharth Gupta wrote:
 
-> The SSR subdevice only adds callback for the unprepare event. Add callbacks
-> for unprepare, start and prepare events. The client driver for a particular
-> remoteproc might be interested in knowing the status of the remoteproc
-> while undergoing SSR, not just when the remoteproc has finished shutting
-> down.
+
+On 4/23/2020 12:18 AM, Ian Rogers wrote:
+> On Wed, Apr 22, 2020 at 8:34 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Wed, Apr 22, 2020 at 7:38 AM Andi Kleen <ak@linux.intel.com> wrote:
+>>>
+>>> On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
+>>>> Remove over escaping with \\.
+>>>> Remove extraneous if 1 if 0 == 1 else 0 else 0.
+>>>
+>>> So where do these parse errors happen exactly? Some earlier
+>>> patches introduced them as regressions?
+>>
+>> I'll work to track down a Fixes tag. I can repro the Skylakex errors
+>> without the test in this series, by doing:
+>>
+>> $ perf stat -M DRAM_Read_Latency sleep 1
+>> Error:
+>> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+>> for event (cha/event=0x36\,uma
+>> sk=0x21/).
+>> /bin/dmesg | grep -i perf may provide additional information.
+>>
+
+I also think some patches introduced this regression. When we rollback 
+to commit 61ec07f5917e (perf vendor events intel: Update all the Intel 
+JSON metrics from TMAM 3.6.), there is no this error on CLX.
+
+Thanks
+Jin Yao
+
+>> This was just the escaping issue. I'm less clear on the other cascade
+>> lake issue, and it is a bit more work for me to test on cascade lake.
+>> What is "if 1 if 0 == 1 else 0 else 0" trying to do? Perhaps hunting
+>> for the Fixes will let me know, but it looks like a copy-paste error.
+>>
+>>> The original metrics worked without parse errors as far as I know.
+>>
+>> The skylake issue above repros on 5.2.17 and so it seems like it is
+>> broken for a while. The test in this series will prevent this in the
+>> future, but without this patch that test fails.
 > 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> ---
->  drivers/remoteproc/qcom_common.c | 39 +++++++++++++++++++++++++++++++++++----
->  include/linux/remoteproc.h       | 15 +++++++++++++++
->  2 files changed, 50 insertions(+), 4 deletions(-)
+> The parse errors were introduced with the metrics, so they've never worked:
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=fd5500989c8f3c3944ac0a144be04bae2506f7ba
 > 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index 56b0c3e..06611f2 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -183,9 +183,9 @@ EXPORT_SYMBOL_GPL(qcom_remove_smd_subdev);
->   *
->   * Returns pointer to srcu notifier head on success, ERR_PTR on failure.
->   *
-> - * This registers the @notify function as handler for restart notifications. As
-> - * remote processors are stopped this function will be called, with the rproc
-> - * pointer passed as a parameter.
-> + * This registers the @notify function as handler for powerup/shutdown
-> + * notifications. This function will be invoked inside the callbacks registered
-> + * for the ssr subdevice, with the rproc pointer passed as a parameter.
->   */
->  void *qcom_register_ssr_notifier(struct rproc *rproc, struct notifier_block *nb)
->  {
-> @@ -227,11 +227,39 @@ int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb)
->  }
->  EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
->  
-> +static int ssr_notify_prepare(struct rproc_subdev *subdev)
-> +{
-> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> +
-> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
-> +				 RPROC_BEFORE_POWERUP, (void *)ssr->name);
-> +	return 0;
-> +}
-> +
-> +static int ssr_notify_start(struct rproc_subdev *subdev)
-> +{
-> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> +
-> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
-> +				 RPROC_AFTER_POWERUP, (void *)ssr->name);
-> +	return 0;
-> +}
-> +
-> +static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
-> +{
-> +	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-> +
-> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
-> +				 RPROC_BEFORE_SHUTDOWN, (void *)ssr->name);
-> +}
-> +
-> +
->  static void ssr_notify_unprepare(struct rproc_subdev *subdev)
->  {
->  	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
->  
-> -	srcu_notifier_call_chain(ssr->rproc_notif_list, 0, (void *)ssr->name);
-> +	srcu_notifier_call_chain(ssr->rproc_notif_list,
-> +				 RPROC_AFTER_SHUTDOWN, (void *)ssr->name);
->  }
->  
->  /**
-> @@ -248,6 +276,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
->  {
->  	ssr->name = ssr_name;
->  	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
-> +	ssr->subdev.prepare = ssr_notify_prepare;
-> +	ssr->subdev.start = ssr_notify_start;
-> +	ssr->subdev.stop = ssr_notify_stop;
->  	ssr->subdev.unprepare = ssr_notify_unprepare;
->  	ssr->rproc_notif_list = kzalloc(sizeof(struct srcu_notifier_head),
->  								GFP_KERNEL);
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 687e1eb..facadb07 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -452,6 +452,21 @@ struct rproc_dump_segment {
->  };
->  
->  /**
-> + * enum rproc_notif_type - Different stages of remoteproc notifications
-> + * @RPROC_BEFORE_SHUTDOWN:	unprepare stage of  remoteproc
-> + * @RPROC_AFTER_SHUTDOWN:	stop stage of  remoteproc
-> + * @RPROC_BEFORE_POWERUP:	prepare stage of  remoteproc
-> + * @RPROC_AFTER_POWERUP:	start stage of  remoteproc
-> + */
-> +enum rproc_notif_type {
-
-As these are tied to the API defined in qcom_rproc.h, I think it better
-belong there.
-
-> +	RPROC_BEFORE_SHUTDOWN,
-> +	RPROC_AFTER_SHUTDOWN,
-> +	RPROC_BEFORE_POWERUP,
-> +	RPROC_AFTER_POWERUP,
-> +	RPROC_MAX
-
-Please omit the MAX, unless you have a specific purpose for it.
-
-Regards,
-Bjorn
-
-> +};
-> +
-> +/**
->   * struct rproc - represents a physical remote processor device
->   * @node: list node of this rproc object
->   * @domain: iommu domain
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> I will send out a v2 with Fixes in the commit message but wanted to
+> wait in case there was any more feedback. In particular the fixes to
+> the new test and expr parser lex code. The lex code wasn't broken at
+> the time the metrics were added and should be working again after this
+> patch set.
+> 
+> Thanks,
+> Ian
+> 
+>>> If it fixes something earlier it would need Fixes: tags.
+>>
+>> Working on it. Thanks for the input!
+>>
+>> Ian
+>>
+>>> -Andi
