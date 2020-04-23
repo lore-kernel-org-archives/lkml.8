@@ -2,126 +2,83 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E0AC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9A7C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE93D20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617312073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 03:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgDWDBx (ORCPT
+        id S1726525AbgDWDJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 23:01:53 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:42530 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbgDWDBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 23:01:52 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0TwNrvuB_1587610903;
-Received: from 30.27.118.66(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwNrvuB_1587610903)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 23 Apr 2020 11:01:45 +0800
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
- <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
- <20200422154543.2efba3dd.cohuck@redhat.com>
- <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
- <20200422180403.03f60b0c.cohuck@redhat.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <5e1e126d-f1b0-196c-594b-4289d0afb9a8@linux.alibaba.com>
-Date:   Thu, 23 Apr 2020 11:01:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 23:09:31 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2490 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725562AbgDWDJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 23:09:31 -0400
+Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id CE0956136034E71C38FF;
+        Thu, 23 Apr 2020 11:09:28 +0800 (CST)
+Received: from DGGEML524-MBX.china.huawei.com ([169.254.1.24]) by
+ DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
+ 14.03.0487.000; Thu, 23 Apr 2020 11:09:21 +0800
+From:   "Zouwei (Samuel)" <zou_wei@huawei.com>
+To:     "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIC1uZXh0XSBQQ0k6IGR3YzogTWFrZSBoaXNpX3BjaWVf?=
+ =?gb2312?Q?platform=5Fops_static?=
+Thread-Topic: [PATCH -next] PCI: dwc: Make hisi_pcie_platform_ops static
+Thread-Index: AQHWGIolbWQn5B0De0Gy9am0DtYXU6iFfyWAgACG+2A=
+Date:   Thu, 23 Apr 2020 03:09:20 +0000
+Message-ID: <C3CD0DF8AD11A84CB25A1426DE537C61E5951DC6@dggeml524-mbx.china.huawei.com>
+References: <1587548829-107925-1-git-send-email-zou_wei@huawei.com>
+ <5EA10481.1080604@hisilicon.com>
+In-Reply-To: <5EA10481.1080604@hisilicon.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.166.212.180]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200422180403.03f60b0c.cohuck@redhat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/4/23 0:04, Cornelia Huck wrote:
-> On Wed, 22 Apr 2020 17:58:04 +0200
-> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-> 
->> On 22.04.20 15:45, Cornelia Huck wrote:
->>> On Wed, 22 Apr 2020 20:58:04 +0800
->>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
->>>    
->>>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->>>> structure. Earlier than historical reasons, many kvm-related function
->>>
->>> s/Earlier than/For/ ?
->>>    
->>>> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
->>>> This patch does a unified cleanup of these remaining redundant parameters.
->>>>
->>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->>>> ---
->>>>   arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
->>>>   1 file changed, 22 insertions(+), 15 deletions(-)
->>>>
->>>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->>>> index e335a7e5ead7..d7bb2e7a07ff 100644
->>>> --- a/arch/s390/kvm/kvm-s390.c
->>>> +++ b/arch/s390/kvm/kvm-s390.c
->>>> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->>>>   	return rc;
->>>>   }
->>>>   
->>>> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>>> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->>>>   {
->>>> +	struct kvm_run *kvm_run = vcpu->run;
->>>>   	struct runtime_instr_cb *riccb;
->>>>   	struct gs_cb *gscb;
->>>>   
->>>> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>>>   		}
->>>>   		if (vcpu->arch.gs_enabled) {
->>>>   			current->thread.gs_cb = (struct gs_cb *)
->>>> -						&vcpu->run->s.regs.gscb;
->>>> +						&kvm_run->s.regs.gscb;
->>>
->>> Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
->>> it. (It seems they amount to at least as much as the changes advertised
->>> in the patch description.)
->>>
->>> Other opinions?
->>
->> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
->> function parameter list into the variable declaration)? Not sure if this is better.
->>
-> 
-> There's more in this patch that I cut... but I think just moving
-> kvm_run from the parameter list would be much less disruptive.
-> 
-
-I think there are two kinds of code(`vcpu->run->` and `kvm_run->`), but 
-there will be more disruptive, not less.
-
-Thanks,
-Tianjia
+SGkgV2FuZywNCg0KVGhhbmtzIGZvciB5b3VyIHJldmlldyBhbmQgcmVwbHkuDQpJIHdpbGwgbW9k
+aWZ5IGFuZCBzZW5kIHRoZSB2MiBzb29uLg0KDQpUaGFua3MNClpvdSBXZWkNCi0tLS0t08q8/tSt
+vP4tLS0tLQ0Kt6K8/sjLOiBXYW5nemhvdSAoQikgDQq3osvNyrG85DogMjAyMMTqNNTCMjPI1SAx
+MDo1OQ0KytW8/sjLOiBab3V3ZWkgKFNhbXVlbCkgPHpvdV93ZWlAaHVhd2VpLmNvbT47IGxvcmVu
+em8ucGllcmFsaXNpQGFybS5jb207IGFtdXJyYXlAdGhlZ29vZHBlbmd1aW4uY28udWs7IGJoZWxn
+YWFzQGdvb2dsZS5jb20NCrOty806IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCtb3zOI6IFJlOiBbUEFUQ0ggLW5leHRdIFBDSTogZHdjOiBN
+YWtlIGhpc2lfcGNpZV9wbGF0Zm9ybV9vcHMgc3RhdGljDQoNCk9uIDIwMjAvNC8yMiAxNzo0Nywg
+Wm91IFdlaSB3cm90ZToNCj4gRml4IHRoZSBmb2xsb3dpbmcgc3BhcnNlIHdhcm5pbmc6DQo+IA0K
+PiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWhpc2kuYzozNjU6MjE6IHdhcm5pbmc6
+DQo+IHN5bWJvbCAnaGlzaV9wY2llX3BsYXRmb3JtX29wcycgd2FzIG5vdCBkZWNsYXJlZC4gU2hv
+dWxkIGl0IGJlIHN0YXRpYz8NCj4gDQo+IFJlcG9ydGVkLWJ5OiBIdWxrIFJvYm90IDxodWxrY2lA
+aHVhd2VpLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogWm91IFdlaSA8em91X3dlaUBodWF3ZWkuY29t
+Pg0KPiAtLS0NCj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtaGlzaS5jIHwgMyAr
+Ky0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4g
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWhpc2kuYyBi
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtaGlzaS5jDQo+IGluZGV4IDZkOWUxYjIu
+LmI0NDBmNDAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUt
+aGlzaS5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtaGlzaS5jDQo+
+IEBAIC0zNjIsNyArMzYyLDggQEAgc3RhdGljIGludCBoaXNpX3BjaWVfcGxhdGZvcm1faW5pdChz
+dHJ1Y3QgcGNpX2NvbmZpZ193aW5kb3cgKmNmZykNCj4gIAlyZXR1cm4gMDsNCj4gIH0NCj4gIA0K
+PiAtc3RydWN0IHBjaV9lY2FtX29wcyBoaXNpX3BjaWVfcGxhdGZvcm1fb3BzID0gew0KPiArc3Rh
+dGljIHN0cnVjdCBwY2lfZWNhbV9vcHMgaGlzaV9wY2llX3BsYXRmb3JtX29wcyA9IHsNCj4gKwl9
+DQoNCndoeSBhZGRpbmcgIn0iPyBCVFcsIHN0YXRpYyBpcyBPSyBoZXJlLg0KDQo+ICAJLmJ1c19z
+aGlmdCAgICA9IDIwLA0KPiAgCS5pbml0ICAgICAgICAgPSAgaGlzaV9wY2llX3BsYXRmb3JtX2lu
+aXQsDQo+ICAJLnBjaV9vcHMgICAgICA9IHsNCj4gDQoNCg==
