@@ -2,93 +2,136 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4926EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CBDC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2177B20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F4120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HYW1Md3F"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eFnWmoI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbgDWRyl (ORCPT
+        id S1730076AbgDWRzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:54:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53221 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729919AbgDWRyk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:54:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587664480;
+        Thu, 23 Apr 2020 13:55:18 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50534 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729995AbgDWRzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:55:17 -0400
+Received: from zn.tnic (p200300EC2F0D2E00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2e00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C4E51EC0716;
+        Thu, 23 Apr 2020 19:55:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587664516;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zQYM7DAdgloihb4r4wvFK5egz1Cicb1Ni3LFaRhaezE=;
-        b=HYW1Md3Fv7cEw68pvmswL9bYhHjDNOk+tGdfz+XTxBlrXN1SY5XER/ionekjWQGm/Ba3lv
-        YGmezA8EmD9VwE/3IHUdMpyMYCpq2eK6+so1qE9zE8K9xqZmRKvUImEusBaKEsYfyXul3J
-        /73qQCm5a+iVSac9Rt0NL1nimmeye/0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-2Lbw4eM7Ni6Qd0yzIoVSyA-1; Thu, 23 Apr 2020 13:54:37 -0400
-X-MC-Unique: 2Lbw4eM7Ni6Qd0yzIoVSyA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C2E4107ACCA;
-        Thu, 23 Apr 2020 17:54:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.28])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5165D10016EB;
-        Thu, 23 Apr 2020 17:54:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 23 Apr 2020 19:54:36 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 19:54:33 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 0/2] proc: Calling proc_flush_task exactly once per
- task
-Message-ID: <20200423175432.GA18034@redhat.com>
-References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
- <87ftcv1nqe.fsf@x220.int.ebiederm.org>
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fdCosX/br/wnZBw1bt/2AcGwoWApmog1vU5fGIBemdU=;
+        b=eFnWmoI2go161GI7ep3qWvw4Pu+5aW1NYgHeRGRtmk7ZcbRcT3qi5Vx2VY6K/4NcNs9cr2
+        PFwMXQMVgyKUI4iVh3jPHS5lVKeHywy9/TW0xse2gDrJIbPAOq4hnJ46Maeiqbtltfjeod
+        pSGeVL+c65UxG8RRU7CQ4OeqQiye3YI=
+Date:   Thu, 23 Apr 2020 19:55:17 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/10] EDAC/ghes: Remove unused members of struct
+ ghes_edac_pvt, rename it to ghes_mci
+Message-ID: <20200423175517.GG26021@zn.tnic>
+References: <20200422115814.22205-1-rrichter@marvell.com>
+ <20200422115814.22205-4-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87ftcv1nqe.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200422115814.22205-4-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/22, Eric W. Biederman wrote:
->
-> Eric W. Biederman (2):
->       proc: Use PIDTYPE_TGID in next_tgid
->       proc: Ensure we see the exit of each process tid exactly once
->
->  fs/exec.c           |  5 +----
->  fs/proc/base.c      | 16 ++--------------
->  include/linux/pid.h |  1 +
->  kernel/pid.c        | 16 ++++++++++++++++
->  4 files changed, 20 insertions(+), 18 deletions(-)
->
+On Wed, Apr 22, 2020 at 01:58:07PM +0200, Robert Richter wrote:
+> The struct members list and ghes of struct ghes_edac_pvt are unused,
+> remove them. On that occasion, rename it to struct ghes_mci. This is
+> shorter and aligns better with the current naming scheme.
+> 
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
 > ---
-> Oleg if these look good I will add these onto my branch of proc changes
-> that includes Alexey's changes.
+>  drivers/edac/ghes_edac.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index cb3dab56a875..39efce0df881 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -15,9 +15,7 @@
+>  #include "edac_module.h"
+>  #include <ras/ras_event.h>
+>  
+> -struct ghes_edac_pvt {
+> -	struct list_head list;
+> -	struct ghes *ghes;
+> +struct ghes_mci {
 
-Eric, sorry, where can I find these 2 patches?
+No, that should be "ghes_pvt" because it *is* ghes_edac's private
+structure and there's also an mci pointer in it.
 
-Oleg.
+>  	struct mem_ctl_info *mci;
+>  
+>  	/* Buffers for the error handling routine */
+> @@ -32,7 +30,7 @@ static refcount_t ghes_refcount = REFCOUNT_INIT(0);
+>   * also provides the necessary (implicit) memory barrier for the SMP
+>   * case to make the pointer visible on another CPU.
+>   */
+> -static struct ghes_edac_pvt *ghes_pvt;
+> +static struct ghes_mci *ghes_pvt;
+>  
+>  /* GHES registration mutex */
+>  static DEFINE_MUTEX(ghes_reg_mutex);
+> @@ -203,7 +201,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  {
+>  	struct edac_raw_error_desc *e;
+>  	struct mem_ctl_info *mci;
+> -	struct ghes_edac_pvt *pvt;
+> +	struct ghes_mci *pvt;
+>  	unsigned long flags;
+>  	char *p;
+>  
+> @@ -457,7 +455,7 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+>  	bool fake = false;
+>  	int rc = 0, num_dimm = 0;
+>  	struct mem_ctl_info *mci;
+> -	struct ghes_edac_pvt *pvt;
+> +	struct ghes_mci *pvt;
+>  	struct edac_mc_layer layers[1];
+>  	struct ghes_edac_dimm_fill dimm_fill;
+>  	unsigned long flags;
+> @@ -494,7 +492,7 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+>  	layers[0].size = num_dimm;
+>  	layers[0].is_virt_csrow = true;
+>  
+> -	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(struct ghes_edac_pvt));
+> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(*pvt));
 
+The sizeof() change doesn't make it better because now I have to go look
+up what pvt is.
+
+sizeof(struct ghes_pvt) tells you what size you're getting here.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
