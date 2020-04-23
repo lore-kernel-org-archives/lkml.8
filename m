@@ -2,168 +2,80 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6B6C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B74C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA3D82075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:13:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mExy4KoW"
+	by mail.kernel.org (Postfix) with ESMTP id 5D90C2074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgDWCNz (ORCPT
+        id S1726501AbgDWCPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgDWCNz (ORCPT
+        Wed, 22 Apr 2020 22:15:00 -0400
+Received: from cmccmta1.chinamobile.com ([221.176.66.79]:13043 "EHLO
+        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgDWCPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:13:55 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1840AC03C1AA;
-        Wed, 22 Apr 2020 19:13:55 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49717g1mmRz9sSd;
-        Thu, 23 Apr 2020 12:13:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587608033;
-        bh=xVuTqNfiwREg9OUyvTo3nmF/OVJaGHdlQk6JpY9joko=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mExy4KoWKorVGiMLvmJogm4dmaC3orsjrkDTll7uYDL9ExSd4FzUL95NnerdYMOtE
-         YOgfvsKn4+Hjuv4FVF7M2MnSGeGamBXGCcYhRzh5oVRQk0DjmcktND8lgVT7QMYpib
-         g1LNv2zcPmhvkSofRFZjCGpoMFIflrXrRYArAEglieecKwfdqJHF+OtByZQBF0kr/F
-         BxcMre6kPlKIxFvrpI4EfXvmsiMBVrUu9gBrOH8HmGeCsQrvbSNHJwkHltpPPxfE6L
-         upKPJZjul49PjHPRWDmfH+QRjXbgMGHRTFK9nQZWe0s5Ro96q3WEgZqW2AAxJ3ZUyZ
-         czivDrn3coC/w==
-Date:   Thu, 23 Apr 2020 12:13:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>
-Subject: linux-next: manual merge of the amdgpu tree with the drm tree
-Message-ID: <20200423121346.42e35467@canb.auug.org.au>
+        Wed, 22 Apr 2020 22:15:00 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee45ea0fa15e79-111ec; Thu, 23 Apr 2020 10:14:45 +0800 (CST)
+X-RM-TRANSID: 2ee45ea0fa15e79-111ec
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.25.154.146])
+        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85ea0fa0c83d-2ea42;
+        Thu, 23 Apr 2020 10:14:44 +0800 (CST)
+X-RM-TRANSID: 2ee85ea0fa0c83d-2ea42
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     kuba@kernel.org, khalasa@piap.pl, davem@davemloft.net,
+        linus.walleij@linaro.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH v3] net: ethernet: ixp4xx: Add error handling in ixp4xx_eth_probe()
+Date:   Thu, 23 Apr 2020 10:16:31 +0800
+Message-Id: <20200423021631.20800-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+aoijb5RJMBtS7MePMMZmj8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+aoijb5RJMBtS7MePMMZmj8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The function ixp4xx_eth_probe() does not perform sufficient error
+checking after executing devm_ioremap_resource(), which can result
+in crashes if a critical error path is encountered.
 
-Hi all,
+Fixes: f458ac479777 ("ARM/net: ixp4xx: Pass ethernet physical base as resource")
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+v3:
+ - remove extra line, between the tags
+v2:
+ - add fixes tag
+---
+ drivers/net/ethernet/xscale/ixp4xx_eth.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Today's linux-next merge of the amdgpu tree got a conflict in:
+diff --git a/drivers/net/ethernet/xscale/ixp4xx_eth.c b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+index 269596c15..2e5202923 100644
+--- a/drivers/net/ethernet/xscale/ixp4xx_eth.c
++++ b/drivers/net/ethernet/xscale/ixp4xx_eth.c
+@@ -1387,6 +1387,8 @@ static int ixp4xx_eth_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	regs_phys = res->start;
+ 	port->regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(port->regs))
++		return PTR_ERR(port->regs);
+ 
+ 	switch (port->id) {
+ 	case IXP4XX_ETH_NPEA:
+-- 
+2.20.1.windows.1
 
-  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
 
-between commit:
 
-  09b974e8983a ("drm/amd/amdgpu_dm/mst: Remove ->destroy_connector() callba=
-ck")
-
-from the drm tree and commit:
-
-  c33f212c0c92 ("drm/amdgpu/display: create fake mst encoders ahead of time=
-")
-
-from the amdgpu tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-index 3db1ec35d2b4,4f0072a9396b..000000000000
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-@@@ -136,23 -93,14 +93,20 @@@ static ssize_t dm_dp_aux_transfer(struc
-  static void
-  dm_dp_mst_connector_destroy(struct drm_connector *connector)
-  {
- -	struct amdgpu_dm_connector *amdgpu_dm_connector =3D to_amdgpu_dm_connect=
-or(connector);
- +	struct amdgpu_dm_connector *aconnector =3D
- +		to_amdgpu_dm_connector(connector);
-- 	struct amdgpu_encoder *amdgpu_encoder =3D aconnector->mst_encoder;
- +
- +	if (aconnector->dc_sink) {
- +		dc_link_remove_remote_sink(aconnector->dc_link,
- +					   aconnector->dc_sink);
- +		dc_sink_release(aconnector->dc_sink);
- +	}
- =20
- -	kfree(amdgpu_dm_connector->edid);
- -	amdgpu_dm_connector->edid =3D NULL;
- +	kfree(aconnector->edid);
- =20
-- 	drm_encoder_cleanup(&amdgpu_encoder->base);
-- 	kfree(amdgpu_encoder);
-  	drm_connector_cleanup(connector);
- -	drm_dp_mst_put_port_malloc(amdgpu_dm_connector->port);
- -	kfree(amdgpu_dm_connector);
- +	drm_dp_mst_put_port_malloc(aconnector->port);
- +	kfree(aconnector);
-  }
- =20
-  static int
-@@@ -412,10 -358,11 +364,19 @@@ dm_dp_add_mst_connector(struct drm_dp_m
-  		master->dc_link,
-  		master->connector_id);
- =20
-- 	aconnector->mst_encoder =3D dm_dp_create_fake_mst_encoder(master);
-- 	drm_connector_attach_encoder(&aconnector->base,
-- 				     &aconnector->mst_encoder->base);
-+ 	for (i =3D 0; i < AMDGPU_DM_MAX_CRTC; i++) {
-+ 		drm_connector_attach_encoder(&aconnector->base,
-+ 					     &aconnector->mst_encoders[i].base);
-+ 	}
-+=20
-++	connector->max_bpc_property =3D master->base.max_bpc_property;
-++	if (connector->max_bpc_property)
-++		drm_connector_attach_max_bpc_property(connector, 8, 16);
-++
-++	connector->vrr_capable_property =3D master->base.vrr_capable_property;
-++	if (connector->vrr_capable_property)
-++		drm_connector_attach_vrr_capable_property(connector);
- +
-  	connector->max_bpc_property =3D master->base.max_bpc_property;
-  	if (connector->max_bpc_property)
-  		drm_connector_attach_max_bpc_property(connector, 8, 16);
-
---Sig_/+aoijb5RJMBtS7MePMMZmj8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6g+doACgkQAVBC80lX
-0GzYsgf9HPCUYzxjIj08o53T96k048Rm4Ej9PAukiAH3p53qvOcyKzcQVuZQP8JB
-uxZkddWLjhkzV3JLfdchTyV/e4UWkF+v8GaUfOYzPWwde94LkmMtDGiPtD8uCen0
-61/wCiLg1XbjiuQJtmtRdAEiK3elwI2OKtK/yNvq0Ue9Vau2OpqozKjqeE+pH+xc
-RP4m72sCXJ6ntOKyT14aKyZGpEZ29zBwN+mnoEoyg0DZVfS4SQcnjuzgQSYKBUdT
-Fg9WUq61pUCz7+dpJpeprZA5QsQR2I0xtt4O5F/kFdG7GVPd+4YlT+763rF0G9q0
-lriWtDXPBTtwGwjB3bXmXCghrc5l4A==
-=MkmL
------END PGP SIGNATURE-----
-
---Sig_/+aoijb5RJMBtS7MePMMZmj8--
