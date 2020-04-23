@@ -2,82 +2,106 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F44FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA198C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCF72071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0302071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f3HaI4v7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgDWP24 (ORCPT
+        id S1729203AbgDWP3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:28:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:43171 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbgDWP24 (ORCPT
+        Thu, 23 Apr 2020 11:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729014AbgDWP3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:28:56 -0400
-Received: from [192.168.178.29] ([46.223.232.170]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MmUYD-1ijCLP2xNp-00iVJm for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020
- 17:28:54 +0200
-From:   Erik Rull <webmaster@rdsoftware.de>
-Subject: Huge difference in reserved memory - how to find?
-To:     linux-kernel@vger.kernel.org
-Message-ID: <f7aa4e34-3472-cbaa-8ca9-978472a80935@rdsoftware.de>
+        Thu, 23 Apr 2020 11:29:03 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02954C08ED7D
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:29:03 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r26so7024851wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=K0XwhvnZ5fHku+zX8bB/tqMgI8KM65JG7UKJ1LIe+hw=;
+        b=f3HaI4v7q0s0ma9brDtDfqbZ273js/4jOfpcLSe86Rdc4863/LFECt156kdpFRFuFU
+         /qAg5B9O+PLzlWP3310ATVRODsMIrhzfM6FRjI2ZfFrQh4TULq2AHJGPyPOzharxZjGs
+         7nU7Xz0r39aTzO4K1n1DPslhQOZhvyuKKyIbf0lq4Ckrwalxc66TSGtchPiX+in6/vCG
+         TN+C9llUiHzgI7809zQxurlbhQHWjyyCzDT1ymd5TPr0DGAHiwg0sY3T6f3iwZEMaYMz
+         GyZiPpsxXPYpGo5h9qA9IliuLqsreuoUyXoDk50xYzX1M3L64josfqN4NbTZNRwbZFey
+         lCWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K0XwhvnZ5fHku+zX8bB/tqMgI8KM65JG7UKJ1LIe+hw=;
+        b=mnZe5G1+olLBelYxnGGdTFANf5sP7AEbSFkWLXQD8rGDR3hXPoUNIEuJayFqNyX5Wz
+         Hc208/e2I6mntjBecV8IKzfWL5ysf/5qTd1/WybNY9z4v8oVefIWXZNQMvS16Hk2GKNL
+         Da3OeamgulV270oSLbeFD8tObKK6e4QIuUSWOc0Q6uJ8TSqPCMdzMOv0XX4Dlb3OMUCg
+         1LRqZarIkRa+1ZuBKXo9So1jidTE4gsiRmt1STForSrs+ky+NwubidoJUcCb6JlG9vsr
+         n2BQ2qAMXPu2mlFt19g9m6JxDPkdYkwmbZE+nPBmf4ry6MgRENPgafWYzzezbxhPR1sg
+         sVjg==
+X-Gm-Message-State: AGi0PuZTcWnls/cZvBY0iRFSflj/lM71EjyD6t1I5mp66uCv5cFDQlLL
+        8euXg2mbKWowfOs/pkmYHpSq2w==
+X-Google-Smtp-Source: APiQypJgzi6SD42pIpK5DubH9kPf+0CuGHiKBJHzVOd+VDHdvOQf8wEqsCDznBChQjiLenoFM3eaig==
+X-Received: by 2002:a1c:a794:: with SMTP id q142mr4732427wme.4.1587655741551;
+        Thu, 23 Apr 2020 08:29:01 -0700 (PDT)
+Received: from linaro.org ([37.167.216.250])
+        by smtp.gmail.com with ESMTPSA id j13sm4361278wrq.24.2020.04.23.08.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 08:29:00 -0700 (PDT)
 Date:   Thu, 23 Apr 2020 17:28:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Firefox/60.0 SeaMonkey/2.53.1
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v6 06/10] PM / EM: change name of em_pd_energy to
+ em_cpu_energy
+Message-ID: <20200423152854.GD65632@linaro.org>
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-7-lukasz.luba@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:rzGcRtocErqHMEBlt9++JRuiXFDRZ+aRw7O4NAKnkFmJ3bYKXEB
- cJyFUxlGIXz27u1vDTxHAmrBUA61DvYV978SIG20X8yrHxC6ACHBKA5qOsY9IEwXpCGctwI
- sy+UGMr9TomUQBlv6yG1CjqdHcNUA8pIIrfSzLquJ0arg8RH8gGAYre9eFM93rU0jX9/pte
- euTUjaMTaMWD4GNDKzXgg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:j52MhtoBE+w=:e6oeCUiluIh1kvketDBBtV
- lHDRyYLZK10b3/y+MUI43tx9FjN2V0PTnqqIJGuycARkDw1AtFZ7HaXTwnDSHKtXcRSTUJbes
- DbS1BvH+/b8fPPV5NhnXArmFTC3uPhTqyR8I2QQAepl3zEUaAN9vN/l+JyxJOj4YMP/pYGSHl
- G7df3XLjc9XzZY0Cm+U2FUyF1nfShuG4bqDupgp7NgRV40/CCM6R31JdaziKEyDiX8HXDTED9
- ksIm64QZvqTCUDbqfQNl5zNPLG6IC08dapdkNXR41qxRTS/EC+oQAxgepBJTycxphUIbDFPvZ
- /PGEizweFzkIARydMo2gBTp+TAOZKz/kroeTauvjgsZvD0apXXExEd8FwX5kNidM3reoZZDbJ
- WdYRoXlfzrTCoFntV55bfu9iFx3XRbwd092c4HOQdNBy0sSO5S1tt/XoeplVsVRcJ+zUXQCC7
- XvhoTGAa4np1wrkbwW5Ay7cx54rDFpycxuTsv4fzu0F6H4F6YJ+aokSZhPg+XVQNlGMI0HpPg
- 3I/uHId4EQtG6ReYXpriZ3oarzfHsH9tt7cPEWfk+GDu9IAuPI2iz2esKULzz4EE1BtyAbD5H
- eM+AmD8MtNT8Ic/uxMIIn9FQMnGaD1E5ezX+ZmLI7SsHvQUyHYs9LvUwuLtoGSygh7+UaM+8e
- 5un7krCAGcQy91kAGasylWmob/WxhGBBQyAg/t/fKlocElmtB0yZsUZVU1ydT9Jd0sS8NU1Ev
- 81ldDK02wxlehA851Nbi0hcgvq1dhMnqBVfrWNEN6x99uY45MyO6HU4nOhApC8lqchRbu6jR3
- yxuEsR+VJF5XmeEMy97X0f6jGmAFovgCPu5unu6iw/W52waiKG+PDA+IZtco3W4pkfvtf6p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410084210.24932-7-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+On Fri, Apr 10, 2020 at 09:42:06AM +0100, Lukasz Luba wrote:
+> Energy Model framework supports now other devices than CPUs. Refactor some
+> of the functions in order to prevent wrong usage. The old function
+> em_pd_energy has to generic name. It must not be used without proper
+> cpumask pointer, which is possible only for CPU devices. Thus, rename it
+> and add proper description to warn of potential wrong usage for other
+> devices.
+> 
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 
-I'm trying to move from 3.4.67 to 4.19 on a rather old Intel CPU and run into
-some memory trouble I do not understand:
-
-The point that confuses me is the difference in the following line:
-
-3.4.67:
-[    0.000000] Memory: 235736k/261056k available (4695k kernel code, 24872k
-reserved, 2889k data, 564k init, 0k highmem)
-
-4.19.82-rt30:
-[    0.534687] Memory: 165244K/260668K available (9050K kernel code, 821K
-rwdata, 2500K rodata, 808K init, 440K bss, 95424K reserved, 0K cma-reserved, 0K
-highmem)
-
-Why is so much memory reserved in the 4.19? I would like to understand why and
-how I could reduce that. I need some more space on the system to let my
-application run.
-
-Thanks a lot!
-
-Best regards,
-
-Erik
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
