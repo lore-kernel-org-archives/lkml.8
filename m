@@ -2,151 +2,105 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5192DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E0BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B28F206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7DD20736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BTr1Wi4p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwtUFfM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbgDWR6q (ORCPT
+        id S1730123AbgDWR7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:58:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
+        Thu, 23 Apr 2020 13:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729996AbgDWR6p (ORCPT
+        with ESMTP id S1729991AbgDWR7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:58:45 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381D9C09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:58:45 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id i27so7625596ota.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:58:45 -0700 (PDT)
+        Thu, 23 Apr 2020 13:59:21 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D6AC09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:59:20 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so7513497wmc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SfTuN1GL8FeDNGb9kVTe6ZjLhJdk6HBFvGUQWKfTZaw=;
-        b=BTr1Wi4pt3CKPmc7eUWoYsjYOlCXW+9iFUIOKas6l/QvDPwXPtE0kDU0KOACjOgc6F
-         3e8Fvecfp5+5Arl6svwNLtfBHCnElBvOlAHABbY80B27DPZSYBpaPF4gydIDYcB+/IZ0
-         jPebPdOFlEOVPo3A7S+5NcPyh+onQKu7YIiL8UUyHBGwnLzR+nlsLeqZ9uz8chfx7Vcp
-         +WeLr9iVCINd8JoBK2yliJsH8UE/JmH7bde0WqRLL7KRFlx8/1zfpVF2LTqdSnGQLZFH
-         Bj1kDDzmNW+WSh6NdjXFmmkjt/nepry9y4gS+PLqrT9Wy4tqxyTGUV6RuOAnFogoA7Aj
-         gD9Q==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=+3v2CXZ31rJC/XGZqxQoIxPYicngYI/XpXBi168YDUA=;
+        b=fwtUFfM1OdfdnPO/OYfjhurTSKSzL3DXgAb8iY48jtF8A9NVVj/4h1b8ZnWDl5Q6Ly
+         dLakkA+6/matqGWMo2igyZjLLrLaSNBfM8l+MuY1PYqir4c49wiVymlpujD02aPH+AHH
+         mjumaFTpmW4Nc9l5fbuAKgZh8EQnYKRgvww1LKIAecbF9uKP0Fc3brjsb1MznGrxUX35
+         hhIivcjttP2ctHYfoIMNJuJ8cUc/Z5W5o6hiGRSt9f18uKP9kTHlKl73Ikq/2gs7J3er
+         tLKUI1Ct8g+v7Rwe//6P2rZ8nGUKd2grxo5b4XgFdzCm977HL1lpuX8a+dal+Z0DocON
+         tJVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SfTuN1GL8FeDNGb9kVTe6ZjLhJdk6HBFvGUQWKfTZaw=;
-        b=M/ye5iV6oKWkzUKMmxGAyAgigofbwqD4/QJQRD64ZDgZ2b9pOkOzondumtYFRkE/Bq
-         QJRCoe/vzAPklKQ6BiNeXe2GcYPSU+bSibQLLmzHFfHmszhaba3f8yUp/uCVlj0/V+fB
-         svzEQTBCPuQdetecXRWDWkh9l4rYN4X5yiZLRrzJp29Cf0GiAKDHOdp7a4wXYmBpL9bi
-         ZUYYfwW0PGliPG6v9x08rU9U31S2sML8H05DvWsMcgmI9TnZ6xb8SPeC70AHGIeVTM22
-         /u7ath2svjtVl0L4whzWKcpgCJQPqhD40GbqETRVH6/otMmvjVsd+at+Su9ke063KLO5
-         XD/w==
-X-Gm-Message-State: AGi0Puau89uVj6rfHDAJRIwc+z32W4/AjaQpGdnjV0bCxivjxzflXq44
-        BhnkI+RYQM/72w0kT99cmn2YSu31WHceAio9/D/8NA==
-X-Google-Smtp-Source: APiQypJGsZZdVAlUvsMum7KWXfeDMIl50YF/tvwOieRFKCZfk5hNZ19j8rsdTXL1UjDvwClRXRtFrsYzlUnJqgj3O70=
-X-Received: by 2002:a54:4f02:: with SMTP id e2mr4120853oiy.10.1587664724608;
- Thu, 23 Apr 2020 10:58:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <CALAqxLURuJ-tMxMY6Z2BvLmyd6X+w7SiSB5otoH6vx+NxJm-NA@mail.gmail.com>
- <jhj8simxgqo.mognet@arm.com> <CALAqxLXGQa-sPjNQV-uXzJLOVMyJtHqdfk0J48dhs+WVbWu+Sw@mail.gmail.com>
-In-Reply-To: <CALAqxLXGQa-sPjNQV-uXzJLOVMyJtHqdfk0J48dhs+WVbWu+Sw@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 23 Apr 2020 10:58:33 -0700
-Message-ID: <CALAqxLWBxgfFxv_STHnnU75GAQs-S-KQXiReVSaFDK50pjokSw@mail.gmail.com>
-Subject: Re: BUG: Invalid wait context with 5.7-rc2?
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=+3v2CXZ31rJC/XGZqxQoIxPYicngYI/XpXBi168YDUA=;
+        b=BxAQJqjCoyPGNLxuvSdKaliGeiAUnPJDs2qb1pRHhevY3jv3jDc1naVDIoAHILudY6
+         Wz4scT8xMnVa8gxCkW09klW69XDzrZZ3K9Y7duknAofAYb8foQ9FcZJWy4xCNwlrv78n
+         qUi4vlFQxkgwfG962Kdr4SkTcBQ/dTUb8TTl4K3Eh0D6oWrYQgWJNJDWukNkpoG8rrvh
+         BIi38DgBRC+h4HBvOIoOPbFMPf43/YyicI4Ga1j7w5MB25c5gkYxW278tulaaPyLDiFb
+         DmmWYzD20yonpcfXxzYVpkc8USRN08StRcYjuaJAkEYMaexlW9Nt4yajUGomVJRECr/X
+         5u4w==
+X-Gm-Message-State: AGi0PuZg7xpv/3JHN28pG7gMBJkrrFh9xeFyKMAuNmzi9lAngccgsjeV
+        RYaPdgtWrMqfRWsA6+HuRbkXXkLL
+X-Google-Smtp-Source: APiQypKjfwrSd102BKVGRxcvF2W6xfSgdPV00Pw8kRR2NGkhTtLDYe2lK0xYtIkDMDY7a3K7IdN5sg==
+X-Received: by 2002:a1c:750a:: with SMTP id o10mr5317263wmc.161.1587664759616;
+        Thu, 23 Apr 2020 10:59:19 -0700 (PDT)
+Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
+        by smtp.gmail.com with ESMTPSA id x23sm4473539wmj.6.2020.04.23.10.59.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 10:59:19 -0700 (PDT)
+Message-ID: <32dbb39debedabd6dbd1a8675760e171c180de9e.camel@gmail.com>
+Subject: Re: [PATCH] Changes in w1_therm.c and adding w1_therm.h
+From:   Akira shimahara <akira215corp@gmail.com>
+To:     Evgeniy Polyakov <zbr@ioremap.net>, Greg KH <greg@kroah.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 23 Apr 2020 19:59:18 +0200
+In-Reply-To: <307231587661588@mail.yandex.ru>
+References: <20200414170248.299534-1-akira215corp@gmail.com>
+         <20200423144116.GA7319@kroah.com> <307231587661588@mail.yandex.ru>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 10:29 AM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Thu, Apr 23, 2020 at 10:19 AM Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
-> > On 23/04/20 17:40, John Stultz wrote:
-> > > Hey Folks,
-> > >
-> > > Recently, I've seen some occasional hangs earlyish in boot on my
-> > > HiKey960 board with 5.7-rc1/rc2. The kernel isn't totally wedged as I
-> > > will see some kernel messages (firmware loading failures, etc) much
-> > > later if I leave it.  But oddly sysrq doesn't respond.
-> > >
-> > > Figuring it must be some sort of deadlock, I added LOCKDEP and a bunch
-> > > of other debug options and started booting in a loop. So far I've not
-> > > been able to trigger the original problem, but I do see the following
-> > > every boot:
-> > >
-> >
-> > Interestingly I can't seem to reproduce that one with the latest master
-> > (5.7.0-rc2-00115-g8c2e9790f196). Is that with some of the extra h960
-> > patches?
->
-> There are additional patches for hikey960, but nothing from the
-> tracelog (which looked pretty generic).
-> But I'll pull everything out to confirm and re-check against
-> linus/master in case there's a recent fix.
+Le jeudi 23 avril 2020 à 20:07 +0300, Evgeniy Polyakov a écrit :
+> Hi
+> 
+> 23.04.2020, 17:41, "Greg KH" <greg@kroah.com>:
+> > You do not document any of these new sysfs files, why not?
+> 
+> Looks like there are bigger isues with the patch that I've missed,
+> and if I understood correctly, Akira asked to drop this patch
+Hi,
 
-Yep. Still seeing it against linus/master with nothing else:
-[    2.091225] clocksource: Switched to clocksource arch_sys_counter
-[    2.091406]
-[    2.098896] =============================
-[    2.102942] [ BUG: Invalid wait context ]
-[    2.106991] 5.7.0-rc2-00069-g18bf34080c4c #250 Not tainted
-[    2.112528] -----------------------------
-[    2.116574] swapper/1/0 is trying to lock:
-[    2.120710] ffffff82194af258 (&pool->lock){..-.}-{3:3}, at:
-__queue_work+0x108/0x7c8
-[    2.128550] other info that might help us debug this:
-[    2.133649] context-{2:2}
-[    2.136290] 1 lock held by swapper/1/0:
-[    2.140159]  #0: ffffffc011d049c8 (rcu_read_lock){....}-{1:3}, at:
-__queue_work+0x48/0x7c8
-[    2.148513] stack backtrace:
-[    2.151421] CPU: 1 PID: 0 Comm: swapper/1 Not tainted
-5.7.0-rc2-00069-g18bf34080c4c #250
-[    2.159593] Hardware name: HiKey960 (DT)
-[    2.163554] Call trace:
-[    2.166023]  dump_backtrace+0x0/0x1a8
-[    2.169719]  show_stack+0x18/0x28
-[    2.173066]  dump_stack+0xdc/0x148
-[    2.176500]  __lock_acquire+0x5c0/0x1568
-[    2.180458]  lock_acquire+0x100/0x378
-[    2.184159]  _raw_spin_lock+0x64/0x108
-[    2.187942]  __queue_work+0x108/0x7c8
-[    2.191637]  queue_work_on+0xd0/0xf0
-[    2.195248]  timers_update_nohz+0x28/0x38
-[    2.199296]  tick_setup_sched_timer+0x110/0x178
-[    2.203870]  hrtimer_run_queues+0x114/0x170
-[    2.208092]  run_local_timers+0x30/0x70
-[    2.211963]  update_process_times+0x28/0x58
-[    2.216189]  tick_periodic+0x48/0x148
-[    2.219884]  tick_handle_periodic+0x28/0xc8
-[    2.224112]  arch_timer_handler_phys+0x2c/0x50
-[    2.225533] VFS: Disk quotas dquot_6.6.0
-[    2.228600]  handle_percpu_devid_irq+0xe0/0x460
-[    2.228605]  generic_handle_irq+0x30/0x48
-[    2.228608]  __handle_domain_irq+0x88/0xf8
-[    2.228613]  gic_handle_irq+0x5c/0xb0
-[    2.228619]  el1_irq+0xf4/0x1c0
-[    2.232654] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
-[    2.237146]  arch_cpu_idle+0x2c/0x230
-[    2.237151]  default_idle_call+0x20/0x44
-[    2.237156]  do_idle+0x1ec/0x2d0
-[    2.237159]  cpu_startup_entry+0x24/0x48
-[    2.241701] pnp: PnP ACPI: disabled
-[    2.245338]  secondary_start_kernel+0x160/0x210
+
+Evgeniy, I don't asked to drop this patch, sorry for the
+misunderstanding. I will add entries to Documentation/ABI/testing/ by
+the end of the week and submit a new patch. Who should I add in the
+'Contact' field ?
+
+To answer Greg's comments, we use the kernel subsystems as much as
+possible, but for timing and bus protocol reasons, we have to go a
+little deeper and control bus transaction as close as possible.
+
+Evgeniy, could you detail the issues you are talking about so I can
+adjust if required ?
+
+Thanks again for you time, regards
+
+Akira Shimahara 
+
