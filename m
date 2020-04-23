@@ -2,110 +2,207 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F9AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2202C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6521C20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hFg12bRG"
+	by mail.kernel.org (Postfix) with ESMTP id ABF0420767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgDWPye (ORCPT
+        id S1729452AbgDWPyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729230AbgDWPye (ORCPT
+        Thu, 23 Apr 2020 11:54:45 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:43253 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729435AbgDWPyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:54:34 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 193D3C09B040
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KwSXPvgUYiTHnatXM5A5YtzTm3Yeu/jjyhqkXoCcjDE=; b=hFg12bRGbQqFI+zNKj371TZHSW
-        lvAvAaphdJwCIw2u4Xn1D3AzlFVuMW07NHIIhyJwgEAEj6mEt9EHRXRNOxx26pnQWyP5eYWngVj0m
-        Q6C4OkHonMLdPzW7KgRqxmM/7/atqLEaML7jxwfLvytR8MN/2myv3xiU6zUAF3NzmT3LKMc4RdxHX
-        dllTEMox+oNRv7N8LIGFwg5vTZKmksw07RFmC/ipKJDUsXDnP0wJfwxjv57aBGTGuhfgE0hjHak/W
-        Y6W2I1k2MG01deBlrwvmsdyj/nng9IiSJUyeIUs48E7j0s8zrMxBq+IeP4zNdubD3I1nkgB+PxRRC
-        E+x42T8Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jReBH-00018N-A0; Thu, 23 Apr 2020 15:54:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2C7F33011C6;
-        Thu, 23 Apr 2020 17:54:25 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 18BC720BC7378; Thu, 23 Apr 2020 17:54:25 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 17:54:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
-        jthierry@redhat.com, tglx@linutronix.de, x86@kernel.org,
-        mbenes@suse.cz
-Subject: Re: [PATCH 3/8] objtool: Rework allocating stack_ops on decode
-Message-ID: <20200423155425.GW20730@hirez.programming.kicks-ass.net>
-References: <20200423125013.452964352@infradead.org>
- <20200423125042.713052240@infradead.org>
- <7df9ec97-dc14-c4b6-fb26-f163e9afb1cd@oracle.com>
+        Thu, 23 Apr 2020 11:54:44 -0400
+Received: from pro2.mail.ovh.net (unknown [10.108.1.145])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 3F0B54F74541;
+        Thu, 23 Apr 2020 17:54:41 +0200 (CEST)
+Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Thu, 23 Apr
+ 2020 17:54:40 +0200
+Date:   Thu, 23 Apr 2020 17:53:17 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <jic23@kernel.org>
+Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
+ attributes
+Message-ID: <20200423155317.GB43448@arch>
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+ <20200422141135.86419-5-tomasz.duszynski@octakon.com>
+ <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <7df9ec97-dc14-c4b6-fb26-f163e9afb1cd@oracle.com>
+In-Reply-To: <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
+X-Originating-IP: [89.70.31.203]
+X-ClientProxiedBy: DAG2EX1.emp2.local (172.16.2.11) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 13421008366491753717
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdejhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 05:40:38PM +0200, Alexandre Chartre wrote:
+On Wed, Apr 22, 2020 at 06:40:17PM +0200, Peter Meerwald-Stadler wrote:
+> On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
+>
+> > Add documentation for sensor specific iio attributes.
+>
+> minor comments below
 
-> > @@ -77,6 +77,17 @@ unsigned long arch_jump_destination(stru
-> >   	return insn->offset + insn->len + insn->immediate;
-> >   }
-> > +#define PUSH_OP(op) \
-> > +({ \
-> > +	list_add_tail(&op->list, ops_list); \
-> > +	NULL; \
-> > +})
-> > +
-> > +#define ADD_OP(op) \
-> > +	if (!(op = calloc(1, sizeof(*op)))) \
-> > +		return -1; \
-> > +	else for (; op; op = PUSH_OP(op))
-> > +
-> 
-> I would better have a function to alloc+add op instead of weird macros,
-> for example:
-> 
-> static struct stack_op *add_op(void)
-> {
->         struct stack *op;
-> 
->         op = calloc(1, sizeof(*op));
->         if (!op)
->                 return NULL;
->         list_add_tail(&op->list, ops_list);
-> }
-> 
-> Then it requires two more lines when using it but I think the code is much
-> cleaner and clearer, e.g.:
-> 
->                         op = add_op();
->                         if (!op)
->                                 return -1;
->                         op->src.type = OP_SRC_ADD;
->                         op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
->                         op->dest.type = OP_DEST_REG;
->                         op->dest.reg = CFI_SP;
+Thanks.
 
-The 'problem' which this is that it doesn't NULL op again, so any later
-use will do 'funny' things instead of crashing sensibly. Also, I'm
-mightly lazy, I don't like endlessly repeating the same things.
+>
+> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
+> >  1 file changed, 97 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > new file mode 100644
+> > index 000000000000..0431a718447d
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
+> > @@ -0,0 +1,97 @@
+> > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Given that sensor's CO2 measurement chamber has fixed volume
+> > +		pressure changes will affect concentration readings. Writing
+> > +		current ambient pressure here will allow senor to make necessary
+>
+> sensor
+>
+
+Okay.
+
+> > +		adjustments. Upon reading previously set value is returned.
+> > +		Units are millibars.
+>
+> unit for pressure in IIO is kilopascal (e.g.
+> /sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
+>
+
+My thinking here was that since these are sensor specific attributes
+they don't need to stick to iio conventions and millibars were somewhat
+more natural to use. But I guess that's just matter of habit.
+
+So generally I am okay with reworking all attrs to accept values in iio
+preferred units.
+
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The range of available values in millibars represented as the
+> > +		minimum value, the step and the maximum value, all enclosed in
+> > +		square brackets.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
+> > +Date:		January 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Amount of time between subsequent measurements. Writing this
+> > +		attribute will change measurement interval. Upon reading
+> > +		current measurement interval is returned. Units are seconds.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The range of available values in seconds represented as the
+> > +		minimum value, the step and the maximum value, all enclosed in
+> > +		square brackets.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/asc
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Writing 1 or 0 to this attribute will respectively activate or
+> > +		deactivate automatic self calibration procedure. Upon reading 1
+>
+> deactivate automatic self calibration (asc) procedure
+>
+
+That shouldn't be too difficult to realize what asc actually stands for after
+reading this short description.
+
+> > +		is returned if asc is ongoing, 0 otherwise.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/frc
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Forced recalibration is used to compensate for sensor drifts
+> > +		when a reference value of CO2 concentration in close proximity
+> > +		to the sensor is available. Writing attribute will set frc
+> > +		value. Upon reading current frc is returned. Units are
+> > +		millibars.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The range of available values in millibars represented as the
+> > +		minimum value, the step and the maximum value, all enclosed in
+> > +		square brackets.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Sensor readings may be affected by ambient temperature.
+> > +		Writing temperature offset will compensate for unwanted changes.
+> > +		Note that written offset gets multiplied by a factor of 100
+> > +		by a sensor internally.
+> > +
+> > +		For example, writing 10 here will correspond to 0.1 degree
+> > +		Celsius.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The range of available values in degrees Celsius represented as
+> > +		the minimum value, the step and the maximum value, all enclosed
+> > +		in square brackets.
+> > +
+> > +What:		/sys/bus/iio/devices/iio:deviceX/reset
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Software reset mechanism forces sensor into the same state
+> > +		as after powering up without the need for removing power supply.
+> > +		Writing any value will reset sensor.
+> >
+>
+> --
+>
+> Peter Meerwald-Stadler
+> Mobile: +43 664 24 44 418
