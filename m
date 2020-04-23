@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BF9C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14845C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C2C2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF6F20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgDWXOv (ORCPT
+        id S1729507AbgDWXOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:14:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49782 "EHLO
+        Thu, 23 Apr 2020 19:14:46 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49822 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728435AbgDWXGs (ORCPT
+        by vger.kernel.org with ESMTP id S1728443AbgDWXGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-0004hJ-DJ; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvV-0004hq-CD; Fri, 24 Apr 2020 00:06:37 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvP-00E6nm-JO; Fri, 24 Apr 2020 00:06:31 +0100
+        id 1jRkvR-00E6pF-CI; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Leo Yan" <leo.yan@linaro.org>,
-        "Jeffrey Hugo" <jeffrey.l.hugo@gmail.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Fri, 24 Apr 2020 00:05:36 +0100
-Message-ID: <lsq.1587683028.125073704@decadent.org.uk>
+        "Lionel Koenig" <lionel.koenig@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Fri, 24 Apr 2020 00:05:54 +0100
+Message-ID: <lsq.1587683028.443437380@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 109/245] tty: serial: msm_serial: Fix lockup for
- sysrq and oops
+Subject: [PATCH 3.16 127/245] ALSA: pcm: Avoid possible info leaks from
+ PCM stream buffers
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,66 +57,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e upstream.
+commit add9d56d7b3781532208afbff5509d7382fb6efe upstream.
 
-As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
-has mentioned the uart driver might cause recursive locking between
-normal printing and the kernel debugging facilities (e.g. sysrq and
-oops).  In the commit it gave out suggestion for fixing recursive
-locking issue: "The solution is to avoid locking in the sysrq case
-and trylock in the oops_in_progress case."
+The current PCM code doesn't initialize explicitly the buffers
+allocated for PCM streams, hence it might leak some uninitialized
+kernel data or previous stream contents by mmapping or reading the
+buffer before actually starting the stream.
 
-This patch follows the suggestion (also used the exactly same code with
-other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
-issue, this can avoid stuck caused by deadlock and print out log for
-sysrq and oops.
+Since this is a common problem, this patch simply adds the clearance
+of the buffer data at hw_params callback.  Although this does only
+zero-clear no matter which format is used, which doesn't mean the
+silence for some formats, but it should be OK because the intention is
+just to clear the previous data on the buffer.
 
-Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
+Reported-by: Lionel Koenig <lionel.koenig@gmail.com>
+Link: https://lore.kernel.org/r/20191211155742.3213-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/msm_serial.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ sound/core/pcm_native.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -857,6 +857,7 @@ static void msm_console_write(struct con
- 	struct msm_port *msm_port;
- 	int num_newlines = 0;
- 	bool replaced = false;
-+	int locked = 1;
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -459,6 +459,10 @@ static int snd_pcm_hw_params(struct snd_
+ 	while (runtime->boundary * 2 <= LONG_MAX - runtime->buffer_size)
+ 		runtime->boundary *= 2;
  
- 	BUG_ON(co->index < 0 || co->index >= UART_NR);
- 
-@@ -869,7 +870,13 @@ static void msm_console_write(struct con
- 			num_newlines++;
- 	count += num_newlines;
- 
--	spin_lock(&port->lock);
-+	if (port->sysrq)
-+		locked = 0;
-+	else if (oops_in_progress)
-+		locked = spin_trylock(&port->lock);
-+	else
-+		spin_lock(&port->lock);
++	/* clear the buffer for avoiding possible kernel info leaks */
++	if (runtime->dma_area)
++		memset(runtime->dma_area, 0, runtime->dma_bytes);
 +
- 	if (msm_port->is_uartdm)
- 		reset_dm_count(port, count);
+ 	snd_pcm_timer_resolution_change(substream);
+ 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_SETUP);
  
-@@ -906,7 +913,9 @@ static void msm_console_write(struct con
- 		msm_write(port, *bf, msm_port->is_uartdm ? UARTDM_TF : UART_TF);
- 		i += num_chars;
- 	}
--	spin_unlock(&port->lock);
-+
-+	if (locked)
-+		spin_unlock(&port->lock);
- }
- 
- static int __init msm_console_setup(struct console *co, char *options)
 
