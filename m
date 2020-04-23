@@ -2,32 +2,32 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39746C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247AAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17ECD2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A8B2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgDWXP5 (ORCPT
+        id S1729592AbgDWXP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:15:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49634 "EHLO
+        Thu, 23 Apr 2020 19:15:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49628 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728396AbgDWXGq (ORCPT
+        by vger.kernel.org with ESMTP id S1728395AbgDWXGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:46 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvT-0004h9-Ne; Fri, 24 Apr 2020 00:06:35 +0100
+        id 1jRkvT-0004hY-V9; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-00E6qc-2v; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvS-00E6rh-J0; Fri, 24 Apr 2020 00:06:34 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,13 +36,13 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>
-Date:   Fri, 24 Apr 2020 00:06:11 +0100
-Message-ID: <lsq.1587683028.852102332@decadent.org.uk>
+        "Michael Straube" <straube.linux@gmail.com>
+Date:   Fri, 24 Apr 2020 00:06:22 +0100
+Message-ID: <lsq.1587683028.576436431@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 144/245] tty: always relink the port
+Subject: [PATCH 3.16 155/245] staging: rtl8188eu: Add device code for
+ TP-Link TL-WN727N v5.21
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,35 +56,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Michael Straube <straube.linux@gmail.com>
 
-commit 273f632912f1b24b642ba5b7eb5022e43a72f3b5 upstream.
+commit 58dcc5bf4030cab548d5c98cd4cd3632a5444d5a upstream.
 
-If the serial device is disconnected and reconnected, it re-enumerates
-properly but does not link it. fwiw, linking means just saving the port
-index, so allow it always as there is no harm in saving the same value
-again even if it tries to relink with the same port.
+This device was added to the stand-alone driver on github.
+Add it to the staging driver as well.
 
-Fixes: fb2b90014d78 ("tty: link tty and port before configuring it as console")
-Reported-by: Kenneth R. Crudup <kenny@panix.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/r/20191227174434.12057-1-sudipm.mukherjee@gmail.com
+Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Link: https://lore.kernel.org/r/20191228143725.24455-1-straube.linux@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/tty_port.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -49,8 +49,7 @@ void tty_port_link_device(struct tty_por
- {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	if (!driver->ports[index])
--		driver->ports[index] = port;
-+	driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
- 
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -61,6 +61,7 @@ static struct usb_device_id rtw_usb_id_t
+ 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
+ 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
+ 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
++	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
+ 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
+ 	{}	/* Terminating entry */
 
