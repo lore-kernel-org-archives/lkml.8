@@ -2,82 +2,80 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40331C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DE5C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC1F2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A202075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sODo5jYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgDWBVS (ORCPT
+        id S1726192AbgDWBYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:21:18 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34145 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWBVR (ORCPT
+        Wed, 22 Apr 2020 21:24:20 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31930 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725846AbgDWBYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:21:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x15so2098728pfa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 18:21:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HuA0hxQTe90PJtZs9WSSy8kDWUbxSlnvi9VsPza7S2Y=;
-        b=NxRGnjG+UfX4tgyPXsBtpAS7Ie29rFncjOTE1gAkOH3z2STfgMKfNzV6wTRRmyuvfX
-         zPB0hS7tuzb4UsOI8BNVUMKvlFqN5AlknjZeIFJCo6msYW9bLiO3Hd3mGQ/Vk9cSnQAW
-         nFesuslAC/VQtY+yujN6O/0lKJF8WSZWoQ8nCIVqislChrJuS4Shql5nHK5/S6KWmraq
-         MG371PT5+Ql5cHo3ZRVgAxO1u2aSPKJvkKaZ4yeju8Z/OfecVlBS9nHY2YiXxHGu5SnT
-         sEI3IhylpUwVoljxW5svgPudgs2e+A4ImcQGEEFAGLAsjwIFFB0uTPBt2/39agzDHJ4O
-         GP3Q==
-X-Gm-Message-State: AGi0PuY3mPuDaXhI3aHXso6RXLG2DNZz8DJGHkF6jWUbvEvELXPHcrft
-        X1hiWoCsb3uPZXuVtcSyWhA=
-X-Google-Smtp-Source: APiQypKxBlGRT0F6vEFPhi5oneOUM697xMXU65q00ggKMra7UIbFqy/Kx++vjPJ34SrVHIxn8OpClA==
-X-Received: by 2002:aa7:80cf:: with SMTP id a15mr1441540pfn.124.1587604876968;
-        Wed, 22 Apr 2020 18:21:16 -0700 (PDT)
-Received: from [100.124.12.67] ([104.129.198.222])
-        by smtp.gmail.com with ESMTPSA id n23sm471545pjq.18.2020.04.22.18.21.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 18:21:16 -0700 (PDT)
-Subject: Re: [PATCH v2] stacktrace: cleanup inconsistent variable type
-To:     Walter Wu <walter-zh.wu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-References: <20200421013511.5960-1-walter-zh.wu@mediatek.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <d2a9f155-f309-0182-73c9-5c02d7014574@acm.org>
-Date:   Wed, 22 Apr 2020 18:21:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 22 Apr 2020 21:24:19 -0400
+X-UUID: 933b61af9163417fa800debf136076a2-20200423
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=n69err7fZ+dUEdayQQ/ds4lOY0vJ/aaYZuP0ALEneYI=;
+        b=sODo5jYW1KGP42KOk/BcU5+1EADLT/hogKmhIwSI4FCuzLtVEy33o+xsJy8dI42hnYpPl5gP8+pnvbHB6UUhaiSLvILJBMii1ByJh3QFXwPqMynC2F7dviDxKfMX84nd6vfqoiF2DkUFHPRyEtKQ8j5vDYPLksEogftU2laF2lw=;
+X-UUID: 933b61af9163417fa800debf136076a2-20200423
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <fengping.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 397310574; Thu, 23 Apr 2020 09:24:17 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 23 Apr 2020 09:24:05 +0800
+Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 23 Apr 2020 09:24:09 +0800
+From:   Fengping yu <fengping.yu@mediatek.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        <linux-input@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v5] add mtk matrix keypad driver for keypad on MTK SoC 
+Date:   Thu, 23 Apr 2020 09:19:56 +0800
+Message-ID: <20200423011958.30521-1-fengping.yu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200421013511.5960-1-walter-zh.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: C4F198DFD9281E00ED4062512287613C53AF1CF5D317FAAF98071E88C786B0462000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/20/20 6:35 PM, Walter Wu wrote:
-> Modify the variable type of 'skip' member of struct stack_trace.
-> In theory, the 'skip' variable type should be unsigned int.
-> There are two reasons:
-> - The 'skip' only has two situation, 1)Positive value, 2)Zero
-> - The 'skip' of struct stack_trace has inconsistent type with struct
->    stack_trace_data, it makes a bit confusion in the relationship between
->    struct stack_trace and stack_trace_data.
+DQpDaGFuZ2Ugc2luY2UgdjQ6DQotIHJlbW92ZSBleHRyYSBzcGFjZSBhbmQgcmVkdW5kYW50IGxp
+bmVzDQotIHJlbW92ZSBkaXNhYmxlX2lycV9ub3N5bmMgYW5kIGVuYWJsZV9pcnEgaW4gaXJxIGhh
+bmRsZXINCi0gcHV0IGRlZmNvbmZpZyBhcyBhIHNpbmdsZSBwYXRjaA0KLSB1bmlmaWVkIGRldmlj
+ZSBwcm9wZXJ0aWVzIGludGVyZmFjZSBmb3IgQUNQSSBhbmQgZGV2aWNlIHRyZWVzDQotIGZpeGVk
+IG90aGVyIGlzc3VlIGFjY29yZGluZyByZXZpZXdlciBjb21tZW50cw0KDQpmZW5ncGluZy55dSAo
+Myk6DQogIGR0LWJpbmRpbmdzOiBhZGQgbWF0cml4IGtleXBhZCBkb2N1bWVudGF0aW9uDQogIGFy
+bTY0OiBjb25maWdzOiBkZWZjb25maWc6IGVuYWJsZSBtdGsga2V5cGFkIGNvbmZpZw0KICBkcml2
+ZXJzOiBpbnB1dDoga2V5Ym9hcmQ6IGFkZCBtdGsga2V5cGFkIGRyaXZlcg0KDQogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC50eHQgICAgIHwgIDYxICsrKysrDQogYXJjaC9h
+cm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJz
+L2lucHV0L2tleWJvYXJkL0tjb25maWcgICAgICAgICAgICAgICAgfCAgIDkgKw0KIGRyaXZlcnMv
+aW5wdXQva2V5Ym9hcmQvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMSArDQogZHJpdmVycy9p
+bnB1dC9rZXlib2FyZC9tdGsta3BkLmMgICAgICAgICAgICAgIHwgMjQyICsrKysrKysrKysrKysr
+KysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgMzE0IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L210ay1rcGQudHh0
+DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvbXRrLWtwZC5jDQoN
+Ci0tDQoyLjE4LjANCg0K
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
