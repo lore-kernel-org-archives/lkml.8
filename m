@@ -2,179 +2,176 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E58C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61F5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2D820776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B82A20736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgDWRdd (ORCPT
+        id S1729981AbgDWRex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:33:33 -0400
-Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:46410 "EHLO
-        ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729879AbgDWRdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:33:31 -0400
-Received: from localhost.localdomain (227.146.230.94.awnet.cz [94.230.146.227])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id 58C6524E0F;
-        Thu, 23 Apr 2020 19:33:28 +0200 (CEST)
-From:   David Heidelberg <david@ixit.cz>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Rob Herring <robh+dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     David Heidelberg <david@ixit.cz>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 1/1] dt-bindings: input: touchscreen: elants_i2c: convert to YAML
-Date:   Thu, 23 Apr 2020 19:32:53 +0200
-Message-Id: <20200423173253.711725-2-david@ixit.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200423173253.711725-1-david@ixit.cz>
-References: <20200423173253.711725-1-david@ixit.cz>
+        Thu, 23 Apr 2020 13:34:53 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32507 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729879AbgDWRew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:34:52 -0400
+IronPort-SDR: RND1g0Ee7IMRsBKx1Pwp/5ML+umHkz5IwRabNBaukWPyV6I2MGmo63xTQAQQTFaSDqhLYMv3aW
+ AqywtyVVvTnQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 10:34:51 -0700
+IronPort-SDR: LdsGU0KqTWZLYY2Opbsopap7RtiKwFrI72w+nQN9mdgFoDjia0qw0vyUrgj0vo7PC6M4tU4+Sa
+ WHKKq1/ojUrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="456991546"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Apr 2020 10:34:50 -0700
+Date:   Thu, 23 Apr 2020 10:34:50 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 5/9] KVM: X86: Refresh CPUID once guest XSS MSR
+ changes
+Message-ID: <20200423173450.GJ17824@linux.intel.com>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-6-weijiang.yang@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326081847.5870-6-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert elants_i2c.txt DT binding to YAML and put into correct directory.
+On Thu, Mar 26, 2020 at 04:18:42PM +0800, Yang Weijiang wrote:
+> CPUID(0xd, 1) reports the current required storage size of
+> XCR0 | XSS, when guest updates the XSS, it's necessary to update
+> the CPUID leaf, otherwise guest will fetch old state size, and
+> results to some WARN traces during guest running.
+> 
+> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/cpuid.c            | 21 ++++++++++++++++++---
+>  arch/x86/kvm/x86.c              |  9 +++++++--
+>  3 files changed, 26 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 24c90ea5ddbd..2c944ad99692 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -650,6 +650,7 @@ struct kvm_vcpu_arch {
+>  
+>  	u64 xcr0;
+>  	u64 guest_supported_xcr0;
+> +	u64 guest_supported_xss;
+>  	u32 guest_xstate_size;
+>  
+>  	struct kvm_pio_request pio;
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 78d461be2102..25e9a11291b3 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -95,9 +95,24 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+> -	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+> -		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
+> -		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
+> +	if (best) {
+> +		if (best->eax & (F(XSAVES) | F(XSAVEC))) {
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
- .../devicetree/bindings/input/elants_i2c.txt  | 34 ---------
- .../input/touchscreen/elan,elants_i2c.yaml    | 69 +++++++++++++++++++
- 2 files changed, 69 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/elants_i2c.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/elan,elants_i2c.yaml
+Please use cpuid_entry_has() to preserve the automagic register lookup and
+compile-time assertions that are provided.  E.g. I don't know off the top
+of my whether %eax is the correct register, and I don't want to know :-).
 
-diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt b/Documentation/devicetree/bindings/input/elants_i2c.txt
-deleted file mode 100644
-index 5edac8be0802..000000000000
---- a/Documentation/devicetree/bindings/input/elants_i2c.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--Elantech I2C Touchscreen
--
--Required properties:
--- compatible: must be "elan,ekth3500".
--- reg: I2C address of the chip.
--- interrupts: interrupt to which the chip is connected (see interrupt
--  binding[0]).
--
--Optional properties:
--- wakeup-source: touchscreen can be used as a wakeup source.
--- pinctrl-names: should be "default" (see pinctrl binding [1]).
--- pinctrl-0: a phandle pointing to the pin settings for the device (see
--  pinctrl binding [1]).
--- reset-gpios: reset gpio the chip is connected to.
--- vcc33-supply: a phandle for the regulator supplying 3.3V power.
--- vccio-supply: a phandle for the regulator supplying IO power.
--
--[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--[1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--
--Example:
--	&i2c1 {
--		/* ... */
--
--		touchscreen@10 {
--			compatible = "elan,ekth3500";
--			reg = <0x10>;
--			interrupt-parent = <&gpio4>;
--			interrupts = <0x0 IRQ_TYPE_EDGE_FALLING>;
--			wakeup-source;
--		};
--
--		/* ... */
--	};
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/elan,elants_i2c.yaml b/Documentation/devicetree/bindings/input/touchscreen/elan,elants_i2c.yaml
-new file mode 100644
-index 000000000000..a792d6377b1d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/elan,elants_i2c.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/input/touchscreen/elan,elants_i2c.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Elantech I2C Touchscreen
-+
-+maintainers:
-+  - David Heidelberg <david@ixit.cz>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - elan,ektf3624
-+      - elan,ekth3500
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  wakeup-source:
-+    type: boolean
-+    description: touchscreen can be used as a wakeup source.
-+
-+  reset-gpios:
-+    description: reset gpio the chip is connected to.
-+
-+  vcc33-supply:
-+    description: a phandle for the regulator supplying 3.3V power.
-+
-+  vccio-supply:
-+    description: a phandle for the regulator supplying IO power.
-+
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-swapped-x-y: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        touchscreen@10 {
-+            compatible = "elan,ekth3500";
-+            reg = <0x10>;
-+
-+            interrupt-parent = <&gpio4>;
-+            interrupts = <0x0 IRQ_TYPE_EDGE_FALLING>;
-+            wakeup-source;
-+        };
-+    };
--- 
-2.26.2
+> +			u64 xstate = vcpu->arch.xcr0 | vcpu->arch.ia32_xss;
+> +
+> +			best->ebx = xstate_required_size(xstate, true);
+> +		}
+> +
+> +		if (best->eax & F(XSAVES)) {
 
+Same thing here.
+
+> +			vcpu->arch.guest_supported_xss =
+> +			(best->ecx | ((u64)best->edx << 32)) & supported_xss;
+
+The indentation is funky, I'm guessing you're trying to squeak in less than
+80 chars.  Maybe this?
+
+		if (!cpuid_entry_has(best, X86_FEATURE_XSAVES)) {
+			best->ecx = 0;
+			best->edx = 0;
+		}
+
+		 vcpu->arch.guest_supported_xss =
+			(((u64)best->edx << 32) | best->ecx) & supported_xss;
+
+Nit: my preference is to have the high half first, x86 is little endian
+(the xcr0 code is "wrong" :-D).  For me, this also makes it more obvious
+that the effective size is a u64.
+
+> +		} else {
+> +			best->ecx = 0;
+> +			best->edx = 0;
+> +			vcpu->arch.guest_supported_xss = 0;
+> +		}
+> +	} else {
+> +		vcpu->arch.guest_supported_xss = 0;
+> +	}
+>  
+>  	/*
+>  	 * The existing code assumes virtual address is 48-bit or 57-bit in the
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 90acdbbb8a5a..51ecb496d47d 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2836,9 +2836,12 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		 * IA32_XSS[bit 8]. Guests have to use RDMSR/WRMSR rather than
+>  		 * XSAVES/XRSTORS to save/restore PT MSRs.
+>  		 */
+> -		if (data & ~supported_xss)
+> +		if (data & ~vcpu->arch.guest_supported_xss)
+>  			return 1;
+> -		vcpu->arch.ia32_xss = data;
+> +		if (vcpu->arch.ia32_xss != data) {
+> +			vcpu->arch.ia32_xss = data;
+> +			kvm_update_cpuid(vcpu);
+> +		}
+>  		break;
+>  	case MSR_SMI_COUNT:
+>  		if (!msr_info->host_initiated)
+> @@ -9635,6 +9638,8 @@ int kvm_arch_hardware_setup(void)
+>  
+>  	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+>  		supported_xss = 0;
+> +	else
+> +		supported_xss = host_xss & KVM_SUPPORTED_XSS;
+
+Silly nit: I'd prefer to invert the check, e.g.
+
+	if (kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+		supported_xss = host_xss & KVM_SUPPORTED_XSS;
+	else
+		supported_xss = 0;
+
+>  
+>  	cr4_reserved_bits = kvm_host_cr4_reserved_bits(&boot_cpu_data);
+>  
+> -- 
+> 2.17.2
+> 
