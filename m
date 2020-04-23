@@ -2,109 +2,143 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAFAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37072C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9066020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587673432;
-	bh=BR2ueSz7ASah2Qj1j+lIsnggO9xKucy4nF+BDyOZFpw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1oH7VSNAI2V4VsjNYTD1GvmIID0k/svnH4rkIwDY9zkbmlIZm9fQbW67GEUyKlOVI
-	 Q11jiTOJsqJKVIc1XZdNZtvgYRiV4DtIPrS9OYSv45YhKAa82A9nlQhuJEoU5gAW70
-	 XQAc4yX4RW+OlJB/DxLKoulokrSsNR9vunDQPH3s=
+	by mail.kernel.org (Postfix) with ESMTP id 13B3720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgDWUXv (ORCPT
+        id S1726287AbgDWUZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgDWUXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:23:51 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53FFA20715;
-        Thu, 23 Apr 2020 20:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587673430;
-        bh=BR2ueSz7ASah2Qj1j+lIsnggO9xKucy4nF+BDyOZFpw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w6cnn6F2H3fSqnb/XLyv8+MJAFIunaS9r575x4GMPiUTlGQRKXAf2FAbt+P3fmFre
-         c2Kp+j8aO4quCbVhBKeZXN3OEyXz+/CF1EpzBMf+F4/huwGJwXiFAYklm6HTsCY4up
-         HGls3nUysoziGvVHP5aUxq+hvvvtD0FqKg8jasFA=
-Date:   Thu, 23 Apr 2020 13:23:48 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rt-users@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH crypto-stable v3 1/2] crypto: arch/lib - limit simd usage
- to 4k chunks
-Message-ID: <20200423202348.GA2796@gmail.com>
-References: <20200422200344.239462-1-Jason@zx2c4.com>
- <20200422231854.675965-1-Jason@zx2c4.com>
- <CAMj1kXHV=ryaFmj0jhQVGBd31nfHs7q5RtSyu7dY6GdEJJsr7A@mail.gmail.com>
- <20200423184219.GA80650@kroah.com>
- <CAMj1kXF9uLUE3=rX1i_yYoigB7j-nLMZpGc35ve2KV+NxjRhVQ@mail.gmail.com>
+        Thu, 23 Apr 2020 16:25:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51594 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726002AbgDWUZo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 16:25:44 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NJWXuU047357;
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj76a14-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03NJidh0079219;
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj76a0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03NKNJSM030716;
+        Thu, 23 Apr 2020 20:25:42 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 30fs66m8se-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 20:25:42 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NKPfxF54198716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 20:25:41 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 480E913604F;
+        Thu, 23 Apr 2020 20:25:41 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B103136053;
+        Thu, 23 Apr 2020 20:25:40 +0000 (GMT)
+Received: from [9.65.212.228] (unknown [9.65.212.228])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 20:25:40 +0000 (GMT)
+Subject: Re: [PATCH 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200417182939.11460-1-jrossi@linux.ibm.com>
+ <20200417182939.11460-2-jrossi@linux.ibm.com>
+ <20200423155620.493cb7cb.pasic@linux.ibm.com>
+ <20200423171103.497dcd02.cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <b6dc3d32-3e84-4ce1-59a2-d5de99716027@linux.ibm.com>
+Date:   Thu, 23 Apr 2020 16:25:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXF9uLUE3=rX1i_yYoigB7j-nLMZpGc35ve2KV+NxjRhVQ@mail.gmail.com>
+In-Reply-To: <20200423171103.497dcd02.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_13:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 08:47:00PM +0200, Ard Biesheuvel wrote:
-> On Thu, 23 Apr 2020 at 20:42, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Apr 23, 2020 at 09:18:15AM +0200, Ard Biesheuvel wrote:
-> > > FYI: you shouldn't cc stable@vger.kernel.org directly on your patches,
-> > > or add the cc: line. Only patches that are already in Linus' tree
-> > > should be sent there.
-> >
-> > Not true at all, please read:
-> >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > for how to do this properly.  Please do not spread incorrect
-> > information.
-> >
-> > And Jason did this properly, he put cc: stable@ in the s-o-b area and
-> > all is good, I will pick up this patch once it hits Linus's tree.
-> >
-> > And there is no problem actually sending the patch to stable@vger while
-> > under development like this, as it gives me a heads-up that something is
-> > coming, and is trivial to filter out.
-> >
-> > If you really want to be nice, you can just do:
-> >         cc: stable@kernel.org
-> > which goes to /dev/null on kernel.org, so no email will be sent to any
-> > list, but my scripts still pick it up.  But no real need to do that,
-> > it's fine.
-> >
+
+
+On 4/23/20 11:11 AM, Cornelia Huck wrote:
+> On Thu, 23 Apr 2020 15:56:20 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
 > 
-> OK, thanks for clearing this up.
+>> On Fri, 17 Apr 2020 14:29:39 -0400
+>> Jared Rossi <jrossi@linux.ibm.com> wrote:
+>>
+>>> Remove the explicit prefetch check when using vfio-ccw devices.
+>>> This check is not needed as all Linux channel programs are intended
+>>> to use prefetch and will be executed in the same way regardless.  
+>>
+>> Hm. This is a guest thing or? So you basically say, it is OK to do
+>> this, because you know that the guest is gonna be Linux and that it
+>> the channel program is intended to use prefetch -- but the ORB supplied
+>> by the guest that designates the channel program happens to state the
+>> opposite.
+>>
+>> Or am I missing something?
 > 
-> So does this mean you have stopped sending out 'formletter'
-> auto-replies for patches that were sent out to stable@vger.kernel.org
-> directly, telling people not to do that?
+> I see this as a kind of architecture compliance/ease of administration
+> tradeoff, as we none of the guests we currently support uses something
+> that breaks with prefetching outside of IPL (which has a different
+> workaround).>
+> One thing that still concerns me a bit is debuggability if a future
+> guest indeed does want to dynamically rewrite a channel program: the
+
++1 for some debuggability, just in general
+
+> guest thinks it instructed the device to not prefetch, and then
+> suddenly things do not work as expected. We can log when a guest
+> submits an orb without prefetch set, but we can't find out if the guest
+> actually does something that relies on non-prefetch.
+
+Without going too far down a non-prefetch rabbit-hole, can we use the
+cpa_within_range logic to see if the address of the CCW being fetched
+exists as the CDA of an earlier (non-TIC) CCW in the chain we're
+processing, and tracing/logging/messaging something about a possible
+conflict?
+
+(Jared, you did some level of this tracing with our real/synthetic tests
+some time ago.  Any chance something of it could be polished and made
+useful, without being overly heavy on the mainline path?)
+
+> 
+> The only correct way to handle this would be to actually implement
+> non-prefetch processing, where I would not really know where to even
+> start -- and then we'd only have synthetic test cases, for now. None of
+> the options are pleasant :(
 > 
 
-I often leave stable@vger.kernel.org in the email Cc list, and no one has ever
-complained.  It's only sending patches directly "To:" stable@vger.kernel.org
-that isn't allowed, except when actually sending out backports.
-
-If there were people who had an actual issue with Cc, then I think the rules
-would have changed long ago to using some other tag like Backport-to that
-doesn't get picked up by git send-email.
-
-- Eric
+And even if we knew where to start, it's quite a bit of effort for the
+hypothetical.  From conversations I've had with long-time I/O folks,
+non-prefetch seems to be the significant minority these days, dating
+back to older CKD devices (and associated connectivity) in practice.
