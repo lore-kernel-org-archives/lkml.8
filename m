@@ -2,171 +2,123 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B262CC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C3CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9347721707
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587639669;
-	bh=HgsNj2H2CWk1JhxVQWo3f0C7WZ/gAljvF34fqPbNRsM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWlZUpNp5J12bGjFSjGb0CWHvZH9OKdmEhsUGKJ+b2G4hgLGVH2xb2PriYMpiQWnv
-	 ZAxVJeDwL1kob7/SnP1ccBV5yaVPpI8BfrpYsm04NYb2s+7TkBSgOYccAXmnGs/tq4
-	 l5ZJyD42Oxjom5d00CEKMVCCZA0B64aXLHFFpCFM=
+	by mail.kernel.org (Postfix) with ESMTP id 2583D20704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:01:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="3LWhmyAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgDWLBJ (ORCPT
+        id S1727974AbgDWLBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgDWLBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:01:08 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 598EF20704;
-        Thu, 23 Apr 2020 11:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587639668;
-        bh=HgsNj2H2CWk1JhxVQWo3f0C7WZ/gAljvF34fqPbNRsM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkhSnUwIAj2E7S1YEXB5tTMiRGYyIOj5LAGrDlJ8/IsdLDlodS28KowfaoXQUc6pH
-         2T/4E+r9KFbSn5zJzWJl6RfaIVimaHxuXcP8pvnSeDGNXTGsTCnYNWKv5JRAvHmUW2
-         Gor8SrQIJPGPvfdxogJIMhDYtgIyYRQB1twIMPxQ=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 1/3] perf-probe: Fix to check blacklist address correctly
-Date:   Thu, 23 Apr 2020 20:01:04 +0900
-Message-Id: <158763966411.30755.5882376357738273695.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <158763965400.30755.14484569071233923742.stgit@devnote2>
-References: <158763965400.30755.14484569071233923742.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
+        Thu, 23 Apr 2020 07:01:17 -0400
+Received: from mail-bn7nam10on2080.outbound.protection.outlook.com ([40.107.92.80]:17345
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727077AbgDWLBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:01:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X4SFvZKJX9Fe4FC3TujIx6cnLD+j45Mzt3Cxd847MCe4KZpWxtUcxkEA3GFR51FUj6dMVAIJfxyKiO3mXGeDGifYtpRyhgR1PYjXxRlmDCGjujEO0JmJsd5QetMMetmNkLmCN3BMrauDP2q1TJsA7CNWvGVpJhbjhNWz9//ixd76w2J4ITT+/969NH7AN85BCM0LayZHpDz+pEUN8mHTqPOtwyHbTfsj3VaX/CtvtoFuDq5aqDAcBeutWiIU8WVrdk003aHo9GvlkmGxej5pNLZ3B6vbiQ5Lu1ImjtLMFGlDyVdgRmnvjzbXlv3O/oi21jnwIGD+ech8X52dFqAV6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yJ4U99gAUOUWEHNnqYQflPG9AN59kkYzX/pF9tQ60uY=;
+ b=jM04M9ucICDpnTeATJjLPUZ2RLuhhI7yAte/85EHHur9wocV3nC/N0nEyBMnN1Snzv1edj5rBsatL85Xv4EjKGQzq+hZqofdjdvORx4eygIXDxBPsBJMv8clyUuya60WEA0mwwNrMz+X/vWOsIztNRp5rlLZq0BEzH2iJ05Fz13drOUXGSv4gItA1s/f+YG8B3zq8GOlQgM7XkJNfYVX4USyAcDiocPySh9oRsxoyU9pjjJ7/fHQL1v7+9PK6bykOQtrsY0JHUHd1Y4PIi+vGpVohrlh8UfR21ceNri99zFfAV2WUBclOhZEkBmYBHr+hhWuMXs3tAm0PY6AiGkN1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yJ4U99gAUOUWEHNnqYQflPG9AN59kkYzX/pF9tQ60uY=;
+ b=3LWhmyAdeYTywsKa2X5FX1vP9v/CG7GplTNPybNRvlgmB4ZizGCM9/u+/F1F38gsZ2FD/U3o8Uw/+lXA4qUTO5WgKDEu+0AckamrVShazNxHfb22wPUTBGwSUk1z/yJbmucVBAt1lswi1gWYsqdJcpbvMv4c1x3fixHctYCJPCw=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (2603:10b6:408:35::23)
+ by BN7PR08MB4114.namprd08.prod.outlook.com (2603:10b6:406:84::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
+ 2020 11:01:13 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::5dbb:4fb8:f0ca:6988]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::5dbb:4fb8:f0ca:6988%6]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
+ 11:01:12 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        "huobean@gmail.com" <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v2 1/5] scsi; ufs: add device descriptor for
+ Host Performance Booster
+Thread-Topic: [EXT] Re: [PATCH v2 1/5] scsi; ufs: add device descriptor for
+ Host Performance Booster
+Thread-Index: AQHWGPtnA7Fw8mUJC0qjkFZon51x26iGiptQ
+Date:   Thu, 23 Apr 2020 11:01:12 +0000
+Message-ID: <BN7PR08MB568449A01D10F89B5C7F0E8BDBD30@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20200416203126.1210-1-beanhuo@micron.com>
+ <20200416203126.1210-2-beanhuo@micron.com>
+ <6e092ac1-7e7d-3f12-8c81-b88369f1f621@acm.org>
+In-Reply-To: <6e092ac1-7e7d-3f12-8c81-b88369f1f621@acm.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWJjNmZmNGE2LTg1NTEtMTFlYS04YjkyLWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxiYzZmZjRhOC04NTUxLTExZWEtOGI5Mi1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9Ijc1NiIgdD0iMTMyMzIxMTMyNjk4NzgwMzQxIiBoPSJIUGw4dUhXQXl6aGtUL2NDd2ROMDQyVU5JQkk9IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQUMxd3NsK1hobldBYlNFMzFuTjBuUTh0SVRmV2MzU2REd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQVM2dEFnQUFBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.109]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 62c352ea-7149-4c18-1639-08d7e775a314
+x-ms-traffictypediagnostic: BN7PR08MB4114:|BN7PR08MB4114:|BN7PR08MB4114:
+x-microsoft-antispam-prvs: <BN7PR08MB4114691746692365AB3D1E0EDBD30@BN7PR08MB4114.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 03827AF76E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR08MB5684.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(136003)(396003)(366004)(55016002)(76116006)(26005)(66556008)(4326008)(478600001)(7696005)(33656002)(52536014)(66446008)(66946007)(53546011)(64756008)(55236004)(6506007)(2906002)(7416002)(66476007)(8676002)(81156014)(8936002)(316002)(186003)(9686003)(110136005)(5660300002)(86362001)(71200400001)(4744005)(54906003)(921003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s6M+DVL3EM3l6NGEUNsHu9VmcunIs5zTIH36rEYf+CllKuuMEhxDWEKDlrGNoYzhnTmqjqCZgqQXRF96wh/oWLk6PeMcof4Dipl0S+Cd3/5jKzpy/K+PY7psjjSZjIO6jiNMh3hiwDgC/dLAYX9RvVoBZ7o4E8NuXeppoafZ9k93a0KqE3Xqzr6Zns/sosz9aNaS4zDM9SVx6ksCsXRG0iYmu4V/nRH9DBsyihqK8dBVNDkIPbhHg4C6rbu9ooiDe+MGy0Xxce31iJ+fb7WOOVFFVQIlLkfM86nal6zlN4R6RHTRnq/Vob1CNpcadOqB+gdZM01CD8ZTCsaCV+vXzRMC8ZvP23QlPZSO+rdKiX6rn1GNTA2s9X2RKuZHsLcTKhb4lb4O6zKerISMgYbrOfFQHSfmDRUAp3cGmV3J7+oypDpSLEB+bVU/s5CmTFhMxUk2gKKJIZqOTaG15KSmiavc0v3bL1vZYF4TRn0dpsE=
+x-ms-exchange-antispam-messagedata: py9EXmJ2IdqN8WELAjekg8CcBit0t2F2hap1x/5CyNgF7zRa+SXjTzdHqUiyr1WQTSzoVlEut2PRyvY5XepVAXznDFNJgcKtWvxcHWtpRcKtIKjDUlLJWBceWjO8OhmlBdWIGhECtCHh23R7SOF6VMKGJsA1SF9vn6NbF71ZN2YUSvL2K/kloctJdrfINQqlsTHVS0nMPwQSPPVsNdVHsH/bX3FNYpHXSRSc2ZQP+/O4+IoF5OxNmo2+H0/ewMZ2ZM5vqIHTfW1DAzUWssPDv76hJxNoD66TGLI74Dx92pkoMuri/z9t5nzOrnm5yQdQ5WZ+r5V8luVRoek9kcBd92BPVtEIYItLeG5lQpLiiCaFG0szfdOQ1U9BSPVa4KtFSs6m2D5QfCg1XmXn4B9cBov+3Buu4VcVFeU/1DlcuBdU5bh+AvDf9PqWr70aVw6Id7M1WsGSbxbiP9cZuaMxOmDW3QVnYuFRmC3saSLLMnT4BPG1AAnuhYBqxzNaoPdvaqpp80TPNXldz2EG+L9B0HJoyI/dMTAtYfnNB8whIDibt02DDOL/t/XYeyjee6I4l6ggeL/Cq1JP4JjFQWAb8fEYNKobegkBGZcAKFmL+EpVw+LuKjFP6Xjvg/l3hIvQvtuzwspuCtRgOXDbJN1YqoVEd0R2eMw88Q/38Ct45hYEMpq/Rkme+VQi8Sa5ypRDZYAZdBuYmtQGp1gT4KvSIuQ8Yf2d8kS70qok91OWFmMx4qlmLQHI5TpprPyfTE9yHRBF/HWUglutjKhU0LNsPfeZYfe/7e/80taN4yQZWVU=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62c352ea-7149-4c18-1639-08d7e775a314
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 11:01:12.7048
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y108IAjNDUXtdxNTr/h2mhyE1SfSy87FnL7Y68asXrRddsxtquTvpFszNh52dLVJ2tb9u5ROygQPP6ba0XE38g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to check kprobe blacklist address correctly with
-relocated address by adjusting debuginfo address.
-
-Since the address in the debuginfo is same as objdump,
-it is different from relocated kernel address with KASLR.
-Thus, the perf-probe always misses to catch the
-blacklisted addresses.
-
-Without this patch, perf probe can not detect the blacklist
-addresses on KASLR enabled kernel.
-
-=========
-  # perf probe kprobe_dispatcher
-  Failed to write event: Invalid argument
-    Error: Failed to add events.
-=========
-
-With this patch, it correctly shows the error message.
-
-=========
-  # perf probe kprobe_dispatcher
-  kprobe_dispatcher is blacklisted function, skip it.
-  Probe point 'kprobe_dispatcher' not found.
-    Error: Failed to add events.
-=========
-
-Fixes: 9aaf5a5f479b ("perf probe: Check kprobes blacklist when adding new events")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
----
- tools/perf/util/probe-event.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index eea132f512b0..f75df63309be 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -102,7 +102,7 @@ void exit_probe_symbol_maps(void)
- 	symbol__exit();
- }
- 
--static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
-+static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
- {
- 	/* kmap->ref_reloc_sym should be set if host_machine is initialized */
- 	struct kmap *kmap;
-@@ -114,6 +114,10 @@ static struct ref_reloc_sym *kernel_get_ref_reloc_sym(void)
- 	kmap = map__kmap(map);
- 	if (!kmap)
- 		return NULL;
-+
-+	if (pmap)
-+		*pmap = map;
-+
- 	return kmap->ref_reloc_sym;
- }
- 
-@@ -125,7 +129,7 @@ static int kernel_get_symbol_address_by_name(const char *name, u64 *addr,
- 	struct map *map;
- 
- 	/* ref_reloc_sym is just a label. Need a special fix*/
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
- 		*addr = (reloc) ? reloc_sym->addr : reloc_sym->unrelocated_addr;
- 	else {
-@@ -745,6 +749,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
- 				       int ntevs)
- {
- 	struct ref_reloc_sym *reloc_sym;
-+	struct map *map;
- 	char *tmp;
- 	int i, skipped = 0;
- 
-@@ -753,7 +758,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
- 		return post_process_offline_probe_trace_events(tevs, ntevs,
- 						symbol_conf.vmlinux_name);
- 
--	reloc_sym = kernel_get_ref_reloc_sym();
-+	reloc_sym = kernel_get_ref_reloc_sym(&map);
- 	if (!reloc_sym) {
- 		pr_warning("Relocated base symbol is not found!\n");
- 		return -EINVAL;
-@@ -764,9 +769,13 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
- 			continue;
- 		if (tevs[i].point.retprobe && !kretprobe_offset_is_supported())
- 			continue;
--		/* If we found a wrong one, mark it by NULL symbol */
-+		/*
-+		 * If we found a wrong one, mark it by NULL symbol.
-+		 * Since addresses in debuginfo is same as objdump, we need
-+		 * to convert it to addresses on memory.
-+		 */
- 		if (kprobe_warn_out_range(tevs[i].point.symbol,
--					  tevs[i].point.address)) {
-+			map__objdump_2mem(map, tevs[i].point.address))) {
- 			tmp = NULL;
- 			skipped++;
- 		} else {
-@@ -2936,7 +2945,7 @@ static int find_probe_trace_events_from_map(struct perf_probe_event *pev,
- 	/* Note that the symbols in the kmodule are not relocated */
- 	if (!pev->uprobes && !pev->target &&
- 			(!pp->retprobe || kretprobe_offset_is_supported())) {
--		reloc_sym = kernel_get_ref_reloc_sym();
-+		reloc_sym = kernel_get_ref_reloc_sym(NULL);
- 		if (!reloc_sym) {
- 			pr_warning("Relocated base symbol is not found!\n");
- 			ret = -EINVAL;
-
+SGkgQmFydA0KVGhhbmtzIHlvdXIgcmV2aWV3LCBJIHdpbGwgdGFrZSB5b3VyIHN1Z2dlc3Rpb25z
+IGluIG5leHQgdmVyc2lvbiBkZXZlbG9wbWVudC4NClRoYW5rcywNCg0KQmVhbg0KDQo+IA0KPiBP
+biA0LzE2LzIwIDE6MzEgUE0sIGh1b2JlYW5AZ21haWwuY29tIHdyb3RlOg0KPiA+ICsJaWYgKGRl
+c2NfYnVmW0RFVklDRV9ERVNDX1BBUkFNX1VGU19GRUFUXSAmIDB4ODApIHsNCj4gDQo+IFBsZWFz
+ZSBpbnRyb2R1Y2UgYSBzeW1ib2xpYyBuYW1lIGluc3RlYWQgb2YgdXNpbmcgdGhlIG51bWJlciAw
+eDgwIGRpcmVjdGx5Lg0KPiANCj4gPiArCQloYmEtPmRldl9pbmZvLmhwYl9jb250cm9sX21vZGUg
+PQ0KPiA+ICsJCQlkZXNjX2J1ZltERVZJQ0VfREVTQ19QQVJBTV9IUEJfQ1RSTF9NT0RFXTsNCj4g
+PiArCQloYmEtPmRldl9pbmZvLmhwYl92ZXIgPQ0KPiA+ICsJCQkodTE2KSAoZGVzY19idWZbREVW
+SUNFX0RFU0NfUEFSQU1fSFBCX1ZFUl0gPDwgOCkNCj4gfA0KPiA+ICsJCQlkZXNjX2J1ZltERVZJ
+Q0VfREVTQ19QQVJBTV9IUEJfVkVSICsgMV07DQo+IA0KPiBQbGVhc2UgdXNlIGdldF91bmFsaWdu
+ZWRfYmUxNigpIGluc3RlYWQgb2Ygb3Blbi1jb2RpbmcgaXQuDQo+IA0KPiBUaGFua3MsDQo+IA0K
+PiBCYXJ0Lg0K
