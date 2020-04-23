@@ -2,124 +2,122 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C147C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3296C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249A220704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81FC22076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knNPV9b5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgDWTbK (ORCPT
+        id S1728733AbgDWTbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:31:10 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45090 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgDWTbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:31:09 -0400
-IronPort-SDR: CTNkFYoa3JcqBpK/uI4fzZ0XoE68i/cIPBPn03BjjcqFwtYJLk99rUNy1DoXkKE4daruisg+Sb
- ppVCedPGY1Kg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 12:31:09 -0700
-IronPort-SDR: tqg+y67A/vNG+cYI5UcNzAeImAaYvydHXeRdJYcr+b08J/agvX+DJI0UNOTHxHxpPb/1zAWlwI
- phuRR75eTgaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="430444846"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 23 Apr 2020 12:31:09 -0700
-Date:   Thu, 23 Apr 2020 12:31:08 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Nadav Amit <namit@cs.technion.ac.il>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/3] kvm: x86: skip DRn reload if previous VM exit is
- DR access VM exit
-Message-ID: <20200423193108.GP17824@linux.intel.com>
-References: <20200416101509.73526-1-xiaoyao.li@intel.com>
- <20200416101509.73526-4-xiaoyao.li@intel.com>
+        Thu, 23 Apr 2020 15:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgDWTbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 15:31:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45FFC09B042;
+        Thu, 23 Apr 2020 12:31:15 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so8227701wma.0;
+        Thu, 23 Apr 2020 12:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fgAZVOCSIveiuqGce1ll+R4dfIKogGqfZA6esAftSZo=;
+        b=knNPV9b5pYpSRUOTLC+KLsUlCy9+s8M/aHaNwAEEc+coAm0Zro7GGhhs0Mf18UjMCk
+         Jy3Kt7savdetdbXCxj3EuD0rloEFKCjOo35vvYb6xP/E59wRwRRjFHwuna3XNXp4CoXc
+         /nrSqm2IgnEsTlOOXi7K87G+2ccTLb0x2Vt+GnzLU8eRdKLrLtssOb9jyLLol5JzKz3j
+         5HogzgY3hb85+VCO8EuFrXJdw+E30xtlAudgmmM/r9dJ8C3lBzojgYhs6mZT61ZGk7Lt
+         upjp+TdAjLC9w/XqRZ1a1qKeIG4q/YDKILPqf0VnI6/TP64WAXOcy+hqvijN0zeNHD9k
+         Q+Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fgAZVOCSIveiuqGce1ll+R4dfIKogGqfZA6esAftSZo=;
+        b=Pz65gSc9RQh3IBtJRIXekyAkaeq1n7YHT6owY/35BRMgEqKK5vCNvFLoWUA0MtnAkD
+         pT8KcCsVdjmi9gPwfspkjhSksRd68/61itsU8wD7m4cU6jNWxa6jGP85YC+n3AgDrKZo
+         R6MP8JA98kPwsmUaVriB0aPdyc5jmYLQOlu3E5gukrswdSjY1xMAr48nYYgFtEf8MBwj
+         LIiXPSrTaarfWFEFlRmZDn5Z/le10/v1yTyN7jlCGHyAV/A+zvuYNCo04W2PgzNDEkd0
+         0Yfm41E9PA1es7QPtmgDImqH+6JHYcVzZxis5O5foZDPqbFUn+ulMcnrPSHLH7gZ3tsQ
+         8pqQ==
+X-Gm-Message-State: AGi0PubAQDV+01Hma91tgSuL/iGWT0IePxcIZH99lwyM+O+NEjUXehri
+        fk6fNpWO5yBdNPD18R+hpILHJ6xkCAJnGbxPuj8=
+X-Google-Smtp-Source: APiQypJ6GT/p5QCtXDyj6Nc/UccKUVDP9vSEuI76TETHj+tm3Tp7yVKfb2mtdWEzWQCVuoW/zENlmPdp16iR0w6s3pw=
+X-Received: by 2002:a1c:6344:: with SMTP id x65mr5917826wmb.56.1587670274438;
+ Thu, 23 Apr 2020 12:31:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416101509.73526-4-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200423141728.19949-1-colin.king@canonical.com>
+In-Reply-To: <20200423141728.19949-1-colin.king@canonical.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 23 Apr 2020 15:31:02 -0400
+Message-ID: <CADnq5_NWZaUeBz8ZyWF_+LFc3=NXiQYJqbj4cMsyBReASCbcEQ@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amd/display: remove redundant assignment to
+ variable ret
+To:     Colin King <colin.king@canonical.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Wenjing Liu <wenjing.liu@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 06:15:09PM +0800, Xiaoyao Li wrote:
-> When DR access vm exit, there is no DRn change throughout VM exit to
-> next VM enter. Skip the DRn reload in this case and fix the comments.
+On Thu, Apr 23, 2020 at 10:18 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The variable ret is being initialized with a value that is never read
+> and it is being updated later with a new value. The initialization is
+> redundant and can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Same thing as the previous patch, the hardware values aren't stable.  In
-this case, MOV DR won't exit so KVM needs to ensure hardware has the guest
-values, irrespective of whether breakpoints are enabled.
+Applied.  Thanks!
 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Alex
+
 > ---
->  arch/x86/kvm/svm/svm.c | 8 +++++---
->  arch/x86/kvm/vmx/vmx.c | 8 +++++---
->  arch/x86/kvm/x86.c     | 2 +-
->  3 files changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 66123848448d..c6883a0bf8c3 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -2287,9 +2287,11 @@ static int dr_interception(struct vcpu_svm *svm)
->  
->  	if (svm->vcpu.guest_debug == 0) {
->  		/*
-> -		 * No more DR vmexits; force a reload of the debug registers
-> -		 * and reenter on this instruction.  The next vmexit will
-> -		 * retrieve the full state of the debug registers.
-> +		 * No more DR vmexits and reenter on this instruction.
-> +		 * The next vmexit will retrieve the full state of the debug
-> +		 * registers and re-enable DR vmexits.
-> +		 * No need to set KVM_DEBUGREG_NEED_RELOAD because no DRn change
-> +		 * since this DR vmexit.
->  		 */
->  		clr_dr_intercepts(svm);
->  		svm->vcpu.arch.switch_db_regs |= KVM_DEBUGREG_WONT_EXIT;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index aa1b8cf7c915..22eff8503048 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4967,9 +4967,11 @@ static int handle_dr(struct kvm_vcpu *vcpu)
->  		exec_controls_clearbit(to_vmx(vcpu), CPU_BASED_MOV_DR_EXITING);
->  
->  		/*
-> -		 * No more DR vmexits; force a reload of the debug registers
-> -		 * and reenter on this instruction.  The next vmexit will
-> -		 * retrieve the full state of the debug registers.
-> +		 * No more DR vmexits and reenter on this instruction.
-> +		 * The next vmexit will retrieve the full state of the debug
-> +		 * registers and re-enable DR vmexits.
-> +		 * No need to set KVM_DEBUGREG_NEED_RELOAD because no DRn change
-> +		 * since this DR vmexit.
->  		 */
->  		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_WONT_EXIT;
->  		return 1;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 71264df64001..8983848cbf45 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8400,7 +8400,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  	if (test_thread_flag(TIF_NEED_FPU_LOAD))
->  		switch_fpu_return();
->  
-> -	if (unlikely(vcpu->arch.switch_db_regs)) {
-> +	if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_NEED_RELOAD)) {
->  		set_debugreg(0, 7);
->  		set_debugreg(vcpu->arch.eff_db[0], 0);
->  		set_debugreg(vcpu->arch.eff_db[1], 1);
-> -- 
-> 2.20.1
-> 
+>  drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> index d5b306384d79..9ef9e50a34fa 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> @@ -4231,7 +4231,7 @@ void dpcd_set_source_specific_data(struct dc_link *link)
+>  {
+>         const uint32_t post_oui_delay = 30; // 30ms
+>         uint8_t dspc = 0;
+> -       enum dc_status ret = DC_ERROR_UNEXPECTED;
+> +       enum dc_status ret;
+>
+>         ret = core_link_read_dpcd(link, DP_DOWN_STREAM_PORT_COUNT, &dspc,
+>                                   sizeof(dspc));
+> --
+> 2.25.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
