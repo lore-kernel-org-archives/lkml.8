@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41264C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA72C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C81820780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497DE20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgDWXHW (ORCPT
+        id S1728828AbgDWXHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:07:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49754 "EHLO
+        Thu, 23 Apr 2020 19:07:21 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49748 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728430AbgDWXGs (ORCPT
+        by vger.kernel.org with ESMTP id S1728428AbgDWXGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:48 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-0004h9-Ln; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvU-0004hq-2r; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-00E6r5-C9; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvS-00E6ru-Kc; Fri, 24 Apr 2020 00:06:34 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marc Kleine-Budde" <mkl@pengutronix.de>,
-        "Florian Faber" <faber@faberman.de>
-Date:   Fri, 24 Apr 2020 00:06:17 +0100
-Message-ID: <lsq.1587683028.567419965@decadent.org.uk>
+        "Kaitao Cheng" <pilgrimtao@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Date:   Fri, 24 Apr 2020 00:06:23 +0100
+Message-ID: <lsq.1587683028.183327539@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 150/245] can: mscan: mscan_rx_poll(): fix rx path
- lockup when returning from polling to irq mode
+Subject: [PATCH 3.16 156/245] kernel/trace: Fix do not unregister
+ tracepoints when register sched_migrate_task fail
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,72 +56,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Florian Faber <faber@faberman.de>
+From: Kaitao Cheng <pilgrimtao@gmail.com>
 
-commit 2d77bd61a2927be8f4e00d9478fe6996c47e8d45 upstream.
+commit 50f9ad607ea891a9308e67b81f774c71736d1098 upstream.
 
-Under load, the RX side of the mscan driver can get stuck while TX still
-works. Restarting the interface locks up the system. This behaviour
-could be reproduced reliably on a MPC5121e based system.
+In the function, if register_trace_sched_migrate_task() returns error,
+sched_switch/sched_wakeup_new/sched_wakeup won't unregister. That is
+why fail_deprobe_sched_switch was added.
 
-The patch fixes the return value of the NAPI polling function (should be
-the number of processed packets, not constant 1) and the condition under
-which IRQs are enabled again after polling is finished.
+Link: http://lkml.kernel.org/r/20191231133530.2794-1-pilgrimtao@gmail.com
 
-With this patch, no more lockups were observed over a test period of ten
-days.
-
-Fixes: afa17a500a36 ("net/can: add driver for mscan family & mpc52xx_mscan")
-Signed-off-by: Florian Faber <faber@faberman.de>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 478142c39c8c2 ("tracing: do not grab lock in wakeup latency function tracing")
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/can/mscan/mscan.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ kernel/trace/trace_sched_wakeup.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/can/mscan/mscan.c
-+++ b/drivers/net/can/mscan/mscan.c
-@@ -412,13 +412,12 @@ static int mscan_rx_poll(struct napi_str
- 	struct net_device *dev = napi->dev;
- 	struct mscan_regs __iomem *regs = priv->reg_base;
- 	struct net_device_stats *stats = &dev->stats;
--	int npackets = 0;
--	int ret = 1;
-+	int work_done = 0;
- 	struct sk_buff *skb;
- 	struct can_frame *frame;
- 	u8 canrflg;
- 
--	while (npackets < quota) {
-+	while (work_done < quota) {
- 		canrflg = in_8(&regs->canrflg);
- 		if (!(canrflg & (MSCAN_RXF | MSCAN_ERR_IF)))
- 			break;
-@@ -439,18 +438,18 @@ static int mscan_rx_poll(struct napi_str
- 
- 		stats->rx_packets++;
- 		stats->rx_bytes += frame->can_dlc;
--		npackets++;
-+		work_done++;
- 		netif_receive_skb(skb);
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -567,7 +567,7 @@ static void start_wakeup_tracer(struct t
+ 	if (ret) {
+ 		pr_info("wakeup trace: Couldn't activate tracepoint"
+ 			" probe to kernel_sched_migrate_task\n");
+-		return;
++		goto fail_deprobe_sched_switch;
  	}
  
--	if (!(in_8(&regs->canrflg) & (MSCAN_RXF | MSCAN_ERR_IF))) {
--		napi_complete(&priv->napi);
--		clear_bit(F_RX_PROGRESS, &priv->flags);
--		if (priv->can.state < CAN_STATE_BUS_OFF)
--			out_8(&regs->canrier, priv->shadow_canrier);
--		ret = 0;
-+	if (work_done < quota) {
-+		if (likely(napi_complete_done(&priv->napi, work_done))) {
-+			clear_bit(F_RX_PROGRESS, &priv->flags);
-+			if (priv->can.state < CAN_STATE_BUS_OFF)
-+				out_8(&regs->canrier, priv->shadow_canrier);
-+		}
- 	}
--	return ret;
-+	return work_done;
- }
+ 	wakeup_reset(tr);
+@@ -585,6 +585,8 @@ static void start_wakeup_tracer(struct t
+ 		printk(KERN_ERR "failed to start wakeup tracer\n");
  
- static irqreturn_t mscan_isr(int irq, void *dev_id)
+ 	return;
++fail_deprobe_sched_switch:
++	unregister_trace_sched_switch(probe_wakeup_sched_switch, NULL);
+ fail_deprobe_wake_new:
+ 	unregister_trace_sched_wakeup_new(probe_wakeup, NULL);
+ fail_deprobe:
 
