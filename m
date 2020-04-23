@@ -4,102 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A726C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01F0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8290B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA70321569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgDWGhO (ORCPT
+        id S1726852AbgDWGi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:37:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53014 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725562AbgDWGhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:37:13 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 63D5C9B22542436B0BDB;
-        Thu, 23 Apr 2020 14:37:10 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 23 Apr 2020 14:37:00 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>
-CC:     <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] mmc: sdhci-pci-o2micro: Make some symbols static
-Date:   Thu, 23 Apr 2020 14:43:19 +0800
-Message-ID: <1587624199-96926-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+        Thu, 23 Apr 2020 02:38:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54341 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgDWGi1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:38:27 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jRVV7-0002Ha-Le; Thu, 23 Apr 2020 06:38:22 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     yhchuang@realtek.com, kvalo@codeaurora.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER
+        (rtw88)), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] rtw88: Use udelay instead of usleep in atomic context
+Date:   Thu, 23 Apr 2020 14:38:10 +0800
+Message-Id: <20200423063811.2636-2-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200423063811.2636-1-kai.heng.feng@canonical.com>
+References: <20200423063811.2636-1-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
+It's incorrect to use usleep in atomic context.
 
-drivers/mmc/host/sdhci-pci-o2micro.c:497:6: warning: symbol
-'sdhci_pci_o2_set_clock' was not declared. Should it be static?
-drivers/mmc/host/sdhci-pci-o2micro.c:512:5: warning: symbol
-'sdhci_pci_o2_probe_slot' was not declared. Should it be static?
-drivers/mmc/host/sdhci-pci-o2micro.c:581:5: warning: symbol
-'sdhci_pci_o2_probe' was not declared. Should it be static?
-drivers/mmc/host/sdhci-pci-o2micro.c:786:5: warning: symbol
-'sdhci_pci_o2_resume' was not declared. Should it be static?
+Switch to a macro which uses udelay instead of usleep to prevent the issue.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/mmc/host/sdhci-pci-o2micro.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtw88/fw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-index fa81050..e2a8468 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -494,7 +494,7 @@ static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
+index 245da96dfddc..8f998b4a7234 100644
+--- a/drivers/net/wireless/realtek/rtw88/fw.c
++++ b/drivers/net/wireless/realtek/rtw88/fw.c
+@@ -228,9 +228,9 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
+ 		goto out;
  	}
- }
  
--void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
-+static void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
- {
- 	u16 clk;
+-	ret = read_poll_timeout(rtw_read8, box_state,
+-				!((box_state >> box) & 0x1), 100, 3000, false,
+-				rtwdev, REG_HMETFR);
++	ret = read_poll_timeout_atomic(rtw_read8, box_state,
++				       !((box_state >> box) & 0x1), 100, 3000,
++				       false, rtwdev, REG_HMETFR);
  
-@@ -509,7 +509,7 @@ void sdhci_pci_o2_set_clock(struct sdhci_host *host, unsigned int clock)
- 	sdhci_o2_enable_clk(host, clk);
- }
- 
--int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
-+static int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
- {
- 	struct sdhci_pci_chip *chip;
- 	struct sdhci_host *host;
-@@ -578,7 +578,7 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
- 	return 0;
- }
- 
--int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
-+static int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
- {
- 	int ret;
- 	u8 scratch;
-@@ -783,7 +783,7 @@ int sdhci_pci_o2_probe(struct sdhci_pci_chip *chip)
- }
- 
- #ifdef CONFIG_PM_SLEEP
--int sdhci_pci_o2_resume(struct sdhci_pci_chip *chip)
-+static int sdhci_pci_o2_resume(struct sdhci_pci_chip *chip)
- {
- 	sdhci_pci_o2_probe(chip);
- 	return sdhci_pci_resume_host(chip);
+ 	if (ret) {
+ 		rtw_err(rtwdev, "failed to send h2c command\n");
 -- 
-2.6.2
+2.17.1
 
