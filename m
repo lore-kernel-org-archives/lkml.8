@@ -2,51 +2,51 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCFEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C7AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A4A20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C7120781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hYdHAwbV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FkoB++/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgDWNTt (ORCPT
+        id S1728092AbgDWNT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:19:49 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58492 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726361AbgDWNTi (ORCPT
+        Thu, 23 Apr 2020 09:19:56 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51313 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727780AbgDWNTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 09:19:38 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NDCX7f009209;
-        Thu, 23 Apr 2020 15:19:22 +0200
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NDDK6m010140;
+        Thu, 23 Apr 2020 15:19:18 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Hcw1lJCHjCweC5Z6YyOzJ+eYTpoFQ8lrStCDfhV3rK8=;
- b=hYdHAwbVNOLGVjgbFJXt4S1dg3ReevB6B70FsOkpmpGQQHBIshVrm11e8CmJDgV39L6W
- Hwy560mZvKtWhfNkPQn4gvVys6FzZNqBpgGhR/4kM/46IDgF6gDrYV3OMYyv7BkoF+cp
- 1tTf0rus5uVAOHAdW444DrNnZ7CT65PFlw98NoQrqWkhYO/8LSeOyeqqdyTH4QpM59JD
- MrTov6h1GfXZX/o+gpGwEbNPCWFf1W+RgD0zzNOcnKMW2HlUqGW3W27K9NOs87wZzmFZ
- TfC1nQHQs8TaPkqsYl2lY5gfw7kuJr4TWV7d4a0dmuDAoRhw6QAZdI+j+tlsNTqnVM52 Hg== 
+ bh=FJh6fC8jON2d+h4HJHf/RBjL/d+0wt6Wf8NAcemUV7o=;
+ b=FkoB++/XIN+a1SjNGlLOo2PutMa7vTxQalTl9Oapjwcf2XfJqs8AAyc6W6zj2YdnjQaE
+ R+ugGyd24bCiyr5NDM4EzpcvHTiPy0Uy+9urnjwAuaHdP6cFcN7NgLKfSf7hKaHSrWNS
+ 4Ph1tYvZHqB7h643zCOLnVG/W8TPot++pTcMDy7rXjcfIy8Y4FzNfaCS2bK70SXf2lWu
+ ZNt5Gaorb5cfQo5iouc/5wT+aeat74b17Epx/VwN2nno6DOLTQT6BQRpBEYQT6EMD+r4
+ UnNW+fka9a1X2+LNQ+TLp2HQACfIBNPHLXsF/XNBXvUOCK68K5bPZ6PM90agPeW0sduz qg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fregw0kg-1
+        by mx07-00178001.pphosted.com with ESMTP id 30fqawmx81-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 15:19:22 +0200
+        Thu, 23 Apr 2020 15:19:18 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9BB3910002A;
-        Thu, 23 Apr 2020 15:19:21 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC5B710002A;
+        Thu, 23 Apr 2020 15:19:17 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8F7A520758D;
-        Thu, 23 Apr 2020 15:19:21 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Apr 2020 15:19:20
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AC08120758D;
+        Thu, 23 Apr 2020 15:19:17 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Apr 2020 15:19:16
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
@@ -57,16 +57,16 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 4/5] bus: stm32: Add stm32 ETZPC firewall bus controller
-Date:   Thu, 23 Apr 2020 15:19:12 +0200
-Message-ID: <20200423131913.30786-5-benjamin.gaignard@st.com>
+Subject: [PATCH v2 1/5] dt-bindings: bus: Add firewall bindings
+Date:   Thu, 23 Apr 2020 15:19:09 +0200
+Message-ID: <20200423131913.30786-2-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200423131913.30786-1-benjamin.gaignard@st.com>
 References: <20200423131913.30786-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE3.st.com
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-23_10:2020-04-23,2020-04-23 signatures=0
@@ -75,309 +75,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add STM32 Extended TrustZone Protection bus controller.
-For each of device-tree nodes it will check and apply
-firewall configuration. If it doesn't match the device
-will not be probed by platform bus.
-
-A device could be configured to be accessible by trusted world,
-co-processor or non-secure world.
+Add schemas for firewall consumer and provider.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- drivers/bus/stm32/Kconfig                   |   8 ++
- drivers/bus/stm32/Makefile                  |   1 +
- drivers/bus/stm32/stm32-etzpc.c             | 160 ++++++++++++++++++++++++++++
- include/dt-bindings/bus/stm32/stm32-etzpc.h |  90 ++++++++++++++++
- 4 files changed, 259 insertions(+)
- create mode 100644 drivers/bus/stm32/stm32-etzpc.c
- create mode 100644 include/dt-bindings/bus/stm32/stm32-etzpc.h
+ .../bindings/bus/stm32/firewall-consumer.yaml      | 25 ++++++++++++++++++++++
+ .../bindings/bus/stm32/firewall-provider.yaml      | 18 ++++++++++++++++
+ 2 files changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
 
-diff --git a/drivers/bus/stm32/Kconfig b/drivers/bus/stm32/Kconfig
-index 57221e833e2d..5dc6e2504de5 100644
---- a/drivers/bus/stm32/Kconfig
-+++ b/drivers/bus/stm32/Kconfig
-@@ -1,3 +1,11 @@
- config FIREWALL_CONTROLLERS
- 	bool "Support of bus firewall controllers"
- 	depends on OF
-+
-+config STM32_ETZPC
-+	bool "STM32 ETZPC bus controller"
-+	depends on MACH_STM32MP157
-+	select FIREWALL_CONTROLLERS
-+	help
-+	  Select y to enable STM32 Extended TrustZone Protection
-+	  Controller (ETZPC)
-diff --git a/drivers/bus/stm32/Makefile b/drivers/bus/stm32/Makefile
-index eb6b978d6450..d42e99b5865e 100644
---- a/drivers/bus/stm32/Makefile
-+++ b/drivers/bus/stm32/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_FIREWALL_CONTROLLERS) += firewall.o
-+obj-$(CONFIG_STM32_ETZPC) += stm32-etzpc.o
-diff --git a/drivers/bus/stm32/stm32-etzpc.c b/drivers/bus/stm32/stm32-etzpc.c
+diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
 new file mode 100644
-index 000000000000..c216c71448ed
+index 000000000000..8f123888d058
 --- /dev/null
-+++ b/drivers/bus/stm32/stm32-etzpc.c
-@@ -0,0 +1,160 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-+ * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
-+ */
++++ b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
+@@ -0,0 +1,25 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
++title: Common Bus Firewall consumer binding
 +
-+#include <dt-bindings/bus/stm32/stm32-etzpc.h>
++maintainers:
++  - Benjamin Gaignard <benjamin.gaignard@st.com>
 +
-+#include "firewall.h"
++# always select the core schema
++select: true
 +
-+#define ETZPC_DECPROT	0x010
-+#define ETZPC_NUM_LOCKS	94
++properties:
++  firewall-0: true
 +
-+struct stm32_etzpc {
-+	struct regmap_field *fields[ETZPC_NUM_LOCKS];
-+};
++  firewall-names: true
 +
-+static int stm32_etzpc_set_config(void *priv, struct of_phandle_args *out_args)
-+{
-+	struct stm32_etzpc *etzpc = dev_get_drvdata((struct device *)priv);
-+	int index = out_args->args[0];
-+	unsigned int value = out_args->args[1];
-+	u32 status;
++patternProperties:
++  "firewall-[0-9]":
++    $ref: "/schemas/types.yaml#/definitions/phandle-array"
 +
-+	if (out_args->args_count != 2)
-+		return -EINVAL;
-+
-+	if (index >= ETZPC_NUM_LOCKS)
-+		return -EINVAL;
-+
-+	if (value > STM32_ETZPC_NON_SECURE)
-+		return -EINVAL;
-+
-+	regmap_field_force_write(etzpc->fields[index], value);
-+
-+	/* Hardware could denied the new value, read it back to check it */
-+	regmap_field_read(etzpc->fields[index], &status);
-+
-+	if (value != status) {
-+		pr_info("failed to set configuration: index %d, value %d\n",
-+			index, value);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct firewall_ops stm32_etzpc_ops = {
-+	.set_config = stm32_etzpc_set_config,
-+};
-+
-+static const struct regmap_config stm32_etzpc_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = sizeof(u32),
-+	.max_register = 0x3FF,
-+};
-+
-+static void stm32_etzpc_populate(struct device *parent)
-+{
-+	struct device_node *child;
-+
-+	if (!parent)
-+		return;
-+
-+	for_each_available_child_of_node(dev_of_node(parent), child) {
-+		if (firewall_set_default_config(child)) {
-+			/*
-+			 * Failed to set firewall configuration mark the node
-+			 * as populated so platform bus won't probe it
-+			 */
-+			of_node_set_flag(child, OF_POPULATED);
-+			dev_info(parent, "%s: Bad firewall configuration\n",
-+				 child->name);
-+		}
-+	}
-+}
-+
-+static int stm32_etzpc_probe(struct platform_device *pdev)
-+{
-+	struct stm32_etzpc *etzpc;
-+	struct regmap *regmap;
-+	struct resource *res;
-+	void __iomem *mmio;
-+	int i, ret;
-+
-+	etzpc = devm_kzalloc(&pdev->dev, sizeof(*etzpc), GFP_KERNEL);
-+	if (!etzpc)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmio = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mmio))
-+		return PTR_ERR(mmio);
-+
-+	regmap = devm_regmap_init_mmio(&pdev->dev, mmio,
-+				       &stm32_etzpc_regmap_cfg);
-+
-+	for (i = 0; i < ETZPC_NUM_LOCKS; i++) {
-+		struct reg_field field;
-+
-+		/*
-+		 * Each hardware block status is defined by
-+		 * a 2 bits field and all of them are packed into
-+		 * 32 bits registers. Do some computation to get
-+		 * register offset and the shift.
-+		 */
-+		field.reg = ETZPC_DECPROT + (i >> 4) * sizeof(u32);
-+		field.lsb = (i % 0x10) << 1;
-+		field.msb = field.lsb + 1;
-+
-+		etzpc->fields[i] = devm_regmap_field_alloc(&pdev->dev,
-+							   regmap, field);
-+	}
-+
-+	platform_set_drvdata(pdev, etzpc);
-+
-+	ret = firewall_register(dev_of_node(&pdev->dev),
-+				&stm32_etzpc_ops,
-+				&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	stm32_etzpc_populate(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id stm32_etzpc_of_match[] = {
-+	{ .compatible = "st,stm32-etzpc-bus" },
-+	{ /* end node */ }
-+};
-+MODULE_DEVICE_TABLE(of, stm32_etzpc_of_match);
-+
-+static struct platform_driver stm32_etzpc_driver = {
-+	.probe  = stm32_etzpc_probe,
-+	.driver = {
-+		.name = "stm32-etzpc",
-+		.of_match_table = stm32_etzpc_of_match,
-+	},
-+};
-+
-+static int __init stm32_etzpc_init(void)
-+{
-+	return platform_driver_register(&stm32_etzpc_driver);
-+}
-+arch_initcall(stm32_etzpc_init);
-+
-+MODULE_AUTHOR("Benjamin Gaignard <benjamin.gaignard@st.com>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 Bus Firewall Controller");
-diff --git a/include/dt-bindings/bus/stm32/stm32-etzpc.h b/include/dt-bindings/bus/stm32/stm32-etzpc.h
++dependencies:
++  firewall-names: [ firewall-0 ]
+diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
 new file mode 100644
-index 000000000000..9c4783b9783c
+index 000000000000..299824c620ea
 --- /dev/null
-+++ b/include/dt-bindings/bus/stm32/stm32-etzpc.h
-@@ -0,0 +1,90 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-+ * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
-+ */
++++ b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
+@@ -0,0 +1,18 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/stm32/firewall-provider.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#ifndef _STM32_ETZPC_H_
-+#define _STM32_ETZPC_H_
++title: Common Bus Firewall provider binding
 +
-+/* ETZPC configurations: trust-zone, non-secure or coprocessor*/
-+#define STM32_ETZPC_TRUST	1
-+#define STM32_ETPCZ_COPRO	2
-+#define STM32_ETZPC_NON_SECURE	3
++maintainers:
++  - Benjamin Gaignard <benjamin.gaignard@st.com>
 +
-+/* ETZPC hard blocks index */
-+#define STM32_ETZPC_USART1	3
-+#define STM32_ETZPC_SPI6	4
-+#define STM32_ETZPC_I2C4	5
-+#define STM32_ETZPC_RNG1	7
-+#define STM32_ETZPC_HASH1	8
-+#define STM32_ETZPC_CRYP1	9
-+#define STM32_ETZPC_I2C6	12
-+#define STM32_ETZPC_TIM2	16
-+#define STM32_ETZPC_TIM3	17
-+#define STM32_ETZPC_TIM4	18
-+#define STM32_ETZPC_TIM5	19
-+#define STM32_ETZPC_TIM6	20
-+#define STM32_ETZPC_TIM7	21
-+#define STM32_ETZPC_TIM12	22
-+#define STM32_ETZPC_TIM13	23
-+#define STM32_ETZPC_TIM14	24
-+#define STM32_ETZPC_LPTIM1	25
-+#define STM32_ETZPC_SPI2	27
-+#define STM32_ETZPC_SPI3	28
-+#define STM32_ETZPC_USART2	30
-+#define STM32_ETZPC_USART3	31
-+#define STM32_ETZPC_USART4	32
-+#define STM32_ETZPC_USART5	33
-+#define STM32_ETZPC_I2C1	34
-+#define STM32_ETZPC_I2C2	35
-+#define STM32_ETZPC_I2C3	36
-+#define STM32_ETZPC_I2C5	37
-+#define STM32_ETZPC_CEC		38
-+#define STM32_ETZPC_DAC		39
-+#define STM32_ETZPC_UART7	40
-+#define STM32_ETZPC_UART8	41
-+#define STM32_ETZPC_MDIOS	44
-+#define STM32_ETZPC_TIM1	48
-+#define STM32_ETZPC_TIM8	49
-+#define STM32_ETZPC_USART6	51
-+#define STM32_ETZPC_SPI1	52
-+#define STM32_ETZPC_SPI4	53
-+#define STM32_ETZPC_TIM15	54
-+#define STM32_ETZPC_TIM16	55
-+#define STM32_ETZPC_TIM17	56
-+#define STM32_ETZPC_SPI5	57
-+#define STM32_ETZPC_SAI1	58
-+#define STM32_ETZPC_SAI2	59
-+#define STM32_ETZPC_SAI3	60
-+#define STM32_ETZPC_DFSDM	61
-+#define STM32_ETZPC_TT_FDCAN	62
-+#define STM32_ETZPC_LPTIM2	64
-+#define STM32_ETZPC_LPTIM3	65
-+#define STM32_ETZPC_LPTIM4	66
-+#define STM32_ETZPC_LPTIM5	67
-+#define STM32_ETZPC_SAI4	68
-+#define STM32_ETZPC_VREFBUF	69
-+#define STM32_ETZPC_DCMI	70
-+#define STM32_ETZPC_CRC2	71
-+#define STM32_ETZPC_ADC		72
-+#define STM32_ETZPC_HASH2	73
-+#define STM32_ETZPC_RNG2	74
-+#define STM32_ETZPC_CRYP2	75
-+#define STM32_ETZPC_SRAM1	80
-+#define STM32_ETZPC_SRAM2	81
-+#define STM32_ETZPC_SRAM3	82
-+#define STM32_ETZPC_SRAM4	83
-+#define STM32_ETZPC_RETRAM	84
-+#define STM32_ETZPC_OTG		85
-+#define STM32_ETZPC_SDMMC3	86
-+#define STM32_ETZPC_DLYBSD3	87
-+#define STM32_ETZPC_DMA1	88
-+#define STM32_ETZPC_DMA2	89
-+#define STM32_ETZPC_DMAMUX	90
-+#define STM32_ETZPC_FMC		91
-+#define STM32_ETZPC_QSPI	92
-+#define STM32_ETZPC_DLYBQ	93
-+#define STM32_ETZPC_ETH1	94
++properties:
++  '#firewall-cells':
++     $ref: /schemas/types.yaml#/definitions/uint32
++     description: Number of cells in a bus firewall specifier
 +
-+#endif /* _STM32_ETZPC_H_ */
++required:
++  - '#firewall-cells'
 -- 
 2.15.0
 
