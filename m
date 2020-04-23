@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73DCC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1264C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C092077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F52A2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgDWXUA (ORCPT
+        id S1729533AbgDWXUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:20:00 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48662 "EHLO
+        Thu, 23 Apr 2020 19:20:11 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48730 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728227AbgDWXGe (ORCPT
+        by vger.kernel.org with ESMTP id S1728231AbgDWXGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:34 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bv-Qp; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvN-0004d7-LX; Fri, 24 Apr 2020 00:06:29 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-00E6j1-BH; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvL-00E6kV-FP; Fri, 24 Apr 2020 00:06:27 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Simon Wunderlich" <sw@simonwunderlich.de>,
-        "Sven Eckelmann" <sven@narfation.org>
-Date:   Fri, 24 Apr 2020 00:04:48 +0100
-Message-ID: <lsq.1587683028.842404845@decadent.org.uk>
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Fri, 24 Apr 2020 00:05:03 +0100
+Message-ID: <lsq.1587683028.6911736@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 061/245] batman-adv: Fix DAT candidate selection on
- little endian systems
+Subject: [PATCH 3.16 076/245] neighbour: remove neigh_cleanup() method
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,43 +55,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 upstream.
+commit f394722fb0d0f701119368959d7cd0ecbc46363a upstream.
 
-The distributed arp table is using a DHT to store and retrieve MAC address
-information for an IP address. This is done using unicast messages to
-selected peers. The potential peers are looked up using the IP address and
-the VID.
+neigh_cleanup() has not been used for seven years, and was a wrong design.
 
-While the IP address is always stored in big endian byte order, this is not
-the case of the VID. It can (depending on the host system) either be big
-endian or little endian. The host must therefore always convert it to big
-endian to ensure that all devices calculate the same peers for the same
-lookup data.
+Messing with shared pointer in bond_neigh_init() without proper
+memory barriers would at least trigger syzbot complains eventually.
 
-Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+It is time to remove this stuff.
+
+Fixes: b63b70d87741 ("IPoIB: Use a private hash table for path lookup in xmit path")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/batman-adv/distributed-arp-table.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -207,9 +207,11 @@ static uint32_t batadv_hash_dat(const vo
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3431,19 +3431,10 @@ static int bond_neigh_init(struct neighb
+ 		return 0;
+ 
+ 	parms.neigh_setup = NULL;
+-	parms.neigh_cleanup = NULL;
+ 	ret = slave_ops->ndo_neigh_setup(slave->dev, &parms);
+ 	if (ret)
+ 		return ret;
+ 
+-	/*
+-	 * Assign slave's neigh_cleanup to neighbour in case cleanup is called
+-	 * after the last slave has been detached.  Assumes that all slaves
+-	 * utilize the same neigh_cleanup (true at this writing as only user
+-	 * is ipoib).
+-	 */
+-	n->parms->neigh_cleanup = parms.neigh_cleanup;
+-
+ 	if (!parms.neigh_setup)
+ 		return 0;
+ 
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -71,7 +71,6 @@ struct neigh_parms {
+ 	struct net_device *dev;
+ 	struct neigh_parms *next;
+ 	int	(*neigh_setup)(struct neighbour *);
+-	void	(*neigh_cleanup)(struct neighbour *);
+ 	struct neigh_table *tbl;
+ 
+ 	void	*sysctl_table;
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -103,9 +103,6 @@ static int neigh_blackhole(struct neighb
+ 
+ static void neigh_cleanup_and_release(struct neighbour *neigh)
  {
- 	uint32_t hash = 0;
- 	const struct batadv_dat_entry *dat = data;
-+	__be16 vid;
- 
- 	hash = batadv_hash_bytes(hash, &dat->ip, sizeof(dat->ip));
--	hash = batadv_hash_bytes(hash, &dat->vid, sizeof(dat->vid));
-+	vid = htons(dat->vid);
-+	hash = batadv_hash_bytes(hash, &vid, sizeof(vid));
- 
- 	hash += (hash << 3);
- 	hash ^= (hash >> 11);
+-	if (neigh->parms->neigh_cleanup)
+-		neigh->parms->neigh_cleanup(neigh);
+-
+ 	__neigh_notify(neigh, RTM_DELNEIGH, 0);
+ 	neigh_release(neigh);
+ }
 
