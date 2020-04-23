@@ -2,149 +2,100 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CF4C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D0FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74352098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E832076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DrKJ9fNz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrwao3Yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgDWPqp (ORCPT
+        id S1729386AbgDWPrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:46:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55922 "EHLO
+        Thu, 23 Apr 2020 11:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729176AbgDWPqo (ORCPT
+        by vger.kernel.org with ESMTP id S1729176AbgDWPrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:46:44 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F720C09B040;
-        Thu, 23 Apr 2020 08:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587656801;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ybxxfVp12h/EJrmfUJdRJSGTmKH3W7lZYEApLFlERWY=;
-        b=DrKJ9fNz8WxLH/lxvzqH+AMSam9tu2FhRn1b+DxbazOFoXyS93+afrGgpwefT4t6QC
-        /4k7b51LsSANcN/xVgHDnGc9MzXErXxCPQeHuiElt1upkXq+nvKp9tSqjV5+k1mBfxS3
-        gAkvjEQjZJNlc0Yw5yj/hGkMx2dR3nhn+e4WqxPIVEcRt6S9melWvYcV+2h+8m47DJTF
-        K+utEk2anK6Ms4Lb8UzV2Zj3a1+UkWzb9yq/ZlLTRil6UF5EXzHTWRMjAccLpfo3BT1D
-        qJ7BmeYa+eOlmSQs2uTl6iNBaTpywNCpLK63P2AacOcUu0H5TmLKFwDnMPpJpV6cP8ls
-        aO1A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCysOfl5tOw33QtdTbGcCRJGxnkq3ByzlXOnoXby"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:2692:1500:61a3:e550:2224:7950]
-        by smtp.strato.de (RZmta 46.6.2 AUTH)
-        with ESMTPSA id R0acebw3NFjv7lw
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 23 Apr 2020 17:45:57 +0200 (CEST)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com>
-Date:   Thu, 23 Apr 2020 17:45:55 +0200
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tony Lindgren <tony@atomide.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
-References: <20200415130233.rgn7xrtwqicptke2@gilmour.lan> <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com> <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com> <20200420073842.nx4xb3zqvu23arkc@gilmour.lan> <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan> <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com> <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan> <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com> <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 23 Apr 2020 11:47:03 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706FCC09B040;
+        Thu, 23 Apr 2020 08:47:01 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id e26so6933625wmk.5;
+        Thu, 23 Apr 2020 08:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=gexsfzJrWQOn4i3Pq7SNyCJbao42w3cesdQKpJpl5r8=;
+        b=hrwao3YwPmfTB2ywD7Jch6LubuZqoTMsMePjZGu0bDegj53Uu4CilC25U98EjqH8Uq
+         f4+98L+bniHA0DwjGKutR6f3EqykCxgTLKmp1ve2FvOzJ9kr1JzFh4mXiabgJzCH46U4
+         3tz+5skehkyqQO+ZJ6HeiT3axwKotBq2ezejAlsTj1mr+sqTobtdiVyfyBPxoQzJ4ly3
+         2ZoVgQL/HUg4F6nPQDr8Ykv5IzZwZszZX9e2Rs4xLeaIn0+f7Itjk4kaPMR9VkpcBgWP
+         9N4AUDqO1Qhrlao0siWFf5xP8hLgzDxiJR9vQ5NYMaFxctPukkacxm6YpvrWXHc7FdU0
+         zbKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gexsfzJrWQOn4i3Pq7SNyCJbao42w3cesdQKpJpl5r8=;
+        b=QbdwVYy3axavP4QuEsSqOaYsUIYEpgQJzbVzTpdnPT7H9WoPU8G5Tl5TkzdSFRC92b
+         eyvKOS+vlq2zFAm/B96rehGRLP6Hu2YEu9Ln4QlawaST/FJdf262sdWV16THV0SYrhOi
+         2oX3Fpuldk9seCAw/wuyzbh9tGGMx9XY8B4xt5AptAjG4Iap+3T8WrhwqWK22M/tOmZQ
+         kNOEmzYDPulSdxHAp00xxht2r6Ru6OZ+7XCCNeue5yuCmLsDerWjxNUGp8TrlpphIKxM
+         xlYqxd94XQcGgxEgygza0b38HDkO5h//LEDl9YZDFrTo2AI55gXT+HxtDTDiIulPPHC2
+         1VmQ==
+X-Gm-Message-State: AGi0Puap7o6mQC0tgcZEzYnrxXw5Gf0AaT+QimaYyoQyhEa3gUCa31+4
+        VEZQ6tJlx1SITRwcMJP08LbawiA2
+X-Google-Smtp-Source: APiQypJAhweB5DTJ9gVc3XAzKWIz4J2EmUXYFAeqSON8LkVyBJRSY8a4TlgTT3EAPufV9JrRElWatw==
+X-Received: by 2002:a1c:2d02:: with SMTP id t2mr4819878wmt.98.1587656819721;
+        Thu, 23 Apr 2020 08:46:59 -0700 (PDT)
+Received: from [10.230.188.26] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a24sm4072415wmb.24.2020.04.23.08.46.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 08:46:57 -0700 (PDT)
+Subject: Re: [PATCH -next] tty: serial: bcm63xx: fix missing clk_put() in
+ bcm63xx_uart
+To:     Zou Wei <zou_wei@huawei.com>, gregkh@linuxfoundation.org,
+        jslaby@suse.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1587472306-105155-1-git-send-email-zou_wei@huawei.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <4d5b3f7c-e516-2a4e-3594-1f8f705c16ab@gmail.com>
+Date:   Thu, 23 Apr 2020 08:46:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1587472306-105155-1-git-send-email-zou_wei@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
 
-> Am 23.04.2020 um 17:00 schrieb Neil Armstrong =
-<narmstrong@baylibre.com>:
->> One thing we can learn is that "core" seems to be a de facto standard=20=
 
->> for the core clock-name. An alternative "gpu" is used by =
-nvidia,gk20a.txt.
->=20
-> Usually IPs needs a few clocks:
-> - pclk or apb or reg: the clock clocking the "slave" bus to serve the =
-registers
-> - axi or bus or ahb: the bus clocking the the "master" bus to get data =
-from system memory
-> - core: the actual clock feeding the GPU logic
+On 4/21/2020 5:31 AM, Zou Wei wrote:
+> This patch fixes below error reported by coccicheck
+> 
+> drivers/tty/serial/bcm63xx_uart.c:848:2-8: ERROR: missing clk_put;
+> clk_get on line 842 and execution via conditional on line 846
+> 
+> Fixes: ab4382d27412 ("tty: move drivers/serial/ to drivers/tty/serial/")
 
-And the sgx544 seems to have two such clocks.
+The driver was doing that prior to being moved, and since this is an 
+error path, I am not sure the Fixes tag is really warranted.
 
-> Sometimes you have a single clock for slave and master bus.
->=20
-> But you can also have separate clocks for shader cores, .. this =
-depends on the IP and it's architecture.
-> The IP can also have memories with separate clocks, etc...
-
-Indeed.
-
-> But all these clocks can be source by an unique clock on a SoC, but =
-different on another
-> SoC, this is why it's important to list them all, even optional.
->=20
-> You'll certainly have at least a reset signal, and a power domain, =
-these should exist and be optional.
-
-Well, they exist only as hints in block diagrams of some SoC data sheets
-(so we do not know if they represent the imagination definitions) and =
-the
-current driver code doesn't make use of it. Still the gpu core works.
-
-So I do not see any urgent need to add a complete list to the bindings =
-now.
-
-Unless some special SoC integration makes use of them. Then it is IMHO =
-easier
-to extend the bindings by a follow-up patch than now thinking about all
-potential options and bloating the bindings with things we (the open =
-source
-community) doesn't and can't know.
-
-My goal is to keep the bindings as minimalistic as possible. And reset =
-lines
-and power domains are (at least for those we have in the works) not =
-needed
-to make working systems.
-
-Therefore, for clocks I also would start with a minimalistic approach =
-for
-a single optional GPU core clock and leave out reset and power =
-completely.
-
-BR and thanks,
-Nikolaus
-
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
