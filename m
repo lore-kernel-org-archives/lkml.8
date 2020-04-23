@@ -4,114 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DE2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AE1C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1BD42084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB6C20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgDWL5b (ORCPT
+        id S1728092AbgDWMBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:57:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44084 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgDWL5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:57:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3251BAD0F;
-        Thu, 23 Apr 2020 11:57:28 +0000 (UTC)
-From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To:     akpm@linux-foundation.org, Christoph Lameter <cl@linux.com>
-Cc:     Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, mhocko@kernel.org,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] slub: Remove userspace notifier for cache add/remove
-Date:   Thu, 23 Apr 2020 13:57:21 +0200
-Message-Id: <20200423115721.19821-1-mkoutny@suse.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 23 Apr 2020 08:01:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13307 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727822AbgDWMBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 08:01:23 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NBXDom071350
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:01:22 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jspuv11r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:01:22 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Thu, 23 Apr 2020 13:01:14 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 Apr 2020 13:01:11 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NC1FlJ63373404
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 12:01:15 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A6DA2A4055;
+        Thu, 23 Apr 2020 12:01:15 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29D1BA405B;
+        Thu, 23 Apr 2020 12:01:15 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.4.105])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 12:01:15 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, gor@linux.ibm.com,
+        cohuck@redhat.com, david@redhat.com,
+        kbuild test robot <lkp@intel.com>,
+        Philipp Rudo <prudo@linux.ibm.com>
+Subject: [PATCH v1 1/1] s390/protvirt: fix compilation issue
+Date:   Thu, 23 Apr 2020 14:01:14 +0200
+X-Mailer: git-send-email 2.25.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042312-0028-0000-0000-000003FD8FB9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042312-0029-0000-0000-000024C35A9B
+Message-Id: <20200423120114.2027410-1-imbrenda@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0 suspectscore=1
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Lameter <cl@linux.com>
+The kernel fails to compile with CONFIG_PROTECTED_VIRTUALIZATION_GUEST
+set but CONFIG_KVM unset.
 
-I came across some unnecessary uevents once again which reminded me
-this. The patch seems to be lost in the leaves of the original
-discussion [1], so resending.
+This patch fixes the issue by making the needed variable always available.
 
-[1] https://lore.kernel.org/r/alpine.DEB.2.21.2001281813130.745@www.lameter.com
-
-8<---
-Kmem caches are internal kernel structures so it is strange that
-userspace notifiers would be needed. And I am not aware of any use
-of these notifiers. These notifiers may just exist because in the
-initial slub release the sysfs code was copied from another
-subsystem.
-
-Signed-off-by: Christoph Lameter <cl@linux.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Michal Koutný <mkoutny@suse.com>
+Fixes: a0f60f8431999bf5 ("s390/protvirt: Add sysfs firmware interface for Ultravisor information")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Philipp Rudo <prudo@linux.ibm.com>
+Suggested-by: Philipp Rudo <prudo@linux.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 ---
- mm/slub.c | 17 +----------------
- 1 file changed, 1 insertion(+), 16 deletions(-)
+ arch/s390/boot/uv.c   | 2 --
+ arch/s390/kernel/uv.c | 3 ++-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 332d4b459a90..ae6116adf875 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5665,19 +5665,6 @@ static struct kobj_type slab_ktype = {
- 	.release = kmem_cache_release,
- };
- 
--static int uevent_filter(struct kset *kset, struct kobject *kobj)
--{
--	struct kobj_type *ktype = get_ktype(kobj);
--
--	if (ktype == &slab_ktype)
--		return 1;
--	return 0;
--}
--
--static const struct kset_uevent_ops slab_uevent_ops = {
--	.filter = uevent_filter,
--};
--
- static struct kset *slab_kset;
- 
- static inline struct kset *cache_kset(struct kmem_cache *s)
-@@ -5745,7 +5732,6 @@ static void sysfs_slab_remove_workfn(struct work_struct *work)
- #ifdef CONFIG_MEMCG
- 	kset_unregister(s->memcg_kset);
+diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
+index 8fde561f1d07..f887a479cdc7 100644
+--- a/arch/s390/boot/uv.c
++++ b/arch/s390/boot/uv.c
+@@ -7,9 +7,7 @@
+ #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
+ int __bootdata_preserved(prot_virt_guest);
  #endif
--	kobject_uevent(&s->kobj, KOBJ_REMOVE);
- out:
- 	kobject_put(&s->kobj);
- }
-@@ -5803,7 +5789,6 @@ static int sysfs_slab_add(struct kmem_cache *s)
- 	}
+-#if IS_ENABLED(CONFIG_KVM)
+ struct uv_info __bootdata_preserved(uv_info);
+-#endif
+ 
+ void uv_query_info(void)
+ {
+diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+index c86d654351d1..4c0677fc8904 100644
+--- a/arch/s390/kernel/uv.c
++++ b/arch/s390/kernel/uv.c
+@@ -23,10 +23,11 @@
+ int __bootdata_preserved(prot_virt_guest);
  #endif
  
--	kobject_uevent(&s->kobj, KOBJ_ADD);
- 	if (!unmergeable) {
- 		/* Setup first alias */
- 		sysfs_slab_alias(s, s->name);
-@@ -5884,7 +5869,7 @@ static int __init slab_sysfs_init(void)
++struct uv_info __bootdata_preserved(uv_info);
++
+ #if IS_ENABLED(CONFIG_KVM)
+ int prot_virt_host;
+ EXPORT_SYMBOL(prot_virt_host);
+-struct uv_info __bootdata_preserved(uv_info);
+ EXPORT_SYMBOL(uv_info);
  
- 	mutex_lock(&slab_mutex);
- 
--	slab_kset = kset_create_and_add("slab", &slab_uevent_ops, kernel_kobj);
-+	slab_kset = kset_create_and_add("slab", NULL, kernel_kobj);
- 	if (!slab_kset) {
- 		mutex_unlock(&slab_mutex);
- 		pr_err("Cannot register slab subsystem.\n");
+ static int __init prot_virt_setup(char *val)
 -- 
-2.26.0
+2.25.3
 
