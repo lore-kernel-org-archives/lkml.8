@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2897FC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72718C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1405320784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7EB20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgDWXLU (ORCPT
+        id S1728949AbgDWXLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50270 "EHLO
+        Thu, 23 Apr 2020 19:11:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50240 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728575AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728560AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvZ-0004nR-IX; Fri, 24 Apr 2020 00:06:41 +0100
+        id 1jRkvb-0004n5-Jr; Fri, 24 Apr 2020 00:06:43 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvV-00E6vx-Ln; Fri, 24 Apr 2020 00:06:37 +0100
+        id 1jRkvW-00E6wn-OP; Fri, 24 Apr 2020 00:06:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Lars-Peter Clausen" <lars@metafoo.de>,
-        "=?UTF-8?q?Lars=20M=C3=B6llendorf?=" <lars.moellendorf@plating.de>
-Date:   Fri, 24 Apr 2020 00:06:43 +0100
-Message-ID: <lsq.1587683028.253626517@decadent.org.uk>
+        "Luis Chamberlain" <mcgrof@kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Fenghua Yu" <fenghua.yu@intel.com>,
+        "Jari Ruusu" <jari.ruusu@gmail.com>
+Date:   Fri, 24 Apr 2020 00:06:53 +0100
+Message-ID: <lsq.1587683028.212227277@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 176/245] iio: buffer: align the size of scan bytes to
- size of the largest element
+Subject: [PATCH 3.16 186/245] Fix built-in early-load Intel microcode
+ alignment
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,58 +59,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lars Möllendorf <lars.moellendorf@plating.de>
+From: Jari Ruusu <jari.ruusu@gmail.com>
 
-commit 883f616530692d81cb70f8a32d85c0d2afc05f69 upstream.
+commit f5ae2ea6347a308cfe91f53b53682ce635497d0d upstream.
 
-Previous versions of `iio_compute_scan_bytes` only aligned each element
-to its own length (i.e. its own natural alignment). Because multiple
-consecutive sets of scan elements are buffered this does not work in
-case the computed scan bytes do not align with the natural alignment of
-the first scan element in the set.
+Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
 
-This commit fixes this by aligning the scan bytes to the natural
-alignment of the largest scan element in the set.
+ "Note that the microcode update must be aligned on a 16-byte boundary
+  and the size of the microcode update must be 1-KByte granular"
 
-Fixes: 959d2952d124 ("staging:iio: make iio_sw_buffer_preenable much more general.")
-Signed-off-by: Lars Möllendorf <lars.moellendorf@plating.de>
-Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust context]
+When early-load Intel microcode is loaded from initramfs, userspace tool
+'iucode_tool' has already 16-byte aligned those microcode bits in that
+initramfs image.  Image that was created something like this:
+
+ iucode_tool --write-earlyfw=FOO.cpio microcode-files...
+
+However, when early-load Intel microcode is loaded from built-in
+firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option, that
+16-byte alignment is not guaranteed.
+
+Fix this by forcing all built-in firmware BLOBs to 16-byte alignment.
+
+[ If we end up having other firmware with much bigger alignment
+  requirements, we might need to introduce some method for the firmware
+  to specify it, this is the minimal "just increase the alignment a bit
+  to account for this one special case" patch    - Linus ]
+
+Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: adjust filename, context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iio/industrialio-buffer.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ firmware/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -478,7 +478,7 @@ static int iio_compute_scan_bytes(struct
- {
- 	const struct iio_chan_spec *ch;
- 	unsigned bytes = 0;
--	int length, i;
-+	int length, i, largest = 0;
- 
- 	/* How much space will the demuxed element take? */
- 	for_each_set_bit(i, mask,
-@@ -491,6 +491,7 @@ static int iio_compute_scan_bytes(struct
- 			length = ch->scan_type.storagebits / 8;
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
- 	if (timestamp) {
- 		ch = iio_find_channel_from_si(indio_dev,
-@@ -502,7 +503,10 @@ static int iio_compute_scan_bytes(struct
- 			length = ch->scan_type.storagebits / 8;
- 		bytes = ALIGN(bytes, length);
- 		bytes += length;
-+		largest = max(largest, length);
- 	}
-+
-+	bytes = ALIGN(bytes, largest);
- 	return bytes;
- }
- 
+--- a/firmware/Makefile
++++ b/firmware/Makefile
+@@ -156,7 +156,7 @@ quiet_cmd_fwbin = MK_FW   $@
+ 		  PROGBITS=$(if $(CONFIG_ARM),%,@)progbits;		     \
+ 		  echo "/* Generated by firmware/Makefile */"		> $@;\
+ 		  echo "    .section .rodata"				>>$@;\
+-		  echo "    .p2align $${ASM_ALIGN}"			>>$@;\
++		  echo "    .p2align 4"					>>$@;\
+ 		  echo "_fw_$${FWSTR}_bin:"				>>$@;\
+ 		  echo "    .incbin \"$(2)\""				>>$@;\
+ 		  echo "_fw_end:"					>>$@;\
 
