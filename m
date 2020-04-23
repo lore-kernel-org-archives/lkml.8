@@ -2,90 +2,85 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB4BC55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EC7C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7788A2074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05E720781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fq4jE7sk"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WNsex+BC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgDWKO3 (ORCPT
+        id S1727019AbgDWKOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:14:29 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50848 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbgDWKO2 (ORCPT
+        Thu, 23 Apr 2020 06:14:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726997AbgDWKOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:14:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587636867;
+        Thu, 23 Apr 2020 06:14:46 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D40C03C1AF;
+        Thu, 23 Apr 2020 03:14:41 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F0D2E00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2e00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EE2C91EC0D72;
+        Thu, 23 Apr 2020 12:14:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1587636880;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8dGdN6Yb2PwPHUYiEBVCnUSoErNUv7Phunj1WBrbxxM=;
-        b=Fq4jE7sk07N9fqNrzVbZ0JmwLz+Nli7RHR/AvC7ibr2QT3H1PRKe4++TAYm0WqO21T7ENY
-        mM/Jx3FZk9BRjsfvmz8q0ddSh2zOPhHOT+zXtTalzyWE8JF/WufYisAFD3JbhvqFF3JJ3U
-        P0JwkfKhXlIvwrZzS57dmDr6BTV0OuM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-17-EdVpfdOpPo-EaMJ3-CdzTQ-1; Thu, 23 Apr 2020 06:14:23 -0400
-X-MC-Unique: EdVpfdOpPo-EaMJ3-CdzTQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24E7480B709;
-        Thu, 23 Apr 2020 10:14:22 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-113-193.ams2.redhat.com [10.36.113.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 541F46109F;
-        Thu, 23 Apr 2020 10:14:21 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 105171753B; Thu, 23 Apr 2020 12:14:20 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 12:14:20 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] drm/bochs: fix an issue of ioremap() leak
-Message-ID: <20200423101420.ityynrorrehjvxrs@sirius.home.kraxel.org>
-References: <20200421164543.16605-1-zhengdejin5@gmail.com>
- <CAHp75Ve4JwkM+=WHHF73jwNwRS39E-xPDrcn77zCUTpVkj8buA@mail.gmail.com>
- <20200422135215.GA25950@nuc8i5>
- <CAHp75Vf2j-QraBxKofgyhtAxpHXnik3DP9kefPhA_d3BuSjfvw@mail.gmail.com>
- <20200422152142.GA26943@nuc8i5>
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=BdV1Evk1l0MLN6r+R1du8FgzPaUF4x3mnOYmAgBhuyo=;
+        b=WNsex+BCR4+GbbWDz7rvnpZqU3fgynJQU7yq28rEGR+JLfochkaSD4OLQ3vaEa15rsxZ56
+        D7qsKUDp88ZLRCuwSxCNDAUU8/jghchbPk4UG7y/DLoj2lbciGV4Zac5IxqXkymW7IQEc1
+        jgVbVLmoQM2EmSfKSAepRv76+0oHO+Y=
+Date:   Thu, 23 Apr 2020 12:14:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     rrichter@marvell.com, mchehab@kernel.org, tony.luck@intel.com,
+        james.morse@arm.com, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] EDAC, thunderx: Make some symbols static
+Message-ID: <20200423101435.GA26021@zn.tnic>
+References: <1587624744-97240-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200422152142.GA26943@nuc8i5>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <1587624744-97240-1-git-send-email-zou_wei@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+On Thu, Apr 23, 2020 at 02:52:24PM +0800, Zou Wei wrote:
+> Fix the following sparse warning:
+> 
+> drivers/edac/thunderx_edac.c:1281:22: warning: symbol 'ocx_dfs_ents'
+> was not declared. Should it be static?
+> drivers/edac/thunderx_edac.c:1922:22: warning: symbol 'l2c_tad_dfs_ents'
+> was not declared. Should it be static?
+> drivers/edac/thunderx_edac.c:1928:22: warning: symbol 'l2c_cbc_dfs_ents'
+> was not declared. Should it be static?
+> drivers/edac/thunderx_edac.c:1934:22: warning: symbol 'l2c_mci_dfs_ents'
+> was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+> ---
+>  drivers/edac/thunderx_edac.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-> I am a newbie, andy gave me some directions to submit the patch, eg: check
-> ioremap leak. At this time, I found that the bochs driver may have similar
-> problems, so I submitted this patch, then, Andy said the best is to switch
-> this driver to use pcim _ * () functions and drop tons of legacy code.
-> I think we might be able to fix this issue first, after that, drop tons
-> of legacy code by pcim_*() functions. Can you give me some suggestions?
-> thank you very much!
+Applied, thanks.
 
-drm has drmm_* functions for that.  Daniel Vetter <daniel@ffwll.ch> has
-a patch series pending switching lots of drivers over and IIRC it fixes
-this bug too.
+-- 
+Regards/Gruss,
+    Boris.
 
-cheers,
-  Gerd
-
+https://people.kernel.org/tglx/notes-about-netiquette
