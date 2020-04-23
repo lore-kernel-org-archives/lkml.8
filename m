@@ -2,181 +2,106 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44601C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD899C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 184F420704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAFE20704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qNv9R8K7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEZkOU/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgDWQRd (ORCPT
+        id S1729495AbgDWQTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:17:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60750 "EHLO
+        Thu, 23 Apr 2020 12:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728865AbgDWQRc (ORCPT
+        by vger.kernel.org with ESMTP id S1728865AbgDWQTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:17:32 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F29C09B041
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:17:32 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id k28so5217547lfe.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:17:32 -0700 (PDT)
+        Thu, 23 Apr 2020 12:19:36 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0232EC09B041
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:19:34 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id 36so2199244uaf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9QZl+b5n39GhclZKWhGgFEfzmZHeerLcWtoVp5AHrqM=;
-        b=qNv9R8K74eklVBdaLfLOxt0Logwaoub61YLqBhyYsj1U0roPtKnE2t//6vCFNQQo2C
-         9bD1ZceoqcOyLKwDdo21DBmYVvv5+5t/t73SP3iT+TmeBk8Qj1jlhm2IoOzO9Kdtj6uC
-         /AiAQ9qA1fI8/rSfmQuKaZFtnT5RdVTqthSC3wTgOD84D9+HRgZhPWsoTihiLQIDzXo2
-         bKKCT2MtlTxVWBq6byGipU4z1mGXozAUsC0IGFRcf5vwQuO8QjuaETRQF1xDlvAZLbWU
-         zmj5SUTJgeh0m0Yz3jc977PliyfQXwfeEIR1Wxm9w0rNWy8eeXc9EOm3oDKUu8DcN0Fq
-         D25g==
+        bh=iKUcBuJDdde4mOEyRTnllxM+tu62ZA2QD/StkqYkuis=;
+        b=NEZkOU/0uCz//ZqaAJkcGOCvpnUulQ02B0Ex143Mw3WV5xFZywAgbpsn9AzJ7InUxY
+         Zf5lR349Qjg1BLHrT8/Ml2Dy6f5cx8S3x8blRTf1jq+qfs8o5P1fVeSb4vV4AEp4XTt0
+         YG/2ldfM9aDW2SfHMjInfGXWq3VeIf5D866rY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9QZl+b5n39GhclZKWhGgFEfzmZHeerLcWtoVp5AHrqM=;
-        b=jhqlSeGxrKuD9EssMgCaFUyOVYgt3EBkk72RC/yPk6ygIQMT+2Fel+dyxyNig1Y+8R
-         UJcui/lC2MBHOnrMWpwo1fg9sKNPQWqYtbuSVO15p177nq3kqvahpKFUGJB9VsbPnJJm
-         H2c8UIbkddYzk4yQQjxhQ5bFjdaiIkr4+YZ3olhLjLFTW7WXQUnil1AS7rmt9Qqf3QqZ
-         VzF5wBhNH6Pvs6VOs9U1m/Z+Bnl16LB6/Ar9+Vpr4eorTgv8Ce2vBVkjFoPGnwtIMrAv
-         E889dKX/N+Lws1RCgHcMh48yizqHERKkeXAPFuVoZrp8zsrZdEpUVrGdSkkrCDVnrPjD
-         ysZw==
-X-Gm-Message-State: AGi0PuagJ42eIlJZsuVhR98E3vi4qVt2A5sdBGjrX8cDze0gnZJor4HZ
-        tcPW5xOkss77Rb1m9PWj4pWDyOA1ZUu0bmuEedpCkA==
-X-Google-Smtp-Source: APiQypJ7xr5BswC3kJGXSX28Ol70xTMqhaBNNZN+KKNku27mav64bY4zzSgddRRyIBErwFSmrswjOeDWzXotbwhdB3I=
-X-Received: by 2002:a19:c7d8:: with SMTP id x207mr2863155lff.190.1587658650720;
- Thu, 23 Apr 2020 09:17:30 -0700 (PDT)
+        bh=iKUcBuJDdde4mOEyRTnllxM+tu62ZA2QD/StkqYkuis=;
+        b=FirZuLFDwgbL5Z09RNHHdSUZoYBmFvs+bRIFXiBjnbXKFtMh3RV4Uf+7wD6JKUlY//
+         D9aJGc1zLkam881Bj4PIFHHROgu9yJi3Gk/W0uBJMAl0UfCZjp8WfNLxsc6KvRRrnYFc
+         lP+S/ss8gBAmtD+t5DKU2BNbVkWfi/vN03CZE+Zdef/5lh5I/fOQYpJfsgm6aeAMlRAe
+         GClMUT0hEQqJYs+MS5Um9ihHQFHVhL8Hu8O1FkCXsm7X5saRi/5M3nUkKT8o+e2Pe86I
+         SRMRMGG2yDg1dB9Zi0FW9Sueok+OybiGTNJ66kcubw7SpVOdbEo9PhVE2qNqx/N0fjWC
+         M62w==
+X-Gm-Message-State: AGi0PuaMELckwA9t7c1RO2HdKdIrXXnv0mjC0gpp7PtxC6J9JJzVWiyb
+        76EccheHaYRCcwQVBbTbp4wgMj6CErk=
+X-Google-Smtp-Source: APiQypLmUluzeP9eE1Kc+kLYXpvyE79/j0+Pq0cwz/HtJkM/22GdPYT+7vzm1C6p7GazLnuk+nmBhw==
+X-Received: by 2002:ab0:704d:: with SMTP id v13mr3777903ual.132.1587658772870;
+        Thu, 23 Apr 2020 09:19:32 -0700 (PDT)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id f6sm713279ual.9.2020.04.23.09.19.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 09:19:32 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id i22so6266231uak.6
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:19:31 -0700 (PDT)
+X-Received: by 2002:a05:6102:4d:: with SMTP id k13mr3971569vsp.198.1587658771501;
+ Thu, 23 Apr 2020 09:19:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200422151401.9147-1-vincent.guittot@linaro.org> <23c1cbb8-7335-80ca-cf40-8abc5c1463f4@arm.com>
-In-Reply-To: <23c1cbb8-7335-80ca-cf40-8abc5c1463f4@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 23 Apr 2020 18:17:19 +0200
-Message-ID: <CAKfTPtD_W8DRmFS6xJUo+Yt=XaJgZmKxUzcCSnoLWNJN5xPFCw@mail.gmail.com>
-Subject: Re: [PATCH] sched/pelt: sync util/runnable_sum with PELT window when propagating
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200422145408.v4.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+ <7e060977-611e-abf5-af76-1cc91660a8ba@codeaurora.org>
+In-Reply-To: <7e060977-611e-abf5-af76-1cc91660a8ba@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 23 Apr 2020 09:19:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WC78xxDUCynbfX0rnAAUxJfUedNhoCrw=5UHhcrRFu8w@mail.gmail.com>
+Message-ID: <CAD=FV=WC78xxDUCynbfX0rnAAUxJfUedNhoCrw=5UHhcrRFu8w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] soc: qcom: rpmh-rsc: Corrently ignore
+ CPU_CLUSTER_PM notifications
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 at 16:30, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
->
->
-> On 22/04/2020 17:14, Vincent Guittot wrote:
-> > update_tg_cfs_util/runnable() propagate the impact of the attach/detach of
-> > an entity down into the cfs_rq hierarchy which must keep the sync with
-> > the current pelt window.
-> >
-> > Even if we can't sync child rq and its group se, we can sync the group se
->
-> So we have
->
->     gcfs --> tg --> gse
->      ________________|
->      |
->      V
->
->     cfs ---> tg (root)
->
->      |
->      V
->
->     rq
->
+Hi,
 
-child cfs_rq aka gcfs_rq
-  |
-gse: group entity that represents child cfs_rq in parent cfs_rq
-  |
-  v
-parent cfs_rq aka cfs_rq
+On Wed, Apr 22, 2020 at 9:45 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> Hi,
+>
+> there is a typo in subject, Corrently to correctly.
+> Other than this, fix seems good to me.
+>
+> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
 
->
-> here. What is 'child rq' for 'group se' here? I guess 'parent cfs_rq' is
-> cfs_rq.
->
-> > and parent cfs_rq with current PELT window. In fact, we must keep them sync
-> > in order to stay also synced with others se and group se that are already
-> > attached to the cfs_rq.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  kernel/sched/fair.c | 26 ++++++--------------------
-> >  1 file changed, 6 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 02f323b85b6d..ca6aa89c88f2 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -3441,52 +3441,38 @@ static inline void
-> >  update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
-> >  {
-> >       long delta = gcfs_rq->avg.util_avg - se->avg.util_avg;
-> > +     u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
-> >
-> >       /* Nothing to update */
-> >       if (!delta)
-> >               return;
-> >
-> > -     /*
-> > -      * The relation between sum and avg is:
-> > -      *
-> > -      *   LOAD_AVG_MAX - 1024 + sa->period_contrib
-> > -      *
-> > -      * however, the PELT windows are not aligned between grq and gse.
-> > -      */
-> > -
-> >       /* Set new sched_entity's utilization */
-> >       se->avg.util_avg = gcfs_rq->avg.util_avg;
-> > -     se->avg.util_sum = se->avg.util_avg * LOAD_AVG_MAX;
-> > +     se->avg.util_sum = se->avg.util_avg * divider;
->
-> divider uses cfs_rq but we sync se->avg.util_avg with gcfs_rq here.
+Sigh.  My brian has never worked very well.  One of these days I'll
+see if I can get it tuned up.  Unless there is another reason to spin
+this series or I'm requested to, I'll assume that Bjron or Andy can
+fix my typo in the subject when applying.
 
-we sync the util_avg of gse with the new util_avg of gcfs_rq but gse
-is attached to cfs_rq and as a result we have to use cfs_rq's
-period_contrib
+Thanks!
 
->
-> But since avg.period_contrib of cfs_rq and gcfs_rq are the same this
-> should work.
->
-> >       /* Update parent cfs_rq utilization */
-> >       add_positive(&cfs_rq->avg.util_avg, delta);
-> > -     cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * LOAD_AVG_MAX;
-> > +     cfs_rq->avg.util_sum = cfs_rq->avg.util_avg * divider;
->
-> Looks like that avg.last_update_time of se (group entity), it's gcfs_rq
-> and cfs_rq is always the same in update_tg_cfs_[util\|runnable].
->
-> So that means the PELT windows are aligned for cfs_rqs and group se's?
-
-We want to align util_avg with util_sum and period_contrib otherwise
-we might have some unalignment. It's quite similarly to what is done
-in attach_entity_load_avg()
-
->
-> And if we want to enforce this for cfs_rq and task, we have
-> sync_entity_load_avg().
-
-It's not a matter of syncing the last_update_time
-
->
-> [...]
+-Doug
