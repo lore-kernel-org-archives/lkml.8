@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABDEC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E428A2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CCF2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbgDWXV1 (ORCPT
+        id S1728573AbgDWXV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:21:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48538 "EHLO
+        Thu, 23 Apr 2020 19:21:26 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48544 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728200AbgDWXGc (ORCPT
+        by vger.kernel.org with ESMTP id S1728199AbgDWXGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:32 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bI-Ej; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvL-0004bY-2N; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-00E6jL-FH; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvJ-00E6iH-Mh; Fri, 24 Apr 2020 00:06:25 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nikos Tsironis" <ntsironis@arrikto.com>,
-        "Mike Snitzer" <snitzer@redhat.com>,
-        "Joe Thornber" <ejt@redhat.com>
-Date:   Fri, 24 Apr 2020 00:04:52 +0100
-Message-ID: <lsq.1587683028.792861446@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "David Sterba" <dsterba@suse.com>,
+        "Gu Jinxiang" <gujx@cn.fujitsu.com>, "Xu Wen" <wen.xu@gatech.edu>,
+        "Qu Wenruo" <wqu@suse.com>,
+        "Ben Hutchings" <ben.hutchings@codethink.co.uk>
+Date:   Fri, 24 Apr 2020 00:04:39 +0100
+Message-ID: <lsq.1587683028.752578447@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 065/245] dm thin metadata: Add support for a
- pre-commit callback
+Subject: [PATCH 3.16 052/245] btrfs: Verify that every chunk has
+ corresponding block group at mount time
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,101 +59,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nikos Tsironis <ntsironis@arrikto.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit ecda7c0280e6b3398459dc589b9a41c1adb45529 upstream.
+commit 7ef49515fa6727cb4b6f2f5b0ffbc5fc20a9f8c6 upstream.
 
-Add support for one pre-commit callback which is run right before the
-metadata are committed.
+If a crafted image has missing block group items, it could cause
+unexpected behavior and breaks the assumption of 1:1 chunk<->block group
+mapping.
 
-This allows the thin provisioning target to run a callback before the
-metadata are committed and is required by the next commit.
+Although we have the block group -> chunk mapping check, we still need
+chunk -> block group mapping check.
 
-Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
-Acked-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-[bwh: Backported to 3.16:
- - Open-code pmd_write_{lock_in_core,unlock}()
- - Adjust context]
+This patch will do extra check to ensure each chunk has its
+corresponding block group.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=199847
+Reported-by: Xu Wen <wen.xu@gatech.edu>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Gu Jinxiang <gujx@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 4.4: adjust context]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/md/dm-thin-metadata.c | 29 +++++++++++++++++++++++++++++
- drivers/md/dm-thin-metadata.h |  7 +++++++
- 2 files changed, 36 insertions(+)
+ fs/btrfs/extent-tree.c | 58 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 57 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-thin-metadata.c
-+++ b/drivers/md/dm-thin-metadata.c
-@@ -198,6 +198,15 @@ struct dm_pool_metadata {
- 	bool fail_io:1;
- 
- 	/*
-+	 * Pre-commit callback.
-+	 *
-+	 * This allows the thin provisioning target to run a callback before
-+	 * the metadata are committed.
-+	 */
-+	dm_pool_pre_commit_fn pre_commit_fn;
-+	void *pre_commit_context;
-+
-+	/*
- 	 * Reading the space map roots can fail, so we read it into these
- 	 * buffers before the superblock is locked and updated.
- 	 */
-@@ -784,6 +793,14 @@ static int __commit_transaction(struct d
- 	 */
- 	BUILD_BUG_ON(sizeof(struct thin_disk_superblock) > 512);
- 
-+	if (pmd->pre_commit_fn) {
-+		r = pmd->pre_commit_fn(pmd->pre_commit_context);
-+		if (r < 0) {
-+			DMERR("pre-commit callback failed");
-+			return r;
-+		}
-+	}
-+
- 	r = __write_changed_details(pmd);
- 	if (r < 0)
- 		return r;
-@@ -844,6 +861,8 @@ struct dm_pool_metadata *dm_pool_metadat
- 	pmd->fail_io = false;
- 	pmd->bdev = bdev;
- 	pmd->data_block_size = data_block_size;
-+	pmd->pre_commit_fn = NULL;
-+	pmd->pre_commit_context = NULL;
- 
- 	r = __create_persistent_data_objects(pmd, format_device);
- 	if (r) {
-@@ -1789,6 +1808,16 @@ int dm_pool_register_metadata_threshold(
- 	return r;
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -8819,6 +8819,62 @@ btrfs_create_block_group_cache(struct bt
+ 	return cache;
  }
  
-+void dm_pool_register_pre_commit_callback(struct dm_pool_metadata *pmd,
-+					  dm_pool_pre_commit_fn fn,
-+					  void *context)
++
++/*
++ * Iterate all chunks and verify that each of them has the corresponding block
++ * group
++ */
++static int check_chunk_block_group_mappings(struct btrfs_fs_info *fs_info)
 +{
-+	down_write(&pmd->root_lock);
-+	pmd->pre_commit_fn = fn;
-+	pmd->pre_commit_context = context;
-+	up_write(&pmd->root_lock);
++	struct btrfs_mapping_tree *map_tree = &fs_info->mapping_tree;
++	struct extent_map *em;
++	struct btrfs_block_group_cache *bg;
++	u64 start = 0;
++	int ret = 0;
++
++	while (1) {
++		read_lock(&map_tree->map_tree.lock);
++		/*
++		 * lookup_extent_mapping will return the first extent map
++		 * intersecting the range, so setting @len to 1 is enough to
++		 * get the first chunk.
++		 */
++		em = lookup_extent_mapping(&map_tree->map_tree, start, 1);
++		read_unlock(&map_tree->map_tree.lock);
++		if (!em)
++			break;
++
++		bg = btrfs_lookup_block_group(fs_info, em->start);
++		if (!bg) {
++			btrfs_err(fs_info,
++	"chunk start=%llu len=%llu doesn't have corresponding block group",
++				     em->start, em->len);
++			ret = -EUCLEAN;
++			free_extent_map(em);
++			break;
++		}
++		if (bg->key.objectid != em->start ||
++		    bg->key.offset != em->len ||
++		    (bg->flags & BTRFS_BLOCK_GROUP_TYPE_MASK) !=
++		    (em->map_lookup->type & BTRFS_BLOCK_GROUP_TYPE_MASK)) {
++			btrfs_err(fs_info,
++"chunk start=%llu len=%llu flags=0x%llx doesn't match block group start=%llu len=%llu flags=0x%llx",
++				em->start, em->len,
++				em->map_lookup->type & BTRFS_BLOCK_GROUP_TYPE_MASK,
++				bg->key.objectid, bg->key.offset,
++				bg->flags & BTRFS_BLOCK_GROUP_TYPE_MASK);
++			ret = -EUCLEAN;
++			free_extent_map(em);
++			btrfs_put_block_group(bg);
++			break;
++		}
++		start = em->start + em->len;
++		free_extent_map(em);
++		btrfs_put_block_group(bg);
++	}
++	return ret;
 +}
 +
- int dm_pool_metadata_set_needs_check(struct dm_pool_metadata *pmd)
+ int btrfs_read_block_groups(struct btrfs_root *root)
  {
- 	int r;
---- a/drivers/md/dm-thin-metadata.h
-+++ b/drivers/md/dm-thin-metadata.h
-@@ -213,6 +213,13 @@ int dm_pool_register_metadata_threshold(
- int dm_pool_metadata_set_needs_check(struct dm_pool_metadata *pmd);
- bool dm_pool_metadata_needs_check(struct dm_pool_metadata *pmd);
+ 	struct btrfs_path *path;
+@@ -8981,7 +9037,7 @@ int btrfs_read_block_groups(struct btrfs
+ 	}
  
-+/* Pre-commit callback */
-+typedef int (*dm_pool_pre_commit_fn)(void *context);
-+
-+void dm_pool_register_pre_commit_callback(struct dm_pool_metadata *pmd,
-+					  dm_pool_pre_commit_fn fn,
-+					  void *context);
-+
- /*----------------------------------------------------------------*/
- 
- #endif
+ 	init_global_block_rsv(info);
+-	ret = 0;
++	ret = check_chunk_block_group_mappings(info);
+ error:
+ 	btrfs_free_path(path);
+ 	return ret;
 
