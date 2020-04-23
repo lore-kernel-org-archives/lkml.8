@@ -2,106 +2,84 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962CEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196B0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF00208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8880214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgDWF5l (ORCPT
+        id S1726683AbgDWGBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:57:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:15586 "EHLO mga04.intel.com"
+        Thu, 23 Apr 2020 02:01:43 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:51124 "EHLO a.mx.secunet.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgDWF5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:57:41 -0400
-IronPort-SDR: Xmj4ccdnJ+aC3spofX+ICKWUACpKa4aph2Dmw14QYPca7dCcerk0vlHQk/E/1k6reQSGO9S4oC
- wqPNPsTNBdNQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 22:57:41 -0700
-IronPort-SDR: ejDVh1zgi7oy/DpflGw3T9rYQg4ba8uEkByvioeoGK7V4VDJqnLN1m14ZQi7+kcx49k+a7vYcp
- UAC8mZg8SZPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="456786339"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Apr 2020 22:57:39 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH v2] mm/swapfile.c: simplify the scan loop in scan_swap_map_slots()
-In-Reply-To: <20200422214111.19370-1-richard.weiyang@gmail.com> (Wei Yang's
-        message of "Wed, 22 Apr 2020 21:41:11 +0000")
-References: <20200422214111.19370-1-richard.weiyang@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-Date:   Thu, 23 Apr 2020 13:57:34 +0800
-Message-ID: <87d07y2181.fsf@yhuang-dev.intel.com>
+        id S1725854AbgDWGBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:01:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 0266C204B4;
+        Thu, 23 Apr 2020 08:01:41 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xBidErRNvxDJ; Thu, 23 Apr 2020 08:01:40 +0200 (CEST)
+Received: from mail-essen-02.secunet.de (mail-essen-02.secunet.de [10.53.40.205])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 91CAF201AA;
+        Thu, 23 Apr 2020 08:01:40 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ MAIL-ESSEN-02.secunet.de (10.53.40.205) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Thu, 23 Apr 2020 08:01:40 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Thu, 23 Apr
+ 2020 08:01:40 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id ECF9731800BD;
+ Thu, 23 Apr 2020 08:01:39 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 08:01:39 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yuanxzhang@fudan.edu.cn>,
+        <kjlu@umn.edu>, Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH] xfrm: Fix xfrm_state refcnt leak in xfrm_input()
+Message-ID: <20200423060139.GB13121@gauss3.secunet.de>
+References: <1587619161-14094-1-git-send-email-xiyuyang19@fudan.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1587619161-14094-1-git-send-email-xiyuyang19@fudan.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wei Yang <richard.weiyang@gmail.com> writes:
+On Thu, Apr 23, 2020 at 01:19:20PM +0800, Xiyu Yang wrote:
+> xfrm_input() invokes xfrm_state_lookup(), which returns a reference of
+> the specified xfrm_state object to "x" with increased refcnt and then
+> "x" is escaped to "sp->xvec[]".
+> 
+> When xfrm_input() encounters error, it calls kfree_skb() to free the
+> "skb" memory. Since "sp" comes from one of "skb" fields, this "free"
+> behavior causes "sp" becomes invalid, so the refcount for its field
+> should be decreased to keep refcount balanced before kfree_skb() calls.
+> 
+> The reference counting issue happens in several exception handling paths
+> of xfrm_input(). When those error scenarios occur such as skb_dst()
+> fails, the function forgets to decrease the refcnt increased by
+> xfrm_state_lookup() and directly calls kfree_skb(), causing a refcnt
+> leak.
 
-> After commit c60aa176c6de8 ("swapfile: swap allocation cycle if
-> nonrot"), swap allocation is cyclic. Current approach is done with two
-> separate loop on the upper and lower half. This looks a little
-> redundant.
+kfree_skb() drops these refcounts already, why should we do that here
+too?
 
-I can understand that the redundant code doesn't smell good.  But I
-don't think the new code is easier to be understood than the original
-one.
-
-> From another point of view, the loop iterates [lowest_bit, highest_bit]
-> range starting with (offset + 1) but except scan_base. So we can
-> simplify the loop with condition (next_offset() != scan_base) by
-> introducing next_offset() which makes sure offset fit in that range
-> with correct order.
->
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> CC: Hugh Dickins <hughd@google.com>
-> CC: "Huang, Ying" <ying.huang@intel.com>
->
-> ---
-> v2:
->   * return scan_base if the lower part is eaten
->   * only start over when iterating on the upper part
-> ---
->  mm/swapfile.c | 31 ++++++++++++++-----------------
->  1 file changed, 14 insertions(+), 17 deletions(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index f903e5a165d5..0005a4a1c1b4 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -729,6 +729,19 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
->  	}
->  }
->  
-> +static unsigned long next_offset(struct swap_info_struct *si,
-> +				unsigned long *offset, unsigned long scan_base)
-> +{
-> +	/* only start over when iterating on the upper part */
-> +	if (++(*offset) > si->highest_bit && *offset > scan_base) {
-> +		*offset = si->lowest_bit;
-> +		/* someone has eaten the lower part */
-> +		if (si->lowest_bit >= scan_base)
-> +			return scan_base;
-> +	}
-
-if "offset > si->highest_bit" is true and "offset < scan_base" is true,
-scan_base need to be returned.
-
-Again, the new code doesn't make it easier to find this kind of issues.
-
-Best Regards,
-Huang, Ying
