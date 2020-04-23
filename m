@@ -2,196 +2,133 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5AFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1EFC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F54214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HSnjqWp/"
+	by mail.kernel.org (Postfix) with ESMTP id 0641B21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgDWHyF (ORCPT
+        id S1726312AbgDWH4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgDWHyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:54:04 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0417BC03C1AB
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:54:04 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id j14so3963253lfg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4UEOdXwxEm6LM9DNvnfZm1b3ROrLaqHjn0hz9sIJcG0=;
-        b=HSnjqWp/6qALA+mTUDwmajzvAkmImFFkRkVElj1CcoJnHeBkUqmj8M269JuUj7VxwP
-         IE9WFiYC2WVF51462BBD5QcmrMpiJDvBGyY+nds/loi04iOEB/39HrWg6weyIOY+mwCW
-         mBucRmf/Fh8xf6Q5ZKPOLnGKtCwqvjl7Y7nTfAfiT/BB/cjlXhXS5oMJeV9Jga1Zkc2M
-         NxVcPXgtJs/k6+6AhqrEgl4TUEtUTut+q7cVRm44M2RHRYgfK5ZEqHdSx205CUG6gTlh
-         eNkmMsa9VkySIOuKNGSsQpcfGpZXeaH+Pq0wBEkG2cZSoorSDDeUL/xXxqcXM+nSaiXL
-         A5dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4UEOdXwxEm6LM9DNvnfZm1b3ROrLaqHjn0hz9sIJcG0=;
-        b=UbTCENTgLsGGj6BMWmXG1g9DlAgRWY4cWNz1aN14RaJTTU5pPQxGIPVUdax72m1tHY
-         Z0RGlWK5rOxKtteiYvtqSNHN9y/9y6QLPZa08sfZYUGB5HubZkW0WPBOLjUw6oNE2Axf
-         J36inRabIgCTMyvczwu/DB60r2+RESjrpxDGEzWbujE5FkCH1bu8kATJA6wiyeWCnRIi
-         ABQGMRbTEfyU33OZO6jRbtKDkCrYNQn+bnEKbs3RD3uxOoClmV/NchvWHulrg6ozr996
-         lARN29NRAR+7FK+BcRP5vO++w4ual2ndwpIFpB8PrJAP9UGrHA0NYAC6LBq8lWazftJU
-         BFUQ==
-X-Gm-Message-State: AGi0PuYT6lYEoSbuvxCFGn8vMrICdBS59Rg8jLK+dHnoG8hEVBRPw+OP
-        jzcXzVdcId/3Es5QH7zLNlN+SH5hAJ4+uta9Y4xjKcSx15PRzw==
-X-Google-Smtp-Source: APiQypKrl1JJiWs2QGieTdGaz/MFZsBlr4BPgyd5GnMJ1EmOHaWBJt7et4F+l23ntDj8Wl8ea9hRxWe0kRUpzTtYHvw=
-X-Received: by 2002:ac2:4da7:: with SMTP id h7mr1565819lfe.95.1587628442305;
- Thu, 23 Apr 2020 00:54:02 -0700 (PDT)
+        Thu, 23 Apr 2020 03:56:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:21960 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgDWH4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:56:04 -0400
+IronPort-SDR: 9q1XsrS7ReNvW3PVd2iLaDYK+pyRmnRIQ7Zsm7z9YFVu0j0jrdDwo17T+VfARP2fgSyV/FgZtm
+ TmySfglMIOeA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 00:56:04 -0700
+IronPort-SDR: r+jLurLD/ryur1rbMtyce0xKOEJmXIaoqKT5V0T+RrNwOh9LVjOo744jmIAT0wOwTME4+gLANB
+ 0TwumWeKu/hg==
+X-IronPort-AV: E=Sophos;i="5.73,306,1583222400"; 
+   d="scan'208";a="430232630"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 00:56:00 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 9B42C2080B; Thu, 23 Apr 2020 10:55:57 +0300 (EEST)
+Date:   Thu, 23 Apr 2020 10:55:57 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Luis Oliveira <lolivei@synopsys.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH 4/4] media: ov5647: Use gpiod_set_value_cansleep
+Message-ID: <20200423075557.GL5381@paasikivi.fi.intel.com>
+References: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
+ <f496fe5d364748e9d625a634581a404f30a13efa.1586759968.git.roman.kovalivskyi@globallogic.com>
 MIME-Version: 1.0
-References: <20200422095031.522502705@linuxfoundation.org>
-In-Reply-To: <20200422095031.522502705@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 23 Apr 2020 13:23:50 +0530
-Message-ID: <CA+G9fYvzMkSyzQzsBeHgc1ps9s_SDnU3qz8fAXEwD-U=8xDNiQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/118] 5.4.35-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f496fe5d364748e9d625a634581a404f30a13efa.1586759968.git.roman.kovalivskyi@globallogic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 at 15:53, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.35 release.
-> There are 118 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 24 Apr 2020 09:48:23 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.35-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Roman,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On Mon, Apr 13, 2020 at 12:17:47PM +0300, Roman Kovalivskyi wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> 
+> All calls to the gpio library are in contexts that can sleep,
+> therefore there is no issue with having those GPIOs controlled
+> by controllers which require sleeping (eg I2C GPIO expanders).
+> 
+> Switch to using gpiod_set_value_cansleep instead of gpiod_set_value
+> to avoid triggering the warning in gpiolib should the GPIO
+> controller need to sleep.
+> 
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
 
-Summary
-------------------------------------------------------------------------
+This should be merged with the second patch.
 
-kernel: 5.4.35-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 186764443bf32f12e07093aaff52dd4a25231781
-git describe: v5.4.34-119-g186764443bf3
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.34-119-g186764443bf3
+> ---
+>  drivers/media/i2c/ov5647.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
+> index 8a1a515388e0..07550377be2e 100644
+> --- a/drivers/media/i2c/ov5647.c
+> +++ b/drivers/media/i2c/ov5647.c
+> @@ -373,7 +373,7 @@ static int ov5647_sensor_power(struct v4l2_subdev *sd, int on)
+>  		dev_dbg(&client->dev, "OV5647 power on\n");
+>  
+>  		if (ov5647->pwdn) {
+> -			gpiod_set_value(ov5647->pwdn, 0);
+> +			gpiod_set_value_cansleep(ov5647->pwdn, 0);
+>  			msleep(PWDN_ACTIVE_DELAY_MS);
+>  		}
+>  
+> @@ -415,7 +415,7 @@ static int ov5647_sensor_power(struct v4l2_subdev *sd, int on)
+>  
+>  		clk_disable_unprepare(ov5647->xclk);
+>  
+> -		gpiod_set_value(ov5647->pwdn, 1);
+> +		gpiod_set_value_cansleep(ov5647->pwdn, 1);
+>  	}
+>  
+>  	/* Update the power count. */
+> @@ -648,13 +648,13 @@ static int ov5647_probe(struct i2c_client *client)
+>  		goto mutex_remove;
+>  
+>  	if (sensor->pwdn) {
+> -		gpiod_set_value(sensor->pwdn, 0);
+> +		gpiod_set_value_cansleep(sensor->pwdn, 0);
+>  		msleep(PWDN_ACTIVE_DELAY_MS);
+>  	}
+>  
+>  	ret = ov5647_detect(sd);
+>  
+> -	gpiod_set_value(sensor->pwdn, 1);
+> +	gpiod_set_value_cansleep(sensor->pwdn, 1);
+>  
+>  	if (ret < 0)
+>  		goto error;
+> -- 
+> 2.17.1
+> 
 
-No regressions (compared to build v5.4.34)
-
-No fixes (compared to build v5.4.34)
-
-Ran 37179 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* perf
-* kvm-unit-tests
-* libgpiod
-* ltp-cve-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* libhugetlbfs
-* ltp-containers-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* v4l2-compliance
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Sakari Ailus
