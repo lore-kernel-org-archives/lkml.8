@@ -2,131 +2,192 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FC3C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6917EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D86220776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587672027;
-	bh=0ie8inC6tglepafpuvFlTbDXa6MYOqRwKqq3Y85aAY0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cgiy3kflI3LHSvSLhNEtnhw5hS7NgXydIixpZ+eLSZhUDyAjZJyIvA0+7sU3kwp9y
-	 Os9FQfFYK0wYb+XcucJx75EjWbozvXQkFG8WlUmzw/TWmX2TLuJjnAc8YN216FIo3j
-	 ntwyzqB1QGYgAxpp5Ce4kLiZ7lTw4hUX5aObPOck=
+	by mail.kernel.org (Postfix) with ESMTP id 4B11F20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgDWUA0 (ORCPT
+        id S1726429AbgDWUCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:00:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgDWUAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:00:25 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7638FC09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:00:24 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id h69so3415553pgc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=WNO7NKxkJpAJDOutrLoHzbNSgDH4TOj7e9H6a/yToIs=;
-        b=GDpy3Gt5Dwy59orl+GSWU7IVcoSdVcntRMwW14jzXGDkk4y1D7XCaT6NAAk/JyNIFM
-         H+K/0KFCU5NpOQcqT/4f42/Kkm2KBKVFl1tkHIjEO6XgaZJTN/sVH0IudLJc+ITFULlG
-         82XcYlMkz1OXsnrw+b/5icSWyNJLY32toCTgo6V0LR/sJwbvJaDI1N+eYdIr+dvHDM3Z
-         VvJyFFmZ6OUEobZ+qmv8VlvEE+iA3SgXNNPMTBSyjUkrRi9aaZgo5FV29yq7L+sHNNWp
-         ILZj90Nf8C7Fj/FjlbS/mUwFYhDvdDSet6oSjy90VRXRHY+LkqOgItlJquqY88+Wp9Dz
-         CKSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=WNO7NKxkJpAJDOutrLoHzbNSgDH4TOj7e9H6a/yToIs=;
-        b=JGbgSZg1iU4hcQw95fOSzjdxAiE5grjAYPpnPhTj3ndCz3D/NhacjSYPexA3kKghA9
-         cpThEhXEvJrksq+a4iMCDuFexeQ2r0Xf6m6KJaajWJjLiFY4dEzjKRfwigN7Hei90lug
-         9K3x1fk0cOBKLagb4MBt4sfBWc9xFEiDfP1AEMTbH4u6wU+Vu71q9skB+kB2orDIxdXo
-         xshYZWC94N5BiyE6SIqhs4BXhT8qdGJfDVCsKRumNjXczb+71UP4+Q8r0heEtHbOFRSz
-         zxzQEy3vtoGd4VJr8N+VoNdBlsLcG1c7Xu4iPTNU7EeO35hJma/iiwNnXQi9w6JSJsjp
-         CuHg==
-X-Gm-Message-State: AGi0PuZwREflIRPONu+YINYZMj2Imfjyy6D/r295RNLkG+M0XPycgWV8
-        t7vH52Impxo6g3ujUvkCi7M=
-X-Google-Smtp-Source: APiQypIUBi1bulsUMUBfX35K2ovGo4PxfVUAJp0ubvhZ488ydOm6T/ITuQ2kCdnycgDY6Ap6lNHHXg==
-X-Received: by 2002:a65:6288:: with SMTP id f8mr5449714pgv.118.1587672023904;
-        Thu, 23 Apr 2020 13:00:23 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id b29sm3471291pfp.68.2020.04.23.13.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 13:00:22 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 13:00:20 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Jaewon Kim <jaewon31.kim@samsung.com>, mgorman@suse.de,
-        m.szyprowski@samsung.com, mina86@mina86.com, shli@fb.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        ytk.lee@samsung.com
-Subject: Re: [PATCH v2] mm/vmscan: count layzfree pages and fix nr_isolated_*
- mismatch
-Message-ID: <20200423200020.GB46847@google.com>
-References: <CGME20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf@epcas1p3.samsung.com>
- <20200422084815.21913-1-jaewon31.kim@samsung.com>
- <20200422130751.GD358439@cmpxchg.org>
- <5EA10872.3010500@samsung.com>
- <20200423160546.GA389168@cmpxchg.org>
+        Thu, 23 Apr 2020 16:02:19 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:47380 "EHLO raptor.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726380AbgDWUCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 16:02:18 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id 3A8DC20459;
+        Thu, 23 Apr 2020 20:01:42 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 22:01:36 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH v13 2/7] proc: allow to mount many instances of proc in
+ one pid namespace
+Message-ID: <20200423200136.zrjzv6d6zghnvvrx@comp-core-i7-2640m-0182e6>
+References: <20200419141057.621356-3-gladkov.alexey@gmail.com>
+ <20200423112858.95820-1-gladkov.alexey@gmail.com>
+ <87lfmmz9bs.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200423160546.GA389168@cmpxchg.org>
+In-Reply-To: <87lfmmz9bs.fsf@x220.int.ebiederm.org>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 23 Apr 2020 20:02:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 12:05:46PM -0400, Johannes Weiner wrote:
-> On Thu, Apr 23, 2020 at 12:16:02PM +0900, Jaewon Kim wrote:
-> > 
-> > 
-> > On 2020년 04월 22일 22:07, Johannes Weiner wrote:
-> > > On Wed, Apr 22, 2020 at 05:48:15PM +0900, Jaewon Kim wrote:
-> > >> @@ -1295,11 +1295,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
-> > >>  		 */
-> > >>  		if (page_mapped(page)) {
-> > >>  			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
-> > >> +			bool lazyfree = PageAnon(page) && !PageSwapBacked(page);
-> > >>  
-> > >>  			if (unlikely(PageTransHuge(page)))
-> > >>  				flags |= TTU_SPLIT_HUGE_PMD;
-> > >> +
-> > >>  			if (!try_to_unmap(page, flags)) {
-> > >>  				stat->nr_unmap_fail += nr_pages;
-> > >> +				if (lazyfree && PageSwapBacked(page))
-> > > This looks pretty strange, until you remember that try_to_unmap()
-> > > could SetPageSwapbacked again.
-> > >
-> > > This might be more obvious?
-> > >
-> > > 			was_swapbacked = PageSwapBacked(page);
-> > > 			if (!try_to_unmap(page, flags)) {
-> > > 				stat->nr_unmap_fail += nr_pages;
-> > > 				if (!was_swapbacked && PageSwapBacked(page))
-> > Hello Johannes, thank you for your comment.
-> > 
-> > The name can changed from layzyfree to was_swapbacked.
-> > By the way, did you mean removing PageAnon(page), too? It seems to be OK, though.
+On Thu, Apr 23, 2020 at 07:16:07AM -0500, Eric W. Biederman wrote:
 > 
-> I can't decide whether PageAnon() makes it clearer or not. But it's
-> not really needed for correctness. So feel free to keep what you had.
+> I took a quick look and there is at least one other use in security/tomoyo/realpath.c:
+> 
+> static char *tomoyo_get_local_path(struct dentry *dentry, char * const buffer,
+> 				   const int buflen)
+> {
+> 	struct super_block *sb = dentry->d_sb;
+> 	char *pos = tomoyo_get_dentry_path(dentry, buffer, buflen);
+> 
+> 	if (IS_ERR(pos))
+> 		return pos;
+> 	/* Convert from $PID to self if $PID is current thread. */
+> 	if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
+> 		char *ep;
+> 		const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
+> 
+> 		if (*ep == '/' && pid && pid ==
+> 		    task_tgid_nr_ns(current, sb->s_fs_info)) {
+> 			pos = ep - 5;
+> 			if (pos < buffer)
+> 				goto out;
+> 			memmove(pos, "/self", 5);
+> 		}
+> 		goto prepend_filesystem_name;
+> 	}
 
-Yub, PageAnon is redundant.
+Ooops. I missed this one. I thought I found all such cases.
 
-> I would really just at least change bool lazyfree to was_lazyfree,
+> Can you make the fixes to locks.c and tomoyo a couple of standalone
+> fixes that should be inserted before your patch?
 
-It's better.
+Sure.
+
+> On the odd chance there is a typo they will bisect better, as well
+> as just keeping this patch and it's description from expanding in size.
+> So that things are small enough for people to really look at and review.
+> 
+> The fix itself looks fine.
+> 
+> Thank you,
+> Eric
+> 
+> 
+> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+> 
+> > Fixed getting proc_pidns in the lock_get_status() and locks_show() directly from
+> > the superblock, which caused a crash:
+> >
+> > === arm64 ===
+> > [12140.366814] LTP: starting proc01 (proc01 -m 128)
+> > [12149.580943] ==================================================================
+> > [12149.589521] BUG: KASAN: out-of-bounds in pid_nr_ns+0x2c/0x90 pid_nr_ns at kernel/pid.c:456
+> > [12149.595939] Read of size 4 at addr 1bff000bfa8c0388 by task = proc01/50298
+> > [12149.603392] Pointer tag: [1b], memory tag: [fe]
+> >
+> > [12149.610906] CPU: 69 PID: 50298 Comm: proc01 Tainted: G L 5.7.0-rc2-next-20200422 #6
+> > [12149.620585] Hardware name: HPE Apollo 70 /C01_APACHE_MB , BIOS L50_5.13_1.11 06/18/2019
+> > [12149.631074] Call trace:
+> > [12149.634304]  dump_backtrace+0x0/0x22c
+> > [12149.638745]  show_stack+0x28/0x34
+> > [12149.642839]  dump_stack+0x104/0x194
+> > [12149.647110]  print_address_description+0x70/0x3a4
+> > [12149.652576]  __kasan_report+0x188/0x238
+> > [12149.657169]  kasan_report+0x3c/0x58
+> > [12149.661430]  check_memory_region+0x98/0xa0
+> > [12149.666303]  __hwasan_load4_noabort+0x18/0x20
+> > [12149.671431]  pid_nr_ns+0x2c/0x90
+> > [12149.675446]  locks_translate_pid+0xf4/0x1a0
+> > [12149.680382]  locks_show+0x68/0x110
+> > [12149.684536]  seq_read+0x380/0x930
+> > [12149.688604]  pde_read+0x5c/0x78
+> > [12149.692498]  proc_reg_read+0x74/0xc0
+> > [12149.696813]  __vfs_read+0x84/0x1d0
+> > [12149.700939]  vfs_read+0xec/0x124
+> > [12149.704889]  ksys_read+0xb0/0x120
+> > [12149.708927]  __arm64_sys_read+0x54/0x88
+> > [12149.713485]  do_el0_svc+0x128/0x1dc
+> > [12149.717697]  el0_sync_handler+0x150/0x250
+> > [12149.722428]  el0_sync+0x164/0x180
+> >
+> > [12149.728672] Allocated by task 1:
+> > [12149.732624]  __kasan_kmalloc+0x124/0x188
+> > [12149.737269]  kasan_kmalloc+0x10/0x18
+> > [12149.741568]  kmem_cache_alloc_trace+0x2e4/0x3d4
+> > [12149.746820]  proc_fill_super+0x48/0x1fc
+> > [12149.751377]  vfs_get_super+0xcc/0x170
+> > [12149.755760]  get_tree_nodev+0x28/0x34
+> > [12149.760143]  proc_get_tree+0x24/0x30
+> > [12149.764439]  vfs_get_tree+0x54/0x158
+> > [12149.768736]  do_mount+0x80c/0xaf0
+> > [12149.772774]  __arm64_sys_mount+0xe0/0x18c
+> > [12149.777504]  do_el0_svc+0x128/0x1dc
+> > [12149.781715]  el0_sync_handler+0x150/0x250
+> > [12149.786445]  el0_sync+0x164/0x180
+> 
+> > diff --git a/fs/locks.c b/fs/locks.c
+> > index b8a31c1c4fff..399c5dbb72c4 100644
+> > --- a/fs/locks.c
+> > +++ b/fs/locks.c
+> > @@ -2823,7 +2823,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
+> >  {
+> >  	struct inode *inode = NULL;
+> >  	unsigned int fl_pid;
+> > -	struct pid_namespace *proc_pidns = file_inode(f->file)->i_sb->s_fs_info;
+> > +	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
+> >  
+> >  	fl_pid = locks_translate_pid(fl, proc_pidns);
+> >  	/*
+> > @@ -2901,7 +2901,7 @@ static int locks_show(struct seq_file *f, void *v)
+> >  {
+> >  	struct locks_iterator *iter = f->private;
+> >  	struct file_lock *fl, *bfl;
+> > -	struct pid_namespace *proc_pidns = file_inode(f->file)->i_sb->s_fs_info;
+> > +	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
+> >  
+> >  	fl = hlist_entry(v, struct file_lock, fl_link);
+> >  
+> 
+> Eric
+> 
+
+-- 
+Rgrds, legion
+
