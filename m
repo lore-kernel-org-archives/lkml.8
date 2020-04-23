@@ -2,206 +2,207 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423B3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C154C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18758206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31B92098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BdTjEPIv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ROYvWIGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgDWPWw (ORCPT
+        id S1729123AbgDWPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729008AbgDWPWv (ORCPT
+        Thu, 23 Apr 2020 11:23:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59129 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729013AbgDWPXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:22:51 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB170C08ED7D
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4ilAvDhDOvqIQ25q6T4G5QwEwvoEj4u+6Gav26YkiWI=; b=BdTjEPIvQUPYwBvuP5/jB1jIL0
-        p/JiXpdgN5Knji4pj1QtL9t4lMWvI9leNIk8uuePPc+Ugrb2FzIURelHej0bs98D6GRqU+ILZrms8
-        Aphpw63ToskiaFUgIVIISKy8Zwh0PS8e7T31dQu+5ukTsvgD103b7Ia+2yRXlOlbuYZ20uNKB2Ujp
-        4pKiL4jA1leoMbGpTILK6j9sn99Pa9MT7hRETHwWybXSIgwsBXiicoJPT4x0aNEv7A6HN8o6N/oWu
-        GGF22wG+1n4wdVF5ZJj3ynpwotNmLsz4nwr8/v4a95BUoQo+dXloTz0d1nGm2WtZiDbQCrGHo3Mxb
-        tApH/wyg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRdgc-0007Z7-3Q; Thu, 23 Apr 2020 15:22:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5A36A3010C4;
-        Thu, 23 Apr 2020 17:22:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 42C1120BE6372; Thu, 23 Apr 2020 17:22:43 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 17:22:43 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     jpoimboe@redhat.com, alexandre.chartre@oracle.com,
-        linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de, x86@kernel.org
-Subject: Re: [PATCH 4/8] objtool: Add support for intra-function calls
-Message-ID: <20200423152243.GV20730@hirez.programming.kicks-ass.net>
-References: <20200423125013.452964352@infradead.org>
- <20200423125042.794350465@infradead.org>
- <alpine.LSU.2.21.2004231619070.6520@pobox.suse.cz>
+        Thu, 23 Apr 2020 11:23:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587655380;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i7iFOYOmmS/LbCdQbSLcBAQAHAEAS8jTJdGBKjzk/kY=;
+        b=ROYvWIGT5tb9LHfpXBCQ26Xh5Mme3qkSRQdSb7VO5K6yoaMIQPaAnZaJfkX49QgvQ5wLTq
+        DN/jTv00HOYMxidu5pPfIORdLodgz4Ev0EnxFFZAPkHlsZR8Ni+xU6hEQ4oWXcrk0R1ZQh
+        5rb9YzI6VV6fqD/Xhno9lNTRsLIcPT8=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-kib3Q57wPk27M25v3_G5ng-1; Thu, 23 Apr 2020 11:22:57 -0400
+X-MC-Unique: kib3Q57wPk27M25v3_G5ng-1
+Received: by mail-qv1-f70.google.com with SMTP id d2so6403210qve.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:22:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i7iFOYOmmS/LbCdQbSLcBAQAHAEAS8jTJdGBKjzk/kY=;
+        b=UxDvWwGth7dZghmGp4t6CURE6tY9t429Qch8IPTUymCnUPdzEsNZt0OAfwpzxPlpC4
+         tNM4Mvu8cpLYPWOwi2BfXErhN84RT/qVoJCpe+64dMLJCtwoL4/jFiGJi0FYIPA98KKh
+         iU4oj68dyQus3VNfWtuNCxnIUtsanLHMgDwfhbYIA7viEI+sNNwlZn/0oYQGIqWenRKj
+         wU9GoBZw+s01WzFAMba+GRcAOgH4domSpVuJdyji6ozftJg3PGoU+jJtVLYmc2Zxi5G1
+         WAi5bEwdaI3dUblTVVtS8+nBcvfEzX+Hf6V9pniisJqq/Ku2TX3n8Y9iNxHWn5E9fr5c
+         sBqw==
+X-Gm-Message-State: AGi0Pub+3a7xkPLZv44Dmf5GWbXNNLOM2v9vCeqK4Xh5S5m8trhPQDXN
+        JW/geFLZ3Y9w9oG7MTIeePWIK8pJzvWrnF/hwtaOs3u+eI0x7vymGrcqXsF8hiLYDe2PJ8Qvlkf
+        Y1JFodMNnlOPxHZL2Bk6X4F0B
+X-Received: by 2002:ac8:6753:: with SMTP id n19mr4564952qtp.353.1587655376572;
+        Thu, 23 Apr 2020 08:22:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJ66H90IP6JPiDFyLFxwW3u6P5r9glVplzra9UyPP1kFhsPvhNCJkQNjXboygVCyzIm3bEeHw==
+X-Received: by 2002:ac8:6753:: with SMTP id n19mr4564920qtp.353.1587655376185;
+        Thu, 23 Apr 2020 08:22:56 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id w27sm1923604qtc.18.2020.04.23.08.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 08:22:55 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 11:22:53 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v8 00/14] KVM: Dirty ring interface
+Message-ID: <20200423152253.GB3596@xz-x1>
+References: <20200331190000.659614-1-peterx@redhat.com>
+ <20200422185155.GA3596@xz-x1>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D877A3B@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2004231619070.6520@pobox.suse.cz>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D877A3B@SHSMSX104.ccr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 04:34:21PM +0200, Miroslav Benes wrote:
-> >  /*
-> >   * Find the destination instructions for all calls.
-> >   */
-> > @@ -715,10 +725,7 @@ static int add_call_destinations(struct
-> >  				continue;
-> >  
-> >  			if (!insn->call_dest) {
-> > -				WARN_FUNC("unsupported intra-function call",
-> > -					  insn->sec, insn->offset);
-> > -				if (retpoline)
-> > -					WARN("If this is a retpoline, please patch it in with alternatives and annotate it with ANNOTATE_NOSPEC_ALTERNATIVE.");
-> > +				WARN_FUNC("intra-function call", insn->sec, insn->offset);
-> 
-> "unsupported intra-function call"?
-
-Well, I think the thinking was that intra-function calls are actually
-supported, 'unannotated' perhaps ?
-
-> >  				return -1;
-> >  			}
-> >  
-> > @@ -741,6 +748,12 @@ static int add_call_destinations(struct
-> >  			}
-> >  		} else
-> >  			insn->call_dest = rela->sym;
-> > +
-> > +		/*
-> > +		 * Whatever stack impact regular CALLs have, should be
-> > +		 * undone by the RETURN of the called function.
-> 
->  * Annotated intra-function CALLs are treated as JMPs with a stack_op.
->  * See read_intra_function_calls().
-> 
-> would make it a bit clearer.
-
-That doesn't work for me; we want to explain why it is OK to delete
-stack_ops for regular CALLs. The reason this is OK, is because they're
-matched by RETURN.
-
-> > +                */
-> > +               remove_insn_ops(insn);
-> >         }
-> >  
-> >         return 0;
-> > @@ -1416,6 +1429,57 @@ static int read_instr_hints(struct objto
-> >         return 0;
-> >  }
+On Thu, Apr 23, 2020 at 06:28:43AM +0000, Tian, Kevin wrote:
+> > From: Peter Xu <peterx@redhat.com>
+> > Sent: Thursday, April 23, 2020 2:52 AM
 > > 
-> > +static int read_intra_function_calls(struct objtool_file *file)
-> > +{
-> > +       struct instruction *insn;
-> > +       struct section *sec;
-> > +       struct rela *rela;
-> > +
-> > +       sec = find_section_by_name(file->elf, ".rela.discard.intra_function_calls");
-> > +       if (!sec)
-> > +               return 0;
-> > +
-> > +       list_for_each_entry(rela, &sec->rela_list, list) {
-> > +               unsigned long dest_off;
-> > +
-> > +               if (rela->sym->type != STT_SECTION) {
-> > +                       WARN("unexpected relocation symbol type in %s",
-> > +                            sec->name);
-> > +                       return -1;
-> > +               }
-> > +
-> > +               insn = find_insn(file, rela->sym->sec, rela->addend);
-> > +               if (!insn) {
-> > +                       WARN("bad .discard.intra_function_call entry");
-> > +                       return -1;
-> > +               }
-> > +
-> > +               if (insn->type != INSN_CALL) {
-> > +                       WARN_FUNC("intra_function_call not a direct call",
-> > +                                 insn->sec, insn->offset);
-> > +                       return -1;
-> > +               }
-> > +
-> > +               /*
-> > +                * Treat intra-function CALLs as JMPs, but with a stack_op.
-> > +                * Also see how setup_call_dest() strips stack_ops from normal
-> > +                * CALLs.
+> > Hi,
+> > 
+> > TL;DR: I'm thinking whether we should record pure GPA/GFN instead of
+> > (slot_id,
+> > slot_offset) tuple for dirty pages in kvm dirty ring to unbind kvm_dirty_gfn
+> > with memslots.
+> > 
+> > (A slightly longer version starts...)
+> > 
+> > The problem is that binding dirty tracking operations to KVM memslots is a
+> > restriction that needs synchronization to memslot changes, which further
+> > needs
+> > synchronization across all the vcpus because they're the consumers of
+> > memslots.
+> > E.g., when we remove a memory slot, we need to flush all the dirty bits
+> > correctly before we do the removal of the memslot.  That's actually an
+> > known
+> > defect for QEMU/KVM [1] (I bet it could be a defect for many other
+> > hypervisors...) right now with current dirty logging.  Meanwhile, even if we
+> > fix it, that procedure is not scale at all, and error prone to dead locks.
+> > 
+> > Here memory removal is really an (still corner-cased but relatively) important
+> > scenario to think about for dirty logging comparing to memory additions &
+> > movings.  Because memory addition will always have no initial dirty page,
+> > and
+> > we don't really move RAM a lot (or do we ever?!) for a general VM use case.
+> > 
+> > Then I went a step back to think about why we need these dirty bit
+> > information
+> > after all if the memslot is going to be removed?
+> > 
+> > There're two cases:
+> > 
+> >   - When the memslot is going to be removed forever, then the dirty
+> > information
+> >     is indeed meaningless and can be dropped, and,
+> > 
+> >   - When the memslot is going to be removed but quickly added back with
+> > changed
+> >     size, then we need to keep those dirty bits because it's just a commmon
+> > way
+> >     to e.g. punch an MMIO hole in an existing RAM region (here I'd confess I
+> >     feel like using "slot_id" to identify memslot is really unfriendly syscall
+> >     design for things like "hole punchings" in the RAM address space...
+> >     However such "punch hold" operation is really needed even for a common
+> >     guest for either system reboots or device hotplugs, etc.).
 > 
-> /*
->  * Treat annotated intra-function CALLs as JMPs, but with a stack_op.
->  * Also see how add_call_destinations() strips stack_ops from normal
->  * CALLs.
->  */
+> why would device hotplug punch a hole in an existing RAM region? 
+
+I thought it could happen because I used to trace the KVM ioctls and see the
+memslot changes during driver loading.  But later when I tried to hotplug a
+device I do see that it won't...  The new MMIO regions are added only into
+0xfe000000 for a virtio-net:
+
+  00000000fe000000-00000000fe000fff (prio 0, i/o): virtio-pci-common
+  00000000fe001000-00000000fe001fff (prio 0, i/o): virtio-pci-isr
+  00000000fe002000-00000000fe002fff (prio 0, i/o): virtio-pci-device
+  00000000fe003000-00000000fe003fff (prio 0, i/o): virtio-pci-notify
+  00000000fe840000-00000000fe84002f (prio 0, i/o): msix-table
+  00000000fe840800-00000000fe840807 (prio 0, i/o): msix-pba
+
+Does it mean that device plugging is guaranteed to not trigger RAM changes?  I
+am really curious about what cases we need to consider in which we need to keep
+the dirty bits for a memory removal, and if system reset is the only case, then
+it could be even easier (because we might be able to avoid the sync in memory
+removal but do that once in a sys reset hook)...
+
 > 
-> ? (note added "annotated" and s/setup_call_dest/add_call_destinations/)
-
-Unannotated intra-function calls are not allowed, so I don't see a
-reason to make that distinction, but sure.
-
-> > +                */
-> > +               insn->type = INSN_JUMP_UNCONDITIONAL;
+> > 
+> > The real scenario we want to cover for dirty tracking is the 2nd one.
+> > 
+> > If we can track dirty using raw GPA, the 2nd scenario is solved itself.
+> > Because we know we'll add those memslots back (though it might be with a
+> > different slot ID), then the GPA value will still make sense, which means we
+> > should be able to avoid any kind of synchronization for things like memory
+> > removals, as long as the userspace is aware of that.
 > 
-> [...]
+> A curious question. What about the backing storage of the affected GPA 
+> is changed after adding back? Is recorded dirty info for previous backing 
+> storage still making sense for the newer one?
+
+It's the case of a permanent removal, plus another addition iiuc.  Then the
+worst case is we get some extra dirty bits set on that new memory region, but
+IMHO that's benigh (we'll migrate some extra pages even they could be zero pages).
+
+Thanks,
+
 > 
-> > @@ -2245,6 +2313,9 @@ static int validate_branch(struct objtoo
-> >  				return 0;
-> >  		}
-> >  
-> > +		if (handle_insn_ops(insn, &state))
-> > +			return 1;
-> > +
-> >  		switch (insn->type) {
-> >  
-> >  		case INSN_RETURN:
-> > @@ -2304,9 +2375,6 @@ static int validate_branch(struct objtoo
-> >  			break;
-> >  
-> >  		case INSN_EXCEPTION_RETURN:
-> > -			if (handle_insn_ops(insn, &state))
-> > -				return 1;
-> > -
-> >  			/*
-> >  			 * This handles x86's sync_core() case, where we use an
-> >  			 * IRET to self. All 'normal' IRET instructions are in
-> > @@ -2326,8 +2394,6 @@ static int validate_branch(struct objtoo
-> >  			return 0;
-> >  
-> >  		case INSN_STACK:
-> > -			if (handle_insn_ops(insn, &state))
-> > -				return 1;
-> >  			break;
+> Thanks
+> Kevin
 > 
-> So we could get rid of INSN_STACK now as Julien proposed, couldn't we? If 
-> I am not missing something. handle_insn_ops() is called unconditionally 
-> here for all insn types and you remove stack_ops when unneeded.
+> > 
+> > With that, when we fetch the dirty bits, we lookup the memslot dynamically,
+> > drop bits if the memslot does not exist on that address (e.g., permanent
+> > removals), and use whatever memslot is there for that guest physical
+> > address.
+> > Though we for sure still need to handle memory move, that the userspace
+> > needs
+> > to still take care of dirty bit flushing and sync for a memory move, however
+> > that's merely not happening so nothing to take care about either.
+> > 
+> > Does this makes sense?  Comments greatly welcomed..
+> > 
+> > Thanks,
+> > 
+> > [1] https://lists.gnu.org/archive/html/qemu-devel/2020-03/msg08361.html
+> > 
+> > --
+> > Peter Xu
+> 
 
-Yes, INSN_STACK can now go away in favour of NOPs with stack_ops.
-Separate patch though.
+-- 
+Peter Xu
 
-> We could also go ahead with Julien's proposal to remove 
-> INSN_EXCEPTION_RETURN hack and move it to tools/objtool/arch/x86/decode.c. 
-
-I don't immediately see how; we don't have a symbol there.
