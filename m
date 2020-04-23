@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EB2C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9260DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09C4D20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7C220780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgDWXHO (ORCPT
+        id S1728048AbgDWXHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:07:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49696 "EHLO
+        Thu, 23 Apr 2020 19:07:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49568 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728422AbgDWXGr (ORCPT
+        by vger.kernel.org with ESMTP id S1728383AbgDWXGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:47 -0400
+        Thu, 23 Apr 2020 19:06:46 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-0004if-EO; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvU-0004hJ-4m; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-00E6po-Le; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvR-00E6q7-Qa; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jose Abreu" <Jose.Abreu@synopsys.com>
-Date:   Fri, 24 Apr 2020 00:06:01 +0100
-Message-ID: <lsq.1587683028.876480865@decadent.org.uk>
+        "Hans de Goede" <hdegoede@redhat.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Date:   Fri, 24 Apr 2020 00:06:05 +0100
+Message-ID: <lsq.1587683028.664970629@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 134/245] net: stmmac: 16KB buffer must be 16 byte aligned
+Subject: [PATCH 3.16 138/245] platform/x86: hp-wmi: Make buffer for
+ HPWMI_FEATURE2_QUERY 128 bytes
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,32 +56,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 8605131747e7e1fd8f6c9f97a00287aae2b2c640 upstream.
+commit 133b2acee3871ae6bf123b8fe34be14464aa3d2c upstream.
 
-The 16KB RX Buffer must also be 16 byte aligned. Fix it.
+At least on the HP Envy x360 15-cp0xxx model the WMI interface
+for HPWMI_FEATURE2_QUERY requires an outsize of at least 128 bytes,
+otherwise it fails with an error code 5 (HPWMI_RET_INVALID_PARAMETERS):
 
-Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Dec 06 00:59:38 kernel: hp_wmi: query 0xd returned error 0x5
+
+We do not care about the contents of the buffer, we just want to know
+if the HPWMI_FEATURE2_QUERY command is supported.
+
+This commits bumps the buffer size, fixing the error.
+
+Fixes: 8a1513b4932 ("hp-wmi: limit hotkey enable")
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/x86/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -270,9 +270,8 @@ struct dma_features {
- 	unsigned int enh_desc;
- };
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -309,7 +309,7 @@ static int __init hp_wmi_bios_2008_later
  
--/* GMAC TX FIFO is 8K, Rx FIFO is 16K */
--#define BUF_SIZE_16KiB 16384
--/* RX Buffer size must be < 8191 and multiple of 4/8/16 bytes */
-+/* RX Buffer size must be multiple of 4/8/16 bytes */
-+#define BUF_SIZE_16KiB 16368
- #define BUF_SIZE_8KiB 8188
- #define BUF_SIZE_4KiB 4096
- #define BUF_SIZE_2KiB 2048
+ static int __init hp_wmi_bios_2009_later(void)
+ {
+-	int state = 0;
++	u8 state[128];
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &state,
+ 				       sizeof(state), sizeof(state));
+ 	if (!ret)
 
