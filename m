@@ -2,142 +2,127 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1A3C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496C6C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 199DF20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2952F20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AsXfCxXa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZkRUfm5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbgDWSKk (ORCPT
+        id S1730227AbgDWSKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729995AbgDWSKi (ORCPT
+        Thu, 23 Apr 2020 14:10:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54847 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729995AbgDWSKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:10:38 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82F1C09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:10:37 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id h12so1859741pjz.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QrjNM8BIB5l9RDDyP/w9uL8SShDah7FJKmQ5DvjnKE8=;
-        b=AsXfCxXazLdQ4m4tFsITnoDFMxqGenJRkSF+hQa764+Ie951E0z1+86ZtMDbqQeqN9
-         EoMfgJun6N/RY0LSGQ4n6KcyLtyLxeE6qI0AYgv5QA60oCmP8THtiezL2RHowJtIe/7X
-         ibS7aUydBcFHYotXKrT/7B5h0McBa7t+WrF0Kod6rl8RAR3VRpE2rebAt0ODkRKw89rM
-         h2swOx8HZH8pTN3Epi4K0wNbez+NDF2bsW3xtSPJjsFeLdq7yB50zmj/WTJb0qBWc6sq
-         zELPZtUFYAhh1kh05HOxNhOi2RPJGDPjiDAXuUVBTAZRVjZr8kCBRFN0xdbZ/Wq5/FTF
-         rGDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QrjNM8BIB5l9RDDyP/w9uL8SShDah7FJKmQ5DvjnKE8=;
-        b=te39BuHmKBZonDFZcZL6/5w5fVorM2jTTXYy8hbMS7Z8/WPwMUocFNGKeWDMt7AHGS
-         jTneGTimsjHDIYKCVfBsB0sr/FqrSLejMzgfLhjVVyRgBG9+jdnkFBM3JM0lJ0durEY8
-         i4Rop4HmiTJ3rIRvT4dznZQR2upMKKtS6ex3x0HfZJJqf2hM8Ybl/ZedYHY6TRi/zVO5
-         6HFuat172eqBiQgUus0QigoYKlquSlmE1hWKX76QLXVluZyQoY2sVVRvjuNcoUS/fkHz
-         3mZHkHQam6o2LBZBsTsmpd9VNRECg4TZTyRkbEypxtFZEh5a62VU4Av1dQ98crZhw64M
-         NFtA==
-X-Gm-Message-State: AGi0PuYHDDu5zmW3vo0REzCW58TKvXNZ32s1DNJocIGYc/Nmf7oxxsZv
-        I4oOzjsKiZd/MDLgKmfpK4BtisAyBbrR1yqBbIwj5w==
-X-Google-Smtp-Source: APiQypJxSAw4KraboivCNfbdVu5dxs22Lp01yJChZEKk7LuJohXkK/zLo28qdyZgNXxQMSdqcAn9Gjof2vvDu8FLAOQ=
-X-Received: by 2002:a17:902:ac87:: with SMTP id h7mr4756081plr.119.1587665437124;
- Thu, 23 Apr 2020 11:10:37 -0700 (PDT)
+        Thu, 23 Apr 2020 14:10:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587665440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2yRJCnoX8qkbcjYUfFVSZLzSknvTSyY8JodZRku30p4=;
+        b=ZkRUfm5vlM7l9u0snLSCtNrMF+lg5iynTEQsS1Ammp7K7u4QyQinGSW2RJhs5EFJfqTazd
+        HWLCBjIs2NIkHBsr938HLleoK9fhEGIfBRHpu041obehRt8rIQw0aCiqSEwfoq1ysttqUQ
+        Ix1DW+d/lcQZ10Xmt+kP0cja+61Ip6A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-455-ssTxrkrmM5-MnUXBiq4--A-1; Thu, 23 Apr 2020 14:10:38 -0400
+X-MC-Unique: ssTxrkrmM5-MnUXBiq4--A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A8B78005BA;
+        Thu, 23 Apr 2020 18:10:37 +0000 (UTC)
+Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CEEF25C1BE;
+        Thu, 23 Apr 2020 18:10:32 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 13:10:30 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+Message-ID: <20200423181030.b5mircvgc7zmqacr@treble>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+ <20200422164037.7edd21ea@thinkpad>
+ <20200422172126.743908f5@thinkpad>
+ <20200422194605.n77t2wtx5fomxpyd@treble>
+ <20200423141834.234ed0bc@thinkpad>
+ <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
+ <20200423141228.sjvnxwdqlzoyqdwg@treble>
 MIME-Version: 1.0
-References: <20200423162923.10886-1-natechancellor@gmail.com>
-In-Reply-To: <20200423162923.10886-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 23 Apr 2020 11:10:25 -0700
-Message-ID: <CAKwvOdnP247LJpqo5ZZfGXUktjtXKzhDwQU=aTOrFi-y_px9mA@mail.gmail.com>
-Subject: Re: [PATCH] USB: gadget: udc: s3c2410_udc: Remove pointless NULL
- check in s3c2410_udc_nuke
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200423141228.sjvnxwdqlzoyqdwg@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 9:30 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
-> address of 'ep->queue' equal to a null pointer is always false
-> [-Wtautological-pointer-compare]
->         if (&ep->queue == NULL)
->              ~~~~^~~~~    ~~~~
-> 1 warning generated.
->
-> It is not wrong, queue is not a pointer so if ep is not NULL, the
-> address of queue cannot be NULL. No other driver does a check like this
-> and this check has been around since the driver was first introduced,
-> presumably with no issues so it does not seem like this check should be
-> something else. Just remove it.
->
-> Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
-> this but it is not the root cause of the warning.
->
-> Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1004
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Thu, Apr 23, 2020 at 09:12:28AM -0500, Josh Poimboeuf wrote:
+> > > this is strange. While I would have expected an exception similar to
+> > > this, it really should have happened on the "sturg" instruction which
+> > > does the DAT-off store in s390_kernel_write(), and certainly not with
+> > > an ID of 0004 (protection). However, in your case, it happens on a
+> > > normal store instruction, with 0004 indicating a protection exception.
+> > > 
+> > > This is more like what I would expect e.g. in the case where you do
+> > > _not_ use the s390_kernel_write() function for RO module text patching,
+> > > but rather normal memory access. So I am pretty sure that this is not
+> > > related to the s390_kernel_write(), but some other issue, maybe some
+> > > place left where you still use normal memory access?
+> > 
+> > The call trace above also suggests that it is not a late relocation, no? 
+> > The path is from KLP module init function through klp_enable_patch. It should 
+> > mean that the to-be-patched object is loaded (it must be a module thanks 
+> > to a check klp_init_object_loaded(), vmlinux relocations were processed 
+> > earlier in apply_relocations()).
+> > 
+> > However, the KLP module state here must be COMING, so s390_kernel_write() 
+> > should be used. What are we missing?
+> 
+> I'm also scratching my head.  It _should_ be using s390_kernel_write()
+> based on the module state, but I don't see that on the stack trace.
+> 
+> This trace (and Gerald's comment) seem to imply it's using
+> __builtin_memcpy(), which might expected for UNFORMED state.
+> 
+> Weird...
 
-Thanks for the patch!  If anything, I'd be happy to see some more NULL
-checks against `ep`, though the callers of s3c2410_udc_nuke() also
-seem quite confident that the pointer is not NULL.
+Mystery solved:
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+  $ CROSS_COMPILE=s390x-linux-gnu- scripts/faddr2line vmlinux apply_rela+0x16a/0x520
+  apply_rela+0x16a/0x520:
+  apply_rela at arch/s390/kernel/module.c:336
 
-> ---
->  drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
-> index 0507a2ca0f552..80002d97b59d8 100644
-> --- a/drivers/usb/gadget/udc/s3c2410_udc.c
-> +++ b/drivers/usb/gadget/udc/s3c2410_udc.c
-> @@ -251,10 +251,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
->  static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
->                 struct s3c2410_ep *ep, int status)
->  {
-> -       /* Sanity check */
-> -       if (&ep->queue == NULL)
-> -               return;
-> -
->         while (!list_empty(&ep->queue)) {
->                 struct s3c2410_request *req;
->                 req = list_entry(ep->queue.next, struct s3c2410_request,
->
-> base-commit: ae83d0b416db002fe95601e7f97f64b59514d936
-> --
-> 2.26.2
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200423162923.10886-1-natechancellor%40gmail.com.
+which corresponds to the following code in apply_rela():
 
 
+	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
+		if (info->plt_initialized == 0) {
+			unsigned int *ip;
+			ip = me->core_layout.base + me->arch.plt_offset +
+				info->plt_offset;
+			ip[0] = 0x0d10e310;	/* basr 1,0  */
+			ip[1] = 0x100a0004;	/* lg	1,10(1) */
+
+
+Notice how it's writing directly to text... oops.
 
 -- 
-Thanks,
-~Nick Desaulniers
+Josh
+
