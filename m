@@ -6,62 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B05C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9624C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A8120706
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C201021582
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587660323;
-	bh=Tjgrw1RRbyEUPIP96xGbs+qYR7X0hWxPlX9NAHat0UQ=;
+	s=default; t=1587660326;
+	bh=YrMFeTdI3wX0lbT2CAoq1eX5P4/UmlD45Rj8jf9ucro=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=aOCz/TLVT9PwX03aZ4NbxGSPhsviTmSoxPyhR+qhCOZ2erfmhr557uWRydgamM4tH
-	 Ca3Qe7UFqSKndjUyA60sD6+4H5F+FUn/BiKvOlf1kVwx71eNKxmSz4Mt8qrr5T9Cce
-	 4pCnM2+Dyxb1EJrtiyeOa7RY9QY/zgz4iaZpmGg8=
+	b=b3/Hq/FgDSbhPbsHDatWBRLY+QzFSsnus5TQ1c6tWNWEcRU9y+UeKTS6bKatt5ZCT
+	 vJbZybemUamyn3x/H/AJUZEQVHY5whKp6ZZkz1xkJcC+g3DyMKycgIPB1Tcb4xWMn1
+	 WcyDrcCpl3hQ0s760wZAN/0mBWrLNDM/vGq1JC7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbgDWQpW (ORCPT
+        id S1729781AbgDWQpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:45:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42380 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 12:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbgDWQpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729661AbgDWQpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 12:45:19 -0400
-Subject: Re: [GIT PULL] exfat fixes for 5.7-rc3
+Subject: Re: [GIT PULL] remoteproc fixes for v5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587660319;
-        bh=Tjgrw1RRbyEUPIP96xGbs+qYR7X0hWxPlX9NAHat0UQ=;
+        s=default; t=1587660318;
+        bh=YrMFeTdI3wX0lbT2CAoq1eX5P4/UmlD45Rj8jf9ucro=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QY84AsYEI1M4ps99ODG8fk65PP1rFPgQX9MuUHH1tUGofk2gTeh0NofJBFG/bZtRa
-         744h0DAIs912KzMm0iyYNoZOPYAjVEcCyOj8/25PHpOiuTsh9KUQMv6DtJ6ORoOXpj
-         CciWPzZXt7Hn/aMjTyIy2lqXxCS55SjJCLglkmiA=
+        b=V5AVlCs2Wcwpe7TWeRAq/aPA1m+HUvNz8roiSNKp+fpcqtiXYAN/jhwIRBQ052eHb
+         rA8D3o2CFPbNEZbF0a9/0ZRV20bvwb91uqpcpaJJw9CPJHsO2AYth4q1mVagbTPlE6
+         +bomwueb3Z33nu5C3V9x+yNVFovpQJDvolKoYwWA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <001c01d61929$6382ac30$2a880490$@samsung.com>
-References: <CGME20200423044100epcas1p12ae3c91c4370bae94ce5b33274edec14@epcas1p1.samsung.com>
- <001c01d61929$6382ac30$2a880490$@samsung.com>
+In-Reply-To: <20200422230833.GA2112870@builder.lan>
+References: <20200422230833.GA2112870@builder.lan>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <001c01d61929$6382ac30$2a880490$@samsung.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git
- tags/for-5.7-rc3
-X-PR-Tracked-Commit-Id: 81df1ad40644b706a1cdbd28a1471f9f0c0ea3e8
+X-PR-Tracked-Message-Id: <20200422230833.GA2112870@builder.lan>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git
+ tags/rproc-v5.7-fixes
+X-PR-Tracked-Commit-Id: c2781e4d9bc6d925dfc1ff833dfdaf12b69679de
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6f8cd037a5f46388c005f7d7ea9b62d515889740
-Message-Id: <158766031916.20212.11965653445061773265.pr-tracker-bot@kernel.org>
-Date:   Thu, 23 Apr 2020 16:45:19 +0000
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        'LKML' <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 3cda77991eb75aa0066065b7f352a4349ca1a3bc
+Message-Id: <158766031890.20212.5272714956436329155.pr-tracker-bot@kernel.org>
+Date:   Thu, 23 Apr 2020 16:45:18 +0000
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 23 Apr 2020 13:41:00 +0900:
+The pull request you sent on Wed, 22 Apr 2020 16:08:33 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git tags/for-5.7-rc3
+> https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git tags/rproc-v5.7-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6f8cd037a5f46388c005f7d7ea9b62d515889740
+https://git.kernel.org/torvalds/c/3cda77991eb75aa0066065b7f352a4349ca1a3bc
 
 Thank you!
 
