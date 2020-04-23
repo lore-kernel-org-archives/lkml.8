@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33DCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3199C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1FC21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26FC21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587627637;
-	bh=B23+txFWRyEt4Ku0qJ/lndtpZmVXz53GpUKda6/l9G4=;
+	s=default; t=1587627640;
+	bh=oX1Yizvm022sZLLTBHMIoLMjSvEhk0YAaF3tm2Z0fOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dZcXelHy7KprhegM8qRinSyzkVVNDsYaGamALONaxHM5mpCHdQgnHxtW6zJV9GIU5
-	 OA+R2bTXR6Lftzj6RuRHum7lYyAjdRm3afJKDc4FhHpu5LNlPoDX0te0/NZzaD5rk6
-	 Ke9wpuffD1AjC84s3aXMY0csAth75eo1LifiHuEE=
+	b=CL4MBM1Io3WGdWOqt1IIdgfA8U3fWEPTD/HUHRH9Szm7mfT6SargGa/2ecjrsxSTr
+	 6aMF5yENC/53Ina+MDEW+S3f+Sbg0RLK/TFVeLW3nmKnT+TulOebqiBLRuF0Lc5jjQ
+	 4XL/oLPwbB1nZsRu4Cwty9dNZz42AVJHMJHH4Le0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgDWHkg (ORCPT
+        id S1726953AbgDWHkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:40:36 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:31786 "EHLO
+        Thu, 23 Apr 2020 03:40:40 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:31787 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgDWHkd (ORCPT
+        with ESMTP id S1726859AbgDWHkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 03:40:33 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03N7dV9a000368;
-        Thu, 23 Apr 2020 16:39:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9a000368
+        by conuserg-10.nifty.com with ESMTP id 03N7dV9Z000368;
+        Thu, 23 Apr 2020 16:39:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9Z000368
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587627588;
-        bh=E2jjP8KPNwvqL0zZwwd3YhfAuKyupQ9yeab/h3FTNEI=;
+        s=dec2015msa; t=1587627587;
+        bh=hA9zKaYolCBXen9YqFKBxUtOtwyQMnhMjhiUYnYYBtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6cu9Enpq+CiCsgRzuKUsbYJAE/NkdzIiiG3eC8D1AK+4ekKSWgVQxk8yPSZ6DCs7
-         5lY97SjxsY77w3uqmDERaSGyw79uBewjPYTd1VtsM12VYgy9fWPHekRWgnaozoQOA9
-         /txHor2s8dxdaCPFXweNbWrK+8FKOSH0rcKMw/dW06CmjpulUejvgF8ylM4LSdfJi9
-         1D/EV78kSCKwg7o1z9fZg98l63n7ySX0Yub4IsdZWOGkI5TnqO11yTV+LwdakdNRYi
-         b1YoNDMqri0o2izM+areu2uEOioxz6ubEoCSBKjeuupYUASWEJSvjsPN1t9LQBcV+S
-         dVFkoMt1ta1rg==
+        b=j3N5a4M/3pkD919qlPicRMxcgkvR8hut/hs/t+tK7ZIAr2tqSGDEr9LQDf087UNUR
+         kj/A0Oini8KGUWlzLarA0l0peNzA3qLMP8a6KoY3Tr5+0pqBre3p3kajWxLZ23JlHR
+         xEskoeVk0jMj+mBH/pQtpOJ42ck9CFmMP1cRZCUQCnUcAq1yiQum1gcsi7OfQzJJ1r
+         eW+kNQ0WSYt6/1tJa1U3k+uWZiU5cjP5EsmNvhTiwm6aKYnZh7OQSek5cs5Es8BJIo
+         hyG27PQOQ5vcdZHgctN1vhTRTA3naqLyRw6tU1O1kz+8/iVH7Th3hS8OL5jX0HRE28
+         Pqwc7TTw11xEQ==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 15/16] samples: timers: use 'userprogs' syntax
-Date:   Thu, 23 Apr 2020 16:39:28 +0900
-Message-Id: <20200423073929.127521-16-masahiroy@kernel.org>
+Subject: [PATCH 14/16] samples: auxdisplay: use 'userprogs' syntax
+Date:   Thu, 23 Apr 2020 16:39:27 +0900
+Message-Id: <20200423073929.127521-15-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200423073929.127521-1-masahiroy@kernel.org>
 References: <20200423073929.127521-1-masahiroy@kernel.org>
@@ -74,62 +74,55 @@ because $(CC) may not necessarily provide libc.
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- samples/Kconfig         |  4 ++++
- samples/Makefile        |  1 +
- samples/timers/Makefile | 17 +++--------------
- 3 files changed, 8 insertions(+), 14 deletions(-)
+ samples/Kconfig             |  4 ++++
+ samples/Makefile            |  1 +
+ samples/auxdisplay/Makefile | 11 ++---------
+ 3 files changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/samples/Kconfig b/samples/Kconfig
-index cdb0091e4734..55548a487d3c 100644
+index b9dafee5d3af..cdb0091e4734 100644
 --- a/samples/Kconfig
 +++ b/samples/Kconfig
-@@ -135,6 +135,10 @@ config SAMPLE_SECCOMP
- 	  Build samples of seccomp filters using various methods of
- 	  BPF filter construction.
+@@ -6,6 +6,10 @@ menuconfig SAMPLES
  
-+config SAMPLE_TIMER
-+	bool "Build timer sample code"
-+	depends on CC_CAN_LINK && HEADERS_INSTALL
+ if SAMPLES
+ 
++config SAMPLE_AUXDISPLAY
++	bool "auxdisplay sample"
++	depends on CC_CAN_LINK
 +
- config SAMPLE_UHID
- 	bool "Build UHID sample code"
- 	depends on CC_CAN_LINK && HEADERS_INSTALL
+ config SAMPLE_TRACE_EVENTS
+ 	tristate "Build trace_events examples -- loadable modules only"
+ 	depends on EVENT_TRACING && m
 diff --git a/samples/Makefile b/samples/Makefile
-index 0c43b5d34b15..042208326689 100644
+index bdc168405452..0c43b5d34b15 100644
 --- a/samples/Makefile
 +++ b/samples/Makefile
-@@ -16,6 +16,7 @@ subdir-$(CONFIG_SAMPLE_PIDFD)		+= pidfd
- obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
- obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
- subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
-+subdir-$(CONFIG_SAMPLE_TIMER)		+= timers
- obj-$(CONFIG_SAMPLE_TRACE_EVENTS)	+= trace_events/
- obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
- obj-$(CONFIG_SAMPLE_FTRACE_DIRECT)	+= ftrace/
-diff --git a/samples/timers/Makefile b/samples/timers/Makefile
-index f9fa07460802..c5f46e8caa80 100644
---- a/samples/timers/Makefile
-+++ b/samples/timers/Makefile
-@@ -1,16 +1,5 @@
+@@ -1,6 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
--ifndef CROSS_COMPILE
--uname_M := $(shell uname -m 2>/dev/null || echo not)
--ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
-+userprogs := hpet_example
-+always-y := $(userprogs)
+ # Makefile for Linux samples code
  
--ifeq ($(ARCH),x86)
++subdir-$(CONFIG_SAMPLE_AUXDISPLAY)	+= auxdisplay
+ obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
+ obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
+ obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
+diff --git a/samples/auxdisplay/Makefile b/samples/auxdisplay/Makefile
+index 0273bab27233..dbdf939af94a 100644
+--- a/samples/auxdisplay/Makefile
++++ b/samples/auxdisplay/Makefile
+@@ -1,10 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
 -CC := $(CROSS_COMPILE)gcc
--PROGS := hpet_example
+-CFLAGS := -I../../usr/include
+-
+-PROGS := cfag12864b-example
 -
 -all: $(PROGS)
 -
 -clean:
 -	rm -fr $(PROGS)
--
--endif
--endif
-+user-ccflags += -I usr/include
++userprogs := cfag12864b-example
++always-y := $(userprogs)
 -- 
 2.25.1
 
