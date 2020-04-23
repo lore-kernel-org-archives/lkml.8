@@ -2,87 +2,83 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61495C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E0DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8CB2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tbKgu6el"
+	by mail.kernel.org (Postfix) with ESMTP id 704D820857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587642036;
+	bh=v+cZbNEq+8xq9TdljfKBzmW0OSxSI3Wv8ELxe4MyXrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sl1iGje0Kr/Mc3Zqyap2vICmddoF9YunYtzcFcXlf4pNXAN4JEfy3BgV7VsK+Naov
+	 kz/FcXTJaaZLqb0wOay48fSu5J0PBRDLrhJQMMJWXllr0CBrKXFA/iABBDPjIWFxlu
+	 lCORFI00kInuIvYT6h4HFK5vHssL5TrvSOR+pu6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgDWLkK (ORCPT
+        id S1728096AbgDWLkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727903AbgDWLkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:40:10 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039BDC035494;
-        Thu, 23 Apr 2020 04:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tB+BVWMxib2gd9XqAz2QdvAOKuEQpc9FChbzR+SgxV4=; b=tbKgu6elYwtDE343Cpmt0XiJGp
-        YBfbojKbLj9MhwhMUUK2urKoXUnNhgrOMDarNDfO6YA2yB65SSwjsKHPqDdVr9vm4XlcmSGQ8tGIp
-        6+vB+UqrpbQKsJSN1FU8awdV+mwaLz7mwcmVFAtyWoAIA0W6LA6Nc7l1bn8DxA7OPHB6w4sU2+OEs
-        E2PnoNS1hbJx+RI2F7iAXFs9kxmluk94xuIjCWED41/z2Dwkjct59Gi90qX1ivsHBs1leveYOkJrD
-        SzcZ7kRgpYF+2CQHNLPcn/4kjW7hItE3avfMSCU9tF7UCTQVc0gtr4RT6lAxr1KL6lcvh81ZStkYy
-        ahRXi2vg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRaDA-0002U1-Dr; Thu, 23 Apr 2020 11:40:08 +0000
-Date:   Thu, 23 Apr 2020 04:40:08 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC] fs: Use slab constructor to initialize conn objects in
- fsnotify
-Message-ID: <20200423114008.GB13910@bombadil.infradead.org>
-References: <20200423044050.162093-1-joel@joelfernandes.org>
+        Thu, 23 Apr 2020 07:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727903AbgDWLkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:40:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 716EC2084D;
+        Thu, 23 Apr 2020 11:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587642034;
+        bh=v+cZbNEq+8xq9TdljfKBzmW0OSxSI3Wv8ELxe4MyXrs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sBJms3bpeviFauiUcUCQiOq4YvvYk8OFWsy6Mp3B3HOj2vHhfIUOdLNK6VE7XTw/v
+         0ouOwtoiVcQZBwXoRq0gVUDPF5lCTPzp00Kx+NssOTIojVr14VSLr5B6qEeEIXo/Co
+         PVQZ5gxk+pxMcaBUiQjn3KKxoZiOVne9eWvObe4I=
+Date:   Thu, 23 Apr 2020 13:40:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] staging: vt6656: Check the return value of
+ vnt_control_out_* calls
+Message-ID: <20200423114032.GA3838948@kroah.com>
+References: <20200419104821.6127-1-oscar.carter@gmx.com>
+ <20200419104821.6127-2-oscar.carter@gmx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423044050.162093-1-joel@joelfernandes.org>
+In-Reply-To: <20200419104821.6127-2-oscar.carter@gmx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 12:40:50AM -0400, Joel Fernandes (Google) wrote:
-> While reading the famous slab paper [1], I noticed that the conn->lock
-> spinlock and conn->list hlist in fsnotify code is being initialized
-> during every object allocation. This seems a good fit for the
-> constructor within the slab to take advantage of the slab design. Move
-> the initializtion to that.
+On Sun, Apr 19, 2020 at 12:48:20PM +0200, Oscar Carter wrote:
+> Check the return value of vnt_control_out_* function calls. When
+> necessary modify the function prototype to be able to return the new
+> checked error code.
+> 
+> It's safe to modify all the function prototypes without fix the call
+> because the only change is the return value from void to int. If before
+> the call didn't check the return value, now neither.
+> 
+> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
 
-The slab paper was written a number of years ago when CPU caches were
-not as they are today.  With this patch, every time you allocate a
-new page, we dirty the entire page, and then the dirty cachelines will
-gradually fall out of cache as the other objects on the page are not used
-immediately.  Then, when we actually use one of the objects on the page,
-we bring those cachelines back in and dirty them again by initialising
-'type' and 'obj'.  The two stores to initialise lock and list are almost
-free when done in fsnotify_attach_connector_to_object(), but are costly
-when done in a slab constructor.
+This patch, and the 2/2 patch did not apply to my tree.  Can you please
+rebase and resend?
 
-There are very few places where a slab constructor is justified with a
-modern CPU.  We've considered removing the functionality before.
+thanks,
 
-> @@ -479,8 +479,6 @@ static int fsnotify_attach_connector_to_object(fsnotify_connp_t *connp,
->  	conn = kmem_cache_alloc(fsnotify_mark_connector_cachep, GFP_KERNEL);
->  	if (!conn)
->  		return -ENOMEM;
-> -	spin_lock_init(&conn->lock);
-> -	INIT_HLIST_HEAD(&conn->list);
->  	conn->type = type;
->  	conn->obj = connp;
->  	/* Cache fsid of filesystem containing the object */
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
+greg k-h
