@@ -2,104 +2,71 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966FDC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC4AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67A662076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PwQVOu7S"
+	by mail.kernel.org (Postfix) with ESMTP id 2EB282076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgDWJl1 (ORCPT
+        id S1726960AbgDWJma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:41:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48619 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbgDWJl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:41:26 -0400
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 03N9e6l31992151
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 23 Apr 2020 02:40:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 03N9e6l31992151
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020032201; t=1587634814;
-        bh=Ya1uL1f9lhCFML4o9w+eIvnqDUw43WLYC+xpvJjwcxc=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=PwQVOu7SkPBzOcBtqqwc9ey3h9Egov7y2oIQXhwFP9AbSi/Mrat5wBApUffK219Cq
-         b/jQsUkGeyCIF9FZRY30m+cNKCDa7GsCTot7LZtCOjE+oSHmM4Q1HHZLj1+qjJkVtJ
-         HMyLpDzklMhvrbaNPtKEPIcqu0pLTmgK+qWm30gmx6aidbBJeNdhPVkQdTKpEyTVDn
-         cG28L34nE/4zxiLleGG+lz2woKzJJY2OucAvY4oxA3OxhGiFEBza2z4LhoiEXT8w7M
-         RkudI+gfdriBZmzXAsCSwNl2/UuuArJZUbg1NYMEpdZPVzTJBXxUyhHBSj4YVH6svc
-         OuvbHJ2Uf8pbw==
-Subject: Re: [PATCH] bpf, x32: remove unneeded conversion to bool
-To:     Wang YanQing <udknight@gmail.com>, Jason Yan <yanaijie@huawei.com>,
-        davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        lukenels@cs.washington.edu, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200420123727.3616-1-yanaijie@huawei.com>
- <dff9a49b-0d00-54b0-0375-cc908289e65a@zytor.com>
- <20200423021021.GA16982@udknight>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <01cbaffb-dfb3-06e7-d01f-ae583ee0c012@zytor.com>
-Date:   Thu, 23 Apr 2020 02:40:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Apr 2020 05:42:30 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57066 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725863AbgDWJma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 05:42:30 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3AB2BE652050569C15EC;
+        Thu, 23 Apr 2020 17:42:27 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Apr 2020 17:42:21 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <pbonzini@redhat.com>
+CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] KVM: remove unneeded conversion to bool
+Date:   Thu, 23 Apr 2020 17:48:36 +0800
+Message-ID: <1587635316-21973-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-In-Reply-To: <20200423021021.GA16982@udknight>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-22 19:10, Wang YanQing wrote:
-> On Wed, Apr 22, 2020 at 11:43:58AM -0700, H. Peter Anvin wrote:
->> On 2020-04-20 05:37, Jason Yan wrote:
->>> The '==' expression itself is bool, no need to convert it to bool again.
->>> This fixes the following coccicheck warning:
->>>
->>> arch/x86/net/bpf_jit_comp32.c:1478:50-55: WARNING: conversion to bool
->>> not needed here
->>> arch/x86/net/bpf_jit_comp32.c:1479:50-55: WARNING: conversion to bool
->>> not needed here
->>>
->>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->>> ---
->>>  arch/x86/net/bpf_jit_comp32.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>
->> x32 is not i386.
->>
->> 	-hpa
-> Hi! H. Peter Anvin and all
-> 
-> I use the name "x86_32" to describe it in original commit 03f5781be2c7
-> ("bpf, x86_32: add eBPF JIT compiler for ia32"), but almost all following
-> committers and contributors use the world "x32", I think it is short format
-> for x{86_}32.
-> 
-> Yes, I agree, "x32" isn't the right name here, I think "x32" is well known
-> as a ABI, so maybe we should use "x86_32" or ia32 in future communication.
-> 
-> Which one is the best name here? x86_32 or ia32 or anything other?
-> 
+This issue was detected by using the Coccinelle software:
 
-x86-32 or i386.
+virt/kvm/eventfd.c:724:38-43: WARNING: conversion to bool not needed here
 
-	-hpa
+The conversion to bool is unneeded, remove it
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ virt/kvm/eventfd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index 67b6fc1..0c4ede4 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -721,7 +721,7 @@ ioeventfd_in_range(struct _ioeventfd *p, gpa_t addr, int len, const void *val)
+ 		return false;
+ 	}
+ 
+-	return _val == p->datamatch ? true : false;
++	return _val == p->datamatch;
+ }
+ 
+ /* MMIO/PIO writes trigger an event if the addr/val match */
+-- 
+2.6.2
 
