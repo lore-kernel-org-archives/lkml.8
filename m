@@ -2,137 +2,184 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3198C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8ACC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C25E20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085D820728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1yAor3A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQdZSTer"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgDWQEB (ORCPT
+        id S1729466AbgDWQFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58600 "EHLO
+        Thu, 23 Apr 2020 12:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729257AbgDWQEB (ORCPT
+        by vger.kernel.org with ESMTP id S1729407AbgDWQFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:04:01 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F8AC09B040;
-        Thu, 23 Apr 2020 09:04:01 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x15so3180130pfa.1;
-        Thu, 23 Apr 2020 09:04:01 -0700 (PDT)
+        Thu, 23 Apr 2020 12:05:00 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79FDC09B041
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:04:59 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f18so6739315lja.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QRRSRzv3ELZyPDBdtIE45poUqjMQaq7ox4Jm7P7/zG8=;
-        b=R1yAor3At9e+xtBhUr6dlgl7zNXUVenScXyHMgcn6IEG2US+/UvODrE8lbtPt/gLs/
-         fbWEVj/JWvpO34kH3WTmFqm02fkOHuQ7PhIiONd8EUu3SW3XtYCNPbk92Xa4fdfbrRE1
-         PXQd0r0F2W4Fp10i4ld1cmfne4gSHWf8NyMjtGLwvuq4GJmQJABiDyvshdytsc4Dk0Rx
-         e//SCLAP6/rdoNEqY0IdCqIT3FibTx1vI72kTE3eLnhpUYI2ZreFg08S9YtkGEs0zhOt
-         WX9FXySSlDXshp0yLq17w2rYTW0o1mmx/y55DH11xOJlY8NmfYyv7tfqjERP5kVDnBrD
-         Eccw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hm2bR7NJE4YEd15tp6ZXOm1K8maVXsNNMYPSYBGCQdU=;
+        b=DQdZSTern+IBZzJwVZXiyh/4VSSO/BdNVhzZMU+jA9jabJ1E7neFa3Gc0KHfg+qThG
+         4mx7P9WXXTo9qMGYyWkglMEmm9zYCoiYWD+d3LF0gBHk8uEzihn91AtHvkEh4crkjE+M
+         ijuVAcOYgB+PTNU+vXaL89vjCnu2N2jOnWUOpkccwzHr0qFpFXp3sQi1Fk5cRqY6cjT+
+         zDk7i9QVa3qYuqx40sp/J4w7kVn068kpdJN/Ar5YeN2xgSXnI/VbTCfgcPZTtWbE6gRM
+         tW94T6/i+mLhc+gfyqxyRXtE/WEfAnDRHRM+QFt5WUIwOjEBIYlbkSK3Ox788CjT4bvC
+         fNUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QRRSRzv3ELZyPDBdtIE45poUqjMQaq7ox4Jm7P7/zG8=;
-        b=TVIeVzzejAOOiRRSoz4/GvNBmr5n75ABs+uF/NIo/cF4b3z+CngP+2xcfu0HXoPN4O
-         gw3GWY1e5GxoaCfNEHMIxVlcDrZuNx464YMIY6HTgDL3jT8r55Mgq1IYOujjzo3zXf5X
-         iMgry4kzJyhwxE03G5YmSpIVIT2XtMuA8aakiZ7/YpNUUtbo+FPTbL7le01odsE39v4S
-         mVYyiSMapgsvQvAUZyvrhDTbiKgPrGTM/YvyByT9Ao8+bqywZX/jMhKXTO3kUPmRFpC9
-         cfh+vKW4gKHw/kxpPhCxagCPzHKg7I7BIzM48OUR0KiTAjH4J6Ub7syT1sBfGHKjyo0w
-         fSLQ==
-X-Gm-Message-State: AGi0Pua+3BR7Q1XoCz2myIeaDcqmDzHUuyfJn6MeyNrAbwM+d1lB3mJM
-        A0NH/FWcDNXqArm9nKELxg0=
-X-Google-Smtp-Source: APiQypJNoUyWvf19ibvNaStq1WA8/4V2tFh9qQrvtbqG8Us89/iEAV2d0p9Nj6pt/PJyn6r+TTHe8Q==
-X-Received: by 2002:aa7:82d4:: with SMTP id f20mr4501737pfn.253.1587657840767;
-        Thu, 23 Apr 2020 09:04:00 -0700 (PDT)
-Received: from localhost (176.122.158.71.16clouds.com. [176.122.158.71])
-        by smtp.gmail.com with ESMTPSA id a200sm2867954pfa.201.2020.04.23.09.03.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 09:04:00 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 00:03:56 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, FlorianSchandinat@gmx.de,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] console: console: Complete exception handling in
- newport_probe()
-Message-ID: <20200423160356.GA2538@nuc8i5>
-References: <20200423142627.1820-1-zhengdejin5@gmail.com>
- <CAHp75Vf1_SMk=_WDUrB97BGR6K6EXOdtgQ92=hTyMdVUoyWQiw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hm2bR7NJE4YEd15tp6ZXOm1K8maVXsNNMYPSYBGCQdU=;
+        b=b9NQuHf4rl6LgW/9PLJPK9MFkxTbtq3Kk5JOnB84xpEn6Eod5nQHNOPPFG+U/SjkBg
+         aMEBgngiu+ROd/hEmHwYx3OmGkFPM7PGDLlupmc1U6bx9zlwivPqLcIKt3yQlTGm3zzU
+         XFJBV1GuwgRd1l9Nv1TzABnfO4E2s8koPpNWbJkZLevXUWCIKtnGs8QJyQ7MUl1gqzpw
+         bMZbPFM3EgEScMohfUUmmBHvzKMPVB8zfY2IIO7nJTCswkhT3WQja1hIZXMrczfNueKA
+         TozHrh07tYd3Pp1e6xXLAGiKdIykNFPpFr/sEcB1pE17c3ZLp1/3o8P/xF4m4HqcCQF2
+         WktQ==
+X-Gm-Message-State: AGi0PuYHc8t08To38pFmqEDo0n8QVs+8633vy7hBtHu7VaRvfXttR0D2
+        v9l//mv3219/RhEKDQ4iChrIAf6q64LqbitEhrGOBg==
+X-Google-Smtp-Source: APiQypIjBtFiqqA6Pm5Jvx80O9Av0E7JPyhm04I1pKSOhf27DjgRDj4v/wh/5hQ5sDhTJO7NzNhiZXmXtCuIpECz0nU=
+X-Received: by 2002:a2e:9455:: with SMTP id o21mr2841437ljh.245.1587657897926;
+ Thu, 23 Apr 2020 09:04:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vf1_SMk=_WDUrB97BGR6K6EXOdtgQ92=hTyMdVUoyWQiw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200423103316.219054872@linuxfoundation.org>
+In-Reply-To: <20200423103316.219054872@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 23 Apr 2020 21:34:46 +0530
+Message-ID: <CA+G9fYsX4-vcoVqp-vjD+LLkfDT18ngM=QXs07xrCuUBgYf7vw@mail.gmail.com>
+Subject: Re: [PATCH 4.9 000/124] 4.9.220-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 05:52:09PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 23, 2020 at 5:26 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> >
-> > A call of the function do_take_over_console() can fail here.
-> > The corresponding system resources were not released then.
-> > Thus add a call of the function iounmap() together with the check
-> > of a failure predicate.
-> 
-> ...
-> 
-> > CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> Use Cc: Better to read.
+On Thu, 23 Apr 2020 at 16:04, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-I will pay attention to the next submission, thanks.
-
-> ...
-> 
-> > v1 -> v2:
-> >         - modify the commit comments by Markus'suggestion.
-> 
-> What suggestion? You need to be clear in changelog what exactly has
-> been done without looking to any previous mail.
+> This is the start of the stable review cycle for the 4.9.220 release.
+> There are 124 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-The commit comments have some more appropriate instructions by
-Markus'suggestion. here is my first version commit comments:
+> Responses should be made by Sat, 25 Apr 2020 10:31:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.220-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-if do_take_over_console() return an error in the newport_probe(),
-due to the io virtual address is not released, it will cause a leak.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thnaks!
+Summary
+------------------------------------------------------------------------
 
-> ...
-> 
-> >         console_lock();
-> >         err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
-> >         console_unlock();
-> > +
-> > +       if (err)
-> > +               iounmap((void *)npregs);
-> >         return err;
-> >  }
-> 
-> I have briefly looked at the code (it is actually quite old one!), and
-> I think this is half-baked solution, besides the fact of missed
-> __iomem annotation and useless explicit casting.
-> The proper one seems to switch to memremap() and do memunmap() here.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+kernel: 4.9.220-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 01b8cf611034623c2ad49e23a48b0b99231b708f
+git describe: v4.9.219-125-g01b8cf611034
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.219-125-g01b8cf611034
+
+No regressions (compared to build v4.9.219)
+
+No fixes (compared to build v4.9.219)
+
+Ran 28201 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* kvm-unit-tests
+* ltp-dio-tests
+* ltp-io-tests
+* ltp-open-posix-tests
+* spectre-meltdown-checker-test
+* kselftest/net
+* kselftest/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
