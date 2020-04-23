@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1737C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20202C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C885B2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC6320780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgDWXUv (ORCPT
+        id S1729884AbgDWXU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:20:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48622 "EHLO
+        Thu, 23 Apr 2020 19:20:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48598 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728214AbgDWXGd (ORCPT
+        by vger.kernel.org with ESMTP id S1728205AbgDWXGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvM-0004bi-3G; Fri, 24 Apr 2020 00:06:28 +0100
+        id 1jRkvL-0004bC-Ee; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-00E6kO-EU; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvK-00E6ja-Kj; Fri, 24 Apr 2020 00:06:26 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Date:   Fri, 24 Apr 2020 00:05:02 +0100
-Message-ID: <lsq.1587683028.586409928@decadent.org.uk>
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>
+Date:   Fri, 24 Apr 2020 00:04:55 +0100
+Message-ID: <lsq.1587683028.459138453@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 075/245] gpio: Fix error message on out-of-range GPIO
- in lookup table
+Subject: [PATCH 3.16 068/245] pinctrl: baytrail: Rework interrupt handling
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,44 +55,177 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit d935bd50dd14a7714cbdba9a76435dbb56edb1ae upstream.
+commit 31e4329f99062a06dca5a493bb4495a63b2dc6ba upstream.
 
-When a GPIO offset in a lookup table is out-of-range, the printed error
-message (1) does not include the actual out-of-range value, and (2)
-contains an off-by-one error in the upper bound.
+Instead of handling everything in the driver's first level interrupt
+handler, we can take advantage of already existing flow handlers that are
+provided by the IRQ core.
 
-Avoid user confusion by also printing the actual GPIO offset, and
-correcting the upper bound of the range.
-While at it, use "%u" for unsigned int.
+This changes the functionality a bit also. Previously the driver looped
+over pending interrupts in a single loop, restarting the loop if some
+interrupt changed state. This caused problem with Lenovo Thinkpad 10
+digitizer that it was not able to deassert the interrupt before the driver
+disabled the interrupt for good (looplimit was exhausted).
 
-Sample impact:
+Rework the interrupt handling logic a bit so that we provide proper mask,
+ack and unmask operations in terms of Baytrail GPIO hardware and loop over
+pending interrupts only once. If the interrupt remains asserted the first
+level handler will be re-triggered automatically.
 
-    -requested GPIO 0 is out of range [0..32] for chip e6052000.gpio
-    +requested GPIO 0 (45) is out of range [0..31] for chip e6052000.gpio
-
-Fixes: 2a3cf6a3599e9015 ("gpiolib: return -ENOENT if no GPIO mapping exists")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191127095919.4214-1-geert+renesas@glider.be
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+[bwh: Backported to 3.16 as dependency of commit 39ce8150a079
+ "pinctrl: baytrail: Serialize all register access":
+ - Adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/gpio/gpiolib.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-baytrail.c | 100 +++++++++++++----------
+ 1 file changed, 56 insertions(+), 44 deletions(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2743,8 +2743,9 @@ static struct gpio_desc *gpiod_find(stru
+--- a/drivers/pinctrl/pinctrl-baytrail.c
++++ b/drivers/pinctrl/pinctrl-baytrail.c
+@@ -251,23 +251,13 @@ static int byt_irq_type(struct irq_data
+ 	 */
+ 	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
  
- 		if (chip->ngpio <= p->chip_hwnum) {
- 			dev_err(dev,
--				"requested GPIO %d is out of range [0..%d] for chip %s\n",
--				idx, chip->ngpio, chip->label);
-+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
-+				idx, p->chip_hwnum, chip->ngpio - 1,
-+				chip->label);
- 			return ERR_PTR(-EINVAL);
+-	switch (type) {
+-	case IRQ_TYPE_LEVEL_HIGH:
+-		value |= BYT_TRIG_LVL;
+-	case IRQ_TYPE_EDGE_RISING:
+-		value |= BYT_TRIG_POS;
+-		break;
+-	case IRQ_TYPE_LEVEL_LOW:
+-		value |= BYT_TRIG_LVL;
+-	case IRQ_TYPE_EDGE_FALLING:
+-		value |= BYT_TRIG_NEG;
+-		break;
+-	case IRQ_TYPE_EDGE_BOTH:
+-		value |= (BYT_TRIG_NEG | BYT_TRIG_POS);
+-		break;
+-	}
+ 	writel(value, reg);
+ 
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		__irq_set_handler_locked(d->irq, handle_edge_irq);
++	else if (type & IRQ_TYPE_LEVEL_MASK)
++		__irq_set_handler_locked(d->irq, handle_level_irq);
++
+ 	spin_unlock_irqrestore(&vg->lock, flags);
+ 
+ 	return 0;
+@@ -421,54 +411,75 @@ static void byt_gpio_irq_handler(unsigne
+ 	struct irq_data *data = irq_desc_get_irq_data(desc);
+ 	struct byt_gpio *vg = irq_data_get_irq_handler_data(data);
+ 	struct irq_chip *chip = irq_data_get_irq_chip(data);
+-	u32 base, pin, mask;
++	u32 base, pin;
+ 	void __iomem *reg;
+-	u32 pending;
++	unsigned long pending;
+ 	unsigned virq;
+-	int looplimit = 0;
+ 
+ 	/* check from GPIO controller which pin triggered the interrupt */
+ 	for (base = 0; base < vg->chip.ngpio; base += 32) {
+-
+ 		reg = byt_gpio_reg(&vg->chip, base, BYT_INT_STAT_REG);
+-
+-		while ((pending = readl(reg))) {
+-			pin = __ffs(pending);
+-			mask = BIT(pin);
+-			/* Clear before handling so we can't lose an edge */
+-			writel(mask, reg);
+-
++		pending = readl(reg);
++		for_each_set_bit(pin, &pending, 32) {
+ 			virq = irq_find_mapping(vg->domain, base + pin);
+ 			generic_handle_irq(virq);
+-
+-			/* In case bios or user sets triggering incorretly a pin
+-			 * might remain in "interrupt triggered" state.
+-			 */
+-			if (looplimit++ > 32) {
+-				dev_err(&vg->pdev->dev,
+-					"Gpio %d interrupt flood, disabling\n",
+-					base + pin);
+-
+-				reg = byt_gpio_reg(&vg->chip, base + pin,
+-						   BYT_CONF0_REG);
+-				mask = readl(reg);
+-				mask &= ~(BYT_TRIG_NEG | BYT_TRIG_POS |
+-					  BYT_TRIG_LVL);
+-				writel(mask, reg);
+-				mask = readl(reg); /* flush */
+-				break;
+-			}
  		}
+ 	}
+ 	chip->irq_eoi(data);
+ }
  
++static void byt_irq_ack(struct irq_data *d)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct byt_gpio *vg = to_byt_gpio(gc);
++	unsigned offset = irqd_to_hwirq(d);
++	void __iomem *reg;
++
++	reg = byt_gpio_reg(&vg->chip, offset, BYT_INT_STAT_REG);
++	writel(BIT(offset % 32), reg);
++}
++
+ static void byt_irq_unmask(struct irq_data *d)
+ {
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct byt_gpio *vg = to_byt_gpio(gc);
++	unsigned offset = irqd_to_hwirq(d);
++	unsigned long flags;
++	void __iomem *reg;
++	u32 value;
++
++	spin_lock_irqsave(&vg->lock, flags);
++
++	reg = byt_gpio_reg(&vg->chip, offset, BYT_CONF0_REG);
++	value = readl(reg);
++
++	switch (irqd_get_trigger_type(d)) {
++	case IRQ_TYPE_LEVEL_HIGH:
++		value |= BYT_TRIG_LVL;
++	case IRQ_TYPE_EDGE_RISING:
++		value |= BYT_TRIG_POS;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		value |= BYT_TRIG_LVL;
++	case IRQ_TYPE_EDGE_FALLING:
++		value |= BYT_TRIG_NEG;
++		break;
++	case IRQ_TYPE_EDGE_BOTH:
++		value |= (BYT_TRIG_NEG | BYT_TRIG_POS);
++		break;
++	}
++
++	writel(value, reg);
++
++	spin_unlock_irqrestore(&vg->lock, flags);
+ }
+ 
+ static void byt_irq_mask(struct irq_data *d)
+ {
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct byt_gpio *vg = to_byt_gpio(gc);
++
++	byt_gpio_clear_triggering(vg, irqd_to_hwirq(d));
+ }
+ 
+ static int byt_irq_reqres(struct irq_data *d)
+@@ -493,6 +504,7 @@ static void byt_irq_relres(struct irq_da
+ 
+ static struct irq_chip byt_irqchip = {
+ 	.name = "BYT-GPIO",
++	.irq_ack = byt_irq_ack,
+ 	.irq_mask = byt_irq_mask,
+ 	.irq_unmask = byt_irq_unmask,
+ 	.irq_set_type = byt_irq_type,
 
