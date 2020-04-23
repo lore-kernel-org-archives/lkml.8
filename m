@@ -6,28 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416C6C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DB4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23C5020728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2C9206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgDWPYZ (ORCPT
+        id S1729174AbgDWPY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:24:25 -0400
-Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:16379 "EHLO
+        Thu, 23 Apr 2020 11:24:26 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:16382 "EHLO
         hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbgDWPYV (ORCPT
+        with ESMTP id S1729078AbgDWPYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:24:21 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 11:24:18 EDT
-IronPort-SDR: UFsrMDAv2hmLnv6OeowbZaEmLe3UT2Z0oME709sw+fgYkc/+FwbNzCLH//0OaLI7EIFv1vXnD/
- Ci1z3F7AyWhABihD/X5KPLRkbUkfukeZYUbLuv6fymz1YFgkr60OSkkK5fV3jrfOgj+7Qjg1bW
- OkUSZsuyXaA8Ia+D6tmbTPSqLvvUSYJywSSVX6mSPWZP/B63oepJRxpveZcJdRre85kU3dg7jU
- yR//NFJlY5VDrQ1TRzvGMUp8n73m9S2kheG5APsopGKTOGzWBC3YP6w/ztyy8lt1QilXWWj1yK
- 3ZU=
+        Thu, 23 Apr 2020 11:24:23 -0400
+IronPort-SDR: xmltpFLAp/Ch+C8s6X8ZcWyZXCqxANXQnZqE0QWcc6RZ49diIS4b/bDe03G5OskVamH9rKrp+T
+ oq4+l3143FtggGIP63BivpfQMLHDGpoOCuqGoKGHTsDyu5izW0eI3bI1YiNNRYwxSGlHA595Aw
+ L9GtxbL4IBGcPwg6gSf4JYXifcX4tzSSFqfVHC4koYUnw/Fm2fHYhrorQTXbRt6CR8JZz04IgN
+ 7oGplHLt4QyJZDS0Q8zkTSplBQCDQgLA+K8/LNJAiVr7nCnwYvYm3yO90J2PwYj5ATv9Cmw4CW
+ AI8=
 X-IronPort-AV: E=Sophos;i="5.73,307,1583186400"; 
-   d="scan'208";a="277228186"
+   d="scan'208";a="277228202"
 From:   =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
         <vesa.jaaskelainen@vaisala.com>
 To:     op-tee@lists.trustedfirmware.org,
@@ -41,204 +40,106 @@ Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
         linux-kernel@vger.kernel.org,
         =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
         <vesa.jaaskelainen@vaisala.com>
-Subject: [PATCH 1/3] tee: add support for session's client UUID generation
-Date:   Thu, 23 Apr 2020 18:16:59 +0300
-Message-Id: <20200423151701.111231-2-vesa.jaaskelainen@vaisala.com>
+Subject: [PATCH 3/3] [RFC] tee: add support for app id for client UUID generation
+Date:   Thu, 23 Apr 2020 18:17:01 +0300
+Message-Id: <20200423151701.111231-4-vesa.jaaskelainen@vaisala.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200423151701.111231-1-vesa.jaaskelainen@vaisala.com>
 References: <20200423151701.111231-1-vesa.jaaskelainen@vaisala.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 23 Apr 2020 15:17:07.0277 (UTC) FILETIME=[4082DFD0:01D61982]
+X-OriginalArrivalTime: 23 Apr 2020 15:17:07.0464 (UTC) FILETIME=[409F6880:01D61982]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TEE Client API defines that from user space only information needed for
-specified login operations is group identifier for group based logins.
+Linux kernel does not provide common contex for application identifier,
+instead different security frameworks provide own means to define
+application identifier for running process. Code includes place holder for
+such solutions but is left for later implementation.
 
-REE kernel is expected to formulate trustworthy client UUID and pass that
-to TEE environment. REE kernel is required to verify that provided group
-identifier for group based logins matches calling processes group
-memberships.
+Open questions:
 
-TEE specification only defines that the information passed from REE
-environment to TEE environment is encoded into on UUID.
+1. App ID source
 
-In order to guarantee trustworthiness of client UUID user space is not
-allowed to freely pass client UUID.
+How to specify what source is used for app id?
 
-UUIDv5 form is used encode variable amount of information needed for
-different login types.
+Does it need to be protected on runtime?
+- Should this be Kconfig setting?
+- Cnfigure once during runtime thru sysfs or so?
+- Configure from device tree?
+
+2. Formatting for App ID
+
+Should there be common format? Or common keyword id?
+
+3. How to handle custom App ID sources
+
+Android has own App ID so does Tizen.
+
+Should there be place holder for this where to make local patch?
 
 Signed-off-by: Vesa Jääskeläinen <vesa.jaaskelainen@vaisala.com>
 ---
- drivers/tee/Kconfig     |   1 +
- drivers/tee/tee_core.c  | 143 ++++++++++++++++++++++++++++++++++++++++
- include/linux/tee_drv.h |  16 +++++
- 3 files changed, 160 insertions(+)
+ drivers/tee/tee_core.c | 45 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
-index 8da63f38e6bd..806eb87d4da0 100644
---- a/drivers/tee/Kconfig
-+++ b/drivers/tee/Kconfig
-@@ -3,6 +3,7 @@
- config TEE
- 	tristate "Trusted Execution Environment support"
- 	depends on HAVE_ARM_SMCCC || COMPILE_TEST || CPU_SUP_AMD
-+	select CRYPTO_SHA1
- 	select DMA_SHARED_BUFFER
- 	select GENERIC_ALLOCATOR
- 	help
 diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-index 6aec502c495c..872272bf9dec 100644
+index 872272bf9dec..df03bd0071da 100644
 --- a/drivers/tee/tee_core.c
 +++ b/drivers/tee/tee_core.c
-@@ -6,18 +6,33 @@
- #define pr_fmt(fmt) "%s: " fmt, __func__
- 
- #include <linux/cdev.h>
-+#include <linux/cred.h>
- #include <linux/fs.h>
- #include <linux/idr.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/tee_drv.h>
- #include <linux/uaccess.h>
-+#include <crypto/hash.h>
-+#include <crypto/sha.h>
- #include "tee_private.h"
- 
- #define TEE_NUM_DEVICES	32
- 
- #define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
- 
-+#define TEE_UUID_NS_NAME_SIZE	128
-+
-+/*
-+ * TEE Client UUID name space identifier (UUIDv4)
-+ *
-+ * Value here is random UUID that is allocated as name space identifier for
-+ * forming Client UUID's for TEE environment using UUIDv5 scheme.
-+ */
-+static const uuid_t tee_client_uuid_ns = UUID_INIT(0x58ac9ca0, 0x2086, 0x4683,
-+						   0xa1, 0xb8, 0xec, 0x4b,
-+						   0xc0, 0x8e, 0x01, 0xb6);
-+
- /*
-  * Unprivileged devices in the lower half range and privileged devices in
-  * the upper half range.
-@@ -110,6 +125,134 @@ static int tee_release(struct inode *inode, struct file *filp)
+@@ -125,6 +125,15 @@ static int tee_release(struct inode *inode, struct file *filp)
  	return 0;
  }
  
-+/**
-+ * uuid_v5() - Calculate UUIDv5
-+ * @uuid: Resulting UUID
-+ * @ns: Name space ID for UUIDv5 function
-+ * @name: Name for UUIDv5 function
-+ * @size: Size of name
-+ *
-+ * UUIDv5 is specific in RFC 4122.
-+ *
-+ * This implements section (for SHA-1):
-+ * 4.3.  Algorithm for Creating a Name-Based UUID
-+ */
-+static int uuid_v5(uuid_t *uuid, const uuid_t *ns, const void *name,
-+		   size_t size)
++static const char *tee_session_get_application_id(void)
 +{
-+	unsigned char hash[SHA1_DIGEST_SIZE];
-+	struct crypto_shash *shash = NULL;
-+	struct shash_desc *desc = NULL;
-+	int rc;
-+
-+	shash = crypto_alloc_shash("sha1", 0, 0);
-+	if (IS_ERR(shash)) {
-+		rc = PTR_ERR(shash);
-+		pr_err("shash(sha1) allocation failed\n");
-+		return rc;
-+	}
-+
-+	desc = kzalloc(sizeof(*desc) + crypto_shash_descsize(shash),
-+		       GFP_KERNEL);
-+	if (IS_ERR(desc)) {
-+		rc = PTR_ERR(desc);
-+		goto out;
-+	}
-+
-+	desc->tfm = shash;
-+
-+	rc = crypto_shash_init(desc);
-+	if (rc < 0)
-+		goto out2;
-+
-+	rc = crypto_shash_update(desc, (const u8 *)ns, sizeof(*ns));
-+	if (rc < 0)
-+		goto out2;
-+
-+	rc = crypto_shash_update(desc, (const u8 *)name, size);
-+	if (rc < 0)
-+		goto out2;
-+
-+	rc = crypto_shash_final(desc, hash);
-+	if (rc < 0)
-+		goto out2;
-+
-+	memcpy(uuid->b, hash, UUID_SIZE);
-+
-+	/* Tag for version 5 */
-+	uuid->b[6] = (hash[6] & 0x0F) | 0x50;
-+	uuid->b[8] = (hash[8] & 0x3F) | 0x80;
-+
-+out2:
-+	kfree(desc);
-+
-+out:
-+	crypto_free_shash(shash);
-+	return rc;
++	return NULL;
 +}
 +
-+int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
-+				 const u8 connection_data[TEE_IOCTL_UUID_LEN])
++static void tee_session_free_application_id(const char *app_id)
 +{
-+	const char *application_id = NULL;
-+	gid_t ns_grp = (gid_t)-1;
-+	kgid_t grp = INVALID_GID;
-+	char *name = NULL;
-+	int rc;
++}
 +
-+	if (connection_method == TEE_IOCTL_LOGIN_PUBLIC) {
-+		/* Nil UUID to be passed to TEE environment */
-+		uuid_copy(uuid, &uuid_null);
-+		return 0;
-+	}
-+
-+	/*
-+	 * In Linux environment client UUID is based on UUIDv5.
+ /**
+  * uuid_v5() - Calculate UUIDv5
+  * @uuid: Resulting UUID
+@@ -217,6 +226,14 @@ int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
+ 	 * For TEEC_LOGIN_GROUP:
+ 	 * gid=<gid>
+ 	 *
++	 * For TEEC_LOGIN_APPLICATION:
++	 * app=<application id>
 +	 *
-+	 * Determine client UUID with following semantics for 'name':
++	 * For TEEC_LOGIN_USER_APPLICATION:
++	 * uid=<uid>:app=<application id>
 +	 *
-+	 * For TEEC_LOGIN_USER:
-+	 * uid=<uid>
-+	 *
-+	 * For TEEC_LOGIN_GROUP:
-+	 * gid=<gid>
-+	 *
-+	 */
-+
-+	name = kzalloc(TEE_UUID_NS_NAME_SIZE, GFP_KERNEL);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	switch (connection_method) {
-+	case TEE_IOCTL_LOGIN_USER:
-+		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "uid=%x",
-+			  current_euid().val);
++	 * For TEEC_LOGIN_GROUP_APPLICATION:
++	 * gid=<gid>:app=<application id>
+ 	 */
+ 
+ 	name = kzalloc(TEE_UUID_NS_NAME_SIZE, GFP_KERNEL);
+@@ -240,6 +257,34 @@ int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
+ 		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "gid=%x", grp.val);
+ 		break;
+ 
++	case TEE_IOCTL_LOGIN_APPLICATION:
++		application_id = tee_session_get_application_id();
++		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "app=%s",
++			  application_id);
++		tee_session_free_application_id(application_id);
 +		break;
 +
-+	case TEE_IOCTL_LOGIN_GROUP:
++	case TEE_IOCTL_LOGIN_USER_APPLICATION:
++		application_id = tee_session_get_application_id();
++		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "uid=%x:app=%s",
++			  current_euid().val, application_id);
++		tee_session_free_application_id(application_id);
++		break;
++
++	case TEE_IOCTL_LOGIN_GROUP_APPLICATION:
 +		memcpy(&ns_grp, connection_data, sizeof(gid_t));
 +		grp = make_kgid(current_user_ns(), ns_grp);
 +		if (!gid_valid(grp) || !in_egroup_p(grp)) {
@@ -246,52 +147,15 @@ index 6aec502c495c..872272bf9dec 100644
 +			goto out;
 +		}
 +
-+		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "gid=%x", grp.val);
++		application_id = tee_session_get_application_id();
++		scnprintf(name, TEE_UUID_NS_NAME_SIZE, "gid=%x:app=%s",
++			  grp.val, application_id);
++		tee_session_free_application_id(application_id);
 +		break;
 +
-+	default:
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	rc = uuid_v5(uuid, &tee_client_uuid_ns, name, strlen(name));
-+out:
-+	kfree(name);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(tee_session_calc_client_uuid);
-+
- static int tee_ioctl_version(struct tee_context *ctx,
- 			     struct tee_ioctl_version_data __user *uvers)
- {
-diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-index 1412e9cc79ce..8471b790e858 100644
---- a/include/linux/tee_drv.h
-+++ b/include/linux/tee_drv.h
-@@ -165,6 +165,22 @@ int tee_device_register(struct tee_device *teedev);
-  */
- void tee_device_unregister(struct tee_device *teedev);
- 
-+/**
-+ * tee_session_calc_client_uuid() - Calculates client UUID for session
-+ * @uuid:		Resulting UUID
-+ * @connection_method:	Connection method for session (TEE_IOCTL_LOGIN_*)
-+ * @connectuon_data:	Connection data for opening session
-+ *
-+ * Based on connection method calculates UUIDv5 based client UUID.
-+ *
-+ * For group based logins verifies that calling process has specified
-+ * credentials.
-+ *
-+ * @return < 0 on failure
-+ */
-+int tee_session_calc_client_uuid(uuid_t *uuid, u32 connection_method,
-+				 const u8 connection_data[TEE_IOCTL_UUID_LEN]);
-+
- /**
-  * struct tee_shm - shared memory object
-  * @ctx:	context using the object
+ 	default:
+ 		rc = -EINVAL;
+ 		goto out;
 -- 
 2.17.1
 
