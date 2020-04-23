@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75918C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4467C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55D122077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F2F2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587684165;
-	bh=hLMKYmJyiWGannRLywh3Dp0bYs9jxWDR8ibDbApWLOg=;
+	s=default; t=1587684170;
+	bh=CXpuQQ0f72KBBMKGxQEhYLGsLmjcQPUNk1FFBPei8A4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClWybF1RippzIrE7tTaFWCa7GgdrYyZrlrY3m20iJYorwXxyJ0i2CGMiNGuXiShme
-	 jxOvfr+Ta6nxigkzkOZN0mjHIFXrnSjYjS2EvDz9gFGqJx0l2V6DUlwp8rDISWDPJ8
-	 8YNQ2F+i/TLxnoUmzBfRSZcD+9blDAISj5VTVBO0=
+	b=DTxTrJ1uq/GHGxBwxZglIDhkeXcNYm3ruySBnAypdadjC13+/AdksAJTrXYnbpLWE
+	 Unq+xbJfwQGUF7a6i26oJMT8st1vqkPymyJQtBsrGdHwhJAKcxQfS2d8oa4qlIjlVn
+	 nBqLiSXtOt73V3iNwS3pfn/xiM8mTm9sTe0OjRZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbgDWXWo (ORCPT
+        id S1729721AbgDWXWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59366 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 19:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbgDWXWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:22:36 -0400
+        id S1729720AbgDWXWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:22:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F7F20784;
-        Thu, 23 Apr 2020 23:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 526F82166E;
+        Thu, 23 Apr 2020 23:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587684155;
-        bh=hLMKYmJyiWGannRLywh3Dp0bYs9jxWDR8ibDbApWLOg=;
+        s=default; t=1587684151;
+        bh=CXpuQQ0f72KBBMKGxQEhYLGsLmjcQPUNk1FFBPei8A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZp9z0BxBC+Bhc3rryu+K8WKqc3dDEvvZhmaHExtSmqXbEH9tDmAwqApYqlb8Xctl
-         n5tjJRLBXerVuTIuyE2E5CZ0CJTe9MZSuHdsTGujcvh/x5zrNUNFWixRHZyHt9DyKw
-         yzbjPudzBob66rHHVNWlJXhMCh6ukFkXwfc7sEuY=
+        b=Omq3cVv3M+qUpu38N31eLW2ejUhykf1c1nHx54z1bFJy82f/M3rOoikQS6WG+pkgX
+         Mex3pfpqYJ9Pj2CSfPfbDQ/opyj+9a3vtGPtaVOrfs5LJh9ssS/2z6oqc+SsER4UZL
+         4XtLFlkNoixd9zXXRFbjq4ouGpcwjF0FGwZ0MRYw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
 Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
         chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v10 17/18] x86/elf: Enumerate kernel FSGSBASE capability in AT_HWCAP2
-Date:   Thu, 23 Apr 2020 19:22:06 -0400
-Message-Id: <20200423232207.5797-18-sashal@kernel.org>
+Subject: [PATCH v10 14/18] x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
+Date:   Thu, 23 Apr 2020 19:22:03 -0400
+Message-Id: <20200423232207.5797-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200423232207.5797-1-sashal@kernel.org>
 References: <20200423232207.5797-1-sashal@kernel.org>
@@ -58,26 +58,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Tony Luck <tony.luck@intel.com>
 
-The kernel needs to explicitly enable FSGSBASE. So, the application needs
-to know if it can safely use these instructions. Just looking at the CPUID
-bit is not enough because it may be running in a kernel that does not
-enable the instructions.
+Before enabling FSGSBASE the kernel could safely assume that the content
+of GS base was a user address. Thus any speculative access as the result
+of a mispredicted branch controlling the execution of SWAPGS would be to
+a user address. So systems with speculation-proof SMAP did not need to
+add additional LFENCE instructions to mitigate.
 
-One way for the application would be to just try and catch the SIGILL.
-But that is difficult to do in libraries which may not want to overwrite
-the signal handlers of the main application.
+With FSGSBASE enabled a hostile user can set GS base to a kernel address.
+So they can make the kernel speculatively access data they wish to leak
+via a side channel. This means that SMAP provides no protection.
 
-Enumerate the enabled FSGSBASE capability in bit 1 of AT_HWCAP2 in the ELF
-aux vector. AT_HWCAP2 is already used by PPC for similar purposes.
+Add FSGSBASE as an additional condition to enable the fence-based SWAPGS
+mitigation.
 
-The application can access it open coded or by using the getauxval()
-function in newer versions of glibc.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Andy Lutomirski <luto@kernel.org>
@@ -87,38 +84,30 @@ Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/uapi/asm/hwcap2.h | 3 +++
- arch/x86/kernel/cpu/common.c       | 4 +++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/bugs.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/uapi/asm/hwcap2.h b/arch/x86/include/uapi/asm/hwcap2.h
-index 8b2effe6efb82..5fdfcb47000f9 100644
---- a/arch/x86/include/uapi/asm/hwcap2.h
-+++ b/arch/x86/include/uapi/asm/hwcap2.h
-@@ -5,4 +5,7 @@
- /* MONITOR/MWAIT enabled in Ring 3 */
- #define HWCAP2_RING3MWAIT		(1 << 0)
- 
-+/* Kernel allows FSGSBASE instructions available in Ring 3 */
-+#define HWCAP2_FSGSBASE			BIT(1)
-+
- #endif
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 0d480cbadc7dc..b5a086ea34258 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1495,8 +1495,10 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	setup_umip(c);
- 
- 	/* Enable FSGSBASE instructions if available. */
--	if (cpu_has(c, X86_FEATURE_FSGSBASE))
-+	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
- 		cr4_set_bits(X86_CR4_FSGSBASE);
-+		elf_hwcap2 |= HWCAP2_FSGSBASE;
-+	}
- 
- 	/*
- 	 * The vendor-specific functions might have changed features.
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index ed54b3b21c396..487603ea51cd1 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -450,14 +450,12 @@ static void __init spectre_v1_select_mitigation(void)
+ 		 * If FSGSBASE is enabled, the user can put a kernel address in
+ 		 * GS, in which case SMAP provides no protection.
+ 		 *
+-		 * [ NOTE: Don't check for X86_FEATURE_FSGSBASE until the
+-		 *	   FSGSBASE enablement patches have been merged. ]
+-		 *
+ 		 * If FSGSBASE is disabled, the user can only put a user space
+ 		 * address in GS.  That makes an attack harder, but still
+ 		 * possible if there's no SMAP protection.
+ 		 */
+-		if (!smap_works_speculatively()) {
++		if (boot_cpu_has(X86_FEATURE_FSGSBASE) ||
++		    !smap_works_speculatively()) {
+ 			/*
+ 			 * Mitigation can be provided from SWAPGS itself or
+ 			 * PTI as the CR3 write in the Meltdown mitigation
 -- 
 2.20.1
 
