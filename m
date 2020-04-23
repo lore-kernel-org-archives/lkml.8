@@ -2,145 +2,116 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CC1C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDD2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B4A20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB73820781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfGul8Hp"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VxMtuIl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgDWNW7 (ORCPT
+        id S1728107AbgDWNYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
+        Thu, 23 Apr 2020 09:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726429AbgDWNW5 (ORCPT
+        by vger.kernel.org with ESMTP id S1727875AbgDWNYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:22:57 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03863C09B041
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:22:56 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x18so6835712wrq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:22:56 -0700 (PDT)
+        Thu, 23 Apr 2020 09:24:14 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A15C08E934
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:24:14 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id f19so6343513iog.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:24:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=6lrCN4Y2jvBEhMEE9yoKB0QoRLluJFmgeNzXOO0519c=;
-        b=MfGul8Hpypn6B6iEzWypyjdhBn2Sm6I3sSyNkRkdieKZwsujvoViJAlUxKfCp6PvVT
-         nwSpOW9fHqYx6TfeuZBHXpiT/Q2s2RfycyW/XV2CCERaWqWBevrZxULrN89FB2oqqqIj
-         EC4+LROpYsU0aZMAoa54xpOSfpfCZFQyZRrwaCx87r3hFioBkCt8KsdEjlJAImIi4s1I
-         Us/CNyKM0JIG8zvg7SiTo3pIgmAXzgypQm3ZpltQJG1qtzhzgxWvcovuoFdh5tQZy9Cx
-         NgvYaqs9da3YhKQ+izEK3Cgf+BXf15gAENfjKuHLNG3VaHH3xMMHcEogSfbIRqjGk5gK
-         /7lA==
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IYI4MOFxE2DmsW+dfX71saQe4Hx32Kp/Cx5yZ42ghYw=;
+        b=VxMtuIl+IDdp4e7GrKdYtdIpD+iv9MOAAj9Ns5O0PNySh3blxlWaHzi1AeebltDvdd
+         AUdUT4sQCysCRq6y/SnXsmyHBKmGjvgBmWaX3Zjqd6NrkEydBITCmFJwQLbOElNs0MZ6
+         3SHV/GocG13e4oFEQN0Pbvf33MXOkhOUSQxeo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6lrCN4Y2jvBEhMEE9yoKB0QoRLluJFmgeNzXOO0519c=;
-        b=lmrIqKb5ro7i+LRfSBDSmByIaOGI2y7KwCA2kJNq+zRNsBPi1Nz9F94Dpr8OIpJCwL
-         S93d796pJqii1saj1lSY7I+Q121dwOhmLfAsq3t9YMlSse1MmoQGp3cjXaKb41/gur76
-         AOoLoqALULXuOMy6yaAra55HV376cLCczmrCUFWL65ckp8/jO/TB3eBakYd81Z9nrY32
-         12wq+x6DRGCPGoolsRYiZH0qlFMXmS5heFLvN78MW9lnX3Y/PJSkRLlUcI66kAMDU9gz
-         9+oClmoTCgc8P6eufj6r6Gw5ebzeEgA12dLB38ItZn4pxOwK66y8OzuUh5dxuH8jpSVK
-         gLcg==
-X-Gm-Message-State: AGi0PuZ1AoxTY4cQ8epb5m1YhTeAlVGUk1HzSINfxuZ0loQUg/Dnzj1A
-        QDlg1Avieqg1i2o/I2XxOeUYTA==
-X-Google-Smtp-Source: APiQypLIExvxbZk7AtfC6O9cBOXmdm+gz1QSH3p+99FlJwwJBGarRXDyjXQkXRxvvC0opKaSfe3/tA==
-X-Received: by 2002:adf:fdc1:: with SMTP id i1mr5430755wrs.158.1587648175280;
-        Thu, 23 Apr 2020 06:22:55 -0700 (PDT)
-Received: from linaro.org ([37.167.216.250])
-        by smtp.gmail.com with ESMTPSA id h137sm14658623wme.0.2020.04.23.06.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 06:22:54 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 15:22:43 +0200
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v6 03/10] PM / EM: update callback structure and add
- device pointer
-Message-ID: <20200423132243.GA65632@linaro.org>
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-4-lukasz.luba@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IYI4MOFxE2DmsW+dfX71saQe4Hx32Kp/Cx5yZ42ghYw=;
+        b=Z1q9WfHqvBvW6pqT2ubwruCy5O4DFAmG06J4l/aA8WUMSC7nMCGcvtIUeKKvISu5La
+         E2nxuV6J6NRFp9L5+MplZgqspeWtt2M70H/R1q2xA/m6vscsJCQjHFtOpt74ycx9BVJY
+         mpEkl2tO/lRpXVo56HjuAxQ7cwCo9r0AcjYWZ7V87DjNkkvD7PQ2HVfKB8QyNb+c4jXh
+         chjCVFMmTpurNFuD0dhmbWJvE9q54oWkFp6Kj2vYV1a0lnLCittlaEFFroVmAR+fUlC0
+         mx17gA2evtVFCSMdytdyX6ey/9MAE4f/Jd498EFEhWxXvZhBEmuvYTszEA3pddnqnI7C
+         RdRg==
+X-Gm-Message-State: AGi0Pub3BG+b8zspUNpU8J1ZXCTb/EeidAccS3YbnOCglrKppsV1TrWs
+        L6nDqyvK0MDgbtMcPywNoL/44E7751ivsgb0kp48ew==
+X-Google-Smtp-Source: APiQypJxiFUmCFrucYd6jfVEYnSaLjmunqORafPxfOfbdjWlBbumjtBRb6y1VgIXjxdlSY4fV+/NyS2Z0lAVtalFbUo=
+X-Received: by 2002:a6b:6618:: with SMTP id a24mr3527703ioc.85.1587648253810;
+ Thu, 23 Apr 2020 06:24:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200410084210.24932-4-lukasz.luba@arm.com>
+References: <20200423044050.162093-1-joel@joelfernandes.org>
+ <20200423044518.GA162422@google.com> <CAOQ4uxgifK_XTkJO69-hQvR4xQGPgHNGKJPv6-MNgHcQat5UBQ@mail.gmail.com>
+ <20200423104827.GD3737@quack2.suse.cz>
+In-Reply-To: <20200423104827.GD3737@quack2.suse.cz>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Thu, 23 Apr 2020 09:24:02 -0400
+Message-ID: <CAEXW_YT4behgV05BqU1PG1o0-FUNnRowdntem5n7bvraGVXz3Q@mail.gmail.com>
+Subject: Re: [RFC] fs: Use slab constructor to initialize conn objects in fsnotify
+To:     Jan Kara <jack@suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:42:03AM +0100, Lukasz Luba wrote:
-> The Energy Model framework is going to support devices other that CPUs. In
-> order to make this happen change the callback function and add pointer to
-> a device as an argument.
-> 
-> Update the related users to use new function and new callback from the
-> Energy Model.
-> 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
+On Thu, Apr 23, 2020 at 6:48 AM Jan Kara <jack@suse.cz> wrote:
+>
+> On Thu 23-04-20 08:24:23, Amir Goldstein wrote:
+> > On Thu, Apr 23, 2020 at 7:45 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > On Thu, Apr 23, 2020 at 12:40:50AM -0400, Joel Fernandes (Google) wrote:
+> > > > While reading the famous slab paper [1], I noticed that the conn->lock
+> > > > spinlock and conn->list hlist in fsnotify code is being initialized
+> > > > during every object allocation. This seems a good fit for the
+> > > > constructor within the slab to take advantage of the slab design. Move
+> > > > the initializtion to that.
+> > > >
+> > > >        spin_lock_init(&conn->lock);
+> > > >        INIT_HLIST_HEAD(&conn->list);
+> > > >
+> > > > [1] https://pdfs.semanticscholar.org/1acc/3a14da69dd240f2fbc11d00e09610263bdbd.pdf
+> > > >
+> > >
+> > > The commit message could be better. Just to clarify, doing it this way is
+> > > more efficient because the object will only have its spinlock init and hlist
+> > > init happen during object construction, not object allocation.
+> > >
+> >
+> > This change may be correct, but completely unjustified IMO.
+> > conn objects are very rarely allocated, from user syscall path only.
+> > I see no reason to micro optimize this.
+> >
+> > Perhaps there is another justification to do this, but not efficiency.
+>
+> Thanks for the suggestion Joel but I agree with Amir here. In principle
+> using constructor is correct however it puts initialization of object in
+> two places which makes the code harder to follow and the allocation of
+> connector does not happen frequently enough for optimizing out these two
+> stores to matter in any tangible way.
 
-[ ... ]
+Thanks a lot Jan and Amir for your comments on the RFC patch. I am
+glad I got learn about this concept and appreciate the discussion very
+much.
 
-> +static struct em_perf_domain *
-> +em_create_pd(struct device *dev, int nr_states, struct em_data_callback *cb,
-> +	     cpumask_t *span)
->  {
->  	unsigned long opp_eff, prev_opp_eff = ULONG_MAX;
->  	unsigned long power, freq, prev_freq = 0;
-> @@ -106,7 +107,7 @@ static struct em_perf_domain *em_create_pd(cpumask_t *span, int nr_states,
->  		 * lowest performance state of 'cpu' above 'freq' and updates
->  		 * 'power' and 'freq' accordingly.
->  		 */
-> -		ret = cb->active_power(&power, &freq, cpu);
-> +		ret = cb->active_power(&power, &freq, dev);
->  		if (ret) {
->  			pr_err("pd%d: invalid perf. state: %d\n", cpu, ret);
->  			goto free_ps_table;
+I agree with your analysis about the lack of constructor benefit with
+infrequent allocations, the other ones being: splitting object
+initialization into 2 code paths and also dirtying the entire page and
+the L1 cache that Matthew mentioned.
 
-Why are the changes 'cpu' to 'dev' in the patch 4/10 instead of this one ?
-
-> @@ -237,7 +238,7 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
->  	}
->  
->  	/* Create the performance domain and add it to the Energy Model. */
-> -	pd = em_create_pd(span, nr_states, cb);
-> +	pd = em_create_pd(dev, nr_states, cb, span);
->  	if (!pd) {
->  		ret = -EINVAL;
->  		goto unlock;
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+ - Joel
