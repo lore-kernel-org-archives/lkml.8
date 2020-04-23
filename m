@@ -2,111 +2,147 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B458C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A756EC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441D22076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:10:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHc+TqrB"
+	by mail.kernel.org (Postfix) with ESMTP id 7FA5420857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587647409;
+	bh=MrQ+RugElkiTg9LS3wQOxTE4aNNFTFJUQOB/dDU+5CQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0MYULCufTG74Pze+hMt8aLqzcQBD1eAtiyjKUYSPdAzZdKIIw07umsD9El76HFoNw
+	 jin9GF28lireiniOHD9DWq71Q91INfh5V/A8e2/IPWZhti+IUoIO90pHcniOqk6RiX
+	 aPJDrFMt35XLsLu7it63cECYC8JwnFOBzp1ZtdIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgDWNKD (ORCPT
+        id S1727853AbgDWNKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:10:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37414 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726532AbgDWNKC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:10:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587647401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IdinXCqJfRCZgVfA06mXMGWP27voGlnnDgqPkPUuXHQ=;
-        b=DHc+TqrBUIGUybURESc1mn54oEBt26bhOfuAi46bgd4Kv6xMiwMScyGZTmpRk49Unt5Wa8
-        HsEwzllC/yQ8Vj4AGnrqZ9oUmbq+AT36P74tU6fEGDf6ErpR2C8YYO7BeUw/VScFiTeOx2
-        Gzkna3bvL7zsRUKyM6BPyc/8Q75Taic=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-GgPj_zu9MBmovQ5BTvMKYA-1; Thu, 23 Apr 2020 09:09:54 -0400
-X-MC-Unique: GgPj_zu9MBmovQ5BTvMKYA-1
-Received: by mail-wm1-f70.google.com with SMTP id l21so1990576wmh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:09:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IdinXCqJfRCZgVfA06mXMGWP27voGlnnDgqPkPUuXHQ=;
-        b=SQrPBDieMfqb6ciApJoIwwTGU5tqRsue+Img2J7qtpA8YWn6jP4exXetJcJaUI5EBC
-         36A4ltsgPTuF8lJQWKVBC2i7cqZRuuIc+o6kxQ9jHOXHIlDLo8FXdrR0emhKo8U9qw26
-         Xxyljc5veJdc5eQqVRrtrADn3BOVce8jfo62RSIFZmiCE1gdZkIjs4fspOgBU7Xh+2W/
-         VAGQjs5h/NQFlL1X2Z5que+cOIow2Rrns6sMap3AMJ0ZadzE1n5mJYCX0+F5uYNqFchZ
-         2ci5+HoU0ibvV8Ve1+mFWburgIbeQ8TgJyyZ59tPQFPxwYG554SirA8nC3fMRxgKUY2F
-         EQIw==
-X-Gm-Message-State: AGi0PubBPusLjTangNnTbcp4Y1NvQqN411dhRX0okSo+1jjJHJrYBMpf
-        CHiUPJl3og0tYQP1jXfOCXSiEzHh4nqBe3UI+j7Gc6tVMuDHEywViirIh/lFF+Z6mWm+2NdprwL
-        DOrsVFHtv6dp9WHzII6are81S
-X-Received: by 2002:a5d:420d:: with SMTP id n13mr5326769wrq.204.1587647392802;
-        Thu, 23 Apr 2020 06:09:52 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKUZdILxUxEUY9M3uIZZlX5wYN9iQ9hZggVqr6R47Bv4L1KltPEiyeTOqSHqyMh/e7XQZ2P5Q==
-X-Received: by 2002:a5d:420d:: with SMTP id n13mr5326746wrq.204.1587647392575;
-        Thu, 23 Apr 2020 06:09:52 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id b22sm11920460wmj.1.2020.04.23.06.09.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 06:09:51 -0700 (PDT)
-Subject: Re: [PATCH] kvm: add capability for halt polling
-To:     Jim Mattson <jmattson@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Jon Cargille <jcargill@google.com>,
-        David Matlack <dmatlack@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200417221446.108733-1-jcargill@google.com>
- <87d083td9f.fsf@vitty.brq.redhat.com>
- <CALMp9eREdS=nfdtvfNhW87G20Tfdwy69Phdbdmo=NzAw_tavzw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <cea84a43-e400-54b9-a6bc-3ad834c17880@redhat.com>
-Date:   Thu, 23 Apr 2020 15:09:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 09:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgDWNKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:10:08 -0400
+Received: from localhost (unknown [117.99.83.91])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D33B2076C;
+        Thu, 23 Apr 2020 13:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587647407;
+        bh=MrQ+RugElkiTg9LS3wQOxTE4aNNFTFJUQOB/dDU+5CQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AfAUNrxEz39CiNj1NAA5PSI+xEO/tfJFTFAkkF6Pf5hL5qVQkrkykiobJ+iHeU1Sj
+         QpSZgBb/jJID6xz1gRuflsOrbhpJhUi6Bt5lE49yrFbJn1B0qjiULC4J/oesIJxmHq
+         BgkPy1gIo3Y4TIOfXIqwEfMSIkVSDLPJre3RTcsU=
+Date:   Thu, 23 Apr 2020 18:40:00 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 0/5] usb: xhci: Add support for Renesas USB controllers
+Message-ID: <20200423131000.GJ72691@vkoul-mobl>
+References: <20200414164152.2786474-1-vkoul@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eREdS=nfdtvfNhW87G20Tfdwy69Phdbdmo=NzAw_tavzw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414164152.2786474-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/04/20 23:36, Jim Mattson wrote:
->>> +     case KVM_CAP_HALT_POLL: {
->>> +             if (cap->flags || cap->args[0] != (unsigned int)cap->args[0])
->>> +                     return -EINVAL;
->>> +
->>> +             kvm->max_halt_poll_ns = cap->args[0];
->> Is it safe to allow any value from userspace here or would it maybe make
->> sense to only allow [0, global halt_poll_ns]?
-> Would that restriction help to get this change accepted?
+On 14-04-20, 22:11, Vinod Koul wrote:
+> This series add support for Renesas USB controllers uPD720201 and uPD720202.
+> These require firmware to be loaded and in case devices have ROM those can
+> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
 > 
+> This includes patches from Christian which supported these controllers w/o
+> ROM and later my patches for ROM support and debugfs hook for rom erase and
+> export of xhci-pci functions.
 
-No, in the sense that I'm applying it already.
+Any feedback Mathias ?
 
-Paolo
+> 
+> Changes in v9:
+>  Make fw load a sync call and have single instance of probe execute,
+>    elimating probe/remove races
+>  Add quirk for renesas and use that for loading
+> 
+> Changes in v8:
+>  Fix compile error reported by Kbuild-bot by making usb_hcd_pci_probe() take
+>  const struct hc_driver * as argument
+> 
+> Changes in v7:
+>  Make a single module which removes issues with module loading
+>  Keep the renesas code in renesas file
+>  Add hc_driver as argument for usb_hcd_pci_probe and modify hdc drivers to
+>    pass this and not use driver_data
+>  Use driver data for fw name
+>  Remove code to check if we need to load firmware or not
+>  remove multiple fw version support, we can do that with symlink in
+>    userspace
+> 
+> Changes in v6:
+>  Move the renesas code into a separate driver which invokes xhci-pci functions.
+> 
+> Changes in v5:
+>  Added a debugfs rom erase patch, helps in debugging
+>  Squashed patch 1 & 2 as requested by Mathias
+> 
+> Changes in v4:
+>  Rollback the delay values as we got device failures
+> 
+> Changes in v3:
+>   Dropped patch 2 as discussed with Christian
+>   Removed aligned 8 bytes check
+>   Change order for firmware search from highest version to lowest
+>   Added entry for new firmware for device 0x14 as well
+>   Add tested by Christian
+> 
+> Changes in v2:
+>   used macros for timeout count and delay
+>   removed renesas_fw_alive_check
+>   cleaned renesas_fw_callback
+>   removed recurion for renesas_fw_download
+>   added MODULE_FIRMWARE
+>   added comment for multiple fw order
+> 
+> Christian Lamparter (1):
+>   usb: renesas-xhci: Add the renesas xhci driver
+> 
+> Vinod Koul (4):
+>   usb: hci: add hc_driver as argument for usb_hcd_pci_probe
+>   usb: xhci: Add support for Renesas controller with memory
+>   usb: renesas-xhci: Add ROM loader for uPD720201
+>   usb: xhci: provide a debugfs hook for erasing rom
+> 
+>  drivers/usb/core/hcd-pci.c          |   7 +-
+>  drivers/usb/host/Makefile           |   3 +-
+>  drivers/usb/host/ehci-pci.c         |   6 +-
+>  drivers/usb/host/ohci-pci.c         |   9 +-
+>  drivers/usb/host/uhci-pci.c         |   8 +-
+>  drivers/usb/host/xhci-pci-renesas.c | 740 ++++++++++++++++++++++++++++
+>  drivers/usb/host/xhci-pci.c         |  47 +-
+>  drivers/usb/host/xhci-pci.h         |  16 +
+>  drivers/usb/host/xhci.h             |   1 +
+>  include/linux/usb/hcd.h             |   3 +-
+>  10 files changed, 817 insertions(+), 23 deletions(-)
+>  create mode 100644 drivers/usb/host/xhci-pci-renesas.c
+>  create mode 100644 drivers/usb/host/xhci-pci.h
+> 
+> -- 
+> 2.25.1
 
+-- 
+~Vinod
