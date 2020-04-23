@@ -2,149 +2,120 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51245C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF82C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3121B20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDE62166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="nUpMcdC5"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DY3WH2bJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbgDWQFu (ORCPT
+        id S1729497AbgDWQGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58902 "EHLO
+        Thu, 23 Apr 2020 12:06:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729405AbgDWQFt (ORCPT
+        by vger.kernel.org with ESMTP id S1729386AbgDWQGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:05:49 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C01C09B040
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:05:48 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id 71so5252890qtc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=o8NjJ+ZRGAsBwuc2VNRIDdFrU8QYsgC6lWkhEP4DRqM=;
-        b=nUpMcdC5tph7V7/hLjokgO8v0xhUSr01BOjkdxf5RmqOQms9brCIntaSQjPKdrCQxh
-         STCb9TFMF7zcBJFU7FPkGp/AnMSTBTnA+UvpxPN8Hr9On8AVnMsw/h7xmJKtO7G1Le6b
-         djXqahTH57hxMYNwKcl4QeJtDIxOkXM31eRtr7U90oE4Mof6bMPidWgB1fFDDH4O+W5y
-         S08qMc3PF05KcZ4PfmP6aRQOPeK6yLXhmo5jUcvMLbfvL3VbT2QttdEcEiMqkH5te1cm
-         0lIwzM+iCv1abdCvh1/udnvoGSOAPpVnWpDtdrqr3XU/My087wIBAcgfrlqnHt+yH5au
-         bKqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=o8NjJ+ZRGAsBwuc2VNRIDdFrU8QYsgC6lWkhEP4DRqM=;
-        b=SL9kxYKhIwf8IwAgNnGnWOcdUMJDVZaU79f6Nf1jQ4XHATBvVkU4MCHjoPHuXrQrjl
-         O+xdBFGUds9YkAMDQjr2/0h+ssdr3ejYKsqeTvXQO/uEsSSpdrMUkRezbrcuQJRlxT5f
-         ag40V1k8mljfMA7hEecqm2AD+rG95SeMjfS8JOZI7s5NWEFPJojdm+IypUgpeWfTuaX+
-         Ff8OitVBsJEhjf91SVb8V/dqokSYCcv91O9pxp4fC3Wdxwpyo1kmXk5sw2onU96BOJkR
-         BTA7lKR/1BkB2MNn1p+Mq3OX0W5DirOgISG3JUSTBXiQvdYZR+32fqgWstQ/io2+Zi5p
-         SVwg==
-X-Gm-Message-State: AGi0Puaonxy0ZjEHA3qykADTbK4ALe/A9097K1HxjbV5hyGoJ0GRdkk8
-        HV6aV9ccDi3w0aerOj1qmP5QnQ==
-X-Google-Smtp-Source: APiQypIWI+qTohLBPVldLUX02lOsPfHAp5mdWRH+VnhUfYHdm8z4Bw7WAdO2HarO/mORZ3HZb3txdg==
-X-Received: by 2002:aed:3aa3:: with SMTP id o32mr4848669qte.364.1587657947786;
-        Thu, 23 Apr 2020 09:05:47 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::921])
-        by smtp.gmail.com with ESMTPSA id 63sm1759922qkl.64.2020.04.23.09.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 09:05:47 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 12:05:46 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     minchan@kernel.org, mgorman@suse.de, m.szyprowski@samsung.com,
-        mina86@mina86.com, shli@fb.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, ytk.lee@samsung.com
-Subject: Re: [PATCH v2] mm/vmscan: count layzfree pages and fix nr_isolated_*
- mismatch
-Message-ID: <20200423160546.GA389168@cmpxchg.org>
-References: <CGME20200422084832epcas1p333225f9b6a00c9ce36f5f5d63fe6e3bf@epcas1p3.samsung.com>
- <20200422084815.21913-1-jaewon31.kim@samsung.com>
- <20200422130751.GD358439@cmpxchg.org>
- <5EA10872.3010500@samsung.com>
+        Thu, 23 Apr 2020 12:06:39 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944C2C09B040;
+        Thu, 23 Apr 2020 09:06:39 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B5BE4F7;
+        Thu, 23 Apr 2020 18:06:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587657996;
+        bh=eWZUj9lTkWCXbhwqDd22bo5n7vvld9tAlLBaI/AKyv4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DY3WH2bJ8iJqesFWYQRAgc8apuelXqtZ/iHRDw+zHNOQC7hM6JCLyNNTaM8gxEAK5
+         WjAHJAVRNkG55Otg2RPBzSnARNva14Kd1mLtU9ZyfeAdafVYqx0qUjMxzB2kLcYy32
+         MeQ2uqL7UOq1ADpod+3DO5CMqmXSit3XxqtPbuco=
+Date:   Thu, 23 Apr 2020 19:06:22 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: Fix command line length limit calling
+ dt-mk-schema
+Message-ID: <20200423160622.GE6196@pendragon.ideasonboard.com>
+References: <20200422185708.6363-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5EA10872.3010500@samsung.com>
+In-Reply-To: <20200422185708.6363-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 12:16:02PM +0900, Jaewon Kim wrote:
+Hi Rob,
+
+Thank you for the patch.
+
+On Wed, Apr 22, 2020 at 01:57:08PM -0500, Rob Herring wrote:
+> As the number of schemas has increased, we're starting to hit the error
+> "execvp: /bin/sh: Argument list too long". This is due to passing all the
+> schema files on the command line to dt-mk-schema. It currently is only
+> with out of tree builds and is intermittent depending on the file path
+> lengths.
 > 
+> Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
+> hitting this proplem more likely since the example validation now always
+> gets the full list of schemas.
 > 
-> On 2020년 04월 22일 22:07, Johannes Weiner wrote:
-> > On Wed, Apr 22, 2020 at 05:48:15PM +0900, Jaewon Kim wrote:
-> >> @@ -1295,11 +1295,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
-> >>  		 */
-> >>  		if (page_mapped(page)) {
-> >>  			enum ttu_flags flags = ttu_flags | TTU_BATCH_FLUSH;
-> >> +			bool lazyfree = PageAnon(page) && !PageSwapBacked(page);
-> >>  
-> >>  			if (unlikely(PageTransHuge(page)))
-> >>  				flags |= TTU_SPLIT_HUGE_PMD;
-> >> +
-> >>  			if (!try_to_unmap(page, flags)) {
-> >>  				stat->nr_unmap_fail += nr_pages;
-> >> +				if (lazyfree && PageSwapBacked(page))
-> > This looks pretty strange, until you remember that try_to_unmap()
-> > could SetPageSwapbacked again.
-> >
-> > This might be more obvious?
-> >
-> > 			was_swapbacked = PageSwapBacked(page);
-> > 			if (!try_to_unmap(page, flags)) {
-> > 				stat->nr_unmap_fail += nr_pages;
-> > 				if (!was_swapbacked && PageSwapBacked(page))
-> Hello Johannes, thank you for your comment.
+> Fix this by passing the schema file list in a pipe and using xargs. We end
+> up doing the find twice, but the time is insignificant compared to the
+> dt-mk-schema time.
 > 
-> The name can changed from layzyfree to was_swapbacked.
-> By the way, did you mean removing PageAnon(page), too? It seems to be OK, though.
+> Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-I can't decide whether PageAnon() makes it clearer or not. But it's
-not really needed for correctness. So feel free to keep what you had.
+Tested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-I would really just at least change bool lazyfree to was_lazyfree,
-otherwise it seems a bit confusing. was_lazyfree makes it a bit
-clearer that we expect try_to_unmap() might change the state.
+> ---
+>  Documentation/devicetree/bindings/Makefile | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+> index 87c76bdabfe6..7782d9985082 100644
+> --- a/Documentation/devicetree/bindings/Makefile
+> +++ b/Documentation/devicetree/bindings/Makefile
+> @@ -14,16 +14,18 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+>  # Use full schemas when checking %.example.dts
+>  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+>  
+> +find_cmd = find $(srctree)/$(src) \( -name '*.yaml' ! \
+> +		-name 'processed-schema*' ! \
+> +		-name '*.example.dt.yaml' \)
+> +
+>  quiet_cmd_mk_schema = SCHEMA  $@
+> -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
+> +      cmd_mk_schema = rm -f $@ ; \
+> +                      $(if $(DT_MK_SCHEMA_FLAGS), \
+> +                           echo $(real-prereqs), \
+> +                           $(find_cmd)) | \
+> +                      xargs $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) >> $@
+>  
+> -DT_DOCS = $(addprefix $(src)/, \
+> -	$(shell \
+> -	cd $(srctree)/$(src) && \
+> -	find * \( -name '*.yaml' ! \
+> -		-name 'processed-schema*' ! \
+> -		-name '*.example.dt.yaml' \) \
+> -	))
+> +DT_DOCS = $(shell $(find_cmd) | sed -e 's|^$(srctree)/||')
+>  
+>  DT_SCHEMA_FILES ?= $(DT_DOCS)
+>  
 
-> >> +					stat->nr_lazyfree_fail += nr_pages;
-> >>  				goto activate_locked;
-> > Or at least was_lazyfree.
-> Sorry but I'm confused.
-> I think you meant additional comment to previous your comment
-> rather than you wanted to rename stat->nr_lazyfree_fail to stat->was_lazyfree.
+-- 
+Regards,
 
-No just the bool variable, the stat one seems fine to me.
-
-> >> @@ -1491,8 +1495,8 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
-> >>  		.priority = DEF_PRIORITY,
-> >>  		.may_unmap = 1,
-> >>  	};
-> >> -	struct reclaim_stat dummy_stat;
-> >> -	unsigned long ret;
-> >> +	struct reclaim_stat stat;
-> >> +	unsigned long reclaimed;
-> > nr_reclaimed would be better.
-> I will add nr_ prefix on next patch.
-
-Thanks!
-
-> > I also prefer keeping dummy_stat, since that's still what it is.
-> This patch uses stat.nr_lazyfree_fail, I do not understand why it is still dummy_stat.
-> If you want, I will keep dummy_stat, though.
-
-My bad, I just misread this. 'stat' makes more sense then.
+Laurent Pinchart
