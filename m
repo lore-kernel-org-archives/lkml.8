@@ -2,77 +2,80 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41981C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E447C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4752077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A19120784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgDWVlO (ORCPT
+        id S1727783AbgDWVlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 17:41:14 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:11728 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725777AbgDWVlN (ORCPT
+        Thu, 23 Apr 2020 17:41:17 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:60409 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726976AbgDWVlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 17:41:13 -0400
-X-IronPort-AV: E=Sophos;i="5.73,309,1583161200"; 
-   d="scan'208";a="45553072"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:11 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AA16B4004BB2;
-        Fri, 24 Apr 2020 06:41:07 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 01/10] dt-bindings: power: rcar-sysc: Document r8a7742 SYSC binding
-Date:   Thu, 23 Apr 2020 22:40:41 +0100
-Message-Id: <1587678050-23468-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 23 Apr 2020 17:41:15 -0400
+Received: from dread.disaster.area (pa49-180-0-232.pa.nsw.optusnet.com.au [49.180.0.232])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 942913A2A5A;
+        Fri, 24 Apr 2020 07:41:08 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jRjam-0006R8-3B; Fri, 24 Apr 2020 07:41:08 +1000
+Date:   Fri, 24 Apr 2020 07:41:08 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH V10 02/11] fs: Remove unneeded IS_DAX() check in
+ io_is_direct()
+Message-ID: <20200423214108.GR27860@dread.disaster.area>
+References: <20200422212102.3757660-1-ira.weiny@intel.com>
+ <20200422212102.3757660-3-ira.weiny@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422212102.3757660-3-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=XYjVcjsg+1UI/cdbgX7I7g==:117 a=XYjVcjsg+1UI/cdbgX7I7g==:17
+        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=JVZ9yd-c_uYkw5Y7WEkA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation for the RZ/G1H (R8A7742) SYSC block.
+On Wed, Apr 22, 2020 at 02:20:53PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Remove the check because DAX now has it's own read/write methods and
+> file systems which support DAX check IS_DAX() prior to IOCB_DIRECT on
+> their own.  Therefore, it does not matter if the file state is DAX when
+> the iocb flags are created.
+> 
+> Also remove io_is_direct() as it is just a simple flag check.
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Looks good.
 
-diff --git a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml
-index e59331e1..55b6ab2 100644
---- a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml
-+++ b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.yaml
-@@ -17,6 +17,7 @@ description:
- properties:
-   compatible:
-     enum:
-+      - renesas,r8a7742-sysc  # RZ/G1H
-       - renesas,r8a7743-sysc  # RZ/G1M
-       - renesas,r8a7744-sysc  # RZ/G1N
-       - renesas,r8a7745-sysc  # RZ/G1E
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 -- 
-2.7.4
-
+Dave Chinner
+david@fromorbit.com
