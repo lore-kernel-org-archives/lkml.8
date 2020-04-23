@@ -2,32 +2,32 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247AAC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02441C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A8B2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD80A20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbgDWXP7 (ORCPT
+        id S1729328AbgDWXPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:15:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49628 "EHLO
+        Thu, 23 Apr 2020 19:15:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49648 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728395AbgDWXGq (ORCPT
+        by vger.kernel.org with ESMTP id S1728399AbgDWXGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:46 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvT-0004hY-V9; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvU-0004h9-Ei; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-00E6rh-J0; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvR-00E6pP-Eu; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Michael Straube" <straube.linux@gmail.com>
-Date:   Fri, 24 Apr 2020 00:06:22 +0100
-Message-ID: <lsq.1587683028.576436431@decadent.org.uk>
+        "Charles Keepax" <ckeepax@opensource.cirrus.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Shengjiu Wang" <shengjiu.wang@nxp.com>
+Date:   Fri, 24 Apr 2020 00:05:56 +0100
+Message-ID: <lsq.1587683028.756541500@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 155/245] staging: rtl8188eu: Add device code for
- TP-Link TL-WN727N v5.21
+Subject: [PATCH 3.16 129/245] ASoC: wm8962: fix lambda value
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,30 +56,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Straube <straube.linux@gmail.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit 58dcc5bf4030cab548d5c98cd4cd3632a5444d5a upstream.
+commit 556672d75ff486e0b6786056da624131679e0576 upstream.
 
-This device was added to the stand-alone driver on github.
-Add it to the staging driver as well.
+According to user manual, it is required that FLL_LAMBDA > 0
+in all cases (Integer and Franctional modes).
 
-Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
-Link: https://lore.kernel.org/r/20191228143725.24455-1-straube.linux@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/wm8962.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -61,6 +61,7 @@ static struct usb_device_id rtw_usb_id_t
- 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
- 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
- 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
-+	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
- 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
- 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
- 	{}	/* Terminating entry */
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2795,7 +2795,7 @@ static int fll_factors(struct _fll_div *
+ 
+ 	if (target % Fref == 0) {
+ 		fll_div->theta = 0;
+-		fll_div->lambda = 0;
++		fll_div->lambda = 1;
+ 	} else {
+ 		gcd_fll = gcd(target, fratio * Fref);
+ 
+@@ -2865,7 +2865,7 @@ static int wm8962_set_fll(struct snd_soc
+ 		return -EINVAL;
+ 	}
+ 
+-	if (fll_div.theta || fll_div.lambda)
++	if (fll_div.theta)
+ 		fll1 |= WM8962_FLL_FRAC;
+ 
+ 	/* Stop the FLL while we reconfigure */
 
