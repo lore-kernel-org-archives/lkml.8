@@ -2,144 +2,157 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C7AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C29C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17C7120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52A22084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FkoB++/X"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k1v1uEaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgDWNT4 (ORCPT
+        id S1728174AbgDWNUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:19:56 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51313 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727780AbgDWNTi (ORCPT
+        Thu, 23 Apr 2020 09:20:08 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:13469 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgDWNUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:19:38 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NDDK6m010140;
-        Thu, 23 Apr 2020 15:19:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=FJh6fC8jON2d+h4HJHf/RBjL/d+0wt6Wf8NAcemUV7o=;
- b=FkoB++/XIN+a1SjNGlLOo2PutMa7vTxQalTl9Oapjwcf2XfJqs8AAyc6W6zj2YdnjQaE
- R+ugGyd24bCiyr5NDM4EzpcvHTiPy0Uy+9urnjwAuaHdP6cFcN7NgLKfSf7hKaHSrWNS
- 4Ph1tYvZHqB7h643zCOLnVG/W8TPot++pTcMDy7rXjcfIy8Y4FzNfaCS2bK70SXf2lWu
- ZNt5Gaorb5cfQo5iouc/5wT+aeat74b17Epx/VwN2nno6DOLTQT6BQRpBEYQT6EMD+r4
- UnNW+fka9a1X2+LNQ+TLp2HQACfIBNPHLXsF/XNBXvUOCK68K5bPZ6PM90agPeW0sduz qg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fqawmx81-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 15:19:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC5B710002A;
-        Thu, 23 Apr 2020 15:19:17 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AC08120758D;
-        Thu, 23 Apr 2020 15:19:17 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Apr 2020 15:19:16
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <gregkh@linuxfoundation.org>,
-        <loic.pallardy@st.com>, <linus.walleij@linaro.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 1/5] dt-bindings: bus: Add firewall bindings
-Date:   Thu, 23 Apr 2020 15:19:09 +0200
-Message-ID: <20200423131913.30786-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200423131913.30786-1-benjamin.gaignard@st.com>
-References: <20200423131913.30786-1-benjamin.gaignard@st.com>
+        Thu, 23 Apr 2020 09:20:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1587648007; x=1619184007;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ozfKvw6mOaujxK+s76z9iF1pqL4KXLNOSEQT+R+GhJc=;
+  b=k1v1uEaqyWsh9rhWqrlwm0/9Px2mcWIygVDbAx2b/RY4BhMhp/bPhXO9
+   kGe41Y20X0SNJrnUojM5U8zssuOBx28cg3n5InxDdq0QhhYegfxY4955X
+   G9BA47tlulk3KfrZLMKrd1rbaOrrXlHMp90CF7+1PcUKNBag94jbRgRcm
+   E=;
+IronPort-SDR: xg5f1mpI4ahD/RPTcm8jL0R1aHFMYgtxDPc9RnGDOzb4KP9AcqrhCR93EQ0hpxT52m+2lCObKg
+ gPGYyQaSE2dw==
+X-IronPort-AV: E=Sophos;i="5.73,307,1583193600"; 
+   d="scan'208";a="27045456"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 23 Apr 2020 13:19:55 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 5E2B1A229A;
+        Thu, 23 Apr 2020 13:19:54 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 23 Apr 2020 13:19:53 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.148) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 23 Apr 2020 13:19:46 +0000
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     Paolo Bonzini <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+Date:   Thu, 23 Apr 2020 16:19:36 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_10:2020-04-23,2020-04-23 signatures=0
+In-Reply-To: <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.148]
+X-ClientProxiedBy: EX13D06UWC002.ant.amazon.com (10.43.162.205) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add schemas for firewall consumer and provider.
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/bus/stm32/firewall-consumer.yaml      | 25 ++++++++++++++++++++++
- .../bindings/bus/stm32/firewall-provider.yaml      | 18 ++++++++++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-new file mode 100644
-index 000000000000..8f123888d058
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-@@ -0,0 +1,25 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Bus Firewall consumer binding
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+# always select the core schema
-+select: true
-+
-+properties:
-+  firewall-0: true
-+
-+  firewall-names: true
-+
-+patternProperties:
-+  "firewall-[0-9]":
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+
-+dependencies:
-+  firewall-names: [ firewall-0 ]
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-new file mode 100644
-index 000000000000..299824c620ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-provider.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Bus Firewall provider binding
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+properties:
-+  '#firewall-cells':
-+     $ref: /schemas/types.yaml#/definitions/uint32
-+     description: Number of cells in a bus firewall specifier
-+
-+required:
-+  - '#firewall-cells'
--- 
-2.15.0
+CgpPbiAyMi8wNC8yMDIwIDAwOjQ2LCBQYW9sbyBCb256aW5pIHdyb3RlOgo+IE9uIDIxLzA0LzIw
+IDIwOjQxLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+IEFuIGVuY2xhdmUgY29tbXVuaWNhdGVz
+IHdpdGggdGhlIHByaW1hcnkgVk0gdmlhIGEgbG9jYWwgY29tbXVuaWNhdGlvbiBjaGFubmVsLAo+
+PiB1c2luZyB2aXJ0aW8tdnNvY2sgWzJdLiBBbiBlbmNsYXZlIGRvZXMgbm90IGhhdmUgYSBkaXNr
+IG9yIGEgbmV0d29yayBkZXZpY2UKPj4gYXR0YWNoZWQuCj4gSXMgaXQgcG9zc2libGUgdG8gaGF2
+ZSBhIHNhbXBsZSBvZiB0aGlzIGluIHRoZSBzYW1wbGVzLyBkaXJlY3Rvcnk/CgpJIGNhbiBhZGQg
+aW4gdjIgYSBzYW1wbGUgZmlsZSBpbmNsdWRpbmcgdGhlIGJhc2ljIGZsb3cgb2YgaG93IHRvIHVz
+ZSB0aGUgCmlvY3RsIGludGVyZmFjZSB0byBjcmVhdGUgLyB0ZXJtaW5hdGUgYW4gZW5jbGF2ZS4K
+ClRoZW4gd2UgY2FuIHVwZGF0ZSAvIGJ1aWxkIG9uIHRvcCBpdCBiYXNlZCBvbiB0aGUgb25nb2lu
+ZyBkaXNjdXNzaW9ucyBvbiAKdGhlIHBhdGNoIHNlcmllcyBhbmQgdGhlIHJlY2VpdmVkIGZlZWRi
+YWNrLgoKPgo+IEkgYW0gaW50ZXJlc3RlZCBlc3BlY2lhbGx5IGluOgo+Cj4gLSB0aGUgaW5pdGlh
+bCBDUFUgc3RhdGU6IENQTDAgdnMuIENQTDMsIGluaXRpYWwgcHJvZ3JhbSBjb3VudGVyLCBldGMu
+Cj4KPiAtIHRoZSBjb21tdW5pY2F0aW9uIGNoYW5uZWw7IGRvZXMgdGhlIGVuY2xhdmUgc2VlIHRo
+ZSB1c3VhbCBsb2NhbCBBUElDCj4gYW5kIElPQVBJQyBpbnRlcmZhY2VzIGluIG9yZGVyIHRvIGdl
+dCBpbnRlcnJ1cHRzIGZyb20gdmlydGlvLXZzb2NrLCBhbmQKPiB3aGVyZSBpcyB0aGUgdmlydGlv
+LXZzb2NrIGRldmljZSAodmlydGlvLW1taW8gSSBzdXBwb3NlKSBwbGFjZWQgaW4gbWVtb3J5Pwo+
+Cj4gLSB3aGF0IHRoZSBlbmNsYXZlIGlzIGFsbG93ZWQgdG8gZG86IGNhbiBpdCBjaGFuZ2UgcHJp
+dmlsZWdlIGxldmVscywKPiB3aGF0IGhhcHBlbnMgaWYgdGhlIGVuY2xhdmUgcGVyZm9ybXMgYW4g
+YWNjZXNzIHRvIG5vbmV4aXN0ZW50IG1lbW9yeSwgZXRjLgo+Cj4gLSB3aGV0aGVyIHRoZXJlIGFy
+ZSBzcGVjaWFsIGh5cGVyY2FsbCBpbnRlcmZhY2VzIGZvciB0aGUgZW5jbGF2ZQoKQW4gZW5jbGF2
+ZSBpcyBhIFZNLCBydW5uaW5nIG9uIHRoZSBzYW1lIGhvc3QgYXMgdGhlIHByaW1hcnkgVk0sIHRo
+YXQgCmxhdW5jaGVkIHRoZSBlbmNsYXZlLiBUaGV5IGFyZSBzaWJsaW5ncy4KCkhlcmUgd2UgbmVl
+ZCB0byB0aGluayBvZiB0d28gY29tcG9uZW50czoKCjEuIEFuIGVuY2xhdmUgYWJzdHJhY3Rpb24g
+cHJvY2VzcyAtIGEgcHJvY2VzcyBydW5uaW5nIGluIHRoZSBwcmltYXJ5IFZNIApndWVzdCwgdGhh
+dCB1c2VzIHRoZSBwcm92aWRlZCBpb2N0bCBpbnRlcmZhY2Ugb2YgdGhlIE5pdHJvIEVuY2xhdmVz
+IAprZXJuZWwgZHJpdmVyIHRvIHNwYXduIGFuIGVuY2xhdmUgVk0gKHRoYXQncyAyIGJlbG93KS4K
+CkhvdyBkb2VzIGFsbCBnZXRzIHRvIGFuIGVuY2xhdmUgVk0gcnVubmluZyBvbiB0aGUgaG9zdD8K
+ClRoZXJlIGlzIGEgTml0cm8gRW5jbGF2ZXMgZW11bGF0ZWQgUENJIGRldmljZSBleHBvc2VkIHRv
+IHRoZSBwcmltYXJ5IFZNLiAKVGhlIGRyaXZlciBmb3IgdGhpcyBuZXcgUENJIGRldmljZSBpcyBp
+bmNsdWRlZCBpbiB0aGUgY3VycmVudCBwYXRjaCBzZXJpZXMuCgpUaGUgaW9jdGwgbG9naWMgaXMg
+bWFwcGVkIHRvIFBDSSBkZXZpY2UgY29tbWFuZHMgZS5nLiB0aGUgCk5FX0VOQ0xBVkVfU1RBUlQg
+aW9jdGwgbWFwcyB0byBhbiBlbmNsYXZlIHN0YXJ0IFBDSSBjb21tYW5kIG9yIHRoZSAKS1ZNX1NF
+VF9VU0VSX01FTU9SWV9SRUdJT04gbWFwcyB0byBhbiBhZGQgbWVtb3J5IFBDSSBjb21tYW5kLiBU
+aGUgUENJIApkZXZpY2UgY29tbWFuZHMgYXJlIHRoZW4gdHJhbnNsYXRlZCBpbnRvIGFjdGlvbnMg
+dGFrZW4gb24gdGhlIGh5cGVydmlzb3IgCnNpZGU7IHRoYXQncyB0aGUgTml0cm8gaHlwZXJ2aXNv
+ciBydW5uaW5nIG9uIHRoZSBob3N0IHdoZXJlIHRoZSBwcmltYXJ5IApWTSBpcyBydW5uaW5nLgoK
+Mi4gVGhlIGVuY2xhdmUgaXRzZWxmIC0gYSBWTSBydW5uaW5nIG9uIHRoZSBzYW1lIGhvc3QgYXMg
+dGhlIHByaW1hcnkgVk0gCnRoYXQgc3Bhd25lZCBpdC4KClRoZSBlbmNsYXZlIFZNIGhhcyBubyBw
+ZXJzaXN0ZW50IHN0b3JhZ2Ugb3IgbmV0d29yayBpbnRlcmZhY2UgYXR0YWNoZWQsIAppdCB1c2Vz
+IGl0cyBvd24gbWVtb3J5IGFuZCBDUFVzICsgaXRzIHZpcnRpby12c29jayBlbXVsYXRlZCBkZXZp
+Y2UgZm9yIApjb21tdW5pY2F0aW9uIHdpdGggdGhlIHByaW1hcnkgVk0uCgpUaGUgbWVtb3J5IGFu
+ZCBDUFVzIGFyZSBjYXJ2ZWQgb3V0IG9mIHRoZSBwcmltYXJ5IFZNLCB0aGV5IGFyZSBkZWRpY2F0
+ZWQgCmZvciB0aGUgZW5jbGF2ZS4gVGhlIE5pdHJvIGh5cGVydmlzb3IgcnVubmluZyBvbiB0aGUg
+aG9zdCBlbnN1cmVzIG1lbW9yeSAKYW5kIENQVSBpc29sYXRpb24gYmV0d2VlbiB0aGUgcHJpbWFy
+eSBWTSBhbmQgdGhlIGVuY2xhdmUgVk0uCgoKVGhlc2UgdHdvIGNvbXBvbmVudHMgbmVlZCB0byBy
+ZWZsZWN0IHRoZSBzYW1lIHN0YXRlIGUuZy4gd2hlbiB0aGUgCmVuY2xhdmUgYWJzdHJhY3Rpb24g
+cHJvY2VzcyAoMSkgaXMgdGVybWluYXRlZCwgdGhlIGVuY2xhdmUgVk0gKDIpIGlzIAp0ZXJtaW5h
+dGVkIGFzIHdlbGwuCgpXaXRoIHJlZ2FyZCB0byB0aGUgY29tbXVuaWNhdGlvbiBjaGFubmVsLCB0
+aGUgcHJpbWFyeSBWTSBoYXMgaXRzIG93biAKZW11bGF0ZWQgdmlydGlvLXZzb2NrIFBDSSBkZXZp
+Y2UuIFRoZSBlbmNsYXZlIFZNIGhhcyBpdHMgb3duIGVtdWxhdGVkIAp2aXJ0aW8tdnNvY2sgZGV2
+aWNlIGFzIHdlbGwuIFRoaXMgY2hhbm5lbCBpcyB1c2VkLCBmb3IgZXhhbXBsZSwgdG8gZmV0Y2gg
+CmRhdGEgaW4gdGhlIGVuY2xhdmUgYW5kIHRoZW4gcHJvY2VzcyBpdC4gQW4gYXBwbGljYXRpb24g
+dGhhdCBzZXRzIHVwIHRoZSAKdnNvY2sgc29ja2V0IGFuZCBjb25uZWN0cyBvciBsaXN0ZW5zLCBk
+ZXBlbmRpbmcgb24gdGhlIHVzZSBjYXNlLCBpcyB0aGVuIApkZXZlbG9wZWQgdG8gdXNlIHRoaXMg
+Y2hhbm5lbDsgdGhpcyBoYXBwZW5zIG9uIGJvdGggZW5kcyAtIHByaW1hcnkgVk0gCmFuZCBlbmNs
+YXZlIFZNLgoKTGV0IG1lIGtub3cgaWYgZnVydGhlciBjbGFyaWZpY2F0aW9ucyBhcmUgbmVlZGVk
+LgoKPgo+PiBUaGUgcHJvcG9zZWQgc29sdXRpb24gaXMgZm9sbG93aW5nIHRoZSBLVk0gbW9kZWwg
+YW5kIHVzZXMgdGhlIEtWTSBBUEkgdG8gYmUgYWJsZQo+PiB0byBjcmVhdGUgYW5kIHNldCByZXNv
+dXJjZXMgZm9yIGVuY2xhdmVzLiBBbiBhZGRpdGlvbmFsIGlvY3RsIGNvbW1hbmQsIGJlc2lkZXMK
+Pj4gdGhlIG9uZXMgcHJvdmlkZWQgYnkgS1ZNLCBpcyB1c2VkIHRvIHN0YXJ0IGFuIGVuY2xhdmUg
+YW5kIHNldHVwIHRoZSBhZGRyZXNzaW5nCj4+IGZvciB0aGUgY29tbXVuaWNhdGlvbiBjaGFubmVs
+IGFuZCBhbiBlbmNsYXZlIHVuaXF1ZSBpZC4KPiBSZXVzaW5nIHNvbWUgS1ZNIGlvY3RscyBpcyBk
+ZWZpbml0ZWx5IGEgZ29vZCBpZGVhLCBidXQgSSB3b3VsZG4ndCByZWFsbHkKPiBzYXkgaXQncyB0
+aGUgS1ZNIEFQSSBzaW5jZSB0aGUgVkNQVSBmaWxlIGRlc2NyaXB0b3IgaXMgYmFzaWNhbGx5IG5v
+bgo+IGZ1bmN0aW9uYWwgKHdpdGhvdXQgS1ZNX1JVTiBhbmQgbW1hcCBpdCdzIG5vdCByZWFsbHkg
+dGhlIEtWTSBBUEkpLgoKSXQgdXNlcyBwYXJ0IG9mIHRoZSBLVk0gQVBJIG9yIGEgc2V0IG9mIEtW
+TSBpb2N0bHMgdG8gbW9kZWwgdGhlIHdheSBhIFZNIAppcyBjcmVhdGVkIC8gdGVybWluYXRlZC4g
+VGhhdCdzIHRydWUsIEtWTV9SVU4gYW5kIG1tYXAtaW5nIHRoZSB2Y3B1IGZkIAphcmUgbm90IGlu
+Y2x1ZGVkLgoKVGhhbmtzIGZvciB0aGUgZmVlZGJhY2sgcmVnYXJkaW5nIHRoZSByZXVzZSBvZiBL
+Vk0gaW9jdGxzLgoKQW5kcmEKCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgKFJvbWFuaWEp
+IFMuUi5MLiByZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJlZXQsIFVCQzUsIGZs
+b29yIDIsIElhc2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJlZ2lzdGVyZWQgaW4g
+Um9tYW5pYS4gUmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
 
