@@ -2,327 +2,88 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8F9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 163E7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7ED20706
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D744420776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:16:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="SJhX+M+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbgDWSPm (ORCPT
+        id S1730192AbgDWSQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:15:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41750 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730042AbgDWSPm (ORCPT
+        Thu, 23 Apr 2020 14:16:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730042AbgDWSQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:15:42 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NI1wmG118103;
-        Thu, 23 Apr 2020 14:15:34 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrc62mp2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 14:15:33 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03NI2cmQ120063;
-        Thu, 23 Apr 2020 14:15:33 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrc62mna-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 14:15:33 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03NIEZKV003340;
-        Thu, 23 Apr 2020 18:15:32 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01dal.us.ibm.com with ESMTP id 30fs67ecft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 18:15:32 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NIFUKj59441528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 18:15:30 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B39E13607D;
-        Thu, 23 Apr 2020 18:15:30 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ACED6136053;
-        Thu, 23 Apr 2020 18:15:29 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.199.36.226])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 18:15:29 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id E98C92E3026; Thu, 23 Apr 2020 23:45:23 +0530 (IST)
-Date:   Thu, 23 Apr 2020 23:45:23 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
-        ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
-        pratik.r.sampat@gmail.com
-Subject: Re: [PATCH v8 1/1] powerpc/powernv: Introduce support and parsing
- for self-save API
-Message-ID: <20200423181523.GA15514@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <20200423105557.29108-1-psampat@linux.ibm.com>
- <20200423105557.29108-2-psampat@linux.ibm.com>
+        Thu, 23 Apr 2020 14:16:08 -0400
+X-Greylist: delayed 4095 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Apr 2020 11:16:08 PDT
+Received: from forward501p.mail.yandex.net (forward501p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14DB5C09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:16:08 -0700 (PDT)
+Received: from mxback10q.mail.yandex.net (mxback10q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b4:0:640:b6ef:cb3])
+        by forward501p.mail.yandex.net (Yandex) with ESMTP id 9C71635003C4;
+        Thu, 23 Apr 2020 21:16:04 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback10q.mail.yandex.net (mxback/Yandex) with ESMTP id zCfXLDaPuq-G4JqQwcl;
+        Thu, 23 Apr 2020 21:16:04 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1587665764;
+        bh=UuuLfyUWwTDsumI8P6GkF3SCpNgR9mP3R2UCevVxbh8=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=SJhX+M+cXxzXdhIyhIa0F9U/TqAXJ/Vyd2+34EA0Ur5fijKcf1vAZhPUFxMdrPh/G
+         0VF4tlyHNRODgz8U7rCgHBoUpCv9f5TslpudvfV6KlVWMIBZR/mEuUTIaRMx/O5StF
+         kssc8NXSqDsm62Skvz+ZmrKd+slHRsqnterZESv0=
+Authentication-Results: mxback10q.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by vla1-a6eaa355d163.qloud-c.yandex.net with HTTP;
+        Thu, 23 Apr 2020 21:16:03 +0300
+From:   Evgeniy Polyakov <zbr@ioremap.net>
+Envelope-From: drustafa@yandex.ru
+To:     Akira shimahara <akira215corp@gmail.com>, Greg KH <greg@kroah.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <32dbb39debedabd6dbd1a8675760e171c180de9e.camel@gmail.com>
+References: <20200414170248.299534-1-akira215corp@gmail.com>
+         <20200423144116.GA7319@kroah.com> <307231587661588@mail.yandex.ru> <32dbb39debedabd6dbd1a8675760e171c180de9e.camel@gmail.com>
+Subject: Re: [PATCH] Changes in w1_therm.c and adding w1_therm.h
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423105557.29108-2-psampat@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_13:2020-04-23,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 spamscore=0 impostorscore=0
- clxscore=1015 adultscore=0 phishscore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230137
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Thu, 23 Apr 2020 21:16:03 +0300
+Message-Id: <243121587665447@mail.yandex.ru>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 04:25:57PM +0530, Pratik Rajesh Sampat wrote:
-> This commit introduces and leverages the Self save API. The difference
-> between self-save and self-restore is that the value to be saved for the
-> SPR does not need to be passed to the call.
-> 
-> Add the new Self Save OPAL API call in the list of OPAL calls.
-> 
-> The device tree is parsed looking for the property "ibm,opal-self-save"
-> If self-save is supported then for all SPRs self-save is invoked for all
-> P9 supported registers. In the case self-save fails corresponding
-> self-restore call is invoked as a fallback.
-> 
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Hi
 
+23.04.2020, 20:59, "Akira shimahara" <akira215corp@gmail.com>:
+> Le jeudi 23 avril 2020 à 20:07 +0300, Evgeniy Polyakov a écrit :
+>>  Looks like there are bigger isues with the patch that I've missed,
+>>  and if I understood correctly, Akira asked to drop this patch
+>
+> Hi,
+>
+> Evgeniy, I don't asked to drop this patch, sorry for the
+> misunderstanding. I will add entries to Documentation/ABI/testing/ by
+> the end of the week and submit a new patch. Who should I add in the
+> 'Contact' field ?
 
+I think there should be your email
 
+> To answer Greg's comments, we use the kernel subsystems as much as
+> possible, but for timing and bus protocol reasons, we have to go a
+> little deeper and control bus transaction as close as possible.
+>
+> Evgeniy, could you detail the issues you are talking about so I can
+> adjust if required ?
 
-A suggestion from the bisectability point of view though.
+I was referring to the mail where you said it was a mistake and I should delete that mail,
+but apparently this is just a miscommuncation. I was surprised, because I didn't caught
+any significant issues with the patch.
 
-Since in this patch you are also invoking self_save API for a new SPR,
-namely PTCR which was previously not present, I would suggest that you
-move the PTCR changes to a different patch.
-
-Otherwise, the patchset looks good to me
-
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
-> ---
->  arch/powerpc/include/asm/opal-api.h        |  3 +-
->  arch/powerpc/include/asm/opal.h            |  1 +
->  arch/powerpc/platforms/powernv/idle.c      | 73 ++++++++++++++++++----
->  arch/powerpc/platforms/powernv/opal-call.c |  1 +
->  4 files changed, 64 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index 1dffa3cb16ba..7ba698369083 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -214,7 +214,8 @@
->  #define OPAL_SECVAR_GET				176
->  #define OPAL_SECVAR_GET_NEXT			177
->  #define OPAL_SECVAR_ENQUEUE_UPDATE		178
-> -#define OPAL_LAST				178
-> +#define OPAL_SLW_SELF_SAVE_REG			181
-> +#define OPAL_LAST				181
-> 
->  #define QUIESCE_HOLD			1 /* Spin all calls at entry */
->  #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index 9986ac34b8e2..a370b0e8d899 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -204,6 +204,7 @@ int64_t opal_handle_hmi2(__be64 *out_flags);
->  int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
->  int64_t opal_unregister_dump_region(uint32_t id);
->  int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
-> +int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
->  int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
->  int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
->  int64_t opal_pci_get_pbcq_tunnel_bar(uint64_t phb_id, uint64_t *addr);
-> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-> index 78599bca66c2..ada7ece24521 100644
-> --- a/arch/powerpc/platforms/powernv/idle.c
-> +++ b/arch/powerpc/platforms/powernv/idle.c
-> @@ -32,6 +32,11 @@
->  #define P9_STOP_SPR_MSR 2000
->  #define P9_STOP_SPR_PSSCR      855
-> 
-> +/* Caching the self-save functionality, lpcr, ptcr support */
-> +DEFINE_STATIC_KEY_FALSE(self_save_available);
-> +DEFINE_STATIC_KEY_FALSE(is_lpcr_self_save);
-> +DEFINE_STATIC_KEY_FALSE(is_ptcr_self_save);
-> +
->  static u32 supported_cpuidle_states;
->  struct pnv_idle_states_t *pnv_idle_states;
->  int nr_pnv_idle_states;
-> @@ -61,6 +66,35 @@ static bool deepest_stop_found;
-> 
->  static unsigned long power7_offline_type;
-> 
-> +/*
-> + * Cache support for SPRs that support self-save as well as kernel save restore
-> + * so that kernel does not duplicate efforts in saving and restoring SPRs
-> + */
-> +static void cache_spr_self_save_support(u64 sprn)
-> +{
-> +	switch (sprn) {
-> +	case SPRN_LPCR:
-> +		static_branch_enable(&is_lpcr_self_save);
-> +		break;
-> +	case SPRN_PTCR:
-> +		static_branch_enable(&is_ptcr_self_save);
-> +		break;
-> +	}
-> +}
-> +
-> +static int pnv_save_one_spr(u64 pir, u64 sprn, u64 val)
-> +{
-> +	if (static_branch_likely(&self_save_available)) {
-> +		int rc = opal_slw_self_save_reg(pir, sprn);
-> +
-> +		if (!rc) {
-> +			cache_spr_self_save_support(sprn);
-> +			return rc;
-> +		}
-> +	}
-> +	return opal_slw_set_reg(pir, sprn, val);
-> +}
-> +
->  static int pnv_save_sprs_for_deep_states(void)
->  {
->  	int cpu;
-> @@ -72,6 +106,7 @@ static int pnv_save_sprs_for_deep_states(void)
->  	 * same across all cpus.
->  	 */
->  	uint64_t lpcr_val	= mfspr(SPRN_LPCR);
-> +	uint64_t ptcr_val	= mfspr(SPRN_PTCR);
->  	uint64_t hid0_val	= mfspr(SPRN_HID0);
->  	uint64_t hid1_val	= mfspr(SPRN_HID1);
->  	uint64_t hid4_val	= mfspr(SPRN_HID4);
-> @@ -84,30 +119,34 @@ static int pnv_save_sprs_for_deep_states(void)
->  		uint64_t pir = get_hard_smp_processor_id(cpu);
->  		uint64_t hsprg0_val = (uint64_t)paca_ptrs[cpu];
-> 
-> -		rc = opal_slw_set_reg(pir, SPRN_HSPRG0, hsprg0_val);
-> +		rc = pnv_save_one_spr(pir, SPRN_HSPRG0, hsprg0_val);
->  		if (rc != 0)
->  			return rc;
-> 
-> -		rc = opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-> +		rc = pnv_save_one_spr(pir, SPRN_LPCR, lpcr_val);
->  		if (rc != 0)
->  			return rc;
-> 
-> +		/*
-> +		 * No need to check for failure, if firmware fails to save then
-> +		 * kernel handles save-restore for PTCR
-> +		 */
-> +		pnv_save_one_spr(pir, SPRN_PTCR, ptcr_val);
-> +
->  		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
-> -			rc = opal_slw_set_reg(pir, P9_STOP_SPR_MSR, msr_val);
-> +			rc = pnv_save_one_spr(pir, P9_STOP_SPR_MSR, msr_val);
->  			if (rc)
->  				return rc;
-> 
-> -			rc = opal_slw_set_reg(pir,
-> +			rc = pnv_save_one_spr(pir,
->  					      P9_STOP_SPR_PSSCR, psscr_val);
-> -
->  			if (rc)
->  				return rc;
->  		}
-> 
->  		/* HIDs are per core registers */
->  		if (cpu_thread_in_core(cpu) == 0) {
-> -
-> -			rc = opal_slw_set_reg(pir, SPRN_HMEER, hmeer_val);
-> +			rc = pnv_save_one_spr(pir, SPRN_HMEER, hmeer_val);
->  			if (rc != 0)
->  				return rc;
-> 
-> @@ -658,7 +697,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  		mmcr0		= mfspr(SPRN_MMCR0);
->  	}
->  	if ((psscr & PSSCR_RL_MASK) >= pnv_first_spr_loss_level) {
-> -		sprs.lpcr	= mfspr(SPRN_LPCR);
-> +		if (!static_branch_unlikely(&is_lpcr_self_save))
-> +			sprs.lpcr	= mfspr(SPRN_LPCR);
->  		sprs.hfscr	= mfspr(SPRN_HFSCR);
->  		sprs.fscr	= mfspr(SPRN_FSCR);
->  		sprs.pid	= mfspr(SPRN_PID);
-> @@ -672,7 +712,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  		sprs.mmcr1	= mfspr(SPRN_MMCR1);
->  		sprs.mmcr2	= mfspr(SPRN_MMCR2);
-> 
-> -		sprs.ptcr	= mfspr(SPRN_PTCR);
-> +		if (!static_branch_unlikely(&is_ptcr_self_save))
-> +			sprs.ptcr	= mfspr(SPRN_PTCR);
->  		sprs.rpr	= mfspr(SPRN_RPR);
->  		sprs.tscr	= mfspr(SPRN_TSCR);
->  		if (!firmware_has_feature(FW_FEATURE_ULTRAVISOR))
-> @@ -756,7 +797,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  		goto core_woken;
-> 
->  	/* Per-core SPRs */
-> -	mtspr(SPRN_PTCR,	sprs.ptcr);
-> +	if (!static_branch_unlikely(&is_ptcr_self_save))
-> +		mtspr(SPRN_PTCR,	sprs.ptcr);
->  	mtspr(SPRN_RPR,		sprs.rpr);
->  	mtspr(SPRN_TSCR,	sprs.tscr);
-> 
-> @@ -777,7 +819,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->  	atomic_unlock_and_stop_thread_idle();
-> 
->  	/* Per-thread SPRs */
-> -	mtspr(SPRN_LPCR,	sprs.lpcr);
-> +	if (!static_branch_unlikely(&is_lpcr_self_save))
-> +		mtspr(SPRN_LPCR,	sprs.lpcr);
->  	mtspr(SPRN_HFSCR,	sprs.hfscr);
->  	mtspr(SPRN_FSCR,	sprs.fscr);
->  	mtspr(SPRN_PID,		sprs.pid);
-> @@ -956,8 +999,10 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
->  	 * Program the LPCR via stop-api only if the deepest stop state
->  	 * can lose hypervisor context.
->  	 */
-> -	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT)
-> -		opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-> +	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT) {
-> +		if (!static_branch_unlikely(&is_lpcr_self_save))
-> +			opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-> +	}
->  }
-> 
->  /*
-> @@ -1298,6 +1343,8 @@ static int pnv_parse_cpuidle_dt(void)
->  		}
->  		for (i = 0; i < nr_idle_states; i++)
->  			pnv_idle_states[i].psscr_mask = temp_u64[i];
-> +		if (of_property_read_bool(np, "ibm,opal-self-save"))
-> +			static_branch_enable(&self_save_available);
->  	}
-> 
->  	/*
-> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-> index 5cd0f52d258f..11e0ceb90de0 100644
-> --- a/arch/powerpc/platforms/powernv/opal-call.c
-> +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> @@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
->  OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
->  OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
->  OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
-> +OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
->  OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
->  OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
->  OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
-> -- 
-> 2.17.1
-> 
