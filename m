@@ -2,151 +2,133 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034BCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E61C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA2902074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="JzIhcvVx"
+	by mail.kernel.org (Postfix) with ESMTP id 78A322087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgDWFUA (ORCPT
+        id S1726496AbgDWFXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:20:00 -0400
-Received: from mail.fudan.edu.cn ([202.120.224.10]:60771 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725863AbgDWFT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:19:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=oKq3oYorpk83ICjscW/wqDC15xPQ4BXvibMUxOOVjpY=; b=J
-        zIhcvVxHIXUwxoz21x6yGF0GfkokA1Lt0sS1MOwHAC9Ntz8CcCkV2RKkO8FIysnb
-        BE/tjAJX/JIMnNuBT9xoMQbtgOSGF8+ZepRDnuyNtcIa5Ifw0HNdnSuQONqJhbCk
-        0kRhnwn/oq41h2dsWps6dJfNZtY68jdihP69iDRdEU=
-Received: from localhost.localdomain (unknown [120.229.255.80])
-        by app1 (Coremail) with SMTP id XAUFCgDXx3RxJaFej708AA--.30683S3;
-        Thu, 23 Apr 2020 13:19:47 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>
-Subject: [PATCH] xfrm: Fix xfrm_state refcnt leak in xfrm_input()
-Date:   Thu, 23 Apr 2020 13:19:20 +0800
-Message-Id: <1587619161-14094-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XAUFCgDXx3RxJaFej708AA--.30683S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr4DXr18Gw47ZFykuw4Uurg_yoW5Wr15pF
-        W5C39rtrWv9ay8Aw1kt348XF1Ut3yxKryFkFykC3WUJF90y3WFgryFgFWaqFW8ArWkCa40
-        qrySqrWFg34kJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
-        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
-        wI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-        AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfHUDUUUUU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Thu, 23 Apr 2020 01:23:11 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:59348 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWFXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 01:23:11 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 6E5D68046E;
+        Thu, 23 Apr 2020 07:23:05 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 07:22:58 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Collabora Kernel ML <kernel@collabora.com>
+Subject: Re: Rule for bridge yaml dt binding maintainers?
+Message-ID: <20200423052258.GA9926@ravnborg.org>
+References: <87d082jtfn.fsf@collabora.com>
+ <20200420175909.GA5810@ravnborg.org>
+ <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
+ <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=8nJEP1OIZ-IA:10 a=7gkXJVJtAAAA:8 a=pbkAPnaIUECbBO13-8AA:9
+        a=wPNLvfGTeEIA:10 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xfrm_input() invokes xfrm_state_lookup(), which returns a reference of
-the specified xfrm_state object to "x" with increased refcnt and then
-"x" is escaped to "sp->xvec[]".
+Hi Joe.
 
-When xfrm_input() encounters error, it calls kfree_skb() to free the
-"skb" memory. Since "sp" comes from one of "skb" fields, this "free"
-behavior causes "sp" becomes invalid, so the refcount for its field
-should be decreased to keep refcount balanced before kfree_skb() calls.
+> > 
+> > > I would also be great if you or someone else could:
+> > > - teach get_maintainers about .yaml file listed maintainers
+> > 
+> > It already does to some extent. IIRC, there's a mode to extract email
+> > addresses from files.
+> 
+> --file-emails
+> 
+> > I was hoping that the MAINTAINERS file split happens sometime and we
+> > can just generate a MAINTAINERS file for bindings.
+> 
+> I don't see the value really.
+> 
+> > > - teach checkpatch that it is OK to convert .txt to .yaml
+> 
+> I suppose that get_maintainer _could_ enable --file-emails
+> for .yaml files.
+> 
+> something like this (more comments below too)
+> ---
+>  scripts/get_maintainer.pl | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+> index 6cbcd1..9d947a0 100755
+> --- a/scripts/get_maintainer.pl
+> +++ b/scripts/get_maintainer.pl
+> @@ -527,7 +527,7 @@ foreach my $file (@ARGV) {
+>  	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
+>  	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
+>  	push(@files, $file);
+> -	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
+> +	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails || $file =~ /\.yaml$/)) {
+>  	    open(my $f, '<', $file)
+>  		or die "$P: Can't open $file: $!\n";
+>  	    my $text = do { local($/) ; <$f> };
+> @@ -539,7 +539,7 @@ foreach my $file (@ARGV) {
+>  		    }
+>  		}
+>  	    }
+> -	    if ($file_emails) {
+> +	    if ($file_emails || $file =~ /\.yaml$/) {
+>  		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
+>  		push(@file_emails, clean_file_emails(@poss_addr));
+>  	    }
+>
+That would be a good step forward. So people editing yaml file
+will actually copy the maintainers and not just Rob as it is today.
+There is a growing tendency to rely on tools only for the
+list of people on cc, which is fine, but we should make those tools
+then do a good job.
 
-The reference counting issue happens in several exception handling paths
-of xfrm_input(). When those error scenarios occur such as skb_dst()
-fails, the function forgets to decrease the refcnt increased by
-xfrm_state_lookup() and directly calls kfree_skb(), causing a refcnt
-leak.
+Thanks for looking into this.
 
-Fix this issue by jumping to "put_sp" label when those error scenarios
-occur.
+Patch is:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
----
- net/xfrm/xfrm_input.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
-index aa35f23c4912..9ca534e28462 100644
---- a/net/xfrm/xfrm_input.c
-+++ b/net/xfrm/xfrm_input.c
-@@ -589,7 +589,7 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
- 		skb_dst_force(skb);
- 		if (!skb_dst(skb)) {
- 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINERROR);
--			goto drop;
-+			goto put_sp;
- 		}
- 
- lock:
-@@ -623,7 +623,7 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
- 
- 		if (xfrm_tunnel_check(skb, x, family)) {
- 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINSTATEMODEERROR);
--			goto drop;
-+			goto put_sp;
- 		}
- 
- 		seq_hi = htonl(xfrm_replay_seqhi(x, seq));
-@@ -677,13 +677,13 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
- 			inner_mode = xfrm_ip2inner_mode(x, XFRM_MODE_SKB_CB(skb)->protocol);
- 			if (inner_mode == NULL) {
- 				XFRM_INC_STATS(net, LINUX_MIB_XFRMINSTATEMODEERROR);
--				goto drop;
-+				goto put_sp;
- 			}
- 		}
- 
- 		if (xfrm_inner_mode_input(x, inner_mode, skb)) {
- 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINSTATEMODEERROR);
--			goto drop;
-+			goto put_sp;
- 		}
- 
- 		if (x->outer_mode.flags & XFRM_MODE_FLAG_TUNNEL) {
-@@ -701,7 +701,7 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
- 		err = xfrm_parse_spi(skb, nexthdr, &spi, &seq);
- 		if (err < 0) {
- 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINHDRERROR);
--			goto drop;
-+			goto put_sp;
- 		}
- 		crypto_done = false;
- 	} while (!err);
-@@ -744,6 +744,8 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
- 
- drop_unlock:
- 	spin_unlock(&x->lock);
-+put_sp:
-+	skb_ext_put_sp(sp);
- drop:
- 	xfrm_rcv_cb(skb, family, x && x->type ? x->type->proto : nexthdr, -1);
- 	kfree_skb(skb);
--- 
-2.7.4
+> > I don't see checkpatch being able to check much of what comes up in
+> > review. Maybe indentation.
+> 
+> Likely better done with another external tool.
+> 
+> Could be added to checkpatch as an external
+> call like spdxcheck.py
 
+If we grow anything more than:
+"Indent shall always be an even number of spaces and no tabs" kind of
+rules then yes, an external tool would be fine.
+
+	Sam
