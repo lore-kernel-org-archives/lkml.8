@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FFBC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73DCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 537212077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C092077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgDWXUC (ORCPT
+        id S1729230AbgDWXUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:20:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48668 "EHLO
+        Thu, 23 Apr 2020 19:20:00 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48662 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728228AbgDWXGe (ORCPT
+        by vger.kernel.org with ESMTP id S1728227AbgDWXGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:34 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvM-0004bf-0S; Fri, 24 Apr 2020 00:06:28 +0100
+        id 1jRkvL-0004bv-Qp; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-00E6kH-DZ; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvK-00E6j1-BH; Fri, 24 Apr 2020 00:06:26 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marcel Holtmann" <marcel@holtmann.org>,
-        "Jiri Kosina" <jkosina@suse.cz>
-Date:   Fri, 24 Apr 2020 00:05:01 +0100
-Message-ID: <lsq.1587683028.704630172@decadent.org.uk>
+        "Simon Wunderlich" <sw@simonwunderlich.de>,
+        "Sven Eckelmann" <sven@narfation.org>
+Date:   Fri, 24 Apr 2020 00:04:48 +0100
+Message-ID: <lsq.1587683028.842404845@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 074/245] HID: uhid: Fix returning EPOLLOUT from
- uhid_char_poll
+Subject: [PATCH 3.16 061/245] batman-adv: Fix DAT candidate selection on
+ little endian systems
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,31 +56,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit be54e7461ffdc5809b67d2aeefc1ddc9a91470c7 upstream.
+commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 upstream.
 
-Always return EPOLLOUT from uhid_char_poll to allow polling /dev/uhid
-for writable state.
+The distributed arp table is using a DHT to store and retrieve MAC address
+information for an IP address. This is done using unicast messages to
+selected peers. The potential peers are looked up using the IP address and
+the VID.
 
-Fixes: 1f9dec1e0164 ("HID: uhid: allow poll()'ing on uhid devices")
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-[bwh: Backported to 3.16: s/EPOLL/POLL/g]
+While the IP address is always stored in big endian byte order, this is not
+the case of the VID. It can (depending on the host system) either be big
+endian or little endian. The host must therefore always convert it to big
+endian to ensure that all devices calculate the same peers for the same
+lookup data.
+
+Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hid/uhid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/distributed-arp-table.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/uhid.c
-+++ b/drivers/hid/uhid.c
-@@ -726,7 +726,7 @@ static unsigned int uhid_char_poll(struc
- 	if (uhid->head != uhid->tail)
- 		return POLLIN | POLLRDNORM;
+--- a/net/batman-adv/distributed-arp-table.c
++++ b/net/batman-adv/distributed-arp-table.c
+@@ -207,9 +207,11 @@ static uint32_t batadv_hash_dat(const vo
+ {
+ 	uint32_t hash = 0;
+ 	const struct batadv_dat_entry *dat = data;
++	__be16 vid;
  
--	return 0;
-+	return POLLOUT | POLLWRNORM;
- }
+ 	hash = batadv_hash_bytes(hash, &dat->ip, sizeof(dat->ip));
+-	hash = batadv_hash_bytes(hash, &dat->vid, sizeof(dat->vid));
++	vid = htons(dat->vid);
++	hash = batadv_hash_bytes(hash, &vid, sizeof(vid));
  
- static const struct file_operations uhid_fops = {
+ 	hash += (hash << 3);
+ 	hash ^= (hash >> 11);
 
