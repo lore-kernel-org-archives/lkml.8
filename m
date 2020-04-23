@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13929C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26737C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA5020728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089772077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgDWXXc (ORCPT
+        id S1729475AbgDWXXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:23:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48442 "EHLO
+        Thu, 23 Apr 2020 19:23:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48410 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728176AbgDWXGb (ORCPT
+        by vger.kernel.org with ESMTP id S1728165AbgDWXGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:31 -0400
+        Thu, 23 Apr 2020 19:06:30 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bZ-2G; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvK-0004b6-L3; Fri, 24 Apr 2020 00:06:26 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-00E6iM-Os; Fri, 24 Apr 2020 00:06:25 +0100
+        id 1jRkvJ-00E6hu-Ee; Fri, 24 Apr 2020 00:06:25 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Su Yue" <suy.fnst@cn.fujitsu.com>,
+        "David Sterba" <dsterba@suse.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
-        "Qu Wenruo" <wqu@suse.com>, "David Sterba" <dsterba@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Fri, 24 Apr 2020 00:04:40 +0100
-Message-ID: <lsq.1587683028.12048215@decadent.org.uk>
+        "Josef Bacik" <jbacik@fb.com>, "Qu Wenruo" <wqu@suse.com>
+Date:   Fri, 24 Apr 2020 00:04:34 +0100
+Message-ID: <lsq.1587683028.710490181@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 053/245] btrfs: tree-checker: Check level for leaves
- and nodes
+Subject: [PATCH 3.16 047/245] btrfs: tree-check: reduce stack consumption
+ in check_dir_item
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,63 +58,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qu Wenruo <wqu@suse.com>
+From: David Sterba <dsterba@suse.com>
 
-commit f556faa46eb4e96d0d0772e74ecf66781e132f72 upstream.
+commit e2683fc9d219430f5b78889b50cde7f40efeba7b upstream.
 
-Although we have tree level check at tree read runtime, it's completely
-based on its parent level.
-We still need to do accurate level check to avoid invalid tree blocks
-sneak into kernel space.
+I've noticed that the updated item checker stack consumption increased
+dramatically in 542f5385e20cf97447 ("btrfs: tree-checker: Add checker
+for dir item")
 
-The check itself is simple, for leaf its level should always be 0.
-For nodes its level should be in range [1, BTRFS_MAX_LEVEL - 1].
+tree-checker.c:check_leaf                    +552 (176 -> 728)
 
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: Su Yue <suy.fnst@cn.fujitsu.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+The array is 255 bytes long, dynamic allocation would slow down the
+sanity checks so it's more reasonable to keep it on-stack. Moving the
+variable to the scope of use reduces the stack usage again
+
+tree-checker.c:check_leaf                    -264 (728 -> 464)
+
+Reviewed-by: Josef Bacik <jbacik@fb.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 4.4:
- - Pass root instead of fs_info to generic_err()
- - Adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/tree-checker.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ fs/btrfs/tree-checker.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/fs/btrfs/tree-checker.c
 +++ b/fs/btrfs/tree-checker.c
-@@ -447,6 +447,13 @@ static int check_leaf(struct btrfs_root
- 	u32 nritems = btrfs_header_nritems(leaf);
- 	int slot;
+@@ -212,7 +212,6 @@ static int check_dir_item(struct btrfs_r
  
-+	if (btrfs_header_level(leaf) != 0) {
-+		generic_err(root, leaf, 0,
-+			"invalid level for leaf, have %d expect 0",
-+			btrfs_header_level(leaf));
-+		return -EUCLEAN;
-+	}
+ 	di = btrfs_item_ptr(leaf, slot, struct btrfs_dir_item);
+ 	while (cur < item_size) {
+-		char namebuf[max(BTRFS_NAME_LEN, XATTR_NAME_MAX)];
+ 		u32 name_len;
+ 		u32 data_len;
+ 		u32 max_name_len;
+@@ -295,6 +294,8 @@ static int check_dir_item(struct btrfs_r
+ 		 */
+ 		if (key->type == BTRFS_DIR_ITEM_KEY ||
+ 		    key->type == BTRFS_XATTR_ITEM_KEY) {
++			char namebuf[max(BTRFS_NAME_LEN, XATTR_NAME_MAX)];
 +
- 	/*
- 	 * Extent buffers from a relocation tree have a owner field that
- 	 * corresponds to the subvolume tree they are based on. So just from an
-@@ -589,9 +596,16 @@ int btrfs_check_node(struct btrfs_root *
- 	unsigned long nr = btrfs_header_nritems(node);
- 	struct btrfs_key key, next_key;
- 	int slot;
-+	int level = btrfs_header_level(node);
- 	u64 bytenr;
- 	int ret = 0;
- 
-+	if (level <= 0 || level >= BTRFS_MAX_LEVEL) {
-+		generic_err(root, node, 0,
-+			"invalid level for node, have %d expect [1, %d]",
-+			level, BTRFS_MAX_LEVEL - 1);
-+		return -EUCLEAN;
-+	}
- 	if (nr == 0 || nr > BTRFS_NODEPTRS_PER_BLOCK(root)) {
- 		btrfs_crit(root->fs_info,
- "corrupt node: root=%llu block=%llu, nritems too %s, have %lu expect range [1,%zu]",
+ 			read_extent_buffer(leaf, namebuf,
+ 					(unsigned long)(di + 1), name_len);
+ 			name_hash = btrfs_name_hash(namebuf, name_len);
 
