@@ -2,66 +2,145 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73947C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBF320736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587626126;
-	bh=1519+u/O1psy9Ki9fQPIu3CaRE2VyNu6zy8FfJD5RU4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dk/oNhVuLKTePdLS5zpTiGBtDClz2LArmmbMvOWqNTrIgkOXJMObK0rPg/Bl9yepF
-	 M6VeJ+0gew4mZddP8Ef6mlA74qV+DNuO5NHzp6rq0pziu81zVC1kCVaKF8ZZsg/zka
-	 Clp8XpKxB3ZRrhStKwz52etAVeRmDFbPmOwnXk98=
+	by mail.kernel.org (Postfix) with ESMTP id 21D7821569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qj/fsWE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgDWHPX (ORCPT
+        id S1726946AbgDWHPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbgDWHPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:15:22 -0400
-Received: from localhost (unknown [49.207.59.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAF1120736;
-        Thu, 23 Apr 2020 07:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587626121;
-        bh=1519+u/O1psy9Ki9fQPIu3CaRE2VyNu6zy8FfJD5RU4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V7V/BsFGGeTdHIHuV8rAf0BtwzyRVEJzfD19lnFRg+gO1BaG4tErnLAwAy0o0abpl
-         w7wOPPxISIpMndBRWVGDpWAD+NdWQ2yL1UhJsc/vHulpZFlMOH0z6/swW60XWwud8w
-         p6HtcolqchHu1Ifcxbw8+ZO9NB48VGYW9cXI1oKM=
-Date:   Thu, 23 Apr 2020 12:45:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] dmaengine: mmp_tdma: Log an error if channel is in
- wrong state
-Message-ID: <20200423071517.GA72691@vkoul-mobl>
-References: <20200419164912.670973-1-lkundrak@v3.sk>
- <20200419164912.670973-6-lkundrak@v3.sk>
+        Thu, 23 Apr 2020 03:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgDWHPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:15:02 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5DAAC03C1AB;
+        Thu, 23 Apr 2020 00:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=nWfIZmbU7Qrbff/0/Pgfe/+8nSWp45Nz1AnrZBwZ5Z4=; b=qj/fsWE3D7YZ/S1VSMh0J1PcHp
+        L0H50uyUkcDxbgqPCv8xEkFanAuHfr9B4QQgNXueHpgVZOftkndl62xFr5nTxqGpSSlTyhjSVerar
+        JbYRXlDk0Qz8nuvGv8mwGOQ+lJK3v8GAHxSjnh4p+MGvEyV9wB+y03v6OmxH2tqB0VrV428qpGDnM
+        RwKUCde4Pt6M1CXsTfoJjkcJdtFpQCO3EOoEBSrYO91StaQv565vRsQrkSzsb0MBj75tEBkP3Cca1
+        A/qco9rXBvo7TyuaFtuubaVV8JBhngN4hl0e5ttl0eKcebao1a08m4/QD00ZwUnGM/JBY0ihANO5Q
+        bLrgtCjA==;
+Received: from [2001:4bb8:188:40ac:46e:e5e4:1e64:2584] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jRW4U-00006B-Ve; Thu, 23 Apr 2020 07:14:55 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
+        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 6/7] isofs: stop using ioctl_by_bdev
+Date:   Thu, 23 Apr 2020 09:12:23 +0200
+Message-Id: <20200423071224.500849-7-hch@lst.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200423071224.500849-1-hch@lst.de>
+References: <20200423071224.500849-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419164912.670973-6-lkundrak@v3.sk>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-04-20, 18:49, Lubomir Rintel wrote:
-> Let's log an error if the channel can't be prepared because it is in an
-> unexpected state.
+Instead just call the CD-ROM layer functionality directly, and turn the
+hot mess in isofs_get_last_session into remotely readable code.
 
-Applied, thanks
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/isofs/inode.c | 54 +++++++++++++++++++++++-------------------------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
+diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
+index 62c0462dc89f..fc48923a9b6c 100644
+--- a/fs/isofs/inode.c
++++ b/fs/isofs/inode.c
+@@ -544,43 +544,41 @@ static int isofs_show_options(struct seq_file *m, struct dentry *root)
+ 
+ static unsigned int isofs_get_last_session(struct super_block *sb, s32 session)
+ {
+-	struct cdrom_multisession ms_info;
+-	unsigned int vol_desc_start;
+-	struct block_device *bdev = sb->s_bdev;
+-	int i;
++	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
++	unsigned int vol_desc_start = 0;
+ 
+-	vol_desc_start=0;
+-	ms_info.addr_format=CDROM_LBA;
+ 	if (session > 0) {
+-		struct cdrom_tocentry Te;
+-		Te.cdte_track=session;
+-		Te.cdte_format=CDROM_LBA;
+-		i = ioctl_by_bdev(bdev, CDROMREADTOCENTRY, (unsigned long) &Te);
+-		if (!i) {
++		struct cdrom_tocentry te;
++
++		if (!cdi)
++			return -EINVAL;
++
++		te.cdte_track = session;
++		te.cdte_format = CDROM_LBA;
++		if (cdrom_read_tocentry(cdi, &te) == 0) {
+ 			printk(KERN_DEBUG "ISOFS: Session %d start %d type %d\n",
+-				session, Te.cdte_addr.lba,
+-				Te.cdte_ctrl&CDROM_DATA_TRACK);
+-			if ((Te.cdte_ctrl&CDROM_DATA_TRACK) == 4)
+-				return Te.cdte_addr.lba;
++				session, te.cdte_addr.lba,
++				te.cdte_ctrl & CDROM_DATA_TRACK);
++			if ((te.cdte_ctrl & CDROM_DATA_TRACK) == 4)
++				return te.cdte_addr.lba;
+ 		}
+ 
+ 		printk(KERN_ERR "ISOFS: Invalid session number or type of track\n");
+ 	}
+-	i = ioctl_by_bdev(bdev, CDROMMULTISESSION, (unsigned long) &ms_info);
+-	if (session > 0)
+-		printk(KERN_ERR "ISOFS: Invalid session number\n");
+-#if 0
+-	printk(KERN_DEBUG "isofs.inode: CDROMMULTISESSION: rc=%d\n",i);
+-	if (i==0) {
+-		printk(KERN_DEBUG "isofs.inode: XA disk: %s\n",ms_info.xa_flag?"yes":"no");
+-		printk(KERN_DEBUG "isofs.inode: vol_desc_start = %d\n", ms_info.addr.lba);
+-	}
+-#endif
+-	if (i==0)
++
++	if (cdi) {
++		struct cdrom_multisession ms_info;
++
++		ms_info.addr_format = CDROM_LBA;
++		if (cdrom_multisession(cdi, &ms_info) == 0) {
+ #if WE_OBEY_THE_WRITTEN_STANDARDS
+-		if (ms_info.xa_flag) /* necessary for a valid ms_info.addr */
++			/* necessary for a valid ms_info.addr */
++			if (ms_info.xa_flag)
+ #endif
+-			vol_desc_start=ms_info.addr.lba;
++				vol_desc_start = ms_info.addr.lba;
++		}
++	}
++
+ 	return vol_desc_start;
+ }
+ 
 -- 
-~Vinod
+2.26.1
+
