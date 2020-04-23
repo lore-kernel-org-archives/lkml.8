@@ -2,117 +2,113 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B36C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FDBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20E78214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512622077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UZsxJbTk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lyKXtZ/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgDWJkb (ORCPT
+        id S1726997AbgDWJlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:40:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54673 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726410AbgDWJka (ORCPT
+        Thu, 23 Apr 2020 05:41:07 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13592 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726364AbgDWJlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:40:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587634829;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+3ygCTnYu/wlHXxWXOoaGQbutWunwVNrFgGVQyQXUr0=;
-        b=UZsxJbTkkSth9DFtMA1BaOEOBs7v1Y0ICoJZHgSYjxjmJHZSOPMBfdqKd4gkYQrLy/Ksx3
-        G07XRGZH01/K2fgdBLzIyVl9+K/bk90fG2+qxG+CS//8MrLBsf4Hddgdk0eLK371tRMH6w
-        anDjnH1SC5931yp1F3Z3BxeGb9B5G/E=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-e_LH8LoAMVSUe7s3rANEhg-1; Thu, 23 Apr 2020 05:40:28 -0400
-X-MC-Unique: e_LH8LoAMVSUe7s3rANEhg-1
-Received: by mail-wr1-f72.google.com with SMTP id p16so2572966wro.16
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:40:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+3ygCTnYu/wlHXxWXOoaGQbutWunwVNrFgGVQyQXUr0=;
-        b=W6YKznXoOI62HTQhixqMScsZEL9CdUEerYNSKyImVM5ac4IlZCStmztPCTYqo3GSAO
-         gSPvlAjlPO4j46PHeQVK7DMGyTQtwLNRNFVWGlLZCpEVDtPsXJyTtmakSHB96h6HUTlg
-         edigJ95ffrVbclstjlw07WcZkWbQtChycX2DVh5/WnOy/5P+1P68imL01qHxBwmFklYM
-         MHuZiv+QTwoK624gZY+pCf+bTnQmk1iMS+YfhAUzSziYqwP1ElE6K2foWvhiJhOxWgZN
-         iYm5vbx+Wt2KuJo8wkNPM5WKiZPX1e4WlfqwjWba7mZciGbCDRjXq0Bx4U3WsWwv/V/f
-         2VnA==
-X-Gm-Message-State: AGi0PuaZoj8g5vNjreD0Lt8A+kWqbL4ic6UqSJTR4uq8nEE/09T5mEY/
-        4pPod7JnlD95T2T3zWVzXtinCo+oM48UeCSfSpp3V5tOUSWciy/Y3y7OmUx5NzZHNzbIZIHHRhD
-        J4q4zSuYznjXZNGIXiEZvuIuB
-X-Received: by 2002:a05:600c:2341:: with SMTP id 1mr3045515wmq.153.1587634826801;
-        Thu, 23 Apr 2020 02:40:26 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI5nDN9Dp9bQCt/hSG35BrUOAHLEb9eZzK5+7BCQXTdDq2vMBThkHU8kWWVihCu3FLU21shzg==
-X-Received: by 2002:a05:600c:2341:: with SMTP id 1mr3045499wmq.153.1587634826607;
-        Thu, 23 Apr 2020 02:40:26 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id z1sm2881789wmf.15.2020.04.23.02.40.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 02:40:26 -0700 (PDT)
-Subject: Re: [PATCH v2 5/5] KVM: VMX: Handle preemption timer fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
- <1587632507-18997-6-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <99d81fa5-dc37-b22f-be1e-4aa0449e6c26@redhat.com>
-Date:   Thu, 23 Apr 2020 11:40:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 05:41:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587634866; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=X4JlYBXDzz9vV+CUfgeK/NaJLq5Ep+S6sMu6NUItr0I=;
+ b=lyKXtZ/16S5tyWj9NGZKqaLsY8RPwwLQ/eVVdrFcTt0J35yURc2ov5jdzcBm8mHP4VnTPX7a
+ O/hDEQWGMoO6OdWaTh04827+yIP7wM89F80yHGOOtHWndXMdLyu+3sPD7vj/UUXa38/kHhRr
+ FJ3HdVZlCRHVddFHvVvTnZdVlvg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea162b0.7f2ab732c848-smtp-out-n05;
+ Thu, 23 Apr 2020 09:41:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C6496C43637; Thu, 23 Apr 2020 09:41:03 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C107C433CB;
+        Thu, 23 Apr 2020 09:41:03 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <1587632507-18997-6-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 23 Apr 2020 15:11:03 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] iommu/arm-smmu: Demote error messages to debug in
+ shutdown callback
+In-Reply-To: <006edb3b-8834-41fe-d9d1-fe873edfca99@arm.com>
+References: <20200327132852.10352-1-saiprakash.ranjan@codeaurora.org>
+ <0023bc68-45fb-4e80-00c8-01fd0369243f@arm.com>
+ <37db9a4d524aa4d7529ae47a8065c9e0@codeaurora.org>
+ <5858bdac-b7f9-ac26-0c0d-c9653cef841d@arm.com>
+ <d60196b548e1241b8334fadd0e8c2fb5@codeaurora.org>
+ <CAD=FV=WXTN6xxqtL6d6MHxG8Epuo6FSQERRPfnoSCskhjh1KeQ@mail.gmail.com>
+ <890456524e2df548ba5d44752513a62c@codeaurora.org>
+ <20200331074400.GB25612@willie-the-truck>
+ <1bf04938249bcd5b2111c1921facfd25@codeaurora.org>
+ <CAD=FV=VBM6cS1UmWTUJ2vrt0a2zn7xV3C53tpthBx58M2=1JPg@mail.gmail.com>
+ <6c82e688f335b9c07b0f52987244664b@codeaurora.org>
+ <006edb3b-8834-41fe-d9d1-fe873edfca99@arm.com>
+Message-ID: <685e51afcf8f89c2d8e225716a57b67a@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 11:01, Wanpeng Li wrote:
-> +bool kvm_lapic_expired_hv_timer_fast(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_lapic *apic = vcpu->arch.apic;
-> +	struct kvm_timer *ktimer = &apic->lapic_timer;
-> +
-> +	if (!apic_lvtt_tscdeadline(apic) ||
-> +		!ktimer->hv_timer_in_use ||
-> +		atomic_read(&ktimer->pending))
-> +		return 0;
-> +
-> +	WARN_ON(swait_active(&vcpu->wq));
-> +	cancel_hv_timer(apic);
-> +
-> +	ktimer->expired_tscdeadline = ktimer->tscdeadline;
-> +	kvm_inject_apic_timer_irqs_fast(vcpu);
-> +
-> +	return 1;
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_lapic_expired_hv_timer_fast);
+On 2020-04-23 14:58, Robin Murphy wrote:
+> On 2020-04-23 9:17 am, Sai Prakash Ranjan wrote:
+> [...]
+>>> Any update on the status here?  If I'm reading the conversation 
+>>> above,
+>>> Robin said: "we'll *always* see the warning because there's no way to
+>>> tear down the default DMA domains, and even if all devices *have* 
+>>> been
+>>> nicely quiesced there's no way to tell".  Did I understand that
+>>> properly?  If so, it seems like it's fully expected to see this
+>>> message on every reboot and it doesn't necessarily signify anything
+>>> bad.
+>>> 
+>> 
+>> Understanding is the same, waiting for Will and Robin to check if its 
+>> OK
+>> to make the message more friendly.
+> 
+> The way I see it, we essentially just want *something* visible that
+> will correlate with any misbehaviour that *might* result from turning
+> off a possibly-live context. How about simply "disabling translation",
+> at dev_warn or dev_info level?
+> 
 
-Please re-evaluate if this is needed (or which parts are needed) after
-cleaning up patch 4.  Anyway again---this is already better, I don't
-like the duplicated code but at least I can understand what's going on.
 
-Paolo
+Sounds good, I'll go with disabling translation with dev_info.
 
+Thanks,
+Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
