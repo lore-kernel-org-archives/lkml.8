@@ -2,114 +2,106 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B3DC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF00C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A072C20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CBD2137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gve4+ZOS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZeJxcYmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgDWCXx (ORCPT
+        id S1726525AbgDWCYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43750 "EHLO
+        Wed, 22 Apr 2020 22:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgDWCXx (ORCPT
+        with ESMTP id S1725781AbgDWCYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:23:53 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0473C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 19:23:51 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t4so1720427plq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 19:23:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eqFUKGkgi/7711Wd38R/oVpsnZqk153pOxex7VFlhKU=;
-        b=Gve4+ZOSbBsFD7X0/46iWM+Blcp+bEInJawIuG4DDAMMxWQXY8av0kd1/fY24V6zdT
-         ELy8Vh8MTreWostHMbb8auwZwm66HdtXBA9EKl7wRW+v112NjfOXIZ2ArntK/RJVlh1Z
-         uhalFEqrBscwkRCDYvmvaRkXL5CoGQuM1dCeRK6LXsqoSA2yJZYAvr5JGWPkH09U1AsT
-         mkavbEi4lPMDXu+O2riYe908bm3/sPNsuq+8gmWdMhYSB0QRf6rHMHyRdBKqrmhEqiE7
-         jXTP4pjwsGNm9HnsQTCJVv/ExMF1I5EFbjDGZYM2iHNqbh01gwuoll9vNLavKQkwmPyT
-         8fPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eqFUKGkgi/7711Wd38R/oVpsnZqk153pOxex7VFlhKU=;
-        b=AhDW0eHbI6reoO6QMYWOQDiBeauBI4A/Dejhqm9zUDKHvnJKSE+WaAL89tVt6nYbqk
-         cl0Bi/GS6F8KKBWjmbrIkQMRkBjVdWqqrgrc2JospuADK6kFU9VBQ0NRWHiId5CsyxIR
-         NYMjyEN9CelY4vVomPhhZXOB/3oYNLmcA1asoyEFcukRn6CeFpqIboW7MJrw6OcRbeyQ
-         dqM2eZu/c1nMKI6lrpZDQY2jGp04hnzs816udTpK/9BnovW8ZeXdZTCD5l2fbBC1uegu
-         sJCKqQMxWg2lF0abQmTdn1OMePnDRCO6YtQgkj1TIID1ZSE066nscQilVqUsWnFy+NCu
-         IYCA==
-X-Gm-Message-State: AGi0PubO0PZlsVUMAUuMv3/EQ1z67bzjtk7RLdh1q34yn7xz++W1DWM2
-        7zYSh+sNLp9ceIKLHCaUn28HKQ==
-X-Google-Smtp-Source: APiQypK1wUBVfNamJOHbWROPygChJ+zXEaD4hi3JQ65lkp1FVEmTMJ3Mzo7b2yTja1eNX2IbCHqx5A==
-X-Received: by 2002:a17:902:76c4:: with SMTP id j4mr1627192plt.177.1587608631391;
-        Wed, 22 Apr 2020 19:23:51 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x26sm854034pfo.218.2020.04.22.19.23.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 19:23:50 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 19:24:17 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: qcom: c630: fix asm dai setup
-Message-ID: <20200423022417.GT20625@builder.lan>
-References: <20200422102044.8995-1-srinivas.kandagatla@linaro.org>
+        Wed, 22 Apr 2020 22:24:30 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E19C03C1AA;
+        Wed, 22 Apr 2020 19:24:30 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4971Mv6JbCz9sP7;
+        Thu, 23 Apr 2020 12:24:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587608668;
+        bh=5fzpnDBD3kTHv78dET2bCLbFuvakH+fA/CNPxrKUKr4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZeJxcYmpYJNiwo84HYTaPIwqhkbHq+xqcG1hMzxBZdMzAwCm3M3evOpHswR6h7hk7
+         WNqEYlNKBqzfsWRYs8wO5m4C5kTIxKqTX5daR5jOVZa+eCIACw6M8nE7WV5ZarMUjV
+         ASodkdWSR7uKDKEwWA8I6KB54ccW/c9wsBmDfZ5QZS0P/g1TNCpcghMdM5AZZm0AOF
+         9GsAK7FUPBxZW/dq5H8JdimPgu07dEIor6brvX5i0STpmzdo+IJSRDLceFwQICNyk1
+         7pDw4m8FKnoqh6LfHLduOkTP4CSqQPGsBoXABpnGLRvUdohNXFT2jl7mcd9ADR+sHZ
+         TTYhsjCWnuxHw==
+Date:   Thu, 23 Apr 2020 12:24:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yintian Tao <yttao@amd.com>,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Subject: linux-next: build warning after merge of the amdgpu tree
+Message-ID: <20200423122425.268829b2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422102044.8995-1-srinivas.kandagatla@linaro.org>
+Content-Type: multipart/signed; boundary="Sig_/BQpd7i+P6VKAZHz0O_d8_2.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22 Apr 03:20 PDT 2020, Srinivas Kandagatla wrote:
+--Sig_/BQpd7i+P6VKAZHz0O_d8_2.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> "direction" property is only valid for asm compressed dais,
-> so remove it for non compressed dais
-> 
-> Fixes: 45021d35fcb2 ("arm64: dts: qcom: c630: Enable audio support")
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hi all,
 
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+After merging the amdgpu tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-Regards,
-Bjorn
+drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function 'gfx_v8_0_ring_emit_rreg=
+':
+drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:6396:21: warning: unused variable 'ki=
+q' [-Wunused-variable]
+ 6396 |  struct amdgpu_kiq *kiq =3D &adev->gfx.kiq;
+      |                     ^~~
+drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c: In function 'gfx_v10_0_ring_emit_rr=
+eg':
+drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c:7608:21: warning: unused variable 'k=
+iq' [-Wunused-variable]
+ 7608 |  struct amdgpu_kiq *kiq =3D &adev->gfx.kiq;
+      |                     ^~~
 
-> ---
->  arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> index 3b617a75fafa..51a670ad15b2 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -359,12 +359,10 @@
->  &q6asmdai {
->  	dai@0 {
->  		reg = <0>;
-> -		direction = <2>;
->  	};
->  
->  	dai@1 {
->  		reg = <1>;
-> -		direction = <1>;
->  	};
->  };
->  
-> -- 
-> 2.21.0
-> 
+Introduced by commit
+
+  5e25f26086f6 ("drm/amdgpu: request reg_val_offs each kiq read reg")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/BQpd7i+P6VKAZHz0O_d8_2.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6g/FkACgkQAVBC80lX
+0GzaFgf/Qj3aXLZUp0O+JHZWgDi1JsKq/nFApY4R/OOqpPyRwGhEYjigTtJyzrUy
+s0JIz9eGgthsJ//IxNdRcSyaID9wNiit0c0eFXlYe4QRDbrlVbxvwr12TL06/x1y
+3hCg0Kpuy+/2MkWu7dJ9CkNBO6rnIgJGRJME/7r53LPX9m2nFD4VKBOoSzPFjzJ/
+X+iuP81rV+PVWAcEGZMsL+6ptOmj6Dc2X0wpUAz0oWNS5aD+VBdfvXogsWzQRRRI
++0bubql4Upy20k1OQpI2/v6oM9S+V3knNde0pg3d7N/G5DKljsEDMzCUKBTisUs4
+fIjxa2IifJ5vSvIuP6Q7zjAx00C8Tw==
+=BYBC
+-----END PGP SIGNATURE-----
+
+--Sig_/BQpd7i+P6VKAZHz0O_d8_2.--
