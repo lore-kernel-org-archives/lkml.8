@@ -2,138 +2,110 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27FDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684EEC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA02B20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402D02076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:14:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chSOWq4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgDWON4 (ORCPT
+        id S1728450AbgDWOOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:13:56 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2088 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726450AbgDWONz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:13:55 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id A235B288AFABC7CBEA83;
-        Thu, 23 Apr 2020 15:13:53 +0100 (IST)
-Received: from [127.0.0.1] (10.47.5.255) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 23 Apr
- 2020 15:13:51 +0100
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     Christoph Hellwig <hch@infradead.org>,
-        Hannes Reinecke <hare@suse.de>
-CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
- <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
- <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
- <39bc2d82-2676-e329-5d32-8acb99b0a204@suse.de>
- <20200407163033.GA26568@infradead.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ae3b498b-aea8-dc09-53b8-9e160effc681@huawei.com>
-Date:   Thu, 23 Apr 2020 15:13:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 23 Apr 2020 10:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726450AbgDWOOV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:14:21 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0446AC08E934
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:14:21 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id g2so2402460plo.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Gr4q+GtQ73VeA1ex9WDdOXnvVsAGwwpT9Br82wEFbbM=;
+        b=chSOWq4WT8sLvJ6tgwVOsVV5xwk0uqU1QNxzyAno/WKveBs/2IXVsFUCOT54GDobkv
+         uPcs1fPtUIZUVsC6VD8qweivTuwJ/1hAj/RawRP5iJNQVG142svwWGv6aLVblg04PQQg
+         DH/k4yOQrq3alOMg9cqUM9x3UI82NDP4tWpYZgG0gL5C79inVyY8+AJMTRRBBUaOwZ+b
+         PZWTFjzPSdf8CZBov1dA/M8NALAUc2B7KSUAdsJs6bRzc75liNI157k5AanFHPLP0MJy
+         2KGWGXRQtHHGqLi0YA8KehFLMOfixaDWKcEjzB6BIJ2E6hyxgWri3GwAUGkQtV+81miE
+         bq3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gr4q+GtQ73VeA1ex9WDdOXnvVsAGwwpT9Br82wEFbbM=;
+        b=CDqBRnQwLE8+JxVmn8+97Ma9btA9cADsiYGj1AEmsBqrKJjhQLy0iMmbUjjOP9abLU
+         SpPixJER6Qa3Hj1qEgDpm8txxMuKElH8HgGknkuEXdiaKuRvgA6CaO3b+kLzkslP1qPr
+         bRNO7JvuUt5AKCvp2lEfgHCqRmK4LzZSwr3Z1gM5ljH52ArL8tnJPISw8SHjqQ+PFlJ8
+         ElC+fkEW8TThoRd1ZbY67xyoP5lmP37duqLvg+xpykNifDTn5pnklEma+Ro+GH75axyV
+         GSGYBCkjUl5QN5119a3oj2kgzlcGHjf/tq0LkthZ4RkD3D5F0zF4Ke9Tb5vZiszWYuOI
+         bxIA==
+X-Gm-Message-State: AGi0PubdRaC2HM5ZvuvHimasWED7EuqupJI15gsvBU97eNT55Z2m3z7D
+        FHwfME657+ur4V5918zfT+Q=
+X-Google-Smtp-Source: APiQypJ9D5YwGJP6XZ0Hx/3cE3rM1cNh5FmISzcRlldumlGuRKgCjPow9KPEvSp4D9K3K9JS3R/h6Q==
+X-Received: by 2002:a17:902:aa97:: with SMTP id d23mr3921865plr.244.1587651260522;
+        Thu, 23 Apr 2020 07:14:20 -0700 (PDT)
+Received: from localhost (176.122.158.71.16clouds.com. [176.122.158.71])
+        by smtp.gmail.com with ESMTPSA id s145sm2237772pgs.57.2020.04.23.07.14.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Apr 2020 07:14:20 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 22:14:16 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] drm/bochs: fix an issue of ioremap() leak
+Message-ID: <20200423141416.GA1562@nuc8i5>
+References: <20200421164543.16605-1-zhengdejin5@gmail.com>
+ <CAHp75Ve4JwkM+=WHHF73jwNwRS39E-xPDrcn77zCUTpVkj8buA@mail.gmail.com>
+ <20200422135215.GA25950@nuc8i5>
+ <CAHp75Vf2j-QraBxKofgyhtAxpHXnik3DP9kefPhA_d3BuSjfvw@mail.gmail.com>
+ <20200422152142.GA26943@nuc8i5>
+ <20200423101420.ityynrorrehjvxrs@sirius.home.kraxel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200407163033.GA26568@infradead.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.5.255]
-X-ClientProxiedBy: lhreml722-chm.china.huawei.com (10.201.108.73) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423101420.ityynrorrehjvxrs@sirius.home.kraxel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/04/2020 17:30, Christoph Hellwig wrote:
-> On Tue, Apr 07, 2020 at 04:00:10PM +0200, Hannes Reinecke wrote:
->> My concern is this:
->>
->> struct scsi_device *scsi_get_host_dev(struct Scsi_Host *shost)
->> {
->> 	[ .. ]
->> 	starget = scsi_alloc_target(&shost->shost_gendev, 0, shost->this_id);
->> 	[ .. ]
->>
->> and we have typically:
->>
->> drivers/scsi/hisi_sas/hisi_sas_v3_hw.c: .this_id                = -1,
->>
->> It's _very_ uncommon to have a negative number as the SCSI target device; in
->> fact, it _is_ an unsigned int already.
->>
->> But alright, I'll give it a go; let's see what I'll end up with.
+On Thu, Apr 23, 2020 at 12:14:20PM +0200, Gerd Hoffmann wrote:
+>   Hi,
 > 
-> But this shouldn't be exposed anywhere.  And I prefer that over having
-> magic requests/scsi_cmnd that do not have a valid ->device pointer.
-> .
+> > I am a newbie, andy gave me some directions to submit the patch, eg: check
+> > ioremap leak. At this time, I found that the bochs driver may have similar
+> > problems, so I submitted this patch, then, Andy said the best is to switch
+> > this driver to use pcim _ * () functions and drop tons of legacy code.
+> > I think we might be able to fix this issue first, after that, drop tons
+> > of legacy code by pcim_*() functions. Can you give me some suggestions?
+> > thank you very much!
 > 
+> drm has drmm_* functions for that.  Daniel Vetter <daniel@ffwll.ch> has
+> a patch series pending switching lots of drivers over and IIRC it fixes
+> this bug too.
+>
+Gerd, Thanks for your info and abandon this commit. 
 
-(just looking at this again)
+BR,
+Dejin
 
-Hi Christoph,
-
-So how would this look added in scsi_lib.c:
-
-struct scsi_cmnd *scsi_get_reserved_cmd(struct Scsi_Host *shost)
-{
-	struct scsi_cmnd *scmd;
-	struct request *rq;
-	struct scsi_device *sdev = scsi_get_host_dev(shost);
-
-	if (!sdev)
-		return NULL;
-
-	rq = blk_mq_alloc_request(sdev->request_queue,
-				  REQ_OP_DRV_OUT | REQ_NOWAIT,
-				  BLK_MQ_REQ_RESERVED);
-	if (IS_ERR(rq)) // fix tidy-up
-		return NULL;
-	WARN_ON(rq->tag == -1);
-	scmd = blk_mq_rq_to_pdu(rq);
-	scmd->request = rq;
-	scmd->device = sdev;
-
-	return scmd;
-}
-EXPORT_SYMBOL_GPL(scsi_get_reserved_cmd);
-
-void scsi_put_reserved_cmd(struct scsi_cmnd *scmd)
-{
-	struct request *rq = blk_mq_rq_from_pdu(scmd);
-
-	if (blk_mq_rq_is_reserved(rq)) {
-		struct scsi_device *sdev = scmd->device;
-		blk_mq_free_request(rq);
-		scsi_free_host_dev(sdev);
-	}
-}
-EXPORT_SYMBOL_GPL(scsi_put_reserved_cmd);
-
-Not sure if we want a static scsi_device per host, or alloc and free 
-dynamically.
-
-(@Hannes, I also have some proper patches for libsas if you want to add it)
-
-Cheers,
-John
+> cheers,
+>   Gerd
+> 
