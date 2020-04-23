@@ -2,60 +2,81 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA63C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5768EC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17B3214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KV91X82h"
+	by mail.kernel.org (Postfix) with ESMTP id 426EF206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgDWGMm (ORCPT
+        id S1726738AbgDWGO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725562AbgDWGMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:12:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B4EC03C1AB;
-        Wed, 22 Apr 2020 23:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jfQK2PwAh2C3DIS291PKwmLlhxlhjUsgV0psLy3bMmM=; b=KV91X82hek96DEsT+pDcDJJIGj
-        9GZPqbKo/WUN/60ih1bKKhXiFmYQ5uA1e2rePhyRNR5rybC3qz+UsJC/MPW4X0wEOLJXhmhqmlEN/
-        u+V6l+t8nifGbbIIV2wdhg/BmUa/2Cltiyn4hw5SRuWsmi4KCOWiamn7DG8VdnLPySpoXHUKI2Hrm
-        I06C1qIk6epjtEJYbdnSjmAIr0CJrO2NEgdH8bOxb+ITemuMnO5APHTKYNR1WjBzJhtsxxoUnJKOY
-        UWILe+jOxHNh/rQrDkCazWVD7SglJ+x88Q2Ddmem1Jd2U69tKt6kh9Ua/36lo+zcGG7+FNVZfvU29
-        SITh1RlA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jRV6C-0003IR-Sl; Thu, 23 Apr 2020 06:12:36 +0000
-Date:   Wed, 22 Apr 2020 23:12:36 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     John Oldman <john.oldman@polehill.co.uk>
-Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: ata: sata_inic162x fixed a spelling issue
-Message-ID: <20200423061236.GA12577@infradead.org>
-References: <20200422140332.22923-1-john.oldman@polehill.co.uk>
+        Thu, 23 Apr 2020 02:14:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56314 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725562AbgDWGO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 02:14:26 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 45E3BCF9CDD682DBC164;
+        Thu, 23 Apr 2020 14:14:24 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
+ 14:14:18 +0800
+Subject: Re: [PATCH -next v2] PCI: dwc: Make hisi_pcie_platform_ops static
+To:     Zou Wei <zou_wei@huawei.com>, <lorenzo.pieralisi@arm.com>,
+        <amurray@thegoodpenguin.co.uk>, <bhelgaas@google.com>
+References: <1587611883-26960-1-git-send-email-zou_wei@huawei.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5EA13239.5070908@hisilicon.com>
+Date:   Thu, 23 Apr 2020 14:14:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422140332.22923-1-john.oldman@polehill.co.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1587611883-26960-1-git-send-email-zou_wei@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 03:03:32PM +0100, John Oldman wrote:
-> Fixed a warning message spelling issue.
+On 2020/4/23 11:18, Zou Wei wrote:
+> Fix the following sparse warning:
+> 
+> drivers/pci/controller/dwc/pcie-hisi.c:365:21: warning:
+> symbol 'hisi_pcie_platform_ops' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zou Wei <zou_wei@huawei.com>
 
-Why does this say Staging in the subject?
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+
+Thanks,
+Zhou
+
+> ---
+>  drivers/pci/controller/dwc/pcie-hisi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
+> index 6d9e1b2..11f5ff7 100644
+> --- a/drivers/pci/controller/dwc/pcie-hisi.c
+> +++ b/drivers/pci/controller/dwc/pcie-hisi.c
+> @@ -362,7 +362,7 @@ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
+>  	return 0;
+>  }
+>  
+> -struct pci_ecam_ops hisi_pcie_platform_ops = {
+> +static struct pci_ecam_ops hisi_pcie_platform_ops = {
+>  	.bus_shift    = 20,
+>  	.init         =  hisi_pcie_platform_init,
+>  	.pci_ops      = {
+> 
+
