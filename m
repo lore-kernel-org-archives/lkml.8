@@ -2,136 +2,153 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871A4C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB75C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2432076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E2020787
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ITMDRs6S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ML8Zyc4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgDWKdR (ORCPT
+        id S1727021AbgDWKdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:33:17 -0400
-Received: from mail-eopbgr20084.outbound.protection.outlook.com ([40.107.2.84]:3350
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725863AbgDWKdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:33:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cWsOpDYUuSQ0T/nTaIbj16F+qPdYPv2xwTwsy4UrXC3rClxUaghv8ROqD1TXT0YlhWtV+fCBhlvBUW+YZ9Ez5n+jOayEALRgjTKQIQU1yD90HEXcEbJkofUBwuQK+FXRc/QsivqjLOwIUKigJjGkvlddsiKfU6FeHqwHjjI1h06fPMPZltANK4xPig4frDri5El8bDyQ2dDwGNjDfM+ptrTvlx6YhZXtZVJMdHMc2QtaZG9BPIDSLF9Ouf0TgCeZzBVl0V0H0oJ1mUwzgFPg0GOOcVyQNHsQ4wDz/nHG6ocN2ddp2jsSsmyG7qG5lJud85uwjTc3ZEXDadQC9d8E3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/GH7jddGNw8L76ZIqCAgKhlt5Iin9pNRtgPLrCuVM44=;
- b=XDARzUEdoLaawxyeeUt5SwlCrU7mfrxlFo7HWX+cNvdxNC4HnP2ygaCJB1gUc4LI7NR0a5Jw0rnjSitB6c76NYA07Q0F3WZqR2rZhB8as9u8AUeiB+9/rUdGyZLl/t7x0Qpwrdct/fUSos1RyMLNiiqS0/Jluo9a176Vvh68pNbcl4mCThFIwSXxf9Rx+ldVJGOqbDv+5ZONV4KYWMnjO0DiIqwNz0rEyQupFiluWLqsCe1DO27HNYnGaG8sF7B1gwFT9v7NH5nziuGF+oar+wuKK42XfbVjPAbk+HX90CLUlZF7C87jvQEIHSqiqrZhY0sjhjgEcrYvTnAX6pOfsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/GH7jddGNw8L76ZIqCAgKhlt5Iin9pNRtgPLrCuVM44=;
- b=ITMDRs6SJGW6QWSOJbPiZNfHzGzotHw5P4BbmJBWoHRGuJfkbvR7YIaLRebBift6fTYlRNaY9Gi4x7sOwR6D9h1V37X3dEdXWW95nFUWPI1eiCm7ZOZvSi+bZZ5FUNndXBvcEle7BLLf7ZkCY3WE385fMXmesG7KJWqrIzblDr0=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4886.eurprd04.prod.outlook.com (2603:10a6:20b:6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Thu, 23 Apr
- 2020 10:33:10 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::d9f7:5527:e89d:1ae3]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::d9f7:5527:e89d:1ae3%7]) with mapi id 15.20.2921.032; Thu, 23 Apr 2020
- 10:33:10 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 4/4] firmware: imx: scu-pd: add more cm4 resources
-Thread-Topic: [PATCH 4/4] firmware: imx: scu-pd: add more cm4 resources
-Thread-Index: AQHWGT4B5RWzQBophkGzJ+N5J4+FiqiGgKjA
-Date:   Thu, 23 Apr 2020 10:33:10 +0000
-Message-ID: <AM6PR04MB4966A8D160E0F1970A24E9F280D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1587625174-32668-1-git-send-email-peng.fan@nxp.com>
- <1587625174-32668-5-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1587625174-32668-5-git-send-email-peng.fan@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bcf53d01-6b2f-4011-01b9-08d7e771b83c
-x-ms-traffictypediagnostic: AM6PR04MB4886:|AM6PR04MB4886:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4886DFE9B26A9A97350E903E80D30@AM6PR04MB4886.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:262;
-x-forefront-prvs: 03827AF76E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(52536014)(110136005)(2906002)(54906003)(6506007)(4326008)(186003)(316002)(55016002)(7696005)(26005)(33656002)(5660300002)(9686003)(86362001)(478600001)(71200400001)(66446008)(81156014)(66946007)(66476007)(64756008)(76116006)(44832011)(8936002)(8676002)(66556008);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +kh17lqJJTlJSvx7Y0+BOcHVGTteBdSm+EzXXz7woNm09+fvkIBeLbrszuPatNKtXG/GCdteSSF3t0fS+vZNtYtvXag+BF0fp/4bpNdzJKiBmNqW/OUQNiAGJVJ5oDqijoBwIPto7EaH6oj12PMAH9O4M584X6O+x4WtWgJRZISakixxQDX6tZ2hfpPZ4mN5L53rW4Wj0ijC/qeZRUhxOgYhJW6dKEiFRJ+nqAh1S30wo2ukRsUvnr3oxxe6tL5fPe0/OrDddCxWlDVLA4O65/4yl+OkTD51BF2T3sMT2yVFDfhwvftEai8PYuU14cJ7k2xj/bgq6n3xYHucoZd6tUcSIJ1x2vBCo1Q+7RaBzvmS9X7zfhpO54OQVPGq7IsXE3G2CcT9FYJmRCTjllIVzvC6Da0JsXzmXHvZAdMJjfsL4WxcKdDM16jvSx9UcyQD
-x-ms-exchange-antispam-messagedata: 71oE0Fs5WckwVfNMLzOltOp/8GNu+CNq3T1+z/kXHS/czMifKXca/YJe2O5rtuMLY/XhvVvUhdHWrNDBKZ8v2AsEuNaNjE5NFwTt1yvxrP1gout/OaN1wPHnxugokplb8Ex/560UyZSFftOmu927yA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 23 Apr 2020 06:33:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725863AbgDWKdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:33:39 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375C6C035494
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 03:33:39 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id r26so6004632wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 03:33:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6jPdlcIxfEbZ7t28aDiBn6sEBBwa7mpS/DnDKlaphSU=;
+        b=ML8Zyc4mlZRhLCXmy4qzW7nX9oIJfOtbfiHZYvQjeqyH1oqqLkdFPIqnmn76pOZjSH
+         lEI+yoBOXKlNeTeNbj+HnTskuSWg2wtdQ3WImhDNxfcAIFbgJq9z80eU5ijQD0g2xzWa
+         ejfm6FZFUS49oei0VyUZYtHgYmBnjMPApm/TdQ4ZhizA666dpf9U2KtJ1F/SpRaLJvQH
+         0wpmC7ncQ4yQSzvTLWrgk0WkCRUkM+ypesSlCwxweAaEC8OOTfwpY5fmmLIOdujOTxTO
+         cfbkyVuLvM+qk2Ho3dmdLI7iIzZ5sdqGAdUt9vtF47POujaVtAxdytqs4ZfAqV3xd71l
+         0wgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6jPdlcIxfEbZ7t28aDiBn6sEBBwa7mpS/DnDKlaphSU=;
+        b=kn5jeqY7Asqkk2NXkAgwckeUcGnm40jrmd7CDh8iuqbLir5O7jyIGBtuVgAXSRtai0
+         dg3yqCQ9DHetXlqQ2wj/pOEzmwRZfU7bClMGBRzVLGg/TOyuHKUtXd8op5PxUGHyAKMZ
+         9ldsVqUmIouK+DNk/vRvto9WQxwlqyFkW1V5CmzPNdw71+fRLaUgoih2LsU5MqZhTFAE
+         7gljRih6Abjy2QfAgSJ2hYrxKqp2xFo22q9NEF2tyPelTXFxVlgbVNTEG+4/niHWiw5J
+         YSoD1PSgmlEXiRfm5jf81PYjnjUwCM+VSORXfe/86zfSAnkZ5po50GEy9RxZKsN0tssu
+         Xnzw==
+X-Gm-Message-State: AGi0PuYV7KL3ZpVslQAukqeY/Aekr0o4TNIdn4apCaT6hvFnNFQIi/rk
+        YCi2xaADVjE5uRO1bSen62SEew==
+X-Google-Smtp-Source: APiQypKiod48xHrM5Fm8UUhAEWoL3u9Xlj9qcFBgpftfn4avtKeo3nYQtZZ7MDTuS0KAYnyZmnpweA==
+X-Received: by 2002:a1c:f418:: with SMTP id z24mr3393652wma.122.1587638017711;
+        Thu, 23 Apr 2020 03:33:37 -0700 (PDT)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id x18sm3086757wrs.11.2020.04.23.03.33.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 03:33:37 -0700 (PDT)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v3 0/2] Add Qualcomm MSM8939 GCC binding and driver
+Date:   Thu, 23 Apr 2020 11:34:04 +0100
+Message-Id: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bcf53d01-6b2f-4011-01b9-08d7e771b83c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 10:33:10.3592
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /j/61+4RgBfPMu6gvfA8PYuc/pwZUmOEYXCai9puwj830LGhVVsgrk/X5Rni2LaCr+XF1MigflYTQYhIe8hjlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4886
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIEFw
-cmlsIDIzLCAyMDIwIDM6MDAgUE0NCj4gDQo+IEFkZCBtb3JlIGNtNCByZXNvdXJjZXMsIHRoZW4g
-bGludXggY291bGQgdXNlIGNtNCdzIGkyYy9scHVhcnQgYW5kIGNvdWxkIGtpY2sNCj4gY200IGNv
-cmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4g
-LS0tDQo+ICBkcml2ZXJzL2Zpcm13YXJlL2lteC9zY3UtcGQuYyB8IDEwICsrKysrKysrKysNCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9maXJtd2FyZS9pbXgvc2N1LXBkLmMgYi9kcml2ZXJzL2Zpcm13YXJlL2lteC9zY3UtcGQu
-Yw0KPiBpbmRleCA3YjQzYmQ2M2NjMWUuLjJmYTg2YmUyMDI3YSAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9maXJtd2FyZS9pbXgvc2N1LXBkLmMNCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9pbXgv
-c2N1LXBkLmMNCj4gQEAgLTE3MCw2ICsxNzAsMTYgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpbXhf
-c2NfcGRfcmFuZ2UNCj4gaW14OHF4cF9zY3VfcGRfcmFuZ2VzW10gPSB7DQo+ICAJLyogQ000MCBT
-UyAqLw0KPiAgCXsgImNtNDBfaTJjIiwgSU1YX1NDX1JfTTRfMF9JMkMsIDEsIGZhbHNlLCAwIH0s
-DQo+ICAJeyAiY200MF9pbnRtdXgiLCBJTVhfU0NfUl9NNF8wX0lOVE1VWCwgMSwgZmFsc2UsIDAg
-fSwNCj4gKwl7ICJjbTQwX3BpZCIsIElNWF9TQ19SX000XzBfUElEMCwgNSwgdHJ1ZSwgMH0sDQo+
-ICsJeyAiY200MF9tdTFhIiwgSU1YX1NDX1JfTTRfMF9NVV8xQSwgMSwgZmFsc2UsIDB9LA0KPiAr
-CXsgImNtNDBfbHB1YXJ0IiwgSU1YX1NDX1JfTTRfMF9VQVJULCAxLCBmYWxzZSwgMH0sDQoNCkZv
-ciBjb25zaXN0ZW5jeSwNCnMvY200MF9waWQvY200MC1waWQNCnMvY200MF9tdTFhL2NtNDAtbXUt
-YTENCnMvY200MF9scHVhcnQvY200MC1scHVhcnQNCg0KVGhpcyBhbHNvIGFwcGxpZXMgZm9yIHRo
-ZSBmb2xsb3dpbmcgcGFydC4NCg0KYmVzaWRlcyB0aGF0LCB5b3UgY2FuIGFkZCBteSB0YWc6DQpS
-ZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0KUmVnYXJk
-cw0KQWlzaGVuZw0KCUENCj4gKw0KPiArCS8qIENNNDEgU1MgKi8NCj4gKwl7ICJjbTQxX2kyYyIs
-IElNWF9TQ19SX000XzFfSTJDLCAxLCBmYWxzZSwgMCB9LA0KPiArCXsgImNtNDFfaW50bXV4Iiwg
-SU1YX1NDX1JfTTRfMV9JTlRNVVgsIDEsIGZhbHNlLCAwIH0sDQo+ICsJeyAiY200MV9waWQiLCBJ
-TVhfU0NfUl9NNF8xX1BJRDAsIDUsIHRydWUsIDB9LA0KPiArCXsgImNtNDFfbXUxYSIsIElNWF9T
-Q19SX000XzFfTVVfMUEsIDEsIGZhbHNlLCAwfSwNCj4gKwl7ICJjbTQxX2xwdWFydCIsIElNWF9T
-Q19SX000XzFfVUFSVCwgMSwgZmFsc2UsIDB9LA0KPiAgfTsNCg0KDQo+IA0KPiAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBpbXhfc2NfcGRfc29jIGlteDhxeHBfc2N1X3BkID0gew0KPiAtLQ0KPiAyLjE2
-LjQNCg0K
+V3:
+This update removes the old clock name arrays which I forgot to prune in
+the previous V2.
+
+git diff bod/clk-next+msm8939 bod/clk-next+msm8939-v2.1
+
+V2:
+This update does the following
+
+1. Drops code in the probe routine to add xo and sleep_clk. Instead
+   the DTS for the GCC will need to declare both of those clocks for the
+   GCC controller.
+
+2. Supplants parent_names for parent_data for all clocks.
+
+3. Squashes down the previous three patches into two.
+
+4. Drops the git log of copying files. The git log makes clear the silicon
+   is highly similar, so, you can just as easily read the log and do a
+   diff.
+
+5. Doesn't update the MSM8916 with parent_data.
+   Happy to do this at a later date but, don't have the time to validate
+   this properly at the moment. This set focuses on the MSM8939 alone.
+
+6. Dropped comment and boilerplate license text as indicated.
+
+7. Dropped dependency on COMMON_CLK_QCOM seems to not be needed.
+
+8. Easily view the changes here:
+   git add bod https://github.com/bryanodonoghue/linux.git
+   git fetch bod
+   git diff bod/clk-next+msm8939 bod/clk-next+msm8939-v2   
+
+V1:
+These three patches add support for the MSM8939 Global Clock Controller.
+The MSM8939 is a derivation of the MSM8916 sharing the large majority of
+its clock settings with MSM8916, however, there are enough changes, in some
+cases mutually incompatible changes that necessitate a separate driver.
+
+I thought it was both important and useful to show in the git log the
+differences between MSM8916 and MSM8939 so, one patch copies the MSM8916
+driver while another patch applies the entire gamut of MSM8939 changes,
+squashing down from a git log of approximately 31 separate commits.
+
+For reference that log is here:
+https://github.com/bryanodonoghue/linux/pull/new/msm8939-clk-next-reference-log
+
+Generally speaking MSM8939 differes from MSM8916 in two key ways.
+
+- New and higher clock frequencies for existing IP blocks.
+- New PLLs to drive those higher frequencies
+
+Bryan O'Donoghue (2):
+  clk: qcom: Add DT bindings for MSM8939 GCC
+  clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock Controller
+
+Bryan O'Donoghue (2):
+  clk: qcom: Add DT bindings for MSM8939 GCC
+  clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock Controller
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml   |    3 +
+ drivers/clk/qcom/Kconfig                      |    8 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/gcc-msm8939.c                | 3999 +++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-msm8939.h  |  206 +
+ include/dt-bindings/reset/qcom,gcc-msm8939.h  |  110 +
+ 6 files changed, 4327 insertions(+)
+ create mode 100644 drivers/clk/qcom/gcc-msm8939.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8939.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8939.h
+
+-- 
+2.25.1
+
