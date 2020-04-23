@@ -4,30 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F870C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D63C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1F3D20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0742077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgDWVl0 (ORCPT
+        id S1727890AbgDWVlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 17:41:26 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:57973 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbgDWVlY (ORCPT
+        Thu, 23 Apr 2020 17:41:31 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:15845 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727820AbgDWVl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 17:41:24 -0400
+        Thu, 23 Apr 2020 17:41:29 -0400
 X-IronPort-AV: E=Sophos;i="5.73,309,1583161200"; 
-   d="scan'208";a="45553084"
+   d="scan'208";a="45339786"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:23 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:27 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AEC84400C420;
-        Fri, 24 Apr 2020 06:41:19 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AAFD94004BB2;
+        Fri, 24 Apr 2020 06:41:23 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -43,9 +42,9 @@ Cc:     Marian-Cristian Rotariu
         linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 04/10] dt-bindings: reset: rcar-rst: Document r8a7742 reset module
-Date:   Thu, 23 Apr 2020 22:40:44 +0100
-Message-Id: <1587678050-23468-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 05/10] soc: renesas: rcar-rst: Add support for RZ/G1H
+Date:   Thu, 23 Apr 2020 22:40:45 +0100
+Message-Id: <1587678050-23468-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -54,26 +53,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document bindings for the RZ/G1H (R8A7742) reset module.
+Add support for RZ/G1H (R8A7742) to the R-Car RST driver.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/reset/renesas,rst.yaml | 1 +
+ drivers/soc/renesas/rcar-rst.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.yaml b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-index b5de1d1..4c2b429 100644
---- a/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-+++ b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-@@ -23,6 +23,7 @@ description: |
- properties:
-   compatible:
-     enum:
-+      - renesas,r8a7742-rst       # RZ/G1H
-       - renesas,r8a7743-rst       # RZ/G1M
-       - renesas,r8a7744-rst       # RZ/G1N
-       - renesas,r8a7745-rst       # RZ/G1E
+diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
+index 2af2e0d..a2b2b17 100644
+--- a/drivers/soc/renesas/rcar-rst.c
++++ b/drivers/soc/renesas/rcar-rst.c
+@@ -39,6 +39,7 @@ static const struct rst_config rcar_rst_gen3 __initconst = {
+ 
+ static const struct of_device_id rcar_rst_matches[] __initconst = {
+ 	/* RZ/G1 is handled like R-Car Gen2 */
++	{ .compatible = "renesas,r8a7742-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a7743-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a7744-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a7745-rst", .data = &rcar_rst_gen2 },
 -- 
 2.7.4
 
