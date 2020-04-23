@@ -2,151 +2,110 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5A4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749FCC55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33DB20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:40:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBDzYVCC"
+	by mail.kernel.org (Postfix) with ESMTP id 5D90420776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgDWKkI (ORCPT
+        id S1727097AbgDWKlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:40:08 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44517 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726923AbgDWKkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:40:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587638402;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+r/PR2FbN4xLG8Nok2HJ4M/QJoOCF0Nk3Bss40sN0xs=;
-        b=fBDzYVCCqW1GoVdwQp91lZNHO5HeSb4pWmnedQElmzSBpXNLACkopal9QJXMg2pm3UJ3L+
-        +XpkN+whgwN7VBTpJK1UvxiK45oP99p+B8qza+MQOhVUymFMokiZwcpFQjGqIFVo6cUp8p
-        SeCWD8j9VoIYkfaBgy55TAtxYAumP9s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-AkzxH94nMVKFKkFx37Ew_w-1; Thu, 23 Apr 2020 06:39:20 -0400
-X-MC-Unique: AkzxH94nMVKFKkFx37Ew_w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07DD5835B41;
-        Thu, 23 Apr 2020 10:39:17 +0000 (UTC)
-Received: from gondolin (ovpn-112-121.ams2.redhat.com [10.36.112.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 11C6260608;
-        Thu, 23 Apr 2020 10:39:03 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 12:39:01 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run'
- parameters
-Message-ID: <20200423123901.72a4c6a4.cohuck@redhat.com>
-In-Reply-To: <5e1e126d-f1b0-196c-594b-4289d0afb9a8@linux.alibaba.com>
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
-        <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
-        <20200422154543.2efba3dd.cohuck@redhat.com>
-        <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
-        <20200422180403.03f60b0c.cohuck@redhat.com>
-        <5e1e126d-f1b0-196c-594b-4289d0afb9a8@linux.alibaba.com>
-Organization: Red Hat GmbH
+        Thu, 23 Apr 2020 06:41:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8397 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbgDWKlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:41:07 -0400
+IronPort-SDR: 91FP6AM55qA9ubi+Nw316rDmXsY1gcBi29KTMCJ+3mKIMuoJJOEC1wLJ9ACk1nSLXtjBC3te7J
+ /i53Wj89f4Zg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 03:41:06 -0700
+IronPort-SDR: Kx7K6p4/N5TZr/15qVHfz7t/YfWa8qfU8ew8siy/+r4y7JvNcT3POh2yqW11AOx+oW2pMXXyru
+ ohidmBdCH2uA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="291141993"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Apr 2020 03:41:04 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jRZI3-002cOT-JJ; Thu, 23 Apr 2020 13:41:07 +0300
+Date:   Thu, 23 Apr 2020 13:41:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Fengping yu <fengping.yu@mediatek.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/3] drivers: input: keyboard: add mtk keypad driver
+Message-ID: <20200423104107.GO185537@smile.fi.intel.com>
+References: <20200423011958.30521-1-fengping.yu@mediatek.com>
+ <20200423011958.30521-4-fengping.yu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423011958.30521-4-fengping.yu@mediatek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 11:01:43 +0800
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
-
-> On 2020/4/23 0:04, Cornelia Huck wrote:
-> > On Wed, 22 Apr 2020 17:58:04 +0200
-> > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-> >   
-> >> On 22.04.20 15:45, Cornelia Huck wrote:  
-> >>> On Wed, 22 Apr 2020 20:58:04 +0800
-> >>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
-> >>>      
-> >>>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> >>>> structure. Earlier than historical reasons, many kvm-related function  
-> >>>
-> >>> s/Earlier than/For/ ?
-> >>>      
-> >>>> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
-> >>>> This patch does a unified cleanup of these remaining redundant parameters.
-> >>>>
-> >>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> >>>> ---
-> >>>>   arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
-> >>>>   1 file changed, 22 insertions(+), 15 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> >>>> index e335a7e5ead7..d7bb2e7a07ff 100644
-> >>>> --- a/arch/s390/kvm/kvm-s390.c
-> >>>> +++ b/arch/s390/kvm/kvm-s390.c
-> >>>> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
-> >>>>   	return rc;
-> >>>>   }
-> >>>>   
-> >>>> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >>>> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
-> >>>>   {
-> >>>> +	struct kvm_run *kvm_run = vcpu->run;
-> >>>>   	struct runtime_instr_cb *riccb;
-> >>>>   	struct gs_cb *gscb;
-> >>>>   
-> >>>> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >>>>   		}
-> >>>>   		if (vcpu->arch.gs_enabled) {
-> >>>>   			current->thread.gs_cb = (struct gs_cb *)
-> >>>> -						&vcpu->run->s.regs.gscb;
-> >>>> +						&kvm_run->s.regs.gscb;  
-> >>>
-> >>> Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
-> >>> it. (It seems they amount to at least as much as the changes advertised
-> >>> in the patch description.)
-> >>>
-> >>> Other opinions?  
-> >>
-> >> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
-> >> function parameter list into the variable declaration)? Not sure if this is better.
-> >>  
-> > 
-> > There's more in this patch that I cut... but I think just moving
-> > kvm_run from the parameter list would be much less disruptive.
-> >   
+On Thu, Apr 23, 2020 at 09:20:02AM +0800, Fengping yu wrote:
+> From: "fengping.yu" <fengping.yu@mediatek.com>
 > 
-> I think there are two kinds of code(`vcpu->run->` and `kvm_run->`), but 
-> there will be more disruptive, not less.
 
-I just fail to see the benefit; sure, kvm_run-> is convenient, but the
-current code is just fine, and any rework should be balanced against
-the cost (e.g. cluttering git annotate).
+This misses the commit message. It's a show stopper for such patches.
+Read this [1].
+
+[1]: https://chris.beams.io/posts/git-commit/
+
+...
+
+> +#define KPD_DEBOUNCE_MASK	GENMASK(13, 0)
+> +#define KPD_DEBOUNCE_MAX	256000
+
+Is there any unit in which debounce time is being measured? Add it as a suffix
+to the definition, if it's possible.
+
+...
+
+> +#define BITS_TO_U32(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
+
+This already defined in bits.h.
+
+...
+
+> +	keypad->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(keypad->base)) {
+
+> +		dev_err(&pdev->dev, "Failed to get resource and iomap keypad\n");
+
+This is duplicate noisy message, please remove.
+
+> +		return PTR_ERR(keypad->base);
+> +	}
+
+...
+
+> +	writew(keypad->key_debounce * 32 / 1000 & KPD_DEBOUNCE_MASK,
+
+Perhaps one pair of parentheses is needed to make logic clear.
+
+(Yes, I remember I commented on this in earlier versions where it was many
+ parentheses around above calculations, but you have to use common sense as well)
+
+> +		keypad->base + KP_DEBOUNCE);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
