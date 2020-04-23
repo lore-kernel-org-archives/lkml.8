@@ -2,144 +2,75 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C891C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4A7C5518C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5252F2074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF56E2074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgDWBh5 (ORCPT
+        id S1726364AbgDWBli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:37:57 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:53220 "EHLO mail.hallyn.com"
+        Wed, 22 Apr 2020 21:41:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59945 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgDWBh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:37:57 -0400
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 44E5B9D0; Wed, 22 Apr 2020 20:37:54 -0500 (CDT)
-Date:   Wed, 22 Apr 2020 20:37:54 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: Re: [PATCH v2 7/7] loopfs: only show devices in their correct
- instance
-Message-ID: <20200423013754.GC2982@mail.hallyn.com>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
- <20200422145437.176057-8-christian.brauner@ubuntu.com>
+        id S1725828AbgDWBli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:41:38 -0400
+IronPort-SDR: sQ9WEnTgJFmZ4m2fFR7xOKLQ13E9KDDiscG0eAMZvq73Yr+Rvr18iyLRbcOEfDQIlkkZxvYw3K
+ oFvZqVNH3yUg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 18:41:37 -0700
+IronPort-SDR: CD2YxbVKG2TZwAYql6zhg9T7ino1fY1Mi5HuKZB8EH+PrVBtjVFDYNpQVW0QQZLAhDq21NCJ8o
+ YIB60eV6aoAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
+   d="scan'208";a="365856621"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 18:41:37 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 53EBF3019B5; Wed, 22 Apr 2020 18:41:37 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 18:41:37 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     John Haxby <john.haxby@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+        x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86/fpu: Allow clearcpuid= to clear several bits
+Message-ID: <20200423014137.GM608746@tassilo.jf.intel.com>
+References: <cover.1587555769.git.john.haxby@oracle.com>
+ <03a3a4d135b17115db9ad91413e21af73e244500.1587555769.git.john.haxby@oracle.com>
+ <20200422143554.GI608746@tassilo.jf.intel.com>
+ <96EA2DF4-7490-4FF0-BB3E-EC9157517918@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422145437.176057-8-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <96EA2DF4-7490-4FF0-BB3E-EC9157517918@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:54:37PM +0200, Christian Brauner wrote:
-> Since loopfs devices belong to a loopfs instance they have no business
-> polluting the host's devtmpfs mount and should not propagate out of the
-> namespace they belong to.
 > 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-
-> ---
-> /* v2 */
-> unchanged
-> ---
->  drivers/base/devtmpfs.c | 4 ++--
->  drivers/block/loop.c    | 4 +++-
->  include/linux/device.h  | 3 +++
->  3 files changed, 8 insertions(+), 3 deletions(-)
+> I did wonder about that.   However, cmdline_find_option() is specifically documented as 
 > 
-> diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-> index c9017e0584c0..77371ceb88fa 100644
-> --- a/drivers/base/devtmpfs.c
-> +++ b/drivers/base/devtmpfs.c
-> @@ -111,7 +111,7 @@ int devtmpfs_create_node(struct device *dev)
->  	const char *tmp = NULL;
->  	struct req req;
->  
-> -	if (!thread)
-> +	if (!thread || dev->no_devnode)
->  		return 0;
->  
->  	req.mode = 0;
-> @@ -138,7 +138,7 @@ int devtmpfs_delete_node(struct device *dev)
->  	const char *tmp = NULL;
->  	struct req req;
->  
-> -	if (!thread)
-> +	if (!thread || dev->no_devnode)
->  		return 0;
->  
->  	req.name = device_get_devnode(dev, NULL, NULL, NULL, &tmp);
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 2dc53bad4b48..5548151b9f11 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -2213,8 +2213,10 @@ static int loop_add(struct loop_device **l, int i, struct inode *inode)
->  	disk->queue		= lo->lo_queue;
->  	sprintf(disk->disk_name, "loop%d", i);
->  #ifdef CONFIG_BLK_DEV_LOOPFS
-> -	if (loopfs_i_sb(inode))
-> +	if (loopfs_i_sb(inode)) {
->  		disk->user_ns = loopfs_i_sb(inode)->s_user_ns;
-> +		disk_to_dev(disk)->no_devnode = true;
-> +	}
->  #endif
->  
->  	add_disk(disk);
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index ac8e37cd716a..c69ef1c5a0ef 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -523,6 +523,8 @@ struct dev_links_info {
->   *		  sync_state() callback.
->   * @dma_coherent: this particular device is dma coherent, even if the
->   *		architecture supports non-coherent devices.
-> + * @no_devnode: whether device nodes associated with this device are kept out
-> + *		of devtmpfs (e.g. due to separate filesystem)
->   *
->   * At the lowest level, every device in a Linux system is represented by an
->   * instance of struct device. The device structure contains the information
-> @@ -622,6 +624,7 @@ struct device {
->      defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
->  	bool			dma_coherent:1;
->  #endif
-> +	bool			no_devnode:1;
->  };
->  
->  static inline struct device *kobj_to_dev(struct kobject *kobj)
-> -- 
-> 2.26.1
+>  * Find a non-boolean option (i.e. option=argument). In accordance with
+>  * standard Linux practice, if this option is repeated, this returns the
+>  * last instance on the command line.
+
+Okay so would need a special version that uses the first and an option
+to pass the cmdline string.
+
+> 
+> And since that appeared in 2017 I decided to stick with the new-fangled interface :)   This is a little-used feature; I'm not sure it's worth the effort of parsing the command line for the old style.  What do you think?
+
+I'm not sure it's that little used.  We use it quite a bit for testing
+and workarounds, and it might be that some of those are deployed.
+
+-Andi
