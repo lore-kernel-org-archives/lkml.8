@@ -2,103 +2,87 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780F9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94973C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50A1B20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7832077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbgDWXTV (ORCPT
+        id S1729083AbgDWXTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 23 Apr 2020 19:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729803AbgDWXTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:19:21 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48826 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728246AbgDWXGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:36 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvO-0004fC-UB; Fri, 24 Apr 2020 00:06:30 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvM-00E6lh-Lr; Fri, 24 Apr 2020 00:06:28 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC4D2168B;
+        Thu, 23 Apr 2020 23:19:21 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jRl7o-000YsF-C0; Thu, 23 Apr 2020 19:19:20 -0400
+Message-Id: <20200423231920.252506175@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Thu, 23 Apr 2020 19:18:40 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-linus][PATCH 2/4] ftrace: Fix memory leak caused by not freeing entry in
+ unregister_ftrace_direct()
+References: <20200423231838.682478056@goodmis.org>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Fri, 24 Apr 2020 00:05:10 +0100
-Message-ID: <lsq.1587683028.896913772@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 083/245] staging: gigaset: add endpoint-type sanity check
-In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-------------------
+kmemleak reported the following:
 
-From: Johan Hovold <johan@kernel.org>
+unreferenced object 0xffff90d47127a920 (size 32):
+  comm "modprobe", pid 1766, jiffies 4294792031 (age 162.568s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 22 01 00 00 00 00 ad de  ........".......
+    00 78 12 a7 ff ff ff ff 00 00 b6 c0 ff ff ff ff  .x..............
+  backtrace:
+    [<00000000bb79e72e>] register_ftrace_direct+0xcb/0x3a0
+    [<00000000295e4f79>] do_one_initcall+0x72/0x340
+    [<00000000873ead18>] do_init_module+0x5a/0x220
+    [<00000000974d9de5>] load_module+0x2235/0x2550
+    [<0000000059c3d6ce>] __do_sys_finit_module+0xc0/0x120
+    [<000000005a8611b4>] do_syscall_64+0x60/0x230
+    [<00000000a0cdc49e>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-commit ed9ed5a89acba51b82bdff61144d4e4a4245ec8a upstream.
+The entry used to save the direct descriptor needs to be freed
+when unregistering.
 
-Add missing endpoint-type sanity checks to probe.
-
-This specifically prevents a warning in USB core on URB submission when
-fuzzing USB descriptors.
-
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191202085610.12719-4-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust filename]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- drivers/isdn/gigaset/usb-gigaset.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/trace/ftrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/isdn/gigaset/usb-gigaset.c
-+++ b/drivers/isdn/gigaset/usb-gigaset.c
-@@ -713,6 +713,12 @@ static int gigaset_probe(struct usb_inte
- 
- 	endpoint = &hostif->endpoint[0].desc;
- 
-+	if (!usb_endpoint_is_bulk_out(endpoint)) {
-+		dev_err(&interface->dev, "missing bulk-out endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
- 	ucs->bulk_out_size = buffer_size;
- 	ucs->bulk_out_endpointAddr = endpoint->bEndpointAddress;
-@@ -732,6 +738,12 @@ static int gigaset_probe(struct usb_inte
- 
- 	endpoint = &hostif->endpoint[1].desc;
- 
-+	if (!usb_endpoint_is_int_in(endpoint)) {
-+		dev_err(&interface->dev, "missing int-in endpoint\n");
-+		retval = -ENODEV;
-+		goto error;
-+	}
-+
- 	ucs->busy = 0;
- 
- 	ucs->read_urb = usb_alloc_urb(0, GFP_KERNEL);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 041694a1eb74..bd030b1b9514 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5165,6 +5165,7 @@ int unregister_ftrace_direct(unsigned long ip, unsigned long addr)
+ 			list_del_rcu(&direct->next);
+ 			synchronize_rcu_tasks();
+ 			kfree(direct);
++			kfree(entry);
+ 			ftrace_direct_func_count--;
+ 		}
+ 	}
+-- 
+2.26.1
+
 
