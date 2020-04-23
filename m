@@ -2,151 +2,357 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE64C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7CCC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 946C92076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:53:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BK9x/DNV"
+	by mail.kernel.org (Postfix) with ESMTP id 232B72076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgDWKxm (ORCPT
+        id S1727835AbgDWKyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:53:42 -0400
-Received: from mail-am6eur05on2089.outbound.protection.outlook.com ([40.107.22.89]:9889
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726990AbgDWKxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:53:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bCRQomvGpQk1QYKau2n+XSJBfqLcFaEvLz8EnFOyu7cTqAslVZSvXA5kaC4wEGgFfTInQbGVqiA7srhKsO6LJAMuyB7Yaxj2YbFSN/GGwczIUS7B6L6wf14FTbaBfjZS9mT3Qvp11iMREcOEkvsk3f4K/GYjRhp9Dj/pYVLGaYXVawvoV7WFc20Ya9l+47tJvrQGg6TIYrHhcQWIGpaiK5RYXj95u9z3HcZIrHouTT16/4FugGvAhmA+jXkHKufpIYDmOarTECwOOaZNG7Qo90N0rtqOwSbk8YqX3hua8ITQs/P+4qTNNK0NDBEAYx/npjfg0RgjPDerNnh0K5QKXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L6riY0DyntUrHz4LaSMdllRqrkaOnS98cV37+6F4LP0=;
- b=Wdy60ETr/ZtMPQLlvrnq6b72ph6nvyxO6kDC/L05G0+GMXMbT1a0oYakO8cdHc+p21yOMnB1xQKbSvZeKl16fIOoKbWUXR7gKLcpgGYtwrtIwSpw09qtNsT+Du72RUmYbvRCGrIQKKhZFjcRlLQYTQ/k9wuC5xmlcEIiVEHpCuWIuI0UAG6ulCUGabyHRUK5MbVvhOHJF+SezfgeQI0Yhr3k/YJHnV9u675z/MTi4SB2MqPk/6ew44DgA6uQBYulGYP2vjatAMGwA5EdUOA0R16QKOGCIef6C29/Dpm9J16f0i8kQeAWiOkOyc9PtzZgFtIRaCOd5ZAzTsIHaXKz2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L6riY0DyntUrHz4LaSMdllRqrkaOnS98cV37+6F4LP0=;
- b=BK9x/DNVvtYavmiNjQ3UGChsXAixt0WSI9Lc6gZ7gcbLnbuKJ72PtqI9ALjxSI4b/VKtgFNjcCfMq2x+qbaF5bO3Rgbiw5Kbz3oaD/N4sKpRuQzCWMJczrU6sRostYowxUXs4H8ljwe+iWDtB6RDo3ZRGUB3tyL+IROyDyF8lnk=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2712.eurprd04.prod.outlook.com (2603:10a6:4:99::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
- 2020 10:53:37 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
- 10:53:37 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] clk: imx: introduce imx_clk_hw_critical
-Thread-Topic: [PATCH] clk: imx: introduce imx_clk_hw_critical
-Thread-Index: AQHWGTz1S3ryZr4eI06QzGNLele1k6iGhU2AgAACxjA=
-Date:   Thu, 23 Apr 2020 10:53:37 +0000
-Message-ID: <DB6PR0402MB2760793865AA2E67E1C33F4488D30@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1587624748-27228-1-git-send-email-peng.fan@nxp.com>
- <AM6PR04MB4966934EE0411F7C3FF5AA2F80D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB4966934EE0411F7C3FF5AA2F80D30@AM6PR04MB4966.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9978d410-e856-4e8d-ae8b-08d7e77493c5
-x-ms-traffictypediagnostic: DB6PR0402MB2712:|DB6PR0402MB2712:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB2712BA657479F72170D82EAE88D30@DB6PR0402MB2712.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 03827AF76E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(396003)(366004)(136003)(7696005)(8676002)(66556008)(64756008)(71200400001)(81156014)(52536014)(66446008)(66946007)(76116006)(66476007)(5660300002)(2906002)(26005)(86362001)(6506007)(478600001)(316002)(33656002)(54906003)(8936002)(4326008)(44832011)(9686003)(55016002)(186003)(110136005);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xCTit5i8VsH+hzTgrTxkUqlEL+r2vhGkqYoKyp9035N9QHHYdqNh/3dVrLoLC7D0PPCCcYIQ77tdv8FQV9gGtJh+0pi+jxCzp+avkiFjjcB5h0kK0P1Fyz2MnISl5pLWZNfccwp2mLc/Ba2nSn6v0Au+6FO3GSjBzxm2uI/x78fTbWLOBv7d8x3JHfYXG37pNkUzyr06IHwQd6/5lqHJwp0T6G2yfklC/awLoFG0xIsYnnI6E8QpucOa6OfDGYEkUc0Dgp6IPKbaaIQ4YLrT2Emxfoq8BexoePBO6+0V+0JpL5T8wiZfr+lPMfiVnJU+g9B/YRe08Ul10KObBbovwIRShJfq4K337rVLmAFi3xClhp9Lc1boRzNpE2QhQoIVV9izmohF+z51TFKGn9IS5f8SnSzOimjEAS9DfqZ6zz742CNtLWtb/HxXeVsohZcz
-x-ms-exchange-antispam-messagedata: 08zg3xPOK/PycDsMeLVXj1qYcX6k1KvxDhQCQOwdqa979kCVYKjRr8IShovSxwU/CU0LQD1y6yv0UwarQknroFDLsDV4PfuvB0mwxEOZ7v/TYixG2utwLtXH/vP/2PoOvZ9/BGe8ZJcOIZOeakLKWw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 23 Apr 2020 06:54:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42704 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726669AbgDWKyv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:54:51 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NAaDpB036730
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:54:49 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj6n2nw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:54:48 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Thu, 23 Apr 2020 11:54:10 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 Apr 2020 11:54:06 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NAsgs665667426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 10:54:42 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CD094204B;
+        Thu, 23 Apr 2020 10:54:42 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E466A42041;
+        Thu, 23 Apr 2020 10:54:39 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.79.176.162])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 10:54:39 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
+        ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
+        pratik.r.sampat@gmail.com, psampat@linux.ibm.com
+Subject: [PATCH v8 0/3] Support for Self Save API in OPAL
+Date:   Thu, 23 Apr 2020 16:24:35 +0530
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9978d410-e856-4e8d-ae8b-08d7e77493c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 10:53:37.6333
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BZjtPZZ4+rj6dEqZTDABcqzI1cst5tVPScgbBHh1hR9JsmkX5x/SZiXLLRScOd69SRxUcU8UzisNEXYt99P2FA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2712
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042310-0008-0000-0000-00000375F5D5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042310-0009-0000-0000-00004A97C294
+Message-Id: <20200423105438.29034-1-psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=6 spamscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=6 priorityscore=1501
+ adultscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSRTogW1BBVENIXSBjbGs6IGlteDogaW50cm9kdWNlIGlteF9jbGtfaHdfY3Jp
-dGljYWwNCj4gDQo+ID4gRnJvbTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+ID4gU2Vu
-dDogVGh1cnNkYXksIEFwcmlsIDIzLCAyMDIwIDI6NTIgUE0NCj4gPg0KPiA+IFRvIGkuTVg4TSBT
-b0MsIHRoZXJlIGlzIGFuIGNhc2UgaXMgd2hlbiBydW5uaW5nIGR1YWwgT1NlcyB3aXRoDQo+ID4g
-aHlwZXJ2aXNvciwgdGhlIGNsayBvZiB0aGUgaGFyZHdhcmUgdGhhdCBwYXNzdGhyb3VnaCB0byB0
-aGUgMm5kIE9TDQo+ID4gbmVlZHMgdG8gYmUgc2V0dXAgYnkgMXN0IExpbnV4IE9TLg0KPiA+IFNv
-IGRldGVjdCBjbG9jay1jcml0aWNhbCBmcm9tIGNjbSBub2RlIGFuZCBlbmFibGUgdGhlIGNsb2Nr
-cyB0byBsZXQNCj4gPiB0aGUgMm5kIE9TIGNvdWxkIHVzZSB0aGUgaGFyZHdhcmUgd2l0aG91dCB0
-b3VjaCBDQ00gbW9kdWxlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcu
-ZmFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY2xrL2lteC9jbGsuYyB8IDE5ICsr
-KysrKysrKysrKysrKysrKysgIGRyaXZlcnMvY2xrL2lteC9jbGsuaA0KPiA+IHwgIDENCj4gPiAr
-DQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGsuYyBiL2RyaXZlcnMvY2xrL2lteC9jbGsuYyBpbmRl
-eA0KPiA+IDg3YWI4ZGIzZDI4Mi4uZWM3ZDQyMjU0MGMxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
-cnMvY2xrL2lteC9jbGsuYw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGsuYw0KPiA+IEBA
-IC0xNzcsMyArMTc3LDIyIEBAIHN0YXRpYyBpbnQgX19pbml0IGlteF9jbGtfZGlzYWJsZV91YXJ0
-KHZvaWQpDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICBsYXRlX2luaXRjYWxsX3N5bmMo
-aW14X2Nsa19kaXNhYmxlX3VhcnQpOw0KPiA+ICsNCj4gPiAraW50IGlteF9jbGtfaHdfY3JpdGlj
-YWwoc3RydWN0IGRldmljZV9ub2RlICpucCwgc3RydWN0IGNsa19odyAqIGNvbnN0DQo+ID4gK2h3
-c1tdKSB7DQo+ID4gKwlzdHJ1Y3QgcHJvcGVydHkgKnByb3A7DQo+ID4gKwljb25zdCBfX2JlMzIg
-KmN1cjsNCj4gPiArCXUzMiBpZHg7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCWlmICgh
-bnAgfHwgIWh3cykNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArDQo+ID4gKwlvZl9wcm9w
-ZXJ0eV9mb3JfZWFjaF91MzIobnAsICJjbG9jay1jcml0aWNhbCIsIHByb3AsIGN1ciwgaWR4KSB7
-DQo+IA0KPiBJcyB0aGVyZSBhIGJpbmRpbmcgZm9yIGl0IGFscmVhZHk/DQoNCkkgdGhpbmsgY2xv
-Y2stY3JpdGljYWwgaXMgYSBjb21tb24gYmluZGluZ3M/IFNlZSBvZl9jbGtfZGV0ZWN0X2NyaXRp
-Y2FsLg0KUGxlYXNlIHJldmlldyB3aGV0aGVyIHRoaXMgYXBwcm9hY2ggaXMgYWNjZXB0YWJsZSwg
-aWYgZG8NCm5lZWQgYmluZGluZ3MsIEkgY291bGQgYWRkIHRoYXQgaW4gdjIuDQoNClRoYW5rcywN
-ClBlbmcuDQoNCj4gDQo+IFJlZ2FyZHMNCj4gQWlzaGVuZw0KPiANCj4gPiArCQlyZXQgPSBjbGtf
-cHJlcGFyZV9lbmFibGUoaHdzW2lkeF0tPmNsayk7DQo+ID4gKwkJaWYgKHJldCkNCj4gPiArCQkJ
-cmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xrLmggYi9kcml2ZXJzL2Nsay9pbXgvY2xr
-LmggaW5kZXgNCj4gPiBkNGVhMTYwOWJjYjcuLjcwMWQ3NDQwZjk4YyAxMDA2NDQNCj4gPiAtLS0g
-YS9kcml2ZXJzL2Nsay9pbXgvY2xrLmgNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLmgN
-Cj4gPiBAQCAtOSw2ICs5LDcgQEAgZXh0ZXJuIHNwaW5sb2NrX3QgaW14X2NjbV9sb2NrOw0KPiA+
-DQo+ID4gIHZvaWQgaW14X2NoZWNrX2Nsb2NrcyhzdHJ1Y3QgY2xrICpjbGtzW10sIHVuc2lnbmVk
-IGludCBjb3VudCk7ICB2b2lkDQo+ID4gaW14X2NoZWNrX2Nsa19od3Moc3RydWN0IGNsa19odyAq
-Y2xrc1tdLCB1bnNpZ25lZCBpbnQgY291bnQpOw0KPiA+ICtpbnQgaW14X2Nsa19od19jcml0aWNh
-bChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCBzdHJ1Y3QgY2xrX2h3ICogY29uc3QNCj4gPiAraHdz
-W10pOw0KPiA+ICB2b2lkIGlteF9yZWdpc3Rlcl91YXJ0X2Nsb2NrcyhzdHJ1Y3QgY2xrICoqIGNv
-bnN0IGNsa3NbXSk7ICB2b2lkDQo+ID4gaW14X21tZGNfbWFza19oYW5kc2hha2Uodm9pZCBfX2lv
-bWVtICpjY21fYmFzZSwgdW5zaWduZWQgaW50IGNobik7DQo+ID4gdm9pZCBpbXhfdW5yZWdpc3Rl
-cl9jbG9ja3Moc3RydWN0IGNsayAqY2xrc1tdLCB1bnNpZ25lZCBpbnQgY291bnQpOw0KPiA+IC0t
-DQo+ID4gMi4xNi40DQoNCg==
+v7: https://lists.ozlabs.org/pipermail/skiboot/2020-April/016763.html
+Changelog
+v6 --> v7
+1. Simplified approach. Instead of advertising support bitmask for
+   each SPR, advertising support only for the presence of the new
+   self-save API Complete design specification is detailed below
+   in the cover-leter.
+2. Patch re-organization, move introducing self-save [2] after STOP
+   API versioning [3].
+
+Background
+==========
+
+The power management framework on POWER systems include core idle
+states that lose context. Deep idle states namely "winkle" on POWER8
+and "stop4" and "stop5" on POWER9 can be entered by a CPU to save
+different levels of power, as a consequence of which all the
+hypervisor resources such as SPRs and SCOMs are lost.
+
+For most SPRs, saving and restoration of content for SPRs and SCOMs
+is handled by the hypervisor kernel prior to entering an post exit
+from an idle state respectively. However, there is a small set of
+critical SPRs and XSCOMs that are expected to contain sane values even
+before the control is transferred to the hypervisor kernel at system
+reset vector.
+
+For this purpose, microcode firmware provides a mechanism to restore
+values on certain SPRs. The communication mechanism between the
+hypervisor kernel and the microcode is a standard interface called
+sleep-winkle-engine (SLW) on Power8 and Stop-API on Power9 which is
+abstracted by OPAL calls from the hypervisor kernel. The Stop-API
+provides an interface known as the self-restore API, to which the SPR
+number and a predefined value to be restored on wake-up from a deep
+stop state is supplied.
+
+
+Motivation to introduce a new Stop-API
+======================================
+
+The self-restore API expects not just the SPR number but also the
+value with which the SPR is restored. This is good for those SPRs such
+as HSPRG0 whose values do not change at runtime, since for them, the
+kernel can invoke the self-restore API at boot time once the values of
+these SPRs are determined.
+
+However, there are use-cases where-in the value to be saved cannot be
+known or cannot be updated in the layer it currently is.
+The shortcomings and the new use-cases which cannot be served by the
+existing self-restore API, serves as motivation for a new API:
+
+Shortcoming1:
+------------
+In a special wakeup scenario when a CPU is woken up in stop4/5 and
+after the task is done, the HCODE puts it back to stop. The value of
+PSSCR is passed to the HCODE via the self-restore API. The kernel
+currently provides the value of the deepest stop state due to being
+conservative. Thus if a core that was in stop4 was woken up due to
+special wakeup, the HCODE will now put it back to stop5 thus increasing
+the subsequent wakeup latency to ~200us.
+
+Shortcoming2:
+------------
+The value of LPCR is dynamic based on if the CPU is entered a stop
+state during cpu idle versus cpu hotplug.
+Today, an additional self-restore call is made before entering
+CPU-Hotplug to clear the PECE1 bit in stop-API so that if we are
+woken up by a special wakeup on an offlined CPU, we go back to stop
+with the the bit cleared.
+There is a overhead of an extra call
+
+New Use-case:
+-------------
+In the case where the hypervisor is running on an
+ultravisor environment, the boot time is too late in the cycle to make
+the self-restore API calls, as these cannot be invoked from an
+non-secure context anymore
+
+To address these shortcomings, the firmware provides another API known
+as the self-save API. The self-save API only takes the SPR number as a
+parameter and will ensure that on wakeup from a deep-stop state the
+SPR is restored with the value that it contained prior to entering the
+deep-stop.
+
+Contrast between self-save and self-restore APIs
+================================================
+
+		  Before entering
+                  deep idle     |---------------|
+                  ------------> | HCODE A       |                
+                  |             |---------------|
+   |---------|    |
+   |   CPU   |----|
+   |---------|    |             
+                  |             |---------------|
+                  |------------>| HCODE B       |
+                  On waking up  |---------------|
+                from deep idle
+
+When a self-restore API is invoked, the HCODE inserts instructions
+into "HCODE B" region of the above figure to restore the content of
+the SPR to the said value. The "HCODE B" region gets executed soon
+after the CPU wakes up from a deep idle state, thus executing the
+inserted instructions, thereby restoring the contents of the SPRs to
+the required values.
+
+When a self-save API is invoked, the HCODE inserts instructions into
+the "HCODE A" region of the above figure to save the content of the
+SPR into some location in memory. It also inserts instructions into
+the "HCODE B" region to restore the content of the SPR to the
+corresponding value saved in the memory by the instructions in "HCODE
+A" region.
+
+Thus, in contrast with self-restore, the self-save API *does not* need
+a value to be passed to it, since it ensures that the value of SPR
+before entering deep stop is saved, and subsequently the same value is
+restored.
+
+Self-save and self-restore are complementary features since,
+self-restore can help in restoring a different value in the SPR on
+wakeup from a deep-idle state than what it had before entering the
+deep idle state. This was used in POWER8 for HSPRG0 to distinguish a
+wakeup from Winkle vs Fastsleep.
+
+Limitations of self-save
+========================
+Ideally all SPRs should be available for self-save, but HID0 is very
+tricky to implement in microcode due to various endianess quirks.
+Couple of implementation schemes were buggy and hence HID0 was left
+out to be self-restore only.
+
+The fallout of this limitation is as follows:
+
+* In Non PEF environment, no issue. Linux will use self-restore for
+  HID0 as it does today and no functional impact.
+
+* In PEF environment, the HID0 restore value is decided by OPAL during
+  boot and it is setup for LE hypervisor with radix MMU. This is the
+  default and current working configuration of a PEF environment.
+  However if there is a change, then HV Linux will try to change the
+  HID0 value to something different than what OPAL decided, at which
+  time deep-stop states will be disabled under this new PEF
+  environment.
+
+A simple and workable design is achieved by scoping the power
+management deep-stop state support only to a known default PEF
+environment. Any deviation will affect *only* deep stop-state support
+(stop4,5) in that environment and not have any functional impediment
+to the environment itself.
+
+In future, if there is a need to support changing of HID0 to various
+values under PEF environment and support deep-stop states, it can be
+worked out via an ultravisor call or improve the microcode design to
+include HID0 in self-save.  These future scheme would be an extension
+and does not break or make the current implementation scheme
+redundant.
+
+Design Choices
+==============
+
+Presenting the design choices in front of us:
+
+Design-Choice 1:
+----------------
+Only expose one of self-save or self-restore for all the SPRs. Prefer
+Self-save
+
+Pros:
+   - Simplifies the design heavily, since the Kernel can unambiguously
+   make one API call for all the SPRs on discovering the presence of
+   the API type.
+
+Cons:
+    - Breaks backward compatibility if OPAL always chooses to expose
+      only the self-save API as the older kernels assume the existence
+      of self-restore.
+
+    - The set of SPRs supported by self-save and self-restore are not
+      identical. Eg: HID0 is not supported by self-save API. PSSCR
+      support via self-restore is not robust during special-wakeup.
+
+    - As discussed above, self-save and self-restore are
+      complementary. Thus OPAL apriory choosing one over the other for
+      all SPRs takes away the flexibility from the kernel.
+
+
+Design-Choice 2:
+----------------
+Expose two arrays of SPRs: One set of SPRs that are supported by
+self-save. Another set of SPRs supported by self-restore. These two
+sets do not intersect. Further, if an SPR is supported by both
+self-save and self-restore APIs, expose it only via self-save.
+
+Pros:
+     - For an SPR the choice for the kernel is unambiguous.
+
+Cons:
+    - Breaks backward compatibility if OPAL always chooses to expose
+      the legacy SPRs only via the self-save API as the older kernels
+      assume the existence of self-restore.
+
+    - By making the decision early on, we take away the flexibility
+       from the kernel to use an API of its choice for an SPR.
+
+
+Design-Choice 3
+---------------
+Expose two arrays of SPRs. One set of SPRs that are supported by
+self-save API. Another set of SPRs supported by self-restore API. Let
+the kernel choose which API to invoke. Even if it wants to always
+prefer self-save over self-restore, let that be kernel's choice.
+
+Pros:
+     - Keeps the design flexible to allow the kernel to take a
+       decision based on its functional and performance requirements.
+       Thus, the kernel for instance can make a choice to invoke
+       self-restore API (when available) for SPRs whose values do not
+       evolve at runtime, and invoke the self-save API (when
+       available)
+       for SPRs whose values will change during runtime.
+
+     - Design is backward compatible with older kernels.
+
+Cons:
+     - The Kernel code will have additional complexity for parsing two
+     lists of SPRs and making a choice w.r.t invocation of a specific
+     stop-api.
+
+Design-Choice 4
+===============
+Expose only the availability of the self-save feature not the subsequent
+SPR list. The kernel will have to make a hard choice of preference,
+although can still have fallback available.
+This makes the design although less flexible for the kernel however
+keeps it simple while still adhering to correctness and backward
+compatibility.
+
+Patches Organization
+====================
+Design choice 4 has been chosen as an implementation to demonstrate in
+this patch series.
+
+Patch 1:
+Commit adds support calling into the self save firmware API.
+Also adds abstraction for making platform agnostic calls.
+
+Patch 2:
+Commit adds API to determine the version of the STOP API. This helps
+to identify support for self save in the firmware
+
+Patch 3:
+commit adds wrappers for the self save api for which an opal call can
+be made. The commit also advertises the self-save feature if the STOP
+API versions are consistent with the firmware.
+
+
+Pratik Rajesh Sampat (1):
+  Self save API integration
+
+Prem Shanker Jha (2):
+  Self Save: Introducing Support for SPR Self Save
+  API to verify the STOP API and image compatibility
+
+ doc/opal-api/opal-slw-self-save-reg-181.rst |  51 ++
+ doc/opal-api/opal-slw-set-reg-100.rst       |   5 +
+ doc/power-management.rst                    |  48 +
+ hw/slw.c                                    | 106 +++
+ include/opal-api.h                          |   3 +-
+ include/p9_stop_api.H                       | 122 ++-
+ include/skiboot.h                           |   3 +
+ libpore/p9_cpu_reg_restore_instruction.H    |  11 +-
+ libpore/p9_hcd_memmap_base.H                |   7 +
+ libpore/p9_stop_api.C                       | 964 +++++++++++---------
+ libpore/p9_stop_api.H                       | 141 ++-
+ libpore/p9_stop_data_struct.H               |   4 +-
+ libpore/p9_stop_util.H                      |  27 +-
+ 13 files changed, 1060 insertions(+), 432 deletions(-)
+ create mode 100644 doc/opal-api/opal-slw-self-save-reg-181.rst
+
+-- 
+2.25.1
+
