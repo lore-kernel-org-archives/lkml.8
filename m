@@ -2,175 +2,192 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9957CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E10C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA9120736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3552076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgDWMSK (ORCPT
+        id S1726619AbgDWMTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:18:10 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:60108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726056AbgDWMSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:18:10 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 7BF311E0F4296EBB6450;
-        Thu, 23 Apr 2020 20:17:33 +0800 (CST)
-Received: from dggeme758-chm.china.huawei.com (10.3.19.104) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Thu, 23 Apr 2020 20:17:32 +0800
-Received: from [10.173.219.71] (10.173.219.71) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 23 Apr 2020 20:17:32 +0800
-Subject: Re: [PATCH net-next 2/3] hinic: add sriov feature support
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
-References: <20200421045635.8128-1-luobin9@huawei.com>
- <20200421045635.8128-3-luobin9@huawei.com>
- <20200421112121.2f0ddf30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <f739eabf-4254-04ae-53e9-35a6ccf0c831@huawei.com>
-Date:   Thu, 23 Apr 2020 20:17:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 23 Apr 2020 08:19:22 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:33428 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgDWMTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 08:19:21 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jRap5-00048z-2F; Thu, 23 Apr 2020 06:19:19 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jRap3-0005q7-LI; Thu, 23 Apr 2020 06:19:18 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>
+References: <20200419141057.621356-3-gladkov.alexey@gmail.com>
+        <20200423112858.95820-1-gladkov.alexey@gmail.com>
+Date:   Thu, 23 Apr 2020 07:16:07 -0500
+In-Reply-To: <20200423112858.95820-1-gladkov.alexey@gmail.com> (Alexey
+        Gladkov's message of "Thu, 23 Apr 2020 13:28:58 +0200")
+Message-ID: <87lfmmz9bs.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200421112121.2f0ddf30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.173.219.71]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-XM-SPF: eid=1jRap3-0005q7-LI;;;mid=<87lfmmz9bs.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+iR9pVq9wAKGMb1dkjvzvzUUF2IrtP4AY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v13 2/7] proc: allow to mount many instances of proc in one pid namespace
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These bit locks are mainly used for extendibility, and other opinions are accepted.Thanks for your review.
 
-On 2020/4/22 2:21, Jakub Kicinski wrote:
-> On Tue, 21 Apr 2020 04:56:34 +0000 Luo bin wrote:
->> +int hinic_pci_sriov_disable(struct pci_dev *pdev)
->> +{
->> +	struct hinic_sriov_info *sriov_info;
->> +	u16 tmp_vfs;
->> +
->> +	sriov_info = hinic_get_sriov_info_by_pcidev(pdev);
->> +	/* if SR-IOV is already disabled then nothing will be done */
->> +	if (!sriov_info->sriov_enabled)
->> +		return 0;
-> Can't happen see below.
+I took a quick look and there is at least one other use in security/tomoyo/realpath.c:
+
+static char *tomoyo_get_local_path(struct dentry *dentry, char * const buffer,
+				   const int buflen)
+{
+	struct super_block *sb = dentry->d_sb;
+	char *pos = tomoyo_get_dentry_path(dentry, buffer, buflen);
+
+	if (IS_ERR(pos))
+		return pos;
+	/* Convert from $PID to self if $PID is current thread. */
+	if (sb->s_magic == PROC_SUPER_MAGIC && *pos == '/') {
+		char *ep;
+		const pid_t pid = (pid_t) simple_strtoul(pos + 1, &ep, 10);
+
+		if (*ep == '/' && pid && pid ==
+		    task_tgid_nr_ns(current, sb->s_fs_info)) {
+			pos = ep - 5;
+			if (pos < buffer)
+				goto out;
+			memmove(pos, "/self", 5);
+		}
+		goto prepend_filesystem_name;
+	}
+
+Can you make the fixes to locks.c and tomoyo a couple of standalone
+fixes that should be inserted before your patch?
+
+On the odd chance there is a typo they will bisect better, as well
+as just keeping this patch and it's description from expanding in size.
+So that things are small enough for people to really look at and review.
+
+The fix itself looks fine.
+
+Thank you,
+Eric
+
+
+Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+
+> Fixed getting proc_pidns in the lock_get_status() and locks_show() directly from
+> the superblock, which caused a crash:
 >
->> +	if (test_and_set_bit(HINIC_SRIOV_DISABLE, &sriov_info->state)) {
->> +		dev_err(&pdev->dev,
->> +			"SR-IOV disable in process, please wait");
->> +		return -EPERM;
->> +	}
-> Hm. I don't understand why you need these bit locks.
+> === arm64 ===
+> [12140.366814] LTP: starting proc01 (proc01 -m 128)
+> [12149.580943] ==================================================================
+> [12149.589521] BUG: KASAN: out-of-bounds in pid_nr_ns+0x2c/0x90 pid_nr_ns at kernel/pid.c:456
+> [12149.595939] Read of size 4 at addr 1bff000bfa8c0388 by task = proc01/50298
+> [12149.603392] Pointer tag: [1b], memory tag: [fe]
 >
->> +	/* If our VFs are assigned we cannot shut down SR-IOV
->> +	 * without causing issues, so just leave the hardware
->> +	 * available but disabled
->> +	 */
->> +	if (pci_vfs_assigned(sriov_info->pdev)) {
->> +		clear_bit(HINIC_SRIOV_DISABLE, &sriov_info->state);
->> +		dev_warn(&pdev->dev, "Unloading driver while VFs are assigned - VFs will not be deallocated\n");
->> +		return -EPERM;
->> +	}
->> +	sriov_info->sriov_enabled = false;
->> +
->> +	/* disable iov and allow time for transactions to clear */
->> +	pci_disable_sriov(sriov_info->pdev);
->> +
->> +	tmp_vfs = (u16)sriov_info->num_vfs;
->> +	sriov_info->num_vfs = 0;
->> +	hinic_deinit_vf_hw(sriov_info, OS_VF_ID_TO_HW(0),
->> +			   OS_VF_ID_TO_HW(tmp_vfs - 1));
->> +
->> +	clear_bit(HINIC_SRIOV_DISABLE, &sriov_info->state);
->> +
->> +	return 0;
->> +}
->> +
->> +int hinic_pci_sriov_enable(struct pci_dev *pdev, int num_vfs)
->> +{
->> +	struct hinic_sriov_info *sriov_info;
->> +	int pre_existing_vfs = 0;
->> +	int err = 0;
->> +
->> +	sriov_info = hinic_get_sriov_info_by_pcidev(pdev);
->> +
->> +	if (test_and_set_bit(HINIC_SRIOV_ENABLE, &sriov_info->state)) {
->> +		dev_err(&pdev->dev,
->> +			"SR-IOV enable in process, please wait, num_vfs %d\n",
->> +			num_vfs);
->> +		return -EPERM;
->> +	}
-> This should never happen, PCI core code will prevent SR-IOV from being
-> enabled twice in a row, and concurrently. See sriov_numvfs_store().
+> [12149.610906] CPU: 69 PID: 50298 Comm: proc01 Tainted: G L 5.7.0-rc2-next-20200422 #6
+> [12149.620585] Hardware name: HPE Apollo 70 /C01_APACHE_MB , BIOS L50_5.13_1.11 06/18/2019
+> [12149.631074] Call trace:
+> [12149.634304]  dump_backtrace+0x0/0x22c
+> [12149.638745]  show_stack+0x28/0x34
+> [12149.642839]  dump_stack+0x104/0x194
+> [12149.647110]  print_address_description+0x70/0x3a4
+> [12149.652576]  __kasan_report+0x188/0x238
+> [12149.657169]  kasan_report+0x3c/0x58
+> [12149.661430]  check_memory_region+0x98/0xa0
+> [12149.666303]  __hwasan_load4_noabort+0x18/0x20
+> [12149.671431]  pid_nr_ns+0x2c/0x90
+> [12149.675446]  locks_translate_pid+0xf4/0x1a0
+> [12149.680382]  locks_show+0x68/0x110
+> [12149.684536]  seq_read+0x380/0x930
+> [12149.688604]  pde_read+0x5c/0x78
+> [12149.692498]  proc_reg_read+0x74/0xc0
+> [12149.696813]  __vfs_read+0x84/0x1d0
+> [12149.700939]  vfs_read+0xec/0x124
+> [12149.704889]  ksys_read+0xb0/0x120
+> [12149.708927]  __arm64_sys_read+0x54/0x88
+> [12149.713485]  do_el0_svc+0x128/0x1dc
+> [12149.717697]  el0_sync_handler+0x150/0x250
+> [12149.722428]  el0_sync+0x164/0x180
 >
->> +	pre_existing_vfs = pci_num_vf(sriov_info->pdev);
->> +
->> +	if (num_vfs > pci_sriov_get_totalvfs(sriov_info->pdev)) {
->> +		clear_bit(HINIC_SRIOV_ENABLE, &sriov_info->state);
->> +		return -ERANGE;
->> +	}
-> Again, can't happen.
->
->> +	if (pre_existing_vfs && pre_existing_vfs != num_vfs) {
->> +		err = hinic_pci_sriov_disable(sriov_info->pdev);
->> +		if (err) {
->> +			clear_bit(HINIC_SRIOV_ENABLE, &sriov_info->state);
->> +			return err;
->> +		}
-> And this.
->
->> +	} else if (pre_existing_vfs == num_vfs) {
-> Or this.
->
->> +		clear_bit(HINIC_SRIOV_ENABLE, &sriov_info->state);
->> +		return num_vfs;
->> +	}
->> +
->> +	err = pci_enable_sriov(sriov_info->pdev, num_vfs);
->> +	if (err) {
->> +		dev_err(&pdev->dev,
->> +			"Failed to enable SR-IOV, error %d\n", err);
->> +		clear_bit(HINIC_SRIOV_ENABLE, &sriov_info->state);
->> +		return err;
->> +	}
->> +
->> +	sriov_info->sriov_enabled = true;
->> +	sriov_info->num_vfs = num_vfs;
->> +	clear_bit(HINIC_SRIOV_ENABLE, &sriov_info->state);
->> +
->> +	return num_vfs;
->> +}
->> +
->> +int hinic_pci_sriov_configure(struct pci_dev *dev, int num_vfs)
->> +{
->> +	struct hinic_sriov_info *sriov_info;
->> +
->> +	sriov_info = hinic_get_sriov_info_by_pcidev(dev);
->> +
->> +	if (test_bit(HINIC_FUNC_REMOVE, &sriov_info->state))
->> +		return -EFAULT;
-> I don't think EFAULT is not a correct error code here. Use EBUSY, or
-> ENODEV?
->
->> +	if (!num_vfs)
->> +		return hinic_pci_sriov_disable(dev);
->> +	else
->> +		return hinic_pci_sriov_enable(dev, num_vfs);
->> +}
-> .
+> [12149.728672] Allocated by task 1:
+> [12149.732624]  __kasan_kmalloc+0x124/0x188
+> [12149.737269]  kasan_kmalloc+0x10/0x18
+> [12149.741568]  kmem_cache_alloc_trace+0x2e4/0x3d4
+> [12149.746820]  proc_fill_super+0x48/0x1fc
+> [12149.751377]  vfs_get_super+0xcc/0x170
+> [12149.755760]  get_tree_nodev+0x28/0x34
+> [12149.760143]  proc_get_tree+0x24/0x30
+> [12149.764439]  vfs_get_tree+0x54/0x158
+> [12149.768736]  do_mount+0x80c/0xaf0
+> [12149.772774]  __arm64_sys_mount+0xe0/0x18c
+> [12149.777504]  do_el0_svc+0x128/0x1dc
+> [12149.781715]  el0_sync_handler+0x150/0x250
+> [12149.786445]  el0_sync+0x164/0x180
+
+> diff --git a/fs/locks.c b/fs/locks.c
+> index b8a31c1c4fff..399c5dbb72c4 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -2823,7 +2823,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
+>  {
+>  	struct inode *inode = NULL;
+>  	unsigned int fl_pid;
+> -	struct pid_namespace *proc_pidns = file_inode(f->file)->i_sb->s_fs_info;
+> +	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
+>  
+>  	fl_pid = locks_translate_pid(fl, proc_pidns);
+>  	/*
+> @@ -2901,7 +2901,7 @@ static int locks_show(struct seq_file *f, void *v)
+>  {
+>  	struct locks_iterator *iter = f->private;
+>  	struct file_lock *fl, *bfl;
+> -	struct pid_namespace *proc_pidns = file_inode(f->file)->i_sb->s_fs_info;
+> +	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file));
+>  
+>  	fl = hlist_entry(v, struct file_lock, fl_link);
+>  
+
+Eric
