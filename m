@@ -2,141 +2,99 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B8DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDB4C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29CE220728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kArGXup8"
+	by mail.kernel.org (Postfix) with ESMTP id 15DC120781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgDWRSk (ORCPT
+        id S1729939AbgDWRTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729873AbgDWRSi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:18:38 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E38C09B042;
-        Thu, 23 Apr 2020 10:18:36 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 72so7428112otu.1;
-        Thu, 23 Apr 2020 10:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eWIMc/tafff8n4r/ioH7WudEqX5eKJY4/xwKjCeysa8=;
-        b=kArGXup8Vf4fJZuWNPUdQbwhZ7FifQlAfceTOlwuVHUC/OYWb1p7KJPArTUaKcOXga
-         Mv9Y9gxkdvL7oC1hzUwDZ/EocCxG8ckOUNDTactW2YiIzCfBKrO6txmbhl5httcUlK8K
-         iBTT9N68VbXe8FkFBd7bXr7cpLj3f+5YL8qRrpj71musLmviat79JKlDcMErKwNcz6AX
-         BYIe5CCCqhUlPxuh/c7qN9DQNC8kcT/5y4GFlUPI8NFhbc26lbzMmZRQDXK58RXpqRZ6
-         Fu1g4xr1/+g56fPtO0kKSWLicbSBM0COZGld3VcqJ95HhTapoTZ5basg2o4l8g3IQE0g
-         /H1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eWIMc/tafff8n4r/ioH7WudEqX5eKJY4/xwKjCeysa8=;
-        b=Z3xlyeXFxSjU0XA+JO9BZjStdb5gV91EfS/p5nWyHQ7/Qid2EYRQyLqdYX+1gwnl8+
-         OtYM2IXk9gKXw8WFh/WmFJykUToTju/f60nP1ct6fKXW8Uc8MJ+Wz7IhJ5lIHr9GSGfR
-         OwJWaQvUun4rzR5Lzpggx0e+riEuTUcRbU0HEmN1qvYt0SLdJN1WPwtm3bYZsAlCLcGa
-         OMfWtrMzKlJGk0ooTSDSDGS5fwL0giaa2NGcenu63Fw92DisA6IxbKOZJlSuCsbCcNEK
-         wVJNCxBFZt4B4NtP+U2pvLN+LE6Ezf81Y5LszIt8HNjhizh6tLPm2a63BcAD31hMLAe5
-         43aw==
-X-Gm-Message-State: AGi0PuZh5qDjfUbGvHGHg1ph/MVQPQaK7vyn5ZP+JmKq4Mgy9JJYzvkE
-        8v3IMpRtWsI5t15Rn0KKOjY=
-X-Google-Smtp-Source: APiQypLHdw9Re8ZNGGoE8MiNgAXFonviP9LlIhN1ClhOhtuOBAsRxzkpDfuVDEM8JJY6OpSlwgyNdQ==
-X-Received: by 2002:a9d:24e3:: with SMTP id z90mr4304153ota.39.1587662316179;
-        Thu, 23 Apr 2020 10:18:36 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id y5sm746726otq.38.2020.04.23.10.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 10:18:35 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v3 4/4] MIPS: VDSO: Allow ld.lld to link the VDSO
-Date:   Thu, 23 Apr 2020 10:18:07 -0700
-Message-Id: <20200423171807.29713-4-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200423171807.29713-1-natechancellor@gmail.com>
-References: <20200419202128.20571-1-natechancellor@gmail.com>
- <20200423171807.29713-1-natechancellor@gmail.com>
+        Thu, 23 Apr 2020 13:19:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:44548 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729873AbgDWRTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:19:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F068830E;
+        Thu, 23 Apr 2020 10:19:03 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F5B93F68F;
+        Thu, 23 Apr 2020 10:19:03 -0700 (PDT)
+References: <CALAqxLURuJ-tMxMY6Z2BvLmyd6X+w7SiSB5otoH6vx+NxJm-NA@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: BUG: Invalid wait context with 5.7-rc2?
+In-reply-to: <CALAqxLURuJ-tMxMY6Z2BvLmyd6X+w7SiSB5otoH6vx+NxJm-NA@mail.gmail.com>
+Date:   Thu, 23 Apr 2020 18:18:55 +0100
+Message-ID: <jhj8simxgqo.mognet@arm.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, when linking with ld.lld, this warning pops up:
 
-    arch/mips/vdso/Makefile:70: MIPS VDSO requires binutils >= 2.25
+Hi John,
 
-CONFIG_LD_VERSION is set with scripts/ld-version.sh, which is specific
-to GNU ld. It returns 0 for ld.lld so CONFIG_MIPS_LD_CAN_LINK_VDSO does
-not set.
+On 23/04/20 17:40, John Stultz wrote:
+> Hey Folks,
+>
+> Recently, I've seen some occasional hangs earlyish in boot on my
+> HiKey960 board with 5.7-rc1/rc2. The kernel isn't totally wedged as I
+> will see some kernel messages (firmware loading failures, etc) much
+> later if I leave it.  But oddly sysrq doesn't respond.
+>
+> Figuring it must be some sort of deadlock, I added LOCKDEP and a bunch
+> of other debug options and started booting in a loop. So far I've not
+> been able to trigger the original problem, but I do see the following
+> every boot:
+>
 
-ld.lld has a completely different versioning scheme (as it follows
-LLVM's versioning) and it does not have the issue mentioned in the
-comment block so it should be allowed to link the VDSO.
+Interestingly I can't seem to reproduce that one with the latest master
+(5.7.0-rc2-00115-g8c2e9790f196). Is that with some of the extra h960
+patches?
 
-With this patch, the VDSO successfully links and shows P_MIPS_PC32 in
-vgettimeofday.o.
+I do get this however:
 
-$ llvm-objdump -Dr arch/mips/vdso/vgettimeofday.o | grep R_MIPS_PC32
-			00000024:  R_MIPS_PC32	_start
-			000000b0:  R_MIPS_PC32	_start
-			000002bc:  R_MIPS_PC32	_start
-			0000036c:  R_MIPS_PC32	_start
-			00000468:  R_MIPS_PC32	_start
-
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/785
-Link: https://github.com/llvm/llvm-project/commit/e364e2e9ce50c12eb2bf093560e1a1a8544d455a
----
-
-v2 -> v3:
-
-* No changes.
-
-v1 -> v2:
-
-* Move into Kconfig so that the warning does not happen.
-
- arch/mips/vdso/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/vdso/Kconfig b/arch/mips/vdso/Kconfig
-index 36a52158d849b..7aec721398d59 100644
---- a/arch/mips/vdso/Kconfig
-+++ b/arch/mips/vdso/Kconfig
-@@ -12,7 +12,7 @@
- # the lack of relocations. As such, we disable the VDSO for microMIPS builds.
- 
- config MIPS_LD_CAN_LINK_VDSO
--	def_bool LD_VERSION >= 225000000
-+	def_bool LD_VERSION >= 225000000 || LD_IS_LLD
- 
- config MIPS_DISABLE_VDSO
- 	def_bool CPU_MICROMIPS || (!CPU_MIPSR6 && !MIPS_LD_CAN_LINK_VDSO)
--- 
-2.26.2
-
+[    3.626638] INFO: trying to register non-static key.
+[    3.626639] the code is fine but needs lockdep annotation.
+[    3.626640] turning off the locking correctness validator.
+[    3.626644] CPU: 7 PID: 51 Comm: kworker/7:1 Not tainted 5.7.0-rc2-00115-g8c2e9790f196 #116
+[    3.626646] Hardware name: HiKey960 (DT)
+[    3.626656] Workqueue: events deferred_probe_work_func
+[    3.632476] sd 0:0:0:0: [sda] Optimal transfer size 8192 bytes not a multiple of physical block size (16384 bytes)
+[    3.640220] Call trace:
+[    3.640225]  dump_backtrace+0x0/0x1b8
+[    3.640227]  show_stack+0x20/0x30
+[    3.640230]  dump_stack+0xec/0x158
+[    3.640234]  register_lock_class+0x598/0x5c0
+[    3.640235]  __lock_acquire+0x80/0x16c0
+[    3.640236]  lock_acquire+0xf4/0x4a0
+[    3.640241]  _raw_spin_lock_irqsave+0x70/0xa8
+[    3.640245]  uart_add_one_port+0x388/0x4b8
+[    3.640248]  pl011_register_port+0x70/0xf0
+[    3.640250]  pl011_probe+0x184/0x1b8
+[    3.640254]  amba_probe+0xdc/0x180
+[    3.640256]  really_probe+0xe0/0x338
+[    3.640257]  driver_probe_device+0x60/0xf8
+[    3.640259]  __device_attach_driver+0x8c/0xd0
+[    3.640260]  bus_for_each_drv+0x84/0xd8
+[    3.640261]  __device_attach+0xe4/0x140
+[    3.640263]  device_initial_probe+0x1c/0x28
+[    3.640265]  bus_probe_device+0xa4/0xb0
+[    3.640266]  deferred_probe_work_func+0x7c/0xb8
+[    3.640269]  process_one_work+0x2c0/0x768
+[    3.640271]  worker_thread+0x4c/0x498
+[    3.640272]  kthread+0x14c/0x158
+[    3.640275]  ret_from_fork+0x10/0x1c
