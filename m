@@ -2,129 +2,92 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D06CC55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E86C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6422075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8811C2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587604735;
+	bh=5J7cR0szFxvJoNJ8P80jMKgqc3d3/p0yIBp4jdKWeYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SE+uz2re80sU3MxkcqirAtl+T3d195pLmQFRU07VN1Z+MhLhqj3NMcC092nkA3wc/
+	 4sHE4OofC2R+b2VRGh+9xKHZsQjY4JlZSuZIQ3pbhe7bF4LjeNjz+Cn4n13t8J5Onx
+	 o82+JBLSaqfP93IZ2ACXbkD92nVAxdm6y7+Np3Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDWBS0 (ORCPT
+        id S1726424AbgDWBSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:18:26 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:37697 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726324AbgDWBSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:18:25 -0400
-Received: (qmail 8173 invoked by uid 500); 22 Apr 2020 21:18:24 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 22 Apr 2020 21:18:24 -0400
-Date:   Wed, 22 Apr 2020 21:18:24 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-In-Reply-To: <0000000000001cfc5605a2556fb7@google.com>
-Message-ID: <Pine.LNX.4.44L0.2004222111060.7643-100000@netrider.rowland.org>
+        Wed, 22 Apr 2020 21:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbgDWBSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:18:54 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B6A2075A;
+        Thu, 23 Apr 2020 01:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587604734;
+        bh=5J7cR0szFxvJoNJ8P80jMKgqc3d3/p0yIBp4jdKWeYo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IIx59UKndzfTh4wq2bvrFTQGolD30iYA5PEGQljltaIBRO7fHpu7TroWBiaoSDHiL
+         zQzTb3TtBKYrMsVRxlHH0z/8IkrBtBN9md++fOaiM7ZrqN+MmQ0q4EHdlAIVhi7UEo
+         DcjwZEgN++cnXQXTx8NmtR6QNwx8wcuUWELejeYo=
+Date:   Thu, 23 Apr 2020 09:18:47 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] arm64: dts: imx8mq-librem5-devkit: Use 0.9V for
+ VDD_GPU
+Message-ID: <20200423011846.GG8571@dragon>
+References: <cover.1587480093.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1587480093.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020, syzbot wrote:
-
-> Hello,
+On Tue, Apr 21, 2020 at 04:44:12PM +0200, Guido Günther wrote:
+> According to the imx8mq data sheet running VDD_GPU at 0.9V is enough
+> when not overclocking to 1GHz (which we currently don't do).
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered crash:
-> WARNING in usbhid_raw_request/usb_submit_urb
+> changes from v2:
+>  - rebase aginst Shawn's tree
+>  - fix a warning for the typec connector
 > 
-> ------------[ cut here ]------------
-> usb 1-1: BOGUS urb xfer, pipe 2 != type 2, pipe 0x80005600, ep attr 0x00, ep addr 0xff
+> Guido Günther (2):
+>   arm64: dts: imx8mq-librem5-devkit: Use 0.9V for VDD_GPU
+>   arm64: dts: Don't use underscore in node name
 
-This means that the ep_out[0] pointer was NULL.  Let's try to find out 
-why.
+This one should also be prefixed like arm64: dts: imx8mq-librem5-devkit:
 
-Alan Stern
+I fixed it up and applied both.
 
-#syz test: https://github.com/google/kasan.git 0fa84af8
+Shawn
 
-Index: usb-devel/drivers/usb/core/hub.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/hub.c
-+++ usb-devel/drivers/usb/core/hub.c
-@@ -4437,9 +4437,11 @@ int hub_port_debounce(struct usb_hub *hu
- 
- void usb_ep0_reinit(struct usb_device *udev)
- {
-+	udev->alan1 = 2;
- 	usb_disable_endpoint(udev, 0 + USB_DIR_IN, true);
- 	usb_disable_endpoint(udev, 0 + USB_DIR_OUT, true);
- 	usb_enable_endpoint(udev, &udev->ep0, true);
-+	udev->alan1 = 3;
- }
- EXPORT_SYMBOL_GPL(usb_ep0_reinit);
- 
-Index: usb-devel/drivers/usb/core/message.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/message.c
-+++ usb-devel/drivers/usb/core/message.c
-@@ -1198,6 +1198,10 @@ void usb_disable_interface(struct usb_de
- 	int i;
- 
- 	for (i = 0; i < alt->desc.bNumEndpoints; ++i) {
-+		if ((alt->endpoint[i].desc.bEndpointAddress & 0x0f) == 0)
-+			dev_info(&dev->dev, "Ep 0 is %d in interface %d-%d\n",
-+					i, alt->desc.bInterfaceNumber,
-+					alt->desc.bAlternateSetting);
- 		usb_disable_endpoint(dev,
- 				alt->endpoint[i].desc.bEndpointAddress,
- 				reset_hardware);
-@@ -1275,6 +1279,8 @@ void usb_disable_device(struct usb_devic
- 		mutex_unlock(hcd->bandwidth_mutex);
- 		/* Second pass: remove endpoint pointers */
- 	}
-+	if (!skip_ep0)
-+		dev->alan1 = 1;
- 	for (i = skip_ep0; i < 16; ++i) {
- 		usb_disable_endpoint(dev, i, true);
- 		usb_disable_endpoint(dev, i + USB_DIR_IN, true);
-Index: usb-devel/drivers/usb/core/urb.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/urb.c
-+++ usb-devel/drivers/usb/core/urb.c
-@@ -204,8 +204,12 @@ int usb_urb_ep_type_check(const struct u
- 	const struct usb_host_endpoint *ep;
- 
- 	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
--	if (!ep)
-+	if (!ep) {
-+		dev_info(&urb->dev->dev, "Ep %d disabled: %d %d\n",
-+			usb_pipeendpoint(urb->pipe),
-+			urb->dev->alan1, urb->dev->alan2);
- 		return -EINVAL;
-+	}
- 	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
- 		return -EINVAL;
- 	return 0;
-Index: usb-devel/include/linux/usb.h
-===================================================================
---- usb-devel.orig/include/linux/usb.h
-+++ usb-devel/include/linux/usb.h
-@@ -629,6 +629,7 @@ struct usb3_lpm_parameters {
-  * usb_set_device_state().
-  */
- struct usb_device {
-+	int		alan1, alan2;
- 	int		devnum;
- 	char		devpath[16];
- 	u32		route;
-
+> 
+>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.26.1
+> 
