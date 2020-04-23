@@ -2,100 +2,144 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF769C55189
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271D1C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD2FC206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fXWumdaw"
+	by mail.kernel.org (Postfix) with ESMTP id 04D5D2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgDWAbH (ORCPT
+        id S1726324AbgDWAfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 20:31:07 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39547 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbgDWAbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 20:31:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 496ys30GbJz9sSc;
-        Thu, 23 Apr 2020 10:31:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587601864;
-        bh=UHUv817hjErmI8Kp+Xk31dEJLk6fwvwdT6MslTcRF4s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fXWumdawnsh6cVY6U5QJXesvD7Csa9T4DFNtDM9Myld4EwmhgPCtpeC97rw5oXp9l
-         LyYYPK3Y3J+hV0aP4jyUwEuHJFGV8t1r5Kn5NkGyvaBSh03T5QqUNPckt3y2VONSay
-         jRrwXYEoHKXnkV3TeesD9tI9qAEc6sXQsybeT/Ikh+kfSIRerxXhQsMNqmrJ+M1nbn
-         Z+78NtwKt7dp+5sc7DW7dDEGpG6JfaHA7Vq+TRRQCiDI7a5UeJlrfflxT5qbLYTVXl
-         c7RrP3KcWx8U8Q66Hq6yD/I1p2CJjx5IAL5svR0njzxXLafD93epWvTeCGfJ5/5Wqq
-         RvLwlYiJbzetw==
-Date:   Thu, 23 Apr 2020 10:31:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steve French <smfrench@gmail.com>,
-        CIFS <linux-cifs@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paulo Alcantara <pc@cjr.nz>, Aurelien Aptel <aaptel@suse.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: linux-next: build failure after merge of the cifs tree
-Message-ID: <20200423103101.0d416eb8@canb.auug.org.au>
+        Wed, 22 Apr 2020 20:35:34 -0400
+Received: from mail-m127107.qiye.163.com ([115.236.127.107]:5216 "EHLO
+        mail-m127107.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgDWAfd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 20:35:33 -0400
+Received: from vivo.com (wm-12.qy.internal [127.0.0.1])
+        by mail-m127107.qiye.163.com (Hmail) with ESMTP id 3D2AA822AC;
+        Thu, 23 Apr 2020 08:35:27 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AEcAyQCMCDKzrJl2z8MdhKp5.3.1587602127200.Hmail.wenhu.wang@vivo.com>
+To:     Scott Wood <oss@buserror.net>
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kernel@vivo.com, robh@kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MixSRVNFTkRdIG1pc2M6IG5ldyBkcml2ZXIgc3JhbV91YXBpIGZvciB1c2VyIGxldmVsIFNSQU0gYWNjZXNz?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.226
+In-Reply-To: <876d477d6d8db20c41be3eb59850c51e6badbfcf.camel@buserror.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/n2uuqLtGjfvdVydf.w_cdJU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Received: from wenhu.wang@vivo.com( [58.251.74.226) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 23 Apr 2020 08:35:27 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Thu, 23 Apr 2020 08:35:27 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VMTUJCQkJCQ0tCSU1OSllXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSEhDTkJPQk1IN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Phg6Aio4Njg*MAEJMRdJAUM2HxMwC05VSFVKTkNMTUtJSklCSE9NVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlNWVdZCAFZQUJKTkg3Bg++
+X-HM-Tid: 0a71a475f99c986bkuuu3d2aa822ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/n2uuqLtGjfvdVydf.w_cdJU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-After merging the cifs tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
-
-fs/cifs/connect.c: In function 'cifs_find_tcon':
-fs/cifs/connect.c:3378:45: error: 'struct cifs_tcon' has no member named 'd=
-fs_path'
- 3378 |   if (!match_tcon(tcon, volume_info) || tcon->dfs_path)
-      |                                             ^~
-
-Caused by commit
-
-  f73409e5babd ("cifs: do not share tcons with DFS")
-
-# CONFIG_CIFS_DFS_UPCALL is not set
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/n2uuqLtGjfvdVydf.w_cdJU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6g4cUACgkQAVBC80lX
-0GwrnQgAkzPK+CDasBQ+GgXMr03z4msIJY8uqddNYwZV4O9ISJ6YPJ7fuAdC89Fr
-V05Df13g12U0MZPZp5xeL05Ju303rhKmsFaeh+r9+7ynvZt8wK8wMX24caQXWGAg
-B6NsdELs/6DbccETPBtSemyltP/gN/JuKqBa9LDyf0ArpJz9thsZrEPavKMUFS8p
-cDDuj5L6jzprPfEoHSWxtB/Hdoa2g5EC50rQjdjA4+s6srgcJgeaYeDP1RxNshGd
-RLN40RgDP4aEiuPXSOQG4K1a4lJwt7JTxe7hyNIp76wHZaKsQnYEO0fbul4Joqd9
-ecBPeyx5mp25ckKwnjO21bdOE2NQ0Q==
-=a0M0
------END PGP SIGNATURE-----
-
---Sig_/n2uuqLtGjfvdVydf.w_cdJU--
+SGksIFNjb3R0LCBHcmVnLAoKVGhhbmsgeW91IGZvciB5b3VyIGhlbHBmdWwgY29tbWVudHMuCkZv
+ciB0aGF0IEdyZWcgbWVudGlvbmVkIHRoYXQgdGhlIHBhdGNoIChvciBwYXRjaCBzZXJpZXMpIHZp
+YSBVSU8gc2hvdWxkIHdvcmtlZCB0aHJvdWdoLApzbyBJIHdhbnQgdG8gbWFrZSBpdCBjbGVhciB0
+aGF0IGlmIGl0IHdvdWxkIGdvIHVwc3RyZWFtPyhBbmQgaWYgc28sIHdoZW4/IE5vIHB1c2gsIGp1
+c3QgYXNrKQoKQWxzbyBJIGhhdmUgYmVlbiB3b25kZXJpbmcgaG93IHRoZSBwYXRjaGVzIHdpdGgg
+Y29tcG9uZW50cyBpbiBkaWZmZXJlbnQgc3Vic3lzdGVtcwpnbyBnZXQgdXBzdHJlYW0gdG8gdGhl
+IG1haW5saW5lPyBMaWtlIHBhdGNoIDEtMyBhcmUgb2YgbGludXhwcGMtZGV2LCBhbmQgcGF0Y2gg
+NCBpcyBvZgpzdWJzeXN0ZW0gVUlPLCBhbmQgaWYgYWNjZXB0YWJsZSwgaG93IHdvdWxkIHlvdSBk
+ZWFsIHdpdGggdGhlbT8KCkJhY2sgdG8gdGhlIGRldmljZXRyZWUgdGhpbmcsIEkgbWFrZSBpdCBk
+ZXRhY2hlZCBmcm9tIGhhcmR3YXJlIGNvbXBhdGliaWxpdGllcyB3aGljaCBiZWxvbmcKdG8gdGhl
+IGhhcmR3YXJlIGxldmVsIGRyaXZlciBhbmQgYWxzbyB1c2VkIG1vZHVsZSBwYXJhbWV0ZXIgZm9y
+IG9mX2lkIGRlZmluaXRpb24gYXMgZHQtYmluZGluZwppcyBub3QgYWxsb3dlZCBmb3IgVUlPIG5v
+dy4gU28gYXMgSSBjYW4gc2VlLCB0aGluZ3MgbWF5IGdvIHdlbGwgYW5kIHRoZXJlIGlzIG5vIGhh
+cm0gdG8gYW55dGhpbmcsCkkgaG9wZSB5b3UoU2NvdHQpIHBsZWFzZSB0YWtlIGEgcmUtY29uc2lk
+ZXJhdGlvbi4gCgpUaGFua3MgJiByZWdhcmRzLApXZW5odQoKPk9uIFN1biwgMjAyMC0wNC0xOSBh
+dCAyMDowNSAtMDcwMCwgV2FuZyBXZW5odSB3cm90ZToKPj4gK3N0YXRpYyB2b2lkIHNyYW1fdWFw
+aV9yZXNfaW5zZXJ0KHN0cnVjdCBzcmFtX3VhcGkgKnVhcGksCj4+ICsJCQkJIHN0cnVjdCBzcmFt
+X3Jlc291cmNlICpyZXMpCj4+ICt7Cj4+ICsJc3RydWN0IHNyYW1fcmVzb3VyY2UgKmN1ciwgKnRt
+cDsKPj4gKwlzdHJ1Y3QgbGlzdF9oZWFkICpoZWFkID0gJnVhcGktPnJlc19saXN0Owo+PiArCj4+
+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKGN1ciwgdG1wLCBoZWFkLCBsaXN0KSB7Cj4+ICsJ
+CWlmICgmdG1wLT5saXN0ICE9IGhlYWQgJiYKPj4gKwkJICAgIChjdXItPmluZm8ub2Zmc2V0ICsg
+Y3VyLT5pbmZvLnNpemUgKyByZXMtPmluZm8uc2l6ZSA8PQo+PiArCQkgICAgdG1wLT5pbmZvLm9m
+ZnNldCkpIHsKPj4gKwkJCXJlcy0+aW5mby5vZmZzZXQgPSBjdXItPmluZm8ub2Zmc2V0ICsgY3Vy
+LT5pbmZvLnNpemU7Cj4+ICsJCQlyZXMtPnBhcmVudCA9IHVhcGk7Cj4+ICsJCQlsaXN0X2FkZCgm
+cmVzLT5saXN0LCAmY3VyLT5saXN0KTsKPj4gKwkJCXJldHVybjsKPj4gKwkJfQo+PiArCX0KPgo+
+V2UgZG9uJ3QgbmVlZCB5ZXQgYW5vdGhlciBvcGVuIGNvZGVkIGFsbG9jYXRvci4gIElmIHlvdSBy
+ZWFsbHkgbmVlZCB0byBkbyB0aGlzCj50aGVuIHVzZSBpbmNsdWRlL2xpbnV4L2dlbmFsbG9jLmgs
+IGJ1dCBtYXliZSBrZWVwIGl0IHNpbXBsZSBhbmQganVzdCBoYXZlIG9uZQo+YWxsb2NhdG9uIHBl
+ciBmaWxlIGRlc2NyaXB0b3Igc28geW91IGRvbid0IG5lZWQgdG8gbWFuYWdlIGZkIG9mZnNldHM/
+Cj4KPj4gK3N0YXRpYyBzdHJ1Y3Qgc3JhbV9yZXNvdXJjZSAqc3JhbV91YXBpX2ZpbmRfcmVzKHN0
+cnVjdCBzcmFtX3VhcGkgKnVhcGksCj4+ICsJCQkJCQlfX3UzMiBvZmZzZXQpCj4+ICt7Cj4+ICsJ
+c3RydWN0IHNyYW1fcmVzb3VyY2UgKnJlczsKPj4gKwo+PiArCWxpc3RfZm9yX2VhY2hfZW50cnko
+cmVzLCAmdWFwaS0+cmVzX2xpc3QsIGxpc3QpIHsKPj4gKwkJaWYgKHJlcy0+aW5mby5vZmZzZXQg
+PT0gb2Zmc2V0KQo+PiArCQkJcmV0dXJuIHJlczsKPj4gKwl9Cj4+ICsKPj4gKwlyZXR1cm4gTlVM
+TDsKPj4gK30KPgo+V2hhdCBpZiB0aGUgYWxsb2NhdGlvbiBpcyBtb3JlIHRoYW4gb25lIHBhZ2Us
+IGFuZCB0aGUgdXNlciBtbWFwcyBzdGFydGluZwo+c29tZXdoZXJlIG90aGVyIHRoYW4gdGhlIGZp
+cnN0IHBhZ2U/Cj4KPj4gKwlzd2l0Y2ggKGNtZCkgewo+PiArCWNhc2UgU1JBTV9VQVBJX0lPQ19T
+RVRfU1JBTV9UWVBFOgo+PiArCQlpZiAodWFwaS0+c2EpCj4+ICsJCQlyZXR1cm4gLUVFWElTVDsK
+Pj4gKwo+PiArCQlnZXRfdXNlcih0eXBlLCAoY29uc3QgX191MzIgX191c2VyICopYXJnKTsKPj4g
+KwkJdWFwaS0+c2EgPSBnZXRfc3JhbV9hcGlfZnJvbV90eXBlKHR5cGUpOwo+PiArCQlpZiAodWFw
+aS0+c2EpCj4+ICsJCQlyZXQgPSAwOwo+PiArCQllbHNlCj4+ICsJCQlyZXQgPSAtRU5PREVWOwo+
+PiArCj4+ICsJCWJyZWFrOwo+PiArCj4KPkp1c3QgZXhwb3NlIG9uZSBkZXZpY2UgcGVyIGJhY2tp
+bmcgU1JBTSwgZXNwZWNpYWxseSBpZiB0aGUgdXNlciBoYXMgYW55IHJlYXNvbgo+dG8gY2FyZSBh
+Ym91dCB3aGVyZSB0aGUgU1JBTSBpcyBjb21pbmcgZnJvbSAoY29ycmVsYXRpbmcgc3lzZnMgbm9k
+ZXMgaXMgbXVjaAo+bW9yZSBleHByZXNzaXZlIHRoYW4gc29tZSB2YWd1ZSBub3Rpb24gb2YgInR5
+cGUiKS4KPgo+PiArCWNhc2UgU1JBTV9VQVBJX0lPQ19BTExPQzoKPj4gKwkJaWYgKCF1YXBpLT5z
+YSkKPj4gKwkJCXJldHVybiAtRUlOVkFMOwo+PiArCj4+ICsJCXJlcyA9IGt6YWxsb2Moc2l6ZW9m
+KCpyZXMpLCBHRlBfS0VSTkVMKTsKPj4gKwkJaWYgKCFyZXMpCj4+ICsJCQlyZXR1cm4gLUVOT01F
+TTsKPj4gKwo+PiArCQlzaXplID0gY29weV9mcm9tX3VzZXIoKHZvaWQgKikmcmVzLT5pbmZvLAo+
+PiArCQkJCSAgICAgIChjb25zdCB2b2lkIF9fdXNlciAqKWFyZywKPj4gKwkJCQkgICAgICBzaXpl
+b2YocmVzLT5pbmZvKSk7Cj4+ICsJCWlmICghUEFHRV9BTElHTkVEKHJlcy0+aW5mby5zaXplKSB8
+fCAhcmVzLT5pbmZvLnNpemUpCj4+ICsJCQlyZXR1cm4gLUVJTlZBTDsKPgo+TWlzc2luZyBFRkFV
+TFQgdGVzdCAoaGVyZSBhbmQgZWxzZXdoZXJlKSwgYW5kIHJlcyBsZWFrcyBvbiBlcnJvci4KPgo+
+PiArCj4+ICsJCXJlcy0+dmlydCA9ICh2b2lkICopdWFwaS0+c2EtPnNyYW1fYWxsb2MocmVzLT5p
+bmZvLnNpemUsCj4+ICsJCQkJCQkJICZyZXMtPnBoeXMsCj4+ICsJCQkJCQkJIFBBR0VfU0laRSk7
+Cj4KPkRvIHdlIHJlYWxseSBuZWVkIG11bHRpcGxlIGFsbG9jYXRvcnMsIG9yIGNvdWxkIHRoZSBi
+YWNrZW5kIGJlIGxpbWl0ZWQgdG8ganVzdAo+YWRkaW5nIHJlZ2lvbnMgdG8gYSBnZW5lcmljIGFs
+bG9jYXRvciAod2l0aCB0aGF0IGFsbG9jYXRvciBhbHNvIHNlcnZpbmcgaW4tCj5rZXJuZWwgdXNl
+cnMpPwo+Cj5JZiBzcmFtX2FsbG9jIGlzIHN1cHBvc2VkIHRvIHJldHVybiBhIHZpcnR1YWwgYWRk
+cmVzcywgd2h5IGlzbid0IHRoYXQgdGhlCj5yZXR1cm4gdHlwZT8KPgo+PiArCQlpZiAoIXJlcy0+
+dmlydCkgewo+PiArCQkJa2ZyZWUocmVzKTsKPj4gKwkJCXJldHVybiAtRU5PTUVNOwo+PiArCQl9
+Cj4KPkVOT1NQQyBtaWdodCBiZSBtb3JlIGFwcHJvcHJpYXRlLCBhcyB0aGlzIGlzbid0IGdlbmVy
+YWwtcHVycG9zZSBSQU0uCj4KPj4gKwo+PiArCQlzcmFtX3VhcGlfcmVzX2luc2VydCh1YXBpLCBy
+ZXMpOwo+PiArCQlzaXplID0gY29weV90b191c2VyKCh2b2lkIF9fdXNlciAqKWFyZywKPj4gKwkJ
+CQkgICAgKGNvbnN0IHZvaWQgKikmcmVzLT5pbmZvLAo+PiArCQkJCSAgICBzaXplb2YocmVzLT5p
+bmZvKSk7Cj4+ICsKPj4gKwkJcmV0ID0gMDsKPj4gKwkJYnJlYWs7Cj4+ICsKPj4gKwljYXNlIFNS
+QU1fVUFQSV9JT0NfRlJFRToKPj4gKwkJaWYgKCF1YXBpLT5zYSkKPj4gKwkJCXJldHVybiAtRUlO
+VkFMOwo+PiArCj4+ICsJCXNpemUgPSBjb3B5X2Zyb21fdXNlcigodm9pZCAqKSZpbmZvLCAoY29u
+c3Qgdm9pZCBfX3VzZXIgKilhcmcsCj4+ICsJCQkJICAgICAgc2l6ZW9mKGluZm8pKTsKPj4gKwo+
+PiArCQlyZXMgPSBzcmFtX3VhcGlfcmVzX2RlbGV0ZSh1YXBpLCAmaW5mbyk7Cj4+ICsJCWlmICgh
+cmVzKSB7Cj4+ICsJCQlwcl9lcnIoImVycm9yIG5vIHNyYW0gcmVzb3VyY2UgZm91bmRcbiIpOwo+
+PiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4+ICsJCX0KPj4gKwo+PiArCQl1YXBpLT5zYS0+c3JhbV9m
+cmVlKHJlcy0+dmlydCk7Cj4+ICsJCWtmcmVlKHJlcyk7Cj4+ICsKPj4gKwkJcmV0ID0gMDsKPj4g
+KwkJYnJlYWs7Cj4KPlNvIHlvdSBjYW4ganVzdCBkZWxldGUgYW55IGFyYml0cmFyeSBvZmZzZXQs
+IGV2ZW4gaWYgeW91IHdlcmVuJ3QgdGhlIG9uZSB0aGF0Cj5hbGxvY2F0ZWQgaXQ/ICBFdmVuIGlm
+IHRoaXMgaXNuJ3QgbWVhbnQgZm9yIHVucHJpdmlsZWdlZCB1c2UgaXQgc2VlbXMgZXJyb3ItCj5w
+cm9uZS4gIAo+Cj4+ICsKPj4gKwlkZWZhdWx0Ogo+PiArCQlwcl9lcnIoImVycm9yIG5vIGNtZCBu
+b3Qgc3VwcG9ydGVkXG4iKTsKPj4gKwkJYnJlYWs7Cj4+ICsJfQo+PiArCj4+ICsJcmV0dXJuIHJl
+dDsKPj4gK30KPj4gKwo+PiArc3RhdGljIGludCBzcmFtX3VhcGlfbW1hcChzdHJ1Y3QgZmlsZSAq
+ZmlscCwgc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEpCj4+ICt7Cj4+ICsJc3RydWN0IHNyYW1f
+dWFwaSAqdWFwaSA9IGZpbHAtPnByaXZhdGVfZGF0YTsKPj4gKwlzdHJ1Y3Qgc3JhbV9yZXNvdXJj
+ZSAqcmVzOwo+PiArCj4+ICsJcmVzID0gc3JhbV91YXBpX2ZpbmRfcmVzKHVhcGksIHZtYS0+dm1f
+cGdvZmYpOwo+PiArCWlmICghcmVzKQo+PiArCQlyZXR1cm4gLUVJTlZBTDsKPj4gKwo+PiArCWlm
+ICh2bWEtPnZtX2VuZCAtIHZtYS0+dm1fc3RhcnQgPiByZXMtPmluZm8uc2l6ZSkKPj4gKwkJcmV0
+dXJuIC1FSU5WQUw7Cj4+ICsKPj4gKwl2bWEtPnZtX3BhZ2VfcHJvdCA9IHBncHJvdF9ub25jYWNo
+ZWQodm1hLT52bV9wYWdlX3Byb3QpOwo+PiArCj4+ICsJcmV0dXJuIHJlbWFwX3Bmbl9yYW5nZSh2
+bWEsIHZtYS0+dm1fc3RhcnQsCj4+ICsJCQkgICAgICAgcmVzLT5waHlzID4+IFBBR0VfU0hJRlQs
+Cj4+ICsJCQkgICAgICAgdm1hLT52bV9lbmQgLSB2bWEtPnZtX3N0YXJ0LAo+PiArCQkJICAgICAg
+IHZtYS0+dm1fcGFnZV9wcm90KTsKPj4gK30KPgo+V2lsbCBub25jYWNoZWQgYWx3YXlzIGJlIHdo
+YXQncyB3YW50ZWQgaGVyZT8KPgo+LVNjb3R0Cj4KPgoNCg0K
