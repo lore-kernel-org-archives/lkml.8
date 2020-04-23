@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0874C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33791C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B838120780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFE520780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgDWXVA (ORCPT
+        id S1729901AbgDWXVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:21:00 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48550 "EHLO
+        Thu, 23 Apr 2020 19:21:05 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48548 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728201AbgDWXGd (ORCPT
+        by vger.kernel.org with ESMTP id S1728203AbgDWXGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvM-0004bu-1I; Fri, 24 Apr 2020 00:06:28 +0100
+        id 1jRkvL-0004bO-Dn; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-00E6iw-8R; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvJ-00E6iD-Ly; Fri, 24 Apr 2020 00:06:25 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Xu Wen" <wen.xu@gatech.edu>, "David Sterba" <dsterba@suse.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Steven Sistare" <steven.sistare@oracle.com>,
-        "Pavel Tatashin" <pasha.tatashin@oracle.com>
-Date:   Fri, 24 Apr 2020 00:04:47 +0100
-Message-ID: <lsq.1587683028.710020660@decadent.org.uk>
+        "Su Yue" <suy.fnst@cn.fujitsu.com>,
+        "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
+        "Qu Wenruo" <wqu@suse.com>
+Date:   Fri, 24 Apr 2020 00:04:38 +0100
+Message-ID: <lsq.1587683028.268403345@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 060/245] x86/pti/efi: broken conversion from efi to
- kernel page table
+Subject: [PATCH 3.16 051/245] btrfs: Check that each block group has
+ corresponding chunk at mount time
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,120 +59,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Tatashin <pasha.tatashin@oracle.com>
+From: Qu Wenruo <wqu@suse.com>
 
-In entry_64.S we have code like this:
+commit 514c7dca85a0bf40be984dab0b477403a6db901f upstream.
 
-    /* Unconditionally use kernel CR3 for do_nmi() */
-    /* %rax is saved above, so OK to clobber here */
-    ALTERNATIVE "jmp 2f", "movq %cr3, %rax", X86_FEATURE_KAISER
-    /* If PCID enabled, NOFLUSH now and NOFLUSH on return */
-    ALTERNATIVE "", "bts $63, %rax", X86_FEATURE_PCID
-    pushq   %rax
-    /* mask off "user" bit of pgd address and 12 PCID bits: */
-    andq    $(~(X86_CR3_PCID_ASID_MASK | KAISER_SHADOW_PGD_OFFSET)), %rax
-    movq    %rax, %cr3
-2:
+A crafted btrfs image with incorrect chunk<->block group mapping will
+trigger a lot of unexpected things as the mapping is essential.
 
-    /* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
-    call    do_nmi
+Although the problem can be caught by block group item checker
+added in "btrfs: tree-checker: Verify block_group_item", it's still not
+sufficient.  A sufficiently valid block group item can pass the check
+added by the mentioned patch but could fail to match the existing chunk.
 
-With this instruction:
-    andq    $(~(X86_CR3_PCID_ASID_MASK | KAISER_SHADOW_PGD_OFFSET)), %rax
+This patch will add extra block group -> chunk mapping check, to ensure
+we have a completely matching (start, len, flags) chunk for each block
+group at mount time.
 
-We unconditionally switch from whatever our CR3 was to kernel page table.
-But, in arch/x86/platform/efi/efi_64.c We temporarily set a different page
-table, that does not have the kernel page table with 0x1000 offset from it.
+Here we reuse the original helper find_first_block_group(), which is
+already doing the basic bg -> chunk checks, adding further checks of the
+start/len and type flags.
 
-Look in efi_thunk() and efi_thunk_set_virtual_address_map().
-
-So, while CR3 points to the other page table, we get an NMI interrupt,
-and clear 0x1000 from CR3, resulting in a bogus CR3 if the 0x1000 bit was
-set.
-
-The efi page table comes from realmode/rm/trampoline_64.S:
-
-arch/x86/realmode/rm/trampoline_64.S
-
-141 .bss
-142 .balign PAGE_SIZE
-143 GLOBAL(trampoline_pgd) .space PAGE_SIZE
-
-Notice: alignment is PAGE_SIZE, so after applying KAISER_SHADOW_PGD_OFFSET
-which equal to PAGE_SIZE, we can get a different page table.
-
-But, even if we fix alignment, here the trampoline binary is later copied
-into dynamically allocated memory in reserve_real_mode(), so we need to
-fix that place as well.
-
-Fixes: f9a1666f97b3 ("KAISER: Kernel Address Isolation")
-Signed-off-by: Pavel Tatashin <pasha.tatashin@oracle.com>
-Reviewed-by: Steven Sistare <steven.sistare@oracle.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=199837
+Reported-by: Xu Wen <wen.xu@gatech.edu>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Su Yue <suy.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 4.4: Use root->fs_info instead of fs_info]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Adjust the Fixes field for 3.16]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/kaiser.h        | 10 ++++++++++
- arch/x86/realmode/init.c             |  4 +++-
- arch/x86/realmode/rm/trampoline_64.S |  3 ++-
- 3 files changed, 15 insertions(+), 2 deletions(-)
+ fs/btrfs/extent-tree.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/kaiser.h
-+++ b/arch/x86/include/asm/kaiser.h
-@@ -19,6 +19,16 @@
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -8556,6 +8556,8 @@ static int find_first_block_group(struct
+ 	int ret = 0;
+ 	struct btrfs_key found_key;
+ 	struct extent_buffer *leaf;
++	struct btrfs_block_group_item bg;
++	u64 flags;
+ 	int slot;
  
- #define KAISER_SHADOW_PGD_OFFSET 0x1000
- 
-+#ifdef CONFIG_PAGE_TABLE_ISOLATION
-+/*
-+ *  A page table address must have this alignment to stay the same when
-+ *  KAISER_SHADOW_PGD_OFFSET mask is applied
-+ */
-+#define KAISER_KERNEL_PGD_ALIGNMENT (KAISER_SHADOW_PGD_OFFSET << 1)
-+#else
-+#define KAISER_KERNEL_PGD_ALIGNMENT PAGE_SIZE
-+#endif
+ 	ret = btrfs_search_slot(NULL, root, key, path, 0, 0);
+@@ -8590,8 +8592,32 @@ static int find_first_block_group(struct
+ 			"logical %llu len %llu found bg but no related chunk",
+ 					  found_key.objectid, found_key.offset);
+ 				ret = -ENOENT;
++			} else if (em->start != found_key.objectid ||
++				   em->len != found_key.offset) {
++				btrfs_err(root->fs_info,
++		"block group %llu len %llu mismatch with chunk %llu len %llu",
++					  found_key.objectid, found_key.offset,
++					  em->start, em->len);
++				ret = -EUCLEAN;
+ 			} else {
+-				ret = 0;
++				read_extent_buffer(leaf, &bg,
++					btrfs_item_ptr_offset(leaf, slot),
++					sizeof(bg));
++				flags = btrfs_block_group_flags(&bg) &
++					BTRFS_BLOCK_GROUP_TYPE_MASK;
 +
- #ifdef __ASSEMBLY__
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- 
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -4,6 +4,7 @@
- #include <asm/cacheflush.h>
- #include <asm/pgtable.h>
- #include <asm/realmode.h>
-+#include <asm/kaiser.h>
- 
- struct real_mode_header *real_mode_header;
- u32 *trampoline_cr4_features;
-@@ -15,7 +16,8 @@ void __init reserve_real_mode(void)
- 	size_t size = PAGE_ALIGN(real_mode_blob_end - real_mode_blob);
- 
- 	/* Has to be under 1M so we can execute real-mode AP code. */
--	mem = memblock_find_in_range(0, 1<<20, size, PAGE_SIZE);
-+	mem = memblock_find_in_range(0, 1 << 20, size,
-+				     KAISER_KERNEL_PGD_ALIGNMENT);
- 	if (!mem)
- 		panic("Cannot allocate trampoline\n");
- 
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -30,6 +30,7 @@
- #include <asm/msr.h>
- #include <asm/segment.h>
- #include <asm/processor-flags.h>
-+#include <asm/kaiser.h>
- #include "realmode.h"
- 
- 	.text
-@@ -139,7 +140,7 @@ tr_gdt:
- tr_gdt_end:
- 
- 	.bss
--	.balign	PAGE_SIZE
-+	.balign	KAISER_KERNEL_PGD_ALIGNMENT
- GLOBAL(trampoline_pgd)		.space	PAGE_SIZE
- 
- 	.balign	8
++				if (flags != (em->map_lookup->type &
++					      BTRFS_BLOCK_GROUP_TYPE_MASK)) {
++					btrfs_err(root->fs_info,
++"block group %llu len %llu type flags 0x%llx mismatch with chunk type flags 0x%llx",
++						found_key.objectid,
++						found_key.offset, flags,
++						(BTRFS_BLOCK_GROUP_TYPE_MASK &
++						 em->map_lookup->type));
++					ret = -EUCLEAN;
++				} else {
++					ret = 0;
++				}
+ 			}
+ 			free_extent_map(em);
+ 			goto out;
 
