@@ -2,182 +2,98 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256BEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058D0C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F050520784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s0/OP9DD"
+	by mail.kernel.org (Postfix) with ESMTP id DC1DD20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgDWVXp (ORCPT
+        id S1726970AbgDWVYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 17:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgDWVXo (ORCPT
+        Thu, 23 Apr 2020 17:24:22 -0400
+Received: from smtprelay0235.hostedemail.com ([216.40.44.235]:35206 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726387AbgDWVYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 17:23:44 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45727C09B042;
-        Thu, 23 Apr 2020 14:23:44 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r14so3631514pfg.2;
-        Thu, 23 Apr 2020 14:23:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XUMoGhY5L7Ce12qPN/+ZvR9RdaPKROuCE+nbwYYQZjo=;
-        b=s0/OP9DDA3gkPf7NIb24mAh7l/E0qodqA1SOp9ziVmNnIO9fT1oyN0LqMv9o8L6cen
-         aeolu96fv+P5eTrlCkNWKxCnSM5ynJO+jOCCnD876QvT1ehFUguZKa+fBN6STq19O97O
-         CiSJHOHTJcGiurWOmlLB1qHssbx4D74cfm9x0/fQS+rfmkru01P064qg/bnR3v4epEQh
-         TCORYK94sO0/9w08wp1/9p2v3kB56BoaHNZ3XLFvV8JaQAZuRa/mzaLQxwyDc972iOBO
-         WbiNhpWsdPTip3BN3vU8Tdlk8uVXTq3w4rfWnC8/sBaX1OCT5xwnSys8Ir+UFqeGjNhP
-         UBdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XUMoGhY5L7Ce12qPN/+ZvR9RdaPKROuCE+nbwYYQZjo=;
-        b=TQwToyJeYmiT2ZtTVZidyFTZsAlLFe/NWujXuoZvyUQ7Qe7ia97FXH8FXgknk+HLpq
-         EjY7UUBfNVZDqdDqCR8r7KzOfxuscBQEsOYPrBYcOC9eJ4cLgNaUYeuhEEs4R7mywiZN
-         3LNjO1R/OWekN+EI19ySu60eIFQynWooMip/53zRH4rjGD5yVXrCllCY4kVNA+g1NznW
-         GEWCWGKP8qsd3OsFGChB9NM9lg+sfrjTFJ/k0xgzpY6hS/rQ3rdpGVQR7C7rtgSPEUHN
-         l1zHkEPhQliIV/W5Hc6DU5M/AgtuRgG/qVUwb3baeN1rNrWn2KAbKKB7+6ltk6sFW48K
-         B9vg==
-X-Gm-Message-State: AGi0PuZQKh3xgRI5fghPG68I3P+E8sRwyHRe9JBHkzXqYYq/+aQq6OsI
-        jVuwTgLbk33+64iqTj92ZO9JYoUruXIghP++dSI=
-X-Google-Smtp-Source: APiQypLtTkISyuDrfh11O88zSEDSw5J46od7eHcJ6QRa2ED7NGyRC8Qv79IS5r4EZ/IHXaEND1Yvqmh+MsIkorv+RlA=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr6033217pgb.203.1587677023745;
- Thu, 23 Apr 2020 14:23:43 -0700 (PDT)
+        Thu, 23 Apr 2020 17:24:21 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 99358180286C8;
+        Thu, 23 Apr 2020 21:24:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: boy57_8a90577b1303
+X-Filterd-Recvd-Size: 2656
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 23 Apr 2020 21:24:19 +0000 (UTC)
+Message-ID: <572b03bdc3eed286c5ed20887d42f674bd93336e.camel@perches.com>
+Subject: Re: linux-kernel: Unused static inline functions
+From:   Joe Perches <joe@perches.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Dan Carpenter <error27@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Date:   Thu, 23 Apr 2020 14:22:01 -0700
+In-Reply-To: <CAKwvOdnW-xvSnT3RS8MWufyp+3=NM-Mb+bv0r2u2soNnyVvXBg@mail.gmail.com>
+References: <1583509304-28508-1-git-send-email-cai@lca.pw>
+         <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>
+         <a7503afc9d561ae9c7116b97c7a960d7ad5cbff9.camel@perches.com>
+         <442b7ace85a414c6a01040368f05d6d219f86536.camel@perches.com>
+         <CAKwvOdmdaDL4bhJc+7Xms=f4YXDw-Rr+WQAknd0Jv6UWOBUcEA@mail.gmail.com>
+         <4603e761a5f39f4d97375e1e08d20d720c526341.camel@perches.com>
+         <CAKwvOdnW-xvSnT3RS8MWufyp+3=NM-Mb+bv0r2u2soNnyVvXBg@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <20200423164251.3349-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200423164251.3349-1-zhengdejin5@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Apr 2020 00:23:31 +0300
-Message-ID: <CAHp75VdSv4AooA-hrgoQH-qs_8woFbzHJH99AKrYUrwae7xoZQ@mail.gmail.com>
-Subject: Re: [PATCH v3] console: newport_con: fix an issue about leak related
- system resources
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, akpm@osdl.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 7:42 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
->
-> A call of the function do_take_over_console() can fail here.
-> The corresponding system resources were not released then.
-> Thus add a call of iounmap() and release_mem_region()
-> together with the check of a failure predicate. and also
-> add release_mem_region() on device removal.
+(adding Julia Lawall and Dan Carpenter who may have ideas too)
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Thu, 2020-04-23 at 11:57 -0700, Nick Desaulniers wrote:
+> I've been mulling over teaching a class internally at Google on
+> getting started contributing to the Linux kernel.  I think this idea
+> (removing dead static inline functions) is perfect for having lots of
+> small little tasks that are clear wins.  Do you have any other ideas
+> for work that there's a lot of?  Like lots of small little bite sized
+> tasks?  Maybe more fallthrough conversion? Anything else?
 
-> Fixes: e86bb8acc0fdc ("[PATCH] VT binding: Make newport_con support binding")
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
-> v2 -> v3:
->         - modify commit tag CC to Cc by Andy's suggestion.
->         - modify Subject 'console: console:' to 'console: newport_con:'
->           by Bartlomiej's suggestion.
->         - add missing release_mem_region() on error and on device removal
->           by Bartlomiej's suggestion.
->         - add correct fixes commit, before this patch, add a wrong 'Fixes:
->           e84de0c6190503 ("MIPS: GIO bus support for SGI IP22/28")'
->           thanks Bartlomiej again!
->
-> v1 -> v2:
->         - modify the commit comments. The commit comments have some more
->           appropriate instructions by Markus'suggestion. here is my first
->           version commit comments:
->
->           if do_take_over_console() return an error in the newport_probe(),
->           due to the io virtual address is not released, it will cause a
->           leak.
->
->  drivers/video/console/newport_con.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
-> index 00dddf6e08b0..2d2ee17052e8 100644
-> --- a/drivers/video/console/newport_con.c
-> +++ b/drivers/video/console/newport_con.c
-> @@ -32,6 +32,8 @@
->  #include <linux/linux_logo.h>
->  #include <linux/font.h>
->
-> +#define NEWPORT_LEN    0x10000
-> +
->  #define FONT_DATA ((unsigned char *)font_vga_8x16.data)
->
->  /* borrowed from fbcon.c */
-> @@ -43,6 +45,7 @@
->  static unsigned char *font_data[MAX_NR_CONSOLES];
->
->  static struct newport_regs *npregs;
-> +static unsigned long newport_addr;
->
->  static int logo_active;
->  static int topscan;
-> @@ -702,7 +705,6 @@ const struct consw newport_con = {
->  static int newport_probe(struct gio_device *dev,
->                          const struct gio_device_id *id)
->  {
-> -       unsigned long newport_addr;
->         int err;
->
->         if (!dev->resource.start)
-> @@ -712,7 +714,7 @@ static int newport_probe(struct gio_device *dev,
->                 return -EBUSY; /* we only support one Newport as console */
->
->         newport_addr = dev->resource.start + 0xF0000;
-> -       if (!request_mem_region(newport_addr, 0x10000, "Newport"))
-> +       if (!request_mem_region(newport_addr, NEWPORT_LEN, "Newport"))
->                 return -ENODEV;
->
->         npregs = (struct newport_regs *)/* ioremap cannot fail */
-> @@ -720,6 +722,11 @@ static int newport_probe(struct gio_device *dev,
->         console_lock();
->         err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
->         console_unlock();
-> +
-> +       if (err) {
-> +               iounmap((void *)npregs);
-> +               release_mem_region(newport_addr, NEWPORT_LEN);
-> +       }
->         return err;
->  }
->
-> @@ -727,6 +734,7 @@ static void newport_remove(struct gio_device *dev)
->  {
->         give_up_console(&newport_con);
->         iounmap((void *)npregs);
-> +       release_mem_region(newport_addr, NEWPORT_LEN);
->  }
->
->  static struct gio_device_id newport_ids[] = {
-> --
-> 2.25.0
->
+Some generic ideas:
 
+o look for always unused/unreferenced, or always static
+  value function arguments and remove them
 
--- 
-With Best Regards,
-Andy Shevchenko
+o int function returns constrained to 0 or 1 could be
+  converted to bool.
+
+And some logging ideas:
+
+o printk to tracing conversions
+
+o removal of printks used just for function tracing
+  as ftrace works well
+
+o pr_<level> macro conversions to functions to save
+  object space
+
+o singletons for pr_fmt
+
+o default use of #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+  and removal of the ~1200 current defines treewide
+
+> Happy to have folks use your script and add your suggested by tag.
+
+Suggested-by doesn't have much value to me,
+especially for scripted stuff.
+
+I'd be happy enough that it gets done eventually.
+
