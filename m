@@ -2,110 +2,120 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0056C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BC1C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4C62075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2AC2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgDWCor (ORCPT
+        id S1726592AbgDWCyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:44:47 -0400
-Received: from mgwkm03.jp.fujitsu.com ([202.219.69.170]:30664 "EHLO
-        mgwkm03.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgDWCor (ORCPT
+        Wed, 22 Apr 2020 22:54:45 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57904 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbgDWCyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:44:47 -0400
-X-Greylist: delayed 671 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 22:44:44 EDT
-Received: from kw-mxq.gw.nic.fujitsu.com (unknown [192.168.231.130]) by mgwkm03.jp.fujitsu.com with smtp
-         id 0abc_3579_5544f71c_4878_43bc_a3de_fa2088113603;
-        Thu, 23 Apr 2020 11:33:27 +0900
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
-        by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id BF869AC00FD;
-        Thu, 23 Apr 2020 11:33:26 +0900 (JST)
-Received: from [10.133.121.138] (VPC-Y08P0560080.g01.fujitsu.local [10.133.121.138])
-        by m3050.s.css.fujitsu.com (Postfix) with ESMTP id A3A30403;
-        Thu, 23 Apr 2020 11:33:26 +0900 (JST)
-Subject: Re: [PATCH V10 04/11] Documentation/dax: Update Usage section
-To:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-References: <20200422212102.3757660-1-ira.weiny@intel.com>
- <20200422212102.3757660-5-ira.weiny@intel.com>
-From:   Yasunori Goto <y-goto@fujitsu.com>
-Message-ID: <2282176d-60c5-0e4b-3cf9-7a7682de380d@fujitsu.com>
-Date:   Thu, 23 Apr 2020 11:33:26 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 22 Apr 2020 22:54:44 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0TwO5QT5_1587610476;
+Received: from 30.27.118.66(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwO5QT5_1587610476)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 23 Apr 2020 10:54:37 +0800
+Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
+ <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
+ <20200422154543.2efba3dd.cohuck@redhat.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <e115bcf6-edf3-7465-f592-4e93e5ad984c@linux.alibaba.com>
+Date:   Thu, 23 Apr 2020 10:54:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200422212102.3757660-5-ira.weiny@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200422154543.2efba3dd.cohuck@redhat.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-I'm trying use your patch now, and I have a small comment in this document.
-
-On 2020/04/23 6:20, ira.weiny@intel.com wrote:
-
-> +To clarify inheritance here are 3 examples:
-> +
-> +Example A:
-> +
-> +mkdir -p a/b/c
-> +xfs_io 'chattr +x' a
-
-Probably, "-c" is necessary here.
-
-xfs_io -c 'chattr +x' a
 
 
-> +mkdir a/b/c/d
-> +mkdir a/e
-> +
-> +	dax: a,e
-> +	no dax: b,c,d
-> +
-> +Example B:
-> +
-> +mkdir a
-> +xfs_io 'chattr +x' a
-ditto
-> +mkdir -p a/b/c/d
-> +
-> +	dax: a,b,c,d
-> +	no dax:
-> +
-> +Example C:
-> +
-> +mkdir -p a/b/c
-> +xfs_io 'chattr +x' c
-ditto
-> +mkdir a/b/c/d
-> +
-> +	dax: c,d
-> +	no dax: a,b
-> +
-> +
+On 2020/4/22 21:45, Cornelia Huck wrote:
+> On Wed, 22 Apr 2020 20:58:04 +0800
+> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+> 
+>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+>> structure. Earlier than historical reasons, many kvm-related function
+> 
+> s/Earlier than/For/ ?
+> 
 
----
+Yes, it should be replaced like this.
 
-Yasunori Goto
+>> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
+>> This patch does a unified cleanup of these remaining redundant parameters.
+>>
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>> ---
+>>   arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
+>>   1 file changed, 22 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>> index e335a7e5ead7..d7bb2e7a07ff 100644
+>> --- a/arch/s390/kvm/kvm-s390.c
+>> +++ b/arch/s390/kvm/kvm-s390.c
+>> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
+>>   	return rc;
+>>   }
+>>   
+>> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
+>>   {
+>> +	struct kvm_run *kvm_run = vcpu->run;
+>>   	struct runtime_instr_cb *riccb;
+>>   	struct gs_cb *gscb;
+>>   
+>> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>>   		}
+>>   		if (vcpu->arch.gs_enabled) {
+>>   			current->thread.gs_cb = (struct gs_cb *)
+>> -						&vcpu->run->s.regs.gscb;
+>> +						&kvm_run->s.regs.gscb;
+> 
+> Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
+> it. (It seems they amount to at least as much as the changes advertised
+> in the patch description.)
+> 
+> Other opinions?
+> 
 
+Why not replace `vcpu->run->` to `kvm_run->` ? If not, there will be 
+both styles of code, which is confusing. I will be confused and think 
+that this is something different.
+
+Thanks,
+Tianjia
+
+>>   			restore_gs_cb(current->thread.gs_cb);
+>>   		}
+>>   		preempt_enable();
