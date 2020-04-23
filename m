@@ -2,100 +2,177 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACE4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D36C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 969DE2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D6F2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgDWFLI (ORCPT
+        id S1726667AbgDWFMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:11:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:60418 "EHLO foss.arm.com"
+        Thu, 23 Apr 2020 01:12:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:37814 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgDWFLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:11:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42B421FB;
-        Wed, 22 Apr 2020 22:11:07 -0700 (PDT)
-Received: from [10.163.1.9] (unknown [10.163.1.9])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60FD33F6CF;
-        Wed, 22 Apr 2020 22:10:56 -0700 (PDT)
-Subject: Re: [PATCH V3 0/3] arm64: Enable vmemmap mapping from device memory
-To:     linux-mm@kvack.org
-Cc:     robin.murphy@arm.com, dan.j.williams@intel.com, jglisse@redhat.com,
-        jgg@mellanox.com, rcampbell@nvidia.com, aneesh.kumar@linux.ibm.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1585631387-18819-1-git-send-email-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ff29a6a3-a75d-878d-75a0-2c458be429f4@arm.com>
-Date:   Thu, 23 Apr 2020 10:40:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725961AbgDWFMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 01:12:21 -0400
+IronPort-SDR: WrhYc+t6JOklM1PUaz60L6OKaRrTcVjckYaBWBGx7BZJjlvDplEinWkHLxDnQgIQhTcpC4XtnV
+ 3vzqHIQliPQQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 22:12:21 -0700
+IronPort-SDR: CaLeYimjrE1X7uWVc9FtYpX1vYLIdIO3dWZk/8E64x85IpEKhr0IbiEnZ4StGXbr+va5BgiGpm
+ 84jyyHJAt8tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
+   d="scan'208";a="365895105"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 22:12:19 -0700
+Date:   Thu, 23 Apr 2020 13:09:34 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: How to upload fpga firmware
+Message-ID: <20200423050934.GC30060@yilunxu-OptiPlex-7050>
+References: <20200422114432.GM1694@pengutronix.de>
+ <20200423013648.GA2430@epycbox.lan>
 MIME-Version: 1.0
-In-Reply-To: <1585631387-18819-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423013648.GA2430@epycbox.lan>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Moritz:
 
-On 03/31/2020 10:39 AM, Anshuman Khandual wrote:
-> This series enables vmemmap backing memory allocation from device memory
-> ranges on arm64. But before that, it enables vmemmap_populate_basepages()
-> and vmemmap_alloc_block_buf() to accommodate struct vmem_altmap based
-> alocation requests.
+On Wed, Apr 22, 2020 at 06:36:48PM -0700, Moritz Fischer wrote:
+> Hi Sascha,
 > 
-> This series applies after latest (v14) arm64 memory hot remove series
-> (https://lkml.org/lkml/2020/3/3/1746) on Linux 5.6.
+> On Wed, Apr 22, 2020 at 01:44:32PM +0200, Sascha Hauer wrote:
+> > Hi,
+> > 
+> > I wonder what can be done with the mainline state of drivers/fpga/. The
+> > entry to the framework seems to be fpga_mgr_load(). The only user of
+> > this function is fpga_region_program_fpga(). This in turn is only called
+> > in response of applying a device tree overlay. A device tree overlay is
+> > applied with of_overlay_fdt_apply() which has no users in the Kernel.
 > 
-> Pending Question:
+> Yes. It is waiting for dt_overlays one way or another. I personally
+> don't currently have the bandwidth to work actively on this.
 > 
-> altmap_alloc_block_buf() does not have any other remaining users in the
-> tree after this change. Should it be converted into a static function and
-> it's declaration be dropped from the header (include/linux/mm.h). Avoided
-> doing so because I was not sure if there are any off-tree users or not.
+> > My current task is to load a firmware to a FPGA. The code all seems to
+> > be there in the Kernel, it only lacks a way to trigger it. I am not very
+> > interested in device tree overlays since the FPGA appears as a PCI
+> > device (although applying a dtbo could enable the PCIe controller device
+> > tree node). Is there some mainline way to upload FPGA firmware? At the
+> > moment we are using the attached patch to trigger loading the firmware
+> > from userspace. Would something like this be acceptable for mainline?
 > 
-> Changes in V3:
+> We've looked into this sort of patches over the years and never came to
+> a general interface that really works.
 > 
-> - Dropped comment from free_hotplug_page_range() per Robin
-> - Modified comment in unmap_hotplug_range() per Robin
-> - Enabled altmap support in vmemmap_alloc_block_buf() per Robin
+> The OPAE folks (and other users I know of) usually use FPGA Manager with
+> a higher layer on top of it that moves the bitstream into the kernel via
+> an ioctl().
+> 
+> One concept I had toyed with mentally, but haven't really gotten around
+> to implement is a 'discoverable' region, that would deal with the
+> necessary re-enumeration via a callback and have a sysfs interface
+> similar to what the patch below has.
+> This would essentially cover use-cases where you have a discoverable
+> device implemented in FPGA logic, such as say an FPGA hanging off of
+> PCIe bus that can get loaded over USB, a CPLD or some other side-band
+> mechanism. After loading the image you'd have to rescan the PCIe bus -
+> which - imho is the kernel's job.
 
-Just a gentle ping. Any updates on this series ? In particular, is there
-any comments or suggestions or concerns with respect to the first two
-patches here that change the core MM and relevant call sites on some
-platforms. Thank you.
+Seems you mentioned the static region update. I have the pcie based FPGA
+card, and the pcie endpoint is implemented in FPGA static region. So after
+I have written image into Flash (over USB or other ways), and trying to
+load it to FPGA, the pcie endpoint is also disfunctional, the pcie device
+is actually lost. We need to rescan the pcie bus after loading is finished.
 
-- Anshuman
+The concern is that when the pcie device lost, the 'discoverable' region
+created by the pcie driver is also destroyed. When you rescaned the pcie
+device back, it is like everything is start over again (pci probe, fpga
+region creation, subdev enumeration ...) rather than just a re-enumeration
+callback for discoverable region.
+
+How do you think about it?
+
+> 
+> What I really wanna avoid is creating another /dev/fpga0 / /dev/xdevcfg
+> that completely leaves the kernel in the dark about the fact that it
+> reconfigures a bit of hardware hanging off the bus.
+
+I have the FPGA board whose image binary for static region is stored in Flash.
+I was able to enumerate the Flash as MTD device and update it directly, (now
+switch to another interface for security support). 
+Do you mean I should avoid doing that cause FPGA region device is unaware of
+the update? Some interface in FPGA region would be better choice?
+
+Thanks!
+
+> 
+> In my ideal world you'd create a pci driver that binds to your device,
+> and creates mfd style subdevices for whatever you'd want your design to
+> do. One of these devices would be an FPGA and a FPGA region attached to
+> that FPGA manager. Your top level driver would co-ordinate the fact that
+> you are re-programming parts of the FPGA and create / destroy devices as
+> needed for the hardware contained in the bitstream.
+> 
+> [..]
+> > +static ssize_t firmware_name_show(struct device *dev,
+> > +				  struct device_attribute *attr,
+> > +				  char *buf)
+> > +{
+> > +	struct fpga_region *region = to_fpga_region(dev);
+> > +
+> > +	if (!region->info || !region->info->firmware_name)
+> > +		return 0;
+> > +
+> > +	return sprintf(buf, "%s\n", region->info->firmware_name);
+> > +}
+> > +
+> > +static ssize_t firmware_name_store(struct device *dev,
+> > +				   struct device_attribute *attr,
+> > +				   const char *firmware_name, size_t count)
+> > +{
+> > +	struct fpga_region *region = to_fpga_region(dev);
+> > +	struct fpga_image_info *info = region->info;
+> > +	int error;
+> > +
+> > +	if (!info) {
+> > +		info = fpga_image_info_alloc(dev);
+> > +		if (!info)
+> > +			return -ENOMEM;
+> > +	} else if (info->firmware_name) {
+> > +		devm_kfree(dev, info->firmware_name);
+> > +	}
+> > +
+> > +	info->firmware_name = devm_kstrdup(dev, firmware_name, GFP_KERNEL);
+> > +	if (!info->firmware_name)
+> > +		return -ENOMEM;
+> > +
+> > +	if (count >  0 && info->firmware_name[count - 1] == '\n')
+> > +		info->firmware_name[count - 1] = '\0';
+> > +
+> > +	region->info = info;
+> > +	error = fpga_region_program_fpga(region);
+> > +	if (error) {
+> > +		devm_kfree(dev, info->firmware_name);
+> > +		info->firmware_name = NULL;
+> > +	}
+> > +
+> > +	return error ? error : count;
+> > +}
+> 
+> Cheers,
+> Moritz
