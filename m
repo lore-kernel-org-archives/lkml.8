@@ -2,69 +2,126 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B8BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38F2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6322077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587649500;
-	bh=yN7Uwml3MaUXo3MsDP/rNPn+9X8ZEznkNegUs+mvS3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2fgk9zAXE4ySeTzy7YgZn3H3gzbRK7SWESTsdDgNh8et3ElR15V0pa+CpmkxCgn3K
-	 ku544Hg1tM8j4EofVwoFU5I/cGTAmEDQT+M9LIPYe+79cusW4Q1aG8i+WC4zprFb1b
-	 NuTrQE7iqt49OHMMdgU3mK2brGTP+n6Fc3Y5/0i4=
+	by mail.kernel.org (Postfix) with ESMTP id A575A20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgDWNo7 (ORCPT
+        id S1728618AbgDWNsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:44:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37128 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 09:48:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53800 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728622AbgDWNo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:44:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D668E20728;
-        Thu, 23 Apr 2020 13:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587649497;
-        bh=yN7Uwml3MaUXo3MsDP/rNPn+9X8ZEznkNegUs+mvS3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cU7mDlKHJ51Bgk22hEmKsJcAly1OUqd1XdCjq2N3bIx7b/sXFEDUrYetIJAchULql
-         O3c6wNrcKehWVwh2FX5dWHcuSFAslhDgJJlg1omRdMAh1H/9j/eEcMes4mBsvUVtM7
-         LqS1cYje7KH3c+fj45g7whaFN1jRARZLZ0PAYH/I=
-Date:   Thu, 23 Apr 2020 15:44:55 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Nicolas Pitre <nico@fluxnic.net>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Chen Wandun <chenwandun@huawei.com>, jslaby@suse.com,
-        daniel.vetter@ffwll.ch, b.zolnierkie@samsung.com, lukas@wunner.de,
-        ghalat@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vt: don't hardcode the mem allocation upper bound
-Message-ID: <20200423134455.GA4073139@kroah.com>
-References: <nycvar.YSQ.7.76.2003281702410.2671@knanqh.ubzr>
- <20200417144915.GA25595@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417144915.GA25595@ravnborg.org>
+        id S1728277AbgDWNsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:48:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 156F4ABEC;
+        Thu, 23 Apr 2020 13:48:36 +0000 (UTC)
+Message-ID: <1587649702.23108.10.camel@suse.com>
+Subject: Re: general protection fault in go7007_usb_probe
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, hverkuil-cisco@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Thu, 23 Apr 2020 15:48:22 +0200
+In-Reply-To: <0000000000003cbf8e05a3d57b98@google.com>
+References: <0000000000003cbf8e05a3d57b98@google.com>
+Content-Type: multipart/mixed; boundary="=-iLs55rpxhBtu80GHb/g1"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:49:15PM +0200, Sam Ravnborg wrote:
-> Hi Greg.
+
+--=-iLs55rpxhBtu80GHb/g1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+
+Am Dienstag, den 21.04.2020, 16:36 -0700 schrieb syzbot:
+> Hello,
 > 
-> I assume you will take this patch.
-> Not really drm-misc material.
+> syzbot found the following crash on:
+> 
+> HEAD commit:    e9010320 usb: cdns3: gadget: make a bunch of functions sta..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1263a930100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bd14feb44652cfaf
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cabfa4b5b05ff6be4ef0
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+cabfa4b5b05ff6be4ef0@syzkaller.appspotmail.com
 
-Yes, will do, thanks.
+#syz test: https://github.com/google/kasan.git e9010320
 
-greg k-h
+--=-iLs55rpxhBtu80GHb/g1
+Content-Disposition: attachment; filename="0001-go7007-add-only-insanity-checking.patch"
+Content-Transfer-Encoding: base64
+Content-Type: text/x-patch; name="0001-go7007-add-only-insanity-checking.patch";
+	charset="UTF-8"
+
+RnJvbSBjMjEyMzI2Yzk4MmUxM2EzMGNhMzE4NzhjYzJhNWE4OGViYjBjMTA2IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
+OiBXZWQsIDIyIEFwciAyMDIwIDEzOjQ5OjU1ICswMjAwClN1YmplY3Q6IFtQQVRDSCAxLzFdIGdv
+NzAwNzogYWRkIG9ubHkgaW5zYW5pdHkgY2hlY2tpbmcKCkEgbWFsaWNpb3VzIFVTQiBkZXZpY2Ug
+bWF5IGxhY2sgZW5kcG9pbnRzIHRoZSBkcml2ZXIgYXNzdW1lcyB0byBleGlzdApBY2Nlc3Npbmcg
+dGhlbSBsZWFkcyB0byBOVUxMIHBvaW50ZXIgYWNjZXNzZXMuIFRoaXMgcGF0Y2ggaW50cm9kdWNl
+cwpzYW5pdHkgY2hlY2tpbmcuCgpTaWduZWQtb2ZmLWJ5OiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3Vt
+QHN1c2UuY29tPgpGaXhlczogODY2Yjg2OTVkNjdlOCAoIlN0YWdpbmc6IGFkZCB0aGUgZ283MDA3
+IHZpZGVvIGRyaXZlciIpCi0tLQogZHJpdmVycy9tZWRpYS91c2IvZ283MDA3L2dvNzAwNy11c2Iu
+YyB8IDE5ICsrKysrKysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25z
+KCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS91c2IvZ283MDA3
+L2dvNzAwNy11c2IuYyBiL2RyaXZlcnMvbWVkaWEvdXNiL2dvNzAwNy9nbzcwMDctdXNiLmMKaW5k
+ZXggZjg4OWM5ZDc0MGNkLi5hNDkyZDgzZjY5YjkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWVkaWEv
+dXNiL2dvNzAwNy9nbzcwMDctdXNiLmMKKysrIGIvZHJpdmVycy9tZWRpYS91c2IvZ283MDA3L2dv
+NzAwNy11c2IuYwpAQCAtMTA1MCw2ICsxMDUwLDEwIEBAIHN0YXRpYyBpbnQgZ283MDA3X3VzYl9w
+cm9iZShzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwKIAlpbnQgdmlkZW9fcGlwZSwgaSwgdl91
+cmJfbGVuOwogCiAJcHJfZGVidWcoInByb2JpbmcgbmV3IEdPNzAwNyBVU0IgYm9hcmRcbiIpOwor
+ICAgIGlmICghaW50ZikKKyAgICAgICAgcHJpbnRrKEtFUk5fRVJSIkRhdmUsIHdpbGwgSSBkcmVh
+bT9cbiIpOworICAgIGlmICghdXNiZGV2KQorICAgICAgICBwcmludGsoS0VSTl9FUlIiU2hhaSBI
+dWx1ZCFcbiIpOwogCiAJc3dpdGNoIChpZC0+ZHJpdmVyX2luZm8pIHsKIAljYXNlIEdPNzAwN19C
+T0FSRElEX01BVFJJWF9JSToKQEAgLTExMjEsNiArMTEyNSwxNCBAQCBzdGF0aWMgaW50IGdvNzAw
+N191c2JfcHJvYmUoc3RydWN0IHVzYl9pbnRlcmZhY2UgKmludGYsCiAJCXJldHVybiAtRU5PTUVN
+OwogCX0KIAorCS8qIHNhbml0eSBjaGVja3MgKi8KKyAgICAvL2lmICh1c2IgJiYgdXNiLT51c2Jk
+ZXYpCisgICAgICAgIGVwID0gdXNiLT51c2JkZXYtPmVwX2luWzRdOworICAgIC8vZWxzZQorICAg
+IC8vICAgIGVwID0gTlVMTDsKKwlpZiAoIWVwKQorCQlyZXR1cm4gLUVOT0RFVjsKKwogCXVzYi0+
+Ym9hcmQgPSBib2FyZDsKIAl1c2ItPnVzYmRldiA9IHVzYmRldjsKIAl1c2JfbWFrZV9wYXRoKHVz
+YmRldiwgZ28tPmJ1c19pbmZvLCBzaXplb2YoZ28tPmJ1c19pbmZvKSk7CkBAIC0xMTQxLDcgKzEx
+NTMsNiBAQCBzdGF0aWMgaW50IGdvNzAwN191c2JfcHJvYmUoc3RydWN0IHVzYl9pbnRlcmZhY2Ug
+KmludGYsCiAJaWYgKHVzYi0+aW50cl91cmItPnRyYW5zZmVyX2J1ZmZlciA9PSBOVUxMKQogCQln
+b3RvIGFsbG9jZmFpbDsKIAotCWVwID0gdXNiLT51c2JkZXYtPmVwX2luWzRdOwogCWlmICh1c2Jf
+ZW5kcG9pbnRfdHlwZSgmZXAtPmRlc2MpID09IFVTQl9FTkRQT0lOVF9YRkVSX0JVTEspCiAJCXVz
+Yl9maWxsX2J1bGtfdXJiKHVzYi0+aW50cl91cmIsIHVzYi0+dXNiZGV2LAogCQkJdXNiX3JjdmJ1
+bGtwaXBlKHVzYi0+dXNiZGV2LCA0KSwKQEAgLTEyNjMsOSArMTI3NCwxMyBAQCBzdGF0aWMgaW50
+IGdvNzAwN191c2JfcHJvYmUoc3RydWN0IHVzYl9pbnRlcmZhY2UgKmludGYsCiAKIAkvKiBBbGxv
+Y2F0ZSB0aGUgVVJCcyBhbmQgYnVmZmVycyBmb3IgcmVjZWl2aW5nIHRoZSB2aWRlbyBzdHJlYW0g
+Ki8KIAlpZiAoYm9hcmQtPmZsYWdzICYgR083MDA3X1VTQl9FWlVTQikgeworCQlpZiAoIXVzYi0+
+dXNiZGV2LT5lcF9pbls2XSkKKwkJCWdvdG8gYWxsb2NmYWlsOwogCQl2X3VyYl9sZW4gPSAxMDI0
+OwogCQl2aWRlb19waXBlID0gdXNiX3JjdmJ1bGtwaXBlKHVzYi0+dXNiZGV2LCA2KTsKIAl9IGVs
+c2UgeworCQlpZiAoIXVzYi0+dXNiZGV2LT5lcF9pblsxXSkKKwkJCWdvdG8gYWxsb2NmYWlsOwog
+CQl2X3VyYl9sZW4gPSA1MTI7CiAJCXZpZGVvX3BpcGUgPSB1c2JfcmN2YnVsa3BpcGUodXNiLT51
+c2JkZXYsIDEpOwogCX0KQEAgLTEyODUsNiArMTMwMCw4IEBAIHN0YXRpYyBpbnQgZ283MDA3X3Vz
+Yl9wcm9iZShzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwKIAkvKiBBbGxvY2F0ZSB0aGUgVVJC
+cyBhbmQgYnVmZmVycyBmb3IgcmVjZWl2aW5nIHRoZSBhdWRpbyBzdHJlYW0gKi8KIAlpZiAoKGJv
+YXJkLT5mbGFncyAmIEdPNzAwN19VU0JfRVpVU0IpICYmCiAJICAgIChib2FyZC0+bWFpbl9pbmZv
+LmZsYWdzICYgR083MDA3X0JPQVJEX0hBU19BVURJTykpIHsKKwkJaWYgKCF1c2ItPnVzYmRldi0+
+ZXBfaW5bOF0pCisJCQlnb3RvIGFsbG9jZmFpbDsKIAkJZm9yIChpID0gMDsgaSA8IDg7ICsraSkg
+ewogCQkJdXNiLT5hdWRpb191cmJzW2ldID0gdXNiX2FsbG9jX3VyYigwLCBHRlBfS0VSTkVMKTsK
+IAkJCWlmICh1c2ItPmF1ZGlvX3VyYnNbaV0gPT0gTlVMTCkKLS0gCjIuMTYuNAoK
+
+
+--=-iLs55rpxhBtu80GHb/g1--
+
