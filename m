@@ -2,109 +2,153 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0D4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7765C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75DE520736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B41020736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYf/qew2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ta28pc2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgDWWot (ORCPT
+        id S1727890AbgDWWqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 18:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
+        Thu, 23 Apr 2020 18:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgDWWot (ORCPT
+        with ESMTP id S1726060AbgDWWqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 18:44:49 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D4A0C09B042;
-        Thu, 23 Apr 2020 15:44:49 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o15so3646559pgi.1;
-        Thu, 23 Apr 2020 15:44:49 -0700 (PDT)
+        Thu, 23 Apr 2020 18:46:42 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 945B3C09B042;
+        Thu, 23 Apr 2020 15:46:42 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z6so8584868wml.2;
+        Thu, 23 Apr 2020 15:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q+5+rmKFTBDtKZKbExYcccSKJKHcBafdo/2P8vmaWnw=;
-        b=jYf/qew2xwPt9wR4+QEpY5eosGKsR8x7sO08Ou2nIuqjazuWaNJedOIeReMizXRUWm
-         0W2wImgewUR6e6/IFzyK154ENOZAEvE4jp0OABYALrVS+WcxK9MW4iJyJM0dU+oa8qz0
-         Of7v5LSpAdOJL2bG6v44cKAjCNieafiHTPEPjHuw1wZ3uhIBAVl2p2IZLbR+ToF8evIY
-         E1Py7yTVpBgv+4ADoYyDny88glxDS6oc0BXoVtJWbLwZ273oQR3NwQj3hh9V+IZZAlMr
-         TofOjFMZX1rqJzC8LZg4GiZhCGbl7n2tFlGQtv+IbDp9J2oIvO1O2GsYX1UgBYDjwjl7
-         qr3g==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GnCkKYdvqkC7ExwmNpz+/QaSPVU/12GT2JWjrOZ9BnY=;
+        b=ta28pc2UiCTcV3T6C3Mn65d5y2lsOmjQHdq7j9CFYeaa1ptPxBbXWU8m+QPdlEJTw9
+         QJKBNm6E+cBfygPPnzvnMb3jeYKix/a2lS9JcMZgb0ioLPCF1zrX73GiuFabfwXnqjSC
+         enkTDCeZRnxnfyiDEG8Q+p9qvb/OK9h9TSwk+mLfB5B2CkUeUeriuKH7055h42NUT6y3
+         7827TfmiLxuQlzkIZ8zJulW+QPHYOY1Zxk18IFtDMlswh7IiOnrr/JXO5lLslAecVvps
+         miM1BYyje5H7FuZQO5cIp4jf67nzC9+a0knjMVYptBdHbJ15yxoxxAv011/nCxk3rnAq
+         SQfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q+5+rmKFTBDtKZKbExYcccSKJKHcBafdo/2P8vmaWnw=;
-        b=QpOqsZzE+wJOOFTLHWNjsY47Hx+me86ZiEy0AGG1ms9ViAMJeYNSnWJ3buPt/VLZpm
-         b9QfxlyPDtMVxK5lImPXpDkkUDqRhEQcv0AtlwvfrYYz1Vl4B+PgZ301WnNj7Sm0rGCB
-         ZGruvrTuGmRDHLULxONJwKmNIncd6yPJTBA2J5D9VvociRb1GcJIC6+tlI+KC67soV1N
-         nUTa//FADTLYmpUqLuTprFRoAwp3L9cQ8kjrVX0557z6m8VwVsAT3fCSk13X3p8XIzGp
-         D3aBiNZ8F+owC2SWSRwMxt5k1/Tspy9XQhaCbB8tYW42FT2kx5oiQfc2fMG4Y+DkutUL
-         7fTA==
-X-Gm-Message-State: AGi0PuappjJAN3pHSRMue5tAgvJyrvqfzMlBJeONObtCHnLdZrY9MY5m
-        if513/XR0a3qh/VdSn9BxKQ=
-X-Google-Smtp-Source: APiQypI2HBCHdZt/kkfyjEZauH2K10lXc6jJryXBIdqUUdgKM0XaVnRjnv0nBLj31dG0zpeG/xO57A==
-X-Received: by 2002:a62:e211:: with SMTP id a17mr5610467pfi.250.1587681888677;
-        Thu, 23 Apr 2020 15:44:48 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h31sm3405815pjb.33.2020.04.23.15.44.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 15:44:48 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=GnCkKYdvqkC7ExwmNpz+/QaSPVU/12GT2JWjrOZ9BnY=;
+        b=Uyyu0RHzJaiqH9izhWp7AzlbsOib1IqPnudCQ/qsl4jjvBn2NzbzttCwRT3nhtf/Xq
+         q43LCmPpE4xBosxis+JEEjyjijYOIl51MrTAxYfampL+3AtIb3cnOH4+QGZTSexNTnnQ
+         nb7SqXVyLCjpDnyG2h/0XyGyq2YQ6wUJOmeUAAD3yJGmxbf1JUwCV49QPbg/i1H7u2VA
+         a+YMCuKtL+siSzVT1pfh7xm2f/d+uUv1zjKAuvIFAGoEHcoCUrdDVLU35gJz9u42Z3rN
+         T2Hk7a4fk5JVbVrcbtW3b4Hwf0dY/pQ6t2xOG745K8uB+sUWbhf3/R/aXLrAaJc4RYzL
+         0nkw==
+X-Gm-Message-State: AGi0PuadzDYAMSdviauX4vAVmiK3llwFOfmkLFlEcnSJ3YyFDyHse2ue
+        BZyWUulQq4WOJdKEkuB4ZXCD8+Nf
+X-Google-Smtp-Source: APiQypLX2Z64aJe8GPCABEu/6oar3MbKNetjqnpCCj6ly30RzWKdu24vxggeOZtc1emio4YmXNWvew==
+X-Received: by 2002:a1c:b445:: with SMTP id d66mr6760001wmf.187.1587682000894;
+        Thu, 23 Apr 2020 15:46:40 -0700 (PDT)
+Received: from [10.230.188.26] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c20sm306582wmd.36.2020.04.23.15.46.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 15:46:40 -0700 (PDT)
+Subject: Re: [PATCH net] net: bcmgenet: correct per TX/RX ring statistics
+To:     Doug Berger <opendmb@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net] net: bcmgenet: correct per TX/RX ring statistics
-Date:   Thu, 23 Apr 2020 15:44:17 -0700
-Message-Id: <1587681857-19734-1-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        linux-kernel@vger.kernel.org
+References: <1587681857-19734-1-git-send-email-opendmb@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <c6e9fbce-247b-d101-2d15-217332bc9459@gmail.com>
+Date:   Thu, 23 Apr 2020 15:46:37 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1587681857-19734-1-git-send-email-opendmb@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change to track net_device_stats per ring to better support SMP
-missed updating the rx_dropped member.
 
-The ndo_get_stats method is also needed to combine the results for
-ethtool statistics (-S) before filling in the ethtool structure.
 
-Fixes: 37a30b435b92 ("net: bcmgenet: Track per TX/RX rings statistics")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 +++
- 1 file changed, 3 insertions(+)
+On 4/23/2020 3:44 PM, Doug Berger wrote:
+> The change to track net_device_stats per ring to better support SMP
+> missed updating the rx_dropped member.
+> 
+> The ndo_get_stats method is also needed to combine the results for
+> ethtool statistics (-S) before filling in the ethtool structure.
+> 
+> Fixes: 37a30b435b92 ("net: bcmgenet: Track per TX/RX rings statistics")
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index d975338bf78d..c4765bbe527b 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -934,6 +934,8 @@ static void bcmgenet_get_ethtool_stats(struct net_device *dev,
- 	if (netif_running(dev))
- 		bcmgenet_update_mib_counters(priv);
- 
-+	dev->netdev_ops->ndo_get_stats(dev);
-+
- 	for (i = 0; i < BCMGENET_STATS_LEN; i++) {
- 		const struct bcmgenet_stats *s;
- 		char *p;
-@@ -3156,6 +3158,7 @@ static struct net_device_stats *bcmgenet_get_stats(struct net_device *dev)
- 	dev->stats.rx_packets = rx_packets;
- 	dev->stats.rx_errors = rx_errors;
- 	dev->stats.rx_missed_errors = rx_errors;
-+	dev->stats.rx_dropped = rx_dropped;
- 	return &dev->stats;
- }
- 
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Thanks for catching that!
 -- 
-2.7.4
-
+Florian
