@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A3EC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81DBC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0FB320784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFEB20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgDWXLK (ORCPT
+        id S1728860AbgDWXKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50286 "EHLO
+        Thu, 23 Apr 2020 19:10:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50302 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728585AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728592AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkva-0004lP-CL; Fri, 24 Apr 2020 00:06:42 +0100
+        id 1jRkvd-0004mp-Qz; Fri, 24 Apr 2020 00:06:46 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvY-00E6xt-3U; Fri, 24 Apr 2020 00:06:40 +0100
+        id 1jRkvW-00E6wI-4m; Fri, 24 Apr 2020 00:06:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "=?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?=" <mirq-linux@rere.qmqm.pl>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Adrian Hunter" <adrian.hunter@intel.com>
-Date:   Fri, 24 Apr 2020 00:07:07 +0100
-Message-ID: <lsq.1587683028.708872706@decadent.org.uk>
+        "Takashi Iwai" <tiwai@suse.de>,
+        "Alberto Aguirre" <albaguirre@gmail.com>
+Date:   Fri, 24 Apr 2020 00:06:47 +0100
+Message-ID: <lsq.1587683028.317725457@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 200/245] mmc: sdhci: fix minimum clock rate for v3
- controller
+Subject: [PATCH 3.16 180/245] ALSA: usb-audio: add implicit fb quirk for
+ Axe-Fx II
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,49 +56,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Alberto Aguirre <albaguirre@gmail.com>
 
-commit 2a187d03352086e300daa2044051db00044cd171 upstream.
+commit 17f08b0d9aafccdb10038ab6dbd9ddb6433c13e2 upstream.
 
-For SDHCIv3+ with programmable clock mode, minimal clock frequency is
-still base clock / max(divider). Minimal programmable clock frequency is
-always greater than minimal divided clock frequency. Without this patch,
-SDHCI uses out-of-spec initial frequency when multiplier is big enough:
+The Axe-Fx II implicit feedback end point and the data sync endpoint
+are in different interface descriptors. Add quirk to ensure a sync
+endpoint is properly configured.
 
-mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
-[for 480 MHz source clock divided by 1024]
-
-The code in sdhci_calc_clk() already chooses a correct SDCLK clock mode.
-
-Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Alberto Aguirre <albaguirre@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/mmc/host/sdhci.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ sound/usb/pcm.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -2945,11 +2945,13 @@ int sdhci_add_host(struct sdhci_host *ho
- 	if (host->ops->get_min_clock)
- 		mmc->f_min = host->ops->get_min_clock(host);
- 	else if (host->version >= SDHCI_SPEC_300) {
--		if (host->clk_mul) {
--			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
-+		if (host->clk_mul)
- 			mmc->f_max = host->max_clk * host->clk_mul;
--		} else
--			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
-+		/*
-+		 * Divided Clock Mode minimum clock rate is always less than
-+		 * Programmable Clock Mode minimum clock rate.
-+		 */
-+		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
- 	} else
- 		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -351,6 +351,15 @@ static int set_sync_ep_implicit_fb_quirk
  
+ 		alts = &iface->altsetting[1];
+ 		goto add_sync_ep;
++	case USB_ID(0x2466, 0x8003):
++		ep = 0x86;
++		iface = usb_ifnum_to_if(dev, 2);
++
++		if (!iface || iface->num_altsetting == 0)
++			return -EINVAL;
++
++		alts = &iface->altsetting[1];
++		goto add_sync_ep;
+ 	case USB_ID(0x1397, 0x0002):
+ 		ep = 0x81;
+ 		iface = usb_ifnum_to_if(dev, 1);
+@@ -360,6 +369,7 @@ static int set_sync_ep_implicit_fb_quirk
+ 
+ 		alts = &iface->altsetting[1];
+ 		goto add_sync_ep;
++
+ 	}
+ 	if (attr == USB_ENDPOINT_SYNC_ASYNC &&
+ 	    altsd->bInterfaceClass == USB_CLASS_VENDOR_SPEC &&
 
