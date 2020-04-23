@@ -2,95 +2,68 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BA5C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34852C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D652720736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B46B21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgDWIGy (ORCPT
+        id S1726101AbgDWILy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:06:54 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:52927 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbgDWIGx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:06:53 -0400
-X-Originating-IP: 50.39.163.217
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 97775C000C;
-        Thu, 23 Apr 2020 08:06:46 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 01:06:44 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>, io-uring@vger.kernel.org,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] fs: openat2: Extend open_how to allow
- userspace-selected fds
-Message-ID: <20200423080644.GA171696@localhost>
-References: <cover.1587531463.git.josh@joshtriplett.org>
- <9873b8bd7d14ff8cd2a5782b434b39f076679eeb.1587531463.git.josh@joshtriplett.org>
- <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
- <CAJfpegt=xe-8AayW2i3AYrk3q-=Pp_A+Hctsk+=sXoMed5hFQA@mail.gmail.com>
- <20200423004807.GC161058@localhost>
- <CAJfpegtSYKsApx2Dc6VGmc5Fm4SsxtAWAP-Zs052umwK1CjJmQ@mail.gmail.com>
- <20200423044226.GH161058@localhost>
- <CAJfpeguaVYo-Lf-5Bi=EYJYWdmCfo3BqZA=kj9E5UmDb0mBc1w@mail.gmail.com>
- <20200423073310.GA169998@localhost>
- <CAJfpegtXj4bSbhpx+=z=R0_ZT8uPEJAAev0O+DVg3AX242e=-g@mail.gmail.com>
+        Thu, 23 Apr 2020 04:11:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:34710 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgDWILy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 04:11:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DFE430E;
+        Thu, 23 Apr 2020 01:11:53 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6315E3F73D;
+        Thu, 23 Apr 2020 01:11:52 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 09:11:49 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Richard Gong <richard.gong@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] firmware: stratix10-svc: Drop unnecessary checking for
+ and populating /firmware/ node
+Message-ID: <20200423081149.GB18538@bogus>
+References: <20200421173256.34897-1-sudeep.holla@arm.com>
+ <8ca3666f-8ff1-3c3c-d40b-81c024b37bdd@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegtXj4bSbhpx+=z=R0_ZT8uPEJAAev0O+DVg3AX242e=-g@mail.gmail.com>
+In-Reply-To: <8ca3666f-8ff1-3c3c-d40b-81c024b37bdd@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 09:45:45AM +0200, Miklos Szeredi wrote:
-> On Thu, Apr 23, 2020 at 9:33 AM Josh Triplett <josh@joshtriplett.org> wrote:
-> > > What are the plans for those syscalls that don't easily lend
-> > > themselves to this modification (such as accept(2))?
-> >
-> > accept4 has a flags argument with more flags available, so it'd be
-> > entirely possible to cleanly extend it further without introducing a new
-> > version.
+On Wed, Apr 22, 2020 at 04:50:00PM -0500, Richard Gong wrote:
+> Hi Sudeep,
 >
-> Variable argument syscalls, you are thinking?
+> I tried and couldn't load stratix10-svc driver with your patch on kernel
+> 5.6.
+>
 
-That or repurposing an existing pointer-sized argument as an
-open_how-style struct, yes. But in any case, I'm not proposing that; I'm
-proposing changes to the existing highly extensible openat2 syscall.
+What exactly do you mean by not loading stratix10-svc driver ?
+This patch doesn't change that part, the driver should still get loaded.
+The change may affect probing part if for some reason the devices for
+nodes under firmware are not populated which I still can't understand.
 
-> > > I mean, you could open the file descriptor outside of io_uring in such
-> > > cases, no?
-> >
-> > I would prefer to not introduce that limitation in the first place, and
-> > instead open normal file descriptors.
-> >
-> > > The point of O_SPECIFIC_FD is to be able to perform short
-> > > sequences of open/dosomething/close without having to block and having
-> > > to issue separate syscalls.
-> >
-> > "close" is not a required component. It's entirely possible to use
-> > io_uring to open a file descriptor, do various things with it, and then
-> > leave it open for subsequent usage via either other io_uring chains or
-> > standalone syscalls.
-> 
-> If this use case arraises,
+Do you see any change under i/sys/devices/platform/firmware\:* with
+and without this change ?
 
-This wasn't a hypothetical "someone might want this". I'm stating that
-this is a requirement I'm seeking to meet with this patch series, and
-one I intend to use. The primary use case is interoperability with
-other code using file descriptors and not using io_uring.
+Lots of drivers removed the code similar to this patch after the Commit
+3aa0582fdb82 ("of: platform: populate /firmware/ node from
+of_platform_default_populate_init()") and continue to work fine. I am
+interested to see what is different in stratix10-svc.
+
+--
+Regards,
+Sudeep
