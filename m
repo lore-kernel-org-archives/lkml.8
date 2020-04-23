@@ -2,120 +2,127 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCF9C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A32C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99FD820776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3930D20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="uUop0dX6"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Kqsnyt0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgDWJqe (ORCPT
+        id S1727024AbgDWJrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:46:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56216 "EHLO
+        Thu, 23 Apr 2020 05:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726951AbgDWJqd (ORCPT
+        by vger.kernel.org with ESMTP id S1726953AbgDWJrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:46:33 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87FD0C03C1AF
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:46:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id u10so4227197lfo.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:46:33 -0700 (PDT)
+        Thu, 23 Apr 2020 05:47:12 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D4BC08E859
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:47:12 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id a2so4239809ejx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:47:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0bn5MZ3x1AZMueYLHBvYYK4+M4Vkn8wTCGTXb/d2uVE=;
-        b=uUop0dX6USv5o0OS0FsApSO+QvBdobyuottPosBAc0udDrdY2SxeBV5a6bdeUQOx5z
-         MKAs4zdQdfAKliIGLGt7qagS4L8LMq726kRgyEkwDLhU9B0M3BmDfK40bSEmf/rzTOie
-         wV1L912Hhuw3qlbV+F3v2EKuxZfE0KY47fwcFWMR3ONnbF2N5wWRQNlTEr/XDrzT+Wwc
-         LQOrdSoPSxQp7PPEkQPKs2MhYDuMizWLdfPkgG33tX2BUGytcxTPeUhZVCCf77Xb0J/Q
-         +6o5wVcgQ6gCA9vaA7J3A25ZsnplIoIDyv5qQG6divGjAphr14PyAexwet/CDVpDhyqc
-         g7Wg==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eBjF9qj4VjUI/zoZpRsdcofUh4Hml8aXIqDYnm8I2pc=;
+        b=Kqsnyt0qkv6L86PfeD2KkzVB6KcD+1wQcWQMNqF6WL3KZ5iZir2mKjmxbzENryVDmR
+         h2KN673yOUpiqe96og6uDdVruUvcsVVl1dfoc8u25NFe2q3KdTuW2ZaTL0u/LLsSYeNl
+         S6piTbwiNJ2aGNlQCA8j4IDc0gBm31CEqEtAQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0bn5MZ3x1AZMueYLHBvYYK4+M4Vkn8wTCGTXb/d2uVE=;
-        b=nrYkg6+ZHfJCLD4S4Hje2n1rQ9ti/4CY4HvD2XDHv8waMvXFHfErdyM0bo/ZUulgu3
-         9sV+Q8HoUBM1GHPvb8XD/up2qL/wZ9CaObElxscgIMNKSl/0Uigl0ISMNzrwwNSO1WCB
-         8QGzLz2jz00molPLooNRkF2Df/qCGMFSpDmUx9hgSVLmQb3I+gYepBmbbEWL7FRvvp2a
-         DzhF6Z19TXx/xmresCblSG0ZvJDvoZoEE12wo0VU0jWJi5dauVwbpYvhldKXUZdNFcdI
-         Ig6RSyU8/w0nKoRPuoYr7Ztsbt6OZrvzVKZM8AHMWmp/O0hdB5Cpwkc4iEjOy8Hek0Az
-         w67A==
-X-Gm-Message-State: AGi0PuaMrqZEcLWi+BvopC9jxzB1T3wHZmgPyc3KotaZrbdgWQnxkr8b
-        F0K7gHbrhgiZ1ljRjYAyB4X8Rw==
-X-Google-Smtp-Source: APiQypLEwhN/y4/l8USQl+mMh50NmWYjOi6/qdBQHkmlNJmc+IJxk5qI719O25WlSoGqZjWR2xG1OA==
-X-Received: by 2002:ac2:5930:: with SMTP id v16mr1893719lfi.103.1587635191938;
-        Thu, 23 Apr 2020 02:46:31 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:46dc:a81c:1cf:8fa9:cce2:9ac2? ([2a00:1fa0:46dc:a81c:1cf:8fa9:cce2:9ac2])
-        by smtp.gmail.com with ESMTPSA id o195sm1322097lfa.50.2020.04.23.02.46.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 02:46:31 -0700 (PDT)
-Subject: Re: [PATCH] ipw2x00: Remove a memory allocation failure log message
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        stas.yakovlev@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200423075825.18206-1-christophe.jaillet@wanadoo.fr>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <5868418d-88b0-3694-2942-5988ab15bdcb@cogentembedded.com>
-Date:   Thu, 23 Apr 2020 12:46:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eBjF9qj4VjUI/zoZpRsdcofUh4Hml8aXIqDYnm8I2pc=;
+        b=SLzgFKtpBPyfT+cLIvS7AC3GBvmKhMQirmGGt06/rGeE9JWrJ9VJKy1i6lE85owyiH
+         4AvFWunX1JTtiRfEyNnyEOxIzyty9JbkqqIMQtH3wd/67u7gob5kSLZA2DHNWIEk+/F7
+         /yOlMDvpZUYWZ6t+IFb6h3V3/fLXr7LfmbsCv+N3orZY28CYfGDKmp3Tzuaaf4wFRYFs
+         /2m9ekagXdWmxsWi495u0A/xMoVqdek2LG67nPTYvd3x2nhuq3VrKt0N0M1pgsWXIRnx
+         iquF1nBG/nFzQRh6pgvb/thwfETpCipeqU/p5XsxcUNfpkISoNfVHtOxywdhEnSyhyPR
+         oYTw==
+X-Gm-Message-State: AGi0PuY0YJ4fKvql1RlveMEPiBpgtMiZ/rmHU8ARbv95AhIK0TWJwvTd
+        GK8NOJFF5HHK5Mt9C8P82qI8kpzMxkuu5DX5JnmZjg==
+X-Google-Smtp-Source: APiQypKzYA+RwPbSzxAVe1uCnwABFW9ULWw73H2FS4WUYBmnv7bX1P0aUaDwT6A5ceIZBB1IQHhJpijAE9OUj++HWT8=
+X-Received: by 2002:a17:906:c06:: with SMTP id s6mr1856032ejf.198.1587635230925;
+ Thu, 23 Apr 2020 02:47:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200423075825.18206-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1587531463.git.josh@joshtriplett.org> <9873b8bd7d14ff8cd2a5782b434b39f076679eeb.1587531463.git.josh@joshtriplett.org>
+ <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
+ <CAJfpegt=xe-8AayW2i3AYrk3q-=Pp_A+Hctsk+=sXoMed5hFQA@mail.gmail.com>
+ <20200423004807.GC161058@localhost> <CAJfpegtSYKsApx2Dc6VGmc5Fm4SsxtAWAP-Zs052umwK1CjJmQ@mail.gmail.com>
+ <20200423044226.GH161058@localhost> <CAJfpeguaVYo-Lf-5Bi=EYJYWdmCfo3BqZA=kj9E5UmDb0mBc1w@mail.gmail.com>
+ <20200423073310.GA169998@localhost> <CAJfpegtXj4bSbhpx+=z=R0_ZT8uPEJAAev0O+DVg3AX242e=-g@mail.gmail.com>
+ <CAJfpegtgrUACZpYR8wWoTE=Hh4Xi+4rRfrZTxRtaFVpT9GMPjw@mail.gmail.com> <CAJfpegvcW9Sic8ZXgWfFQ3d8JTr53XABfP8rZzsVhCDBKCgMBw@mail.gmail.com>
+In-Reply-To: <CAJfpegvcW9Sic8ZXgWfFQ3d8JTr53XABfP8rZzsVhCDBKCgMBw@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 23 Apr 2020 11:46:59 +0200
+Message-ID: <CAJfpegv-zRp3a3JcmCO4JpXB=f32=TK=+jP1o-peqqxffT5ERw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] fs: openat2: Extend open_how to allow
+ userspace-selected fds
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>, io-uring@vger.kernel.org,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Thu, Apr 23, 2020 at 11:20 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> On Thu, Apr 23, 2020 at 9:57 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >
+> > On Thu, Apr 23, 2020 at 9:45 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >
+> > > > I would prefer to not introduce that limitation in the first place, and
+> > > > instead open normal file descriptors.
+> > > >
+> > > > > The point of O_SPECIFIC_FD is to be able to perform short
+> > > > > sequences of open/dosomething/close without having to block and having
+> > > > > to issue separate syscalls.
+> > > >
+> > > > "close" is not a required component. It's entirely possible to use
+> > > > io_uring to open a file descriptor, do various things with it, and then
+> > > > leave it open for subsequent usage via either other io_uring chains or
+> > > > standalone syscalls.
+> > >
+> > > If this use case arraises, we could add an op to dup/move a private
+> > > descriptor to a public one.  io_uring can return values, right?
+> > >
+> > > Still not convinced...
+> >
+> > Oh, and we haven't even touched on the biggest advantage of a private
+> > fd table: not having to dirty a cacheline on fdget/fdput due to the
+> > possibility of concurrent close() in a MT application.
+> >
+> > I believe this is a sticking point in some big enterprise apps and it
+> > may even be a driving force for io_uring.
+>
+> https://lwn.net/Articles/787473/
+>
+> And an interesting (very old) article referenced from above, that
+> gives yet a new angle on fd allocation issues:
+>
+> https://lwn.net/Articles/236843/
+>
+> A private fd space would be perfect for libraries such as glibc.
 
-On 23.04.2020 10:58, Christophe JAILLET wrote:
+Ah, io_uring already implements a fixed private fd table via
+io_uring_register(IORING_REGISTER_FILES,...), we just need a way to
+wire up open, socket, accept, etc. to fill a slot in that table
+instead of, or in addition to allocating a slot in the fd_table.
 
-> Axe a memory allocation failure log message. This message is useless and
-> incorrect (vmalloc is not used here for the memory allocation)
-> 
-> This has been like that since the very beginning of this driver in
-> commit 43f66a6ce8da ("Add ipw2200 wireless driver.")
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->   drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> index 60b5e08dd6df..30c4f041f565 100644
-> --- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> +++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> @@ -3770,10 +3770,9 @@ static int ipw_queue_tx_init(struct ipw_priv *priv,
->   	struct pci_dev *dev = priv->pci_dev;
->   
->   	q->txb = kmalloc_array(count, sizeof(q->txb[0]), GFP_KERNEL);
-> -	if (!q->txb) {
-> -		IPW_ERROR("vmalloc for auxiliary BD structures failed\n");
-> +	if (!q->txb)
->   		return -ENOMEM;
-> -	}
-> +
-
-    No need for this extra empty line.
-
->   
->   	q->bd =
->   	    pci_alloc_consistent(dev, sizeof(q->bd[0]) * count, &q->q.dma_addr);
-
-MBR, Sergei
-
+Thanks,
+Miklos
