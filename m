@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94674C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04281C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABF420780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15D920780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgDWXNH (ORCPT
+        id S1729102AbgDWXNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:13:07 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50084 "EHLO
+        Thu, 23 Apr 2020 19:13:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50052 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728510AbgDWXGv (ORCPT
+        by vger.kernel.org with ESMTP id S1728500AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkva-0004ms-J5; Fri, 24 Apr 2020 00:06:42 +0100
+        id 1jRkvZ-0004n5-02; Fri, 24 Apr 2020 00:06:41 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvX-00E6xM-8e; Fri, 24 Apr 2020 00:06:39 +0100
+        id 1jRkvV-00E6vg-CG; Fri, 24 Apr 2020 00:06:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,13 +36,13 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Johan Hovold" <johan@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Fri, 24 Apr 2020 00:07:00 +0100
-Message-ID: <lsq.1587683028.797327125@decadent.org.uk>
+        "Vladis Dronov" <vdronov@redhat.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Date:   Fri, 24 Apr 2020 00:06:40 +0100
+Message-ID: <lsq.1587683028.245534157@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 193/245] USB: serial: ch341: handle unbound port at
- reset_resume
+Subject: [PATCH 3.16 173/245] Input: gtco - fix endpoint sanity check
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,35 +58,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 4d5ef53f75c22d28f490bcc5c771fcc610a9afa4 upstream.
+commit a8eeb74df5a6bdb214b2b581b14782c5f5a0cf83 upstream.
 
-Check for NULL port data in reset_resume() to avoid dereferencing a NULL
-pointer in case the port device isn't bound to a driver (e.g. after a
-failed control request at port probe).
+The driver was checking the number of endpoints of the first alternate
+setting instead of the current one, something which could lead to the
+driver binding to an invalid interface.
 
-Fixes: 1ded7ea47b88 ("USB: ch341 serial: fix port number changed after resume")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 162f98dea487 ("Input: gtco - fix crash on detecting device without endpoints")
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-5-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/ch341.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/input/tablet/gtco.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/drivers/usb/serial/ch341.c
-+++ b/drivers/usb/serial/ch341.c
-@@ -571,9 +571,13 @@ static int ch341_tiocmget(struct tty_str
- static int ch341_reset_resume(struct usb_serial *serial)
- {
- 	struct usb_serial_port *port = serial->port[0];
--	struct ch341_private *priv = usb_get_serial_port_data(port);
-+	struct ch341_private *priv;
- 	int ret;
+--- a/drivers/input/tablet/gtco.c
++++ b/drivers/input/tablet/gtco.c
+@@ -886,18 +886,14 @@ static int gtco_probe(struct usb_interfa
+ 	}
  
-+	priv = usb_get_serial_port_data(port);
-+	if (!priv)
-+		return 0;
-+
- 	/* reconfigure ch341 serial port after bus-reset */
- 	ch341_configure(serial->dev, priv);
+ 	/* Sanity check that a device has an endpoint */
+-	if (usbinterface->altsetting[0].desc.bNumEndpoints < 1) {
++	if (usbinterface->cur_altsetting->desc.bNumEndpoints < 1) {
+ 		dev_err(&usbinterface->dev,
+ 			"Invalid number of endpoints\n");
+ 		error = -EINVAL;
+ 		goto err_free_urb;
+ 	}
  
+-	/*
+-	 * The endpoint is always altsetting 0, we know this since we know
+-	 * this device only has one interrupt endpoint
+-	 */
+-	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
++	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
+ 
+ 	/* Some debug */
+ 	dev_dbg(&usbinterface->dev, "gtco # interfaces: %d\n", usbinterface->num_altsetting);
+@@ -984,7 +980,7 @@ static int gtco_probe(struct usb_interfa
+ 	input_dev->dev.parent = &usbinterface->dev;
+ 
+ 	/* Setup the URB, it will be posted later on open of input device */
+-	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
++	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
+ 
+ 	usb_fill_int_urb(gtco->urbinfo,
+ 			 gtco->usbdev,
 
