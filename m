@@ -2,102 +2,73 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DDAC55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C26C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC6F20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854BF2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZ7AsC2I"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="OY75G05P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgDWMEr (ORCPT
+        id S1728335AbgDWMFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728104AbgDWMEr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:04:47 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28BCC08E859;
-        Thu, 23 Apr 2020 05:04:45 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u127so6274917wmg.1;
-        Thu, 23 Apr 2020 05:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7pzWOwtxsf/GOJdSTrWttvSQWG+r/olQojnay9bW+7g=;
-        b=fZ7AsC2IwJojBrtLDXRKj0pALBcuMU0gc3Qg1+hQzeewCZsDGdRVVBCq4RU+Apu0cb
-         ceZK/rvlGABb/08T1r/08kfRynVhCJrv8hxV+kU+ZLGQaDq93TmWVEaptU9QulaXURyZ
-         QpynrAVNUk/l2zlyJ1uyX9ZtPT8pEd3jyg3Ins/nitXL1K66AABtc1tl7wRLLxLvnihn
-         ktYa7O27l82IbpULBLwj6mQLvZAyFM3J5qOENkta8YwOgO/PHw8OKlfh8LwjbnmahGRc
-         aT+Sa7aVdU8tLE/iM0FVmhp0riHUc9qoxOOnnWGwexdzeS8gqakLIxuVUTMW6FbOJjVY
-         Hjig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7pzWOwtxsf/GOJdSTrWttvSQWG+r/olQojnay9bW+7g=;
-        b=dlvDkxbVasLzNFtIBPWczRSYMSlBJAKPBdnGuCpqZe9Z3mSUhz+JC7PeEpwPfvHZK7
-         IGg6Z/Fj86JmBQfmoJW7UFdpVh9RYvCRYcxw81dov5tPewjGSRRVwVAZ4EOntvJI5xfZ
-         Z/fGcTpoMjJizEcmcieOjaIfE3YrC5xRULbX9uFUTCJufAXyHEqyFVxlZQ9ICPjszg4E
-         xsT9lQB9grcAzfJ40To06/YtavW8Vhc2b+UHgty4b75K9MPwPTJoquBAYzBJuNngtBmD
-         7/5uqJv06fqdoNW9rV5COVMkS4gLI2usgn6V20qykUTdSL9O69LQZXe05rqvKAEot7QL
-         0kPA==
-X-Gm-Message-State: AGi0PuaZzmiKZ0olVrJTUwtM2OdMjxnhEbWOA5hvunkJhA/dATUmOAfI
-        SLSNmZplbrE7w1+s+7k+UWI=
-X-Google-Smtp-Source: APiQypLYuV6w/fTD9Hyy7FfkqSrG9k2dll4pxQZ16rn70tPxFyw2C+RYY2W0PBwQksmoaC1llzpM3A==
-X-Received: by 2002:a1c:f416:: with SMTP id z22mr3889087wma.32.1587643483498;
-        Thu, 23 Apr 2020 05:04:43 -0700 (PDT)
-Received: from debian.lan (host-84-13-17-86.opaltelecom.net. [84.13.17.86])
-        by smtp.gmail.com with ESMTPSA id g15sm3432761wrp.96.2020.04.23.05.04.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 05:04:42 -0700 (PDT)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] IB/rdmavt: return proper error code
-Date:   Thu, 23 Apr 2020 13:04:34 +0100
-Message-Id: <20200423120434.19304-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 23 Apr 2020 08:05:11 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:56260 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728104AbgDWMFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 08:05:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 638CE4A17C;
+        Thu, 23 Apr 2020 12:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        in-reply-to:content-disposition:content-type:content-type
+        :mime-version:references:message-id:subject:subject:from:from
+        :date:date:received:received:received; s=mta-01; t=1587643507;
+         x=1589457908; bh=mLLyssSl6nMcwXw59jsI5OboKUUNH5MjP+qTGX8gHHs=; b=
+        OY75G05PhSzt2UMWkl7XrxyvffrzW9M7VFST76ZgRkVMRyvdWRRiIrU6Km5QujVE
+        /2sJ4v4XTFJIfhs3z/DzvRxYnDtID4Y68+4b3BXPVnjZmJ3qRdgG2r7ywY8/XBds
+        VRdNIfnCpEwfipWFSeELQreZh+FUrLtgQQvuKTxj6zw=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SGlfKVfQBJWF; Thu, 23 Apr 2020 15:05:07 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 5106B46473;
+        Thu, 23 Apr 2020 15:05:07 +0300 (MSK)
+Received: from localhost (172.17.14.122) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 23
+ Apr 2020 15:05:08 +0300
+Date:   Thu, 23 Apr 2020 15:05:06 +0300
+From:   "Alexander A. Filippov" <a.filippov@yadro.com>
+To:     Alexander Filippov <a.filippov@yadro.com>
+CC:     <linux-aspeed@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] ARM: DTS: Aspeed: Add YADRO Nicole BMC
+Message-ID: <20200423120506.GA21043@bbwork.lan>
+References: <20200423112100.19424-1-a.filippov@yadro.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200423112100.19424-1-a.filippov@yadro.com>
+X-Originating-IP: [172.17.14.122]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function rvt_create_mmap_info() can return either NULL or an error
-in ERR_PTR(). Check properly for both the error type and return the
-error code accordingly.
+Looks like I've missed subject prefix.
+Should I resend this with v4 prefix?
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- drivers/infiniband/sw/rdmavt/cq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
-index 5724cbbe38b1..326b1e6b362d 100644
---- a/drivers/infiniband/sw/rdmavt/cq.c
-+++ b/drivers/infiniband/sw/rdmavt/cq.c
-@@ -248,8 +248,8 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	 */
- 	if (udata && udata->outlen >= sizeof(__u64)) {
- 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
--		if (!cq->ip) {
--			err = -ENOMEM;
-+		if (IS_ERR_OR_NULL(cq->ip)) {
-+			err = cq->ip ? PTR_ERR(cq->ip) : -ENOMEM;
- 			goto bail_wc;
- 		}
- 
--- 
-2.11.0
-
+Alexander
