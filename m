@@ -2,91 +2,229 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56764C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E828CC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F72208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C826F21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Mc74Mtgk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TPKfetaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgDWHBY (ORCPT
+        id S1726819AbgDWHDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:01:24 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40180 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725562AbgDWHBX (ORCPT
+        Thu, 23 Apr 2020 03:03:21 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36038 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgDWHDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:01:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587625283; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=jnGBvqgD2+rCZ5dqwcs/N0/DjWzyVn5656ZJjEr5E6M=; b=Mc74MtgkK7HuKMOFeFopLWMbyVa9Gz6/PsoMuZ0vHTPpW4zb+bkUfzmKH5FsH4w3fp66K6jw
- 2XDv2cVVlsJ6BP7BURebssQx3Vr8FljouGWEAJGjz6SBYkGLCxmDvdOgP4t4xFsKr4hqpZdd
- 4MEaZd6K43fOGocHUK4QFt6bD+Q=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea13d35.7f87b6312490-smtp-out-n02;
- Thu, 23 Apr 2020 07:01:09 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C0E57C433F2; Thu, 23 Apr 2020 07:01:07 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 917ACC433D2;
-        Thu, 23 Apr 2020 07:01:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 917ACC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Tony Chuang <yhchuang@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list\:REALTEK WIRELESS DRIVER \(rtw88\)" 
-        <linux-wireless@vger.kernel.org>,
-        "open list\:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] rtw88: Use udelay instead of usleep in atomic context
-References: <20200423063811.2636-1-kai.heng.feng@canonical.com>
-        <20200423063811.2636-2-kai.heng.feng@canonical.com>
-        <87h7xan1cy.fsf@kamboji.qca.qualcomm.com>
-        <D2ACB475-AE1A-41D1-BEB9-1FC30DA13AE8@canonical.com>
-Date:   Thu, 23 Apr 2020 10:01:03 +0300
-In-Reply-To: <D2ACB475-AE1A-41D1-BEB9-1FC30DA13AE8@canonical.com> (Kai-Heng
-        Feng's message of "Thu, 23 Apr 2020 14:53:18 +0800")
-Message-ID: <87d07yn0sw.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 23 Apr 2020 03:03:20 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03N73I2Z098273;
+        Thu, 23 Apr 2020 02:03:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587625398;
+        bh=wHkNrNpLwPyDidLzLh0cr2HlLzONahMMqBFlRlGS2a4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TPKfetaHcEPUvDfcMoiZjjdYg2GvafzdAM8VTjrfDmfT7wY+F+Dn0Vr4NumTaHImX
+         DqaFvUmt7X0Wkr4AidY50QgT7bQTLl+VKcCUsI75scT16p80UMcXYUqbikntcsjKOI
+         FcEb2VZWD0GqekNBU3ZyXpQHE9l6ctSy6R3Sb8D4=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03N73IJw042644
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Apr 2020 02:03:18 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Apr 2020 02:03:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 23 Apr 2020 02:03:17 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03N73FiI013793;
+        Thu, 23 Apr 2020 02:03:16 -0500
+Subject: Re: [PATCH v2 3/6] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl
+ node to select SERDES lane mux
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh@kernel.org>
+CC:     <t-kristo@ti.com>, <nm@ti.com>, <nsekhar@ti.com>,
+        <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200303101722.26052-1-rogerq@ti.com>
+ <20200303101722.26052-4-rogerq@ti.com> <20200310210904.GA11275@bogus>
+ <247a115e-6b44-2906-07cf-771236d492d6@ti.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <6940e725-aebc-dcc6-7b25-1026b9b3c653@ti.com>
+Date:   Thu, 23 Apr 2020 10:03:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <247a115e-6b44-2906-07cf-771236d492d6@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+Kishon, Rob,
 
->> On Apr 23, 2020, at 14:49, Kalle Valo <kvalo@codeaurora.org> wrote:
->> 
->> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
->> 
->>> It's incorrect to use usleep in atomic context.
->>> 
->>> Switch to a macro which uses udelay instead of usleep to prevent the issue.
->>> 
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> 
->> This fixes a regression, right? So there should be a Fixes line.
->
-> Yes, but the regression commit isn't in Linus' tree, so the sha1 may change.
+On 19/03/2020 13:37, Kishon Vijay Abraham I wrote:
+> Hi Rob,
+> 
+> On 11/03/20 2:39 am, Rob Herring wrote:
+>> On Tue, Mar 03, 2020 at 12:17:19PM +0200, Roger Quadros wrote:
+>>> From: Kishon Vijay Abraham I <kishon@ti.com>
+>>>
+>>> Add serdes_ln_ctrl node used for selecting SERDES lane mux.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> ---
+>>>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 27 ++++++++++++
+>>>   include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
+>>>   2 files changed, 80 insertions(+)
+>>>   create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
+>>>
+>>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>>> index cbaadee5bfdc..c5d54af37e91 100644
+>>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>>> @@ -5,6 +5,8 @@
+>>>    * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
+>>>    */
+>>>   #include <dt-bindings/phy/phy.h>
+>>> +#include <dt-bindings/mux/mux.h>
+>>> +#include <dt-bindings/mux/mux-j721e-wiz.h>
+>>>   
+>>>   &cbass_main {
+>>>   	msmc_ram: sram@70000000 {
+>>> @@ -19,6 +21,31 @@
+>>>   		};
+>>>   	};
+>>>   
+>>> +	scm_conf: scm-conf@100000 {
+>>> +		compatible = "syscon", "simple-mfd", "ti,j721e-system-controller";
+>>
+>> Wrong ordering. Most significant first.
+>>
+>>> +		reg = <0 0x00100000 0 0x1c000>;
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <1>;
+>>> +		ranges = <0x0 0x0 0x00100000 0x1c000>;
+>>> +
+>>> +		serdes_ln_ctrl: serdes-ln-ctrl@4080 {
+>>
+>> Your syscon.yaml change is not valid if you have child nodes. Do a
+>> specific binding for this block.
+> 
+> Do you mean in addition to having platform specific binding for
+> scm-conf, I need to have platform specific binding for serdes-ln-ctrl.
+> 
+> Since the driver doesn't do any platform specific stuff, the driver
+> doesn't have to change. Is that correct?
+> 
 
-No, the commit id won't change after I have commited the patch. I don't
-rebase my trees.
+Any resolution on this?
+
+cheers,
+-roger
+
+> Thanks
+> Kishon
+>>
+>>> +			compatible = "mmio-mux";
+>>> +			reg = <0x00004080 0x50>;
+>>> +			#mux-control-cells = <1>;
+>>> +			mux-reg-masks = <0x4080 0x3>, <0x4084 0x3>, /* SERDES0 lane0/1 select */
+>>> +					<0x4090 0x3>, <0x4094 0x3>, /* SERDES1 lane0/1 select */
+>>> +					<0x40a0 0x3>, <0x40a4 0x3>, /* SERDES2 lane0/1 select */
+>>> +					<0x40b0 0x3>, <0x40b4 0x3>, /* SERDES3 lane0/1 select */
+>>> +					<0x40c0 0x3>, <0x40c4 0x3>, <0x40c8 0x3>, <0x40cc 0x3>;
+>>> +					/* SERDES4 lane0/1/2/3 select */
+>>> +			idle-states = <SERDES0_LANE0_PCIE0_LANE0>, <SERDES0_LANE1_PCIE0_LANE1>,
+>>> +				      <SERDES1_LANE0_PCIE1_LANE0>, <SERDES1_LANE1_PCIE1_LANE1>,
+>>> +				      <SERDES2_LANE0_PCIE2_LANE0>, <SERDES2_LANE1_PCIE2_LANE1>,
+>>> +				      <MUX_IDLE_AS_IS>, <SERDES3_LANE1_USB3_0>,
+>>> +				      <SERDES4_LANE0_EDP_LANE0>, <SERDES4_LANE1_EDP_LANE1>, <SERDES4_LANE2_EDP_LANE2>, <SERDES4_LANE3_EDP_LANE3>;
+>>> +		};
+>>> +	};
+>>> +
+>>>   	gic500: interrupt-controller@1800000 {
+>>>   		compatible = "arm,gic-v3";
+>>>   		#address-cells = <2>;
+>>> diff --git a/include/dt-bindings/mux/mux-j721e-wiz.h b/include/dt-bindings/mux/mux-j721e-wiz.h
+>>> new file mode 100644
+>>> index 000000000000..fd1c4ea9fc7f
+>>> --- /dev/null
+>>> +++ b/include/dt-bindings/mux/mux-j721e-wiz.h
+>>> @@ -0,0 +1,53 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * This header provides constants for J721E WIZ.
+>>> + */
+>>> +
+>>> +#ifndef _DT_BINDINGS_J721E_WIZ
+>>> +#define _DT_BINDINGS_J721E_WIZ
+>>> +
+>>> +#define SERDES0_LANE0_QSGMII_LANE1	0x0
+>>> +#define SERDES0_LANE0_PCIE0_LANE0	0x1
+>>> +#define SERDES0_LANE0_USB3_0_SWAP	0x2
+>>> +
+>>> +#define SERDES0_LANE1_QSGMII_LANE2	0x0
+>>> +#define SERDES0_LANE1_PCIE0_LANE1	0x1
+>>> +#define SERDES0_LANE1_USB3_0		0x2
+>>> +
+>>> +#define SERDES1_LANE0_QSGMII_LANE3	0x0
+>>> +#define SERDES1_LANE0_PCIE1_LANE0	0x1
+>>> +#define SERDES1_LANE0_USB3_1_SWAP	0x2
+>>> +#define SERDES1_LANE0_SGMII_LANE0	0x3
+>>> +
+>>> +#define SERDES1_LANE1_QSGMII_LANE4	0x0
+>>> +#define SERDES1_LANE1_PCIE1_LANE1	0x1
+>>> +#define SERDES1_LANE1_USB3_1		0x2
+>>> +#define SERDES1_LANE1_SGMII_LANE1	0x3
+>>> +
+>>> +#define SERDES2_LANE0_PCIE2_LANE0	0x1
+>>> +#define SERDES2_LANE0_SGMII_LANE0	0x3
+>>> +#define SERDES2_LANE0_USB3_1_SWAP	0x2
+>>> +
+>>> +#define SERDES2_LANE1_PCIE2_LANE1	0x1
+>>> +#define SERDES2_LANE1_USB3_1		0x2
+>>> +#define SERDES2_LANE1_SGMII_LANE1	0x3
+>>> +
+>>> +#define SERDES3_LANE0_PCIE3_LANE0	0x1
+>>> +#define SERDES3_LANE0_USB3_0_SWAP	0x2
+>>> +
+>>> +#define SERDES3_LANE1_PCIE3_LANE1	0x1
+>>> +#define SERDES3_LANE1_USB3_0		0x2
+>>> +
+>>> +#define SERDES4_LANE0_EDP_LANE0		0x0
+>>> +#define SERDES4_LANE0_QSGMII_LANE5	0x2
+>>> +
+>>> +#define SERDES4_LANE1_EDP_LANE1		0x0
+>>> +#define SERDES4_LANE1_QSGMII_LANE6	0x2
+>>> +
+>>> +#define SERDES4_LANE2_EDP_LANE2		0x0
+>>> +#define SERDES4_LANE2_QSGMII_LANE7	0x2
+>>> +
+>>> +#define SERDES4_LANE3_EDP_LANE3		0x0
+>>> +#define SERDES4_LANE3_QSGMII_LANE8	0x2
+>>> +
+>>> +#endif /* _DT_BINDINGS_J721E_WIZ */
+>>> -- 
+>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>>
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
