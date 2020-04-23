@@ -7,68 +7,82 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E14C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45491C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2004E2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFCC20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgDWJHt (ORCPT
+        id S1726587AbgDWJJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:07:49 -0400
-Received: from mailomta30-sa.btinternet.com ([213.120.69.36]:41402 "EHLO
-        sa-prd-fep-041.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726145AbgDWJHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:07:49 -0400
-Received: from sa-prd-rgout-004.btmx-prd.synchronoss.net ([10.2.38.7])
-          by sa-prd-fep-041.btinternet.com with ESMTP
-          id <20200423090746.GEMB3922.sa-prd-fep-041.btinternet.com@sa-prd-rgout-004.btmx-prd.synchronoss.net>;
-          Thu, 23 Apr 2020 10:07:46 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.51.225.56]
-X-OWM-Source-IP: 31.51.225.56 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdduudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomheplfhohhhnucfqlhgumhgrnhcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecukfhppeefuddrhedurddvvdehrdehieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihrdhhohhmvgdpihhnvghtpeefuddrhedurddvvdehrdehiedpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeorgigsghovgeskhgvrhhnvghlrdgukheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdhiuggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgtphhtthhopeeolhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgqe
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (31.51.225.56) by sa-prd-rgout-004.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5E3A27DB0CE250A7; Thu, 23 Apr 2020 10:07:46 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     axboe@kernel.dk
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] ata: sata_inic162x fixed a spelling issue
-Date:   Thu, 23 Apr 2020 10:07:42 +0100
-Message-Id: <20200423090742.20590-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Thu, 23 Apr 2020 05:09:19 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2878 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725884AbgDWJJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 05:09:18 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9496F9BBF6822CF50185;
+        Thu, 23 Apr 2020 17:09:11 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Apr 2020 17:09:01 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <ulf.hansson@linaro.org>
+CC:     <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] mmc: core: Use DEFINE_DEBUGFS_ATTRIBUTE instead of DEFINE_SIMPLE_ATTRIBUTE
+Date:   Thu, 23 Apr 2020 17:15:19 +0800
+Message-ID: <1587633319-19835-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a warning message spelling issue.
+Fixes coccicheck warning:
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
+drivers/mmc/core/debugfs.c:222:0-23: WARNING: mmc_clock_fops should be
+defined with DEFINE_DEBUGFS_ATTRIBUTE
+
+Use DEFINE_DEBUGFS_ATTRIBUTE rather than DEFINE_SIMPLE_ATTRIBUTE
+for debugfs files
+
+Fixes: 703aae3d09a4b ("mmc: add a file to debugfs for changing host clock at runtime")
+Fixes: a04c50aaa916f ("mmc: core: no need to check return value of debugfs_create functions")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
 ---
- drivers/ata/sata_inic162x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/core/debugfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ata/sata_inic162x.c b/drivers/ata/sata_inic162x.c
-index a6b76cc12a66..e517bd8822a5 100644
---- a/drivers/ata/sata_inic162x.c
-+++ b/drivers/ata/sata_inic162x.c
-@@ -145,7 +145,7 @@ enum {
+diff --git a/drivers/mmc/core/debugfs.c b/drivers/mmc/core/debugfs.c
+index 09e0c76..9ec84c8 100644
+--- a/drivers/mmc/core/debugfs.c
++++ b/drivers/mmc/core/debugfs.c
+@@ -219,7 +219,7 @@ static int mmc_clock_opt_set(void *data, u64 val)
+ 	return 0;
+ }
  
- 	/* PORT_IDMA_CTL bits */
- 	IDMA_CTL_RST_ATA	= (1 << 2),  /* hardreset ATA bus */
--	IDMA_CTL_RST_IDMA	= (1 << 5),  /* reset IDMA machinary */
-+	IDMA_CTL_RST_IDMA	= (1 << 5),  /* reset IDMA machinery */
- 	IDMA_CTL_GO		= (1 << 7),  /* IDMA mode go */
- 	IDMA_CTL_ATA_NIEN	= (1 << 8),  /* ATA IRQ disable */
+-DEFINE_SIMPLE_ATTRIBUTE(mmc_clock_fops, mmc_clock_opt_get, mmc_clock_opt_set,
++DEFINE_DEBUGFS_ATTRIBUTE(mmc_clock_fops, mmc_clock_opt_get, mmc_clock_opt_set,
+ 	"%llu\n");
  
+ void mmc_add_host_debugfs(struct mmc_host *host)
+@@ -232,8 +232,8 @@ void mmc_add_host_debugfs(struct mmc_host *host)
+ 	debugfs_create_file("ios", S_IRUSR, root, host, &mmc_ios_fops);
+ 	debugfs_create_x32("caps", S_IRUSR, root, &host->caps);
+ 	debugfs_create_x32("caps2", S_IRUSR, root, &host->caps2);
+-	debugfs_create_file("clock", S_IRUSR | S_IWUSR, root, host,
+-			    &mmc_clock_fops);
++	debugfs_create_file_unsafe("clock", S_IRUSR | S_IWUSR, root, host,
++				   &mmc_clock_fops);
+ 
+ #ifdef CONFIG_FAIL_MMC_REQUEST
+ 	if (fail_request)
 -- 
-2.17.1
+2.6.2
 
