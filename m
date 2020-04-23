@@ -2,137 +2,127 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACEEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C62BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835BC20715
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618832075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbgDWQxJ (ORCPT
+        id S1729776AbgDWQ4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:53:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48282 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729673AbgDWQxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:53:09 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NGXJta147070
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:53:08 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jspv5u5w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:53:07 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 23 Apr 2020 17:52:29 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 17:52:26 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NGptFe53805508
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 16:51:55 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 754D2A4065;
-        Thu, 23 Apr 2020 16:53:02 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2AA4A405B;
-        Thu, 23 Apr 2020 16:53:01 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.178.107])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 16:53:01 +0000 (GMT)
-Subject: Re: [PATCH 3/5] ima: Fix ima digest hash table key calculation
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Thu, 23 Apr 2020 12:53:01 -0400
-In-Reply-To: <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
-References: <20200325161116.7082-1-roberto.sassu@huawei.com>
-         <20200325161116.7082-3-roberto.sassu@huawei.com>
-         <1587588987.5165.20.camel@linux.ibm.com>
-         <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042316-0008-0000-0000-000003762A0D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042316-0009-0000-0000-00004A97F7F0
-Message-Id: <1587660781.5610.15.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_12:2020-04-23,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
- spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230128
+        Thu, 23 Apr 2020 12:56:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57896 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729685AbgDWQ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:56:32 -0400
+IronPort-SDR: 3BlYyVNj/vAYLoaK/7jtjRLpLXNwp1ogQRf3gtenegxcOKmNoTAhGPwT5FjVfR6cz+I+Q4hozC
+ DH0xfarPWb5g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:56:31 -0700
+IronPort-SDR: pQYcwN/zIhJlMVvB52YVl4Ttgkv0Zub6V7g3IRK2tHK9OAWwX6uOkH8xSsyvzdH2fIZxkqKrs4
+ QMlZheB3U/lw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="430390420"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 23 Apr 2020 09:56:31 -0700
+Date:   Thu, 23 Apr 2020 09:56:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 9/9] KVM: X86: Set CET feature bits for CPUID
+ enumeration
+Message-ID: <20200423165631.GB25564@linux.intel.com>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-10-weijiang.yang@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326081847.5870-10-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-04-23 at 10:21 +0000, Roberto Sassu wrote:
-> > Hi Roberto, Krsysztof,
-> > 
-> > On Wed, 2020-03-25 at 17:11 +0100, Roberto Sassu wrote:
-> > > From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-> > >
-> > > Function hash_long() accepts unsigned long, while currently only one byte
-> > > is passed from ima_hash_key(), which calculates a key for ima_htable.
-> > Use
-> > > more bytes to avoid frequent collisions.
-> > >
-> > > Length of the buffer is not explicitly passed as a function parameter,
-> > > because this function expects a digest whose length is greater than the
-> > > size of unsigned long.
-> > 
-> > Somehow I missed the original report of this problem https://lore.kern
-> > el.org/patchwork/patch/674684/.  This patch is definitely better, but
-> > how many unique keys are actually being used?  Is it anywhere near
-> > IMA_MEASURE_HTABLE_SIZE(512)?
+On Thu, Mar 26, 2020 at 04:18:46PM +0800, Yang Weijiang wrote:
+> Set the feature bits so that CET capabilities can be seen
+> in guest via CPUID enumeration. Add CR4.CET bit support
+> in order to allow guest set CET master control bit(CR4.CET).
 > 
-> I did a small test (with 1043 measurements):
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 3 ++-
+>  arch/x86/kvm/cpuid.c            | 4 ++++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 > 
-> slots: 250, max depth: 9 (without the patch)
-> slots: 448, max depth: 7 (with the patch)
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 2c944ad99692..5109c43c6981 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -95,7 +95,8 @@
+>  			  | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
+>  			  | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
+>  			  | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
+> -			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
+> +			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
+> +			  | X86_CR4_CET))
+>  
+>  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
+>  
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 25e9a11291b3..26ab959df92f 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -366,6 +366,10 @@ void kvm_set_cpu_caps(void)
+>  		kvm_cpu_cap_set(X86_FEATURE_INTEL_STIBP);
+>  	if (boot_cpu_has(X86_FEATURE_AMD_SSBD))
+>  		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL_SSBD);
+> +	if (boot_cpu_has(X86_FEATURE_IBT))
+> +		kvm_cpu_cap_set(X86_FEATURE_IBT);
+> +	if (boot_cpu_has(X86_FEATURE_SHSTK))
+> +		kvm_cpu_cap_set(X86_FEATURE_SHSTK);
 
-448 out of 512 slots are used.
+This is the wrong way to advertise bits, the correct method is to declare
+the flag in the appriorate kvm_cpu_cap_mask() call.  The manually handling
+is only needed when the feature bit diverges from kernel support, either
+because KVM allow a feature based purely on hardware support, e.g. LA57, or
+when emulating a feature based on a different similar feature, e.g. the
+STIBP/SSBD flags above.
 
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 6828be99b908..6262438f9527 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -329,7 +329,8 @@ void kvm_set_cpu_caps(void)
+                F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
+                F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+                F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+-               F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/
++               F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/ |
++               F(SHSTK)
+        );
+        /* Set LA57 based on hardware capability. */
+        if (cpuid_ecx(7) & F(LA57))
+@@ -338,7 +339,7 @@ void kvm_set_cpu_caps(void)
+        kvm_cpu_cap_mask(CPUID_7_EDX,
+                F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+                F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
+-               F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM)
++               F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) | F(IBT)
+        );
+
+>  
+>  	kvm_cpu_cap_mask(CPUID_7_1_EAX,
+>  		F(AVX512_BF16)
+> -- 
+> 2.17.2
 > 
-> Then, I increased the number of bits to 10:
-> 
-> slots: 251, max depth: 9 (without the patch)
-> slots: 660, max depth: 4 (with the patch)
-
-660 out of 1024 slots are used.
-
-I wonder if there is any benefit to hashing a digest, instead of just
-using the first bits. 
-
-> 
-> > Do we need a new securityfs entry to display the number used?
-> 
-> Probably it is useful only if the administrator can decide the number of slots.
-
-The securityfs suggestion was just a means for triggering the above
-debugging info you provided.  Could you provide another patch with the
-debugging info?
-
-thanks,
-
-Mimi
-
