@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E63C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EA6C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76C12077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8582077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgDWXZl (ORCPT
+        id S1728097AbgDWXG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:25:41 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48174 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728046AbgDWXG1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48116 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726161AbgDWXGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:06:25 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvI-0004Zi-GX; Fri, 24 Apr 2020 00:06:24 +0100
+        id 1jRkvH-0004ZJ-RR; Fri, 24 Apr 2020 00:06:23 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvH-00E6fN-TS; Fri, 24 Apr 2020 00:06:23 +0100
+        id 1jRkvH-00E6eL-Eu; Fri, 24 Apr 2020 00:06:23 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jan Kara" <jack@suse.com>, "Theodore Ts'o" <tytso@mit.edu>
-Date:   Fri, 24 Apr 2020 00:04:03 +0100
-Message-ID: <lsq.1587683028.116815940@decadent.org.uk>
+        "Nicolai Stange" <nstange@suse.de>,
+        "Kalle Valo" <kvalo@codeaurora.org>
+Date:   Fri, 24 Apr 2020 00:03:50 +0100
+Message-ID: <lsq.1587683028.183373099@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 016/245] ext4: fix races between buffered IO and
- collapse / insert range
+Subject: [PATCH 3.16 003/245] libertas: don't exit from lbs_ibss_join_existing()
+ with RCU read lock held
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,76 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.com>
+From: Nicolai Stange <nstange@suse.de>
 
-commit 32ebffd3bbb4162da5ff88f9a35dd32d0a28ea70 upstream.
+commit c7bf1fb7ddca331780b9a733ae308737b39f1ad4 upstream.
 
-Current code implementing FALLOC_FL_COLLAPSE_RANGE and
-FALLOC_FL_INSERT_RANGE is prone to races with buffered writes and page
-faults. If buffered write or write via mmap manages to squeeze between
-filemap_write_and_wait_range() and truncate_pagecache() in the fallocate
-implementations, the written data is simply discarded by
-truncate_pagecache() although it should have been shifted.
+Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
+descriptor") introduced a bounds check on the number of supplied rates to
+lbs_ibss_join_existing().
 
-Fix the problem by moving filemap_write_and_wait_range() call inside
-i_mutex and i_mmap_sem. That way we are protected against races with
-both buffered writes and page faults.
+Unfortunately, it introduced a return path from within a RCU read side
+critical section without a corresponding rcu_read_unlock(). Fix this.
 
-Signed-off-by: Jan Kara <jack@suse.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-[bwh: Backported to 3.16: drop changes in ext4_insert_range()]
+Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss descriptor")
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -5453,21 +5453,7 @@ int ext4_collapse_range(struct inode *in
- 			return ret;
- 	}
- 
--	/*
--	 * Need to round down offset to be aligned with page size boundary
--	 * for page size > block size.
--	 */
--	ioffset = round_down(offset, PAGE_SIZE);
--
--	/* Write out all dirty pages */
--	ret = filemap_write_and_wait_range(inode->i_mapping, ioffset,
--					   LLONG_MAX);
--	if (ret)
--		return ret;
--
--	/* Take mutex lock */
- 	mutex_lock(&inode->i_mutex);
--
- 	/*
- 	 * There is no need to overlap collapse range with EOF, in which case
- 	 * it is effectively a truncate operation
-@@ -5492,6 +5478,27 @@ int ext4_collapse_range(struct inode *in
- 	 * page cache.
- 	 */
- 	down_write(&EXT4_I(inode)->i_mmap_sem);
-+	/*
-+	 * Need to round down offset to be aligned with page size boundary
-+	 * for page size > block size.
-+	 */
-+	ioffset = round_down(offset, PAGE_SIZE);
-+	/*
-+	 * Write tail of the last page before removed range since it will get
-+	 * removed from the page cache below.
-+	 */
-+	ret = filemap_write_and_wait_range(inode->i_mapping, ioffset, offset);
-+	if (ret)
-+		goto out_mmap;
-+	/*
-+	 * Write data that will be shifted to preserve them when discarding
-+	 * page cache below. We are also protected from pages becoming dirty
-+	 * by i_mmap_sem.
-+	 */
-+	ret = filemap_write_and_wait_range(inode->i_mapping, offset + len,
-+					   LLONG_MAX);
-+	if (ret)
-+		goto out_mmap;
- 	truncate_pagecache(inode, ioffset);
- 
- 	credits = ext4_writepage_trans_blocks(inode);
+ drivers/net/wireless/libertas/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/net/wireless/libertas/cfg.c
++++ b/drivers/net/wireless/libertas/cfg.c
+@@ -1855,6 +1855,7 @@ static int lbs_ibss_join_existing(struct
+ 		rates_max = rates_eid[1];
+ 		if (rates_max > MAX_RATES) {
+ 			lbs_deb_join("invalid rates");
++			rcu_read_unlock();
+ 			goto out;
+ 		}
+ 		rates = cmd.bss.rates;
 
