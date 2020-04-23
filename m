@@ -2,190 +2,299 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E0DC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAEAC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A8D20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034162075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mIsO+EWb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cBxzoZPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgDWTS5 (ORCPT
+        id S1728485AbgDWTTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:18:57 -0400
-Received: from mail-am6eur05on2070.outbound.protection.outlook.com ([40.107.22.70]:17286
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728283AbgDWTS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:18:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RnjzxrsH0eTkSQf53TXhZj0NLAlDR1o9/m9i7RYuVaqDWpgphx/okiZGHYdCRTEAz8ztRO1pR4MuMNapFUcywW4WqEd1clr3940o1EtDieSWZt08ZsgARMwLiUr4C3uCy1MZZpNlTycBHVEjtwWOaDydHtkyVxM5gB1cSlFnGaOXQJ4eac5dSWaEQ4XSfOA6to7y8kD7XMHLKt5A+ybHzaAf6kg1ixfBzM9rCC95m7lYRcJWwJV/wWzx4R+AQ1SY6eGKfLbi5SeluiD4LOBoGn3j5mJGalYhCzgZQTYUUFIB8fnDa9ibIgAm7HApw0IkbEouhlIp2qwPaTJR45qx2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uaBKJHoHBMehdMyQkscBsvT0z6PpnqLQ8mp8jMTRnQo=;
- b=NLhpetxYjSsVhUT3SsD1033JRaEB6ZCnoHaEnXv1yBgzmrhCOCc6Sk1746CnFQW7+WEBBss0D7rw96zyju7CMrffmm/G2D94sWzlf4Sxu+xnnmMKbtycNHZ3+vfWCyMvyUT/wBTRoLzxBIYIrZB88T3PFpL0WquThLMAW8MvafTLSZ253wajjJktWQFct/S2eli53HUEVTI7WD9T6YEDfrSZbJuJL2AkV3Ja6/361x/tEro7K938XB4AMCeSlEV6XiiVIWNSyk+XFBgTi+WHSFBVkS9NcbnohmFY/MIO9OteuHg9pSsnnMsRcwOM5YOKVwjdgms+svtcSkhOotuUbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uaBKJHoHBMehdMyQkscBsvT0z6PpnqLQ8mp8jMTRnQo=;
- b=mIsO+EWbhOs1G9JMNbafBvTcKVh4TW+PMNYJZif1STmxWCUN5EbTXMfJhZRIZi7/oqXAnIi41m0c3Ngl/bTEjbavLiK0bDqhX/iwUwfSZIXFy75LZqB3Mj04l6uyUHPc2vvpYX8U6rzziTFWhEcrMx7d+r9v3JPpkPLEK/m8SWE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB3309.eurprd05.prod.outlook.com (2603:10a6:802:21::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
- 2020 19:18:50 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
- 19:18:50 +0000
-Date:   Thu, 23 Apr 2020 16:18:46 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Megha Dey <megha.dey@linux.intel.com>, maz@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
-        baolu.lu@intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
-        KVM list <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200423191846.GE13640@mellanox.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
+        Thu, 23 Apr 2020 15:19:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbgDWTTw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 15:19:52 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A6BC09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:19:52 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d184so3460920pfd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MN/PVJrF+f7yjrExIzo0JqWz7rF2lNQe+cbBsQkY73M=;
+        b=cBxzoZPaGgmragWm3x/8f9CfLl0k/XfGiDr6IptktH8HXeVQUhS6Bh2yvFzEHxScMD
+         vxQhA+VSnKcsc9Lx6yT6e7Mdq3kh08U8EkWMOtaKEUbL5ipJ6S4vJysXK/2ouMPce6Ce
+         ZoiZldA11u5S5p25RLRA9Y2T1d51/RsKwE80o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MN/PVJrF+f7yjrExIzo0JqWz7rF2lNQe+cbBsQkY73M=;
+        b=nrXLJ1noKVNA/ok53xEQqs1s1YyrO9C+OvVJfjQ19a8SLleFOppD7fT6BuSytrArdJ
+         2TpSc5e1ohYVc2OwrWxPQrA6nUp2M7drmq4hhvir9zZY4zaHIKv/sfl6T1LG45o4ZoRU
+         AeYY0Xcm5jMxUf0clwBnKMElp/nhMAJP2LHHO67k+Cl68eSEM0IUYZPBlolQVyGwUIg4
+         ksmQZ1U6oI/5HbvnKAFG3WYbNxMOrhNbqjRMdDre3uM/r1SmEdr4CFRyEwmA+BCM8ltF
+         sKDjGQwIiNMtOXHNHIAPidUxNBgboQvpU7CD/03+1FAxxSUdmeLUwl9H4Z36j029ieQx
+         z8dA==
+X-Gm-Message-State: AGi0PuYCJdtdc5p45aKrzG49oixGwG2ZM9UaJ/P4Fa41h9g6e8t+Qhbd
+        B9r06IwasrnPWPi7fJgD6aozcg==
+X-Google-Smtp-Source: APiQypJ7yElN8rUZrEF3HZr91nOyHNG81OsNKQotj3X76rsbOEgXOj26nedzcfHVMBdDDSZ9WKQEjg==
+X-Received: by 2002:a63:4866:: with SMTP id x38mr5488115pgk.280.1587669592116;
+        Thu, 23 Apr 2020 12:19:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w9sm3464782pff.101.2020.04.23.12.19.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 12:19:51 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 12:19:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Balbir Singh <sblbir@amazon.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, tony.luck@intel.com, benh@kernel.crashing.org,
+        x86@kernel.org, dave.hansen@intel.com
+Subject: Re: [PATCH v4 5/6] Optionally flush L1D on context switch
+Message-ID: <202004231219.9D614F5@keescook>
+References: <20200423140125.7332-1-sblbir@amazon.com>
+ <20200423140125.7332-6-sblbir@amazon.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR15CA0055.namprd15.prod.outlook.com
- (2603:10b6:208:237::24) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR15CA0055.namprd15.prod.outlook.com (2603:10b6:208:237::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 19:18:50 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRhN0-00071R-DZ; Thu, 23 Apr 2020 16:18:46 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: eee5c3b7-e83a-46fd-be2c-08d7e7bb277b
-X-MS-TrafficTypeDiagnostic: VI1PR05MB3309:|VI1PR05MB3309:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB330934170AEF3540CEE1168BCFD30@VI1PR05MB3309.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03827AF76E
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(86362001)(8676002)(6916009)(7416002)(33656002)(26005)(66476007)(66556008)(66946007)(4326008)(52116002)(2616005)(53546011)(8936002)(2906002)(36756003)(9786002)(186003)(9746002)(1076003)(5660300002)(54906003)(498600001)(81156014)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DRJUcoFuCBFgCfrCO5q2Ki2ZTUxMPISz74taY4W741o8ROnEK0pvP03W/TnU/zh+s4AIjcobz6VakrGvjFiyCmguXrRHUzjIwOaAyW8zMXHe6nKywQX1uZQRdZq6XOVhwMJWF4SpIqaM/7i5A4jbQgCeRUZ3TVny9wAK4yepaWUOJkhVTzUU8pQI4keBPNAxWD2AMrEa8t/BsmGxDHp9/lzNTW9FdDHFM9UH79BAAuU8Rg7qqg47K3gH9W1x3GOLdMYEaCgcGC9CD2YeEqiDdWo4ZH72bFQfqmScFxSdl2QUsCjQWDNeEAvEGLiHxqldtqewaELozyci/TmTFJcfi05ASjZQFnX4fOevRHxYiRJLErFT3RoGGcvwzb7BWOnJrpobDOJgOqcdv7comHd1+y+kXLocVO/cPa1Z8SJjfAD1C8KJ15nZpUtoddIwwaNhlqK7ychNwHzE9XYr1kqtQ2LULoOvyDOb7+kJHxJkD22DVZMKRioFqRnLdVPsOk+N
-X-MS-Exchange-AntiSpam-MessageData: H8CyWhVAln0AcS9SXPO9hLTRQf1w0CjBJAOcHz2bXaCR7bBEpmox+q14Xu/FsZkycZg0Zc8WzqbFrmSpdGeiDa3hm318fW/iABjzXWa388kEoGCqRjc6hHwMifmlnXaXc9iOP85Qb1Kuovc7lRgPXQ==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eee5c3b7-e83a-46fd-be2c-08d7e7bb277b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 19:18:50.4605
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +0joJvFidrLPR0qraskthoRviuoFQt5NJreUlHFvlzGUfv5SJX0+kwg7k7JW0xKlJdgPmvQ2muhT5eIaDnGPeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3309
+In-Reply-To: <20200423140125.7332-6-sblbir@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 02:24:11PM -0700, Dan Williams wrote:
-> On Tue, Apr 21, 2020 at 4:55 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >
-> > On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
-> > > The actual code is independent of the stage 2 driver code submission that adds
-> > > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
-> > > support dedicated workqueue on a guest with no vIOMMU.
-> > >
-> > > A new device type "mdev" is introduced for the idxd driver. This allows the wq
-> > > to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
-> > > queue (wq) is enabled, an uuid generated by the user can be added to the wq
-> > > through the uuid sysfs attribute for the wq.  After the association, a mdev can
-> > > be created using this UUID. The mdev driver code will associate the uuid and
-> > > setup the mdev on the driver side. When the create operation is successful, the
-> > > uuid can be passed to qemu. When the guest boots up, it should discover a DSA
-> > > device when doing PCI discovery.
-> >
-> > I'm feeling really skeptical that adding all this PCI config space and
-> > MMIO BAR emulation to the kernel just to cram this into a VFIO
-> > interface is a good idea, that kind of stuff is much safer in
-> > userspace.
-> >
-> > Particularly since vfio is not really needed once a driver is using
-> > the PASID stuff. We already have general code for drivers to use to
-> > attach a PASID to a mm_struct - and using vfio while disabling all the
-> > DMA/iommu config really seems like an abuse.
-> >
-> > A /dev/idxd char dev that mmaps a bar page and links it to a PASID
-> > seems a lot simpler and saner kernel wise.
-> >
-> > > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
-> > > interrupts for the guest. This preserves MSIX for host usages and also allows a
-> > > significantly larger number of interrupt vectors for guest usage.
-> >
-> > I never did get a reply to my earlier remarks on the IMS patches.
-> >
-> > The concept of a device specific addr/data table format for MSI is not
-> > Intel specific. This should be general code. We have a device that can
-> > use this kind of kernel capability today.
+On Fri, Apr 24, 2020 at 12:01:24AM +1000, Balbir Singh wrote:
+> Implement a mechanism to selectively flush the L1D cache. The goal is to
+> allow tasks that are paranoid due to the recent snoop assisted data sampling
+> vulnerabilites, to flush their L1D on being switched out.  This protects
+> their data from being snooped or leaked via side channels after the task
+> has context switched out.
 > 
-> This has been my concern reviewing the implementation. IMS needs more
-> than one in-tree user to validate degrees of freedom in the api. I had
-> been missing a second "in-tree user" to validate the scope of the
-> flexibility that was needed.
+> There are two scenarios we might want to protect against, a task leaving
+> the CPU with data still in L1D (which is the main concern of this patch),
+> the second scenario is a malicious task coming in (not so well trusted)
+> for which we want to clean up the cache before it starts. Only the case
+> for the former is addressed.
+> 
+> A new thread_info flag TIF_SPEC_FLUSH_L1D is added to track tasks which
+> opt-into L1D flushing. cpu_tlbstate.last_user_mm_spec is used to convert
+> the TIF flags into mm state (per cpu via last_user_mm_spec) in
+> cond_mitigation(), which then used to do decide when to call flush_l1d().
+> 
+> Add prctl()'s to opt-in to the L1D cache on context switch out, the
+> existing mechanisms of tracking prev_mm via cpu_tlbstate is
+> reused to track state of the tasks and to flush the L1D cache.
+> The prctl interface is generic and can be ported over to other
+> architectures.
+> 
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Balbir Singh <sblbir@amazon.com>
 
-IMS is too narrowly specified.
+I'm not a huge fan of __weak (I like CONFIGs better), but that's no
+enough to NAK this. ;) Thanks for the prctl() change!
 
-All platforms that support MSI today can support IMS. It is simply a
-way for the platform to give the driver an addr/data pair that triggers
-an interrupt when a posted write is performed to that pair.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-This is different from the other interrupt setup flows which are
-tightly tied to the PCI layer. Here the driver should simply ask for
-interrupts.
+-Kees
 
-Ie the entire IMS API to the driver should be something very simple
-like:
+> ---
+>  arch/x86/include/asm/thread_info.h |  7 ++++-
+>  arch/x86/mm/tlb.c                  | 44 ++++++++++++++++++++++++++++--
+>  include/uapi/linux/prctl.h         |  4 +++
+>  kernel/sys.c                       | 20 ++++++++++++++
+>  4 files changed, 72 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+> index 8de8ceccb8bc..67de693d9ba1 100644
+> --- a/arch/x86/include/asm/thread_info.h
+> +++ b/arch/x86/include/asm/thread_info.h
+> @@ -84,7 +84,7 @@ struct thread_info {
+>  #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
+>  #define TIF_SECCOMP		8	/* secure computing */
+>  #define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
+> -#define TIF_SPEC_FORCE_UPDATE	10	/* Force speculation MSR update in context switch */
+> +#define TIF_SPEC_FLUSH_L1D	10	/* Flush L1D on mm switches (processes) */
+>  #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
+>  #define TIF_UPROBE		12	/* breakpointed or singlestepping */
+>  #define TIF_PATCH_PENDING	13	/* pending live patching update */
+> @@ -96,6 +96,7 @@ struct thread_info {
+>  #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
+>  #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
+>  #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
+> +#define TIF_SPEC_FORCE_UPDATE	23	/* Force speculation MSR update in context switch */
+>  #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
+>  #define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
+>  #define TIF_LAZY_MMU_UPDATES	27	/* task is updating the mmu lazily */
+> @@ -132,6 +133,7 @@ struct thread_info {
+>  #define _TIF_ADDR32		(1 << TIF_ADDR32)
+>  #define _TIF_X32		(1 << TIF_X32)
+>  #define _TIF_FSCHECK		(1 << TIF_FSCHECK)
+> +#define _TIF_SPEC_FLUSH_L1D	(1 << TIF_SPEC_FLUSH_L1D)
+>  
+>  /* Work to do before invoking the actual syscall. */
+>  #define _TIF_WORK_SYSCALL_ENTRY	\
+> @@ -235,6 +237,9 @@ static inline int arch_within_stack_frames(const void * const stack,
+>  			   current_thread_info()->status & TS_COMPAT)
+>  #endif
+>  
+> +extern int arch_prctl_l1d_flush_set(struct task_struct *tsk, unsigned long enable);
+> +extern int arch_prctl_l1d_flush_get(struct task_struct *tsk);
+> +
+>  extern void arch_task_cache_init(void);
+>  extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
+>  extern void arch_release_task_struct(struct task_struct *tsk);
+> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+> index da5c94286c7d..7778560760e6 100644
+> --- a/arch/x86/mm/tlb.c
+> +++ b/arch/x86/mm/tlb.c
+> @@ -13,6 +13,7 @@
+>  #include <asm/mmu_context.h>
+>  #include <asm/nospec-branch.h>
+>  #include <asm/cache.h>
+> +#include <asm/cacheflush.h>
+>  #include <asm/apic.h>
+>  #include <asm/uv/uv.h>
+>  
+> @@ -33,11 +34,12 @@
+>   */
+>  
+>  /*
+> - * Bits to mangle the TIF_SPEC_IB state into the mm pointer which is
+> + * Bits to mangle the TIF_SPEC_* state into the mm pointer which is
+>   * stored in cpu_tlb_state.last_user_mm_spec.
+>   */
+>  #define LAST_USER_MM_IBPB	0x1UL
+> -#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB)
+> +#define LAST_USER_MM_L1D_FLUSH	0x2UL
+> +#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB | LAST_USER_MM_L1D_FLUSH)
+>  
+>  /*
+>   * We get here when we do something requiring a TLB invalidation
+> @@ -152,6 +154,35 @@ void leave_mm(int cpu)
+>  }
+>  EXPORT_SYMBOL_GPL(leave_mm);
+>  
+> +static int enable_l1d_flush_for_task(struct task_struct *tsk)
+> +{
+> +	int ret = l1d_flush_init_once();
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	set_ti_thread_flag(&tsk->thread_info, TIF_SPEC_FLUSH_L1D);
+> +	return ret;
+> +}
+> +
+> +static int disable_l1d_flush_for_task(struct task_struct *tsk)
+> +{
+> +	clear_ti_thread_flag(&tsk->thread_info, TIF_SPEC_FLUSH_L1D);
+> +	return 0;
+> +}
+> +
+> +int arch_prctl_l1d_flush_get(struct task_struct *tsk)
+> +{
+> +	return test_ti_thread_flag(&tsk->thread_info, TIF_SPEC_FLUSH_L1D);
+> +}
+> +
+> +int arch_prctl_l1d_flush_set(struct task_struct *tsk, unsigned long enable)
+> +{
+> +	if (enable)
+> +		return enable_l1d_flush_for_task(tsk);
+> +	return disable_l1d_flush_for_task(tsk);
+> +}
+> +
+>  void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>  	       struct task_struct *tsk)
+>  {
+> @@ -268,6 +299,9 @@ static void cond_mitigation(struct task_struct *next)
+>  			indirect_branch_prediction_barrier();
+>  	}
+>  
+> +	if (prev_mm & LAST_USER_MM_L1D_FLUSH)
+> +		arch_l1d_flush(0); /* Just flush, don't populate the TLB */
+> +
+>  	this_cpu_write(cpu_tlbstate.last_user_mm_spec, next_mm);
+>  }
+>  
+> @@ -502,6 +536,12 @@ void initialize_tlbstate_and_flush(void)
+>  	write_cr3(build_cr3(mm->pgd, 0));
+>  
+>  	/* Reinitialize tlbstate. */
+> +
+> +	/*
+> +	 * Leave last_user_mm_spec at LAST_USER_MM_IBPB, we don't
+> +	 * want to set LAST_USER_MM_L1D_FLUSH and force a flush before
+> +	 * we've allocated the flush pages.
+> +	 */
+>  	this_cpu_write(cpu_tlbstate.last_user_mm_spec, LAST_USER_MM_IBPB);
+>  	this_cpu_write(cpu_tlbstate.loaded_mm_asid, 0);
+>  	this_cpu_write(cpu_tlbstate.next_asid, 1);
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 07b4f8131e36..42cb3038c81a 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -238,4 +238,8 @@ struct prctl_mm_map {
+>  #define PR_SET_IO_FLUSHER		57
+>  #define PR_GET_IO_FLUSHER		58
+>  
+> +/* Flush L1D on context switch (mm) */
+> +#define PR_SET_L1D_FLUSH		59
+> +#define PR_GET_L1D_FLUSH		60
+> +
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index d325f3ab624a..578aa8b6d87e 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2262,6 +2262,16 @@ int __weak arch_prctl_spec_ctrl_set(struct task_struct *t, unsigned long which,
+>  	return -EINVAL;
+>  }
+>  
+> +int __weak arch_prctl_l1d_flush_set(struct task_struct *tsk, unsigned long enable)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +int __weak arch_prctl_l1d_flush_get(struct task_struct *t)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+>  #define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE)
+>  
+>  SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+> @@ -2514,6 +2524,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>  
+>  		error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
+>  		break;
+> +	case PR_SET_L1D_FLUSH:
+> +		if (arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +		error = arch_prctl_l1d_flush_set(me, arg2);
+> +		break;
+> +	case PR_GET_L1D_FLUSH:
+> +		if (arg2 || arg3 || arg4 || arg5)
+> +			return -EINVAL;
+> +		error = arch_prctl_l1d_flush_get(me);
+> +		break;
+>  	default:
+>  		error = -EINVAL;
+>  		break;
+> -- 
+> 2.17.1
+> 
 
- struct message_irq
- {
-   uint64_t addr;
-   uint32_t data;
- };
-
- struct message_irq *request_message_irq(
-    struct device *, irq_handler_t handler, unsigned long flags,
-    const char *name, void *dev);
-
-And the plumbing underneath should setup the irq chips and so forth as
-required.
-
-Jason
+-- 
+Kees Cook
