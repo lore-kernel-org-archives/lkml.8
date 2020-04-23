@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CAEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D863C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 573EE20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8149F20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgDWXLa (ORCPT
+        id S1729255AbgDWXLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:30 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50156 "EHLO
+        Thu, 23 Apr 2020 19:11:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50232 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728530AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728558AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvb-0004n6-0u; Fri, 24 Apr 2020 00:06:43 +0100
+        id 1jRkvc-0004nR-Hv; Fri, 24 Apr 2020 00:06:44 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvW-00E6wt-PO; Fri, 24 Apr 2020 00:06:38 +0100
+        id 1jRkvY-00E6ye-H1; Fri, 24 Apr 2020 00:06:40 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Fri, 24 Apr 2020 00:06:54 +0100
-Message-ID: <lsq.1587683028.369919197@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Finn Thain" <fthain@telegraphics.com.au>,
+        "Stan Johnson" <userm57@yahoo.com>
+Date:   Fri, 24 Apr 2020 00:07:11 +0100
+Message-ID: <lsq.1587683028.584916903@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 187/245] ALSA: seq: Fix racy access for queue timer
- in proc read
+Subject: [PATCH 3.16 204/245] net/sonic: Use MMIO accessors
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,51 +56,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a upstream.
+commit e3885f576196ddfc670b3d53e745de96ffcb49ab upstream.
 
-snd_seq_info_timer_read() reads the information of the timer assigned
-for each queue, but it's done in a racy way which may lead to UAF as
-spotted by syzkaller.
+The driver accesses descriptor memory which is simultaneously accessed by
+the chip, so the compiler must not be allowed to re-order CPU accesses.
+sonic_buf_get() used 'volatile' to prevent that. sonic_buf_put() should
+have done so too but was overlooked.
 
-This patch applies the missing q->timer_mutex lock while accessing the
-timer object as well as a slight code change to adapt the standard
-coding style.
-
-Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200115203733.26530-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/seq/seq_timer.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/sound/core/seq/seq_timer.c
-+++ b/sound/core/seq/seq_timer.c
-@@ -484,15 +484,19 @@ void snd_seq_info_timer_read(struct snd_
- 		q = queueptr(idx);
- 		if (q == NULL)
- 			continue;
--		if ((tmr = q->timer) == NULL ||
--		    (ti = tmr->timeri) == NULL) {
--			queuefree(q);
--			continue;
--		}
-+		mutex_lock(&q->timer_mutex);
-+		tmr = q->timer;
-+		if (!tmr)
-+			goto unlock;
-+		ti = tmr->timeri;
-+		if (!ti)
-+			goto unlock;
- 		snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
- 		resolution = snd_timer_resolution(ti) * tmr->ticks;
- 		snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
- 		snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
-+unlock:
-+		mutex_unlock(&q->timer_mutex);
- 		queuefree(q);
-  	}
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -342,30 +342,30 @@ static void sonic_tx_timeout(struct net_
+    as far as we can tell. */
+ /* OpenBSD calls this "SWO".  I'd like to think that sonic_buf_put()
+    is a much better name. */
+-static inline void sonic_buf_put(void* base, int bitmode,
++static inline void sonic_buf_put(u16 *base, int bitmode,
+ 				 int offset, __u16 val)
+ {
+ 	if (bitmode)
+ #ifdef __BIG_ENDIAN
+-		((__u16 *) base + (offset*2))[1] = val;
++		__raw_writew(val, base + (offset * 2) + 1);
+ #else
+-		((__u16 *) base + (offset*2))[0] = val;
++		__raw_writew(val, base + (offset * 2) + 0);
+ #endif
+ 	else
+-	 	((__u16 *) base)[offset] = val;
++		__raw_writew(val, base + (offset * 1) + 0);
  }
+ 
+-static inline __u16 sonic_buf_get(void* base, int bitmode,
++static inline __u16 sonic_buf_get(u16 *base, int bitmode,
+ 				  int offset)
+ {
+ 	if (bitmode)
+ #ifdef __BIG_ENDIAN
+-		return ((volatile __u16 *) base + (offset*2))[1];
++		return __raw_readw(base + (offset * 2) + 1);
+ #else
+-		return ((volatile __u16 *) base + (offset*2))[0];
++		return __raw_readw(base + (offset * 2) + 0);
+ #endif
+ 	else
+-		return ((volatile __u16 *) base)[offset];
++		return __raw_readw(base + (offset * 1) + 0);
+ }
+ 
+ /* Inlines that you should actually use for reading/writing DMA buffers */
 
