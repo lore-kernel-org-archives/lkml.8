@@ -2,107 +2,73 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503A5C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9169C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A1F20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B651320728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbgDWRT2 (ORCPT
+        id S1729949AbgDWRUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:19:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:44566 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbgDWRT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:19:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FC5130E;
-        Thu, 23 Apr 2020 10:19:27 -0700 (PDT)
-Received: from [10.37.12.89] (unknown [10.37.12.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 713D33F68F;
-        Thu, 23 Apr 2020 10:19:05 -0700 (PDT)
-Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs
- in Energy Model
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-5-lukasz.luba@arm.com>
- <20200423151250.GB65632@linaro.org>
- <ff1c8cc5-f64d-6156-7d30-97b8426c6f99@arm.com>
- <ddf89887-4fa5-f2ca-d62a-9158f7d29db2@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <a826a4cd-7cbf-3d0f-352e-2978e64024d9@arm.com>
-Date:   Thu, 23 Apr 2020 18:19:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Apr 2020 13:20:03 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:53732 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729674AbgDWRUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:20:03 -0400
+Received: by mail-il1-f200.google.com with SMTP id 9so6306982ill.20
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:20:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=4mHKeAyAGDDsSPX7mqI92rd3yyYuGCPiX2VzFqgkLt0=;
+        b=AKyB0+xcpxYeWEGebamLZEKTqAzRWqCrHHR3D9KGUkNUDccoDaDT3Qmk+Zk5n6xk9B
+         FDhV6etJGoJZoqcTERam3+xfm42zHNKLwvA8aJ6ewEJM7WARJsqZPDw/JEfqDtf5n4uj
+         H+hZbBevm7PPQTj0TLlbtMn+H3YjQJexwzTwtOzXzItidVpi2ToQ2aK/If51LrebyuJk
+         8MzyehURv6pTisMGKq2ZRaSZH8//ewErjkBdzm1ZlHtPhaXbNCHFff0RBXcVOotikwJu
+         uSv+2ob9LPr5zkHy3N1q5jNiCsZt1DDQmz6MBJQsSycXtJLxasDeINXwQTpx/E2abjKZ
+         WPHw==
+X-Gm-Message-State: AGi0PubiYJgoc2mQj/YmZPG9uqkLOovi2t75RYze1XZFSdpwT2qF4343
+        lylN2DtOEcvbAGG5uNc7mcHIX3BN7uxbsNO2XBzvH/E0sFi6
+X-Google-Smtp-Source: APiQypL3/Yll+s/nR/T7aWG5H5r0GMTjZ+XDNfQFUpGPUOlIZiYuDIrlgjwlvi0UJ9oFMUvbGMpJcF1eGb6b/taoe3T0JYP7C2Ye
 MIME-Version: 1.0
-In-Reply-To: <ddf89887-4fa5-f2ca-d62a-9158f7d29db2@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:7302:: with SMTP id e2mr4356263ioh.98.1587662402406;
+ Thu, 23 Apr 2020 10:20:02 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 10:20:02 -0700
+In-Reply-To: <Pine.LNX.4.44L0.2004231235560.20147-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000084cea205a3f875bd@google.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
+From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-On 4/23/20 6:15 PM, Daniel Lezcano wrote:
-> On 23/04/2020 18:57, Lukasz Luba wrote:
->>
->>
->> On 4/23/20 4:12 PM, Daniel Lezcano wrote:
->>> On Fri, Apr 10, 2020 at 09:42:04AM +0100, Lukasz Luba wrote:
->>>> Add support for other devices that CPUs. The registration function
->>>> does not require a valid cpumask pointer and is ready to handle new
->>>> devices. Some of the internal structures has been reorganized in
->>>> order to
->>>> keep consistent view (like removing per_cpu pd pointers). To track usage
->>>> of the Energy Model structures, they are protected with kref.
->>>
->>> Why not add the energy model structure in the struct device directly?
->>
->> Do you mean this structure?
->> https://elixir.bootlin.com/linux/latest/source/include/linux/device.h#L537
->>
->> and to put something like:
->> struct device {
->> ...
->>      struct dev_pm_domain    *pm_domain;
->> #ifdef CONFIG_ENERGY_MODEL
->>      struct em_perf_domain    *em_pd;
->> #endif
->> ...
->> };
-> 
-> Yes, exactly.
-> 
+Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
 
-Thank you for the confirmation. I am going to start working on it.
+Tested on:
 
-BTW, thank you for all of the ACKs and reviews.
+commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1027bca0100000
 
-Regards,
-Lukasz
+Note: testing is done by a robot and is best-effort only.
