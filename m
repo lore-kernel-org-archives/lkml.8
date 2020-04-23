@@ -2,108 +2,123 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989DAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4D1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3232071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA516206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PUgNeRn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgDWEmg (ORCPT
+        id S1726188AbgDWEpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 00:42:36 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41873 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgDWEmg (ORCPT
+        Thu, 23 Apr 2020 00:45:16 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53852 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbgDWEpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 00:42:36 -0400
-X-Originating-IP: 50.39.163.217
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 4D0E620004;
-        Thu, 23 Apr 2020 04:42:28 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 21:42:26 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>, io-uring@vger.kernel.org,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] fs: openat2: Extend open_how to allow
- userspace-selected fds
-Message-ID: <20200423044226.GH161058@localhost>
-References: <cover.1587531463.git.josh@joshtriplett.org>
- <9873b8bd7d14ff8cd2a5782b434b39f076679eeb.1587531463.git.josh@joshtriplett.org>
- <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
- <CAJfpegt=xe-8AayW2i3AYrk3q-=Pp_A+Hctsk+=sXoMed5hFQA@mail.gmail.com>
- <20200423004807.GC161058@localhost>
- <CAJfpegtSYKsApx2Dc6VGmc5Fm4SsxtAWAP-Zs052umwK1CjJmQ@mail.gmail.com>
+        Thu, 23 Apr 2020 00:45:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587617115; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=vh9IJdgT9/A9ldq1KMRZu9hcfpyIPJCDLUN3HH4MeW4=; b=PUgNeRn8uvmPHfjF+n+CbOWR90qXedz0zpzQjOuYOGKEPK4t1F0nm9GsjYJbRQSKWYHKHmob
+ raoIQV0hnfL01hAccQY/xPbhHfIZh9qvz2atODEztG1BHmv29I2O3NpNLLd8IE3Uo6gANVce
+ BTgR1WskwCza5tyyPgngT79XV68=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea11d59.7f7df0fc6ea0-smtp-out-n05;
+ Thu, 23 Apr 2020 04:45:13 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 22C4CC43636; Thu, 23 Apr 2020 04:45:12 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.0.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4BDAC433CB;
+        Thu, 23 Apr 2020 04:45:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A4BDAC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v4 1/5] soc: qcom: rpmh-rsc: Corrently ignore
+ CPU_CLUSTER_PM notifications
+To:     Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rafael.j.wysocki@intel.com, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200422145408.v4.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <7e060977-611e-abf5-af76-1cc91660a8ba@codeaurora.org>
+Date:   Thu, 23 Apr 2020 10:15:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegtSYKsApx2Dc6VGmc5Fm4SsxtAWAP-Zs052umwK1CjJmQ@mail.gmail.com>
+In-Reply-To: <20200422145408.v4.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 06:24:14AM +0200, Miklos Szeredi wrote:
-> On Thu, Apr 23, 2020 at 2:48 AM Josh Triplett <josh@joshtriplett.org> wrote:
-> > On Wed, Apr 22, 2020 at 09:55:56AM +0200, Miklos Szeredi wrote:
-> > > On Wed, Apr 22, 2020 at 8:06 AM Michael Kerrisk (man-pages)
-> > > <mtk.manpages@gmail.com> wrote:
-> > > >
-> > > > [CC += linux-api]
-> > > >
-> > > > On Wed, 22 Apr 2020 at 07:20, Josh Triplett <josh@joshtriplett.org> wrote:
-> > > > >
-> > > > > Inspired by the X protocol's handling of XIDs, allow userspace to select
-> > > > > the file descriptor opened by openat2, so that it can use the resulting
-> > > > > file descriptor in subsequent system calls without waiting for the
-> > > > > response to openat2.
-> > > > >
-> > > > > In io_uring, this allows sequences like openat2/read/close without
-> > > > > waiting for the openat2 to complete. Multiple such sequences can
-> > > > > overlap, as long as each uses a distinct file descriptor.
-> > >
-> > > If this is primarily an io_uring feature, then why burden the normal
-> > > openat2 API with this?
-> >
-> > This feature was inspired by io_uring; it isn't exclusively of value
-> > with io_uring. (And io_uring doesn't normally change the semantics of
-> > syscalls.)
-> 
-> What's the use case of O_SPECIFIC_FD beyond io_uring?
+Hi,
 
-Avoiding a call to dup2 and close, if you need something as a specific
-file descriptor, such as when setting up to exec something, or when
-debugging a program.
+there is a typo in subject, Corrently to correctly.
+Other than this, fix seems good to me.
 
-I don't expect it to be as widely used as with io_uring, but I also
-don't want io_uring versions of syscalls to diverge from the underlying
-syscalls, and this would be a heavy divergence.
+Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
 
-> > > This would also allow Implementing a private fd table for io_uring.
-> > > I.e. add a flag interpreted by file ops (IORING_PRIVATE_FD), including
-> > > openat2 and freely use the private fd space without having to worry
-> > > about interactions with other parts of the system.
-> >
-> > I definitely don't want to add a special kind of file descriptor that
-> > doesn't work in normal syscalls taking file descriptors. A file
-> > descriptor allocated via O_SPECIFIC_FD is an entirely normal file
-> > descriptor, and works anywhere a file descriptor normally works.
-> 
-> What's the use case of allocating a file descriptor within io_uring
-> and using it outside of io_uring?
+Thanks,
+Maulik
 
-Calling a syscall not provided via io_uring. Calling a library that
-doesn't use io_uring. Passing the file descriptor via UNIX socket to
-another program. Passing the file descriptor via exec to another
-program. Userspace is modular, and file descriptors are widely used.
+On 4/23/2020 3:24 AM, Douglas Anderson wrote:
+> Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
+> CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
+> a default.  This means that we'll try to do a flush in those cases but
+> we won't necessarily be the last CPU down.  That's not so ideal since
+> our (lack of) locking assumes we're on the last CPU.
+>
+> Luckily this isn't as big a problem as you'd think since (at least on
+> the SoC I tested) we don't get these notifications except on full
+> system suspend.  ...and on full system suspend we get them on the last
+> CPU down.  That means that the worst problem we hit is flushing twice.
+> Still, it's good to make it correct.
+>
+> Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
+> Reported-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v4:
+> - ("...Corrently ignore CPU_CLUSTER_PM notifications") split out for v4.
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>   drivers/soc/qcom/rpmh-rsc.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index a9e15699f55f..3571a99fc839 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -806,6 +806,8 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
+>   	case CPU_PM_EXIT:
+>   		cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
+>   		goto exit;
+> +	default:
+> +		return NOTIFY_DONE;
+>   	}
+>   
+>   	ret = rpmh_rsc_ctrlr_is_busy(drv);
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
