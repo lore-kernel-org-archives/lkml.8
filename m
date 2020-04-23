@@ -4,177 +4,208 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43CDC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB507C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE692084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FD220781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgDWIk5 (ORCPT
+        id S1726847AbgDWIlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:40:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44290 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgDWIk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:40:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EA591AFDC;
-        Thu, 23 Apr 2020 08:40:53 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id ED3521E0E61; Thu, 23 Apr 2020 10:40:51 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 10:40:51 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V10 10/11] fs: Introduce DCACHE_DONTCACHE
-Message-ID: <20200423084051.GC3737@quack2.suse.cz>
-References: <20200422212102.3757660-1-ira.weiny@intel.com>
- <20200422212102.3757660-11-ira.weiny@intel.com>
+        Thu, 23 Apr 2020 04:41:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2840 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbgDWIlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 04:41:03 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4D94C6AD35676552E2D7;
+        Thu, 23 Apr 2020 16:41:00 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.154) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 23 Apr 2020
+ 16:40:54 +0800
+Subject: Re: [PATCH] xfrm: policy: Only use mark as policy lookup key
+To:     Xin Long <lucien.xin@gmail.com>
+References: <20200421143149.45108-1-yuehaibing@huawei.com>
+ <20200422093344.GY13121@gauss3.secunet.de>
+ <1650fd55-dd70-f687-88b6-d32a04245915@huawei.com>
+ <CADvbK_cEgKCEGRJU1v=FAdFNoh3TzD+cZLiKUtsMLHJh3JqOfg@mail.gmail.com>
+ <02a56d2c-8d27-f53a-d9e3-c25bd03677c8@huawei.com>
+ <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
+CC:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        davem <davem@davemloft.net>, <kuba@kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jamal Hadi Salim <hadi@cyberus.ca>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <b392a477-2ab5-1045-a18c-4df915f78001@huawei.com>
+Date:   Thu, 23 Apr 2020 16:40:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422212102.3757660-11-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CADvbK_cScGYRuZfJPoQ+oQKRUk-cr6nOAdTX9cU7MKtw0DUEaA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22-04-20 14:21:01, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On 2020/4/23 14:37, Xin Long wrote:
+> On Thu, Apr 23, 2020 at 10:26 AM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>
+>> On 2020/4/22 23:41, Xin Long wrote:
+>>> On Wed, Apr 22, 2020 at 8:18 PM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>>>
+>>>> On 2020/4/22 17:33, Steffen Klassert wrote:
+>>>>> On Tue, Apr 21, 2020 at 10:31:49PM +0800, YueHaibing wrote:
+>>>>>> While update xfrm policy as follow:
+>>>>>>
+>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>  priority 1 mark 0 mask 0x10
+>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>  priority 2 mark 0 mask 0x00
+>>>>>> ip -6 xfrm policy update src fd00::1/128 dst fd00::2/128 dir in \
+>>>>>>  priority 2 mark 0 mask 0x10
+>>>>>>
+>>>>>> We get this warning:
+>>>>>>
+>>>>>> WARNING: CPU: 0 PID: 4808 at net/xfrm/xfrm_policy.c:1548
+>>>>>> Kernel panic - not syncing: panic_on_warn set ...
+>>>>>> CPU: 0 PID: 4808 Comm: ip Not tainted 5.7.0-rc1+ #151
+>>>>>> Call Trace:
+>>>>>> RIP: 0010:xfrm_policy_insert_list+0x153/0x1e0
+>>>>>>  xfrm_policy_inexact_insert+0x70/0x330
+>>>>>>  xfrm_policy_insert+0x1df/0x250
+>>>>>>  xfrm_add_policy+0xcc/0x190 [xfrm_user]
+>>>>>>  xfrm_user_rcv_msg+0x1d1/0x1f0 [xfrm_user]
+>>>>>>  netlink_rcv_skb+0x4c/0x120
+>>>>>>  xfrm_netlink_rcv+0x32/0x40 [xfrm_user]
+>>>>>>  netlink_unicast+0x1b3/0x270
+>>>>>>  netlink_sendmsg+0x350/0x470
+>>>>>>  sock_sendmsg+0x4f/0x60
+>>>>>>
+>>>>>> Policy C and policy A has the same mark.v and mark.m, so policy A is
+>>>>>> matched in first round lookup while updating C. However policy C and
+>>>>>> policy B has same mark and priority, which also leads to matched. So
+>>>>>> the WARN_ON is triggered.
+>>>>>>
+>>>>>> xfrm policy lookup should only be matched when the found policy has the
+>>>>>> same lookup keys (mark.v & mark.m) no matter priority.
+>>>>>>
+>>>>>> Fixes: 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and different priorities")
+>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>> ---
+>>>>>>  net/xfrm/xfrm_policy.c | 16 +++++-----------
+>>>>>>  1 file changed, 5 insertions(+), 11 deletions(-)
+>>>>>>
+>>>>>> diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+>>>>>> index 297b2fd..67d0469 100644
+>>>>>> --- a/net/xfrm/xfrm_policy.c
+>>>>>> +++ b/net/xfrm/xfrm_policy.c
+>>>>>> @@ -1436,13 +1436,7 @@ static void xfrm_policy_requeue(struct xfrm_policy *old,
+>>>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>>>>>                                 struct xfrm_policy *pol)
+>>>>>>  {
+>>>>>> -    u32 mark = policy->mark.v & policy->mark.m;
+>>>>>> -
+>>>>>> -    if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>>>>>> -            return true;
+>>>>>> -
+>>>>>> -    if ((mark & pol->mark.m) == pol->mark.v &&
+>>>>>> -        policy->priority == pol->priority)
+>>>>>
+>>>>> If you remove the priority check, you can't insert policies with matching
+>>>>> mark and different priorities anymore. This brings us back the old bug.
+>>>>
+>>>> Yes, this is true.
+>>>>
+>>>>>
+>>>>> I plan to apply the patch from Xin Long, this seems to be the right way
+>>>>> to address this problem.
+>>>>
+>>>> That still brings an issue, update like this:
+>>>>
+>>>> policy A (mark.v = 1, mark.m = 0, priority = 1)
+>>>> policy B (mark.v = 1, mark.m = 0, priority = 1)
+>>>>
+>>>> A and B will all in the list.
+>>> I think this is another issue even before:
+>>> 7cb8a93968e3 ("xfrm: Allow inserting policies with matching mark and
+>>> different priorities")
+>>>
+>>>>
+>>>> So should do this:
+>>>>
+>>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>>>                                    struct xfrm_policy *pol)
+>>>>  {
+>>>> -       u32 mark = policy->mark.v & policy->mark.m;
+>>>> -
+>>>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>>>> -               return true;
+>>>> -
+>>>> -       if ((mark & pol->mark.m) == pol->mark.v &&
+>>>> +       if ((policy->mark.v & policy->mark.m) == (pol->mark.v & pol->mark.m) &&
+>>>>             policy->priority == pol->priority)
+>>>>                 return true;
+>>> "mark.v & mark.m" looks weird to me, it should be:
+>>> ((something & mark.m) == mark.v)
+>>>
+>>> So why should we just do this here?:
+>>> (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m &&
+>>>  policy->priority == pol->priority)
+>>
+>>
+>> This leads to this issue:
+>>
+>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000005
+>>  ip -6 xfrm policy add src fd00::1/128 dst fd00::2/128 dir in mark 0x00000001 mask 0x00000003
+>>
+>> the two policies will be in list, which should not be allowed.
+> I think these are two different policies.
+> For instance:
+> mark = 0x1234567b will match the 1st one only.
+> mark = 0x1234567d will match the 2st one only
 > 
-> DCACHE_DONTCACHE indicates a dentry should not be cached on final
-> dput().
-> 
-> Also add a helper function to mark DCACHE_DONTCACHE on all dentries
-> pointing to a specific inode when that inode is being set I_DONTCACHE.
-> 
-> This facilitates dropping dentry references to inodes sooner which
-> require eviction to swap S_DAX mode.
-> 
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> So these should have been allowed, no?
 
-The patch looks good to me. You can add:
+If mark = 0x12345671, it may match different policy depends on the order of inserting,
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
+tmpl src 192.168.2.10 dst 192.168.1.20 proto esp mode tunnel mark 0x00000001 mask 0x00000005
 
-								Honza
+ip xfrm policy update src 172.16.2.0/24 dst 172.16.1.0/24 dir in ptype main \
+tmpl src 192.168.2.100 dst 192.168.1.100 proto esp mode beet mark 0x00000001 mask 0x00000003
+
+In fact, your case should use different priority to match.
 
 > 
-> ---
-> Changes from V9:
-> 	modify i_state under i_lock
-> 	Update comment
-> 		"Purge from memory on final dput()"
+> I'm actually confused now.
+> does the mask work against its own value, or the other value?
+> as 'A == (mark.v&mark.m)' and '(A & mark.m) == mark.v' are different things.
 > 
-> Changes from V8:
-> 	Update commit message
-> 	Use mark_inode_dontcache in XFS
-> 	Fix locking...  can't use rcu here.
-> 	Change name to mark_inode_dontcache
-> ---
->  fs/dcache.c            |  4 ++++
->  fs/inode.c             | 15 +++++++++++++++
->  fs/xfs/xfs_icache.c    |  2 +-
->  include/linux/dcache.h |  2 ++
->  include/linux/fs.h     |  1 +
->  5 files changed, 23 insertions(+), 1 deletion(-)
+> This can date back to Jamal's xfrm by MARK:
 > 
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index b280e07e162b..0030fabab2c4 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -647,6 +647,10 @@ static inline bool retain_dentry(struct dentry *dentry)
->  		if (dentry->d_op->d_delete(dentry))
->  			return false;
->  	}
-> +
-> +	if (unlikely(dentry->d_flags & DCACHE_DONTCACHE))
-> +		return false;
-> +
->  	/* retain; LRU fodder */
->  	dentry->d_lockref.count--;
->  	if (unlikely(!(dentry->d_flags & DCACHE_LRU_LIST)))
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 93d9252a00ab..316355433797 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -1526,6 +1526,21 @@ int generic_delete_inode(struct inode *inode)
->  }
->  EXPORT_SYMBOL(generic_delete_inode);
->  
-> +void mark_inode_dontcache(struct inode *inode)
-> +{
-> +	struct dentry *de;
-> +
-> +	spin_lock(&inode->i_lock);
-> +	hlist_for_each_entry(de, &inode->i_dentry, d_u.d_alias) {
-> +		spin_lock(&de->d_lock);
-> +		de->d_flags |= DCACHE_DONTCACHE;
-> +		spin_unlock(&de->d_lock);
-> +	}
-> +	inode->i_state |= I_DONTCACHE;
-> +	spin_unlock(&inode->i_lock);
-> +}
-> +EXPORT_SYMBOL(mark_inode_dontcache);
-> +
->  /*
->   * Called when we're dropping the last reference
->   * to an inode.
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index de76f7f60695..3c8f44477804 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -559,7 +559,7 @@ xfs_iget_cache_miss(
->  	 */
->  	iflags = XFS_INEW;
->  	if (flags & XFS_IGET_DONTCACHE)
-> -		VFS_I(ip)->i_state |= I_DONTCACHE;
-> +		mark_inode_dontcache(VFS_I(ip));
->  	ip->i_udquot = NULL;
->  	ip->i_gdquot = NULL;
->  	ip->i_pdquot = NULL;
-> diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-> index c1488cc84fd9..a81f0c3cf352 100644
-> --- a/include/linux/dcache.h
-> +++ b/include/linux/dcache.h
-> @@ -177,6 +177,8 @@ struct dentry_operations {
->  
->  #define DCACHE_REFERENCED		0x00000040 /* Recently used, don't discard. */
->  
-> +#define DCACHE_DONTCACHE		0x00000080 /* Purge from memory on final dput() */
-> +
->  #define DCACHE_CANT_MOUNT		0x00000100
->  #define DCACHE_GENOCIDE			0x00000200
->  #define DCACHE_SHRINK_LIST		0x00000400
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 44bd45af760f..064168ec2e0b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3055,6 +3055,7 @@ static inline int generic_drop_inode(struct inode *inode)
->  	return !inode->i_nlink || inode_unhashed(inode) ||
->  		(inode->i_state & I_DONTCACHE);
->  }
-> +extern void mark_inode_dontcache(struct inode *inode);
->  
->  extern struct inode *ilookup5_nowait(struct super_block *sb,
->  		unsigned long hashval, int (*test)(struct inode *, void *),
-> -- 
-> 2.25.1
+> https://lwn.net/Articles/375829/
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> where it does 'm->v & m->m' in xfrm_mark_get() and
+> 'policy->mark.v & policy->mark.m' in xfrm_policy_insert() while
+> it does '(A & pol->mark.m) == pol->mark.v' in other places.
+> 
+> Now I'm thinking 'm->v & m->m' is meaningless, by which if we get
+> a value != m->v, it means this mark can never be matched by any.
+> 
+>   policy A (mark.v = 1, mark.m = 0, priority = 1)
+>   policy B (mark.v = 1, mark.m = 0, priority = 1)
+> 
+> So probably we should avoid this case by check m->v == (m->v & m->m)
+> when adding a new policy.
+> 
+> wdyt?
+> 
+
