@@ -2,112 +2,94 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D308FC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8682C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEDE5206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EE8ROhQr"
+	by mail.kernel.org (Postfix) with ESMTP id BD9D52087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587652019;
+	bh=b+ZeOpfMOAl7P9tF//IQYcI2CeTcgmG6tUypxiwjAek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jaSDuB4HuevpeMmwvnIYhJO81rPGdZlULwrGOQHA7CUmr8J7566qrtXC2hQbJ8lWM
+	 Zpzf7SUiagQwNO6bbi9Ebn0n+xDVde98YPLpy3UyjO02DMVecC2oIzveiY8O5pWWX5
+	 r6ze9DqI9BtLGrEse5UZjdQMHwbCFxNXRi2XBUjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgDWO0f (ORCPT
+        id S1728257AbgDWO07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726068AbgDWO0f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:26:35 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F8C2C08E934;
-        Thu, 23 Apr 2020 07:26:34 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d184so3025337pfd.4;
-        Thu, 23 Apr 2020 07:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aneiRCA50vAzubtGKmjmJT4bwgD2W0Rx0hNrzKdvMIM=;
-        b=EE8ROhQrsKp+SKKeVgB/oHc2SdkZpZcZfqh9PqeRwgXpzp4CEgiXyQWVYLo1Hany6G
-         zhLRXT2RT3nDcfC+Q7xFV5TaEAhThEOILMB+GC7NoOpOd16X1J9vkMtHJdyJjNJCbegA
-         XjfCllKqA1U0XCdDPvSXrKpZPE5RDXkz3wSk2uuhOk2iX7V/DF/f6qY8EB1OJwAsPtfQ
-         VYrCc7D3ZiyUSXPf15Ed6TtttZkeh5fKR99xvHDGd5Ii9WUYk/S1gRPH8LhlA3IrJ006
-         VJXSnUFUj+I4EHCwXWGbDsxmR7qtBIUJnLyx4uOyJTDocmmeCkOnkqgzQH5HahsEeJb5
-         e+Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aneiRCA50vAzubtGKmjmJT4bwgD2W0Rx0hNrzKdvMIM=;
-        b=tN0BG0U9b2PcireFvkPiIFrsyPVw4A4uW89/pUdMPiLm66ysaggtJRaFSN4PgJGYWA
-         rzuUN0wtbvrKhXgLo6Fx7/0s2dVcc4pEcbKHI+CjGQ8l4Iy0rk18uyHpLpapDTXw5STl
-         RlsTzV7eML/f4vNKgpDUFd28DXB1L9FAMOZ9sR+jY/FFnH5F0pyD0TrNx0+SPuCNV2tL
-         ekGVZTILbUtxZjUqKXs+5pTmJ2idw1lw/dTm6Hzl6Kj8Z2WO1nx6Y4V0/U26miy7eSKk
-         T2EWJBMxaHxlYC53dRmFHAF5F+XOWq3TqsJbD2in+3pX8zRj7oE0/hCO7mJgtzcfr6eL
-         gGXw==
-X-Gm-Message-State: AGi0PuYjG4Dwvczx+8N3i1oowPBgj1Auf1BCTPIgFAG0Wvj8mlA2A7d5
-        CkCYsmqpw7Z1fwuqw+3JU0U=
-X-Google-Smtp-Source: APiQypK/lVoX0fg8UENl82mCz0W+dZgsUBwikvkecQKoTS04dwfuTust7mIKAAoyNfsXzkBnUI9Rsw==
-X-Received: by 2002:a63:48a:: with SMTP id 132mr4255931pge.380.1587651993798;
-        Thu, 23 Apr 2020 07:26:33 -0700 (PDT)
-Received: from localhost (176.122.158.71.16clouds.com. [176.122.158.71])
-        by smtp.gmail.com with ESMTPSA id a19sm2846848pfd.91.2020.04.23.07.26.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 07:26:33 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     gregkh@linuxfoundation.org, tglx@linutronix.de,
-        FlorianSchandinat@gmx.de, b.zolnierkie@samsung.com,
-        ralf@linux-mips.org, tsbogend@alpha.franken.de,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v2] console: console: Complete exception handling in newport_probe()
-Date:   Thu, 23 Apr 2020 22:26:27 +0800
-Message-Id: <20200423142627.1820-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 23 Apr 2020 10:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbgDWO06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:26:58 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C034D206ED;
+        Thu, 23 Apr 2020 14:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587652018;
+        bh=b+ZeOpfMOAl7P9tF//IQYcI2CeTcgmG6tUypxiwjAek=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EWlU3yIm0IvfzZmy5wl4C4wg5LOpBxIgb5et9xJ1j/keq315zPSg0qzR9jrup5VwF
+         zlUHwacNkctwRltWVpBErLAT34eFttfvRhVBxc8gQaEzMRh4Q9v45KDWIH31zsdSaj
+         uf3EHZrGbIrPZLrhWUY35Tg4vDIsIwaPLP8li/xY=
+Date:   Thu, 23 Apr 2020 15:26:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: linux-next: build failure after merge of the sound-asoc tree
+Message-ID: <20200423142655.GK4808@sirena.org.uk>
+References: <20200423155539.4492a0cc@canb.auug.org.au>
+ <20200423113041.GI4808@sirena.org.uk>
+ <00f801fc-cf1c-8ea0-3d2a-0c8e902dd1f0@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pWJxWxNlJUNgDlXi"
+Content-Disposition: inline
+In-Reply-To: <00f801fc-cf1c-8ea0-3d2a-0c8e902dd1f0@linux.intel.com>
+X-Cookie: This unit... must... survive.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A call of the function ¡°do_take_over_console¡± can fail here.
-The corresponding system resources were not released then.
-Thus add a call of the function ¡°iounmap¡± together with the check
-of a failure predicate.
 
-Fixes: e84de0c6190503 ("MIPS: GIO bus support for SGI IP22/28")
-CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v1 -> v2:
-	- modify the commit comments by Markus'suggestion.
+--pWJxWxNlJUNgDlXi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- drivers/video/console/newport_con.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Thu, Apr 23, 2020 at 07:26:32AM -0500, Pierre-Louis Bossart wrote:
 
-diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
-index 00dddf6e08b0..6bfc8e3ffd4a 100644
---- a/drivers/video/console/newport_con.c
-+++ b/drivers/video/console/newport_con.c
-@@ -720,6 +720,9 @@ static int newport_probe(struct gio_device *dev,
- 	console_lock();
- 	err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
- 	console_unlock();
-+
-+	if (err)
-+		iounmap((void *)npregs);
- 	return err;
- }
- 
--- 
-2.25.0
+> We have a fix for this, I'll send it later today. There were still unmet
+> dependencies and inconsistent use of select/depends.
 
+I've already done a fix for the immediate issue which I'm about to send
+out so that it's in before Stephen starts again tomorrow but obviously
+better fixes on top of that would be good.
+
+--pWJxWxNlJUNgDlXi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6hpa4ACgkQJNaLcl1U
+h9DLswf+NUHW3HB0K3q2NQmq754SLSx5hReWipvqZ8n88+WdK8d8SUx80Plz/pJ2
+jhJAZNHxk+4BdT7LFtz10jOe2AqAXkLYBNYk2nBzfiaD8XgjZG3ED09fQo7oH4/O
+3RjQcjF8uIVITM3/oQN4G4u2V4kj3+YbL3MajhAQDx/RIJeMVCAfEIKbDj7QgCNY
+tqT2tlNgo86HXgJuRqwAbUCa8mpyVYB0jGDrekev2Jaj4Uz3b1aFliy8kNuGa4Bu
+Zt9sYu3c8cVwpYPgByfZmHZ+B9jpX+D2t6bOFMExkUcgBKLJvY4AB6yQgMSgfBG4
+V9UJqIJ7uYLwO4T8O7fTt+3989N1OQ==
+=RjQ7
+-----END PGP SIGNATURE-----
+
+--pWJxWxNlJUNgDlXi--
