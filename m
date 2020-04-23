@@ -2,73 +2,152 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02ECC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82318C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D23D20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587675019;
-	bh=AdfVc9jHOKmzcM5ts3Z7u9YEIcRlZk2jm2fkwZjfBRM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=leUz99PjB6qKZRn86/GL3xgOygpd+TMcWujI3jMO/nbE/lta7BrGOWWwyPgtauRfo
-	 MG3OJTK5ejv+kfs1sI2mynx5qeYdDVOCAzrsuKByv47fBPJmICgsRSqQRQDZoI8lsM
-	 KY2rVoJgiYR3TBOmZq9JqKGxaqXgUAX1pK4QWI10=
+	by mail.kernel.org (Postfix) with ESMTP id 6B4702073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgDWUuT (ORCPT
+        id S1726904AbgDWUvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgDWUuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:50:18 -0400
-Subject: Re: [GIT PULL] PCI fixes for v5.7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587675018;
-        bh=AdfVc9jHOKmzcM5ts3Z7u9YEIcRlZk2jm2fkwZjfBRM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yacrZg405u+zMEabzpdcWAhl0TDtrwI19yCx6U7UWoSlX3rEktRYgh06HwY0MC1F5
-         Su92xqqQJ3jqe6FOnD76S2KVktWV0d7voccN1JlXWzW4B1Y4G4wnp/Ds5KoG9wG8Pw
-         pPspbjHOX3gmZlpHblPQGUoTdyCbcL3WSkV70uto=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200423173955.GA193359@google.com>
-References: <20200423173955.GA193359@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200423173955.GA193359@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
- tags/pci-v5.7-fixes-1
-X-PR-Tracked-Commit-Id: ef46738cc47adb6f70d548c03bd44508f18e14a5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 25b1fa8dfb3fe2578c04a077953b13c534f30902
-Message-Id: <158767501830.2530.11160481403245965059.pr-tracker-bot@kernel.org>
-Date:   Thu, 23 Apr 2020 20:50:18 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        =?iso-8859-1?Q?Lu=EDs?= Mendes <luis.p.mendes@gmail.com>,
-        Todd Poynor <toddpoynor@google.com>
+        Thu, 23 Apr 2020 16:51:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39758 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726081AbgDWUvu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 16:51:50 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NKWDaj103561
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 16:51:50 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrc66r6t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 16:51:49 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 23 Apr 2020 21:51:10 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 Apr 2020 21:51:07 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NKpiSY61276258
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 20:51:44 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 314FCA4040;
+        Thu, 23 Apr 2020 20:51:44 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65B82A4053;
+        Thu, 23 Apr 2020 20:51:43 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.178.107])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 20:51:43 +0000 (GMT)
+Subject: Re: [PATCH] ima: Allow imasig requirement to be satisfied by EVM
+ portable signatures
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
+Date:   Thu, 23 Apr 2020 16:51:42 -0400
+In-Reply-To: <20200421092418.25151-1-roberto.sassu@huawei.com>
+References: <20200421092418.25151-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042320-0008-0000-0000-00000376466D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042320-0009-0000-0000-00004A9814D5
+Message-Id: <1587675102.5610.66.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_15:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 lowpriorityscore=0 spamscore=0 impostorscore=0
+ clxscore=1015 adultscore=0 phishscore=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 23 Apr 2020 12:39:55 -0500:
+On Tue, 2020-04-21 at 11:24 +0200, Roberto Sassu wrote:
+> System administrators can require that all accessed files have a signature
+> by specifying appraise_type=imasig in a policy rule.
+> 
+> Currently, only IMA signatures satisfy this requirement. However, also EVM
+> portable signatures can satisfy it. Metadata, including security.ima, are
+> signed and cannot change.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.7-fixes-1
+Please expand this paragraph with a short comparison of the security
+guarantees provided by EVM immutable, portable signatures versus ima-
+sig.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/25b1fa8dfb3fe2578c04a077953b13c534f30902
+> 
+> This patch helps in the scenarios where system administrators want to
+> enforce this restriction but only EVM portable signatures are available.
 
-Thank you!
+Yes, I agree it "helps", but we still need to address the ability of
+setting/removing security.ima, which isn't possible with an IMA
+signature.  This sounds like we need to define an immutable file hash.
+ What do you think?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> The patch makes the following changes:
+> 
+> file xattr types:
+> security.ima: IMA_XATTR_DIGEST/IMA_XATTR_DIGEST_NG
+> security.evm: EVM_XATTR_PORTABLE_DIGSIG
+> 
+> execve(), mmap(), open() behavior (with appraise_type=imasig):
+> before: denied (file without IMA signature, imasig requirement not met)
+> after: allowed (file with EVM portable signature, imasig requirement met)
+> 
+> open(O_WRONLY) behavior (without appraise_type=imasig):
+> before: allowed (file without IMA signature, not immutable)
+> after: denied (file with EVM portable signature, immutable)
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> ---
+>  security/integrity/ima/ima_appraise.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+> index a9649b04b9f1..69a6a958f811 100644
+> --- a/security/integrity/ima/ima_appraise.c
+> +++ b/security/integrity/ima/ima_appraise.c
+> @@ -219,12 +219,16 @@ static int xattr_verify(enum ima_hooks func, struct integrity_iint_cache *iint,
+>  		hash_start = 1;
+>  		/* fall through */
+>  	case IMA_XATTR_DIGEST:
+> -		if (iint->flags & IMA_DIGSIG_REQUIRED) {
+> -			*cause = "IMA-signature-required";
+> -			*status = INTEGRITY_FAIL;
+> -			break;
+> +		if (*status != INTEGRITY_PASS_IMMUTABLE) {
+> +			if (iint->flags & IMA_DIGSIG_REQUIRED) {
+> +				*cause = "IMA-signature-required";
+> +				*status = INTEGRITY_FAIL;
+> +				break;
+> +			}
+> +			clear_bit(IMA_DIGSIG, &iint->atomic_flags);
+> +		} else {
+> +			set_bit(IMA_DIGSIG, &iint->atomic_flags);
+>  		}
+> -		clear_bit(IMA_DIGSIG, &iint->atomic_flags);
+>  		if (xattr_len - sizeof(xattr_value->type) - hash_start >=
+>  				iint->ima_hash->length)
+>  			/*
+
+Nice!
+
+Mimi
+
