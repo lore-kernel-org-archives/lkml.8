@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46864C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EFCC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31AB820784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7502077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbgDWXOX (ORCPT
+        id S1728551AbgDWXOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:14:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49904 "EHLO
+        Thu, 23 Apr 2020 19:14:22 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49870 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728458AbgDWXGt (ORCPT
+        by vger.kernel.org with ESMTP id S1728054AbgDWXGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:49 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-0004i7-8S; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvT-0004hn-D4; Fri, 24 Apr 2020 00:06:35 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-00E6pd-HW; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvS-00E6rL-Gh; Fri, 24 Apr 2020 00:06:34 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Shuah Khan" <skhan@linuxfoundation.org>,
-        "Suwan Kim" <suwan.kim027@gmail.com>,
-        "Marek Marczykowski-=?UTF-8?Q?G=C3=B3recki?=" 
-        <marmarek@invisiblethingslab.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Fri, 24 Apr 2020 00:05:59 +0100
-Message-ID: <lsq.1587683028.873025428@decadent.org.uk>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "kbuild test robot" <lkp@intel.com>
+Date:   Fri, 24 Apr 2020 00:06:20 +0100
+Message-ID: <lsq.1587683028.338927194@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 132/245] usbip: Fix error path of vhci_recv_ret_submit()
+Subject: [PATCH 3.16 153/245] tracing: Have stack tracer compile when
+ MCOUNT_INSN_SIZE is not defined
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,66 +56,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Suwan Kim <suwan.kim027@gmail.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-commit aabb5b833872524eaf28f52187e5987984982264 upstream.
+commit b8299d362d0837ae39e87e9019ebe6b736e0f035 upstream.
 
-If a transaction error happens in vhci_recv_ret_submit(), event
-handler closes connection and changes port status to kick hub_event.
-Then hub tries to flush the endpoint URBs, but that causes infinite
-loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
-"vhci_priv" in vhci_urb_dequeue() was already released by
-vhci_recv_ret_submit() before a transmission error occurred. Thus,
-vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
-continuously calls vhci_urb_dequeue().
+On some archs with some configurations, MCOUNT_INSN_SIZE is not defined, and
+this makes the stack tracer fail to compile. Just define it to zero in this
+case.
 
-The root cause of this issue is that vhci_recv_ret_submit()
-terminates early without giving back URB when transaction error
-occurs in vhci_recv_ret_submit(). That causes the error URB to still
-be linked at endpoint list without “vhci_priv".
+Link: https://lore.kernel.org/r/202001020219.zvE3vsty%lkp@intel.com
 
-So, in the case of transaction error in vhci_recv_ret_submit(),
-unlink URB from the endpoint, insert proper error code in
-urb->status and give back URB.
-
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Tested-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20191213023055.19933-3-suwan.kim027@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust filename]
+Fixes: 4df297129f622 ("tracing: Remove most or all of stack tracer stack size from stack_max_size")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/usbip/vhci_rx.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ kernel/trace/trace_stack.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/staging/usbip/vhci_rx.c
-+++ b/drivers/staging/usbip/vhci_rx.c
-@@ -88,16 +88,21 @@ static void vhci_recv_ret_submit(struct
- 	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -182,6 +182,11 @@ check_stack(unsigned long ip, unsigned l
+ 	local_irq_restore(flags);
+ }
  
- 	/* recv transfer buffer */
--	if (usbip_recv_xbuff(ud, urb) < 0)
--		return;
-+	if (usbip_recv_xbuff(ud, urb) < 0) {
-+		urb->status = -EPROTO;
-+		goto error;
-+	}
- 
- 	/* recv iso_packet_descriptor */
--	if (usbip_recv_iso(ud, urb) < 0)
--		return;
-+	if (usbip_recv_iso(ud, urb) < 0) {
-+		urb->status = -EPROTO;
-+		goto error;
-+	}
- 
- 	/* restore the padding in iso packets */
- 	usbip_pad_iso(ud, urb);
- 
-+error:
- 	if (usbip_dbg_flag_vhci_rx)
- 		usbip_dump_urb(urb);
- 
++/* Some archs may not define MCOUNT_INSN_SIZE */
++#ifndef MCOUNT_INSN_SIZE
++# define MCOUNT_INSN_SIZE 0
++#endif
++
+ static void
+ stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		 struct ftrace_ops *op, struct pt_regs *pt_regs)
 
