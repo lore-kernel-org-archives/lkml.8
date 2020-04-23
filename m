@@ -2,72 +2,103 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6B0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D55AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E402F208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328AA208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgDWHES (ORCPT
+        id S1726806AbgDWHFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:04:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2838 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726679AbgDWHEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:04:16 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5D3BC9A1978D68F7FC4D;
-        Thu, 23 Apr 2020 15:04:11 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 23 Apr 2020 15:04:03 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <bfields@fieldses.org>,
-        <chuck.lever@oracle.com>
-CC:     <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] xprtrdma: Make xprt_rdma_slot_table_entries static
-Date:   Thu, 23 Apr 2020 15:10:02 +0800
-Message-ID: <1587625802-97494-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Thu, 23 Apr 2020 03:05:55 -0400
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:3276
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726027AbgDWHFz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:05:55 -0400
+X-Greylist: delayed 308 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 03:05:53 EDT
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id CC965206A4;
+        Thu, 23 Apr 2020 07:00:42 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Apr 2020 09:00:42 +0200
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Andrew Hendry <andrew.hendry@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-x25@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn,
+        kjlu@umn.edu, Xin Tan <tanxin.ctf@gmail.com>
+Subject: Re: [PATCH 1/2] net/x25: Fix x25_neigh refcnt leak when x25_connect()
+ fails
+Organization: TDT AG
+In-Reply-To: <1587618822-13544-1-git-send-email-xiyuyang19@fudan.edu.cn>
+References: <1587618822-13544-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Message-ID: <fccc5247bb916ccbd9a4c2ef8c6e76e4@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
+On 2020-04-23 07:13, Xiyu Yang wrote:
+> x25_connect() invokes x25_get_neigh(), which returns a reference of the
+> specified x25_neigh object to "x25->neighbour" with increased refcnt.
+> 
+> When x25_connect() returns, local variable "x25" and "x25->neighbour"
+> become invalid, so the refcount should be decreased to keep refcount
+> balanced.
+> 
+> The reference counting issue happens in one exception handling path of
+> x25_connect(). When sock state is not TCP_ESTABLISHED and its flags
+> include O_NONBLOCK, the function forgets to decrease the refcnt
+> increased by x25_get_neigh(), causing a refcnt leak.
+> 
+> Fix this issue by jumping to "out_put_neigh" label when x25_connect()
+> fails.
 
-net/sunrpc/xprtrdma/transport.c:71:14: warning: symbol 'xprt_rdma_slot_table_entries'
-was not declared. Should it be static?
+I don't agree with that.
+Please have a look at commit e21dba7a4df4 ("net/x25: fix nonblocking 
+connect).
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- net/sunrpc/xprtrdma/transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But I also think you are right and there seems to be a refcnt leak,
+which should be fixed by a call to x25_neigh_put() in the
+x25_disconnect() function.
 
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 659da37..9f2e8f5 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -68,7 +68,7 @@
-  * tunables
-  */
- 
--unsigned int xprt_rdma_slot_table_entries = RPCRDMA_DEF_SLOT_TABLE;
-+static unsigned int xprt_rdma_slot_table_entries = RPCRDMA_DEF_SLOT_TABLE;
- unsigned int xprt_rdma_max_inline_read = RPCRDMA_DEF_INLINE;
- unsigned int xprt_rdma_max_inline_write = RPCRDMA_DEF_INLINE;
- unsigned int xprt_rdma_memreg_strategy		= RPCRDMA_FRWR;
--- 
-2.6.2
+- Martin
+
+
+> 
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> ---
+>  net/x25/af_x25.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+> index d5b09bbff375..e6571c56209b 100644
+> --- a/net/x25/af_x25.c
+> +++ b/net/x25/af_x25.c
+> @@ -816,7 +816,7 @@ static int x25_connect(struct socket *sock, struct
+> sockaddr *uaddr,
+>  	/* Now the loop */
+>  	rc = -EINPROGRESS;
+>  	if (sk->sk_state != TCP_ESTABLISHED && (flags & O_NONBLOCK))
+> -		goto out;
+> +		goto out_put_neigh;
+> 
+>  	rc = x25_wait_for_connection_establishment(sk);
+>  	if (rc)
 
