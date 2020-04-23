@@ -2,143 +2,209 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DEAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F187C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A288D20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5iHnNB2"
+	by mail.kernel.org (Postfix) with ESMTP id 82F9620767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgDWQHk (ORCPT
+        id S1729642AbgDWQHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729445AbgDWQHj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:07:39 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71DF9C09B040;
-        Thu, 23 Apr 2020 09:07:39 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mq3so2700151pjb.1;
-        Thu, 23 Apr 2020 09:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NxTCttzzyKukMBv3aYqM9l7FatWOoSNEzIW2jB1tXgY=;
-        b=Z5iHnNB2A5T1twefghoZXgXtbUAPA3lNiSK7sW/h21T/R8wgHUf1ePRlJmgDVPt10D
-         29F+p8yxgUqZXthriyoWD5RVJB7UiR/UsCxybnKivViCn/KLoHeyW8N3W5orLvCEZ5s9
-         aXUdlN4weT4qwhVTcTuwwt/zv7s7Ko7ZqezuQJsuKGxwayEpKmrLiYZ2PufAq3UP0j+o
-         Qs9EwFpUQI/I/EeWRxabdne8uST2qtqGCGNjwTmGSrZ1HKgxD5xGJpcpZe9uMg+ww/mZ
-         IY3a+/Kkr6JjRYbmEBzqcVulUVakzBqgxVK2r1qFfgDGt3BD+9QIQy7ceVeTzegKe6+u
-         QRHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NxTCttzzyKukMBv3aYqM9l7FatWOoSNEzIW2jB1tXgY=;
-        b=DF8MFss3aS8duuo05Lv/iRLuE+BcHA44jamxRpvm2gmIrZNokDvpH+1Vowwea9SPvS
-         ZU3DKR3MpyIRNftXa/fyPi/yvR7hTl8bLmbK2s6YSwq2l8jpI2ld6HYBcxmFYWe+NnLx
-         CEBDy963KsVlizQ2Y/oNoBot+otKE+MnelBbjEZAv7vkRfpRL+kha0EPSSR5fsBZBkus
-         wmvsztAQyg/M4Anj1k+ZwesUarXd3o08Cw1pAklk1fTdQfmB2x7VtetttfmOHOBb0Nrh
-         HrH/riwLULtudg4zGTVok3tmY3ZVGbtDCRqz02fiK/cktCACBaOeFqMX3zN81Tkz0JpR
-         4twQ==
-X-Gm-Message-State: AGi0PubNLp84Zz4VxkfpGelaNpQr1fAYotqKlmV0NtWhcipbnxqOrwyk
-        zyPvCpi/oLuBfyA5n2PZId4LSnBM
-X-Google-Smtp-Source: APiQypLCG6KpFpHLZOdq8L+b4QI7d1WJx+yWi7XDiofNb0ySL/eZrtE2FzUpxXb/FWiz0sL17ZCAAA==
-X-Received: by 2002:a17:90a:2043:: with SMTP id n61mr1424658pjc.126.1587658058593;
-        Thu, 23 Apr 2020 09:07:38 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p66sm2906357pfb.65.2020.04.23.09.07.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 09:07:37 -0700 (PDT)
-Subject: Re: [PATCH 4.4 00/99] 4.4.220-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200423103313.886224224@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <69ca2f08-831c-0768-a309-54b6bb2b6384@roeck-us.net>
-Date:   Thu, 23 Apr 2020 09:07:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Apr 2020 12:07:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:53741 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729282AbgDWQHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:07:49 -0400
+IronPort-SDR: bVUndtzK5OU0fulqqZWTxhjMMM/NTz0uplgjtRo5UioK5j+AKMBCxZFi8xBZ0VQGZFitaSnqDU
+ tB0zBA6aI3nQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:07:48 -0700
+IronPort-SDR: 8QzfRGjB2XS7O9PVLE1nc6wgt+Pwh/J9AfozwJGNvS2l3WYJ7jpcqgGzfMd0a43l1yF0Qou1ax
+ BIVwCmn9KmHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="335012264"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 23 Apr 2020 09:07:48 -0700
+Date:   Thu, 23 Apr 2020 09:07:48 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 1/9] KVM: VMX: Introduce CET VMX fields and flags
+Message-ID: <20200423160748.GF17824@linux.intel.com>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-2-weijiang.yang@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200423103313.886224224@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326081847.5870-2-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/20 3:34 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.220 release.
-> There are 99 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 25 Apr 2020 10:31:20 +0000.
-> Anything received after that time might be too late.
-> 
+On Thu, Mar 26, 2020 at 04:18:38PM +0800, Yang Weijiang wrote:
+> CET(Control-flow Enforcement Technology) is a CPU feature
+> used to prevent Return/Jump-Oriented Programming(ROP/JOP)
+> attacks. It provides the following sub-features to defend
+> against ROP/JOP style control-flow subversion attacks:
 
-Build results:
-	total: 169 pass: 169 fail: 0
-Qemu test results:
-	total: 335 pass: 335 fail: 0
+Changelogs should wrap at 75 characters.  Wrapping slightly earlier is ok,
+but wrapping at ~60 chars is too narrow.
 
-Guenter
+> Shadow Stack (SHSTK):
+>   A second stack for program which is used exclusively for
+>   control transfer operations.
+> 
+> Indirect Branch Tracking (IBT):
+>   Code branching protection to defend against jump/call oriented
+>   programming.
+> 
+> Several new CET MSRs are defined in kernel to support CET:
+>   MSR_IA32_{U,S}_CET: Controls the CET settings for user
+>                       mode and kernel mode respectively.
+> 
+>   MSR_IA32_PL{0,1,2,3}_SSP: Stores shadow stack pointers for
+>                             CPL-0,1,2,3 protection respectively.
+> 
+>   MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack
+>                         pointer table.
+> 
+> Two XSAVES state bits are introduced for CET:
+>   IA32_XSS:[bit 11]: Control saving/restoring user mode CET states
+>   IA32_XSS:[bit 12]: Control saving/restoring kernel mode CET states.
+> 
+> Six VMCS fields are introduced for CET:
+>   {HOST,GUEST}_S_CET: Stores CET settings for kernel mode.
+>   {HOST,GUEST}_SSP: Stores shadow stack pointer of current task/thread.
+>   {HOST,GUEST}_INTR_SSP_TABLE: Stores base address of shadow stack pointer
+>                                table.
+> 
+> If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored
+> from below VMCS fields at VM-Exit:
+>   HOST_S_CET
+>   HOST_SSP
+>   HOST_INTR_SSP_TABLE
+> 
+> If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded
+> from below VMCS fields at VM-Entry:
+>   GUEST_S_CET
+>   GUEST_SSP
+>   GUEST_INTR_SSP_TABLE
+> 
+> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/include/asm/vmx.h      | 8 ++++++++
+>  arch/x86/include/uapi/asm/kvm.h | 1 +
+>  arch/x86/kvm/x86.c              | 4 ++++
+>  arch/x86/kvm/x86.h              | 2 +-
+>  4 files changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+> index 5e090d1f03f8..e938bc6c37aa 100644
+> --- a/arch/x86/include/asm/vmx.h
+> +++ b/arch/x86/include/asm/vmx.h
+> @@ -94,6 +94,7 @@
+>  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
+>  #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
+>  #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
+> +#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
+>  
+>  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
+>  
+> @@ -107,6 +108,7 @@
+>  #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
+>  #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
+>  #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
+> +#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
+>  
+>  #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
+>  
+> @@ -328,6 +330,9 @@ enum vmcs_field {
+>  	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
+>  	GUEST_SYSENTER_ESP              = 0x00006824,
+>  	GUEST_SYSENTER_EIP              = 0x00006826,
+> +	GUEST_S_CET                     = 0x00006828,
+> +	GUEST_SSP                       = 0x0000682a,
+> +	GUEST_INTR_SSP_TABLE            = 0x0000682c,
+>  	HOST_CR0                        = 0x00006c00,
+>  	HOST_CR3                        = 0x00006c02,
+>  	HOST_CR4                        = 0x00006c04,
+> @@ -340,6 +345,9 @@ enum vmcs_field {
+>  	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
+>  	HOST_RSP                        = 0x00006c14,
+>  	HOST_RIP                        = 0x00006c16,
+> +	HOST_S_CET                      = 0x00006c18,
+> +	HOST_SSP                        = 0x00006c1a,
+> +	HOST_INTR_SSP_TABLE             = 0x00006c1c
+>  };
+>  
+>  /*
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+> index 3f3f780c8c65..78e5c4266270 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -31,6 +31,7 @@
+>  #define MC_VECTOR 18
+>  #define XM_VECTOR 19
+>  #define VE_VECTOR 20
+> +#define CP_VECTOR 21
+>  
+>  /* Select x86 specific features in <linux/kvm.h> */
+>  #define __KVM_HAVE_PIT
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 40c6768942ae..830afe5038d1 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -186,6 +186,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
+>  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
+>  				| XFEATURE_MASK_PKRU)
+>  
+> +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER | \
+> +				 XFEATURE_MASK_CET_KERNEL)
+
+This belongs in a later patch, KVM obviously doesn't support XSS.
+
+> +
+>  u64 __read_mostly host_efer;
+>  EXPORT_SYMBOL_GPL(host_efer);
+>  
+> @@ -402,6 +405,7 @@ static int exception_class(int vector)
+>  	case NP_VECTOR:
+>  	case SS_VECTOR:
+>  	case GP_VECTOR:
+> +	case CP_VECTOR:
+>  		return EXCPT_CONTRIBUTORY;
+>  	default:
+>  		break;
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index c1954e216b41..8f0baa6fa72f 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -115,7 +115,7 @@ static inline bool x86_exception_has_error_code(unsigned int vector)
+>  {
+>  	static u32 exception_has_error_code = BIT(DF_VECTOR) | BIT(TS_VECTOR) |
+>  			BIT(NP_VECTOR) | BIT(SS_VECTOR) | BIT(GP_VECTOR) |
+> -			BIT(PF_VECTOR) | BIT(AC_VECTOR);
+> +			BIT(PF_VECTOR) | BIT(AC_VECTOR) | BIT(CP_VECTOR);
+>  
+>  	return (1U << vector) & exception_has_error_code;
+
+Maybe it's gratuitous, but I feel like the #CP logic should be in a patch
+of its own, e.g. the changelog doesn't mention anything about #CP.
+
+>  }
+> -- 
+> 2.17.2
+> 
