@@ -2,143 +2,155 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37072C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0150BC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13B3720724
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D194920736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587673720;
+	bh=rFETX999Zp3r99BfZgeA6NJYed2VirDJsVNov/jbgoM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xcFpywurLcB7KncaZkSYntkMzixWlXUKOWW3VCKhKJX2/XaWvUWf3/ELtJ+kS7v4e
+	 Llagsp1hbwDqyRf9jbzTj3FCoLltrAxwHiNfROdS64axOLBpUAE+CWBlXSwxjm0ybc
+	 dZ9tDgL8OApXdk+Z7V/Wwnj+ai0SomR/oGinAZmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDWUZp (ORCPT
+        id S1726160AbgDWU2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:25:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51594 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726002AbgDWUZo (ORCPT
+        Thu, 23 Apr 2020 16:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgDWU2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:25:44 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NJWXuU047357;
-        Thu, 23 Apr 2020 16:25:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj76a14-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 16:25:43 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03NJidh0079219;
-        Thu, 23 Apr 2020 16:25:43 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj76a0y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 16:25:43 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03NKNJSM030716;
-        Thu, 23 Apr 2020 20:25:42 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 30fs66m8se-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 20:25:42 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NKPfxF54198716
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 20:25:41 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 480E913604F;
-        Thu, 23 Apr 2020 20:25:41 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B103136053;
-        Thu, 23 Apr 2020 20:25:40 +0000 (GMT)
-Received: from [9.65.212.228] (unknown [9.65.212.228])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 20:25:40 +0000 (GMT)
-Subject: Re: [PATCH 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200417182939.11460-1-jrossi@linux.ibm.com>
- <20200417182939.11460-2-jrossi@linux.ibm.com>
- <20200423155620.493cb7cb.pasic@linux.ibm.com>
- <20200423171103.497dcd02.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <b6dc3d32-3e84-4ce1-59a2-d5de99716027@linux.ibm.com>
-Date:   Thu, 23 Apr 2020 16:25:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 16:28:39 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0C7C09B043
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:28:38 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 198so5851423lfo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=giPR15AGo2ieKRr3YuoUOrhNULDHeEPLry+vrqvhGiE=;
+        b=JQhx257sPEWqT9zRF6PD8JqbodRaG1MGCuGlHa53uJha8lI8D96q5xrXYbWjmV6xLd
+         oywtHlBFUsxfiEyxeaj+g1ToDxzvFWnhXvi/Cn4OihPXDgNMAC9boLNLxKuDK6PnpbS7
+         xmyHWYFSP2mhTikwCZUYiiY3pVwTxO/itjoVs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=giPR15AGo2ieKRr3YuoUOrhNULDHeEPLry+vrqvhGiE=;
+        b=PSDEGLNk+NsJOnMwW9TFCz05E+t702pMsk3Zki8ooNOz4YhvuDYlFoCc9AvJARx+Jy
+         E7f0NlctrUKLM3V2btWoAeBMJ21GJ/yYRYePLBfXRC/adrMjRx2YenyuC2yStCSVk5hS
+         x0Rvy9j6cna88uX7zPOGNujtz5iUxpykfUo2OZ/p8arV4VAZWNB5niZRTDSRzAjSqBUi
+         XwNoHerszSdhOO4nP/CO20Q8ulkU1wD34I5lfeve5AWMKa1juCfUwNda6pU5fJV/PsGo
+         /AJueBcHkTzfRK4vo0pkYd1Y6Azwx+3NGsHzLS2wxkB815UQj2bOtcuTBq9bA9+Wey+j
+         T5/A==
+X-Gm-Message-State: AGi0PuYzhTobKUw9vRfTKA8xqGa/ulMXooTM6CCv6/lS0DqdZOrf2NEh
+        wfh/wPMAYsizgbHzZwgct5tGVqSHTic=
+X-Google-Smtp-Source: APiQypJXTcwv4AS683IwK+W0P9GeV8VPyrhWsVqLnZXOWnWHH2gcSRFM4kIt2TmR/Td+9nYUHeThWQ==
+X-Received: by 2002:a05:6512:405:: with SMTP id u5mr3490855lfk.192.1587673715877;
+        Thu, 23 Apr 2020 13:28:35 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id z17sm2643302ljc.8.2020.04.23.13.28.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 13:28:34 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id u15so7659073ljd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:28:34 -0700 (PDT)
+X-Received: by 2002:a2e:8512:: with SMTP id j18mr3533041lji.201.1587673714229;
+ Thu, 23 Apr 2020 13:28:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200423171103.497dcd02.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_13:2020-04-23,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- adultscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 clxscore=1011
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230146
+References: <20200419141057.621356-1-gladkov.alexey@gmail.com>
+ <87ftcv1nqe.fsf@x220.int.ebiederm.org> <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87wo66vvnm.fsf_-_@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 23 Apr 2020 13:28:18 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgXEJdkgGzZQzBDGk7ijjVdAVXe=G-mkFSVng_Hpwd4tQ@mail.gmail.com>
+Message-ID: <CAHk-=wgXEJdkgGzZQzBDGk7ijjVdAVXe=G-mkFSVng_Hpwd4tQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] proc: Ensure we see the exit of each process tid exactly
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 23, 2020 at 12:42 PM Eric W. Biederman
+<ebiederm@xmission.com> wrote:
+>
+> +void exchange_tids(struct task_struct *ntask, struct task_struct *otask)
+> +{
+> +       /* pid_links[PIDTYPE_PID].next is always NULL */
+> +       struct pid *npid = READ_ONCE(ntask->thread_pid);
+> +       struct pid *opid = READ_ONCE(otask->thread_pid);
+> +
+> +       rcu_assign_pointer(opid->tasks[PIDTYPE_PID].first, &ntask->pid_links[PIDTYPE_PID]);
+> +       rcu_assign_pointer(npid->tasks[PIDTYPE_PID].first, &otask->pid_links[PIDTYPE_PID]);
+> +       rcu_assign_pointer(ntask->thread_pid, opid);
+> +       rcu_assign_pointer(otask->thread_pid, npid);
+> +       WRITE_ONCE(ntask->pid_links[PIDTYPE_PID].pprev, &opid->tasks[PIDTYPE_PID].first);
+> +       WRITE_ONCE(otask->pid_links[PIDTYPE_PID].pprev, &npid->tasks[PIDTYPE_PID].first);
+> +       WRITE_ONCE(ntask->pid, pid_nr(opid));
+> +       WRITE_ONCE(otask->pid, pid_nr(npid));
+> +}
 
+This function is _very_ hard to read as written.
 
-On 4/23/20 11:11 AM, Cornelia Huck wrote:
-> On Thu, 23 Apr 2020 15:56:20 +0200
-> Halil Pasic <pasic@linux.ibm.com> wrote:
-> 
->> On Fri, 17 Apr 2020 14:29:39 -0400
->> Jared Rossi <jrossi@linux.ibm.com> wrote:
->>
->>> Remove the explicit prefetch check when using vfio-ccw devices.
->>> This check is not needed as all Linux channel programs are intended
->>> to use prefetch and will be executed in the same way regardless.  
->>
->> Hm. This is a guest thing or? So you basically say, it is OK to do
->> this, because you know that the guest is gonna be Linux and that it
->> the channel program is intended to use prefetch -- but the ORB supplied
->> by the guest that designates the channel program happens to state the
->> opposite.
->>
->> Or am I missing something?
-> 
-> I see this as a kind of architecture compliance/ease of administration
-> tradeoff, as we none of the guests we currently support uses something
-> that breaks with prefetching outside of IPL (which has a different
-> workaround).>
-> One thing that still concerns me a bit is debuggability if a future
-> guest indeed does want to dynamically rewrite a channel program: the
+It really wants a helper function to do the swapping per hlist_head
+and hlist_node, I think. And "opid/npid" is very hard to see, and the
+naming doesn't make much sense (if it's an "exchange", then why is it
+"old/new" - they're symmetric).
 
-+1 for some debuggability, just in general
+At least something like
 
-> guest thinks it instructed the device to not prefetch, and then
-> suddenly things do not work as expected. We can log when a guest
-> submits an orb without prefetch set, but we can't find out if the guest
-> actually does something that relies on non-prefetch.
+        struct hlist_head *old_pid_hlist = opid->tasks + PIDTYPE_PID;
+        struct hlist_head *new_pid_hlist = npid->tasks + PIDTYPE_PID;
+        struct hlist_node *old_pid_node = otask->pid_links + PIDTYPE_PID;
+        struct hlist_node *new_pid_node = ntask->pid_links + PIDTYPE_PID;
 
-Without going too far down a non-prefetch rabbit-hole, can we use the
-cpa_within_range logic to see if the address of the CCW being fetched
-exists as the CDA of an earlier (non-TIC) CCW in the chain we're
-processing, and tracing/logging/messaging something about a possible
-conflict?
+        struct hlist_node *old_first_node = old_pid_hlist->first;
+        struct hlist_node *new_first_node = new_pid_hlist->first;
 
-(Jared, you did some level of this tracing with our real/synthetic tests
-some time ago.  Any chance something of it could be polished and made
-useful, without being overly heavy on the mainline path?)
+and then trying to group up the first/pprev/thread_pid/pid  accesses
+so that you them together, and using a helper function that does the
+whole switch, so that you'd have
 
-> 
-> The only correct way to handle this would be to actually implement
-> non-prefetch processing, where I would not really know where to even
-> start -- and then we'd only have synthetic test cases, for now. None of
-> the options are pleasant :(
-> 
+        /* Move new node to old hlist, and update thread_pid/pid fields */
+        insert_pid_pointers(old_pid_hlist, new_pid_node, new_first_node);
+        rcu_assign_pointer(ntask->thread_pid, opid);
+        WRITE_ONCE(ntask->pid, pid_nr(opid));
 
-And even if we knew where to start, it's quite a bit of effort for the
-hypothetical.  From conversations I've had with long-time I/O folks,
-non-prefetch seems to be the significant minority these days, dating
-back to older CKD devices (and associated connectivity) in practice.
+        /* Move old new to new hlist, and update thread_pid/pid fields */
+        insert_pid_pointers(new_pid_hlist, old_pid_node, old_first_node);
+        rcu_assign_pointer(otask->thread_pid, npid);
+        WRITE_ONCE(otask->pid, pid_nr(npid));
+
+or something roughly like that.
+
+(And the above still uses "old/new", which as mentioned sounds wrong
+to me. Maybe it should just be "a_xyz" and "b_xyz"? Also note that I
+did this in my MUA, so I could have gotten the names and types wrong
+etc).
+
+I think that would make it look at least _slightly_ less like random
+line noise and easier to follow.
+
+But maybe even a rcu_hlist_swap() helper? We have one for regular
+lists. Do we really have to do it all written out, not do it with a
+"remove and reinsert" model?
+
+                Linus
