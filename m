@@ -2,85 +2,121 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED33BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EC1C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC50214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0548820CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbgDWXJs (ORCPT
+        id S1729095AbgDWXJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:09:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50876 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728651AbgDWXG6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:58 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvl-0004yq-6a; Fri, 24 Apr 2020 00:06:53 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvi-00E72o-0e; Fri, 24 Apr 2020 00:06:50 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Richard Cochran" <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
-Date:   Fri, 24 Apr 2020 00:07:37 +0100
-Message-ID: <lsq.1587683028.932105363@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 230/245] ptp: do not explicitly set drvdata in
- ptp_clock_register()
-In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+        Thu, 23 Apr 2020 19:09:51 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55406 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728296AbgDWXJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:09:47 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8AB5E20013D;
+        Fri, 24 Apr 2020 01:09:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 16560200143;
+        Fri, 24 Apr 2020 01:09:42 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7513240246;
+        Fri, 24 Apr 2020 07:09:37 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] mailbox: imx: Add context save/restore for suspend/resume
+Date:   Fri, 24 Apr 2020 07:01:11 +0800
+Message-Id: <1587682871-528-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
+For "mem" mode suspend on i.MX8 SoCs, MU settings could be
+lost because its power is off, so save/restore is needed
+for MU settings during suspend/resume. However, the restore
+can ONLY be done when MU settings are actually lost, for the
+scenario of settings NOT lost in "freeze" mode suspend, since
+there could be still IPC going on multiple CPUs, restoring the
+MU settings could overwrite the TIE by mistake and cause system
+freeze, so need to make sure ONLY restore the MU settings when
+it is powered off.
 
-------------------
-
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-commit 882f312dc0751c973db26478f07f082c584d16aa upstream.
-
-We do not need explicitly call dev_set_drvdata(), as it is done for us by
-device_create().
-
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/ptp/ptp_clock.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/mailbox/imx-mailbox.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -216,8 +216,6 @@ struct ptp_clock *ptp_clock_register(str
- 	if (IS_ERR(ptp->dev))
- 		goto no_device;
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 97bf0ac..b53cf63 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -67,6 +67,8 @@ struct imx_mu_priv {
+ 	struct clk		*clk;
+ 	int			irq;
  
--	dev_set_drvdata(ptp->dev, ptp);
--
- 	err = ptp_populate_sysfs(ptp);
- 	if (err)
- 		goto no_sysfs;
++	u32 xcr;
++
+ 	bool			side_b;
+ };
+ 
+@@ -583,12 +585,45 @@ static const struct of_device_id imx_mu_dt_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+ 
++static int imx_mu_suspend_noirq(struct device *dev)
++{
++	struct imx_mu_priv *priv = dev_get_drvdata(dev);
++
++	priv->xcr = imx_mu_read(priv, priv->dcfg->xCR);
++
++	return 0;
++}
++
++static int imx_mu_resume_noirq(struct device *dev)
++{
++	struct imx_mu_priv *priv = dev_get_drvdata(dev);
++
++	/*
++	 * ONLY restore MU when context lost, the TIE could
++	 * be set during noirq resume as there is MU data
++	 * communication going on, and restore the saved
++	 * value will overwrite the TIE and cause MU data
++	 * send failed, may lead to system freeze. This issue
++	 * is observed by testing freeze mode suspend.
++	 */
++	if (!imx_mu_read(priv, priv->dcfg->xCR))
++		imx_mu_write(priv, priv->xcr, priv->dcfg->xCR);
++
++	return 0;
++}
++
++static const struct dev_pm_ops imx_mu_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_mu_suspend_noirq,
++				      imx_mu_resume_noirq)
++};
++
+ static struct platform_driver imx_mu_driver = {
+ 	.probe		= imx_mu_probe,
+ 	.remove		= imx_mu_remove,
+ 	.driver = {
+ 		.name	= "imx_mu",
+ 		.of_match_table = imx_mu_dt_ids,
++		.pm = &imx_mu_pm_ops,
+ 	},
+ };
+ module_platform_driver(imx_mu_driver);
+-- 
+2.7.4
 
