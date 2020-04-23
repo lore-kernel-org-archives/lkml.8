@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4C4C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6B2C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 235E32080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A6B2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgDWCZ5 (ORCPT
+        id S1726616AbgDWC0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:25:57 -0400
+        Wed, 22 Apr 2020 22:26:01 -0400
 Received: from mga05.intel.com ([192.55.52.43]:43420 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbgDWCZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 22:25:55 -0400
-IronPort-SDR: PBtXlPbCYjHb5PWE2+UKniXZQP0fwMd80Rn55KecCtOjSdBBCa8ZXnNNgYGdavfMRW0ZhWKMLX
- bka5aVbcKS9Q==
+        id S1726046AbgDWCZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 22:25:58 -0400
+IronPort-SDR: wM19L4gr9oxiPfoATnG+pwzDYYhXm2MgaLMssCFyKiY2NDUtM788cs3FSZq+DJRdgLh3HKf14J
+ uxN5g3GCLQow==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 19:25:54 -0700
-IronPort-SDR: d4SYGUjyFo0ArnHT9KsSbY4ttXZC48ZmHxFFgQYMg8axD1qCJoGlYChMUaQ/JOlTOtM4X7m7rr
- kg2WlQY4qTCg==
+IronPort-SDR: PVnCEJYehreoWf0lBzr4dNWvVBTu0u3jmAHrc6AlP3H9rww3JzHGd3riVr/szbSOwSGPe2xgEt
+ pHfBmuMwlx6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="259273932"
+   d="scan'208";a="259273947"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 19:25:54 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -41,9 +41,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
         Peter Shier <pshier@google.com>
-Subject: [PATCH 01/13] KVM: nVMX: Preserve exception priority irrespective of exiting behavior
-Date:   Wed, 22 Apr 2020 19:25:38 -0700
-Message-Id: <20200423022550.15113-2-sean.j.christopherson@intel.com>
+Subject: [PATCH 06/13] KVM: nVMX: Report NMIs as allowed when in L2 and Exit-on-NMI is set
+Date:   Wed, 22 Apr 2020 19:25:43 -0700
+Message-Id: <20200423022550.15113-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200423022550.15113-1-sean.j.christopherson@intel.com>
 References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
@@ -54,74 +54,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Short circuit vmx_check_nested_events() if an exception is pending and
-needs to be injected into L2, priority between coincident events is not
-dependent on exiting behavior.  This fixes a bug where a single-step #DB
-that is not intercepted by L1 is incorrectly dropped due to servicing a
-VMX Preemption Timer VM-Exit.
+Report NMIs as allowed when the vCPU is in L2 and L2 is being run with
+Exit-on-NMI enabled, as NMIs are always unblocked from L1's perspective
+in this case.
 
-Injected exceptions also need to be blocked if nested VM-Enter is
-pending or an exception was already injected, otherwise injecting the
-exception could overwrite an existing event injection from L1.
-Technically, this scenario should be impossible, i.e. KVM shouldn't
-inject its own exception during nested VM-Enter.  This will be addressed
-in a future patch.
-
-Note, event priority between SMI, NMI and INTR is incorrect for L2, e.g.
-SMI should take priority over VM-Exit on NMI/INTR, and NMI that is
-injected into L2 should take priority over VM-Exit INTR.  This will also
-be addressed in a future patch.
-
-Fixes: b6b8a1451fc4 ("KVM: nVMX: Rework interception of IRQs and NMIs")
-Reported-by: Jim Mattson <jmattson@google.com>
-Cc: Oliver Upton <oupton@google.com>
-Cc: Peter Shier <pshier@google.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index f228339cd0a0..dc7315b31fee 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3716,11 +3716,11 @@ static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
- 	/*
- 	 * Process any exceptions that are not debug traps before MTF.
- 	 */
--	if (vcpu->arch.exception.pending &&
--	    !vmx_pending_dbg_trap(vcpu) &&
--	    nested_vmx_check_exception(vcpu, &exit_qual)) {
-+	if (vcpu->arch.exception.pending && !vmx_pending_dbg_trap(vcpu)) {
- 		if (block_nested_events)
- 			return -EBUSY;
-+		if (!nested_vmx_check_exception(vcpu, &exit_qual))
-+			goto no_vmexit;
- 		nested_vmx_inject_exception_vmexit(vcpu, exit_qual);
- 		return 0;
- 	}
-@@ -3733,10 +3733,11 @@ static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
- 		return 0;
- 	}
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 7dd42e7fef94..c7bb9d90d441 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4516,6 +4516,9 @@ static bool vmx_nmi_allowed(struct kvm_vcpu *vcpu)
+ 	if (to_vmx(vcpu)->nested.nested_run_pending)
+ 		return false;
  
--	if (vcpu->arch.exception.pending &&
--	    nested_vmx_check_exception(vcpu, &exit_qual)) {
-+	if (vcpu->arch.exception.pending) {
- 		if (block_nested_events)
- 			return -EBUSY;
-+		if (!nested_vmx_check_exception(vcpu, &exit_qual))
-+			goto no_vmexit;
- 		nested_vmx_inject_exception_vmexit(vcpu, exit_qual);
- 		return 0;
- 	}
-@@ -3771,6 +3772,7 @@ static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
- 		return 0;
- 	}
- 
-+no_vmexit:
- 	vmx_complete_nested_posted_interrupt(vcpu);
- 	return 0;
- }
++	if (is_guest_mode(vcpu) && nested_exit_on_nmi(vcpu))
++		return true;
++
+ 	if (!enable_vnmi &&
+ 	    to_vmx(vcpu)->loaded_vmcs->soft_vnmi_blocked)
+ 		return false;
 -- 
 2.26.0
 
