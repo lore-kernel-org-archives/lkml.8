@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD63CC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7D6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9857F20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C448F2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgDWXRG (ORCPT
+        id S1729636AbgDWXRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:17:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49324 "EHLO
+        Thu, 23 Apr 2020 19:17:05 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49344 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728333AbgDWXGm (ORCPT
+        by vger.kernel.org with ESMTP id S1728337AbgDWXGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:42 -0400
+        Thu, 23 Apr 2020 19:06:43 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvQ-0004gH-Td; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvS-0004hK-Cg; Fri, 24 Apr 2020 00:06:34 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvP-00E6nT-65; Fri, 24 Apr 2020 00:06:31 +0100
+        id 1jRkvP-00E6nr-MS; Fri, 24 Apr 2020 00:06:31 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Felipe Balbi" <felipe.balbi@linux.intel.com>
-Date:   Fri, 24 Apr 2020 00:05:32 +0100
-Message-ID: <lsq.1587683028.746271206@decadent.org.uk>
+        "Or Gerlitz" <ogerlitz@mellanox.com>,
+        "Moni Shoua" <monis@mellanox.com>,
+        "Roland Dreier" <roland@purestorage.com>
+Date:   Fri, 24 Apr 2020 00:05:37 +0100
+Message-ID: <lsq.1587683028.190449561@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 105/245] usb: dwc3: pci: add support for Comet Lake
- PCH ID
+Subject: [PATCH 3.16 110/245] IB/mlx4: Avoid executing gid task when
+ device is being removed
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,37 +57,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
+From: Moni Shoua <monis@mellanox.com>
 
-commit 7ae622c978db6b2e28b4fced6ecd2a174492059d upstream.
+commit 4bf9715f184969dc703bde7be94919995024a6a9 upstream.
 
-This patch simply adds a new PCI Device ID
+When device is being removed (e.g during VPI port link type change
+from ETH to IB), tasks for gid table changes should not be executed.
 
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-[bwh: Backported to 3.16:
- - No properties support
- - Adjust context, indentation]
+Flush the current queue of tasks and block further tasks from entering the queue.
+
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Or Gerlitz <ogerlitz@mellanox.com>
+Signed-off-by: Roland Dreier <roland@purestorage.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/hw/mlx4/main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -37,6 +37,7 @@
- #define PCI_DEVICE_ID_INTEL_BXT_M	0x1aaa
- #define PCI_DEVICE_ID_INTEL_APL		0x5aaa
- #define PCI_DEVICE_ID_INTEL_KBP		0xa2b0
-+#define PCI_DEVICE_ID_INTEL_CMLH	0x02ee
- #define PCI_DEVICE_ID_INTEL_GLK		0x31aa
- #define PCI_DEVICE_ID_INTEL_CNPLP	0x9dee
- #define PCI_DEVICE_ID_INTEL_CNPH	0xa36e
-@@ -197,6 +198,7 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BSW), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BYT), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_MRFLD), },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CMLH), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTLP), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTH), },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BXT), },
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1395,6 +1395,9 @@ static void update_gids_task(struct work
+ 	int err;
+ 	struct mlx4_dev	*dev = gw->dev->dev;
+ 
++	if (!gw->dev->ib_active)
++		return;
++
+ 	mailbox = mlx4_alloc_cmd_mailbox(dev);
+ 	if (IS_ERR(mailbox)) {
+ 		pr_warn("update gid table failed %ld\n", PTR_ERR(mailbox));
+@@ -1425,6 +1428,9 @@ static void reset_gids_task(struct work_
+ 	int err;
+ 	struct mlx4_dev	*dev = gw->dev->dev;
+ 
++	if (!gw->dev->ib_active)
++		return;
++
+ 	mailbox = mlx4_alloc_cmd_mailbox(dev);
+ 	if (IS_ERR(mailbox)) {
+ 		pr_warn("reset gid table failed\n");
+@@ -2363,6 +2369,9 @@ static void mlx4_ib_remove(struct mlx4_d
+ 	struct mlx4_ib_dev *ibdev = ibdev_ptr;
+ 	int p;
+ 
++	ibdev->ib_active = false;
++	flush_workqueue(wq);
++
+ 	mlx4_ib_close_sriov(ibdev);
+ 	mlx4_ib_mad_cleanup(ibdev);
+ 	ib_unregister_device(&ibdev->ib_dev);
 
