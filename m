@@ -2,163 +2,175 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55903C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185B3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA8720736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC4620736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7iFJBLs"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="QThNPR4A";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CzxjR+VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgDWU7v (ORCPT
+        id S1726458AbgDWVCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgDWU7u (ORCPT
+        Thu, 23 Apr 2020 17:02:01 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51278 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726060AbgDWVCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:59:50 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2A3C09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:59:49 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id v18so3629987qvx.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ihVUWvH7naN45tEl+tGyxd0ZwoDtNc3umBeh695OPSw=;
-        b=F7iFJBLsSL5MxRQq3dyES6rsfpTKqNCnHlY6UZmEy1QRFOanmMrTKTVijiE8tTvsuB
-         +jsw3jt99cjCHMPAzJlca4IftxweXwJIqfjihrVcUC622jlUBDLr3q5MdTINT4yDxnS+
-         WJQSyFORRBgNXje13MmhGen8Ylwh+0KBT5xTMrSdagu7mKiazISkQy4VjnCRfPolVcGN
-         URhgjASdPTgEiuzB0NTXKuulkLOXSvro/WJIe49ilkLB5lSbYCOIZUO8Nu+4slKQLStO
-         KVtWHMC7P9gj2pcfL5V4zjdOKOWLTg6VYNPwAb99B4kfZLE+L8bHNVFbFEIHWpwR935Z
-         zzUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ihVUWvH7naN45tEl+tGyxd0ZwoDtNc3umBeh695OPSw=;
-        b=dOfASx76Lz/wxVGLtesLA2uk+8v+9Rzbylm4Nhgt7Z4mzrRWrEB91Ybayq4KBJF18e
-         9RMtPPsfmJ/QAOLqMhYGUQ2H2QFNc12Bda56AW4LHAj462j72hs1s2yiz6Mpn9C5ENOE
-         jw7JwzQwx8zrrN438+XlnQcHGuRM5k3gWDfM8ZFNra1YkYhP7gk5t00LXW8swak3D5Gm
-         jN2EVsEPeFmjEiMJ4nznzOztymYaU2tBvkM5rWBQwkCMqlkw24qc0mDr5byB0UmCYvXQ
-         Fsn1Vy1PrGpSjPd6caK9lKfsEJjdOu8V+96wCG+fK1BaWUBBfwFC0wA3UIwFpTBKwtTk
-         rxQA==
-X-Gm-Message-State: AGi0PubZt+WbsBfCx3q9ElXeEYGMoDUCbcXPWzWmY4k9s12k75U9p441
-        nj1E8+yyUWqKTD+klypaDfI=
-X-Google-Smtp-Source: APiQypJHXpYYUR5/MDUJvrbaDeEG58t7M2St+MPpPFseuRWjUAvumM40T/5oREyhgFfDS1/o90AOwA==
-X-Received: by 2002:a0c:8222:: with SMTP id h31mr6142237qva.106.1587675588472;
-        Thu, 23 Apr 2020 13:59:48 -0700 (PDT)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id h25sm2586381qte.37.2020.04.23.13.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 13:59:47 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 16:59:47 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        khazhy@google.com, kernel@collabora.com
-Subject: Re: [PATCH 0/2] Historical Service Time Path Selector
-Message-ID: <20200423205947.GA13657@lobo>
-References: <20200416211336.2423618-1-krisman@collabora.com>
-MIME-Version: 1.0
+        Thu, 23 Apr 2020 17:02:00 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NKKGj5024685;
+        Thu, 23 Apr 2020 14:01:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=SgyIf1p4GdPKkHSnvcPXXDcyiQKo9PwreXigNDsh8tQ=;
+ b=QThNPR4AqUe+tn/mtZ9babiYkp2TrPe/dqObcfp9jNmLwYOdzZYCTgter1fJOQvrgevP
+ 4tMS2dfJxTWRTD5ssOU3ltLWdP6r9fn9k2NXyouSm9QQcvJ/dC8z0KPUy60XdyW4HaDg
+ BH1nIvcm4z2CvpVpcYW5c1Mn9xKuc3vfn2s= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 30jtc5r3a9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 23 Apr 2020 14:01:53 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 23 Apr 2020 14:01:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hukzox6XFjnGUUUFvLoaduWdCbfa3wAcmWBbaXPoHHEKNkWknJ7Tfr+JzX0Jeckuy0T4hQF8orB0liIflkVLga3gj5KimUEdr9k30EN30MNqGNsAdWkPQ0Xcf3B0FaRHnzIpiNj6idfJ1fsA3y21RDo6pZWedBmpUSAb/MbHRTSXkU/v1e/mThOwKITSqu2VO5VslCCYG6Oq7X8rYbznXJg3hzYW0dmeMry3JGqdfgdSb5KhvJxKAB3/gvisz3sPlUiqcHUFwSwBlDZXGfY/FfKzzWl7z4iEO35XfzIqr/9FEq+zboYCPsb54sQWRFSPQgFgZdu4pBVzqrvNNu+pyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SgyIf1p4GdPKkHSnvcPXXDcyiQKo9PwreXigNDsh8tQ=;
+ b=L3ITgljhbKTD84U1Eybbft810+HmAoawmrG+9R/WgwruUyzdv3Mi1AkOfZVGIB/Ydo23xYqmd1xGQYPhbddTYUBHmg5OMwXUpQB23MVzpuafpKzkI4HttcZd82KuorFsORaYPwose19BRJuI/HmeIBscucHjYVGeN/v7VBoKy4vv67Eg8xENURea7Kuw6Gi6U9adwM66mvCHed/7o4UJa5DLR/yYgqoKD2CpOnctJuOGtIXnCqc3znu/QZiHO3rxkHlceocxBv4UzEr39xsM644soUfNLgiuz64M7uDKsebkbA+NYAYa1C98C0uT9c6PYLGw9BjP0J+fTsYojvZ49w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SgyIf1p4GdPKkHSnvcPXXDcyiQKo9PwreXigNDsh8tQ=;
+ b=CzxjR+VV0zT5+EC5sYH3gEqjz5PSCx7rum1IKLe6nL0fEe3GH13LEY1APje1M8Sq1ZNaHK32iGI1xUPBZ5i/oLkkuX431kcf06bMnlerABfS6fCAB/qVzGaeDJxUzaO8mBDebne8SgbtXDGnP0zFZBVt9Cus9luTptls8npS3ak=
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2677.namprd15.prod.outlook.com (2603:10b6:a03:153::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Thu, 23 Apr
+ 2020 21:01:51 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
+ 21:01:51 +0000
+Date:   Thu, 23 Apr 2020 14:01:47 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Christopher Lameter <cl@linux.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 04/19] mm: slub: implement SLUB version of
+ obj_to_index()
+Message-ID: <20200423210147.GA83398@carbon.DHCP.thefacebook.com>
+References: <20200422204708.2176080-1-guro@fb.com>
+ <20200422204708.2176080-5-guro@fb.com>
+ <alpine.DEB.2.21.2004222349280.20021@www.lameter.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416211336.2423618-1-krisman@collabora.com>
+In-Reply-To: <alpine.DEB.2.21.2004222349280.20021@www.lameter.com>
+X-ClientProxiedBy: CO2PR06CA0062.namprd06.prod.outlook.com
+ (2603:10b6:104:3::20) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:adb1) by CO2PR06CA0062.namprd06.prod.outlook.com (2603:10b6:104:3::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 21:01:50 +0000
+X-Originating-IP: [2620:10d:c090:400::5:adb1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 801655fe-4216-4630-a1b1-08d7e7c98ba0
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2677:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2677B7031359A0159D648083BED30@BYAPR15MB2677.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 03827AF76E
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(346002)(366004)(136003)(396003)(39860400002)(186003)(55016002)(33656002)(54906003)(52116002)(66556008)(9686003)(66476007)(4326008)(478600001)(16526019)(316002)(2906002)(66946007)(7696005)(6666004)(5660300002)(6916009)(8936002)(81156014)(8676002)(86362001)(6506007)(1076003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5iLZ4xq8oVU7GSqnO2oInfaZkbOQM39Qjd+flo2tBIApwMpCH8u0qvNLTk+VKRjcE0GV+smkCfciFA4NXRRkFch9LUHHwcbQ6RL1OVLWlQhEG+wCDVefIqZVUvFETNRoGFd+DyXvrQM828ykwR1mNr4umcwaWPlaYJD9scO7QX2r/eZUvCvfNVOaMdWu5NF76whyTOaECAvqM0mB+v/hxcjmoct+XrcvPqQmM/DgHFXE56N8JhQut0a5+UgVmcwPfvIxxqxaX2XlSWxRMTC8F6GAEbx7OQmas+OMwzBzUxDS/Jwhp9bgp3WQU8eICA7viC9JC4Va0/v2SZUoI0PaNrwscoUJMfzmYmx8/xdi4keXn6O/co/GODBSKffqoMYsWdg6Vrv200EgnsIGZO/OCcZcw4oKS4JRsZpxQljvxSgPm2h0glME3zlMIIZEryeT
+X-MS-Exchange-AntiSpam-MessageData: 0kskA+v+NOYT83Xp2vrucJKbF0Zratfm03Dfp293GntyWgLbOPT4//bdqMMROirR2LyXKlWEsXLd3jN4LVVCIyPkGXgN4JBxBeNORetYWekaV3N7ZYuDIjkgm2hRX4BQeIS4QrR2RGvgYaFuiIAFQlYZFEFdtN18+x/OfCe+o8KpxELVuptFotS9767pPls/
+X-MS-Exchange-CrossTenant-Network-Message-Id: 801655fe-4216-4630-a1b1-08d7e7c98ba0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 21:01:51.4256
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S55VR/ErcmxK0RPUdiEk+6u8NHNetivNxkSkI6zTVtgvFD5u/HxXVJBETHgZ/vbx
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2677
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_15:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ clxscore=1015 spamscore=0 adultscore=0 malwarescore=0 suspectscore=5
+ bulkscore=0 mlxscore=0 mlxlogscore=948 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230150
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16 2020 at  5:13P -0400,
-Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
+On Wed, Apr 22, 2020 at 11:52:13PM +0000, Christoph Lameter wrote:
+> On Wed, 22 Apr 2020, Roman Gushchin wrote:
+> 
+> >  enum stat_item {
+> >  	ALLOC_FASTPATH,		/* Allocation from cpu slab */
+> > @@ -86,6 +87,7 @@ struct kmem_cache {
+> >  	unsigned long min_partial;
+> >  	unsigned int size;	/* The size of an object including metadata */
+> >  	unsigned int object_size;/* The size of an object without metadata */
+> > +	struct reciprocal_value reciprocal_size;
+> 
+> 
+> This needs to be moved further back since it is not an item that needs to
+> be cache hot for the hotpaths. Place it with "align", inuse etc?
+> 
+> Hmmm. the same applies to min_partial maybe?
+> 
+>
 
-> Hello,
-> 
-> This small series implements a new path selector that leverages
-> historical path IO time in order to estimate future path performance.
-> Implementation details can be found on Patch 2.
-> 
-> This selector yields better path distribution, considering the mean
-> deviation from the calculated optimal utilization, for small IO depths
-> when compared to the Service Time selector with fio benchmarks.  For
-> instance, on a multipath setup with 4 paths, where one path is 4 times
-> slower than the rest, issuing 500MB of randwrites, we have the following
-> path utilization rates:
-> 
->       |    depth=1    |    depth=64   |       |
->       |   ST  |   HST |   ST  |   HST |  Best |
-> |-----+-------+-------+-------+-------+-------|
-> | sda | 0.250 | 0.294 | 0.297 | 0.294 | 0.307 |
-> | sdb | 0.250 | 0.297 | 0.296 | 0.297 | 0.307 |
-> | sdc | 0.250 | 0.296 | 0.298 | 0.296 | 0.307 |
-> | sdd | 0.250 | 0.112 | 0.106 | 0.112 | 0.076 |
-> 
-> For small depths, HST is much quicker in detecting slow paths and has a
-> better selection than ST.  As the iodepth increases, ST gets close to
-> HST, which still behaves steadily.
-> 
-> The raw performance data for different depths types of IO can be found
-> at:
-> 
->   <https://people.collabora.com/~krisman/GOO0012/hst-vs-st-bench.html>
-> 
-> This was tested primarily on a Google cloud SAN with real data and usage
-> patterns and with artificial benchmarks using fio.
-> 
-> Khazhismel Kumykov (2):
->   md: Expose struct request to path selector
->   md: Add Historical Service Time Path Selector
+Something like this?
 
-Looks like you've put a lot of time to this and I'd be happy to help
-you get this to land upstream.
+Thanks!
 
-But... (you knew there'd be at least one "but" right? ;) I'm not
-liking making this path selector request-based specific.  All other
-selectors up to this point are request-based vs bio-based agnostic.
+--
 
-Would you be open to dropping patch 1/2 and replacing it with
-something like the following patch?
-
-Then you'd pass 'u64 start_time_ns' into the path_selector_type's
-.end_io (and possibly .start_io).
-
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index df13fdebe21f..50121513227b 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -674,6 +674,16 @@ static bool md_in_flight(struct mapped_device *md)
- 		return md_in_flight_bios(md);
- }
- 
-+u64 dm_start_time_ns_from_clone(struct bio *bio)
-+{
-+	struct dm_target_io *tio = container_of(bio, struct dm_target_io, clone);
-+	struct dm_io *io = tio->io;
-+
-+	/* FIXME: convert io->start_time from jiffies to nanoseconds */
-+	return (u64)jiffies_to_msec(io->start_time) * NSEC_PER_MSEC;
-+}
-+EXPORT_SYMBOL_GPL(dm_start_time_ns_from_clone);
-+
- static void start_io_acct(struct dm_io *io)
- {
- 	struct mapped_device *md = io->md;
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index 475668c69dbc..e2d506dd805e 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -329,6 +329,8 @@ void *dm_per_bio_data(struct bio *bio, size_t data_size);
- struct bio *dm_bio_from_per_bio_data(void *data, size_t data_size);
- unsigned dm_bio_get_target_bio_nr(const struct bio *bio);
- 
-+u64 dm_start_time_ns_from_clone(struct bio *bio);
-+
- int dm_register_target(struct target_type *t);
- void dm_unregister_target(struct target_type *t);
- 
+diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
+index cdf4f299c982..6246a3c65cd5 100644
+--- a/include/linux/slub_def.h
++++ b/include/linux/slub_def.h
+@@ -84,10 +84,8 @@ struct kmem_cache {
+        struct kmem_cache_cpu __percpu *cpu_slab;
+        /* Used for retrieving partial slabs, etc. */
+        slab_flags_t flags;
+-       unsigned long min_partial;
+        unsigned int size;      /* The size of an object including metadata */
+        unsigned int object_size;/* The size of an object without metadata */
+-       struct reciprocal_value reciprocal_size;
+        unsigned int offset;    /* Free pointer offset */
+ #ifdef CONFIG_SLUB_CPU_PARTIAL
+        /* Number of per cpu partial objects to keep around */
+@@ -103,6 +101,8 @@ struct kmem_cache {
+        void (*ctor)(void *);
+        unsigned int inuse;             /* Offset to metadata */
+        unsigned int align;             /* Alignment */
++       unsigned long min_partial;
++       struct reciprocal_value reciprocal_size;
+        unsigned int red_left_pad;      /* Left redzone padding size */
+        const char *name;       /* Name (only for display!) */
+        struct list_head list;  /* List of slab caches */
