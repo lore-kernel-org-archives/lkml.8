@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84A4C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7621CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC7520780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7E720780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgDWXTG (ORCPT
+        id S1728240AbgDWXGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:19:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48822 "EHLO
+        Thu, 23 Apr 2020 19:06:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48134 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728243AbgDWXGg (ORCPT
+        by vger.kernel.org with ESMTP id S1727063AbgDWXG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:36 -0400
+        Thu, 23 Apr 2020 19:06:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvN-0004dP-L1; Fri, 24 Apr 2020 00:06:29 +0100
+        id 1jRkvH-0004ZN-Vo; Fri, 24 Apr 2020 00:06:24 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-00E6l1-S9; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvH-00E6ef-I1; Fri, 24 Apr 2020 00:06:23 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Xiao Jiangfeng" <xiaojiangfeng@huawei.com>,
-        "Mao Wenan" <maowenan@huawei.com>
-Date:   Fri, 24 Apr 2020 00:05:05 +0100
-Message-ID: <lsq.1587683028.285728953@decadent.org.uk>
+        "Johannes Berg" <johannes.berg@intel.com>,
+        "Dedy Lansky" <dlansky@codeaurora.org>
+Date:   Fri, 24 Apr 2020 00:03:54 +0100
+Message-ID: <lsq.1587683028.558647797@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 078/245] af_packet: set defaule value for tmo
+Subject: [PATCH 3.16 007/245] cfg80211/mac80211: make ieee80211_send_layer2_update
+ a public function
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,53 +56,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Dedy Lansky <dlansky@codeaurora.org>
 
-commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe upstream.
+commit 30ca1aa536211f5ac3de0173513a7a99a98a97f3 upstream.
 
-There is softlockup when using TPACKET_V3:
-...
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
-(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
-(mod_timer) from [<c0549c30>]
-(prb_retire_rx_blk_timer_expired+0x68/0x11c)
-(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
-(call_timer_fn+0x90/0x17c)
-(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
-(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
-(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
-(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
-...
+Make ieee80211_send_layer2_update() a common function so other drivers
+can re-use it.
 
-If __ethtool_get_link_ksettings() is failed in
-prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
-is zero and the timer expire for retire_blk_timer is turn to
-mod_timer(&pkc->retire_blk_timer, jiffies + 0),
-which will trigger cpu usage of softirq is 100%.
-
-Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[bwh: Backported to 3.16 as dependency of commit 3e493173b784
+ "mac80211: Do not send Layer 2 Update frame before authorization":
+ - Retain type-casting of skb_put() return value
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/packet/af_packet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/net/cfg80211.h | 11 ++++++++++
+ net/mac80211/cfg.c     | 48 ++----------------------------------------
+ net/wireless/util.c    | 45 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 58 insertions(+), 46 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -608,7 +608,8 @@ static int prb_calc_retire_blk_tmo(struc
- 			msec = 1;
- 			div = speed / 1000;
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -3627,6 +3627,17 @@ const u8 *cfg80211_find_vendor_ie(unsign
+ 				  const u8 *ies, int len);
+ 
+ /**
++ * cfg80211_send_layer2_update - send layer 2 update frame
++ *
++ * @dev: network device
++ * @addr: STA MAC address
++ *
++ * Wireless drivers can use this function to update forwarding tables in bridge
++ * devices upon STA association.
++ */
++void cfg80211_send_layer2_update(struct net_device *dev, const u8 *addr);
++
++/**
+  * DOC: Regulatory enforcement infrastructure
+  *
+  * TODO
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1196,50 +1196,6 @@ static int ieee80211_stop_ap(struct wiph
+ 	return 0;
+ }
+ 
+-/* Layer 2 Update frame (802.2 Type 1 LLC XID Update response) */
+-struct iapp_layer2_update {
+-	u8 da[ETH_ALEN];	/* broadcast */
+-	u8 sa[ETH_ALEN];	/* STA addr */
+-	__be16 len;		/* 6 */
+-	u8 dsap;		/* 0 */
+-	u8 ssap;		/* 0 */
+-	u8 control;
+-	u8 xid_info[3];
+-} __packed;
+-
+-static void ieee80211_send_layer2_update(struct sta_info *sta)
+-{
+-	struct iapp_layer2_update *msg;
+-	struct sk_buff *skb;
+-
+-	/* Send Level 2 Update Frame to update forwarding tables in layer 2
+-	 * bridge devices */
+-
+-	skb = dev_alloc_skb(sizeof(*msg));
+-	if (!skb)
+-		return;
+-	msg = (struct iapp_layer2_update *)skb_put(skb, sizeof(*msg));
+-
+-	/* 802.2 Type 1 Logical Link Control (LLC) Exchange Identifier (XID)
+-	 * Update response frame; IEEE Std 802.2-1998, 5.4.1.2.1 */
+-
+-	eth_broadcast_addr(msg->da);
+-	memcpy(msg->sa, sta->sta.addr, ETH_ALEN);
+-	msg->len = htons(6);
+-	msg->dsap = 0;
+-	msg->ssap = 0x01;	/* NULL LSAP, CR Bit: Response */
+-	msg->control = 0xaf;	/* XID response lsb.1111F101.
+-				 * F=0 (no poll command; unsolicited frame) */
+-	msg->xid_info[0] = 0x81;	/* XID format identifier */
+-	msg->xid_info[1] = 1;	/* LLC types/classes: Type 1 LLC */
+-	msg->xid_info[2] = 0;	/* XID sender's receive window size (RW) */
+-
+-	skb->dev = sta->sdata->dev;
+-	skb->protocol = eth_type_trans(skb, sta->sdata->dev);
+-	memset(skb->cb, 0, sizeof(skb->cb));
+-	netif_rx_ni(skb);
+-}
+-
+ static int sta_apply_auth_flags(struct ieee80211_local *local,
+ 				struct sta_info *sta,
+ 				u32 mask, u32 set)
+@@ -1535,7 +1491,7 @@ static int ieee80211_add_station(struct
+ 	}
+ 
+ 	if (layer2_update)
+-		ieee80211_send_layer2_update(sta);
++		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
+ 
+ 	rcu_read_unlock();
+ 
+@@ -1640,7 +1596,7 @@ static int ieee80211_change_station(stru
+ 				atomic_inc(&sta->sdata->bss->num_mcast_sta);
  		}
--	}
-+	} else
-+		return DEFAULT_PRB_RETIRE_TOV;
  
- 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
+-		ieee80211_send_layer2_update(sta);
++		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
+ 	}
  
+ 	err = sta_apply_parameters(local, sta, params);
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -1583,3 +1583,48 @@ EXPORT_SYMBOL(rfc1042_header);
+ const unsigned char bridge_tunnel_header[] __aligned(2) =
+ 	{ 0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8 };
+ EXPORT_SYMBOL(bridge_tunnel_header);
++
++/* Layer 2 Update frame (802.2 Type 1 LLC XID Update response) */
++struct iapp_layer2_update {
++	u8 da[ETH_ALEN];	/* broadcast */
++	u8 sa[ETH_ALEN];	/* STA addr */
++	__be16 len;		/* 6 */
++	u8 dsap;		/* 0 */
++	u8 ssap;		/* 0 */
++	u8 control;
++	u8 xid_info[3];
++} __packed;
++
++void cfg80211_send_layer2_update(struct net_device *dev, const u8 *addr)
++{
++	struct iapp_layer2_update *msg;
++	struct sk_buff *skb;
++
++	/* Send Level 2 Update Frame to update forwarding tables in layer 2
++	 * bridge devices */
++
++	skb = dev_alloc_skb(sizeof(*msg));
++	if (!skb)
++		return;
++	msg = (struct iapp_layer2_update *)skb_put(skb, sizeof(*msg));
++
++	/* 802.2 Type 1 Logical Link Control (LLC) Exchange Identifier (XID)
++	 * Update response frame; IEEE Std 802.2-1998, 5.4.1.2.1 */
++
++	eth_broadcast_addr(msg->da);
++	ether_addr_copy(msg->sa, addr);
++	msg->len = htons(6);
++	msg->dsap = 0;
++	msg->ssap = 0x01;	/* NULL LSAP, CR Bit: Response */
++	msg->control = 0xaf;	/* XID response lsb.1111F101.
++				 * F=0 (no poll command; unsolicited frame) */
++	msg->xid_info[0] = 0x81;	/* XID format identifier */
++	msg->xid_info[1] = 1;	/* LLC types/classes: Type 1 LLC */
++	msg->xid_info[2] = 0;	/* XID sender's receive window size (RW) */
++
++	skb->dev = dev;
++	skb->protocol = eth_type_trans(skb, dev);
++	memset(skb->cb, 0, sizeof(skb->cb));
++	netif_rx_ni(skb);
++}
++EXPORT_SYMBOL(cfg80211_send_layer2_update);
 
