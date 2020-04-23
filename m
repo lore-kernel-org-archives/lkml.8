@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E25DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E71C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7462420780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA5620780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgDWXKi (ORCPT
+        id S1727906AbgDWXKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:10:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50404 "EHLO
+        Thu, 23 Apr 2020 19:10:40 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50354 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728601AbgDWXGx (ORCPT
+        by vger.kernel.org with ESMTP id S1728598AbgDWXGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:53 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvf-0004tM-TR; Fri, 24 Apr 2020 00:06:48 +0100
+        id 1jRkvd-0004lP-Sz; Fri, 24 Apr 2020 00:06:46 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvb-00E716-B4; Fri, 24 Apr 2020 00:06:43 +0100
+        id 1jRkvW-00E6wh-Ml; Fri, 24 Apr 2020 00:06:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,16 +36,14 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Jann Horn" <jannh@google.com>,
-        "Suren Baghdasaryan" <surenb@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Todd Kjos" <tkjos@google.com>
-Date:   Fri, 24 Apr 2020 00:07:22 +0100
-Message-ID: <lsq.1587683028.379768933@decadent.org.uk>
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Keiya Nobuta" <nobuta.keiya@fujitsu.com>
+Date:   Fri, 24 Apr 2020 00:06:52 +0100
+Message-ID: <lsq.1587683028.868709353@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 215/245] staging: android: ashmem: Disallow ashmem
- memory from being remapped
+Subject: [PATCH 3.16 185/245] usb: core: hub: Improved device recognition
+ on remote wakeup
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,71 +57,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Suren Baghdasaryan <surenb@google.com>
+From: Keiya Nobuta <nobuta.keiya@fujitsu.com>
 
-commit 6d67b0290b4b84c477e6a2fc6e005e174d3c7786 upstream.
+commit 9c06ac4c83df6d6fbdbf7488fbad822b4002ba19 upstream.
 
-When ashmem file is mmapped, the resulting vma->vm_file points to the
-backing shmem file with the generic fops that do not check ashmem
-permissions like fops of ashmem do. If an mremap is done on the ashmem
-region, then the permission checks will be skipped. Fix that by disallowing
-mapping operation on the backing shmem file.
+If hub_activate() is called before D+ has stabilized after remote
+wakeup, the following situation might occur:
 
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lore.kernel.org/r/20200127235616.48920-1-tkjos@google.com
+         __      ___________________
+        /  \    /
+D+   __/    \__/
+
+Hub  _______________________________
+          |  ^   ^           ^
+          |  |   |           |
+Host _____v__|___|___________|______
+          |  |   |           |
+          |  |   |           \-- Interrupt Transfer (*3)
+          |  |    \-- ClearPortFeature (*2)
+          |   \-- GetPortStatus (*1)
+          \-- Host detects remote wakeup
+
+- D+ goes high, Host starts running by remote wakeup
+- D+ is not stable, goes low
+- Host requests GetPortStatus at (*1) and gets the following hub status:
+  - Current Connect Status bit is 0
+  - Connect Status Change bit is 1
+- D+ stabilizes, goes high
+- Host requests ClearPortFeature and thus Connect Status Change bit is
+  cleared at (*2)
+- After waiting 100 ms, Host starts the Interrupt Transfer at (*3)
+- Since the Connect Status Change bit is 0, Hub returns NAK.
+
+In this case, port_event() is not called in hub_event() and Host cannot
+recognize device. To solve this issue, flag change_bits even if only
+Connect Status Change bit is 1 when got in the first GetPortStatus.
+
+This issue occurs rarely because it only if D+ changes during a very
+short time between GetPortStatus and ClearPortFeature. However, it is
+fatal if it occurs in embedded system.
+
+Signed-off-by: Keiya Nobuta <nobuta.keiya@fujitsu.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200109051448.28150-1-nobuta.keiya@fujitsu.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/android/ashmem.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/usb/core/hub.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -351,8 +351,23 @@ static inline vm_flags_t calc_vm_may_fla
- 	       _calc_vm_trans(prot, PROT_EXEC,  VM_MAYEXEC);
- }
- 
-+static int ashmem_vmfile_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	/* do not allow to mmap ashmem backing shmem file directly */
-+	return -EPERM;
-+}
-+
-+static unsigned long
-+ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
-+				unsigned long len, unsigned long pgoff,
-+				unsigned long flags)
-+{
-+	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
-+}
-+
- static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
- {
-+	static struct file_operations vmfile_fops;
- 	struct ashmem_area *asma = file->private_data;
- 	int ret = 0;
- 
-@@ -386,6 +401,19 @@ static int ashmem_mmap(struct file *file
- 			goto out;
- 		}
- 		asma->file = vmfile;
-+		/*
-+		 * override mmap operation of the vmfile so that it can't be
-+		 * remapped which would lead to creation of a new vma with no
-+		 * asma permission checks. Have to override get_unmapped_area
-+		 * as well to prevent VM_BUG_ON check for f_ops modification.
-+		 */
-+		if (!vmfile_fops.mmap) {
-+			vmfile_fops = *vmfile->f_op;
-+			vmfile_fops.mmap = ashmem_vmfile_mmap;
-+			vmfile_fops.get_unmapped_area =
-+					ashmem_vmfile_get_unmapped_area;
-+		}
-+		vmfile->f_op = &vmfile_fops;
- 	}
- 	get_file(asma->file);
- 
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1125,6 +1125,7 @@ static void hub_activate(struct usb_hub
+ 			 * PORT_OVER_CURRENT is not. So check for any of them.
+ 			 */
+ 			if (udev || (portstatus & USB_PORT_STAT_CONNECTION) ||
++			    (portchange & USB_PORT_STAT_C_CONNECTION) ||
+ 			    (portstatus & USB_PORT_STAT_OVERCURRENT) ||
+ 			    (portchange & USB_PORT_STAT_C_OVERCURRENT))
+ 				set_bit(port1, hub->change_bits);
 
