@@ -2,115 +2,113 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1C2C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35D4C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBD272076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973782076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iYTLICJq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7kmrUSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgDWRtm (ORCPT
+        id S1730042AbgDWRvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:49:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729802AbgDWRtl (ORCPT
+        Thu, 23 Apr 2020 13:51:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57409 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729889AbgDWRvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:49:41 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC59C09B042;
-        Thu, 23 Apr 2020 10:49:41 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F0D2E00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:2e00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21A3B1EC0D2B;
-        Thu, 23 Apr 2020 19:49:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1587664179;
+        Thu, 23 Apr 2020 13:51:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587664279;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=OvdL2EnC1XGchLmoU3JyFalyZK03IwfgrdUs09gNkZ4=;
-        b=iYTLICJqgEIZDtFuqkPcFsHvapP1JTkkQOjRkOMrceIBjacNubtsQW/8LhBHa6Qj7ZrNi9
-        D58agPINzetx0j9oAdZdhpFcvNDe29FuUsSq7p/vEyFoeBtZk+OtXYZQd3sVdNTJ9fcFfz
-        Pw7qSD6p7KnHxBEW1+UmGaQqUagf5ZA=
-Date:   Thu, 23 Apr 2020 19:49:34 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] EDAC/mc: Use int type for parameters of
- edac_mc_alloc()
-Message-ID: <20200423174934.GF26021@zn.tnic>
-References: <20200422115814.22205-1-rrichter@marvell.com>
- <20200422115814.22205-3-rrichter@marvell.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K4I4TQXbu0COs/qS0TdMrpO0BMmwvUdkWqtKkxdiZtg=;
+        b=Q7kmrUSJztHIZqhpDgQ2Xk/v5fhpqOJEt3iGB0THxP1c91Qd19SW1IjlCg6VBWVh48mEVP
+        7aPdszrzYrwRzFttCb9mQt8dPPs1cEQtWO0A8C+iM7xcCBszeSSjJ9z22h58TINQ0luhAl
+        0g0HQLTxzhnLF7cHYmgO0A3JjnXsCWs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-mn-TdN1CPCC676oJ5djcYw-1; Thu, 23 Apr 2020 13:51:13 -0400
+X-MC-Unique: mn-TdN1CPCC676oJ5djcYw-1
+Received: by mail-wr1-f71.google.com with SMTP id p2so3246367wrx.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:51:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K4I4TQXbu0COs/qS0TdMrpO0BMmwvUdkWqtKkxdiZtg=;
+        b=GkccjypMzZ7NG7mYqYiKIFp7buqO9Bd115k5v79lB9tOgrvvqafvhN3+oFP+s33kNe
+         nyBC3jJiPRBnDeIGYGydwvX9wOCIMwWAxzx+1x6j/OFirRpUHTxs+vntvGzbFLfUQCl7
+         phAPmr4VApYLEPzNsVgCgEMCgHIdjijihdGlDt8NL9K/IwUmqJhPRwA3Ce7vKpkACoYP
+         4fh0sbO5RtYbwsGs8PGsduZkvgJxaeySB5s7wnAtFj9iPeZnIgF79Qef8P1OoRGJyCmi
+         bfv0R8GONspngwKCSBaubTL70/bs7ITHW+CSH6SOSTxJedD6MSzOp3ESPk5vcJEZkSAx
+         +HTQ==
+X-Gm-Message-State: AGi0PuaqNf3ohrAQMRNDoIwSPs9EbTY+6v3bqiQ4EineMyEdF9+SyOE9
+        zwYrHjtaCMODj7g5wiO3kAA009/xlHfCioCB8QZtISOqrD/w1QaRFj8YzDEjoWjnP3cpy6AVAir
+        LQ5pTtMeCdt7Vhx6Rr3oHRkmC
+X-Received: by 2002:a1c:9e51:: with SMTP id h78mr5726979wme.177.1587664272587;
+        Thu, 23 Apr 2020 10:51:12 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK/wZjFY48hmQMwIAV2fQ6VxIkFz+VgDCtd7gu1Ykeal53v56KplZrYM0/Je0GgoY4i5twzKQ==
+X-Received: by 2002:a1c:9e51:: with SMTP id h78mr5726937wme.177.1587664272275;
+        Thu, 23 Apr 2020 10:51:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
+        by smtp.gmail.com with ESMTPSA id h137sm15720031wme.0.2020.04.23.10.51.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 10:51:11 -0700 (PDT)
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+References: <20200421184150.68011-1-andraprs@amazon.com>
+ <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+ <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+ <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+ <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
+Date:   Thu, 23 Apr 2020 19:51:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200422115814.22205-3-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 01:58:06PM +0200, Robert Richter wrote:
-> Most iterators use int type as index. mci->mc_idx is also type int. So
-> use int type for parameters of edac_mc_alloc(). Extend the range check
-> to check for negative values. There is a type cast now when assigning
-> variable n_layers to mci->n_layer, it is safe due to the range check.
+On 23/04/20 19:42, Paraschiv, Andra-Irina wrote:
+>>
+>>>> - the initial CPU state: CPL0 vs. CPL3, initial program counter, etc.
 > 
-> While at it, rename the users of edac_mc_alloc() to mc_idx as this
-> fits better here.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/edac_mc.c | 7 +++----
->  drivers/edac/edac_mc.h | 6 +++---
->  2 files changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index 107d7c4de933..57d1d356d69c 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -444,8 +444,7 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
->  	return 0;
->  }
->  
-> -struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
-> -				   unsigned int n_layers,
-> +struct mem_ctl_info *edac_mc_alloc(int mc_idx, int n_layers,
->  				   struct edac_mc_layer *layers,
->  				   unsigned int sz_pvt)
->  {
-> @@ -456,7 +455,7 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
->  	void *pvt, *ptr = NULL;
->  	bool per_rank = false;
->  
-> -	if (WARN_ON(n_layers > EDAC_MAX_LAYERS || n_layers == 0))
-> +	if (WARN_ON(mc_idx < 0 || n_layers < 1 || n_layers > EDAC_MAX_LAYERS))
->  		return NULL;
+> The enclave VM has its own kernel and follows the well-known Linux boot
+> protocol, in the end getting to the user application after init finishes
+> its work, so that's CPL3.
 
-Yeah, no, this doesn't make sense to me. The memory controller number
-and the number of layers can never ever be negative and thus signed.
+CPL3 is how the user application run, but does the enclave's Linux boot
+process start in real mode at the reset vector (0xfffffff0), in 16-bit
+protected mode at the Linux bzImage entry point, or at the ELF entry point?
 
-And some drivers supply unsigned types and some signed. So if anything,
-this should be fixing all the callers to supply unsigned quantities.
+Paolo
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
