@@ -5,27 +5,26 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B207C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D3AC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64DDF20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9890320767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgDWUDw (ORCPT
+        id S1726937AbgDWUD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:03:52 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:48466 "EHLO raptor.unsafe.ru"
+        Thu, 23 Apr 2020 16:03:56 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:48608 "EHLO raptor.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726431AbgDWUDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:03:49 -0400
+        id S1726669AbgDWUDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 16:03:54 -0400
 Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 9434420A05;
-        Thu, 23 Apr 2020 20:03:42 +0000 (UTC)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id 83BE120A0A;
+        Thu, 23 Apr 2020 20:03:47 +0000 (UTC)
 From:   Alexey Gladkov <gladkov.alexey@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
@@ -51,112 +50,105 @@ Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Oleg Nesterov <oleg@redhat.com>,
         David Howells <dhowells@redhat.com>
-Subject: [PATCH v13 4/8] proc: instantiate only pids that we can ptrace on 'hidepid=4' mount option
-Date:   Thu, 23 Apr 2020 22:03:12 +0200
-Message-Id: <20200423200316.164518-5-gladkov.alexey@gmail.com>
+Subject: [PATCH v13 8/8] proc: use named enums for better readability
+Date:   Thu, 23 Apr 2020 22:03:16 +0200
+Message-Id: <20200423200316.164518-9-gladkov.alexey@gmail.com>
 X-Mailer: git-send-email 2.25.3
 In-Reply-To: <20200423200316.164518-1-gladkov.alexey@gmail.com>
 References: <20200423200316.164518-1-gladkov.alexey@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 23 Apr 2020 20:03:43 +0000 (UTC)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 23 Apr 2020 20:03:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If "hidepid=4" mount option is set then do not instantiate pids that
-we can not ptrace. "hidepid=4" means that procfs should only contain
-pids that the caller can ptrace.
-
-Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
 Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
 Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- fs/proc/base.c          | 15 +++++++++++++++
- fs/proc/root.c          | 13 ++++++++++---
- include/linux/proc_fs.h |  1 +
- 3 files changed, 26 insertions(+), 3 deletions(-)
+ fs/proc/base.c          | 2 +-
+ fs/proc/inode.c         | 2 +-
+ fs/proc/root.c          | 4 ++--
+ include/linux/proc_fs.h | 8 ++++----
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 93b5d05c142c..a52a91e90c25 100644
+index a52a91e90c25..2868bff1a142 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
-@@ -701,6 +701,14 @@ static bool has_pid_permissions(struct proc_fs_info *fs_info,
+@@ -699,7 +699,7 @@ int proc_setattr(struct dentry *dentry, struct iattr *attr)
+  */
+ static bool has_pid_permissions(struct proc_fs_info *fs_info,
  				 struct task_struct *task,
- 				 int hide_pid_min)
+-				 int hide_pid_min)
++				 enum proc_hidepid hide_pid_min)
  {
-+	/*
-+	 * If 'hidpid' mount option is set force a ptrace check,
-+	 * we indicate that we are using a filesystem syscall
-+	 * by passing PTRACE_MODE_READ_FSCREDS
-+	 */
-+	if (fs_info->hide_pid == HIDEPID_NOT_PTRACEABLE)
-+		return ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS);
-+
- 	if (fs_info->hide_pid < hide_pid_min)
- 		return true;
- 	if (in_group_p(fs_info->pid_gid))
-@@ -3319,7 +3327,14 @@ struct dentry *proc_pid_lookup(struct dentry *dentry, unsigned int flags)
- 	if (!task)
- 		goto out;
+ 	/*
+ 	 * If 'hidpid' mount option is set force a ptrace check,
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index cbacac2e892b..f40c2532c057 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -166,7 +166,7 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
+ 		deactivate_super(old_sb);
+ }
  
-+	/* Limit procfs to only ptraceable tasks */
-+	if (fs_info->hide_pid == HIDEPID_NOT_PTRACEABLE) {
-+		if (!has_pid_permissions(fs_info, task, HIDEPID_NO_ACCESS))
-+			goto out_put_task;
-+	}
-+
- 	result = proc_pid_instantiate(dentry, task, NULL);
-+out_put_task:
- 	put_task_struct(task);
- out:
- 	return result;
+-static inline const char *hidepid2str(int v)
++static inline const char *hidepid2str(enum proc_hidepid v)
+ {
+ 	switch (v) {
+ 		case HIDEPID_OFF: return "off";
 diff --git a/fs/proc/root.c b/fs/proc/root.c
-index 208989274923..8f23b951d685 100644
+index 288093261b7f..ffebed1999e5 100644
 --- a/fs/proc/root.c
 +++ b/fs/proc/root.c
-@@ -47,6 +47,14 @@ static const struct fs_parameter_spec proc_fs_parameters[] = {
- 	{}
+@@ -32,9 +32,9 @@
+ struct proc_fs_context {
+ 	struct pid_namespace	*pid_ns;
+ 	unsigned int		mask;
+-	int			hidepid;
++	enum proc_hidepid	hidepid;
+ 	int			gid;
+-	int			pidonly;
++	enum proc_pidonly	pidonly;
  };
  
-+static inline int valid_hidepid(unsigned int value)
-+{
-+	return (value == HIDEPID_OFF ||
-+		value == HIDEPID_NO_ACCESS ||
-+		value == HIDEPID_INVISIBLE ||
-+		value == HIDEPID_NOT_PTRACEABLE);
-+}
-+
- static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
- {
- 	struct proc_fs_context *ctx = fc->fs_private;
-@@ -63,10 +71,9 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		break;
- 
- 	case Opt_hidepid:
-+		if (!valid_hidepid(result.uint_32))
-+			return invalf(fc, "proc: unknown value of hidepid.\n");
- 		ctx->hidepid = result.uint_32;
--		if (ctx->hidepid < HIDEPID_OFF ||
--		    ctx->hidepid > HIDEPID_INVISIBLE)
--			return invalfc(fc, "hidepid value must be between 0 and 2.\n");
- 		break;
- 
- 	default:
+ enum proc_param {
 diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 1b98a41fdd8a..5bdc117ae947 100644
+index 8bc31ba5cd9c..2cb424e6f36a 100644
 --- a/include/linux/proc_fs.h
 +++ b/include/linux/proc_fs.h
-@@ -47,6 +47,7 @@ enum {
+@@ -43,7 +43,7 @@ struct proc_ops {
+ } __randomize_layout;
+ 
+ /* definitions for hide_pid field */
+-enum {
++enum proc_hidepid {
  	HIDEPID_OFF	  = 0,
  	HIDEPID_NO_ACCESS = 1,
  	HIDEPID_INVISIBLE = 2,
-+	HIDEPID_NOT_PTRACEABLE = 4, /* Limit pids to only ptraceable pids */
+@@ -51,7 +51,7 @@ enum {
  };
  
- struct proc_fs_info {
+ /* definitions for proc mount option pidonly */
+-enum {
++enum proc_pidonly {
+ 	PROC_PIDONLY_OFF = 0,
+ 	PROC_PIDONLY_ON  = 1,
+ };
+@@ -61,8 +61,8 @@ struct proc_fs_info {
+ 	struct dentry *proc_self;        /* For /proc/self */
+ 	struct dentry *proc_thread_self; /* For /proc/thread-self */
+ 	kgid_t pid_gid;
+-	int hide_pid;
+-	int pidonly;
++	enum proc_hidepid hide_pid;
++	enum proc_pidonly pidonly;
+ };
+ 
+ static inline struct proc_fs_info *proc_sb_info(struct super_block *sb)
 -- 
 2.25.3
 
