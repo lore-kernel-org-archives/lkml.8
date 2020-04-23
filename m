@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B970C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11712C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5043520784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F155020784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgDWXLw (ORCPT
+        id S1729294AbgDWXLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:52 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50236 "EHLO
+        Thu, 23 Apr 2020 19:11:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50226 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728557AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728555AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvc-0004na-L3; Fri, 24 Apr 2020 00:06:44 +0100
+        id 1jRkva-0004mp-QB; Fri, 24 Apr 2020 00:06:43 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvY-00E6yk-ME; Fri, 24 Apr 2020 00:06:40 +0100
+        id 1jRkvW-00E6wx-Rf; Fri, 24 Apr 2020 00:06:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Stan Johnson" <userm57@yahoo.com>,
-        "Finn Thain" <fthain@telegraphics.com.au>
-Date:   Fri, 24 Apr 2020 00:07:12 +0100
-Message-ID: <lsq.1587683028.258102348@decadent.org.uk>
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Date:   Fri, 24 Apr 2020 00:06:55 +0100
+Message-ID: <lsq.1587683028.131123999@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 205/245] net/sonic: Fix receive buffer handling
+Subject: [PATCH 3.16 188/245] scsi: fnic: fix invalid stack access
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,108 +55,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 9e311820f67e740f4fb8dcb82b4c4b5b05bdd1a5 upstream.
+commit 42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf upstream.
 
-The SONIC can sometimes advance its rx buffer pointer (RRP register)
-without advancing its rx descriptor pointer (CRDA register). As a result
-the index of the current rx descriptor may not equal that of the current
-rx buffer. The driver mistakenly assumes that they are always equal.
-This assumption leads to incorrect packet lengths and possible packet
-duplication. Avoid this by calling a new function to locate the buffer
-corresponding to a given descriptor.
+gcc -O3 warns that some local variables are not properly initialized:
 
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
+drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[0] = *a0;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
+  u64 a0, a1;
+      ^~
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
+
+Apparently the code relies on the local variables occupying adjacent memory
+locations in the same order, but this is of course not guaranteed.
+
+Use an array of two u64 variables where needed to make it work correctly.
+
+I suspect there is also an endianness bug here, but have not digged in deep
+enough to be sure.
+
+Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Link: https://lore.kernel.org/r/20200107201602.4096790-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 35 ++++++++++++++++++++++++----
- drivers/net/ethernet/natsemi/sonic.h |  5 ++--
- 2 files changed, 33 insertions(+), 7 deletions(-)
+ drivers/scsi/fnic/vnic_dev.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -423,6 +423,21 @@ static irqreturn_t sonic_interrupt(int i
- 	return IRQ_HANDLED;
+--- a/drivers/scsi/fnic/vnic_dev.c
++++ b/drivers/scsi/fnic/vnic_dev.c
+@@ -445,26 +445,26 @@ int vnic_dev_soft_reset_done(struct vnic
+ 
+ int vnic_dev_hang_notify(struct vnic_dev *vdev)
+ {
+-	u64 a0, a1;
++	u64 a0 = 0, a1 = 0;
+ 	int wait = 1000;
+ 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
  }
  
-+/* Return the array index corresponding to a given Receive Buffer pointer. */
-+static int index_from_addr(struct sonic_local *lp, dma_addr_t addr,
-+			   unsigned int last)
-+{
-+	unsigned int i = last;
-+
-+	do {
-+		i = (i + 1) & SONIC_RRS_MASK;
-+		if (addr == lp->rx_laddr[i])
-+			return i;
-+	} while (i != last);
-+
-+	return -ENOENT;
-+}
-+
- /*
-  * We have a good packet(s), pass it/them up the network stack.
-  */
-@@ -442,6 +457,16 @@ static void sonic_rx(struct net_device *
+ int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
+ {
+-	u64 a0, a1;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err, i;
  
- 		status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
- 		if (status & SONIC_RCR_PRX) {
-+			u32 addr = (sonic_rda_get(dev, entry,
-+						  SONIC_RD_PKTPTR_H) << 16) |
-+				   sonic_rda_get(dev, entry, SONIC_RD_PKTPTR_L);
-+			int i = index_from_addr(lp, addr, entry);
-+
-+			if (i < 0) {
-+				WARN_ONCE(1, "failed to find buffer!\n");
-+				break;
-+			}
-+
- 			/* Malloc up new buffer. */
- 			new_skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
- 			if (new_skb == NULL) {
-@@ -463,7 +488,7 @@ static void sonic_rx(struct net_device *
+ 	for (i = 0; i < ETH_ALEN; i++)
+ 		mac_addr[i] = 0;
  
- 			/* now we have a new skb to replace it, pass the used one up the stack */
- 			dma_unmap_single(lp->device, lp->rx_laddr[entry], SONIC_RBSIZE, DMA_FROM_DEVICE);
--			used_skb = lp->rx_skb[entry];
-+			used_skb = lp->rx_skb[i];
- 			pkt_len = sonic_rda_get(dev, entry, SONIC_RD_PKTLEN);
- 			skb_trim(used_skb, pkt_len);
- 			used_skb->protocol = eth_type_trans(used_skb, dev);
-@@ -472,13 +497,13 @@ static void sonic_rx(struct net_device *
- 			lp->stats.rx_bytes += pkt_len;
+-	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
+ 	if (err)
+ 		return err;
  
- 			/* and insert the new skb */
--			lp->rx_laddr[entry] = new_laddr;
--			lp->rx_skb[entry] = new_skb;
-+			lp->rx_laddr[i] = new_laddr;
-+			lp->rx_skb[i] = new_skb;
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		mac_addr[i] = ((u8 *)&a0)[i];
++		mac_addr[i] = ((u8 *)&a)[i];
  
- 			bufadr_l = (unsigned long)new_laddr & 0xffff;
- 			bufadr_h = (unsigned long)new_laddr >> 16;
--			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_L, bufadr_l);
--			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
-+			sonic_rra_put(dev, i, SONIC_RR_BUFADR_L, bufadr_l);
-+			sonic_rra_put(dev, i, SONIC_RR_BUFADR_H, bufadr_h);
- 		} else {
- 			/* This should only happen, if we enable accepting broken packets. */
- 			lp->stats.rx_errors++;
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -273,8 +273,9 @@
- #define SONIC_NUM_RDS   SONIC_NUM_RRS /* number of receive descriptors */
- #define SONIC_NUM_TDS   16            /* number of transmit descriptors */
+ 	return 0;
+ }
+@@ -489,15 +489,15 @@ void vnic_dev_packet_filter(struct vnic_
  
--#define SONIC_RDS_MASK  (SONIC_NUM_RDS-1)
--#define SONIC_TDS_MASK  (SONIC_NUM_TDS-1)
-+#define SONIC_RRS_MASK  (SONIC_NUM_RRS - 1)
-+#define SONIC_RDS_MASK  (SONIC_NUM_RDS - 1)
-+#define SONIC_TDS_MASK  (SONIC_NUM_TDS - 1)
+ void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
  
- #define SONIC_RBSIZE	1520          /* size of one resource buffer */
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
  
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
+ 	if (err)
+ 		printk(KERN_ERR
+ 			"Can't add addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
+@@ -507,15 +507,15 @@ void vnic_dev_add_addr(struct vnic_dev *
+ 
+ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
+ 
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
+ 	if (err)
+ 		printk(KERN_ERR
+ 			"Can't del addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
 
