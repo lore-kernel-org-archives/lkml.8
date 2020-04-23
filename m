@@ -2,135 +2,63 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897C3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7971FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D49D20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC9C20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbgDWIgc (ORCPT
+        id S1726451AbgDWIiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:36:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWIgc (ORCPT
+        Thu, 23 Apr 2020 04:38:54 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:54827 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWIiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:36:32 -0400
-X-Greylist: delayed 1887 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Apr 2020 01:36:31 PDT
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B8EC03C1AB
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 01:36:31 -0700 (PDT)
-Received: from [2a02:fe0:c700:2:984c:ac0d:3200:67f3] (port=54787)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <Ywe_C4rlyn@scandinavic.eu>)
-        id 1jRXLR-0006bG-3W
-        for linux-kernel@vger.kernel.org; Thu, 23 Apr 2020 10:36:29 +0200
-Subject: Re: Fair Pay Initiative: - itX
-References: <cefcd5a7-d7e7-f296-94d5-7c3e4f5bc2a3@samilands.eu>
- <077e9c84-45b3-cd70-e8f9-6733fcb862ac@samilands.eu>
- <a4e3b765-1546-27aa-8727-bdb54d037d38@samilands.eu>
- <47fb0210-b725-387b-5b10-6f15a7ccaf82@scandinavic.eu>
-To:     linux-kernel@vger.kernel.org
-From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Ywe_C4rlyn@scandinavic.eu>
-Message-ID: <c20cd7fa-bcb9-36b5-b959-e4382ec7d92e@scandinavic.eu>
-Date:   Thu, 23 Apr 2020 10:36:16 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <47fb0210-b725-387b-5b10-6f15a7ccaf82@scandinavic.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Apr 2020 04:38:54 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG3.macronix.com with ESMTP id 03N8ck1n034673;
+        Thu, 23 Apr 2020 16:38:46 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com
+Cc:     juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v2 0/2] mtd: spi-nor: macronix: Add support for mx25l512/mx25u512
+Date:   Thu, 23 Apr 2020 16:38:41 +0800
+Message-Id: <1587631123-25474-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG3.macronix.com 03N8ck1n034673
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Then I think I have set the course for *nix in 202x - itX.
+Hi,
 
-With philosophy going back to a c64 bought in the mid 80s.
+mx25l51245g/mx25u51245g is a mass production for new design and
+replace mx66l51235l/mx66u51235f(phase out).
 
-With influences back to the 70s and fair pay politics, that now is The 
-Dewa belief, rather than christanity. That again goes back to Adam!
+Validated by read, erase, read back, write and read back
+on Xilinx Zynq PicoZed FPGA board which included
+Macronix SPI Host (driver/spi/spi-mxic.c).
 
-Then all things should be solved here, that has been part of the 
-discussion even since then!
+change log:
+v2:
+Add which controller we tested the mx25l/u51245g.
 
-And the level of IT should be best in politics generally aswell.
+Mason Yang (2):
+  mtd: spi-nor: macronix: Add support for mx25l51245g
+  mtd: spi-nor: macronix: Add support for mx25u51245g
 
-Serene Greetings,
-Ywe Cærlyn
-itX Initiative Taker.
-https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
+ drivers/mtd/spi-nor/macronix.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+-- 
+1.9.1
 
-Den 23.04.2020 10:04, skrev Ywe Cærlyn:
-> Solving this it seems christianity is the root of behaviour problems 
-> here, and solves this aswell, which is what this discussion started 
-> with. More the reasons to switch to The Dewa.
-> 
-> Serene Greetings!
-> 
-> Den 22.04.2020 15:42, skrev Ywe Cærlyn:
->> Rather naming the effort after the I/T sector seems right. The whole 
->> of I/T sector is in this, and describes the involved dynamics.
->> Also is an indicator of what kind of quality we want in this.
->>
->> - no 10ms filters in sched.c
->> - realtime audio threads probably good possibly h/w accelerated, also 
->> for production.
->> - low jitter overall for desktop and server.
->> - tight configs gets better gaming on *nix
->> etc.
->>
->> : itX
->>
->> - even compliant with monotheism, and Óne Dewa without company, as a 
->> global target of optimal economics, clear example of needs work = 
->> India, who needs to drop the idea of elephant gods etc. And after the 
->> 70s it seems the concept is more relevant than ever.
->>
->> Serene Greetings,
->> Ywe Cærlyn
->>
->> Den 22.04.2020 10:34, skrev Ywe Cærlyn:
->>> And really, when coupled to concepts like Imam, Imam Of The Dewa, it 
->>> really is our own technologic goals aswell. In places where ALLAH 
->>> does not work, or G-D, one really should try this instead. (Could be 
->>> related to linguistic and cultural changes, or symbolworlds as a good 
->>> psychologist would say.)
->>>
->>> Serene Greetings.
->>>
->>> Den 20.04.2020 10:56, skrev Ywe Cærlyn:
->>>> Something that I find interesting, is that hippie times, turned in 
->>>> favour of The Dewa, and not really G-d, although it is economically 
->>>> compatible. Even Bill Gates negating G-d, is much The Dewa, 
->>>> politically.
->>>>
->>>> And Steve Jobs is known for hindu connections, and the trance 
->>>> culture I was part of making myself, post-hippe style, was about The 
->>>> Dewa.
->>>>
->>>> And now it is everything we would want in politics, system design, 
->>>> and culture.
->>>>
->>>> I can only strongly suggest using the concept, when referring a 
->>>> certain transcendence, and a ban on amanita is fully compatible with 
->>>> science aswell.
->>>>
->>>> Also for Norway to join EU.
->>>>
->>>> Serene Greetings,
->>>> Ywe Cærlyn,
->>>> The Fair Pay Initiative.
->>>> https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
->>>>
->>>>
->>>>
->>>>
->>>>
