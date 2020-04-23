@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF12C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CE0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D87820780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81ACB20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgDWXMU (ORCPT
+        id S1729313AbgDWXMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:12:20 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50104 "EHLO
+        Thu, 23 Apr 2020 19:12:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50080 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728518AbgDWXGv (ORCPT
+        by vger.kernel.org with ESMTP id S1728512AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvY-0004mB-JC; Fri, 24 Apr 2020 00:06:40 +0100
+        id 1jRkvZ-0004nQ-0d; Fri, 24 Apr 2020 00:06:41 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvX-00E6xk-U1; Fri, 24 Apr 2020 00:06:39 +0100
+        id 1jRkvV-00E6w2-Ol; Fri, 24 Apr 2020 00:06:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Guenter Roeck" <linux@roeck-us.net>,
-        "Luuk Paulussen" <luuk.paulussen@alliedtelesis.co.nz>
-Date:   Fri, 24 Apr 2020 00:07:05 +0100
-Message-ID: <lsq.1587683028.381735639@decadent.org.uk>
+        "=?UTF-8?q?Jer=C3=B3nimo=20Borque?=" <jeronimo@borque.com.ar>,
+        "Johan Hovold" <johan@kernel.org>
+Date:   Fri, 24 Apr 2020 00:06:44 +0100
+Message-ID: <lsq.1587683028.185466724@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 198/245] hwmon: (adt7475) Make volt2reg return same
- reg as reg2volt input
+Subject: [PATCH 3.16 177/245] USB: serial: simple: Add Motorola Solutions
+ TETRA MTP3xxx and MTP85xx
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,41 +56,205 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
+From: Jerónimo Borque <jeronimo@borque.com.ar>
 
-commit cf3ca1877574a306c0207cbf7fdf25419d9229df upstream.
+commit 260e41ac4dd3e5acb90be624c03ba7f019615b75 upstream.
 
-reg2volt returns the voltage that matches a given register value.
-Converting this back the other way with volt2reg didn't return the same
-register value because it used truncation instead of rounding.
+Add device-ids for the Motorola Solutions TETRA radios MTP3xxx series
+and MTP85xx series
 
-This meant that values read from sysfs could not be written back to sysfs
-to set back the same register value.
+$ lsusb -vd 0cad:
 
-With this change, volt2reg will return the same value for every voltage
-previously returned by reg2volt (for the set of possible input values)
+Bus 001 Device 009: ID 0cad:9015 Motorola CGISS TETRA PEI interface
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0
+  bDeviceSubClass         0
+  bDeviceProtocol         0
+  bMaxPacketSize0        64
+  idVendor           0x0cad Motorola CGISS
+  idProduct          0x9015
+  bcdDevice           24.16
+  iManufacturer           1
+  iProduct                2
+  iSerial                 0
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength       0x0037
+    bNumInterfaces          2
+    bConfigurationValue     1
+    iConfiguration          3
+    bmAttributes         0x80
+      (Bus Powered)
+    MaxPower              500mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           2
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x01  EP 1 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       0
+      bNumEndpoints           2
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x02  EP 2 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
 
-Signed-off-by: Luuk Paulussen <luuk.paulussen@alliedtelesis.co.nz>
-Link: https://lore.kernel.org/r/20191205231659.1301-1-luuk.paulussen@alliedtelesis.co.nz
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Bus 001 Device 010: ID 0cad:9013 Motorola CGISS TETRA PEI interface
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0
+  bDeviceSubClass         0
+  bDeviceProtocol         0
+  bMaxPacketSize0        64
+  idVendor           0x0cad Motorola CGISS
+  idProduct          0x9013
+  bcdDevice           24.16
+  iManufacturer           1
+  iProduct                2
+  iSerial                 0
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength       0x0037
+    bNumInterfaces          2
+    bConfigurationValue     1
+    iConfiguration          3
+    bmAttributes         0x80
+      (Bus Powered)
+    MaxPower              500mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           2
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x01  EP 1 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       0
+      bNumEndpoints           2
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass      0
+      bInterfaceProtocol      0
+      iInterface              0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x02  EP 2 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+
+Signed-off-by: Jerónimo Borque <jeronimo@borque.com.ar>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hwmon/adt7475.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/serial/usb-serial-simple.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/hwmon/adt7475.c
-+++ b/drivers/hwmon/adt7475.c
-@@ -268,9 +268,10 @@ static inline u16 volt2reg(int channel,
- 	long reg;
- 
- 	if (bypass_attn & (1 << channel))
--		reg = (volt * 1024) / 2250;
-+		reg = DIV_ROUND_CLOSEST(volt * 1024, 2250);
- 	else
--		reg = (volt * r[1] * 1024) / ((r[0] + r[1]) * 2250);
-+		reg = DIV_ROUND_CLOSEST(volt * r[1] * 1024,
-+					(r[0] + r[1]) * 2250);
- 	return clamp_val(reg, 0, 1023) & (0xff << 2);
- }
+--- a/drivers/usb/serial/usb-serial-simple.c
++++ b/drivers/usb/serial/usb-serial-simple.c
+@@ -89,6 +89,8 @@ DEVICE(moto_modem, MOTO_IDS);
+ #define MOTOROLA_TETRA_IDS()			\
+ 	{ USB_DEVICE(0x0cad, 0x9011) },	/* Motorola Solutions TETRA PEI */ \
+ 	{ USB_DEVICE(0x0cad, 0x9012) },	/* MTP6550 */ \
++	{ USB_DEVICE(0x0cad, 0x9013) },	/* MTP3xxx */ \
++	{ USB_DEVICE(0x0cad, 0x9015) },	/* MTP85xx */ \
+ 	{ USB_DEVICE(0x0cad, 0x9016) }	/* TPG2200 */
+ DEVICE(motorola_tetra, MOTOROLA_TETRA_IDS);
  
 
