@@ -2,217 +2,138 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C143C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C1FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE9592076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587671305;
-	bh=+ytu+YDAJzv2PrgwpsGZi4ZyQQ6l2Ov2bxefoLHSpwU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Odvt4gt6pxiX5OH5TuOL6KBijnvFogUyLuZ0uqbG2dumIiC5bto2LGsamgomunWTn
-	 MLIBh2Ue3SRgdN/Pj6BkCSH1CbsjhpoUlyzstaVVEpryjdesAMkcHkkFzlmazY3GBV
-	 a8RlFs1NcKFIJmhNClE3G3F2xxWy006xo3ESvWso=
+	by mail.kernel.org (Postfix) with ESMTP id 3051B20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YC4VUDJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgDWTsY (ORCPT
+        id S1726755AbgDWTtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbgDWTsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:48:24 -0400
-Received: from pobox.suse.cz (unknown [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CC1A20728;
-        Thu, 23 Apr 2020 19:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587671303;
-        bh=+ytu+YDAJzv2PrgwpsGZi4ZyQQ6l2Ov2bxefoLHSpwU=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=a0Weh408xx04E+13hfs1LRFJGgLn9GQmwB7C1DXEucIuYMeogJdexcN0DxOH8KSI4
-         2Sp9sfRFzQ2bBIJ5TNoe1OBenf3zRRhHYSqJv44cHgtHxTTvmpg08kjzE0wmnDMNA5
-         npL8B+rT72WcbuzRGQtv7OVUcZh4D5Yf1dSDqMO8=
-Date:   Thu, 23 Apr 2020 21:48:20 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PREEMPT_RT] 8250 IRQ lockup when flooding serial console (was
- Re: [ANNOUNCE] v5.4.28-rt19)
-In-Reply-To: <20200423160707.hqt5wjinzcec2yig@linutronix.de>
-Message-ID: <nycvar.YFH.7.76.2004232141590.19713@cbobk.fhfr.pm>
-References: <20200330144712.cwcz5ejal4ankeoi@linutronix.de> <nycvar.YEU.7.76.2004231017470.4730@gjva.wvxbf.pm> <nycvar.YFH.7.76.2004231111550.19713@cbobk.fhfr.pm> <20200423104559.rgplz6rqk6sg4kz7@linutronix.de>
- <20200423160707.hqt5wjinzcec2yig@linutronix.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 23 Apr 2020 15:49:50 -0400
+Received: from mail-eopbgr30076.outbound.protection.outlook.com ([40.107.3.76]:64642
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726116AbgDWTtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 15:49:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F/EGZokF+8TbeLKwBwhCBcznldoclQdmjnrH6UTKzax0W8PrwCEPRvKNMR/6EUDYxz8y/AjiRGcIU0bEENiQZ06VJ3gN4blGJMkDeRgckdGqO08kJE9FohRGlYFLAH0OE4JHKlpWsGNgtvzZuE1mtYTpwvVTRFNfHrk8dsvNIZS84pfQcMJx7HtGKatLUv4WK2syDm/UTJQGT6fJVcyUQd7nq7kHvJm89tm2rMa5dMr/Wt6alVWUJ9w1/T1Yj23HqhpjDfO9Btk+zEr72oqGv5RiIJ4JoAT4BHm5Q+W8RUipib23kKsmsEWhjPasxosyBUyTHzUp79TUJxYn0bq01A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rzvQLkO/xld9TcDTkwpHyIBcJ5JZG1r9RwFegksu4tc=;
+ b=lpF+xVec/+VPWofBNjGNyQeooG4YPDlg9qgQ+SmvIrBAa9OKCws4BmGPdv4zLWwhiflQmoJ9SAb05HrzlwhoOXiiFTlB4VPwbc93PtB4ic4Gz+eHkz8Iutq4nGGXo8FwkbthEWn1Chw8mW7WXdXsQW/zu9wwf7iZUy4y7JNdw1Jt+zrmml/RLiswnw6yMx57aPYlaGvySnesIXrJ4GhEM3Ova/dxIqVfrPFV0ibybAWK1akZTDg8apWR5DTvfz4+F7ekLyjeR8eefOLIQTfwq3PkaOZHYTU7+kO7OCyN6STvgdlHz59iFIV3TFwaxv95m9Eit+oiLvnqBV6JHUwBNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rzvQLkO/xld9TcDTkwpHyIBcJ5JZG1r9RwFegksu4tc=;
+ b=YC4VUDJvLbVubbOwCfDMRRelHE7CvzdMnZhhYVOgtQrSvNdvUA/kVUeIRr0OoBSa6IIQqmjwYyz9CbDbiOlO6cP4K2HbtA/7LCz15l/YgtkEN8JXFCAscExTtMQECdgHLy61yKxaH7aaMrFk2XtYyWPtARO3tmB/AOE3AvPXRZs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB6864.eurprd05.prod.outlook.com (2603:10a6:800:18d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
+ 2020 19:49:44 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
+ 19:49:44 +0000
+Date:   Thu, 23 Apr 2020 16:49:41 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Megha Dey <megha.dey@linux.intel.com>, maz@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
+        KVM list <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200423194941.GG13640@mellanox.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
+ <CAPcyv4hGX5jCzag8oQVUZ6Eq9GvZYLN_6kmBAgQMbrBbNzJ0yg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hGX5jCzag8oQVUZ6Eq9GvZYLN_6kmBAgQMbrBbNzJ0yg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR12CA0005.namprd12.prod.outlook.com
+ (2603:10b6:208:a8::18) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR12CA0005.namprd12.prod.outlook.com (2603:10b6:208:a8::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 19:49:43 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRhqv-0007Qv-1Z; Thu, 23 Apr 2020 16:49:41 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6c1c6805-27c7-4618-9885-08d7e7bf7852
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6864:|VI1PR05MB6864:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB68642978D0C435E4D26606EACFD30@VI1PR05MB6864.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 03827AF76E
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(9746002)(9786002)(86362001)(6916009)(33656002)(5660300002)(54906003)(8936002)(81156014)(7416002)(478600001)(316002)(26005)(52116002)(36756003)(2906002)(2616005)(186003)(66556008)(4326008)(8676002)(66946007)(66476007)(4744005)(1076003)(24400500001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: G4BKlTir9utjQof5cK/oslejjp3p/Il7VAEAxorU5mOcIJzYCHsYSR0Q5cVtHOHg7qJE1KGEmR0FaYJ6rtspcDH+eBao1tgmHsROXcd709QzzpwIFGlOiN4UKjLMAT2VnP1+ziG5Snj+9AQuLwH2upLzeAxbWfRje2vDNpUl9ZFzS7qb8w5lqgueT1RtHxcQBEmcKfbr37QlHWouIU50o35EXej2J/HEk2sALfqEmXFeFPk8CUN8N4xx6tmflGU3nvR/Oc6+oVOwBp70sFD9Yj2Udrbh4vCOM+KIBsB2TFiyfziW9dNwMlje6QIHCtS/rM3kHpeaMqDG3f4YsG+Row1SLIYfdIbtnRkYMrAdblMMjpOnWIYrVXmlwdLiEmbqhqizWXYFpmJAGcWNDutnSxcj17YEJyLz23vYu6Ckup6IKHov9ESOWkq8vnikytigivcoo6w+PsFtWDj77+5758Rue+RUSL4ytROJzkM9pOjrq+m/gELafALBXEPXadNI
+X-MS-Exchange-AntiSpam-MessageData: II9LNYqnxYZsIEhP7A7xLL4CSGTLq4DeqSqKOkOlks7Mv6v7nmYeQv9sUfo8kwkaXd/DhCyWpOEneOEf4ghkoU9T6YLvRGzbzNDY+H6hx8WpqGUJkrVNo7UwcnjBKXJQYlAy709+C263g8iDS4ilmQ==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c1c6805-27c7-4618-9885-08d7e7bf7852
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 19:49:44.4550
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FQ8MP1TWp8zNZlFkZqoibUtlubZPm/AOjyLpAyfTZBDrv7SuKwykQag9DMjOkoWGZdJBVlzLUlEmaA0wIxDFWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6864
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020, Sebastian Andrzej Siewior wrote:
+On Thu, Apr 23, 2020 at 12:17:50PM -0700, Dan Williams wrote:
 
-> The IRQ4 is edge and in charge of ttyS0. It is handled by 
-> handle_edge_irq() and after ->irq_ack(), the thread is woken up and then 
-> we get another ->handle_edge_irq() for IRQ4. With larger PASS_LIMIT the 
-> thread runs longer so note_interrupt() will make less IRQ_HANDLED based 
-> on ->threads_handled_last. If it observes 100 handled within 100000 
-> interrupts then the counters are reset again. On !RT it usually manages 
-> to get >100 per 100000 interrupts so it appears good. On RT it gets less 
-> and the interrupt gets disabled.
-> 
-> So it is not RT related, but RT triggers it more reliably (also the 
-> PASS_LIMIT change can vanish). I can't tell if this is a qemu bug in 
-> emulating the HW or not. I can't reproduce it real HW. I see a second 
-> edge interrupt only after the thread completed. I can't tell if this is 
-> because it is a real UART and the data is flowing slower or because the 
-> edge-IRQ is not triggered repeatedly.
+> Per Megha's follow-up can you send the details about that other device
+> and help clear a path for a device-specific MSI addr/data table
+> format. Ever since HMM I've been sensitive, perhaps overly-sensitive,
+> to claims about future upstream users. The fact that you have an
+> additional use case is golden for pushing this into a common area and
+> validating the scope of the proposed API.
 
-Yeah, it's all strange. In the hope of understanding the issue a little 
-bit better, I tried to disable IRQs in serial8250_handle_irq() to mimic 
-what !PREEMPT_RT spinlock would do; the idea was that this is some kind of 
-strange race / memory ordering (missed ack?) between the threaded irq4 
-handler and the do_IRQ() -> handle_edge_irq() -> ... path.
+I think I said it at plumbers, but yes, we are interested in this, and
+would like dynamic MSI-like interrupts available to the driver (what
+Intel calls IMS)
 
-So I did this:
+It is something easy enough to illustrate with any RDMA device really,
+just open a MR against the addr and use RDMA_WRITE to trigger the
+data. It should trigger a Linux IRQ. Nothing else should be needed.
 
----
- drivers/tty/serial/8250/8250_port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index e31217e8dce6..1a577305e174 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1813,12 +1813,13 @@ static bool handle_rx_dma(struct uart_8250_port *up, unsigned int iir)
- int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- {
- 	unsigned char status;
--	unsigned long flags;
-+	unsigned long flags, f;
- 	struct uart_8250_port *up = up_to_u8250p(port);
- 
- 	if (iir & UART_IIR_NO_INT)
- 		return 0;
- 
-+	local_irq_save(f);
- 	spin_lock_irqsave(&port->lock, flags);
- 
- 	status = serial_port_in(port, UART_LSR);
-@@ -1833,6 +1834,7 @@ int serial8250_handle_irq(struct uart_port *port, unsigned int iir)
- 		serial8250_tx_chars(up);
- 
- 	uart_unlock_and_check_sysrq(port, flags);
-+	local_irq_restore(f);
- 	return 1;
- }
-
-But curiously enough, that exploded in the oposite order (so first there 
-was CPU stall, and only later the disabling of IRQ4 due to spurious 
-storm):
-
-[  107.308525] 000: rcu: INFO: rcu_preempt self-detected stall on CPU
-[  107.308542] 000: rcu: 	0-....: (20985 ticks this GP) idle=b2a/1/0x4000000000000002 softirq=0/0 fqs=4841 
-[  107.308563] 000: 	(t=21000 jiffies g=16217 q=22343)
-[  107.308565] 000: NMI backtrace for cpu 0
-[  107.308570] 000: CPU: 0 PID: 1213 Comm: irq/4-ttyS0 Not tainted 5.6.4-rt19+ #11
-[  107.308577] 000: Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c89-rebuilt.suse.com 04/01/2014
-[  107.308579] 000: Call Trace:
-[  107.308599] 000:  <IRQ>
-[  107.308608] 000:  dump_stack+0x50/0x6b
-[  107.308630] 000:  nmi_cpu_backtrace+0x8a/0x90
-[  107.308639] 000:  ? lapic_can_unplug_cpu+0xd0/0xd0
-[  107.308644] 000:  nmi_trigger_cpumask_backtrace+0xe9/0x130
-[  107.308647] 000:  rcu_dump_cpu_stacks+0x8e/0xbc
-[  107.308658] 000:  rcu_sched_clock_irq+0x70a/0xad0
-[  107.308661] 000:  ? cpuacct_account_field+0x16/0x70
-[  107.308667] 000:  ? tick_sched_do_timer+0x60/0x60
-[  107.308675] 000:  update_process_times+0x1f/0x40
-[  107.308680] 000:  tick_sched_handle+0x2f/0x40
-[  107.308685] 000:  tick_sched_timer+0x3e/0x80
-[  107.308687] 000:  __hrtimer_run_queues+0x11e/0x3c0
-[  107.308691] 000:  hrtimer_interrupt+0xea/0x250
-[  107.308694] 000:  smp_apic_timer_interrupt+0x84/0x200
-[  107.308704] 000:  apic_timer_interrupt+0xf/0x20
-[  107.308709] 000:  </IRQ>
-[  107.308713] 000: RIP: 0010:serial8250_handle_irq.part.26+0x9e/0xd0
-[  107.308719] 000: Code: 48 85 c0 74 09 80 b8 e9 00 00 00 00 74 0f 41 83 e5 20 74 09 f6 83 36 02 00 00 02 75 2d 31 f6 48 89 df e8 65 87 ff ff 41 54 9d <b8> 01 00 00 00 5b 5d 41 5c 41 5d 41 5e c3 48 8b 40 08 48 89 df e8
-[  107.308723] 000: RSP: 0018:ffffb6ffc0a63e20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-[  107.308726] 000: RAX: ffff90b23734e040 RBX: ffffffff9f5a0de0 RCX: 0000000000000000
-[  107.308728] 000: RDX: 0000000000000003 RSI: 0000000000000000 RDI: ffffffff9f5a0de0
-[  107.308729] 000: RBP: 0000000000000060 R08: ffffffff9ea0b7a0 R09: ffffb6ffc0a63d78
-[  107.308730] 000: R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000246
-[  107.308731] 000: R13: 0000000000000020 R14: 00000000000000c2 R15: ffff90b2ba711e58
-[  107.308739] 000:  serial8250_default_handle_irq+0x45/0x50
-[  107.308741] 000:  serial8250_interrupt+0x51/0xa0
-[  107.308749] 000:  ? irq_finalize_oneshot.part.46+0xd0/0xd0
-[  107.308755] 000:  irq_forced_thread_fn+0x2b/0x70
-[  107.308758] 000:  irq_thread+0xd8/0x170
-[  107.308760] 000:  ? wake_threads_waitq+0x30/0x30
-[  107.308761] 000:  ? irq_thread_dtor+0x90/0x90
-[  107.308763] 000:  kthread+0x10e/0x130
-[  107.308769] 000:  ? kthread_park+0x80/0x80
-[  107.308770] 000:  ret_from_fork+0x35/0x40
-[  165.360370] 000: irq 4: nobody cared (try booting with the "irqpoll" option)
-[  165.360392] 000: CPU: 0 PID: 1213 Comm: irq/4-ttyS0 Not tainted 5.6.4-rt19+ #11
-[  165.360398] 000: Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c89-rebuilt.suse.com 04/01/2014
-[  165.360599] 000: Call Trace:
-[  165.361639] 000:  <IRQ>
-[  165.361651] 000:  dump_stack+0x50/0x6b
-[  165.361670] 000:  __report_bad_irq+0x2b/0xb0
-[  165.361678] 000:  note_interrupt+0x22e/0x280
-[  165.361680] 000:  ? serial8250_handle_irq.part.26+0x9e/0xd0
-[  165.361685] 000:  handle_irq_event_percpu+0x6e/0x90
-[  165.361693] 000:  handle_irq_event+0x48/0x90
-[  165.361695] 000:  handle_edge_irq+0x95/0x1f0
-[  165.361700] 000:  do_IRQ+0x6c/0x120
-[  165.361709] 000:  common_interrupt+0xf/0xf
-[  165.361719] 000:  </IRQ>
-[  165.361720] 000: RIP: 0010:serial8250_handle_irq.part.26+0x9e/0xd0
-[  165.361727] 000: Code: 48 85 c0 74 09 80 b8 e9 00 00 00 00 74 0f 41 83 e5 20 74 09 f6 83 36 02 00 00 02 75 2d 31 f6 48 89 df e8 65 87 ff ff 41 54 9d <b8> 01 00 00 00 5b 5d 41 5c 41 5d 41 5e c3 48 8b 40 08 48 89 df e8
-[  165.361731] 000: RSP: 0018:ffffb6ffc0a63e20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdb
-[  165.361732] 000: RAX: ffff90b23734e040 RBX: ffffffff9f5a0de0 RCX: 0000000000000001
-[  165.361736] 000: RDX: 0000000000000003 RSI: 0000000000000097 RDI: 00000000ffffffff
-[  165.361737] 000: RBP: 0000000000000060 R08: ffffffff9ea0b7a0 R09: ffffb6ffc0a63d78
-[  165.361739] 000: R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000246
-[  165.361740] 000: R13: 0000000000000020 R14: 00000000000000c2 R15: ffff90b2ba711e58
-[  165.361749] 000:  serial8250_default_handle_irq+0x45/0x50
-[  165.361752] 000:  serial8250_interrupt+0x51/0xa0
-[  165.361759] 000:  ? irq_finalize_oneshot.part.46+0xd0/0xd0
-[  165.361762] 000:  irq_forced_thread_fn+0x2b/0x70
-[  165.361767] 000:  irq_thread+0xd8/0x170
-[  165.361771] 000:  ? wake_threads_waitq+0x30/0x30
-[  165.361773] 000:  ? irq_thread_dtor+0x90/0x90
-[  165.361775] 000:  kthread+0x10e/0x130
-[  165.361780] 000:  ? kthread_park+0x80/0x80
-[  165.361782] 000:  ret_from_fork+0x35/0x40
-[  165.361787] 000: handlers:
-[  165.361793] 000: [<00000000005f10ab>] irq_default_primary_handler threaded [<00000000853a4a7e>] serial8250_interrupt
-[  165.361795] 000: Disabling IRQ #4
-
-So this time the storm + stall apparently was triggered by the 'popf' 
-coming from my added local_irq_restore().
-
-It's really curious.
-
-I'd be happy to blame it on some qemu breakage, but it seems to be 
-happening on any randomly chosen version so far.
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Jason
