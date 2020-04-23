@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCBEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B762C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB2C20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092F420780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgDWXNX (ORCPT
+        id S1729062AbgDWXNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:13:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49982 "EHLO
+        Thu, 23 Apr 2020 19:13:48 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50006 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728482AbgDWXGu (ORCPT
+        by vger.kernel.org with ESMTP id S1728490AbgDWXGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:50 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvY-0004ms-FA; Fri, 24 Apr 2020 00:06:40 +0100
+        id 1jRkvZ-0004n0-0I; Fri, 24 Apr 2020 00:06:41 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-00E6vO-QT; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvV-00E6vb-81; Fri, 24 Apr 2020 00:06:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marcel Holtmann" <marcel@holtmann.org>,
-        "Jiri Kosina" <jkosina@suse.cz>
-Date:   Fri, 24 Apr 2020 00:06:37 +0100
-Message-ID: <lsq.1587683028.312246222@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Vladis Dronov" <vdronov@redhat.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Date:   Fri, 24 Apr 2020 00:06:39 +0100
+Message-ID: <lsq.1587683028.552896285@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 170/245] HID: hidraw: Fix returning EPOLLOUT from
- hidraw_poll
+Subject: [PATCH 3.16 172/245] Input: aiptek - fix endpoint sanity check
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,42 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 9f3b61dc1dd7b81e99e7ed23776bb64a35f39e1a upstream.
+commit 3111491fca4f01764e0c158c5e0f7ced808eef51 upstream.
 
-When polling a connected /dev/hidrawX device, it is useful to get the
-EPOLLOUT when writing is possible. Since writing is possible as soon as
-the device is connected, always return it.
+The driver was checking the number of endpoints of the first alternate
+setting instead of the current one, something which could lead to the
+driver binding to an invalid interface.
 
-Right now EPOLLOUT is only returned when there are also input reports
-are available. This works if devices start sending reports when
-connected, but some HID devices might need an output report first before
-sending any input reports. This change will allow using EPOLLOUT here as
-well.
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-[bwh: Backported to 3.16: s/EPOLL/POLL/g]
+Fixes: 8e20cf2bce12 ("Input: aiptek - fix crash on detecting device without endpoints")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Vladis Dronov <vdronov@redhat.com>
+Link: https://lore.kernel.org/r/20191210113737.4016-3-johan@kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hid/hidraw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/tablet/aiptek.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -265,10 +265,10 @@ static unsigned int hidraw_poll(struct f
+--- a/drivers/input/tablet/aiptek.c
++++ b/drivers/input/tablet/aiptek.c
+@@ -1820,14 +1820,14 @@ aiptek_probe(struct usb_interface *intf,
+ 	input_set_abs_params(inputdev, ABS_WHEEL, AIPTEK_WHEEL_MIN, AIPTEK_WHEEL_MAX - 1, 0, 0);
  
- 	poll_wait(file, &list->hidraw->wait, wait);
- 	if (list->head != list->tail)
--		return POLLIN | POLLRDNORM | POLLOUT;
-+		return POLLIN | POLLRDNORM;
- 	if (!list->hidraw->exist)
- 		return POLLERR | POLLHUP;
--	return 0;
-+	return POLLOUT | POLLWRNORM;
- }
+ 	/* Verify that a device really has an endpoint */
+-	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
+ 		dev_err(&intf->dev,
+ 			"interface has %d endpoints, but must have minimum 1\n",
+-			intf->altsetting[0].desc.bNumEndpoints);
++			intf->cur_altsetting->desc.bNumEndpoints);
+ 		err = -EINVAL;
+ 		goto fail3;
+ 	}
+-	endpoint = &intf->altsetting[0].endpoint[0].desc;
++	endpoint = &intf->cur_altsetting->endpoint[0].desc;
  
- static int hidraw_open(struct inode *inode, struct file *file)
+ 	/* Go set up our URB, which is called when the tablet receives
+ 	 * input.
 
