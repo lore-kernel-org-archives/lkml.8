@@ -2,154 +2,74 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCADFC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A989C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C29C20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492A820728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M0IdiOuh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WZQXdpe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgDWOgo (ORCPT
+        id S1728329AbgDWOhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:36:44 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56686 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgDWOgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:36:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NESqx4043325;
-        Thu, 23 Apr 2020 14:36:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
- content-transfer-encoding : mime-version : subject : message-id : date :
- cc : to; s=corp-2020-01-29;
- bh=vhc1qxRXMx+iuW9x2FbtF55Pq5hnzBq07HQyTGBkbI4=;
- b=M0IdiOuhleGgSwvuxcumRfGfShs+bWWU8BddaDiKGgCPDw8xDeNALaru/oA5jLPbUJv4
- K28p+Iwq9GCqEU0d0Svz/QuCmf+16GiQ6jzP8XW35seZDKetC2uDbpcqCYVIia/xcmiq
- 3SBNHz1nM186Am/qu3zQ8CPrXD8i5YOLGqDGNsj4tMel0bV0BxULUqdJG3qiWcH8zLm/
- /XYQt8SPYNE/Eb/c9MhsGEDbg9pgxItsTyEU6HuSKlvHT7EhtXKcmrwe0YNJJvfj3Wef
- soFHNnKGs7I3O2H5LuQ1bRumFiuupTdxJGiY+iF6cpceJyv8UjHnTmP1s/pqyy4yGyQk zQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30grpgwd7j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 14:36:41 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03NEXfYh016068;
-        Thu, 23 Apr 2020 14:36:41 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30k7qv81my-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 14:36:41 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03NEae1Z028661;
-        Thu, 23 Apr 2020 14:36:40 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 Apr 2020 07:36:40 -0700
-From:   Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: [GIT PULL] Please pull first round of NFS server -rc fixes for v5.7
-Message-Id: <AC510313-C744-4F22-82F7-F75F20F4B073@oracle.com>
-Date:   Thu, 23 Apr 2020 10:36:39 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 suspectscore=2 bulkscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=2 bulkscore=0 clxscore=1015
- malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230116
+        Thu, 23 Apr 2020 10:37:24 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58630 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbgDWOhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:37:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=3+fByAMXo9X0NbPvTaF3P44AieG5P/6XjT9WC6GWwOA=; b=WZQXdpe1xs5vNCcREe9Hlz/rQn
+        KTy81E21moUdEgByQ0H3ujl4EFc7M0eQBwU910JMo1s0gi8i/7V1M6XAz+3e7u0mBIf9CAaBlJ6c/
+        8vLooOTBmXCLmXSwQeEuKoF4864sdjREcpNl4OiVRnlEArF7+2bcmguE9RtOXT1r8BrE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jRcyW-004OZN-Ci; Thu, 23 Apr 2020 16:37:12 +0200
+Date:   Thu, 23 Apr 2020 16:37:12 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michael Walle <michael@walle.cc>,
+        Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: phy: bcm54140: fix less than zero comparison
+ on an unsigned
+Message-ID: <20200423143712.GA1020784@lunn.ch>
+References: <20200423141016.19666-1-colin.king@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423141016.19666-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus-
+On Thu, Apr 23, 2020 at 03:10:16PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the unsigned variable tmp is being checked for an negative
+> error return from the call to bcm_phy_read_rdb and this can never
+> be true since tmp is unsigned.  Fix this by making tmp a plain int.
+> 
+> Addresses-Coverity: ("Unsigned compared against 0")
 
-As promised, here is the first set of 5.7-rc fixes for NFS server =
-issues.
-These were all unresolved at the time the 5.7 window opened, and needed
-some additional time to ensure they were correctly addressed. They are
-ready now.
+I thought 0 was unsigned?
 
-At the moment I know of one more urgent issue regarding the NFS server.
-A fix has been tested and is under review. I expect to send one more
-"5.7-rc fixes" PR, containing this fix (which now consists of 3 =
-patches).
+> Fixes: 4406d36dfdf1 ("net: phy: bcm54140: add hwmon support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-The following changes since commit =
-8f3d9f354286745c751374f5f1fcafee6b3f3136:
-
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-  git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.7-rc-1
-
-for you to fetch changes up to 23cf1ee1f1869966b75518c59b5cbda4c6c92450:
-
-  svcrdma: Fix leak of svc_rdma_recv_ctxt objects (2020-04-17 12:40:38 =
--0400)
-
-----------------------------------------------------------------
-Fixes:
-
-- Address several use-after-free and memory leak bugs
-
-- Prevent a backchannel livelock
-
-----------------------------------------------------------------
-Chuck Lever (3):
-      SUNRPC: Fix backchannel RPC soft lockups
-      svcrdma: Fix trace point use-after-free race
-      svcrdma: Fix leak of svc_rdma_recv_ctxt objects
-
-Vasily Averin (1):
-      nfsd: memory corruption in nfsd4_lock()
-
-Yihao Wu (1):
-      SUNRPC/cache: Fix unsafe traverse caused double-free in =
-cache_purge
-
- fs/nfsd/nfs4callback.c                     |  4 +++-
- fs/nfsd/nfs4state.c                        |  2 ++
- include/linux/sunrpc/svc_rdma.h            |  1 +
- include/trace/events/rpcrdma.h             | 50 =
-++++++++++++++++++++++++++++++++++++--------------
- net/sunrpc/cache.c                         |  5 +++--
- net/sunrpc/svc_xprt.c                      |  5 ++---
- net/sunrpc/svcsock.c                       |  4 ++++
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  2 ++
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c    | 22 ++++++++++++++++++++++
- net/sunrpc/xprtrdma/svc_rdma_rw.c          |  3 +--
- net/sunrpc/xprtrdma/svc_rdma_sendto.c      | 29 =
-++++++++++++-----------------
- net/sunrpc/xprtrdma/svc_rdma_transport.c   |  5 -----
- net/sunrpc/xprtsock.c                      |  1 +
- 13 files changed, 89 insertions(+), 44 deletions(-)
-
---
-Chuck Lever
-
-
-
+    Andrew
