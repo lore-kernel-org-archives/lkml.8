@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EED4C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FB4C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89FFF2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E742080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 02:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgDWC0z (ORCPT
+        id S1726789AbgDWC1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 22:26:55 -0400
-Received: from mga06.intel.com ([134.134.136.31]:33065 "EHLO mga06.intel.com"
+        Wed, 22 Apr 2020 22:27:01 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43423 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbgDWCZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726544AbgDWCZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Apr 2020 22:25:56 -0400
-IronPort-SDR: 4pefOQtHnSjUXkk6rEKj5Z2PuGaHLh0pZSCrCDfVy0pe1ZoS/PsE9iSDVij3lynAdEZ3hiTnmZ
- 0NGBFI1RvJkw==
+IronPort-SDR: nrQqXwYFV/ErWlbNz4IlEj2p0bcbgwnKQhQvk/5JtQYs/qn8aQiciKLRWkfcxAK/2HBE5l4ry6
+ GCr0LtxBh4rg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 19:25:55 -0700
-IronPort-SDR: UjKYGvDlp6USocJXccboeEzgMSiDuFUu03zbK1ScOPedwGhoa2Uc+X5D2L4fy9uMoFKq5Nm4+3
- rmyc3bUVzv3Q==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 19:25:54 -0700
+IronPort-SDR: yc5y/LBg8ss/whbeXqY+VOPxyY2Vfp3zmkfOzH2qDM24ETc0W/jl7ED60fbXcenVMheRiXOJb3
+ 3I2b6JfUoDEA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="259273967"
+   d="scan'208";a="259273942"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga006.jf.intel.com with ESMTP; 22 Apr 2020 19:25:54 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -42,9 +42,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
         Peter Shier <pshier@google.com>
-Subject: [PATCH 12/13] KVM: x86: Replace late check_nested_events() hack with more precise fix
-Date:   Wed, 22 Apr 2020 19:25:49 -0700
-Message-Id: <20200423022550.15113-13-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/13] KVM: x86: Make return for {interrupt_nmi}_allowed() a bool instead of int
+Date:   Wed, 22 Apr 2020 19:25:41 -0700
+Message-Id: <20200423022550.15113-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200423022550.15113-1-sean.j.christopherson@intel.com>
 References: <20200423022550.15113-1-sean.j.christopherson@intel.com>
@@ -55,113 +55,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a separate hook for checking if interrupt injection is blocked and
-use the hook to handle the case where an interrupt arrives between
-check_nested_events() and the injection logic.  Drop the retry of
-check_nested_events() that hack-a-fixed the same condition.
-
-Blocking injection is also a bit of a hack, e.g. KVM should do exiting
-and non-exiting interrupt processing in a single pass, but it's a more
-precise hack.  The old comment is also misleading, e.g. KVM_REQ_EVENT is
-purely an optimization, setting it on every run loop (which KVM doesn't
-do) should not affect functionality, only performance.
+Return an actual bool for kvm_x86_ops' {interrupt_nmi}_allowed() hook to
+better reflect the return semantics, and to avoid creating an even
+bigger mess when the related VMX code is refactored in upcoming patches.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/svm/svm.c          |  1 +
- arch/x86/kvm/vmx/vmx.c          | 13 +++++++++++++
- arch/x86/kvm/x86.c              | 22 ++++------------------
- 4 files changed, 19 insertions(+), 18 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 4 ++--
+ arch/x86/kvm/svm/svm.c          | 9 +++++----
+ arch/x86/kvm/vmx/vmx.c          | 8 ++++----
+ 3 files changed, 11 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 787636acd648..16fdeddb4a65 100644
+index 65dc2c88d8b2..787636acd648 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1140,6 +1140,7 @@ struct kvm_x86_ops {
+@@ -1139,8 +1139,8 @@ struct kvm_x86_ops {
+ 	void (*set_nmi)(struct kvm_vcpu *vcpu);
  	void (*queue_exception)(struct kvm_vcpu *vcpu);
  	void (*cancel_injection)(struct kvm_vcpu *vcpu);
- 	bool (*interrupt_allowed)(struct kvm_vcpu *vcpu);
-+	bool (*interrupt_injection_allowed)(struct kvm_vcpu *vcpu);
- 	bool (*nmi_allowed)(struct kvm_vcpu *vcpu);
+-	int (*interrupt_allowed)(struct kvm_vcpu *vcpu);
+-	int (*nmi_allowed)(struct kvm_vcpu *vcpu);
++	bool (*interrupt_allowed)(struct kvm_vcpu *vcpu);
++	bool (*nmi_allowed)(struct kvm_vcpu *vcpu);
  	bool (*get_nmi_mask)(struct kvm_vcpu *vcpu);
  	void (*set_nmi_mask)(struct kvm_vcpu *vcpu, bool masked);
+ 	void (*enable_nmi_window)(struct kvm_vcpu *vcpu);
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index f21f734861dd..6d3ccbfc9e6a 100644
+index eb95283ab68d..f21f734861dd 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -3993,6 +3993,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.queue_exception = svm_queue_exception,
- 	.cancel_injection = svm_cancel_injection,
- 	.interrupt_allowed = svm_interrupt_allowed,
-+	.interrupt_injection_allowed = svm_interrupt_allowed,
- 	.nmi_allowed = svm_nmi_allowed,
- 	.get_nmi_mask = svm_get_nmi_mask,
- 	.set_nmi_mask = svm_set_nmi_mask,
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2f8cacb3aa9b..68b3748b5383 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4550,6 +4550,18 @@ static bool vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
- 	return !vmx_interrupt_blocked(vcpu);
+@@ -3062,11 +3062,12 @@ static void update_cr8_intercept(struct kvm_vcpu *vcpu, int tpr, int irr)
+ 		set_cr_intercept(svm, INTERCEPT_CR8_WRITE);
  }
  
-+static bool vmx_interrupt_injection_allowed(struct kvm_vcpu *vcpu)
-+{
-+	/*
-+	 * An IRQ must not be injected into L2 if it's supposed to VM-Exit,
-+	 * e.g. if the IRQ arrived asynchronously after checking nested events.
-+	 */
-+	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
-+		return false;
-+
-+	return vmx_interrupt_allowed(vcpu);
-+}
-+
- static int vmx_set_tss_addr(struct kvm *kvm, unsigned int addr)
+-static int svm_nmi_allowed(struct kvm_vcpu *vcpu)
++static bool svm_nmi_allowed(struct kvm_vcpu *vcpu)
  {
- 	int ret;
-@@ -7823,6 +7835,7 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.queue_exception = vmx_queue_exception,
- 	.cancel_injection = vmx_cancel_injection,
- 	.interrupt_allowed = vmx_interrupt_allowed,
-+	.interrupt_injection_allowed = vmx_interrupt_injection_allowed,
- 	.nmi_allowed = vmx_nmi_allowed,
- 	.get_nmi_mask = vmx_get_nmi_mask,
- 	.set_nmi_mask = vmx_set_nmi_mask,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 7c49a7dc601f..d9d6028a77e0 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7755,24 +7755,10 @@ static int inject_pending_event(struct kvm_vcpu *vcpu)
- 		--vcpu->arch.nmi_pending;
- 		vcpu->arch.nmi_injected = true;
- 		kvm_x86_ops.set_nmi(vcpu);
--	} else if (kvm_cpu_has_injectable_intr(vcpu)) {
--		/*
--		 * Because interrupts can be injected asynchronously, we are
--		 * calling check_nested_events again here to avoid a race condition.
--		 * See https://lkml.org/lkml/2014/7/2/60 for discussion about this
--		 * proposal and current concerns.  Perhaps we should be setting
--		 * KVM_REQ_EVENT only on certain events and not unconditionally?
--		 */
--		if (is_guest_mode(vcpu) && kvm_x86_ops.check_nested_events) {
--			r = kvm_x86_ops.check_nested_events(vcpu);
--			if (r != 0)
--				return r;
--		}
--		if (kvm_x86_ops.interrupt_allowed(vcpu)) {
--			kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu),
--					    false);
--			kvm_x86_ops.set_irq(vcpu);
--		}
-+	} else if (kvm_cpu_has_injectable_intr(vcpu) &&
-+		   kvm_x86_ops.interrupt_injection_allowed(vcpu)) {
-+		kvm_queue_interrupt(vcpu, kvm_cpu_get_interrupt(vcpu), false);
-+		kvm_x86_ops.set_irq(vcpu);
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	struct vmcb *vmcb = svm->vmcb;
+-	int ret;
++	bool ret;
++
+ 	ret = !(vmcb->control.int_state & SVM_INTERRUPT_SHADOW_MASK) &&
+ 	      !(svm->vcpu.arch.hflags & HF_NMI_MASK);
+ 	ret = ret && gif_set(svm) && nested_svm_nmi(svm);
+@@ -3094,14 +3095,14 @@ static void svm_set_nmi_mask(struct kvm_vcpu *vcpu, bool masked)
  	}
+ }
  
- 	return 0;
+-static int svm_interrupt_allowed(struct kvm_vcpu *vcpu)
++static bool svm_interrupt_allowed(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	struct vmcb *vmcb = svm->vmcb;
+ 
+ 	if (!gif_set(svm) ||
+ 	     (vmcb->control.int_state & SVM_INTERRUPT_SHADOW_MASK))
+-		return 0;
++		return false;
+ 
+ 	if (is_guest_mode(vcpu) && (svm->vcpu.arch.hflags & HF_VINTR_MASK))
+ 		return !!(svm->vcpu.arch.hflags & HF_HIF_MASK);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 766303b31949..7dd42e7fef94 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4511,21 +4511,21 @@ void vmx_set_nmi_mask(struct kvm_vcpu *vcpu, bool masked)
+ 	}
+ }
+ 
+-static int vmx_nmi_allowed(struct kvm_vcpu *vcpu)
++static bool vmx_nmi_allowed(struct kvm_vcpu *vcpu)
+ {
+ 	if (to_vmx(vcpu)->nested.nested_run_pending)
+-		return 0;
++		return false;
+ 
+ 	if (!enable_vnmi &&
+ 	    to_vmx(vcpu)->loaded_vmcs->soft_vnmi_blocked)
+-		return 0;
++		return false;
+ 
+ 	return	!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
+ 		  (GUEST_INTR_STATE_MOV_SS | GUEST_INTR_STATE_STI
+ 		   | GUEST_INTR_STATE_NMI));
+ }
+ 
+-static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
++static bool vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
+ {
+ 	if (to_vmx(vcpu)->nested.nested_run_pending)
+ 		return false;
 -- 
 2.26.0
 
