@@ -2,114 +2,100 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEF8C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B10C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2302074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48F02098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587653133;
-	bh=U3TC3bN3p9nhKeritQu2fK5CBI6ltT2H/wZ9X1HyZNI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nUDbl/x3/keLRmMhpDPeedldGqE+9dNVGs07YFe3mG06YxhyjlSmD5fZD/4tj+t4x
-	 iLMGUnWNfhhe0CVsDoFVX0EbVo6E05BN3oRSN+ZeLB6QCIBzU0FT1NZLTHcOWb5MrI
-	 veP63Ikn8jE/aQbtPiZrVHfPDZxDb1mXKcGUL2zw=
+	s=default; t=1587653157;
+	bh=ANqknJSxVOzlNxsyyTwkD/70QAGgpY8SByw/9DBpl70=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=W/7RNOjFEK3I1KyE68ERCmiiH+NE+Kqu1270UEtmxvIaIGBvpOTz1Uo+6UGkR8Ns6
+	 2gORp1hL5T5WAlea6IPWDxN63KjdaBuos5hYZcgsJzxjWBOPip9CQtGbcgDfIRfiwg
+	 UvCDauoDU74CqFYJe9JScCEh8Pyd6CG5AVbuiaUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgDWOpc (ORCPT
+        id S1728751AbgDWOp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:45:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50536 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 10:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgDWOpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:45:32 -0400
+        id S1726380AbgDWOp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:45:56 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6D82074F;
-        Thu, 23 Apr 2020 14:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C2F2074F;
+        Thu, 23 Apr 2020 14:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587653131;
-        bh=U3TC3bN3p9nhKeritQu2fK5CBI6ltT2H/wZ9X1HyZNI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2GdKcbP/7Ijdm+VeNN6EOWFzP2+mwXdUap8T5O+nZ0CN6YEiDyTb2byLJ89nA8YSi
-         VDzwLK9iDw/URifFQJrlhb8BH4/8y1m2hox1gF+EIhfuLSiMBuUt0OsfyvubHM/p7q
-         ar2sCqg9tb7xPPSCxfEGFZu0SYh4W7Gg/C/mSyFM=
-Date:   Thu, 23 Apr 2020 15:45:29 +0100
+        s=default; t=1587653156;
+        bh=ANqknJSxVOzlNxsyyTwkD/70QAGgpY8SByw/9DBpl70=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=ru1gOba4KuQhYQr69+Ue5CA1nHDc7RKD/v/hHPrWGOixDUP3cqFyHcd++D4/E742t
+         Ap80b1l07EsIu1XQXZrcVjBSVaSNCd6G0gy0URpbdN6XEqvGk8l63iEEfm/gHfMVf7
+         BfTnRVXjYEi0ngQ/lbcBcNZPgG3kp2ZBjNxTXCXM=
+Date:   Thu, 23 Apr 2020 15:45:53 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     AceLan Kao <acelan.kao@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Aaron Sierra <asierra@xes-inc.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regmap-i2c: add 16 bits register width support
-Message-ID: <20200423144529.GM4808@sirena.org.uk>
-References: <20200423085857.93684-1-acelan.kao@canonical.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EE8jvUPYYQjJtG7J"
-Content-Disposition: inline
-In-Reply-To: <20200423085857.93684-1-acelan.kao@canonical.com>
-X-Cookie: This unit... must... survive.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        Timur Tabi <timur@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Colin King <colin.king@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <20200423083922.8159-1-colin.king@canonical.com>
+References: <20200423083922.8159-1-colin.king@canonical.com>
+Subject: Re: [PATCH][next] ASoC: fsl_easrc: fix spelling mistake "prefitler" -> "prefilter"
+Message-Id: <158765314784.33774.8027671793681805498.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 23 Apr 2020 09:39:22 +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a deb_dbg message, fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  sound/soc/fsl/fsl_easrc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> [...]
 
---EE8jvUPYYQjJtG7J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to
 
-On Thu, Apr 23, 2020 at 04:58:57PM +0800, AceLan Kao wrote:
-> This allows to access data with 16 bits register width
-> via i2c smbus block functions.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
 
-> The implementation is inspired by below commit
-> https://patchwork.ozlabs.org/patch/545292/
+Thanks!
 
-Do you actually have a system that needs this or is it just being
-implemented for completeness?  The patch you link to mentions that there
-are correctness issues with this implementation.
+[1/1] ASoC: fsl_easrc: fix spelling mistake "prefitler" -> "prefilter"
+      commit: 76ec4aea9fd8117f064caa63ee6f7fbcb70eeb2c
 
-Please include human readable descriptions of things like commits and
-issues being discussed in e-mail in your mails, this makes them much
-easier for humans to read especially when they have no internet access.
-I do frequently catch up on my mail on flights or while otherwise
-travelling so this is even more pressing for me than just being about
-making things a bit easier to read.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> @@ -255,6 +312,10 @@ static const struct regmap_bus *regmap_get_i2c_bus(struct i2c_client *i2c,
->  		 i2c_check_functionality(i2c->adapter,
->  					 I2C_FUNC_SMBUS_I2C_BLOCK))
->  		return &regmap_i2c_smbus_i2c_block;
-> +	else if (config->val_bits == 8 && config->reg_bits == 16 &&
-> +		i2c_check_functionality(i2c->adapter,
-> +					I2C_FUNC_SMBUS_I2C_BLOCK))
-> +		return &regmap_i2c_smbus_i2c_block_reg16;
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-OTOH we'll only use it if the device wouldn't otherwise work so I'm not
-sure that it's any worse than just hoping the bus is uncontested,
-hopefully system designers have taken this into account when building
-systems without real I2C controllers.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---EE8jvUPYYQjJtG7J
-Content-Type: application/pgp-signature; name="signature.asc"
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6hqggACgkQJNaLcl1U
-h9DIqgf+O6MUgn8IRhVjKqiNm14EY05T45nx9Glldr42oSPuanv/Og8adXetxcNf
-IJP1xEihOrPMS7DZJl1Vc/jbJR3SMX0cbhDNxQTjXV00R02YeHDieCy/991CaNrY
-ZwaOEoVjguOHCs9Z5f9jRGTUd2FZ5uLNgpssj3rS4Jugs+GUka5FFQGQMs9ckh1S
-fynMgFbn1rsAsSsMnjHSUwgSxp/6ZXsXhnUt7twiQf0B7aW9m7NjsZduXE8LRpJA
-hJC5Aj+Xrm0QqtzUmeb/Us5t5IYoE/u3DXLDfghbHkpzeLki86Vxw9m0IuAm0rMP
-XhZyIBBMKsTUakQhqffh/aqMFEvckA==
-=nI9G
------END PGP SIGNATURE-----
-
---EE8jvUPYYQjJtG7J--
+Thanks,
+Mark
