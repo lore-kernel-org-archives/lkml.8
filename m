@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A384C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60497C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D72820780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4761820784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgDWXHI (ORCPT
+        id S1728779AbgDWXHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:07:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49674 "EHLO
+        Thu, 23 Apr 2020 19:07:11 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49670 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728407AbgDWXGr (ORCPT
+        by vger.kernel.org with ESMTP id S1728402AbgDWXGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:47 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvU-0004hX-E1; Fri, 24 Apr 2020 00:06:36 +0100
+        id 1jRkvT-0004iP-Kw; Fri, 24 Apr 2020 00:06:35 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-00E6pT-Fe; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvR-00E6ow-1A; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Jiri Slaby" <jslaby@suse.com>
-Date:   Fri, 24 Apr 2020 00:05:57 +0100
-Message-ID: <lsq.1587683028.301840929@decadent.org.uk>
+        "Theodore Ts'o" <tytso@mit.edu>, "Jan Kara" <jack@suse.cz>
+Date:   Fri, 24 Apr 2020 00:05:50 +0100
+Message-ID: <lsq.1587683028.111006664@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 130/245] tty: link tty and port before configuring it
- as console
+Subject: [PATCH 3.16 123/245] ext4: check for directory entries too close
+ to block end
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,67 +55,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
+commit 109ba779d6cca2d519c5dd624a3276d03e21948e upstream.
 
-There seems to be a race condition in tty drivers and I could see on
-many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-do 'tty->port->itty = tty' even though tty->port is NULL.
-'tty->port' will be set by the driver and if the driver has not yet done
-it before we open the tty device we can get to this situation. By adding
-some extra debug prints, I noticed that:
+ext4_check_dir_entry() currently does not catch a case when a directory
+entry ends so close to the block end that the header of the next
+directory entry would not fit in the remaining space. This can lead to
+directory iteration code trying to access address beyond end of current
+buffer head leading to oops.
 
-6.650130: uart_add_one_port
-6.663849: register_console
-6.664846: tty_open
-6.674391: tty_init_dev
-6.675456: tty_port_link_device
-
-uart_add_one_port() registers the console, as soon as it registers, the
-userspace tries to use it and that leads to tty_open() but
-uart_add_one_port() has not yet done tty_port_link_device() and so
-tty->port is not yet configured when control reaches tty_init_dev().
-
-Further look into the code and tty_port_link_device() is done by
-uart_add_one_port(). After registering the console uart_add_one_port()
-will call tty_port_register_device_attr_serdev() and
-tty_port_link_device() is called from this.
-
-Call add tty_port_link_device() before uart_configure_port() is done and
-add a check in tty_port_link_device() so that it only links the port if
-it has not been done yet.
-
-Suggested-by: Jiri Slaby <jslaby@suse.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191202170213.4761-3-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/serial_core.c | 1 +
- drivers/tty/tty_port.c           | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ fs/ext4/dir.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2639,6 +2639,7 @@ int uart_add_one_port(struct uart_driver
- 		lockdep_set_class(&uport->lock, &port_lock_key);
- 	}
- 
-+	tty_port_link_device(port, drv->tty_driver, uport->line);
- 	uart_configure_port(drv, state, uport);
- 
- 	/*
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -49,7 +49,8 @@ void tty_port_link_device(struct tty_por
- {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	driver->ports[index] = port;
-+	if (!driver->ports[index])
-+		driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
- 
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -78,6 +78,11 @@ int __ext4_check_dir_entry(const char *f
+ 		error_msg = "rec_len is too small for name_len";
+ 	else if (unlikely(((char *) de - buf) + rlen > size))
+ 		error_msg = "directory entry overrun";
++	else if (unlikely(((char *) de - buf) + rlen >
++			  size - EXT4_DIR_REC_LEN(1) &&
++			  ((char *) de - buf) + rlen != size)) {
++		error_msg = "directory entry too close to block end";
++	}
+ 	else if (unlikely(le32_to_cpu(de->inode) >
+ 			le32_to_cpu(EXT4_SB(dir->i_sb)->s_es->s_inodes_count)))
+ 		error_msg = "inode out of bounds";
 
