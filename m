@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C0AC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79085C55194
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C469C217BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5747C21775
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Su+MiabB"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PYtnpbyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbgDWRqg (ORCPT
+        id S1730051AbgDWRqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46418 "EHLO
+        Thu, 23 Apr 2020 13:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729997AbgDWRqb (ORCPT
+        with ESMTP id S1730038AbgDWRqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:46:31 -0400
+        Thu, 23 Apr 2020 13:46:36 -0400
 Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EC8C09B042;
-        Thu, 23 Apr 2020 10:46:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A98C09B042;
+        Thu, 23 Apr 2020 10:46:36 -0700 (PDT)
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C4AA22305A;
-        Thu, 23 Apr 2020 19:46:28 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 9540923D06;
+        Thu, 23 Apr 2020 19:46:34 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587663989;
+        t=1587663995;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XEc2Gou41BL3m+JkXNh0S7dWuskCnoHw4qZ/tnV0NvI=;
-        b=Su+MiabBuDU2j7Z62BVZ3bAwqxj1h0oWVUDkNQx67hVzjrvYYBTwSIYm2Y0m2JAqdjbK+M
-        WNK50XO9/gIZ7aC4cbdxXplDXy0G3v4TrYPTJcV9qCjuCB7HVtebYwkbMPp4/AMlu98tnH
-        XUjRmwcFuzKXEqExHLQS6zwMvS9kG8g=
+        bh=C0mwyzOpo4Hci45ys2sqCNcGyNGL1Gk5vpcSqV75bMI=;
+        b=PYtnpbyTDsSqVeej+oE4e4zzVxtag/2m9gR5aKhsA3zDrg6by5LPTvZzbF3wOVLhN0z6x0
+        NygYN2o92Xy9emcFz/5e4kcOyuconkSayIrYiVFOGhn7vW4e/q14pAtyslZJ74QR3ROrnU
+        dwjFBKewH9NREEGCg8dEGoz8TF/O3H4=
 From:   Michael Walle <michael@walle.cc>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v3 03/16] mfd: mfd-core: match device tree node against reg property
-Date:   Thu, 23 Apr 2020 19:45:30 +0200
-Message-Id: <20200423174543.17161-4-michael@walle.cc>
+Subject: [PATCH v3 09/16] gpiolib: Introduce gpiochip_irqchip_add_domain()
+Date:   Thu, 23 Apr 2020 19:45:36 +0200
+Message-Id: <20200423174543.17161-10-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200423174543.17161-1-michael@walle.cc>
 References: <20200423174543.17161-1-michael@walle.cc>
@@ -74,7 +74,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C4AA22305A
+X-Rspamd-Queue-Id: 9540923D06
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -100,132 +100,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There might be multiple children with the device tree compatible, for
-example if a MFD has multiple instances of the same function. In this
-case only the first is matched and the other children get a wrong
-of_node reference.
-Add a new option to match also against the unit address of the child
-node. Additonally, a new helper OF_MFD_CELL_REG is added.
+This connects an IRQ domain to a gpiochip and reuses gpiochip_to_irq().
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
- include/linux/mfd/core.h | 26 ++++++++++++++++++++------
- 2 files changed, 40 insertions(+), 15 deletions(-)
+ drivers/gpio/gpiolib.c      | 20 ++++++++++++++++++++
+ include/linux/gpio/driver.h |  3 +++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index e735565969b3..4ecb376338f7 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, int id,
- 	struct device_node *np = NULL;
- 	int ret = -ENOMEM;
- 	int platform_id;
-+	u32 of_reg;
- 	int r;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 40f2d7f69be2..7b3d7f496b9a 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2722,6 +2722,26 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gc,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_irqchip_add_key);
  
- 	if (id == PLATFORM_DEVID_AUTO)
-@@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent, int id,
- 
- 	if (parent->of_node && cell->of_compatible) {
- 		for_each_child_of_node(parent->of_node, np) {
--			if (of_device_is_compatible(np, cell->of_compatible)) {
--				if (!of_device_is_available(np)) {
--					/* Ignore disabled devices error free */
--					ret = 0;
--					goto fail_alias;
--				}
--				pdev->dev.of_node = np;
--				pdev->dev.fwnode = &np->fwnode;
--				break;
-+			if (!of_device_is_compatible(np, cell->of_compatible))
-+				continue;
++/**
++ * gpiochip_irqchip_add_key() - adds an irqdomain to a gpiochip
++ * @gc: the gpiochip to add the irqchip to
++ * @domain: the irqdomain to add to the gpiochip
++ *
++ * This function adds an IRQ domain to the gpiochip.
++ */
++int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
++				struct irq_domain *domain)
++{
++	if (!domain)
++		return -EINVAL;
 +
-+			/* also match the unit address if set */
-+			if (cell->of_reg & MFD_OF_REG_VALID) {
-+				if (of_property_read_u32(np, "reg", &of_reg))
-+					continue;
-+				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
-+					continue;
- 			}
++	gc->to_irq = gpiochip_to_irq;
++	gc->irq.domain = domain;
 +
-+			if (!of_device_is_available(np)) {
-+				/* Ignore disabled devices error free */
-+				ret = 0;
-+				goto fail_alias;
-+			}
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gpiochip_irqchip_add_domain);
 +
-+			pdev->dev.of_node = np;
-+			pdev->dev.fwnode = &np->fwnode;
-+			break;
- 		}
- 	}
+ #else /* CONFIG_GPIOLIB_IRQCHIP */
  
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index d01d1299e49d..c2c0ad6b14f3 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -13,8 +13,11 @@
- #include <linux/platform_device.h>
+ static inline int gpiochip_add_irqchip(struct gpio_chip *gc,
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index b8fc92c177eb..dfb1aa0ad4dc 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -599,6 +599,9 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gc,
+ bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gc,
+ 				unsigned int offset);
  
- #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
-+#define MFD_OF_REG_VALID	BIT(31)
-+#define MFD_OF_REG_MASK		GENMASK(30, 0)
- 
--#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _match)\
-+#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-+		     _of_reg, _match)					\
- 	{								\
- 		.name = (_name),					\
- 		.resources = (_res),					\
-@@ -22,24 +25,32 @@
- 		.platform_data = (_pdata),				\
- 		.pdata_size = (_pdsize),				\
- 		.of_compatible = (_compat),				\
-+		.of_reg = (_of_reg),					\
- 		.acpi_match = (_match),					\
- 		.id = (_id),						\
- 	}
- 
-+#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
-+			_of_reg)					\
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-+		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
++int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
++				struct irq_domain *domain);
 +
- #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
--	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-+		     0, NULL)						\
+ #ifdef CONFIG_LOCKDEP
  
- #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
--	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
-+		     _match)						\
- 
- #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
--	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
- 
- #define MFD_CELL_RES(_name, _res)					\
--	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
-+	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
- 
- #define MFD_CELL_NAME(_name)						\
--	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
-+	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
- 
- struct irq_domain;
- struct property_entry;
-@@ -78,6 +89,9 @@ struct mfd_cell {
- 	 */
- 	const char		*of_compatible;
- 
-+	/* matching the reg property if set */
-+	unsigned int		of_reg;
-+
- 	/* Matches ACPI */
- 	const struct mfd_cell_acpi_match	*acpi_match;
- 
+ /*
 -- 
 2.20.1
 
