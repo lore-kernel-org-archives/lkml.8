@@ -2,131 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF6BC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FBDC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2332206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z/qlnvbc"
+	by mail.kernel.org (Postfix) with ESMTP id 0BB09206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgDWP0I (ORCPT
+        id S1729128AbgDWP22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:26:08 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:35290 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728990AbgDWP0I (ORCPT
+        Thu, 23 Apr 2020 11:28:28 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:33431 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbgDWP21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:26:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587655567; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=9wQ2DyfHn0zQSPKWH0MRTyykuPGkgNXnO6TKfK9XPEc=; b=Z/qlnvbcwiBfdDvEwGlUw0O0huETxxo8SIBay5J8Dvm/5Tf5sGio1ne8RvEO+vvws0UvI0Sx
- CaFbIWqEEL8b0m6TW9m8GfLJ3PXgZPpbSFaQGV4lbv3rqq6636knzWh3zzuYvDhZn2+5dATA
- Ai5BdmWV9I7/i9iu7vS1QqUiHmE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea1b388.7f79f553e810-smtp-out-n01;
- Thu, 23 Apr 2020 15:26:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5C528C432C2; Thu, 23 Apr 2020 15:25:59 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 04D96C433F2;
-        Thu, 23 Apr 2020 15:25:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 04D96C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 23 Apr 2020 09:25:55 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] [PATCH v2 2/9] drm/msm: add internal MSM_BO_MAP_PRIV
- flag
-Message-ID: <20200423152555.GA32401@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Sean Paul <sean@poorly.run>
-References: <20200421234127.27965-1-jonathan@marek.ca>
- <20200421234127.27965-3-jonathan@marek.ca>
+        Thu, 23 Apr 2020 11:28:27 -0400
+Received: from mail-lj1-f179.google.com ([209.85.208.179]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MXH3e-1jiiIB0GPm-00YlvZ; Thu, 23 Apr 2020 17:28:25 +0200
+Received: by mail-lj1-f179.google.com with SMTP id j3so6626065ljg.8;
+        Thu, 23 Apr 2020 08:28:24 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZUU0SgLRsgYacVk2JXjaYAMeu6r00aDjYVvoGo1i9IfilFXY8n
+        sO8fqQ4igkpA/IZdFn8cizzTV+CGcQgbKAQe6Qw=
+X-Google-Smtp-Source: APiQypINcNdjhLpMjI8cph0tTGcFMHFZDQLmojF6lZ/7qKWwhCKDNWXB8vz+MSiiUAkbnxZQLkqoMfC3KKw5YDYcM+w=
+X-Received: by 2002:a2e:6a08:: with SMTP id f8mr2858238ljc.8.1587655704471;
+ Thu, 23 Apr 2020 08:28:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421234127.27965-3-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com>
+ <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr> <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
+ <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr> <871rofdhtg.fsf@intel.com>
+ <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr> <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org>
+ <nycvar.YSQ.7.76.2004231059170.2671@knanqh.ubzr> <20200423150556.GZ26002@ziepe.ca>
+ <nycvar.YSQ.7.76.2004231109500.2671@knanqh.ubzr> <20200423151624.GA26002@ziepe.ca>
+In-Reply-To: <20200423151624.GA26002@ziepe.ca>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 Apr 2020 17:28:08 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0ydfp79Us-WhwwHOB2MGgtj=ovfYa_g8qhazA4gmv8eg@mail.gmail.com>
+Message-ID: <CAK8P3a0ydfp79Us-WhwwHOB2MGgtj=ovfYa_g8qhazA4gmv8eg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "leon@kernel.org" <leon@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2iQTX2VsakGHk54BTB9WVoqR/JzU2kdpHG5qlk7OzErzbDjBSFJ
+ cw4+bPaHDdKsw3pJ2bgD5MLFptdhCXGqhbySx9hQn24n/AWHnU+wNuuNihTQrmvZZ4B/Pt+
+ AWOp/GpqTWV+iiRpnOyNcvnyxixueiY7CyokX7afxwIn3Oo659/VkB51cMdLTfUJsSsU/2q
+ DEUtJ0DJw15QT/HVKXuDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yXYeGGUUVu4=:KOVIF5il65qxHEA6pI+gSc
+ aAfwOmhprWnuOPz+7W+rziPQkbN0ejmKpA4BZqkwFCnaDPPv7pDgfS3i5nu1MHtQqUHYLQCG8
+ /0/DYe+pZDRflErTRstkLc/IRW6TS+/l/iyKITt18tPZnbzW/jegLplN2RzgUawwvLkWtfsSx
+ mBZ5tDr4b2JwBPF9NuSmg0xXGO8Z1SRzrpsQEsCduQOpduc9DKk/I6ccsitsv6ARTH1ep4Gm5
+ PvSruZGSuG8hiDOrcOg8YLEhGjymwtvh46Og2gaoJ5pgWaJuMI1hUmi73TAijEyKklEMK4uQv
+ uDS3kvyT9NMDg4BCjl7w62Xeox4SgGhYWn2EPcebRaDpt2bup9zhTIkBunkTJPNjvgLhoc5TQ
+ j/uKFI4UpYjPkea32bJHAifAmObWP8ih2wSfQOvPXd+wybbLdkT6KPOCHbNrSwXDTq3HhPpq3
+ E0rqwicYUJmeGJXz+X5opr7Nq1Es7a1wFdoCSIoYaNczaTzaWFoEb3k+Ock7t94wG9cqgvLJb
+ rtKzCn+CLRWE5O0an+1PLcyrYMQivB8BvJnh6PbBUkeNn9aYNrLLsDc4IA9I71NgqYFLmZ04j
+ WZspW8jH2Jj/fCdMO8BeWLSeeKlvDuNmslBxld9UBF1+6u6fQe2cpnNG9ML+LG1cCVDeQAwGo
+ cNFoheYAQWKdFlfDfBGmZX85lY+R5FqbwyoXKKBMiPvBIX3uERVe/KQOoRTuJxZ+C9keneMli
+ qAgmg8+fmD19nRdG2zAS3M8tk/7b+xVM3Cp7pJJvbfr6f3nwjSrzf+eeXSlq6D/B71YcgPJJJ
+ MMtB/aDDv0NNGi9TzKBToxRdsVO8sFxz0P65s1gRPBNm6MAcKs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 07:41:20PM -0400, Jonathan Marek wrote:
-> This flag sets IOMMU_PRIV, which is required for some a6xx GMU objects.
+On Thu, Apr 23, 2020 at 5:16 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> On Thu, Apr 23, 2020 at 11:11:46AM -0400, Nicolas Pitre wrote:
 
-The GMU doesn't _need_  privileged surfaces, but it sure is a good idea.
-As a bonus with the APRIV bit on some a6xx targets we can set all of the
-global buffers as privileged so people can't go out and overwrite the memstore
-any more.
+> > > > I don't see how that one can be helped. The MTD dependency is not
+> > > > optional.
+> > >
+> > > Could it be done as
+> > >
+> > > config MTD
+> > >    depends on CRAMFS if CRAMFS_MTD
+> > >
+> > > ?
+> >
+> > No. There is no logic in restricting MTD usage based on CRAMFS or
+> > CRAMFS_MTD.
+>
+> Ah, I got it backwards, maybe this:
+>
+> config CRAMFS
+>    depends on MTD if CRAMFS_MTD
 
-Reviewed-by: Jordan Crouse <jcrouse@codeauorora.org>
+I'm not sure this can work if you also have the requirement that 'CRAMFS_MTD
+depends on CRAMFS': dependencies in Kconfig generally cannot have
+loops in them.
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/msm_gem.c | 3 +++
->  drivers/gpu/drm/msm/msm_gem.h | 1 +
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> index d8f56a34c117..6277fde13df9 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.c
-> +++ b/drivers/gpu/drm/msm/msm_gem.c
-> @@ -428,6 +428,9 @@ static int msm_gem_pin_iova(struct drm_gem_object *obj,
->  	if (!(msm_obj->flags & MSM_BO_GPU_READONLY))
->  		prot |= IOMMU_WRITE;
->  
-> +	if (msm_obj->flags & MSM_BO_MAP_PRIV)
-> +		prot |= IOMMU_PRIV;
-> +
->  	WARN_ON(!mutex_is_locked(&msm_obj->lock));
->  
->  	if (WARN_ON(msm_obj->madv != MSM_MADV_WILLNEED))
-> diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-> index 30584eaf8cc8..972490b14ba5 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.h
-> +++ b/drivers/gpu/drm/msm/msm_gem.h
-> @@ -13,6 +13,7 @@
->  
->  /* Additional internal-use only BO flags: */
->  #define MSM_BO_STOLEN        0x10000000    /* try to use stolen/splash memory */
-> +#define MSM_BO_MAP_PRIV      0x20000000    /* use IOMMU_PRIV when mapping */
->  
->  struct msm_gem_address_space {
->  	const char *name;
-> -- 
-> 2.26.1
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+       Arnd
