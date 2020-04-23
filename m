@@ -2,190 +2,159 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BAEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6786C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A41F22076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:31:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wHRuCyoY"
+	by mail.kernel.org (Postfix) with ESMTP id B08E32076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgDWHbL (ORCPT
+        id S1726883AbgDWHdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgDWHbL (ORCPT
+        Thu, 23 Apr 2020 03:33:19 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:58457 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWHdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:31:11 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C329CC03C1AB
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:31:10 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so5585959wrx.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 00:31:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QCHmK+5GfaVz8bbbSowmaOnzegplSKmswr3oSdG1Ntc=;
-        b=wHRuCyoYU/1JjFHHLgJzy5f6OLxd/6zex5VtF6Y8xPMvGkeIiIERjXUt3Yw+NBYZOr
-         YgqzpaTbrSURXySiGxorVXH2cTNKO5vmz7ISsdQ/dvyNgFiMf597TORn0tn9B6mQ8Aee
-         5TzyhRWTUrp0hqap5PjWPA5royN5hN9sHtohj/OoAYa+1IVy9/k/LYW+dCTjtXE4kqhW
-         V68KHrWzidCtAlLJwi/NG0r/abQfxKHE/fjaLWv1IosHKt41zcM3yowszB1EALP+9V89
-         Vhf8OfJ79+p7RnBMwGKNW7NO9eLRFYvAf7/GDJNe+E43+jT8nHN7WjhytopLZBgFfxmW
-         ZxbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QCHmK+5GfaVz8bbbSowmaOnzegplSKmswr3oSdG1Ntc=;
-        b=Q7sVn/Sgn6gMq5TGOprsL8RfouVnEHvZu+PtGHOHCP/MPgWxk/NG4RkTbUBm698TSs
-         VBu+eknGPCZD9bL9hNZbibYezczS68ALWsmN2RzhZ8q0TUJX1z0WphBoGWT1m+jrNdkP
-         S3PK0xEbqd8URli4NWMw86Z/s5KbdXfFuZTTrwHKhDZCkPUjagEAoC3nNCBif0GqYy4e
-         UJJQvslKtLgZg+3YKuYuSo4AAL2Ui0UEQdShrDjpVJxwXn2/chUMgO18m9oDyehKULW9
-         isYIBMX01FL440nvye+n9+8EDCKVSBbRO0QkldDybgkfLDL/aGneMPvmlezpKCS/C+RC
-         f05Q==
-X-Gm-Message-State: AGi0PuarhQPVbonwEieNnTB7/g3K+tIoKM7EF9pasi7LVV1vdRmue62S
-        eJ2mF77gRQM9ayvXeHxCWOq4fQ==
-X-Google-Smtp-Source: APiQypJURckLnLZ0H/WagG5eV1Il3kHdYUP+TbaZp19RH7fgAaUZ5DpZsvJJE3WKzR4nFCtMn0O5IA==
-X-Received: by 2002:a5d:4092:: with SMTP id o18mr3262717wrp.227.1587627069178;
-        Thu, 23 Apr 2020 00:31:09 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id j68sm2443417wrj.32.2020.04.23.00.31.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 00:31:08 -0700 (PDT)
-Subject: Re: [PATCH v7 0/8] Genericize DW MIPI DSI bridge and add i.MX 6
- driver
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        linux-imx@nxp.com
-References: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <d4cda063-3047-a5cc-a675-1d5008657b97@baylibre.com>
-Date:   Thu, 23 Apr 2020 09:31:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 23 Apr 2020 03:33:19 -0400
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 84089200011;
+        Thu, 23 Apr 2020 07:33:11 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 00:33:10 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>, io-uring@vger.kernel.org,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v5 2/3] fs: openat2: Extend open_how to allow
+ userspace-selected fds
+Message-ID: <20200423073310.GA169998@localhost>
+References: <cover.1587531463.git.josh@joshtriplett.org>
+ <9873b8bd7d14ff8cd2a5782b434b39f076679eeb.1587531463.git.josh@joshtriplett.org>
+ <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
+ <CAJfpegt=xe-8AayW2i3AYrk3q-=Pp_A+Hctsk+=sXoMed5hFQA@mail.gmail.com>
+ <20200423004807.GC161058@localhost>
+ <CAJfpegtSYKsApx2Dc6VGmc5Fm4SsxtAWAP-Zs052umwK1CjJmQ@mail.gmail.com>
+ <20200423044226.GH161058@localhost>
+ <CAJfpeguaVYo-Lf-5Bi=EYJYWdmCfo3BqZA=kj9E5UmDb0mBc1w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpeguaVYo-Lf-5Bi=EYJYWdmCfo3BqZA=kj9E5UmDb0mBc1w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/04/2020 18:16, Adrian Ratiu wrote:
-> Hello everyone,
+On Thu, Apr 23, 2020 at 08:04:25AM +0200, Miklos Szeredi wrote:
+> On Thu, Apr 23, 2020 at 6:42 AM Josh Triplett <josh@joshtriplett.org> wrote:
+> >
+> > On Thu, Apr 23, 2020 at 06:24:14AM +0200, Miklos Szeredi wrote:
+> > > On Thu, Apr 23, 2020 at 2:48 AM Josh Triplett <josh@joshtriplett.org> wrote:
+> > > > On Wed, Apr 22, 2020 at 09:55:56AM +0200, Miklos Szeredi wrote:
+> > > > > On Wed, Apr 22, 2020 at 8:06 AM Michael Kerrisk (man-pages)
+> > > > > <mtk.manpages@gmail.com> wrote:
+> > > > > >
+> > > > > > [CC += linux-api]
+> > > > > >
+> > > > > > On Wed, 22 Apr 2020 at 07:20, Josh Triplett <josh@joshtriplett.org> wrote:
+> > > > > > >
+> > > > > > > Inspired by the X protocol's handling of XIDs, allow userspace to select
+> > > > > > > the file descriptor opened by openat2, so that it can use the resulting
+> > > > > > > file descriptor in subsequent system calls without waiting for the
+> > > > > > > response to openat2.
+> > > > > > >
+> > > > > > > In io_uring, this allows sequences like openat2/read/close without
+> > > > > > > waiting for the openat2 to complete. Multiple such sequences can
+> > > > > > > overlap, as long as each uses a distinct file descriptor.
+> > > > >
+> > > > > If this is primarily an io_uring feature, then why burden the normal
+> > > > > openat2 API with this?
+> > > >
+> > > > This feature was inspired by io_uring; it isn't exclusively of value
+> > > > with io_uring. (And io_uring doesn't normally change the semantics of
+> > > > syscalls.)
+> > >
+> > > What's the use case of O_SPECIFIC_FD beyond io_uring?
+> >
+> > Avoiding a call to dup2 and close, if you need something as a specific
+> > file descriptor, such as when setting up to exec something, or when
+> > debugging a program.
+> >
+> > I don't expect it to be as widely used as with io_uring, but I also
+> > don't want io_uring versions of syscalls to diverge from the underlying
+> > syscalls, and this would be a heavy divergence.
 > 
-> v7 addresses the points raised by Enric and Laurent in v6.
-> Specific details in patch changelogs.
-> 
-> Two new independent patches were derived from this series
-> and posted for review (now they are dependencies for v7):
-> 
-> Message-ID: 20200421105814.1364900-1-adrian.ratiu@collabora.com
-> Web: https://lore.kernel.org/linux-devicetree/20200421105814.1364900-1-adrian.ratiu@collabora.com/T/#u
-> 
-> and
-> 
-> Message-ID: 20200420100222.1308898-1-adrian.ratiu@collabora.com
-> Web: https://lore.kernel.org/linux-arm-kernel/20200420100222.1308898-1-adrian.ratiu@collabora.com/T/#u
+> What are the plans for those syscalls that don't easily lend
+> themselves to this modification (such as accept(2))?
 
-Side note, you can build the following URL from message-id:
-http://lore.kernel.org/r/20200420100222.1308898-1-adrian.ratiu@collabora.com
+accept4 has a flags argument with more flags available, so it'd be
+entirely possible to cleanly extend it further without introducing a new
+version. The same goes for other fd-producing syscalls that still have
+flag space available.
 
-Neil
+This may or may not provide sufficient motivation on its own to
+introduce a new syscall variant of a syscall that isn't currently
+extensible.
 
-> 
-> Tested on latest linux-next 20200421 with the above two patches
-> applied.
-> 
-> Thank you,
-> Adrian
-> 
-> Adrian Ratiu (8):
->   drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
->   drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
->   drm: bridge: synopsis: add dsi v1.01 support
->   drm: imx: Add i.MX 6 MIPI DSI host platform driver
->   dt-bindings: display: add i.MX6 MIPI DSI host controller doc
->   drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
->   drm: bridge: dw-mipi-dsi: split low power cfg register into fields
->   drm: bridge: dw-mipi-dsi: fix bad register field offsets
-> 
->  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 135 ++++
->  drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 692 +++++++++++++-----
->  drivers/gpu/drm/imx/Kconfig                   |   8 +
->  drivers/gpu/drm/imx/Makefile                  |   1 +
->  drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 391 ++++++++++
->  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  12 +-
->  7 files changed, 1035 insertions(+), 205 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
->  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
-> 
+> Compared to that, having a common flag for file ops to enable the use
+> of fixed and private file descriptors is a clean and well contained
+> interface.
 
+"private" is not a desirable property here. See below. Even if the
+userspace-specified fd mechanism were to become something only
+accessible via io_uring (which I'd prefer to avoid), that's not a reason
+to avoid generating real file descriptors that work anywhere a file
+descriptor works.
+
+> > > > > This would also allow Implementing a private fd table for io_uring.
+> > > > > I.e. add a flag interpreted by file ops (IORING_PRIVATE_FD), including
+> > > > > openat2 and freely use the private fd space without having to worry
+> > > > > about interactions with other parts of the system.
+> > > >
+> > > > I definitely don't want to add a special kind of file descriptor that
+> > > > doesn't work in normal syscalls taking file descriptors. A file
+> > > > descriptor allocated via O_SPECIFIC_FD is an entirely normal file
+> > > > descriptor, and works anywhere a file descriptor normally works.
+> > >
+> > > What's the use case of allocating a file descriptor within io_uring
+> > > and using it outside of io_uring?
+> >
+> > Calling a syscall not provided via io_uring. Calling a library that
+> > doesn't use io_uring. Passing the file descriptor via UNIX socket to
+> > another program. Passing the file descriptor via exec to another
+> > program. Userspace is modular, and file descriptors are widely used.
+> 
+> I mean, you could open the file descriptor outside of io_uring in such
+> cases, no?
+
+I would prefer to not introduce that limitation in the first place, and
+instead open normal file descriptors.
+
+> The point of O_SPECIFIC_FD is to be able to perform short
+> sequences of open/dosomething/close without having to block and having
+> to issue separate syscalls.
+
+"close" is not a required component. It's entirely possible to use
+io_uring to open a file descriptor, do various things with it, and then
+leave it open for subsequent usage via either other io_uring chains or
+standalone syscalls.
+
+> If you're going to issue separate
+> syscalls anyway, then I see no point in doing the open within
+> io_uring.  Or?
+
+io_uring is not an all-or-nothing proposition. There's value in using
+io_uring for some operations without converting an entire program (and
+every library it might potentially use on a file descriptor) entirely to
+io_uring. Userspace is modular, and file descriptors are a common
+element used by many different bits of userspace.
