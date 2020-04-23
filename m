@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D1DC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A4CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 859E420780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC8020780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgDWXPX (ORCPT
+        id S1729020AbgDWXPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:15:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49690 "EHLO
+        Thu, 23 Apr 2020 19:15:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49682 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728417AbgDWXGr (ORCPT
+        by vger.kernel.org with ESMTP id S1728416AbgDWXGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:47 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-0004he-Qj; Fri, 24 Apr 2020 00:06:35 +0100
+        id 1jRkvU-0004hK-98; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvQ-00E6o9-5Q; Fri, 24 Apr 2020 00:06:32 +0100
+        id 1jRkvR-00E6q2-P9; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Sterba" <dsterba@suse.com>,
-        "Josef Bacik" <josef@toxicpanda.com>,
-        "Filipe Manana" <fdmanana@suse.com>
-Date:   Fri, 24 Apr 2020 00:05:41 +0100
-Message-ID: <lsq.1587683028.116145969@decadent.org.uk>
+        syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com,
+        "Pablo Neira Ayuso" <pablo@netfilter.org>,
+        "Florian Westphal" <fw@strlen.de>
+Date:   Fri, 24 Apr 2020 00:06:04 +0100
+Message-ID: <lsq.1587683028.484204835@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 114/245] Btrfs: fix removal logic of the tree mod log
- that leads to use-after-free issues
+Subject: [PATCH 3.16 137/245] netfilter: ebtables: compat: reject all
+ padding in matches/watchers
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,110 +57,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 6609fee8897ac475378388238456c84298bff802 upstream.
+commit e608f631f0ba5f1fc5ee2e260a3a35d13107cbfe upstream.
 
-When a tree mod log user no longer needs to use the tree it calls
-btrfs_put_tree_mod_seq() to remove itself from the list of users and
-delete all no longer used elements of the tree's red black tree, which
-should be all elements with a sequence number less then our equals to
-the caller's sequence number. However the logic is broken because it
-can delete and free elements from the red black tree that have a
-sequence number greater then the caller's sequence number:
+syzbot reported following splat:
 
-1) At a point in time we have sequence numbers 1, 2, 3 and 4 in the
-   tree mod log;
+BUG: KASAN: vmalloc-out-of-bounds in size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
+Read of size 4 at addr ffffc900004461f4 by task syz-executor267/7937
 
-2) The task which got assigned the sequence number 1 calls
-   btrfs_put_tree_mod_seq();
+CPU: 1 PID: 7937 Comm: syz-executor267 Not tainted 5.5.0-rc1-syzkaller #0
+ size_entry_mwt net/bridge/netfilter/ebtables.c:2063 [inline]
+ compat_copy_entries+0x128b/0x1380 net/bridge/netfilter/ebtables.c:2155
+ compat_do_replace+0x344/0x720 net/bridge/netfilter/ebtables.c:2249
+ compat_do_ebt_set_ctl+0x22f/0x27e net/bridge/netfilter/ebtables.c:2333
+ [..]
 
-3) Sequence number 1 is deleted from the list of sequence numbers;
+Because padding isn't considered during computation of ->buf_user_offset,
+"total" is decremented by fewer bytes than it should.
 
-4) The current minimum sequence number is computed to be the sequence
-   number 2;
+Therefore, the first part of
 
-5) A task using sequence number 2 is at tree_mod_log_rewind() and gets
-   a pointer to one of its elements from the red black tree through
-   a call to tree_mod_log_search();
+if (*total < sizeof(*entry) || entry->next_offset < sizeof(*entry))
 
-6) The task with sequence number 1 iterates the red black tree of tree
-   modification elements and deletes (and frees) all elements with a
-   sequence number less then or equals to 2 (the computed minimum sequence
-   number) - it ends up only leaving elements with sequence numbers of 3
-   and 4;
+will pass, -- it should not have.  This causes oob access:
+entry->next_offset is past the vmalloced size.
 
-7) The task with sequence number 2 now uses the pointer to its element,
-   already freed by the other task, at __tree_mod_log_rewind(), resulting
-   in a use-after-free issue. When CONFIG_DEBUG_PAGEALLOC=y it produces
-   a trace like the following:
+Reject padding and check that computed user offset (sum of ebt_entry
+structure plus all individual matches/watchers/targets) is same
+value that userspace gave us as the offset of the next entry.
 
-  [16804.546854] general protection fault: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
-  [16804.547451] CPU: 0 PID: 28257 Comm: pool Tainted: G        W         5.4.0-rc8-btrfs-next-51 #1
-  [16804.548059] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  [16804.548666] RIP: 0010:rb_next+0x16/0x50
-  (...)
-  [16804.550581] RSP: 0018:ffffb948418ef9b0 EFLAGS: 00010202
-  [16804.551227] RAX: 6b6b6b6b6b6b6b6b RBX: ffff90e0247f6600 RCX: 6b6b6b6b6b6b6b6b
-  [16804.551873] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff90e0247f6600
-  [16804.552504] RBP: ffff90dffe0d4688 R08: 0000000000000001 R09: 0000000000000000
-  [16804.553136] R10: ffff90dffa4a0040 R11: 0000000000000000 R12: 000000000000002e
-  [16804.553768] R13: ffff90e0247f6600 R14: 0000000000001663 R15: ffff90dff77862b8
-  [16804.554399] FS:  00007f4b197ae700(0000) GS:ffff90e036a00000(0000) knlGS:0000000000000000
-  [16804.555039] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [16804.555683] CR2: 00007f4b10022000 CR3: 00000002060e2004 CR4: 00000000003606f0
-  [16804.556336] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [16804.556968] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [16804.557583] Call Trace:
-  [16804.558207]  __tree_mod_log_rewind+0xbf/0x280 [btrfs]
-  [16804.558835]  btrfs_search_old_slot+0x105/0xd00 [btrfs]
-  [16804.559468]  resolve_indirect_refs+0x1eb/0xc70 [btrfs]
-  [16804.560087]  ? free_extent_buffer.part.19+0x5a/0xc0 [btrfs]
-  [16804.560700]  find_parent_nodes+0x388/0x1120 [btrfs]
-  [16804.561310]  btrfs_check_shared+0x115/0x1c0 [btrfs]
-  [16804.561916]  ? extent_fiemap+0x59d/0x6d0 [btrfs]
-  [16804.562518]  extent_fiemap+0x59d/0x6d0 [btrfs]
-  [16804.563112]  ? __might_fault+0x11/0x90
-  [16804.563706]  do_vfs_ioctl+0x45a/0x700
-  [16804.564299]  ksys_ioctl+0x70/0x80
-  [16804.564885]  ? trace_hardirqs_off_thunk+0x1a/0x20
-  [16804.565461]  __x64_sys_ioctl+0x16/0x20
-  [16804.566020]  do_syscall_64+0x5c/0x250
-  [16804.566580]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [16804.567153] RIP: 0033:0x7f4b1ba2add7
-  (...)
-  [16804.568907] RSP: 002b:00007f4b197adc88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  [16804.569513] RAX: ffffffffffffffda RBX: 00007f4b100210d8 RCX: 00007f4b1ba2add7
-  [16804.570133] RDX: 00007f4b100210d8 RSI: 00000000c020660b RDI: 0000000000000003
-  [16804.570726] RBP: 000055de05a6cfe0 R08: 0000000000000000 R09: 00007f4b197add44
-  [16804.571314] R10: 0000000000000000 R11: 0000000000000246 R12: 00007f4b197add48
-  [16804.571905] R13: 00007f4b197add40 R14: 00007f4b100210d0 R15: 00007f4b197add50
-  (...)
-  [16804.575623] ---[ end trace 87317359aad4ba50 ]---
-
-Fix this by making btrfs_put_tree_mod_seq() skip deletion of elements that
-have a sequence number equals to the computed minimum sequence number, and
-not just elements with a sequence number greater then that minimum.
-
-Fixes: bd989ba359f2ac ("Btrfs: add tree modification log functions")
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 3.16: adjust context]
+Reported-by: syzbot+f68108fed972453a0ad4@syzkaller.appspotmail.com
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/ctree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bridge/netfilter/ebtables.c | 33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -418,7 +418,7 @@ void btrfs_put_tree_mod_seq(struct btrfs
- 	for (node = rb_first(tm_root); node; node = next) {
- 		next = rb_next(node);
- 		tm = container_of(node, struct tree_mod_elem, node);
--		if (tm->seq > min_seq)
-+		if (tm->seq >= min_seq)
- 			continue;
- 		rb_erase(node, tm_root);
- 		kfree(tm);
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1855,7 +1855,7 @@ static int ebt_buf_count(struct ebt_entr
+ }
+ 
+ static int ebt_buf_add(struct ebt_entries_buf_state *state,
+-		       void *data, unsigned int sz)
++		       const void *data, unsigned int sz)
+ {
+ 	if (state->buf_kern_start == NULL)
+ 		goto count_only;
+@@ -1889,7 +1889,7 @@ enum compat_mwt {
+ 	EBT_COMPAT_TARGET,
+ };
+ 
+-static int compat_mtw_from_user(struct compat_ebt_entry_mwt *mwt,
++static int compat_mtw_from_user(const struct compat_ebt_entry_mwt *mwt,
+ 				enum compat_mwt compat_mwt,
+ 				struct ebt_entries_buf_state *state,
+ 				const unsigned char *base)
+@@ -1966,22 +1966,23 @@ static int compat_mtw_from_user(struct c
+  * return size of all matches, watchers or target, including necessary
+  * alignment and padding.
+  */
+-static int ebt_size_mwt(struct compat_ebt_entry_mwt *match32,
++static int ebt_size_mwt(const struct compat_ebt_entry_mwt *match32,
+ 			unsigned int size_left, enum compat_mwt type,
+ 			struct ebt_entries_buf_state *state, const void *base)
+ {
++	const char *buf = (const char *)match32;
+ 	int growth = 0;
+-	char *buf;
+ 
+ 	if (size_left == 0)
+ 		return 0;
+ 
+-	buf = (char *) match32;
+-
+-	while (size_left >= sizeof(*match32)) {
++	do {
+ 		struct ebt_entry_match *match_kern;
+ 		int ret;
+ 
++		if (size_left < sizeof(*match32))
++			return -EINVAL;
++
+ 		match_kern = (struct ebt_entry_match *) state->buf_kern_start;
+ 		if (match_kern) {
+ 			char *tmp;
+@@ -2018,22 +2019,18 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
+ 
+-		/* rule should have no remaining data after target */
+-		if (type == EBT_COMPAT_TARGET && size_left)
+-			return -EINVAL;
+-
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
+-	}
++	} while (size_left);
+ 
+ 	return growth;
+ }
+ 
+ /* called for all ebt_entry structures. */
+-static int size_entry_mwt(struct ebt_entry *entry, const unsigned char *base,
++static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *base,
+ 			  unsigned int *total,
+ 			  struct ebt_entries_buf_state *state)
+ {
+-	unsigned int i, j, startoff, new_offset = 0;
++	unsigned int i, j, startoff, next_expected_off, new_offset = 0;
+ 	/* stores match/watchers/targets & offset of next struct ebt_entry: */
+ 	unsigned int offsets[4];
+ 	unsigned int *offsets_update = NULL;
+@@ -2121,11 +2118,13 @@ static int size_entry_mwt(struct ebt_ent
+ 			return ret;
+ 	}
+ 
+-	startoff = state->buf_user_offset - startoff;
++	next_expected_off = state->buf_user_offset - startoff;
++	if (next_expected_off != entry->next_offset)
++		return -EINVAL;
+ 
+-	if (WARN_ON(*total < startoff))
++	if (*total < entry->next_offset)
+ 		return -EINVAL;
+-	*total -= startoff;
++	*total -= entry->next_offset;
+ 	return 0;
+ }
+ 
 
