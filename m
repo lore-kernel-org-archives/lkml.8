@@ -2,198 +2,126 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA7C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDC6C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E157720781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Fn2d1x+/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5O3GV4K"
+	by mail.kernel.org (Postfix) with ESMTP id EC82F20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgDWUgy (ORCPT
+        id S1726636AbgDWUhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:36:54 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:59747 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725877AbgDWUgx (ORCPT
+        Thu, 23 Apr 2020 16:37:05 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:36006 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgDWUhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:36:53 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4725158030B;
-        Thu, 23 Apr 2020 16:36:49 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 23 Apr 2020 16:36:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Iubs+KISuHQ9VGeGg+cCp2xJSoU
-        PuYVrphsLXiw5SFg=; b=Fn2d1x+/36iC3PGOTy5Cp2hHxpxTsbZXqEhCoWSU6fC
-        Bh2uGjm8NzjGSIGOhUdI6jIFnaNlWlK/KNK0SO5YgDVKAzn9T8T4ClUJFkXWcI/L
-        SrSHQwn+ywvkFIfMqeLT0tGOBnOJCf3GhECZDwsJXcOOkFJEZ5PO3Hg2TEHxt0Ji
-        XXCiuCgBhfrNpF+Q4qgbmo0zisCBtKA1VkhzWKnI3UD+PuwtHOjrTI/5OtSrja0W
-        0xNGXCJ8ebZmLgh5iBcj0TUAG6xzsfP58vDHg4dtrP2Je050KddpO2V/+DEw4INi
-        HTrBFJ8cS/EHw4cjf9yqCM3mqKMdTGT34HW7z+GoIEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Iubs+K
-        ISuHQ9VGeGg+cCp2xJSoUPuYVrphsLXiw5SFg=; b=X5O3GV4KFSkNBZXwi0gXe/
-        Az/rwjNsPXRiOZeR/DIobQrkLfux9vKSBPW2Q7Wch/uG7VG9fPmUEU8Kyi30iPJx
-        6rZFq866Z4AieJ/VQuUcLR0mV0pZLLxlv3ciLBDB/NhY/AvDjNVAvMjJxXjdCS6K
-        u41z1fKpjs0erRbydhTf6J8lDzfZB7FSCFB8idsmUzAcZtLjWHuo6bbN3Dpzw+lv
-        Xc1y1zz0vGYrNGmVPq0/4/8tCV+p/V1vxI12KqIjNELt9KhmHqpZLjuh1WSuMbeZ
-        mWk/VcSn4C4MRsWk0RVAApy8MoL8ZK52EhiDYG9eBvoyLIChI6lqSRyqMDdlQG7g
-        ==
-X-ME-Sender: <xms:XfyhXtOzOOFFqaB2EmGtuUz4AXihlYYhfPH3NPly7o2BbKivw_911Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:XfyhXkMYXTgP_dAi3mHrR2OLJMQgltfV-ZrcUbSZbYi-eyL9XqlWvQ>
-    <xmx:XfyhXnRz3tzFqWtdmt2KW_Iy-oRzKWX5FUFdLIFvNbNly0q4eowTmw>
-    <xmx:XfyhXuBpYPyCR1QitUY5OuM1TQtkKBdD8mz-YseHbvORsD3x-nC7Qg>
-    <xmx:YfyhXklTjVJsrJRboZpeYnKPAGn0Xr4Sox5XlaeG8MS2WPQdNjQpdg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CD893328005E;
-        Thu, 23 Apr 2020 16:36:44 -0400 (EDT)
-Date:   Thu, 23 Apr 2020 22:36:42 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tony Lindgren <tony@atomide.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Message-ID: <20200423203642.35ms4aarnv65tfp5@gilmour.lan>
-References: <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
- <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
- <20200421141543.GU37466@atomide.com>
- <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
- <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
- <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
- <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
- <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com>
- <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com>
- <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
+        Thu, 23 Apr 2020 16:37:04 -0400
+Received: by mail-il1-f197.google.com with SMTP id l15so7468702ilj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:37:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Fh1Rwz1L5Fktyzu7aZcY0NbJt9JupzD0Et8VKTqI8Dw=;
+        b=VBTFM12OgWkayWV9nkurqXN2iF6izPwRb0U4S+aZ+TIExy9fuU+GxXjwt5G2VOcNCm
+         QVg+c32/MRdQ0S/8P3TeWGgcPfihfzZ1AMvX1Rl0Ps1Nc49ImONrCVeaD65uyYbvaSdn
+         HAdrog7lpJRnzGkPbuP0MOrVKuiv2qC//69ywX6jel9choM/sHHY9IofkzGbXYwyfI6q
+         ef5/pqeqZXh39jMg4Snx9ZTou9NVXkscIsuCH27Fs06Nins5doi//znvxe9fZqrZR3Eq
+         XzJNMaHm2ypx0ECMYxz/2z6TrbL7nrcG5cN4nBGiSvtXLDUqvwCdEIunZfbkN+zwoGMd
+         V+/A==
+X-Gm-Message-State: AGi0PuZP3nLzKCS8acaOl9FRLpigVf6oZBmOBeZKRlmfdNqvX0rDeWBw
+        YCchYo6clb+gmWxi97H54zU59QlCcuBAmSOJkecJOrRRdylb
+X-Google-Smtp-Source: APiQypIRven/Uxycbw1y/arYmjGIp1zPGSk+lq6qYoWGv5tlOatvIjsb58ugJT77RaFSloaPdHpaRShiQArumo/5i2e5SxtWDH6f
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="goo77pyirkr5psgn"
-Content-Disposition: inline
-In-Reply-To: <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
+X-Received: by 2002:a5e:9401:: with SMTP id q1mr5318069ioj.80.1587674223663;
+ Thu, 23 Apr 2020 13:37:03 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 13:37:03 -0700
+In-Reply-To: <Pine.LNX.4.44L0.2004231451570.13251-100000@netrider.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001ee25205a3fb364b@google.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
+From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---goo77pyirkr5psgn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot has tested the proposed patch but the reproducer still triggered crash:
+WARNING in usbhid_raw_request/usb_submit_urb
 
-On Thu, Apr 23, 2020 at 05:45:55PM +0200, H. Nikolaus Schaller wrote:
-> > Am 23.04.2020 um 17:00 schrieb Neil Armstrong <narmstrong@baylibre.com>:
-> >> One thing we can learn is that "core" seems to be a de facto standard=
-=20
-> >> for the core clock-name. An alternative "gpu" is used by nvidia,gk20a.=
-txt.
-> >=20
-> > Usually IPs needs a few clocks:
-> > - pclk or apb or reg: the clock clocking the "slave" bus to serve the r=
-egisters
-> > - axi or bus or ahb: the bus clocking the the "master" bus to get data =
-=66rom system memory
-> > - core: the actual clock feeding the GPU logic
->=20
-> And the sgx544 seems to have two such clocks.
->=20
-> > Sometimes you have a single clock for slave and master bus.
-> >=20
-> > But you can also have separate clocks for shader cores, .. this depends=
- on the IP and it's architecture.
-> > The IP can also have memories with separate clocks, etc...
->=20
-> Indeed.
->=20
-> > But all these clocks can be source by an unique clock on a SoC, but dif=
-ferent on another
-> > SoC, this is why it's important to list them all, even optional.
-> >=20
-> > You'll certainly have at least a reset signal, and a power domain, thes=
-e should exist and be optional.
->=20
-> Well, they exist only as hints in block diagrams of some SoC data
-> sheets (so we do not know if they represent the imagination
-> definitions) and the current driver code doesn't make use of it. Still
-> the gpu core works.
->=20
-> So I do not see any urgent need to add a complete list to the bindings
-> now.
->=20
-> Unless some special SoC integration makes use of them. Then it is IMHO
-> easier to extend the bindings by a follow-up patch than now thinking
-> about all potential options and bloating the bindings with things we
-> (the open source community) doesn't and can't know.
->=20
-> My goal is to keep the bindings as minimalistic as possible. And reset
-> lines and power domains are (at least for those we have in the works)
-> not needed to make working systems.
->=20
-> Therefore, for clocks I also would start with a minimalistic approach
-> for a single optional GPU core clock and leave out reset and power
-> completely.
+usb 2-1: Ep 0 disabled: 4
+------------[ cut here ]------------
+usb 2-1: BOGUS urb xfer, pipe 2 != type 2
+WARNING: CPU: 1 PID: 4177 at drivers/usb/core/urb.c:482 usb_submit_urb+0xa38/0x1380 drivers/usb/core/urb.c:482
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 4177 Comm: syz-executor.1 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:221
+ __warn.cold+0x2f/0x30 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:usb_submit_urb+0xa38/0x1380 drivers/usb/core/urb.c:482
+Code: 84 40 04 00 00 e8 28 8a dd fd 4c 89 ef e8 30 5a 17 ff 41 89 d8 44 89 e1 4c 89 f2 48 89 c6 48 c7 c7 c0 dd 3b 86 e8 d0 1a b2 fd <0f> 0b e8 01 8a dd fd 0f b6 6c 24 08 bb 86 03 00 00 48 c7 c6 20 df
+RSP: 0018:ffff8881cfcefb30 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff812974dd RDI: ffffed1039f9df58
+RBP: 0000000000000000 R08: ffff8881d8d01880 R09: ffffed103b66439f
+R10: ffffed103b66439e R11: ffff8881db321cf3 R12: 0000000000000002
+R13: ffff8881c5cd60a8 R14: ffff8881c6021ed0 R15: ffff8881d9572100
+ usb_start_wait_urb+0x108/0x4c0 drivers/usb/core/message.c:58
+ usb_internal_control_msg drivers/usb/core/message.c:102 [inline]
+ usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:153
+ usbhid_set_raw_report drivers/hid/usbhid/hid-core.c:917 [inline]
+ usbhid_raw_request+0x225/0x620 drivers/hid/usbhid/hid-core.c:1265
+ hid_hw_raw_request include/linux/hid.h:1079 [inline]
+ hidraw_send_report+0x296/0x500 drivers/hid/hidraw.c:151
+ hidraw_ioctl+0x620/0xaf0 drivers/hid/hidraw.c:422
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c849
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc247305c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fc2473066d4 RCX: 000000000045c849
+RDX: 00000000200000c0 RSI: 0000000080404806 RDI: 0000000000000006
+RBP: 000000000076bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000335 R14: 00000000004c59df R15: 000000000076bfac
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-Like I said above, the DT is considered an ABI and you'll have to
-maintain backward compatibility (ie, newer kernel running with older
-DT). Therefore, you won't be able to require a new clock, reset or
-power-domain later on for example.
 
-I guess the question I'm really asking is: since you don't really know
-how the hardware is integrated at the moment, why should we have that
-discussion *now*. It's really not suprising that you don't know yet, so
-I'm not sure why we need to rush in the bindings.
+Tested on:
 
-Maxime
+commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=143e9b9be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1067e1bbe00000
 
---goo77pyirkr5psgn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqH8WgAKCRDj7w1vZxhR
-xevnAQDosUT6nmUX0+zNQOj7IKsbVGpyycJhdLX1FoaJiEMTHgD/SWTr0aPp/w2C
-TCfnfiPupaeG8u9JV8QMCk/a58o6Xw8=
-=ygqv
------END PGP SIGNATURE-----
-
---goo77pyirkr5psgn--
