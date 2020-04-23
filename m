@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20202C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0874C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC6320780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B838120780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgDWXU6 (ORCPT
+        id S1729888AbgDWXVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:20:58 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48598 "EHLO
+        Thu, 23 Apr 2020 19:21:00 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48550 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728205AbgDWXGd (ORCPT
+        by vger.kernel.org with ESMTP id S1728201AbgDWXGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bC-Ee; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvM-0004bu-1I; Fri, 24 Apr 2020 00:06:28 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-00E6ja-Kj; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvK-00E6iw-8R; Fri, 24 Apr 2020 00:06:26 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Mika Westerberg" <mika.westerberg@linux.intel.com>
-Date:   Fri, 24 Apr 2020 00:04:55 +0100
-Message-ID: <lsq.1587683028.459138453@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Steven Sistare" <steven.sistare@oracle.com>,
+        "Pavel Tatashin" <pasha.tatashin@oracle.com>
+Date:   Fri, 24 Apr 2020 00:04:47 +0100
+Message-ID: <lsq.1587683028.710020660@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 068/245] pinctrl: baytrail: Rework interrupt handling
+Subject: [PATCH 3.16 060/245] x86/pti/efi: broken conversion from efi to
+ kernel page table
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,177 +57,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Pavel Tatashin <pasha.tatashin@oracle.com>
 
-commit 31e4329f99062a06dca5a493bb4495a63b2dc6ba upstream.
+In entry_64.S we have code like this:
 
-Instead of handling everything in the driver's first level interrupt
-handler, we can take advantage of already existing flow handlers that are
-provided by the IRQ core.
+    /* Unconditionally use kernel CR3 for do_nmi() */
+    /* %rax is saved above, so OK to clobber here */
+    ALTERNATIVE "jmp 2f", "movq %cr3, %rax", X86_FEATURE_KAISER
+    /* If PCID enabled, NOFLUSH now and NOFLUSH on return */
+    ALTERNATIVE "", "bts $63, %rax", X86_FEATURE_PCID
+    pushq   %rax
+    /* mask off "user" bit of pgd address and 12 PCID bits: */
+    andq    $(~(X86_CR3_PCID_ASID_MASK | KAISER_SHADOW_PGD_OFFSET)), %rax
+    movq    %rax, %cr3
+2:
 
-This changes the functionality a bit also. Previously the driver looped
-over pending interrupts in a single loop, restarting the loop if some
-interrupt changed state. This caused problem with Lenovo Thinkpad 10
-digitizer that it was not able to deassert the interrupt before the driver
-disabled the interrupt for good (looplimit was exhausted).
+    /* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
+    call    do_nmi
 
-Rework the interrupt handling logic a bit so that we provide proper mask,
-ack and unmask operations in terms of Baytrail GPIO hardware and loop over
-pending interrupts only once. If the interrupt remains asserted the first
-level handler will be re-triggered automatically.
+With this instruction:
+    andq    $(~(X86_CR3_PCID_ASID_MASK | KAISER_SHADOW_PGD_OFFSET)), %rax
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-[bwh: Backported to 3.16 as dependency of commit 39ce8150a079
- "pinctrl: baytrail: Serialize all register access":
- - Adjust filename, context]
+We unconditionally switch from whatever our CR3 was to kernel page table.
+But, in arch/x86/platform/efi/efi_64.c We temporarily set a different page
+table, that does not have the kernel page table with 0x1000 offset from it.
+
+Look in efi_thunk() and efi_thunk_set_virtual_address_map().
+
+So, while CR3 points to the other page table, we get an NMI interrupt,
+and clear 0x1000 from CR3, resulting in a bogus CR3 if the 0x1000 bit was
+set.
+
+The efi page table comes from realmode/rm/trampoline_64.S:
+
+arch/x86/realmode/rm/trampoline_64.S
+
+141 .bss
+142 .balign PAGE_SIZE
+143 GLOBAL(trampoline_pgd) .space PAGE_SIZE
+
+Notice: alignment is PAGE_SIZE, so after applying KAISER_SHADOW_PGD_OFFSET
+which equal to PAGE_SIZE, we can get a different page table.
+
+But, even if we fix alignment, here the trampoline binary is later copied
+into dynamically allocated memory in reserve_real_mode(), so we need to
+fix that place as well.
+
+Fixes: f9a1666f97b3 ("KAISER: Kernel Address Isolation")
+Signed-off-by: Pavel Tatashin <pasha.tatashin@oracle.com>
+Reviewed-by: Steven Sistare <steven.sistare@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Adjust the Fixes field for 3.16]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pinctrl/pinctrl-baytrail.c | 100 +++++++++++++----------
- 1 file changed, 56 insertions(+), 44 deletions(-)
+ arch/x86/include/asm/kaiser.h        | 10 ++++++++++
+ arch/x86/realmode/init.c             |  4 +++-
+ arch/x86/realmode/rm/trampoline_64.S |  3 ++-
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/pinctrl-baytrail.c
-@@ -251,23 +251,13 @@ static int byt_irq_type(struct irq_data
- 	 */
- 	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
+--- a/arch/x86/include/asm/kaiser.h
++++ b/arch/x86/include/asm/kaiser.h
+@@ -19,6 +19,16 @@
  
--	switch (type) {
--	case IRQ_TYPE_LEVEL_HIGH:
--		value |= BYT_TRIG_LVL;
--	case IRQ_TYPE_EDGE_RISING:
--		value |= BYT_TRIG_POS;
--		break;
--	case IRQ_TYPE_LEVEL_LOW:
--		value |= BYT_TRIG_LVL;
--	case IRQ_TYPE_EDGE_FALLING:
--		value |= BYT_TRIG_NEG;
--		break;
--	case IRQ_TYPE_EDGE_BOTH:
--		value |= (BYT_TRIG_NEG | BYT_TRIG_POS);
--		break;
--	}
- 	writel(value, reg);
+ #define KAISER_SHADOW_PGD_OFFSET 0x1000
  
-+	if (type & IRQ_TYPE_EDGE_BOTH)
-+		__irq_set_handler_locked(d->irq, handle_edge_irq);
-+	else if (type & IRQ_TYPE_LEVEL_MASK)
-+		__irq_set_handler_locked(d->irq, handle_level_irq);
++#ifdef CONFIG_PAGE_TABLE_ISOLATION
++/*
++ *  A page table address must have this alignment to stay the same when
++ *  KAISER_SHADOW_PGD_OFFSET mask is applied
++ */
++#define KAISER_KERNEL_PGD_ALIGNMENT (KAISER_SHADOW_PGD_OFFSET << 1)
++#else
++#define KAISER_KERNEL_PGD_ALIGNMENT PAGE_SIZE
++#endif
 +
- 	spin_unlock_irqrestore(&vg->lock, flags);
+ #ifdef __ASSEMBLY__
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
  
- 	return 0;
-@@ -421,54 +411,75 @@ static void byt_gpio_irq_handler(unsigne
- 	struct irq_data *data = irq_desc_get_irq_data(desc);
- 	struct byt_gpio *vg = irq_data_get_irq_handler_data(data);
- 	struct irq_chip *chip = irq_data_get_irq_chip(data);
--	u32 base, pin, mask;
-+	u32 base, pin;
- 	void __iomem *reg;
--	u32 pending;
-+	unsigned long pending;
- 	unsigned virq;
--	int looplimit = 0;
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -4,6 +4,7 @@
+ #include <asm/cacheflush.h>
+ #include <asm/pgtable.h>
+ #include <asm/realmode.h>
++#include <asm/kaiser.h>
  
- 	/* check from GPIO controller which pin triggered the interrupt */
- 	for (base = 0; base < vg->chip.ngpio; base += 32) {
--
- 		reg = byt_gpio_reg(&vg->chip, base, BYT_INT_STAT_REG);
--
--		while ((pending = readl(reg))) {
--			pin = __ffs(pending);
--			mask = BIT(pin);
--			/* Clear before handling so we can't lose an edge */
--			writel(mask, reg);
--
-+		pending = readl(reg);
-+		for_each_set_bit(pin, &pending, 32) {
- 			virq = irq_find_mapping(vg->domain, base + pin);
- 			generic_handle_irq(virq);
--
--			/* In case bios or user sets triggering incorretly a pin
--			 * might remain in "interrupt triggered" state.
--			 */
--			if (looplimit++ > 32) {
--				dev_err(&vg->pdev->dev,
--					"Gpio %d interrupt flood, disabling\n",
--					base + pin);
--
--				reg = byt_gpio_reg(&vg->chip, base + pin,
--						   BYT_CONF0_REG);
--				mask = readl(reg);
--				mask &= ~(BYT_TRIG_NEG | BYT_TRIG_POS |
--					  BYT_TRIG_LVL);
--				writel(mask, reg);
--				mask = readl(reg); /* flush */
--				break;
--			}
- 		}
- 	}
- 	chip->irq_eoi(data);
- }
+ struct real_mode_header *real_mode_header;
+ u32 *trampoline_cr4_features;
+@@ -15,7 +16,8 @@ void __init reserve_real_mode(void)
+ 	size_t size = PAGE_ALIGN(real_mode_blob_end - real_mode_blob);
  
-+static void byt_irq_ack(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct byt_gpio *vg = to_byt_gpio(gc);
-+	unsigned offset = irqd_to_hwirq(d);
-+	void __iomem *reg;
-+
-+	reg = byt_gpio_reg(&vg->chip, offset, BYT_INT_STAT_REG);
-+	writel(BIT(offset % 32), reg);
-+}
-+
- static void byt_irq_unmask(struct irq_data *d)
- {
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct byt_gpio *vg = to_byt_gpio(gc);
-+	unsigned offset = irqd_to_hwirq(d);
-+	unsigned long flags;
-+	void __iomem *reg;
-+	u32 value;
-+
-+	spin_lock_irqsave(&vg->lock, flags);
-+
-+	reg = byt_gpio_reg(&vg->chip, offset, BYT_CONF0_REG);
-+	value = readl(reg);
-+
-+	switch (irqd_get_trigger_type(d)) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		value |= BYT_TRIG_LVL;
-+	case IRQ_TYPE_EDGE_RISING:
-+		value |= BYT_TRIG_POS;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		value |= BYT_TRIG_LVL;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		value |= BYT_TRIG_NEG;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		value |= (BYT_TRIG_NEG | BYT_TRIG_POS);
-+		break;
-+	}
-+
-+	writel(value, reg);
-+
-+	spin_unlock_irqrestore(&vg->lock, flags);
- }
+ 	/* Has to be under 1M so we can execute real-mode AP code. */
+-	mem = memblock_find_in_range(0, 1<<20, size, PAGE_SIZE);
++	mem = memblock_find_in_range(0, 1 << 20, size,
++				     KAISER_KERNEL_PGD_ALIGNMENT);
+ 	if (!mem)
+ 		panic("Cannot allocate trampoline\n");
  
- static void byt_irq_mask(struct irq_data *d)
- {
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct byt_gpio *vg = to_byt_gpio(gc);
-+
-+	byt_gpio_clear_triggering(vg, irqd_to_hwirq(d));
- }
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -30,6 +30,7 @@
+ #include <asm/msr.h>
+ #include <asm/segment.h>
+ #include <asm/processor-flags.h>
++#include <asm/kaiser.h>
+ #include "realmode.h"
  
- static int byt_irq_reqres(struct irq_data *d)
-@@ -493,6 +504,7 @@ static void byt_irq_relres(struct irq_da
+ 	.text
+@@ -139,7 +140,7 @@ tr_gdt:
+ tr_gdt_end:
  
- static struct irq_chip byt_irqchip = {
- 	.name = "BYT-GPIO",
-+	.irq_ack = byt_irq_ack,
- 	.irq_mask = byt_irq_mask,
- 	.irq_unmask = byt_irq_unmask,
- 	.irq_set_type = byt_irq_type,
+ 	.bss
+-	.balign	PAGE_SIZE
++	.balign	KAISER_KERNEL_PGD_ALIGNMENT
+ GLOBAL(trampoline_pgd)		.space	PAGE_SIZE
+ 
+ 	.balign	8
 
