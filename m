@@ -2,91 +2,96 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D132C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0C1C55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 157392084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27522077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:50:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCQSm3f+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgDWLrJ (ORCPT
+        id S1728174AbgDWLuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:47:09 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37446 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbgDWLrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:47:09 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jRaJU-0001c8-A7; Thu, 23 Apr 2020 21:46:41 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 23 Apr 2020 21:46:40 +1000
-Date:   Thu, 23 Apr 2020 21:46:40 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Baolin Wang <baolin.wang@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v5 2/3] crypto: engine - support for parallel requests
- based on retry mechanism
-Message-ID: <20200423114640.GA14399@gondor.apana.org.au>
-References: <1586982375-18710-1-git-send-email-iuliana.prodan@nxp.com>
- <1586982375-18710-3-git-send-email-iuliana.prodan@nxp.com>
+        Thu, 23 Apr 2020 07:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727081AbgDWLuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:50:15 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB81DC035494;
+        Thu, 23 Apr 2020 04:50:14 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id t11so4497254lfe.4;
+        Thu, 23 Apr 2020 04:50:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0myt66h+KuJjxp6VJJBImdgi/+DrnmI1vWbnrvx6uF4=;
+        b=dCQSm3f+PEwrnEUww5FJRA78dUepbt+uKSQgCnAfHxF+0xIsM4szquq+IjXS6UBZg5
+         PlQpdIjw8h+9OBx1D3c1D9aWz8UGX/Muwp1Hoh7BRmW9BpKs80ZD8FsCDv2LI+tLy0cb
+         cRYGtEvn/5/9X6uH1vU1G/PmcCGlQnJ0rq24qrdiHLgJF2d5YjK4lVR0EyBwK9u/T7An
+         ZhXU9KsSYTGc5Bhdd6KJP6Nncux4r0o+hmUKdC96wTE43Mhan4hC5aLjSjqrsVJV9s0S
+         coxAdaCARKmjLV83b9tw8hMzOLJfQSnsGCUGnaNQZ1U3J9CSoxDk0RnE2YhJU6Hi56VW
+         SqwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0myt66h+KuJjxp6VJJBImdgi/+DrnmI1vWbnrvx6uF4=;
+        b=BWxTNrX2Ll/C3Am6OEx+FR6UqOhqmB3BxClUGb/SyWni0EMWAnByLTq1xHXqbpS616
+         Uy+zE0GudWS73IKCACDdlk+NFsSdgdoV8FnQcRp8gN5x7AxybELGDU+dOxLFA3UMFlNq
+         7tLluJM31d6C1admoeubBCzSjWwEIBUFJYhPtuZHFVjoWMzz1RlPwvihDvtiqokytYh/
+         cYodhaQyhkWZ6E6DM7JzgAKV+xVDWUbU6l+kS/iRRQVxYBW7v40o1YsOKqsasHTZP0jP
+         LkyMex2m34OMSfy+cr8TlnGYBJelr0wpLYdpmryNezhp0Hz8jJWYduDrxMweKfToFF+L
+         FdXg==
+X-Gm-Message-State: AGi0PuZjxgVAv/OqH4qspafPUr7WfIbFejjQGNeiRdMsPD/pZhkx+vB1
+        0ucbRKaabV2yD21LGHbVlyEv3X2/Ge+l/VA0/tG6WA==
+X-Google-Smtp-Source: APiQypKZRn0ziiHFKI4kHuz8qP+crx/uaqkj2hKD1Sp7uDRG9p/ViyTblhjFD3/iLMGplyddPzqJIvHP5UWaYZY7DtI=
+X-Received: by 2002:a19:9109:: with SMTP id t9mr2271272lfd.10.1587642613050;
+ Thu, 23 Apr 2020 04:50:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586982375-18710-3-git-send-email-iuliana.prodan@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200423073929.127521-1-masahiroy@kernel.org> <20200423073929.127521-15-masahiroy@kernel.org>
+In-Reply-To: <20200423073929.127521-15-masahiroy@kernel.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 23 Apr 2020 13:50:02 +0200
+Message-ID: <CANiq72nUa8uoXtSThqq7t9oAmZnGSE9a1_d+ZoRAagpKDo4DRg@mail.gmail.com>
+Subject: Re: [PATCH 14/16] samples: auxdisplay: use 'userprogs' syntax
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:26:14PM +0300, Iuliana Prodan wrote:
-> Added support for executing multiple requests, in parallel,
-> for crypto engine based on a retry mechanism.
-> If hardware was unable to execute a backlog request, enqueue it
-> back in front of crypto-engine queue, to keep the order
-> of requests.
-> 
-> A new variable is added, retry_support (this is to keep the
-> backward compatibility of crypto-engine) , which keeps track
-> whether the hardware has support for retry mechanism and,
-> also, if can run multiple requests.
-> 
-> If do_one_request() returns:
-> >= 0: hardware executed the request successfully;
-> < 0: this is the old error path. If hardware has support for retry
-> mechanism, the request is put back in front of crypto-engine queue.
-> For backwards compatibility, if the retry support is not available,
-> the crypto-engine will work as before.
-> Only MAY_BACKLOG requests are enqueued back into
-> crypto-engine's queue, since the others can be dropped.
+Hi Masahiro,
 
-This looks a lot nicer!
+On Thu, Apr 23, 2020 at 9:41 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Kbuild now supports the 'userprogs' syntax to describe the build rules
+> of userspace programs for the target architecture (i.e. the same
+> architecture as the kernel).
+>
+> Add the entry to samples/Makefile to put this into the build bot
+> coverage.
+>
+> I also added the CONFIG option guarded by 'depends on CC_CAN_LINK'
+> because $(CC) may not necessarily provide libc.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-However, I do have one little issue with the error case.  I think
-we should not lump all errors together.  For queueing errors, we
-should requeue regardless of MAY_BACKLOG.  After all, we don't
-want to have random packet loss just becayse the queue was full.
+Thanks for this! Looks nice. I guess you take all patches for the
+samples/ changes through your tree?
 
-For other errors (e.g., a kmalloc error), we should requeue the
-MAY_BACKLOG requests and drop everythin else.
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Cheers,
+Miguel
