@@ -2,282 +2,118 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E45C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AF5C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C701520728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="zWPu+z3h"
+	by mail.kernel.org (Postfix) with ESMTP id 04D6620728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgDWOiA (ORCPT
+        id S1728403AbgDWOiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726285AbgDWOh7 (ORCPT
+        Thu, 23 Apr 2020 10:38:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41988 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgDWOiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:37:59 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BB3C08ED7D
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:37:59 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id 10so1785600vkr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 07:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ug3KiCtaYc2Wm8ungvIjXJGgMkxsZrDe9mGUGvcX/Bo=;
-        b=zWPu+z3h95PnKcJptjma7DrUfqzD6ETQeNhRoBAIDiGfv6tyoZVVI5fLdYPE24Bg9W
-         iXquNUsFq/pKpxjBjLor4OZRCT6EwKAMSeYSePz7lJOnV9IyAhl6gx7uK3arMMbKkr+P
-         VFN3NH3Ee4vJPGPmYyJKj4L5utnLkGqkc2dV33JyM7cnY+rSjvD3/RQh8CuVcM9ce17Y
-         1B6ZVHSbtKvUDSADHKXLWBSWkYduBUMI4s+fayyoETdw60pDj7xlgn4kAL5qLw474YwA
-         q8LQurPtvHiUV5XqCOVIIwaSmj0subdwxJ+8agVAHS+SmcfevzNMJmNm3D/M9h3jcPp7
-         I6Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ug3KiCtaYc2Wm8ungvIjXJGgMkxsZrDe9mGUGvcX/Bo=;
-        b=OQHi8HMB5qs0tam8xwLNu+ytycaQQTgSbxLxT9N/BGPgJBZbCh1551HnwgK7rCrURe
-         /uquAasjB26r4h1k9q78rFkYXIoaQVsl74JaDWhuCaBnTB559dLg1oSmaFrtFOBKymG7
-         rDUwnx5TdZk9GBFoYWfVfl+vVmQ51mw5QV7r4s+lf8wNJ/JzmGeJoYXxqZLWsbTnhoAM
-         dg3YFY6+SCXLTrahfu2PMk3phLyBS9q3TRDWfRL/bZRgoUaLiEZ5sGwlcCmwmdad/p4x
-         f3wf3u/zKhzhe3z0lgY7tZhSi3QIe4S46kBHFwMj8fTlUlrCvN4rv0+4h2nzUG6w6Nrl
-         Y5rg==
-X-Gm-Message-State: AGi0PuY/7t6b50DZ17+L9vuHF3Mfdqlna6hFFMBccqNnD9R80VZCFU+6
-        4m7+YxKGeq3//riB1Frb5qC61alWM/fLXtA3gVlmeQ==
-X-Google-Smtp-Source: APiQypJ7U6znxJCGvIjdiEDJKmyx8voqZXUHTKPQxiRWpWkQibyxKowhF3MORyevpBPSV+VXgHmkCg5/K3uHw44EK24=
-X-Received: by 2002:a1f:ce86:: with SMTP id e128mr3761286vkg.86.1587652678214;
- Thu, 23 Apr 2020 07:37:58 -0700 (PDT)
+        Thu, 23 Apr 2020 10:38:12 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jRczR-0002sk-Nx; Thu, 23 Apr 2020 14:38:09 +0000
+Subject: Re: [PATCH][next] net: phy: bcm54140: fix less than zero comparison
+ on an unsigned
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michael Walle <michael@walle.cc>,
+        Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200423141016.19666-1-colin.king@canonical.com>
+ <20200423143712.GA1020784@lunn.ch>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <5551f51e-8f86-f9df-0efe-7ff27a0d309f@canonical.com>
+Date:   Thu, 23 Apr 2020 15:38:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1587650406-20050-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1587650406-20050-1-git-send-email-Anson.Huang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 23 Apr 2020 20:07:35 +0530
-Message-ID: <CAHLCerP3jGUZC+i2i6CEYhOtBjLYKAPe7M0bKUs1b5oQEsdfEg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: firmware: imx: Move system control into
- dt-binding headfile
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux@rempel-privat.de, Peng Fan <peng.fan@nxp.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dl-linux-imx <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200423143712.GA1020784@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 7:38 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> i.MX8 SoCs DTS file needs system control macro definitions, so move them
-> into dt-binding headfile.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On 23/04/2020 15:37, Andrew Lunn wrote:
+> On Thu, Apr 23, 2020 at 03:10:16PM +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> Currently the unsigned variable tmp is being checked for an negative
+>> error return from the call to bcm_phy_read_rdb and this can never
+>> be true since tmp is unsigned.  Fix this by making tmp a plain int.
+>>
+>> Addresses-Coverity: ("Unsigned compared against 0")
+> 
+> I thought 0 was unsigned?
 
-Why am I seeing multiple versions of the same series?
+yeah, misleading message from the static analyzer methinks
 
-You need to squash this series so that the swapping of the header file
-happens in a single patch otherwise compilation will break with only
-patch 1 applied.
+> 
+>> Fixes: 4406d36dfdf1 ("net: phy: bcm54140: add hwmon support")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> 
+>     Andrew
+> 
 
-> ---
->  include/dt-bindings/firmware/imx/rsrc.h | 84 +++++++++++++++++++++++++++++++++
->  include/linux/firmware/imx/sci.h        |  1 -
->  include/linux/firmware/imx/types.h      | 65 -------------------------
->  3 files changed, 84 insertions(+), 66 deletions(-)
->  delete mode 100644 include/linux/firmware/imx/types.h
->
-> diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
-> index 4e61f64..51906b9 100644
-> --- a/include/dt-bindings/firmware/imx/rsrc.h
-> +++ b/include/dt-bindings/firmware/imx/rsrc.h
-> @@ -547,4 +547,88 @@
->  #define IMX_SC_R_ATTESTATION           545
->  #define IMX_SC_R_LAST                  546
->
-> +/*
-> + * Defines for SC PM CLK
-> + */
-> +#define IMX_SC_PM_CLK_SLV_BUS          0       /* Slave bus clock */
-> +#define IMX_SC_PM_CLK_MST_BUS          1       /* Master bus clock */
-> +#define IMX_SC_PM_CLK_PER              2       /* Peripheral clock */
-> +#define IMX_SC_PM_CLK_PHY              3       /* Phy clock */
-> +#define IMX_SC_PM_CLK_MISC             4       /* Misc clock */
-> +#define IMX_SC_PM_CLK_MISC0            0       /* Misc 0 clock */
-> +#define IMX_SC_PM_CLK_MISC1            1       /* Misc 1 clock */
-> +#define IMX_SC_PM_CLK_MISC2            2       /* Misc 2 clock */
-> +#define IMX_SC_PM_CLK_MISC3            3       /* Misc 3 clock */
-> +#define IMX_SC_PM_CLK_MISC4            4       /* Misc 4 clock */
-> +#define IMX_SC_PM_CLK_CPU              2       /* CPU clock */
-> +#define IMX_SC_PM_CLK_PLL              4       /* PLL */
-> +#define IMX_SC_PM_CLK_BYPASS           4       /* Bypass clock */
-> +
-> +/*
-> + * Defines for SC CONTROL
-> + */
-> +#define IMX_SC_C_TEMP                       0U
-> +#define IMX_SC_C_TEMP_HI                    1U
-> +#define IMX_SC_C_TEMP_LOW                   2U
-> +#define IMX_SC_C_PXL_LINK_MST1_ADDR         3U
-> +#define IMX_SC_C_PXL_LINK_MST2_ADDR         4U
-> +#define IMX_SC_C_PXL_LINK_MST_ENB           5U
-> +#define IMX_SC_C_PXL_LINK_MST1_ENB          6U
-> +#define IMX_SC_C_PXL_LINK_MST2_ENB          7U
-> +#define IMX_SC_C_PXL_LINK_SLV1_ADDR         8U
-> +#define IMX_SC_C_PXL_LINK_SLV2_ADDR         9U
-> +#define IMX_SC_C_PXL_LINK_MST_VLD           10U
-> +#define IMX_SC_C_PXL_LINK_MST1_VLD          11U
-> +#define IMX_SC_C_PXL_LINK_MST2_VLD          12U
-> +#define IMX_SC_C_SINGLE_MODE                13U
-> +#define IMX_SC_C_ID                         14U
-> +#define IMX_SC_C_PXL_CLK_POLARITY           15U
-> +#define IMX_SC_C_LINESTATE                  16U
-> +#define IMX_SC_C_PCIE_G_RST                 17U
-> +#define IMX_SC_C_PCIE_BUTTON_RST            18U
-> +#define IMX_SC_C_PCIE_PERST                 19U
-> +#define IMX_SC_C_PHY_RESET                  20U
-> +#define IMX_SC_C_PXL_LINK_RATE_CORRECTION   21U
-> +#define IMX_SC_C_PANIC                      22U
-> +#define IMX_SC_C_PRIORITY_GROUP             23U
-> +#define IMX_SC_C_TXCLK                      24U
-> +#define IMX_SC_C_CLKDIV                     25U
-> +#define IMX_SC_C_DISABLE_50                 26U
-> +#define IMX_SC_C_DISABLE_125                27U
-> +#define IMX_SC_C_SEL_125                    28U
-> +#define IMX_SC_C_MODE                       29U
-> +#define IMX_SC_C_SYNC_CTRL0                 30U
-> +#define IMX_SC_C_KACHUNK_CNT                31U
-> +#define IMX_SC_C_KACHUNK_SEL                32U
-> +#define IMX_SC_C_SYNC_CTRL1                 33U
-> +#define IMX_SC_C_DPI_RESET                  34U
-> +#define IMX_SC_C_MIPI_RESET                 35U
-> +#define IMX_SC_C_DUAL_MODE                  36U
-> +#define IMX_SC_C_VOLTAGE                    37U
-> +#define IMX_SC_C_PXL_LINK_SEL               38U
-> +#define IMX_SC_C_OFS_SEL                    39U
-> +#define IMX_SC_C_OFS_AUDIO                  40U
-> +#define IMX_SC_C_OFS_PERIPH                 41U
-> +#define IMX_SC_C_OFS_IRQ                    42U
-> +#define IMX_SC_C_RST0                       43U
-> +#define IMX_SC_C_RST1                       44U
-> +#define IMX_SC_C_SEL0                       45U
-> +#define IMX_SC_C_CALIB0                     46U
-> +#define IMX_SC_C_CALIB1                     47U
-> +#define IMX_SC_C_CALIB2                     48U
-> +#define IMX_SC_C_IPG_DEBUG                  49U
-> +#define IMX_SC_C_IPG_DOZE                   50U
-> +#define IMX_SC_C_IPG_WAIT                   51U
-> +#define IMX_SC_C_IPG_STOP                   52U
-> +#define IMX_SC_C_IPG_STOP_MODE              53U
-> +#define IMX_SC_C_IPG_STOP_ACK               54U
-> +#define IMX_SC_C_SYNC_CTRL                  55U
-> +#define IMX_SC_C_OFS_AUDIO_ALT              56U
-> +#define IMX_SC_C_DSP_BYP                    57U
-> +#define IMX_SC_C_CLK_GEN_EN                 58U
-> +#define IMX_SC_C_INTF_SEL                   59U
-> +#define IMX_SC_C_RXC_DLY                    60U
-> +#define IMX_SC_C_TIMER_SEL                  61U
-> +#define IMX_SC_C_LAST                       62U
-> +
->  #endif /* __DT_BINDINGS_RSCRC_IMX_H */
-> diff --git a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
-> index 17ba4e4..3fa418a 100644
-> --- a/include/linux/firmware/imx/sci.h
-> +++ b/include/linux/firmware/imx/sci.h
-> @@ -11,7 +11,6 @@
->  #define _SC_SCI_H
->
->  #include <linux/firmware/imx/ipc.h>
-> -#include <linux/firmware/imx/types.h>
->
->  #include <linux/firmware/imx/svc/misc.h>
->  #include <linux/firmware/imx/svc/pm.h>
-> diff --git a/include/linux/firmware/imx/types.h b/include/linux/firmware/imx/types.h
-> deleted file mode 100644
-> index 8082110..0000000
-> --- a/include/linux/firmware/imx/types.h
-> +++ /dev/null
-> @@ -1,65 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0+ */
-> -/*
-> - * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> - * Copyright 2017~2018 NXP
-> - *
-> - * Header file containing types used across multiple service APIs.
-> - */
-> -
-> -#ifndef _SC_TYPES_H
-> -#define _SC_TYPES_H
-> -
-> -/*
-> - * This type is used to indicate a control.
-> - */
-> -enum imx_sc_ctrl {
-> -       IMX_SC_C_TEMP = 0,
-> -       IMX_SC_C_TEMP_HI = 1,
-> -       IMX_SC_C_TEMP_LOW = 2,
-> -       IMX_SC_C_PXL_LINK_MST1_ADDR = 3,
-> -       IMX_SC_C_PXL_LINK_MST2_ADDR = 4,
-> -       IMX_SC_C_PXL_LINK_MST_ENB = 5,
-> -       IMX_SC_C_PXL_LINK_MST1_ENB = 6,
-> -       IMX_SC_C_PXL_LINK_MST2_ENB = 7,
-> -       IMX_SC_C_PXL_LINK_SLV1_ADDR = 8,
-> -       IMX_SC_C_PXL_LINK_SLV2_ADDR = 9,
-> -       IMX_SC_C_PXL_LINK_MST_VLD = 10,
-> -       IMX_SC_C_PXL_LINK_MST1_VLD = 11,
-> -       IMX_SC_C_PXL_LINK_MST2_VLD = 12,
-> -       IMX_SC_C_SINGLE_MODE = 13,
-> -       IMX_SC_C_ID = 14,
-> -       IMX_SC_C_PXL_CLK_POLARITY = 15,
-> -       IMX_SC_C_LINESTATE = 16,
-> -       IMX_SC_C_PCIE_G_RST = 17,
-> -       IMX_SC_C_PCIE_BUTTON_RST = 18,
-> -       IMX_SC_C_PCIE_PERST = 19,
-> -       IMX_SC_C_PHY_RESET = 20,
-> -       IMX_SC_C_PXL_LINK_RATE_CORRECTION = 21,
-> -       IMX_SC_C_PANIC = 22,
-> -       IMX_SC_C_PRIORITY_GROUP = 23,
-> -       IMX_SC_C_TXCLK = 24,
-> -       IMX_SC_C_CLKDIV = 25,
-> -       IMX_SC_C_DISABLE_50 = 26,
-> -       IMX_SC_C_DISABLE_125 = 27,
-> -       IMX_SC_C_SEL_125 = 28,
-> -       IMX_SC_C_MODE = 29,
-> -       IMX_SC_C_SYNC_CTRL0 = 30,
-> -       IMX_SC_C_KACHUNK_CNT = 31,
-> -       IMX_SC_C_KACHUNK_SEL = 32,
-> -       IMX_SC_C_SYNC_CTRL1 = 33,
-> -       IMX_SC_C_DPI_RESET = 34,
-> -       IMX_SC_C_MIPI_RESET = 35,
-> -       IMX_SC_C_DUAL_MODE = 36,
-> -       IMX_SC_C_VOLTAGE = 37,
-> -       IMX_SC_C_PXL_LINK_SEL = 38,
-> -       IMX_SC_C_OFS_SEL = 39,
-> -       IMX_SC_C_OFS_AUDIO = 40,
-> -       IMX_SC_C_OFS_PERIPH = 41,
-> -       IMX_SC_C_OFS_IRQ = 42,
-> -       IMX_SC_C_RST0 = 43,
-> -       IMX_SC_C_RST1 = 44,
-> -       IMX_SC_C_SEL0 = 45,
-> -       IMX_SC_C_LAST
-> -};
-> -
-> -#endif /* _SC_TYPES_H */
-> --
-> 2.7.4
->
