@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53612C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCBEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 357FC20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB2C20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgDWXNg (ORCPT
+        id S1728488AbgDWXNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:13:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50008 "EHLO
+        Thu, 23 Apr 2020 19:13:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49982 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728489AbgDWXGu (ORCPT
+        by vger.kernel.org with ESMTP id S1728482AbgDWXGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:50 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvZ-0004n6-22; Fri, 24 Apr 2020 00:06:41 +0100
+        id 1jRkvY-0004ms-FA; Fri, 24 Apr 2020 00:06:40 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvV-00E6vm-G8; Fri, 24 Apr 2020 00:06:37 +0100
+        id 1jRkvU-00E6vO-QT; Fri, 24 Apr 2020 00:06:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-        "Vladis Dronov" <vdronov@redhat.com>
-Date:   Fri, 24 Apr 2020 00:06:41 +0100
-Message-ID: <lsq.1587683028.978249607@decadent.org.uk>
+        "Marcel Holtmann" <marcel@holtmann.org>,
+        "Jiri Kosina" <jkosina@suse.cz>
+Date:   Fri, 24 Apr 2020 00:06:37 +0100
+Message-ID: <lsq.1587683028.312246222@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 174/245] Input: sur40 - fix interface sanity checks
+Subject: [PATCH 3.16 170/245] HID: hidraw: Fix returning EPOLLOUT from
+ hidraw_poll
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,35 +56,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit 6b32391ed675827f8425a414abbc6fbd54ea54fe upstream.
+commit 9f3b61dc1dd7b81e99e7ed23776bb64a35f39e1a upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+When polling a connected /dev/hidrawX device, it is useful to get the
+EPOLLOUT when writing is possible. Since writing is possible as soon as
+the device is connected, always return it.
 
-This in turn could cause the driver to misbehave or trigger a WARN() in
-usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Right now EPOLLOUT is only returned when there are also input reports
+are available. This works if devices start sending reports when
+connected, but some HID devices might need an output report first before
+sending any input reports. This change will allow using EPOLLOUT here as
+well.
 
-Fixes: bdb5c57f209c ("Input: add sur40 driver for Samsung SUR40 (aka MS Surface 2.0/Pixelsense)")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-8-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+[bwh: Backported to 3.16: s/EPOLL/POLL/g]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/input/touchscreen/sur40.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hidraw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/input/touchscreen/sur40.c
-+++ b/drivers/input/touchscreen/sur40.c
-@@ -357,7 +357,7 @@ static int sur40_probe(struct usb_interf
- 	int error;
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -265,10 +265,10 @@ static unsigned int hidraw_poll(struct f
  
- 	/* Check if we really have the right interface. */
--	iface_desc = &interface->altsetting[0];
-+	iface_desc = interface->cur_altsetting;
- 	if (iface_desc->desc.bInterfaceClass != 0xFF)
- 		return -ENODEV;
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return POLLIN | POLLRDNORM | POLLOUT;
++		return POLLIN | POLLRDNORM;
+ 	if (!list->hidraw->exist)
+ 		return POLLERR | POLLHUP;
+-	return 0;
++	return POLLOUT | POLLWRNORM;
+ }
  
+ static int hidraw_open(struct inode *inode, struct file *file)
 
