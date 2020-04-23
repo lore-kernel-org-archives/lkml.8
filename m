@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBB5C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB814C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 823D520784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AFA20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgDWXLd (ORCPT
+        id S1729264AbgDWXLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50246 "EHLO
+        Thu, 23 Apr 2020 19:11:47 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50222 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728561AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728551AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvd-0004rZ-G2; Fri, 24 Apr 2020 00:06:45 +0100
+        id 1jRkvd-0004lu-0Z; Fri, 24 Apr 2020 00:06:45 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvZ-00E700-RN; Fri, 24 Apr 2020 00:06:41 +0100
+        id 1jRkvY-00E6yr-Sa; Fri, 24 Apr 2020 00:06:40 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Al Viro" <viro@zeniv.linux.org.uk>,
-        syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com,
-        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-Date:   Fri, 24 Apr 2020 00:07:17 +0100
-Message-ID: <lsq.1587683028.750035357@decadent.org.uk>
+        "Finn Thain" <fthain@telegraphics.com.au>,
+        "Stan Johnson" <userm57@yahoo.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Fri, 24 Apr 2020 00:07:13 +0100
+Message-ID: <lsq.1587683028.429395064@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 210/245] vfs: fix do_last() regression
+Subject: [PATCH 3.16 206/245] net/sonic: Quiesce SONIC before
+ re-initializing descriptor memory
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,60 +57,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 6404674acd596de41fd3ad5f267b4525494a891a upstream.
+commit 3f4b7e6a2be982fd8820a2b54d46dd9c351db899 upstream.
 
-Brown paperbag time: fetching ->i_uid/->i_mode really should've been
-done from nd->inode.  I even suggested that, but the reason for that has
-slipped through the cracks and I went for dir->d_inode instead - made
-for more "obvious" patch.
+Make sure the SONIC's DMA engine is idle before altering the transmit
+and receive descriptors. Add a helper for this as it will be needed
+again.
 
-Analysis:
-
- - at the entry into do_last() and all the way to step_into(): dir (aka
-   nd->path.dentry) is known not to have been freed; so's nd->inode and
-   it's equal to dir->d_inode unless we are already doomed to -ECHILD.
-   inode of the file to get opened is not known.
-
- - after step_into(): inode of the file to get opened is known; dir
-   might be pointing to freed memory/be negative/etc.
-
- - at the call of may_create_in_sticky(): guaranteed to be out of RCU
-   mode; inode of the file to get opened is known and pinned; dir might
-   be garbage.
-
-The last was the reason for the original patch.  Except that at the
-do_last() entry we can be in RCU mode and it is possible that
-nd->path.dentry->d_inode has already changed under us.
-
-In that case we are going to fail with -ECHILD, but we need to be
-careful; nd->inode is pointing to valid struct inode and it's the same
-as nd->path.dentry->d_inode in "won't fail with -ECHILD" case, so we
-should use that.
-
-Reported-by: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Reported-by: syzbot+190005201ced78a74ad6@syzkaller.appspotmail.com
-Wearing-brown-paperbag: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: d0cb50185ae9 ("do_last(): fetch directory ->i_mode and ->i_uid before it's too late")
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/namei.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c | 25 +++++++++++++++++++++++++
+ drivers/net/ethernet/natsemi/sonic.h |  3 +++
+ 2 files changed, 28 insertions(+)
 
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2945,8 +2945,8 @@ static int do_last(struct nameidata *nd,
- 		   int *opened, struct filename *name)
- {
- 	struct dentry *dir = nd->path.dentry;
--	kuid_t dir_uid = dir->d_inode->i_uid;
--	umode_t dir_mode = dir->d_inode->i_mode;
-+	kuid_t dir_uid = nd->inode->i_uid;
-+	umode_t dir_mode = nd->inode->i_mode;
- 	int open_flag = op->open_flag;
- 	bool will_truncate = (open_flag & O_TRUNC) != 0;
- 	bool got_write = false;
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -103,6 +103,24 @@ static int sonic_open(struct net_device
+ 	return 0;
+ }
+ 
++/* Wait for the SONIC to become idle. */
++static void sonic_quiesce(struct net_device *dev, u16 mask)
++{
++	struct sonic_local * __maybe_unused lp = netdev_priv(dev);
++	int i;
++	u16 bits;
++
++	for (i = 0; i < 1000; ++i) {
++		bits = SONIC_READ(SONIC_CMD) & mask;
++		if (!bits)
++			return;
++		if (irqs_disabled() || in_interrupt())
++			udelay(20);
++		else
++			usleep_range(100, 200);
++	}
++	WARN_ONCE(1, "command deadline expired! 0x%04x\n", bits);
++}
+ 
+ /*
+  * Close the SONIC device
+@@ -120,6 +138,9 @@ static int sonic_close(struct net_device
+ 	/*
+ 	 * stop the SONIC, disable interrupts
+ 	 */
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
++
+ 	SONIC_WRITE(SONIC_IMR, 0);
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
+@@ -159,6 +180,9 @@ static void sonic_tx_timeout(struct net_
+ 	 * put the Sonic into software-reset mode and
+ 	 * disable all interrupts before releasing DMA buffers
+ 	 */
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
++
+ 	SONIC_WRITE(SONIC_IMR, 0);
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
+@@ -638,6 +662,7 @@ static int sonic_init(struct net_device
+ 	 */
+ 	SONIC_WRITE(SONIC_CMD, 0);
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	sonic_quiesce(dev, SONIC_CR_ALL);
+ 
+ 	/*
+ 	 * initialize the receive resource area
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -109,6 +109,9 @@
+ #define SONIC_CR_TXP            0x0002
+ #define SONIC_CR_HTX            0x0001
+ 
++#define SONIC_CR_ALL (SONIC_CR_LCAM | SONIC_CR_RRRA | \
++		      SONIC_CR_RXEN | SONIC_CR_TXP)
++
+ /*
+  * SONIC data configuration bits
+  */
 
