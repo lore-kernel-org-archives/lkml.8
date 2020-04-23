@@ -2,84 +2,96 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5D2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6EDC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDCA120728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:52:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="URkDANZ1"
+	by mail.kernel.org (Postfix) with ESMTP id C2EE820728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgDWNwJ (ORCPT
+        id S1728606AbgDWN5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728613AbgDWNwI (ORCPT
+        Thu, 23 Apr 2020 09:57:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41198 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728431AbgDWN5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:52:08 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71591C08E934
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:52:08 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q10so5598299ile.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K0kiSpJdpt5NzjR2rc87lSUDGTW+J0mkXavjC7NX4h0=;
-        b=URkDANZ18i7l8EMTaDnbsvv9CKA6pBNYrsSuVcozBJdAlFu+Fm88JzkvHTwro//ZXr
-         s4VnlFHqww7tuoLrRodMANhPeZYIS3CaqJqrlssyMUUIeKf7badVaQEllGFc3uO/0ovb
-         OgW4aNCG2x/2w2XaDfybOCC65I9HMeKWIYYMQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K0kiSpJdpt5NzjR2rc87lSUDGTW+J0mkXavjC7NX4h0=;
-        b=dL+W5bx0EgnSnooFufSbAnl48k6IHCvnJM/ikNzNVHkCCtusRSE7EDlOKxeF4u41lP
-         CV42r8bH6cqhnzXQUPspUbHskWoy87uIDfuMhwF4B3ldDun8JJ2k2GSt5Zlj+yvsLAaU
-         MwZnk4Bi4r8LMURzt+yWZfTlRU+6w8CGT/ntsgQ5dlg7czlkg0hjeypYU6oQ5+g186T2
-         QjxiQv6mD3wt6d5ey+jFsw/smeL3hE2j8r20qS5PTE0ntBjujSEoF9n6LS+j3+ng6IHO
-         Z9tvGsZ7ConswxqHNFTRtXg9omC3KxDvdkoUlkpMiPi5UkajjEZjeHl4WcMuJK4/IR14
-         45Jw==
-X-Gm-Message-State: AGi0PubLGWE8ClC1iNTMZfO5RJXDbrACJUt6ozaC4KUp86p3BTQNAeQU
-        GAeW3BgmOC86ekQl8yqVBQWeEyjrLnQDPK8p1+LblO1N
-X-Google-Smtp-Source: APiQypJE+c0suQ0XLykWP3NEC/rlj/rHRfrunXiI2/nKj47l8PHG5g0xmK+UP5b30nEX3sMv8Tw6exgnCYtYG1Q7RoI=
-X-Received: by 2002:a92:3509:: with SMTP id c9mr1052016ila.262.1587649927663;
- Thu, 23 Apr 2020 06:52:07 -0700 (PDT)
+        Thu, 23 Apr 2020 09:57:45 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NDaC5J084306
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:57:44 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj6tju6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:57:43 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 23 Apr 2020 14:57:17 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 Apr 2020 14:57:13 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NDuMQM7930322
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 13:56:22 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FE9952050;
+        Thu, 23 Apr 2020 13:56:22 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.58.187])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id EA8FF5204F;
+        Thu, 23 Apr 2020 13:56:21 +0000 (GMT)
+Date:   Thu, 23 Apr 2020 15:56:20 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Jared Rossi <jrossi@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
+In-Reply-To: <20200417182939.11460-2-jrossi@linux.ibm.com>
+References: <20200417182939.11460-1-jrossi@linux.ibm.com>
+        <20200417182939.11460-2-jrossi@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200423044050.162093-1-joel@joelfernandes.org>
- <20200423114008.GB13910@bombadil.infradead.org> <CAEXW_YTwHApBgUBS1-GBUQ4i7iNHde1k5CxVVEqHPQfAV+51HQ@mail.gmail.com>
-In-Reply-To: <CAEXW_YTwHApBgUBS1-GBUQ4i7iNHde1k5CxVVEqHPQfAV+51HQ@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 23 Apr 2020 09:51:56 -0400
-Message-ID: <CAEXW_YQp3vRoZbsgkhm4PmPaXW+ePdAKV6m5+eXxkGcYjQTLXA@mail.gmail.com>
-Subject: Re: [RFC] fs: Use slab constructor to initialize conn objects in fsnotify
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042313-0012-0000-0000-000003A9E399
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042313-0013-0000-0000-000021E73824
+Message-Id: <20200423155620.493cb7cb.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_10:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 mlxlogscore=847 phishscore=0 suspectscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 9:20 AM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> There's one improvement (although probably verys small) that the paper mentions:
-> Also according to the paper you referenced, the instruction cache is
-> what would also benefit. Those spinlock and hlist initialization
-> instructions wouldn't cost L1 I-cache footprint for every allocation.
+On Fri, 17 Apr 2020 14:29:39 -0400
+Jared Rossi <jrossi@linux.ibm.com> wrote:
 
-Just to add to my statement: Obviously, this benefit gives diminishing
-returns in this code path considering that the allocations here are
-infrequent. But I just mentioned it here for completeness sake.
+> Remove the explicit prefetch check when using vfio-ccw devices.
+> This check is not needed as all Linux channel programs are intended
+> to use prefetch and will be executed in the same way regardless.
 
-Thanks,
+Hm. This is a guest thing or? So you basically say, it is OK to do
+this, because you know that the guest is gonna be Linux and that it
+the channel program is intended to use prefetch -- but the ORB supplied
+by the guest that designates the channel program happens to state the
+opposite.
 
- - Joel
+Or am I missing something?
+
+Regards,
+Halil 
+
