@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0A1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09143C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2878420784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D895C20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbgDWXY3 (ORCPT
+        id S1730001AbgDWXYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:24:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48296 "EHLO
+        Thu, 23 Apr 2020 19:24:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48266 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728141AbgDWXG3 (ORCPT
+        by vger.kernel.org with ESMTP id S1728134AbgDWXG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:29 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-0004a7-6H; Fri, 24 Apr 2020 00:06:25 +0100
+        id 1jRkvJ-0004aH-DS; Fri, 24 Apr 2020 00:06:25 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvI-00E6g7-A4; Fri, 24 Apr 2020 00:06:24 +0100
+        id 1jRkvI-00E6gR-H0; Fri, 24 Apr 2020 00:06:24 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Chris Mason" <clm@fb.com>,
         "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
-        "Qu Wenruo" <quwenruo@cn.fujitsu.com>,
-        "Vegard Nossum" <vegard.nossum@oracle.com>,
+        "Chris Mason" <clm@fb.com>, "David Sterba" <dsterba@suse.com>,
+        "Liu Bo" <bo.li.liu@oracle.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Fri, 24 Apr 2020 00:04:12 +0100
-Message-ID: <lsq.1587683028.808298705@decadent.org.uk>
+Date:   Fri, 24 Apr 2020 00:04:16 +0100
+Message-ID: <lsq.1587683028.107139602@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 025/245] btrfs: Enhance chunk validation check
+Subject: [PATCH 3.16 029/245] Btrfs: detect corruption when non-root leaf
+ has zero item
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,98 +58,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qu Wenruo <quwenruo@cn.fujitsu.com>
+From: Liu Bo <bo.li.liu@oracle.com>
 
-commit f04b772bfc17f502703794f4d100d12155c1a1a9 upstream.
+commit 1ba98d086fe3a14d6a31f2f66dbab70c45d00f63 upstream.
 
-Enhance chunk validation:
-1) Num_stripes
-   We already have such check but it's only in super block sys chunk
-   array.
-   Now check all on-disk chunks.
+Right now we treat leaf which has zero item as a valid one
+because we could have an empty tree, that is, a root that is
+also a leaf without any item, however, in the same case but
+when the leaf is not a root, we can end up with hitting the
+BUG_ON(1) in btrfs_extend_item() called by
+setup_inline_extent_backref().
 
-2) Chunk logical
-   It should be aligned to sector size.
-   This behavior should be *DOUBLE CHECKED* for 64K sector size like
-   PPC64 or AArch64.
-   Maybe we can found some hidden bugs.
+This makes us check the situation as a corruption if leaf is
+not its own root.
 
-3) Chunk length
-   Same as chunk logical, should be aligned to sector size.
-
-4) Stripe length
-   It should be power of 2.
-
-5) Chunk type
-   Any bit out of TYPE_MAS | PROFILE_MASK is invalid.
-
-With all these much restrict rules, several fuzzed image reported in
-mail list should no longer cause kernel panic.
-
-Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
-Signed-off-by: Qu Wenruo <quwenruo@cn.fujitsu.com>
+Signed-off-by: Liu Bo <bo.li.liu@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Chris Mason <clm@fb.com>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/volumes.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ fs/btrfs/disk-io.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -5814,6 +5814,7 @@ static int read_one_chunk(struct btrfs_r
- 	struct extent_map *em;
- 	u64 logical;
- 	u64 length;
-+	u64 stripe_len;
- 	u64 devid;
- 	u8 uuid[BTRFS_UUID_SIZE];
- 	int num_stripes;
-@@ -5822,6 +5823,37 @@ static int read_one_chunk(struct btrfs_r
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -520,8 +520,29 @@ static noinline int check_leaf(struct bt
+ 	u32 nritems = btrfs_header_nritems(leaf);
+ 	int slot;
  
- 	logical = key->offset;
- 	length = btrfs_chunk_length(leaf, chunk);
-+	stripe_len = btrfs_chunk_stripe_len(leaf, chunk);
-+	num_stripes = btrfs_chunk_num_stripes(leaf, chunk);
-+	/* Validation check */
-+	if (!num_stripes) {
-+		btrfs_err(root->fs_info, "invalid chunk num_stripes: %u",
-+			  num_stripes);
-+		return -EIO;
-+	}
-+	if (!IS_ALIGNED(logical, root->sectorsize)) {
-+		btrfs_err(root->fs_info,
-+			  "invalid chunk logical %llu", logical);
-+		return -EIO;
-+	}
-+	if (!length || !IS_ALIGNED(length, root->sectorsize)) {
-+		btrfs_err(root->fs_info,
-+			"invalid chunk length %llu", length);
-+		return -EIO;
-+	}
-+	if (!is_power_of_2(stripe_len)) {
-+		btrfs_err(root->fs_info, "invalid chunk stripe length: %llu",
-+			  stripe_len);
-+		return -EIO;
-+	}
-+	if (~(BTRFS_BLOCK_GROUP_TYPE_MASK | BTRFS_BLOCK_GROUP_PROFILE_MASK) &
-+	    btrfs_chunk_type(leaf, chunk)) {
-+		btrfs_err(root->fs_info, "unrecognized chunk type: %llu",
-+			  ~(BTRFS_BLOCK_GROUP_TYPE_MASK |
-+			    BTRFS_BLOCK_GROUP_PROFILE_MASK) &
-+			  btrfs_chunk_type(leaf, chunk));
-+		return -EIO;
+-	if (nritems == 0)
++	if (nritems == 0) {
++		struct btrfs_root *check_root;
++
++		key.objectid = btrfs_header_owner(leaf);
++		key.type = BTRFS_ROOT_ITEM_KEY;
++		key.offset = (u64)-1;
++
++		check_root = btrfs_get_fs_root(root->fs_info, &key, false);
++		/*
++		 * The only reason we also check NULL here is that during
++		 * open_ctree() some roots has not yet been set up.
++		 */
++		if (!IS_ERR_OR_NULL(check_root)) {
++			/* if leaf is the root, then it's fine */
++			if (leaf->start !=
++			    btrfs_root_bytenr(&check_root->root_item)) {
++				CORRUPT("non-root leaf's nritems is 0",
++					leaf, root, 0);
++				return -EIO;
++			}
++		}
+ 		return 0;
 +	}
  
- 	read_lock(&map_tree->map_tree.lock);
- 	em = lookup_extent_mapping(&map_tree->map_tree, logical, 1);
-@@ -5838,7 +5870,6 @@ static int read_one_chunk(struct btrfs_r
- 	em = alloc_extent_map();
- 	if (!em)
- 		return -ENOMEM;
--	num_stripes = btrfs_chunk_num_stripes(leaf, chunk);
- 	map = kmalloc(map_lookup_size(num_stripes), GFP_NOFS);
- 	if (!map) {
- 		free_extent_map(em);
+ 	/* Check the 0 item */
+ 	if (btrfs_item_offset_nr(leaf, 0) + btrfs_item_size_nr(leaf, 0) !=
 
