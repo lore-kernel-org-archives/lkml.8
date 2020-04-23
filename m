@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E77C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71269C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20DC120780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F5420780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgDWXNu (ORCPT
+        id S1728947AbgDWXNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:13:50 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49998 "EHLO
+        Thu, 23 Apr 2020 19:13:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49944 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728485AbgDWXGu (ORCPT
+        by vger.kernel.org with ESMTP id S1728472AbgDWXGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:50 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvY-0004mt-Sy; Fri, 24 Apr 2020 00:06:40 +0100
+        id 1jRkvY-0004lg-K2; Fri, 24 Apr 2020 00:06:40 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvV-00E6vU-3i; Fri, 24 Apr 2020 00:06:37 +0100
+        id 1jRkvX-00E6xe-RA; Fri, 24 Apr 2020 00:06:39 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jiri Kosina" <jkosina@suse.cz>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-Date:   Fri, 24 Apr 2020 00:06:38 +0100
-Message-ID: <lsq.1587683028.439244510@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Johan Hovold" <johan@kernel.org>
+Date:   Fri, 24 Apr 2020 00:07:04 +0100
+Message-ID: <lsq.1587683028.421274354@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 171/245] HID: hidraw, uhid: Always report EPOLLOUT
+Subject: [PATCH 3.16 197/245] USB: serial: quatech2: handle unbound ports
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,64 +55,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Johan Hovold <johan@kernel.org>
 
-commit 9e635c2851df6caee651e589fbf937b637973c91 upstream.
+commit 9715a43eea77e42678a1002623f2d9a78f5b81a1 upstream.
 
-hidraw and uhid device nodes are always available for writing so we should
-always report EPOLLOUT and EPOLLWRNORM bits, not only in the cases when
-there is nothing to read.
+Check for NULL port data in the modem- and line-status handlers to avoid
+dereferencing a NULL pointer in the unlikely case where a port device
+isn't bound to a driver (e.g. after an allocation failure on port
+probe).
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Fixes: be54e7461ffdc ("HID: uhid: Fix returning EPOLLOUT from uhid_char_poll")
-Fixes: 9f3b61dc1dd7b ("HID: hidraw: Fix returning EPOLLOUT from hidraw_poll")
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-[bwh: Backported to 3.16:
- - Use unsigned int type instead of __poll_t
- - s/EPOLL/POLL/g]
+Note that the other (stubbed) event handlers qt2_process_xmit_empty()
+and qt2_process_flush() would need similar sanity checks in case they
+are ever implemented.
+
+Fixes: f7a33e608d9a ("USB: serial: add quatech2 usb to serial driver")
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hid/hidraw.c | 7 ++++---
- drivers/hid/uhid.c   | 5 +++--
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ drivers/usb/serial/quatech2.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -262,13 +262,14 @@ out:
- static unsigned int hidraw_poll(struct file *file, poll_table *wait)
- {
- 	struct hidraw_list *list = file->private_data;
-+	unsigned int mask = POLLOUT | POLLWRNORM; /* hidraw is always writable */
+--- a/drivers/usb/serial/quatech2.c
++++ b/drivers/usb/serial/quatech2.c
+@@ -872,7 +872,10 @@ static void qt2_update_msr(struct usb_se
+ 	u8 newMSR = (u8) *ch;
+ 	unsigned long flags;
  
- 	poll_wait(file, &list->hidraw->wait, wait);
- 	if (list->head != list->tail)
--		return POLLIN | POLLRDNORM;
-+		mask |= POLLIN | POLLRDNORM;
- 	if (!list->hidraw->exist)
--		return POLLERR | POLLHUP;
--	return POLLOUT | POLLWRNORM;
-+		mask |= POLLERR | POLLHUP;
-+	return mask;
- }
++	/* May be called from qt2_process_read_urb() for an unbound port. */
+ 	port_priv = usb_get_serial_port_data(port);
++	if (!port_priv)
++		return;
  
- static int hidraw_open(struct inode *inode, struct file *file)
---- a/drivers/hid/uhid.c
-+++ b/drivers/hid/uhid.c
-@@ -720,13 +720,14 @@ unlock:
- static unsigned int uhid_char_poll(struct file *file, poll_table *wait)
- {
- 	struct uhid_device *uhid = file->private_data;
-+	unsigned int mask = POLLOUT | POLLWRNORM; /* uhid is always writable */
+ 	spin_lock_irqsave(&port_priv->lock, flags);
+ 	port_priv->shadowMSR = newMSR;
+@@ -900,7 +903,10 @@ static void qt2_update_lsr(struct usb_se
+ 	unsigned long flags;
+ 	u8 newLSR = (u8) *ch;
  
- 	poll_wait(file, &uhid->waitq, wait);
++	/* May be called from qt2_process_read_urb() for an unbound port. */
+ 	port_priv = usb_get_serial_port_data(port);
++	if (!port_priv)
++		return;
  
- 	if (uhid->head != uhid->tail)
--		return POLLIN | POLLRDNORM;
-+		mask |= POLLIN | POLLRDNORM;
- 
--	return POLLOUT | POLLWRNORM;
-+	return mask;
- }
- 
- static const struct file_operations uhid_fops = {
+ 	if (newLSR & UART_LSR_BI)
+ 		newLSR &= (u8) (UART_LSR_OE | UART_LSR_BI);
 
