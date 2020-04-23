@@ -2,100 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3F7C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F832C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F262077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30F62077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:16:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnA8a2Vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgDWXQP (ORCPT
+        id S1728713AbgDWXQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:16:15 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49572 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728390AbgDWXGq (ORCPT
+        Thu, 23 Apr 2020 19:16:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729136AbgDWXQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:46 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-0004hY-Ra; Fri, 24 Apr 2020 00:06:35 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-00E6rA-DH; Fri, 24 Apr 2020 00:06:34 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Apr 2020 19:16:10 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3D6C09B042;
+        Thu, 23 Apr 2020 16:16:09 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a21so5158231ljj.11;
+        Thu, 23 Apr 2020 16:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8qJvmaPgFPJLMzlBpUP3e9FdupJ5/GzejZ+T8BwXEys=;
+        b=gnA8a2Vgx6uioCmpFLX58qJhmVK19TlagkIB+2WPTaUf15MUkyJ41BmhrQ3Afmj9bI
+         AvYygrPnfA6E/yvPbqI4YC38L65vkD9YY6BkVGLVVBx8qzo4nsUiYXGuXBncD/dWQslY
+         Fk6Chfe7sHpRjG4lx79QEXfU02cgaLmkiW7VBPRuaa2KiJdptJmTLhYcjhteyW40M6aw
+         m2BGG1O7wvWC9+XqkTVFiPZ7uKRt/acY2w/pOwVytTDv1aGQzsJs3OL9zTd92vfNA41h
+         3LLPSSTjyae4BmWu7ggMe5daEbcZk39Bv0bz0dXJm9VGnbGJAE4hyWNa+fCt2qOjBiAq
+         znWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8qJvmaPgFPJLMzlBpUP3e9FdupJ5/GzejZ+T8BwXEys=;
+        b=J9yyvtuhOTB+v3gWs63lx/fe6M3ujJSgTbi6JIuU16uyQDswWCpT5vqO6gltmj4tjP
+         QpyK+w1SQevjTPbccmSpNlahYO7qztlk3WuzP/H0P/pYOrLFHYIq/NLOOukHQQs76EiA
+         6TElIRC65pmvJUMIQMSQn7e5czbQwBNI8OxplnLMQHkPCwJUFhymnYeV8E8KZNT13VOY
+         NTgzlSoaNtp1B926RMszHmD2+6Tr5GFzcItLXG2kRO6dc6iAAZd+Y/Mdg71fv5XXUigr
+         x9FeWGP9I6d0m/jvKW95aqgPLUKo3YTmJTYW65z2D3Oi6dUhyue+ldb0buIjjAYFFHnF
+         MmCA==
+X-Gm-Message-State: AGi0PuY4zEyH2/yB59AhEOf5m9FVpeqMTO4uHtjbuEtEa/qhmQIXQAnB
+        /I72yniDwyRz8KZVa99mfkAa8fbp
+X-Google-Smtp-Source: APiQypJhoG1u4KBT0Y3dIF1unc2wCeJ4aWSgoyLf6n7IGDCtJ6EDz2jCTp7jf1nKNef4dy5fuTgutQ==
+X-Received: by 2002:a05:651c:2002:: with SMTP id s2mr3564032ljo.285.1587683767789;
+        Thu, 23 Apr 2020 16:16:07 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id r2sm209644ljm.8.2020.04.23.16.16.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 16:16:07 -0700 (PDT)
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
+Date:   Fri, 24 Apr 2020 02:16:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Pengcheng Yang" <yangpc@wangsu.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Fri, 24 Apr 2020 00:06:18 +0100
-Message-ID: <lsq.1587683028.447677336@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 151/245] tcp: fix "old stuff" D-SACK causing SACK to
- be treated as D-SACK
-In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
+22.04.2020 09:18, Sowjanya Komatineni пишет:
+> +static int chan_capture_kthread_start(void *data)
+> +{
+> +	struct tegra_vi_channel *chan = data;
+> +	struct tegra_channel_buffer *buf;
+> +	int err = 0;
+> +
+> +	set_freezable();
+> +
+> +	while (1) {
+> +		try_to_freeze();
+> +
+> +		wait_event_interruptible(chan->start_wait,
+> +					 !list_empty(&chan->capture) ||
+> +					 kthread_should_stop());
+> +
+> +		if (kthread_should_stop())
+> +			break;
+> +
+> +		/*
+> +		 * Source is not streaming if error is non-zero.
+> +		 * So, do not dequeue buffers on capture error.
+> +		 */
+> +		if (err)
+> +			continue;
 
-------------------
-
-From: Pengcheng Yang <yangpc@wangsu.com>
-
-commit c9655008e7845bcfdaac10a1ed8554ec167aea88 upstream.
-
-When we receive a D-SACK, where the sequence number satisfies:
-	undo_marker <= start_seq < end_seq <= prior_snd_una
-we consider this is a valid D-SACK and tcp_is_sackblock_valid()
-returns true, then this D-SACK is discarded as "old stuff",
-but the variable first_sack_index is not marked as negative
-in tcp_sacktag_write_queue().
-
-If this D-SACK also carries a SACK that needs to be processed
-(for example, the previous SACK segment was lost), this SACK
-will be treated as a D-SACK in the following processing of
-tcp_sacktag_write_queue(), which will eventually lead to
-incorrect updates of undo_retrans and reordering.
-
-Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- net/ipv4/tcp_input.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1713,8 +1713,11 @@ tcp_sacktag_write_queue(struct sock *sk,
- 		}
- 
- 		/* Ignore very old stuff early */
--		if (!after(sp[used_sacks].end_seq, prior_snd_una))
-+		if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
-+			if (i == 0)
-+				first_sack_index = -1;
- 			continue;
-+		}
- 
- 		used_sacks++;
- 	}
-
+This will result in an endless loop, I suppose it wasn't the intention.
