@@ -2,113 +2,93 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35D4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7FCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973782076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F942076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7kmrUSJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ePd5uThm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgDWRvU (ORCPT
+        id S1730074AbgDWRwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:51:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57409 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729889AbgDWRvU (ORCPT
+        Thu, 23 Apr 2020 13:52:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730056AbgDWRwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:51:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587664279;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K4I4TQXbu0COs/qS0TdMrpO0BMmwvUdkWqtKkxdiZtg=;
-        b=Q7kmrUSJztHIZqhpDgQ2Xk/v5fhpqOJEt3iGB0THxP1c91Qd19SW1IjlCg6VBWVh48mEVP
-        7aPdszrzYrwRzFttCb9mQt8dPPs1cEQtWO0A8C+iM7xcCBszeSSjJ9z22h58TINQ0luhAl
-        0g0HQLTxzhnLF7cHYmgO0A3JjnXsCWs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-mn-TdN1CPCC676oJ5djcYw-1; Thu, 23 Apr 2020 13:51:13 -0400
-X-MC-Unique: mn-TdN1CPCC676oJ5djcYw-1
-Received: by mail-wr1-f71.google.com with SMTP id p2so3246367wrx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:51:13 -0700 (PDT)
+        Thu, 23 Apr 2020 13:52:07 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63800C09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:52:07 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d17so3266726pgo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gUBWqO+doxiCdXhXr0gP3xCZStrWlqjjVcMdf3dRmaw=;
+        b=ePd5uThm0bXYSdghyVL6I8ByRtTuSR6tLpg9uD5btVJ1E85KUfRyUDcADHutASIuDr
+         wDRbsm9ApCKQZzTHq3mRpCwYKxFbfoi6FBL+jrJjgTuhJOa3JtS04BSBu7+j0Gvo0Kfp
+         GWql8yW1YEi7K+fykGXsWHbz9wd1XAGEE+AXg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K4I4TQXbu0COs/qS0TdMrpO0BMmwvUdkWqtKkxdiZtg=;
-        b=GkccjypMzZ7NG7mYqYiKIFp7buqO9Bd115k5v79lB9tOgrvvqafvhN3+oFP+s33kNe
-         nyBC3jJiPRBnDeIGYGydwvX9wOCIMwWAxzx+1x6j/OFirRpUHTxs+vntvGzbFLfUQCl7
-         phAPmr4VApYLEPzNsVgCgEMCgHIdjijihdGlDt8NL9K/IwUmqJhPRwA3Ce7vKpkACoYP
-         4fh0sbO5RtYbwsGs8PGsduZkvgJxaeySB5s7wnAtFj9iPeZnIgF79Qef8P1OoRGJyCmi
-         bfv0R8GONspngwKCSBaubTL70/bs7ITHW+CSH6SOSTxJedD6MSzOp3ESPk5vcJEZkSAx
-         +HTQ==
-X-Gm-Message-State: AGi0PuaqNf3ohrAQMRNDoIwSPs9EbTY+6v3bqiQ4EineMyEdF9+SyOE9
-        zwYrHjtaCMODj7g5wiO3kAA009/xlHfCioCB8QZtISOqrD/w1QaRFj8YzDEjoWjnP3cpy6AVAir
-        LQ5pTtMeCdt7Vhx6Rr3oHRkmC
-X-Received: by 2002:a1c:9e51:: with SMTP id h78mr5726979wme.177.1587664272587;
-        Thu, 23 Apr 2020 10:51:12 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK/wZjFY48hmQMwIAV2fQ6VxIkFz+VgDCtd7gu1Ykeal53v56KplZrYM0/Je0GgoY4i5twzKQ==
-X-Received: by 2002:a1c:9e51:: with SMTP id h78mr5726937wme.177.1587664272275;
-        Thu, 23 Apr 2020 10:51:12 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id h137sm15720031wme.0.2020.04.23.10.51.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 10:51:11 -0700 (PDT)
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
- <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
- <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
- <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
-Date:   Thu, 23 Apr 2020 19:51:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gUBWqO+doxiCdXhXr0gP3xCZStrWlqjjVcMdf3dRmaw=;
+        b=dxFJ1Iys4po7kqns3OBc3UDxDFSrRWiL9n90pZ4zqcNNZtGa0a0PiUaNnpWRxYThD0
+         lvoiVgywoo4gXCTr/ygEgVRvB7l1tmQih2JDP5k/YSG0g8RW2rmBtWLpBkmubBG+39vB
+         qp+tUAegzyLh3KV3AmTYpbSuOgQHm9zAG4+W2XKYmr6d76LWi6S7oL0jR5S+PQKOdKTa
+         Eszs4eZu4Uq11iEbyhZhk9t4ahBuu/CrXlGIOT1VNvJnz9BHZLcdN3Ds0zNIudnG5C0O
+         HEBIK/LnilpVq3+a1x5o/Ai9S3oObK6TLMbMT67QYNhLFDUvK/lBCuzub5u7sqUx3GnS
+         zQeA==
+X-Gm-Message-State: AGi0Puaq9UnFGVxYX50dOiwgSN+U4WDss3Zl0i0kFzdxEhEsu1YIKzbQ
+        uLJ4rtEojRrqnkY3vvPZ23XUELoQQF0=
+X-Google-Smtp-Source: APiQypJjwRJAqItcsR/IbYNtsDxmiUE23oypy6sxVf2T83GopjZzhZgPEk7nNNtXCX6Xs1QV17SLXw==
+X-Received: by 2002:aa7:80cf:: with SMTP id a15mr5116879pfn.124.1587664326513;
+        Thu, 23 Apr 2020 10:52:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y26sm3046528pfn.185.2020.04.23.10.52.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 10:52:05 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 10:52:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] ARM: decompressor: simplify libfdt builds
+Message-ID: <202004231051.5DF870A@keescook>
+References: <20200419191958.208600-1-masahiroy@kernel.org>
+ <CAMuHMdXmJ3gfYzubQRbN6Bx0A=p8TodidmoeaZkJVtYjhDcQnw@mail.gmail.com>
+ <20200422075854.GK25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422075854.GK25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 19:42, Paraschiv, Andra-Irina wrote:
->>
->>>> - the initial CPU state: CPL0 vs. CPL3, initial program counter, etc.
+On Wed, Apr 22, 2020 at 08:58:54AM +0100, Russell King - ARM Linux admin wrote:
+> On Wed, Apr 22, 2020 at 09:44:38AM +0200, Geert Uytterhoeven wrote:
+> > Is there a real reason this is only applied to a subset of the C object
+> > files, and not to all of them? Or have we been lucky so far, by not
+> > triggering the issue in decompressed.c, misc.c, and string.c (yet)?
 > 
-> The enclave VM has its own kernel and follows the well-known Linux boot
-> protocol, in the end getting to the user application after init finishes
-> its work, so that's CPL3.
+> I don't remember the details. See commit 7f66cd3f5420, which came from
+> Kees which introduced this.
 
-CPL3 is how the user application run, but does the enclave's Linux boot
-process start in real mode at the reset vector (0xfffffff0), in 16-bit
-protected mode at the Linux bzImage entry point, or at the ELF entry point?
+Just to clarify: the original change was just removing it where it was
+detected in the then-current build. I was going for the least invasive
+change to the build system.
 
-Paolo
-
+-- 
+Kees Cook
