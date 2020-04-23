@@ -2,127 +2,152 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0D9C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125B3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 736C9208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BA9208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBnyG7PT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rel7F6qG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgDWHfa (ORCPT
+        id S1726849AbgDWHiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbgDWHfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:35:30 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A19AC03C1AB;
-        Thu, 23 Apr 2020 00:35:28 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id x2so4604357ilp.13;
-        Thu, 23 Apr 2020 00:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0hlTl/zCZbAA+GFl2dvVEJ1v8GPDc+Kbabyo2qL/7PY=;
-        b=OBnyG7PTHDCCLUE4ws+cv0rx52XPBDkBrMCNyEZfc9kAQVk3+4lTcKI7hbJtv25yej
-         fv4TX/B2zr1x45m1SG5oNY6N7HrCNdF1AVTdschZ5mWmwdvgXbyANO8zmDpCTrg1sM1Q
-         8IYYK06n8wgXSzYkkzIKxf1tQY9QDb9UNOu/xrSg6wswcih34vgfVq2d3TKja0szHgmb
-         4VZeWTbVGmIfUiagSYTLqT562mhG/GXzAh71Adh4VxD+TGpq66SAVVeTN0ifPV42dIDC
-         pz0AcXv+7QFMoWVwrfNwlUlVFJxPfd6kqVJCsrf3dpnxtgmFwiNyRCHN8FYtYXFJbZpK
-         ygWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0hlTl/zCZbAA+GFl2dvVEJ1v8GPDc+Kbabyo2qL/7PY=;
-        b=CwUWT95ZKMyoqi/KhyQVSj/zjZts7aEnlnFXSFWu/ZIlB7Ns9c6ZdSXdm6U7MzTuKU
-         bfcDPBGt6JkOSCmirotVIV1EBxfAKViul/b6/nRT9znroQRhFod18FijyYmF3lJkSOHW
-         3oLlb8aiU5HI/WwiobJMDgRmI5fWHLdDo2KHckK7f11CfKcyR5l1JCqLbp8WmsAgzjc7
-         9qNNNRpTd8nv2ksXT9uVy94kqxuJ5DnSBXkm8cDXU5Sx40Dlx6bgC+PhqwbrMt2dU/tu
-         0j5GVnkeIjrjSN1eernLABKoHuAla8rAL5vEgKYg0AsmIE/KalcFvK02rPAVNFO/iM6p
-         uMQQ==
-X-Gm-Message-State: AGi0Pub3FqE8sj85JewDEd50ow8jVsNuSSQPOi5n5NFeypSOYXa/nTyD
-        T8BOG+mCWVS3LbSmWv/LSqqKuv34Kh3/cn7Iu+kuULb8Xp0=
-X-Google-Smtp-Source: APiQypKXWH4EZsa3e+ik+tfviGjD3zqic9BgcJWx+N0WLN2FGGHy7WvCtX5MXcR6RsFDgYNqLahTpflaJeSW9U3t+TA=
-X-Received: by 2002:a92:d443:: with SMTP id r3mr2212189ilm.293.1587627327911;
- Thu, 23 Apr 2020 00:35:27 -0700 (PDT)
+        Thu, 23 Apr 2020 03:38:08 -0400
+Received: from mail-eopbgr60088.outbound.protection.outlook.com ([40.107.6.88]:17742
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbgDWHiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:38:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SRu7JTYFnogXoTNcW8GQSKi5s9VhLlu04zEhNkyZBgB0SK0jqyrrtee1frTW5XNjXpFyC5+WlS3JYeZYFQ+ncdtosjt5qcVaBPymosomSTxWc1ESET6s9pe5BCZSktV2LSlYmLeesm1oOV8IZ9ZlEt7l1GWU1mlB4A69KLeLxzHzI2xzp4vxrQbC6XLs+fSSnAcb+INeYQAW1Du/AaIae3tXmrWLipwiAhBnCnzhuY9oqGsno0+RwIFR92yAHO7XxTtu62qkRj5Gtgpsuwe3Rs9DHTiged6cDCYY65qmiwMX7XP6WLXNjuF99I8XMsp3iXSfzpPAuheLNJlDdeNcBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DyqK3YEtIl8Lv4Z1U8+JHGKKgMKXFexlIZSFylSMOWQ=;
+ b=bloZ8j3c6ZAdMoZSlBE69Qlz3FqxkhZRLUGxQoFM+7S479kgufrULfsCeBBpFs8wKEifsTBTn9OAvul3GmOHu963F/rcla7Sno3ks+zPlFlyVnFfd634wNuEGb8ggZCGhjbycn5kI5FX25c/jdysyqMi+b+eStubWoTOm/tw0Vjre/pIEoxvilJ5HG4R1lmnikvEGIbZa0+GZ+bojafX8ecQEvdfZOZ3PmP8g59HQs82h/teEL++pC4teL4nnMZHDtKCsulMOvQe9P7eZ6HZDhVBGZB2EV4+P5qBEerXBrQoDcmAAi7GOa7K3tD0lHhlfNt+g+q5GSJewuZcsuEkZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DyqK3YEtIl8Lv4Z1U8+JHGKKgMKXFexlIZSFylSMOWQ=;
+ b=rel7F6qGlcFPRVhXAB+EqcM/yt6nz22JHHiGKd4nxCZSZqxPBOB7pqYIlZqcf4VpLOKXCk7YeBFOmDFHWV6YsyCGzF50e2l+ywHYBHRa4cGgsZT74EqukadPRtxm9ytM1TWVuT1r4Uggw2qsOSHDOhTlV/x8hAlImQmV7OL1QMc=
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ (2603:10a6:803:11::14) by VI1PR0402MB3454.eurprd04.prod.outlook.com
+ (2603:10a6:803:a::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
+ 2020 07:38:04 +0000
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c0d8:b266:77f1:ed8c]) by VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c0d8:b266:77f1:ed8c%6]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
+ 07:38:04 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "info@metux.net" <info@metux.net>,
+        "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: wm8962: restore the CLOCKING2 register in resume
+Thread-Topic: [PATCH] ASoC: wm8962: restore the CLOCKING2 register in resume
+Thread-Index: AdYZQfo76p2wS61GRuCd1txp3pItIQ==
+Date:   Thu, 23 Apr 2020 07:38:04 +0000
+Message-ID: <VI1PR0402MB3342492AE94B24C7E92F1ABDE3D30@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f4a6c756-481b-46f9-223e-08d7e759425e
+x-ms-traffictypediagnostic: VI1PR0402MB3454:
+x-microsoft-antispam-prvs: <VI1PR0402MB3454002C7691594D8197394DE3D30@VI1PR0402MB3454.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03827AF76E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3342.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(2906002)(478600001)(7416002)(26005)(316002)(7696005)(6506007)(71200400001)(8936002)(6916009)(33656002)(81156014)(8676002)(52536014)(9686003)(86362001)(5660300002)(76116006)(54906003)(66476007)(66946007)(66556008)(4326008)(64756008)(55016002)(66446008)(186003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wWh5pKZVxPmzvo3xYq7Wgggn5XeqlFkrltx63MVHiweBNqDcuWlqx4mru4fzb1SeeY0dMz1ZNMdfPgowN5P1arhAe4x3kl/lMqFQaQsdt/8JQ8jz6ehn12Ifzd4QSOJvWKkGo9Cf0MyjLo1lCHKAPwLOw/ukn+HujvQhNcmSukZffxgp1N+WT2yrLqxQGRcCBA5ImP6Ix7PUcRbETcYNzRxEtn23qA75OySbM0EIQhycufz+O94zD/ZKh6vvL2PIF79jR67Q3GbuCfpfX7GtlNbKfgWLm85jrRsUSseiKRskWT16Dc2Y1moZrqnNxq+y4amkJt9o1A+rzEWG5bgaxWwSpuDpPuJEf8s/Vsv7VCqIQm5E8RXMuSPa5VL5yW+mmq6cYgexVffGvHOegMtbBmI2AeiYpTTvCkMMDTWzAhduu6W+NrYjM9+hRqgMq/xN
+x-ms-exchange-antispam-messagedata: I6Wna6y8yCT/lnOadigxqod3dmhf3SJl7jqgGXWJbKFgX8+ONSRDVtsdj7n5D1MmTpwrhPcYNT945YfPmWV7s8qgFUy8YjSENT+2kixXna56aKpwjCBllwuL2TEG3ZhTVJxi2NZHBRJk50uh2OP4sHEoLzT7e9UAC9G3W1FlYUvaLTMnBlO7IfRMSv/pX2P58SAy+bhWyLOTnOlyOJgCDONUt04LOyUR7VAJnbt/7wOgYFWoWkhIEWE9mz7Pu7atNyo78lRKcGcph2R8Qsid/GJFdDE2aX4l8hUaESH9A7UfEm41QXKvbhchB1BVlZKOR2q4q4cWpv54uuwk6LI6qq0Oym9hwqbT52RrYUH1uzx5c0wTEf0RFED/jDXUkm8w3eNU2H0c+dgp6qt7IP8zJo6Nkuq2v7hNMok9i7NiqNFWSwLbFV8LyO+7w3rTH4+VLNwJANSn0DO/M9FYnq29AOnQviNzsP/eBsJZ1QIMWNlaVdl+BNto8MU6C1FuPCu/Rc7bezCMKtrsvhlObFHi+WEXDw7N14+bHmRJZpJpN0uzuSUQ5oqzLeTTKiO323KbEaQXe+Qj4EuTiBAF5HRoiriz9Ow5LVXn7PCDujMbZOpzFgbxCZGevthkRWZL+lLL97SswiceQTd50DPIOND8NxJzwN2x3Eo1aRmhtyRYRK/5QTJLmQARyxKwR8vJHcXaNkbjjg+5TdyE9A5lEOd1SNk8N503jSgJfj6y/SipPPH3neQLKO0R6x7Hac/PRD1pWOZ3pAWB/qdEA6c2sjANbyvBFw13Y21higzAv5IAOVc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200422041502.7497-1-samuel@sholland.org> <20200422151616.httmhmo2tbd4m4eu@gilmour.lan>
- <b554ea70-16da-1637-d349-db51dddcf95b@sholland.org>
-In-Reply-To: <b554ea70-16da-1637-d349-db51dddcf95b@sholland.org>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 23 Apr 2020 09:35:16 +0200
-Message-ID: <CAJiuCcfxokJr3Tj9XY8AT8O2y68RpuO+O3QZRvfCjVbu6s9aUw@mail.gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH] arm64: dts: allwinner: a64: Disable
- SPDIF by default
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
-        Marcus Cooper <codekipper@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4a6c756-481b-46f9-223e-08d7e759425e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 07:38:04.6138
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xlqCGUFYF15Tzuu261n1OAyd/XfM/grLP5FQTLGnOq4bxvMr99DSxhXmW8k4+tJkiFY0ff6sj7vwHJNQI41aCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3454
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel, Maxime,
 
-On Thu, 23 Apr 2020 at 01:50, Samuel Holland <samuel@sholland.org> wrote:
->
-> Maxime,
->
-> On 4/22/20 10:16 AM, Maxime Ripard wrote:
-> > On Tue, Apr 21, 2020 at 11:15:02PM -0500, Samuel Holland wrote:
-> >> As of v5.7-rc2, Linux now prints the following message at boot:
-> >>
-> >>   [   33.848525] platform sound_spdif: deferred probe pending
-> >>
-> >> This is because &sound_spdif is waiting on its DAI link component
-> >> &spdif to probe, but &spdif is disabled in the DTS. Disable the
-> >> audio card as well to match.
-> >>
-> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>=20
+> On Tue, Apr 21, 2020 at 08:02:15PM +0800, Shengjiu Wang wrote:
+> > The CLOCKING2 is a volatile register, but some bits should be restored
+> > when resume, for example SYSCLK_SRC. otherwise the output clock is
+> > wrong
 > >
-> > The patch looks good, but don't we have some boards with SPDIF enabled that
-> > should be modified accordingly?
->
-> I don't see any in-tree. The only A64 DTS that references &spdif at all is
-> sun50i-a64-pine64.dts, which explicitly disables it:
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  sound/soc/codecs/wm8962.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+> > index d9d59f45833f..6e96c0c5ad2a 100644
+> > --- a/sound/soc/codecs/wm8962.c
+> > +++ b/sound/soc/codecs/wm8962.c
+> > @@ -82,6 +82,7 @@ struct wm8962_priv {  #endif
+> >
+> >       int irq;
+> > +     u32 regcache_clocking2;
+> >  };
+> >
+> >  /* We can't use the same notifier block for more than one supply and
+> > @@ -3813,6 +3814,10 @@ static int wm8962_runtime_resume(struct
+> device
+> > *dev)
+> >
+> >       regcache_sync(wm8962->regmap);
+> >
+> > +     regmap_update_bits(wm8962->regmap, WM8962_CLOCKING2,
+> > +                        WM8962_SYSCLK_SRC_MASK,
+> > +                        wm8962->regcache_clocking2);
+> > +
+>=20
+> I wonder if it might just be better to make the register non-volatile? Fr=
+om
+> looking through the datasheet I am guessing this is volatile for the
+> CLASSD_CLK_DIV bits, which are controlled by the chip itself. But the
+> datasheet claims these are read only and protected by the security key, a=
+nd
+> they are not read by the driver at all.
+>=20
+> Thanks,
+> Charles
+>=20
+Use non-volatile also can fix the issue, I will send v2 for it
 
-This has been introduced by Marcus Cooper for the Pine64 audio extension.
-https://store.pine64.org/?product=pine64-stereo-audio-dac-pot-board
-
-So this should be moved to an overlay no?
-
-Regards,
-Clement
-
->
->         /* On Euler connector */
->         &spdif {
->                 status = "disabled";
->         };
->
-> I'm leaning toward agreeing with Clement that the sound_spdif node (and also
-> spdif_out) should be removed altogether from the A64 DTSI.
->
-> Regards,
-> Samuel
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/b554ea70-16da-1637-d349-db51dddcf95b%40sholland.org.
+Best regards
+Wang shengjiu
