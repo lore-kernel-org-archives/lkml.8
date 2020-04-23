@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15808C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C327C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0016120780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624FA2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgDWXIw (ORCPT
+        id S1727967AbgDWXI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:08:52 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50936 "EHLO
+        Thu, 23 Apr 2020 19:08:56 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50882 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728663AbgDWXG7 (ORCPT
+        by vger.kernel.org with ESMTP id S1728653AbgDWXG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:59 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvk-0004xG-Jw; Fri, 24 Apr 2020 00:06:52 +0100
+        id 1jRkvk-0004y2-QY; Fri, 24 Apr 2020 00:06:52 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvj-00E73X-S3; Fri, 24 Apr 2020 00:06:51 +0100
+        id 1jRkvg-00E72Z-P0; Fri, 24 Apr 2020 00:06:48 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Max Kellermann" <max@duempel.org>,
-        "Mauro Carvalho Chehab" <mchehab@osg.samsung.com>
-Date:   Fri, 24 Apr 2020 00:07:46 +0100
-Message-ID: <lsq.1587683028.937457411@decadent.org.uk>
+        "Hans de Goede" <hdegoede@redhat.com>,
+        "Johan Hovold" <johan@kernel.org>,
+        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
+Date:   Fri, 24 Apr 2020 00:07:34 +0100
+Message-ID: <lsq.1587683028.991461894@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 239/245] [media] drivers/media/media-devnode: clear
- private_data before put_device()
+Subject: [PATCH 3.16 227/245] media: ov519: add missing endpoint sanity checks
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,33 +57,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Max Kellermann <max@duempel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit bf244f665d76d20312c80524689b32a752888838 upstream.
+commit 998912346c0da53a6dbb71fab3a138586b596b30 upstream.
 
-Callbacks invoked from put_device() may free the struct media_devnode
-pointer, so any cleanup needs to be done before put_device().
+Make sure to check that we have at least one endpoint before accessing
+the endpoint array to avoid dereferencing a NULL-pointer on stream
+start.
 
-Signed-off-by: Max Kellermann <max@duempel.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Note that these sanity checks are not redundant as the driver is mixing
+looking up altsettings by index and by number, which need not coincide.
+
+Fixes: 1876bb923c98 ("V4L/DVB (12079): gspca_ov519: add support for the ov511 bridge")
+Fixes: b282d87332f5 ("V4L/DVB (12080): gspca_ov519: Fix ov518+ with OV7620AE (Trust spacecam 320)")
+Cc: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/media-devnode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/gspca/ov519.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/media/media-devnode.c
-+++ b/drivers/media/media-devnode.c
-@@ -197,10 +197,11 @@ static int media_release(struct inode *i
- 	if (mdev->fops->release)
- 		mdev->fops->release(filp);
+--- a/drivers/media/usb/gspca/ov519.c
++++ b/drivers/media/usb/gspca/ov519.c
+@@ -3497,6 +3497,11 @@ static void ov511_mode_init_regs(struct
+ 		return;
+ 	}
  
-+	filp->private_data = NULL;
++	if (alt->desc.bNumEndpoints < 1) {
++		sd->gspca_dev.usb_err = -ENODEV;
++		return;
++	}
 +
- 	/* decrease the refcount unconditionally since the release()
- 	   return value is ignored. */
- 	put_device(&mdev->dev);
--	filp->private_data = NULL;
- 	return 0;
- }
+ 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
+ 	reg_w(sd, R51x_FIFO_PSIZE, packet_size >> 5);
+ 
+@@ -3622,6 +3627,11 @@ static void ov518_mode_init_regs(struct
+ 		return;
+ 	}
+ 
++	if (alt->desc.bNumEndpoints < 1) {
++		sd->gspca_dev.usb_err = -ENODEV;
++		return;
++	}
++
+ 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
+ 	ov518_reg_w32(sd, R51x_FIFO_PSIZE, packet_size & ~7, 2);
  
 
