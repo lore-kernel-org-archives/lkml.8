@@ -2,333 +2,127 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2511C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF52C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 986C22075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43AF92075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KQiO+x5e"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="idZVkBu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgDWPj2 (ORCPT
+        id S1729370AbgDWPja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:39:28 -0400
-Received: from mout.gmx.net ([212.227.15.15]:42763 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgDWPj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:39:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1587656354;
-        bh=AnrOXTpXsfBgG++l8YlqTgHwAfmDn9tSuFzC+LRmxiA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=KQiO+x5enh7v4JgcavZkzff4u1bf7ewLcsToRsjf7S2WJPUBM21UPzSNd/TSFYd9k
-         ULKdKewsiwuTEMuERX//niqIu4jNxX2LY06vdpZgaHZN7A18r/vNKCEQbYbLg1q6fg
-         I9myX7P+KYOvBrkLx5pYGXeoJJKgD7tRQvH4DppM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1M9Wys-1jX7aw2XRM-005cVE; Thu, 23 Apr 2020 17:39:14 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        "John B. Wyatt IV" <jbwyatt4@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] staging: vt6656: Remove functions' documentation
-Date:   Thu, 23 Apr 2020 17:38:36 +0200
-Message-Id: <20200423153836.5582-3-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200423153836.5582-1-oscar.carter@gmx.com>
-References: <20200423153836.5582-1-oscar.carter@gmx.com>
+        Thu, 23 Apr 2020 11:39:30 -0400
+Received: from mail-eopbgr30046.outbound.protection.outlook.com ([40.107.3.46]:55534
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729332AbgDWPj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:39:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JcqhEkt2yevtKwGqWB0y+dgEY5GhNWa0tc0M/MnFLZrJiFccfHtNkuGSy449qCFXdvPD4QSIc93L4ob+5Yt3CAFCLHwhvBtrXjWC1MvE3JgE/H+6A2WSP3ISKXlAXuIT0bytgWA+80AC/mlnaBAG2E5lrKtfwpHHhTIjqmWaMDQbD0rO07j+8kYml4TkWkHuy7Nl3eEaTKCpTyr1EkOEtNarnvmat50sAzbpRxGOCde+U7M4gSXLWgIJjQwnyMr8h2FQIfErUSMnp0UWPe5a7fzKACHd6wdymFkFBHFUMl2xBNeCJ9uoRTwS5YxfqdM/4wmvWN6M4M4kuvgxB4Z/mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TIWm0BOwSfWeNSZUykaS0hHq8GTcL3jy9xN51aSqa5Y=;
+ b=ma/b3HxxcDFh1hlWMPAoiI8S1QPlLBPYpgwX10dI/Ea7EcXEahfBUj7PPHVGmwUpXsCfJzBrdwievyg7Hh1zW5f37YFFaiIrm8hGpgyqG08zhvUm0Bp3H0aA+LCLDLSg01IHk2o7pgd+qRUXH5076JJh5NNoLj27JK9h0U9ObEuvw5jGdLmQ/N2LDaNVVHS8XSUEGev3SxrdpTSugYxLrwfKjgKjfEldjNlPRkzu7piJ7dCTcbBH9zHBYPewtPWP2ARYQONYeeg99dLctnfZtxZEqUNO+YziMgVADnjO+lVI2/CdSGF5yvVRabGjzMq30NN6wkGwisNl1iWD7ZFQmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TIWm0BOwSfWeNSZUykaS0hHq8GTcL3jy9xN51aSqa5Y=;
+ b=idZVkBu5x7e5FON5hOEp5wayuBMPX2e6EVsKKgLv3JGCKCF5QAexTCCClyhGGW5ExCRbAm7vMVmzW8R9Tcq2MGcglZ9RRf5rpGyfwtn9KWjcCoQKv32yHM25fBXj8Y4hMNHH9RxJzGwcQSB/7qeYHnuk3vsksSCQRvFq+NaIYEY=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3899.eurprd04.prod.outlook.com (2603:10a6:8:f::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Thu, 23 Apr
+ 2020 15:39:24 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
+ 15:39:24 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+CC:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings: firmware: imx: Move system control into
+ dt-binding headfile
+Thread-Topic: [PATCH 1/3] dt-bindings: firmware: imx: Move system control into
+ dt-binding headfile
+Thread-Index: AQHWGXizyKpLQyPoM0K6vK6jVENDPKiGxoOAgAAQV6A=
+Date:   Thu, 23 Apr 2020 15:39:24 +0000
+Message-ID: <DB3PR0402MB39167F9D8D3101FDA02E3077F5D30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1587650406-20050-1-git-send-email-Anson.Huang@nxp.com>
+ <CAHLCerP3jGUZC+i2i6CEYhOtBjLYKAPe7M0bKUs1b5oQEsdfEg@mail.gmail.com>
+In-Reply-To: <CAHLCerP3jGUZC+i2i6CEYhOtBjLYKAPe7M0bKUs1b5oQEsdfEg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 51351c67-cb01-4163-ae22-08d7e79c802a
+x-ms-traffictypediagnostic: DB3PR0402MB3899:|DB3PR0402MB3899:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38998B5117959DDDDA7E1167F5D30@DB3PR0402MB3899.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 03827AF76E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(366004)(7416002)(76116006)(9686003)(8676002)(86362001)(64756008)(66476007)(4326008)(478600001)(66946007)(66446008)(66556008)(33656002)(5660300002)(55016002)(4744005)(316002)(186003)(54906003)(6916009)(2906002)(81156014)(71200400001)(52536014)(26005)(44832011)(8936002)(7696005)(6506007)(53546011);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2bNCzmRQmwBbRCntm7MOTMnHzdshrQOzhpHE0wR+oIQ1XK6MX60rxF9mgiJ2I+Z0Cd0GVcdxyIS9iUWJwCbPVuvZHGCWT7eE1SGYdUSvvFWPbMe8WELWJEVw9rfVYjX4FjYs7kRVdjeJU2ztsgUmFNGwI1IPSWLTpem3f/Y30KGrPQsqXtWBVJn7Ol8UkoE2z/TWwrhLdRDlTlhhhiY/DPBZVNvMAf2nJX991D2mubgsvBQx+kIG5Y2tNKZcpLKoQ9YbUtTgEwIiqwtSBmP4UgV89cpp5w7WKXPa0bU48s5QOez/bhZY43FI/asW2SKaOB9hobstqxCsKstYOh8IdEuI8AVpa0pL+PKxeig0aIjooCgs3E+sFGzyPI8lAqLQNQcMnlap1JQa9GDG9784Japvnh2M8xv+mUM76bknazDGUlE9qdlUAKTejCy+FZ2Y
+x-ms-exchange-antispam-messagedata: Dw/cntGq1vYYAttlywiimH/vxgYh56tc8l0GU37ZfBU3a1v2xHr3JiVxFYFsbzjCeKb2zx5Ha6awmi015ttWoYkYFzVKGW2JUORKYgg8AO0Wgl/S4QDTQ6cFqje3pdYMCoU0KKvReoRyfJuQO0oZErj53N1o7XLam44cZBY6fpHVSqXFNfSXrsXULZ3qCa4ZwkQfuGGcM8kiaRfViU0tuk9rHwPrbOY3vw9JpuY3vagIhTLA6I3n5p7cn3KcRSaPAd2Xg4OMOc5eVkrWcXYpUZW0CxKsu9nB3J3b9oi+yjLVcfVVx9MY0xc68MfEvHYZO7/O1HQNjQreoYSFPsy3zzd0GwbJUy02EQ3+vk8JUK0xgH+pNapz574g1l+dVG3uYf8ItZP4xi8OnHntpjhVYTG1QGAyM8KnPNwFmp6v2cgjosMSF5vozKhdTLZIKB2gWwwkRZo2r8mk341TZvrkcmHhZW+SzLT5qDi/LlAFldeiNs38deR6bSnuvfbA6eSiO9InuEjISiv51/kKNJ2I2MLXF5pip3WaT6P6RzNbFQDpl29UWGgZFGTpDsIcWklJAptXb3j07wCbwwIh9FpTq22SJq1eHoZYnxN9/QzmeFgx++FmCvpANw/pFz+cgVR0zAq4Bt5EVGEhzUT9Fl3Wc4mCfCQpqSYSJ4/DGUqgOd+OlRlkC9/U0F1wZQ+PDniwCzzRbC0tZ/aLqswBNEeAo2BME2twi9GozVZJtBteppSlVboVlSoe1R601Ex7vbmUZ6ouQwQvcBeT6g6RYb4llBZIHgq4U/irAfX+PNt5pLs=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6sKv60QHAf3LbU2MSaMTkLSVfIXF5/SOzoMo+QJ6n/IHyE0dUSk
- qzwguUyEpuZotUOSO31IF30z4NjWvUui8I28Ehh9kvcip4mSd6r0IpWBAV4zA1sMwISvu1m
- VLhq+RIuBwE06lZ81841MXVwzz6WRJtjCbjfaLalLverADEsryCg9rYzyfkoYFZXL4T7j/u
- yesT3gNc+5lw2jjOb4hZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LY3TKA0ZSDY=:RouImVkvsHs+B8J/YIPOho
- LxbKnsmm3LPQnIKONRzTUC34a1YDB4sN3DDdYWeFSdO3ZzM+5Ts26WoPoAxNmwl1nUeIJWwOq
- 29jcBWwiE4/8YGvBRzPvDoOvMLHFSX6swQd6Ntyw63LY+zqY4Zx8DOkkx7zidO/kkGWtk7hkE
- dxpc22v1k7+A9SzbKHccIGR4rRhknbJtHwE8YLA6jhWyKueRffGwetsEk/ZSPCE5e3FSCFYkR
- rIWkvEHxhxY7pPmsFxpQJFL16uzvS58emXl5zXBRNXwzE3uFTG7iopr6p0VUeEVOKLFM0e4bN
- AXzpWRr9NwxHtsD3p+T0DGiQC6sg+Spmbu95nqxyAz+GvWcdZgFtSJFrpR55Se6TOJSeTCEbu
- ZaK/Wruca4NqxpVOaf1Ry/uI9JalaAQwvEGR4q7BRufex7D74I+ZlnnxJL5IdgkF73le0BWA0
- QeF9hqecaeewvSdd8QfxezTbK235zSIQIbot+K1qlZVLbovUJ027xW51naWFc74TZtUcQQ9+A
- yjZVpC12GWgadv95XRLGg7WNrT34IBoNon+cJA/+Q2p7pdOTN23gxxJCiCRDLZZWOYS7XPkxQ
- QvuTjZFcf7pXuTVqmMaGdkm3d7Ao20jBxUrMzJPTEUfHdMmce/KyylqB/DkA0nryOGFAIyVLw
- 381oPkmAdjmzys07AUQdutwTBOXrj74MDikbxBUBAytbLRdL4+gT5+BQxKOjXc6+aP9v/qytb
- Ij3+53X+katqB6iaf1rW3ACQEJnBfg8hJRpmVNaMgbpDLpSE2x5VI4v8IjtQDhmiKo+MksXcW
- WueX9yIaoptdxjBpcI+JHm9H+rBjzVhBXYig6uSZpLlBgItsGTBzbz/PDAccRspSX3rGK0JgN
- 0uN/agFhP5KefyM/BD0RVELQMsNaNITZF/OsR9ghBJ6nLrRhOtZz69N2aCCSwvQFSaaCIBIDW
- YwPAU6XgZufurGB3QTYCSkDbwEl/YF7Fp29chyW3wIbBjjM7xANAhNI0wJF9D17+EIGTp7ESZ
- +RqyQQGm+6sDvGsBzG9y4CY7MPKLCRkzvMv3bTLVMdtZZtGQo2ggmDwkaa68+COZIX5HidB66
- 8oq7vFultHMYNZ/toezj1M6op3uqMuhLBExa0jXk8YvN2fvx8Ok9DtOvJ3kdof4g+szftvFU9
- eU7f6jx94/g9kRFVxggVARd7U9/cNuUX5bXBh3wQB+MswGoR2fRt6h981ge/fcsAi08KFX7Hj
- 4avA244WPAqlRSsDw
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51351c67-cb01-4163-ae22-08d7e79c802a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 15:39:24.6320
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: k1dEcNp63/K34Y0bMOVtZMZOkgOfOICSQsTbB63VwSah77NnDDhbzXEqBMLOXlMAtR53LaZPIBBmbZptkZUlEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3899
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the functions' documentation as the names of the functions are
-clear enought. Also, the actual documentation it's not correct in all
-cases.
-
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/card.c  | 79 ----------------------------------
- drivers/staging/vt6656/mac.c   | 52 ----------------------
- drivers/staging/vt6656/power.c | 10 -----
- 3 files changed, 141 deletions(-)
-
-diff --git a/drivers/staging/vt6656/card.c b/drivers/staging/vt6656/card.c
-index c29f7072c742..370ae4253a3f 100644
-=2D-- a/drivers/staging/vt6656/card.c
-+++ b/drivers/staging/vt6656/card.c
-@@ -46,16 +46,6 @@ static const u16 cw_rxbcntsf_off[MAX_RATE] =3D {
- 	192, 96, 34, 17, 34, 23, 17, 11, 8, 5, 4, 3
- };
-
--/*
-- * Description: Set NIC media channel
-- *
-- * Parameters:
-- *  In:
-- *      pDevice             - The adapter to be set
-- *      connection_channel  - Channel to be set
-- *  Out:
-- *      none
-- */
- int vnt_set_channel(struct vnt_private *priv, u32 connection_channel)
- {
- 	int ret;
-@@ -99,19 +89,6 @@ static const u8 vnt_rspinf_gb_table[] =3D {
- 	0x0e, 0x8d, 0x0a, 0x88, 0x0a, 0x8c, 0x0a, 0x8c, 0x0a
- };
-
--/*
-- * Description: Set RSPINF
-- *
-- * Parameters:
-- *  In:
-- *      pDevice             - The adapter to be set
-- *  Out:
-- *      none
-- *
-- * Return Value: None.
-- *
-- */
--
- int vnt_set_rspinf(struct vnt_private *priv, u8 bb_type)
- {
- 	const u8 *data;
-@@ -145,18 +122,6 @@ int vnt_set_rspinf(struct vnt_private *priv, u8 bb_ty=
-pe)
- 			       MESSAGE_REQUEST_MACREG, len, data);
- }
-
--/*
-- * Description: Update IFS
-- *
-- * Parameters:
-- *  In:
-- *	priv - The adapter to be set
-- * Out:
-- *	none
-- *
-- * Return Value: None.
-- *
-- */
- int vnt_update_ifs(struct vnt_private *priv)
- {
- 	u8 max_min =3D 0;
-@@ -300,21 +265,6 @@ u64 vnt_get_tsf_offset(u8 rx_rate, u64 tsf1, u64 tsf2=
-)
- 	return tsf1 - tsf2 - (u64)cw_rxbcntsf_off[rx_rate % MAX_RATE];
- }
-
--/*
-- * Description: Sync. TSF counter to BSS
-- *              Get TSF offset and write to HW
-- *
-- * Parameters:
-- *  In:
-- *      priv		- The adapter to be sync.
-- *      time_stamp	- Rx BCN's TSF
-- *      local_tsf	- Local TSF
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-- *
-- */
- int vnt_adjust_tsf(struct vnt_private *priv, u8 rx_rate,
- 		   u64 time_stamp, u64 local_tsf)
- {
-@@ -408,20 +358,6 @@ u64 vnt_get_next_tbtt(u64 tsf, u16 beacon_interval)
- 	return tsf;
- }
-
--/*
-- * Description: Set NIC TSF counter for first Beacon time
-- *              Get NEXTTBTT from adjusted TSF and Beacon Interval
-- *
-- * Parameters:
-- *  In:
-- *      dwIoBase        - IO Base
-- *	beacon_interval - Beacon Interval
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-- *
-- */
- int vnt_reset_next_tbtt(struct vnt_private *priv, u16 beacon_interval)
- {
- 	u64 next_tbtt =3D 0;
-@@ -444,21 +380,6 @@ int vnt_reset_next_tbtt(struct vnt_private *priv, u16=
- beacon_interval)
- 			       MESSAGE_REQUEST_TBTT, 0, 8, data);
- }
-
--/*
-- * Description: Sync NIC TSF counter for Beacon time
-- *              Get NEXTTBTT and write to HW
-- *
-- * Parameters:
-- *  In:
-- *	priv		- The adapter to be set
-- *      tsf		- Current TSF counter
-- *      beacon_interval - Beacon Interval
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-- *
-- */
- int vnt_update_next_tbtt(struct vnt_private *priv, u64 tsf,
- 			 u16 beacon_interval)
- {
-diff --git a/drivers/staging/vt6656/mac.c b/drivers/staging/vt6656/mac.c
-index 639172fad0f3..da7067c34643 100644
-=2D-- a/drivers/staging/vt6656/mac.c
-+++ b/drivers/staging/vt6656/mac.c
-@@ -22,19 +22,6 @@
- #include "mac.h"
- #include "usbpipe.h"
-
--/*
-- * Description:
-- *      Write MAC Multicast Address Mask
-- *
-- * Parameters:
-- *  In:
-- *	mc_filter (mac filter)
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-- *
-- */
- int vnt_mac_set_filter(struct vnt_private *priv, u64 mc_filter)
- {
- 	__le64 le_mc =3D cpu_to_le64(mc_filter);
-@@ -44,17 +31,6 @@ int vnt_mac_set_filter(struct vnt_private *priv, u64 mc=
-_filter)
- 			       (u8 *)&le_mc);
- }
-
--/*
-- * Description:
-- *      Shut Down MAC
-- *
-- * Parameters:
-- *  In:
-- *  Out:
-- *      none
-- *
-- *
-- */
- int vnt_mac_shutdown(struct vnt_private *priv)
- {
- 	return vnt_control_out(priv, MESSAGE_TYPE_MACSHUTDOWN, 0, 0, 0, NULL);
-@@ -72,40 +48,12 @@ int vnt_mac_set_bb_type(struct vnt_private *priv, u8 t=
-ype)
- 			       data);
- }
-
--/*
-- * Description:
-- *      Disable the Key Entry by MISCFIFO
-- *
-- * Parameters:
-- *  In:
-- *      dwIoBase        - Base Address for MAC
-- *
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-- *
-- */
- int vnt_mac_disable_keyentry(struct vnt_private *priv, u8 entry_idx)
- {
- 	return vnt_control_out(priv, MESSAGE_TYPE_CLRKEYENTRY, 0, 0,
- 			       sizeof(entry_idx), &entry_idx);
- }
-
--/*
-- * Description:
-- *      Set the Key by MISCFIFO
-- *
-- * Parameters:
-- *  In:
-- *      dwIoBase        - Base Address for MAC
-- *
-- *  Out:
-- *      none
-- *
-- * Return Value: none
-- *
-- */
- int vnt_mac_set_keyentry(struct vnt_private *priv, u16 key_ctl, u32 entry=
-_idx,
- 			 u32 key_idx, u8 *addr, u8 *key)
- {
-diff --git a/drivers/staging/vt6656/power.c b/drivers/staging/vt6656/power=
-.c
-index 2d8d5a332a63..d160a0773943 100644
-=2D-- a/drivers/staging/vt6656/power.c
-+++ b/drivers/staging/vt6656/power.c
-@@ -77,16 +77,6 @@ void vnt_enable_power_saving(struct vnt_private *priv, =
-u16 listen_interval)
- 	dev_dbg(&priv->usb->dev,  "PS:Power Saving Mode Enable...\n");
- }
-
--/*
-- *
-- * Routine Description:
-- * Disable hw power saving functions
-- *
-- * Return Value:
-- *    None.
-- *
-- */
--
- int vnt_disable_power_saving(struct vnt_private *priv)
- {
- 	int ret;
-=2D-
-2.20.1
-
+SGksIEFtaXQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gZHQtYmluZGluZ3M6IGZpcm13
+YXJlOiBpbXg6IE1vdmUgc3lzdGVtIGNvbnRyb2wgaW50bw0KPiBkdC1iaW5kaW5nIGhlYWRmaWxl
+DQo+IA0KPiBPbiBUaHUsIEFwciAyMywgMjAyMCBhdCA3OjM4IFBNIEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IGkuTVg4IFNvQ3MgRFRTIGZpbGUg
+bmVlZHMgc3lzdGVtIGNvbnRyb2wgbWFjcm8gZGVmaW5pdGlvbnMsIHNvIG1vdmUNCj4gPiB0aGVt
+IGludG8gZHQtYmluZGluZyBoZWFkZmlsZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29u
+IEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiANCj4gV2h5IGFtIEkgc2VlaW5nIG11bHRp
+cGxlIHZlcnNpb25zIG9mIHRoZSBzYW1lIHNlcmllcz8NCj4gDQo+IFlvdSBuZWVkIHRvIHNxdWFz
+aCB0aGlzIHNlcmllcyBzbyB0aGF0IHRoZSBzd2FwcGluZyBvZiB0aGUgaGVhZGVyIGZpbGUgaGFw
+cGVucw0KPiBpbiBhIHNpbmdsZSBwYXRjaCBvdGhlcndpc2UgY29tcGlsYXRpb24gd2lsbCBicmVh
+ayB3aXRoIG9ubHkgcGF0Y2ggMSBhcHBsaWVkLg0KDQpUaGUgZmlyc3QgdmVyc2lvbiBJIHNlbnQg
+aXMgaGF2aW5nIGNvbW1hbmQgZXJyb3IgYnkgbWlzdGFrZSBhbmQgcGF0Y2ggMS8zIGlzIG1pc3Np
+bmcsDQpTbyBJIHNlbmQgaXQgYWdhaW4uDQoNClllcywgSSB3aWxsIHNxdWFzaCB0aGlzIHNlcmll
+cywgc29tZXRpbWVzIEkgd2FzIGNvbmZ1c2VkIGFib3V0IHRoZSBwYXRjaCBjYXRlZ29yeSwgYnV0
+DQptYWtpbmcgaXQgTk9UIGJyZWFrIHRoZSBiaXNlY3Qgb3IgYnVpbGQgc2hvdWxkIGJlIHRoZSBt
+b3N0IGltcG9ydGFudCBmYWN0b3IuDQoNClRoYW5rcywNCkFuc29uDQo=
