@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032AFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB83C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0C720784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B418220784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgDWXVE (ORCPT
+        id S1728811AbgDWXU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:21:04 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48596 "EHLO
+        Thu, 23 Apr 2020 19:20:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48626 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728206AbgDWXGd (ORCPT
+        by vger.kernel.org with ESMTP id S1728215AbgDWXGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:33 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvM-0004be-0R; Fri, 24 Apr 2020 00:06:28 +0100
+        id 1jRkvL-0004ba-Do; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-00E6js-2N; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvJ-00E6iR-RU; Fri, 24 Apr 2020 00:06:25 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Pablo Neira Ayuso" <pablo@netfilter.org>
-Date:   Fri, 24 Apr 2020 00:04:59 +0100
-Message-ID: <lsq.1587683028.807471934@decadent.org.uk>
+        "David Sterba" <dsterba@suse.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
+        "Nikolay Borisov" <nborisov@suse.com>,
+        "Shaokun Zhang" <zhangshaokun@hisilicon.com>,
+        "Qu Wenruo" <wqu@suse.com>
+Date:   Fri, 24 Apr 2020 00:04:41 +0100
+Message-ID: <lsq.1587683028.16611676@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 072/245] netfilter: nf_tables: validate
- NFT_DATA_VALUE after nft_data_init()
+Subject: [PATCH 3.16 054/245] btrfs: tree-checker: Fix misleading group
+ system information
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,57 +60,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-commit 0d2c96af797ba149e559c5875c0151384ab6dd14 upstream.
+commit 761333f2f50ccc887aa9957ae829300262c0d15b upstream.
 
-Userspace might bogusly sent NFT_DATA_VERDICT in several netlink
-attributes that assume NFT_DATA_VALUE. Moreover, make sure that error
-path invokes nft_data_release() to decrement the reference count on the
-chain object.
+block_group_err shows the group system as a decimal value with a '0x'
+prefix, which is somewhat misleading.
 
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Fixes: 0f3cd9b36977 ("netfilter: nf_tables: add range expression")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-[bwh: Backported to 3.16:
- - Drop changes in nft_get_set_elem(), nft_range
- - Call nft_data_uninit() instead of nft_data_release()
- - Adjust context]
+Fix it to print hexadecimal, as was intended.
+
+Fixes: fce466eab7ac6 ("btrfs: tree-checker: Verify block_group_item")
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/net/netfilter/nft_bitwise.c
-+++ b/net/netfilter/nft_bitwise.c
-@@ -86,7 +86,7 @@ static int nft_bitwise_init(const struct
- 	err = nft_data_init(NULL, &priv->mask, &d1, tb[NFTA_BITWISE_MASK]);
- 	if (err < 0)
- 		return err;
--	if (d1.len != priv->len) {
-+	if (d1.type != NFT_DATA_VALUE || d1.len != priv->len) {
- 		err = -EINVAL;
- 		goto err1;
- 	}
-@@ -94,7 +94,7 @@ static int nft_bitwise_init(const struct
- 	err = nft_data_init(NULL, &priv->xor, &d2, tb[NFTA_BITWISE_XOR]);
- 	if (err < 0)
- 		goto err1;
--	if (d2.len != priv->len) {
-+	if (d2.type != NFT_DATA_VALUE || d2.len != priv->len) {
- 		err = -EINVAL;
- 		goto err2;
- 	}
---- a/net/netfilter/nft_cmp.c
-+++ b/net/netfilter/nft_cmp.c
-@@ -84,6 +84,12 @@ static int nft_cmp_init(const struct nft
- 	if (desc.len > U8_MAX)
- 		return -ERANGE;
- 
-+	if (desc.type != NFT_DATA_VALUE) {
-+		err = -EINVAL;
-+		nft_data_uninit(&priv->data, desc.type);
-+		return err;
-+	}
-+
- 	priv->len = desc.len;
- 	return 0;
- }
+ fs/btrfs/tree-checker.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -399,7 +399,7 @@ static int check_block_group_item(struct
+ 	    type != (BTRFS_BLOCK_GROUP_METADATA |
+ 			   BTRFS_BLOCK_GROUP_DATA)) {
+ 		block_group_err(fs_info, leaf, slot,
+-"invalid type, have 0x%llx (%lu bits set) expect either 0x%llx, 0x%llx, 0x%llu or 0x%llx",
++"invalid type, have 0x%llx (%lu bits set) expect either 0x%llx, 0x%llx, 0x%llx or 0x%llx",
+ 			type, hweight64(type),
+ 			BTRFS_BLOCK_GROUP_DATA, BTRFS_BLOCK_GROUP_METADATA,
+ 			BTRFS_BLOCK_GROUP_SYSTEM,
 
