@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765AAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C72C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52A9C20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE94B20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgDWHtm (ORCPT
+        id S1727014AbgDWHtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:49:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37832 "EHLO
+        Thu, 23 Apr 2020 03:49:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgDWHtm (ORCPT
+        with ESMTP id S1726650AbgDWHtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:49:42 -0400
+        Thu, 23 Apr 2020 03:49:43 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E76C03C1AB;
-        Thu, 23 Apr 2020 00:49:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B320C03C1AB;
+        Thu, 23 Apr 2020 00:49:43 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWc1-0008JD-8W; Thu, 23 Apr 2020 09:49:33 +0200
+        id 1jRWc1-0008JE-O1; Thu, 23 Apr 2020 09:49:33 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A2FE31C0244;
-        Thu, 23 Apr 2020 09:49:32 +0200 (CEST)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5293D1C0450;
+        Thu, 23 Apr 2020 09:49:33 +0200 (CEST)
 Date:   Thu, 23 Apr 2020 07:49:32 -0000
 From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Constify arch_decode_instruction()
+Subject: [tip: objtool/core] objtool: Rename elf_read() to elf_open_read()
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -44,10 +44,10 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Sami Tolvanen <samitolvanen@google.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200422103205.61900-4-mingo@kernel.org>
-References: <20200422103205.61900-4-mingo@kernel.org>
+In-Reply-To: <20200422103205.61900-3-mingo@kernel.org>
+References: <20200422103205.61900-3-mingo@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158762817210.28353.13596091994137162716.tip-bot2@tip-bot2>
+Message-ID: <158762817276.28353.6504307167044928918.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,18 +63,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     0c98be8118221a8d3de572740f29dd02ed9686a5
-Gitweb:        https://git.kernel.org/tip/0c98be8118221a8d3de572740f29dd02ed9686a5
+Commit-ID:     bc359ff2f6f3e8a9df38c39017e269bc442357c7
+Gitweb:        https://git.kernel.org/tip/bc359ff2f6f3e8a9df38c39017e269bc442357c7
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 22 Apr 2020 12:32:05 +02:00
+AuthorDate:    Wed, 22 Apr 2020 12:32:04 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Thu, 23 Apr 2020 08:34:18 +02:00
 
-objtool: Constify arch_decode_instruction()
+objtool: Rename elf_read() to elf_open_read()
 
-Mostly straightforward constification, except that WARN_FUNC()
-needs a writable pointer while we have read-only pointers,
-so deflect this to WARN().
+'struct elf *' handling is an open/close paradigm, make sure the naming
+matches that:
+
+   elf_open_read()
+   elf_write()
+   elf_close()
 
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
@@ -83,53 +86,49 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Sami Tolvanen <samitolvanen@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200422103205.61900-4-mingo@kernel.org
+Link: https://lore.kernel.org/r/20200422103205.61900-3-mingo@kernel.org
 ---
- tools/objtool/arch.h            | 2 +-
- tools/objtool/arch/x86/decode.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ tools/objtool/check.c | 2 +-
+ tools/objtool/elf.c   | 2 +-
+ tools/objtool/elf.h   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index 561c316..445b8fa 100644
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -72,7 +72,7 @@ struct instruction;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index f2a8427..12e2aea 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2614,7 +2614,7 @@ int check(const char *_objname, bool orc)
  
- void arch_initial_func_cfi_state(struct cfi_init_state *state);
+ 	objname = _objname;
  
--int arch_decode_instruction(struct elf *elf, struct section *sec,
-+int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, enum insn_type *type,
- 			    unsigned long *immediate,
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index f0d42ad..c45a0b4 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -27,7 +27,7 @@ static unsigned char op_to_cfi_reg[][2] = {
- 	{CFI_DI, CFI_R15},
- };
+-	file.elf = elf_read(objname, orc ? O_RDWR : O_RDONLY);
++	file.elf = elf_open_read(objname, orc ? O_RDWR : O_RDONLY);
+ 	if (!file.elf)
+ 		return 1;
  
--static int is_x86_64(struct elf *elf)
-+static int is_x86_64(const struct elf *elf)
- {
- 	switch (elf->ehdr.e_machine) {
- 	case EM_X86_64:
-@@ -77,7 +77,7 @@ unsigned long arch_jump_destination(struct instruction *insn)
- 	return insn->offset + insn->len + insn->immediate;
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index fab5534..453b723 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -542,7 +542,7 @@ static int read_relas(struct elf *elf)
+ 	return 0;
  }
  
--int arch_decode_instruction(struct elf *elf, struct section *sec,
-+int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, enum insn_type *type,
- 			    unsigned long *immediate,
-@@ -98,7 +98,7 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- 	insn_get_length(&insn);
+-struct elf *elf_read(const char *name, int flags)
++struct elf *elf_open_read(const char *name, int flags)
+ {
+ 	struct elf *elf;
+ 	Elf_Cmd cmd;
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index a55bcde..5e76ac3 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -113,7 +113,7 @@ static inline u32 rela_hash(struct rela *rela)
+ 	return sec_offset_hash(rela->sec, rela->offset);
+ }
  
- 	if (!insn_complete(&insn)) {
--		WARN_FUNC("can't decode instruction", sec, offset);
-+		WARN("can't decode instruction at %s:0x%lx", sec->name, offset);
- 		return -1;
- 	}
- 
+-struct elf *elf_read(const char *name, int flags);
++struct elf *elf_open_read(const char *name, int flags);
+ struct section *elf_create_section(struct elf *elf, const char *name, size_t entsize, int nr);
+ struct section *elf_create_rela_section(struct elf *elf, struct section *base);
+ void elf_add_rela(struct elf *elf, struct rela *rela);
