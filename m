@@ -2,108 +2,231 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119B2C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE52C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E437320784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6s1g6Fs"
+	by mail.kernel.org (Postfix) with ESMTP id 6DC232077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgDWXOF (ORCPT
+        id S1729471AbgDWXOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728628AbgDWXNr (ORCPT
+        Thu, 23 Apr 2020 19:14:18 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49832 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728446AbgDWXGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:13:47 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE16C09B042;
-        Thu, 23 Apr 2020 16:13:46 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k13so8597460wrw.7;
-        Thu, 23 Apr 2020 16:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=9+tLQbU6rNyziVvImQingDwaJR2gEdQLKWLdpp3M4uw=;
-        b=h6s1g6FsVkOnYNVUK0jCFCIai1dpCxoOwuZQEmdWFiI79i7obLds2NSsRmtUcIBafm
-         pU1UOVCouOoTHwgKmzNtXyeedkXSPOQnaLct+2R4Rmszu8De5EhaR+cebxqI9Ge6A4nv
-         eiSunmNNEGytSXCwMuYLdLdih2Qi6JFk+FKfK2GAx3jvoeyDiXgxHHO+UJNp9tQYNJIo
-         EFIt6ibvaQgTHHBD1lRmkve2LyG3RcxPOLMY/RJeYraZFdKnYPmr0GfVuBp8dtOiKSRn
-         TIpaS+2hkONaA4CEolsj//ldTJsjx2r6ZCgxUTB9keWDbAaxJdP1woVYLsmqFA9DZ1d+
-         aLVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=9+tLQbU6rNyziVvImQingDwaJR2gEdQLKWLdpp3M4uw=;
-        b=Kb1hUsqXcTlm+A/2fBap2r5jKU4uYgZKeWKSdTqZaSJXRd8ci0hFrOwdCcfZbvL+A5
-         HmWuqz+DW5IYI8VmIo9k2JEIG9ErENa9uFTfr0TsudWtctDtZ7qHUUMGDzi/hweMuorS
-         gDZAULOcOIhBzUzeqJo4U6HOwEpbEtYG2/rJN099SBieDip4Tx2fDLevNuC/819/Lh9b
-         8MxC+XX641WLoC+Xb3L5Wix4V9FY5NB1ZKMxryEAMzwr4FStmIbwqP9kZHwNYNatfMtJ
-         9iKgvQ6kEX42KSDDP7eTG9MTpzi5C1cm9FTKKDHZVyqGUHDQv0sKbjdNlyg9vwewYo5q
-         5j3A==
-X-Gm-Message-State: AGi0PuYiA1UDMlcAv21bn8PkQSmAd8yewtxEJ/oGnkOscbfpoEIIBu/q
-        zTYXVhESTVQjHgDYaYPz7qHnrkcS
-X-Google-Smtp-Source: APiQypLhovJKyzkshBe8hf/w0eNYa9nDr2KJcanPob1u6b3ohu2lVf1ziRQrKnbDOa79MLZijp7Exw==
-X-Received: by 2002:adf:92c2:: with SMTP id 60mr7191793wrn.379.1587683625642;
-        Thu, 23 Apr 2020 16:13:45 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s12sm382393wmc.7.2020.04.23.16.13.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Apr 2020 16:13:45 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next] net: systemport: suppress warnings on failed Rx SKB allocations
-Date:   Thu, 23 Apr 2020 16:13:30 -0700
-Message-Id: <1587683610-4342-1-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 23 Apr 2020 19:06:49 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jRkvT-0004id-Qh; Fri, 24 Apr 2020 00:06:36 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jRkvR-00E6p4-70; Fri, 24 Apr 2020 00:06:33 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "syzbot" <syzkaller@googlegroups.com>,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Date:   Fri, 24 Apr 2020 00:05:52 +0100
+Message-ID: <lsq.1587683028.374093470@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 125/245] 6pack,mkiss: fix possible deadlock
+In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver is designed to drop Rx packets and reclaim the buffers
-when an allocation fails, and the network interface needs to safely
-handle this packet loss. Therefore, an allocation failure of Rx
-SKBs is relatively benign.
+3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
 
-However, the output of the warning message occurs with a high
-scheduling priority that can cause excessive jitter/latency for
-other high priority processing.
+------------------
 
-This commit suppresses the warning messages to prevent scheduling
-problems while retaining the failure count in the statistics of
-the network interface.
+From: Eric Dumazet <edumazet@google.com>
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+commit 5c9934b6767b16ba60be22ec3cbd4379ad64170d upstream.
+
+We got another syzbot report [1] that tells us we must use
+write_lock_irq()/write_unlock_irq() to avoid possible deadlock.
+
+[1]
+
+WARNING: inconsistent lock state
+5.5.0-rc1-syzkaller #0 Not tainted
+--------------------------------
+inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-R} usage.
+syz-executor826/9605 [HC1[1]:SC0[0]:HE0:SE1] takes:
+ffffffff8a128718 (disc_data_lock){+-..}, at: sp_get.isra.0+0x1d/0xf0 drivers/net/ppp/ppp_synctty.c:138
+{HARDIRQ-ON-W} state was registered at:
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __raw_write_lock_bh include/linux/rwlock_api_smp.h:203 [inline]
+  _raw_write_lock_bh+0x33/0x50 kernel/locking/spinlock.c:319
+  sixpack_close+0x1d/0x250 drivers/net/hamradio/6pack.c:657
+  tty_ldisc_close.isra.0+0x119/0x1a0 drivers/tty/tty_ldisc.c:489
+  tty_set_ldisc+0x230/0x6b0 drivers/tty/tty_ldisc.c:585
+  tiocsetd drivers/tty/tty_io.c:2337 [inline]
+  tty_ioctl+0xe8d/0x14f0 drivers/tty/tty_io.c:2597
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+irq event stamp: 3946
+hardirqs last  enabled at (3945): [<ffffffff87c86e43>] __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
+hardirqs last  enabled at (3945): [<ffffffff87c86e43>] _raw_spin_unlock_irq+0x23/0x80 kernel/locking/spinlock.c:199
+hardirqs last disabled at (3946): [<ffffffff8100675f>] trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
+softirqs last  enabled at (2658): [<ffffffff86a8b4df>] spin_unlock_bh include/linux/spinlock.h:383 [inline]
+softirqs last  enabled at (2658): [<ffffffff86a8b4df>] clusterip_netdev_event+0x46f/0x670 net/ipv4/netfilter/ipt_CLUSTERIP.c:222
+softirqs last disabled at (2656): [<ffffffff86a8b22b>] spin_lock_bh include/linux/spinlock.h:343 [inline]
+softirqs last disabled at (2656): [<ffffffff86a8b22b>] clusterip_netdev_event+0x1bb/0x670 net/ipv4/netfilter/ipt_CLUSTERIP.c:196
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(disc_data_lock);
+  <Interrupt>
+    lock(disc_data_lock);
+
+ *** DEADLOCK ***
+
+5 locks held by syz-executor826/9605:
+ #0: ffff8880a905e198 (&tty->legacy_mutex){+.+.}, at: tty_lock+0xc7/0x130 drivers/tty/tty_mutex.c:19
+ #1: ffffffff899a56c0 (rcu_read_lock){....}, at: mutex_spin_on_owner+0x0/0x330 kernel/locking/mutex.c:413
+ #2: ffff8880a496a2b0 (&(&i->lock)->rlock){-.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+ #2: ffff8880a496a2b0 (&(&i->lock)->rlock){-.-.}, at: serial8250_interrupt+0x2d/0x1a0 drivers/tty/serial/8250/8250_core.c:116
+ #3: ffffffff8c104048 (&port_lock_key){-.-.}, at: serial8250_handle_irq.part.0+0x24/0x330 drivers/tty/serial/8250/8250_port.c:1823
+ #4: ffff8880a905e090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref+0x22/0x90 drivers/tty/tty_ldisc.c:288
+
+stack backtrace:
+CPU: 1 PID: 9605 Comm: syz-executor826 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_usage_bug.cold+0x327/0x378 kernel/locking/lockdep.c:3101
+ valid_state kernel/locking/lockdep.c:3112 [inline]
+ mark_lock_irq kernel/locking/lockdep.c:3309 [inline]
+ mark_lock+0xbb4/0x1220 kernel/locking/lockdep.c:3666
+ mark_usage kernel/locking/lockdep.c:3554 [inline]
+ __lock_acquire+0x1e55/0x4a00 kernel/locking/lockdep.c:3909
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+ __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
+ _raw_read_lock+0x32/0x50 kernel/locking/spinlock.c:223
+ sp_get.isra.0+0x1d/0xf0 drivers/net/ppp/ppp_synctty.c:138
+ sixpack_write_wakeup+0x25/0x340 drivers/net/hamradio/6pack.c:402
+ tty_wakeup+0xe9/0x120 drivers/tty/tty_io.c:536
+ tty_port_default_wakeup+0x2b/0x40 drivers/tty/tty_port.c:50
+ tty_port_tty_wakeup+0x57/0x70 drivers/tty/tty_port.c:387
+ uart_write_wakeup+0x46/0x70 drivers/tty/serial/serial_core.c:104
+ serial8250_tx_chars+0x495/0xaf0 drivers/tty/serial/8250/8250_port.c:1761
+ serial8250_handle_irq.part.0+0x2a2/0x330 drivers/tty/serial/8250/8250_port.c:1834
+ serial8250_handle_irq drivers/tty/serial/8250/8250_port.c:1820 [inline]
+ serial8250_default_handle_irq+0xc0/0x150 drivers/tty/serial/8250/8250_port.c:1850
+ serial8250_interrupt+0xf1/0x1a0 drivers/tty/serial/8250/8250_core.c:126
+ __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
+ handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
+ handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
+ handle_edge_irq+0x25e/0x8d0 kernel/irq/chip.c:830
+ generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
+ do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
+ common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
+ </IRQ>
+RIP: 0010:cpu_relax arch/x86/include/asm/processor.h:685 [inline]
+RIP: 0010:mutex_spin_on_owner+0x247/0x330 kernel/locking/mutex.c:579
+Code: c3 be 08 00 00 00 4c 89 e7 e8 e5 06 59 00 4c 89 e0 48 c1 e8 03 42 80 3c 38 00 0f 85 e1 00 00 00 49 8b 04 24 a8 01 75 96 f3 90 <e9> 2f fe ff ff 0f 0b e8 0d 19 09 00 84 c0 0f 85 ff fd ff ff 48 c7
+RSP: 0018:ffffc90001eafa20 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffd7
+RAX: 0000000000000000 RBX: ffff88809fd9e0c0 RCX: 1ffffffff13266dd
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: 0000000000000000
+RBP: ffffc90001eafa60 R08: 1ffff11013d22898 R09: ffffed1013d22899
+R10: ffffed1013d22898 R11: ffff88809e9144c7 R12: ffff8880a905e138
+R13: ffff88809e9144c0 R14: 0000000000000000 R15: dffffc0000000000
+ mutex_optimistic_spin kernel/locking/mutex.c:673 [inline]
+ __mutex_lock_common kernel/locking/mutex.c:962 [inline]
+ __mutex_lock+0x32b/0x13c0 kernel/locking/mutex.c:1106
+ mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
+ tty_lock+0xc7/0x130 drivers/tty/tty_mutex.c:19
+ tty_release+0xb5/0xe90 drivers/tty/tty_io.c:1665
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0x8e7/0x2ef0 kernel/exit.c:797
+ do_group_exit+0x135/0x360 kernel/exit.c:895
+ __do_sys_exit_group kernel/exit.c:906 [inline]
+ __se_sys_exit_group kernel/exit.c:904 [inline]
+ __x64_sys_exit_group+0x44/0x50 kernel/exit.c:904
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x43fef8
+Code: Bad RIP value.
+RSP: 002b:00007ffdb07d2338 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043fef8
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004bf730 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
+
+Fixes: 6e4e2f811bad ("6pack,mkiss: fix lock inconsistency")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/hamradio/6pack.c | 4 ++--
+ drivers/net/hamradio/mkiss.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index af7ce5c5488c..ed12a0f894bf 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -664,7 +664,8 @@ static struct sk_buff *bcm_sysport_rx_refill(struct bcm_sysport_priv *priv,
- 	dma_addr_t mapping;
+--- a/drivers/net/hamradio/6pack.c
++++ b/drivers/net/hamradio/6pack.c
+@@ -685,10 +685,10 @@ static void sixpack_close(struct tty_str
+ {
+ 	struct sixpack *sp;
  
- 	/* Allocate a new SKB for a new packet */
--	skb = netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH);
-+	skb = __netdev_alloc_skb(priv->netdev, RX_BUF_LENGTH,
-+				 GFP_ATOMIC | __GFP_NOWARN);
- 	if (!skb) {
- 		priv->mib.alloc_rx_buff_failed++;
- 		netif_err(priv, rx_err, ndev, "SKB alloc failed\n");
--- 
-2.7.4
+-	write_lock_bh(&disc_data_lock);
++	write_lock_irq(&disc_data_lock);
+ 	sp = tty->disc_data;
+ 	tty->disc_data = NULL;
+-	write_unlock_bh(&disc_data_lock);
++	write_unlock_irq(&disc_data_lock);
+ 	if (!sp)
+ 		return;
+ 
+--- a/drivers/net/hamradio/mkiss.c
++++ b/drivers/net/hamradio/mkiss.c
+@@ -811,10 +811,10 @@ static void mkiss_close(struct tty_struc
+ {
+ 	struct mkiss *ax;
+ 
+-	write_lock_bh(&disc_data_lock);
++	write_lock_irq(&disc_data_lock);
+ 	ax = tty->disc_data;
+ 	tty->disc_data = NULL;
+-	write_unlock_bh(&disc_data_lock);
++	write_unlock_irq(&disc_data_lock);
+ 
+ 	if (!ax)
+ 		return;
 
