@@ -2,354 +2,192 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5EEC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356A7C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B58A2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:27:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="quR0lZjJ"
+	by mail.kernel.org (Postfix) with ESMTP id 146F52077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgDWM1v (ORCPT
+        id S1727982AbgDWMdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:27:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726105AbgDWM1v (ORCPT
+        Thu, 23 Apr 2020 08:33:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32778 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726540AbgDWMdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:27:51 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8B8C08E859;
-        Thu, 23 Apr 2020 05:27:50 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id t12so4192583edw.3;
-        Thu, 23 Apr 2020 05:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3YODsxHKh3+gYik4nxqvD1Fs/lq1MAv8RtUoSUQEtQ0=;
-        b=quR0lZjJMJ76yrAFa03h3aKM/vVQyQ01lr2A8i0ktFJ4AgwbXxrJSeDPGXUZYXHNV3
-         tczIuArHrKUqsWmqma2TlKaZp3ArO1dFwfsNfgmJB/H7O8GLPtDKaDGykUVVO2xIOupm
-         +/5OZayOQBsGgw5oqeUeNrDF75V8PKiIve3iSjOVAN1BcDyE7vk5YV5ZvKMzcliI3IcP
-         AE1fb+LF4P0bJcTpQzu8SxAhEnvQVgE2LwNDzFQVYHgs9Tf/fvk4365eYwOJJpTNQ+Ki
-         4x00m4vOW1kOr4L53qz9N8Ju1qGGYP3PPGCt0XpOYPHMC5DIgC55flwg+1u14Yz1x328
-         RpHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3YODsxHKh3+gYik4nxqvD1Fs/lq1MAv8RtUoSUQEtQ0=;
-        b=OhK2E2GvffXIz1blGjdZNOxWiauIY1DZzOtirNfkeB9h4tZA66775Rw/BkJ4eGpI2A
-         3wuxEFjrOEmwKrJU+mHHaC97LM2SoXsLKyrOOWCcT07RwSrQh8DozrUAJMe/SlAw3fWG
-         ucr6NpXwHA8LPUjc6OSF4dsBUAZ5VCawWMJNVOiFTE5ADA6rmhFoOpWiEYfn/BXNKkvj
-         qpjRRS6zuiBd/g/e8u3WE7lPr5ynJnHK0Dx/qMW0O7C94b7VNhTTVdKmdZy1FWW9Ku/I
-         Ypk8hollzLsMbCA+62rsh5cKTxRb4lwmxzYHZTCqhT3Czp9j22ibhWNBWXLPf8Dim35m
-         4nbg==
-X-Gm-Message-State: AGi0PuYdsJWv6JCBnU66EUwmqhdecBK6ZlAAoZbPnWMMYi0VoF3kmD8S
-        vvA4J1dPuUizAaTDZHm19WOYaCAHYocpbV3iHoE=
-X-Google-Smtp-Source: APiQypKKiCmIvPP3hDfQ1tDIv8YbGVkm6z5WzLXKuGfV/VtSBQdgzeb6EdpEXHKL9RFD33VT85N0wH3zsk6exq3Jx8U=
-X-Received: by 2002:a50:f288:: with SMTP id f8mr2477116edm.337.1587644869194;
- Thu, 23 Apr 2020 05:27:49 -0700 (PDT)
+        Thu, 23 Apr 2020 08:33:20 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NBXEdf071449
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:33:19 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jspuw191-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:33:18 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Thu, 23 Apr 2020 13:32:38 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 Apr 2020 13:32:35 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NCW3EU64749952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 12:32:03 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B086A4051;
+        Thu, 23 Apr 2020 12:33:11 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB711A404D;
+        Thu, 23 Apr 2020 12:33:10 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.19.192])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 12:33:10 +0000 (GMT)
+Date:   Thu, 23 Apr 2020 14:33:09 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+In-Reply-To: <20200422194605.n77t2wtx5fomxpyd@treble>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+ <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+ <20200422164037.7edd21ea@thinkpad>
+ <20200422172126.743908f5@thinkpad>
+ <20200422194605.n77t2wtx5fomxpyd@treble>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200420232624.9127-1-michael@walle.cc> <20200420232624.9127-3-michael@walle.cc>
-In-Reply-To: <20200420232624.9127-3-michael@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 23 Apr 2020 15:27:38 +0300
-Message-ID: <CA+h21hrLf+L1Aa8mY-qCfPWY3bVLVMFCCLx_Af66EhRRX5f6Fg@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next 3/3] net: phy: mscc: use phy_package_shared
-To:     Michael Walle <michael@walle.cc>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042312-0008-0000-0000-0000037601EF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042312-0009-0000-0000-00004A97CEF4
+Message-Id: <20200423141834.234ed0bc@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
+ spamscore=0 bulkscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+On Wed, 22 Apr 2020 14:46:05 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-On Tue, 21 Apr 2020 at 02:28, Michael Walle <michael@walle.cc> wrote:
->
-> Use the new phy_package_shared common storage to ease the package
-> initialization and to access the global registers.
->
-> This was only compile-time tested!
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
+> On Wed, Apr 22, 2020 at 05:21:26PM +0200, Gerald Schaefer wrote:
+> > > Sorry, just noticed this. Heiko will return next month, and I'm not
+> > > really familiar with s390 livepatching. Adding Vasily, he might
+> > > have some more insight.
+> > > 
+> > > So, I might be completely wrong here, but using s390_kernel_write()
+> > > for writing to anything other than 1:1 mapped kernel, should go
+> > > horribly wrong, as that runs w/o DAT. It would allow to bypass
+> > > DAT write protection, which I assume is why you want to use it,
+> > > but it should not work on module text section, as that would be
+> > > in vmalloc space and not 1:1 mapped kernel memory.
+> > > 
+> > > Not quite sure how to test / trigger this, did this really work for
+> > > you on s390?
+> > 
+> > OK, using s390_kernel_write() as default write function for module
+> > relocation seems to work fine for me, so apparently I am missing /
+> > mixing up something. Sorry for the noise, please ignore my concern.
+> 
+> Hi Gerald,
+> 
+> I think you were right.  Joe found the below panic with his klp-convert
+> tests.
+> 
+> Your test was probably the early module loading case (normal relocations
+> before write protection), rather than the late case.  Not sure why that
+> would work, but calling s390_kernel_write() late definitely seems to be
+> broken.
+> 
+> Is there some other way to write vmalloc'ed s390 text without using
+> module_disable_ro()?
+> 
+> [   50.294476] Unable to handle kernel pointer dereference in virtual kernel address space
+> [   50.294479] Failing address: 000003ff8015b000 TEID: 000003ff8015b407
+> [   50.294480] Fault in home space mode while using kernel ASCE.
+> [   50.294483] AS:000000006cef0007 R3:000000007e2c4007 S:0000000003ccb800 P:0000 00000257321d
+> [   50.294557] Oops: 0004 ilc:3 [#1] SMP
+> [   50.294561] Modules linked in: test_klp_convert1(K+) test_klp_convert_mod ghash_s390 prng xts aes_s390 des_s390 libdes sha512_s390 vmur zcrypt_cex4 ip_tables xfs libcrc32c dasd_fba_mod qeth_l2 dasd_eckd_mod dasd_mod qeth lcs ctcm qdio cc
+> wgroup fsm dm_mirror dm_region_hash dm_log dm_mod pkey zcrypt [last unloaded: test_klp_atomic_replace]
+> [   50.294576] CPU: 0 PID: 1743 Comm: modprobe Tainted: G              K   5.6.0 + #2
+> [   50.294579] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+> [   50.294583] Krnl PSW : 0704e00180000000 000000006bf6be0a (apply_rela+0x2ba/0x 4e0)
+> [   50.294589]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI: 0 EA:3
+> [   50.294684] Krnl GPRS: 000003ff80147010 000003e0001b9588 000003ff8015c168 000 003ff8015b19a
+> [   50.294686]            000003ff8015b07c 0d10e310100a0004 000003ff80147010 000 00000000000a0
+> [   50.294687]            000003ff8015e588 000003ff8015e5e8 000003ff8015d300 000 0003b00000014
+> [   50.294698]            000000007a663000 000000006c6bbb80 000003e0009a7918 000 003e0009a78b8
+> [   50.294707] Krnl Code: 000000006bf6bdf8: e350d0080004        lg      %r5,8(%r 13)
+> [   50.294707]            000000006bf6bdfe: e34010080008        ag      %r4,8(%r 1)
+> [   50.294707]           #000000006bf6be04: e340a2000008        ag      %r4,512( %r10)
+> [   50.294707]           >000000006bf6be0a: e35040000024        stg     %r5,0(%r 4)
+> [   50.294707]            000000006bf6be10: c050007c6136        larl    %r5,0000 00006cef807c
+> [   50.294707]            000000006bf6be16: e35050000012        lt      %r5,0(%r 5)
+> [   50.294707]            000000006bf6be1c: a78400a6            brc     8,000000 006bf6bf68
+> [   50.294707]            000000006bf6be20: a55e07f1            llilh   %r5,2033
+> 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 01.
+> 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from CPU 00.
+> [   50.295369] Call Trace:
+> [   50.295372]  [<000000006bf6be0a>] apply_rela+0x2ba/0x4e0
+> [   50.295376]  [<000000006bf6c5c8>] apply_relocate_add+0xe0/0x138
+> [   50.295378]  [<000000006c0229a0>] klp_apply_section_relocs+0xe8/0x128
+> [   50.295380]  [<000000006c022b4c>] klp_apply_object_relocs+0x9c/0xd0
+> [   50.295382]  [<000000006c022bb0>] klp_init_object_loaded+0x30/0x138
+> [   50.295384]  [<000000006c023052>] klp_enable_patch+0x39a/0x870
+> [   50.295387]  [<000003ff8015b0da>] test_klp_convert_init+0x22/0x50 [test_klp_convert1]
+> [   50.295389]  [<000000006bf54838>] do_one_initcall+0x40/0x1f0
+> [   50.295391]  [<000000006c04d610>] do_init_module+0x70/0x280
+> [   50.295392]  [<000000006c05002a>] load_module+0x1aba/0x1d10
+> [   50.295394]  [<000000006c0504c4>] __do_sys_finit_module+0xa4/0xe8
+> [   50.295416]  [<000000006c6b5742>] system_call+0x2aa/0x2c8
+> [   50.295416] Last Breaking-Event-Address:
+> [   50.295418]  [<000000006c6b6aa0>] __s390_indirect_jump_r4+0x0/0xc
+> [   50.295421] Kernel panic - not syncing: Fatal exception: panic_on_oops
+> 
 
-I happen to have a board with a VSC8514 PHY. For this driver, only the "Fast
-Link Failure Indication" feature seems to be configured via
-phy_base_write/__phy_package_write. Functionally I can't test it, because the
-GPIO9 pin is not wired on my board. But I could at least check that the value
-that should be written can be read back from all PHYs in the package:
+Hi Josh,
 
-Microsemi GE VSC8514 SyncE 0000:00:00.3:10: reading 0x400f from
-MSCC_PHY_MAC_CFG_FASTLINK
-swp0: PHY [0000:00:00.3:10] driver [Microsemi GE VSC8514 SyncE] (irq=POLL)
-Microsemi GE VSC8514 SyncE 0000:00:00.3:11: reading 0x400f from
-MSCC_PHY_MAC_CFG_FASTLINK
-0000:00:00.5 swp1: PHY [0000:00:00.3:11] driver [Microsemi GE VSC8514
-SyncE] (irq=POLL)
-Microsemi GE VSC8514 SyncE 0000:00:00.3:12: reading 0x400f from
-MSCC_PHY_MAC_CFG_FASTLINK
-0000:00:00.5 swp2: PHY [0000:00:00.3:12] driver [Microsemi GE VSC8514
-SyncE] (irq=POLL)
-Microsemi GE VSC8514 SyncE 0000:00:00.3:13: reading 0x400f from
-MSCC_PHY_MAC_CFG_FASTLINK
-0000:00:00.5 swp3: PHY [0000:00:00.3:13] driver [Microsemi GE VSC8514
-SyncE] (irq=POLL)
+this is strange. While I would have expected an exception similar to
+this, it really should have happened on the "sturg" instruction which
+does the DAT-off store in s390_kernel_write(), and certainly not with
+an ID of 0004 (protection). However, in your case, it happens on a
+normal store instruction, with 0004 indicating a protection exception.
 
-So assuming that the feature worked before, it looks like there is no
-regression. Of course, the PHY still passes traffic just fine.
+This is more like what I would expect e.g. in the case where you do
+_not_ use the s390_kernel_write() function for RO module text patching,
+but rather normal memory access. So I am pretty sure that this is not
+related to the s390_kernel_write(), but some other issue, maybe some
+place left where you still use normal memory access?
 
-So you can add my:
+There is also some good news. While thinking about how to use "sturg"
+for vmalloc addresses, I came up with the idea to use "lra" (load
+real address) before that. Then I found out that we already do exactly
+that in the inline assembly, so all should be fine. Well, maybe the
+comment for s390_kernel_write() could be improved...
 
-Tested-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Vasily also found out that we apparently already use s390_kernel_write()
+for module text, for alternatives, so I guess we can safely assume that
+it should work fine in principle.
 
->  drivers/net/phy/mscc/mscc.h      |  1 -
->  drivers/net/phy/mscc/mscc_main.c | 99 ++++++++++----------------------
->  2 files changed, 29 insertions(+), 71 deletions(-)
->
-> diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-> index 030bf8b600df..acdd8ee61a39 100644
-> --- a/drivers/net/phy/mscc/mscc.h
-> +++ b/drivers/net/phy/mscc/mscc.h
-> @@ -353,7 +353,6 @@ struct vsc8531_private {
->         const struct vsc85xx_hw_stat *hw_stats;
->         u64 *stats;
->         int nstats;
-> -       bool pkg_init;
->         /* For multiple port PHYs; the MDIO address of the base PHY in the
->          * package.
->          */
-> diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-> index 5391acdece05..382b56064de9 100644
-> --- a/drivers/net/phy/mscc/mscc_main.c
-> +++ b/drivers/net/phy/mscc/mscc_main.c
-> @@ -691,27 +691,23 @@ static int vsc85xx_eee_init_seq_set(struct phy_device *phydev)
->  /* phydev->bus->mdio_lock should be locked when using this function */
->  static int phy_base_write(struct phy_device *phydev, u32 regnum, u16 val)
->  {
-> -       struct vsc8531_private *priv = phydev->priv;
-> -
->         if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
->                 dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
->                 dump_stack();
->         }
->
-> -       return __mdiobus_write(phydev->mdio.bus, priv->base_addr, regnum, val);
-> +       return __phy_package_write(phydev, regnum, val);
->  }
->
->  /* phydev->bus->mdio_lock should be locked when using this function */
->  static int phy_base_read(struct phy_device *phydev, u32 regnum)
->  {
-> -       struct vsc8531_private *priv = phydev->priv;
-> -
->         if (unlikely(!mutex_is_locked(&phydev->mdio.bus->mdio_lock))) {
->                 dev_err(&phydev->mdio.dev, "MDIO bus lock not held!\n");
->                 dump_stack();
->         }
->
-> -       return __mdiobus_read(phydev->mdio.bus, priv->base_addr, regnum);
-> +       return __phy_package_read(phydev, regnum);
->  }
->
->  /* bus->mdio_lock should be locked when using this function */
-> @@ -1287,65 +1283,36 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
->         return ret;
->  }
->
-> -/* Check if one PHY has already done the init of the parts common to all PHYs
-> - * in the Quad PHY package.
-> - */
-> -static bool vsc8584_is_pkg_init(struct phy_device *phydev, bool reversed)
-> +static void vsc8584_get_base_addr(struct phy_device *phydev)
->  {
-> -       struct mii_bus *bus = phydev->mdio.bus;
-> -       struct vsc8531_private *vsc8531;
-> -       struct phy_device *phy;
-> -       int i, addr;
-> -
-> -       /* VSC8584 is a Quad PHY */
-> -       for (i = 0; i < 4; i++) {
-> -               vsc8531 = phydev->priv;
-> -
-> -               if (reversed)
-> -                       addr = vsc8531->base_addr - i;
-> -               else
-> -                       addr = vsc8531->base_addr + i;
-> -
-> -               phy = mdiobus_get_phy(bus, addr);
-> -               if (!phy)
-> -                       continue;
-> +       struct vsc8531_private *vsc8531 = phydev->priv;
-> +       u16 val, addr;
->
-> -               if ((phy->phy_id & phydev->drv->phy_id_mask) !=
-> -                   (phydev->drv->phy_id & phydev->drv->phy_id_mask))
-> -                       continue;
-> +       mutex_lock(&phydev->mdio.bus->mdio_lock);
-> +       __phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
->
-> -               vsc8531 = phy->priv;
-> +       addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
-> +       addr >>= PHY_CNTL_4_ADDR_POS;
->
-> -               if (vsc8531 && vsc8531->pkg_init)
-> -                       return true;
-> -       }
-> +       val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
->
-> -       return false;
-> +       if (val & PHY_ADDR_REVERSED)
-> +               vsc8531->base_addr = phydev->mdio.addr + addr;
-> +       else
-> +               vsc8531->base_addr = phydev->mdio.addr - addr;
-> +       mutex_unlock(&phydev->mdio.bus->mdio_lock);
->  }
->
->  static int vsc8584_config_init(struct phy_device *phydev)
->  {
->         struct vsc8531_private *vsc8531 = phydev->priv;
-> -       u16 addr, val;
->         int ret, i;
-> +       u16 val;
->
->         phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
->
->         mutex_lock(&phydev->mdio.bus->mdio_lock);
->
-> -       __mdiobus_write(phydev->mdio.bus, phydev->mdio.addr,
-> -                       MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
-> -       addr = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
-> -                             MSCC_PHY_EXT_PHY_CNTL_4);
-> -       addr >>= PHY_CNTL_4_ADDR_POS;
-> -
-> -       val = __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
-> -                            MSCC_PHY_ACTIPHY_CNTL);
-> -       if (val & PHY_ADDR_REVERSED)
-> -               vsc8531->base_addr = phydev->mdio.addr + addr;
-> -       else
-> -               vsc8531->base_addr = phydev->mdio.addr - addr;
-> -
->         /* Some parts of the init sequence are identical for every PHY in the
->          * package. Some parts are modifying the GPIO register bank which is a
->          * set of registers that are affecting all PHYs, a few resetting the
-> @@ -1359,7 +1326,7 @@ static int vsc8584_config_init(struct phy_device *phydev)
->          * do the correct init sequence for all PHYs that are package-critical
->          * in this pre-init function.
->          */
-> -       if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0)) {
-> +       if (phy_package_init_once(phydev)) {
->                 /* The following switch statement assumes that the lowest
->                  * nibble of the phy_id_mask is always 0. This works because
->                  * the lowest nibble of the PHY_ID's below are also 0.
-> @@ -1388,8 +1355,6 @@ static int vsc8584_config_init(struct phy_device *phydev)
->                         goto err;
->         }
->
-> -       vsc8531->pkg_init = true;
-> -
->         phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
->                        MSCC_PHY_PAGE_EXTENDED_GPIO);
->
-> @@ -1427,7 +1392,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
->
->         /* Disable SerDes for 100Base-FX */
->         ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
-> -                         PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
-> +                         PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
-> +                         PROC_CMD_FIBER_DISABLE |
->                           PROC_CMD_READ_MOD_WRITE_PORT |
->                           PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_100BASE_FX);
->         if (ret)
-> @@ -1435,7 +1401,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
->
->         /* Disable SerDes for 1000Base-X */
->         ret = vsc8584_cmd(phydev, PROC_CMD_FIBER_MEDIA_CONF |
-> -                         PROC_CMD_FIBER_PORT(addr) | PROC_CMD_FIBER_DISABLE |
-> +                         PROC_CMD_FIBER_PORT(vsc8531->base_addr) |
-> +                         PROC_CMD_FIBER_DISABLE |
->                           PROC_CMD_READ_MOD_WRITE_PORT |
->                           PROC_CMD_RST_CONF_PORT | PROC_CMD_FIBER_1000BASE_X);
->         if (ret)
-> @@ -1750,26 +1717,14 @@ static int vsc8514_config_init(struct phy_device *phydev)
->  {
->         struct vsc8531_private *vsc8531 = phydev->priv;
->         unsigned long deadline;
-> -       u16 val, addr;
->         int ret, i;
-> +       u16 val;
->         u32 reg;
->
->         phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
->
->         mutex_lock(&phydev->mdio.bus->mdio_lock);
->
-> -       __phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
-> -
-> -       addr = __phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_4);
-> -       addr >>= PHY_CNTL_4_ADDR_POS;
-> -
-> -       val = __phy_read(phydev, MSCC_PHY_ACTIPHY_CNTL);
-> -
-> -       if (val & PHY_ADDR_REVERSED)
-> -               vsc8531->base_addr = phydev->mdio.addr + addr;
-> -       else
-> -               vsc8531->base_addr = phydev->mdio.addr - addr;
-> -
->         /* Some parts of the init sequence are identical for every PHY in the
->          * package. Some parts are modifying the GPIO register bank which is a
->          * set of registers that are affecting all PHYs, a few resetting the
-> @@ -1781,11 +1736,9 @@ static int vsc8514_config_init(struct phy_device *phydev)
->          * do the correct init sequence for all PHYs that are package-critical
->          * in this pre-init function.
->          */
-> -       if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0))
-> +       if (phy_package_init_once(phydev))
->                 vsc8514_config_pre_init(phydev);
->
-> -       vsc8531->pkg_init = true;
-> -
->         phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
->                        MSCC_PHY_PAGE_EXTENDED_GPIO);
->
-> @@ -1991,6 +1944,9 @@ static int vsc8514_probe(struct phy_device *phydev)
->
->         phydev->priv = vsc8531;
->
-> +       vsc8584_get_base_addr(phydev);
-> +       devm_phy_package_join(&phydev->mdio.dev, phydev, vsc8531->base_addr);
-> +
->         vsc8531->nleds = 4;
->         vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
->         vsc8531->hw_stats = vsc85xx_hw_stats;
-> @@ -2046,6 +2002,9 @@ static int vsc8584_probe(struct phy_device *phydev)
->
->         phydev->priv = vsc8531;
->
-> +       vsc8584_get_base_addr(phydev);
-> +       devm_phy_package_join(&phydev->mdio.dev, phydev, vsc8531->base_addr);
-> +
->         vsc8531->nleds = 4;
->         vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
->         vsc8531->hw_stats = vsc8584_hw_stats;
-> --
-> 2.20.1
->
+Regards,
+Gerald
 
-Thanks,
--Vladimir
