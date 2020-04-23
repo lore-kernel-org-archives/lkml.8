@@ -2,100 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EB9C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B34C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 736E620776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF6C2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:45:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gzyPkRSK"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="IqBvaW2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgDWPpQ (ORCPT
+        id S1729448AbgDWPp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:45:16 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36162 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729411AbgDWPpP (ORCPT
+        Thu, 23 Apr 2020 11:45:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729205AbgDWPpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:45:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587656714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o/eyK+EbSaVmWgGDTgI5XBVI7nXdlbx2Mfw1lzGhFR0=;
-        b=gzyPkRSKWM963WOFXVwXI6h2IArpOjLV8nCSZ0lNw+PkW6LDINUVrmufd4nT9JlBteZj1a
-        iaJQOOpVgxVGXh8xCok1V8f1KhC6OeHmhN6l+UjgiXayBT86IIHOMyTvx4OHU6g3CckBTL
-        sJlzDEqNt3VN5zn/Fyt9TE3wuLim640=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-0bcyUlqXO228VXmCzroyUg-1; Thu, 23 Apr 2020 11:45:12 -0400
-X-MC-Unique: 0bcyUlqXO228VXmCzroyUg-1
-Received: by mail-wr1-f69.google.com with SMTP id p2so3058851wrx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:45:12 -0700 (PDT)
+        Thu, 23 Apr 2020 11:45:23 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1720BC09B040
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:45:23 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id p25so3127554pfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+SloOzgks90oP9C6mvgapac7rntE6LuQE/iY+UvGdqE=;
+        b=IqBvaW2GJu0QG+ZWgBIXE1KXL1ya6B4MBW23tQvRqVMiJqNihLu7ElQNpdOWuKXf2D
+         e7fOcA8oeZHNM3l4zTGseuDdu7cySBLdVZCmqMt5FT1XF4o5RIHje5hfbbfRfuuQIF9l
+         wlt0YjK5vcwOmbln9gLApxVOyBNzdy/PZ8FPk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o/eyK+EbSaVmWgGDTgI5XBVI7nXdlbx2Mfw1lzGhFR0=;
-        b=C4/JqROjm8Vrhi+2n76bXpVMbGx7BNtNEDqRcYRWvI3HIq2gya6DRol50zwIfL9gkb
-         betuM+2NmsorN1LF8UGVJMXolO+jENbu8avGYmBKtSmW/bA7ZpxQF+HFH1kVVS5/vDFT
-         SxRueAUQrAZYH36VjRs+4g3EJvscbfIGpjxD3u4zw48Q2s+PKJaW6u6ikf7v8GHQsxdz
-         Le0E7N3tlzOhEaqeJ/uiNqAgpthqGS8M6soDDQHZtp5ZR80wNRx7VuAzgJnyTpYcdPwI
-         7JwH3a0PMQsXc3fGrbvVS131SVGVmwyBW5jDMWwD4UwRV+NHycoEedQz4cxDVi7hajD3
-         XV6g==
-X-Gm-Message-State: AGi0PuYJIntopQOohtjezjkz44GBxGW7WQtWI/dGAr+8JDmiYQF1SRlm
-        gsFWVGGBUdZ6KiEN2PQM9XagapAIpgHPplUc/VdKVftGNPO4fX90iL9wIBpMaq880DT1N8/dIWi
-        2NxzI0IMQhfznRdP44zkEGatY
-X-Received: by 2002:a5d:4ed1:: with SMTP id s17mr5521551wrv.310.1587656709292;
-        Thu, 23 Apr 2020 08:45:09 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJQIWjb+dZw7q23LstnoGqkWnnG7jTTPRc3d17WOFTrkOrZ7Cz8Lu6tsmp8q4JwNsmEAyDl6w==
-X-Received: by 2002:a5d:4ed1:: with SMTP id s17mr5521534wrv.310.1587656709102;
-        Thu, 23 Apr 2020 08:45:09 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id q184sm4116644wma.25.2020.04.23.08.45.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 08:45:08 -0700 (PDT)
-Subject: Re: [PATCH 2/2] KVM: x86: check_nested_events if there is an
- injectable NMI
-To:     Cathy Avery <cavery@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com, wei.huang2@amd.com
-References: <20200414201107.22952-1-cavery@redhat.com>
- <20200414201107.22952-3-cavery@redhat.com>
- <20200423144209.GA17824@linux.intel.com>
- <467c5c66-8890-02ba-2e9a-c28365d9f2c6@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <28f3db39-4561-7873-09dc-a27ebe5501b6@redhat.com>
-Date:   Thu, 23 Apr 2020 17:45:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+SloOzgks90oP9C6mvgapac7rntE6LuQE/iY+UvGdqE=;
+        b=KYp3haYupuDaqZJnYYYFD5+AlcjNoxK1Fz3/itP72fNQtRsX/pwF954mMhzDJPA2Kq
+         cnLNVA2KOp/5aCleXglhGnUjYWwjofhp7dI1lbolb3FCU1urHKs/8pQ45z2eO8sZ8D01
+         YR4p56fPsGDxXQiuy6yXdV8MHI1jD1M6AilixEMW4mRCXdzHJeYrfIJAyPuRmrNXLhIw
+         2kPfpXs88Ci+gkhyr9MrMo+p3QIZCqu41TDygswecfrjgKMMQWIrgsKiqFBDEwQatFvh
+         bgsDSvaGXrz0S4KWrUECRgOLOCtQMbzAVViZBuRzTWUl5PoMITCkwhnIXgll9qrK03Uv
+         aqrg==
+X-Gm-Message-State: AGi0Pub2YIwl/AXZfWarsPRGGzlYd4z4YJxd8kMj/HweBkYvHp1DW2UY
+        Y/aqHqLZPCsqMy9Jy5dDitMkCkZyZeU=
+X-Google-Smtp-Source: APiQypI9GuOWUlHBu6sSOoBDP8OTkF209Ci68BXqNi3aY+8I1lm6ymh949tU0rIRJW1ZfPbwVMB3sQ==
+X-Received: by 2002:aa7:9f0a:: with SMTP id g10mr4217244pfr.109.1587656722363;
+        Thu, 23 Apr 2020 08:45:22 -0700 (PDT)
+Received: from localhost (2001-44b8-111e-5c00-7979-720a-9390-aec6.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:7979:720a:9390:aec6])
+        by smtp.gmail.com with ESMTPSA id z6sm2200624pgg.39.2020.04.23.08.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 08:45:21 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, kasan-dev@googlegroups.com
+Cc:     dvyukov@google.com, christophe.leroy@c-s.fr,
+        Daniel Axtens <dja@axtens.net>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: [PATCH v3 3/3] kasan: initialise array in kasan_memcmp test
+Date:   Fri, 24 Apr 2020 01:45:03 +1000
+Message-Id: <20200423154503.5103-4-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200423154503.5103-1-dja@axtens.net>
+References: <20200423154503.5103-1-dja@axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <467c5c66-8890-02ba-2e9a-c28365d9f2c6@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 17:36, Cathy Avery wrote:
-> 
-> You will have to forgive me as I am new to KVM and any help would be
-> most appreciated.
+memcmp may bail out before accessing all the memory if the buffers
+contain differing bytes. kasan_memcmp calls memcmp with a stack array.
+Stack variables are not necessarily initialised (in the absence of a
+compiler plugin, at least). Sometimes this causes the memcpy to bail
+early thus fail to trigger kasan.
 
-No problem---this is a _really_ hairy part.  At least every time we make
-some changes it suddenly starts making more sense (both hacks and bugs
-decrease over time).
+Make sure the array initialised to zero in the code.
 
-Paolo
+No other test is dependent on the contents of an array on the stack.
+
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+---
+ lib/test_kasan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index 939f395a5392..7700097842c8 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -638,7 +638,7 @@ static noinline void __init kasan_memcmp(void)
+ {
+ 	char *ptr;
+ 	size_t size = 24;
+-	int arr[9];
++	int arr[9] = {};
+ 
+ 	pr_info("out-of-bounds in memcmp\n");
+ 	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
+-- 
+2.20.1
 
