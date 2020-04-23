@@ -2,118 +2,91 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F1FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACB9C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEBD1206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:48:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j5HNGP0g"
+	by mail.kernel.org (Postfix) with ESMTP id 520F4206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 04:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgDWEsj (ORCPT
+        id S1726271AbgDWEvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 00:48:39 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:61597 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725867AbgDWEsi (ORCPT
+        Thu, 23 Apr 2020 00:51:22 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:43895 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgDWEvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 00:48:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587617318; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=flpEztTAvjXCoh3VqacaArYvF6G0oezbCFCoUfSVpec=; b=j5HNGP0gG2LfE/SP85GndUPb15sd6wMBwwcP4THr+0/4HLS3FKbKEk+2hFtmcEslfl99BmuY
- HRRFyFwKUN56gjH1nIvUBJB6pExJGH4qV6nqGNvRciIog0aNuMTAhia0X6sfNQbeAccrQtij
- nVHxlJ6JWJQV9xNlbsrY45b+rHU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ea11e25.7f784ad28b20-smtp-out-n04;
- Thu, 23 Apr 2020 04:48:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A4340C432C2; Thu, 23 Apr 2020 04:48:37 +0000 (UTC)
-Received: from [192.168.43.129] (unknown [106.222.0.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6597BC433CB;
-        Thu, 23 Apr 2020 04:48:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6597BC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v4 2/5] soc: qcom: rpmh-rsc: We aren't notified of our own
- failure w/ NOTIFY_BAD
-To:     Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, swboyd@chromium.org, evgreen@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200422145408.v4.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
- <20200422145408.v4.2.I1927d1bca2569a27b2d04986baf285027f0818a2@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <a41c50fe-d4d3-47bc-f5a1-9d9b346cdeb8@codeaurora.org>
-Date:   Thu, 23 Apr 2020 10:18:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Apr 2020 00:51:22 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 36D75C0005;
+        Thu, 23 Apr 2020 04:51:14 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 21:51:12 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mtk.manpages@gmail.com,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-man@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v5 1/3] fs: Support setting a minimum fd for "lowest
+ available fd" allocation
+Message-ID: <20200423045112.GI161058@localhost>
+References: <cover.1587531463.git.josh@joshtriplett.org>
+ <05c9a6725490c5a5c4ee71be73326c2fedf35ba5.1587531463.git.josh@joshtriplett.org>
+ <20200423011253.GA18957@altlinux.org>
 MIME-Version: 1.0
-In-Reply-To: <20200422145408.v4.2.I1927d1bca2569a27b2d04986baf285027f0818a2@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423011253.GA18957@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+On Thu, Apr 23, 2020 at 04:12:53AM +0300, Dmitry V. Levin wrote:
+> On Tue, Apr 21, 2020 at 10:19:49PM -0700, Josh Triplett wrote:
+> > Some applications want to prevent the usual "lowest available fd"
+> > allocation from allocating certain file descriptors. For instance, they
+> > may want to prevent allocation of a closed fd 0, 1, or 2 other than via
+> > dup2/dup3, or reserve some low file descriptors for other purposes.
+> > 
+> > Add a prctl to increase the minimum fd and return the previous minimum.
+> > 
+> > System calls that allocate a specific file descriptor, such as
+> > dup2/dup3, ignore this minimum.
+> > 
+> > exec resets the minimum fd, to prevent one program from interfering with
+> > another program's expectations about fd allocation.
+> 
+> Please make this aspect properly documented in "Effect on process
+> attributes" section of execve(2) manual page.
 
-Thanks,
-Maulik
+Done. I'll include updated manpage patches in v6.
 
-On 4/23/2020 3:25 AM, Douglas Anderson wrote:
-> When a PM Notifier returns NOTIFY_BAD it doesn't get called with
-> CPU_PM_ENTER_FAILED.  It only get called for CPU_PM_ENTER_FAILED if
-> someone else (further down the notifier chain) returns NOTIFY_BAD.
+> > +unsigned int increase_min_fd(unsigned int num)
+> > +{
+> > +	struct files_struct *files = current->files;
+> > +	unsigned int old_min_fd;
+> > +
+> > +	spin_lock(&files->file_lock);
+> > +	old_min_fd = files->min_fd;
+> > +	files->min_fd += num;
+> > +	spin_unlock(&files->file_lock);
+> > +	return old_min_fd;
+> > +}
 >
-> Handle this case by taking our CPU out of the list of ones that have
-> entered PM.  Without this it's possible we could detect that the last
-> CPU went down (and we would flush) even if some CPU was alive.  That's
-> not good since our flushing routines currently assume they're running
-> on the last CPU for mutual exclusion.
->
-> Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v4:
-> - ("...We aren't notified of our own failure...") split out for v4.
->
-> Changes in v3: None
-> Changes in v2: None
->
->   drivers/soc/qcom/rpmh-rsc.c | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 3571a99fc839..e540e49fd61c 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -823,6 +823,10 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
->   		ret = NOTIFY_OK;
->   
->   exit:
-> +	if (ret == NOTIFY_BAD)
-> +		/* We won't be called w/ CPU_PM_ENTER_FAILED */
-> +		cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
-> +
->   	spin_unlock(&drv->pm_lock);
->   	return ret;
->   }
+> If it's "increase", there should be an overflow check.
+> Otherwise it's "assign" rather than "increase".
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+I'll add a check in v6, to make sure that the value cannot overflow into
+the errno range. (Note that this is not security-sensitive, it's just
+providing a footgun-resistant interface. It should absolutely check,
+though.)
+
+- Josh Triplett
