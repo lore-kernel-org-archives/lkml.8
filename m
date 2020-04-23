@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F98EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED662C55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729E92168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F4121927
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgDWHum (ORCPT
+        id S1727054AbgDWHtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:50:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37902 "EHLO
+        Thu, 23 Apr 2020 03:49:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgDWHty (ORCPT
+        with ESMTP id S1727023AbgDWHtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:49:54 -0400
+        Thu, 23 Apr 2020 03:49:45 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B24C08C5F2;
-        Thu, 23 Apr 2020 00:49:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B04C03C1AB;
+        Thu, 23 Apr 2020 00:49:45 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWcE-0008P4-Je; Thu, 23 Apr 2020 09:49:46 +0200
+        id 1jRWc6-0008NI-J9; Thu, 23 Apr 2020 09:49:38 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4AF831C0493;
-        Thu, 23 Apr 2020 09:49:41 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 07:49:40 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2BFEB1C0244;
+        Thu, 23 Apr 2020 09:49:38 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 07:49:37 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] x86,ftrace: Fix ftrace_regs_caller() unwind
+Subject: [tip: objtool/core] objtool: Implement noinstr validation
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Alexandre Chartre <alexandre.chartre@oracle.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416115118.749606694@infradead.org>
-References: <20200416115118.749606694@infradead.org>
+In-Reply-To: <20200416115119.106268040@infradead.org>
+References: <20200416115119.106268040@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158762818087.28353.3866847854011199128.tip-bot2@tip-bot2>
+Message-ID: <158762817766.28353.14956833448401569914.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,173 +62,301 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     0298739b7983cf9bf4fcfb4bfb815c539bdb87ca
-Gitweb:        https://git.kernel.org/tip/0298739b7983cf9bf4fcfb4bfb815c539bdb87ca
+Commit-ID:     c4a33939a7eb396acbb05569e57eebe4374cc57c
+Gitweb:        https://git.kernel.org/tip/c4a33939a7eb396acbb05569e57eebe4374cc57c
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 01 Apr 2020 16:53:19 +02:00
+AuthorDate:    Tue, 10 Mar 2020 18:57:41 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 22 Apr 2020 10:53:50 +02:00
 
-x86,ftrace: Fix ftrace_regs_caller() unwind
+objtool: Implement noinstr validation
 
-The ftrace_regs_caller() trampoline does something 'funny' when there
-is a direct-caller present. In that case it stuffs the 'direct-caller'
-address on the return stack and then exits the function. This then
-results in 'returning' to the direct-caller with the exact registers
-we came in with -- an indirect tail-call without using a register.
+Validate that any call out of .noinstr.text is in between
+instr_begin() and instr_end() annotations.
 
-This however (rightfully) confuses objtool because the function shares
-a few instruction in order to have a single exit path, but the stack
-layout is different for them, depending through which path we came
-there.
+This annotation is useful to ensure correct behaviour wrt tracing
+sensitive code like entry/exit and idle code. When we run code in a
+sensitive context we want a guarantee no unknown code is ran.
 
-This is currently cludged by forcing the stack state to the non-direct
-case, but this generates actively wrong (ORC) unwind information for
-the direct case, leading to potential broken unwinds.
+Since this validation relies on knowing the section of call
+destination symbols, we must run it on vmlinux.o instead of on
+individual object files.
 
-Fix this issue by fully separating the exit paths. This results in
-having to poke a second RET into the trampoline copy, see
-ftrace_regs_caller_ret.
+Add two options:
 
-This brings us to a second objtool problem, in order for it to
-perceive the 'jmp ftrace_epilogue' as a function exit, it needs to be
-recognised as a tail call. In order to make that happen,
-ftrace_epilogue needs to be the start of an STT_FUNC, so re-arrange
-code to make this so.
+ -d/--duplicate "duplicate validation for vmlinux"
+ -l/--vmlinux "vmlinux.o validation"
 
-Finally, a third issue is that objtool requires functions to exit with
-the same stack layout they started with, which is obviously violated
-in the direct case, employ the new HINT_RET_OFFSET to tell objtool
-this is an expected exception.
-
-Together, this results in generating correct ORC unwind information
-for the ftrace_regs_caller() function and it's trampoline copies.
+Where the latter auto-detects when objname ends with "vmlinux.o" and
+the former will force all validations, also those already done on
+!vmlinux object files.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200416115118.749606694@infradead.org
+Link: https://lkml.kernel.org/r/20200416115119.106268040@infradead.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/ftrace.c    | 12 ++++++++++--
- arch/x86/kernel/ftrace_64.S | 32 +++++++++++++++-----------------
- 2 files changed, 25 insertions(+), 19 deletions(-)
+ tools/objtool/builtin-check.c | 11 +++-
+ tools/objtool/builtin.h       |  2 +-
+ tools/objtool/check.c         | 98 ++++++++++++++++++++++++++++++++++-
+ tools/objtool/check.h         |  3 +-
+ tools/objtool/elf.h           |  2 +-
+ 5 files changed, 112 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 37a0aea..867c126 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -282,7 +282,8 @@ static inline void tramp_free(void *tramp) { }
+diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
+index 10fbe75..be42b71 100644
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -14,10 +14,11 @@
+  */
  
- /* Defined as markers to the end of the ftrace default trampolines */
- extern void ftrace_regs_caller_end(void);
--extern void ftrace_epilogue(void);
-+extern void ftrace_regs_caller_ret(void);
-+extern void ftrace_caller_end(void);
- extern void ftrace_caller_op_ptr(void);
- extern void ftrace_regs_caller_op_ptr(void);
+ #include <subcmd/parse-options.h>
++#include <string.h>
+ #include "builtin.h"
+ #include "check.h"
  
-@@ -334,7 +335,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 		call_offset = (unsigned long)ftrace_regs_call;
- 	} else {
- 		start_offset = (unsigned long)ftrace_caller;
--		end_offset = (unsigned long)ftrace_epilogue;
-+		end_offset = (unsigned long)ftrace_caller_end;
- 		op_offset = (unsigned long)ftrace_caller_op_ptr;
- 		call_offset = (unsigned long)ftrace_call;
- 	}
-@@ -366,6 +367,13 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	if (WARN_ON(ret < 0))
- 		goto fail;
+-bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
++bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
  
-+	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-+		ip = trampoline + (ftrace_regs_caller_ret - ftrace_regs_caller);
-+		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
-+		if (WARN_ON(ret < 0))
-+			goto fail;
+ static const char * const check_usage[] = {
+ 	"objtool check [<options>] file.o",
+@@ -32,12 +33,14 @@ const struct option check_options[] = {
+ 	OPT_BOOLEAN('b', "backtrace", &backtrace, "unwind on error"),
+ 	OPT_BOOLEAN('a', "uaccess", &uaccess, "enable uaccess checking"),
+ 	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
++	OPT_BOOLEAN('d', "duplicate", &validate_dup, "duplicate validation for vmlinux.o"),
++	OPT_BOOLEAN('l', "vmlinux", &vmlinux, "vmlinux.o validation"),
+ 	OPT_END(),
+ };
+ 
+ int cmd_check(int argc, const char **argv)
+ {
+-	const char *objname;
++	const char *objname, *s;
+ 
+ 	argc = parse_options(argc, argv, check_options, check_usage, 0);
+ 
+@@ -46,5 +49,9 @@ int cmd_check(int argc, const char **argv)
+ 
+ 	objname = argv[0];
+ 
++	s = strstr(objname, "vmlinux.o");
++	if (s && !s[9])
++		vmlinux = true;
++
+ 	return check(objname, false);
+ }
+diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
+index 0b90790..85c979c 100644
+--- a/tools/objtool/builtin.h
++++ b/tools/objtool/builtin.h
+@@ -8,7 +8,7 @@
+ #include <subcmd/parse-options.h>
+ 
+ extern const struct option check_options[];
+-extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
++extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux;
+ 
+ extern int cmd_check(int argc, const char **argv);
+ extern int cmd_orc(int argc, const char **argv);
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index abf9715..87e528c 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -257,6 +257,9 @@ static int decode_instructions(struct objtool_file *file)
+ 		    strncmp(sec->name, ".discard.", 9))
+ 			sec->text = true;
+ 
++		if (!strcmp(sec->name, ".noinstr.text"))
++			sec->noinstr = true;
++
+ 		for (offset = 0; offset < sec->len; offset += insn->len) {
+ 			insn = malloc(sizeof(*insn));
+ 			if (!insn) {
+@@ -1340,6 +1343,53 @@ static int read_retpoline_hints(struct objtool_file *file)
+ 	return 0;
+ }
+ 
++static int read_instr_hints(struct objtool_file *file)
++{
++	struct section *sec;
++	struct instruction *insn;
++	struct rela *rela;
++
++	sec = find_section_by_name(file->elf, ".rela.discard.instr_end");
++	if (!sec)
++		return 0;
++
++	list_for_each_entry(rela, &sec->rela_list, list) {
++		if (rela->sym->type != STT_SECTION) {
++			WARN("unexpected relocation symbol type in %s", sec->name);
++			return -1;
++		}
++
++		insn = find_insn(file, rela->sym->sec, rela->addend);
++		if (!insn) {
++			WARN("bad .discard.instr_end entry");
++			return -1;
++		}
++
++		insn->instr--;
 +	}
 +
- 	/*
- 	 * The address of the ftrace_ops that is used for this trampoline
- 	 * is stored at the end of the trampoline. This will be used to
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 369e61f..7657dc7 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -157,8 +157,12 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
- 	 * think twice before adding any new code or changing the
- 	 * layout here.
- 	 */
--SYM_INNER_LABEL(ftrace_epilogue, SYM_L_GLOBAL)
-+SYM_INNER_LABEL(ftrace_caller_end, SYM_L_GLOBAL)
- 
-+	jmp ftrace_epilogue
-+SYM_FUNC_END(ftrace_caller);
++	sec = find_section_by_name(file->elf, ".rela.discard.instr_begin");
++	if (!sec)
++		return 0;
 +
-+SYM_FUNC_START(ftrace_epilogue)
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
- 	jmp ftrace_stub
-@@ -170,14 +174,12 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
-  */
- SYM_INNER_LABEL_ALIGN(ftrace_stub, SYM_L_WEAK)
- 	retq
--SYM_FUNC_END(ftrace_caller)
-+SYM_FUNC_END(ftrace_epilogue)
++	list_for_each_entry(rela, &sec->rela_list, list) {
++		if (rela->sym->type != STT_SECTION) {
++			WARN("unexpected relocation symbol type in %s", sec->name);
++			return -1;
++		}
++
++		insn = find_insn(file, rela->sym->sec, rela->addend);
++		if (!insn) {
++			WARN("bad .discard.instr_begin entry");
++			return -1;
++		}
++
++		insn->instr++;
++	}
++
++	return 0;
++}
++
+ static void mark_rodata(struct objtool_file *file)
+ {
+ 	struct section *sec;
+@@ -1411,6 +1461,10 @@ static int decode_sections(struct objtool_file *file)
+ 	if (ret)
+ 		return ret;
  
- SYM_FUNC_START(ftrace_regs_caller)
- 	/* Save the current flags before any operations that can change them */
- 	pushfq
++	ret = read_instr_hints(file);
++	if (ret)
++		return ret;
++
+ 	return 0;
+ }
  
--	UNWIND_HINT_SAVE
--
- 	/* added 8 bytes to save flags */
- 	save_mcount_regs 8
- 	/* save_mcount_regs fills in first two parameters */
-@@ -233,7 +235,10 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	movq ORIG_RAX(%rsp), %rax
- 	movq %rax, MCOUNT_REG_SIZE-8(%rsp)
+@@ -2007,6 +2061,13 @@ static inline const char *call_dest_name(struct instruction *insn)
  
--	/* If ORIG_RAX is anything but zero, make this a call to that */
+ static int validate_call(struct instruction *insn, struct insn_state *state)
+ {
++	if (state->noinstr && state->instr <= 0 &&
++	    (!insn->call_dest || insn->call_dest->sec != insn->sec)) {
++		WARN_FUNC("call to %s() leaves .noinstr.text section",
++				insn->sec, insn->offset, call_dest_name(insn));
++		return 1;
++	}
++
+ 	if (state->uaccess && !func_uaccess_safe(insn->call_dest)) {
+ 		WARN_FUNC("call to %s() with UACCESS enabled",
+ 				insn->sec, insn->offset, call_dest_name(insn));
+@@ -2035,6 +2096,12 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
+ 
+ static int validate_return(struct symbol *func, struct instruction *insn, struct insn_state *state)
+ {
++	if (state->noinstr && state->instr > 0) {
++		WARN_FUNC("return with instrumentation enabled",
++			  insn->sec, insn->offset);
++		return 1;
++	}
++
+ 	if (state->uaccess && !func_uaccess_safe(func)) {
+ 		WARN_FUNC("return with UACCESS enabled",
+ 			  insn->sec, insn->offset);
+@@ -2115,6 +2182,9 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 				return 0;
+ 		}
+ 
++		if (state.noinstr)
++			state.instr += insn->instr;
++
+ 		if (insn->hint)
+ 			state.cfi = insn->cfi;
+ 		else
+@@ -2422,6 +2492,14 @@ static int validate_section(struct objtool_file *file, struct section *sec)
+ 	struct insn_state state;
+ 	int ret, warnings = 0;
+ 
 +	/*
-+	 * If ORIG_RAX is anything but zero, make this a call to that.
-+	 * See arch_ftrace_set_direct_caller().
++	 * We need the full vmlinux for noinstr validation, otherwise we can
++	 * not correctly determine insn->call_dest->sec (external symbols do
++	 * not have a section).
 +	 */
- 	movq ORIG_RAX(%rsp), %rax
- 	cmpq	$0, %rax
- 	je	1f
-@@ -244,20 +249,14 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	movq %rax, MCOUNT_REG_SIZE(%rsp)
++	if (vmlinux)
++		state.noinstr = sec->noinstr;
++
+ 	list_for_each_entry(func, &sec->symbol_list, list) {
+ 		if (func->type != STT_FUNC)
+ 			continue;
+@@ -2456,6 +2534,17 @@ static int validate_section(struct objtool_file *file, struct section *sec)
+ 	return warnings;
+ }
  
- 	restore_mcount_regs 8
-+	/* Restore flags */
-+	popfq
++static int validate_vmlinux_functions(struct objtool_file *file)
++{
++	struct section *sec;
++
++	sec = find_section_by_name(file->elf, ".noinstr.text");
++	if (!sec)
++		return 0;
++
++	return validate_section(file, sec);
++}
++
+ static int validate_functions(struct objtool_file *file)
+ {
+ 	struct section *sec;
+@@ -2513,6 +2602,15 @@ int check(const char *_objname, bool orc)
+ 	if (list_empty(&file.insn_list))
+ 		goto out;
  
--	jmp	2f
-+SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
-+	UNWIND_HINT_RET_OFFSET
-+	jmp	ftrace_epilogue
++	if (vmlinux && !validate_dup) {
++		ret = validate_vmlinux_functions(&file);
++		if (ret < 0)
++			goto out;
++
++		warnings += ret;
++		goto out;
++	}
++
+ 	if (retpoline) {
+ 		ret = validate_retpoline(&file);
+ 		if (ret < 0)
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index 99413d4..12a9660 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -18,6 +18,8 @@ struct insn_state {
+ 	unsigned int uaccess_stack;
+ 	bool uaccess;
+ 	bool df;
++	bool noinstr;
++	s8 instr;
+ };
  
- 1:	restore_mcount_regs
--
--
--2:
--	/*
--	 * The stack layout is nondetermistic here, depending on which path was
--	 * taken.  This confuses objtool and ORC, rightfully so.  For now,
--	 * pretend the stack always looks like the non-direct case.
--	 */
--	UNWIND_HINT_RESTORE
--
- 	/* Restore flags */
- 	popfq
+ struct instruction {
+@@ -31,6 +33,7 @@ struct instruction {
+ 	bool alt_group, dead_end, ignore, ignore_alts;
+ 	bool hint;
+ 	bool retpoline_safe;
++	s8 instr;
+ 	u8 visited;
+ 	u8 ret_offset;
+ 	struct symbol *call_dest;
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index 0b79c23..eb79cb9 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -39,7 +39,7 @@ struct section {
+ 	char *name;
+ 	int idx;
+ 	unsigned int len;
+-	bool changed, text, rodata;
++	bool changed, text, rodata, noinstr;
+ };
  
-@@ -268,7 +267,6 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	 * to the return.
- 	 */
- SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
--
- 	jmp ftrace_epilogue
- 
- SYM_FUNC_END(ftrace_regs_caller)
+ struct symbol {
