@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC126C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94F9C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9447C20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C429D20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgDWXJY (ORCPT
+        id S1729061AbgDWXJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:09:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50888 "EHLO
+        Thu, 23 Apr 2020 19:09:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50852 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728654AbgDWXG6 (ORCPT
+        by vger.kernel.org with ESMTP id S1728646AbgDWXG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:58 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvk-0004yZ-VE; Fri, 24 Apr 2020 00:06:53 +0100
+        id 1jRkvk-0004xG-6j; Fri, 24 Apr 2020 00:06:52 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvh-00E72d-8B; Fri, 24 Apr 2020 00:06:49 +0100
+        id 1jRkvf-00E72K-Eh; Fri, 24 Apr 2020 00:06:47 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>
-Date:   Fri, 24 Apr 2020 00:07:35 +0100
-Message-ID: <lsq.1587683028.804976832@decadent.org.uk>
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Willy Tarreau" <w@1wt.eu>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Jordy Zomer" <jordy@simplyhacker.com>
+Date:   Fri, 24 Apr 2020 00:07:31 +0100
+Message-ID: <lsq.1587683028.161841510@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 228/245] media: stv06xx: add missing descriptor
- sanity checks
+Subject: [PATCH 3.16 224/245] floppy: check FDC index for errors before
+ assigning it
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,90 +58,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 485b06aadb933190f4bc44e006076bc27a23f205 upstream.
+commit 2e90ca68b0d2f5548804f22f0dd61145516171e3 upstream.
 
-Make sure to check that we have two alternate settings and at least one
-endpoint before accessing the second altsetting structure and
-dereferencing the endpoint arrays.
+Jordy Zomer reported a KASAN out-of-bounds read in the floppy driver in
+wait_til_ready().
 
-This specifically avoids dereferencing NULL-pointers or corrupting
-memory when a device does not have the expected descriptors.
+Which on the face of it can't happen, since as Willy Tarreau points out,
+the function does no particular memory access.  Except through the FDCS
+macro, which just indexes a static allocation through teh current fdc,
+which is always checked against N_FDC.
 
-Note that the sanity checks in stv06xx_start() and pb0100_start() are
-not redundant as the driver is mixing looking up altsettings by index
-and by number, which may not coincide.
+Except the checking happens after we've already assigned the value.
 
-Fixes: 8668d504d72c ("V4L/DVB (12082): gspca_stv06xx: Add support for st6422 bridge and sensor")
-Fixes: c0b33bdc5b8d ("[media] gspca-stv06xx: support bandwidth changing")
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+The floppy driver is a disgrace (a lot of it going back to my original
+horrd "design"), and has no real maintainer.  Nobody has the hardware,
+and nobody really cares.  But it still gets used in virtual environment
+because it's one of those things that everybody supports.
+
+The whole thing should be re-written, or at least parts of it should be
+seriously cleaned up.  The 'current fdc' index, which is used by the
+FDCS macro, and which is often shadowed by a local 'fdc' variable, is a
+prime example of how not to write code.
+
+But because nobody has the hardware or the motivation, let's just fix up
+the immediate problem with a nasty band-aid: test the fdc index before
+actually assigning it to the static 'fdc' variable.
+
+Reported-by: Jordy Zomer <jordy@simplyhacker.com>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/gspca/stv06xx/stv06xx.c     | 19 ++++++++++++++++++-
- .../media/usb/gspca/stv06xx/stv06xx_pb0100.c  |  4 ++++
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ drivers/block/floppy.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/media/usb/gspca/stv06xx/stv06xx.c
-+++ b/drivers/media/usb/gspca/stv06xx/stv06xx.c
-@@ -293,6 +293,9 @@ static int stv06xx_start(struct gspca_de
- 		return -EIO;
- 	}
- 
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	err = stv06xx_write_bridge(sd, STV_ISO_SIZE_L, packet_size);
- 	if (err < 0)
-@@ -317,11 +320,21 @@ out:
- 
- static int stv06xx_isoc_init(struct gspca_dev *gspca_dev)
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -847,14 +847,17 @@ static void reset_fdc_info(int mode)
+ /* selects the fdc and drive, and enables the fdc's input/dma. */
+ static void set_fdc(int drive)
  {
-+	struct usb_interface_cache *intfc;
- 	struct usb_host_interface *alt;
- 	struct sd *sd = (struct sd *) gspca_dev;
- 
-+	intfc = gspca_dev->dev->actconfig->intf_cache[0];
++	unsigned int new_fdc = fdc;
 +
-+	if (intfc->num_altsetting < 2)
-+		return -ENODEV;
-+
-+	alt = &intfc->altsetting[1];
-+
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	/* Start isoc bandwidth "negotiation" at max isoc bandwidth */
--	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	alt->endpoint[0].desc.wMaxPacketSize =
- 		cpu_to_le16(sd->sensor->max_packet_size[gspca_dev->curr_mode]);
- 
-@@ -334,6 +347,10 @@ static int stv06xx_isoc_nego(struct gspc
- 	struct usb_host_interface *alt;
- 	struct sd *sd = (struct sd *) gspca_dev;
- 
-+	/*
-+	 * Existence of altsetting and endpoint was verified in
-+	 * stv06xx_isoc_init()
-+	 */
- 	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	min_packet_size = sd->sensor->min_packet_size[gspca_dev->curr_mode];
---- a/drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c
-+++ b/drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c
-@@ -198,6 +198,10 @@ static int pb0100_start(struct sd *sd)
- 	alt = usb_altnum_to_altsetting(intf, sd->gspca_dev.alt);
- 	if (!alt)
- 		return -ENODEV;
-+
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 
- 	/* If we don't have enough bandwidth use a lower framerate */
+ 	if (drive >= 0 && drive < N_DRIVE) {
+-		fdc = FDC(drive);
++		new_fdc = FDC(drive);
+ 		current_drive = drive;
+ 	}
+-	if (fdc != 1 && fdc != 0) {
++	if (new_fdc >= N_FDC) {
+ 		pr_info("bad fdc value\n");
+ 		return;
+ 	}
++	fdc = new_fdc;
+ 	set_dor(fdc, ~0, 8);
+ #if N_FDC > 1
+ 	set_dor(1 - fdc, ~8, 0);
 
