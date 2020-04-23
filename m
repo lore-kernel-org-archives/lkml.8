@@ -2,130 +2,118 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5950AC55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69178C55189
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3552720787
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fwkUXe3f"
+	by mail.kernel.org (Postfix) with ESMTP id 51A552071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDWBnV (ORCPT
+        id S1726386AbgDWBrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgDWBnU (ORCPT
+        Wed, 22 Apr 2020 21:47:48 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:7901 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725781AbgDWBrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:43:20 -0400
-X-Greylist: delayed 12401 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 22 Apr 2020 18:43:20 PDT
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8221FC03C1AA;
-        Wed, 22 Apr 2020 18:43:20 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4970SN6b8Hz9sSd;
-        Thu, 23 Apr 2020 11:43:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1587606197;
-        bh=+Oe8bj8PhMMloiNTEF+tPE9kazN7s8cc/Q+pJLOx2ME=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fwkUXe3fgqT4VNtMtTTWvC5MfPBmuvdGHhAgNSegkyiawbz/QK7t6+gxtBoEnXJP5
-         V/8IhmxIk+pf4BGL7ZB8naFdu157p8RA/NwhNjF1XeU5tHj1+OenAQGpH2WBZ752AU
-         hBUzVcH2IE2/aw2BlSHZSrFDUA90ZN3e0b77ilLpJRry28bZ0SQlqDsjQUSWKuzTBK
-         Mo6nZE6e5+EhW/7DWj5wgZNFEbY2z55D1qNTGwVWUXO+zjDcARoGm5TXQgJBHX+TtP
-         AxIbKk75RlE4OdUTWdmYL5R9XR5PRicob6gt7YxNs9HQaEArnEc+eYtuBt9jt8aaPy
-         Yx0+t7qTBaJMQ==
-Date:   Thu, 23 Apr 2020 11:43:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: linux-next: manual merge of the net-next tree with the
- kbuild-current tree
-Message-ID: <20200423114313.634bf6cd@canb.auug.org.au>
+        Wed, 22 Apr 2020 21:47:47 -0400
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 Apr 2020 21:47:47 EDT
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Wed, 22 Apr 2020 18:32:40 -0700
+Received: from [10.62.16.246] (unknown [10.62.16.246])
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 8A28AB1660;
+        Wed, 22 Apr 2020 21:32:42 -0400 (EDT)
+Reply-To: <ganb@vmware.com>
+Subject: Re: Re: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime
+ handler
+To:     Joerg Roedel <jroedel@suse.de>, Mike Stunes <mstunes@vmware.com>
+CC:     Joerg Roedel <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-41-joro@8bytes.org>
+ <A7DF63B4-6589-4386-9302-6B7F8BE0D9BA@vmware.com>
+ <20200415155302.GD21899@suse.de>
+From:   Bo Gan <ganb@vmware.com>
+Message-ID: <1a164e55-19dd-a20b-6837-9f425cfac100@vmware.com>
+Date:   Wed, 22 Apr 2020 18:33:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8BsiIvlLwI3mvWUcKjtJ27C";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200415155302.GD21899@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: ganb@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8BsiIvlLwI3mvWUcKjtJ27C
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/15/20 8:53 AM, Joerg Roedel wrote:
+> Hi Mike,
+> 
+> On Tue, Apr 14, 2020 at 07:03:44PM +0000, Mike Stunes wrote:
+>> set_memory_decrypted needs to check the return value. I see it
+>> consistently return ENOMEM. I've traced that back to split_large_page
+>> in arch/x86/mm/pat/set_memory.c.
+> 
+> I agree that the return code needs to be checked. But I wonder why this
+> happens. The split_large_page() function returns -ENOMEM when
+> alloc_pages() fails. Do you boot the guest with minal RAM assigned?
+> 
+> Regards,
+> 
+> 	Joerg
+> 
 
-Hi all,
+I just want to add some context around this. The call path that lead to 
+the failure is like the following:
 
-Today's linux-next merge of the net-next tree got a conflict in:
+	__alloc_pages_slowpath
+	__alloc_pages_nodemask
+	alloc_pages_current
+	alloc_pages
+	split_large_page
+	__change_page_attr
+	__change_page_attr_set_clr
+	__set_memory_enc_dec
+	set_memory_decrypted
+	sev_es_init_ghcbs
+	trap_init   -> before mm_init (in init/main.c)
+	start_kernel
+	x86_64_start_reservations
+	x86_64_start_kernel
+	secondary_startup_64
 
-  include/linux/vermagic.h
+At this time, mem_init hasn't been called yet (which would be called by 
+mm_init). Thus, the free pages are still owned by memblock. It's in 
+mem_init (x86/mm/init_64.c) that memblock_free_all gets called and free 
+pages are released.
 
-between commit:
+During testing, I've also noticed that debug_pagealloc=1 will make the 
+issue disappear. That's because with debug_pagealloc=1, 
+probe_page_size_mask in x86/mm/init.c will not allow large pages 
+(2M/1G). Therefore, no split_large_page would happen. Similarly, if CPU 
+doesn't have X86_FEATURE_PSE, there won't be large pages either.
 
-  e3459da6c363 ("arch: split MODULE_ARCH_VERMAGIC definitions out to <asm/v=
-ermagic.h>")
+Any thoughts? Maybe split_large_page should get pages from memblock at 
+early boot?
 
-from the kbuild-current tree and commit:
-
-  51161bfc66a6 ("kernel/module: Hide vermagic header file from general use")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/vermagic.h
-index dc236577b92f,7768d20ada39..000000000000
---- a/include/linux/vermagic.h
-+++ b/include/linux/vermagic.h
-@@@ -1,9 -1,10 +1,13 @@@
-  /* SPDX-License-Identifier: GPL-2.0 */
- +#ifndef _LINUX_VERMAGIC_H
- +#define _LINUX_VERMAGIC_H
- =20
-+ #ifndef INCLUDE_VERMAGIC
-+ #error "This header can be included from kernel/module.c or *.mod.c only"
-+ #endif
-+=20
-  #include <generated/utsrelease.h>
- +#include <asm/vermagic.h>
- =20
-  /* Simply sanity version stamp for modules. */
-  #ifdef CONFIG_SMP
-
---Sig_/8BsiIvlLwI3mvWUcKjtJ27C
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6g8rEACgkQAVBC80lX
-0GxBwQf/WI2vcF+eXo4TdZk72JDteMo0bxJRQTxYsF0np8HFDp94a+Z29xzOC9Ue
-7M48lUb59GipOSqbAaEQMCTSLJ1MEnALOiAFq5IrBY36wd5AEdfckhTNBN+tKKap
-aFF4NkoU9qrY7czZzu/1fiENLfqLWGJbTPAZcPQSyJN+heLQBmPc3+tpPrKlnign
-eQCNdTi6gP0pXrITEosOGSqSSaixglXDQaE1bKQMUpr68m6T8rswSDbLEVOyDeLY
-1kU20iLaL/Q14LvQuBqoNrH2uDj/JzMdR68iXKymRC2WjMTLq5IYzGY/j81nIfxT
-qjgGuoGYgWQSUHlKcLEYAiQPTFbYDg==
-=P0PE
------END PGP SIGNATURE-----
-
---Sig_/8BsiIvlLwI3mvWUcKjtJ27C--
+Bo
