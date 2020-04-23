@@ -2,90 +2,168 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED65AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F881C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD0620781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C43020715
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:51:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YelSMpK6"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AFFUb/gO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgDWQsU (ORCPT
+        id S1729793AbgDWQvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729716AbgDWQsT (ORCPT
+        Thu, 23 Apr 2020 12:51:00 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16536 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729673AbgDWQvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:48:19 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DA0C09B041;
-        Thu, 23 Apr 2020 09:48:19 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id m18so7187175otq.9;
-        Thu, 23 Apr 2020 09:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bh0M22ljnn7wAk7TqVlJbCHIzOAS6jwjmvuWuteywQk=;
-        b=YelSMpK6UYl4wPJ243K10x9IaOyTRkHv04jg6GMmVYSYzCjHGEdcllHqBdt3QukHub
-         2q+L3FbWwosVkRLfyrCESZWhbj93LY9/YnIL/y9wSV2JqYgCCrY+4w6q6M/55LVPmVCc
-         g8tE+1nxihdEbF2U8hHui3YW8EAMo9xAGCk+EeGoP5Qy0QKDXHelRjv/fFw6WnmxEE07
-         tq4SOpyb39RERQ0cI06PhpWP7akf3lEY1rjuCklFTKci+wpgmVO63/UkkQwK7pzrx8OP
-         Ufn9UCy0YB7Q1LXGNka5UaMLHhdcpmBgSc/6RrmuS2m35fOO763dmqtK9++c1QKkfYFz
-         15xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bh0M22ljnn7wAk7TqVlJbCHIzOAS6jwjmvuWuteywQk=;
-        b=H88RcYG8auttTYUauSz5cTqbGMTMv1YIs38yPvqf38Q3bpvodh9YzzhvNyNrLCrgy2
-         N2B0rNK9ta80jObnfjUV6TBSoPpDyIhBO9ed1NikOcVUCZGB3Athsj4/HIv6dMpTMobE
-         ZekwiojFv9i+E2jvKR6m0y4HfJYy6v5Jz2miK3ppLFzUULDNAgI/fQgSY1q8dJKH6iJ2
-         47KJsdosjOcRuTNy2mKBIdC5ritTZ21bj6XdHpjUejOvxg0XjPjeak3ybrIk0hPkKxF0
-         BdQX9VZ/b3rFJrbVK/CjZSwY6O/I/o4dCJmSWhkE/6MtqbmW6PHZtrOqQwr/IalpmkS0
-         avsg==
-X-Gm-Message-State: AGi0PuYQBGPUVzJ3OeNFENYmrwzNnP5Y2CAM0oIkBMtvRvYG0md6LnWB
-        1Ee+0rvc5R4wkWSfxAvOpto=
-X-Google-Smtp-Source: APiQypIDjXakw5+CsR051thcbpc5b4wm1P7FVM+FxdlZiT46LPYnOIQIo9zN5hsgv9IT+eMJKXZ6wg==
-X-Received: by 2002:a05:6830:1d62:: with SMTP id l2mr2441949oti.316.1587660498522;
-        Thu, 23 Apr 2020 09:48:18 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id w24sm799343oor.47.2020.04.23.09.48.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 09:48:17 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 09:48:16 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] kbuild: use $(CC_VERSION_TEXT) to evaluate
- CC_IS_GCC and CC_IS_CLANG
-Message-ID: <20200423164816.GA12996@ubuntu-s3-xlarge-x86>
-References: <20200423142354.312088-1-masahiroy@kernel.org>
+        Thu, 23 Apr 2020 12:51:00 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea1c6fe0000>; Thu, 23 Apr 2020 09:49:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 09:50:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 09:50:59 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 16:50:59 +0000
+Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 16:50:58 +0000
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+ <ae6dfd6b-4b0b-db73-54cf-a16e59476f38@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <3115a959-045e-7b27-94fb-a11a8b5f4a6a@nvidia.com>
+Date:   Thu, 23 Apr 2020 09:50:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423142354.312088-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ae6dfd6b-4b0b-db73-54cf-a16e59476f38@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587660543; bh=dej+/NPj9Zi1pabB1YDOATDwcPgl93oxjqVQvLEgeFI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=AFFUb/gOdvlNFh1DMRIVqsHEiu2OxZA7yamw8sGomynyNEQHjU2gdH4D/+rYuHqzW
+         GIE8dqx8IYgzpyoX8l8Xq9wTvP0fkBgIqmSUWljq4BsBGCshvTvhd4DDHKLOz2zvZs
+         dCFHPknwxPg2f4a/rXS/H6paMn9MbEc4DsdqHaeok/pVCehqLD0knLBkIh4DbpiRwt
+         juF5SVtaW6gsd9UosilztfUhUIxEx4gWkpM5qQUCpVc7iDEavnuhMEEMXGZuh7thla
+         G7AeWdL8aB6c99SkEIgPAIrzhVYcDr6dpiunAdtX5Kx3iSSgXoGfJHOwWLbDMK93tx
+         0ep0Na2OjP/IQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:23:51PM +0900, Masahiro Yamada wrote:
-> The result of '$(CC) --version | head -n 1' is already computed by the
-> top Makefile, and stored in the environment variable, CC_VERSION_TEXT.
-> 
-> 'echo' is probably less expensive than the two commands $(CC) and
-> 'head' although this optimization is not noticeable level.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+On 4/23/20 12:48 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On 22/04/2020 08:18, Sowjanya Komatineni wrote:
+>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>> which can support up to 6 MIPI CSI camera sensors.
+>>
+>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>> capture from an external camera sensor connected to CSI or from
+>> built-in test pattern generator.
+>>
+>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>
+>> This patch adds a v4l2 capture driver with media interface for
+>> Tegra210 built-in CSI to VI test pattern generator.
+>>
+>> This patch includes TPG support only and all the video pipeline
+>> configuration happens through the video device node.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/staging/media/Kconfig          |    2 +
+>>   drivers/staging/media/Makefile         |    1 +
+>>   drivers/staging/media/tegra/Kconfig    |   13 +
+>>   drivers/staging/media/tegra/Makefile   |    8 +
+>>   drivers/staging/media/tegra/TODO       |   10 +
+>>   drivers/staging/media/tegra/common.h   |  262 ++++++++
+>>   drivers/staging/media/tegra/csi.c      |  606 +++++++++++++++++
+>>   drivers/staging/media/tegra/csi.h      |  149 +++++
+>>   drivers/staging/media/tegra/tegra210.c |  709 ++++++++++++++++++++
+>>   drivers/staging/media/tegra/tegra210.h |  190 ++++++
+>>   drivers/staging/media/tegra/vi.c       | 1132 ++++++++++++++++++++++++++++++++
+>>   drivers/staging/media/tegra/vi.h       |   83 +++
+>>   drivers/staging/media/tegra/video.c    |  153 +++++
+>>   drivers/staging/media/tegra/video.h    |   34 +
+>>   14 files changed, 3352 insertions(+)
+>>   create mode 100644 drivers/staging/media/tegra/Kconfig
+>>   create mode 100644 drivers/staging/media/tegra/Makefile
+>>   create mode 100644 drivers/staging/media/tegra/TODO
+>>   create mode 100644 drivers/staging/media/tegra/common.h
+>>   create mode 100644 drivers/staging/media/tegra/csi.c
+>>   create mode 100644 drivers/staging/media/tegra/csi.h
+>>   create mode 100644 drivers/staging/media/tegra/tegra210.c
+>>   create mode 100644 drivers/staging/media/tegra/tegra210.h
+>>   create mode 100644 drivers/staging/media/tegra/vi.c
+>>   create mode 100644 drivers/staging/media/tegra/vi.h
+>>   create mode 100644 drivers/staging/media/tegra/video.c
+>>   create mode 100644 drivers/staging/media/tegra/video.h
+> With 'make menuconfig' I get this:
+>
+> scripts/kconfig/mconf  Kconfig
+>
+> WARNING: unmet direct dependencies detected for TEGRA_HOST1X
+>    Depends on [n]: HAS_IOMEM [=y] && (ARCH_TEGRA || ARM && COMPILE_TEST [=y])
+>    Selected by [y]:
+>    - VIDEO_TEGRA [=y] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && (ARCH_TEGRA || COMPILE_TEST [=y])
+>
+> This is an x86_64 build with COMPILE_TEST set. I can provide my full .config if you need it.
+>
+> CONFIG_TEGRA_HOST1X=y
+> CONFIG_VIDEO_TEGRA=y
+>
+> Regards,
+>
+>          Hans
+
+Hi Hans,
+
+In v7, changed Kconfig to remove ARM. But looks like we should limit
+
+TEGRA_HOST1X also limits compile to ARM only so running VIDEO_TEGRA on 
+x86_64 shows above warning.
+
+We should limit compile to ARM for CONFIG_VIDEO_TEGRA.
+
+Will update CONFIG_VIDEO_TEGRA dependency to use ARM && COMPILE_TEST 
+like I had in previous version. Sorry about this.
+
+
+Also, I see some changes went into latest linux-next staging media 
+Kconfig, So, will have my patches on top of today's linux-next.
+
+Thanks
+
+Sowjanya
+
+
