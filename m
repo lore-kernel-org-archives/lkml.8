@@ -2,106 +2,139 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA198C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EDCC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0302071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA00206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f3HaI4v7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JCwTXSOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgDWP3E (ORCPT
+        id S1729216AbgDWP3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729014AbgDWP3D (ORCPT
+        Thu, 23 Apr 2020 11:29:31 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31585 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729081AbgDWP3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:29:03 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02954C08ED7D
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:29:03 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r26so7024851wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=K0XwhvnZ5fHku+zX8bB/tqMgI8KM65JG7UKJ1LIe+hw=;
-        b=f3HaI4v7q0s0ma9brDtDfqbZ273js/4jOfpcLSe86Rdc4863/LFECt156kdpFRFuFU
-         /qAg5B9O+PLzlWP3310ATVRODsMIrhzfM6FRjI2ZfFrQh4TULq2AHJGPyPOzharxZjGs
-         7nU7Xz0r39aTzO4K1n1DPslhQOZhvyuKKyIbf0lq4Ckrwalxc66TSGtchPiX+in6/vCG
-         TN+C9llUiHzgI7809zQxurlbhQHWjyyCzDT1ymd5TPr0DGAHiwg0sY3T6f3iwZEMaYMz
-         GyZiPpsxXPYpGo5h9qA9IliuLqsreuoUyXoDk50xYzX1M3L64josfqN4NbTZNRwbZFey
-         lCWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=K0XwhvnZ5fHku+zX8bB/tqMgI8KM65JG7UKJ1LIe+hw=;
-        b=mnZe5G1+olLBelYxnGGdTFANf5sP7AEbSFkWLXQD8rGDR3hXPoUNIEuJayFqNyX5Wz
-         Hc208/e2I6mntjBecV8IKzfWL5ysf/5qTd1/WybNY9z4v8oVefIWXZNQMvS16Hk2GKNL
-         Da3OeamgulV270oSLbeFD8tObKK6e4QIuUSWOc0Q6uJ8TSqPCMdzMOv0XX4Dlb3OMUCg
-         1LRqZarIkRa+1ZuBKXo9So1jidTE4gsiRmt1STForSrs+ky+NwubidoJUcCb6JlG9vsr
-         n2BQ2qAMXPu2mlFt19g9m6JxDPkdYkwmbZE+nPBmf4ry6MgRENPgafWYzzezbxhPR1sg
-         sVjg==
-X-Gm-Message-State: AGi0PuZTcWnls/cZvBY0iRFSflj/lM71EjyD6t1I5mp66uCv5cFDQlLL
-        8euXg2mbKWowfOs/pkmYHpSq2w==
-X-Google-Smtp-Source: APiQypJgzi6SD42pIpK5DubH9kPf+0CuGHiKBJHzVOd+VDHdvOQf8wEqsCDznBChQjiLenoFM3eaig==
-X-Received: by 2002:a1c:a794:: with SMTP id q142mr4732427wme.4.1587655741551;
-        Thu, 23 Apr 2020 08:29:01 -0700 (PDT)
-Received: from linaro.org ([37.167.216.250])
-        by smtp.gmail.com with ESMTPSA id j13sm4361278wrq.24.2020.04.23.08.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 08:29:00 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 17:28:54 +0200
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v6 06/10] PM / EM: change name of em_pd_energy to
- em_cpu_energy
-Message-ID: <20200423152854.GD65632@linaro.org>
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-7-lukasz.luba@arm.com>
+        Thu, 23 Apr 2020 11:29:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587655769;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FcLTDydwrIahBOgkgaYdQfK7uHJ+oa3gx9sDiQ6LppA=;
+        b=JCwTXSOMy4G41Mwe6QqOEWhzT5BEkQtm2ilPCoMvxzZpzMIt3jGtJusGv3+erGUDTzfli0
+        xS0GkI+qIbi2vrwsTWmh2Bbkzy4garTtGQza1u7P3/pr8VeMXo0P/O/Tw/yA7nXDcfX1vo
+        S1aLfhAffzwXUbn/SxJFrm4pqylpQEU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-x_b0bV3jOnK4tEUDZjbD9Q-1; Thu, 23 Apr 2020 11:29:25 -0400
+X-MC-Unique: x_b0bV3jOnK4tEUDZjbD9Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EAFD107ACF4;
+        Thu, 23 Apr 2020 15:29:24 +0000 (UTC)
+Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AA0910021B3;
+        Thu, 23 Apr 2020 15:29:23 +0000 (UTC)
+Date:   Thu, 23 Apr 2020 10:29:21 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: linux-next: Tree for Apr 23 (objtool warnings)
+Message-ID: <20200423152921.shhjokjka7pwuyqr@treble>
+References: <20200423174104.239dffab@canb.auug.org.au>
+ <1239aab1-84b4-02c3-a819-2c35dfa67a1c@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200410084210.24932-7-lukasz.luba@arm.com>
+In-Reply-To: <1239aab1-84b4-02c3-a819-2c35dfa67a1c@infradead.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:42:06AM +0100, Lukasz Luba wrote:
-> Energy Model framework supports now other devices than CPUs. Refactor some
-> of the functions in order to prevent wrong usage. The old function
-> em_pd_energy has to generic name. It must not be used without proper
-> cpumask pointer, which is possible only for CPU devices. Thus, rename it
-> and add proper description to warn of potential wrong usage for other
-> devices.
+On Thu, Apr 23, 2020 at 07:59:31AM -0700, Randy Dunlap wrote:
+> On 4/23/20 12:41 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200422:
+> > 
 > 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> on x86_64:
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+More truncation of functions by CONFIG_USBAN_TRAP.  Kees?
+
+> drivers/target/target_core_xcopy.o: warning: objtool: target_xcopy_do_work()+0x6dd: unreachable instruction
+
+0000000000000170 <target_xcopy_read_source>:
+     170:	55                   	push   %rbp
+     171:	48 89 e5             	mov    %rsp,%rbp
+     174:	48 81 ec 40 03 00 00 	sub    $0x340,%rsp
+     17b:	65 48 8b 0c 25 28 00 	mov    %gs:0x28,%rcx
+     182:	00 00 
+     184:	48 89 4d f8          	mov    %rcx,-0x8(%rbp)
+     188:	31 c9                	xor    %ecx,%ecx
+     18a:	83 e2 07             	and    $0x7,%edx
+     18d:	75 34                	jne    1c3 <target_xcopy_read_source+0x53>
+     18f:	48 89 f0             	mov    %rsi,%rax
+     192:	83 e0 07             	and    $0x7,%eax
+     195:	75 2c                	jne    1c3 <target_xcopy_read_source+0x53>
+     197:	48 8d 95 d0 fc ff ff 	lea    -0x330(%rbp),%rdx
+     19e:	b9 65 00 00 00       	mov    $0x65,%ecx
+     1a3:	48 c7 c6 00 00 00 00 	mov    $0x0,%rsi
+			1a6: R_X86_64_32S	.rodata.str1.1
+     1aa:	48 89 d7             	mov    %rdx,%rdi
+     1ad:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+			1b0: R_X86_64_32S	.bss+0x560
+     1b4:	f3 48 ab             	rep stos %rax,%es:(%rdi)
+     1b7:	48 8d bd 48 ff ff ff 	lea    -0xb8(%rbp),%rdi
+     1be:	e8 00 00 00 00       	callq  1c3 <target_xcopy_read_source+0x53>
+			1bf: R_X86_64_PLT32	__init_swait_queue_head-0x4
+     1c3:	0f 0b                	ud2    
+     1c5:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+     1cc:	00 00 00 00 
+
+> net/mac80211/rx.o: warning: objtool: __ieee80211_check_fast_rx_iface()+0x79: unreachable instruction
+
+0000000000007be0 <ieee80211_check_fast_rx>:
+    7be0:	40 f6 c7 07          	test   $0x7,%dil
+    7be4:	75 44                	jne    7c2a <ieee80211_check_fast_rx+0x4a>
+    7be6:	48 8b 57 50          	mov    0x50(%rdi),%rdx
+    7bea:	48 89 d0             	mov    %rdx,%rax
+    7bed:	83 e0 07             	and    $0x7,%eax
+    7bf0:	75 3c                	jne    7c2e <ieee80211_check_fast_rx+0x4e>
+    7bf2:	55                   	push   %rbp
+    7bf3:	b9 06 00 00 00       	mov    $0x6,%ecx
+    7bf8:	48 89 e5             	mov    %rsp,%rbp
+    7bfb:	48 83 ec 38          	sub    $0x38,%rsp
+    7bff:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+    7c03:	48 89 f7             	mov    %rsi,%rdi
+    7c06:	f3 48 ab             	rep stos %rax,%es:(%rdi)
+    7c09:	48 8b 82 d8 03 00 00 	mov    0x3d8(%rdx),%rax
+    7c10:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
+    7c14:	8b 82 68 0f 00 00    	mov    0xf68(%rdx),%eax
+    7c1a:	89 45 d8             	mov    %eax,-0x28(%rbp)
+    7c1d:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+			7c20: R_X86_64_32S	rfc1042_header
+    7c24:	a8 03                	test   $0x3,%al
+    7c26:	75 04                	jne    7c2c <ieee80211_check_fast_rx+0x4c>
+    7c28:	0f 0b                	ud2    
+    7c2a:	0f 0b                	ud2    
+    7c2c:	0f 0b                	ud2    
+    7c2e:	0f 0b                	ud2    
+
+-- 
+Josh
+
