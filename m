@@ -2,140 +2,111 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8293FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4039BC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62C2E20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:01:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZYPUz1gx"
+	by mail.kernel.org (Postfix) with ESMTP id 1A6C220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587679657;
+	bh=4vjmcAoEw04l2V8m6FsN1oyvQD+Z6v+Kw6HAImQoYE0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=UtsIYszErS8NRZP1cJfKWyDJkVDs/HP2XGlHPPng8a+KFWXFjA54X/kSrxPI00D1d
+	 ODOh7p2vM7lV6KWAVIio9G60he1qiyRIP+EJdcChWzu0fSvJTBaazGL79K+71Ncw+J
+	 EjRMkoXKChAmnfO9gtOiORJWZ3KPyAaGWJMicER4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgDWWBA (ORCPT
+        id S1726947AbgDWWHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 18:01:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58168 "EHLO
+        Thu, 23 Apr 2020 18:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgDWWBA (ORCPT
+        with ESMTP id S1726056AbgDWWHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 18:01:00 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CCE1C09B043
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 15:01:00 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id n24so2897859plp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 15:01:00 -0700 (PDT)
+        Thu, 23 Apr 2020 18:07:35 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C5AC09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 15:07:35 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id u11so8305011iow.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 15:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=hSobCRVgJYv8jTPKwKrXDNHzB+BBFkTsELb63uGxAd8=;
-        b=ZYPUz1gxAH/HgbgmZdKnWT/BQKippmQ+YUiRwZlCEZGBIAMYAtCRpmhtYm1WAA+3Z6
-         U1KQ9iddQi7ivCKuN3vwSYdtP/7DdE+9cBZyU6V6I7bXxi3hFy/7Ov7+q+bNHt1WO57r
-         WmK4XRUeHrLsaiBE+XYsZeTSdEGxq/H9jsu2TR8r997KWGr1IeYNZmZ/hE0tQtlY7QVL
-         pGr4lPo/0j7LglSY9w98a2sZKmMz97Wvf1L7i8fSQqqKK9Xm5dJuPmo+49Tj2iDpjtNY
-         Q2qwqDQOFBmZGG0xQBrr/IWmjKA+M1Bs4v1ChRFCyGwuvhSapsQZzxxfpYJIoHPuo6an
-         CeNA==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NAMx4wud/Mi7YohlwtY2GeSPAKTse+6Zaacz6L0GB4k=;
+        b=Lo+wxziG4e9zqEKOLc1QBrh8YdwMKE9QbsdG7j/we8WguL6xCqPu3+WLl0j2Sj191J
+         pj7F5wcaFn2UX+t2KRFHgPnKC0lwLQT/dO6ZnEDG+kBZ4lI7YvzZRYyTF2Pri1mLJGLm
+         do7qYwzCv/UxZKqvve0/yumPGAbraqJwsctWE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hSobCRVgJYv8jTPKwKrXDNHzB+BBFkTsELb63uGxAd8=;
-        b=ZtMKg4pYGHgaJz/RDLzryyADYfZehMteOhHUvWRcP4g3Uj1lNzvthwksJUHL3fGH2a
-         wSDb8+yG/od6xvW5eur2uM9SrLMfD2pV5m2JDbPMvnZ/Is0k+qQfoa3R2CU1rRI/kWYH
-         Q4t0fureUahzHDCUvq+dhhbVBBrIMm1S8285yP2Tz0hgZTOMNGcJ8VEfnfiCnb7NN9so
-         BbhTiUI2/Nq/BdU5RBgQqtK0fOr9Rem1pb57PNxcthiKHp46YZVhgLWXOUBXj5+3zvbg
-         qm4+AxzFCUEGTE3xvwQi6ZWjspWte2/XZXPzcqzPGcTrcral7c/2Su8TxMqDZrIzYud7
-         RVcQ==
-X-Gm-Message-State: AGi0PuYLW717Q4xYcZ/V7Ppuz9Oyvr6Logugbf7c4WCr/bxnOSekVp3L
-        OfS6IKI4UP8kSZpIhsU/ZzZ8D+u8o40=
-X-Google-Smtp-Source: APiQypISQERDQ57ZtP48t/sQ5TT49fdM+AomovaRvC1c3Qrxqba75fl6A5M6o5QVA3yDOF0AVnK91Q==
-X-Received: by 2002:a17:90a:f985:: with SMTP id cq5mr2866956pjb.193.1587679259332;
-        Thu, 23 Apr 2020 15:00:59 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id 135sm3515843pfu.125.2020.04.23.15.00.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 15:00:58 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Subject: [RFC][PATCH] serial: amba-pl011: Make sure we initialize the port.lock spinlock
-Date:   Thu, 23 Apr 2020 22:00:56 +0000
-Message-Id: <20200423220056.29450-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NAMx4wud/Mi7YohlwtY2GeSPAKTse+6Zaacz6L0GB4k=;
+        b=OSutpIUwChe2xj3aaamI/qr9KUbiwyGxfC5KFlFx3F3O03CVNU73vr5X2NbaeMe+oC
+         gZ9ebbo7cJYiamS+9+6URghU0wBXXVw0PDAVj69Mq4PZymw61gdqJF760ZFS6DP2oUJn
+         2ianAcu4ygCQ2w9BC1p3OkzdWhErgeAjYDmAaeCUEvV7XWqDuPs/g4eSgTiAsHbS7eby
+         2g7u2hBp/mfqJexI0qhzAr/YVME3RqPDypNrupATTYCHqZeHgjKx9Mx+y0YQ9yX8Ewmm
+         EsOgbqWaG1fR6qPxvgWvncAv7i09nYKGSeuo4l9t/y8CQmTXckmQJNFGYqDAmO5Vy8Bg
+         e2Uw==
+X-Gm-Message-State: AGi0PuZxrlSh9exg/CryOxwxVFvw7mdc5j77HMtT3m4hhQibkhnRM0lC
+        e/B8vjMNEFjUYpLUNYvL7rZ+qiKpHrA=
+X-Google-Smtp-Source: APiQypIf1AGfqowv5bNcmPIYb8uM6nxk+6mxvj/psnlguiKv+yM9vdBjwInxyKgJm5rujF1qs4t61A==
+X-Received: by 2002:a05:6638:f0f:: with SMTP id h15mr5542081jas.142.1587679654921;
+        Thu, 23 Apr 2020 15:07:34 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id e27sm1328363ild.78.2020.04.23.15.07.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 15:07:33 -0700 (PDT)
+Subject: Re: [PATCH] kunit: Add missing newline in summary message
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Marco Elver <elver@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Frank Rowand <frank.rowand@sony.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200416114256.226329-1-elver@google.com>
+ <CAFd5g46tezcWT7z6DFWBW=7604=_hNopuvkazE80sLOmJvcQbg@mail.gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <dd192a69-8b51-7ea9-4327-a48fc96eb68f@linuxfoundation.org>
+Date:   Thu, 23 Apr 2020 16:07:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAFd5g46tezcWT7z6DFWBW=7604=_hNopuvkazE80sLOmJvcQbg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Valentine reported seeing:
+On 4/22/20 1:35 PM, Brendan Higgins wrote:
+> On Thu, Apr 16, 2020 at 4:43 AM Marco Elver <elver@google.com> wrote:
+>>
+>> Add missing newline, as otherwise flushing of the final summary message
+>> to the console log can be delayed.
+>>
+>> Fixes: e2219db280e3 ("kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display")
+>> Signed-off-by: Marco Elver <elver@google.com>
+> 
+> Acked-by: Brendan Higgins <brendanhiggins@google.com>
+> 
+> Thanks!
+> 
 
-[    3.626638] INFO: trying to register non-static key.
-[    3.626639] the code is fine but needs lockdep annotation.
-[    3.626640] turning off the locking correctness validator.
-[    3.626644] CPU: 7 PID: 51 Comm: kworker/7:1 Not tainted 5.7.0-rc2-00115-g8c2e9790f196 #116
-[    3.626646] Hardware name: HiKey960 (DT)
-[    3.626656] Workqueue: events deferred_probe_work_func
-[    3.632476] sd 0:0:0:0: [sda] Optimal transfer size 8192 bytes not a multiple of physical block size (16384 bytes)
-[    3.640220] Call trace:
-[    3.640225]  dump_backtrace+0x0/0x1b8
-[    3.640227]  show_stack+0x20/0x30
-[    3.640230]  dump_stack+0xec/0x158
-[    3.640234]  register_lock_class+0x598/0x5c0
-[    3.640235]  __lock_acquire+0x80/0x16c0
-[    3.640236]  lock_acquire+0xf4/0x4a0
-[    3.640241]  _raw_spin_lock_irqsave+0x70/0xa8
-[    3.640245]  uart_add_one_port+0x388/0x4b8
-[    3.640248]  pl011_register_port+0x70/0xf0
-[    3.640250]  pl011_probe+0x184/0x1b8
-[    3.640254]  amba_probe+0xdc/0x180
-[    3.640256]  really_probe+0xe0/0x338
-[    3.640257]  driver_probe_device+0x60/0xf8
-[    3.640259]  __device_attach_driver+0x8c/0xd0
-[    3.640260]  bus_for_each_drv+0x84/0xd8
-[    3.640261]  __device_attach+0xe4/0x140
-[    3.640263]  device_initial_probe+0x1c/0x28
-[    3.640265]  bus_probe_device+0xa4/0xb0
-[    3.640266]  deferred_probe_work_func+0x7c/0xb8
-[    3.640269]  process_one_work+0x2c0/0x768
-[    3.640271]  worker_thread+0x4c/0x498
-[    3.640272]  kthread+0x14c/0x158
-[    3.640275]  ret_from_fork+0x10/0x1c
+Applied. Now in
 
-Which seems to be due to the fact that after allocating the uap
-structure, the pl011 code doesn't initialize the spinlock.
+git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest kunit
+branch.
 
-This patch fixes it by initializing the spinlock and the warning
-has gone away.
-
-CC: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-serial@vger.kernel.org
-Reported-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/tty/serial/amba-pl011.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 2296bb0f9578..458fc3d9d48c 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2575,6 +2575,7 @@ static int pl011_setup_port(struct device *dev, struct uart_amba_port *uap,
- 	uap->port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_AMBA_PL011_CONSOLE);
- 	uap->port.flags = UPF_BOOT_AUTOCONF;
- 	uap->port.line = index;
-+	spin_lock_init(&uap->port.lock);
- 
- 	amba_ports[index] = uap;
- 
--- 
-2.17.1
-
+thanks,
+-- Shuah
