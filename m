@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59925C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DFEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA2920780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5D820784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbgDWXS1 (ORCPT
+        id S1729781AbgDWXSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:18:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49042 "EHLO
+        Thu, 23 Apr 2020 19:18:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49034 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728277AbgDWXGi (ORCPT
+        by vger.kernel.org with ESMTP id S1728278AbgDWXGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:38 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvP-0004fk-Qy; Fri, 24 Apr 2020 00:06:31 +0100
+        id 1jRkvP-0004fT-Kj; Fri, 24 Apr 2020 00:06:31 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvO-00E6ma-GR; Fri, 24 Apr 2020 00:06:30 +0100
+        id 1jRkvN-00E6m6-Ly; Fri, 24 Apr 2020 00:06:29 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Jiri Kosina" <jkosina@suse.cz>
-Date:   Fri, 24 Apr 2020 00:05:21 +0100
-Message-ID: <lsq.1587683028.902216420@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Johan Hovold" <johan@kernel.org>
+Date:   Fri, 24 Apr 2020 00:05:15 +0100
+Message-ID: <lsq.1587683028.722273015@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 094/245] HID: Fix slab-out-of-bounds read in
- hid_field_extract
+Subject: [PATCH 3.16 088/245] USB: adutux: fix interface sanity check
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,49 +55,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Johan Hovold <johan@kernel.org>
 
-commit 8ec321e96e056de84022c032ffea253431a83c3c upstream.
+commit 3c11c4bed02b202e278c0f5c319ae435d7fb9815 upstream.
 
-The syzbot fuzzer found a slab-out-of-bounds bug in the HID report
-handler.  The bug was caused by a report descriptor which included a
-field with size 12 bits and count 4899, for a total size of 7349
-bytes.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-The usbhid driver uses at most a single-page 4-KB buffer for reports.
-In the test there wasn't any problem about overflowing the buffer,
-since only one byte was received from the device.  Rather, the bug
-occurred when the HID core tried to extract the data from the report
-fields, which caused it to try reading data beyond the end of the
-allocated buffer.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-This patch fixes the problem by rejecting any report whose total
-length exceeds the HID_MAX_BUFFER_SIZE limit (minus one byte to allow
-for a possible report index).  In theory a device could have a report
-longer than that, but if there was such a thing we wouldn't handle it
-correctly anyway.
-
-Reported-and-tested-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 03270634e242 ("USB: Add ADU support for Ontrak ADU devices")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210112601.3561-3-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/hid/hid-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/misc/adutux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -248,6 +248,12 @@ static int hid_add_field(struct hid_pars
- 	offset = report->size;
- 	report->size += parser->global.report_size * parser->global.report_count;
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -682,7 +682,7 @@ static int adu_probe(struct usb_interfac
+ 	init_waitqueue_head(&dev->read_wait);
+ 	init_waitqueue_head(&dev->write_wait);
  
-+	/* Total size check: Allow for possible report index byte */
-+	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
-+		hid_err(parser->device, "report is too long\n");
-+		return -1;
-+	}
-+
- 	if (!parser->local.usage_index) /* Ignore padding fields */
- 		return 0;
+-	iface_desc = &interface->altsetting[0];
++	iface_desc = interface->cur_altsetting;
  
+ 	/* set up the endpoint information */
+ 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
 
