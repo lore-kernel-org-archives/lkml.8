@@ -6,67 +6,70 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFCDC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCE9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1948820781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0390121569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgDWIjD (ORCPT
+        id S1726741AbgDWIjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:39:03 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:54839 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWIjC (ORCPT
+        Thu, 23 Apr 2020 04:39:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58556 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWIjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:39:02 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id 03N8ck1p034673;
-        Thu, 23 Apr 2020 16:38:48 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com
-Cc:     juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v2 2/2] mtd: spi-nor: macronix: Add support for mx25u51245g
-Date:   Thu, 23 Apr 2020 16:38:43 +0800
-Message-Id: <1587631123-25474-3-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1587631123-25474-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1587631123-25474-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com 03N8ck1p034673
+        Thu, 23 Apr 2020 04:39:39 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jRXOE-0006dm-9L; Thu, 23 Apr 2020 08:39:22 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ASoC: fsl_easrc: fix spelling mistake "prefitler" -> "prefilter"
+Date:   Thu, 23 Apr 2020 09:39:22 +0100
+Message-Id: <20200423083922.8159-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mx25u51245g is a mass production for new design and
-replace mx66u51235f(phase out).
+From: Colin Ian King <colin.king@canonical.com>
 
-Validated by read, erase, read back, write and read back
-on Xilinx Zynq PicoZed FPGA board which included
-Macronix SPI Host (driver/spi/spi-mxic.c).
+There is a spelling mistake in a deb_dbg message, fix it.
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/mtd/spi-nor/macronix.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/fsl/fsl_easrc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-index c864ac8..e685aec 100644
---- a/drivers/mtd/spi-nor/macronix.c
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -73,6 +73,9 @@
- 	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024,
- 			      SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
- 			      SPI_NOR_4B_OPCODES) },
-+	{ "mx25u51245g", INFO(0xc2253a, 0, 64 * 1024, 1024,
-+			      SECT_4K | SPI_NOR_DUAL_READ |
-+			      SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
- 	{ "mx66u51235f", INFO(0xc2253a, 0, 64 * 1024, 1024,
- 			      SECT_4K | SPI_NOR_DUAL_READ |
- 			      SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
+index 233f26ff885c..97658e1f4989 100644
+--- a/sound/soc/fsl/fsl_easrc.c
++++ b/sound/soc/fsl/fsl_easrc.c
+@@ -1769,7 +1769,7 @@ static void fsl_easrc_dump_firmware(struct fsl_asrc *easrc)
+ 	}
+ 
+ 	dev_dbg(dev, "Firmware v%u dump:\n", firm->firmware_version);
+-	dev_dbg(dev, "Num prefitler scenarios: %u\n", firm->prefil_scen);
++	dev_dbg(dev, "Num prefilter scenarios: %u\n", firm->prefil_scen);
+ 	dev_dbg(dev, "Num interpolation scenarios: %u\n", firm->interp_scen);
+ 	dev_dbg(dev, "\nInterpolation scenarios:\n");
+ 
 -- 
-1.9.1
+2.25.1
 
