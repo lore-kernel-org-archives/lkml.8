@@ -2,155 +2,126 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8EFC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF54C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0BC72074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05C72074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgsVLVg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgDWMgD (ORCPT
+        id S1728307AbgDWMgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:36:03 -0400
-Received: from esgaroth.petrovitsch.at ([78.47.184.11]:3302 "EHLO
-        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgDWMgB (ORCPT
+        Thu, 23 Apr 2020 08:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726090AbgDWMgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:36:01 -0400
-Received: from [10.68.100.236] (h10-gesig.woeg.acw.at [217.116.178.11] (may be forged))
-        (authenticated bits=0)
-        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id 03NCY9Ht015917
-        (version=TLSv1 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO);
-        Thu, 23 Apr 2020 14:34:10 +0200
-Subject: Re: [PATCH 1/4] fs: Implement close-on-fork
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "Karstens, Nate" <Nate.Karstens@garmin.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Changli Gao <xiaosuo@gmail.com>
-References: <20200420071548.62112-1-nate.karstens@garmin.com>
- <20200420071548.62112-2-nate.karstens@garmin.com>
- <fa6c5c9c7c434f878c94a7c984cd43ba@garmin.com>
- <20200422154356.GU5820@bombadil.infradead.org>
- <6ed7bd08892b4311b70636658321904f@garmin.com>
- <97f05204-a27c-7cc8-429a-edcf6eebaa11@petrovitsch.priv.at>
- <337320db094d4426a621858fa0f6d7fd@AcuMS.aculab.com>
-From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
-X-Pep-Version: 2.0
-Message-ID: <f3640ed9-d846-9cbd-7690-53da5ff1473a@petrovitsch.priv.at>
-Date:   Thu, 23 Apr 2020 12:34:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Apr 2020 08:36:53 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A928BC08E934;
+        Thu, 23 Apr 2020 05:36:53 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 188so6248774wmc.2;
+        Thu, 23 Apr 2020 05:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mi3rnUMPvy/QR3Ps6vsxVuv41qLYHh/uNXwCdOf964o=;
+        b=PgsVLVg2fEE4UgEw5ybsRRcMm8D0szEHNj4jYCN/y3Piw4K0Zvmgpeth5Hjb8gCVI0
+         Y2HAif5w2DxAfImAwIjZYnbyP7fEaBREjKHo0lML6cKH1VCtmlwGLGXxHftgpxo7RyJk
+         5ta54tkpyf8ALl3fGhh7E3u2HGxUH2dYnvxhZ8FMENxzdzOtQmlhJPnxAadF68Z+W+uf
+         V2We74ZXkgSjQP/TIAUvhG6NnMiAjbgwaE6w/Kt2o6aFnsYbbqeZjmXF+ac+tinjBO/U
+         p6YlOnEegbdG2PF+zK/S49wjLppEutcfSgHcBipTrQvS9xAjVt25l7orY3r29/DAPQFs
+         eEMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mi3rnUMPvy/QR3Ps6vsxVuv41qLYHh/uNXwCdOf964o=;
+        b=AJEX3QCfh+BdO/SJSsU6fd+pe8gAHYmfdgPph9hLCcL+0xYgeC9iv2cuMhtr3gw29A
+         69CSsnmLo02w0/m39jVR21ho08JdMdxSVlMDwAXigFn02wVUduu7Xk+cG8xasfg6vF/C
+         v/l53Usc8cNm93UMKmaAGQJW8YgFj3UfYjc9BDZbsuoPGYAZA618fn217CQoI7Dy3xBd
+         2TVevSaMV65aApOn1yuoLYYG4jMaLPo9sW4w0ffeniPxg0zJxpRpjGEmPcr/TWyLqzGY
+         HEHg/EZeJj9cV1iPYXmDwcUS+9LWIzDg9+1aJ2U9M872Z6TDsNXHQ8wsJrKxnTt0TIiP
+         2N9g==
+X-Gm-Message-State: AGi0PuZrXUPYarTT6xRInH1CYEC1O4iEonudktsiIn5n8wB9LA92ukjN
+        Gsfp2zQMBW4R8Mcg4Zee/Os=
+X-Google-Smtp-Source: APiQypLOTc7Zk2kFUmf/qLTme2iOBIANPeVm3oJWV5ReTH48bHyBCwfMNIZwZ1IBZDmEt730DGE/4A==
+X-Received: by 2002:a05:600c:2316:: with SMTP id 22mr3898972wmo.164.1587645412306;
+        Thu, 23 Apr 2020 05:36:52 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id 68sm3672991wrm.65.2020.04.23.05.36.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 05:36:51 -0700 (PDT)
+Subject: Re: [PATCH v2 6/9] dt-bindings: media: rkisp1: move rockchip-isp1
+ bindings out of staging
+To:     Helen Koike <helen.koike@collabora.com>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, kishon@ti.com
+References: <20200403161538.1375908-1-helen.koike@collabora.com>
+ <20200403161538.1375908-7-helen.koike@collabora.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <7da8fb4d-018e-894a-884b-760eaf2959e6@gmail.com>
+Date:   Thu, 23 Apr 2020 14:36:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <337320db094d4426a621858fa0f6d7fd@AcuMS.aculab.com>
-Content-Type: multipart/mixed;
- boundary="------------985EBFE9F348F8C36FCBAAF1"
+In-Reply-To: <20200403161538.1375908-7-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-DCC-wuwien-Metrics: esgaroth.tuxoid.at 1290; Body=22 Fuz1=22 Fuz2=22
-X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------985EBFE9F348F8C36FCBAAF1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Hi Helen,
 
-Hi all!
+make ARCH=arm dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+  CHKDT   Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+  DTC
+Documentation/devicetree/bindings/media/rockchip-isp1.example.dt.yaml
+Documentation/devicetree/bindings/media/rockchip-isp1.example.dts:22.27-99.11:
+Warning (unit_address_vs_reg): /example-0/parent@0: node has a unit
+name, but no reg or ranges property
+  CHECK
+Documentation/devicetree/bindings/media/rockchip-isp1.example.dt.yaml
 
-On 22/04/2020 16:55, David Laight wrote:
-> From: Bernd Petrovitsch
->> Sent: 22 April 2020 17:32
-> ...
->> Apart from that, system() is a PITA even on
->> single/non-threaded apps.
->=20
-> Not only that, it is bloody dangerous because (typically)
-> shell is doing post substitution syntax analysis.
+On 4/3/20 6:15 PM, Helen Koike wrote:
+> Move rkisp1 bindings to Documentation/devicetree/bindings/media
+> 
+> Verified with:
+> make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> 
+> V2:
+> - no changes
+> 
+>  .../devicetree/bindings/media/rockchip-isp1.yaml                  | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (100%)
+> 
+> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> similarity index 100%
+> rename from drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> rename to Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> 
 
-I actually meant exactly that with PITA;-)
-
-> If you need to run an external process you need to generate
-> an arv[] array containing the parameters.
-
-FullACK. That is usually similar trivial ...
-
-MfG,
-	Bernd
---=20
-There is no cloud, just other people computers.
--- https://static.fsf.org/nosvn/stickers/thereisnocloud.svg
-
---------------985EBFE9F348F8C36FCBAAF1
-Content-Type: application/pgp-keys;
- name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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3D=3D
-=3DGX6K
------END PGP PUBLIC KEY BLOCK-----
-
---------------985EBFE9F348F8C36FCBAAF1--
