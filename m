@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3E3C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333ACC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E49921569
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEB721707
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587627658;
-	bh=nxZxQhB5VnxVJrH578Orl5TQSsieDYbyp6CM1cqpFt0=;
+	s=default; t=1587627665;
+	bh=im15wNX38X3WBMZn7zLM7iy+W2/88axSa1j9i6Y8Al4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sNez7yjhlJeddmrRhMyoQFLXxYATUOsqJuwjlMi7HqPskBqmmco6iceD28d5WunyV
-	 O1kZ9+UFehFQYmDArctZq3tqyyKgq+TSXKtywuMt1LWQigy5pYcpUmFYhz7GUmd52o
-	 mqwIVeV1e4kt3sZfXhlOnwy7zwgfRH8fvemdNx+4=
+	b=ahcPSrVUolFK+cUaMrLOjxW914FGi0/nlsmWmbNXkBGg72ZBqtMKVNQLTuDx6BMof
+	 pXR2FHU7kot6vvNoJLtJXMB6kFXgk8nMVpLvOmOzs0UkgADHzsUy6QRGrO7aHqgy4X
+	 l3TMQ6EYc/NgflZjrf7RPjc5Df2ZvVJuWYdNf228=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgDWHk5 (ORCPT
+        id S1727029AbgDWHlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:40:57 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:31968 "EHLO
+        Thu, 23 Apr 2020 03:41:03 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:31893 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgDWHkk (ORCPT
+        with ESMTP id S1726924AbgDWHkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:40:40 -0400
+        Thu, 23 Apr 2020 03:40:37 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03N7dV9X000368;
-        Thu, 23 Apr 2020 16:39:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9X000368
+        by conuserg-10.nifty.com with ESMTP id 03N7dV9U000368;
+        Thu, 23 Apr 2020 16:39:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9U000368
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587627584;
-        bh=IJ47QMDJ2p1WpT//uXZ9PGqmJ2o4lEX/9JvZFrqoJcg=;
+        s=dec2015msa; t=1587627582;
+        bh=kpWIErtGjk+nNiQCQS8fEiXHwNw1IZLOOB6A61EUzm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMapKvhvYs93mGJOYEgVx8fHRRWoSYDTa8VqMlHhDQZPh68juTrwreDLN1IkRkZP/
-         G1R8k7uj531IyiXkgaFLX8L1RGWKn9vAZZN5FG518KbT81/wouRCI7wXEPbWLWGjLU
-         X27Zr9DIxHkETOdFmqLkzGwSrRTWSnkK+1y//rdBs5jAdRSV/wOubfONQya1HCjYjQ
-         1+onh9kBCKoVXXyXmkGX1EfoFYRuGSdCzAtWYobu5Jbj5ZVw78waTbmbbkhglfk1xQ
-         a878xIsAH4dC6qJaABNHQAJpTftDmvBKhq0k1BBTtjFMNTMPgvqs4h+yL9AjzPjruc
-         nKOeMmfrccfaw==
+        b=VxTjkNLJBDbRlV2i7A0jgoROkuz9K4mzv2x5QFyQWrtJqgp6W4U4oyswxIO+nQAvU
+         iMost6bPmumftTJ2qXqI/QQbWE5nZQjwe1fabqi/cvQYUp3LGs+sIluHW6KAOhvkH3
+         Hk7hUm5DAjWoX2BpVW2q3iSr20o/+toAXczljOrN7Rqs6R+p+rYKs5/gtIBDAA5EI9
+         UoW49eQe5Gc/jcf1TBUBoRnTBsFkWNLBFVNNOCOMmNG9soqUZdwy6Pvumr6EyrUYfI
+         cbLdZFfdqk/w45zUF8fS3OKRbFq2r+/Ro/dhWTEVtdh+4efDvd0RaA7KZ6PvLFjKuN
+         ikwwRzJvGnKFQ==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/16] samples: pidfd: build sample program for target architecture
-Date:   Thu, 23 Apr 2020 16:39:25 +0900
-Message-Id: <20200423073929.127521-13-masahiroy@kernel.org>
+Subject: [PATCH 09/16] samples: hidraw: build sample program for target architecture
+Date:   Thu, 23 Apr 2020 16:39:22 +0900
+Message-Id: <20200423073929.127521-10-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200423073929.127521-1-masahiroy@kernel.org>
 References: <20200423073929.127521-1-masahiroy@kernel.org>
@@ -74,37 +73,38 @@ $(CC) may not necessarily provide libc.
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- samples/Kconfig        | 2 +-
- samples/pidfd/Makefile | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ samples/Kconfig         | 2 +-
+ samples/hidraw/Makefile | 9 +++------
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/samples/Kconfig b/samples/Kconfig
-index b8beb6fd75b4..b8113555aa6c 100644
+index ff9126ef1c79..2e0ef2cc1aa8 100644
 --- a/samples/Kconfig
 +++ b/samples/Kconfig
-@@ -122,7 +122,7 @@ config SAMPLE_HIDRAW
+@@ -118,7 +118,7 @@ config SAMPLE_CONNECTOR
  
- config SAMPLE_PIDFD
- 	bool "pidfd sample"
+ config SAMPLE_HIDRAW
+ 	bool "hidraw sample"
 -	depends on HEADERS_INSTALL
 +	depends on CC_CAN_LINK && HEADERS_INSTALL
  
- config SAMPLE_SECCOMP
- 	bool "Build seccomp sample code"
-diff --git a/samples/pidfd/Makefile b/samples/pidfd/Makefile
-index ee2979849d92..0191902647ca 100644
---- a/samples/pidfd/Makefile
-+++ b/samples/pidfd/Makefile
-@@ -1,6 +1,6 @@
+ config SAMPLE_PIDFD
+ 	bool "pidfd sample"
+diff --git a/samples/hidraw/Makefile b/samples/hidraw/Makefile
+index 8bd25f77671f..752ed03cdb64 100644
+--- a/samples/hidraw/Makefile
++++ b/samples/hidraw/Makefile
+@@ -1,8 +1,5 @@
  # SPDX-License-Identifier: GPL-2.0
- 
--hostprogs := pidfd-metadata
+-# List of programs to build
+-hostprogs := hid-example
 -always-y := $(hostprogs)
--HOSTCFLAGS_pidfd-metadata.o += -I$(objtree)/usr/include
--all: pidfd-metadata
-+usertprogs := pidfd-metadata
++userprogs := hid-example
 +always-y := $(userprogs)
-+
+ 
+-HOSTCFLAGS_hid-example.o += -I$(objtree)/usr/include
+-
+-all: hid-example
 +user-ccflags += -I usr/include
 -- 
 2.25.1
