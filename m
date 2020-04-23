@@ -2,76 +2,94 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E07C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FA9C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE3F20704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E252076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587667656;
+	bh=ysT67fj+CwFIi/cQSwft5njqONSjwtIgNbDHLbf1qGs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=SehPon5/ATRWxaASETq5MxGl10mSeNTUMf6DFkmCjNzt8ZoIgqtTLN3NDk0f3mocL
+	 P4Cqtw2KFiuCWj6QwOH91hlApdCTlPKNMRuzEwFAAbfzGKQUvQIdwr+9j/+EkvfXtC
+	 zBVqR2x9AzmDs/fvVPDI01suUBAWnV2sM+UI7d88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbgDWSrZ (ORCPT
+        id S1730306AbgDWSrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbgDWSrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:47:23 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40ED3C09B043;
-        Thu, 23 Apr 2020 11:47:23 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jRgsX-0003Hz-KU; Thu, 23 Apr 2020 20:47:17 +0200
-Date:   Thu, 23 Apr 2020 20:47:17 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: Re: [PREEMPT_RT] 8250 IRQ lockup when flooding serial console (was
- Re: [ANNOUNCE] v5.4.28-rt19)
-Message-ID: <20200423184717.w3c6eymkic5wnlix@linutronix.de>
-References: <20200330144712.cwcz5ejal4ankeoi@linutronix.de>
- <nycvar.YEU.7.76.2004231017470.4730@gjva.wvxbf.pm>
- <nycvar.YFH.7.76.2004231111550.19713@cbobk.fhfr.pm>
- <20200423104559.rgplz6rqk6sg4kz7@linutronix.de>
- <20200423090601.2439e64f@gandalf.local.home>
- <20200423143437.3d82c3ea@gandalf.local.home>
+        Thu, 23 Apr 2020 14:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728082AbgDWSre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 14:47:34 -0400
+Received: from localhost (mobile-166-175-187-210.mycingular.net [166.175.187.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E44320704;
+        Thu, 23 Apr 2020 18:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587667654;
+        bh=ysT67fj+CwFIi/cQSwft5njqONSjwtIgNbDHLbf1qGs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=R83GfzjO86+V+apIEHHSQnTMOg+yiEY/nSZigenvnPJeiBXNOE4+/4IGGaZST4PbE
+         zX+c6WfoScBt2okvQJ4kpX4cPH5TMjMPNBx6VlcvpUcBcRMVePsqTOxbjgrQ6e3Khd
+         gvIhtp17qUCidr1hVXWsasIlMXoyMSMnaTmNRmbk=
+Date:   Thu, 23 Apr 2020 13:47:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ani Sinha <ani@anisinha.ca>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Denis Efremov <efremov@linux.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: Cleanup unused EMI() and HP_SUPR_RM() macros
+Message-ID: <20200423184732.GA203039@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423143437.3d82c3ea@gandalf.local.home>
+In-Reply-To: <1587439673-39652-1-git-send-email-ani@anisinha.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-23 14:34:37 [-0400], Steven Rostedt wrote:
-> On Thu, 23 Apr 2020 09:06:01 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Apr 21, 2020 at 08:57:50AM +0530, Ani Sinha wrote:
+> We do not use PCIE hotplug surprise (PCI_EXP_SLTCAP_HPS) bit anymore.
+> Consequently HP_SUPR_RM() macro is no longer used. Let's clean it up.
+> EMI() macro also seems to be unused. So removing it as well. Thanks
+> Mika Westerberg <mika.westerberg@linux.intel.com> for
+> pointing it out.
 > 
-> > BTW, I haven't released a new 5.4-rt because the default one is triggering
-> > a large latency somewhere, and makes my tests fail. I'm trying to dig into
-> > the cause when I get time.
-> 
-> Figured it out. Seems that starting with 5.4-rt, PREEMPT_RT now depends on
-> CONFIG_EXPERT, which I didn't have set, and PREEMPT_RT was disabled when
-> using my default config.
-> 
-> Had to add CONFIG_EXPERT to my default config to make it work again.
+> Signed-off-by: Ani Sinha <ani@anisinha.ca>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Yes, this changed upstream.
+Applied to pci/hotplug for v5.8, thanks!
 
-> Starting the tests over....
+> ---
+>  drivers/pci/hotplug/pciehp.h | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> -- Steve
-
-Sebastian
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index ae44f46..4fd200d 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -148,8 +148,6 @@ struct controller {
+>  #define MRL_SENS(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
+>  #define ATTN_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
+>  #define PWR_LED(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
+> -#define HP_SUPR_RM(ctrl)	((ctrl)->slot_cap & PCI_EXP_SLTCAP_HPS)
+> -#define EMI(ctrl)		((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
+>  #define NO_CMD_CMPL(ctrl)	((ctrl)->slot_cap & PCI_EXP_SLTCAP_NCCS)
+>  #define PSN(ctrl)		(((ctrl)->slot_cap & PCI_EXP_SLTCAP_PSN) >> 19)
+>  
+> -- 
+> 2.7.4
+> 
