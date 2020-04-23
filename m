@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255A5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49626C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEC020784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300C32077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgDWXVr (ORCPT
+        id S1729646AbgDWXVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:21:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48520 "EHLO
+        Thu, 23 Apr 2020 19:21:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48516 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728196AbgDWXGc (ORCPT
+        by vger.kernel.org with ESMTP id S1728195AbgDWXGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:32 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bF-Eq; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvL-0004bI-1i; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-00E6jQ-GP; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvJ-00E6i8-Kv; Fri, 24 Apr 2020 00:06:25 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Benjamin Adler" <benadler@gmx.net>,
-        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Date:   Fri, 24 Apr 2020 00:04:53 +0100
-Message-ID: <lsq.1587683028.875034036@decadent.org.uk>
+        "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
+        "Qu Wenruo" <wqu@suse.com>, "Xu Wen" <wen.xu@gatech.edu>,
+        "David Sterba" <dsterba@suse.com>,
+        "Gu Jinxiang" <gujx@cn.fujitsu.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 00:04:37 +0100
+Message-ID: <lsq.1587683028.51843587@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 066/245] pinctrl: baytrail: Relax GPIO request rules
+Subject: [PATCH 3.16 050/245] btrfs: validate type when reading a chunk
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,98 +58,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Gu Jinxiang <gujx@cn.fujitsu.com>
 
-commit f8323b6bb2cc7d26941d4838dd4375952980a88a upstream.
+commit 315409b0098fb2651d86553f0436b70502b29bb2 upstream.
 
-Zotac ZBOX PI320, a Baytrail based mini-PC, has power button connected to a
-GPIO pin and it is exposed to the operating system as Windows 8 button
-array. This is implemented in Linux as a driver using gpio_keys.
+Reported in https://bugzilla.kernel.org/show_bug.cgi?id=199839, with an
+image that has an invalid chunk type but does not return an error.
 
-However, BIOS on this particula machine forgot to mux the pin to be a GPIO
-instead of native function, which results following message to be seen on
-the console:
+Add chunk type check in btrfs_check_chunk_valid, to detect the wrong
+type combinations.
 
- byt_gpio INT33FC:02: pin 16 cannot be used as GPIO.
-
-This causes power button to not work as the driver was not able to request
-the GPIO it needs.
-
-So instead of completely preventing this we allow turning the pin as GPIO
-but issue warning that something might be wrong.
-
-Reported-by: Benjamin Adler <benadler@gmx.net>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-[bwh: Backported to 3.16: adjust filename]
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=199839
+Reported-by: Xu Wen <wen.xu@gatech.edu>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Gu Jinxiang <gujx@cn.fujitsu.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 4.4: Use root->fs_info instead of fs_info]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pinctrl/pinctrl-baytrail.c | 35 +++++++++++++++---------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ fs/btrfs/volumes.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
---- a/drivers/pinctrl/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/pinctrl-baytrail.c
-@@ -160,40 +160,49 @@ static void __iomem *byt_gpio_reg(struct
- 	return vg->reg_base + reg_offset + reg;
- }
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -5815,6 +5815,8 @@ static int btrfs_check_chunk_valid(struc
+ 	u16 num_stripes;
+ 	u16 sub_stripes;
+ 	u64 type;
++	u64 features;
++	bool mixed = false;
  
--static bool is_special_pin(struct byt_gpio *vg, unsigned offset)
-+static u32 byt_get_gpio_mux(struct byt_gpio *vg, unsigned offset)
- {
- 	/* SCORE pin 92-93 */
- 	if (!strcmp(vg->range->name, BYT_SCORE_ACPI_UID) &&
- 		offset >= 92 && offset <= 93)
--		return true;
-+		return 1;
- 
- 	/* SUS pin 11-21 */
- 	if (!strcmp(vg->range->name, BYT_SUS_ACPI_UID) &&
- 		offset >= 11 && offset <= 21)
--		return true;
-+		return 1;
- 
--	return false;
-+	return 0;
- }
- 
- static int byt_gpio_request(struct gpio_chip *chip, unsigned offset)
- {
- 	struct byt_gpio *vg = to_byt_gpio(chip);
- 	void __iomem *reg = byt_gpio_reg(chip, offset, BYT_CONF0_REG);
--	u32 value;
--	bool special;
-+	u32 value, gpio_mux;
- 
- 	/*
- 	 * In most cases, func pin mux 000 means GPIO function.
- 	 * But, some pins may have func pin mux 001 represents
--	 * GPIO function. Only allow user to export pin with
--	 * func pin mux preset as GPIO function by BIOS/FW.
-+	 * GPIO function.
-+	 *
-+	 * Because there are devices out there where some pins were not
-+	 * configured correctly we allow changing the mux value from
-+	 * request (but print out warning about that).
- 	 */
- 	value = readl(reg) & BYT_PIN_MUX;
--	special = is_special_pin(vg, offset);
--	if ((special && value != 1) || (!special && value)) {
--		dev_err(&vg->pdev->dev,
--			"pin %u cannot be used as GPIO.\n", offset);
--		return -EINVAL;
-+	gpio_mux = byt_get_gpio_mux(vg, offset);
-+	if (WARN_ON(gpio_mux != value)) {
-+		unsigned long flags;
-+
-+		spin_lock_irqsave(&vg->lock, flags);
-+		value = readl(reg) & ~BYT_PIN_MUX;
-+		value |= gpio_mux;
-+		writel(value, reg);
-+		spin_unlock_irqrestore(&vg->lock, flags);
-+
-+		dev_warn(&vg->pdev->dev,
-+			 "pin %u forcibly re-configured as GPIO\n", offset);
+ 	length = btrfs_chunk_length(leaf, chunk);
+ 	stripe_len = btrfs_chunk_stripe_len(leaf, chunk);
+@@ -5855,6 +5857,32 @@ static int btrfs_check_chunk_valid(struc
+ 			  btrfs_chunk_type(leaf, chunk));
+ 		return -EIO;
  	}
- 
- 	pm_runtime_get(&vg->pdev->dev);
++
++	if ((type & BTRFS_BLOCK_GROUP_TYPE_MASK) == 0) {
++		btrfs_err(root->fs_info, "missing chunk type flag: 0x%llx", type);
++		return -EIO;
++	}
++
++	if ((type & BTRFS_BLOCK_GROUP_SYSTEM) &&
++	    (type & (BTRFS_BLOCK_GROUP_METADATA | BTRFS_BLOCK_GROUP_DATA))) {
++		btrfs_err(root->fs_info,
++			"system chunk with data or metadata type: 0x%llx", type);
++		return -EIO;
++	}
++
++	features = btrfs_super_incompat_flags(root->fs_info->super_copy);
++	if (features & BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS)
++		mixed = true;
++
++	if (!mixed) {
++		if ((type & BTRFS_BLOCK_GROUP_METADATA) &&
++		    (type & BTRFS_BLOCK_GROUP_DATA)) {
++			btrfs_err(root->fs_info,
++			"mixed chunk type in non-mixed mode: 0x%llx", type);
++			return -EIO;
++		}
++	}
++
+ 	if ((type & BTRFS_BLOCK_GROUP_RAID10 && sub_stripes != 2) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes < 1) ||
+ 	    (type & BTRFS_BLOCK_GROUP_RAID5 && num_stripes < 2) ||
 
