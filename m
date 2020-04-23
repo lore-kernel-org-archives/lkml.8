@@ -2,223 +2,162 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A20C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E6EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101D12076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587669678;
-	bh=2KnfhVayUMe+HrAjNmA7CsrG+0u1Hh0u1U2HY+hWBOE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=I+9NeyB8jDaApmNtRxH3a7tdHlHC/bnYqc8c3ftoe5dAVOl08Nc3Qtt71z3RNwW49
-	 aPQbNpx9PQom5bHWUp4x342grRYZCcd8AYekvRCjnnrr0VZk1+ex6He9+sjoNWXXOt
-	 NswNiHi5XNWo+yBYKmSkP+HeoXALQGQRuO1tQOu8=
+	by mail.kernel.org (Postfix) with ESMTP id 6A9B42075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LUADqTn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgDWTVR (ORCPT
+        id S1728557AbgDWTYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:21:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgDWTVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:21:16 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 056D62075A;
-        Thu, 23 Apr 2020 19:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587669676;
-        bh=2KnfhVayUMe+HrAjNmA7CsrG+0u1Hh0u1U2HY+hWBOE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=qVz4VocAPek72AM12Hn8Xi2igiIdysBAnPNHUjwqpYgfzH+twr1sRc8O4Ftg5A2cl
-         T17FEZzPDDe0EXUUnAN0ffL56/EH0AMgWzj0xs6zGT8M6oWKF3nGvskqohUQ7NoWtn
-         EzY0IlAE2vrE/UdiNjeKiGvqxnhQJsZA3WJfPAq8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D5981352129A; Thu, 23 Apr 2020 12:21:15 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 12:21:15 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Refactor object allocation and try harder
- for array allocation
-Message-ID: <20200423192115.GV17661@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200413211504.108086-1-joel@joelfernandes.org>
- <20200414194353.GQ17661@paulmck-ThinkPad-P72>
- <20200416103007.GA3925@pc636>
- <20200416131745.GA90777@google.com>
- <20200416180100.GT17661@paulmck-ThinkPad-P72>
- <20200422145752.GB362484@cmpxchg.org>
- <20200422153503.GQ17661@paulmck-ThinkPad-P72>
- <20200423174831.GB389168@cmpxchg.org>
- <20200423180249.GT17661@paulmck-ThinkPad-P72>
- <20200423182750.GA32451@pc636>
+        Thu, 23 Apr 2020 15:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgDWTYI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 15:24:08 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF56C09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:24:08 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id 7so3932810pjo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 12:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WPYdNIZiW2wlSf4+Ub9IiFcK437hBCn7oo/oGCWqW7o=;
+        b=LUADqTn/aOcQPDNN0HhsE5ocsphRiy6BwPeu3kxHtPYTYxfvDuYZnBojhzbIG9qF//
+         BOmJvGSbFQOxI8hRHea4757zL4VfC2iuw+C6z6z9Bedj+/x81+AmsQdmMSOx+aTGbvNj
+         jja1BHlZCgC5SSRTTjN2alDx28LrjPsRMEb38=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WPYdNIZiW2wlSf4+Ub9IiFcK437hBCn7oo/oGCWqW7o=;
+        b=hpt7GDfX8KMlkfV5O0hscfq2tzizp/OgCCyCk7h4Ls49lq/lFo2RFqRM4BIW7r00D+
+         Ilcqy23TGZJjNwP0UeBYI19MU9OJyXPRC2wxm8GmB6uCSUjagIX1KfZUwxcFWXUzEe9C
+         KWJNC5dhl+a5CZ1NzywFKCM1cliIQzjruG+0nqnHL9l0E+orKkSyt1q3jztH+OI3wC59
+         wEKNzO1ptZGhGK6kMJKa6hXy6cViur06FDmGkGel3iiUwy6bcHtnpLdN813SPdKemufu
+         ZfmvUxmroa6ubrZkgu4kT1WAW3clnDwtDbQYPVWMMDacbE92QkAcArx3kWubWxdWfpWG
+         V0wg==
+X-Gm-Message-State: AGi0PuahCaAI884IKHGmJyyl6ftyeIl9TDWy8bHNyTGarMXMZgOv7vpj
+        LZAKRu7nxzJg+5Mq7P59utxLpg==
+X-Google-Smtp-Source: APiQypJZk74uGhsPcYlIl8PSuhy3pu0nJKqpy4TPmEplMdcaHBNjpzGbOaUTi+GMACEUOqsV5xLUXg==
+X-Received: by 2002:a17:902:788e:: with SMTP id q14mr5233333pll.72.1587669847180;
+        Thu, 23 Apr 2020 12:24:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c4sm2958661pgg.17.2020.04.23.12.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 12:24:06 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 12:24:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Apr 23 (objtool warnings)
+Message-ID: <202004231222.8A28DE1@keescook>
+References: <20200423174104.239dffab@canb.auug.org.au>
+ <1239aab1-84b4-02c3-a819-2c35dfa67a1c@infradead.org>
+ <20200423152921.shhjokjka7pwuyqr@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423182750.GA32451@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200423152921.shhjokjka7pwuyqr@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 08:27:50PM +0200, Uladzislau Rezki wrote:
-> On Thu, Apr 23, 2020 at 11:02:49AM -0700, Paul E. McKenney wrote:
-> > On Thu, Apr 23, 2020 at 01:48:31PM -0400, Johannes Weiner wrote:
-> > > On Wed, Apr 22, 2020 at 08:35:03AM -0700, Paul E. McKenney wrote:
-> > > > On Wed, Apr 22, 2020 at 10:57:52AM -0400, Johannes Weiner wrote:
-> > > > > On Thu, Apr 16, 2020 at 11:01:00AM -0700, Paul E. McKenney wrote:
-> > > > > > On Thu, Apr 16, 2020 at 09:17:45AM -0400, Joel Fernandes wrote:
-> > > > > > > On Thu, Apr 16, 2020 at 12:30:07PM +0200, Uladzislau Rezki wrote:
-> > > > > > > > I have a question about dynamic attaching of the rcu_head. Do you think
-> > > > > > > > that we should drop it? We have it because of it requires 8 + syzeof(struct rcu_head)
-> > > > > > > > bytes and is used when we can not allocate 1 page what is much more for array purpose.
-> > > > > > > > Therefore, dynamic attaching can succeed because of using SLAB and requesting much
-> > > > > > > > less memory then one page. There will be higher chance of bypassing synchronize_rcu()
-> > > > > > > > and inlining freeing on a stack.
-> > > > > > > > 
-> > > > > > > > I agree that we should not use GFP_* flags instead we could go with GFP_NOWAIT |
-> > > > > > > > __GFP_NOWARN when head attaching only. Also dropping GFP_ATOMIC to keep
-> > > > > > > > atomic reserved memory for others.
-> > > > > > 
-> > > > > > I must defer to people who understand the GFP flags better than I do.
-> > > > > > The suggestion of __GFP_RETRY_MAYFAIL for no memory pressure (or maybe
-> > > > > > when the CPU's reserve is not yet full) and __GFP_NORETRY otherwise came
-> > > > > > from one of these people.  ;-)
-> > > > > 
-> > > > > The exact flags we want here depends somewhat on the rate and size of
-> > > > > kfree_rcu() bursts we can expect. We may want to start with one set
-> > > > > and instrument allocation success rates.
-> > > > > 
-> > > > > Memory tends to be fully consumed by the filesystem cache, so some
-> > > > > form of light reclaim is necessary for almost all allocations.
-> > > > > 
-> > > > > GFP_NOWAIT won't do any reclaim by itself, but it'll wake kswapd.
-> > > > > Kswapd maintains a small pool of free pages so that even allocations
-> > > > > that are allowed to enter reclaim usually don't have to. It would be
-> > > > > safe for RCU to dip into that.
-> > > > > 
-> > > > > However, there are some cons to using it:
-> > > > > 
-> > > > > - Depending on kfree_rcu() burst size, this pool could exhaust (it's
-> > > > > usually about half a percent of memory, but is affected by sysctls),
-> > > > > and then it would fail NOWAIT allocations until kswapd has caught up.
-> > > > > 
-> > > > > - This pool is shared by all GFP_NOWAIT users, and many (most? all?)
-> > > > > of them cannot actually sleep. Often they would have to drop locks,
-> > > > > restart list iterations, or suffer some other form of deterioration to
-> > > > > work around failing allocations.
-> > > > > 
-> > > > > Since rcu wouldn't have anything better to do than sleep at this
-> > > > > juncture, it may as well join the reclaim effort.
-> > > > > 
-> > > > > Using __GFP_NORETRY or __GFP_RETRY_MAYFAIL would allow them that
-> > > > > without exerting too much pressure on the VM.
-> > > > 
-> > > > Thank you for looking this over and for the feedback!
-> > > > 
-> > > > Good point on the sleeping.  My assumption has been that sleeping waiting
-> > > > for a grace period was highly likely to allow memory to eventually be
-> > > > freed, and that there is a point of diminishing returns beyond which
-> > > > adding additional tasks to the reclaim effort does not help much.
+On Thu, Apr 23, 2020 at 10:29:21AM -0500, Josh Poimboeuf wrote:
+> On Thu, Apr 23, 2020 at 07:59:31AM -0700, Randy Dunlap wrote:
+> > On 4/23/20 12:41 AM, Stephen Rothwell wrote:
+> > > Hi all,
 > > > 
-> > > There is when the VM is struggling, but not necessarily when there is
-> > > simply a high, concurrent rate of short-lived file cache allocations.
+> > > Changes since 20200422:
 > > > 
-> > > Kswapd can easily reclaim gigabytes of clean page cache each second,
-> > > but there might be enough allocation concurrency from other threads to
-> > > starve a kfree_rcu() that only makes a very cursory attempt at getting
-> > > memory out of being able to snap up some of those returns.
-> > > 
-> > > In that scenario it makes sense to be a bit more persistent, or even
-> > > help scale out the concurrency of reclaim to that of allocations.
-> > > 
-> > > > Here are some strategies right offhand when sleeping is required:
-> > > > 
-> > > > 1.	Always sleep in synchronize_rcu() in order to (with high
-> > > > 	probability) free the memory.  This might mean that the reclaim
-> > > > 	effort goes slower than would be good.
-> > > > 
-> > > > 2.	Always sleep in the memory allocator in order to help reclaim
-> > > > 	along.	(This is a strawman version of what I expect your
-> > > > 	proposal really is, but putting it here for completeness, please
-> > > > 	see below.)
-> > > > 
-> > > > 3.	Always sleep in the memory allocator in order to help reclaim
-> > > > 	along, but return failure at some point.  Then the caller
-> > > > 	invokes synchronize_rcu().  When to return failure?
-> > > > 
-> > > > 	o	After some substantial but limited amount of effort has
-> > > > 		been spent on reclaim.
-> > > > 
-> > > > 	o	When it becomes likely that further reclaim effort
-> > > > 		is not going to free up additional memory.
-> > > > 
-> > > > I am guessing that you are thinking in terms of specifying GFP flags to
-> > > > result in some variant of #3.
-> > > 
-> > > Yes, although I would add
-> > > 
-> > > 	o	After making more than one attempt at the freelist to
-> > > 		prevent merely losing races when the allocator/reclaim
-> > > 		subsystem is mobbed by a high concurrency of requests.
-> > > 
-> > > __GFP_NORETRY (despite its name) accomplishes this.
-> > > 
-> > > __GFP_RETRY_MAYFAIL is yet more persistent, but may retry for quite a
-> > > while if the allocation keeps losing the race for a page. This
-> > > increases the chance of the allocation eventually suceeding, but also
-> > > the risk of 1) trying to get memory for longer than a
-> > > synchronize_rcu() might have taken and 2) exerting more temporary
-> > > memory pressure on the workload* than might be productive.
-> > > 
-> > > So I'm inclined to suggest __GFP_NORETRY as a starting point, and make
-> > > further decisions based on instrumentation of the success rates of
-> > > these opportunistic allocations.
-> > > 
-> > > * Reclaim and OOM handling will be fine since no reserves are tapped
 > > 
-> > Thank you for the explanation!  Makes sense to me!!!
-> > 
-> > Joel, Vlad, does this seem reasonable?
-> >
-> To me that makes sense. I think such strategy does fit to what we do,
-> i mean we need to release memory asap. Doing it without initiating of
-> long process of memory reclaim and do it only lightly(what __GFP_NORETRY does)
-> is a good approach. We have an option to fallback to synchronize_rcu().
+> > on x86_64:
 > 
-> But that is for sleepable context.
-> 
-> I have a question about non-sleeping context as well and how we allocate one
-> page:
-> 
-> <snip>
->    bnode = (struct kvfree_rcu_bulk_data *)
->        __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> 
-> <snip>
-> 
-> Johannes, i saw you mentioned earlier that waking up a kswapd is not a
-> good idea, what actually GFP_NOWAIT does. Do you recommend to exclude
-> it? Also to replace by what? __GFP_HIGH|__GFP_ATOMIC?
+> More truncation of functions by CONFIG_USBAN_TRAP.  Kees?
 
-This is best-effort, correct?
+Looks like another randconfig with CONFIG_UBSAN_ALIGNMENT=y
 
-Upon memory-allocation failure, the single-argument kfree_rcu() can leak
-the memory (it has presumably already splatted) and the double-argument
-kfree_rcu() can make use of the rcu_head structure that was provided.
+I will test this and see if my proposed Kconfig change solves it.
 
-							Thanx, Paul
+-Kees
+
+> 
+> > drivers/target/target_core_xcopy.o: warning: objtool: target_xcopy_do_work()+0x6dd: unreachable instruction
+> 
+> 0000000000000170 <target_xcopy_read_source>:
+>      170:	55                   	push   %rbp
+>      171:	48 89 e5             	mov    %rsp,%rbp
+>      174:	48 81 ec 40 03 00 00 	sub    $0x340,%rsp
+>      17b:	65 48 8b 0c 25 28 00 	mov    %gs:0x28,%rcx
+>      182:	00 00 
+>      184:	48 89 4d f8          	mov    %rcx,-0x8(%rbp)
+>      188:	31 c9                	xor    %ecx,%ecx
+>      18a:	83 e2 07             	and    $0x7,%edx
+>      18d:	75 34                	jne    1c3 <target_xcopy_read_source+0x53>
+>      18f:	48 89 f0             	mov    %rsi,%rax
+>      192:	83 e0 07             	and    $0x7,%eax
+>      195:	75 2c                	jne    1c3 <target_xcopy_read_source+0x53>
+>      197:	48 8d 95 d0 fc ff ff 	lea    -0x330(%rbp),%rdx
+>      19e:	b9 65 00 00 00       	mov    $0x65,%ecx
+>      1a3:	48 c7 c6 00 00 00 00 	mov    $0x0,%rsi
+> 			1a6: R_X86_64_32S	.rodata.str1.1
+>      1aa:	48 89 d7             	mov    %rdx,%rdi
+>      1ad:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
+> 			1b0: R_X86_64_32S	.bss+0x560
+>      1b4:	f3 48 ab             	rep stos %rax,%es:(%rdi)
+>      1b7:	48 8d bd 48 ff ff ff 	lea    -0xb8(%rbp),%rdi
+>      1be:	e8 00 00 00 00       	callq  1c3 <target_xcopy_read_source+0x53>
+> 			1bf: R_X86_64_PLT32	__init_swait_queue_head-0x4
+>      1c3:	0f 0b                	ud2    
+>      1c5:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
+>      1cc:	00 00 00 00 
+> 
+> > net/mac80211/rx.o: warning: objtool: __ieee80211_check_fast_rx_iface()+0x79: unreachable instruction
+> 
+> 0000000000007be0 <ieee80211_check_fast_rx>:
+>     7be0:	40 f6 c7 07          	test   $0x7,%dil
+>     7be4:	75 44                	jne    7c2a <ieee80211_check_fast_rx+0x4a>
+>     7be6:	48 8b 57 50          	mov    0x50(%rdi),%rdx
+>     7bea:	48 89 d0             	mov    %rdx,%rax
+>     7bed:	83 e0 07             	and    $0x7,%eax
+>     7bf0:	75 3c                	jne    7c2e <ieee80211_check_fast_rx+0x4e>
+>     7bf2:	55                   	push   %rbp
+>     7bf3:	b9 06 00 00 00       	mov    $0x6,%ecx
+>     7bf8:	48 89 e5             	mov    %rsp,%rbp
+>     7bfb:	48 83 ec 38          	sub    $0x38,%rsp
+>     7bff:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
+>     7c03:	48 89 f7             	mov    %rsi,%rdi
+>     7c06:	f3 48 ab             	rep stos %rax,%es:(%rdi)
+>     7c09:	48 8b 82 d8 03 00 00 	mov    0x3d8(%rdx),%rax
+>     7c10:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
+>     7c14:	8b 82 68 0f 00 00    	mov    0xf68(%rdx),%eax
+>     7c1a:	89 45 d8             	mov    %eax,-0x28(%rbp)
+>     7c1d:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
+> 			7c20: R_X86_64_32S	rfc1042_header
+>     7c24:	a8 03                	test   $0x3,%al
+>     7c26:	75 04                	jne    7c2c <ieee80211_check_fast_rx+0x4c>
+>     7c28:	0f 0b                	ud2    
+>     7c2a:	0f 0b                	ud2    
+>     7c2c:	0f 0b                	ud2    
+>     7c2e:	0f 0b                	ud2    
+> 
+> -- 
+> Josh
+> 
+
+-- 
+Kees Cook
