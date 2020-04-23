@@ -2,73 +2,113 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9169C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA233C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B651320728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E8020728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgDWRUD (ORCPT
+        id S1729959AbgDWRUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:20:03 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:53732 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729674AbgDWRUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:20:03 -0400
-Received: by mail-il1-f200.google.com with SMTP id 9so6306982ill.20
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:20:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=4mHKeAyAGDDsSPX7mqI92rd3yyYuGCPiX2VzFqgkLt0=;
-        b=AKyB0+xcpxYeWEGebamLZEKTqAzRWqCrHHR3D9KGUkNUDccoDaDT3Qmk+Zk5n6xk9B
-         FDhV6etJGoJZoqcTERam3+xfm42zHNKLwvA8aJ6ewEJM7WARJsqZPDw/JEfqDtf5n4uj
-         H+hZbBevm7PPQTj0TLlbtMn+H3YjQJexwzTwtOzXzItidVpi2ToQ2aK/If51LrebyuJk
-         8MzyehURv6pTisMGKq2ZRaSZH8//ewErjkBdzm1ZlHtPhaXbNCHFff0RBXcVOotikwJu
-         uSv+2ob9LPr5zkHy3N1q5jNiCsZt1DDQmz6MBJQsSycXtJLxasDeINXwQTpx/E2abjKZ
-         WPHw==
-X-Gm-Message-State: AGi0PubiYJgoc2mQj/YmZPG9uqkLOovi2t75RYze1XZFSdpwT2qF4343
-        lylN2DtOEcvbAGG5uNc7mcHIX3BN7uxbsNO2XBzvH/E0sFi6
-X-Google-Smtp-Source: APiQypL3/Yll+s/nR/T7aWG5H5r0GMTjZ+XDNfQFUpGPUOlIZiYuDIrlgjwlvi0UJ9oFMUvbGMpJcF1eGb6b/taoe3T0JYP7C2Ye
+        Thu, 23 Apr 2020 13:20:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:61994 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729673AbgDWRUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:20:33 -0400
+IronPort-SDR: 2bwoYOm0LsG1M8Irxk0f8XxjU90ucpK9nbMtCzqK1aluy0vDQd0yN5BqA8ST5Nm72JWOaIJ2L5
+ g+NGBARfT+YA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 10:20:32 -0700
+IronPort-SDR: LWUiK1gN/OvI+iuLB4DyOrg8eobfD24oQh6h9eiO+ieYEsaZAM/aVGYZAG+xN1AHhBPOpa+X9Q
+ wFVPLyQe8ADA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="246323687"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Apr 2020 10:20:32 -0700
+Date:   Thu, 23 Apr 2020 10:20:32 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v11 4/9] KVM: VMX: Check CET dependencies on CR settings
+Message-ID: <20200423172032.GI17824@linux.intel.com>
+References: <20200326081847.5870-1-weijiang.yang@intel.com>
+ <20200326081847.5870-5-weijiang.yang@intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7302:: with SMTP id e2mr4356263ioh.98.1587662402406;
- Thu, 23 Apr 2020 10:20:02 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 10:20:02 -0700
-In-Reply-To: <Pine.LNX.4.44L0.2004231235560.20147-100000@netrider.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000084cea205a3f875bd@google.com>
-Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
-From:   syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326081847.5870-5-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Mar 26, 2020 at 04:18:41PM +0800, Yang Weijiang wrote:
+> CR4.CET is master control bit for CET function.
+> There're mutual constrains between CR0.WP and CR4.CET, so need
+> to check the dependent bit while changing the control registers.
+> 
+> Note:
+> 1)The processor does not allow CR4.CET to be set if CR0.WP = 0,
+>   similarly, it does not allow CR0.WP to be cleared while
+>   CR4.CET = 1. In either case, KVM would inject #GP to guest.
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+Nit: the CET vs. WP dependency and #GP belongs in the "main" part of the
+changelog, as it's the crux of the patch.  Item (2) below is more along
+the lines of "note" material.
 
-Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-dashboard link: https://syzkaller.appspot.com/bug?extid=db339689b2101f6f6071
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1027bca0100000
-
-Note: testing is done by a robot and is best-effort only.
+> 
+> 2)SHSTK and IBT features share one control MSR:
+>   MSR_IA32_{U,S}_CET, which means it's difficult to hide
+>   one feature from another in the case of SHSTK != IBT,
+>   after discussed in community, it's agreed to allow guest
+>   control two features independently as it won't introduce
+>   security hole.
+> 
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 4 ++++
+>  arch/x86/kvm/x86.c     | 3 +++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bd7cd175fd81..87f101750746 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -3089,6 +3089,10 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>  			return 1;
+>  	}
+>  
+> +	if ((cr4 & X86_CR4_CET) && (!is_cet_supported(vcpu) ||
+> +	    !(kvm_read_cr0(vcpu) & X86_CR0_WP)))
+> +		return 1;
+> +
+>  	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
+>  		return 1;
+>  
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 830afe5038d1..90acdbbb8a5a 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -804,6 +804,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+>  	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
+>  		return 1;
+>  
+> +	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
+> +		return 1;
+> +
+>  	kvm_x86_ops->set_cr0(vcpu, cr0);
+>  
+>  	if ((cr0 ^ old_cr0) & X86_CR0_PG) {
+> -- 
+> 2.17.2
+> 
