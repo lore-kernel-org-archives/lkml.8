@@ -2,194 +2,100 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08025C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF769C55189
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D9D2074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2FC206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DkYFt5JS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fXWumdaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDWA1J (ORCPT
+        id S1726151AbgDWAbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 20:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgDWA1E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 20:27:04 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F8DC03C1AD
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:27:04 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id i9so3220799pjs.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to;
-        bh=cLhIPyxMn3s+VxrKXhmBoW15tCFqEcrWbg6AizvES3c=;
-        b=DkYFt5JS1cxdS2DHIvHgS0H+WuG1lYhcepNLKeMUdwTbK0/X/yFbZ/ke8bST2Y1V9i
-         N6E+lCb7I55KnDLjr1oRU4jg2YrvHExJlXCWtvVjCQFHgQSq00Iiv9CmL0r9DzgUXxIz
-         UaaOWHLzhaaQIiVOVf2sTLoYnWf9KbR0ubRP67JDTDjSA6utYb0NYceD6RS/GQfcq1Pg
-         Opevl3csIbN4Ha7nrW/YsexZAL2w09hSV64mfaHidynrMu826KXNcPqEVzlvbnXqPlAx
-         9MYkFM8ZL1iS4waU0L3c3RBioyL2YwAYvwq6T7CUT1yonxAJjXO1oukoKp6D/v74GZt0
-         HtlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to;
-        bh=cLhIPyxMn3s+VxrKXhmBoW15tCFqEcrWbg6AizvES3c=;
-        b=LLAceGRI7LYLYAe2aMNw+MXO2TMnw7HXAZI/SfQgjOvYW/Dmuznj6kz3QBz5UG8Qim
-         DGsYJNq16XhLVsCjl596WCrKdwXZG55Py0pVAdFV754S2E+TZAsARkFNUMI/8fyTQ293
-         /PW1bGQdfHkvWylqsA0FNSH1Z41N/Mi2wA9Fg/EtoVeRzwXUikGC8UswVb1QYMF0S/RO
-         Qcs6j06SBw+cfzIvTNAPLrdYwcs8FqISkfDCWkJKe59jli6TkQr/ECRc1GTgiK8w441w
-         vC0QmTLdvv+CrUnnE0WIth9SgIwCeqPPEatTxM/GKtn77mNAdDduSOD5dKV57ijCv6uh
-         CktQ==
-X-Gm-Message-State: AGi0Pua/p2gIbtYoI3HboLyDa/W3IyEi93DW/M1b9kIipn5Qh3XADrf2
-        CVpckH4PROaf3i/3DY+Rs9+lw0IfphM=
-X-Google-Smtp-Source: APiQypJ8fFvez1uks1jwaK82spWzI82Nw2+laLmruWmMNiV7KJez/SW8NdNyAD1F4/9ojj2p3zTicA0CU7c=
-X-Received: by 2002:a17:90a:210b:: with SMTP id a11mr1464127pje.31.1587601623780;
- Wed, 22 Apr 2020 17:27:03 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 17:26:32 -0700
-In-Reply-To: <20200423002632.224776-1-dancol@google.com>
-Message-Id: <20200423002632.224776-3-dancol@google.com>
-Mime-Version: 1.0
-References: <20200423002632.224776-1-dancol@google.com>
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 2/2] Add a new sysctl knob: unprivileged_userfaultfd_user_mode_only
-From:   Daniel Colascione <dancol@google.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Xu <peterx@redhat.com>,
-        Daniel Colascione <dancol@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, timmurray@google.com,
-        minchan@google.com, sspatil@google.com, lokeshgidra@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 22 Apr 2020 20:31:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39547 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbgDWAbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 20:31:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 496ys30GbJz9sSc;
+        Thu, 23 Apr 2020 10:31:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1587601864;
+        bh=UHUv817hjErmI8Kp+Xk31dEJLk6fwvwdT6MslTcRF4s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fXWumdawnsh6cVY6U5QJXesvD7Csa9T4DFNtDM9Myld4EwmhgPCtpeC97rw5oXp9l
+         LyYYPK3Y3J+hV0aP4jyUwEuHJFGV8t1r5Kn5NkGyvaBSh03T5QqUNPckt3y2VONSay
+         jRrwXYEoHKXnkV3TeesD9tI9qAEc6sXQsybeT/Ikh+kfSIRerxXhQsMNqmrJ+M1nbn
+         Z+78NtwKt7dp+5sc7DW7dDEGpG6JfaHA7Vq+TRRQCiDI7a5UeJlrfflxT5qbLYTVXl
+         c7RrP3KcWx8U8Q66Hq6yD/I1p2CJjx5IAL5svR0njzxXLafD93epWvTeCGfJ5/5Wqq
+         RvLwlYiJbzetw==
+Date:   Thu, 23 Apr 2020 10:31:01 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steve French <smfrench@gmail.com>,
+        CIFS <linux-cifs@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paulo Alcantara <pc@cjr.nz>, Aurelien Aptel <aaptel@suse.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: linux-next: build failure after merge of the cifs tree
+Message-ID: <20200423103101.0d416eb8@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/n2uuqLtGjfvdVydf.w_cdJU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sysctl can be set to either zero or one. When zero (the default)
-the system lets all users call userfaultfd with or without
-UFFD_USER_MODE_ONLY, modulo other access controls. When
-unprivileged_userfaultfd_user_mode_only is set to one, users without
-CAP_SYS_PTRACE must pass UFFD_USER_MODE_ONLY to userfaultfd or the API
-will fail with EPERM. This facility allows administrators to reduce
-the likelihood that an attacker with access to userfaultfd can delay
-faulting kernel code to widen timing windows for other exploits.
+--Sig_/n2uuqLtGjfvdVydf.w_cdJU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Daniel Colascione <dancol@google.com>
----
- Documentation/admin-guide/sysctl/vm.rst | 13 +++++++++++++
- fs/userfaultfd.c                        | 11 ++++++++++-
- include/linux/userfaultfd_k.h           |  1 +
- kernel/sysctl.c                         |  9 +++++++++
- 4 files changed, 33 insertions(+), 1 deletion(-)
+Hi all,
 
-diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-index 0329a4d3fa9e..4296b508ab74 100644
---- a/Documentation/admin-guide/sysctl/vm.rst
-+++ b/Documentation/admin-guide/sysctl/vm.rst
-@@ -850,6 +850,19 @@ privileged users (with SYS_CAP_PTRACE capability).
- 
- The default value is 1.
- 
-+unprivileged_userfaultfd_user_mode_only
-+========================================
-+
-+This flag controls whether unprivileged users can use the userfaultfd
-+system calls to handle page faults in kernel mode.  If set to zero,
-+userfaultfd works with or without UFFD_USER_MODE_ONLY, modulo
-+unprivileged_userfaultfd above.  If set to one, users without
-+SYS_CAP_PTRACE must pass UFFD_USER_MODE_ONLY in order for userfaultfd
-+to succeed.  Prohibiting use of userfaultfd for handling faults from
-+kernel mode may make certain vulnerabilities more difficult
-+to exploit.
-+
-+The default value is 0.
- 
- user_reserve_kbytes
- ===================
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 21378abe8f7b..85cc1ab74361 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -29,6 +29,7 @@
- #include <linux/hugetlb.h>
- 
- int sysctl_unprivileged_userfaultfd __read_mostly = 1;
-+int sysctl_unprivileged_userfaultfd_user_mode_only __read_mostly = 0;
- 
- static struct kmem_cache *userfaultfd_ctx_cachep __read_mostly;
- 
-@@ -2009,8 +2010,16 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
- 	static const int uffd_flags = UFFD_USER_MODE_ONLY;
- 	struct userfaultfd_ctx *ctx;
- 	int fd;
-+	bool need_cap_check = false;
- 
--	if (!sysctl_unprivileged_userfaultfd && !capable(CAP_SYS_PTRACE))
-+	if (!sysctl_unprivileged_userfaultfd)
-+		need_cap_check = true;
-+
-+	if (sysctl_unprivileged_userfaultfd_user_mode_only &&
-+	    (flags & UFFD_USER_MODE_ONLY) == 0)
-+		need_cap_check = true;
-+
-+	if (need_cap_check && !capable(CAP_SYS_PTRACE))
- 		return -EPERM;
- 
- 	BUG_ON(!current->mm);
-diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-index a8e5f3ea9bb2..d81e30074bf5 100644
---- a/include/linux/userfaultfd_k.h
-+++ b/include/linux/userfaultfd_k.h
-@@ -31,6 +31,7 @@
- #define UFFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS)
- 
- extern int sysctl_unprivileged_userfaultfd;
-+extern int sysctl_unprivileged_userfaultfd_user_mode_only;
- 
- extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
- 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 8a176d8727a3..9cbdf4483961 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1719,6 +1719,15 @@ static struct ctl_table vm_table[] = {
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_ONE,
- 	},
-+	{
-+		.procname	= "unprivileged_userfaultfd_user_mode_only",
-+		.data		= &sysctl_unprivileged_userfaultfd_user_mode_only,
-+		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd_user_mode_only),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
- #endif
- 	{ }
- };
--- 
-2.26.2.303.gf8c07b1a785-goog
+After merging the cifs tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
+fs/cifs/connect.c: In function 'cifs_find_tcon':
+fs/cifs/connect.c:3378:45: error: 'struct cifs_tcon' has no member named 'd=
+fs_path'
+ 3378 |   if (!match_tcon(tcon, volume_info) || tcon->dfs_path)
+      |                                             ^~
+
+Caused by commit
+
+  f73409e5babd ("cifs: do not share tcons with DFS")
+
+# CONFIG_CIFS_DFS_UPCALL is not set
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/n2uuqLtGjfvdVydf.w_cdJU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6g4cUACgkQAVBC80lX
+0GwrnQgAkzPK+CDasBQ+GgXMr03z4msIJY8uqddNYwZV4O9ISJ6YPJ7fuAdC89Fr
+V05Df13g12U0MZPZp5xeL05Ju303rhKmsFaeh+r9+7ynvZt8wK8wMX24caQXWGAg
+B6NsdELs/6DbccETPBtSemyltP/gN/JuKqBa9LDyf0ArpJz9thsZrEPavKMUFS8p
+cDDuj5L6jzprPfEoHSWxtB/Hdoa2g5EC50rQjdjA4+s6srgcJgeaYeDP1RxNshGd
+RLN40RgDP4aEiuPXSOQG4K1a4lJwt7JTxe7hyNIp76wHZaKsQnYEO0fbul4Joqd9
+ecBPeyx5mp25ckKwnjO21bdOE2NQ0Q==
+=a0M0
+-----END PGP SIGNATURE-----
+
+--Sig_/n2uuqLtGjfvdVydf.w_cdJU--
