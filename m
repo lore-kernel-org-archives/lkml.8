@@ -2,146 +2,104 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B24C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1618DC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A0C2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7EAE2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 08:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CpOMfkYJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONKOeG7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgDWItO (ORCPT
+        id S1726690AbgDWItw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:49:14 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:31248 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgDWItN (ORCPT
+        Thu, 23 Apr 2020 04:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgDWItv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:49:13 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200423084910epoutp01400857162378162b74dc66ef0902b20b~IZqpJ-23M1521815218epoutp01V
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:49:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200423084910epoutp01400857162378162b74dc66ef0902b20b~IZqpJ-23M1521815218epoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587631750;
-        bh=KwdIFH/L5SIr+QnGowAwrh8gTyuooEa0C2RIgzHAXto=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=CpOMfkYJ3yRxrfeJgUmVrIOhL9B4UIAmHp78jawGm65OEqnuYSlZGx3cyho9LqOFg
-         47ybqGPOaLcJ2iC6tTQcg9+U3KdQOlguAVITzNCqWzFom96WamxVY4VDo6Awt/rKor
-         UxNXW3kJmJrmYwMdHidIhClRB7ddwYZcqCpJ7olo=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200423084909epcas1p4da55aa560d9389b7bc730155969caf2f~IZqo03bo51221312213epcas1p4-;
-        Thu, 23 Apr 2020 08:49:09 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4979vm5mL7zMqYkf; Thu, 23 Apr
-        2020 08:49:08 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        70.94.04648.48651AE5; Thu, 23 Apr 2020 17:49:08 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413~IZqnfniHt2361123611epcas1p1G;
-        Thu, 23 Apr 2020 08:49:08 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200423084908epsmtrp18addace45fb4525f4bc94ac0687d24d5~IZqnea3jc1033910339epsmtrp18;
-        Thu, 23 Apr 2020 08:49:08 +0000 (GMT)
-X-AuditID: b6c32a37-1dbff70000001228-d3-5ea1568410ab
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        78.A0.04158.48651AE5; Thu, 23 Apr 2020 17:49:08 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200423084908epsmtip1f4a453c8fa0c376dd19e06b0c5b22915~IZqnQk8zp1130711307epsmtip1H;
-        Thu, 23 Apr 2020 08:49:08 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-Cc:     "'Hyunchul Lee'" <hyc.lee@gmail.com>,
-        "'Eric Sandeen'" <sandeen@sandeen.net>,
-        "'Sedat Dilek'" <sedat.dilek@gmail.com>,
-        "'Goldwyn Rodrigues'" <rgoldwyn@suse.de>
-Subject: [ANNOUNCE] exfatprogs-1.0.2 version released
-Date:   Thu, 23 Apr 2020 17:49:08 +0900
-Message-ID: <004701d6194c$0d238990$276a9cb0$@samsung.com>
+        Thu, 23 Apr 2020 04:49:51 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5DFC08C5F2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 01:49:51 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id y19so2465962qvv.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 01:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qo//qD9OD7T8B6dTROYouIyhkWIPZhIPm7QvQRgaKxs=;
+        b=ONKOeG7TEeoKoqQp6fjmJ4mPUW+Oe6+vHAU0iZy8grh9BjjfDr2FzSOYKN2t+4SWOH
+         UZGxyOzt6xeStIAbFvUtOSZV6LvLEYZbZedmP69vLrmdaybkwhxEFDygJxxtTirJ4m1n
+         udmu4ZoGccPoUFi0jCkWJ0U0785GTiTZHqt/uMHxXg2ucqu1Brc+zPMIi5I29KAGHMaT
+         Oxs1nNDn0C7lB7e8uAl4iKfNuvZkx83SIzjRPONAlQ0lyGE/9jtZzbdgwbbp8sJhjUeD
+         nGGZb/UuijJT9sSotxOGScYcbSoNCAO9Bjp5995/ZHcOXhwJpTGLSMdRk99STmOBPqbx
+         EQ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qo//qD9OD7T8B6dTROYouIyhkWIPZhIPm7QvQRgaKxs=;
+        b=L/FLA6G0LIHCFWrwNESuxwDGJHQnYvYQ8N6gdxB3cR90ZTixqOnlu7UVC0haeyxIlx
+         uHaGwVR4X2G/JHTDwRMO7GGwyMlm6wgKSnfNvR2f5zjxJyImF1h4ZM8ea7ALSCv7pN5d
+         SbwEk7xN8XQ/ZyGG2H8yQgymZkNdnuJJJbsoi4T7cER8oAspnOKn7nPIKGFnllgFdlBa
+         AqadQE6XHziSJbswrMLa4n607RP9Cj6rQ1EFRVdSrV6YabsH874l1vS6GPNF0Ky0fVl2
+         8jCsYaeaxN9cbR00HDw2Z6sYk2YkCKoHvfqplptuICwha+kdGd3ZUy6adas/wq+sMnPu
+         ezhw==
+X-Gm-Message-State: AGi0PuZCF6pVZ2zq4CFap9PoehRID5oyPAQ/7EljK88EMQlMGkk8Hgq/
+        m9sdKAxm1B0WTwUeWGOdafOUo6D00U1b83N+CS1PRg==
+X-Google-Smtp-Source: APiQypKVoLZ8h/psAn10+YfLXqmNMJ1C8QLjnL9+KZDS7lrDkmiQbibD/cl+DIHUKw4ejfisYtEEwehjctNek3XcsSU=
+X-Received: by 2002:ad4:4d06:: with SMTP id l6mr3124690qvl.34.1587631790155;
+ Thu, 23 Apr 2020 01:49:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdYZSpFQSutFdpomSvqOYdc5YaaMqA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUcRTH+e3Mzk7SxrRavbZrd0IqaS/X1dXcEIxYSEqQTDrWBndQcfZg
-        ZxUPJIVcTcWjiHC7ERSFylQ8OpAMSekQ7LILlZJSMa0w7cDa3THyv897v+9739/7/R6JyeoI
-        OZlpd7MuO8PRRBDecX+HSnUy+apF+9ijMb4YmZEY79wdwI1Pb10gjDXT10XGkmdhxutn+/E4
-        wtztfScxt9ePicxtDwvM31o3J+KHudgMlrGyLgVrT3NYM+3pJnpfUmp8qiFSq1Ppoo1RtMLO
-        2FgTvSchUbU3k/NZ04ochsv2pRIZnqc1u2Ndjmw3q8hw8G4TzTqtnFOndap5xsZn29PVaQ5b
-        jE6rDTf4lMe5jOKpcbGzKih3pu+MqAhdIsvRChKoCJhceCMpR0GkjOpC8OhcNSEEXxF0DPUh
-        IfiOoLGkWvSv5O3IgNjPMuouguf9JkE0geBO5TzyHxCUChZ/9xB+DqESYPbnsMgvwqhGBHWj
-        UwFRMGWAtsmngU44FQrVf9oDLKWioer9PVzg1TBQ9yHAGLUFOqcvYMItFPBjvEEsGKihvrMG
-        EzQhcP6UB/ObAdVPQNlIw1LBHng+WkIIHAyTD9olAsthotrjY9LHBfClZ0lehuDTvElgPby6
-        0SL2SzBqB9y4pRHSSuj+dREJtqvg81ylWOgihTKPTJCEQtXQ/aV32wDlpbNLpmZoLp6S1CCl
-        d9mQ3mVDepcN4/1vfAXhzWgt6+Rt6Syvc+qXf3YrCqxlWFQXanmS0IsoEtErpSnKKxaZmMnh
-        82y9CEiMDpG2jF2yyKRWJi+fdTlSXdkcy/cig+8PajH5mjSHb8nt7lSdIVyv1xsjIqMiDXp6
-        nfTsS84io9IZN5vFsk7W9a9ORK6QF6EY/cL81ab9Zw7lmCPaR8ur8IYkSXT4aGnTkcUGRntw
-        Wl0o8tRneeZmB0l5Fx43c+CN5ck7RfLNMfVMZu22oYjB8V3hx273POgrGNx+7/VE/OJHvlWZ
-        8lITaeFOb1qfrLnsVp5c2Pgod2dtPmGpGFZbk04k7ry8tXB3m6T2aEXTNRrnMxhdGObimb+s
-        m1oOrAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFLMWRmVeSWpSXmKPExsWy7bCSnG5L2MI4g45+YYtr99+zW+zZe5LF
-        4vKuOWwWE96uY7JovaJlsW7qCRYHNo+ds+6ye2xZ/JDJY/Ppao/Pm+QCWKK4bFJSczLLUov0
-        7RK4MhpfP2Ut6OOqeH90MlMD4zyOLkZODgkBE4k790+ydjFycQgJ7GaU6F21ihUiIS1x7MQZ
-        5i5GDiBbWOLw4WKImueMEvvPvGUGqWET0JX492c/G4gtIuAn8WvZGyaQImaBlYwSu7f3gg0S
-        FjCV2PzqMpjNIqAq0f9/C5jNK2Ap0ff4IAuELShxcuYTFpBlzAJ6Em0bGUHCzALyEtvfzmGG
-        uEdB4ufTZawQu/QkFm+fwAxRIyIxu7ONeQKj4Cwkk2YhTJqFZNIsJB0LGFlWMUqmFhTnpucW
-        GxYY5aWW6xUn5haX5qXrJefnbmIEx4CW1g7GEyfiDzEKcDAq8fBGKC6IE2JNLCuuzD3EKMHB
-        rCTCu+HhvDgh3pTEyqrUovz4otKc1OJDjNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFIN
-        jDIvdrXd22hj8v+UDNvZ7eeWy2xgub5s9s37236eqNBpMM+SObbqdZjqr3Dz2YbfOyeFGn2P
-        UCubvV5c4rT9jNcKs9Wf7qkytbB0Ociw2qBM7fWR8I3yc/9ttTt09Oi9iLlmS/epnehvncf7
-        JsT6rmKYwNWSqc2Fy3dOetEj47vyxEeFBapT93grsRRnJBpqMRcVJwIA15nMUX0CAAA=
-X-CMS-MailID: 20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413
-References: <CGME20200423084908epcas1p1b5d43c33b263b30844fc03a341f67413@epcas1p1.samsung.com>
+References: <CACT4Y+ZuGaeyyVsCkqJRo4+0hoMP8Eq_JTuU0L-NFqTrQP_czA@mail.gmail.com>
+ <36C7F018-510E-4555-BC6B-42DEB0468CBA@lca.pw>
+In-Reply-To: <36C7F018-510E-4555-BC6B-42DEB0468CBA@lca.pw>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 23 Apr 2020 10:49:38 +0200
+Message-ID: <CACT4Y+a4NvM3K4auifUHsVM8POTAyhyTCbs6SW6AY27cOsuSMw@mail.gmail.com>
+Subject: Re: linux-next test error: WARNING: suspicious RCU usage in ipmr_device_event
+To:     Qian Cai <cai@lca.pw>
+Cc:     syzbot <syzbot+21f82f61c24a7295edf5@syzkaller.appspotmail.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>, kuba@kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the second release of exfatprogs since the initial version(1.0.1).
-We have received various feedbacks and patches since the previous release
-and applied them in this release. Thanks for feedback and patches!
+On Tue, Apr 21, 2020 at 1:21 PM Qian Cai <cai@lca.pw> wrote:
+> > On Apr 21, 2020, at 6:51 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > +linux-next, Stephen for a new linux-next breakage
+>
+> I don=E2=80=99t know why you keep sending the same thing over and over ag=
+ain where I replied you just two days ago for the same thing.
 
-According to Goldwyn's comments, We renamed the project name from
-exfat-utils to exfatprogs. However, There is an opinion that just renaming
-the name is not enough. Because the binary names(mkfs.exfat, fsck.exfat)
-still are same with ones in current exfat-utils RPM package.
+Well, formally this bug was never mailed. The other one is about
+"WARNING: suspicious RCU usage in ovs_ct_exit". It just happened that
+this "WARNING: suspicious RCU usage in ipmr_device_event" was appended
+to that one (because kernel somehow failed to respect panic_on_warn?).
+But warnings except the first one are ignored, frequently they are
+induced and it's not possible to track 2 different bugs at the same
+time in a reasonable way anyway.
 
-If that's real problem, We are considering a long jump with 2.0.0 when adding
-repair feature.
+So effectively this is the first occurance of this bug (presumably the
+fix for ovs_ct_exit has reached linux-next). First occurrence is
+always mailed.
 
-Any feedback is welcome!:)
+Now let's tell syzbot that this one is fixed as well:
 
-The major changes in this release:
- * Rename project name to exfatprogs.
- * label.exfat: Add support for label.exfat to set/get exfat volume label.
- * Replace iconv library by standard C functions mbstowcs() and wcrtomb().
- * Fix the build warnings/errors and add warning options.
- * Fix several bugs(memory leak, wrong endian conversion, zero out beyond end of file) and cleanup codes
- * Fix issues on big endian system and on 32bit system.
- * Add support for Android build system.
-
-The git tree is at:
-      https://github.com/exfatprogs/exfatprogs
-
-The tarballs can be found at:
-      https://github.com/exfatprogs/exfatprogs/releases/tag/1.0.2
-
+#syz fix: ipmr: Fix RCU list debugging warning
