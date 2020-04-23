@@ -4,61 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15E7C55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F039C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEDAC215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D36021582
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587627698;
-	bh=OAEdO+IFLZ8N189wG3BknW5AiXVpPlZ0lS2ZfVkhu6c=;
+	s=default; t=1587627700;
+	bh=/JWvupmEMySxDqYIYZIYncvR2Q8mmZsljXsYjNOnvIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mj00PzANgetTMrZukpHwYM018agKo/GUq06MvX4WSEJIQYIlBXikZPw1WJv0TCYQE
-	 rONDcW6f12BtBP2QKILRmkxqosH5/SVAhMKYJEm5LhT1mSZsKUnotz5NdTf38clzO5
-	 HfLaN0z1IJdp7IKHrL8Febi7kwoc9aSyvlDEsP8E=
+	b=0rs89a7hQF0Dyhco3lkhuVk/+Mo8pERMPU3QMeo4s96poszS+17YeBWpKyYeRD5eK
+	 pBrd1CHI09c3Awg+cof3gthu4kZOzUxYYdODtFJ5ICtrq4u+wl7KIUoaJi7NXU98QV
+	 kIlbb5tcVY/4oW2HxnFbbJZC6O0Drvs+iHILTbXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgDWHlh (ORCPT
+        id S1727772AbgDWHlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:41:37 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:33137 "EHLO
+        Thu, 23 Apr 2020 03:41:39 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:31862 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgDWHlR (ORCPT
+        with ESMTP id S1726919AbgDWHkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:41:17 -0400
+        Thu, 23 Apr 2020 03:40:35 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03N7dV9O000368;
-        Thu, 23 Apr 2020 16:39:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9O000368
+        by conuserg-10.nifty.com with ESMTP id 03N7dV9N000368;
+        Thu, 23 Apr 2020 16:39:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9N000368
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587627575;
-        bh=myxup6EGe0ikE/kZA9HlfZByZy7k5g2S+MsusXB8OsE=;
+        s=dec2015msa; t=1587627574;
+        bh=LAmTf3avyguNhJLnR/j7TVLMdgz9CQZK990PrBeMhx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M/y7bmq/WkMKS6RcGf2/hrRssIL6AXYXpdNHOKWMGCdSpE5CMgVCPq1OXEyGDX2gT
-         llvMT+gX75+2USBLL4CYyGOybViCEMRMeSzCqRaUsAaSEsufU/EyFq7nAqDZH3CJwP
-         DcM+sm3rPamr4Dd7wtGNnSddS9HHn8Ac8vn1tRkKoAmJJEU3G4eQyHBMoH3n3KbDQX
-         Ocks0hz9NsMxqFma+ckEcyq3gBwetKwYEhReaLqoErMxgVd9hSrTTFRW1pCImWEqhc
-         rhUBzio3Y/ky/tz0OhLN2ngoMREOIlnDDUaAg/tMtx0mz/zQMZBM+g6jetzyAizSVx
-         UUkmR/KHtSPQg==
+        b=MSs+1vgXqBRAkGhPA8eINQND3Yn3h3DtPWIMZsni9ragUGcGyzFInzKyQzOgPwj++
+         t/6Zn74uvLNxz0xoKXv9ZLiRXjPGrpwwJhlHI5R370DTaF/8peZy7BlJt488ShbDKJ
+         2iGcIVC943qxlVMRtCZJZX8d2u9Y400/LFJDuj6riX+Pgepq5jThP/0jS+LvL/htcS
+         3rBViAksHx4UOAcJhURudlp2ncwDiysmcG6lWfX1ZxPHfU0j88pgC5JZ0hVjpqnIYw
+         VsARbonJsLwaja8ArPmH08KXCpu8OiiI0zZyIg1PzYPZGUW6NBioyaVqT3B/Gl/4WX
+         wcJns61R/pDpw==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 03/16] kbuild: add infrastructure to build userspace programs
-Date:   Thu, 23 Apr 2020 16:39:16 +0900
-Message-Id: <20200423073929.127521-4-masahiroy@kernel.org>
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 02/16] Revert "objtool: Skip samples subdirectory"
+Date:   Thu, 23 Apr 2020 16:39:15 +0900
+Message-Id: <20200423073929.127521-3-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200423073929.127521-1-masahiroy@kernel.org>
 References: <20200423073929.127521-1-masahiroy@kernel.org>
@@ -69,165 +62,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild supports the infrastructure to build host programs, but there
-was no support to build userspace programs for the target architecture
-(i.e. the same architecture as the kernel).
+This reverts commit 8728497895794d1f207a836e02dae762ad175d56.
 
-Sam Ravnborg worked on this a long time ago.
+This directory contains no object.
 
-  https://lkml.org/lkml/2014/7/13/154
-
-But, it was not merged. One problem at that time was, there was no
-good way to know whether $(CC) can link standalone programs. In fact,
-pre-built kernel.org toolchains [1] do not provide libc.
-
-Now, we can handle this cleanly because the compiler capability is
-evaluated at the Kconfig time. If $(CC) cannot link standalone programs,
-the relevant options are hidden by 'depends on CC_CAN_LINK'.
-
-The implementation just mimics scripts/Makefile.host
-
-The userspace programs are compiled with the same flags as the host
-programs. In addition, it uses -m32 or -m64 if it is found in
-$(KBUILD_CFLAGS).
-
-This new syntax has at least two usecases.
-
-- Sample programs
-
-  Several userspace programs under samples/ include UAPI headers
-  installed in usr/include. Most of them were previously built for
-  the host architecture just to use 'hostprogs' syntax.
-
-  However, 'make headers' always works for the target architecture.
-  This caused the arch mismatch in cross-compiling. To fix this
-  distortion, sample code should be built for the target architecture.
-
-- Bpfilter
-
-  net/bpfilter/Makefile compiles bpfilter_umh as the user mode helper,
-  and embeds it into the kernel code. Currently, it overrides HOSTCC
-  with CC to use the 'hostprogs' syntax. This hack should go away.
-
-[1]: https://mirrors.edge.kernel.org/pub/tools/crosstool/
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- Makefile                   | 11 +++++++---
- scripts/Makefile.build     |  5 +++++
- scripts/Makefile.clean     |  2 +-
- scripts/Makefile.userprogs | 44 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 58 insertions(+), 4 deletions(-)
- create mode 100644 scripts/Makefile.userprogs
+ samples/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 49b2709ff44e..f20597820131 100644
---- a/Makefile
-+++ b/Makefile
-@@ -406,9 +406,11 @@ else
- HOSTCC	= gcc
- HOSTCXX	= g++
- endif
--KBUILD_HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 \
--		-fomit-frame-pointer -std=gnu89 $(HOST_LFS_CFLAGS) \
--		$(HOSTCFLAGS)
-+
-+export KBUILD_USERCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
-+			      -O2 -fomit-frame-pointer -std=gnu89
-+
-+KBUILD_HOSTCFLAGS   := $(KBUILD_USERCFLAGS) $(HOST_LFS_CFLAGS) $(HOSTCFLAGS)
- KBUILD_HOSTCXXFLAGS := -Wall -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS)
- KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
- KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
-@@ -937,6 +939,9 @@ ifeq ($(CONFIG_RELR),y)
- LDFLAGS_vmlinux	+= --pack-dyn-relocs=relr
- endif
+diff --git a/samples/Makefile b/samples/Makefile
+index f8f847b4f61f..5ce50ef0f2b2 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -1,6 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for Linux samples code
+-OBJECT_FILES_NON_STANDARD := y
  
-+# Align the bit size of userspace programs with the kernel
-+KBUILD_USERCFLAGS += $(filter -m32 -m64, $(KBUILD_CFLAGS))
-+
- # make the checker run with the right architecture
- CHECKFLAGS += --arch=$(ARCH)
- 
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 9fcbfac15d1d..94f2f7016172 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -50,6 +50,11 @@ ifneq ($(hostprogs)$(hostcxxlibs-y)$(hostcxxlibs-m),)
- include scripts/Makefile.host
- endif
- 
-+# Do not include userprogs rules unless needed
-+ifneq ($(userprogs),)
-+include scripts/Makefile.userprogs
-+endif
-+
- ifndef obj
- $(warning kbuild: Makefile.build is included improperly)
- endif
-diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
-index 075f0cc2d8d7..e2c76122319d 100644
---- a/scripts/Makefile.clean
-+++ b/scripts/Makefile.clean
-@@ -29,7 +29,7 @@ subdir-ymn	:= $(addprefix $(obj)/,$(subdir-ymn))
- 
- __clean-files	:= $(extra-y) $(extra-m) $(extra-)       \
- 		   $(always) $(always-y) $(always-m) $(always-) $(targets) $(clean-files)   \
--		   $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) \
-+		   $(hostprogs) $(hostprogs-y) $(hostprogs-m) $(hostprogs-) $(userprogs) \
- 		   $(hostcxxlibs-y) $(hostcxxlibs-m)
- 
- __clean-files   := $(filter-out $(no-clean-files), $(__clean-files))
-diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-new file mode 100644
-index 000000000000..0d987085819b
---- /dev/null
-+++ b/scripts/Makefile.userprogs
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Build userspace programs for the target system
-+#
-+
-+userprogs 	:= $(sort $(userprogs))
-+
-+# Executables compiled from a single .c file
-+user-csingle	:= $(foreach m, $(userprogs), $(if $($(m)-objs),,$(m)))
-+
-+# C executables linked based on several .o files
-+user-cmulti	:= $(foreach m, $(userprogs), $(if $($(m)-objs),$(m)))
-+
-+# Object (.o) files compiled from .c files
-+user-cobjs	:= $(foreach m, $(userprogs), $($(m)-objs))
-+
-+user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
-+user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
-+user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
-+
-+user_c_flags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(user-ccflags) \
-+			$($(target-stem)-ccflags)
-+
-+# Create an executable from a single .c file
-+quiet_cmd_user_cc_c = CC [U]  $@
-+      cmd_user_cc_c = $(CC) $(user_c_flags) -o $@ $<
-+$(user-csingle): $(obj)/%: $(src)/%.c FORCE
-+	$(call if_changed_dep,user_cc_c)
-+
-+# Link an executable based on list of .o files
-+quiet_cmd_user_ld = LD [U]  $@
-+      cmd_user_ld = $(CC) -o $@ $(addprefix $(obj)/, $($(target-stem)-objs)) \
-+                      $($(target-stem)-ldlibs)
-+$(user-cmulti): FORCE
-+	$(call if_changed,user_ld)
-+$(call multi_depend, $(user-cmulti), , -objs)
-+
-+# Create .o file from a .c file
-+quiet_cmd_user_cc_o_c = CC [U]  $@
-+      cmd_user_cc_o_c = $(CC) $(user_c_flags) -c -o $@ $<
-+$(user-cobjs): $(obj)/%.o: $(src)/%.c FORCE
-+	$(call if_changed_dep,user_cc_o_c)
-+
-+targets += $(user-csingle) $(user-cmulti) $(user-cobjs)
+ obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
+ obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
 -- 
 2.25.1
 
