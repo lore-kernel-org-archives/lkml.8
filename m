@@ -7,46 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8CAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AFBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9740721775
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EED621569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgDWHus (ORCPT
+        id S1726054AbgDWHuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37884 "EHLO
+        Thu, 23 Apr 2020 03:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbgDWHtu (ORCPT
+        with ESMTP id S1727046AbgDWHtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:49:50 -0400
+        Thu, 23 Apr 2020 03:49:49 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF7EC03C1AB;
-        Thu, 23 Apr 2020 00:49:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB50C08E934;
+        Thu, 23 Apr 2020 00:49:49 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWcB-0008OZ-Kj; Thu, 23 Apr 2020 09:49:43 +0200
+        id 1jRWcD-0008Qu-9x; Thu, 23 Apr 2020 09:49:45 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 46F861C047B;
-        Thu, 23 Apr 2020 09:49:40 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 07:49:39 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6FE291C04D1;
+        Thu, 23 Apr 2020 09:49:43 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 07:49:43 -0000
+From:   "tip-bot2 for Muchun Song" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] x86,ftrace: Shrink ftrace_regs_caller() by one byte
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
+Subject: [tip: objtool/core] objtool: Remove redundant .rodata section name comparison
+Cc:     Muchun Song <songmuchun@bytedance.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200416115118.867411350@infradead.org>
-References: <20200416115118.867411350@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158762817989.28353.12633424393537109680.tip-bot2@tip-bot2>
+Message-ID: <158762818300.28353.16248240508762508316.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,47 +58,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     9f2dfd61dd022d4559d42a832fb03e76aad36c5f
-Gitweb:        https://git.kernel.org/tip/9f2dfd61dd022d4559d42a832fb03e76aad36c5f
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 01 Apr 2020 16:51:11 +02:00
+Commit-ID:     1ee444700e960b017558038a9443474e808b0045
+Gitweb:        https://git.kernel.org/tip/1ee444700e960b017558038a9443474e808b0045
+Author:        Muchun Song <songmuchun@bytedance.com>
+AuthorDate:    Sun, 12 Apr 2020 22:44:05 +08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 22 Apr 2020 10:53:50 +02:00
 
-x86,ftrace: Shrink ftrace_regs_caller() by one byte
+objtool: Remove redundant .rodata section name comparison
 
-'Optimize' ftrace_regs_caller. Instead of comparing against an
-immediate, the more natural way to test for zero on x86 is: 'test
-%r,%r'.
+If the prefix of section name is not '.rodata', the following
+function call can never return 0.
 
-  48 83 f8 00             cmp    $0x0,%rax
-  74 49                   je     226 <ftrace_regs_call+0xa3>
+    strcmp(sec->name, C_JUMP_TABLE_SECTION)
 
-  48 85 c0                test   %rax,%rax
-  74 49                   je     225 <ftrace_regs_call+0xa2>
+So the name comparison is pointless, just remove it.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200416115118.867411350@infradead.org
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/ftrace_64.S | 4 ++--
+ tools/objtool/check.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index be9aff2..9738ed2 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -240,8 +240,8 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	 * See arch_ftrace_set_direct_caller().
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index cffa5e3..e06a891 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1354,8 +1354,8 @@ static void mark_rodata(struct objtool_file *file)
+ 	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
  	 */
- 	movq ORIG_RAX(%rsp), %rax
--	cmpq	$0, %rax
--	je	1f
-+	testq	%rax, %rax
-+	jz	1f
- 
- 	/* Swap the flags with orig_rax */
- 	movq MCOUNT_REG_SIZE(%rsp), %rdi
+ 	for_each_sec(file, sec) {
+-		if ((!strncmp(sec->name, ".rodata", 7) && !strstr(sec->name, ".str1.")) ||
+-		    !strcmp(sec->name, C_JUMP_TABLE_SECTION)) {
++		if (!strncmp(sec->name, ".rodata", 7) &&
++		    !strstr(sec->name, ".str1.")) {
+ 			sec->rodata = true;
+ 			found = true;
+ 		}
