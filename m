@@ -2,96 +2,200 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA63FC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4332EC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A8C20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A88220767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:11:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="E8SsOA0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgDWUKA (ORCPT
+        id S1726468AbgDWULV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:10:00 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:47299 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDWUJ6 (ORCPT
+        Thu, 23 Apr 2020 16:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgDWULU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:09:58 -0400
-X-Originating-IP: 93.29.109.196
-Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id DB045E000A;
-        Thu, 23 Apr 2020 20:09:54 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v2 4/4] media: rockchip: rga: Only set output CSC mode for RGB input
-Date:   Thu, 23 Apr 2020 22:09:37 +0200
-Message-Id: <20200423200937.1039257-5-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
-References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
+        Thu, 23 Apr 2020 16:11:20 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33828C09B043
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:11:20 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id h6so3567706qvz.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=lWtwv24Nfi0axiyCp3rc/Sxd+Qy0bmZpIX4zlE10TGU=;
+        b=E8SsOA0QTJuBO3ylcTS2xJsVATuHuxVjAatduicQzuspBirkZTmaN7KsZ6488gy1x5
+         hVMem2vuSKMAm6WRqtcHA6AsKeB38+XVlUj65g41PzO7wqQmIkfYnc2xIFfFiCi3FR5T
+         KEIKtRoxDy1RwWlu4xSglVFmVpQaVyMah7amYQi1rnQ6+Vagd86hWwWBpsVcvLLcnf0+
+         gjs9BvZD18tfGRTrq/znf09Tpnxqx+67K7tH6cdI0WV2BACgOO+d6z10Eqk7uiRX9HaU
+         3FY1WkZCCbU6ggo/3Mj+g2XNtO0IyDlH6QN7vxfIKFJnUTzvceAGGaI7L40VJpEcn/TR
+         oq5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lWtwv24Nfi0axiyCp3rc/Sxd+Qy0bmZpIX4zlE10TGU=;
+        b=dJx6B/FpEUfNl8CDFGAsYm+bW1cZH8b6gYR8lVRW1pEi88jNlBLm5jb+atpApGPf9J
+         i1kZV/g0/MgTAXisLxhQPQ2ty+WTR2rAPdwPXwtUXzDeFCzQH+yHBhZcpR7BRnruMYdO
+         55cRIsU4PNes/2fBNFu1MJMwzxgL83lnkHNkY2B0Fr69WTwSY0LCiuorPL97CGBdnyxp
+         lwNe5VYCbHEEUAA70XbJhoXxLrkSI+s1j01EEQrGXi1kdqxZmPURly0r0iR7nYBvGjLU
+         gUeE9+UJmYViKiqNM3eyy2kvyvYN4XweUmAaE3IQlL/oTCJeDd7j8yIQRlzkmoowhTDw
+         eopQ==
+X-Gm-Message-State: AGi0PubUSyhoVA1vs2xki+JD193rMjwt4M8oM8YshoKdNzwLgMFiYCfC
+        KqYhBSJVZfV6Q8DEDTRiO/cz+w==
+X-Google-Smtp-Source: APiQypKuPAopgt+O2z/cQxgPn4lmcCmWiRkwb8I7ACO1Hf+8ae3BUi01fvAzpbYMvGtIS+7kz8qhyg==
+X-Received: by 2002:a0c:ed42:: with SMTP id v2mr5911795qvq.94.1587672679177;
+        Thu, 23 Apr 2020 13:11:19 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id g12sm2476558qtu.69.2020.04.23.13.11.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 Apr 2020 13:11:18 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jRiBq-0007lh-1P; Thu, 23 Apr 2020 17:11:18 -0300
+Date:   Thu, 23 Apr 2020 17:11:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, megha.dey@linux.intel.com, maz@kernel.org,
+        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
+ domain
+Message-ID: <20200423201118.GA29567@ziepe.ca>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting the output CSC mode is required for a YUV output, but must not
-be set when the input is also YUV. Doing this (as tested with a YUV420P
-to YUV420P conversion) results in wrong colors.
+On Tue, Apr 21, 2020 at 04:34:11PM -0700, Dave Jiang wrote:
+> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
+> new file mode 100644
+> index 000000000000..738f6d153155
+> +++ b/drivers/base/ims-msi.c
+> @@ -0,0 +1,100 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Support for Device Specific IMS interrupts.
+> + *
+> + * Copyright © 2019 Intel Corporation.
+> + *
+> + * Author: Megha Dey <megha.dey@intel.com>
+> + */
+> +
+> +#include <linux/dmar.h>
+> +#include <linux/irq.h>
+> +#include <linux/mdev.h>
+> +#include <linux/pci.h>
+> +
+> +/*
+> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
+> + * Return mdev's parent dev if success.
+> + */
+> +static inline struct device *mdev_to_parent(struct device *dev)
+> +{
+> +	struct device *ret = NULL;
+> +	struct device *(*fn)(struct device *dev);
+> +	struct bus_type *bus = symbol_get(mdev_bus_type);
+> +
+> +	if (bus && dev->bus == bus) {
+> +		fn = symbol_get(mdev_dev_to_parent_dev);
+> +		ret = fn(dev);
+> +		symbol_put(mdev_dev_to_parent_dev);
+> +		symbol_put(mdev_bus_type);
 
-Adapt the logic to only set the CSC mode when the output is YUV and the
-input is RGB.
+No, things like this are not OK in the drivers/base
 
-Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/media/platform/rockchip/rga/rga-hw.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+Whatever this is doing needs to be properly architected in some
+generic way.
 
-diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-index 4be6dcf292ff..cbffcf986ccf 100644
---- a/drivers/media/platform/rockchip/rga/rga-hw.c
-+++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-@@ -216,13 +216,17 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
- 	}
- 
- 	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
--		switch (ctx->out.colorspace) {
--		case V4L2_COLORSPACE_REC709:
--			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
--			break;
--		default:
--			dst_info.data.csc_mode = RGA_DST_CSC_MODE_BT601_R0;
--			break;
-+		if (ctx->in.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
-+			switch (ctx->out.colorspace) {
-+			case V4L2_COLORSPACE_REC709:
-+				dst_info.data.csc_mode =
-+					RGA_SRC_CSC_MODE_BT709_R0;
-+				break;
-+			default:
-+				dst_info.data.csc_mode =
-+					RGA_DST_CSC_MODE_BT601_R0;
-+				break;
-+			}
- 		}
- 	}
- 
--- 
-2.26.0
+> +static int dev_ims_prepare(struct irq_domain *domain, struct device *dev,
+> +			   int nvec, msi_alloc_info_t *arg)
+> +{
+> +	if (dev_is_mdev(dev))
+> +		dev = mdev_to_parent(dev);
 
+Like maybe the caller shouldn't be passing in a mdev in the first
+place, or some generic driver layer scheme is needed to go from a
+child device (eg a mdev or one of these new virtual bus things) to the
+struct device that owns the IRQ interface.
+
+> +	init_irq_alloc_info(arg, NULL);
+> +	arg->dev = dev;
+> +	arg->type = X86_IRQ_ALLOC_TYPE_IMS;
+
+Also very bewildering to see X86_* in drivers/base
+
+> +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
+> +					      const char *name)
+> +{
+> +	struct fwnode_handle *fn;
+> +	struct irq_domain *domain;
+> +
+> +	fn = irq_domain_alloc_named_fwnode(name);
+> +	if (!fn)
+> +		return NULL;
+> +
+> +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
+> +	if (!domain)
+> +		return NULL;
+> +
+> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
+> +	irq_domain_free_fwnode(fn);
+> +
+> +	return domain;
+> +}
+
+I'm still not really clear why all this is called IMS.. This looks
+like the normal boilerplate to setup an IRQ domain? What is actually
+'ims' in here?
+
+> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> index 7d922950caaf..c21f1305a76b 100644
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -36,7 +36,6 @@ struct mdev_device {
+>  };
+>  
+>  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+> -#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
+>  
+>  struct mdev_type {
+>  	struct kobject kobj;
+> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> index 0ce30ca78db0..fa2344e239ef 100644
+> +++ b/include/linux/mdev.h
+> @@ -144,5 +144,8 @@ void mdev_unregister_driver(struct mdev_driver *drv);
+>  struct device *mdev_parent_dev(struct mdev_device *mdev);
+>  struct device *mdev_dev(struct mdev_device *mdev);
+>  struct mdev_device *mdev_from_dev(struct device *dev);
+> +struct device *mdev_dev_to_parent_dev(struct device *dev);
+> +
+> +#define dev_is_mdev(dev) ((dev)->bus == symbol_get(mdev_bus_type))
+
+NAK on the symbol_get
+
+Jason
