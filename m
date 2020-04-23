@@ -2,158 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1459DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D41CC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F193D20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269CD20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587628087;
+	bh=LbnhmMfvitCTIggf1UmKQ6jkAVYasWbP2XpydlwCgi8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X1k5RXUOBBaKKR227b1rgGK21U2MexbQCrqdIKvhWytSRwEMek9CfkkNKADp8/KbW
+	 weO9IlP3INgbwLj/h9Vcumpfo1qc+tg95Zs4D5f/6LbhOwazDUywZ9uFc13qU1dROd
+	 dGPJXNzhfwUpyYtnq/kcIHtpex43o923sK0FK4NY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgDWHr3 (ORCPT
+        id S1726968AbgDWHsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:47:29 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64699 "EHLO mga07.intel.com"
+        Thu, 23 Apr 2020 03:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbgDWHr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:47:28 -0400
-IronPort-SDR: 4OUUcQHIIKsiOGwvPAP8zmx8ioWZllOaiYAW/wJPNjjCRI5CEWTu/g28Ya0NtD7sznzisg/B6l
- KWb0Z0TAV8LA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 00:47:27 -0700
-IronPort-SDR: xebuX4Zqh2Fzs8VKrVMTXlJ1UMcv1KriaDNTvXrXAHOnRuQgYvCSjXW9IpM+PKHsaq1g09075h
- aWGqFgg+JwGw==
-X-IronPort-AV: E=Sophos;i="5.73,306,1583222400"; 
-   d="scan'208";a="255903604"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 00:47:16 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id B6BA22080B; Thu, 23 Apr 2020 10:47:13 +0300 (EEST)
-Date:   Thu, 23 Apr 2020 10:47:13 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Luis Oliveira <lolivei@synopsys.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: Re: [PATCH 3/4] media: ov5647: Add support for non-continuous clock
- mode
-Message-ID: <20200423074713.GK5381@paasikivi.fi.intel.com>
-References: <cover.1586759968.git.roman.kovalivskyi@globallogic.com>
- <c3189c80ac27d67e814509d44a864f8164971efb.1586759968.git.roman.kovalivskyi@globallogic.com>
+        id S1726271AbgDWHsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:48:05 -0400
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49CD320781;
+        Thu, 23 Apr 2020 07:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587628085;
+        bh=LbnhmMfvitCTIggf1UmKQ6jkAVYasWbP2XpydlwCgi8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fRAblcZIAKl/+y3XakBp9dg36fyoosssKOAUedUxkb8ozKxDCcJXwoUr6t7SheNtP
+         8OpKCOhxyQLm5UchDeLT70YrfX3nvHJ9JwHwCZvDsIN54x68MlpEiASw6a5YtGJ61l
+         r/CZPVMRM/vYEWLp7lCHNUR2ARleeVnl0isS2zpk=
+Received: by mail-il1-f170.google.com with SMTP id e8so4643853ilm.7;
+        Thu, 23 Apr 2020 00:48:05 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaIu16hQ52U+wvwS3h3QerIv7HniDukfhqHFYUZklB0bBuSWxrg
+        +58k/7yg6b6+0K0CD9mizp3F70khh+BmD3iH7VE=
+X-Google-Smtp-Source: APiQypKNATjPQwmj04xG86W/VSk+32MltYr5UKx21IGPfk6KrXvzAlYcN+pPjEmNzXxJvkiL0tInaDkyulvtXvujHzU=
+X-Received: by 2002:a92:aa0f:: with SMTP id j15mr2200985ili.211.1587628084769;
+ Thu, 23 Apr 2020 00:48:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3189c80ac27d67e814509d44a864f8164971efb.1586759968.git.roman.kovalivskyi@globallogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200422200344.239462-1-Jason@zx2c4.com> <20200422231854.675965-1-Jason@zx2c4.com>
+ <CAMj1kXHV=ryaFmj0jhQVGBd31nfHs7q5RtSyu7dY6GdEJJsr7A@mail.gmail.com> <beb32f2b-f16a-d235-f2a5-026b32dbc5b8@c-s.fr>
+In-Reply-To: <beb32f2b-f16a-d235-f2a5-026b32dbc5b8@c-s.fr>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 23 Apr 2020 09:47:53 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHYne8iE8wg9zoacp36tcVg+yqKoF6f1guwu1KUVXcqkA@mail.gmail.com>
+Message-ID: <CAMj1kXHYne8iE8wg9zoacp36tcVg+yqKoF6f1guwu1KUVXcqkA@mail.gmail.com>
+Subject: Re: [PATCH crypto-stable v3 1/2] crypto: arch/lib - limit simd usage
+ to 4k chunks
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-rt-users@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roman,
+On Thu, 23 Apr 2020 at 09:40, Christophe Leroy <christophe.leroy@c-s.fr> wr=
+ote:
+>
+>
+>
+> Le 23/04/2020 =C3=A0 09:18, Ard Biesheuvel a =C3=A9crit :
+> > FYI: you shouldn't cc stable@vger.kernel.org directly on your patches,
+> > or add the cc: line. Only patches that are already in Linus' tree
+> > should be sent there.
+> >
+> > Also, the fixes tags are really quite sufficient. In fact, it is
+> > actually rather difficult these days to prevent something from being
+> > taken into -stable if the bots notice that it applies cleanly.
+>
+> According to Kernel Documentation,
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html :
+>
+>
+> Patches that fix a severe bug in a released kernel should be directed
+> toward the stable maintainers by putting a line like this:
+>
+> Cc: stable@vger.kernel.org
+>
+> into the sign-off area of your patch (note, NOT an email recipient). You
+> should also read Documentation/process/stable-kernel-rules.rst in
+> addition to this file.
+>
+>
+> Isn't it correct anymore ?
+>
 
-On Mon, Apr 13, 2020 at 12:17:46PM +0300, Roman Kovalivskyi wrote:
-> From: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> 
-> The driver was only supporting continuous clock mode
-> although this was not stated anywhere.
-> Non-continuous clock saves a small amount of power and
-> on some SoCs is easier to interface with.
-> 
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> Signed-off-by: Roman Kovalivskyi <roman.kovalivskyi@globallogic.com>
-> ---
->  drivers/media/i2c/ov5647.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-> index c39e3d20e3ef..8a1a515388e0 100644
-> --- a/drivers/media/i2c/ov5647.c
-> +++ b/drivers/media/i2c/ov5647.c
-> @@ -44,6 +44,7 @@
->  #define PWDN_ACTIVE_DELAY_MS	20
->  
->  #define MIPI_CTRL00_CLOCK_LANE_GATE		BIT(5)
-> +#define MIPI_CTRL00_LINE_SYNC_ENABLE		BIT(4)
->  #define MIPI_CTRL00_BUS_IDLE			BIT(2)
->  #define MIPI_CTRL00_CLOCK_LANE_DISABLE		BIT(0)
->  
-> @@ -95,6 +96,7 @@ struct ov5647 {
->  	int				power_count;
->  	struct clk			*xclk;
->  	struct gpio_desc		*pwdn;
-> +	unsigned int			flags;
->  };
->  
->  static inline struct ov5647 *to_state(struct v4l2_subdev *sd)
-> @@ -269,9 +271,15 @@ static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
->  
->  static int ov5647_stream_on(struct v4l2_subdev *sd)
->  {
-> +	struct ov5647 *ov5647 = to_state(sd);
-> +	u8 val = MIPI_CTRL00_BUS_IDLE;
->  	int ret;
->  
-> -	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, MIPI_CTRL00_BUS_IDLE);
-> +	if (ov5647->flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)
-> +		val |= MIPI_CTRL00_CLOCK_LANE_GATE |
-> +		       MIPI_CTRL00_LINE_SYNC_ENABLE;
-> +
-> +	ret = ov5647_write(sd, OV5647_REG_MIPI_CTRL00, val);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -568,7 +576,7 @@ static const struct v4l2_subdev_internal_ops ov5647_subdev_internal_ops = {
->  	.open = ov5647_open,
->  };
->  
-> -static int ov5647_parse_dt(struct device_node *np)
-> +static int ov5647_parse_dt(struct device_node *np, struct ov5647 *sensor)
->  {
->  	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
+So this states clearly that you should not actually cc the patch to
+stable@vger.kernel.org, you should only add the cc: line to the commit
+log area if it fixes a *severe* bug. Once the patch makes it into
+Linus' tree, the cc: line will be used by the -stable maintainers to
+locate the patch and pull it in.
 
-The bus type should be set to V4L2_MBUS_CSI2_DPHY here; 0 is just for
-compatibility with the old heuristics.
-
->  	struct device_node *ep;
-> @@ -581,6 +589,9 @@ static int ov5647_parse_dt(struct device_node *np)
->  
->  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
->  
-> +	if (!ret)
-> +		sensor->flags = bus_cfg.bus.mipi_csi2.flags;
-> +
->  	of_node_put(ep);
->  	return ret;
->  }
-> @@ -599,7 +610,7 @@ static int ov5647_probe(struct i2c_client *client)
->  		return -ENOMEM;
->  
->  	if (IS_ENABLED(CONFIG_OF) && np) {
-> -		ret = ov5647_parse_dt(np);
-> +		ret = ov5647_parse_dt(np, sensor);
->  		if (ret) {
->  			dev_err(dev, "DT parsing error: %d\n", ret);
->  			return ret;
-
--- 
-Kind regards,
-
-Sakari Ailus
+But as I pointed out, even with just the fixes: tags, the patch will
+be picked up by -stable anyway. Omitting the cc: line helps prevent
+inadvertently sending the patch to stable@vger.kernel.org directly,
+since git send-email typically honours Cc: lines in its input in its
+default configuration.
