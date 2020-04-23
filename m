@@ -2,71 +2,73 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC86C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4355C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034B820736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835CF21569
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587626524;
+	bh=U12rqlmXTaLrY3z2T7tWjVcCbQmMHqer0x+sCeBzUtE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cAAAINEOxitEi81wUmV61p6T2qwImhbiaFXOtyNGzPJnxm7tg4F1JBAAgh3phhT2K
+	 7v17GV0ok4C3dAbTo2wRqHfSkM76GqTIalv1wjoq0xPkNuvD2B4DfAEBceURnHSGjk
+	 QhriHbZnbETMGXtqPpEidxAvxgiSKtnhsWtESvxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgDWHVd (ORCPT
+        id S1726887AbgDWHWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:21:33 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2876 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725562AbgDWHVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:21:32 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E36214EA4ACBEAE2ECCD;
-        Thu, 23 Apr 2020 15:21:30 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 23 Apr 2020 15:21:21 +0800
-From:   Zou Wei <zou_wei@huawei.com>
-To:     <aelior@marvell.com>, <GR-everest-linux-l2@marvell.com>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: [PATCH -next] qed: Make ll2_cbs static
-Date:   Thu, 23 Apr 2020 15:27:40 +0800
-Message-ID: <1587626860-97801-1-git-send-email-zou_wei@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Thu, 23 Apr 2020 03:22:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgDWHWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:22:03 -0400
+Received: from localhost (unknown [49.207.59.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E47D20736;
+        Thu, 23 Apr 2020 07:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587626523;
+        bh=U12rqlmXTaLrY3z2T7tWjVcCbQmMHqer0x+sCeBzUtE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s3thZLOlkheO+B7irKilkc4PbWfubeLwSuTvIpeNBde3dKdf7pMW/lfgHRmHLQ1m9
+         j434vm1b+UzCMRhQW58dpqtJX3WHrTG9vEf2/i0sPxpTSWJnzJg3ajyJfXdXJLtoJE
+         kJC++T9qA3Yr4cEAASM0+UIG/EXOgkyWFLVlnq2U=
+Date:   Thu, 23 Apr 2020 12:51:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     leonid.ravich@dell.com
+Cc:     dmaengine@vger.kernel.org, lravich@gmail.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dmaengine: ioat: removing duplicate code from
+ timeout handler
+Message-ID: <20200423072158.GD72691@vkoul-mobl>
+References: <1587583557-4113-3-git-send-email-leonid.ravich@dell.com>
+ <1587589761-32690-1-git-send-email-leonid.ravich@dell.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587589761-32690-1-git-send-email-leonid.ravich@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following sparse warning:
+On 23-04-20, 00:09, leonid.ravich@dell.com wrote:
+> From: Leonid Ravich <Leonid.Ravich@emc.com>
+> 
+> moving duplicate code from timeout error handling to common
+> function.
 
-drivers/net/ethernet/qlogic/qed/qed_ll2.c:2334:20: warning: symbol 'll2_cbs'
-was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
----
- drivers/net/ethernet/qlogic/qed/qed_ll2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-index 037e597..4afd857 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-@@ -2331,7 +2331,7 @@ static void qed_ll2_register_cb_ops(struct qed_dev *cdev,
- 	cdev->ll2->cb_cookie = cookie;
- }
- 
--struct qed_ll2_cbs ll2_cbs = {
-+static struct qed_ll2_cbs ll2_cbs = {
- 	.rx_comp_cb = &qed_ll2b_complete_rx_packet,
- 	.rx_release_cb = &qed_ll2b_release_rx_packet,
- 	.tx_comp_cb = &qed_ll2b_complete_tx_packet,
+Applied all, thanks
 -- 
-2.6.2
-
+~Vinod
