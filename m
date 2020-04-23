@@ -2,159 +2,127 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6786C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0D9C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08E32076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736C9208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:35:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBnyG7PT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgDWHdT (ORCPT
+        id S1726859AbgDWHfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:33:19 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:58457 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWHdT (ORCPT
+        Thu, 23 Apr 2020 03:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbgDWHfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:33:19 -0400
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 84089200011;
-        Thu, 23 Apr 2020 07:33:11 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 00:33:10 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>, io-uring@vger.kernel.org,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] fs: openat2: Extend open_how to allow
- userspace-selected fds
-Message-ID: <20200423073310.GA169998@localhost>
-References: <cover.1587531463.git.josh@joshtriplett.org>
- <9873b8bd7d14ff8cd2a5782b434b39f076679eeb.1587531463.git.josh@joshtriplett.org>
- <CAKgNAkjo3AeA78XqK-RRGqJHNy1H8SbcjQQQs7+jDwuFgq4YSg@mail.gmail.com>
- <CAJfpegt=xe-8AayW2i3AYrk3q-=Pp_A+Hctsk+=sXoMed5hFQA@mail.gmail.com>
- <20200423004807.GC161058@localhost>
- <CAJfpegtSYKsApx2Dc6VGmc5Fm4SsxtAWAP-Zs052umwK1CjJmQ@mail.gmail.com>
- <20200423044226.GH161058@localhost>
- <CAJfpeguaVYo-Lf-5Bi=EYJYWdmCfo3BqZA=kj9E5UmDb0mBc1w@mail.gmail.com>
+        Thu, 23 Apr 2020 03:35:30 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A19AC03C1AB;
+        Thu, 23 Apr 2020 00:35:28 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id x2so4604357ilp.13;
+        Thu, 23 Apr 2020 00:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0hlTl/zCZbAA+GFl2dvVEJ1v8GPDc+Kbabyo2qL/7PY=;
+        b=OBnyG7PTHDCCLUE4ws+cv0rx52XPBDkBrMCNyEZfc9kAQVk3+4lTcKI7hbJtv25yej
+         fv4TX/B2zr1x45m1SG5oNY6N7HrCNdF1AVTdschZ5mWmwdvgXbyANO8zmDpCTrg1sM1Q
+         8IYYK06n8wgXSzYkkzIKxf1tQY9QDb9UNOu/xrSg6wswcih34vgfVq2d3TKja0szHgmb
+         4VZeWTbVGmIfUiagSYTLqT562mhG/GXzAh71Adh4VxD+TGpq66SAVVeTN0ifPV42dIDC
+         pz0AcXv+7QFMoWVwrfNwlUlVFJxPfd6kqVJCsrf3dpnxtgmFwiNyRCHN8FYtYXFJbZpK
+         ygWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0hlTl/zCZbAA+GFl2dvVEJ1v8GPDc+Kbabyo2qL/7PY=;
+        b=CwUWT95ZKMyoqi/KhyQVSj/zjZts7aEnlnFXSFWu/ZIlB7Ns9c6ZdSXdm6U7MzTuKU
+         bfcDPBGt6JkOSCmirotVIV1EBxfAKViul/b6/nRT9znroQRhFod18FijyYmF3lJkSOHW
+         3oLlb8aiU5HI/WwiobJMDgRmI5fWHLdDo2KHckK7f11CfKcyR5l1JCqLbp8WmsAgzjc7
+         9qNNNRpTd8nv2ksXT9uVy94kqxuJ5DnSBXkm8cDXU5Sx40Dlx6bgC+PhqwbrMt2dU/tu
+         0j5GVnkeIjrjSN1eernLABKoHuAla8rAL5vEgKYg0AsmIE/KalcFvK02rPAVNFO/iM6p
+         uMQQ==
+X-Gm-Message-State: AGi0Pub3FqE8sj85JewDEd50ow8jVsNuSSQPOi5n5NFeypSOYXa/nTyD
+        T8BOG+mCWVS3LbSmWv/LSqqKuv34Kh3/cn7Iu+kuULb8Xp0=
+X-Google-Smtp-Source: APiQypKXWH4EZsa3e+ik+tfviGjD3zqic9BgcJWx+N0WLN2FGGHy7WvCtX5MXcR6RsFDgYNqLahTpflaJeSW9U3t+TA=
+X-Received: by 2002:a92:d443:: with SMTP id r3mr2212189ilm.293.1587627327911;
+ Thu, 23 Apr 2020 00:35:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpeguaVYo-Lf-5Bi=EYJYWdmCfo3BqZA=kj9E5UmDb0mBc1w@mail.gmail.com>
+References: <20200422041502.7497-1-samuel@sholland.org> <20200422151616.httmhmo2tbd4m4eu@gilmour.lan>
+ <b554ea70-16da-1637-d349-db51dddcf95b@sholland.org>
+In-Reply-To: <b554ea70-16da-1637-d349-db51dddcf95b@sholland.org>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 23 Apr 2020 09:35:16 +0200
+Message-ID: <CAJiuCcfxokJr3Tj9XY8AT8O2y68RpuO+O3QZRvfCjVbu6s9aUw@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH] arm64: dts: allwinner: a64: Disable
+ SPDIF by default
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 08:04:25AM +0200, Miklos Szeredi wrote:
-> On Thu, Apr 23, 2020 at 6:42 AM Josh Triplett <josh@joshtriplett.org> wrote:
+Hi Samuel, Maxime,
+
+On Thu, 23 Apr 2020 at 01:50, Samuel Holland <samuel@sholland.org> wrote:
+>
+> Maxime,
+>
+> On 4/22/20 10:16 AM, Maxime Ripard wrote:
+> > On Tue, Apr 21, 2020 at 11:15:02PM -0500, Samuel Holland wrote:
+> >> As of v5.7-rc2, Linux now prints the following message at boot:
+> >>
+> >>   [   33.848525] platform sound_spdif: deferred probe pending
+> >>
+> >> This is because &sound_spdif is waiting on its DAI link component
+> >> &spdif to probe, but &spdif is disabled in the DTS. Disable the
+> >> audio card as well to match.
+> >>
+> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
 > >
-> > On Thu, Apr 23, 2020 at 06:24:14AM +0200, Miklos Szeredi wrote:
-> > > On Thu, Apr 23, 2020 at 2:48 AM Josh Triplett <josh@joshtriplett.org> wrote:
-> > > > On Wed, Apr 22, 2020 at 09:55:56AM +0200, Miklos Szeredi wrote:
-> > > > > On Wed, Apr 22, 2020 at 8:06 AM Michael Kerrisk (man-pages)
-> > > > > <mtk.manpages@gmail.com> wrote:
-> > > > > >
-> > > > > > [CC += linux-api]
-> > > > > >
-> > > > > > On Wed, 22 Apr 2020 at 07:20, Josh Triplett <josh@joshtriplett.org> wrote:
-> > > > > > >
-> > > > > > > Inspired by the X protocol's handling of XIDs, allow userspace to select
-> > > > > > > the file descriptor opened by openat2, so that it can use the resulting
-> > > > > > > file descriptor in subsequent system calls without waiting for the
-> > > > > > > response to openat2.
-> > > > > > >
-> > > > > > > In io_uring, this allows sequences like openat2/read/close without
-> > > > > > > waiting for the openat2 to complete. Multiple such sequences can
-> > > > > > > overlap, as long as each uses a distinct file descriptor.
-> > > > >
-> > > > > If this is primarily an io_uring feature, then why burden the normal
-> > > > > openat2 API with this?
-> > > >
-> > > > This feature was inspired by io_uring; it isn't exclusively of value
-> > > > with io_uring. (And io_uring doesn't normally change the semantics of
-> > > > syscalls.)
-> > >
-> > > What's the use case of O_SPECIFIC_FD beyond io_uring?
-> >
-> > Avoiding a call to dup2 and close, if you need something as a specific
-> > file descriptor, such as when setting up to exec something, or when
-> > debugging a program.
-> >
-> > I don't expect it to be as widely used as with io_uring, but I also
-> > don't want io_uring versions of syscalls to diverge from the underlying
-> > syscalls, and this would be a heavy divergence.
-> 
-> What are the plans for those syscalls that don't easily lend
-> themselves to this modification (such as accept(2))?
+> > The patch looks good, but don't we have some boards with SPDIF enabled that
+> > should be modified accordingly?
+>
+> I don't see any in-tree. The only A64 DTS that references &spdif at all is
+> sun50i-a64-pine64.dts, which explicitly disables it:
 
-accept4 has a flags argument with more flags available, so it'd be
-entirely possible to cleanly extend it further without introducing a new
-version. The same goes for other fd-producing syscalls that still have
-flag space available.
+This has been introduced by Marcus Cooper for the Pine64 audio extension.
+https://store.pine64.org/?product=pine64-stereo-audio-dac-pot-board
 
-This may or may not provide sufficient motivation on its own to
-introduce a new syscall variant of a syscall that isn't currently
-extensible.
+So this should be moved to an overlay no?
 
-> Compared to that, having a common flag for file ops to enable the use
-> of fixed and private file descriptors is a clean and well contained
-> interface.
+Regards,
+Clement
 
-"private" is not a desirable property here. See below. Even if the
-userspace-specified fd mechanism were to become something only
-accessible via io_uring (which I'd prefer to avoid), that's not a reason
-to avoid generating real file descriptors that work anywhere a file
-descriptor works.
-
-> > > > > This would also allow Implementing a private fd table for io_uring.
-> > > > > I.e. add a flag interpreted by file ops (IORING_PRIVATE_FD), including
-> > > > > openat2 and freely use the private fd space without having to worry
-> > > > > about interactions with other parts of the system.
-> > > >
-> > > > I definitely don't want to add a special kind of file descriptor that
-> > > > doesn't work in normal syscalls taking file descriptors. A file
-> > > > descriptor allocated via O_SPECIFIC_FD is an entirely normal file
-> > > > descriptor, and works anywhere a file descriptor normally works.
-> > >
-> > > What's the use case of allocating a file descriptor within io_uring
-> > > and using it outside of io_uring?
-> >
-> > Calling a syscall not provided via io_uring. Calling a library that
-> > doesn't use io_uring. Passing the file descriptor via UNIX socket to
-> > another program. Passing the file descriptor via exec to another
-> > program. Userspace is modular, and file descriptors are widely used.
-> 
-> I mean, you could open the file descriptor outside of io_uring in such
-> cases, no?
-
-I would prefer to not introduce that limitation in the first place, and
-instead open normal file descriptors.
-
-> The point of O_SPECIFIC_FD is to be able to perform short
-> sequences of open/dosomething/close without having to block and having
-> to issue separate syscalls.
-
-"close" is not a required component. It's entirely possible to use
-io_uring to open a file descriptor, do various things with it, and then
-leave it open for subsequent usage via either other io_uring chains or
-standalone syscalls.
-
-> If you're going to issue separate
-> syscalls anyway, then I see no point in doing the open within
-> io_uring.  Or?
-
-io_uring is not an all-or-nothing proposition. There's value in using
-io_uring for some operations without converting an entire program (and
-every library it might potentially use on a file descriptor) entirely to
-io_uring. Userspace is modular, and file descriptors are a common
-element used by many different bits of userspace.
+>
+>         /* On Euler connector */
+>         &spdif {
+>                 status = "disabled";
+>         };
+>
+> I'm leaning toward agreeing with Clement that the sound_spdif node (and also
+> spdif_out) should be removed altogether from the A64 DTSI.
+>
+> Regards,
+> Samuel
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/b554ea70-16da-1637-d349-db51dddcf95b%40sholland.org.
