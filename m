@@ -2,137 +2,151 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F5FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034BCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 704CC2074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2902074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnsO8fVk"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="JzIhcvVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgDWFSO (ORCPT
+        id S1726565AbgDWFUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725867AbgDWFSM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:18:12 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928EEC03C1AB;
-        Wed, 22 Apr 2020 22:18:11 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o15so2334590pgi.1;
-        Wed, 22 Apr 2020 22:18:11 -0700 (PDT)
+        Thu, 23 Apr 2020 01:20:00 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:60771 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725863AbgDWFT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 01:19:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qCBsa1pJlvt7zkIr/3FJFH5RgTV4mszszMc7Yftm9j8=;
-        b=ZnsO8fVk0++VtXCgCcGrNVzqJZq0AoklIMWuOpbYiwXhATkktI9CbfqB4yRA0SItP7
-         azBW1r6Jb5iyoAiziDIDLIuEYdQ4M97hJ/Sf/rfI92FjaZZ2S/q9tzL2QhP2j7J2egpf
-         CbxWrli3xBhkp6H20ZA2qRN7J2jVYTeh4GVyoJ11H2yCZtvohehqoD1QwPvpFLH7Ka4J
-         oqowfGJg4MNNxmHVCxWKhClqlf4InXXnWLzk4c3jbHm0H4RQyGW1999uONr1HVCP9F1M
-         bnjQ02lVGrC2IUMkYYiiJebH93C7ygcXHo1kP3G/fFgNFcLyRgVNSB52JQ5Qq2oxpqX7
-         4hxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=qCBsa1pJlvt7zkIr/3FJFH5RgTV4mszszMc7Yftm9j8=;
-        b=QF4pwUbLkNhVu+vKs2wqZr9JmqCAYpvfgzViUj5yNNONJtIDaTdP6WaHhgwy7Ixn+X
-         T0vPLa5D4Wwz79atWE/WIgvLld4SYjgXTBYlh2h3TLFZteianxkF6DDGejYs5jg7ACSX
-         qTXj2k+nQ5kLEDlFIDL3tstwpLLFZzLGZZVi2PJsPeIQyA1Jk8Ax21kHOGW4/kXwpmpJ
-         WNCHuQmbrK2foG7R2JFD/oX+onGlQEJ4WIdSwOxop1QeFG80lpjCOR4J9b3L6Rg82D6S
-         q4/cQ2twMP5UMclUbatr6uPnlpyjzaCOmYqs/7n1BJFmYFfA2S4thrzSCd375z0lV+Vv
-         ntKQ==
-X-Gm-Message-State: AGi0Pub1qdT7OAE3l/dwKVH47lXSALGTqpS/ZdVg8nTzSzK+wW5VMbHc
-        UusTehVnzXPCeU0K0KkEbv8=
-X-Google-Smtp-Source: APiQypLKYZo7sa83+KriCNF74gBjCVlbbw0qbHAGVoV3iMxICiijUV8rmcy6yRTFdCDjoeefv36pdQ==
-X-Received: by 2002:a63:2166:: with SMTP id s38mr2306743pgm.369.1587619091150;
-        Wed, 22 Apr 2020 22:18:11 -0700 (PDT)
-Received: from udknight.localhost ([183.250.89.86])
-        by smtp.gmail.com with ESMTPSA id k10sm1300719pfa.163.2020.04.22.22.18.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Apr 2020 22:18:10 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 03N4AMGY001222;
-        Thu, 23 Apr 2020 12:10:22 +0800
-Received: (from root@localhost)
-        by udknight.localhost (8.14.9/8.14.9/Submit) id 03N4AGAg001218;
-        Thu, 23 Apr 2020 12:10:16 +0800
-Date:   Thu, 23 Apr 2020 12:10:16 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf@vger.kernel.org, Brian Gerst <brgerst@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Xi Wang <xi.wang@gmail.com>,
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=oKq3oYorpk83ICjscW/wqDC15xPQ4BXvibMUxOOVjpY=; b=J
+        zIhcvVxHIXUwxoz21x6yGF0GfkokA1Lt0sS1MOwHAC9Ntz8CcCkV2RKkO8FIysnb
+        BE/tjAJX/JIMnNuBT9xoMQbtgOSGF8+ZepRDnuyNtcIa5Ifw0HNdnSuQONqJhbCk
+        0kRhnwn/oq41h2dsWps6dJfNZtY68jdihP69iDRdEU=
+Received: from localhost.localdomain (unknown [120.229.255.80])
+        by app1 (Coremail) with SMTP id XAUFCgDXx3RxJaFej708AA--.30683S3;
+        Thu, 23 Apr 2020 13:19:47 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf v2 2/2] bpf, x86_32: Fix clobbering of dst for
- BPF_JSET
-Message-ID: <20200423041016.GA1153@udknight>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
-        Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org,
-        Brian Gerst <brgerst@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200422173630.8351-1-luke.r.nels@gmail.com>
- <20200422173630.8351-2-luke.r.nels@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422173630.8351-2-luke.r.nels@gmail.com>
-User-Agent: Mutt/1.7.1 (2016-10-04)
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] xfrm: Fix xfrm_state refcnt leak in xfrm_input()
+Date:   Thu, 23 Apr 2020 13:19:20 +0800
+Message-Id: <1587619161-14094-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgDXx3RxJaFej708AA--.30683S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXr4DXr18Gw47ZFykuw4Uurg_yoW5Wr15pF
+        W5C39rtrWv9ay8Aw1kt348XF1Ut3yxKryFkFykC3WUJF90y3WFgryFgFWaqFW8ArWkCa40
+        qrySqrWFg34kJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+        6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+        YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
+        wI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+        AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfHUDUUUUU=
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:36:30AM -0700, Luke Nelson wrote:
-> The current JIT clobbers the destination register for BPF_JSET BPF_X
-> and BPF_K by using "and" and "or" instructions. This is fine when the
-> destination register is a temporary loaded from a register stored on
-> the stack but not otherwise.
-> 
-> This patch fixes the problem (for both BPF_K and BPF_X) by always loading
-> the destination register into temporaries since BPF_JSET should not
-> modify the destination register.
-> 
-> This bug may not be currently triggerable as BPF_REG_AX is the only
-> register not stored on the stack and the verifier uses it in a limited
-> way.
-> 
-> Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
-> Signed-off-by: Xi Wang <xi.wang@gmail.com>
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Acked-by: Wang YanQing <udknight@gmail.com>
+xfrm_input() invokes xfrm_state_lookup(), which returns a reference of
+the specified xfrm_state object to "x" with increased refcnt and then
+"x" is escaped to "sp->xvec[]".
+
+When xfrm_input() encounters error, it calls kfree_skb() to free the
+"skb" memory. Since "sp" comes from one of "skb" fields, this "free"
+behavior causes "sp" becomes invalid, so the refcount for its field
+should be decreased to keep refcount balanced before kfree_skb() calls.
+
+The reference counting issue happens in several exception handling paths
+of xfrm_input(). When those error scenarios occur such as skb_dst()
+fails, the function forgets to decrease the refcnt increased by
+xfrm_state_lookup() and directly calls kfree_skb(), causing a refcnt
+leak.
+
+Fix this issue by jumping to "put_sp" label when those error scenarios
+occur.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ net/xfrm/xfrm_input.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
+index aa35f23c4912..9ca534e28462 100644
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -589,7 +589,7 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 		skb_dst_force(skb);
+ 		if (!skb_dst(skb)) {
+ 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINERROR);
+-			goto drop;
++			goto put_sp;
+ 		}
+ 
+ lock:
+@@ -623,7 +623,7 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 
+ 		if (xfrm_tunnel_check(skb, x, family)) {
+ 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINSTATEMODEERROR);
+-			goto drop;
++			goto put_sp;
+ 		}
+ 
+ 		seq_hi = htonl(xfrm_replay_seqhi(x, seq));
+@@ -677,13 +677,13 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 			inner_mode = xfrm_ip2inner_mode(x, XFRM_MODE_SKB_CB(skb)->protocol);
+ 			if (inner_mode == NULL) {
+ 				XFRM_INC_STATS(net, LINUX_MIB_XFRMINSTATEMODEERROR);
+-				goto drop;
++				goto put_sp;
+ 			}
+ 		}
+ 
+ 		if (xfrm_inner_mode_input(x, inner_mode, skb)) {
+ 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINSTATEMODEERROR);
+-			goto drop;
++			goto put_sp;
+ 		}
+ 
+ 		if (x->outer_mode.flags & XFRM_MODE_FLAG_TUNNEL) {
+@@ -701,7 +701,7 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 		err = xfrm_parse_spi(skb, nexthdr, &spi, &seq);
+ 		if (err < 0) {
+ 			XFRM_INC_STATS(net, LINUX_MIB_XFRMINHDRERROR);
+-			goto drop;
++			goto put_sp;
+ 		}
+ 		crypto_done = false;
+ 	} while (!err);
+@@ -744,6 +744,8 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 
+ drop_unlock:
+ 	spin_unlock(&x->lock);
++put_sp:
++	skb_ext_put_sp(sp);
+ drop:
+ 	xfrm_rcv_cb(skb, family, x && x->type ? x->type->proto : nexthdr, -1);
+ 	kfree_skb(skb);
+-- 
+2.7.4
+
