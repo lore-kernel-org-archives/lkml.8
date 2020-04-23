@@ -2,189 +2,187 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87D7C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8BBC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB882098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F6820CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgDWKCc (ORCPT
+        id S1726864AbgDWKDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:02:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55844 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725863AbgDWKCc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:02:32 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NA1obY041578;
-        Thu, 23 Apr 2020 06:02:23 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30k3xu8pt7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 06:02:22 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03NA1IxE011806;
-        Thu, 23 Apr 2020 10:02:22 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma04wdc.us.ibm.com with ESMTP id 30fs66rjyb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 10:02:22 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NA2Lu051183928
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 10:02:21 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4FC4A13604F;
-        Thu, 23 Apr 2020 10:02:21 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B5A613605D;
-        Thu, 23 Apr 2020 10:02:20 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.199.35.140])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 10:02:20 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 6E5122E301B; Thu, 23 Apr 2020 15:32:13 +0530 (IST)
-Date:   Thu, 23 Apr 2020 15:32:13 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/5] Track and expose idle PURR and SPURR ticks
-Message-ID: <20200423100213.GA23192@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
- <04b5e2fa-089f-93c9-cde9-33a930455bb2@linux.ibm.com>
+        Thu, 23 Apr 2020 06:03:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2841 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725863AbgDWKDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:03:22 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 305877B68F68317747C4;
+        Thu, 23 Apr 2020 18:03:21 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 23 Apr 2020 18:03:13 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: add compressed/gc data read IO stat
+Date:   Thu, 23 Apr 2020 18:03:06 +0800
+Message-ID: <20200423100306.8817-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04b5e2fa-089f-93c9-cde9-33a930455bb2@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- impostorscore=0 adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230073
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 03:46:35PM -0700, Tyrel Datwyler wrote:
-> On 4/7/20 1:47 AM, Gautham R. Shenoy wrote:
-> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> > 
-> > Hi,
-> > 
-> > This is the fifth version of the patches to track and expose idle PURR
-> > and SPURR ticks. These patches are required by tools such as lparstat
-> > to compute system utilization for capacity planning purposes.
-> > 
-> > The previous versions can be found here:
-> > v4: https://lkml.org/lkml/2020/3/27/323
-> > v3: https://lkml.org/lkml/2020/3/11/331
-> > v2: https://lkml.org/lkml/2020/2/21/21
-> > v1: https://lore.kernel.org/patchwork/cover/1159341/
-> > 
-> > They changes from v4 are:
-> > 
-> >    - As suggested by Naveen, moved the functions read_this_idle_purr()
-> >      and read_this_idle_spurr() from Patch 2 and Patch 3 respectively
-> >      to Patch 4 where it is invoked.
-> > 
-> >    - Dropped Patch 6 which cached the values of purr, spurr,
-> >      idle_purr, idle_spurr in order to minimize the number of IPIs
-> >      sent.
-> > 
-> >    - Updated the dates for the idle_purr, idle_spurr in the
-> >      Documentation Patch 5.
-> > 
-> > Motivation:
-> > ===========
-> > On PSeries LPARs, the data centers planners desire a more accurate
-> > view of system utilization per resource such as CPU to plan the system
-> > capacity requirements better. Such accuracy can be obtained by reading
-> > PURR/SPURR registers for CPU resource utilization.
-> > 
-> > Tools such as lparstat which are used to compute the utilization need
-> > to know [S]PURR ticks when the cpu was busy or idle. The [S]PURR
-> > counters are already exposed through sysfs.  We already account for
-> > PURR ticks when we go to idle so that we can update the VPA area. This
-> > patchset extends support to account for SPURR ticks when idle, and
-> > expose both via per-cpu sysfs files.
-> > 
-> > These patches are required for enhancement to the lparstat utility
-> > that compute the CPU utilization based on PURR and SPURR which can be
-> > found here :
-> > https://groups.google.com/forum/#!topic/powerpc-utils-devel/fYRo69xO9r4
-> > 
-> > 
-> > With the patches, when lparstat is run on a LPAR running CPU-Hogs,
-> > =========================================================================
-> > sudo ./src/lparstat -E 1 3
-> > 
-> > System Configuration
-> > type=Dedicated mode=Capped smt=8 lcpu=2 mem=4834112 kB cpus=0 ent=2.00 
-> > 
-> > ---Actual---                 -Normalized-
-> > %busy  %idle   Frequency     %busy  %idle
-> > ------ ------  ------------- ------ ------
-> > 1  99.99   0.00  3.35GHz[111%] 110.99   0.00
-> > 2 100.00   0.00  3.35GHz[111%] 111.01   0.00
-> > 3 100.00   0.00  3.35GHz[111%] 111.00   0.00
-> > 
-> > With patches, when lparstat is run on and idle LPAR
-> > =========================================================================
-> > System Configuration
-> > type=Dedicated mode=Capped smt=8 lcpu=2 mem=4834112 kB cpus=0 ent=2.00 
-> > ---Actual---                 -Normalized-
-> > %busy  %idle   Frequency     %busy  %idle
-> > ------ ------  ------------- ------ ------
-> > 1   0.15  99.84  2.17GHz[ 72%]   0.11  71.89
-> > 2   0.24  99.76  2.11GHz[ 70%]   0.18  69.82
-> > 3   0.24  99.75  2.11GHz[ 70%]   0.18  69.81
-> > 
-> > Gautham R. Shenoy (5):
-> >   powerpc: Move idle_loop_prolog()/epilog() functions to header file
-> >   powerpc/idle: Store PURR snapshot in a per-cpu global variable
-> >   powerpc/pseries: Account for SPURR ticks on idle CPUs
-> >   powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
-> >   Documentation: Document sysfs interfaces purr, spurr, idle_purr,
-> >     idle_spurr
-> > 
-> >  Documentation/ABI/testing/sysfs-devices-system-cpu | 39 +++++++++
-> >  arch/powerpc/include/asm/idle.h                    | 93 ++++++++++++++++++++++
-> >  arch/powerpc/kernel/sysfs.c                        | 82 ++++++++++++++++++-
-> >  arch/powerpc/platforms/pseries/setup.c             |  8 +-
-> >  drivers/cpuidle/cpuidle-pseries.c                  | 39 ++-------
-> >  5 files changed, 224 insertions(+), 37 deletions(-)
-> >  create mode 100644 arch/powerpc/include/asm/idle.h
-> > 
-> 
-> Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+in order to account data read IOs more accurately.
 
-Thanks for reviewing the patches.
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
 
-> 
-> Any chance this is going to be merged in the near future? There is a patchset to
-> update lparstat in the powerpc-utils package to calculate PURR/SPURR cpu
-> utilization that I would like to merge, but have been holding off to make sure
-> we are synced with this proposed patchset.
+Jaegeuk, merge this patch into ("f2fs: support read iostat") will
+be okay to me as well.
 
-Michael, could you please consider this for 5.8 ?
+ fs/f2fs/data.c              |  1 +
+ fs/f2fs/f2fs.h              |  2 ++
+ fs/f2fs/gc.c                |  2 ++
+ fs/f2fs/sysfs.c             |  7 +++++++
+ include/trace/events/f2fs.h | 11 ++++++++---
+ 5 files changed, 20 insertions(+), 3 deletions(-)
 
---
-Thanks and Regards
-gautham.
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 199877cb57fe..8dd48c5b6c0d 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2176,6 +2176,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 
+ 		inc_page_count(sbi, F2FS_RD_DATA);
+ 		f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
++		f2fs_update_iostat(sbi, FS_CDATA_READ_IO, F2FS_BLKSIZE);
+ 		ClearPageError(page);
+ 		*last_block_in_bio = blkaddr;
+ 	}
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 3b9603266a2a..c154651335cd 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1108,6 +1108,8 @@ enum iostat_type {
+ 	APP_READ_IO,			/* app read IOs */
+ 	APP_MAPPED_READ_IO,		/* app mapped read IOs */
+ 	FS_DATA_READ_IO,		/* data read IOs */
++	FS_GDATA_READ_IO,		/* data read IOs from background gc */
++	FS_CDATA_READ_IO,		/* compressed data read IOs */
+ 	FS_NODE_READ_IO,		/* node read IOs */
+ 	FS_META_READ_IO,		/* meta read IOs */
+ 
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 28a8c79c8bdc..a4c02bf61f8a 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -739,6 +739,7 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
+ 	f2fs_put_page(page, 1);
+ 
+ 	f2fs_update_iostat(sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
++	f2fs_update_iostat(sbi, FS_GDATA_READ_IO, F2FS_BLKSIZE);
+ 
+ 	return 0;
+ put_encrypted_page:
+@@ -845,6 +846,7 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 		}
+ 
+ 		f2fs_update_iostat(fio.sbi, FS_DATA_READ_IO, F2FS_BLKSIZE);
++		f2fs_update_iostat(fio.sbi, FS_GDATA_READ_IO, F2FS_BLKSIZE);
+ 
+ 		lock_page(mpage);
+ 		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index eaf8088548f0..a117ae1f9d5f 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -803,6 +803,7 @@ static int __maybe_unused iostat_info_seq_show(struct seq_file *seq,
+ 	seq_printf(seq, "time:		%-16llu\n", now);
+ 
+ 	/* print app write IOs */
++	seq_puts(seq, "[WRITE]\n");
+ 	seq_printf(seq, "app buffered:	%-16llu\n",
+ 				sbi->rw_iostat[APP_BUFFERED_IO]);
+ 	seq_printf(seq, "app direct:	%-16llu\n",
+@@ -829,6 +830,7 @@ static int __maybe_unused iostat_info_seq_show(struct seq_file *seq,
+ 				sbi->rw_iostat[FS_CP_META_IO]);
+ 
+ 	/* print app read IOs */
++	seq_puts(seq, "[READ]\n");
+ 	seq_printf(seq, "app buffered:	%-16llu\n",
+ 				sbi->rw_iostat[APP_BUFFERED_READ_IO]);
+ 	seq_printf(seq, "app direct:	%-16llu\n",
+@@ -839,12 +841,17 @@ static int __maybe_unused iostat_info_seq_show(struct seq_file *seq,
+ 	/* print fs read IOs */
+ 	seq_printf(seq, "fs data:	%-16llu\n",
+ 				sbi->rw_iostat[FS_DATA_READ_IO]);
++	seq_printf(seq, "fs gc data:	%-16llu\n",
++				sbi->rw_iostat[FS_GDATA_READ_IO]);
++	seq_printf(seq, "fs compr_data:	%-16llu\n",
++				sbi->rw_iostat[FS_CDATA_READ_IO]);
+ 	seq_printf(seq, "fs node:	%-16llu\n",
+ 				sbi->rw_iostat[FS_NODE_READ_IO]);
+ 	seq_printf(seq, "fs meta:	%-16llu\n",
+ 				sbi->rw_iostat[FS_META_READ_IO]);
+ 
+ 	/* print other IOs */
++	seq_puts(seq, "[OTHER]\n");
+ 	seq_printf(seq, "fs discard:	%-16llu\n",
+ 				sbi->rw_iostat[FS_DISCARD]);
+ 
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 417a486f5c8a..9ef8dea5c833 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1837,6 +1837,8 @@ TRACE_EVENT(f2fs_iostat,
+ 		__field(unsigned long long,	app_rio)
+ 		__field(unsigned long long,	app_mrio)
+ 		__field(unsigned long long,	fs_drio)
++		__field(unsigned long long,	fs_gdrio)
++		__field(unsigned long long,	fs_cdrio)
+ 		__field(unsigned long long,	fs_nrio)
+ 		__field(unsigned long long,	fs_mrio)
+ 		__field(unsigned long long,	fs_discard)
+@@ -1861,6 +1863,8 @@ TRACE_EVENT(f2fs_iostat,
+ 		__entry->app_rio	= iostat[APP_READ_IO];
+ 		__entry->app_mrio	= iostat[APP_MAPPED_READ_IO];
+ 		__entry->fs_drio	= iostat[FS_DATA_READ_IO];
++		__entry->fs_gdrio	= iostat[FS_GDATA_READ_IO];
++		__entry->fs_cdrio	= iostat[FS_CDATA_READ_IO];
+ 		__entry->fs_nrio	= iostat[FS_NODE_READ_IO];
+ 		__entry->fs_mrio	= iostat[FS_META_READ_IO];
+ 		__entry->fs_discard	= iostat[FS_DISCARD];
+@@ -1872,15 +1876,16 @@ TRACE_EVENT(f2fs_iostat,
+ 		"gc [data=%llu, node=%llu], "
+ 		"cp [data=%llu, node=%llu, meta=%llu], "
+ 		"app [read=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
+-		"fs [data=%llu, node=%llu, meta=%llu]",
++		"fs [data=%llu, (gc_data=%llu, compr_data=%llu), "
++		"node=%llu, meta=%llu]",
+ 		show_dev(__entry->dev), __entry->app_wio, __entry->app_dio,
+ 		__entry->app_bio, __entry->app_mio, __entry->fs_dio,
+ 		__entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
+ 		__entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
+ 		__entry->fs_cp_nio, __entry->fs_cp_mio,
+ 		__entry->app_rio, __entry->app_drio, __entry->app_brio,
+-		__entry->app_mrio, __entry->fs_drio, __entry->fs_nrio,
+-		__entry->fs_mrio)
++		__entry->app_mrio, __entry->fs_drio, __entry->fs_gdrio,
++		__entry->fs_cdrio, __entry->fs_nrio, __entry->fs_mrio)
+ );
+ 
+ #endif /* _TRACE_F2FS_H */
+-- 
+2.18.0.rc1
+
