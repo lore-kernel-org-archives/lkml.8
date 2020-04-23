@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C92C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D17AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF7520704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646012076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fkt4m5aB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GhZ71I2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgDWK2v (ORCPT
+        id S1727049AbgDWK35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:28:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27114 "EHLO
+        Thu, 23 Apr 2020 06:29:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27272 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726420AbgDWK2u (ORCPT
+        with ESMTP id S1727014AbgDWK34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:28:50 -0400
+        Thu, 23 Apr 2020 06:29:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587637729;
+        s=mimecast20190719; t=1587637795;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=F4gaJDC+0sH0pf6hQtA9epfsJhXMtyNcCCHD374PsVM=;
-        b=Fkt4m5aBbycyYvz0OWF94QhrDhLLL67yA1ESLenDjh/pKH8Xkq+ZbQStxsTkIO9BF6R1GM
-        ImP2jPJ2rUJPUvkq4P15KWahD42pmysGKBMx7DlWtQThV0B2JWkrGmkZlhtOx2I0s4TTu+
-        7KfFcgYkpwb3+d/VEwxcLoQhoWMxz0U=
+        bh=v9AXR8INu2V1rXzlem4kdzH7dLRNBQB5Vc6BL374Yjc=;
+        b=GhZ71I2hOUzwRtJgGDWbEfDU3Z7FVPVvQb84chqU2Zw40V2wceOTxe1COUIz5IpAq1uRyU
+        4jmso28+otRGkE2tJg7CvmtY0tctMymJTs5BoI6VR1fB3TLA5cay1mICkSGERIturST7PP
+        2KwKeaZqQeqwg4YuDfOX50r+Tda0/s0=
 Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
  [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-3P5Z-h8qMcywYd4Qh93dqg-1; Thu, 23 Apr 2020 06:28:48 -0400
-X-MC-Unique: 3P5Z-h8qMcywYd4Qh93dqg-1
-Received: by mail-wr1-f69.google.com with SMTP id y10so2637829wrn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 03:28:47 -0700 (PDT)
+ us-mta-167-OkCP4SNCOAuopXw77MfKQQ-1; Thu, 23 Apr 2020 06:29:48 -0400
+X-MC-Unique: OkCP4SNCOAuopXw77MfKQQ-1
+Received: by mail-wr1-f69.google.com with SMTP id x15so2655631wrn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 03:29:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=F4gaJDC+0sH0pf6hQtA9epfsJhXMtyNcCCHD374PsVM=;
-        b=ah7rpJq5vf8ALitMqU9P5Ur+xIdL0ljNh8Tb79ggs8IohRLBV3r3xBpwvFvTGXc6XB
-         7JmTqvnXNOOkwhqresIXDO6y+jKDCjoTRXBZcwqReMgEjDGjTpj/5mqJf3rDKPGq/HWB
-         ZJSaYUshCP7CTJJDNl8h/ow9eUzFWQnNn3D6yiWJP9taNM64YWy8HqW3a3zU80YCKeM1
-         51P7swYebauY/vQmkGIr+niy/SmyxspLdHHWU2QHW2eKFsWK0PSQBbUmozaouVdXTDKk
-         SwK1BDtmgxhnWH4KNbxrvkwttOXvlqpUmH81VOWmZi/HDasLcH3woexz7I5NkILLSw9U
-         6PFw==
-X-Gm-Message-State: AGi0PuaTO5n9lVbLyAf7Upl22p82vOPyhgCr4FttDZby6/e45+Q18dOr
-        T6POXZZjfaRiansoX8woCLDjeiEsjS5daksHqKUeaVrgxAlZTNzPxarYmV4zpT7UMCWU7yP1BMc
-        1C2VbCr42JkoayjMaoCYzdABe
-X-Received: by 2002:a7b:c959:: with SMTP id i25mr3399720wml.20.1587637726968;
-        Thu, 23 Apr 2020 03:28:46 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIwDLQEdjIxqk+ixiCPh718UOGXUU8SgMs4SSKoJavwX9XPgwvm+sHaWDIv6J+rTgsp3KH5Kg==
-X-Received: by 2002:a7b:c959:: with SMTP id i25mr3399700wml.20.1587637726785;
-        Thu, 23 Apr 2020 03:28:46 -0700 (PDT)
+        bh=v9AXR8INu2V1rXzlem4kdzH7dLRNBQB5Vc6BL374Yjc=;
+        b=Zf7tg25QIHWPLUKmUCln988EBYES+WhBqkULMJNQs+SEfOZCsmcgjGFcVgyndqMmpz
+         uli+gsSeeDbNkkKXdpue+JeRKZxR6NMqLEekomdsWSbwqQUqkfp3k0SojgNCNgc+ItTd
+         OAKiwW8vCxaxmARzDHfVgeSFwBpRZnY1oIjH2w7yrQVKpVs5Bt2xAq/0NzzpekmvAyoL
+         UlbKTrqB+jIbFXyABkPj2JONbUeEu32udvuDiDgjL2esfOLxUE92JfU1Bu6oZE7TtnoR
+         ys3Q1K3kfsvCQHP3JwXLhQNGuRwj5oYFzTylnck7NTVO5M9KP/WJW0HnryqiYUbkDDxi
+         31+A==
+X-Gm-Message-State: AGi0PubZ7xGtS/IIIWgMj5UINpPagjy5y4NkFZf35NZCInwXqHr5FNM1
+        UaFZIMSdiCXbjZt+EyeJlKhGBGSbboyPit4uBcs0ILZaXgwI8yD4qOPpmi1VeVRXU/qPLqdDhU4
+        n7GYzqPSw0QR0DHock/HYgE9I
+X-Received: by 2002:adf:a3d5:: with SMTP id m21mr4322769wrb.54.1587637787646;
+        Thu, 23 Apr 2020 03:29:47 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIKDKQY6xB5YBU0fXjYucgfv1RSNisE2zdI//PsRQUExilnMvDayNiGTxi7DsmMMZbDdNW2ow==
+X-Received: by 2002:adf:a3d5:: with SMTP id m21mr4322755wrb.54.1587637787471;
+        Thu, 23 Apr 2020 03:29:47 -0700 (PDT)
 Received: from [192.168.10.150] ([93.56.170.5])
-        by smtp.gmail.com with ESMTPSA id w10sm3295066wrg.52.2020.04.23.03.28.45
+        by smtp.gmail.com with ESMTPSA id x13sm3273966wmc.5.2020.04.23.03.29.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 03:28:46 -0700 (PDT)
-Subject: Re: [PATCH v2 4/5] KVM: X86: TSCDEADLINE MSR emulation fastpath
+        Thu, 23 Apr 2020 03:29:46 -0700 (PDT)
+Subject: Re: [PATCH v2 5/5] KVM: VMX: Handle preemption timer fastpath
 To:     Wanpeng Li <kernellwp@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -73,16 +73,16 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
         Joerg Roedel <joro@8bytes.org>,
         Haiwei Li <lihaiwei@tencent.com>
 References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
- <1587632507-18997-5-git-send-email-wanpengli@tencent.com>
- <1309372a-0dcf-cba6-9d65-e50139bbe46b@redhat.com>
- <CANRm+CwwUO9Snyvuhyg8zbLf9DRhQ8RhRddkrdu+wRjF8v5tdw@mail.gmail.com>
+ <1587632507-18997-6-git-send-email-wanpengli@tencent.com>
+ <99d81fa5-dc37-b22f-be1e-4aa0449e6c26@redhat.com>
+ <CANRm+CyyKwFoSns31gK=_v0j1VQrOwDhgTqWZOLZS9iGZeC3Gw@mail.gmail.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <45bc6124-c07f-9336-376a-20ed2694fa01@redhat.com>
-Date:   Thu, 23 Apr 2020 12:28:45 +0200
+Message-ID: <ce15ea08-4d5d-6e7b-9413-b5fcf1309697@redhat.com>
+Date:   Thu, 23 Apr 2020 12:29:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CANRm+CwwUO9Snyvuhyg8zbLf9DRhQ8RhRddkrdu+wRjF8v5tdw@mail.gmail.com>
+In-Reply-To: <CANRm+CyyKwFoSns31gK=_v0j1VQrOwDhgTqWZOLZS9iGZeC3Gw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,12 +91,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 11:54, Wanpeng Li wrote:
->> and then you don't need kvm_set_lapic_tscdeadline_msr_fast and
->
-> I guess you mean don't need tscdeadline_expired_timer_fast().
+On 23/04/20 11:56, Wanpeng Li wrote:
+>> Please re-evaluate if this is needed (or which parts are needed) after
+>> cleaning up patch 4.  Anyway again---this is already better, I don't
+>> like the duplicated code but at least I can understand what's going on.
+> Except the apic_lvtt_tscdeadline(apic) check, others are duplicated,
+> what do you think about apic_lvtt_tscdeadline(apic) check?
 
-Both.
+We have to take a look again after you clean up patch 4.  My hope is to
+reuse the slowpath code as much as possible, by introducing some
+optimizations here and there.
 
 Paolo
 
