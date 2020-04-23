@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60497C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB5CC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4761820784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A6420780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgDWXHL (ORCPT
+        id S1728808AbgDWXHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:07:11 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49670 "EHLO
+        Thu, 23 Apr 2020 19:07:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49658 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728402AbgDWXGr (ORCPT
+        by vger.kernel.org with ESMTP id S1728413AbgDWXGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:47 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvT-0004iP-Kw; Fri, 24 Apr 2020 00:06:35 +0100
+        id 1jRkvT-0004i3-VG; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvR-00E6ow-1A; Fri, 24 Apr 2020 00:06:33 +0100
+        id 1jRkvR-00E6qN-VO; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, "Jan Kara" <jack@suse.cz>
-Date:   Fri, 24 Apr 2020 00:05:50 +0100
-Message-ID: <lsq.1587683028.111006664@decadent.org.uk>
+        "Jia-Ju Bai" <baijiaju1990@gmail.com>,
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Fri, 24 Apr 2020 00:06:08 +0100
+Message-ID: <lsq.1587683028.203073685@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 123/245] ext4: check for directory entries too close
- to block end
+Subject: [PATCH 3.16 141/245] ALSA: ice1724: Fix sleep-in-atomic in
+ Infrasonic Quartet support code
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,36 +56,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 109ba779d6cca2d519c5dd624a3276d03e21948e upstream.
+commit 0aec96f5897ac16ad9945f531b4bef9a2edd2ebd upstream.
 
-ext4_check_dir_entry() currently does not catch a case when a directory
-entry ends so close to the block end that the header of the next
-directory entry would not fit in the remaining space. This can lead to
-directory iteration code trying to access address beyond end of current
-buffer head leading to oops.
+Jia-Ju Bai reported a possible sleep-in-atomic scenario in the ice1724
+driver with Infrasonic Quartet support code: namely, ice->set_rate
+callback gets called inside ice->reg_lock spinlock, while the callback
+in quartet.c holds ice->gpio_mutex.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191202170213.4761-3-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This patch fixes the invalid call: it simply moves the calls of
+ice->set_rate and ice->set_mclk callbacks outside the spinlock.
+
+Reported-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/5d43135e-73b9-a46a-2155-9e91d0dcdf83@gmail.com
+Link: https://lore.kernel.org/r/20191218192606.12866-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ext4/dir.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/pci/ice1712/ice1724.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -78,6 +78,11 @@ int __ext4_check_dir_entry(const char *f
- 		error_msg = "rec_len is too small for name_len";
- 	else if (unlikely(((char *) de - buf) + rlen > size))
- 		error_msg = "directory entry overrun";
-+	else if (unlikely(((char *) de - buf) + rlen >
-+			  size - EXT4_DIR_REC_LEN(1) &&
-+			  ((char *) de - buf) + rlen != size)) {
-+		error_msg = "directory entry too close to block end";
-+	}
- 	else if (unlikely(le32_to_cpu(de->inode) >
- 			le32_to_cpu(EXT4_SB(dir->i_sb)->s_es->s_inodes_count)))
- 		error_msg = "inode out of bounds";
+--- a/sound/pci/ice1712/ice1724.c
++++ b/sound/pci/ice1712/ice1724.c
+@@ -663,6 +663,7 @@ static int snd_vt1724_set_pro_rate(struc
+ 	unsigned long flags;
+ 	unsigned char mclk_change;
+ 	unsigned int i, old_rate;
++	bool call_set_rate = false;
+ 
+ 	if (rate > ice->hw_rates->list[ice->hw_rates->count - 1])
+ 		return -EINVAL;
+@@ -686,7 +687,7 @@ static int snd_vt1724_set_pro_rate(struc
+ 		 * setting clock rate for internal clock mode */
+ 		old_rate = ice->get_rate(ice);
+ 		if (force || (old_rate != rate))
+-			ice->set_rate(ice, rate);
++			call_set_rate = true;
+ 		else if (rate == ice->cur_rate) {
+ 			spin_unlock_irqrestore(&ice->reg_lock, flags);
+ 			return 0;
+@@ -694,12 +695,14 @@ static int snd_vt1724_set_pro_rate(struc
+ 	}
+ 
+ 	ice->cur_rate = rate;
++	spin_unlock_irqrestore(&ice->reg_lock, flags);
++
++	if (call_set_rate)
++		ice->set_rate(ice, rate);
+ 
+ 	/* setting master clock */
+ 	mclk_change = ice->set_mclk(ice, rate);
+ 
+-	spin_unlock_irqrestore(&ice->reg_lock, flags);
+-
+ 	if (mclk_change && ice->gpio.i2s_mclk_changed)
+ 		ice->gpio.i2s_mclk_changed(ice);
+ 	if (ice->gpio.set_pro_rate)
 
