@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11712C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A66C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F155020784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D3320784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbgDWXLx (ORCPT
+        id S1728940AbgDWXMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:11:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50226 "EHLO
+        Thu, 23 Apr 2020 19:12:02 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50160 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728555AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728531AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:52 -0400
+        Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkva-0004mp-QB; Fri, 24 Apr 2020 00:06:43 +0100
+        id 1jRkvX-0004lg-Nm; Fri, 24 Apr 2020 00:06:39 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvW-00E6wx-Rf; Fri, 24 Apr 2020 00:06:38 +0100
+        id 1jRkvT-00E6tc-Ou; Fri, 24 Apr 2020 00:06:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Arnd Bergmann" <arnd@arndb.de>
-Date:   Fri, 24 Apr 2020 00:06:55 +0100
-Message-ID: <lsq.1587683028.131123999@decadent.org.uk>
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Kenneth Klette Jonassen" <kennetkl@ifi.uio.no>
+Date:   Fri, 24 Apr 2020 00:06:29 +0100
+Message-ID: <lsq.1587683028.804407755@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 188/245] scsi: fnic: fix invalid stack access
+Subject: [PATCH 3.16 162/245] pkt_sched: fq: avoid hang when quantum 0
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,121 +56,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kenneth Klette Jonassen <kennetkl@ifi.uio.no>
 
-commit 42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf upstream.
+commit 3725a269815ba6dbb415feddc47da5af7d1fac58 upstream.
 
-gcc -O3 warns that some local variables are not properly initialized:
+Configuring fq with quantum 0 hangs the system, presumably because of a
+non-interruptible infinite loop. Either way quantum 0 does not make sense.
 
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
-drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[0] = *a0;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
-  u64 a0, a1;
-      ^~
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
+Reproduce with:
+sudo tc qdisc add dev lo root fq quantum 0 initial_quantum 0
+ping 127.0.0.1
 
-Apparently the code relies on the local variables occupying adjacent memory
-locations in the same order, but this is of course not guaranteed.
-
-Use an array of two u64 variables where needed to make it work correctly.
-
-I suspect there is also an endianness bug here, but have not digged in deep
-enough to be sure.
-
-Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
-Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-Link: https://lore.kernel.org/r/20200107201602.4096790-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Kenneth Klette Jonassen <kennetkl@ifi.uio.no>
+Acked-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/fnic/vnic_dev.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ net/sched/sch_fq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/fnic/vnic_dev.c
-+++ b/drivers/scsi/fnic/vnic_dev.c
-@@ -445,26 +445,26 @@ int vnic_dev_soft_reset_done(struct vnic
+--- a/net/sched/sch_fq.c
++++ b/net/sched/sch_fq.c
+@@ -687,8 +687,14 @@ static int fq_change(struct Qdisc *sch,
+ 	if (tb[TCA_FQ_FLOW_PLIMIT])
+ 		q->flow_plimit = nla_get_u32(tb[TCA_FQ_FLOW_PLIMIT]);
  
- int vnic_dev_hang_notify(struct vnic_dev *vdev)
- {
--	u64 a0, a1;
-+	u64 a0 = 0, a1 = 0;
- 	int wait = 1000;
- 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
- }
+-	if (tb[TCA_FQ_QUANTUM])
+-		q->quantum = nla_get_u32(tb[TCA_FQ_QUANTUM]);
++	if (tb[TCA_FQ_QUANTUM]) {
++		u32 quantum = nla_get_u32(tb[TCA_FQ_QUANTUM]);
++
++		if (quantum > 0)
++			q->quantum = quantum;
++		else
++			err = -EINVAL;
++	}
  
- int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
- {
--	u64 a0, a1;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err, i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
- 		mac_addr[i] = 0;
- 
--	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
- 	if (err)
- 		return err;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		mac_addr[i] = ((u8 *)&a0)[i];
-+		mac_addr[i] = ((u8 *)&a)[i];
- 
- 	return 0;
- }
-@@ -489,15 +489,15 @@ void vnic_dev_packet_filter(struct vnic_
- 
- void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
- 	if (err)
- 		printk(KERN_ERR
- 			"Can't add addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
-@@ -507,15 +507,15 @@ void vnic_dev_add_addr(struct vnic_dev *
- 
- void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
- 	if (err)
- 		printk(KERN_ERR
- 			"Can't del addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
+ 	if (tb[TCA_FQ_INITIAL_QUANTUM])
+ 		q->initial_quantum = nla_get_u32(tb[TCA_FQ_INITIAL_QUANTUM]);
 
