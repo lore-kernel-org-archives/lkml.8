@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37331C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1993C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2109220780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE7020780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDWXGn (ORCPT
+        id S1728585AbgDWXRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:06:43 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48150 "EHLO
+        Thu, 23 Apr 2020 19:17:02 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49372 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727879AbgDWXG1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728346AbgDWXGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:27 -0400
+        Thu, 23 Apr 2020 19:06:43 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvI-0004ZR-4F; Fri, 24 Apr 2020 00:06:24 +0100
+        id 1jRkvT-0004i3-1b; Fri, 24 Apr 2020 00:06:35 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvH-00E6eu-L4; Fri, 24 Apr 2020 00:06:23 +0100
+        id 1jRkvQ-00E6og-Lw; Fri, 24 Apr 2020 00:06:32 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        "Lukas Czerner" <lczerner@redhat.com>
-Date:   Fri, 24 Apr 2020 00:03:57 +0100
-Message-ID: <lsq.1587683028.111002229@decadent.org.uk>
+        "David Sterba" <dsterba@suse.com>,
+        "Lu Fengqi" <lufq.fnst@cn.fujitsu.com>
+Date:   Fri, 24 Apr 2020 00:05:47 +0100
+Message-ID: <lsq.1587683028.711032763@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 010/245] ext4: wait for existing dio workers in
- ext4_alloc_file_blocks()
+Subject: [PATCH 3.16 120/245] btrfs: Remove redundant btrfs_release_path
+ from btrfs_unlink_subvol
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,47 +56,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
 
-commit 0d306dcf86e8f065dff42a4a934ae9d99af35ba5 upstream.
+commit 5b7d687ad5913a56b6a8788435d7a53990b4176d upstream.
 
-Currently existing dio workers can jump in and potentially increase
-extent tree depth while we're allocating blocks in
-ext4_alloc_file_blocks().  This may cause us to underestimate the
-number of credits needed for the transaction because the extent tree
-depth can change after our estimation.
+Although it is safe to call this on already released paths with no locks
+held or extent buffers, removing the redundant btrfs_release_path is
+reasonable.
 
-Fix this by waiting for all the existing dio workers in the same way
-as we do it in ext4_punch_hole.  We've seen errors caused by this in
-xfstest generic/299, however it's really hard to reproduce.
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Lu Fengqi <lufq.fnst@cn.fujitsu.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 3.16 as dependency of commit d49d3287e74f
+ "btrfs: fix invalid removal of root ref"]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ext4/extents.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/btrfs/inode.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -4707,6 +4707,10 @@ static int ext4_alloc_file_blocks(struct
- 	if (len <= EXT_UNWRITTEN_MAX_LEN)
- 		flags |= EXT4_GET_BLOCKS_NO_NORMALIZE;
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -4031,7 +4031,6 @@ int btrfs_unlink_subvol(struct btrfs_tra
  
-+	/* Wait all existing dio workers, newcomers will block on i_mutex */
-+	ext4_inode_block_unlocked_dio(inode);
-+	inode_dio_wait(inode);
-+
- 	/*
- 	 * credits to insert 1 extent into extent tree
- 	 */
-@@ -4756,6 +4760,8 @@ retry:
- 		goto retry;
+ 		leaf = path->nodes[0];
+ 		btrfs_item_key_to_cpu(leaf, &key, path->slots[0]);
+-		btrfs_release_path(path);
+ 		index = key.offset;
  	}
- 
-+	ext4_inode_resume_unlocked_dio(inode);
-+
- 	return ret > 0 ? ret2 : ret;
- }
- 
+ 	btrfs_release_path(path);
 
