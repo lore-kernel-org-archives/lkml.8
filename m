@@ -4,30 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ABCC55193
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94BBC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA46B20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B5C20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgDWVlu (ORCPT
+        id S1728077AbgDWVl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 17:41:50 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:7839 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727976AbgDWVls (ORCPT
+        Thu, 23 Apr 2020 17:41:58 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:11728 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725777AbgDWVlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 17:41:48 -0400
+        Thu, 23 Apr 2020 17:41:16 -0400
 X-IronPort-AV: E=Sophos;i="5.73,309,1583161200"; 
-   d="scan'208";a="45339816"
+   d="scan'208";a="45553076"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:47 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:15 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D21654004BB2;
-        Fri, 24 Apr 2020 06:41:43 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id ACEBC400C420;
+        Fri, 24 Apr 2020 06:41:11 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -43,9 +42,9 @@ Cc:     Marian-Cristian Rotariu
         linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 10/10] cpufreq: dt: Add support for r8a7742
-Date:   Thu, 23 Apr 2020 22:40:50 +0100
-Message-Id: <1587678050-23468-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 02/10] dt-bindings: power: rcar-sysc: Add r8a7742 power domain index macros
+Date:   Thu, 23 Apr 2020 22:40:42 +0100
+Message-Id: <1587678050-23468-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -54,27 +53,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the compatible strings for supporting the generic cpufreq driver on
-the Renesas RZ/G1H (R8A7742) SoC.
+Add power domain indices for RZ/G1H (R8A7742) SoC.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/dt-bindings/power/r8a7742-sysc.h | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 include/dt-bindings/power/r8a7742-sysc.h
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index cb9db16..148aa66 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -53,6 +53,7 @@ static const struct of_device_id whitelist[] __initconst = {
- 	{ .compatible = "renesas,r7s72100", },
- 	{ .compatible = "renesas,r8a73a4", },
- 	{ .compatible = "renesas,r8a7740", },
-+	{ .compatible = "renesas,r8a7742", },
- 	{ .compatible = "renesas,r8a7743", },
- 	{ .compatible = "renesas,r8a7744", },
- 	{ .compatible = "renesas,r8a7745", },
+diff --git a/include/dt-bindings/power/r8a7742-sysc.h b/include/dt-bindings/power/r8a7742-sysc.h
+new file mode 100644
+index 0000000..1b1bd3c
+--- /dev/null
++++ b/include/dt-bindings/power/r8a7742-sysc.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++#ifndef __DT_BINDINGS_POWER_R8A7742_SYSC_H__
++#define __DT_BINDINGS_POWER_R8A7742_SYSC_H__
++
++/*
++ * These power domain indices match the numbers of the interrupt bits
++ * representing the power areas in the various Interrupt Registers
++ * (e.g. SYSCISR, Interrupt Status Register)
++ */
++
++#define R8A7742_PD_CA15_CPU0		 0
++#define R8A7742_PD_CA15_CPU1		 1
++#define R8A7742_PD_CA15_CPU2		 2
++#define R8A7742_PD_CA15_CPU3		 3
++#define R8A7742_PD_CA7_CPU0		 5
++#define R8A7742_PD_CA7_CPU1		 6
++#define R8A7742_PD_CA7_CPU2		 7
++#define R8A7742_PD_CA7_CPU3		 8
++#define R8A7742_PD_CA15_SCU		12
++#define R8A7742_PD_RGX			20
++#define R8A7742_PD_CA7_SCU		21
++
++/* Always-on power area */
++#define R8A7742_PD_ALWAYS_ON		32
++
++#endif /* __DT_BINDINGS_POWER_R8A7742_SYSC_H__ */
 -- 
 2.7.4
 
