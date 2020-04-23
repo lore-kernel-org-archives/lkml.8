@@ -2,153 +2,137 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F5EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EE2C55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80A3B2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:44:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="O7+gDV4+"
+	by mail.kernel.org (Postfix) with ESMTP id E8D342075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgDWFoR (ORCPT
+        id S1726639AbgDWFrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:44:17 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17876 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725854AbgDWFoQ (ORCPT
+        Thu, 23 Apr 2020 01:47:15 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33850 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgDWFrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:44:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1587620578; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=WEXPfoDkTWR/J9oQ9Jcu7q/a/EFKCDDKjQO2CAHp2ijGoscDdlo4HyceiMs/n8zMB8/PyX3CFPQhD0dhwlAMta1YuthFxuys8tCAVPSxLiThRHeZrNgUdQrqb0fjrHP/m6RSUyLwuSo60uQLNKaqMejC5AOOMEInULT2bvzITAo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1587620578; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=p0Hue82OArHegP34/EQC99f2PxSUyGy0fvP1kcei0ek=; 
-        b=Lqh3ZFfPQNHk+KReY/uCf6LxTjL1w/abhWPo7X+YAx4gZ7d7GdyYgBPPQrbjRE5oopJe0PaHPWFllMrx7utrTHEYfaiBmh+TJLsnABmCJjEa/RgNrR+RndKhHs6JjmC/rp+MpgqE32A0BXqWdhuRz869SpvjWMX9xw24/E19FrM=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587620578;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=p0Hue82OArHegP34/EQC99f2PxSUyGy0fvP1kcei0ek=;
-        b=O7+gDV4+us94bD1eMWGrcE2y8xlgPk4WYi+XXKNEK4r6a30aHvXJ5TsQzXVS1ez9
-        GGg94lSbvV4EKhj+hPewIDkylwxf2o8dCXaiUZuVUXmXWj/KqIV6nf8vMZy2a3519N5
-        AD3tg2QdF4MfiUOeo4+mz7/YfJMjQD0Y4U9bJo18=
-Received: from [127.0.0.1] (122.235.213.3 [122.235.213.3]) by mx.zoho.com.cn
-        with SMTPS id 1587620575832526.5212172311194; Thu, 23 Apr 2020 13:42:55 +0800 (CST)
-Date:   Thu, 23 Apr 2020 13:42:52 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-CC:     linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit kernel
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org>
-References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com> <20200422143258.1250960-1-jiaxun.yang@flygoat.com> <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org>
-Message-ID: <B307BFAC-9973-4444-B69A-40B054210E84@flygoat.com>
+        Thu, 23 Apr 2020 01:47:14 -0400
+Received: by mail-io1-f68.google.com with SMTP id f3so5172373ioj.1;
+        Wed, 22 Apr 2020 22:47:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YIA9n3BbOJBvQz8fK79Sx7YPP5FbY1KMzzgVdpfzCAM=;
+        b=hUNtbqGOUAmOkRrK3+Wa1+zVt6vAY1gVwYl0jU3N5LVDFvbJoBpb0RZ35x59pLliWs
+         Y/RhP2K/nGv4loeOmJS9aWNxySskEwAvkFYpd4ylMVA7K+s5NKRLGvNJr5979m3sONZp
+         cn+pLIo/2tLxsuGcdEqoqBwg2ooBj+m2MAKRX+sxN5h31R1gu88S6Qk938TKxoK2JPYz
+         FiDTMxWOLfEF649lY7xFTKbDAIMz0ZCblp824aEG4o+jZUb8MMyq0UN6HX5qhh3J/YMk
+         YOfKfcA0DH4v2jihCZp0Jj3IY1I6AyahKFTw1TxlM9uJ0luEBEPWcGI/E/MTZzTBjGrF
+         Vi6w==
+X-Gm-Message-State: AGi0PubAc/4CoGqmp/r6mrRjZyZzw4IUk/L4o8xqkrpkaXHc+2cIEqCE
+        MvT+Je5UbylRSspE/Vttum97nkNfM5RLpXrwn5M=
+X-Google-Smtp-Source: APiQypLQb8z2G7X3Zawb3QxUz7bMW61nzP1Kp41ANKFUZ7n0a1V1lV7qJujlq4JOVLy8fduXFoXC3ymul/IReVhOi7k=
+X-Received: by 2002:a6b:7317:: with SMTP id e23mr2185787ioh.72.1587620833499;
+ Wed, 22 Apr 2020 22:47:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com> <20200422142428.1249684-5-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200422142428.1249684-5-jiaxun.yang@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Thu, 23 Apr 2020 13:54:32 +0800
+Message-ID: <CAAhV-H5u9Y23SqJTUHZtdjiOU=-FzZm6U=yonyveJFa2mACFzQ@mail.gmail.com>
+Subject: Re: [PATCH 4/6] dt-bindings: interrupt-controller: Add Loongson PCH PIC
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Jiaxun,
 
-
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=888=
-:10:12, "Maciej W=2E Rozycki" <macro@linux-mips=2Eorg> =E5=86=99=E5=88=B0:
->On Wed, 22 Apr 2020, Jiaxun Yang wrote:
+On Wed, Apr 22, 2020 at 10:27 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
->> Reviewed-by: Maciej W=2E Rozycki <macro@linux-mips=2Eorg>
+> Add binding for Loongson PCH PIC Controller.
 >
-> Hmm, that was for an earlier version of the patch, and reviews obviously=
-=20
->do not automatically carry over to subsequent versions, as it cannot be=
-=20
->claimed that they are as good in the reviewer's eyes as the actual versio=
-n=20
->reviewed was=2E
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../loongson,pch-pic.yaml                     | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
 >
->> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
->> index e1c44aed8156=2E=2E68c0f22fefc0 100644
->> --- a/arch/mips/Makefile
->> +++ b/arch/mips/Makefile
->> @@ -288,12 +288,23 @@ ifdef CONFIG_64BIT
->>    endif
->>  endif
->> =20
->> +# When linking a 32-bit executable the LLVM linker cannot cope with a
->> +# 32-bit load address that has been sign-extended to 64 bits=2E  Simpl=
-y
->> +# remove the upper 32 bits then, as it is safe to do so with other
->> +# linkers=2E
->> +ifdef CONFIG_64BIT
->> +	load-ld			=3D $(load-y)
->> +else
->> +	load-ld			=3D $(subst 0xffffffff,0x,$(load-y))
->> +endif
->> +
->>  KBUILD_AFLAGS	+=3D $(cflags-y)
->>  KBUILD_CFLAGS	+=3D $(cflags-y)
->> -KBUILD_CPPFLAGS +=3D -DVMLINUX_LOAD_ADDRESS=3D$(load-y)
->> +KBUILD_CPPFLAGS +=3D -DVMLINUX_LOAD_ADDRESS=3D$(load-y) -DVMLINUX_LINK=
-_ADDRESS=3D$(load-ld)
->>  KBUILD_CPPFLAGS +=3D -DDATAOFFSET=3D$(if $(dataoffset-y),$(dataoffset-=
-y),0)
->> =20
->>  bootvars-y	=3D VMLINUX_LOAD_ADDRESS=3D$(load-y) \
->> +		  VMLINUX_LINK_ADDRESS=3D$(load-ld) \
->>  		  VMLINUX_ENTRY_ADDRESS=3D$(entry-y) \
->>  		  PLATFORM=3D"$(platform-y)" \
->>  		  ITS_INPUTS=3D"$(its-y)"
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+> new file mode 100644
+> index 000000000000..afc0c924e477
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,pch-pic.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Loongson PCH PIC Controller
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
+> +
+> +description: |
+> +  This interrupt controller is found in the Loongson-7A family of PCH for
+Please use "Loongson's LS7A family" here.
+
+> +  transforming interrupts from on-chip devices into HyperTransport vectorized
+> +  interrupts.
+> +
+> +properties:
+> +  compatible:
+> +    const: loongson,pch-pic-1.0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  loongson,pic-base-vec:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> +    description: |
+> +      u32 value of the base of parent HyperTransport vector allocated
+> +      to PCH PIC.
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    pic: interrupt-controller@10000000 {
+> +      compatible = "loongson,pch-pic-1.0";
+> +      reg = <0x10000000 0x400>;
+> +      interrupt-controller;
+> +      #interrupt-cells = <2>;
+> +      loongson,pic-base-vec = <64>;
+> +      interrupt-parent = <&htvec>;
+> +    };
+> +...
+> --
+> 2.26.0.rc2
 >
-> Hmm, to be honest I find the nomenclature confusing: VMLINUX_LOAD_ADDRES=
-S=20
->and VMLINUX_LINK_ADDRESS sound like synonyms to me and also look very=20
->similar, so I expect people will be confused and scratch their heads in=
-=20
->the future=2E  Due to the obscurity of the problem I think there is littl=
-e=20
->room for manoeuvre here really, but how about using LINKER_LOAD_ADDRESS=
-=20
->for the new variable?
->
-> Alternatively, have you made any attempt to verify if actually replacing=
-=20
->the setting for VMLINUX_LOAD_ADDRESS would be safe?  Glancing over its us=
-e=20
->there do not appear to be many places=2E
-
-Limited experiments showed it should be fine=2E=2E=2E
-
-But MIPS kernel has some design I'm not really familiar with like SYM32 fo=
-r
-64-bit kernel and special address space design for Trap-and-emul KVM=2E
-
-I'm not 100 sure it's safe so I didn't do so=2E
-
->
->  Maciej
-
---=20
-Jiaxun Yang
