@@ -2,256 +2,155 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934E5C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0A7C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727F220776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BC220776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:05:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nr80KI7m";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="SM8Pey+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDWAFg (ORCPT
+        id S1726192AbgDWAFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 20:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgDWAFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 20:05:36 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52AD72075A;
-        Thu, 23 Apr 2020 00:05:34 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 20:05:32 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Matt Helsley <mhelsley@vmware.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] recordmcount: support >64k sections
-Message-ID: <20200422200532.480face2@oasis.local.home>
-In-Reply-To: <20200422232417.72162-1-samitolvanen@google.com>
-References: <20200422232417.72162-1-samitolvanen@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 22 Apr 2020 20:05:45 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:45638 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725895AbgDWAFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 20:05:44 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N004xq021076;
+        Wed, 22 Apr 2020 17:05:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=vUB/aPIyKqX+bvEjFw20MrR6zuqRKIu3N8uFP7AIEP4=;
+ b=nr80KI7m98YsosU0ngbpO0DkBpJQJEpY2vvUp9TFvMt15ehCSB+2PWOybLYZmJ2aeztz
+ 6UmJNSPbc9hBOyqARBp0zC/eV/lJgJkgSEiWB8xbVqg0gDdoCrOgWDZ96/iSrAwaxPM/
+ qKQ6SPBJlkLFz2q/6JP5AXemYla6/aRcxKE= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 30jtc5hygs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 22 Apr 2020 17:05:37 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 22 Apr 2020 17:05:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E2aBgUndQ+bUUp/Rwh/pKfFfIxHxAkhJGOgRcsDLqYI0wI1VleIpfgtrW9rlpQ/bGkEPyOjFTFW/3dggh5Siqx+RG3ffKqUiImcVNNB4hNwOwPK7wOYaMCDLbGtAJ5gjYqEZfDvQUuOV8kRasq2AGmh/gDAHfdW2fA6eaaG/dFFa1h9Irw82e2vu9RtBkanFFetYi1tO/HDQxM0r62gpvTT1EAiqIsBVpbcNlJaNBqPiZp9WT69OefhMxqmjDSa+RnNOtXFY0RpwPQM0LacM1j4WyJzSfkrh8WMwxXuI5PwZqjYm2w5s3uPv/WZhY3rNb/rr1RGmgE+UlqlYcututQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vUB/aPIyKqX+bvEjFw20MrR6zuqRKIu3N8uFP7AIEP4=;
+ b=KXxgZs/9mgURD07AQdg724dQqczK6mPEiyfBNsCJXc4mhW7JUCs2UHfM041lI4pUEUKqSQ7nfLwDj4nyp/JcUbHVW5W1UtVWZPyBVj8xleAoyix8+N8iZuGzKJyd/I9TscsxGz+HLXzlaaKl7f2g23I99KgUzIqAq6Gci8iS74dawtGJQD6K+yVl3VLiwOZ+jpTp/OHU4jnJNtmeyBUrX2iMpS1ajixYe//SIWoUlcD0EET+w6IoxIWZv7mm2JyuVli9NcLVbHKjEE6p5PPb7ixQBYIlG8AcK/3K1yMEkz/SuibQxxqIKHsCS3f++4hZz2gxxslOS5e1zXXn1g6elw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vUB/aPIyKqX+bvEjFw20MrR6zuqRKIu3N8uFP7AIEP4=;
+ b=SM8Pey+fd8RZASiliZ0QMTi/jhi5R/D5OiCQa4uF5JU9UIUU2zWRrR4eaofrEVtJ79DRNm52nmteUVNEjlDSOVvJYL0EgRcAiXJ/6xZORVY/iXplxlskyFG3XgrQjPbhA1t+IPnkGqe6Z6yNpQX9XbvE9cJkpAr4Q7LIg/ZY8zA=
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2903.namprd15.prod.outlook.com (2603:10b6:a03:f5::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Thu, 23 Apr
+ 2020 00:05:35 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
+ 00:05:35 +0000
+Date:   Wed, 22 Apr 2020 17:05:30 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Christopher Lameter <cl@linux.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 04/19] mm: slub: implement SLUB version of
+ obj_to_index()
+Message-ID: <20200423000530.GA63356@carbon.lan>
+References: <20200422204708.2176080-1-guro@fb.com>
+ <20200422204708.2176080-5-guro@fb.com>
+ <alpine.DEB.2.21.2004222349280.20021@www.lameter.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2004222349280.20021@www.lameter.com>
+X-ClientProxiedBy: MWHPR04CA0062.namprd04.prod.outlook.com
+ (2603:10b6:300:6c::24) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.lan (2620:10d:c090:400::5:3fb8) by MWHPR04CA0062.namprd04.prod.outlook.com (2603:10b6:300:6c::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 00:05:33 +0000
+X-Originating-IP: [2620:10d:c090:400::5:3fb8]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2caed472-c5e5-4091-8c7b-08d7e71a0bab
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2903:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2903CB66AB1E44856DD8EE3EBED30@BYAPR15MB2903.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03827AF76E
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(366004)(136003)(346002)(376002)(396003)(5660300002)(55016002)(8936002)(36756003)(66946007)(316002)(6916009)(9686003)(4744005)(8886007)(4326008)(33656002)(478600001)(7696005)(2906002)(6506007)(52116002)(1076003)(16526019)(54906003)(8676002)(81156014)(86362001)(66556008)(66476007)(186003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NT/X7PQwXGaBXJ0Jfmm+94Z31wcFeg5LAo8gh9VlBtv1E0w7LDJzlBf2Wd5dpjDtfrXNem2oJschQM1j4A2DW14PLFNVfqG6c/yAMKzcBLOOPfuhBiubvJkL2Ku55QMVysbQSr9oiQUSUMCL4b9fYnS0+DcQWSFhg6TCWWxy2lCQlu2wK5a0ObuPxrh+s+YwvF+OahzS+QfJxlaCNXUYSENtt4vsBiZp09c2a9RfopwOL4xHaVUCbCtGUK+qSZ6boRUN3Rm3T3+UyYf0RSZhbgXX+HD7YBGqhc5cx4D3VMQ50zf+8ru4oU/cM/PHlZY3KQZH08pPBrQabPiccxIeXYvDRCIUzi7XhIlAAsvJwHR4XvrgO71is/hrk1XAAZ+LLrtoSAlxvpCR59FA0isNhfeIIk9yzM2WgnElWRAlTWGSzjhWOtKt68TlLbd7+8xl
+X-MS-Exchange-AntiSpam-MessageData: qnJsUn56UFHMphE9ZHTPIMuj4T3iFrKhgwK58bxLRWvoq7g8T7rW1nkH9v/C4HaNDwjgr5I+v9RPSya9axkurEaYm1RZUUQPtFz313jq+0GJe79gLzoDAGehSjPSPZkHEYaB+MGeR7nKJMm8yRR4iLmvsd0wG1luEKNRqzzupiDwXlCv/EVfX5ptQPlT1GDQ
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2caed472-c5e5-4091-8c7b-08d7e71a0bab
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 00:05:35.0370
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mYIY1FM+Y0SWjfxkIY7ydRa3CmPz534ny13klxdkCOD69TrL5YCoYpqCIx5ZALL2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2903
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_08:2020-04-22,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ clxscore=1015 spamscore=0 adultscore=0 malwarescore=0 suspectscore=1
+ bulkscore=0 mlxscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220184
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020 16:24:17 -0700
-Sami Tolvanen <samitolvanen@google.com> wrote:
-
-> When compiling a kernel with Clang and LTO, we need to run
-> recordmcount on vmlinux.o with a large number of sections, which
-> currently fails as the program doesn't understand extended
-> section indexes. This change adds support for processing binaries
-> with >64k sections.
-
-Thanks! As you have also Cc'd Matt Helsley, perhaps you have noticed we
-are trying to get this code merged with objtool.
-
-How would that affect this?
-
--- Steve
-
-
-
+On Wed, Apr 22, 2020 at 11:52:13PM +0000, Christoph Lameter wrote:
+> On Wed, 22 Apr 2020, Roman Gushchin wrote:
 > 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  scripts/recordmcount.h | 75
-> ++++++++++++++++++++++++++++++++++++++---- 1 file changed, 69
-> insertions(+), 6 deletions(-)
+> >  enum stat_item {
+> >  	ALLOC_FASTPATH,		/* Allocation from cpu slab */
+> > @@ -86,6 +87,7 @@ struct kmem_cache {
+> >  	unsigned long min_partial;
+> >  	unsigned int size;	/* The size of an object including metadata */
+> >  	unsigned int object_size;/* The size of an object without metadata */
+> > +	struct reciprocal_value reciprocal_size;
 > 
-> diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-> index 74eab03e31d4..b48163864cca 100644
-> --- a/scripts/recordmcount.h
-> +++ b/scripts/recordmcount.h
-> @@ -29,6 +29,9 @@
->  #undef has_rel_mcount
->  #undef tot_relsize
->  #undef get_mcountsym
-> +#undef get_shnum
-> +#undef get_shstrndx
-> +#undef get_symindex
->  #undef get_sym_str_and_relp
->  #undef do_func
->  #undef Elf_Addr
-> @@ -58,6 +61,9 @@
->  # define __has_rel_mcount	__has64_rel_mcount
->  # define has_rel_mcount		has64_rel_mcount
->  # define tot_relsize		tot64_relsize
-> +# define get_shnum		get_shnum64
-> +# define get_shstrndx		get_shstrndx64
-> +# define get_symindex		get_symindex64
->  # define get_sym_str_and_relp	get_sym_str_and_relp_64
->  # define do_func		do64
->  # define get_mcountsym		get_mcountsym_64
-> @@ -91,6 +97,9 @@
->  # define __has_rel_mcount	__has32_rel_mcount
->  # define has_rel_mcount		has32_rel_mcount
->  # define tot_relsize		tot32_relsize
-> +# define get_shnum		get_shnum32
-> +# define get_shstrndx		get_shstrndx32
-> +# define get_symindex		get_symindex32
->  # define get_sym_str_and_relp	get_sym_str_and_relp_32
->  # define do_func		do32
->  # define get_mcountsym		get_mcountsym_32
-> @@ -173,6 +182,38 @@ static int MIPS_is_fake_mcount(Elf_Rel const *rp)
->  	return is_fake;
->  }
->  
-> +static unsigned int get_symindex(Elf_Sym const *sym, Elf32_Word
-> const *symtab,
-> +				 Elf32_Word const *symtab_shndx)
-> +{
-> +	unsigned long offset;
-> +	int index;
-> +
-> +	if (sym->st_shndx != SHN_XINDEX)
-> +		return w2(sym->st_shndx);
-> +
-> +	offset = (unsigned long)sym - (unsigned long)symtab;
-> +	index = offset / sizeof(*sym);
-> +
-> +	return w(symtab_shndx[index]);
-> +}
-> +
-> +static unsigned int get_shnum(Elf_Ehdr const *ehdr, Elf_Shdr const
-> *shdr0) +{
-> +	if (shdr0 && !ehdr->e_shnum)
-> +		return w(shdr0->sh_size);
-> +
-> +	return w2(ehdr->e_shnum);
-> +}
-> +
-> +static int get_shstrndx(Elf_Ehdr const *ehdr, Elf_Shdr const *shdr0)
-> +{
-> +	if (ehdr->e_shstrndx != SHN_XINDEX)
-> +		return w2(ehdr->e_shstrndx);
-> +
-> +	return w(shdr0->sh_link);
-> +}
-> +
-> +
->  /* Append the new shstrtab, Elf_Shdr[], __mcount_loc and its
-> relocations. */ static int append_func(Elf_Ehdr *const ehdr,
->  			Elf_Shdr *const shstr,
-> @@ -188,10 +229,12 @@ static int append_func(Elf_Ehdr *const ehdr,
->  	char const *mc_name = (sizeof(Elf_Rela) == rel_entsize)
->  		? ".rela__mcount_loc"
->  		:  ".rel__mcount_loc";
-> -	unsigned const old_shnum = w2(ehdr->e_shnum);
->  	uint_t const old_shoff = _w(ehdr->e_shoff);
->  	uint_t const old_shstr_sh_size   = _w(shstr->sh_size);
->  	uint_t const old_shstr_sh_offset = _w(shstr->sh_offset);
-> +	Elf_Shdr *const shdr0 = (Elf_Shdr *)(old_shoff + (void
-> *)ehdr);
-> +	unsigned const old_shnum = get_shnum(ehdr, shdr0);
-> +	unsigned const new_shnum = 2 + old_shnum; /*
-> {.rel,}__mcount_loc */ uint_t t = 1 + strlen(mc_name) +
-> _w(shstr->sh_size); uint_t new_e_shoff;
->  
-> @@ -201,6 +244,12 @@ static int append_func(Elf_Ehdr *const ehdr,
->  	t += (_align & -t);  /* word-byte align */
->  	new_e_shoff = t;
->  
-> +	if (!ehdr->e_shnum || new_shnum >= SHN_LORESERVE) {
-> +		ehdr->e_shnum = 0;
-> +		shdr0->sh_size = w(new_shnum);
-> +	} else
-> +		ehdr->e_shnum = w2(2 + w2(ehdr->e_shnum));
-> +
->  	/* body for new shstrtab */
->  	if (ulseek(sb.st_size, SEEK_SET) < 0)
->  		return -1;
-> @@ -255,7 +304,6 @@ static int append_func(Elf_Ehdr *const ehdr,
->  		return -1;
->  
->  	ehdr->e_shoff = _w(new_e_shoff);
-> -	ehdr->e_shnum = w2(2 + w2(ehdr->e_shnum));  /*
-> {.rel,}__mcount_loc */ if (ulseek(0, SEEK_SET) < 0)
->  		return -1;
->  	if (uwrite(ehdr, sizeof(*ehdr)) < 0)
-> @@ -434,6 +482,8 @@ static int find_secsym_ndx(unsigned const txtndx,
->  				uint_t *const recvalp,
->  				unsigned int *sym_index,
->  				Elf_Shdr const *const symhdr,
-> +				Elf32_Word const *symtab,
-> +				Elf32_Word const *symtab_shndx,
->  				Elf_Ehdr const *const ehdr)
->  {
->  	Elf_Sym const *const sym0 = (Elf_Sym const
-> *)(_w(symhdr->sh_offset) @@ -445,7 +495,7 @@ static int
-> find_secsym_ndx(unsigned const txtndx, for (symp = sym0, t = nsym; t;
-> --t, ++symp) { unsigned int const st_bind =
-> ELF_ST_BIND(symp->st_info); 
-> -		if (txtndx == w2(symp->st_shndx)
-> +		if (txtndx == get_symindex(symp, symtab,
-> symtab_shndx) /* avoid STB_WEAK */
->  		    && (STB_LOCAL == st_bind || STB_GLOBAL ==
-> st_bind)) { /* function symbols on ARM have quirks, avoid them */
-> @@ -516,21 +566,23 @@ static unsigned tot_relsize(Elf_Shdr const
-> *const shdr0, return totrelsz;
->  }
->  
-> -
->  /* Overall supervision for Elf32 ET_REL file. */
->  static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
->  		   unsigned const reltype)
->  {
->  	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
->  		+ (void *)ehdr);
-> -	unsigned const nhdr = w2(ehdr->e_shnum);
-> -	Elf_Shdr *const shstr = &shdr0[w2(ehdr->e_shstrndx)];
-> +	unsigned const nhdr = get_shnum(ehdr, shdr0);
-> +	Elf_Shdr *const shstr = &shdr0[get_shstrndx(ehdr, shdr0)];
->  	char const *const shstrtab = (char const
-> *)(_w(shstr->sh_offset)
->  		+ (void *)ehdr);
->  
->  	Elf_Shdr const *relhdr;
->  	unsigned k;
->  
-> +	Elf32_Word *symtab = NULL;
-> +	Elf32_Word *symtab_shndx = NULL;
-> +
->  	/* Upper bound on space: assume all relevant relocs are for
-> mcount. */ unsigned       totrelsz;
->  
-> @@ -561,6 +613,16 @@ static int do_func(Elf_Ehdr *const ehdr, char
-> const *const fname, return -1;
->  	}
->  
-> +	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
-> +		if (relhdr->sh_type == SHT_SYMTAB)
-> +			symtab = (void *)ehdr + relhdr->sh_offset;
-> +		else if (relhdr->sh_type == SHT_SYMTAB_SHNDX)
-> +			symtab_shndx = (void *)ehdr +
-> relhdr->sh_offset; +
-> +		if (symtab && symtab_shndx)
-> +			break;
-> +	}
-> +
->  	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
->  		char const *const txtname = has_rel_mcount(relhdr,
-> shdr0, shstrtab, fname);
-> @@ -577,6 +639,7 @@ static int do_func(Elf_Ehdr *const ehdr, char
-> const *const fname, result = find_secsym_ndx(w(relhdr->sh_info),
-> txtname, &recval, &recsym,
->  						&shdr0[symsec_sh_link],
-> +						symtab, symtab_shndx,
->  						ehdr);
->  			if (result)
->  				goto out;
 > 
-> base-commit: c578ddb39e565139897124e74e5a43e56538cb33
+> This needs to be moved further back since it is not an item that needs to
+> be cache hot for the hotpaths.
 
+It could be relatively hot, because it's accessed for reading on every
+accounted allocation.
+
+> Place it with "align", inuse etc?
+> 
+> Hmmm. the same applies to min_partial maybe?
+> 
+> 
+
+And min_partial should much colder.
+
+So maybe a patch on top of the series which moves both fields can work?
+
+Thanks!
