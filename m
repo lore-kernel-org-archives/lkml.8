@@ -2,233 +2,152 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501CDC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AC0C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227F120656
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:06:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MjMAt3Q+"
+	by mail.kernel.org (Postfix) with ESMTP id 6C98F206A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 21:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgDWVGb (ORCPT
+        id S1726390AbgDWVJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 17:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgDWVGa (ORCPT
+        Thu, 23 Apr 2020 17:09:13 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:51169 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725934AbgDWVJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 17:06:30 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6903AC09B043
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 14:06:29 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id w7so5797758ply.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 14:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=yS4CittGbOhF42R8TWWDdhwDXYai0/leJlv4gqT/NmU=;
-        b=MjMAt3Q+mlUPCn3Q31RVo9VFUEZSn/fgCsj2+47u/QF2NPz4QbAe/vq4BuaTBVgsaW
-         Ald4CFbyRy+x7ubqf4RwZVLcYYeL9DqaoDJ4buPw+2FLaOg6PLBmWUwJ33KYAkBB6iLs
-         vrBWVcAmzLHI5AsoiHSQcFHPf0aQaHBf94lKu9Ot+btIm/j1xgONPA9lDUGGM8mzJ0sM
-         Jr9Qum+CkfMwOw/OeL3WY/01JZ11dC/ncINYa2KAWzo1XcjrXnedfMuYvyeBTmbD+MIg
-         THl5MVODRKtpY856nLQIgy8RMRyfpaUfo5leFwSIFzg8ZVZRmvRfTQDOZv9YmxvBmyAH
-         UpTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=yS4CittGbOhF42R8TWWDdhwDXYai0/leJlv4gqT/NmU=;
-        b=YTCkqDVxcT3hHxjfxWSzmBD2RvJEy2qc2OslvPlvWoLH2shCqmcKy5AuaHYlFJi0WX
-         vnVba7Pd5WQQRgvzDhxwU30Qujp+7JwEQ/XT0vAJEnBfp68Jo7minJorez2cGcKifZUL
-         mNxuQZ3Ll2FUfvWAr/+KCqVLuErlp50Hz+0PBNALKnlPaGAyKBIRwu6gFnTT1lMMbvQq
-         3sAl2C+IDRlvT3pDk8Lt99eh04rbGlgH2C0XDnafH78R78O84we6rCzaPk0XvQyfESEK
-         EIGFNk2HOAJtaMPHqNhX5r/Rp1GDOcOLpbY3uoTmylOUYw+S3sHcvGlSpy/B2DKSXln0
-         7sGw==
-X-Gm-Message-State: AGi0PuaM88WmhoHWSIYioThZeeVutfmQ6NJeg8WA1gtu9obuvVmprVHX
-        wvm8maialCp4+bWsx9I3mDzIQ0C8dg==
-X-Google-Smtp-Source: APiQypKUsdB4kXM10psaIqd8GHuFR98krDXOwGDqbfD5wKpd5DBiRPeNbwHv//n+Z6ripoplsdXHoUG/hA==
-X-Received: by 2002:a63:e708:: with SMTP id b8mr5914784pgi.128.1587675988521;
- Thu, 23 Apr 2020 14:06:28 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 14:05:23 -0700
-Message-Id: <20200423210523.52833-1-sqazi@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH v2] block: Limit number of items taken from the I/O scheduler
- in one go
-From:   Salman Qazi <sqazi@google.com>
-To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jesse Barnes <jsbarnes@google.com>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>, Salman Qazi <sqazi@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 23 Apr 2020 17:09:12 -0400
+Received: (qmail 23819 invoked by uid 500); 23 Apr 2020 17:09:11 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 23 Apr 2020 17:09:11 -0400
+Date:   Thu, 23 Apr 2020 17:09:11 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     syzbot <syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <ingrassia@epigenesys.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb (3)
+In-Reply-To: <0000000000001ee25205a3fb364b@google.com>
+Message-ID: <Pine.LNX.4.44L0.2004231654460.22192-100000@netrider.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Flushes bypass the I/O scheduler and get added to hctx->dispatch
-in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
-hctx->run_work work item and is past the point in
-blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
+On Thu, 23 Apr 2020, syzbot wrote:
 
-The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
-because the I/O scheduler can feed an arbitrary number of commands.
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer still triggered crash:
+> WARNING in usbhid_raw_request/usb_submit_urb
+> 
+> usb 2-1: Ep 0 disabled: 4
 
-Since we have only one hctx->run_work, the commands waiting in
-hctx->dispatch will wait an arbitrary length of time for run_work to be
-rerun.
+Nasty!  This indicates an URB is being submitted while the device is
+being reset.
 
-A similar phenomenon exists with dispatches from the software queue.
+The URB comes from an hidraw ioctl request.  I wonder where the reset 
+comes from?  We can try to find out -- but I don't think this will lead 
+directly to a solution.
 
-The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
-blk_mq_do_dispatch_ctx and return from the run_work handler and let it
-rerun.
+In general there is no mutual exclusion between USB I/O and resets.  
+Unless the reset came through the usbhid driver, I don't see how we can 
+prevent this from happening again.
 
-Signed-off-by: Salman Qazi <sqazi@google.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-mq-sched.c | 49 ++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 43 insertions(+), 6 deletions(-)
+I suppose we _could_ change the code so that it would be treated as an 
+ordinary I/O error, maybe with dev_warn instead of dev_WARN.  After 
+all, failure to find ep 0 can hardly be called a driver bug.  Anyway, 
+let's see what the next test turns up.
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 74cedea56034..b69b780351c1 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -84,12 +84,17 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
-  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
-  * its queue by itself in its completion handler, so we don't need to
-  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-+ *
-+ * Returns true if hctx->dispatch was found non-empty and
-+ * run_work has to be run again.  This is necessary to avoid
-+ * starving flushes.
-  */
--static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-+static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- {
- 	struct request_queue *q = hctx->queue;
- 	struct elevator_queue *e = q->elevator;
- 	LIST_HEAD(rq_list);
-+	bool ret = false;
- 
- 	do {
- 		struct request *rq;
-@@ -97,6 +102,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- 		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
- 			break;
- 
-+		if (!list_empty_careful(&hctx->dispatch)) {
-+			ret = true;
-+			break;
-+		}
-+
- 		if (!blk_mq_get_dispatch_budget(hctx))
- 			break;
- 
-@@ -113,6 +123,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- 		 */
- 		list_add(&rq->queuelist, &rq_list);
- 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
-+
-+	return ret;
+Alan Stern
+
+#syz test: https://github.com/google/kasan.git 0fa84af8
+
+Index: usb-devel/drivers/usb/core/hub.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/hub.c
++++ usb-devel/drivers/usb/core/hub.c
+@@ -4440,6 +4440,7 @@ void usb_ep0_reinit(struct usb_device *u
+ 	usb_disable_endpoint(udev, 0 + USB_DIR_IN, true);
+ 	usb_disable_endpoint(udev, 0 + USB_DIR_OUT, true);
+ 	usb_enable_endpoint(udev, &udev->ep0, true);
++	udev->alan1 = 0;
  }
+ EXPORT_SYMBOL_GPL(usb_ep0_reinit);
  
- static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
-@@ -130,16 +142,26 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
-  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
-  * its queue by itself in its completion handler, so we don't need to
-  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-+ *
-+ * Returns true if hctx->dispatch was found non-empty and
-+ * run_work has to be run again.  This is necessary to avoid
-+ * starving flushes.
-  */
--static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
-+static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
- {
- 	struct request_queue *q = hctx->queue;
- 	LIST_HEAD(rq_list);
- 	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
-+	bool ret = false;
- 
- 	do {
- 		struct request *rq;
- 
-+		if (!list_empty_careful(&hctx->dispatch)) {
-+			ret = true;
-+			break;
-+		}
-+
- 		if (!sbitmap_any_bit_set(&hctx->ctx_map))
- 			break;
- 
-@@ -165,6 +187,7 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
- 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
- 
- 	WRITE_ONCE(hctx->dispatch_from, ctx);
-+	return ret;
- }
- 
- void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-@@ -172,6 +195,8 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
- 	struct request_queue *q = hctx->queue;
- 	struct elevator_queue *e = q->elevator;
- 	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
-+	bool run_again;
-+	bool restarted = false;
- 	LIST_HEAD(rq_list);
- 
- 	/* RCU or SRCU read lock is needed before checking quiesced flag */
-@@ -180,6 +205,9 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
- 
- 	hctx->run++;
- 
-+again:
-+	run_again = false;
-+
- 	/*
- 	 * If we have previous entries on our dispatch list, grab them first for
- 	 * more fair dispatch.
-@@ -208,19 +236,28 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
- 		blk_mq_sched_mark_restart_hctx(hctx);
- 		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
- 			if (has_sched_dispatch)
--				blk_mq_do_dispatch_sched(hctx);
-+				run_again = blk_mq_do_dispatch_sched(hctx);
- 			else
--				blk_mq_do_dispatch_ctx(hctx);
-+				run_again = blk_mq_do_dispatch_ctx(hctx);
- 		}
- 	} else if (has_sched_dispatch) {
--		blk_mq_do_dispatch_sched(hctx);
-+		run_again = blk_mq_do_dispatch_sched(hctx);
- 	} else if (hctx->dispatch_busy) {
- 		/* dequeue request one by one from sw queue if queue is busy */
--		blk_mq_do_dispatch_ctx(hctx);
-+		run_again = blk_mq_do_dispatch_ctx(hctx);
- 	} else {
- 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
- 		blk_mq_dispatch_rq_list(q, &rq_list, false);
+@@ -4471,6 +4472,7 @@ static int hub_set_address(struct usb_de
+ 		update_devnum(udev, devnum);
+ 		/* Device now using proper address. */
+ 		usb_set_device_state(udev, USB_STATE_ADDRESS);
++		udev->alan1 = 1;
+ 		usb_ep0_reinit(udev);
  	}
-+
-+	if (run_again) {
-+		if (!restarted) {
-+			restarted = true;
-+			goto again;
-+		}
-+
-+		blk_mq_run_hw_queue(hctx, true);
-+	}
- }
+ 	return retval;
+@@ -4838,6 +4840,7 @@ hub_port_init(struct usb_hub *hub, struc
+ 		else
+ 			dev_warn(&udev->dev, "Using ep0 maxpacket: %d\n", i);
+ 		udev->ep0.desc.wMaxPacketSize = cpu_to_le16(i);
++		udev->alan1 = 2;
+ 		usb_ep0_reinit(udev);
+ 	}
  
- bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
--- 
-2.26.1.301.g55bc3eb7cb9-goog
+@@ -5226,6 +5229,7 @@ static void hub_port_connect(struct usb_
+ loop_disable:
+ 		hub_port_disable(hub, port1, 1);
+ loop:
++		udev->alan1 = 3;
+ 		usb_ep0_reinit(udev);
+ 		release_devnum(udev);
+ 		hub_free_dev(udev);
+@@ -5762,10 +5766,14 @@ static int usb_reset_and_verify_device(s
+ 	bos = udev->bos;
+ 	udev->bos = NULL;
+ 
++	dev_info(&udev->dev, "Device reset\n");
++	dump_stack();
++
+ 	for (i = 0; i < SET_CONFIG_TRIES; ++i) {
+ 
+ 		/* ep0 maxpacket size may change; let the HCD know about it.
+ 		 * Other endpoints will be handled by re-enumeration. */
++		udev->alan1 = 4;
+ 		usb_ep0_reinit(udev);
+ 		ret = hub_port_init(parent_hub, udev, port1, i);
+ 		if (ret >= 0 || ret == -ENOTCONN || ret == -ENODEV)
+Index: usb-devel/drivers/usb/core/urb.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/urb.c
++++ usb-devel/drivers/usb/core/urb.c
+@@ -204,8 +204,12 @@ int usb_urb_ep_type_check(const struct u
+ 	const struct usb_host_endpoint *ep;
+ 
+ 	ep = usb_pipe_endpoint(urb->dev, urb->pipe);
+-	if (!ep)
++	if (!ep) {
++		dev_info(&urb->dev->dev, "Ep %d disabled: %d\n",
++			usb_pipeendpoint(urb->pipe),
++			urb->dev->alan1);
+ 		return -EINVAL;
++	}
+ 	if (usb_pipetype(urb->pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
+ 		return -EINVAL;
+ 	return 0;
+Index: usb-devel/include/linux/usb.h
+===================================================================
+--- usb-devel.orig/include/linux/usb.h
++++ usb-devel/include/linux/usb.h
+@@ -629,6 +629,7 @@ struct usb3_lpm_parameters {
+  * usb_set_device_state().
+  */
+ struct usb_device {
++	int		alan1;
+ 	int		devnum;
+ 	char		devpath[16];
+ 	u32		route;
 
