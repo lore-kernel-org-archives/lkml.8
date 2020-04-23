@@ -2,136 +2,185 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C853BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26843C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A363E206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28AE206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WQmrB/5H"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t3BwxSwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgDWPYi (ORCPT
+        id S1729191AbgDWPZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:24:38 -0400
-Received: from mail-co1nam11on2054.outbound.protection.outlook.com ([40.107.220.54]:10485
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729152AbgDWPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:24:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QbpSgPo3FbFFnW40apscAaNlKg/QWvfZOrc5rpLcxnREJQ1G1MczGmdxXApXIEeSAYC5fV/282m2G3IrppRdCOeFoCPSAyIMo5xToT96+mL2QywvAlzI4JgaGZqvhfWWWEQwWwW8PVQgwjOoBrQTL+4qXvdzkgD6LhrqeEqO+LKuJEoz7l50N5rXBBgoC50XSHaesfvgYJ4y0Sbs6f+1TLDdMoS1LU7BIZT2v9Dnfh09Q/MkZsEZgz/WxDuE22YiXwcwW14WfSvAu5twUoY3uk/OAgSXa/AE0sfwGHipVPqgBi32rUh/OB6SiLZd7kdXhSH6hSTs/L7bO5l0ynoc8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UiyDdcewKqQdfPS/aQehQwnwEd+DRpklXiSdsSapetw=;
- b=AAHm6nf98L4vFUEGqj684Y2v/yAoL/y/cGtHy8KuZUS2OgwS6zFKexLiCuBC0w/2o0pbytgBUFQhDu67NnpKPHI7ehAOqPIPnTcy74PP/EEMdyjxJ5JISr7EVUSmjNuOB1HZ6I8jiN/HNlHfqIsL3bGsTKCtTDygar+PxOIVnQj52uD599V89OdFurYuDjLsW1l5Mh/9+mcAt2KKpRVUKzyo0zzOT2D3jj4Ydua0PKfCckZEBq6E4sHL5vw6W3Te6sH5afNoKtaHCk9ClxuXIANTT47JaGNyh7+2QENNhlNxREP69L0DxjE/jpjsjhk/Hlg3ARJdpkzfmki08GVcJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UiyDdcewKqQdfPS/aQehQwnwEd+DRpklXiSdsSapetw=;
- b=WQmrB/5HU/g653bxSknpJMzqb+u+A/oNTswBGj4oG4R+1/mDU+pzoOufX8yDJOdHsiyivVknZzqIKumfWGd6GW4kK5J1TlqCG42SJ1K5KS03FO3qg5i4EzhKusB0HpBswxPheyieMCNVUNjVHffxJrfQiYFNOVp1zu6Nz3S5l0c=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-Received: from DM5PR12MB1226.namprd12.prod.outlook.com (2603:10b6:3:75::7) by
- DM5PR12MB2391.namprd12.prod.outlook.com (2603:10b6:4:b3::27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.27; Thu, 23 Apr 2020 15:24:33 +0000
-Received: from DM5PR12MB1226.namprd12.prod.outlook.com
- ([fe80::e549:aba2:a697:2b3]) by DM5PR12MB1226.namprd12.prod.outlook.com
- ([fe80::e549:aba2:a697:2b3%10]) with mapi id 15.20.2921.030; Thu, 23 Apr 2020
- 15:24:32 +0000
-From:   Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ira Weiny <ira.weiny@intel.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Subject: [PATCH] KVM: SVM: Change flag passed to GUP fast in sev_pin_memory()
-Date:   Thu, 23 Apr 2020 10:24:19 -0500
-Message-Id: <20200423152419.87202-1-Janakarajan.Natarajan@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: DM5PR1401CA0016.namprd14.prod.outlook.com
- (2603:10b6:4:4a::26) To DM5PR12MB1226.namprd12.prod.outlook.com
- (2603:10b6:3:75::7)
+        Thu, 23 Apr 2020 11:25:54 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:48476 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728990AbgDWPZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:25:53 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200423152551euoutp0199d8e43aeb1674749809956aa504746b~IfE-0hjCY2259222592euoutp01e
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 15:25:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200423152551euoutp0199d8e43aeb1674749809956aa504746b~IfE-0hjCY2259222592euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587655551;
+        bh=4CcgJX+hMyyt8NIG6umkE7GDivLV5CaWJh6tXmz7IAM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=t3BwxSwoSx1mkbPrk0RXM78rPZZyYc2pjOa9WI3m4l9z2woCViVmUq4HYLoK+Q5Mc
+         mYi2UvWn+SGK7fxJXuYnhBWQXKkFmiDereAZrC5JLtw0BwssO7kkWg2JT+i85xxtU2
+         SjCHIxhy4Mxv5lJKi/6ySubMCB4wykN25gVSAHiI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200423152551eucas1p1f74c81ba9a55483c9b2b6707c5dae3c2~IfE-mfEiU0758907589eucas1p16;
+        Thu, 23 Apr 2020 15:25:51 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id BB.4E.60698.F73B1AE5; Thu, 23
+        Apr 2020 16:25:51 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200423152550eucas1p1c7555e091e310f29f5d99bec04a90107~IfE_2qBz60759507595eucas1p1M;
+        Thu, 23 Apr 2020 15:25:50 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200423152550eusmtrp19943a6fb8b63ad410d060f79349dc093~IfE_1_-cT3134831348eusmtrp1j;
+        Thu, 23 Apr 2020 15:25:50 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-3f-5ea1b37f359b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9C.FB.07950.E73B1AE5; Thu, 23
+        Apr 2020 16:25:50 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200423152549eusmtip1a56fe5afbd52660c5da01981adefc06e~IfE_WE6Wq1007910079eusmtip1b;
+        Thu, 23 Apr 2020 15:25:49 +0000 (GMT)
+Subject: Re: [PATCH v2] console: console: Complete exception handling in
+ newport_probe()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, FlorianSchandinat@gmx.de,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <051e7dee-d64c-c54c-6bdd-6e60444c0a26@samsung.com>
+Date:   Thu, 23 Apr 2020 17:25:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jubuntu.amd.com (165.204.78.2) by DM5PR1401CA0016.namprd14.prod.outlook.com (2603:10b6:4:4a::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 15:24:31 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bbcb5e80-e49c-4142-ca1a-08d7e79a6c56
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2391:|DM5PR12MB2391:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB2391C32D9953D7C50905E1A5E7D30@DM5PR12MB2391.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:972;
-X-Forefront-PRVS: 03827AF76E
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1226.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(366004)(36756003)(66556008)(66476007)(66946007)(2616005)(5660300002)(1076003)(956004)(6486002)(8936002)(81156014)(8676002)(7416002)(478600001)(6666004)(7696005)(52116002)(26005)(16526019)(186003)(86362001)(2906002)(4326008)(316002)(54906003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7ng6LnkN1MSQRpHnsMtgu5kcSVkrCaEghyJxXYMrDxcnz/qzru1EXJ7YDvcl5qeOXJSJxx0tnEINoGj1IuH8aVd+tRO54u4NIa0bp4XpJ2fof+FdcxYFU7zK7/IQ/G60+MK9iPR54IbYtsoH/akKfv8khaBZ4qgisM+zyaENclNPLTYoobOUN25s6XiTT0QWMKO/RjEBs6ODPoMywvrE8/SpsGVgqBtL6kKn0rf29EjVDjSvjdpYomaX6eQThv1DNXqxKgvzeduzhT+XVAsIaZN38+e2fbflCOxT8ed8n9rqVLpvC4osi550FMwZ6F2rpAGs8dljYmJuoXNTZJbk0rAWvcKcfrW719eQvtI7LUoVTuPx7/sbprGl1qQT69eAa5610pPn+VGfc37Jt+HkonqctykwewX+TYf9gbXSk632ItZG1kJvPzqOrSIqHGM/
-X-MS-Exchange-AntiSpam-MessageData: GUke2vFzBervHXdyj2Pb3QAtsEu78nTUrffjC2ttL9VJLIzYGRR9xk1264E1P8VgmCUmyRxNOnJcV1jLR87MfkXzA+zGIaWJ91ezVgEUoWV+IQUwgjWaOvfrxNgDlvJoxPvdJFzi3S313Yp+2+qLGw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbcb5e80-e49c-4142-ca1a-08d7e79a6c56
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 15:24:32.8260
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5g0mtvCpLeGLc2fc/3rzqfbAi8P5Tb15YRO42aYd9OZ5gv4fUkNddM++7l3N7HWfLd73ibOly2MHT4h9okKFWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2391
+In-Reply-To: <CAHp75Vd8kC6ub-=pwe3QtdZ=FBqka3F1bbHea6__G5_Vm_ybcQ@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGKsWRmVeSWpSXmKPExsWy7djPc7r1mxfGGTx7zWvxcsJhRosrX9+z
+        WXTOvMZo0bx4PZvFib4PrBaXd81hs7i0R8Vi86apzBaHmw4yW+x6dJPZgcuj9dJyFo+ds+6y
+        e3z4GOfx7tw5do+jK9cyeeyfu4bd4373cSaPz5vkAjiiuGxSUnMyy1KL9O0SuDL27tzEVrCb
+        t2Lm3JlMDYztXF2MnBwSAiYSy37OZ+pi5OIQEljBKNHb9YMZwvnCKHHwwTko5zOjxIt7C1lg
+        Wlb0d7BDJJYzSnzcsZkNwnnLKNH85AbQMA4OYYEoiY/HOLsY2TlEBPQl9peBVDAL/GaSWP//
+        AyvIHDYBK4mJ7asYQWxeATuJTUfXgdksAqoSz17+ZgKxRQUiJD49OMwKUSMocXLmE7AbOAUC
+        JY7tuMoGYjMLiEvcejKfCcKWl9j+dg7Y0RICt9glrn6GOdpFYuuH1ewQtrDEq+NboGwZidOT
+        e1ggGtYxSvzteAHVvZ1RYvnkf2wQVdYSd879YgN5jFlAU2L9Ln2IsKPEh11LwMISAnwSN94K
+        QhzBJzFp23RmiDCvREebEES1msSGZRvYYNZ27VzJPIFRaRaS12YheWcWkndmIexdwMiyilE8
+        tbQ4Nz212DgvtVyvODG3uDQvXS85P3cTIzB1nf53/OsOxn1/kg4xCnAwKvHwGpQujBNiTSwr
+        rsw9xCjBwawkwrvh4bw4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzGi17GCgmkJ5akZqemFqQW
+        wWSZODilGhgDWH7/cJ8fbLr6l+3URwl7JjyZ1ryqXvjLOe9M2UPy05+fYnS+XxN9o6em3zhy
+        67OZRwt8NkyTunM543P/0m3hb7afFrj+lvtCpRtf+DW+Yq8/z891fnaeG/K/KFIhiaWKhXX7
+        3K19InlT2c9t1zvPUJI+w8Rru43x/fqDE4/ZPyvljfh2UHmpEktxRqKhFnNRcSIAU2FTDlkD
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xu7p1mxfGGdw/K2HxcsJhRosrX9+z
+        WXTOvMZo0bx4PZvFib4PrBaXd81hs7i0R8Vi86apzBaHmw4yW+x6dJPZgcuj9dJyFo+ds+6y
+        e3z4GOfx7tw5do+jK9cyeeyfu4bd4373cSaPz5vkAjii9GyK8ktLUhUy8otLbJWiDS2M9Awt
+        LfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DL27tzEVrCbt2Lm3JlMDYztXF2MnBwSAiYS
+        K/o72LsYuTiEBJYyStz/PY21i5EDKCEjcXx9GUSNsMSfa11sILaQwGtGiX0L+EBKhAWiJD4e
+        4+xiZOcQEdCX2A9WzCzwl0niyIpciOJOJok5mx1AbDYBK4mJ7asYQWxeATuJTUfXgdksAqoS
+        z17+ZgKxRQUiJA7vmAVVIyhxcuYTFhCbUyBQ4tiOq2wQ89Ul/sy7xAxhi0vcejKfCcKWl9j+
+        dg7zBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECY3TbsZ9b
+        djB2vQs+xCjAwajEw2tQujBOiDWxrLgy9xCjBAezkgjvhofz4oR4UxIrq1KL8uOLSnNSiw8x
+        mgI9N5FZSjQ5H5g+8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1
+        MC6TW5unNUtuUWiY5RZLpdYemYIzmspZHVNn/o17PyPv/I+wxVd9p57ZFjvpwnH/bsGZInsZ
+        Tlu49D6eb9fCXc0Y2HSDz9Qz/r7+/80hb+QddOYpZZZmHDAzncj7Upuh2n1FeOPeF048PYnN
+        CROOc5kxujrbFfOkP7mhNCFyfvvTxznB4p1HlViKMxINtZiLihMBYdIREucCAAA=
+X-CMS-MailID: 20200423152550eucas1p1c7555e091e310f29f5d99bec04a90107
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200423142637eucas1p2ea543e281d96c75aa4292b49756f2146
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200423142637eucas1p2ea543e281d96c75aa4292b49756f2146
+References: <CGME20200423142637eucas1p2ea543e281d96c75aa4292b49756f2146@eucas1p2.samsung.com>
+        <20200423142627.1820-1-zhengdejin5@gmail.com>
+        <081f8192-1708-80ff-6eef-885d72bdf5c5@samsung.com>
+        <CAHp75Vd8kC6ub-=pwe3QtdZ=FBqka3F1bbHea6__G5_Vm_ybcQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When trying to lock read-only pages, sev_pin_memory() fails because FOLL_WRITE
-is used as the flag for get_user_pages_fast().
 
-Commit 73b0140bf0fe ("mm/gup: change GUP fast to use flags rather than a write
-'bool'") updated the get_user_pages_fast() call sites to use flags, but
-incorrectly updated the call in sev_pin_memory(). As the original coding of this
-call was correct, revert the change made by that commit.
+On 4/23/20 5:05 PM, Andy Shevchenko wrote:
+> On Thu, Apr 23, 2020 at 5:55 PM Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+> 
+>>> +     if (err)
+>>> +             iounmap((void *)npregs);
+>>
+>> Looks OK but while you are at it, could you please also add missing
+>> release_mem_region() on error and on device removal:
+>>
+>>         newport_addr = dev->resource.start + 0xF0000;
+>>         if (!request_mem_region(newport_addr, 0x10000, "Newport"))
+>>                 return -ENODEV;
+>>
+>>         npregs = (struct newport_regs *)/* ioremap cannot fail */
+>>                 ioremap(newport_addr, sizeof(struct newport_regs));
+>>         console_lock();
+>>         err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
+>>         console_unlock();
+>>         return err;
+>> }
+>>
+>> static void newport_remove(struct gio_device *dev)
+>> {
+>>         give_up_console(&newport_con);
+>>         iounmap((void *)npregs);
+>> }
+>>
+>> ?
+> 
+> Don't you think that proper solution is rather switch to memremap()?
 
-Fixes: 73b0140bf0fe ("mm/gup: change GUP fast to use flags rather than a write 'bool'")
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
----
- arch/x86/kvm/svm/sev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Doesn't seem to be a case here (used memory region in uncached).
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index cf912b4aaba8..89f7f3aebd31 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -345,7 +345,7 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
- 		return NULL;
+On MIPS (this is MIPS-only driver):
+
+...
+#define ioremap(offset, size)						\
+	__ioremap_mode((offset), (size), _CACHE_UNCACHED)
+#define ioremap_uc		ioremap
+...
+
+While memremap() is only for cacheable memory:
+
+...
+ * memremap() - remap an iomem_resource as cacheable memory
+ * @offset: iomem resource start address
+ * @size: size of remap
+ * @flags: any of MEMREMAP_WB, MEMREMAP_WT, MEMREMAP_WC,
+ *		  MEMREMAP_ENC, MEMREMAP_DEC
+...
+
+
+>>>       return err;
+>>>  }
+> 
  
- 	/* Pin the user virtual address. */
--	npinned = get_user_pages_fast(uaddr, npages, FOLL_WRITE, pages);
-+	npinned = get_user_pages_fast(uaddr, npages, write ? FOLL_WRITE : 0, pages);
- 	if (npinned != npages) {
- 		pr_err("SEV: Failure locking %lu pages.\n", npages);
- 		goto err;
--- 
-2.17.1
-
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
