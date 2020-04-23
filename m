@@ -2,147 +2,123 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99B7C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5042BC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78DD520857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D96720857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="B+EA2MQy";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="XM6IO9W1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iw5Pumrk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgDWPLw (ORCPT
+        id S1729088AbgDWPM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:11:52 -0400
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:56841 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgDWPLv (ORCPT
+        Thu, 23 Apr 2020 11:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728978AbgDWPM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:11:51 -0400
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id A52406367B;
-        Thu, 23 Apr 2020 11:11:48 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=liUy51BXPagKlCpsxsU30mmCCug=; b=B+EA2M
-        QyUzFiSAqoYAraOIp3H40AD73D0C4Tobz7XWGQjCz0nUpgHcTMrSzaXIztWtxrT/
-        GC+Rc8QJvC5DmljlmmT397odad9V22Qh0yNVArwcRZ/uETpdSm17o+W7MV7FHfgV
-        WV7JsA/cdm4QR0+vUtZv+aszhzdRqtZkFCEcE=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 96FBD6367A;
-        Thu, 23 Apr 2020 11:11:48 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=sgOUu7eN/fZaL+hHaitw7ZcpUu4hOm/EaIXLM4l/NWY=; b=XM6IO9W1P4XTOEkPCHeNSEh0evLSN/mxgeAFKpbS+9j5iBWGTYUrUuMCegQSMtZfLbX0I/3kO+hyy0pBdPeGqOlsdSzXN2rtn0NSfR0rubiHS2vXyGPTJBg36GoTo1adjeVe7FnDe1xAEKSqYVfm8gS3poCWcphGgECndwVn1d0=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id C829F63679;
-        Thu, 23 Apr 2020 11:11:47 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id B5CAE2DA0C34;
-        Thu, 23 Apr 2020 11:11:46 -0400 (EDT)
-Date:   Thu, 23 Apr 2020 11:11:46 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [RFC PATCH 1/2] Kconfig: Introduce "uses" keyword
-In-Reply-To: <20200423150556.GZ26002@ziepe.ca>
-Message-ID: <nycvar.YSQ.7.76.2004231109500.2671@knanqh.ubzr>
-References: <CAK7LNATmPD1R+Ranis2u3yohx8b0+dGKAvFpjg8Eo9yEHRT6zQ@mail.gmail.com> <87v9lu1ra6.fsf@intel.com> <45b9efec57b2e250e8e39b3b203eb8cee10cb6e8.camel@mellanox.com> <nycvar.YSQ.7.76.2004210951160.2671@knanqh.ubzr> <62a51b2e5425a3cca4f7a66e2795b957f237b2da.camel@mellanox.com>
- <nycvar.YSQ.7.76.2004211411500.2671@knanqh.ubzr> <871rofdhtg.fsf@intel.com> <nycvar.YSQ.7.76.2004221649480.2671@knanqh.ubzr> <940d3add-4d12-56ed-617a-8b3bf8ef3a0f@infradead.org> <nycvar.YSQ.7.76.2004231059170.2671@knanqh.ubzr>
- <20200423150556.GZ26002@ziepe.ca>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 23 Apr 2020 11:12:58 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 637C9C08ED7D
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:12:58 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g12so6935071wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 08:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UTeQeyto1m9v5SuM5s4edMyeNen1x/MgttTL6x5XBaI=;
+        b=iw5PumrkE5tqjlzCsaMqI20CHiXkIq28cZxQKuxfCha3jMxVbtGl6SD5je3Nz0E4bV
+         cqmjnLcMA2tqqU8+zI3/jNhwckZtEBWsz/83I1YLcPij7OdReAARgFEvOCsQfvSg2Hue
+         CV+ej96HusLzaqZEYHGcQItEgti4huE+fBPOnCnmhtMwrLqS6xDGdq2YwK6kpsPcAgPK
+         9/kZwf+6oOTKdSytvqn7NUBtlDJQzxJbbRstoM5Rn9Td82mHmVtiPUaOf9mlba3BR9X9
+         WqihTMlRXZYAEeGiEiTm/kkDgR2NEXT+s/pOJLW5xVi4Jy50tC67SaICig75NffChPdy
+         GP7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UTeQeyto1m9v5SuM5s4edMyeNen1x/MgttTL6x5XBaI=;
+        b=XkVLZFizx3GeZEgraIva5KzEJXr5qF5xm2maLtxw9A7BsI/Nrvx10203blIWkciKT1
+         nF/ewQoZby7J0cC0UAAcm875f2wyL8FVuNMKXy0uBf/Qshww9KdaJTW/7CyeYoOyA6iH
+         7uPvCRy+QF6tb+7qFyEg1CXpHSUIOMJ2YbQsriHaWG8qVK3bJ1UV7u2A2g3gGnrkV1j+
+         HIWX+82dQXOR/scAFK1jOd0vdIQUF7r4wdyLELZwo+Y0k4g2JT1c//CtYBHx9oQqVac1
+         cix2J/uXVqlPXccQgVDHCdBuZFMjbUXeYgMAvmv9niF84YgXnJrLYaWRPxWmMOALLABr
+         awMw==
+X-Gm-Message-State: AGi0Pub0CVzjvVqdzkx6IpCXaBvSPzuSrwEmIqM4bVjWZeMMdW/JcsYH
+        dc04mWwLnIWHfBlL7xOWQZupDQ==
+X-Google-Smtp-Source: APiQypJEQibO8s5dDdPKk1vNMfNrO+DNEUITlcbdqfwFUErA7buEWgNGHo8cuZ6SAl0DQrcK5ToIww==
+X-Received: by 2002:a1c:1d84:: with SMTP id d126mr4597986wmd.119.1587654776840;
+        Thu, 23 Apr 2020 08:12:56 -0700 (PDT)
+Received: from linaro.org ([37.167.216.250])
+        by smtp.gmail.com with ESMTPSA id l16sm4161477wrp.91.2020.04.23.08.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 08:12:56 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 17:12:50 +0200
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than
+ CPUs in Energy Model
+Message-ID: <20200423151250.GB65632@linaro.org>
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-5-lukasz.luba@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: C05F543C-8574-11EA-8AB0-D1361DBA3BAF-78420484!pb-smtp2.pobox.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200410084210.24932-5-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020, Jason Gunthorpe wrote:
+On Fri, Apr 10, 2020 at 09:42:04AM +0100, Lukasz Luba wrote:
+> Add support for other devices that CPUs. The registration function
+> does not require a valid cpumask pointer and is ready to handle new
+> devices. Some of the internal structures has been reorganized in order to
+> keep consistent view (like removing per_cpu pd pointers). To track usage
+> of the Energy Model structures, they are protected with kref.
 
-> On Thu, Apr 23, 2020 at 11:01:40AM -0400, Nicolas Pitre wrote:
-> > On Wed, 22 Apr 2020, Randy Dunlap wrote:
-> > 
-> > > On 4/22/20 2:13 PM, Nicolas Pitre wrote:
-> > > > On Wed, 22 Apr 2020, Jani Nikula wrote:
-> > > > 
-> > > >> On Tue, 21 Apr 2020, Nicolas Pitre <nico@fluxnic.net> wrote:
-> > > >>> This is really a conditional dependency. That's all this is about.
-> > > >>> So why not simply making it so rather than fooling ourselves? All that 
-> > > >>> is required is an extension that would allow:
-> > > >>>
-> > > >>> 	depends on (expression) if (expression)
-> > > >>>
-> > > >>> This construct should be obvious even without reading the doc, is 
-> > > >>> already used extensively for other things already, and is flexible 
-> > > >>> enough to cover all sort of cases in addition to this particular one.
-> > > >>
-> > > >> Okay, you convinced me. Now you only need to convince whoever is doing
-> > > >> the actual work of implementing this stuff. ;)
-> > > > 
-> > > > What about this:
-> > > > 
-> > > > Subject: [PATCH] kconfig: allow for conditional dependencies
-> > > > 
-> > > > This might appear to be a strange concept, but sometimes we want
-> > > > a dependency to be conditionally applied. One such case is currently
-> > > > expressed with:
-> > > > 
-> > > > 	depends on FOO || !FOO
-> > > > 
-> > > > This pattern is strange enough to give one's pause. Given that it is
-> > > > also frequent, let's make the intent more obvious with some syntaxic 
-> > > > sugar by effectively making dependencies optionally conditional.
-> > > > This also makes the kconfig language more uniform.
-> > > > 
-> > > > Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
-> > > 
-> > > Hi,
-> > > 
-> > > If we must do something here, I prefer this one.
-> > > 
-> > > Nicolas, would you do another example, specifically for
-> > > CRAMFS_MTD in fs/cramfs/Kconfig, please?
-> > 
-> > I don't see how that one can be helped. The MTD dependency is not 
-> > optional.
-> 
-> Could it be done as 
-> 
-> config MTD
->    depends on CRAMFS if CRAMFS_MTD
-> 
-> ?
+Why not add the energy model structure in the struct device directly?
 
-No. There is no logic in restricting MTD usage based on CRAMFS or 
-CRAMFS_MTD.
+For instance for the em_cpu_get() function, the cpu id allows to retrieve the
+cpu device and then from there, the energy model instead of browsing another
+list. The em_device life cycle will be tied to the struct device.
 
+Then when the struct device and the em_device are connected, add the debugfs
+with a struct device list for those which are energy aware, so you end up with
+a structure:
 
-Nicolas
+struct em_device {
+	struct device *dev;
+	struct list_head em_dev_list;
+};
+
+(a global single dentry for debugfs to do a recursive delete is enough).
+
+Locks when inspecting and add/removal called from the struct device release
+function. So no need of an extra refcounting.
+
+Does it make sense?
