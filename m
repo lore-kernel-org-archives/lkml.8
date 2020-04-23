@@ -2,62 +2,65 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126F1C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93451C55185
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E097920776
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733DC20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 00:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a6ZdhD4y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UM9lf+Uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgDWA04 (ORCPT
+        id S1726363AbgDWA1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 20:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53846 "EHLO
+        Wed, 22 Apr 2020 20:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgDWA04 (ORCPT
+        by vger.kernel.org with ESMTP id S1725846AbgDWA1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 20:26:56 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAB2C03C1AA
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:26:56 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id y21so3305233pjn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:26:56 -0700 (PDT)
+        Wed, 22 Apr 2020 20:27:02 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05981C03C1AB
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:27:01 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id a5so3696377pfk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 17:27:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to;
-        bh=ORrb4UEf1wJbypW2W14BtjgaJCMRJSAaiDxPKEJIZ/U=;
-        b=a6ZdhD4yH9iKxDcoTEdxCEcbWBKMpVZeG6AbvnYoX7sNV4cQSrwUQBg9AIH/T9F6nH
-         kVNpHjmu+gPw9LmgmE/wLJXJdEn824WaAQ/otYW9T6Bu5Ki89IVTJZ/E8cMmOFSHPsHw
-         ImwJTISQW/22UftFkX3rAvLV5rEa2YsCiBJT5+mYr43hFx47iMANlRltunFzs4mMc5+9
-         A2eK67iS98TN38UHrr2gHoQlnVtuAU9liBYE+KT/Tjz4AuhKQrnF1FjxFnG+J6DVZDBt
-         D3xZ050LzhKBg7M3NpIgNea4pPd7lNQ1rmlUDiprNPfLCOrIPX/Y8djvEMO3qHngpCuc
-         AzFw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to;
+        bh=3cs6cpETnu5up7poODqqpjwIIIEEY9B/JJrROxUknZo=;
+        b=UM9lf+UjXr7lQ4WhqVJUaEoeVlpkZXm8IVaaoCLCkjlU4nL3c9A30jdtNMATw5LU30
+         ZN/uQt6iOFMRSjWe1mIyG0tfJLl07wwCa/9w/q7bnyzDQOzo62S+rW6YV9fc1x2yMaQy
+         U26PJs1dTMsjpsMRYLOd5Y5Y2ITryXXyxPAZ8VA12ffUY6m57kgupwUGYHEqKj1oYPH0
+         wF2hsOYFZU4zrR9uMbePQ9C1+He52kETBBM+OgoLJ2Lkf3j4fXoRvjjJxfFl+aP+ocyf
+         H5+ezAemb1c/R0uR3+ZNDWcwGgvTWOQ2RA2jRQxlu+8ZJTVKxedPGoiN9dnLIV1O+TvS
+         /04A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to;
-        bh=ORrb4UEf1wJbypW2W14BtjgaJCMRJSAaiDxPKEJIZ/U=;
-        b=JH2XHmM168w3k7wqyCuTkMULG3UJppcOBV1jnmq2P0/+f1M2EFGBUUKY1b8XMmJreX
-         /FvSgnAMH63t8Shvf9sYpletflQSqYMAXEI1EAteb16FNba+R/B9fr7iB7SrxMhRAjpr
-         NuBwQPzpNjsb21xRuLdaLKQK1tpNCoKM2WwrMJmRwac3cFTx8/rNvApguTprRHQFdpIG
-         RR3K5vQxTsPaI3VAHUd26cDZ4r7NdpGIRxmd3+QOTEZp+AcleaOPbt8wYzBWm7K2lKfa
-         NjQpNeaxInCaCef8mXdLqIiMqCumRzSfT7SXqh6VYsQpBPF/LpOVNG5BFkbfR7H9THCG
-         5Rbw==
-X-Gm-Message-State: AGi0PubSEDWqS2tJDaf22yHSqvqoCxJtHYKLcpocEQ/sNGUm8YLsMFWH
-        XwxERfPz4EvPAprfmfkg7BCkGhqNdRA=
-X-Google-Smtp-Source: APiQypLa+EJG7w/AjaAKFadG+PwV+ytFV63ocsJscjXMYp4P1isXQ+oFL9DO3fVFdsz1M3Km8qh0ztDBN2k=
-X-Received: by 2002:a17:90a:8d02:: with SMTP id c2mr1371093pjo.113.1587601615603;
- Wed, 22 Apr 2020 17:26:55 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 17:26:30 -0700
-Message-Id: <20200423002632.224776-1-dancol@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to;
+        bh=3cs6cpETnu5up7poODqqpjwIIIEEY9B/JJrROxUknZo=;
+        b=Cpiwu88oub4bJQu9azC9v27LWhKc1k/RSDFdB4qczxIVHD7p7Cd4lD7fDdXyGt4JyL
+         KjgOCA0x/C24fvtyNEWtr3QFyzzi9s+NLr/XTO9s01orPo+50sXm5LR5eyasNpjELGoI
+         VGG87YI+OsffOGdvoUSCGAWlWoXoMggyhSIVsmv0BmZKqu5dKBDmMcPamz8IobV/cjgc
+         gALvi+LwBYAtb8+uwJmmp7TuW5z7xs0bIfKqx4gHW/OWLIuYLmXZX40gBgmHd1wpWMzq
+         0sUsIk/mUWv/ggv8K5ZP+kUXURpYeetYOGoTLY2buFFMmBkLSgl1bT8t6o4aGxYZiCRw
+         Cq/g==
+X-Gm-Message-State: AGi0PuatAKZ5OUfmFVNXJ73MxZbpYrs/WamuKxw3piIKoEV9OEF0xS9m
+        zgvrURbpQOZcwC14J6/uS7rXI4jsl7A=
+X-Google-Smtp-Source: APiQypLEMPU3+WWUCkc7uWfkQ+0lZ7h9UwrP41CKaeCyB4zN/CtnLBODcu/h6ljeA8UPWl8LNoRxpWvc6W0=
+X-Received: by 2002:a17:90a:b104:: with SMTP id z4mr1426983pjq.115.1587601620510;
+ Wed, 22 Apr 2020 17:27:00 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 17:26:31 -0700
+In-Reply-To: <20200423002632.224776-1-dancol@google.com>
+Message-Id: <20200423002632.224776-2-dancol@google.com>
 Mime-Version: 1.0
+References: <20200423002632.224776-1-dancol@google.com>
 X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
-Subject: [PATCH 0/2] Control over userfaultfd kernel-fault handling
+Subject: [PATCH 1/2] Add UFFD_USER_MODE_ONLY
 From:   Daniel Colascione <dancol@google.com>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -84,31 +87,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This small patch series adds a new flag to userfaultfd(2) that allows
-callers to give up the ability to handle user-mode faults with the
-resulting UFFD file object. In then add a new sysctl to require
-unprivileged callers to use this new flag.
+userfaultfd handles page faults from both user and kernel code.  Add a
+new UFFD_USER_MODE_ONLY flag for userfaultfd(2) that makes the
+resulting userfaultfd object refuse to handle faults from kernel mode,
+treating these faults as if SIGBUS were always raised, causing the
+kernel code to fail with EFAULT.
 
-The purpose of this new interface is to decrease the change of an
-unprivileged userfaultfd user taking advantage of userfaultfd to
-enhance security vulnerabilities by lengthening the race window in
-kernel code.
+A future patch adds a knob allowing administrators to give some
+processes the ability to create userfaultfd file objects only if they
+pass UFFD_USER_MODE_ONLY, reducing the likelihood that these processes
+will exploit userfaultfd's ability to delay kernel page faults to open
+timing windows for future exploits.
 
-This patch series is split from [1].
+Signed-off-by: Daniel Colascione <dancol@google.com>
+---
+ fs/userfaultfd.c                 | 7 ++++++-
+ include/uapi/linux/userfaultfd.h | 9 +++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
-
-Daniel Colascione (2):
-  Add UFFD_USER_MODE_ONLY
-  Add a new sysctl knob: unprivileged_userfaultfd_user_mode_only
-
- Documentation/admin-guide/sysctl/vm.rst | 13 +++++++++++++
- fs/userfaultfd.c                        | 18 ++++++++++++++++--
- include/linux/userfaultfd_k.h           |  1 +
- include/uapi/linux/userfaultfd.h        |  9 +++++++++
- kernel/sysctl.c                         |  9 +++++++++
- 5 files changed, 48 insertions(+), 2 deletions(-)
-
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index e39fdec8a0b0..21378abe8f7b 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -418,6 +418,9 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
+ 
+ 	if (ctx->features & UFFD_FEATURE_SIGBUS)
+ 		goto out;
++	if ((vmf->flags & FAULT_FLAG_USER) == 0 &&
++	    ctx->flags & UFFD_USER_MODE_ONLY)
++		goto out;
+ 
+ 	/*
+ 	 * If it's already released don't get it. This avoids to loop
+@@ -2003,6 +2006,7 @@ static void init_once_userfaultfd_ctx(void *mem)
+ 
+ SYSCALL_DEFINE1(userfaultfd, int, flags)
+ {
++	static const int uffd_flags = UFFD_USER_MODE_ONLY;
+ 	struct userfaultfd_ctx *ctx;
+ 	int fd;
+ 
+@@ -2012,10 +2016,11 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+ 	BUG_ON(!current->mm);
+ 
+ 	/* Check the UFFD_* constants for consistency.  */
++	BUILD_BUG_ON(uffd_flags & UFFD_SHARED_FCNTL_FLAGS);
+ 	BUILD_BUG_ON(UFFD_CLOEXEC != O_CLOEXEC);
+ 	BUILD_BUG_ON(UFFD_NONBLOCK != O_NONBLOCK);
+ 
+-	if (flags & ~UFFD_SHARED_FCNTL_FLAGS)
++	if (flags & ~(UFFD_SHARED_FCNTL_FLAGS | uffd_flags))
+ 		return -EINVAL;
+ 
+ 	ctx = kmem_cache_alloc(userfaultfd_ctx_cachep, GFP_KERNEL);
+diff --git a/include/uapi/linux/userfaultfd.h b/include/uapi/linux/userfaultfd.h
+index e7e98bde221f..5f2d88212f7c 100644
+--- a/include/uapi/linux/userfaultfd.h
++++ b/include/uapi/linux/userfaultfd.h
+@@ -257,4 +257,13 @@ struct uffdio_writeprotect {
+ 	__u64 mode;
+ };
+ 
++/*
++ * Flags for the userfaultfd(2) system call itself.
++ */
++
++/*
++ * Create a userfaultfd that can handle page faults only in user mode.
++ */
++#define UFFD_USER_MODE_ONLY 1
++
+ #endif /* _LINUX_USERFAULTFD_H */
 -- 
 2.26.2.303.gf8c07b1a785-goog
 
