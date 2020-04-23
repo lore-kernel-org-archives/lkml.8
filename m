@@ -2,131 +2,99 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CB3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FC2C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC4D12076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IA27skT5"
+	by mail.kernel.org (Postfix) with ESMTP id 615E02076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 09:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgDWJZI (ORCPT
+        id S1726864AbgDWJZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 05:25:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59601 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725884AbgDWJZH (ORCPT
+        Thu, 23 Apr 2020 05:25:11 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:40865 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbgDWJZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:25:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587633905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=do8zJdc7I4uHXHEben8lWabWs6HgpJn+cw0sGKbh2zc=;
-        b=IA27skT5UHBBlazwPOyGuCxq3BNUM2Iv84uGXyrC4Py7l7I1QcZNdL7QfNhZ9J3QZBBo8d
-        WU3mbJEzu+izGEAu+jRMvcCvBBU/AmfCnYAblQCNrtfUZJxLAAoGqAz2hK+hBQSV4vM+aR
-        Ct8gxxncjgW4JfuaPwAJu/tByWABTNE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-ekMwkEZ0PtmWCLZr-fo10w-1; Thu, 23 Apr 2020 05:25:04 -0400
-X-MC-Unique: ekMwkEZ0PtmWCLZr-fo10w-1
-Received: by mail-wr1-f72.google.com with SMTP id m5so2554093wru.15
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 02:25:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=do8zJdc7I4uHXHEben8lWabWs6HgpJn+cw0sGKbh2zc=;
-        b=YVM1TLSUFyuk4HE3auIA1WJ8v/f2aUAizRyCRSSY1OFCRMCkLGalp+FDk6/EAKCX3t
-         LmwHOb19zPMBq2wX7RduC8GLEY04bhjIrozsIlzMY3SInE2mmj6WgxGSBnsE/lqNpe1z
-         qwTCBI2uqaTBiiEI3Msw7PHPv64Oy+GNManBdHMJN17cCNzi1H3OKpw7cQlGxK5S0vkV
-         tDrRGHKl8+lj2/xayKbSCEyTgDOIbqt4lxbKTF9h7mmKgCGo0UFDdrF/8n48jOaDD82a
-         Oz5wl4vPV8rCEDZ8Nkq3fl8Stax2Ssszgu4wVmq4KNPLmbZneHTfv6cVlftH5rwNEqLQ
-         IeoA==
-X-Gm-Message-State: AGi0PuaNarrSegvymqj5YP1FSrO+pUJBkAcFZ9UyyD2YgbZFtNKJ8k3p
-        nCi/zEaumdu/i7qBT3IxOaraFIia6kzt0bzZRB9pTNBL6AurY9DR39hDqPfi5ZFdSL6E0IDnTKM
-        37xx9kfZf4VwsGAje0gCIcI99
-X-Received: by 2002:adf:f648:: with SMTP id x8mr3763901wrp.257.1587633902901;
-        Thu, 23 Apr 2020 02:25:02 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKfSJ+2+dBWEkydp4auYku0fYvTDUrKMch6QWddxKWBQoac935UdKFUm+uuf3gEakhZSfBc3w==
-X-Received: by 2002:adf:f648:: with SMTP id x8mr3763873wrp.257.1587633902615;
-        Thu, 23 Apr 2020 02:25:02 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:d0a0:f143:e9e4:2926? ([2001:b07:6468:f312:d0a0:f143:e9e4:2926])
-        by smtp.gmail.com with ESMTPSA id t16sm3114627wrb.8.2020.04.23.02.25.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 02:25:02 -0700 (PDT)
-Subject: Re: [PATCH v2 1/5] KVM: LAPIC: Introduce interrupt delivery fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-References: <1587632507-18997-1-git-send-email-wanpengli@tencent.com>
- <1587632507-18997-2-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <09cba36c-61d8-e660-295d-af54ceb36036@redhat.com>
-Date:   Thu, 23 Apr 2020 11:25:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 05:25:09 -0400
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M4roN-1jSv120psd-0020KI; Thu, 23 Apr 2020 11:25:07 +0200
+Received: by mail-qk1-f170.google.com with SMTP id t3so5686261qkg.1;
+        Thu, 23 Apr 2020 02:25:06 -0700 (PDT)
+X-Gm-Message-State: AGi0PubPju4TS9vqFIy5fUpPQXhorHWEfCTMOmWy9O+uzLsr19DU4U0c
+        kbcUSai7neEsPCcvYaur2DGy6nKnjCrmZIZgJh0=
+X-Google-Smtp-Source: APiQypL+w45VTBoxMvprVb6NEGdgZyNyPMU0dKAvD2rTXgVRLwfn3/Y7HWt6ZXTYoBoj1KPld4qOl8X+Utd6NzHUvt8=
+X-Received: by 2002:a37:63d0:: with SMTP id x199mr2439571qkb.3.1587633905619;
+ Thu, 23 Apr 2020 02:25:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1587632507-18997-2-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1587531463.git.josh@joshtriplett.org> <05c9a6725490c5a5c4ee71be73326c2fedf35ba5.1587531463.git.josh@joshtriplett.org>
+In-Reply-To: <05c9a6725490c5a5c4ee71be73326c2fedf35ba5.1587531463.git.josh@joshtriplett.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 Apr 2020 11:24:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a09h4jhJWckxVUMYLoUp8=vAJ5NXuMTzSmghRxuk2_PTQ@mail.gmail.com>
+Message-ID: <CAK8P3a09h4jhJWckxVUMYLoUp8=vAJ5NXuMTzSmghRxuk2_PTQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] fs: Support setting a minimum fd for "lowest
+ available fd" allocation
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     io-uring@vger.kernel.org,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, Aleksa Sarai <cyphar@cyphar.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:e6+fXZCzbNUcGueHZi0BR8/JFqXLu3ow8UkwsShEw/fDTsxMjHo
+ Qt1mAwe83HkCU+qPttGnY+0+8e3ZAHvsTa02Fukov2D2leInYAI/HO06d2FyAdvYk3pgoIh
+ 89W3fIgoQ6/p4NNtT/BtKzw5jAz2+rRJy2GeWnBok4QDe/DCzXnyOn+APqk5xJG0Kx4aAp2
+ vy+iKbATk+5JtgOy4odVQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:V3w25P3eXTE=:ThBWKENYGuaDDbCgV64qnP
+ bkbRgl8/B2JfJMnqoS0JcufoLCvJqQNpdxz+pX4XaXGGEokkLU9t8l4Ha1MlAHOFKG/8K6FXI
+ MYgyZ0j2vV5S0xR09xlGrx+I3Lfoa56k4t6h6pX0LTYtAUgK2cIJMjm4eOc6jQdXBEAiaDdE4
+ KylyazTM42OhTMoN6Qw1U1rlngh6GgVM9AT90hM/XVLp5mEfR6nldUdSReMlKQmPSYSOq+0Pz
+ aD7MXXCwbVwbu1VX3wHVgAp+JhwDrK/Bbr6svVTCIR4MqTy7I503erAZvZtqm+7y6HsS9/SwK
+ C6131GSKb579dphRwUOY76Eh+oBlIZgjwNopQS/eDDIBqpswCUTpCF4McxzZ1auDrOMA68/X8
+ tP2KlKWOvFCG80DicrkpzLNXqQVippZPOgPqkVs5AqvEqwQG6+tdQu82gRBMUtEMrJgADgtH5
+ 7ezukIAhwBbMBSGDPAb6F84UR9oixi2YEnHSK93vq69kT65uLfVEZdbaazznxZzq3EUmTLniB
+ q3r8wazivQU22HEn79g0Jal+QVdPnEQM41vBpJ/6hZBe/T9+PAwFpec/re6J5FIemCkKHzUpO
+ 2ras1d3DBNePUpsWkCX8uW69oIsM7wWleraqMomlc9EUebhOa3Hu3RnEWjywuu0uo449qjD9t
+ yHWhG+k50RrPr9MhcRvBxlifJIcFlP69epb+U4BuIgglulInbGMZvYyxlj/XjySxeQZItuhLp
+ 3Ymw+EJwVAIu3LOp1e92ImKesomN3PC4JP3/s0b8LQ9vGHci3Z1z7rjfVhyEZtHub3Pa4wpLM
+ M4OEPdbG01a3cYWIZvLOQG5wmdOIKX8dOZZX7tg6VELwG4fFbI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/20 11:01, Wanpeng Li wrote:
-> +static void fast_deliver_interrupt(struct kvm_lapic *apic, int vector)
-> +{
-> +	struct kvm_vcpu *vcpu = apic->vcpu;
-> +
-> +	kvm_lapic_clear_vector(vector, apic->regs + APIC_TMR);
-> +
-> +	if (vcpu->arch.apicv_active) {
-> +		if (kvm_x86_ops.pi_test_and_set_pir_on(vcpu, vector))
-> +			return;
-> +
-> +		kvm_x86_ops.sync_pir_to_irr(vcpu);
-> +	} else {
-> +		kvm_lapic_set_irr(vector, apic);
-> +		if (kvm_cpu_has_injectable_intr(vcpu)) {
-> +			if (kvm_x86_ops.interrupt_allowed(vcpu)) {
-> +				kvm_queue_interrupt(vcpu,
-> +					kvm_cpu_get_interrupt(vcpu), false);
-> +				kvm_x86_ops.set_irq(vcpu);
-> +			} else
-> +				kvm_x86_ops.enable_irq_window(vcpu);
-> +		}
-> +	}
-> +}
-> +
+On Wed, Apr 22, 2020 at 7:19 AM Josh Triplett <josh@joshtriplett.org> wrote:
+>
+> Some applications want to prevent the usual "lowest available fd"
+> allocation from allocating certain file descriptors. For instance, they
+> may want to prevent allocation of a closed fd 0, 1, or 2 other than via
+> dup2/dup3, or reserve some low file descriptors for other purposes.
+>
+> Add a prctl to increase the minimum fd and return the previous minimum.
+>
+> System calls that allocate a specific file descriptor, such as
+> dup2/dup3, ignore this minimum.
+>
+> exec resets the minimum fd, to prevent one program from interfering with
+> another program's expectations about fd allocation.
 
-Ok, got it now.  The problem is that deliver_posted_interrupt goes through
+Have you considered making this a separate system call rather than
+a part of prctl()?
 
-        if (!kvm_vcpu_trigger_posted_interrupt(vcpu, false))
-                kvm_vcpu_kick(vcpu);
+At the moment, there are certain classes of things controlled by prctl,
+e.g. capabilities, floating point handling and timer behavior, but nothing
+that relates to file descriptors as such, so it's not an obvious decision.
 
-Would it help to make the above
+Another option would be prlimit(), as it already controls the maximum
+file descriptor number with RLIMIT_NOFILE, and adding a minimum
+there would let you set min/max atomically.
 
-        if (vcpu != kvm_get_running_vcpu() &&
-	    !kvm_vcpu_trigger_posted_interrupt(vcpu, false))
-                kvm_vcpu_kick(vcpu);
-
-?  If that is enough for the APICv case, it's good enough.
-
-Paolo
-
+     Arnd
