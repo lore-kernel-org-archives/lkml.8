@@ -2,144 +2,165 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE14C55189
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49476C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A712098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6302074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587605813;
+	bh=1QM6rFh8dJaX0N+qMjJUYWNb3erpQwXP4idZtNjT+yo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yYhXSDbwhVXfJAeMn2DSPy5cQ51OEt3WFam8K0diXZ3GhANP8oZpvAZf9FAWjLLXN
+	 00v3ZUALfoLV95VomxEUcOIhpv32mtKoVD26+Ag/gMQCtaT9RuBiI+5PTfZ2bKdEo+
+	 GrFu577XDCoTegoWAGJIIUGLnxEBBDIGpKqSXwR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDWBgn (ORCPT
+        id S1726541AbgDWBgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:36:43 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:53178 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgDWBgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:36:42 -0400
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id AFB809D0; Wed, 22 Apr 2020 20:36:39 -0500 (CDT)
-Date:   Wed, 22 Apr 2020 20:36:39 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Serge Hallyn <serge@hallyn.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Tejun Heo <tj@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        David Rheinsberg <david.rheinsberg@gmail.com>,
-        Tom Gundersen <teg@jklm.no>,
-        Christian Kellner <ckellner@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Steve Barber <smbarber@google.com>,
-        Dylan Reid <dgreid@google.com>,
-        Filipe Brandenburger <filbranden@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Benjamin Elder <bentheelder@google.com>,
-        Akihiro Suda <suda.kyoto@gmail.com>
-Subject: Re: [PATCH v2 6/7] loopfs: start attaching correct namespace during
- loop_add()
-Message-ID: <20200423013639.GB2982@mail.hallyn.com>
-References: <20200422145437.176057-1-christian.brauner@ubuntu.com>
- <20200422145437.176057-7-christian.brauner@ubuntu.com>
+        Wed, 22 Apr 2020 21:36:52 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52126 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbgDWBgv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:36:51 -0400
+Received: by mail-pj1-f67.google.com with SMTP id mq3so1730021pjb.1;
+        Wed, 22 Apr 2020 18:36:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TZq6bba/Za2cfM2s4UaUYLj7V0czmPB9F3lz7Q2Lzpo=;
+        b=jK+kKWGF+kN55gPscY/Ah/q7nVK+ddvmipd43rPh8nBRM8K6TbUGdqwf2yudnetSCK
+         Q4h8hi2StCM4LQXdYfhCtzcaL6YO13jUjNlwKEh/7nOQYJ1Wu7rSJtwGZud92u8j95+N
+         f4uSk7O/0QEOkJea3mDvA0RnnHc2hzzaaOJmDDIyiy879mZeldq4ecMSEjAFuGMyOf7I
+         tHfKMb1TOkc4wEQySn0LhS051eE7w/6UwyMKix7r685kmw1u1brzqrnbjkDjmxanfDKZ
+         ZUvqRzVZdXnSYXIzuhrssX0JpLHGADumHB/8Pxns7NVVJ95rASS9dvU3Kcp/9739hZFC
+         6V9w==
+X-Gm-Message-State: AGi0PuZoxgxO9OgGtjpsjhGuWb/58m+Bltc06qMS+e1Ous7d8jSQ2ueQ
+        RBIzwQl4SoiozeCs5d5H4OE=
+X-Google-Smtp-Source: APiQypLuZz9AxyqwFKbFjw5IcxAxKPR30Avx26+5vdiyhCp6KpPp1XaR6f09JwbRqlC61ZgLJQLSzA==
+X-Received: by 2002:a17:902:a40e:: with SMTP id p14mr1410819plq.297.1587605810907;
+        Wed, 22 Apr 2020 18:36:50 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id 135sm786680pfu.125.2020.04.22.18.36.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 18:36:49 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 18:36:48 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Moritz Fischer <mdf@kernel.org>
+Subject: Re: How to upload fpga firmware
+Message-ID: <20200423013648.GA2430@epycbox.lan>
+References: <20200422114432.GM1694@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422145437.176057-7-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200422114432.GM1694@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 04:54:36PM +0200, Christian Brauner wrote:
-> Tag loop devices with the namespace the loopfs instance was mounted in.
-> This has the consequence that loopfs devices carry the correct sysfs
-> permissions for all their core files. All other devices files will
-> continue to be correctly owned by the initial namespaces. Here is sample
-> output:
-> 
-> root@b1:~# mount -t loop loop /mnt
-> root@b1:~# ln -sf /mnt/loop-control /dev/loop-control
-> root@b1:~# losetup -f
-> /dev/loop8
-> root@b1:~# ln -sf /mnt/loop8 /dev/loop8
-> root@b1:~# ls -al /sys/class/block/loop8
-> lrwxrwxrwx 1 root root 0 Apr  7 13:06 /sys/class/block/loop8 -> ../../devices/virtual/block/loop8
-> root@b1:~# ls -al /sys/class/block/loop8/
-> total 0
-> drwxr-xr-x  9 root   root       0 Apr  7 13:06 .
-> drwxr-xr-x 18 nobody nogroup    0 Apr  7 13:07 ..
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 alignment_offset
-> lrwxrwxrwx  1 nobody nogroup    0 Apr  7 13:07 bdi -> ../../bdi/7:8
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 capability
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 dev
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 discard_alignment
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 events
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 events_async
-> -rw-r--r--  1 root   root    4096 Apr  7 13:06 events_poll_msecs
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 ext_range
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 hidden
-> drwxr-xr-x  2 nobody nogroup    0 Apr  7 13:07 holders
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 inflight
-> drwxr-xr-x  2 nobody nogroup    0 Apr  7 13:07 integrity
-> drwxr-xr-x  3 nobody nogroup    0 Apr  7 13:07 mq
-> drwxr-xr-x  2 root   root       0 Apr  7 13:06 power
-> drwxr-xr-x  3 nobody nogroup    0 Apr  7 13:07 queue
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 range
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 removable
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 ro
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 size
-> drwxr-xr-x  2 nobody nogroup    0 Apr  7 13:07 slaves
-> -r--r--r--  1 root   root    4096 Apr  7 13:06 stat
-> lrwxrwxrwx  1 nobody nogroup    0 Apr  7 13:07 subsystem -> ../../../../class/block
-> drwxr-xr-x  2 root   root       0 Apr  7 13:06 trace
-> -rw-r--r--  1 root   root    4096 Apr  7 13:06 uevent
-> root@b1:~#
-> 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Hi Sascha,
 
-I was a *bit* worried about not taking a reference to the
-user namespace, but it doesn't look like the chain of
-loop_remove() -> del_gendisk() -> device_del() will allow any later
-access through sysfs, so I guess it's fine.
-
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-
-> ---
-> /* v2 */
-> unchanged
-> - Christian Brauner <christian.brauner@ubuntu.com>:
->   - Adapted commit message otherwise unchanged.
-> ---
->  drivers/block/loop.c | 4 ++++
->  1 file changed, 4 insertions(+)
+On Wed, Apr 22, 2020 at 01:44:32PM +0200, Sascha Hauer wrote:
+> Hi,
 > 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 8e21d4b33e01..2dc53bad4b48 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -2212,6 +2212,10 @@ static int loop_add(struct loop_device **l, int i, struct inode *inode)
->  	disk->private_data	= lo;
->  	disk->queue		= lo->lo_queue;
->  	sprintf(disk->disk_name, "loop%d", i);
-> +#ifdef CONFIG_BLK_DEV_LOOPFS
-> +	if (loopfs_i_sb(inode))
-> +		disk->user_ns = loopfs_i_sb(inode)->s_user_ns;
-> +#endif
->  
->  	add_disk(disk);
->  
-> -- 
-> 2.26.1
+> I wonder what can be done with the mainline state of drivers/fpga/. The
+> entry to the framework seems to be fpga_mgr_load(). The only user of
+> this function is fpga_region_program_fpga(). This in turn is only called
+> in response of applying a device tree overlay. A device tree overlay is
+> applied with of_overlay_fdt_apply() which has no users in the Kernel.
+
+Yes. It is waiting for dt_overlays one way or another. I personally
+don't currently have the bandwidth to work actively on this.
+
+> My current task is to load a firmware to a FPGA. The code all seems to
+> be there in the Kernel, it only lacks a way to trigger it. I am not very
+> interested in device tree overlays since the FPGA appears as a PCI
+> device (although applying a dtbo could enable the PCIe controller device
+> tree node). Is there some mainline way to upload FPGA firmware? At the
+> moment we are using the attached patch to trigger loading the firmware
+> from userspace. Would something like this be acceptable for mainline?
+
+We've looked into this sort of patches over the years and never came to
+a general interface that really works.
+
+The OPAE folks (and other users I know of) usually use FPGA Manager with
+a higher layer on top of it that moves the bitstream into the kernel via
+an ioctl().
+
+One concept I had toyed with mentally, but haven't really gotten around
+to implement is a 'discoverable' region, that would deal with the
+necessary re-enumeration via a callback and have a sysfs interface
+similar to what the patch below has.
+This would essentially cover use-cases where you have a discoverable
+device implemented in FPGA logic, such as say an FPGA hanging off of
+PCIe bus that can get loaded over USB, a CPLD or some other side-band
+mechanism. After loading the image you'd have to rescan the PCIe bus -
+which - imho is the kernel's job.
+
+What I really wanna avoid is creating another /dev/fpga0 / /dev/xdevcfg
+that completely leaves the kernel in the dark about the fact that it
+reconfigures a bit of hardware hanging off the bus.
+
+In my ideal world you'd create a pci driver that binds to your device,
+and creates mfd style subdevices for whatever you'd want your design to
+do. One of these devices would be an FPGA and a FPGA region attached to
+that FPGA manager. Your top level driver would co-ordinate the fact that
+you are re-programming parts of the FPGA and create / destroy devices as
+needed for the hardware contained in the bitstream.
+
+[..]
+> +static ssize_t firmware_name_show(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  char *buf)
+> +{
+> +	struct fpga_region *region = to_fpga_region(dev);
+> +
+> +	if (!region->info || !region->info->firmware_name)
+> +		return 0;
+> +
+> +	return sprintf(buf, "%s\n", region->info->firmware_name);
+> +}
+> +
+> +static ssize_t firmware_name_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *firmware_name, size_t count)
+> +{
+> +	struct fpga_region *region = to_fpga_region(dev);
+> +	struct fpga_image_info *info = region->info;
+> +	int error;
+> +
+> +	if (!info) {
+> +		info = fpga_image_info_alloc(dev);
+> +		if (!info)
+> +			return -ENOMEM;
+> +	} else if (info->firmware_name) {
+> +		devm_kfree(dev, info->firmware_name);
+> +	}
+> +
+> +	info->firmware_name = devm_kstrdup(dev, firmware_name, GFP_KERNEL);
+> +	if (!info->firmware_name)
+> +		return -ENOMEM;
+> +
+> +	if (count >  0 && info->firmware_name[count - 1] == '\n')
+> +		info->firmware_name[count - 1] = '\0';
+> +
+> +	region->info = info;
+> +	error = fpga_region_program_fpga(region);
+> +	if (error) {
+> +		devm_kfree(dev, info->firmware_name);
+> +		info->firmware_name = NULL;
+> +	}
+> +
+> +	return error ? error : count;
+> +}
+
+Cheers,
+Moritz
