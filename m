@@ -2,183 +2,153 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168D9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E97C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9D121556
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 06:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E17208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CP9Uls27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgDWG5x (ORCPT
+        id S1726586AbgDWHBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:57:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:17521 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgDWG5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:57:52 -0400
-IronPort-SDR: 5CvoguHw9XGMEMKcCr1NXQ4rdA1b5SyCCV7n+4iBzrtVK0ATnOCPnAGIJ1JsRUGj1I13lJVEQm
- o83ZC9NrkdQQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 23:57:52 -0700
-IronPort-SDR: 5ulPnrtMfp1BYERyF+Rw1WdpC63D7z9WauseFppZJ6R7UYPhr9lRuXDhv8+5WuiHOGKjV42H9w
- VY9EM/makVnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,306,1583222400"; 
-   d="scan'208";a="280295535"
-Received: from glass.png.intel.com ([172.30.181.92])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Apr 2020 23:57:49 -0700
-From:   Wong Vee Khee <vee.khee.wong@intel.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        Thu, 23 Apr 2020 03:01:10 -0400
+Received: from mail-eopbgr60077.outbound.protection.outlook.com ([40.107.6.77]:56054
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725562AbgDWHBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:01:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QZuO+2Q3nUmvIE/UZRNHG3IeNBQGwZJjuMuPAW4YuLycR/c3QvI9hg//yA71rgUEyR5Qie1znvSVN+9Cjl4Eq5p6Re6EGJaTo5liqvk4lBuj01UBRrGfCAXTnyOXBnGrXtA7TQ2VNWp1GqvVR8MOlayVSDsbfXiOvE5J1jkLB3xXKexNvf/zx+OHXbgMkTKq4Jf+Ia6hFygC0S+PhbNuLfOCYigfXXZzTG0E+2GI3BXHW7fEgq439GxgqVcrRWTXAu3XCNdZl/jM8EuUErpO78ESidAwXWM1ctT2/Df7LzBpKC/6X+a08TY+IAVNg9YppFac9Svor9pfV5MxNGLnNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ffBclFaIhjRLAK7MzFsb012aA60idB+fH+Vz0PPO97w=;
+ b=SkdBE7zaMtgROUveuqliuNnebvuWX8hFKXBfS20vmRSjDHvdg8285zf0XC26rHjv8ZJN52UAIUuxaAuYs16kcMprQErszomurCpHuyzYfA1hlGqijkGoURXQW98Nc/ZO8jHcgi4lG+Ekd9HWqACQcvWgRWL4B5ublbtAEUZ+2KLs8ExKAG/rCBkXUlr85/ScpW2JrA+Lf5vR5hLw8fqMoHRYX/uPECV9j9m3VcZrPTkWQi59yvYCijojdGeafJ8FjPtWJ94W2GWgeYfGA9AgEa7Qxnjbf7n/AQ3o2OK/0ek+60Bwyv2hwuVhURBgyw2jQASwytLLiwfbweE2jwrIvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ffBclFaIhjRLAK7MzFsb012aA60idB+fH+Vz0PPO97w=;
+ b=CP9Uls27hw/hBbP9qMwLDcu9Ot1mqP5pwmkjoZkZqesAJH+iHMRGWjC8H5pDub9GbAvmNmjqT3stq4qrHd/2tPTkTKaY8sdozLf1tSwoLV/rMhLmBMB8vbwlLBU8/7DOWLxKM39gWnNAlTStf3iaNdNONnaRKhsV/+AtI8oQOuo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2822.eurprd04.prod.outlook.com (2603:10a6:4:96::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Thu, 23 Apr
+ 2020 07:01:06 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
+ 07:01:06 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, abel.vesa@nxp.com, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Wei Feng <weifeng.voon@intel.com>,
-        Wong Vee Khee <vee.khee.wong@intel.com>
-Subject: [PATCH net-next 1/1] net: stmmac: Add option for VLAN filter fail queue enable
-Date:   Thu, 23 Apr 2020 15:00:26 +0800
-Message-Id: <20200423070026.26200-1-vee.khee.wong@intel.com>
-X-Mailer: git-send-email 2.17.0
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] clk: imx: introduce imx_clk_hw_critical
+Date:   Thu, 23 Apr 2020 14:52:28 +0800
+Message-Id: <1587624748-27228-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0133.apcprd04.prod.outlook.com
+ (2603:1096:3:16::17) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR04CA0133.apcprd04.prod.outlook.com (2603:1096:3:16::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2937.13 via Frontend Transport; Thu, 23 Apr 2020 07:01:02 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 58967f40-8bd2-463f-ae2e-08d7e75417e5
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2822:|DB6PR0402MB2822:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB28221B5F19EBCEBFACF1A2B188D30@DB6PR0402MB2822.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 03827AF76E
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(66946007)(66556008)(66476007)(5660300002)(6512007)(2616005)(6506007)(69590400007)(316002)(8936002)(6666004)(9686003)(956004)(81156014)(186003)(8676002)(36756003)(6486002)(86362001)(478600001)(52116002)(16526019)(2906002)(4326008)(26005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2PtT2wqPZDmpJHcsl/XXQjfTudtWy4pGegZdcH4Vxj/xgrSN4o25G4/7N7fliafYE+LDZQs3mn3q5OEbKokQKnc8iFV5pWPsCJ1mcARQBNOchwGz+Pjol9KrOv2V/wUfEIuve7HKX7XvxTa7SN2gTncmRj/YgptcBpogb8TBDPNbtUYdZ02CJmDhQfAkXCIQQTKnBDlewkamLRBfZZyDVW9pB8Ti6XPElng1LZVd3XpwevuShaJV6XrQ0uZh9ro9M8zNKLgr+gONK3vHOpGmGgJLPR6I9DL23m/8WAf8Xlc7Hieb60O37irqWqOgSdwkn5Vl2fjXrdHRYH8VyVVti1eeia4xTouHXKg/4a5FgSg3e9QsjZIyKLDftR7XYMNOliVoFaE4ZBMgZN8+otvk29ccYRBgWghalppH6x0QFEfoURwHz3ZtKRxdIfTZgA5eMzf+6jtXh41XOO/Bf41yWlpm4cEcotGxfCuAdFm1CrIBuC11oxWI4nrXODQGE2/p
+X-MS-Exchange-AntiSpam-MessageData: gfCkf5d4pE8PelfW25KWiGngQq2Pjk8f+wqJgunq8QGDbzAYzmkjjIsHZZhgeuyPAtB1vLsYZyWPL6JqaMj6TZpMH+Nba6AcxE60PodK8VWPE5CtSmDzdpR2FglrFvKuqi51iLIuUhCK5IZOcYk7dw==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58967f40-8bd2-463f-ae2e-08d7e75417e5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 07:01:06.2520
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B5lCUn35qCvTcTcdrRXSSsv3RVClfiKyLOP/dwK/t4AQcsQu35qsHrGdQy6mwKhRrc7BYERm+FJjXa6MLuKeoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2822
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-Add option in plat_stmmacenet_data struct to enable VLAN Filter Fail
-Queuing. This option allows packets that fail VLAN filter to be routed
-to a specific Rx queue when Receive All is also set.
+To i.MX8M SoC, there is an case is when running dual OSes
+with hypervisor, the clk of the hardware that passthrough
+to the 2nd OS needs to be setup by 1st Linux OS.
+So detect clock-critical from ccm node and enable the clocks to let
+the 2nd OS could use the hardware without touch CCM module.
 
-When this option is enabled:
-- Enable VFFQ only when entering promiscuous mode, because Receive All
-  will pass up all rx packets that failed address filtering (similar to
-  promiscuous mode).
-- VLAN-promiscuous mode is never entered to allow rx packet to fail VLAN
-  filters and get routed to selected VFFQ Rx queue.
-
-Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
-Reviewed-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Chuah, Kim Tatt <kim.tatt.chuah@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h      |  2 ++
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 15 +++++++++++++--
- drivers/net/ethernet/stmicro/stmmac/dwmac5.h      |  6 ++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  3 +++
- include/linux/stmmac.h                            |  2 ++
- 6 files changed, 27 insertions(+), 2 deletions(-)
+ drivers/clk/imx/clk.c | 19 +++++++++++++++++++
+ drivers/clk/imx/clk.h |  1 +
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 127f75862962..52e6d1ef7176 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -474,6 +474,8 @@ struct mac_device_info {
- 	unsigned int num_vlan;
- 	u32 vlan_filter[32];
- 	unsigned int promisc;
-+	bool vlan_fail_q_en;
-+	u8 vlan_fail_q;
- };
- 
- struct stmmac_rx_routing {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 61f3249bd724..592b043f9676 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -76,6 +76,7 @@
- #define GMAC_PACKET_FILTER_HPF		BIT(10)
- #define GMAC_PACKET_FILTER_VTFE		BIT(16)
- #define GMAC_PACKET_FILTER_IPFE		BIT(20)
-+#define GMAC_PACKET_FILTER_RA		BIT(31)
- 
- #define GMAC_MAX_PERFECT_ADDRESSES	128
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index ecd834e0e121..002791b77356 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -618,7 +618,18 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 	value &= ~GMAC_PACKET_FILTER_PM;
- 	value &= ~GMAC_PACKET_FILTER_PR;
- 	if (dev->flags & IFF_PROMISC) {
--		value = GMAC_PACKET_FILTER_PR | GMAC_PACKET_FILTER_PCF;
-+		/* VLAN Tag Filter Fail Packets Queuing */
-+		if (hw->vlan_fail_q_en) {
-+			value = readl(ioaddr + GMAC_RXQ_CTRL4);
-+			value &= ~GMAC_RXQCTRL_VFFQ_MASK;
-+			value |= GMAC_RXQCTRL_VFFQE |
-+				 (hw->vlan_fail_q << GMAC_RXQCTRL_VFFQ_SHIFT);
-+			writel(value, ioaddr + GMAC_RXQ_CTRL4);
-+			value = GMAC_PACKET_FILTER_PR | GMAC_PACKET_FILTER_RA;
-+		} else {
-+			value = GMAC_PACKET_FILTER_PR | GMAC_PACKET_FILTER_PCF;
-+		}
+diff --git a/drivers/clk/imx/clk.c b/drivers/clk/imx/clk.c
+index 87ab8db3d282..ec7d422540c1 100644
+--- a/drivers/clk/imx/clk.c
++++ b/drivers/clk/imx/clk.c
+@@ -177,3 +177,22 @@ static int __init imx_clk_disable_uart(void)
+ 	return 0;
+ }
+ late_initcall_sync(imx_clk_disable_uart);
 +
- 	} else if ((dev->flags & IFF_ALLMULTI) ||
- 		   (netdev_mc_count(dev) > hw->multicast_filter_bins)) {
- 		/* Pass all multi */
-@@ -680,7 +691,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
- 
--	if (dev->flags & IFF_PROMISC) {
-+	if (dev->flags & IFF_PROMISC && !hw->vlan_fail_q_en) {
- 		if (!hw->promisc) {
- 			hw->promisc = 1;
- 			dwmac4_vlan_promisc_enable(dev, hw);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
-index 3e8faa96b4d4..64530deb55ba 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
-@@ -92,6 +92,12 @@
- #define TCEIE				BIT(0)
- #define DMA_ECC_INT_STATUS		0x00001088
- 
-+/* EQoS version 5.xx VLAN Tag Filter Fail Packets Queuing */
-+#define GMAC_RXQ_CTRL4                 0x00000094
-+#define GMAC_RXQCTRL_VFFQ_MASK         GENMASK(19, 17)
-+#define GMAC_RXQCTRL_VFFQ_SHIFT                17
-+#define GMAC_RXQCTRL_VFFQE             BIT(16)
++int imx_clk_hw_critical(struct device_node *np, struct clk_hw * const hws[])
++{
++	struct property *prop;
++	const __be32 *cur;
++	u32 idx;
++	int ret;
 +
- int dwmac5_safety_feat_config(void __iomem *ioaddr, unsigned int asp);
- int dwmac5_safety_feat_irq_status(struct net_device *ndev,
- 		void __iomem *ioaddr, unsigned int asp,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index e6898fd5223f..27d9bf98c908 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4723,6 +4723,9 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 	if (priv->dma_cap.tsoen)
- 		dev_info(priv->device, "TSO supported\n");
- 
-+	priv->hw->vlan_fail_q_en = priv->plat->vlan_fail_q_en;
-+	priv->hw->vlan_fail_q = priv->plat->vlan_fail_q;
++	if (!np || !hws)
++		return -EINVAL;
 +
- 	/* Run HW quirks, if any */
- 	if (priv->hwif_quirks) {
- 		ret = priv->hwif_quirks(priv);
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index fbafb353e9be..f4287f363031 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -196,5 +196,7 @@ struct plat_stmmacenet_data {
- 	int mac_port_sel_speed;
- 	bool en_tx_lpi_clockgating;
- 	int has_xgmac;
-+	bool vlan_fail_q_en;
-+	u8 vlan_fail_q;
- };
- #endif
++	of_property_for_each_u32(np, "clock-critical", prop, cur, idx) {
++		ret = clk_prepare_enable(hws[idx]->clk);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index d4ea1609bcb7..701d7440f98c 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -9,6 +9,7 @@ extern spinlock_t imx_ccm_lock;
+ 
+ void imx_check_clocks(struct clk *clks[], unsigned int count);
+ void imx_check_clk_hws(struct clk_hw *clks[], unsigned int count);
++int imx_clk_hw_critical(struct device_node *np, struct clk_hw * const hws[]);
+ void imx_register_uart_clocks(struct clk ** const clks[]);
+ void imx_mmdc_mask_handshake(void __iomem *ccm_base, unsigned int chn);
+ void imx_unregister_clocks(struct clk *clks[], unsigned int count);
 -- 
-2.17.0
+2.16.4
 
