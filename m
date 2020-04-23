@@ -2,260 +2,232 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB064C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FADC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC2C20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D1220857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNYFFwO7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/sDkbg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgDWQdQ (ORCPT
+        id S1729655AbgDWQdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:33:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34996 "EHLO
+        Thu, 23 Apr 2020 12:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729423AbgDWQdQ (ORCPT
+        by vger.kernel.org with ESMTP id S1729407AbgDWQdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:33:16 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB050C09B041
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:33:14 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id i9so1448477ool.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 09:33:14 -0700 (PDT)
+        Thu, 23 Apr 2020 12:33:46 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F4FC09B041;
+        Thu, 23 Apr 2020 09:33:46 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a21so6874739ljb.9;
+        Thu, 23 Apr 2020 09:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+P4exUzF4xLf5Y60Fmf3k7cdV4ADYZbeIV1x1d0wOko=;
-        b=MNYFFwO71GxTHjfwhwqDqQUViIZw7WnUjWaZYoPQ5OAhdhHzbLi34HtdRffTnlnSsV
-         bG7hZOz8t0SJsZ/AUrCDCwN4eNJ/e4O7StVzNnCGnnz/rpcONRo2QFrg+0zYKQnJIIa0
-         VsQr44874KxvDeGyDFGmb6bupmXGeJz/66605bXrAT87njr2yse3aDnKS4QtFrTMBuS/
-         xx1KTHq0l4G8oFdv+05VFPOp6X9LsbhjNRp0gbuMrBSqSaNmqrGr67Xa+WJhqEQwDVH3
-         /3x0XgFHZ4AHERqymDlvLA3O5aSyfWPsLaTwf30f5r2oy+K+coP5dnfRucDKCg6r+2mr
-         qx+g==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tAn1shUBNNakvYCQL+s6mMcCDRrVLS5bHorftkCoepw=;
+        b=F/sDkbg9eR9uOa3Ziuy7wuAPTZdYr3C4xlrE793YbjCkgvCCwv4f1kRw4pVa1scuTi
+         VmmVDU2mLAWRBfG5uhiPuEQOu3l7hJTRbujcT9dttF8QjldZdiMFnwCHhBSf+9SHKbBd
+         bcBINMVHHZwCYExvpG8uRi84L79NcLAguqwTWcHAyN/pxIY4zfqUxWkJIF0J+S3tYw6T
+         LYOhxBt5w4TFMC1sJydAW+j8oN7NJ5KYJWHESQGP/fNOItXVjLq+6i8dwkqzF2nq+Cnk
+         QSb1PNh8bBqYmUmyeOTUXtL9BpDCp97ckrRniEpP8fXHT/anyEnS91/IOg/6s4mNPZAz
+         A1xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+P4exUzF4xLf5Y60Fmf3k7cdV4ADYZbeIV1x1d0wOko=;
-        b=VFJB2IWwFeIPtgAKyeMOOCNp3omZaIBhtoogKS8KEwsTkfx0opYru0/kJ31psEjjjo
-         s4cpEZUxWX1MFa9fV8eMn5HgdVflEYxwWtaKtL4z975Pazf2GeSWnYz2k46rfOnhb9AZ
-         XA6f/VdDShSqRYVuuchTjwq2KaJV475jIz7iTY5DLq6zrRyBxTdCUXs0uH4JIRBchuT0
-         1ajanvkvnyAfP8UIR95U8OYhGVelDeUd/czbVm4vfpuK+Ln+CSyjqAk/a08xDrgCXY40
-         HZkIkSVcWclxKYoKDAeMSkTGbfFF2Fr0VKpiQJBMHcSMiwD02tADK0bWN1oYWYZUmr1X
-         YHQw==
-X-Gm-Message-State: AGi0PuYPgXRXByi0gp/Waws8PsDQWR62GSROwxDAGmYeYKJAg8D+REYS
-        CZ0aoCWodOc++JiqmFmQ6E3c80ssRg0=
-X-Google-Smtp-Source: APiQypJVM26C/ljYr3jxqCuUV7DPpi5sh5YyUwSHv/XwZUBfyTYt/PBaL4ICgxA5YQb5WYKgkE/+Qg==
-X-Received: by 2002:a4a:bb10:: with SMTP id f16mr4021122oop.43.1587659593810;
-        Thu, 23 Apr 2020 09:33:13 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id k12sm764896oik.30.2020.04.23.09.33.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 09:33:12 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 09:33:11 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Dirk Mueller <dmueller@suse.com>, kbuild-all@lists.01.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast
- in a inline asm context requiring an l-value: remove the cast or build with
- -fheinous-gnu-extensions
-Message-ID: <20200423163311.GA6774@ubuntu-s3-xlarge-x86>
-References: <202004232041.oMgr2Xiq%lkp@intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tAn1shUBNNakvYCQL+s6mMcCDRrVLS5bHorftkCoepw=;
+        b=byIOpp5guWA/JNJbDEI5R6iM3vbrwm6+uCbAYPNIqj6hG64IYvlFzgDTYV8eiD9yvt
+         utmDujoLw8kJrpSKayoAOkGj4zymCix8wZQQ4nwHaKXT9DTuJPR4Ykqp4vSa9pVLJPUV
+         jrFZ8MA18PWlQYggKWAdqcyvp+z0RsFwxOadYeSxKMklD92xRqxZTMNoKe2SVNKluvlY
+         w9MgRH8gchowyBoSYXQIkB6iVR/WGaALHfA0Lit6rtdnM+hrAxF6318cCXWLCSc2EEQy
+         XomLdWp7PPHlQFp5eYTNfwypw7pQHjc3dti0G2KcGgjAPd++5WoUGGHDiD4OTMWOZTEh
+         wEMQ==
+X-Gm-Message-State: AGi0PubW6G9WUoh3lBAbXfCcb9gcsQgJJCQ3DJm8DQ5mX5ZrCh/NaQDa
+        EHQO0tup6D86PWPHjFo+J5lWBsym
+X-Google-Smtp-Source: APiQypL1iVIogi3rRVYwY+/ni9SjumEkAptLvW+9rxUc9zq2PVTO6ihJP5Gh1pvA1xhNnIkP+/WWMg==
+X-Received: by 2002:a2e:85c4:: with SMTP id h4mr2975652ljj.112.1587659624165;
+        Thu, 23 Apr 2020 09:33:44 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o16sm2420603ljp.53.2020.04.23.09.33.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 09:33:43 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
+ <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
+ <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
+ <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
+ <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+ <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
+Date:   Thu, 23 Apr 2020 19:33:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202004232041.oMgr2Xiq%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 08:00:47PM +0800, kbuild test robot wrote:
-> Hi Dirk,
+23.04.2020 13:56, Jon Hunter пишет:
 > 
-> First bad commit (maybe != root cause):
+> On 22/04/2020 15:07, Dmitry Osipenko wrote:
 > 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   c578ddb39e565139897124e74e5a43e56538cb33
-> commit: e33a814e772cdc36436c8c188d8c42d019fda639 scripts/dtc: Remove redundant YYLOC global declaration
-> date:   4 weeks ago
-> config: powerpc-randconfig-a001-20200423 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project bbf386f02b05db017fda66875cc5edef70779244)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install powerpc cross compiling tool for clang build
->         # apt-get install binutils-powerpc-linux-gnu
->         git checkout e33a814e772cdc36436c8c188d8c42d019fda639
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=powerpc 
+> ...
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
+>>> So I think that part of the problem already existed prior to these
+>>> patches. Without your patches I see ...
+>>>
+>>> [   59.543528] tegra-i2c 7000d000.i2c: i2c transfer timed out
+>>
+>> Does this I2C timeout happen with my patches? Could you please post full
+>> logs of an older and the recent kernel versions?
 > 
-> All errors (new ones prefixed by >>):
+> I believe that it does, but I need to check.
 > 
-> >> lib/mpi/generic_mpih-mul1.c:37:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                    umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
->                    ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:790:20: note: expanded from macro 'umul_ppmm'
->            : "=r" ((USItype) ph) \
->                    ~~~~~~~~~~^~
->    1 error generated.
-> --
-> >> lib/mpi/generic_mpih-mul2.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                    umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
->                    ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:790:20: note: expanded from macro 'umul_ppmm'
->            : "=r" ((USItype) ph) \
->                    ~~~~~~~~~~^~
->    1 error generated.
-> --
-> >> lib/mpi/generic_mpih-mul3.c:36:13: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                    umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
->                    ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:790:20: note: expanded from macro 'umul_ppmm'
->            : "=r" ((USItype) ph) \
->                    ~~~~~~~~~~^~
->    1 error generated.
-> --
-> >> lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:750:21: note: expanded from macro 'sub_ddmmss'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:99:20: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:751:20: note: expanded from macro 'sub_ddmmss'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
-> >> lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:757:21: note: expanded from macro 'sub_ddmmss'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:99:20: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:758:20: note: expanded from macro 'sub_ddmmss'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
-> >> lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:764:21: note: expanded from macro 'sub_ddmmss'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:99:20: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:765:20: note: expanded from macro 'sub_ddmmss'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
-> >> lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:771:21: note: expanded from macro 'sub_ddmmss'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:99:20: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:772:20: note: expanded from macro 'sub_ddmmss'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
-> >> lib/mpi/mpih-div.c:99:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:778:21: note: expanded from macro 'sub_ddmmss'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:99:20: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                    sub_ddmmss(n1, n0, n1, n0, d1, d0);
->                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:779:20: note: expanded from macro 'sub_ddmmss'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:120:18: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                                    add_ssaaaa(n1, n0, r - d0,
->                                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:725:21: note: expanded from macro 'add_ssaaaa'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:120:22: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                                    add_ssaaaa(n1, n0, r - d0,
->                                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~
->    lib/mpi/longlong.h:726:20: note: expanded from macro 'add_ssaaaa'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:120:18: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                                    add_ssaaaa(n1, n0, r - d0,
->                                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:732:21: note: expanded from macro 'add_ssaaaa'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:120:22: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                                    add_ssaaaa(n1, n0, r - d0,
->                                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~
->    lib/mpi/longlong.h:733:20: note: expanded from macro 'add_ssaaaa'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:120:18: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                                    add_ssaaaa(n1, n0, r - d0,
->                                                    ~~~~~~~~~~~^~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:739:21: note: expanded from macro 'add_ssaaaa'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:120:22: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                                    add_ssaaaa(n1, n0, r - d0,
->                                                    ~~~~~~~~~~~~~~~^~~~~~~~~~~
->    lib/mpi/longlong.h:740:20: note: expanded from macro 'add_ssaaaa'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:129:16: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                            umul_ppmm(n1, n0, d0, q);
->                                            ~~~~~~~~~~^~~~~~~~~~~~~~
->    lib/mpi/longlong.h:790:20: note: expanded from macro 'umul_ppmm'
->            : "=r" ((USItype) ph) \
->                    ~~~~~~~~~~^~
->    lib/mpi/mpih-div.c:137:17: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                            sub_ddmmss(n1, n0, n1, n0, 0, d0);
->                                            ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:750:21: note: expanded from macro 'sub_ddmmss'
->                    : "=r" ((USItype)(sh)), \
->                            ~~~~~~~~~~^~~
->    lib/mpi/mpih-div.c:137:21: error: invalid use of a cast in a inline asm context requiring an l-value: remove the cast or build with -fheinous-gnu-extensions
->                                            sub_ddmmss(n1, n0, n1, n0, 0, d0);
->                                            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
->    lib/mpi/longlong.h:751:20: note: expanded from macro 'sub_ddmmss'
->                    "=&r" ((USItype)(sl)) \
->                           ~~~~~~~~~~^~~
->    fatal error: too many errors emitted, stopping now [-ferror-limit=]
->    20 errors generated.
+>>> [   59.549036] vdd_sata,avdd_plle: failed to disable
+>>>
+>>> [   59.553778] Failed to disable avdd-plle: -110
+>>>
+>>> [   59.558150] tegra-pcie 3000.pcie: failed to disable regulators: -110
+>>>
+>>>
+>>> However, now with your patches the i2c is failing to resume and this
+>>> breaks system suspend completely for Tegra30. So far this is the only
+>>> board that appears to break.
+>>>
+>>> So the above issue needs to be fixed and I will chat to Thierry about this.
+>>
+>> Okay
 > 
-> vim +37 lib/mpi/generic_mpih-mul1.c
+> So I have been looking at this some more and this starting to all look a
+> bit of a mess :-(
+> 
+> Firstly, the Tegra PCI driver suspends late (noirq) as we know. The PCI
+> driver will warn if it cannot disable the regulators when suspending but
+> does not actually fail suspend. So this warning is just indicating that
+> we were unable to disable the regulators.
+> 
+> Now I don't see that we can ever disable the PCI regulators currently
+> when entering suspend because ...
+> 
+> 1. We are in the noirq phase and so we will not get the completion
+>    interrupt for the I2C transfer. I know that you recently added the
+>    atomic I2C transfer support, but we can get the regulator framework
+>    to use this (I have not looked in much detail so far).
 
-Obviously not caused by that commit but I sent a patch a week and a half
-ago:
+That's not good :) I didn't realize that *all* interrupts of every
+device are disabled before .noirq is invoked. It appeared to me that the
+IRQs disabling and .noirq invocation is performed for the drivers one
+after another, but now I see that it's not true.
 
-https://lore.kernel.org/lkml/20200413195041.24064-1-natechancellor@gmail.com/
+https://elixir.bootlin.com/linux/v5.7-rc2/source/drivers/base/power/main.c#L1446
 
-https://github.com/ClangBuiltLinux/linux/issues/991
+> 2. Even if the regulator framework supported atomic I2C transfers, we
+>    also have the problem that the I2C controller could be runtime-
+>    suspended and pm_runtime_get_sync() will not work during during this
+>    phase to resume it correctly. This is a problem that needs to be
+>    fixed indeed!
 
-Cheers,
-Nathan
+Could you please clarify why pm_runtime_get_sync() can't be used by the
+I2C driver's in NOIRQ phase?
+
+> 3. Then we also have the possible dependency on the DMA driver that is
+>    suspended during the noirq phase.
+
+Yes, this is correct.
+
+Again, some regulator drivers may do something on suspend too, although
+looks like the current upstream Tegra devices are not affected by this
+potential problem.
+
+> It could be argued that if the PCI regulators are never turned off
+> (currently) then we should not even bother and this will likely resolve
+> this for now. However, really we should try to fix that correctly.
+
+Yes, keeping PCI regulators always-enabled should be a good immediate
+solution.
+
+Also, the RPM's system suspend/resume needs to fixed for the pci-tegra
+driver, like I already suggested before.
+
+> What I still don't understand is why your patch breaks resume. Even if
+> the I2C transfer fails, and is deemed harmless by the client driver, we
+> should still be able to suspend and resume correctly.
+
+If DMA is getting synchronized after DMA driver being suspended, then it
+could be a problem.
+
+Could you please try to apply this hunk and see if it makes any
+difference (I'll probably make it as proper patch):
+
+--- >8 ---
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index a42c0b4d14ac..55fc7400f717 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -816,6 +816,13 @@ static bool
+tegra_dma_eoc_interrupt_deasserted(struct tegra_dma_channel *tdc)
+ static void tegra_dma_synchronize(struct dma_chan *dc)
+ {
+ 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
++	int err;
++
++	err = pm_runtime_get_sync(tdc->tdma->dev);
++	if (err < 0) {
++		dev_err(tdc2dev(tdc), "Failed to synchronize DMA: %d\n", err);
++		return;
++	}
+
+ 	/*
+ 	 * CPU, which handles interrupt, could be busy in
+@@ -825,6 +832,8 @@ static void tegra_dma_synchronize(struct dma_chan *dc)
+ 	wait_event(tdc->wq, tegra_dma_eoc_interrupt_deasserted(tdc));
+
+ 	tasklet_kill(&tdc->tasklet);
++
++	pm_runtime_put(tdc->tdma->dev);
+ }
+
+ static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel
+*tdc,
+--- >8 ---
+
+It also could be that there is more than the suspend ordering problem,
+but for now it is hard to tell without having a detailed log which
+includes I2C/DMA/RPM traces.
+
+Lastly, it should be worthwhile to try to apply the WIP ARM32 KASAN
+series and see what will happen using CONFIG_KASAN=y.
+
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=230197
