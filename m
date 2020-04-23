@@ -2,158 +2,133 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD74C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28811C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE10220704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B752076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNLNNyip"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dnch9q0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgDWRC4 (ORCPT
+        id S1729837AbgDWRGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729674AbgDWRCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:02:54 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2D5C09B042;
-        Thu, 23 Apr 2020 10:02:54 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so7716579wrx.4;
-        Thu, 23 Apr 2020 10:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OgOoFPMvziAtiUZxoE51wszbOZtCs8cBFEzsWONoXaQ=;
-        b=fNLNNyipyEVINdAKv5TCJmwFHz02ABD9GsJ45feEgUSC3QzsDSJ/C24fKrp0btqSCW
-         bD7q0I+D2qw88HV3LrvVGA+jkQuSd20SfXmhPJNdYOvvECzR+3lRimOKZdhvgKEPilcB
-         0ySYrBYjp1Oxqyh7Y3rskjj07DRr0XvjV3hgoZWku9fXg8QTRuuyJAM5PxnZHglByWL2
-         8AOKnuNZHCJq0LXMVnh1mLIS03knoIEnnbUf1L46MO6p3eoDTP8Ys1RbBbT1oVGGdSde
-         4qWLJdVy22i5VT2+5yfhtpnz4jDWjefKGZ3eoCSl5RezIbj2HgHo/xugZL/dmEGTxD3q
-         Frdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OgOoFPMvziAtiUZxoE51wszbOZtCs8cBFEzsWONoXaQ=;
-        b=lLBHWkuomg7Jb+xlTNC3UGJrVYCVIWe1UlofuF1xgDXaPtMMDtxFyKtPGegJPgjpWT
-         jwvwq0IlV3VJeEng/vWlmImB1UA+vAOUOJTLi40PkEGtApniCTbvDkeb5tGdvTlKsmBE
-         Hu6JpSVYRe/Qqbp4UrzA0nVQGSWhZ6PbLH+TbqMCsN9OdTjyjRUke5B29hNfXI6I4IcK
-         fiKFObVyBSRBx1YvHQsfWm2h3Oc9sdXJDDfNGyebnf9NJcKQ78QvmvKswwHZ6OxgFb+K
-         nZVC/7hl7Vx59h+6JxnZV3OVrOHX9PRy+q1Vs0FciVlw7ZEXVB58YE+fCya2I29UlGv5
-         w0Bg==
-X-Gm-Message-State: AGi0PubyRPA8QqEQHpA6nzs4cwLNYmqT8EPxJk7Og+92eSD2YGUt+TET
-        mD2Kxiq4lVmzzCgai+9kci8x6hVY
-X-Google-Smtp-Source: APiQypLNkmvGiFI2nuonYn40oI+/9YHa3LWpEYLJDmPDLMrDGbGo6niBfzx8atGWQ8hO+m50PuzLaw==
-X-Received: by 2002:adf:ed46:: with SMTP id u6mr5623801wro.327.1587661372787;
-        Thu, 23 Apr 2020 10:02:52 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:c569:21dc:2ec:9a23? (p200300EA8F296000C56921DC02EC9A23.dip0.t-ipconnect.de. [2003:ea:8f29:6000:c569:21dc:2ec:9a23])
-        by smtp.googlemail.com with ESMTPSA id d13sm4300093wmb.39.2020.04.23.10.02.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 10:02:52 -0700 (PDT)
-Subject: Re: [PATCH net 1/2] net: phy: DP83822: Fix WoL in config init to be
- disabled
-To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com
-Cc:     linux@armlinux.org.uk, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org, afd@ti.com
-References: <20200423163947.18313-1-dmurphy@ti.com>
- <20200423163947.18313-2-dmurphy@ti.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <487889d0-d2e4-ddd4-b199-c621b2826601@gmail.com>
-Date:   Thu, 23 Apr 2020 19:02:44 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Apr 2020 13:06:34 -0400
+Received: from mout.gmx.net ([212.227.15.15]:50883 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729673AbgDWRGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:06:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1587661582;
+        bh=EFoet2sHsrazKCmeWq8vS35/INWJasHQ6ZT4FP4XYU4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=dnch9q0mkeSfLR4few9AuYLgos2XArTckfDtAuHpcBMDe2iweCUaYVCkvJj3o+vJv
+         tWSDBaolaygXczlgr30SLanetzWIDHChi2n4BZuuUhcETQug7Wrv1G4m143fV05F9q
+         lquS3NvLwBycEWuvPJsYNy4BLfYkOHO+oerTluPM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MAfYw-1jL5jZ28bY-00B4pr; Thu, 23 Apr 2020 19:06:22 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: vt6656: Add formula to the vnt_rf_addpower function
+Date:   Thu, 23 Apr 2020 19:05:57 +0200
+Message-Id: <20200423170557.10401-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200423163947.18313-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:s2AKSwgBK6pKD3g1eM4Bf+xszXJ9QKNoSOSezgVCvS4kM2XcSqJ
+ nN68RR/IcoxzfUpdNl0RGPyQd1xyrgCsst4dfMwflujnurgogkYv+II1wxqDWDh3WUDIX5k
+ TFLIyS28KY+PNZlsR/PjG/QkaZL3triFrK6Y7uT1h9Hdn9MLkZYiKACStZOVyvtMUVtYXCK
+ b4+yfZczxdxWMa0NlCo6g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dYCPScnRMmA=:Tq0A2oVNVggqE3mrj40uLf
+ 6aHPsR1KuQSBgEU3kql6zw8l2TnpTfTqnG2bgdre+mXOf0iIebkWQbrgqE78+ao7YNzTRcScO
+ +m2KxQCKYOaBfYiT/not5athP5TdKqmKJFjFWX7u2XFYK/lzEyy+vog4QSDsFv3Pggm+g+KfX
+ PM0v9NnHYM1x1TS1uScM6m7FkoHiBLuZg13l23t+Cx5zgdEEZAq/UoEdAgRdYDiGaupia4m/R
+ 2xmjpPvc3LXXM5wNIStuVfii00GpjpSS6d2Ay520xFiIbSykP4oWk0MHWWJ9zgNOQDiLFJ8Z9
+ /hdOHKQYhn0ZFDQSSVDLnapSZRwy81iHuw4rD34G6E+804W7IqRRWYu2LC8cBQEPCIjS4XKCT
+ 9SQeCN1DGQJIiFidtcHzCr2+FDhzztfyjGKX5syz/w2MeZkQD1Nr0tFlvsjwTDGz5FXu6V/gE
+ dEfmu/HTr5C4VBThisBLpYiVQYTgajVviLYuh7TgAWJQoi31pDrBh118AqLrYQFs6LAsdOfHP
+ szC96wCae0H+2SfEDH17hqnmE5PYZOzJi0/7QRAsAWTqT1WznHHY/4+yOhTkp+uQVwFe7HwDq
+ uMikVJoloycxkBjjZJc7nZj500DqE94+qi8bPTgwr1icNl8P5eLMuvQukTMabGhduGsb6HID6
+ 1mGaW6LhIPR3lnVI8Io93KjI6XiG+OregTVipHuqBp1hhULvB2DxXZkZd2dyl771vOhmLhOkX
+ xPJTofHPWqGf5jfzMxooNYGzaL53K6kYQEIPUmDNuQvi7Ma4Lpg03QzSMXg4SMu1cXcoKXFeb
+ ilonWabYVg0kOKe1Z3TgZ+8FA760FBH87bb9MWQ6pSNbcXXC4zLB4lv7pk2DjFJyx4UENZLqF
+ FTKI8LUr2+1qbbpsayDkoNncydLrNTFCBbqGng8dGN9sVWwrtYFBmZYPlgAhuFQnrfAQ1QboG
+ fJrOUmU+xCU4yy/gqxBLPc6Rpt6uanBk1NOHclF5AEn8dYQ3NFGHiNUh1zKTipMak8lFWCFhF
+ Oi6gDkty7g/WsVKp7I2mlopWrrGMJ2RNfmUZmGxiSbE7gQA/eEA3S3eqo7wk+JjD051LB2vDO
+ hennND5Dp9Wu3pAuKdmPP0K2F/mPxXYCLupTBaaif+M92raZh6pzvDclC2WQfBowN4EZNUi0g
+ r8+VAx8itx/ZmzX0kIzX8JnVIkNOIiYOXW/Xyy8NhZ0U6D05GpIWrP7OUrSNrMrSEug6Anx27
+ 7IR1n1U51bK6w0tYd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.04.2020 18:39, Dan Murphy wrote:
-> The WoL feature should be disabled when config_init is called and the
-> feature should turned on or off  when set_wol is called.
-> 
-> In addition updated the calls to modify the registers to use the set_bit
-> and clear_bit function calls.
-> 
-> Fixes: 3b427751a9d0 ("net: phy: DP83822 initial driver submission")
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/net/phy/dp83822.c | 30 ++++++++++++++++--------------
->  1 file changed, 16 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-> index fe9aa3ad52a7..40fdfd043947 100644
-> --- a/drivers/net/phy/dp83822.c
-> +++ b/drivers/net/phy/dp83822.c
-> @@ -137,16 +137,19 @@ static int dp83822_set_wol(struct phy_device *phydev,
->  			value &= ~DP83822_WOL_SECURE_ON;
->  		}
->  
-> -		value |= (DP83822_WOL_EN | DP83822_WOL_INDICATION_SEL |
-> -			  DP83822_WOL_CLR_INDICATION);
-> -		phy_write_mmd(phydev, DP83822_DEVADDR, MII_DP83822_WOL_CFG,
-> -			      value);
-> +		/* Clear any pending WoL interrupt */
-> +		phy_read(phydev, MII_DP83822_MISR2);
-> +
-> +		value |= DP83822_WOL_EN | DP83822_WOL_INDICATION_SEL |
-> +			DP83822_WOL_CLR_INDICATION;
-> +
-> +		return phy_set_bits_mmd(phydev, DP83822_DEVADDR,
-> +					MII_DP83822_WOL_CFG, value);
+Use a formula to calculate the return value of the vnt_rf_addpower
+function instead of the "if" statement with literal values for every
+case.
 
-The switch to phy_set_bits_mmd() doesn't seem to be correct here.
-So far bit DP83822_WOL_MAGIC_EN is cleared if WAKE_MAGIC isn't set.
-Similar for bit DP83822_WOL_SECURE_ON. With your change they don't
-get cleared any longer.
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+Changelog v1 -> v2
+- Change the type of "base" variable from s32 to int as Dan Carpenter
+  suggested.
+- Remove the "--" postoperator and replace with (base - 1) as Dan
+  Carpenter suggested. Also, as this expression has a minus before the
+  parenthesis, remove it an apply the minus operator changing the sign of
+  "base" and literal "1".
 
->  	} else {
-> -		value = phy_read_mmd(phydev, DP83822_DEVADDR,
-> -				     MII_DP83822_WOL_CFG);
-> -		value &= ~DP83822_WOL_EN;
-> -		phy_write_mmd(phydev, DP83822_DEVADDR, MII_DP83822_WOL_CFG,
-> -			      value);
-> +		value = DP83822_WOL_EN | DP83822_WOL_CLR_INDICATION;
-> +
-You clear one bit more than before. The reason for this may be worth a note
-in the commit message.
+ drivers/staging/vt6656/rf.c | 20 +++-----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
 
-> +		return phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
-> +					  MII_DP83822_WOL_CFG, value);
->  	}
->  
->  	return 0;
-> @@ -258,12 +261,11 @@ static int dp83822_config_intr(struct phy_device *phydev)
->  
->  static int dp83822_config_init(struct phy_device *phydev)
->  {
-> -	int value;
-> -
-> -	value = DP83822_WOL_MAGIC_EN | DP83822_WOL_SECURE_ON | DP83822_WOL_EN;
-> +	int value = DP83822_WOL_EN | DP83822_WOL_MAGIC_EN |
-> +		    DP83822_WOL_SECURE_ON;
->  
-> -	return phy_write_mmd(phydev, DP83822_DEVADDR, MII_DP83822_WOL_CFG,
-> -	      value);
-> +	return phy_clear_bits_mmd(phydev, DP83822_DEVADDR,
-> +				  MII_DP83822_WOL_CFG, value);
->  }
->  
->  static int dp83822_phy_reset(struct phy_device *phydev)
-> 
+diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
+index 06fa8867cfa3..612fd4a59f8a 100644
+=2D-- a/drivers/staging/vt6656/rf.c
++++ b/drivers/staging/vt6656/rf.c
+@@ -538,28 +538,14 @@ int vnt_rf_write_embedded(struct vnt_private *priv, =
+u32 data)
+
+ static u8 vnt_rf_addpower(struct vnt_private *priv)
+ {
++	int base;
+ 	s32 rssi =3D -priv->current_rssi;
+
+ 	if (!rssi)
+ 		return 7;
+
+-	if (priv->rf_type =3D=3D RF_VT3226D0) {
+-		if (rssi < -70)
+-			return 9;
+-		else if (rssi < -65)
+-			return 7;
+-		else if (rssi < -60)
+-			return 5;
+-	} else {
+-		if (rssi < -80)
+-			return 9;
+-		else if (rssi < -75)
+-			return 7;
+-		else if (rssi < -70)
+-			return 5;
+-	}
+-
+-	return 0;
++	base =3D (priv->rf_type =3D=3D RF_VT3226D0) ? -60 : -70;
++	return (rssi < base) ? ((rssi - base + 1) / -5) * 2 + 5 : 0;
+ }
+
+ /* Set Tx power by power level and rate */
+=2D-
+2.20.1
 
