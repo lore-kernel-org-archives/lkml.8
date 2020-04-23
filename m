@@ -2,115 +2,118 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CADBC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1988AC55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5C820704
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73FA20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:21:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SL+MA9BT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgDWKVL (ORCPT
+        id S1727057AbgDWKVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:21:11 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2087 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgDWKVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:21:07 -0400
-Received: from lhreml737-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id BEFCE37216D8C8C0F9D0;
-        Thu, 23 Apr 2020 11:21:04 +0100 (IST)
-Received: from fraeml703-chm.china.huawei.com (10.206.15.52) by
- lhreml737-chm.china.huawei.com (10.201.108.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Thu, 23 Apr 2020 11:21:04 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 23 Apr 2020 12:21:03 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Thu, 23 Apr 2020 12:21:03 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 3/5] ima: Fix ima digest hash table key calculation
-Thread-Topic: [PATCH 3/5] ima: Fix ima digest hash table key calculation
-Thread-Index: AQHWAsCL0WxU1zQQXUO+TcKy4wW9saiFqfKAgAD8PeA=
-Date:   Thu, 23 Apr 2020 10:21:03 +0000
-Message-ID: <11984a05a5624f64aed1ec6b0d0b75ff@huawei.com>
-References: <20200325161116.7082-1-roberto.sassu@huawei.com>
-         <20200325161116.7082-3-roberto.sassu@huawei.com>
- <1587588987.5165.20.camel@linux.ibm.com>
-In-Reply-To: <1587588987.5165.20.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.15.0]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 23 Apr 2020 06:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725854AbgDWKVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:21:14 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB641C035493;
+        Thu, 23 Apr 2020 03:21:13 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id v2so2171398plp.9;
+        Thu, 23 Apr 2020 03:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jJtnFW/MJ1nCflksmUkvWZ3WflwQQKwodxCjPDupG9g=;
+        b=SL+MA9BTwa7HX9cUn2j5xDITP997LDN3HbD/qjO86/wv5xpXkNgbmjFZ8WZi9YTx78
+         qgwmKScnBS+z5QiqP+VTwClgd3H2WwlvQUYePUMJZ5mA++HZrfBJzy1PN3lj/8ZLv5Dx
+         IUqdoiAe3EHaIkzmnStrXgVjYV5KfhUQkyMzqiLGbki355Ax1z3SfsoqJT6THn7dg1P/
+         FEUQZS4Pj2589j2HQnosfG6I0ScwYJYUta04/XZoy5MVEk2weROYwGqByZ8a0aSCwwVz
+         m7We8Z4UOStTP0Qd07pXUSee+CfoTI0kk6CSoKBkTPPJVhcNf7u/oOt77R3oj2hW8CGI
+         XCzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jJtnFW/MJ1nCflksmUkvWZ3WflwQQKwodxCjPDupG9g=;
+        b=mxF7wbJYyd6SZrHzSkVvzbyudda36n0j71Eo6dqjqFNj+1QSain8Y7iJW22DUnF+8U
+         HbzPiXVIiwxDYbRRp6v1cqrKkQTwtT9L28wohwnKTd2XBN9YBXCMhIA7K3tlmlmcRJZ6
+         GBM65gEXpvokM5Pc+58HWahTsxYC7qpjD/Bd3FwQE1mU4vmybsctVQnUiWIACxBig6uh
+         TVWSbL9SI9h+g9BlEOw9KbSAaifOfkfhD/6HHI4A7JTUAMjgsuj1wRwPquWWxoV/DPRb
+         q1SNhNPGCKqm7g0UQGTLWsMKwTKzuXyOB9y2hHoEzygiZM/RJiOi+DtwI7STBgxA7LFT
+         OkCg==
+X-Gm-Message-State: AGi0PubwVkdTdXXnylKZ+46XxuBP9mmbGFzYbAev4vCNmFPGdnKuBWjZ
+        OPBr6eNQLMvddLX/RFJ6GTjMUKdC/JnhXmFsFyc=
+X-Google-Smtp-Source: APiQypI72YMXj/eLWFT07xzy8FGvE30CVwUIO/B8ZXXxdfzcDMRlffRZbIssKJ42cgrlohzeba429xetnxfkBq9KMVA=
+X-Received: by 2002:a17:902:9306:: with SMTP id bc6mr3049629plb.255.1587637273301;
+ Thu, 23 Apr 2020 03:21:13 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200420194405.8281-1-jithu.joseph@intel.com> <20200420194405.8281-2-jithu.joseph@intel.com>
+ <CAHp75VeV+HOditUphBkFoy6LLh6QKfBoC-eLixquAHLTwaz4RQ@mail.gmail.com> <ac04f1aa46234496fc88354add386da725d883ab.camel@intel.com>
+In-Reply-To: <ac04f1aa46234496fc88354add386da725d883ab.camel@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 23 Apr 2020 13:21:06 +0300
+Message-ID: <CAHp75VfqWkAEk3deJmjBzeinmJY3MXTWVxO4FdBWyxcY8oXtAQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] platform/x86: Add Slim Bootloader firmware update
+ signaling driver
+To:     Jithu Joseph <jithu.joseph@intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        maurice.ma@intel.com, ravi.p.rangarajan@intel.com,
+        sean.v.kelley@intel.com, kuo-lang.tseng@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCkhVQVdFSSBURUNITk9MT0dJRVMgRHVlc3NlbGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5h
-Z2luZyBEaXJlY3RvcjogTGkgUGVuZywgTGkgSmlhbiwgU2hpIFlhbmxpDQoNCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9oYXJAbGlu
-dXguaWJtLmNvbV0NCj4gU2VudDogV2VkbmVzZGF5LCBBcHJpbCAyMiwgMjAyMCAxMDo1NiBQTQ0K
-PiBUbzogUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPg0KPiBDYzogbGlu
-dXgtaW50ZWdyaXR5QHZnZXIua2VybmVsLm9yZzsgbGludXgtc2VjdXJpdHktbW9kdWxlQHZnZXIu
-a2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgS3J6eXN6dG9mIFN0
-cnVjenluc2tpDQo+IDxrcnp5c3p0b2Yuc3RydWN6eW5za2lAaHVhd2VpLmNvbT47IFNpbHZpdSBW
-bGFzY2VhbnUNCj4gPFNpbHZpdS5WbGFzY2VhbnVAaHVhd2VpLmNvbT47IHN0YWJsZUB2Z2VyLmtl
-cm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAzLzVdIGltYTogRml4IGltYSBkaWdlc3Qg
-aGFzaCB0YWJsZSBrZXkgY2FsY3VsYXRpb24NCj4gDQo+IEhpIFJvYmVydG8sIEtyc3lzenRvZiwN
-Cj4gDQo+IE9uIFdlZCwgMjAyMC0wMy0yNSBhdCAxNzoxMSArMDEwMCwgUm9iZXJ0byBTYXNzdSB3
-cm90ZToNCj4gPiBGcm9tOiBLcnp5c3p0b2YgU3RydWN6eW5za2kgPGtyenlzenRvZi5zdHJ1Y3p5
-bnNraUBodWF3ZWkuY29tPg0KPiA+DQo+ID4gRnVuY3Rpb24gaGFzaF9sb25nKCkgYWNjZXB0cyB1
-bnNpZ25lZCBsb25nLCB3aGlsZSBjdXJyZW50bHkgb25seSBvbmUgYnl0ZQ0KPiA+IGlzIHBhc3Nl
-ZCBmcm9tIGltYV9oYXNoX2tleSgpLCB3aGljaCBjYWxjdWxhdGVzIGEga2V5IGZvciBpbWFfaHRh
-YmxlLg0KPiBVc2UNCj4gPiBtb3JlIGJ5dGVzIHRvIGF2b2lkIGZyZXF1ZW50IGNvbGxpc2lvbnMu
-DQo+ID4NCj4gPiBMZW5ndGggb2YgdGhlIGJ1ZmZlciBpcyBub3QgZXhwbGljaXRseSBwYXNzZWQg
-YXMgYSBmdW5jdGlvbiBwYXJhbWV0ZXIsDQo+ID4gYmVjYXVzZSB0aGlzIGZ1bmN0aW9uIGV4cGVj
-dHMgYSBkaWdlc3Qgd2hvc2UgbGVuZ3RoIGlzIGdyZWF0ZXIgdGhhbiB0aGUNCj4gPiBzaXplIG9m
-IHVuc2lnbmVkIGxvbmcuDQo+IA0KPiBTb21laG93IEkgbWlzc2VkIHRoZSBvcmlnaW5hbCByZXBv
-cnQgb2YgdGhpcyBwcm9ibGVtwqBodHRwczovL2xvcmUua2Vybg0KPiBlbC5vcmcvcGF0Y2h3b3Jr
-L3BhdGNoLzY3NDY4NC8uIMKgVGhpcyBwYXRjaCBpcyBkZWZpbml0ZWx5IGJldHRlciwgYnV0DQo+
-IGhvdyBtYW55IHVuaXF1ZSBrZXlzIGFyZSBhY3R1YWxseSBiZWluZyB1c2VkPyDCoElzIGl0IGFu
-eXdoZXJlIG5lYXINCj4gSU1BX01FQVNVUkVfSFRBQkxFX1NJWkUoNTEyKT8NCg0KSSBkaWQgYSBz
-bWFsbCB0ZXN0ICh3aXRoIDEwNDMgbWVhc3VyZW1lbnRzKToNCg0Kc2xvdHM6IDI1MCwgbWF4IGRl
-cHRoOiA5ICh3aXRob3V0IHRoZSBwYXRjaCkNCnNsb3RzOiA0NDgsIG1heCBkZXB0aDogNyAod2l0
-aCB0aGUgcGF0Y2gpDQoNClRoZW4sIEkgaW5jcmVhc2VkIHRoZSBudW1iZXIgb2YgYml0cyB0byAx
-MDoNCg0Kc2xvdHM6IDI1MSwgbWF4IGRlcHRoOiA5ICh3aXRob3V0IHRoZSBwYXRjaCkNCnNsb3Rz
-OiA2NjAsIG1heCBkZXB0aDogNCAod2l0aCB0aGUgcGF0Y2gpDQoNCj4gRG8gd2UgbmVlZCBhIG5l
-dyBzZWN1cml0eWZzIGVudHJ5IHRvIGRpc3BsYXkgdGhlIG51bWJlciB1c2VkPw0KDQpQcm9iYWJs
-eSBpdCBpcyB1c2VmdWwgb25seSBpZiB0aGUgYWRtaW5pc3RyYXRvciBjYW4gZGVjaWRlIHRoZSBu
-dW1iZXIgb2Ygc2xvdHMuDQoNClJvYmVydG8NCg0KSFVBV0VJIFRFQ0hOT0xPR0lFUyBEdWVzc2Vs
-ZG9yZiBHbWJILCBIUkIgNTYwNjMNCk1hbmFnaW5nIERpcmVjdG9yOiBMaSBQZW5nLCBMaSBKaWFu
-LCBTaGkgWWFubGkNCg0KDQo+ID4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBGaXhl
-czogMzMyM2VlYzkyMWVmICgiaW50ZWdyaXR5OiBJTUEgYXMgYW4gaW50ZWdyaXR5IHNlcnZpY2Ug
-cHJvdmlkZXIiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBTdHJ1Y3p5bnNraSA8a3J6
-eXN6dG9mLnN0cnVjenluc2tpQGh1YXdlaS5jb20+DQo+ID4gLS0tDQo+ID4gIHNlY3VyaXR5L2lu
-dGVncml0eS9pbWEvaW1hLmggfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
-bigrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVn
-cml0eS9pbWEvaW1hLmggYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oDQo+ID4gaW5kZXgg
-NjQzMTdkOTUzNjNlLi5jZjAwMjJjMmJjMTQgMTAwNjQ0DQo+ID4gLS0tIGEvc2VjdXJpdHkvaW50
-ZWdyaXR5L2ltYS9pbWEuaA0KPiA+ICsrKyBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hLmgN
-Cj4gPiBAQCAtMTc3LDcgKzE3Nyw3IEBAIGV4dGVybiBzdHJ1Y3QgaW1hX2hfdGFibGUgaW1hX2h0
-YWJsZTsNCj4gPg0KPiA+ICBzdGF0aWMgaW5saW5lIHVuc2lnbmVkIGxvbmcgaW1hX2hhc2hfa2V5
-KHU4ICpkaWdlc3QpDQo+ID4gIHsNCj4gPiAtCXJldHVybiBoYXNoX2xvbmcoKmRpZ2VzdCwgSU1B
-X0hBU0hfQklUUyk7DQo+ID4gKwlyZXR1cm4gaGFzaF9sb25nKCooKHVuc2lnbmVkIGxvbmcgKilk
-aWdlc3QpLCBJTUFfSEFTSF9CSVRTKTsNCj4gPiAgfQ0KPiA+DQo+ID4gICNkZWZpbmUgX19pbWFf
-aG9va3MoaG9vaykJCVwNCg0K
+On Thu, Apr 23, 2020 at 5:08 AM Jithu Joseph <jithu.joseph@intel.com> wrote=
+:
+
+...
+
+> > > +static ssize_t firmware_update_request_store(struct device *dev,
+> > > +                                            struct
+> > > device_attribute *attr,
+> > > +                                            const char *buf,
+> > > size_t count)
+> > > +{
+> > > +       bool val;
+> > > +       int ret;
+> > > +
+> > > +       ret =3D kstrtobool(buf, &val);
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       ret =3D set_fwu_request(dev, val ? 1 : 0);
+> >
+> > Hmm... If you are going to extend this, why not to pass integer
+> > directly? (And thus take one from user)
+>
+> We have also been thinking about  extensibility =E2=80=A6
+>
+> So I will modify the code to allow any u32 input by the user  to be
+> passed down via wmi_set_block(), though 0 and 1 will be the only
+> inputs  documented  in the ABI today.( Or did you still mean  to error
+> out if the user input is something other than 0 or 1 ?)
+
+I think the best approach is to allow to parse integer input
+(kstrtouint() is good enough) and return -ERANGE for values > 1. Also
+put a comment before that check why is done like this (some
+justification that interface may be extended in the future or so), and
+pass integer value directly to set_fwu_request().
+
+--=20
+With Best Regards,
+Andy Shevchenko
