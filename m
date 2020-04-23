@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23184C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7B2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4AA20780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B394A20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgDWXK5 (ORCPT
+        id S1729204AbgDWXLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:10:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50306 "EHLO
+        Thu, 23 Apr 2020 19:11:01 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50292 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728589AbgDWXGw (ORCPT
+        by vger.kernel.org with ESMTP id S1728588AbgDWXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:52 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkve-0004mS-7f; Fri, 24 Apr 2020 00:06:46 +0100
+        id 1jRkve-0004rl-1a; Fri, 24 Apr 2020 00:06:46 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvZ-00E6z2-1M; Fri, 24 Apr 2020 00:06:41 +0100
+        id 1jRkva-00E70M-13; Fri, 24 Apr 2020 00:06:42 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Dumazet" <eric.dumazet@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com,
-        "Cong Wang" <xiyou.wangcong@gmail.com>
-Date:   Fri, 24 Apr 2020 00:07:14 +0100
-Message-ID: <lsq.1587683028.609597722@decadent.org.uk>
+        "Jens Axboe" <axboe@fb.com>, "Davidlohr Bueso" <dave@stgolabs.ne>,
+        "Davidlohr Bueso" <dbueso@suse.de>
+Date:   Fri, 24 Apr 2020 00:07:18 +0100
+Message-ID: <lsq.1587683028.407504257@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 207/245] net_sched: fix datalen for ematch
+Subject: [PATCH 3.16 211/245] blktrace: re-write setting q->blk_trace
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,47 +55,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Davidlohr Bueso <dave@stgolabs.ne>
 
-commit 61678d28d4a45ef376f5d02a839cc37509ae9281 upstream.
+commit cdea01b2bf98affb7e9c44530108a4a28535eee8 upstream.
 
-syzbot reported an out-of-bound access in em_nbyte. As initially
-analyzed by Eric, this is because em_nbyte sets its own em->datalen
-in em_nbyte_change() other than the one specified by user, but this
-value gets overwritten later by its caller tcf_em_validate().
-We should leave em->datalen untouched to respect their choices.
+This is really about simplifying the double xchg patterns into
+a single cmpxchg, with the same logic. Other than the immediate
+cleanup, there are some subtleties this change deals with:
 
-I audit all the in-tree ematch users, all of those implement
-->change() set em->datalen, so we can just avoid setting it twice
-in this case.
+(i) While the load of the old bt is fully ordered wrt everything,
+ie:
 
-Reported-and-tested-by: syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
-Reported-by: syzbot+2f07903a5b05e7f36410@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+        old_bt = xchg(&q->blk_trace, bt);             [barrier]
+        if (old_bt)
+	     (void) xchg(&q->blk_trace, old_bt);    [barrier]
+
+blk_trace could still be changed between the xchg and the old_bt
+load. Note that this description is merely theoretical and afaict
+very small, but doing everything in a single context with cmpxchg
+closes this potential race.
+
+(ii) Ordering guarantees are obviously kept with cmpxchg.
+
+(iii) Gets rid of the hacky-by-nature (void)xchg pattern.
+
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+eviewed-by: Jeff Moyer <jmoyer@redhat.com>
+Signed-off-by: Jens Axboe <axboe@fb.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/sched/ematch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
---- a/net/sched/ematch.c
-+++ b/net/sched/ematch.c
-@@ -266,12 +266,12 @@ static int tcf_em_validate(struct tcf_pr
- 				}
- 				em->data = (unsigned long) v;
- 			}
-+			em->datalen = data_len;
- 		}
- 	}
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -448,7 +448,7 @@ int do_blk_trace_setup(struct request_qu
+ 		       struct block_device *bdev,
+ 		       struct blk_user_trace_setup *buts)
+ {
+-	struct blk_trace *old_bt, *bt = NULL;
++	struct blk_trace *bt = NULL;
+ 	struct dentry *dir = NULL;
+ 	int ret, i;
  
- 	em->matchid = em_hdr->matchid;
- 	em->flags = em_hdr->flags;
--	em->datalen = data_len;
+@@ -532,11 +532,8 @@ int do_blk_trace_setup(struct request_qu
+ 	bt->trace_state = Blktrace_setup;
  
- 	err = 0;
- errout:
+ 	ret = -EBUSY;
+-	old_bt = xchg(&q->blk_trace, bt);
+-	if (old_bt) {
+-		(void) xchg(&q->blk_trace, old_bt);
++	if (cmpxchg(&q->blk_trace, NULL, bt))
+ 		goto err;
+-	}
+ 
+ 	if (atomic_inc_return(&blk_probes_ref) == 1)
+ 		blk_register_tracepoints();
+@@ -1550,7 +1547,7 @@ static int blk_trace_remove_queue(struct
+ static int blk_trace_setup_queue(struct request_queue *q,
+ 				 struct block_device *bdev)
+ {
+-	struct blk_trace *old_bt, *bt = NULL;
++	struct blk_trace *bt = NULL;
+ 	int ret = -ENOMEM;
+ 
+ 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
+@@ -1566,12 +1563,9 @@ static int blk_trace_setup_queue(struct
+ 
+ 	blk_trace_setup_lba(bt, bdev);
+ 
+-	old_bt = xchg(&q->blk_trace, bt);
+-	if (old_bt != NULL) {
+-		(void)xchg(&q->blk_trace, old_bt);
+-		ret = -EBUSY;
++	ret = -EBUSY;
++	if (cmpxchg(&q->blk_trace, NULL, bt))
+ 		goto free_bt;
+-	}
+ 
+ 	if (atomic_inc_return(&blk_probes_ref) == 1)
+ 		blk_register_tracepoints();
 
