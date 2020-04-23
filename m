@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC249C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AABC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADAAA208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2040208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587627728;
-	bh=MCdlm1Cwbqqdk9PJI2Rc/okv5yFGjb65OVcf97+CElA=;
+	s=default; t=1587627732;
+	bh=V3iPccgK+vl/32LMP8x53D6ueRG0X7Rmd/LXz306oiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4iaDFbLyVaEBGKL1UKoOPyJ6LLWrH2QhIIGRRvq3c+XnwYg9JNfYQ4/n875zqwPD
-	 PJ+EC4OzF2OTzLRjEI45Bmz0kQtA0MxltLJjC3qORRrCWagH9fDxweVUSPbcRK06wb
-	 Q3deUyLNFHC9KdIB3hUhdKQD6uOlens+MFCwnZ7M=
+	b=OLaoQ/7WNsv3v0DHpejA+Kq4PKMHj1STcJjbgL9+fW0zx0n52vnvgkBqc3k+oJoBv
+	 naqYzqQqBiuHGWxkrbbg/QAdP3xLrjFDrjZ+lvjkLavoJoWu4OQuaykEO8L0dYlH4x
+	 MIlkuRnnVUTAu8HyO6jKogZz5aLPyh+j9eqzpW2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgDWHmH (ORCPT
+        id S1727831AbgDWHmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:42:07 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:31737 "EHLO
+        Thu, 23 Apr 2020 03:42:12 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:31739 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWHkb (ORCPT
+        with ESMTP id S1726692AbgDWHkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 03:40:31 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03N7dV9W000368;
-        Thu, 23 Apr 2020 16:39:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9W000368
+        by conuserg-10.nifty.com with ESMTP id 03N7dV9S000368;
+        Thu, 23 Apr 2020 16:39:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03N7dV9S000368
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587627584;
-        bh=IOtkXOaBmjWxmjZkP0pk5es2tQnZPFsfxI9iU204lI0=;
+        s=dec2015msa; t=1587627581;
+        bh=YToMVALGZ0JNA1/v+fELxUiPiJLJ9MUFCjYJs4uH7Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BAGrgZED1hzAxkrN0HQzkWFMT2ex9n2vQ8G8+5UfudJnj7te6r8Aj7cegBNmyLjZb
-         fWpTYOdDoJ2oOWSjz++TiBdrNdnY0to9blRllHBjAulb/8ccmeRZFcBBt4KwkZxxGg
-         noYGrF3KItotaHsTdaN3HoCzIS+PbII5XO9/1QuZ3ncJP317qbKJwCH0vdfFWlsicJ
-         3SP7mL4X/LR6NUI1fOmhfCJKR5AwnyHmHR4wORaVomu+deg9nnnQltF/TAOn1kU8fc
-         AkIEVqUwz4piWFHpY+ju8kZ6Cndi5v93nnz1IJ1yAiiKiNDHWwqT6USzg5F/O9e0kA
-         uyu4zvzUx9G5A==
+        b=G/pln6ZqRmDgm/Bssq1alNkuc3Z6L+0VRdRpDBSRfM6rnylBKkpq4N0FhnZAHaBKQ
+         09d4dGS1RK79D/dxytzaPXHkugwYmcLh0hfnxdlEMCRtGa0CW+r71QZodx9ox2jEGd
+         B/QE/aSCu3/paRvfEhFpPYcJClh8DomUcQgr+0futox9bKYhrpUwpUlQi+BtXI+PTs
+         InMpNzc7xM+x36FYrtaQRwJ4N4i7ESf5cQbZFRxr27525RtaDOwQm4ooWQR0EYsHI0
+         gLhz3pin+fwgPhwIGuvcIfLLWiUC9iFQLYZ5tpCbhf3MKrJnRgeoaUFpWBhsseUilu
+         01mlRhbtRxh6g==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     bpf@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/16] samples: vfs: build sample programs for target architecture
-Date:   Thu, 23 Apr 2020 16:39:24 +0900
-Message-Id: <20200423073929.127521-12-masahiroy@kernel.org>
+Subject: [PATCH 07/16] samples: uhid: fix warnings in uhid-example
+Date:   Thu, 23 Apr 2020 16:39:20 +0900
+Message-Id: <20200423073929.127521-8-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200423073929.127521-1-masahiroy@kernel.org>
 References: <20200423073929.127521-1-masahiroy@kernel.org>
@@ -61,53 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These userspace programs include UAPI headers exported to usr/include/.
-'make headers' always works for the target architecture (i.e. the same
-architecture as the kernel), so the sample programs must be built for
-the target as well. Kbuild now supports the 'userprogs' syntax to
-describe it cleanly.
+From: Sam Ravnborg <sam@ravnborg.org>
 
-I also guarded the CONFIG option by 'depends on CC_CAN_LINK' because
-$(CC) may not necessarily provide libc.
+Fix warnings seen when building for 32-bit architecture.
 
+Use "%xd" for arguments of type size_t to fix the warnings.
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- samples/Kconfig      |  2 +-
- samples/vfs/Makefile | 11 +++--------
- 2 files changed, 4 insertions(+), 9 deletions(-)
+This is the same as Sam's patch in 2014.
+https://lkml.org/lkml/2014/7/13/152
 
-diff --git a/samples/Kconfig b/samples/Kconfig
-index 2e0ef2cc1aa8..b8beb6fd75b4 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -184,7 +184,7 @@ config SAMPLE_ANDROID_BINDERFS
- 
- config SAMPLE_VFS
- 	bool "Build example programs that use new VFS system calls"
--	depends on HEADERS_INSTALL
-+	depends on CC_CAN_LINK && HEADERS_INSTALL
- 	help
- 	  Build example userspace programs that use new VFS system calls such
- 	  as mount API and statx().  Note that this is restricted to the x86
-diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
-index 65acdde5c117..f3831466c1bb 100644
---- a/samples/vfs/Makefile
-+++ b/samples/vfs/Makefile
-@@ -1,10 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--# List of programs to build
--hostprogs := \
--	test-fsmount \
--	test-statx
-+userprogs := test-fsmount test-statx
-+always-y := $(userprogs)
- 
--always-y := $(hostprogs)
--
--HOSTCFLAGS_test-fsmount.o += -I$(objtree)/usr/include
--HOSTCFLAGS_test-statx.o += -I$(objtree)/usr/include
-+user-ccflags += -I usr/include
+
+ samples/uhid/uhid-example.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/samples/uhid/uhid-example.c b/samples/uhid/uhid-example.c
+index b72d645ce828..015cb06a241e 100644
+--- a/samples/uhid/uhid-example.c
++++ b/samples/uhid/uhid-example.c
+@@ -165,7 +165,7 @@ static int uhid_write(int fd, const struct uhid_event *ev)
+ 		fprintf(stderr, "Cannot write to uhid: %m\n");
+ 		return -errno;
+ 	} else if (ret != sizeof(*ev)) {
+-		fprintf(stderr, "Wrong size written to uhid: %ld != %lu\n",
++		fprintf(stderr, "Wrong size written to uhid: %zd != %zu\n",
+ 			ret, sizeof(ev));
+ 		return -EFAULT;
+ 	} else {
+@@ -236,7 +236,7 @@ static int event(int fd)
+ 		fprintf(stderr, "Cannot read uhid-cdev: %m\n");
+ 		return -errno;
+ 	} else if (ret != sizeof(ev)) {
+-		fprintf(stderr, "Invalid size read from uhid-dev: %ld != %lu\n",
++		fprintf(stderr, "Invalid size read from uhid-dev: %zd != %zu\n",
+ 			ret, sizeof(ev));
+ 		return -EFAULT;
+ 	}
 -- 
 2.25.1
 
