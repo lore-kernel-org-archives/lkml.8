@@ -2,150 +2,103 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DBC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6550C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F90214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:27:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5M1LLms"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED8E208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgDWF1J (ORCPT
+        id S1726778AbgDWF2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
+        Thu, 23 Apr 2020 01:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726122AbgDWF1I (ORCPT
+        by vger.kernel.org with ESMTP id S1726070AbgDWF2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:27:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E24AC03C1AB;
-        Wed, 22 Apr 2020 22:27:07 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f8so1910672plt.2;
-        Wed, 22 Apr 2020 22:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5dRfGuiAmG9ezbEhwEm/4CtR44lsDucqUbK7PXbEl8Y=;
-        b=F5M1LLmsBpNN0fDAzQu31LTtIIQODx3f7aCxVlXmDLvGsnGmub9LLb8Jh86o59C0II
-         1P/8Jeuqhoov7oo0U654aVLXuP28nJ6gPHuf3fMG6chzvgRs5/yMdLNEs3Q1nRU0vhEt
-         1XPDILZXi9XIBnRazyV+VsjItkUFsIMht/cfD+/SDZV/g6ZfmHj5tYmtPtcwLVu/IQqU
-         2l6NZRxutaxvloiKPPxGTgOCPUnuioixocy10pqC4bZJxSPswExXdrlibTXIPM/ugqPq
-         i7OoSRwdf9eeBkXujPpqR4Qz9HIOcFTM94ncbDh3tDNUFSTVs6ytMzZ3M36vVdOXndv9
-         ww+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5dRfGuiAmG9ezbEhwEm/4CtR44lsDucqUbK7PXbEl8Y=;
-        b=AmFdId67i8VZ3bZRXDeDvz96da8qFnzJAC0iLo97Iw6ONXtfyq4a/H0GlleJlLOQBt
-         TN5uMmywMtf/Iqkif/SdWaybkQOyEZpi0UaulxDoMy0yBMuwXa2IC/tBkwHlousglDQn
-         vBWp/EGDzgS9UBFua54kO/m/8KfwYPgXDpOxC42WR+p81f4jYJQxVPghq8utg3IfG4Ym
-         jJKLrZ71mHzyhKIquxf+YBKaFjcUnBG8rBk213a5Ot4holHscQEjfmtGmLSd1O0udZuP
-         CgBet/lcD0pNCg73KpmH4J/3GHDdtulyQChC1gG0Dj2lytHkoC+SCuzkP6WTSAWdbdUt
-         5nXw==
-X-Gm-Message-State: AGi0PuZgHE8plJSxag6xb101g91xCHUCqEPloWPJ9cnaGm2Xt4Le9C6N
-        lQbusrunbKVuuOIk96fj204=
-X-Google-Smtp-Source: APiQypKZ1vg3B7CBVKCjT6RRrpVuaJ6pmpVjHiUxcDrwGFDDC+LfEX+3iekDoy33KuMefBsyLY965Q==
-X-Received: by 2002:a17:90a:9a89:: with SMTP id e9mr2548628pjp.108.1587619627027;
-        Wed, 22 Apr 2020 22:27:07 -0700 (PDT)
-Received: from js1304-desktop ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id r4sm953199pgi.6.2020.04.22.22.27.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Apr 2020 22:27:06 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 14:27:01 +0900
-From:   Joonsoo Kim <js1304@gmail.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 10/18] mm: memcontrol: switch to native NR_ANON_MAPPED
- counter
-Message-ID: <20200423052700.GB12538@js1304-desktop>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-11-hannes@cmpxchg.org>
- <20200422065151.GJ6780@js1304-desktop>
- <20200422122818.GB358439@cmpxchg.org>
+        Thu, 23 Apr 2020 01:28:11 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386C4C03C1AB
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 22:28:11 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jRUP5-00068Z-Fn; Thu, 23 Apr 2020 07:28:03 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jRUP4-0004xb-Pk; Thu, 23 Apr 2020 07:28:02 +0200
+Date:   Thu, 23 Apr 2020 07:28:02 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Fengping yu <fengping.yu@mediatek.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 2/3] arm64: configs: defconfig: enable mtk keypad
+ config
+Message-ID: <20200423052802.4ab3xfpgsi3lvqfq@pengutronix.de>
+References: <20200423011958.30521-1-fengping.yu@mediatek.com>
+ <20200423011958.30521-3-fengping.yu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200422122818.GB358439@cmpxchg.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200423011958.30521-3-fengping.yu@mediatek.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:26:40 up 159 days, 20:45, 157 users,  load average: 0.15, 0.08,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 08:28:18AM -0400, Johannes Weiner wrote:
-> Hello Joonsoo,
+On 20-04-23 09:20, Fengping yu wrote:
+> From: "fengping.yu" <fengping.yu@mediatek.com>
 > 
-> On Wed, Apr 22, 2020 at 03:51:52PM +0900, Joonsoo Kim wrote:
-> > On Mon, Apr 20, 2020 at 06:11:18PM -0400, Johannes Weiner wrote:
-> > > @@ -3768,7 +3761,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
-> > >  
-> > >  static const unsigned int memcg1_stats[] = {
-> > >  	NR_FILE_PAGES,
-> > > -	MEMCG_RSS,
-> > > +	NR_ANON_MAPPED,
-> > >  	MEMCG_RSS_HUGE,
-> > >  	NR_SHMEM,
-> > >  	NR_FILE_MAPPED,
-> > > @@ -5395,7 +5388,12 @@ static int mem_cgroup_move_account(struct page *page,
-> > >  
-> > >  	lock_page_memcg(page);
-> > >  
-> > > -	if (!PageAnon(page)) {
-> > > +	if (PageAnon(page)) {
-> > > +		if (page_mapped(page)) {
-> > 
-> > This page_mapped() check is newly inserted. Could you elaborate more
-> > on why mem_cgroup_charge_statistics() doesn't need this check?
+> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
+
+Nit, this should be the last patch in this series. Also you need to add
+a few comments wihtin the commit message. Empty commit messages are not
+allowed.
+
+Regards,
+  Marco
+
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> MEMCG_RSS extended from when the page was charged until it was
-> uncharged, but NR_ANON_MAPPED is only counted while the page is really
-> mapped into page tables. That starts shortly after we charge and ends
-> shortly before we uncharge, so pages could move between cgroups before
-> or after they are mapped, while they aren't counted in NR_ANON_MAPPED.
-> 
-> So to know that the page is counted, charge_statistics() only needed
-> to know that the page is charged and Anon; move_account() also needs
-> to know that the page is mapped.
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 0f212889c931..7863352521e5 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -316,6 +316,7 @@ CONFIG_KEYBOARD_GPIO=y
+>  CONFIG_KEYBOARD_SNVS_PWRKEY=m
+>  CONFIG_KEYBOARD_IMX_SC_KEY=m
+>  CONFIG_KEYBOARD_CROS_EC=y
+> +CONFIG_KEYBOARD_MTK_KPD=y
+>  CONFIG_INPUT_TOUCHSCREEN=y
+>  CONFIG_TOUCHSCREEN_ATMEL_MXT=m
+>  CONFIG_INPUT_MISC=y
+> -- 
+> 2.18.0
 
-Got it!
-
-> 
-> > > @@ -1181,7 +1187,7 @@ void page_add_new_anon_rmap(struct page *page,
-> > >  		/* increment count (starts at -1) */
-> > >  		atomic_set(&page->_mapcount, 0);
-> > >  	}
-> > > -	__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, nr);
-> > > +	__mod_lruvec_page_state(page, NR_ANON_MAPPED, nr);
-> > >  	__page_set_anon_rmap(page, vma, address, 1);
-> > >  }
-> > 
-> > memcg isn't setup yet and accounting isn't applied to proper memcg.
-> > Maybe, it would be applied to root memcg. With this change, we don't
-> > need the mapping to commit the charge so switching the order of
-> > page_add_new_anon_rmap() and mem_cgroup_commit_charge() will solve the
-> > issue.
-> 
-> Good catch, it's that dreaded circular dependency. It's fixed two
-> patches down when I charge anon pages earlier as well. But I'll change
-> the rmap<->commit order in this patch to avoid the temporary bug.
-
-Okay.
-
-> Thanks for your thorough review!
-
-Thanks.
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
