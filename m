@@ -2,105 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E0BC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB85FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7DD20736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4D220736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwtUFfM1"
+	dkim=pass (2048-bit key) header.d=anisinha-ca.20150623.gappssmtp.com header.i=@anisinha-ca.20150623.gappssmtp.com header.b="vkzbFlKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgDWR7W (ORCPT
+        id S1730067AbgDWSCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48482 "EHLO
+        Thu, 23 Apr 2020 14:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729991AbgDWR7V (ORCPT
+        with ESMTP id S1729901AbgDWSCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:59:21 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D6AC09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:59:20 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u16so7513497wmc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:59:20 -0700 (PDT)
+        Thu, 23 Apr 2020 14:02:00 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9BCC09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:01:59 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f13so7858857wrm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:01:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=+3v2CXZ31rJC/XGZqxQoIxPYicngYI/XpXBi168YDUA=;
-        b=fwtUFfM1OdfdnPO/OYfjhurTSKSzL3DXgAb8iY48jtF8A9NVVj/4h1b8ZnWDl5Q6Ly
-         dLakkA+6/matqGWMo2igyZjLLrLaSNBfM8l+MuY1PYqir4c49wiVymlpujD02aPH+AHH
-         mjumaFTpmW4Nc9l5fbuAKgZh8EQnYKRgvww1LKIAecbF9uKP0Fc3brjsb1MznGrxUX35
-         hhIivcjttP2ctHYfoIMNJuJ8cUc/Z5W5o6hiGRSt9f18uKP9kTHlKl73Ikq/2gs7J3er
-         tLKUI1Ct8g+v7Rwe//6P2rZ8nGUKd2grxo5b4XgFdzCm977HL1lpuX8a+dal+Z0DocON
-         tJVQ==
+        d=anisinha-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4vFvQJ+X9x2fkOsaxQlxkegYOOkfdjHsu+VNUmji7qM=;
+        b=vkzbFlKNxWQfoNjGjP0cN0x+tAOzVkVduiUCVecHWhVGJQZl0dbe5CO367tCplapfV
+         2kDEkUunHthWlNCDEH5rLiC2cmHULSn3na8remXr6R9gQWZT2A+S+4Rw6HE1+q2/dVI1
+         uajUo7ezsZ5ZGHtNDHPxFyhKGJ3vpVRgxRX59H3B1G8ZqB6XgymkQaTcth4blxSISb7N
+         1DMmqHEfhZT2k6b9DqCS0CF0tvSICTxhv4+Qy/bWUT+6r7y22TtyVTnW//tsn5CTXhzj
+         s8arD2itkmSubXpIclsmY6MVoVNJ3KyrmJnG8C9nTxPhQEpc8Ka1gWZi6I+6iuRIDl2S
+         19GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=+3v2CXZ31rJC/XGZqxQoIxPYicngYI/XpXBi168YDUA=;
-        b=BxAQJqjCoyPGNLxuvSdKaliGeiAUnPJDs2qb1pRHhevY3jv3jDc1naVDIoAHILudY6
-         Wz4scT8xMnVa8gxCkW09klW69XDzrZZ3K9Y7duknAofAYb8foQ9FcZJWy4xCNwlrv78n
-         qUi4vlFQxkgwfG962Kdr4SkTcBQ/dTUb8TTl4K3Eh0D6oWrYQgWJNJDWukNkpoG8rrvh
-         BIi38DgBRC+h4HBvOIoOPbFMPf43/YyicI4Ga1j7w5MB25c5gkYxW278tulaaPyLDiFb
-         DmmWYzD20yonpcfXxzYVpkc8USRN08StRcYjuaJAkEYMaexlW9Nt4yajUGomVJRECr/X
-         5u4w==
-X-Gm-Message-State: AGi0PuZg7xpv/3JHN28pG7gMBJkrrFh9xeFyKMAuNmzi9lAngccgsjeV
-        RYaPdgtWrMqfRWsA6+HuRbkXXkLL
-X-Google-Smtp-Source: APiQypKjfwrSd102BKVGRxcvF2W6xfSgdPV00Pw8kRR2NGkhTtLDYe2lK0xYtIkDMDY7a3K7IdN5sg==
-X-Received: by 2002:a1c:750a:: with SMTP id o10mr5317263wmc.161.1587664759616;
-        Thu, 23 Apr 2020 10:59:19 -0700 (PDT)
-Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
-        by smtp.gmail.com with ESMTPSA id x23sm4473539wmj.6.2020.04.23.10.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 10:59:19 -0700 (PDT)
-Message-ID: <32dbb39debedabd6dbd1a8675760e171c180de9e.camel@gmail.com>
-Subject: Re: [PATCH] Changes in w1_therm.c and adding w1_therm.h
-From:   Akira shimahara <akira215corp@gmail.com>
-To:     Evgeniy Polyakov <zbr@ioremap.net>, Greg KH <greg@kroah.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Thu, 23 Apr 2020 19:59:18 +0200
-In-Reply-To: <307231587661588@mail.yandex.ru>
-References: <20200414170248.299534-1-akira215corp@gmail.com>
-         <20200423144116.GA7319@kroah.com> <307231587661588@mail.yandex.ru>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4vFvQJ+X9x2fkOsaxQlxkegYOOkfdjHsu+VNUmji7qM=;
+        b=DyzA7Dh9Mypotg77CGsebVNmE8Y53mrnsdqIqHDJj68DEmd8jD1zjoyA6BHpvTUfsA
+         pKQofhoMofww8g/Kjolj+0nNPTAeAR4d4WEOjPA0MVZByucnqIEFYzWukQd32yMb6/QA
+         8ny1S3HLHaKwmUSM34SJeinGUAsW+pVpStCtB3q+pANYr98EacAnz8h+qeHRlLPuRvZh
+         0NvihGpY8E61PQXr5UCY9SJvBHAdnEp8rmbS1dUMh9b+afdVoHYTWLn+AokSgxLxrEPy
+         MvWjsq4aiHp0sxfq/fF0rzhGXptUmraGVt6KRE/QQxbOoElBON+yXJ+QpPKQvX2fW9Ra
+         9/sQ==
+X-Gm-Message-State: AGi0PuZPQ1q4i/2Ocg0Bfz6C9IOcRyHtUH96CkiTnkkNkFv14GChSmz2
+        xjRBrWde53e87AzqBS4jDb7RyCwfhKtl2uXf3yE/bg==
+X-Google-Smtp-Source: APiQypLNbBxoio8j8JZsOio5k0hMyf+7ii06W4qPM4R6vyYszHDENG8QcRNoFv0EP8lb/W8NSXVxoN7S8fkxpy7nVuc=
+X-Received: by 2002:a5d:660d:: with SMTP id n13mr6029719wru.369.1587664918339;
+ Thu, 23 Apr 2020 11:01:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1587387114-38475-1-git-send-email-ani@anisinha.ca> <20200420175734.GA53587@google.com>
+In-Reply-To: <20200420175734.GA53587@google.com>
+From:   Ani Sinha <ani@anisinha.ca>
+Date:   Thu, 23 Apr 2020 23:31:47 +0530
+Message-ID: <CAARzgwzjqgqJY4+MdHCYEKOKxxVbt_d3C-fMwKtjSSFOnw+PqQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: remove unused EMI() macro
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ani Sinha <ani@anirban.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Denis Efremov <efremov@linux.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeudi 23 avril 2020 à 20:07 +0300, Evgeniy Polyakov a écrit :
-> Hi
-> 
-> 23.04.2020, 17:41, "Greg KH" <greg@kroah.com>:
-> > You do not document any of these new sysfs files, why not?
-> 
-> Looks like there are bigger isues with the patch that I've missed,
-> and if I understood correctly, Akira asked to drop this patch
-Hi,
+On Mon, Apr 20, 2020 at 11:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> Hi Ani,
+>
+> On Mon, Apr 20, 2020 at 06:21:41PM +0530, Ani Sinha wrote:
+> > EMI() macro seems to be unused. So removing it. Thanks
+> > Mika Westerberg <mika.westerberg@linux.intel.com> for
+> > pointing it out.
+> >
+> > Signed-off-by: Ani Sinha <ani@anisinha.ca>
+> > ---
+> >  drivers/pci/hotplug/pciehp.h | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> > index 5747967..4fd200d 100644
+> > --- a/drivers/pci/hotplug/pciehp.h
+> > +++ b/drivers/pci/hotplug/pciehp.h
+> > @@ -148,7 +148,6 @@ struct controller {
+> >  #define MRL_SENS(ctrl)               ((ctrl)->slot_cap & PCI_EXP_SLTCAP_MRLSP)
+> >  #define ATTN_LED(ctrl)               ((ctrl)->slot_cap & PCI_EXP_SLTCAP_AIP)
+> >  #define PWR_LED(ctrl)                ((ctrl)->slot_cap & PCI_EXP_SLTCAP_PIP)
+> > -#define EMI(ctrl)            ((ctrl)->slot_cap & PCI_EXP_SLTCAP_EIP)
+>
+> Thanks for the patch!  Can you squash it together with the HP_SUPR_RM
+> removal (and also check for any other unused ones at the same time)?
+> For trivial things like this, I'd rather merge one patch that removes
+> several unused things at once instead of several patches.
+>
+> I like the subject of this one ("Removed unused ..."), but please
+> capitalize it as you did for the HP_SUPR_RM one so it matches previous
+> history.
 
+I have sent an updated patch few days back.
 
-Evgeniy, I don't asked to drop this patch, sorry for the
-misunderstanding. I will add entries to Documentation/ABI/testing/ by
-the end of the week and submit a new patch. Who should I add in the
-'Contact' field ?
-
-To answer Greg's comments, we use the kernel subsystems as much as
-possible, but for timing and bus protocol reasons, we have to go a
-little deeper and control bus transaction as close as possible.
-
-Evgeniy, could you detail the issues you are talking about so I can
-adjust if required ?
-
-Thanks again for you time, regards
-
-Akira Shimahara 
-
+ani
