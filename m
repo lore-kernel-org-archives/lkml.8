@@ -2,113 +2,163 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE21C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55903C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C374B20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA8720736
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 20:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UsXa2sz6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7iFJBLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgDWU4T (ORCPT
+        id S1726431AbgDWU7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:56:19 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:46606 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgDWU4S (ORCPT
+        Thu, 23 Apr 2020 16:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgDWU7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:56:18 -0400
+        Thu, 23 Apr 2020 16:59:50 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2A3C09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:59:49 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id v18so3629987qvx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 13:59:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587675378; x=1619211378;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=0S83oBfqDWuSdd9AaloZ5eml95gdIqfKx3IPqDHjd5E=;
-  b=UsXa2sz6it2/aYuk5tpqayjeUym+p849O+dzvWUUOtegcXM1kvtki3FC
-   /ENcZvDX4aJvTADlbg30glD9/MiEY0fRehsbtbgHLyHPuRuqlXdkD5Fm1
-   Z2Bu+6574fO1hWo0azlAZvlqELCmQ/f4aZ3XgMUEY5JXy5NJKnb377Y9Q
-   o=;
-IronPort-SDR: Zn8vzOeSfp5/fGSWpeLFwk5ovrbGiLXR+m876/QFJU9ehkXeF2nnw5Ljs05sN7D3GoMPQ5ZacH
- k/q3huFcpNCw==
-X-IronPort-AV: E=Sophos;i="5.73,309,1583193600"; 
-   d="scan'208";a="40543903"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Apr 2020 20:56:16 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id CD264A2977;
-        Thu, 23 Apr 2020 20:56:15 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Apr 2020 20:56:15 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.203) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Apr 2020 20:56:11 +0000
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        "Paraschiv, Andra-Irina" <andraprs@amazon.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
- <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
- <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
- <1ee5958d-e13e-5175-faf7-a1074bd9846d@amazon.com>
- <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <80489572-72a1-dbe7-5306-60799711dae0@amazon.com>
-Date:   Thu, 23 Apr 2020 22:56:08 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ihVUWvH7naN45tEl+tGyxd0ZwoDtNc3umBeh695OPSw=;
+        b=F7iFJBLsSL5MxRQq3dyES6rsfpTKqNCnHlY6UZmEy1QRFOanmMrTKTVijiE8tTvsuB
+         +jsw3jt99cjCHMPAzJlca4IftxweXwJIqfjihrVcUC622jlUBDLr3q5MdTINT4yDxnS+
+         WJQSyFORRBgNXje13MmhGen8Ylwh+0KBT5xTMrSdagu7mKiazISkQy4VjnCRfPolVcGN
+         URhgjASdPTgEiuzB0NTXKuulkLOXSvro/WJIe49ilkLB5lSbYCOIZUO8Nu+4slKQLStO
+         KVtWHMC7P9gj2pcfL5V4zjdOKOWLTg6VYNPwAb99B4kfZLE+L8bHNVFbFEIHWpwR935Z
+         zzUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ihVUWvH7naN45tEl+tGyxd0ZwoDtNc3umBeh695OPSw=;
+        b=dOfASx76Lz/wxVGLtesLA2uk+8v+9Rzbylm4Nhgt7Z4mzrRWrEB91Ybayq4KBJF18e
+         9RMtPPsfmJ/QAOLqMhYGUQ2H2QFNc12Bda56AW4LHAj462j72hs1s2yiz6Mpn9C5ENOE
+         jw7JwzQwx8zrrN438+XlnQcHGuRM5k3gWDfM8ZFNra1YkYhP7gk5t00LXW8swak3D5Gm
+         jN2EVsEPeFmjEiMJ4nznzOztymYaU2tBvkM5rWBQwkCMqlkw24qc0mDr5byB0UmCYvXQ
+         Fsn1Vy1PrGpSjPd6caK9lKfsEJjdOu8V+96wCG+fK1BaWUBBfwFC0wA3UIwFpTBKwtTk
+         rxQA==
+X-Gm-Message-State: AGi0PubZt+WbsBfCx3q9ElXeEYGMoDUCbcXPWzWmY4k9s12k75U9p441
+        nj1E8+yyUWqKTD+klypaDfI=
+X-Google-Smtp-Source: APiQypJHXpYYUR5/MDUJvrbaDeEG58t7M2St+MPpPFseuRWjUAvumM40T/5oREyhgFfDS1/o90AOwA==
+X-Received: by 2002:a0c:8222:: with SMTP id h31mr6142237qva.106.1587675588472;
+        Thu, 23 Apr 2020 13:59:48 -0700 (PDT)
+Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
+        by smtp.gmail.com with ESMTPSA id h25sm2586381qte.37.2020.04.23.13.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 13:59:47 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 16:59:47 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        khazhy@google.com, kernel@collabora.com
+Subject: Re: [PATCH 0/2] Historical Service Time Path Selector
+Message-ID: <20200423205947.GA13657@lobo>
+References: <20200416211336.2423618-1-krisman@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <f560aed3-a241-acbd-6d3b-d0c831234235@redhat.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.203]
-X-ClientProxiedBy: EX13D27UWA001.ant.amazon.com (10.43.160.19) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416211336.2423618-1-krisman@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyMy4wNC4yMCAxOTo1MSwgUGFvbG8gQm9uemluaSB3cm90ZToKPiAKPiBPbiAyMy8wNC8y
-MCAxOTo0MiwgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3cm90ZToKPj4+Cj4+Pj4+IC0gdGhlIGlu
-aXRpYWwgQ1BVIHN0YXRlOiBDUEwwIHZzLiBDUEwzLCBpbml0aWFsIHByb2dyYW0gY291bnRlciwg
-ZXRjLgo+Pgo+PiBUaGUgZW5jbGF2ZSBWTSBoYXMgaXRzIG93biBrZXJuZWwgYW5kIGZvbGxvd3Mg
-dGhlIHdlbGwta25vd24gTGludXggYm9vdAo+PiBwcm90b2NvbCwgaW4gdGhlIGVuZCBnZXR0aW5n
-IHRvIHRoZSB1c2VyIGFwcGxpY2F0aW9uIGFmdGVyIGluaXQgZmluaXNoZXMKPj4gaXRzIHdvcmss
-IHNvIHRoYXQncyBDUEwzLgo+IAo+IENQTDMgaXMgaG93IHRoZSB1c2VyIGFwcGxpY2F0aW9uIHJ1
-biwgYnV0IGRvZXMgdGhlIGVuY2xhdmUncyBMaW51eCBib290Cj4gcHJvY2VzcyBzdGFydCBpbiBy
-ZWFsIG1vZGUgYXQgdGhlIHJlc2V0IHZlY3RvciAoMHhmZmZmZmZmMCksIGluIDE2LWJpdAo+IHBy
-b3RlY3RlZCBtb2RlIGF0IHRoZSBMaW51eCBiekltYWdlIGVudHJ5IHBvaW50LCBvciBhdCB0aGUg
-RUxGIGVudHJ5IHBvaW50PwoKVGhlcmUgaXMgbm8gImVudHJ5IHBvaW50IiBwZXIgc2UuIFlvdSBw
-cmVwb3B1bGF0ZSBhdCB0YXJnZXQgYnpJbWFnZSBpbnRvIAp0aGUgZW5jbGF2ZSBtZW1vcnkgb24g
-Ym9vdCB3aGljaCB0aGVuIGZvbGxvd3MgdGhlIHN0YW5kYXJkIGJvb3QgCnByb3RvY29sLiBFdmVy
-eXRoaW5nIGJlZm9yZSB0aGF0IChlbmNsYXZlIGZpcm13YXJlLCBldGMuKSBpcyBwcm92aWRlZCBi
-eSAKdGhlIGVuY2xhdmUgZW52aXJvbm1lbnQuCgpUaGluayBvZiBpdCBsaWtlIGEgbWVjaGFuaXNt
-IHRvIGxhdW5jaCBhIHNlY29uZCBRRU1VIGluc3RhbmNlIG9uIHRoZSAKaG9zdCwgYnV0IGFsbCB5
-b3UgY2FuIGFjdHVhbGx5IGNvbnRyb2wgYXJlIHRoZSAtc21wLCAtbSwgLWtlcm5lbCBhbmQgCi1p
-bml0cmQgcGFyYW1ldGVycy4gVGhlIG9ubHkgSS9PIGNoYW5uZWwgeW91IGhhdmUgYmV0d2VlbiB5
-b3VyIFZNIGFuZCAKdGhhdCBuZXcgVk0gaXMgYSB2c29jayBjaGFubmVsIHdoaWNoIGlzIGNvbmZp
-Z3VyZWQgYnkgdGhlIGhvc3Qgb24geW91ciAKYmVoYWxmLgoKCkFsZXgKCgoKQW1hem9uIERldmVs
-b3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdl
-c2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWlu
-Z2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBC
-ClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+On Thu, Apr 16 2020 at  5:13P -0400,
+Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
 
+> Hello,
+> 
+> This small series implements a new path selector that leverages
+> historical path IO time in order to estimate future path performance.
+> Implementation details can be found on Patch 2.
+> 
+> This selector yields better path distribution, considering the mean
+> deviation from the calculated optimal utilization, for small IO depths
+> when compared to the Service Time selector with fio benchmarks.  For
+> instance, on a multipath setup with 4 paths, where one path is 4 times
+> slower than the rest, issuing 500MB of randwrites, we have the following
+> path utilization rates:
+> 
+>       |    depth=1    |    depth=64   |       |
+>       |   ST  |   HST |   ST  |   HST |  Best |
+> |-----+-------+-------+-------+-------+-------|
+> | sda | 0.250 | 0.294 | 0.297 | 0.294 | 0.307 |
+> | sdb | 0.250 | 0.297 | 0.296 | 0.297 | 0.307 |
+> | sdc | 0.250 | 0.296 | 0.298 | 0.296 | 0.307 |
+> | sdd | 0.250 | 0.112 | 0.106 | 0.112 | 0.076 |
+> 
+> For small depths, HST is much quicker in detecting slow paths and has a
+> better selection than ST.  As the iodepth increases, ST gets close to
+> HST, which still behaves steadily.
+> 
+> The raw performance data for different depths types of IO can be found
+> at:
+> 
+>   <https://people.collabora.com/~krisman/GOO0012/hst-vs-st-bench.html>
+> 
+> This was tested primarily on a Google cloud SAN with real data and usage
+> patterns and with artificial benchmarks using fio.
+> 
+> Khazhismel Kumykov (2):
+>   md: Expose struct request to path selector
+>   md: Add Historical Service Time Path Selector
+
+Looks like you've put a lot of time to this and I'd be happy to help
+you get this to land upstream.
+
+But... (you knew there'd be at least one "but" right? ;) I'm not
+liking making this path selector request-based specific.  All other
+selectors up to this point are request-based vs bio-based agnostic.
+
+Would you be open to dropping patch 1/2 and replacing it with
+something like the following patch?
+
+Then you'd pass 'u64 start_time_ns' into the path_selector_type's
+.end_io (and possibly .start_io).
+
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index df13fdebe21f..50121513227b 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -674,6 +674,16 @@ static bool md_in_flight(struct mapped_device *md)
+ 		return md_in_flight_bios(md);
+ }
+ 
++u64 dm_start_time_ns_from_clone(struct bio *bio)
++{
++	struct dm_target_io *tio = container_of(bio, struct dm_target_io, clone);
++	struct dm_io *io = tio->io;
++
++	/* FIXME: convert io->start_time from jiffies to nanoseconds */
++	return (u64)jiffies_to_msec(io->start_time) * NSEC_PER_MSEC;
++}
++EXPORT_SYMBOL_GPL(dm_start_time_ns_from_clone);
++
+ static void start_io_acct(struct dm_io *io)
+ {
+ 	struct mapped_device *md = io->md;
+diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+index 475668c69dbc..e2d506dd805e 100644
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -329,6 +329,8 @@ void *dm_per_bio_data(struct bio *bio, size_t data_size);
+ struct bio *dm_bio_from_per_bio_data(void *data, size_t data_size);
+ unsigned dm_bio_get_target_bio_nr(const struct bio *bio);
+ 
++u64 dm_start_time_ns_from_clone(struct bio *bio);
++
+ int dm_register_target(struct target_type *t);
+ void dm_unregister_target(struct target_type *t);
+ 
