@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FC9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6D2C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6466420784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D7620780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgDWXPg (ORCPT
+        id S1729244AbgDWXPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:15:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49724 "EHLO
+        Thu, 23 Apr 2020 19:15:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49686 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728423AbgDWXGr (ORCPT
+        by vger.kernel.org with ESMTP id S1728415AbgDWXGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:47 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-0004hn-CS; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvU-0004iX-BP; Fri, 24 Apr 2020 00:06:36 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvQ-00E6oK-9g; Fri, 24 Apr 2020 00:06:32 +0100
+        id 1jRkvR-00E6ps-NY; Fri, 24 Apr 2020 00:06:33 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Sterba" <dsterba@suse.com>,
-        "Johannes Thumshirn" <jthumshirn@suse.de>,
-        "Filipe Manana" <fdmanana@suse.com>,
-        "Josef Bacik" <josef@toxicpanda.com>
-Date:   Fri, 24 Apr 2020 00:05:43 +0100
-Message-ID: <lsq.1587683028.968684714@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Jose Abreu" <Jose.Abreu@synopsys.com>
+Date:   Fri, 24 Apr 2020 00:06:02 +0100
+Message-ID: <lsq.1587683028.93221036@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 116/245] btrfs: handle ENOENT in btrfs_uuid_tree_iterate
+Subject: [PATCH 3.16 135/245] net: stmmac: Enable 16KB buffer size
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,34 +55,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-commit 714cd3e8cba6841220dce9063a7388a81de03825 upstream.
+commit b2f3a481c4cd62f78391b836b64c0a6e72b503d2 upstream.
 
-If we get an -ENOENT back from btrfs_uuid_iter_rem when iterating the
-uuid tree we'll just continue and do btrfs_next_item().  However we've
-done a btrfs_release_path() at this point and no longer have a valid
-path.  So increment the key and go back and do a normal search.
+XGMAC supports maximum MTU that can go to 16KB. Lets add this check in
+the calculation of RX buffer size.
 
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/uuid-tree.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/uuid-tree.c
-+++ b/fs/btrfs/uuid-tree.c
-@@ -333,6 +333,8 @@ again_search_slot:
- 				}
- 				if (ret < 0 && ret != -ENOENT)
- 					goto out;
-+				key.offset++;
-+				goto again_search_slot;
- 			}
- 			item_size -= sizeof(subid_le);
- 			offset += sizeof(subid_le);
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -904,7 +904,9 @@ static int stmmac_set_bfsize(int mtu, in
+ {
+ 	int ret = bufsize;
+ 
+-	if (mtu >= BUF_SIZE_4KiB)
++	if (mtu >= BUF_SIZE_8KiB)
++		ret = BUF_SIZE_16KiB;
++	else if (mtu >= BUF_SIZE_4KiB)
+ 		ret = BUF_SIZE_8KiB;
+ 	else if (mtu >= BUF_SIZE_2KiB)
+ 		ret = BUF_SIZE_4KiB;
 
