@@ -2,39 +2,56 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4007C55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D67520784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C282087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587684790;
+	bh=eOH8otZNBa35EahXHMyUuKwMSkdWrQwp8Sr98YxOspw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JtVpnp+5LSF8qwtHrXunn6NqCCKMiFtGrN+U6U5R4Ehj1lJtJAwr+1au+a7IXys3s
+	 ujug+BPFK7etIhbt90TdDH2Y6C9JC5VfOqyWed+JjnEipURLpnbV50mmKvMGLxXR0G
+	 XR8dI5tn4Fukxi45EPW9f4M1jeGtfDQhy1JcxjDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgDWXbO (ORCPT
+        id S1728141AbgDWXdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36524 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 19:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgDWXbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:31:12 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726060AbgDWXdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 19:33:09 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D93F20736;
-        Thu, 23 Apr 2020 23:31:11 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 19:31:09 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] tracing: A few fixes for v5.7
-Message-ID: <20200423193109.26721533@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id AF58120736;
+        Thu, 23 Apr 2020 23:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587684789;
+        bh=eOH8otZNBa35EahXHMyUuKwMSkdWrQwp8Sr98YxOspw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qlb/v6AnJJnQsYbkp4vlbhpaoOVQfoei+UqBfVMMSmK8ugUvdfKzoycXG+Jfn7A74
+         hE3e4s2653BuRPYTyRkWMydupaiKX7tzOAHGb6pmRPQXxEcTyTeZclLq3Y62WBsT8U
+         HpxMgrP8h8ynCzxAMUVoVtykjUd5VoOLQOMKW0MQ=
+Date:   Fri, 24 Apr 2020 08:33:05 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf-probe: Do not show the skipped events
+Message-Id: <20200424083305.6bff9456650308ab7a4ab750@kernel.org>
+In-Reply-To: <20200423140139.GG19437@kernel.org>
+References: <158763965400.30755.14484569071233923742.stgit@devnote2>
+        <158763968263.30755.12800484151476026340.stgit@devnote2>
+        <20200423140139.GG19437@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,157 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 23 Apr 2020 11:01:39 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Linus,
+> Em Thu, Apr 23, 2020 at 08:01:22PM +0900, Masami Hiramatsu escreveu:
+> > When a probe point is expanded to several places (like inlined) and
+> > if some of them are skipped because of blacklisted or __init function,
+> > those trace_events has no event name. It must be skipped while showing
+> > results.
+> > 
+> > Without this fix, you can see "(null):(null)" on the list,
+> > ===========
+> 
+> Ok, you broke the patch in two, I think its better to combine both, ok?
 
-A few tracing fixes:
+No, if an inlined function is embedded in blacklisted areas, it also
+shows same "(null):(null)" without [2/3].
 
- - Two fixes that fix memory leaks detected by kmemleak
- - Removal of some dead code
- - A few local functions turned to static
+Reordering the patches is OK, but this is still an independent fix.
+
+Thank you,
+
+> 
+> - Arnaldo
+> 
+> >   # ./perf probe request_resource
+> >   reserve_setup is out of .text, skip it.
+> >   Added new events:
+> >     (null):(null)        (on request_resource)
+> >     probe:request_resource (on request_resource)
+> > 
+> >   You can now use it in all perf tools, such as:
+> > 
+> >   	perf record -e probe:request_resource -aR sleep 1
+> > 
+> > ===========
+> > 
+> > With this fix, it is ignored.
+> > ===========
+> >   # ./perf probe request_resource
+> >   reserve_setup is out of .text, skip it.
+> >   Added new events:
+> >     probe:request_resource (on request_resource)
+> > 
+> >   You can now use it in all perf tools, such as:
+> > 
+> >   	perf record -e probe:request_resource -aR sleep 1
+> > 
+> > ===========
+> > 
+> > Fixes: 5a51fcd1f30c ("perf probe: Skip kernel symbols which is out of .text")
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  tools/perf/builtin-probe.c |    3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+> > index 70548df2abb9..6b1507566770 100644
+> > --- a/tools/perf/builtin-probe.c
+> > +++ b/tools/perf/builtin-probe.c
+> > @@ -364,6 +364,9 @@ static int perf_add_probe_events(struct perf_probe_event *pevs, int npevs)
+> >  
+> >  		for (k = 0; k < pev->ntevs; k++) {
+> >  			struct probe_trace_event *tev = &pev->tevs[k];
+> > +			/* Skipped events have no event name */
+> > +			if (!tev->event)
+> > +				continue;
+> >  
+> >  			/* We use tev's name for showing new events */
+> >  			show_perf_probe_event(tev->group, tev->event, pev,
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
 
 
-Please pull the latest trace-v5.7-rc2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.7-rc2
-
-Tag SHA1: 575108b02f8dfcff6e1b13bfa64a403b5a93615f
-Head SHA1: d013496f99c5608e0f80afd67acb1ba93c4144ea
-
-
-Jason Yan (1):
-      tracing: Convert local functions in tracing_map.c to static
-
-Nikolay Borisov (1):
-      tracing: Remove DECLARE_TRACE_NOARGS
-
-Steven Rostedt (VMware) (1):
-      ftrace: Fix memory leak caused by not freeing entry in unregister_ftrace_direct()
-
-Vamshi K Sthambamkadi (1):
-      tracing: Fix memory leaks in trace_events_hist.c
-
-----
- include/linux/tracepoint.h       | 22 +---------------------
- kernel/trace/ftrace.c            |  1 +
- kernel/trace/trace_events_hist.c |  7 +++++++
- kernel/trace/tracing_map.c       |  6 +++---
- 4 files changed, 12 insertions(+), 24 deletions(-)
----------------------------
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 1fb11daa5c53..a1fecf311621 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -156,8 +156,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-  * Note, the proto and args passed in includes "__data" as the first parameter.
-  * The reason for this is to handle the "void" prototype. If a tracepoint
-  * has a "void" prototype, then it is invalid to declare a function
-- * as "(void *, void)". The DECLARE_TRACE_NOARGS() will pass in just
-- * "void *data", where as the DECLARE_TRACE() will pass in "void *data, proto".
-+ * as "(void *, void)".
-  */
- #define __DO_TRACE(tp, proto, args, cond, rcuidle)			\
- 	do {								\
-@@ -373,25 +372,6 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- # define __tracepoint_string
- #endif
- 
--/*
-- * The need for the DECLARE_TRACE_NOARGS() is to handle the prototype
-- * (void). "void" is a special value in a function prototype and can
-- * not be combined with other arguments. Since the DECLARE_TRACE()
-- * macro adds a data element at the beginning of the prototype,
-- * we need a way to differentiate "(void *data, proto)" from
-- * "(void *data, void)". The second prototype is invalid.
-- *
-- * DECLARE_TRACE_NOARGS() passes "void" as the tracepoint prototype
-- * and "void *__data" as the callback prototype.
-- *
-- * DECLARE_TRACE() passes "proto" as the tracepoint protoype and
-- * "void *__data, proto" as the callback prototype.
-- */
--#define DECLARE_TRACE_NOARGS(name)					\
--	__DECLARE_TRACE(name, void, ,					\
--			cpu_online(raw_smp_processor_id()),		\
--			void *__data, __data)
--
- #define DECLARE_TRACE(name, proto, args)				\
- 	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()),		\
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 041694a1eb74..bd030b1b9514 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5165,6 +5165,7 @@ int unregister_ftrace_direct(unsigned long ip, unsigned long addr)
- 			list_del_rcu(&direct->next);
- 			synchronize_rcu_tasks();
- 			kfree(direct);
-+			kfree(entry);
- 			ftrace_direct_func_count--;
- 		}
- 	}
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 5f6834a2bf41..fcab11cc6833 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -3320,6 +3320,9 @@ static void __destroy_hist_field(struct hist_field *hist_field)
- 	kfree(hist_field->name);
- 	kfree(hist_field->type);
- 
-+	kfree(hist_field->system);
-+	kfree(hist_field->event_name);
-+
- 	kfree(hist_field);
- }
- 
-@@ -4382,6 +4385,7 @@ static struct hist_field *create_var(struct hist_trigger_data *hist_data,
- 		goto out;
- 	}
- 
-+	var->ref = 1;
- 	var->flags = HIST_FIELD_FL_VAR;
- 	var->var.idx = idx;
- 	var->var.hist_data = var->hist_data = hist_data;
-@@ -5011,6 +5015,9 @@ static void destroy_field_vars(struct hist_trigger_data *hist_data)
- 
- 	for (i = 0; i < hist_data->n_field_vars; i++)
- 		destroy_field_var(hist_data->field_vars[i]);
-+
-+	for (i = 0; i < hist_data->n_save_vars; i++)
-+		destroy_field_var(hist_data->save_vars[i]);
- }
- 
- static void save_field_var(struct hist_trigger_data *hist_data,
-diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-index 9e31bfc818ff..74738c9856f1 100644
---- a/kernel/trace/tracing_map.c
-+++ b/kernel/trace/tracing_map.c
-@@ -283,7 +283,7 @@ int tracing_map_add_key_field(struct tracing_map *map,
- 	return idx;
- }
- 
--void tracing_map_array_clear(struct tracing_map_array *a)
-+static void tracing_map_array_clear(struct tracing_map_array *a)
- {
- 	unsigned int i;
- 
-@@ -294,7 +294,7 @@ void tracing_map_array_clear(struct tracing_map_array *a)
- 		memset(a->pages[i], 0, PAGE_SIZE);
- }
- 
--void tracing_map_array_free(struct tracing_map_array *a)
-+static void tracing_map_array_free(struct tracing_map_array *a)
- {
- 	unsigned int i;
- 
-@@ -316,7 +316,7 @@ void tracing_map_array_free(struct tracing_map_array *a)
- 	kfree(a);
- }
- 
--struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
-+static struct tracing_map_array *tracing_map_array_alloc(unsigned int n_elts,
- 						  unsigned int entry_size)
- {
- 	struct tracing_map_array *a;
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
