@@ -2,266 +2,147 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02E3C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FA8C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C64A2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C6920781
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="txnSveMz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0UrBH17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgDWOBx (ORCPT
+        id S1728731AbgDWOBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:01:53 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:6920 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbgDWOBq (ORCPT
+        Thu, 23 Apr 2020 10:01:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728117AbgDWOBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 10:01:46 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E09C08E934;
+        Thu, 23 Apr 2020 07:01:44 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id 71so4872288qtc.12;
+        Thu, 23 Apr 2020 07:01:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1587650506; x=1619186506;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=f3snJgTnmBO8PbV2Q0WMVuNQT9obU/m2sjWKpYpCIXw=;
-  b=txnSveMzrElWd7gFYq8gBLy67ThoOBHABUY+ex+0kWstOh/E0ZijNDMF
-   GF1e7OKp1M27jREyRJN3qprkLQSpV0lABkoJAgd3uCDUwZkIkmj6rN2KD
-   +ks2lfdaicZPW5mVMrRCeM1N4tfOpwA48Jr5cHBXjKWKfg6efsj7JBOgf
-   Q=;
-IronPort-SDR: ZgRF0izE03FLM/pNsniUZjoZdrNjg5inI6M2vxEG13Z3wnzBsR2NG+SxyRdaVVWvsTfTiBLT+E
- 28uifrW/TkYA==
-X-IronPort-AV: E=Sophos;i="5.73,307,1583193600"; 
-   d="scan'208";a="40451037"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 23 Apr 2020 14:01:45 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 8F71CA2120;
-        Thu, 23 Apr 2020 14:01:41 +0000 (UTC)
-Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Apr 2020 14:01:40 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 23 Apr 2020 14:01:40 +0000
-Received: from localhost (10.143.207.46) by mail-relay.amazon.com
- (10.43.62.224) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Apr 2020 14:01:39 +0000
-From:   Balbir Singh <sblbir@amazon.com>
-To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC:     <jpoimboe@redhat.com>, <tony.luck@intel.com>,
-        <keescook@chromium.org>, <benh@kernel.crashing.org>,
-        <x86@kernel.org>, <dave.hansen@intel.com>,
-        "Balbir Singh" <sblbir@amazon.com>
-Subject: [PATCH v4 4/6] arch/x86/kvm: Refactor L1D flushing
-Date:   Fri, 24 Apr 2020 00:01:23 +1000
-Message-ID: <20200423140125.7332-5-sblbir@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200423140125.7332-1-sblbir@amazon.com>
-References: <20200423140125.7332-1-sblbir@amazon.com>
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=osr0mTWjxJPKDiqYEcIsdHiMlFzxd4uhLnyuStegdes=;
+        b=J0UrBH170vTDsmQj8fB2XIfVzvJYnsGi2GJpsv4h+jS2DQGIU9vpiUWrhAlI+5AC8J
+         XwHE+9VzZ2iZTKNODWa84DstekuuAdT2Eg9+IYgnIj6KOHart/XuIBjt072OL3kHsRfg
+         wY7OZvAFnu09pJOPa5BVF+IPSygbD51dKa+wm6bhjy6fIfTfg+sh5JoW+UFjwvoZ3tWu
+         CSmPOpp3J6dIQ5N2YXbpj6rmO9hdQnBaGg6iHlxeSHMcxy3XQcJ1eBk/TwglvvuBPPMq
+         cLjJX4/lwGQj0y9TbQrxhoU+fwwXOPI6u9hi1vdePQPT/OMINpSE93nt92dKeUJIAscR
+         5bVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=osr0mTWjxJPKDiqYEcIsdHiMlFzxd4uhLnyuStegdes=;
+        b=VmSRy1hfd76exG14o5CXGBSJsZ7dl1arVMNPIJpwWQA9zMz3UYZjpO4/LjARGhDhUL
+         jBAN3yA0Ra4OicHBAR2SZQVKvdWtXxQZ3VnLXLpu+EjvIHdGnLc9j6TdDA9r7MqlrGjH
+         8ITpL5VkdDgrQQsfeXhXzFbknxFThBWQPHvRvVszznyxyO2c2ii8UjHO6zzkNrf/o62S
+         qJEu45jyAeAakRJgthXBQgJ8geiYMZIzrfQIV6+0JhnlblIsvGOSfdl1HWoBEfSrNzkx
+         A69Lr0AyGbIFmkKTNeHwSRp4yyloQ2yqZqensajk+6Do6ztRN7DR9WEBAacES1RrdjqQ
+         yASQ==
+X-Gm-Message-State: AGi0PuahxbmMq5Ny+YOHiioYI4aGdd1shVstfHeaX3W7Wo7QKNjb/88c
+        xuWIJ1PA6UgNVOmk8lQNAmnQLXrBTcM=
+X-Google-Smtp-Source: APiQypLyHNtxtf0V5ZuckKMJVvCUEvtSakXM1mV9n7Cf3T8eFJrjQIRIw4llktNM7xGGzUZc8pULag==
+X-Received: by 2002:ac8:6753:: with SMTP id n19mr4152344qtp.353.1587650503377;
+        Thu, 23 Apr 2020 07:01:43 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id g47sm1805051qte.54.2020.04.23.07.01.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 07:01:42 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C4EAE409A3; Thu, 23 Apr 2020 11:01:39 -0300 (-03)
+Date:   Thu, 23 Apr 2020 11:01:39 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf-probe: Do not show the skipped events
+Message-ID: <20200423140139.GG19437@kernel.org>
+References: <158763965400.30755.14484569071233923742.stgit@devnote2>
+ <158763968263.30755.12800484151476026340.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158763968263.30755.12800484151476026340.stgit@devnote2>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move out the initialization function to l1d_flush_init_once()
-so that it can be reused for subsequent patches. The side-effect
-of this patch is that the memory allocated for l1d flush pages
-is no longer freed up and the memory allocated once is shared
-amongst callers.
+Em Thu, Apr 23, 2020 at 08:01:22PM +0900, Masami Hiramatsu escreveu:
+> When a probe point is expanded to several places (like inlined) and
+> if some of them are skipped because of blacklisted or __init function,
+> those trace_events has no event name. It must be skipped while showing
+> results.
+> 
+> Without this fix, you can see "(null):(null)" on the list,
+> ===========
 
-l1d_flush_sw/hw() are now abstracted under arch_l1d_flush().
-vmx_l1d_flush_mutex however continues to exist as it also used
-from other code paths.
+Ok, you broke the patch in two, I think its better to combine both, ok?
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Balbir Singh <sblbir@amazon.com>
----
- arch/x86/include/asm/cacheflush.h | 12 ++++---
- arch/x86/kernel/l1d_flush.c       | 53 +++++++++++++++++++++++--------
- arch/x86/kvm/vmx/vmx.c            | 20 ++----------
- 3 files changed, 50 insertions(+), 35 deletions(-)
+- Arnaldo
 
-diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
-index 21cc3b28fa63..851d8f1ab827 100644
---- a/arch/x86/include/asm/cacheflush.h
-+++ b/arch/x86/include/asm/cacheflush.h
-@@ -7,11 +7,13 @@
- #include <asm/special_insns.h>
- 
- #define L1D_CACHE_ORDER 4
-+
-+enum l1d_flush_options {
-+	L1D_FLUSH_POPULATE_TLB = 0x1,
-+};
-+
- void clflush_cache_range(void *addr, unsigned int size);
--void l1d_flush_populate_tlb(void *l1d_flush_pages);
--void *l1d_flush_alloc_pages(void);
--void l1d_flush_cleanup_pages(void *l1d_flush_pages);
--void l1d_flush_sw(void *l1d_flush_pages);
--int l1d_flush_hw(void);
-+int l1d_flush_init_once(void);
-+void arch_l1d_flush(enum l1d_flush_options options);
- 
- #endif /* _ASM_X86_CACHEFLUSH_H */
-diff --git a/arch/x86/kernel/l1d_flush.c b/arch/x86/kernel/l1d_flush.c
-index 5871794f890d..a754b6c288a9 100644
---- a/arch/x86/kernel/l1d_flush.c
-+++ b/arch/x86/kernel/l1d_flush.c
-@@ -1,7 +1,7 @@
- #include <linux/mm.h>
- #include <asm/cacheflush.h>
- 
--void *l1d_flush_alloc_pages(void)
-+static void *l1d_flush_alloc_pages(void)
- {
- 	struct page *page;
- 	void *l1d_flush_pages = NULL;
-@@ -27,20 +27,14 @@ void *l1d_flush_alloc_pages(void)
- 	}
- 	return l1d_flush_pages;
- }
--EXPORT_SYMBOL_GPL(l1d_flush_alloc_pages);
- 
--void l1d_flush_cleanup_pages(void *l1d_flush_pages)
--{
--	free_pages((unsigned long)l1d_flush_pages, L1D_CACHE_ORDER);
--}
--EXPORT_SYMBOL_GPL(l1d_flush_cleanup_pages);
- 
- /*
-  * Not all users of l1d flush would want to populate the TLB first
-  * split out the function so that callers can optionally flush the L1D
-  * cache via sw without prefetching the TLB.
-  */
--void l1d_flush_populate_tlb(void *l1d_flush_pages)
-+static void l1d_flush_populate_tlb(void *l1d_flush_pages)
- {
- 	int size = PAGE_SIZE << L1D_CACHE_ORDER;
- 
-@@ -58,9 +52,8 @@ void l1d_flush_populate_tlb(void *l1d_flush_pages)
- 		    [size] "r" (size)
- 		: "eax", "ebx", "ecx", "edx");
- }
--EXPORT_SYMBOL_GPL(l1d_flush_populate_tlb);
- 
--int l1d_flush_hw(void)
-+static int l1d_flush_hw(void)
- {
- 	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
- 		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-@@ -68,9 +61,8 @@ int l1d_flush_hw(void)
- 	}
- 	return -ENOTSUPP;
- }
--EXPORT_SYMBOL_GPL(l1d_flush_hw);
- 
--void l1d_flush_sw(void *l1d_flush_pages)
-+static void l1d_flush_sw(void *l1d_flush_pages)
- {
- 	int size = PAGE_SIZE << L1D_CACHE_ORDER;
- 
-@@ -87,4 +79,39 @@ void l1d_flush_sw(void *l1d_flush_pages)
- 			[size] "r" (size)
- 			: "eax", "ecx");
- }
--EXPORT_SYMBOL_GPL(l1d_flush_sw);
-+
-+static void *l1d_flush_pages;
-+static DEFINE_MUTEX(l1d_flush_mutex);
-+
-+/*
-+ * Initialize and setup L1D flush once, each caller will reuse the
-+ * l1d_flush_pages for flushing, no per CPU allocations or NUMA aware
-+ * allocations at the moment.
-+ */
-+int l1d_flush_init_once(void)
-+{
-+	int ret = 0;
-+
-+	if (static_cpu_has(X86_FEATURE_FLUSH_L1D) || l1d_flush_pages)
-+		return ret;
-+
-+	mutex_lock(&l1d_flush_mutex);
-+	if (!l1d_flush_pages)
-+		l1d_flush_pages = l1d_flush_alloc_pages();
-+	ret = l1d_flush_pages ? 0 : -ENOMEM;
-+	mutex_unlock(&l1d_flush_mutex);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(l1d_flush_init_once);
-+
-+void arch_l1d_flush(enum l1d_flush_options options)
-+{
-+	if (!l1d_flush_hw())
-+		return;
-+
-+	if (options & L1D_FLUSH_POPULATE_TLB)
-+		l1d_flush_populate_tlb(l1d_flush_pages);
-+
-+	l1d_flush_sw(l1d_flush_pages);
-+}
-+EXPORT_SYMBOL_GPL(arch_l1d_flush);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 786d1615a09f..d489234c4d5a 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -203,8 +203,6 @@ static const struct {
- 	[VMENTER_L1D_FLUSH_NOT_REQUIRED] = {"not required", false},
- };
- 
--static void *vmx_l1d_flush_pages;
--
- static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
- {
- 	if (!boot_cpu_has_bug(X86_BUG_L1TF)) {
-@@ -247,12 +245,9 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
- 		l1tf = VMENTER_L1D_FLUSH_ALWAYS;
- 	}
- 
--	if (l1tf != VMENTER_L1D_FLUSH_NEVER && !vmx_l1d_flush_pages &&
--	    !boot_cpu_has(X86_FEATURE_FLUSH_L1D)) {
--		vmx_l1d_flush_pages = l1d_flush_alloc_pages();
--		if (!vmx_l1d_flush_pages)
-+	if (l1tf != VMENTER_L1D_FLUSH_NEVER)
-+		if (l1d_flush_init_once())
- 			return -ENOMEM;
--	}
- 
- 	l1tf_vmx_mitigation = l1tf;
- 
-@@ -6010,12 +6005,7 @@ static void vmx_l1d_flush(struct kvm_vcpu *vcpu)
- 	}
- 
- 	vcpu->stat.l1d_flush++;
--
--	if (!l1d_flush_hw())
--		return;
--
--	l1d_flush_populate_tlb(vmx_l1d_flush_pages);
--	l1d_flush_sw(vmx_l1d_flush_pages);
-+	arch_l1d_flush(L1D_FLUSH_POPULATE_TLB);
- }
- 
- static void update_cr8_intercept(struct kvm_vcpu *vcpu, int tpr, int irr)
-@@ -7983,10 +7973,6 @@ static struct kvm_x86_init_ops vmx_init_ops __initdata = {
- 
- static void vmx_cleanup_l1d_flush(void)
- {
--	if (vmx_l1d_flush_pages) {
--		l1d_flush_cleanup_pages(vmx_l1d_flush_pages);
--		vmx_l1d_flush_pages = NULL;
--	}
- 	/* Restore state so sysfs ignores VMX */
- 	l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
- }
+>   # ./perf probe request_resource
+>   reserve_setup is out of .text, skip it.
+>   Added new events:
+>     (null):(null)        (on request_resource)
+>     probe:request_resource (on request_resource)
+> 
+>   You can now use it in all perf tools, such as:
+> 
+>   	perf record -e probe:request_resource -aR sleep 1
+> 
+> ===========
+> 
+> With this fix, it is ignored.
+> ===========
+>   # ./perf probe request_resource
+>   reserve_setup is out of .text, skip it.
+>   Added new events:
+>     probe:request_resource (on request_resource)
+> 
+>   You can now use it in all perf tools, such as:
+> 
+>   	perf record -e probe:request_resource -aR sleep 1
+> 
+> ===========
+> 
+> Fixes: 5a51fcd1f30c ("perf probe: Skip kernel symbols which is out of .text")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  tools/perf/builtin-probe.c |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+> index 70548df2abb9..6b1507566770 100644
+> --- a/tools/perf/builtin-probe.c
+> +++ b/tools/perf/builtin-probe.c
+> @@ -364,6 +364,9 @@ static int perf_add_probe_events(struct perf_probe_event *pevs, int npevs)
+>  
+>  		for (k = 0; k < pev->ntevs; k++) {
+>  			struct probe_trace_event *tev = &pev->tevs[k];
+> +			/* Skipped events have no event name */
+> +			if (!tev->event)
+> +				continue;
+>  
+>  			/* We use tev's name for showing new events */
+>  			show_perf_probe_event(tev->group, tev->event, pev,
+> 
+
 -- 
-2.17.1
 
+- Arnaldo
