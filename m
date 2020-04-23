@@ -7,411 +7,579 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC87CC55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E523C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC88120767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5A520776
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:02:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ri00r3mv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="obo46nth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgDWQCW (ORCPT
+        id S1729555AbgDWQCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:02:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46496 "EHLO
+        Thu, 23 Apr 2020 12:02:31 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46502 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729504AbgDWQCU (ORCPT
+        with ESMTP id S1729530AbgDWQC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:02:20 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NG21c0107668;
-        Thu, 23 Apr 2020 11:02:01 -0500
+        Thu, 23 Apr 2020 12:02:29 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NG2Nr3107738;
+        Thu, 23 Apr 2020 11:02:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587657721;
-        bh=1C9pZG/jB3VeIukaC/9Q0XgtdOXGCrHgKjLiFBYYRO0=;
+        s=ti-com-17Q1; t=1587657743;
+        bh=Hmh5Cscf08xM36Wssgy2YWWR9QgZTNHHtXnnVauEbAs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ri00r3mvZkJOqd6Bd48AhmpSH5FhMO4+SoW9oziTk7IKzFb/Z0VQEybufbXlkknc/
-         ZIB720pgtdXLPbxAGfW9ZdEqqNrYhFF8AwMDKhgMUM+Hd3YYr685Xt7TrYULIhZxkQ
-         AxnBPfOuQXlbJcAkX+J82fx3kxj2HRM4L424FIKc=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03NG21w2046495
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Apr 2020 11:02:01 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Apr 2020 11:02:01 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+        b=obo46nth8jCjlmj+lSGNJmnAsqsYQqmtKQZJ1GtyQ5gZ59nq00uxS6eOc/AvCvOAZ
+         3m2a2dsCMl5FEFKkYWM4ScH4m2630pONQI2rQpreNdu7BSakODYzKSs11J/ATBLEnO
+         HvBKBm4ds+5ngdmKgAEinRgzAUmKowGSNDUdm+4Q=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NG2N0T050434;
+        Thu, 23 Apr 2020 11:02:23 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
  (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Apr 2020 11:02:23 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Apr 2020 11:02:01 -0500
+ Frontend Transport; Thu, 23 Apr 2020 11:02:23 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NG21Y6063676;
-        Thu, 23 Apr 2020 11:02:01 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NG2Nxf062330;
+        Thu, 23 Apr 2020 11:02:23 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v20 07/17] dt: bindings: lp55xx: Update binding for Multicolor Framework
-Date:   Thu, 23 Apr 2020 10:55:14 -0500
-Message-ID: <20200423155524.13971-8-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v20 12/17] leds: lp55xx: Add multicolor framework support to lp55xx
+Date:   Thu, 23 Apr 2020 10:55:19 -0500
+Message-ID: <20200423155524.13971-13-dmurphy@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200423155524.13971-1-dmurphy@ti.com>
 References: <20200423155524.13971-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the DT binding to include the properties to use the
-multicolor framework for the devices that use the LP55xx
-framework.
+Add multicolor framework support for the lp55xx family.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Tony Lindgren <tony@atomide.com>
-CC: "Benoît Cousson" <bcousson@baylibre.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
 ---
- .../devicetree/bindings/leds/leds-lp55xx.txt  | 149 +++++++++++++++---
- 1 file changed, 124 insertions(+), 25 deletions(-)
+ drivers/leds/Kconfig                      |   1 +
+ drivers/leds/leds-lp5521.c                |  14 +-
+ drivers/leds/leds-lp5523.c                |  14 +-
+ drivers/leds/leds-lp5562.c                |  13 +-
+ drivers/leds/leds-lp55xx-common.c         | 178 +++++++++++++++++++---
+ drivers/leds/leds-lp55xx-common.h         |  11 +-
+ drivers/leds/leds-lp8501.c                |  14 +-
+ include/linux/platform_data/leds-lp55xx.h |   8 +
+ 8 files changed, 207 insertions(+), 46 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index bfe2805c5534..0ccc1efc2499 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -1,6 +1,8 @@
- Binding for TI/National Semiconductor LP55xx LED Drivers
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 66253a2a01d3..d5226ebb28b2 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -377,6 +377,7 @@ config LEDS_LP50XX
+ config LEDS_LP55XX_COMMON
+ 	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
+ 	depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
++	depends on OF
+ 	select FW_LOADER
+ 	select FW_LOADER_USER_HELPER
+ 	help
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6d2163c0f625..6ff81d6be789 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -505,9 +505,16 @@ static int lp5521_probe(struct i2c_client *client,
+ 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
+ 	struct device_node *np = client->dev.of_node;
  
- Required properties:
-+- #address-cells: 1
-+- #size-cells: 0
- - compatible: one of
- 	national,lp5521
- 	national,lp5523
-@@ -14,6 +16,18 @@ Required properties:
- Each child has own specific current settings
- - led-cur: Current setting at each LED channel (mA x10, 0 if LED is not connected)
- - max-cur: Maximun current at each LED channel.
-+- reg: Output channel for the LED.  This is zero based channel identifier and
-+	the data sheet is a one based channel identifier.
-+	reg value to output to LED output number
-+	D1 = reg value is 0
-+	D2 = reg value is 1
-+	D3 = reg value is 2
-+	D4 = reg value is 3
-+	D5 = reg value is 4
-+	D6 = reg value is 5
-+	D7 = reg value is 6
-+	D8 = reg value is 7
-+	D9 = reg value is 8
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->cfg = &lp5521_cfg;
++
+ 	if (!pdata) {
+ 		if (np) {
+-			pdata = lp55xx_of_populate_pdata(&client->dev, np);
++			pdata = lp55xx_of_populate_pdata(&client->dev, np,
++							 chip);
+ 			if (IS_ERR(pdata))
+ 				return PTR_ERR(pdata);
+ 		} else {
+@@ -516,10 +523,6 @@ static int lp5521_probe(struct i2c_client *client,
+ 		}
+ 	}
  
- Optional properties:
- - enable-gpio: GPIO attached to the chip's enable pin
-@@ -35,23 +49,28 @@ example 1) LP5521
- on channel 0.
+-	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+-	if (!chip)
+-		return -ENOMEM;
+-
+ 	led = devm_kcalloc(&client->dev,
+ 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
+ 	if (!led)
+@@ -527,7 +530,6 @@ static int lp5521_probe(struct i2c_client *client,
  
- lp5521@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5521";
- 	reg = <0x32>;
- 	label = "lp5521_pri";
- 	clock-mode = /bits/ 8 <2>;
+ 	chip->cl = client;
+ 	chip->pdata = pdata;
+-	chip->cfg = &lp5521_cfg;
  
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 		linux,default-trigger = "heartbeat";
- 	};
+ 	mutex_init(&chip->lock);
  
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index 15e7051392f5..b076c16df9ab 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -872,9 +872,16 @@ static int lp5523_probe(struct i2c_client *client,
+ 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
+ 	struct device_node *np = client->dev.of_node;
  
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
-@@ -70,59 +89,70 @@ ASEL1    ASEL0    Address
-  VEN      VEN       35h
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->cfg = &lp5523_cfg;
++
+ 	if (!pdata) {
+ 		if (np) {
+-			pdata = lp55xx_of_populate_pdata(&client->dev, np);
++			pdata = lp55xx_of_populate_pdata(&client->dev, np,
++							 chip);
+ 			if (IS_ERR(pdata))
+ 				return PTR_ERR(pdata);
+ 		} else {
+@@ -883,10 +890,6 @@ static int lp5523_probe(struct i2c_client *client,
+ 		}
+ 	}
  
- lp5523@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "national,lp5523";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <1>;
+-	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+-	if (!chip)
+-		return -ENOMEM;
+-
+ 	led = devm_kcalloc(&client->dev,
+ 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
+ 	if (!led)
+@@ -894,7 +897,6 @@ static int lp5523_probe(struct i2c_client *client,
  
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
+ 	chip->cl = client;
+ 	chip->pdata = pdata;
+-	chip->cfg = &lp5523_cfg;
  
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
+ 	mutex_init(&chip->lock);
  
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index 1c94422408b0..7ecdd199d7ef 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -520,9 +520,16 @@ static int lp5562_probe(struct i2c_client *client,
+ 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
+ 	struct device_node *np = client->dev.of_node;
  
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->cfg = &lp5562_cfg;
++
+ 	if (!pdata) {
+ 		if (np) {
+-			pdata = lp55xx_of_populate_pdata(&client->dev, np);
++			pdata = lp55xx_of_populate_pdata(&client->dev, np,
++							 chip);
+ 			if (IS_ERR(pdata))
+ 				return PTR_ERR(pdata);
+ 		} else {
+@@ -531,9 +538,6 @@ static int lp5562_probe(struct i2c_client *client,
+ 		}
+ 	}
  
--	chan4 {
-+	chan@4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
+-	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+-	if (!chip)
+-		return -ENOMEM;
  
--	chan5 {
-+	chan@5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
+ 	led = devm_kcalloc(&client->dev,
+ 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
+@@ -542,7 +546,6 @@ static int lp5562_probe(struct i2c_client *client,
  
--	chan6 {
-+	chan@6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
+ 	chip->cl = client;
+ 	chip->pdata = pdata;
+-	chip->cfg = &lp5562_cfg;
  
--	chan7 {
-+	chan@7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
+ 	mutex_init(&chip->lock);
  
--	chan8 {
-+	chan@8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
-@@ -133,29 +163,35 @@ example 3) LP5562
- 4 channels are defined.
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 882ef39e4965..f32105f8bfca 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -35,6 +35,11 @@ static struct lp55xx_led *dev_to_lp55xx_led(struct device *dev)
+ 	return cdev_to_lp55xx_led(dev_get_drvdata(dev));
+ }
  
- lp5562@30 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp5562";
- 	reg = <0x30>;
- 	clock-mode = /bits/8 <2>;
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "R";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "G";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "B";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "W";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
-@@ -167,62 +203,125 @@ example 4) LP8501
- Others are same as LP5523.
- 
- lp8501@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "ti,lp8501";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <2>;
- 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
- 
--	chan0 {
-+	chan@0 {
-+		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan1 {
-+	chan@1 {
-+		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan2 {
-+	chan@2 {
-+		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan3 {
-+	chan@3 {
-+		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan4 {
-+	chan@4 {
-+		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan5 {
-+	chan@5 {
-+		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan6 {
-+	chan@6 {
-+		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan7 {
-+	chan@7 {
-+		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan8 {
-+	chan@8 {
-+		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
++static struct lp55xx_led *mcled_cdev_to_led(struct led_classdev_mc *mc_cdev)
++{
++	return container_of(mc_cdev, struct lp55xx_led, mc_cdev);
++}
++
+ static void lp55xx_reset_device(struct lp55xx_chip *chip)
+ {
+ 	struct lp55xx_device_config *cfg = chip->cfg;
+@@ -131,6 +136,18 @@ static struct attribute *lp55xx_led_attrs[] = {
  };
+ ATTRIBUTE_GROUPS(lp55xx_led);
+ 
++static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
++				    enum led_brightness brightness)
++{
++	struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
++	struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
++	struct lp55xx_device_config *cfg = led->chip->cfg;
 +
-+Multicolor Framework Support
-+In addition to the nodes and properties defined above for device support the
-+properties below are needed for multicolor framework support as defined in
-+Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
++	led_mc_calc_color_components(&led->mc_cdev, brightness);
++	return cfg->multicolor_brightness_fn(led);
 +
-+Required child properties for multicolor framework
-+	- color : Must be LED_COLOR_ID_MULTI
-+	- function : see Documentation/devicetree/bindings/leds/common.txt
++}
 +
-+Required grandchildren properties
-+	- reg : This is the LED output of the device
-+	- color : see Documentation/devicetree/bindings/leds/common.txt
+ static int lp55xx_set_brightness(struct led_classdev *cdev,
+ 			     enum led_brightness brightness)
+ {
+@@ -147,9 +164,12 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+ 	struct lp55xx_platform_data *pdata = chip->pdata;
+ 	struct lp55xx_device_config *cfg = chip->cfg;
+ 	struct device *dev = &chip->cl->dev;
++	int max_channel = cfg->max_channel;
++	struct led_mc_subled *mc_led_info;
++	struct led_classdev *led_cdev;
+ 	char name[32];
++	int i, j = 0;
+ 	int ret;
+-	int max_channel = cfg->max_channel;
+ 
+ 	if (chan >= max_channel) {
+ 		dev_err(dev, "invalid channel: %d / %d\n", chan, max_channel);
+@@ -159,10 +179,44 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+ 	if (pdata->led_config[chan].led_current == 0)
+ 		return 0;
+ 
++	if (pdata->led_config[chan].name) {
++		led->cdev.name = pdata->led_config[chan].name;
++	} else {
++		snprintf(name, sizeof(name), "%s:channel%d",
++			pdata->label ? : chip->cl->name, chan);
++		led->cdev.name = name;
++	}
 +
-+Multicolor LED example:
-+led-controller@32 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "national,lp5523";
-+	reg = <0x32>;
-+	clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
++	if (pdata->led_config[chan].num_colors > 1) {
++		mc_led_info = devm_kcalloc(dev,
++					   pdata->led_config[chan].num_colors,
++					   sizeof(*mc_led_info), GFP_KERNEL);
++		if (!mc_led_info)
++			return -ENOMEM;
 +
-+	multi-led@2 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <2>;
-+		color = <LED_COLOR_ID_MULTI>;
-+		function = LED_FUNCTION_STANDBY;
-+		linux,default-trigger = "heartbeat";
++		led_cdev = &led->mc_cdev.led_cdev;
++		led_cdev->name = led->cdev.name;
++		led_cdev->brightness_set_blocking = lp55xx_set_mc_brightness;
++		led_cdev->groups = lp55xx_led_groups;
++		led->mc_cdev.num_colors = pdata->led_config[chan].num_colors;
++		for (i = 0; i < led->mc_cdev.num_colors; i++) {
++			mc_led_info[i].color_index =
++				pdata->led_config[chan].color_id[i];
++			mc_led_info[i].color_channel =
++					pdata->led_config[chan].output_num[i];
++			j++;
++		}
 +
-+		led@0 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x0>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
++		led->mc_cdev.multicolor_info = mc_led_info;
++	} else {
++		led->cdev.default_trigger =
++			pdata->led_config[chan].default_trigger;
++		led->cdev.brightness_set_blocking = lp55xx_set_brightness;
++	}	led->cdev.groups = lp55xx_led_groups;
 +
-+		led@1 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x1>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
+ 	led->led_current = pdata->led_config[chan].led_current;
+ 	led->max_current = pdata->led_config[chan].max_current;
+ 	led->chan_nr = pdata->led_config[chan].chan_nr;
+-	led->cdev.default_trigger = pdata->led_config[chan].default_trigger;
+ 
+ 	if (led->chan_nr >= max_channel) {
+ 		dev_err(dev, "Use channel numbers between 0 and %d\n",
+@@ -170,18 +224,11 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+ 		return -EINVAL;
+ 	}
+ 
+-	led->cdev.brightness_set_blocking = lp55xx_set_brightness;
+-	led->cdev.groups = lp55xx_led_groups;
++	if (pdata->led_config[chan].num_colors > 1)
++		ret = devm_led_classdev_multicolor_register(dev, &led->mc_cdev);
++	else
++		ret = devm_led_classdev_register(dev, &led->cdev);
+ 
+-	if (pdata->led_config[chan].name) {
+-		led->cdev.name = pdata->led_config[chan].name;
+-	} else {
+-		snprintf(name, sizeof(name), "%s:channel%d",
+-			pdata->label ? : chip->cl->name, chan);
+-		led->cdev.name = name;
+-	}
+-
+-	ret = devm_led_classdev_register(dev, &led->cdev);
+ 	if (ret) {
+ 		dev_err(dev, "led register err: %d\n", ret);
+ 		return ret;
+@@ -525,14 +572,105 @@ void lp55xx_unregister_sysfs(struct lp55xx_chip *chip)
+ }
+ EXPORT_SYMBOL_GPL(lp55xx_unregister_sysfs);
+ 
++static int lp55xx_parse_common_child(struct device_node *np,
++				     struct lp55xx_led_config *cfg,
++				     int led_number, int *chan_nr)
++{
++	int ret;
 +
-+		led@6 {
-+			led-cur = /bits/ 8 <50>;
-+			max-cur = /bits/ 8 <100>;
-+			reg = <0x6>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+	};
-+};
++	of_property_read_string(np, "chan-name",
++				&cfg[led_number].name);
++	of_property_read_u8(np, "led-cur",
++			    &cfg[led_number].led_current);
++	of_property_read_u8(np, "max-cur",
++			    &cfg[led_number].max_current);
++
++	ret = of_property_read_u32(np, "reg", chan_nr);
++	if (ret)
++		return ret;
++
++	if (*chan_nr < 0 || *chan_nr > cfg->max_channel)
++		return -EINVAL;
++
++	return 0;
++}
++
++static int lp55xx_parse_multi_led_child(struct device_node *child,
++					 struct lp55xx_led_config *cfg,
++					 int child_number, int color_number)
++{
++	int chan_nr, color_id, ret;
++
++	ret = lp55xx_parse_common_child(child, cfg, child_number, &chan_nr);
++	if (ret)
++		return ret;
++
++	ret = of_property_read_u32(child, "color", &color_id);
++	if (ret)
++		return ret;
++
++	cfg[child_number].color_id[color_number] = color_id;
++	cfg[child_number].output_num[color_number] = chan_nr;
++
++	return 0;
++}
++
++static int lp55xx_parse_multi_led(struct device_node *np,
++				  struct lp55xx_led_config *cfg,
++				  int child_number)
++{
++	struct device_node *child;
++	int num_colors = 0, ret;
++
++	for_each_child_of_node(np, child) {
++		ret = lp55xx_parse_multi_led_child(child, cfg, child_number,
++						   num_colors);
++		if (ret)
++			return ret;
++		num_colors++;
++	}
++
++	cfg[child_number].num_colors = num_colors;
++
++	return 0;
++}
++
++static int lp55xx_parse_logical_led(struct device_node *np,
++				   struct lp55xx_led_config *cfg,
++				   int child_number)
++{
++	int led_color, ret;
++	int chan_nr = 0;
++
++	cfg[child_number].default_trigger =
++		of_get_property(np, "linux,default-trigger", NULL);
++
++	ret = of_property_read_u32(np, "color", &led_color);
++	if (ret)
++		return ret;
++
++	if (led_color == LED_COLOR_ID_MULTI)
++		return lp55xx_parse_multi_led(np, cfg, child_number);
++
++	ret =  lp55xx_parse_common_child(np, cfg, child_number, &chan_nr);
++	if (ret < 0)
++		return ret;
++
++	cfg[child_number].chan_nr = chan_nr;
++
++	return ret;
++}
++
+ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
+-						      struct device_node *np)
++						      struct device_node *np,
++						      struct lp55xx_chip *chip)
+ {
+ 	struct device_node *child;
+ 	struct lp55xx_platform_data *pdata;
+ 	struct lp55xx_led_config *cfg;
+ 	int num_channels;
+ 	int i = 0;
++	int ret;
+ 
+ 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+ 	if (!pdata)
+@@ -550,16 +688,12 @@ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
+ 
+ 	pdata->led_config = &cfg[0];
+ 	pdata->num_channels = num_channels;
++	cfg->max_channel = chip->cfg->max_channel;
+ 
+ 	for_each_child_of_node(np, child) {
+-		cfg[i].chan_nr = i;
+-
+-		of_property_read_string(child, "chan-name", &cfg[i].name);
+-		of_property_read_u8(child, "led-cur", &cfg[i].led_current);
+-		of_property_read_u8(child, "max-cur", &cfg[i].max_current);
+-		cfg[i].default_trigger =
+-			of_get_property(child, "linux,default-trigger", NULL);
+-
++		ret = lp55xx_parse_logical_led(child, cfg, i);
++		if (ret)
++			return ERR_PTR(-EINVAL);
+ 		i++;
+ 	}
+ 
+diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
+index b9b1041e8143..a9d7ba3f2fd1 100644
+--- a/drivers/leds/leds-lp55xx-common.h
++++ b/drivers/leds/leds-lp55xx-common.h
+@@ -12,6 +12,8 @@
+ #ifndef _LEDS_LP55XX_COMMON_H
+ #define _LEDS_LP55XX_COMMON_H
+ 
++#include <linux/led-class-multicolor.h>
++
+ enum lp55xx_engine_index {
+ 	LP55XX_ENGINE_INVALID,
+ 	LP55XX_ENGINE_1,
+@@ -109,6 +111,9 @@ struct lp55xx_device_config {
+ 	/* access brightness register */
+ 	int (*brightness_fn)(struct lp55xx_led *led);
+ 
++	/* perform brightness value to multiple LEDs */
++	int (*multicolor_brightness_fn)(struct lp55xx_led *led);
++
+ 	/* current setting function */
+ 	void (*set_led_current) (struct lp55xx_led *led, u8 led_current);
+ 
+@@ -159,6 +164,8 @@ struct lp55xx_chip {
+  * struct lp55xx_led
+  * @chan_nr         : Channel number
+  * @cdev            : LED class device
++ * @mc_cdev	    : Multi color class device
++ * @color_components: Multi color LED map information
+  * @led_current     : Current setting at each led channel
+  * @max_current     : Maximun current at each led channel
+  * @brightness      : Brightness value
+@@ -167,6 +174,7 @@ struct lp55xx_chip {
+ struct lp55xx_led {
+ 	int chan_nr;
+ 	struct led_classdev cdev;
++	struct led_classdev_mc mc_cdev;
+ 	u8 led_current;
+ 	u8 max_current;
+ 	u8 brightness;
+@@ -196,6 +204,7 @@ extern void lp55xx_unregister_sysfs(struct lp55xx_chip *chip);
+ 
+ /* common device tree population function */
+ extern struct lp55xx_platform_data
+-*lp55xx_of_populate_pdata(struct device *dev, struct device_node *np);
++*lp55xx_of_populate_pdata(struct device *dev, struct device_node *np,
++			  struct lp55xx_chip *chip);
+ 
+ #endif /* _LEDS_LP55XX_COMMON_H */
+diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
+index a58019cdb8c3..ac2c31db4a65 100644
+--- a/drivers/leds/leds-lp8501.c
++++ b/drivers/leds/leds-lp8501.c
+@@ -308,9 +308,16 @@ static int lp8501_probe(struct i2c_client *client,
+ 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
+ 	struct device_node *np = client->dev.of_node;
+ 
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->cfg = &lp8501_cfg;
++
+ 	if (!pdata) {
+ 		if (np) {
+-			pdata = lp55xx_of_populate_pdata(&client->dev, np);
++			pdata = lp55xx_of_populate_pdata(&client->dev, np,
++							 chip);
+ 			if (IS_ERR(pdata))
+ 				return PTR_ERR(pdata);
+ 		} else {
+@@ -319,10 +326,6 @@ static int lp8501_probe(struct i2c_client *client,
+ 		}
+ 	}
+ 
+-	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+-	if (!chip)
+-		return -ENOMEM;
+-
+ 	led = devm_kcalloc(&client->dev,
+ 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
+ 	if (!led)
+@@ -330,7 +333,6 @@ static int lp8501_probe(struct i2c_client *client,
+ 
+ 	chip->cl = client;
+ 	chip->pdata = pdata;
+-	chip->cfg = &lp8501_cfg;
+ 
+ 	mutex_init(&chip->lock);
+ 
+diff --git a/include/linux/platform_data/leds-lp55xx.h b/include/linux/platform_data/leds-lp55xx.h
+index 96a787100fda..d85275aea38c 100644
+--- a/include/linux/platform_data/leds-lp55xx.h
++++ b/include/linux/platform_data/leds-lp55xx.h
+@@ -12,17 +12,25 @@
+ #ifndef _LEDS_LP55XX_H
+ #define _LEDS_LP55XX_H
+ 
++#include <linux/led-class-multicolor.h>
++
+ /* Clock configuration */
+ #define LP55XX_CLOCK_AUTO	0
+ #define LP55XX_CLOCK_INT	1
+ #define LP55XX_CLOCK_EXT	2
+ 
++#define LP55XX_MAX_GROUPED_CHAN	4
++
+ struct lp55xx_led_config {
+ 	const char *name;
+ 	const char *default_trigger;
+ 	u8 chan_nr;
+ 	u8 led_current; /* mA x10, 0 if led is not connected */
+ 	u8 max_current;
++	int num_colors;
++	unsigned int max_channel;
++	int color_id[LED_COLOR_ID_MAX];
++	int output_num[LED_COLOR_ID_MAX];
+ };
+ 
+ struct lp55xx_predef_pattern {
 -- 
 2.25.1
 
