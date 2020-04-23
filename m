@@ -2,98 +2,103 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E2AC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A28DC54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE84214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:47:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587653260;
-	bh=SxyGQHkd0kcs2U6kVroogS8EX8n6xP/5/eW4cnGhP2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vd9mqmfc1fFfSsrEXRxK+0TYo7YoP0ll7uqAkPsWEwEqhY1FFqj6Na17BAu9eO99w
-	 sVjhKpOSHHtQgBDxuMRL5dWGD7BwA1fiTnPnse78KfqhRTgjSv1qz67IdwT8Yp2ykm
-	 b7lyqackaH2dzx4O4MYLR5UNp/PcgeAyiIPPPmJQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8B5522074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 14:48:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BMVw9gHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgDWOrj (ORCPT
+        id S1728804AbgDWOsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgDWOrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:47:39 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Thu, 23 Apr 2020 10:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726450AbgDWOsM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:48:12 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82D9C08E934;
+        Thu, 23 Apr 2020 07:48:11 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A889A2074F;
-        Thu, 23 Apr 2020 14:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587653259;
-        bh=SxyGQHkd0kcs2U6kVroogS8EX8n6xP/5/eW4cnGhP2A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qDHQTLKs8uQ7KZmmrcux3fu6B5vJDbaGT8DjmnQGpm+YFoAh5shJbv3JFnMjFH7vZ
-         am609VgcZcLFXG/4VN81vf3THcxDqTGRVqNtOa3OVXjE0aiCcKG5gjV2hMxNCkakln
-         lg7JdGzThZ2fAtrhff4gIN4lhHEpl/CLVqNh41m8=
-Date:   Thu, 23 Apr 2020 15:47:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, yhchuang@realtek.com,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH 1/2] iopoll: Introduce read_poll_timeout_atomic macro
-Message-ID: <20200423144736.GN4808@sirena.org.uk>
-References: <20200423063811.2636-1-kai.heng.feng@canonical.com>
- <87lfmmn1fo.fsf@kamboji.qca.qualcomm.com>
- <20200423102347.GC4808@sirena.org.uk>
- <87eeseigs9.fsf@kamboji.qca.qualcomm.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C317422F99;
+        Thu, 23 Apr 2020 16:48:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587653286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lLmBZL0FMhG+mFKlP2Ht3IzgRfKlXEzRMeQdQ+FbklY=;
+        b=BMVw9gHa6625K6Ui86hhu5yBTBrixqKjDF/MkErR/f+ykPUOWc+923D2EJAhzY3SZQSwJC
+        NATLzsxcUFj3zAA7qPUQpKwhO1ckB3eV+z6Qb4HppFp3BaweHTtEjzqngjmdjUX3d8gijp
+        aRNO5cl2Zi5o1SJcnUN5hzdrVxIkWio=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="citGix+cyBYE+lqp"
-Content-Disposition: inline
-In-Reply-To: <87eeseigs9.fsf@kamboji.qca.qualcomm.com>
-X-Cookie: This unit... must... survive.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Apr 2020 16:48:05 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: phy: bcm54140: fix less than zero comparison
+ on an unsigned
+In-Reply-To: <20200423141016.19666-1-colin.king@canonical.com>
+References: <20200423141016.19666-1-colin.king@canonical.com>
+Message-ID: <cbb5132b022cd5e954c0fb5aa285dd0a@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C317422F99
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[10];
+         NEURAL_HAM(-0.00)[-0.881];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[lunn.ch,gmail.com,armlinux.org.uk,davemloft.net,roeck-us.net,vger.kernel.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am 2020-04-23 16:10, schrieb Colin King:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the unsigned variable tmp is being checked for an negative
+> error return from the call to bcm_phy_read_rdb and this can never
+> be true since tmp is unsigned.  Fix this by making tmp a plain int.
+> 
+> Addresses-Coverity: ("Unsigned compared against 0")
+> Fixes: 4406d36dfdf1 ("net: phy: bcm54140: add hwmon support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
---citGix+cyBYE+lqp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+FWIW since Andrew already reviewed it:
 
-On Thu, Apr 23, 2020 at 02:27:02PM +0300, Kalle Valo wrote:
+Reviewed-by: Michael Walle <michael@walle.cc>
 
-> Oh, ok. As patch 2 goes to my wireless-drivers-next tree would it be ok
-> for everyone if I take this patch as well?
-
-I'd give it a bit longer than usual for people to review but yeah, if
-nobody complains it's probably reasonable.
-
---citGix+cyBYE+lqp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6hqocACgkQJNaLcl1U
-h9CL+Af+KRWt3kOxuDKEMWFarbD/Rlly0YZ1l5BYoRj/9CQKNWCcG0Ptb8+H558O
-IbGgrmKk9SM5zLI/qYCEEizRMtVyA+KCwxiSaPAYYfyTQCThvh7g0EUQZED5DS27
-mmF4FnO24mLHaVBgDGswVNRtl6xFEzYBlO1S5Vg/E9hn/JRoNCWY/jse2FQxc8OD
-MLCjMWbUJXgtpbF2v5iaufqT/4TZJPWa2DPAS39/yEjC64usdPPk9efUjc3+9ivS
-trWJlYc/roepMOdpQEFvwlOduJSBbuS2SKAowIKXCnjm+2DAiiGRKLcz1FF625b1
-D7QmC+Nm2S6YPouyjL4iFA8P0C48Aw==
-=KBox
------END PGP SIGNATURE-----
-
---citGix+cyBYE+lqp--
+-michael
