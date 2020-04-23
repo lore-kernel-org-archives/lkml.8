@@ -2,130 +2,94 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC999C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FE8C54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32BE20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DAA20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sDAFKvHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgDWSww (ORCPT
+        id S1730338AbgDWSxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:52:52 -0400
-Received: from 18.mo3.mail-out.ovh.net ([87.98.172.162]:39958 "EHLO
-        18.mo3.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728396AbgDWSww (ORCPT
+        Thu, 23 Apr 2020 14:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgDWSxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:52:52 -0400
-X-Greylist: delayed 932 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 14:52:51 EDT
-Received: from player796.ha.ovh.net (unknown [10.110.208.43])
-        by mo3.mail-out.ovh.net (Postfix) with ESMTP id 8054924D249
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:37:18 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player796.ha.ovh.net (Postfix) with ESMTPSA id C471011A47C7A;
-        Thu, 23 Apr 2020 18:37:12 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH 2/3] docs: sysctl/kernel: document ftrace entries
-Date:   Thu, 23 Apr 2020 20:36:50 +0200
-Message-Id: <20200423183651.15365-2-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200423183651.15365-1-steve@sk2.org>
-References: <20200423183651.15365-1-steve@sk2.org>
+        Thu, 23 Apr 2020 14:53:07 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1654DC09B042
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:53:07 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id j4so7933071otr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:53:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HMPPKtadtl0cEjroea7mXsdefqmGAHEHdtPRIbCzW0Q=;
+        b=sDAFKvHzrkB3rjxkW4EUPUKW6zSesgCna5+ROQwp/oYmsYtaTWVt1MIlYXTYGxPTWW
+         Tb3UU+oi6w9YnvWvcnEs/ySG3JTllE/Q9rQsfpZk5R495gXnyNX2e5hwEzBIBSz8NkCp
+         dlUIP3JpnufeBhRb8pRgTmEKHbIuvHMERZ3XAL0Jv4F4NZbLVjN4wACcSCgvKMxuWcJj
+         VUA165wRwkpcOZOoED3pirf3HiOKcWY2jOKeBckzPSP1jVdDcWjcvnERVZv0oi7JIr8/
+         dUIk2J1Pv8yzdKYstU5GisQwWxklfPB6oXVvuUhYbhWY7o1KvseYaSvafgmY/ZmD0EFp
+         hcBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HMPPKtadtl0cEjroea7mXsdefqmGAHEHdtPRIbCzW0Q=;
+        b=eEQWoLFtNom0VBfzXQQnBppLmbHgofMSEkOqxcHDzRU0blgBiitH1k+6Z6cNFssYkh
+         0BjUvdlYt1LIq44UrXT15yGYqz8lBW24WW/EO9/5wKEzcZJeiX5EA4hlfKu5VaIMAtJA
+         VQXFU6YBvibZiSsCZwmLAiVmexGiq7kScTdE+4ZuJ0BNm1hPUyFYxlcZ+juf0joj5uuT
+         U/yAFw4W4//D90yvpZz27CqqK/kQaj49a45DMHOno7JCXdSrJ1vgIGat7tqKc7xNFQc2
+         PbXIfrR/+YuWXyX1psYmP02eFqpipW9zn62LsD2T1quASIvyfjdG+AyaAIl5dM7I3X5a
+         FuSg==
+X-Gm-Message-State: AGi0PuZrIDegRBbVl/v1WJ9qJUq/UlTEh0LlUfAhqKOFZPavcHybekW4
+        g/NWqEwxVOsyzgtiW0DWzkyHi3VEhvkli4dxJVQlwQ==
+X-Google-Smtp-Source: APiQypKp/CKEoiUXBB9NIOWJDTRO/kEDOqevd9xQIVVjzftkBl9I/Wp5OMfDbp0fksX1vycP85f3Tdi+yNFwSLlA7Nw=
+X-Received: by 2002:aca:db08:: with SMTP id s8mr4239090oig.97.1587667986328;
+ Thu, 23 Apr 2020 11:53:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 16167359714264960389
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejleeirdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+References: <CALAqxLURuJ-tMxMY6Z2BvLmyd6X+w7SiSB5otoH6vx+NxJm-NA@mail.gmail.com>
+ <20200423171029.GS17661@paulmck-ThinkPad-P72> <20200423184955.c7yij2hg7a2ftsfa@linutronix.de>
+In-Reply-To: <20200423184955.c7yij2hg7a2ftsfa@linutronix.de>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 23 Apr 2020 11:52:54 -0700
+Message-ID: <CALAqxLXGik84wE9bW+1vEDKnv3O3iynPtgX3FG=d-Jma0qrb8Q@mail.gmail.com>
+Subject: Re: BUG: Invalid wait context with 5.7-rc2?
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on the ftrace documentation, the tp_printk boot parameter
-documentation, and the implementation in kernel/trace/trace.c.
+On Thu, Apr 23, 2020 at 11:49 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2020-04-23 10:10:29 [-0700], Paul E. McKenney wrote:
+> > > Curious if this was already on anyone's radar?
+> >
+> > Looks like __queue_work() is attempting to acquire a normal spinlock_t
+> > with interrupts disabled, which -rt doesn't like much.  And I believe
+> > that lockdep has been upgraded to check for this.
+> >
+> > Adding Sebastian for his thoughts.
+>
+> This is known. There is more than just workqueue in this regard. Please
+> disable CONFIG_PROVE_RAW_LOCK_NESTING until this is fixed (see Kconfig
+> help). Except for workqueue, there is also printk which triggers the
+> same warning and isn't as easy to fix as workqueue.
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst | 50 +++++++++++++++++++++
- 1 file changed, 50 insertions(+)
-
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 82bfd5892663..d4bbdaf96ebc 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -265,6 +265,27 @@ domain names are in general different. For a detailed discussion
- see the ``hostname(1)`` man page.
- 
- 
-+ftrace_dump_on_oops
-+===================
-+
-+Determines whether ``ftrace_dump()`` should be called on an oops (or
-+kernel panic). This will output the contents of the ftrace buffers to
-+the console.  This is very useful for capturing traces that lead to
-+crashes and outputing it to a serial console.
-+
-+= ===================================================
-+0 Disabled (default).
-+1 Dump buffers of all CPUs.
-+2 Dump the buffer of the CPU that triggered the oops.
-+= ===================================================
-+
-+
-+ftrace_enabled, stack_tracer_enabled
-+====================================
-+
-+See :doc:`/trace/ftrace`.
-+
-+
- hardlockup_all_cpu_backtrace
- ============================
- 
-@@ -1191,6 +1212,35 @@ If a value outside of this range is written to ``threads-max`` an
- ``EINVAL`` error occurs.
- 
- 
-+traceoff_on_warning
-+===================
-+
-+When set, disables tracing (see :doc:`/trace/ftrace`) when a
-+``WARN()`` is hit.
-+
-+
-+tracepoint_printk
-+=================
-+
-+When tracepoints are sent to printk() (enabled by the ``tp_printk``
-+boot parameter), this entry provides runtime control::
-+
-+    echo 0 > /proc/sys/kernel/tracepoint_printk
-+
-+will stop tracepoints from being sent to printk(), and
-+
-+::
-+
-+    echo 1 > /proc/sys/kernel/tracepoint_printk
-+
-+will send them to printk() again.
-+
-+This only works if the kernel was booted with ``tp_printk`` enabled.
-+
-+See :doc:`/admin-guide/kernel-parameters` and
-+:doc:`/trace/boottime-trace`.
-+
-+
- unknown_nmi_panic
- =================
- 
--- 
-2.20.1
-
+Ok. Appreciate it! Thanks so much for the context! I'll stop worrying
+about that one and keep digging on my own issue.
+-john
