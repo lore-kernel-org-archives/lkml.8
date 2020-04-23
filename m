@@ -2,102 +2,141 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED72C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FE3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E9420857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LSeysXyx"
+	by mail.kernel.org (Postfix) with ESMTP id A45E020857
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgDWPLS (ORCPT
+        id S1729054AbgDWPLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 23 Apr 2020 11:11:21 -0400
+Received: from mga07.intel.com ([134.134.136.100]:22750 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729032AbgDWPLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 11:11:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31540 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728878AbgDWPLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:11:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587654676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p98rCYJhtZR44ScMt2ctfYRg4qGKkTUSrXSjyzpvnXo=;
-        b=LSeysXyx17f58+nkjrqsUkdtjnW9ET3yHrQZrirfGifdbvrtIZ/mlysEyBjMCRBiBB6rJj
-        i70FDlyBFnXzB3JGwoLzujcggZ/7X+f2nDjs3ZoVMwDHFsAlnQN7FCsQx+H1+dOsjdyQ/U
-        YYdsREitGgYJCpcLX8JRN1bgQnDsqvk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-O4prfYliPcqdEkCRMS9Erg-1; Thu, 23 Apr 2020 11:11:09 -0400
-X-MC-Unique: O4prfYliPcqdEkCRMS9Erg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E7E3872FF0;
-        Thu, 23 Apr 2020 15:11:08 +0000 (UTC)
-Received: from gondolin (ovpn-112-121.ams2.redhat.com [10.36.112.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D0E8D600F5;
-        Thu, 23 Apr 2020 15:11:06 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 17:11:03 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Jared Rossi <jrossi@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-Message-ID: <20200423171103.497dcd02.cohuck@redhat.com>
-In-Reply-To: <20200423155620.493cb7cb.pasic@linux.ibm.com>
-References: <20200417182939.11460-1-jrossi@linux.ibm.com>
-        <20200417182939.11460-2-jrossi@linux.ibm.com>
-        <20200423155620.493cb7cb.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+IronPort-SDR: h/issFRsndPNKjiiGV+hxyd/Nz/72qoPHh+5BqyXLClBtoSUDeeRou43ol33nhegKXLYcY0FAl
+ S4gCY+H1oCVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 08:11:16 -0700
+IronPort-SDR: 1jhfBXFrFWuz6CBqLI/R4z6G6fO9VBVZHvtWFo2hWncqCnf2JYI2aDRZyC1trtpfT6bqz1QlZc
+ M3Yvq3BWxaww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="244894681"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga007.jf.intel.com with ESMTP; 23 Apr 2020 08:11:16 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX106.amr.corp.intel.com ([169.254.1.150]) with mapi id 14.03.0439.000;
+ Thu, 23 Apr 2020 08:11:15 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "rajatja@google.com" <rajatja@google.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "fred@fredlawl.com" <fred@fredlawl.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use DPC
+Thread-Topic: [PATCH v2 2/2] PCI/DPC: Allow Native DPC Host Bridges to use
+ DPC
+Thread-Index: AQHWF186KnXLsMWtVkCGO69asmmcQaiGN2OAgAESEwA=
+Date:   Thu, 23 Apr 2020 15:11:14 +0000
+Message-ID: <ea21d9475b0af277c7288504ff2cd32b3f91e4ba.camel@intel.com>
+References: <1587418630-13562-1-git-send-email-jonathan.derrick@intel.com>
+         <1587418630-13562-3-git-send-email-jonathan.derrick@intel.com>
+         <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
+In-Reply-To: <0058b993-0663-7fed-ed31-cb0adf845a39@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.1.180]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7AE62BCA59372E4DBE12A4448988D76D@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 15:56:20 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
-
-> On Fri, 17 Apr 2020 14:29:39 -0400
-> Jared Rossi <jrossi@linux.ibm.com> wrote:
-> 
-> > Remove the explicit prefetch check when using vfio-ccw devices.
-> > This check is not needed as all Linux channel programs are intended
-> > to use prefetch and will be executed in the same way regardless.  
-> 
-> Hm. This is a guest thing or? So you basically say, it is OK to do
-> this, because you know that the guest is gonna be Linux and that it
-> the channel program is intended to use prefetch -- but the ORB supplied
-> by the guest that designates the channel program happens to state the
-> opposite.
-> 
-> Or am I missing something?
-
-I see this as a kind of architecture compliance/ease of administration
-tradeoff, as we none of the guests we currently support uses something
-that breaks with prefetching outside of IPL (which has a different
-workaround).
-
-One thing that still concerns me a bit is debuggability if a future
-guest indeed does want to dynamically rewrite a channel program: the
-guest thinks it instructed the device to not prefetch, and then
-suddenly things do not work as expected. We can log when a guest
-submits an orb without prefetch set, but we can't find out if the guest
-actually does something that relies on non-prefetch.
-
-The only correct way to handle this would be to actually implement
-non-prefetch processing, where I would not really know where to even
-start -- and then we'd only have synthetic test cases, for now. None of
-the options are pleasant :(
-
+SGkgU2F0aHlhbmFyYXlhbmFuLA0KDQpPbiBXZWQsIDIwMjAtMDQtMjIgYXQgMTU6NTAgLTA3MDAs
+IEt1cHB1c3dhbXksIFNhdGh5YW5hcmF5YW5hbiB3cm90ZToNCj4gDQo+IE9uIDQvMjAvMjAgMjoz
+NyBQTSwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4gVGhlIGV4aXN0aW5nIHBvcnRkcnYgbW9kZWwg
+cHJldmVudHMgRFBDIHNlcnZpY2VzIHdpdGhvdXQgZWl0aGVyIE9TDQo+ID4gY29udHJvbCAoX09T
+QykgZ3JhbnRlZCB0byBBRVIgc2VydmljZXMsIGEgSG9zdCBCcmlkZ2UgcmVxdWVzdGluZyBOYXRp
+dmUNCj4gPiBBRVIsIG9yIHVzaW5nIG9uZSBvZiB0aGUgJ3BjaWVfcG9ydHM9JyBwYXJhbWV0ZXJz
+IG9mICduYXRpdmUnIG9yDQo+ID4gJ2RwYy1uYXRpdmUnLg0KPiA+IA0KPiA+IFRoZSBEUEMgcG9y
+dCBzZXJ2aWNlIGRyaXZlciBpdHNlbGYgd2lsbCBhbHNvIGZhaWwgdG8gcHJvYmUgaWYgdGhlIGtl
+cm5lbA0KPiA+IGFzc3VtZXMgdGhlIHBvcnQgaXMgdXNpbmcgRmlybXdhcmUtRmlyc3QgQUVSLiBJ
+dCdzIGEgcmVhc29uYWJsZQ0KPiA+IGV4cGVjdGF0aW9uIHRoYXQgYSBwb3J0IHVzaW5nIEZpcm13
+YXJlLUZpcnN0IEFFUiB3aWxsIGFsc28gYmUgdXNpbmcNCj4gPiBGaXJtd2FyZS1GaXJzdCBEUEMs
+IGhvd2V2ZXIgaWYgYSBIb3N0IEJyaWRnZSByZXF1ZXN0cyBOYXRpdmUgRFBDLCB0aGUNCj4gPiBE
+UEMgZHJpdmVyIHNob3VsZCBhbGxvdyBpdCBhbmQgbm90IGZhaWwgdG8gYmluZCBkdWUgdG8gQUVS
+IGNhcGFiaWxpdHkNCj4gPiBzZXR0aW5ncy4NCj4gPiANCj4gPiBIb3N0IEJyaWRnZXMgd2hpY2gg
+cmVxdWVzdCBOYXRpdmUgRFBDIHBvcnQgc2VydmljZXMgd2lsbCBhbHNvIGxpa2VseQ0KPiA+IHJl
+cXVlc3QgTmF0aXZlIEFFUiwgaG93ZXZlciBpdCBzaG91bGRuJ3QgYmUgYSByZXF1aXJlbWVudC4g
+VGhpcyBwYXRjaA0KPiA+IGFsbG93cyBwb3J0cyBvbiB0aG9zZSBIb3N0IEJyaWRnZXMgdG8gaGF2
+ZSBEUEMgcG9ydCBzZXJ2aWNlcy4NCj4gPiANCj4gPiBUaGlzIHdpbGwgYXZvaWQgdGhlIHVubGlr
+ZWx5IHNpdHVhdGlvbiB3aGVyZSB0aGUgcG9ydCBpcyBGaXJtd2FyZS1GaXJzdA0KPiA+IEFFUiBh
+bmQgTmF0aXZlIERQQywgYW5kIGEgQklPUyBvciBzd2l0Y2ggZmlybXdhcmUgcHJlY29uZmlndXJh
+dGlvbiBvZg0KPiA+IHRoZSBEUEMgdHJpZ2dlciBjb3VsZCByZXN1bHQgaW4gdW5oYW5kbGVkIERQ
+QyBldmVudHMuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFu
+LmRlcnJpY2tAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9wY2kvcGNpZS9kcGMu
+YyAgICAgICAgICB8IDMgKystDQo+ID4gICBkcml2ZXJzL3BjaS9wY2llL3BvcnRkcnZfY29yZS5j
+IHwgMyArKy0NCj4gPiAgIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAyIGRlbGV0
+aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wY2llL2RwYy5jIGIv
+ZHJpdmVycy9wY2kvcGNpZS9kcGMuYw0KPiA+IGluZGV4IDc2MjE3MDQuLjNmMzEwNmYgMTAwNjQ0
+DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvcGNpZS9kcGMuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNp
+L3BjaWUvZHBjLmMNCj4gPiBAQCAtMjg0LDcgKzI4NCw4IEBAIHN0YXRpYyBpbnQgZHBjX3Byb2Jl
+KHN0cnVjdCBwY2llX2RldmljZSAqZGV2KQ0KPiA+ICAgCWludCBzdGF0dXM7DQo+ID4gICAJdTE2
+IGN0bCwgY2FwOw0KPiA+ICAgDQo+ID4gLQlpZiAocGNpZV9hZXJfZ2V0X2Zpcm13YXJlX2ZpcnN0
+KHBkZXYpICYmICFwY2llX3BvcnRzX2RwY19uYXRpdmUpDQo+ID4gKwlpZiAocGNpZV9hZXJfZ2V0
+X2Zpcm13YXJlX2ZpcnN0KHBkZXYpICYmICFwY2llX3BvcnRzX2RwY19uYXRpdmUgJiYNCj4gPiAr
+CSAgICAhcGNpX2ZpbmRfaG9zdF9icmlkZ2UocGRldi0+YnVzKS0+bmF0aXZlX2RwYykNCj4gV2h5
+IGRvIGl0IGluIHByb2JlIGFzIHdlbGwgPyBpZiBob3N0LT5uYXRpdmVfZHBjIGlzIG5vdCBzZXQg
+dGhlbiB0aGUNCj4gZGV2aWNlIERQQyBwcm9iZSBpdCBzZWxmIHdvbid0IGhhcHBlbiByaWdodCA/
+DQoNClBvcnRkcnYgb25seSBlbmFibGVzIHRoZSBpbnRlcnJ1cHQgYW5kIGFsbG93cyB0aGUgcHJv
+YmUgdG8gb2NjdXIuDQoNClRoZSBwcm9iZSBpdHNlbGYgd2lsbCBzdGlsbCBmYWlsIGlmIHRoZXJl
+J3MgYSBtaXhlZC1tb2RlIF9PU0MNCm5lZ290aWF0ZWQgQUVSICYgRFBDLCBkdWUgdG8gcGNpZV9h
+ZXJfZ2V0X2Zpcm13YXJlX2ZpcnN0IHJldHVybmluZyAxDQpmb3IgQUVSIGFuZCBubyBjaGVjayBm
+b3IgRFBDLg0KDQpJIGRvbid0IGtub3cgaWYgc3VjaCBhIHBsYXRmb3JtIHdpbGwgZXhpc3QsIGJ1
+dCB0aGUga2VybmVsIGlzIGFscmVhZHkNCndpcmVkIGZvciAnZHBjLW5hdGl2ZScgc28gaXQgbWFr
+ZXMgc2Vuc2UgdG8gZXh0ZW5kIGl0IGZvciB0aGlzLi4NCg0KVGhpcyB0cmFuc2Zvcm0gbWlnaHQg
+YmUgbW9yZSByZWFkYWJsZToNCglpZiAocGNpZV9hZXJfZ2V0X2Zpcm13YXJlX2ZpcnN0KHBkZXYp
+ICYmDQoJICAgICEocGNpZV9wb3J0c19kcGNfbmF0aXZlIHx8IGhiLT5uYXRpdmVfZHBjKSkNCg0K
+DQoNCj4gPiAgIAkJcmV0dXJuIC1FTk9UU1VQUDsNCj4gPiAgIA0KPiA+ICAgCXN0YXR1cyA9IGRl
+dm1fcmVxdWVzdF90aHJlYWRlZF9pcnEoZGV2aWNlLCBkZXYtPmlycSwgZHBjX2lycSwNCj4gPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpZS9wb3J0ZHJ2X2NvcmUuYyBiL2RyaXZlcnMvcGNp
+L3BjaWUvcG9ydGRydl9jb3JlLmMNCj4gPiBpbmRleCA1MGE5NTIyLi5mMjEzOWExIDEwMDY0NA0K
+PiA+IC0tLSBhL2RyaXZlcnMvcGNpL3BjaWUvcG9ydGRydl9jb3JlLmMNCj4gPiArKysgYi9kcml2
+ZXJzL3BjaS9wY2llL3BvcnRkcnZfY29yZS5jDQo+ID4gQEAgLTI1Niw3ICsyNTYsOCBAQCBzdGF0
+aWMgaW50IGdldF9wb3J0X2RldmljZV9jYXBhYmlsaXR5KHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+
+ID4gICAJICovDQo+ID4gICAJaWYgKHBjaV9maW5kX2V4dF9jYXBhYmlsaXR5KGRldiwgUENJX0VY
+VF9DQVBfSURfRFBDKSAmJg0KPiA+ICAgCSAgICBwY2lfYWVyX2F2YWlsYWJsZSgpICYmDQo+ID4g
+LQkgICAgKHBjaWVfcG9ydHNfZHBjX25hdGl2ZSB8fCAoc2VydmljZXMgJiBQQ0lFX1BPUlRfU0VS
+VklDRV9BRVIpKSkNCj4gPiArCSAgICAocGNpZV9wb3J0c19kcGNfbmF0aXZlIHx8IGhvc3QtPm5h
+dGl2ZV9kcGMgfHwNCj4gPiArCSAgICAgKHNlcnZpY2VzICYgUENJRV9QT1JUX1NFUlZJQ0VfQUVS
+KSkpDQo+ID4gICAJCXNlcnZpY2VzIHw9IFBDSUVfUE9SVF9TRVJWSUNFX0RQQzsNCj4gPiAgIA0K
+PiA+ICAgCWlmIChwY2lfcGNpZV90eXBlKGRldikgPT0gUENJX0VYUF9UWVBFX0RPV05TVFJFQU0g
+fHwNCj4gPiANCg==
