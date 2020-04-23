@@ -2,302 +2,158 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BD9C55192
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE29C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6D762074F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA2D2074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 10:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ta7B/bt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgDWK4O (ORCPT
+        id S1727924AbgDWK4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:56:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50482 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727887AbgDWK4K (ORCPT
+        Thu, 23 Apr 2020 06:56:20 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1154 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbgDWK4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:56:10 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NAWr9O030876
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:56:08 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30k8p920cw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 06:56:07 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Thu, 23 Apr 2020 11:55:19 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 11:55:16 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NAu2fa58589358
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 10:56:02 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 141B811C04A;
-        Thu, 23 Apr 2020 10:56:02 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4588911C05E;
-        Thu, 23 Apr 2020 10:56:00 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.79.176.162])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 10:56:00 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, skiboot@lists.ozlabs.org, oohall@gmail.com,
-        ego@linux.vnet.ibm.com, linuxram@us.ibm.com,
-        pratik.r.sampat@gmail.com, psampat@linux.ibm.com
-Subject: [PATCH v8 1/1] powerpc/powernv: Introduce support and parsing for self-save API
-Date:   Thu, 23 Apr 2020 16:25:57 +0530
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200423105557.29108-1-psampat@linux.ibm.com>
-References: <20200423105557.29108-1-psampat@linux.ibm.com>
+        Thu, 23 Apr 2020 06:56:18 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea173dd0000>; Thu, 23 Apr 2020 03:54:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 03:56:18 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 23 Apr 2020 03:56:18 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 10:56:18 +0000
+Received: from [10.26.73.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 10:56:15 +0000
+Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
+ for a long time
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "Wolfram Sang" <wsa@the-dreams.de>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+CC:     <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200324191217.1829-1-digetx@gmail.com>
+ <20200324191217.1829-2-digetx@gmail.com>
+ <1e259e22-c300-663a-e537-18d854e0f478@nvidia.com>
+ <f59ba318-8e99-c486-fa4d-1ee28a7b203d@gmail.com>
+ <b01cec76-bb39-9fb5-8f6e-4023c075e6b3@gmail.com>
+ <8cd085e1-f9fd-6ec0-9f7a-d5463f176a63@nvidia.com>
+ <db1132ce-53a8-371c-98e0-cb7cd91d5c7d@gmail.com>
+ <fa344989-4cce-0d2c-dc93-4ca546823160@nvidia.com>
+ <bba0a93a-8ec4-eda6-97f3-fb2ab0b9b503@gmail.com>
+ <6f07e5c8-7916-7ea2-2fe7-d05f8f011471@nvidia.com>
+ <77a31b2f-f525-ba9e-f1ae-2b474465bde4@gmail.com>
+ <470b4de4-e98a-1bdc-049e-6259ad603507@nvidia.com>
+ <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
+Date:   Thu, 23 Apr 2020 11:56:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042310-4275-0000-0000-000003C52A99
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042310-4276-0000-0000-000038DAB4F9
-Message-Id: <20200423105557.29108-2-psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 clxscore=1015 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004230078
+In-Reply-To: <d2531fc1-b452-717d-af71-19497e14ef00@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587639261; bh=WJzV1Jv0Ce9gv3BZE2UoDPJdOFk4EzrOQ7ddtDD0IpQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Ta7B/bt77dEvbces/XxV6IU4FQh26/tXcAY+s0a6HoRsYoUFgLQPdJ1iUgUnkG6qh
+         59dwFvLfpdY5/akeYk1yAvgHKsmO8FF72rXcIUEMfMJm5bL+VFaHxGn+uggWde9vRV
+         xZ98JrcqdRWxvrEie1pyeoAJXaANRUB98c1JB+L0r045gnxV6h+aoyd+5PAx/1dm5S
+         9G7++0Vc3lEfyfNUefaBeaTPM1uqwv0x+sJaAbOKv+varrIR2xE5G8NkIk//MY2kaa
+         7SDI6q0MHo/mRXTwKggeNmgsDfTX++qNVxWXnS5iz773Ec31sel+n9zOlwvq0xR4X/
+         I3EjyobghTudA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces and leverages the Self save API. The difference
-between self-save and self-restore is that the value to be saved for the
-SPR does not need to be passed to the call.
 
-Add the new Self Save OPAL API call in the list of OPAL calls.
+On 22/04/2020 15:07, Dmitry Osipenko wrote:
 
-The device tree is parsed looking for the property "ibm,opal-self-save"
-If self-save is supported then for all SPRs self-save is invoked for all
-P9 supported registers. In the case self-save fails corresponding
-self-restore call is invoked as a fallback.
+...
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- arch/powerpc/include/asm/opal-api.h        |  3 +-
- arch/powerpc/include/asm/opal.h            |  1 +
- arch/powerpc/platforms/powernv/idle.c      | 73 ++++++++++++++++++----
- arch/powerpc/platforms/powernv/opal-call.c |  1 +
- 4 files changed, 64 insertions(+), 14 deletions(-)
+>> So I think that part of the problem already existed prior to these
+>> patches. Without your patches I see ...
+>>
+>> [   59.543528] tegra-i2c 7000d000.i2c: i2c transfer timed out
+> 
+> Does this I2C timeout happen with my patches? Could you please post full
+> logs of an older and the recent kernel versions?
 
-diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-index 1dffa3cb16ba..7ba698369083 100644
---- a/arch/powerpc/include/asm/opal-api.h
-+++ b/arch/powerpc/include/asm/opal-api.h
-@@ -214,7 +214,8 @@
- #define OPAL_SECVAR_GET				176
- #define OPAL_SECVAR_GET_NEXT			177
- #define OPAL_SECVAR_ENQUEUE_UPDATE		178
--#define OPAL_LAST				178
-+#define OPAL_SLW_SELF_SAVE_REG			181
-+#define OPAL_LAST				181
- 
- #define QUIESCE_HOLD			1 /* Spin all calls at entry */
- #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 9986ac34b8e2..a370b0e8d899 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -204,6 +204,7 @@ int64_t opal_handle_hmi2(__be64 *out_flags);
- int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
- int64_t opal_unregister_dump_region(uint32_t id);
- int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
-+int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
- int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
- int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
- int64_t opal_pci_get_pbcq_tunnel_bar(uint64_t phb_id, uint64_t *addr);
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index 78599bca66c2..ada7ece24521 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -32,6 +32,11 @@
- #define P9_STOP_SPR_MSR 2000
- #define P9_STOP_SPR_PSSCR      855
- 
-+/* Caching the self-save functionality, lpcr, ptcr support */
-+DEFINE_STATIC_KEY_FALSE(self_save_available);
-+DEFINE_STATIC_KEY_FALSE(is_lpcr_self_save);
-+DEFINE_STATIC_KEY_FALSE(is_ptcr_self_save);
-+
- static u32 supported_cpuidle_states;
- struct pnv_idle_states_t *pnv_idle_states;
- int nr_pnv_idle_states;
-@@ -61,6 +66,35 @@ static bool deepest_stop_found;
- 
- static unsigned long power7_offline_type;
- 
-+/*
-+ * Cache support for SPRs that support self-save as well as kernel save restore
-+ * so that kernel does not duplicate efforts in saving and restoring SPRs
-+ */
-+static void cache_spr_self_save_support(u64 sprn)
-+{
-+	switch (sprn) {
-+	case SPRN_LPCR:
-+		static_branch_enable(&is_lpcr_self_save);
-+		break;
-+	case SPRN_PTCR:
-+		static_branch_enable(&is_ptcr_self_save);
-+		break;
-+	}
-+}
-+
-+static int pnv_save_one_spr(u64 pir, u64 sprn, u64 val)
-+{
-+	if (static_branch_likely(&self_save_available)) {
-+		int rc = opal_slw_self_save_reg(pir, sprn);
-+
-+		if (!rc) {
-+			cache_spr_self_save_support(sprn);
-+			return rc;
-+		}
-+	}
-+	return opal_slw_set_reg(pir, sprn, val);
-+}
-+
- static int pnv_save_sprs_for_deep_states(void)
- {
- 	int cpu;
-@@ -72,6 +106,7 @@ static int pnv_save_sprs_for_deep_states(void)
- 	 * same across all cpus.
- 	 */
- 	uint64_t lpcr_val	= mfspr(SPRN_LPCR);
-+	uint64_t ptcr_val	= mfspr(SPRN_PTCR);
- 	uint64_t hid0_val	= mfspr(SPRN_HID0);
- 	uint64_t hid1_val	= mfspr(SPRN_HID1);
- 	uint64_t hid4_val	= mfspr(SPRN_HID4);
-@@ -84,30 +119,34 @@ static int pnv_save_sprs_for_deep_states(void)
- 		uint64_t pir = get_hard_smp_processor_id(cpu);
- 		uint64_t hsprg0_val = (uint64_t)paca_ptrs[cpu];
- 
--		rc = opal_slw_set_reg(pir, SPRN_HSPRG0, hsprg0_val);
-+		rc = pnv_save_one_spr(pir, SPRN_HSPRG0, hsprg0_val);
- 		if (rc != 0)
- 			return rc;
- 
--		rc = opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-+		rc = pnv_save_one_spr(pir, SPRN_LPCR, lpcr_val);
- 		if (rc != 0)
- 			return rc;
- 
-+		/*
-+		 * No need to check for failure, if firmware fails to save then
-+		 * kernel handles save-restore for PTCR
-+		 */
-+		pnv_save_one_spr(pir, SPRN_PTCR, ptcr_val);
-+
- 		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
--			rc = opal_slw_set_reg(pir, P9_STOP_SPR_MSR, msr_val);
-+			rc = pnv_save_one_spr(pir, P9_STOP_SPR_MSR, msr_val);
- 			if (rc)
- 				return rc;
- 
--			rc = opal_slw_set_reg(pir,
-+			rc = pnv_save_one_spr(pir,
- 					      P9_STOP_SPR_PSSCR, psscr_val);
--
- 			if (rc)
- 				return rc;
- 		}
- 
- 		/* HIDs are per core registers */
- 		if (cpu_thread_in_core(cpu) == 0) {
--
--			rc = opal_slw_set_reg(pir, SPRN_HMEER, hmeer_val);
-+			rc = pnv_save_one_spr(pir, SPRN_HMEER, hmeer_val);
- 			if (rc != 0)
- 				return rc;
- 
-@@ -658,7 +697,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 		mmcr0		= mfspr(SPRN_MMCR0);
- 	}
- 	if ((psscr & PSSCR_RL_MASK) >= pnv_first_spr_loss_level) {
--		sprs.lpcr	= mfspr(SPRN_LPCR);
-+		if (!static_branch_unlikely(&is_lpcr_self_save))
-+			sprs.lpcr	= mfspr(SPRN_LPCR);
- 		sprs.hfscr	= mfspr(SPRN_HFSCR);
- 		sprs.fscr	= mfspr(SPRN_FSCR);
- 		sprs.pid	= mfspr(SPRN_PID);
-@@ -672,7 +712,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 		sprs.mmcr1	= mfspr(SPRN_MMCR1);
- 		sprs.mmcr2	= mfspr(SPRN_MMCR2);
- 
--		sprs.ptcr	= mfspr(SPRN_PTCR);
-+		if (!static_branch_unlikely(&is_ptcr_self_save))
-+			sprs.ptcr	= mfspr(SPRN_PTCR);
- 		sprs.rpr	= mfspr(SPRN_RPR);
- 		sprs.tscr	= mfspr(SPRN_TSCR);
- 		if (!firmware_has_feature(FW_FEATURE_ULTRAVISOR))
-@@ -756,7 +797,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 		goto core_woken;
- 
- 	/* Per-core SPRs */
--	mtspr(SPRN_PTCR,	sprs.ptcr);
-+	if (!static_branch_unlikely(&is_ptcr_self_save))
-+		mtspr(SPRN_PTCR,	sprs.ptcr);
- 	mtspr(SPRN_RPR,		sprs.rpr);
- 	mtspr(SPRN_TSCR,	sprs.tscr);
- 
-@@ -777,7 +819,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
- 	atomic_unlock_and_stop_thread_idle();
- 
- 	/* Per-thread SPRs */
--	mtspr(SPRN_LPCR,	sprs.lpcr);
-+	if (!static_branch_unlikely(&is_lpcr_self_save))
-+		mtspr(SPRN_LPCR,	sprs.lpcr);
- 	mtspr(SPRN_HFSCR,	sprs.hfscr);
- 	mtspr(SPRN_FSCR,	sprs.fscr);
- 	mtspr(SPRN_PID,		sprs.pid);
-@@ -956,8 +999,10 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
- 	 * Program the LPCR via stop-api only if the deepest stop state
- 	 * can lose hypervisor context.
- 	 */
--	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT)
--		opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-+	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT) {
-+		if (!static_branch_unlikely(&is_lpcr_self_save))
-+			opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
-+	}
- }
- 
- /*
-@@ -1298,6 +1343,8 @@ static int pnv_parse_cpuidle_dt(void)
- 		}
- 		for (i = 0; i < nr_idle_states; i++)
- 			pnv_idle_states[i].psscr_mask = temp_u64[i];
-+		if (of_property_read_bool(np, "ibm,opal-self-save"))
-+			static_branch_enable(&self_save_available);
- 	}
- 
- 	/*
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 5cd0f52d258f..11e0ceb90de0 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -223,6 +223,7 @@ OPAL_CALL(opal_handle_hmi,			OPAL_HANDLE_HMI);
- OPAL_CALL(opal_handle_hmi2,			OPAL_HANDLE_HMI2);
- OPAL_CALL(opal_config_cpu_idle_state,		OPAL_CONFIG_CPU_IDLE_STATE);
- OPAL_CALL(opal_slw_set_reg,			OPAL_SLW_SET_REG);
-+OPAL_CALL(opal_slw_self_save_reg,		OPAL_SLW_SELF_SAVE_REG);
- OPAL_CALL(opal_register_dump_region,		OPAL_REGISTER_DUMP_REGION);
- OPAL_CALL(opal_unregister_dump_region,		OPAL_UNREGISTER_DUMP_REGION);
- OPAL_CALL(opal_pci_set_phb_cxl_mode,		OPAL_PCI_SET_PHB_CAPI_MODE);
+I believe that it does, but I need to check.
+
+>> [   59.549036] vdd_sata,avdd_plle: failed to disable
+>>
+>> [   59.553778] Failed to disable avdd-plle: -110
+>>
+>> [   59.558150] tegra-pcie 3000.pcie: failed to disable regulators: -110
+>>
+>>
+>> However, now with your patches the i2c is failing to resume and this
+>> breaks system suspend completely for Tegra30. So far this is the only
+>> board that appears to break.
+>>
+>> So the above issue needs to be fixed and I will chat to Thierry about this.
+> 
+> Okay
+
+So I have been looking at this some more and this starting to all look a
+bit of a mess :-(
+
+Firstly, the Tegra PCI driver suspends late (noirq) as we know. The PCI
+driver will warn if it cannot disable the regulators when suspending but
+does not actually fail suspend. So this warning is just indicating that
+we were unable to disable the regulators.
+
+Now I don't see that we can ever disable the PCI regulators currently
+when entering suspend because ...
+
+1. We are in the noirq phase and so we will not get the completion
+   interrupt for the I2C transfer. I know that you recently added the
+   atomic I2C transfer support, but we can get the regulator framework
+   to use this (I have not looked in much detail so far).
+
+2. Even if the regulator framework supported atomic I2C transfers, we
+   also have the problem that the I2C controller could be runtime-
+   suspended and pm_runtime_get_sync() will not work during during this
+   phase to resume it correctly. This is a problem that needs to be
+   fixed indeed!
+
+3. Then we also have the possible dependency on the DMA driver that is
+   suspended during the noirq phase.
+
+It could be argued that if the PCI regulators are never turned off
+(currently) then we should not even bother and this will likely resolve
+this for now. However, really we should try to fix that correctly.
+
+What I still don't understand is why your patch breaks resume. Even if
+the I2C transfer fails, and is deemed harmless by the client driver, we
+should still be able to suspend and resume correctly.
+
+Cheers
+Jon
+
 -- 
-2.17.1
-
+nvpublic
