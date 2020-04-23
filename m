@@ -2,118 +2,132 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6867C55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A7FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D15BE20784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6468320784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:20:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gP/V70j/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729670AbgDWXUQ (ORCPT
+        id S1729865AbgDWXUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:20:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48652 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728226AbgDWXGe (ORCPT
+        Thu, 23 Apr 2020 19:20:18 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17709 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729589AbgDWXUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:34 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvM-0004c4-1k; Fri, 24 Apr 2020 00:06:28 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-00E6jG-EQ; Fri, 24 Apr 2020 00:06:26 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Apr 2020 19:20:15 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea222a20000>; Thu, 23 Apr 2020 16:20:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 16:20:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 16:20:15 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 23:20:14 +0000
+Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 23:20:13 +0000
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+ <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
+ <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
+Message-ID: <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
+Date:   Thu, 23 Apr 2020 16:20:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Joe Thornber" <ejt@redhat.com>,
-        "Mike Snitzer" <snitzer@redhat.com>, "Hou Tao" <houtao1@huawei.com>
-Date:   Fri, 24 Apr 2020 00:04:51 +0100
-Message-ID: <lsq.1587683028.323647383@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 064/245] dm btree: increase rebalance threshold in
- __rebalance2()
-In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587684002; bh=CPRq9cMt/lN6NzDJ05Bova74TvWpdusnmYaV2OQmpZc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=gP/V70j/RucgH4oE3n6e/1smKYjeDoHMjHN/psXuADH9AlFST3EEkQCEVSqbkKTmi
+         l//C9mwLWXxdia9IrSUrhTGW6ze7BUYFWhX3FVAZAK58EYcTXLDNgqJlWNVFPFaQCN
+         nEwCgtUC2FOTMKw1AAQiGkHY/6RB3ZQCVSl2xBFaU0v04D3L9axdagwKcQnCYGGfFB
+         Emy7GW7lGBBoqnXCTU7FVD/2tAvJbtj9gaTSJIULthE+Odlnp+92m9nTgJy8scK+UZ
+         TDJa5aSuX0SCMCPocR+LZj0Dn0Sc+GZbJNBo/0Iu4xSGa206pLTZUMzlSXJMpKXNpH
+         unAWdnh7miXPA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.83-rc1 review patch.  If anyone has any objections, please let me know.
 
-------------------
-
-From: Hou Tao <houtao1@huawei.com>
-
-commit 474e559567fa631dea8fb8407ab1b6090c903755 upstream.
-
-We got the following warnings from thin_check during thin-pool setup:
-
-  $ thin_check /dev/vdb
-  examining superblock
-  examining devices tree
-    missing devices: [1, 84]
-      too few entries in btree_node: 41, expected at least 42 (block 138, max_entries = 126)
-  examining mapping tree
-
-The phenomenon is the number of entries in one node of details_info tree is
-less than (max_entries / 3). And it can be easily reproduced by the following
-procedures:
-
-  $ new a thin pool
-  $ presume the max entries of details_info tree is 126
-  $ new 127 thin devices (e.g. 1~127) to make the root node being full
-    and then split
-  $ remove the first 43 (e.g. 1~43) thin devices to make the children
-    reblance repeatedly
-  $ stop the thin pool
-  $ thin_check
-
-The root cause is that the B-tree removal procedure in __rebalance2()
-doesn't guarantee the invariance: the minimal number of entries in
-non-root node should be >= (max_entries / 3).
-
-Simply fix the problem by increasing the rebalance threshold to
-make sure the number of entries in each child will be greater
-than or equal to (max_entries / 3 + 1), so no matter which
-child is used for removal, the number will still be valid.
-
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/md/persistent-data/dm-btree-remove.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
---- a/drivers/md/persistent-data/dm-btree-remove.c
-+++ b/drivers/md/persistent-data/dm-btree-remove.c
-@@ -203,7 +203,13 @@ static void __rebalance2(struct dm_btree
- 	struct btree_node *right = r->n;
- 	uint32_t nr_left = le32_to_cpu(left->header.nr_entries);
- 	uint32_t nr_right = le32_to_cpu(right->header.nr_entries);
--	unsigned threshold = 2 * merge_threshold(left) + 1;
-+	/*
-+	 * Ensure the number of entries in each child will be greater
-+	 * than or equal to (max_entries / 3 + 1), so no matter which
-+	 * child is used for removal, the number will still be not
-+	 * less than (max_entries / 3).
-+	 */
-+	unsigned int threshold = 2 * (merge_threshold(left) + 1);
- 
- 	if (nr_left + nr_right < threshold) {
- 		/*
-
+On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
+>
+> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> +static int chan_capture_kthread_start(void *data)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 int err =3D 0;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 set_freezable();
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 while (1) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 try_to_freeze();
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 wait_event_interruptible(chan->start_wait,
+>>> + !list_empty(&chan->capture) ||
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 kthread_should_stop());
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (kthread_should_stop())
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 /*
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 * Source is not streaming if error is non-zero.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 * So, do not dequeue buffers on capture error.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 if (err)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
+>> This will result in an endless loop, I suppose it wasn't the intention.
+>
+> no it will not. on error we report vb2_queue_error which will do=20
+> streaming stop request.
+>
+> So thread will be stopped on streaming stop request thru kthread stop=20
+> signal
+To be clear on error it reports vb2 queue error and waits for stop=20
+streaming to happen
