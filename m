@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCCFC55186
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580A3C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23112077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7262077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgDWXVh (ORCPT
+        id S1729792AbgDWXVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:21:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48500 "EHLO
+        Thu, 23 Apr 2020 19:21:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48524 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728188AbgDWXGc (ORCPT
+        by vger.kernel.org with ESMTP id S1728197AbgDWXGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:32 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvK-0004b3-Jp; Fri, 24 Apr 2020 00:06:26 +0100
+        id 1jRkvL-0004bF-0G; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-00E6ho-Cx; Fri, 24 Apr 2020 00:06:25 +0100
+        id 1jRkvJ-00E6i3-Ih; Fri, 24 Apr 2020 00:06:25 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,14 +36,15 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Arnd Bergmann" <arnd@arndb.de>, "David Sterba" <dsterba@suse.com>,
+        "Xu Wen" <wen.xu@gatech.edu>, "David Sterba" <dsterba@suse.com>,
+        "Gu Jinxiang" <gujx@cn.fujitsu.com>, "Qu Wenruo" <wqu@suse.com>,
         "Ben Hutchings" <ben.hutchings@codethink.co.uk>
-Date:   Fri, 24 Apr 2020 00:04:33 +0100
-Message-ID: <lsq.1587683028.39784643@decadent.org.uk>
+Date:   Fri, 24 Apr 2020 00:04:36 +0100
+Message-ID: <lsq.1587683028.60741686@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 046/245] btrfs: tree-checker: use %zu format string
- for size_t
+Subject: [PATCH 3.16 049/245] btrfs: tree-checker: Detect invalid and
+ empty essential trees
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,37 +58,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 7cfad65297bfe0aa2996cd72d21c898aa84436d9 upstream.
+commit ba480dd4db9f1798541eb2d1c423fc95feee8d36 upstream.
 
-The return value of sizeof() is of type size_t, so we must print it
-using the %z format modifier rather than %l to avoid this warning
-on some architectures:
+A crafted image has empty root tree block, which will later cause NULL
+pointer dereference.
 
-fs/btrfs/tree-checker.c: In function 'check_dir_item':
-fs/btrfs/tree-checker.c:273:50: error: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'u32' {aka 'unsigned int'} [-Werror=format=]
+The following trees should never be empty:
+1) Tree root
+   Must contain at least root items for extent tree, device tree and fs
+   tree
 
-Fixes: 005887f2e3e0 ("btrfs: tree-checker: Add checker for dir item")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+2) Chunk tree
+   Or we can't even bootstrap as it contains the mapping.
+
+3) Fs tree
+   At least inode item for top level inode (.).
+
+4) Device tree
+   Dev extents for chunks
+
+5) Extent tree
+   Must have corresponding extent for each chunk.
+
+If any of them is empty, we are sure the fs is corrupted and no need to
+mount it.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=199847
+Reported-by: Xu Wen <wen.xu@gatech.edu>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Tested-by: Gu Jinxiang <gujx@cn.fujitsu.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 4.4: Pass root instead of fs_info to generic_err()]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/tree-checker.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/tree-checker.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
 --- a/fs/btrfs/tree-checker.c
 +++ b/fs/btrfs/tree-checker.c
-@@ -223,7 +223,7 @@ static int check_dir_item(struct btrfs_r
- 		/* header itself should not cross item boundary */
- 		if (cur + sizeof(*di) > item_size) {
- 			dir_item_err(root, leaf, slot,
--		"dir item header crosses item boundary, have %lu boundary %u",
-+		"dir item header crosses item boundary, have %zu boundary %u",
- 				cur + sizeof(*di), item_size);
- 			return -EUCLEAN;
- 		}
+@@ -456,9 +456,22 @@ static int check_leaf(struct btrfs_root
+ 	 * skip this check for relocation trees.
+ 	 */
+ 	if (nritems == 0 && !btrfs_header_flag(leaf, BTRFS_HEADER_FLAG_RELOC)) {
++		u64 owner = btrfs_header_owner(leaf);
+ 		struct btrfs_root *check_root;
+ 
+-		key.objectid = btrfs_header_owner(leaf);
++		/* These trees must never be empty */
++		if (owner == BTRFS_ROOT_TREE_OBJECTID ||
++		    owner == BTRFS_CHUNK_TREE_OBJECTID ||
++		    owner == BTRFS_EXTENT_TREE_OBJECTID ||
++		    owner == BTRFS_DEV_TREE_OBJECTID ||
++		    owner == BTRFS_FS_TREE_OBJECTID ||
++		    owner == BTRFS_DATA_RELOC_TREE_OBJECTID) {
++			generic_err(root, leaf, 0,
++			"invalid root, root %llu must never be empty",
++				    owner);
++			return -EUCLEAN;
++		}
++		key.objectid = owner;
+ 		key.type = BTRFS_ROOT_ITEM_KEY;
+ 		key.offset = (u64)-1;
+ 
 
