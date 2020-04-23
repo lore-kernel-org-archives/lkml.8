@@ -2,212 +2,125 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFFFC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2A6C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D971820781
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3MX+cfG"
+	by mail.kernel.org (Postfix) with ESMTP id 5D8F62071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 18:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587666162;
+	bh=xFQ9Q3vM+7y9hc9c9uKbOxxkbGkui3VYraUb1WBywZc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oTLdIMqPwt8VKELSdn880wVYt9Cruc1GYNVG9eVNP9blKydw7CJtfrkmNZ1CYIDLj
+	 A6W/EQ9+mGYGBj68MLjedHalhpQRwt3UOJJh9ft7Bp8cH4IkSLikw3zEIa+4GvyAUY
+	 l/pJ44BTKqzvcnrxXS6Ji4mlBCC4YORqa4o/B+bA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbgDWSU0 (ORCPT
+        id S1730193AbgDWSWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
+        Thu, 23 Apr 2020 14:22:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730102AbgDWSU0 (ORCPT
+        with ESMTP id S1730074AbgDWSWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:20:26 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B73C09B042
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:20:24 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id w29so5689009qtv.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:20:24 -0700 (PDT)
+        Thu, 23 Apr 2020 14:22:41 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A4BC09B043
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:22:40 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u10so5548668lfo.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:22:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cT5ATBuUiTdXH82UTD5odx305gB5xjb75K740f5eMPs=;
-        b=o3MX+cfGQ8qSY+2N9+UlkZSOhS2dfjgCFVabO/QNwiXpnSSc9WWra2U9f2xEQUYcUc
-         IHf0TCV0P8QFI5hz9/HaRUyHi8SjisWGLTQkBzgmDGIuS75gOsTzp8NcpFWwsYZr7L3E
-         G+m0fY2La0uEHOQIqhlpDYpoIua0wNUtrc3aH00DEPsmPVoEriDd+q5nUW99DZY11hTc
-         VGk3Zi68G48DUwTPkthkbeobo9Ky+iYCf/3DSPXtNgB2mwV07DfgMqcex4dz2CtaOTDO
-         Pcu5LuRrWoRuRk9VUL6Ll+fajn8HdU2bU6ly87taZYPa1mRK2ZIbnb1L3nd6Rrte3tLx
-         OKCQ==
+         :cc;
+        bh=LscwPz73Lt0pgGTl+o/FebA5dRZodM4/3xJx4XGRFWs=;
+        b=ZgjkI/0hqXjrYL+1zMORXDCbPO/cbFMR+PA+1RlleHhrFArqqZqVDrF2naxr2O/nZ8
+         8DcrKKqA2CocQV8SGpC3aPyDpPzeFJT3QtO/W+6TFqOD/cqopRZBQi+Y/GW8PBeaNBp0
+         IcU9neWFV5iGS7i3ZNxhsiHXnEpr7As01GU3A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cT5ATBuUiTdXH82UTD5odx305gB5xjb75K740f5eMPs=;
-        b=tnPTkWrjZpOetYh6Tc5o8HRfkTSnyZboYYBirZv9cKE6/c4i2Sd/M5VINCp5aEIy8K
-         eqW6PGJfHZGaOP1gwCNNPo8GeBvThQPfES1XUVeEx06HegP2v4XJzmMta3MFuGxFdICW
-         npop8GVCLH780AqKClSLb0bDC/1xbRugAheGkbvIErzcvFhmyCnTp2/XlaFARAni9bAu
-         TavOx9Lz5RLhxQQgxvfK0pG1J0vJpW2SAIt7J+BMDC0tyCGWhFGHMPFnUBRUL5aMQzSq
-         z1wewG00/M/cDGT0pwYefLapRoUoaKJ/xSxIqnnE0GPLgNg1d5tN1+igaD9XfnSxA05M
-         ckQw==
-X-Gm-Message-State: AGi0PuaCxxtkuUCr99oolGJHkP6zMnrPzL5NIA3TjRtKLSYJvIPsLx4G
-        01SY03iu4UcNuAZkxkg8GQkDi+GoxdbZfiWr4ME=
-X-Google-Smtp-Source: APiQypLQ+A5G+am3KfrM/gyUvuSvnsHkNi9N1yvzsrOeq9ZksxmdWo6aDMZE9VUwTHe86G4UpkAKY7Gw2tqumq4Ti/c=
-X-Received: by 2002:ac8:7681:: with SMTP id g1mr5259933qtr.311.1587666023963;
- Thu, 23 Apr 2020 11:20:23 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=LscwPz73Lt0pgGTl+o/FebA5dRZodM4/3xJx4XGRFWs=;
+        b=B3ofI5oMszXS10Pv91LU/XJzq8yOrSUlYaxDGP/PK2YsQV9TBpaY62dSr1BJYifIOK
+         4jTWYAnxfH7nJC96fwLH7cf8a9f58AhTsc6kYtW3/jU4t7BWC98djXHT97BuG7t3pHmF
+         +gVjUglUPRKxvIt2/lSDKZUEx3nAraxhu5RzMtD99ThMTayCv8aBMFDPpi94b2SiJUdX
+         FPVCVAOdrZwANuPBGkZoq8F1HFLQJsSsqVJqiAXUoZPD4khr17ezPZ7jpdaY84ePzOj1
+         KJ128vXFKP6LzynmLB87tByveM/gpCK2riJOxAWFxTbsn4wDxlbLwPrJRNhaEXblJrx7
+         c48A==
+X-Gm-Message-State: AGi0PubljOz1HbiFg0AdUXv5rsS18rBtulWKKyAstFptOy9ZXacqM7Gu
+        itv93Tpsu2i+mTV0Ib3e/kPNbhNchqM=
+X-Google-Smtp-Source: APiQypJ1Bg366jRuX9u7PCtUBgi8YSLddiWXUYbV+5w8nrPhUi/akSy08YoYRgTsdCwbmbnLbDgNXg==
+X-Received: by 2002:ac2:4859:: with SMTP id 25mr3263545lfy.59.1587666157504;
+        Thu, 23 Apr 2020 11:22:37 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id d3sm2821991lfq.63.2020.04.23.11.22.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 11:22:36 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id g10so5508080lfj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 11:22:36 -0700 (PDT)
+X-Received: by 2002:a19:9109:: with SMTP id t9mr3320601lfd.10.1587666155908;
+ Thu, 23 Apr 2020 11:22:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584689540-5227-1-git-send-email-weiyi.lu@mediatek.com> <1584689540-5227-3-git-send-email-weiyi.lu@mediatek.com>
-In-Reply-To: <1584689540-5227-3-git-send-email-weiyi.lu@mediatek.com>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Thu, 23 Apr 2020 20:20:12 +0200
-Message-ID: <CAFqH_523KpaCwhhHDKVCKaJgJUPc+7r03f6U=1XiNNQ1PaNN5w@mail.gmail.com>
-Subject: Re: [PATCH v13 02/11] dt-bindings: soc: Add MT8183 power dt-bindings
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
+References: <20200423173955.GA193359@google.com>
+In-Reply-To: <20200423173955.GA193359@google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 23 Apr 2020 11:22:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj7f3HJxmhP_SKQoFwuSx-OQgvp41pbgJN7TtspQj=RUA@mail.gmail.com>
+Message-ID: <CAHk-=wj7f3HJxmhP_SKQoFwuSx-OQgvp41pbgJN7TtspQj=RUA@mail.gmail.com>
+Subject: Re: [GIT PULL] PCI fixes for v5.7
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>,
+        Todd Poynor <toddpoynor@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Weiyi Lu,
-
-Thank you for the patch. Just a trivial comment below.
-
-Missatge de Weiyi Lu <weiyi.lu@mediatek.com> del dia dv., 20 de mar=C3=A7
-2020 a les 8:33:
+On Thu, Apr 23, 2020 at 10:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> Add power dt-bindings of MT8183 and introduces "BASIC" and
-> "SUBSYS" clock types in binding document.
-> The "BASIC" type is compatible to the original power control with
-> clock name [a-z]+[0-9]*, e.g. mm, vpu1.
-> The "SUBSYS" type is used for bus protection control with clock
-> name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
->
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> ---
->  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 20 ++++++++++++++--=
--
->  include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++=
-++++++
->  2 files changed, 43 insertions(+), 3 deletions(-)
->  create mode 100644 include/dt-bindings/power/mt8183-power.h
->
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/=
-Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> index 2bc3677..1baaa6f 100644
-> --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> @@ -15,6 +15,7 @@ power/power-domain.yaml. It provides the power domains =
-defined in
->  - include/dt-bindings/power/mt2701-power.h
->  - include/dt-bindings/power/mt2712-power.h
->  - include/dt-bindings/power/mt7622-power.h
-> +- include/dt-bindings/power/mt8183-power.h
->
->  Required properties:
->  - compatible: Should be one of:
-> @@ -27,12 +28,16 @@ Required properties:
->         - "mediatek,mt7623a-scpsys": For MT7623A SoC
->         - "mediatek,mt7629-scpsys", "mediatek,mt7622-scpsys": For MT7629 =
-SoC
->         - "mediatek,mt8173-scpsys"
-> +       - "mediatek,mt8183-scpsys"
->  - #power-domain-cells: Must be 1
->  - reg: Address range of the SCPSYS unit
->  - infracfg: must contain a phandle to the infracfg controller
-> -- clock, clock-names: clocks according to the common clock binding.
-> -                      These are clocks which hardware needs to be
-> -                      enabled before enabling certain power domains.
-> +- clock, clock-names: Clocks according to the common clock binding.
-> +                      Some SoCs have to groups of clocks.
-> +                      BASIC clocks need to be enabled before enabling th=
-e
-> +                      corresponding power domain.
-> +                      SUBSYS clocks need to be enabled before releasing =
-the
-> +                      bus protection.
->         Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
->         Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio=
-", "vdec"
->         Required clocks for MT6765: MUX: "mm", "mfg"
-> @@ -43,6 +48,15 @@ Required properties:
->         Required clocks for MT7622 or MT7629: "hif_sel"
->         Required clocks for MT7623A: "ethif"
->         Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
-> +       Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "=
-isp",
-> +                                          "vpu", "vpu1", "vpu2", "vpu3"
-> +                                   SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3=
-",
-> +                                           "mm-4", "mm-5", "mm-6", "mm-7=
-",
-> +                                           "mm-8", "mm-9", "isp-0", "isp=
--1",
-> +                                           "cam-0", "cam-1", "cam-2", "c=
-am-3",
-> +                                           "cam-4", "cam-5", "cam-6", "v=
-pu-0",
-> +                                           "vpu-1", "vpu-2", "vpu-3", "v=
-pu-4",
-> +                                           "vpu-5"
->
->  Optional properties:
->  - vdec-supply: Power supply for the vdec power domain
-> diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindin=
-gs/power/mt8183-power.h
-> new file mode 100644
-> index 0000000..5c0c8c7
-> --- /dev/null
-> +++ b/include/dt-bindings/power/mt8183-power.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0
+>   - Workaround Apex TPU class code issue that prevents resource
+>     assignment (Bjorn Helgaas)
 
-This line should end with a '*/'
+Hmm.
 
-> + *
+I have no objections to that patch, but I do wonder if it might not be
+better to try to actually assign the resource at enable_resource time?
 
-And this line start with a '/'
+Put another way: if I read the situation correctly, what happened is
+that the hardware is broken and doesn't have the proper class code,
+and so the resource is not initially assigned at all. But then the
+driver matches on the device ID, and tries to use the device, and then
+we get into trouble at pci_enable_resources().
 
+But is there any reason we don't just at least try to do
+pci_assign_resource() at that point? Yeah, because we didn't do it at
+bus scanning, maybe there's no room for it, but that's what we do for
+the PCI ROM resources (which I think we also don't claim by default)
+when drivers ask to map them.
 
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Weiyi Lu <weiyi.lu@mediatek.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
-> +#define _DT_BINDINGS_POWER_MT8183_POWER_H
-> +
-> +#define MT8183_POWER_DOMAIN_AUDIO      0
-> +#define MT8183_POWER_DOMAIN_CONN       1
-> +#define MT8183_POWER_DOMAIN_MFG_ASYNC  2
-> +#define MT8183_POWER_DOMAIN_MFG                3
-> +#define MT8183_POWER_DOMAIN_MFG_CORE0  4
-> +#define MT8183_POWER_DOMAIN_MFG_CORE1  5
-> +#define MT8183_POWER_DOMAIN_MFG_2D     6
-> +#define MT8183_POWER_DOMAIN_DISP       7
-> +#define MT8183_POWER_DOMAIN_CAM                8
-> +#define MT8183_POWER_DOMAIN_ISP                9
-> +#define MT8183_POWER_DOMAIN_VDEC       10
-> +#define MT8183_POWER_DOMAIN_VENC       11
-> +#define MT8183_POWER_DOMAIN_VPU_TOP    12
-> +#define MT8183_POWER_DOMAIN_VPU_CORE0  13
-> +#define MT8183_POWER_DOMAIN_VPU_CORE1  14
-> +
-> +#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
-> --
-> 1.8.1.1.dirty
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+The pci/rom.c code does
+
+        /* assign the ROM an address if it doesn't have one */
+        if (res->parent == NULL && pci_assign_resource(pdev, PCI_ROM_RESOURCE))
+                return NULL;
+
+could we perhaps do the same in enable_resource?
+
+Your patch is obviously much better for an -rc kernel, so this is more
+of a longer-term "wouldn't it be less fragile to ..." query.
+
+Alternatively, maybe we should do resource assignment even for
+PCI_CLASS_NOT_DEFINED?
+
+                     Linus
