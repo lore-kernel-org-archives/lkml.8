@@ -2,63 +2,138 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B2CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143ADC55191
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A094A20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B8A20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="p7MdlFTX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LS7t6pzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgDWROs (ORCPT
+        id S1729881AbgDWRPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:14:48 -0400
-Received: from forward501p.mail.yandex.net ([77.88.28.111]:41889 "EHLO
-        forward501p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729674AbgDWROr (ORCPT
+        Thu, 23 Apr 2020 13:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729674AbgDWRPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 13:14:47 -0400
-X-Greylist: delayed 410 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 13:14:46 EDT
-Received: from mxback10g.mail.yandex.net (mxback10g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:171])
-        by forward501p.mail.yandex.net (Yandex) with ESMTP id 2DE6C350030C;
-        Thu, 23 Apr 2020 20:07:50 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback10g.mail.yandex.net (mxback/Yandex) with ESMTP id CKPOo3RA33-7nHuvsHP;
-        Thu, 23 Apr 2020 20:07:49 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1587661669;
-        bh=q10Ol93uIKqGljLLQN5m691CxeTW2gdHmj35roTjhTU=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=p7MdlFTXHRMgT+FLLI6oAFz/evPhc+O5Sz7+ia10pTyRMYMv6AQ28SG7Xk4e5I664
-         kGKqf3RTIpB822NMGLapGVjpFp+EC8bpp1k6bpc1zucfkbHzpqjHwfLcnuaeml88iN
-         2nyqPzgOQeGHNnecrJAFN2yhgEMQx2Mye+M3Ese4=
-Authentication-Results: mxback10g.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by sas2-ace8bd7a4730.qloud-c.yandex.net with HTTP;
-        Thu, 23 Apr 2020 20:07:49 +0300
-From:   Evgeniy Polyakov <zbr@ioremap.net>
-Envelope-From: drustafa@yandex.ru
-To:     Greg KH <greg@kroah.com>, Akira Shimahara <akira215corp@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200423144116.GA7319@kroah.com>
-References: <20200414170248.299534-1-akira215corp@gmail.com> <20200423144116.GA7319@kroah.com>
-Subject: Re: [PATCH] Changes in w1_therm.c and adding w1_therm.h
+        Thu, 23 Apr 2020 13:15:34 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3885EC09B044
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:15:32 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u16so7373477wmc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 10:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fsz6yPmVodHIAGKUEkvYHzu/ExufdaJ3lV6EfBbjr/M=;
+        b=LS7t6pzEmK1UKWLE+ifdRC16uMDswKS7v+2IPC/TfosO7rAl+qZLKWbjscW8fVMt3v
+         1ma+2i4218WDyTaV/Nz10zY4H9KwN0u+ZSJbgg+iuqYMRImmBIYJNaO+GRPQWuMQ7nEn
+         EIONqnAxXg1Zp2PZZeAdugJxMad9J6bW2gsLRpfAY8WjqySQzErIR3g+hDarox9ZuWqR
+         GnpnaUL95V7dBN0xZRAeWhHOTZeyLhRGhJzZ9oKaENvK3QAePz+ztUbyLI1n2HD+wHEF
+         e6D2NNwm3CcIPwegKXhdh8ViXwMsS8Mgh0dzwsOBoq4UFCZZn+OwOqe34GGtYiZxNz0D
+         Dn2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fsz6yPmVodHIAGKUEkvYHzu/ExufdaJ3lV6EfBbjr/M=;
+        b=mrvl6KT6vaqGTAOqGBzH2QbKqWyrAF2jJDgk/0S0h1NdILUoepRuEi/VaIlY6Ivf3T
+         NNj/iYBRXFTKYKYmju9OAzMcOo+aCtvQIu1Mhw9MbVaQ/RZHs9Xrg8wfLTfZjk/B4wVU
+         d8mspU9MRxzgSKOyE2jN+efKiGdxRoF59TZPAuErB/waKxU6ZHNiZ6M00chSaJC3WmeY
+         11FMiQPVAuEguRFC4QoZvnAQvJaTkpwzPFRISvUH9qKJwMq9skkkiJhlIj2Ii62VgvvT
+         IfBuhs9NmnH0BmQKhvxeY4z0EdxL9hX8mIpOM84AvKvOaeNY/H45IpQIZ8zxDeGnZaEP
+         aXNA==
+X-Gm-Message-State: AGi0PubjTMQGlgJE0XuZsLMucENRje+qFOgw8SKg06Im8eFFRf4cMfSE
+        Iddh/w5px2aS52ggeVUgo26NmHIBL+Q=
+X-Google-Smtp-Source: APiQypLpzfjeHcKORCtuutm1uyBf7sFOUFW7Mb8uOr8lGTYIICuH1CY1N6lSdxp/QVB17oX17RO+pA==
+X-Received: by 2002:a05:600c:2194:: with SMTP id e20mr5154639wme.22.1587662130818;
+        Thu, 23 Apr 2020 10:15:30 -0700 (PDT)
+Received: from [192.168.43.23] ([37.167.216.250])
+        by smtp.googlemail.com with ESMTPSA id a20sm4965935wra.26.2020.04.23.10.15.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 10:15:30 -0700 (PDT)
+Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs
+ in Energy Model
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200410084210.24932-1-lukasz.luba@arm.com>
+ <20200410084210.24932-5-lukasz.luba@arm.com>
+ <20200423151250.GB65632@linaro.org>
+ <ff1c8cc5-f64d-6156-7d30-97b8426c6f99@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <ddf89887-4fa5-f2ca-d62a-9158f7d29db2@linaro.org>
+Date:   Thu, 23 Apr 2020 19:15:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Thu, 23 Apr 2020 20:07:49 +0300
-Message-Id: <307231587661588@mail.yandex.ru>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+In-Reply-To: <ff1c8cc5-f64d-6156-7d30-97b8426c6f99@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On 23/04/2020 18:57, Lukasz Luba wrote:
+> 
+> 
+> On 4/23/20 4:12 PM, Daniel Lezcano wrote:
+>> On Fri, Apr 10, 2020 at 09:42:04AM +0100, Lukasz Luba wrote:
+>>> Add support for other devices that CPUs. The registration function
+>>> does not require a valid cpumask pointer and is ready to handle new
+>>> devices. Some of the internal structures has been reorganized in
+>>> order to
+>>> keep consistent view (like removing per_cpu pd pointers). To track usage
+>>> of the Energy Model structures, they are protected with kref.
+>>
+>> Why not add the energy model structure in the struct device directly?
+> 
+> Do you mean this structure?
+> https://elixir.bootlin.com/linux/latest/source/include/linux/device.h#L537
+> 
+> and to put something like:
+> struct device {
+> ...
+>     struct dev_pm_domain    *pm_domain;
+> #ifdef CONFIG_ENERGY_MODEL
+>     struct em_perf_domain    *em_pd;
+> #endif
+> ...
+> };
 
-23.04.2020, 17:41, "Greg KH" <greg@kroah.com>:
-> You do not document any of these new sysfs files, why not?
+Yes, exactly.
 
-Looks like there are bigger isues with the patch that I've missed, and if I understood correctly, Akira asked to drop this patch
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
