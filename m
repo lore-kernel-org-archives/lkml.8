@@ -2,139 +2,412 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EDCC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B96FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA00206EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80102071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 15:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JCwTXSOM"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="lP5rt/ZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbgDWP3b (ORCPT
+        id S1729226AbgDWPbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:29:31 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31585 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729081AbgDWP3a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:29:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587655769;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FcLTDydwrIahBOgkgaYdQfK7uHJ+oa3gx9sDiQ6LppA=;
-        b=JCwTXSOMy4G41Mwe6QqOEWhzT5BEkQtm2ilPCoMvxzZpzMIt3jGtJusGv3+erGUDTzfli0
-        xS0GkI+qIbi2vrwsTWmh2Bbkzy4garTtGQza1u7P3/pr8VeMXo0P/O/Tw/yA7nXDcfX1vo
-        S1aLfhAffzwXUbn/SxJFrm4pqylpQEU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-x_b0bV3jOnK4tEUDZjbD9Q-1; Thu, 23 Apr 2020 11:29:25 -0400
-X-MC-Unique: x_b0bV3jOnK4tEUDZjbD9Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EAFD107ACF4;
-        Thu, 23 Apr 2020 15:29:24 +0000 (UTC)
-Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AA0910021B3;
-        Thu, 23 Apr 2020 15:29:23 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 10:29:21 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: linux-next: Tree for Apr 23 (objtool warnings)
-Message-ID: <20200423152921.shhjokjka7pwuyqr@treble>
-References: <20200423174104.239dffab@canb.auug.org.au>
- <1239aab1-84b4-02c3-a819-2c35dfa67a1c@infradead.org>
+        Thu, 23 Apr 2020 11:31:25 -0400
+Received: from mail-eopbgr750047.outbound.protection.outlook.com ([40.107.75.47]:23254
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729055AbgDWPbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:31:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oHmxJDlzHtM/XyBRiGA8Z0xioCZpeCXR1iuHzXdPmkk+dG2j1XCrgRrXGsTyPVMOTnjAJpwt671+KUTyQmCoqGq3Eh+elN4bVs7VFDt2FfyZnNftf1cF9r/YzNb+DExKgbNOT0E+9zEUTh8+KnVn2V+9HGGVKRfOh2NW7ufwRwc3cs8Fyir0CMMBuKD3JWtrLn+WckeBCWG+o1vSSZ0QIUzx4QatCcExFCIX2nY+Jg/DUhQdEkprE14z+ekAQOF9Uc3CGYAvqP5JwKppv505JBh5KBsOxHHgjMlWxb0GQI3IomUyYBSJbOBYmgy6PNaKl4Mn6DShFTfIK0hFCD7Lqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jWeoGUPUWKiPLj8zDV+vKK3D4ZDnsst/miMcSMnWyc8=;
+ b=kvKGkbpUFEZEKRsqkNkf26PMEWbI3PVZXJpx362e62CGk7nqjjDMjUbgW70YP+ur5pTfqMOoCyo36I7Q7giZC5bdH+o/54Ap9pBarZerKZKEu9qEIBjeJQ076G9zGWohDWpwVgOfSQ8JWDi8pvvXVZAJWSsBTM49rio+A/Gt23zN0jaFJlI6j6a5NZxwRazRY+yxWcxG0xUzcIArunWfHx2RR2gS0RmTCGBoPdGYkBq/gIs8kXvqB5sJ14C66AHs/rZz3Ij4t8IldYl5sbEyqipulyaBF3oP7O6Ym0FuHrangiMof5E4rtYE0DiOn129Cei8Raq9EvXHxk9XmKpE2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jWeoGUPUWKiPLj8zDV+vKK3D4ZDnsst/miMcSMnWyc8=;
+ b=lP5rt/ZKZWBgHnpBKe8y/BayNhVCx695h803aQvtwXSgT32QPaZOucWuRUDg2f6PftsS6PLQ61hB6YE/l/mTavf5ItfZn7BAbQ+IbzWGY5AqHxTg4c3veDgU4pieakcEt9dcY6a8En72ldnFydlGM1f37LwmGg5eS91Yx1Qhg6s=
+Received: from SN6PR01CA0003.prod.exchangelabs.com (2603:10b6:805:b6::16) by
+ CY4PR02MB2726.namprd02.prod.outlook.com (2603:10b6:903:124::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
+ 2020 15:31:18 +0000
+Received: from SN1NAM02FT005.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:b6:cafe::c6) by SN6PR01CA0003.outlook.office365.com
+ (2603:10b6:805:b6::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend
+ Transport; Thu, 23 Apr 2020 15:31:18 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; ideasonboard.com; dkim=none (message not signed)
+ header.d=none;ideasonboard.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT005.mail.protection.outlook.com (10.152.72.117) with Microsoft SMTP
+ Server id 15.20.2937.19 via Frontend Transport; Thu, 23 Apr 2020 15:31:17
+ +0000
+Received: from [149.199.38.66] (port=42623 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jRdnm-0003mQ-6r; Thu, 23 Apr 2020 08:30:10 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jRdor-00054A-Fk; Thu, 23 Apr 2020 08:31:17 -0700
+Received: from [172.23.82.133] (helo=xhdvsagar40x.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jRdol-000505-GR; Thu, 23 Apr 2020 08:31:11 -0700
+From:   Vishal Sagar <vishal.sagar@xilinx.com>
+To:     Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        hans.verkuil@cisco.com, Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v12 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
+Date:   Thu, 23 Apr 2020 21:00:37 +0530
+Message-Id: <20200423153038.106453-2-vishal.sagar@xilinx.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200423153038.106453-1-vishal.sagar@xilinx.com>
+References: <20200423153038.106453-1-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1239aab1-84b4-02c3-a819-2c35dfa67a1c@infradead.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(376002)(39860400002)(46966005)(54906003)(110136005)(8676002)(81156014)(81166007)(9786002)(36756003)(7416002)(316002)(82310400002)(356005)(5660300002)(47076004)(82740400003)(4326008)(8936002)(6666004)(966005)(186003)(44832011)(2616005)(336012)(7696005)(478600001)(426003)(70586007)(1076003)(70206006)(26005)(2906002);DIR:OUT;SFP:1101;
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 99275f51-c3d3-497f-db5d-08d7e79b5df1
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2726:
+X-Microsoft-Antispam-PRVS: <CY4PR02MB27269C9E842637D4FE3F3505A7D30@CY4PR02MB2726.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03827AF76E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lOBjL2RxPsd6zYuJ4VubUoB0LQhULeHdpTHsCqXLZnAlIE3/hhNmTK5S4OY9lgxUEcYFq7omKakUQuTXPPWpOz0tSwmoe7qD2P+xdRTDbswWW341ykAtuSIYURdK81ZAHxFVff3iE6gW39zD65zCCyi/wzjU04aYyhDuyw8oShTeE1jL/m9x2Voj6odwL9yhtoMBsg/lW9Awo/7F7jVdPGydGVXQ4eHaYiZ4thMoqxZu2BUheMhTIgOboVilxo9xpXOrriDt4bnji1EttuHgY02hGU/BZYAjfo9T8ClcrdZS4nkMdcWlRPcjHHNUihUilzAsRdgUYjA+TEwFpKaKTPAXfv/zt2alQvbCAAN4dHv1LzJMD32IsaS6a060OUdGwRy2iOA8FHae6rThOrpgdkgZHhBcCLGOOdPvb37HNJ0WIKND6S8Yfi7ms0O3bVls+UZRkOcyHXfUYXvyn8ZS+m7arSTWFXQgyQE7qmEXy+F4G6NzIpKSIo/oJs3j+h2AWeyKy3twsqlGMl/P4b2+YJqpX2YOxD1uTXaUiZ+MBtLtFarnPQhW8D+p/CKkpVsKJPJUcEvhVNWjW3k4dZsWww==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2020 15:31:17.8103
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99275f51-c3d3-497f-db5d-08d7e79b5df1
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 07:59:31AM -0700, Randy Dunlap wrote:
-> On 4/23/20 12:41 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200422:
-> > 
-> 
-> on x86_64:
+Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
 
-More truncation of functions by CONFIG_USBAN_TRAP.  Kees?
+The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+D-PHY in Rx mode and a Video Format Bridge.
 
-> drivers/target/target_core_xcopy.o: warning: objtool: target_xcopy_do_work()+0x6dd: unreachable instruction
+Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+v12
+- Moved to yaml format
+- Update CSI-2 and D-PHY
+- Mention that bindings for D-PHY not here
+- reset -> video-reset
 
-0000000000000170 <target_xcopy_read_source>:
-     170:	55                   	push   %rbp
-     171:	48 89 e5             	mov    %rsp,%rbp
-     174:	48 81 ec 40 03 00 00 	sub    $0x340,%rsp
-     17b:	65 48 8b 0c 25 28 00 	mov    %gs:0x28,%rcx
-     182:	00 00 
-     184:	48 89 4d f8          	mov    %rcx,-0x8(%rbp)
-     188:	31 c9                	xor    %ecx,%ecx
-     18a:	83 e2 07             	and    $0x7,%edx
-     18d:	75 34                	jne    1c3 <target_xcopy_read_source+0x53>
-     18f:	48 89 f0             	mov    %rsi,%rax
-     192:	83 e0 07             	and    $0x7,%eax
-     195:	75 2c                	jne    1c3 <target_xcopy_read_source+0x53>
-     197:	48 8d 95 d0 fc ff ff 	lea    -0x330(%rbp),%rdx
-     19e:	b9 65 00 00 00       	mov    $0x65,%ecx
-     1a3:	48 c7 c6 00 00 00 00 	mov    $0x0,%rsi
-			1a6: R_X86_64_32S	.rodata.str1.1
-     1aa:	48 89 d7             	mov    %rdx,%rdi
-     1ad:	48 c7 c2 00 00 00 00 	mov    $0x0,%rdx
-			1b0: R_X86_64_32S	.bss+0x560
-     1b4:	f3 48 ab             	rep stos %rax,%es:(%rdi)
-     1b7:	48 8d bd 48 ff ff ff 	lea    -0xb8(%rbp),%rdi
-     1be:	e8 00 00 00 00       	callq  1c3 <target_xcopy_read_source+0x53>
-			1bf: R_X86_64_PLT32	__init_swait_queue_head-0x4
-     1c3:	0f 0b                	ud2    
-     1c5:	66 66 2e 0f 1f 84 00 	data16 nopw %cs:0x0(%rax,%rax,1)
-     1cc:	00 00 00 00 
+v11
+- Modify compatible string from 4.0 to 5.0
 
-> net/mac80211/rx.o: warning: objtool: __ieee80211_check_fast_rx_iface()+0x79: unreachable instruction
+v10
+- No changes
 
-0000000000007be0 <ieee80211_check_fast_rx>:
-    7be0:	40 f6 c7 07          	test   $0x7,%dil
-    7be4:	75 44                	jne    7c2a <ieee80211_check_fast_rx+0x4a>
-    7be6:	48 8b 57 50          	mov    0x50(%rdi),%rdx
-    7bea:	48 89 d0             	mov    %rdx,%rax
-    7bed:	83 e0 07             	and    $0x7,%eax
-    7bf0:	75 3c                	jne    7c2e <ieee80211_check_fast_rx+0x4e>
-    7bf2:	55                   	push   %rbp
-    7bf3:	b9 06 00 00 00       	mov    $0x6,%ecx
-    7bf8:	48 89 e5             	mov    %rsp,%rbp
-    7bfb:	48 83 ec 38          	sub    $0x38,%rsp
-    7bff:	48 8d 75 d0          	lea    -0x30(%rbp),%rsi
-    7c03:	48 89 f7             	mov    %rsi,%rdi
-    7c06:	f3 48 ab             	rep stos %rax,%es:(%rdi)
-    7c09:	48 8b 82 d8 03 00 00 	mov    0x3d8(%rdx),%rax
-    7c10:	48 89 45 d0          	mov    %rax,-0x30(%rbp)
-    7c14:	8b 82 68 0f 00 00    	mov    0xf68(%rdx),%eax
-    7c1a:	89 45 d8             	mov    %eax,-0x28(%rbp)
-    7c1d:	48 c7 c0 00 00 00 00 	mov    $0x0,%rax
-			7c20: R_X86_64_32S	rfc1042_header
-    7c24:	a8 03                	test   $0x3,%al
-    7c26:	75 04                	jne    7c2c <ieee80211_check_fast_rx+0x4c>
-    7c28:	0f 0b                	ud2    
-    7c2a:	0f 0b                	ud2    
-    7c2c:	0f 0b                	ud2    
-    7c2e:	0f 0b                	ud2    
+v9
+- Fix xlnx,vfb description.
+- s/Optional/Required endpoint property.
+- Move data-lanes description from Ports to endpoint property section.
 
+v8
+- Added reset-gpios optional property to assert video_aresetn
+
+v7
+- Removed the control name from dt bindings
+- Updated the example dt node name to csi2rx
+
+v6
+- Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
+- Added reviewed by Rob Herring
+
+v5
+- Incorporated comments by Luca Cersoli
+- Removed DPHY clock from description and example
+- Removed bayer pattern from device tree MIPI CSI IP
+  doesn't deal with bayer pattern.
+
+v4
+- Added reviewed by Hyun Kwon
+
+v3
+- removed interrupt parent as suggested by Rob
+- removed dphy clock
+- moved vfb to optional properties
+- Added required and optional port properties section
+- Added endpoint property section
+
+v2
+- updated the compatible string to latest version supported
+- removed DPHY related parameters
+- added CSI v2.0 related property (including VCX for supporting upto 16
+  virtual channels).
+- modified csi-pxl-format from string to unsigned int type where the value
+  is as per the CSI specification
+- Defined port 0 and port 1 as sink and source ports.
+- Removed max-lanes property as suggested by Rob and Sakari
+ .../bindings/media/xilinx/xlnx,csi2rxss.yaml  | 215 ++++++++++++++++++
+ 1 file changed, 215 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+new file mode 100644
+index 000000000000..365084e27f7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+@@ -0,0 +1,215 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/xilinx/xlnx,csi2rxss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx MIPI CSI-2 Receiver Subsystem
++
++maintainers:
++  - Vishal Sagar <vishal.sagar@xilinx.com>
++
++description: |
++  The Xilinx MIPI CSI-2 Receiver Subsystem is used to capture MIPI CSI-2
++  traffic from compliant camera sensors and send the output as AXI4 Stream
++  video data for image processing.
++  The subsystem consists of a MIPI D-PHY in slave mode which captures the
++  data packets. This is passed along the MIPI CSI-2 Rx IP which extracts the
++  packet data. The optional Video Format Bridge (VFB) converts this data to
++  AXI4 Stream video data.
++  For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
++  Please note that this bindings includes only the MIPI CSI-2 Rx controller
++  and Video Format Bridge and not D-PHY.
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - xlnx,mipi-csi2-rx-subsystem-5.0
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: List of clock specifiers
++    items:
++      - description: AXI Lite clock
++      - description: Video clock
++
++  clock-names:
++    items:
++      - const: lite_aclk
++      - const: video_aclk
++
++  xlnx,csi-pxl-format:
++    description: |
++      This denotes the CSI Data type selected in hw design.
++      Packets other than this data type (except for RAW8 and
++      User defined data types) will be filtered out.
++      Possible values are as below -
++      0x1e - YUV4228B
++      0x1f - YUV42210B
++      0x20 - RGB444
++      0x21 - RGB555
++      0x22 - RGB565
++      0x23 - RGB666
++      0x24 - RGB888
++      0x28 - RAW6
++      0x29 - RAW7
++      0x2a - RAW8
++      0x2b - RAW10
++      0x2c - RAW12
++      0x2d - RAW14
++      0x2e - RAW16
++      0x2f - RAW20
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f]
++
++  xlnx,vfb:
++    type: boolean
++    description: Present when Video Format Bridge is enabled in IP configuration
++
++  xlnx,en-csi-v2-0:
++    type: boolean
++    description: Present if CSI v2 is enabled in IP configuration.
++
++  xlnx,en-vcx:
++    type: boolean
++    description: |
++      When present, there are maximum 16 virtual channels, else
++      only 4. This is present only if xlnx,en-csi-v2-0 is present.
++
++  xlnx,en-active-lanes:
++    type: boolean
++    description: |
++      Present if the number of active lanes can be re-configured at
++      runtime in the Protocol Configuration Register. Otherwise all lanes,
++      as set in IP configuration, are always active.
++
++  video-reset-gpios:
++    description: Optional specifier for a GPIO that asserts video_aresetn.
++    maxItems: 1
++
++  ports:
++    type: object
++
++    properties:
++      port@0:
++        type: object
++        description: |
++          Input / sink port node, single endpoint describing the
++          CSI-2 transmitter.
++
++        properties:
++          reg:
++            const: 0
++
++          endpoint:
++            type: object
++
++            properties:
++
++              data-lanes:
++                description: |
++                  This is required only in the sink port 0 endpoint which
++                  connects to MIPI CSI-2 source like sensor.
++                  The possible values are -
++                  1       - For 1 lane enabled in IP.
++                  1 2     - For 2 lanes enabled in IP.
++                  1 2 3   - For 3 lanes enabled in IP.
++                  1 2 3 4 - For 4 lanes enabled in IP.
++                items:
++                  - const: 1
++                  - const: 2
++                  - const: 3
++                  - const: 4
++
++              remote-endpoint: true
++
++            required:
++              - data-lanes
++              - remote-endpoint
++
++            additionalProperties: false
++
++        additionalProperties: false
++
++      port@1:
++        type: object
++        description: |
++          Output / source port node, endpoint describing modules
++          connected the CSI-2 receiver.
++
++        properties:
++
++          reg:
++            const: 1
++
++          endpoint:
++            type: object
++
++            properties:
++
++              remote-endpoint: true
++
++            required:
++              - remote-endpoint
++
++            additionalProperties: false
++
++        additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - xlnx,csi-pxl-format
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    xcsi2rxss_1: csi2rx@a0020000 {
++        compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
++        reg = <0x0 0xa0020000 0x0 0x10000>;
++        interrupt-parent = <&gic>;
++        interrupts = <0 95 4>;
++        xlnx,csi-pxl-format = <0x2a>;
++        xlnx,vfb;
++        xlnx,en-active-lanes;
++        xlnx,en-csi-v2-0;
++        xlnx,en-vcx;
++        clock-names = "lite_aclk", "video_aclk";
++        clocks = <&misc_clk_0>, <&misc_clk_1>;
++        video-reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                /* Sink port */
++                reg = <0>;
++                csiss_in: endpoint {
++                    data-lanes = <1 2 3 4>;
++                    /* MIPI CSI-2 Camera handle */
++                    remote-endpoint = <&camera_out>;
++                };
++            };
++            port@1 {
++                /* Source port */
++                reg = <1>;
++                csiss_out: endpoint {
++                    remote-endpoint = <&vproc_in>;
++                };
++            };
++        };
++    };
 -- 
-Josh
+2.21.0
 
