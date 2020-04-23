@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903AAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505F9C55193
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F4420780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E9D20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbgDWXHF (ORCPT
+        id S1728708AbgDWXHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:07:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49356 "EHLO
+        Thu, 23 Apr 2020 19:07:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49282 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728345AbgDWXGn (ORCPT
+        by vger.kernel.org with ESMTP id S1728320AbgDWXGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 19:06:43 -0400
+        Thu, 23 Apr 2020 19:06:41 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-0004hN-Ep; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvQ-0004gA-Qj; Fri, 24 Apr 2020 00:06:32 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvP-00E6nw-Oj; Fri, 24 Apr 2020 00:06:31 +0100
+        id 1jRkvO-00E6nD-Vf; Fri, 24 Apr 2020 00:06:30 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Maor Gottlieb" <maorg@mellanox.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        "Parav Pandit" <parav@mellanox.com>,
-        "Leon Romanovsky" <leonro@mellanox.com>
-Date:   Fri, 24 Apr 2020 00:05:38 +0100
-Message-ID: <lsq.1587683028.748862993@decadent.org.uk>
+        "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
+        "Felipe Balbi" <felipe.balbi@linux.intel.com>
+Date:   Fri, 24 Apr 2020 00:05:29 +0100
+Message-ID: <lsq.1587683028.676204666@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 111/245] IB/mlx4: Follow mirror sequence of device
- add during device removal
+Subject: [PATCH 3.16 102/245] usb: dwc3: pci: add Intel Gemini Lake PCI ID
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,56 +55,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Parav Pandit <parav@mellanox.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 89f988d93c62384758b19323c886db917a80c371 upstream.
+commit 8f8983a5683623b62b339d159573f95a1fce44f3 upstream.
 
-Current code device add sequence is:
+Intel Gemini Lake SoC has the same DWC3 than Broxton. Add
+the new ID to the supported Devices.
 
-ib_register_device()
-ib_mad_init()
-init_sriov_init()
-register_netdev_notifier()
-
-Therefore, the remove sequence should be,
-
-unregister_netdev_notifier()
-close_sriov()
-mad_cleanup()
-ib_unregister_device()
-
-However it is not above.
-Hence, make do above remove sequence.
-
-Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-[bwh: Backported to 3.16: No need to call mlx4_ib_diag_cleanup()]
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+[bwh: Backported to 3.16: adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -2372,15 +2372,16 @@ static void mlx4_ib_remove(struct mlx4_d
- 	ibdev->ib_active = false;
- 	flush_workqueue(wq);
+ drivers/usb/dwc3/dwc3-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -37,6 +37,7 @@
+ #define PCI_DEVICE_ID_INTEL_BXT_M	0x1aaa
+ #define PCI_DEVICE_ID_INTEL_APL		0x5aaa
+ #define PCI_DEVICE_ID_INTEL_KBP		0xa2b0
++#define PCI_DEVICE_ID_INTEL_GLK		0x31aa
  
--	mlx4_ib_close_sriov(ibdev);
--	mlx4_ib_mad_cleanup(ibdev);
--	ib_unregister_device(&ibdev->ib_dev);
- 	if (ibdev->iboe.nb.notifier_call) {
- 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
- 			pr_warn("failure unregistering notifier\n");
- 		ibdev->iboe.nb.notifier_call = NULL;
- 	}
- 
-+	mlx4_ib_close_sriov(ibdev);
-+	mlx4_ib_mad_cleanup(ibdev);
-+	ib_unregister_device(&ibdev->ib_dev);
-+
- 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
- 			      ibdev->steer_qpn_count);
- 	kfree(ibdev->ib_uc_qpns_bitmap);
+ struct dwc3_pci {
+ 	struct device		*dev;
+@@ -199,6 +200,7 @@ static const struct pci_device_id dwc3_p
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BXT_M), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_APL), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_KBP), },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_GLK), },
+ 	{  }	/* Terminating Entry */
+ };
+ MODULE_DEVICE_TABLE(pci, dwc3_pci_id_table);
 
