@@ -2,151 +2,129 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB176C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959F4C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B3D2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587639892;
-	bh=VFuqTtF0WU7F5qqWsxqZw4JTy8mZQeA340SFeltQ9uc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=r/LAodAGYJ2P55WBngbZAUikagd4DPhNYK5c3FYzqsvUxWNSYGSD6ndI8ayBocRV8
-	 EAX6WhzjALIr5RQHIVgF4Cm3c984GTQMboL0czc14XIn9ICh+YGmVaL1aBxqL3AOUc
-	 niWNFLf8z2eTAmeunkbUoyx8dCs0Gpc2DFY+upDU=
+	by mail.kernel.org (Postfix) with ESMTP id 73EBD2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 11:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgDWLEv (ORCPT
+        id S1728001AbgDWLFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52792 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 07:05:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46262 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgDWLEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:04:51 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 399AE20787;
-        Thu, 23 Apr 2020 11:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587639890;
-        bh=VFuqTtF0WU7F5qqWsxqZw4JTy8mZQeA340SFeltQ9uc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=0G0CSDTl9HPtPyOr7GhlqPqpar02CBKx02VSk5GT5WCak0MzVbc5Qiu0IK3lM8p2o
-         6f3RDCiTn0vLnv/Lo0BgfnIgyE8RSFP2v771zOVizdy3QCglqjGrI3AVdhbxDz1MeC
-         klLhP/Y0pGjyVwwBevOWgpO21BwvD497jv8wdIbY=
-Message-ID: <aea3e7e828adb60478a67692d749d2054fe56cf6.camel@kernel.org>
-Subject: Re: [v3] ceph: if we are blacklisted, __do_request returns directly
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 23 Apr 2020 07:04:17 -0400
-In-Reply-To: <CAB9OAC3fqvm9oigQour-jYuaSoh9Ny6Botk9Ls+ie-uKap19AQ@mail.gmail.com>
-References: <20200417110723.12235-1-gmayyyha@gmail.com>
-         <ad6ca41f601d4feb2c3bd2850aeab95c3187bf2d.camel@kernel.org>
-         <CAB9OAC1+E6Qs=hr0naT73MNQ5scKOck4vF2gzsCS=0fQMLvG8A@mail.gmail.com>
-         <86562f7eca48dd13a6cbafa4c6465d3a731fab88.camel@kernel.org>
-         <CAB9OAC3fqvm9oigQour-jYuaSoh9Ny6Botk9Ls+ie-uKap19AQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1726805AbgDWLFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:05:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AF96BB08C;
+        Thu, 23 Apr 2020 11:05:51 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id F2BF91E1293; Thu, 23 Apr 2020 13:05:51 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 13:05:51 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tim Waugh <tim@cyberelk.net>,
+        Borislav Petkov <bp@alien8.de>, Jan Kara <jack@suse.com>,
+        linux-block@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] udf: stop using ioctl_by_bdev
+Message-ID: <20200423110551.GF3737@quack2.suse.cz>
+References: <20200423071224.500849-1-hch@lst.de>
+ <20200423071224.500849-8-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423071224.500849-8-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-21 at 20:21 +0800, Yanhu Cao wrote:
-> On Tue, Apr 21, 2020 at 6:15 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > On Tue, 2020-04-21 at 10:13 +0800, Yanhu Cao wrote:
-> > > On Mon, Apr 20, 2020 at 8:16 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > > > On Fri, 2020-04-17 at 19:07 +0800, Yanhu Cao wrote:
-> > > > > If we mount cephfs by the recover_session option,
-> > > > > __do_request can return directly until the client automatically reconnects.
-> > > > > 
-> > > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > > > ---
-> > > > >  fs/ceph/mds_client.c | 6 ++++++
-> > > > >  1 file changed, 6 insertions(+)
-> > > > > 
-> > > > > diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> > > > > index 486f91f9685b..16ac5e5f7f79 100644
-> > > > > --- a/fs/ceph/mds_client.c
-> > > > > +++ b/fs/ceph/mds_client.c
-> > > > > @@ -2708,6 +2708,12 @@ static void __do_request(struct ceph_mds_client *mdsc,
-> > > > > 
-> > > > >       put_request_session(req);
-> > > > > 
-> > > > > +     if (mdsc->fsc->blacklisted &&
-> > > > > +         ceph_test_mount_opt(mdsc->fsc, CLEANRECOVER)) {
-> > > > > +             err = -EBLACKLISTED;
-> > > > > +             goto finish;
-> > > > > +     }
-> > > > > +
-> > > > 
-> > > > Why check for CLEANRECOVER? If we're mounted with recover_session=no
-> > > > wouldn't we want to do the same thing here?
-> > > > 
-> > > > Either way, it's still blacklisted. The only difference is that it won't
-> > > > attempt to automatically recover the session that way.
-> > > 
-> > > I think mds will clear the blacklist. In addition to loading cephfs
-> > > via recover_session=clean, I didn't find a location where
-> > > fsc->blacklisted is set to false. If the client has been blacklisted,
-> > > should it always be blacklisted (fsc->blacklisted=true)? Or is there
-> > > another way to set fsc->blacklised to false?
-> > > 
-> > 
-> > Basically, this patch is just changing it so that when the client is
-> > blacklisted and the mount is done with recover_session=clean, we'll
-> > shortcut the rest of the __do_request and just return -EBLACKLISTED.
-> > 
-> > My question is: why do we need to test for recover_session=clean here?
+On Thu 23-04-20 09:12:24, Christoph Hellwig wrote:
+> Instead just call the CD-ROM layer functionality directly.
 > 
-> I thought that fsc->blacklisted is related to recovery_session=clean.
-> If we test it, the client can do the rest of __do_request. It seems
-> useless now because kcephfs cannot resume the session like ceph-fuse
-> when mds cleared the blacklist.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+The patch looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/udf/lowlevel.c | 29 +++++++++++++----------------
+>  1 file changed, 13 insertions(+), 16 deletions(-)
 > 
-
-fsc->blacklisted just indicates that the client has detected that it has
-been blacklisted. With recover_session=clean it can reconnect and
-continue on (with some limitations). See:
-
-    https://ceph.io/community/automatic-cephfs-recovery-after-blacklisting/
-
-> > If the client _knows_ that it is blacklisted, why would it want to
-> > continue with __do_request in the recover_session=no case? Would it make
-> > more sense to always return early in __do_request when the client is
-> > blacklisted?
+> diff --git a/fs/udf/lowlevel.c b/fs/udf/lowlevel.c
+> index 5c7ec121990d..f1094cdcd6cd 100644
+> --- a/fs/udf/lowlevel.c
+> +++ b/fs/udf/lowlevel.c
+> @@ -27,41 +27,38 @@
+>  
+>  unsigned int udf_get_last_session(struct super_block *sb)
+>  {
+> +	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
+>  	struct cdrom_multisession ms_info;
+> -	unsigned int vol_desc_start;
+> -	struct block_device *bdev = sb->s_bdev;
+> -	int i;
+>  
+> -	vol_desc_start = 0;
+> -	ms_info.addr_format = CDROM_LBA;
+> -	i = ioctl_by_bdev(bdev, CDROMMULTISESSION, (unsigned long)&ms_info);
+> +	if (!cdi) {
+> +		udf_debug("CDROMMULTISESSION not supported.\n");
+> +		return 0;
+> +	}
+>  
+> -	if (i == 0) {
+> +	ms_info.addr_format = CDROM_LBA;
+> +	if (cdrom_multisession(cdi, &ms_info) == 0) {
+>  		udf_debug("XA disk: %s, vol_desc_start=%d\n",
+>  			  ms_info.xa_flag ? "yes" : "no", ms_info.addr.lba);
+>  		if (ms_info.xa_flag) /* necessary for a valid ms_info.addr */
+> -			vol_desc_start = ms_info.addr.lba;
+> -	} else {
+> -		udf_debug("CDROMMULTISESSION not supported: rc=%d\n", i);
+> +			return ms_info.addr.lba;
+>  	}
+> -	return vol_desc_start;
+> +	return 0;
+>  }
+>  
+>  unsigned long udf_get_last_block(struct super_block *sb)
+>  {
+>  	struct block_device *bdev = sb->s_bdev;
+> +	struct cdrom_device_info *cdi = disk_to_cdi(bdev->bd_disk);
+>  	unsigned long lblock = 0;
+>  
+>  	/*
+> -	 * ioctl failed or returned obviously bogus value?
+> +	 * The cdrom layer call failed or returned obviously bogus value?
+>  	 * Try using the device size...
+>  	 */
+> -	if (ioctl_by_bdev(bdev, CDROM_LAST_WRITTEN, (unsigned long) &lblock) ||
+> -	    lblock == 0)
+> +	if (!cdi || cdrom_get_last_written(cdi, &lblock) || lblock == 0)
+>  		lblock = i_size_read(bdev->bd_inode) >> sb->s_blocksize_bits;
+>  
+>  	if (lblock)
+>  		return lblock - 1;
+> -	else
+> -		return 0;
+> +	return 0;
+>  }
+> -- 
+> 2.26.1
 > 
-> Makes sense. if there is no problem. I will patch the next commit and
-> return -EBLACKLISTED only when fsc->blacklisted=true.
-> 
-
-Sure. To be clear, I don't see this as a bug, but rather just an
-optimization. If the client is blacklisted then we don't really need to
-do all of the work or attempt to send the request until that's been
-cleared. That's the case regardless of the recover_session= option.
-
-> > 
-> > > > >       mds = __choose_mds(mdsc, req, &random);
-> > > > >       if (mds < 0 ||
-> > > > >           ceph_mdsmap_get_state(mdsc->mdsmap, mds) < CEPH_MDS_STATE_ACTIVE) {
-> > > > --
-> > > > Jeff Layton <jlayton@kernel.org>
-> > > > 
-> > 
-> > --
-> > Jeff Layton <jlayton@kernel.org>
-> > 
-
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
