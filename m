@@ -2,111 +2,182 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05531C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33258C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48E820736
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12EDA20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 22:59:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PwhaHkh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgDWW5l (ORCPT
+        id S1728001AbgDWW7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 18:57:41 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:48863 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727021AbgDWW5k (ORCPT
+        Thu, 23 Apr 2020 18:59:24 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16665 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgDWW7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 18:57:40 -0400
-Received: from dread.disaster.area (pa49-180-0-232.pa.nsw.optusnet.com.au [49.180.0.232])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id CA3A8820564;
-        Fri, 24 Apr 2020 08:57:35 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jRkmk-0006uC-DD; Fri, 24 Apr 2020 08:57:34 +1000
-Date:   Fri, 24 Apr 2020 08:57:34 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH V10 10/11] fs: Introduce DCACHE_DONTCACHE
-Message-ID: <20200423225734.GY27860@dread.disaster.area>
-References: <20200422212102.3757660-1-ira.weiny@intel.com>
- <20200422212102.3757660-11-ira.weiny@intel.com>
+        Thu, 23 Apr 2020 18:59:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea21dbe0000>; Thu, 23 Apr 2020 15:59:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 15:59:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 15:59:23 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 22:59:23 +0000
+Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 22:59:22 +0000
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+ <ae6dfd6b-4b0b-db73-54cf-a16e59476f38@xs4all.nl>
+ <3115a959-045e-7b27-94fb-a11a8b5f4a6a@nvidia.com>
+ <db413479-1557-3c40-ecb2-5a0c657065b6@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <843d1276-1281-7f02-ce08-d0dad52bb681@nvidia.com>
+Date:   Thu, 23 Apr 2020 15:59:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422212102.3757660-11-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=XYjVcjsg+1UI/cdbgX7I7g==:117 a=XYjVcjsg+1UI/cdbgX7I7g==:17
-        a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10 a=QyXUC8HyAAAA:8 a=drOt6m5kAAAA:8
-        a=7-415B0cAAAA:8 a=y1ryl40uyaZQ8-5qDf4A:9 a=CjuIK1q_8ugA:10
-        a=RMMjzBEyIzXRtoq5n5K6:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <db413479-1557-3c40-ecb2-5a0c657065b6@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587682751; bh=RI0kJ3AGzoip+FKYoq7/Zfox+0bxzRVuBZ/UiOfO/6Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=PwhaHkh3ZfdltpPCXmxtMirnM+Tdvz8OK50WYJCFX6seFpzm5OlV42K4QVrbCyEiQ
+         HyCZDzan3lIidx/mqWdP1J1g4/qfeb7MkajJA3JUPBwW0UlzZGs9IT9p2fijtbYUS8
+         8q2+CoTWtzFN+0lhSn8oCCg7NSTJiQ4o16lHZNP6Uc9b3nsYnZN20PCb+ABzA4wKuG
+         q4c2OfmGS9IWxo6ylzuTdMA/DZlE9fnGCY7iLojftl+9DWhsMgTktYIpif6feQhV6k
+         +WK4OoG/TJ8GbWqgdui/PJ3gKEiwVmjm47oSg5i1xOBFxnXdP2m4mdwAFMPSCV01qp
+         rGhXtCVQEZs3w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 02:21:01PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> DCACHE_DONTCACHE indicates a dentry should not be cached on final
-> dput().
-> 
-> Also add a helper function to mark DCACHE_DONTCACHE on all dentries
-> pointing to a specific inode when that inode is being set I_DONTCACHE.
-> 
-> This facilitates dropping dentry references to inodes sooner which
-> require eviction to swap S_DAX mode.
-> 
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Code looks fine....
+On 4/23/20 3:55 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 23.04.2020 19:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/23/20 12:48 AM, Hans Verkuil wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 22/04/2020 08:18, Sowjanya Komatineni wrote:
+>>>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>>>> which can support up to 6 MIPI CSI camera sensors.
+>>>>
+>>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>>>> capture from an external camera sensor connected to CSI or from
+>>>> built-in test pattern generator.
+>>>>
+>>>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>>>
+>>>> This patch adds a v4l2 capture driver with media interface for
+>>>> Tegra210 built-in CSI to VI test pattern generator.
+>>>>
+>>>> This patch includes TPG support only and all the video pipeline
+>>>> configuration happens through the video device node.
+>>>>
+>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>    drivers/staging/media/Kconfig          |=C2=A0=C2=A0=C2=A0 2 +
+>>>>    drivers/staging/media/Makefile         |=C2=A0=C2=A0=C2=A0 1 +
+>>>>    drivers/staging/media/tegra/Kconfig    |=C2=A0=C2=A0 13 +
+>>>>    drivers/staging/media/tegra/Makefile   |=C2=A0=C2=A0=C2=A0 8 +
+>>>>    drivers/staging/media/tegra/TODO       |=C2=A0=C2=A0 10 +
+>>>>    drivers/staging/media/tegra/common.h   |=C2=A0 262 ++++++++
+>>>>    drivers/staging/media/tegra/csi.c      |=C2=A0 606 ++++++++++++++++=
++
+>>>>    drivers/staging/media/tegra/csi.h      |=C2=A0 149 +++++
+>>>>    drivers/staging/media/tegra/tegra210.c |=C2=A0 709 ++++++++++++++++=
+++++
+>>>>    drivers/staging/media/tegra/tegra210.h |=C2=A0 190 ++++++
+>>>>    drivers/staging/media/tegra/vi.c       | 1132
+>>>> ++++++++++++++++++++++++++++++++
+>>>>    drivers/staging/media/tegra/vi.h       |=C2=A0=C2=A0 83 +++
+>>>>    drivers/staging/media/tegra/video.c    |=C2=A0 153 +++++
+>>>>    drivers/staging/media/tegra/video.h    |=C2=A0=C2=A0 34 +
+>>>>    14 files changed, 3352 insertions(+)
+>>>>    create mode 100644 drivers/staging/media/tegra/Kconfig
+>>>>    create mode 100644 drivers/staging/media/tegra/Makefile
+>>>>    create mode 100644 drivers/staging/media/tegra/TODO
+>>>>    create mode 100644 drivers/staging/media/tegra/common.h
+>>>>    create mode 100644 drivers/staging/media/tegra/csi.c
+>>>>    create mode 100644 drivers/staging/media/tegra/csi.h
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra210.c
+>>>>    create mode 100644 drivers/staging/media/tegra/tegra210.h
+>>>>    create mode 100644 drivers/staging/media/tegra/vi.c
+>>>>    create mode 100644 drivers/staging/media/tegra/vi.h
+>>>>    create mode 100644 drivers/staging/media/tegra/video.c
+>>>>    create mode 100644 drivers/staging/media/tegra/video.h
+>>> With 'make menuconfig' I get this:
+>>>
+>>> scripts/kconfig/mconf  Kconfig
+>>>
+>>> WARNING: unmet direct dependencies detected for TEGRA_HOST1X
+>>>     Depends on [n]: HAS_IOMEM [=3Dy] && (ARCH_TEGRA || ARM &&
+>>> COMPILE_TEST [=3Dy])
+>>>     Selected by [y]:
+>>>     - VIDEO_TEGRA [=3Dy] && STAGING [=3Dy] && STAGING_MEDIA [=3Dy] &&
+>>> MEDIA_SUPPORT [=3Dy] && (ARCH_TEGRA || COMPILE_TEST [=3Dy])
+>>>
+>>> This is an x86_64 build with COMPILE_TEST set. I can provide my full
+>>> .config if you need it.
+>>>
+>>> CONFIG_TEGRA_HOST1X=3Dy
+>>> CONFIG_VIDEO_TEGRA=3Dy
+>>>
+>>> Regards,
+>>>
+>>>           Hans
+>> Hi Hans,
+>>
+>> In v7, changed Kconfig to remove ARM. But looks like we should limit
+>>
+>> TEGRA_HOST1X also limits compile to ARM only so running VIDEO_TEGRA on
+>> x86_64 shows above warning.
+>>
+>> We should limit compile to ARM for CONFIG_VIDEO_TEGRA.
+>>
+>> Will update CONFIG_VIDEO_TEGRA dependency to use ARM && COMPILE_TEST
+>> like I had in previous version. Sorry about this.
+>>
+>>
+>> Also, I see some changes went into latest linux-next staging media
+>> Kconfig, So, will have my patches on top of today's linux-next.
+> VIDEO_TEGRA should depend on TEGRA_HOST1X and not select it.
+>
+> depends on (ARCH_TEGRA && TEGRA_HOST1X) || COMPILE_TEST
 
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -1526,6 +1526,21 @@ int generic_delete_inode(struct inode *inode)
->  }
->  EXPORT_SYMBOL(generic_delete_inode);
->  
-> +void mark_inode_dontcache(struct inode *inode)
-> +{
-> +	struct dentry *de;
-> +
-> +	spin_lock(&inode->i_lock);
-> +	hlist_for_each_entry(de, &inode->i_dentry, d_u.d_alias) {
-> +		spin_lock(&de->d_lock);
-> +		de->d_flags |= DCACHE_DONTCACHE;
-> +		spin_unlock(&de->d_lock);
-> +	}
-> +	inode->i_state |= I_DONTCACHE;
-> +	spin_unlock(&inode->i_lock);
-> +}
-> +EXPORT_SYMBOL(mark_inode_dontcache);
+Was selecting it to auto-select Tegra host1x when video_tegra is enabled.
 
-Though I suspect that this should be in fs/dcache.c and not
-fs/inode.c. i.e. nothing in fs/inode.c does dentry list walks, but
-there are several cases in the dcache code where inode dentry walks
-are done under the inode lock (e.g. d_find_alias(inode)).
+Yes, can use depends on
 
-So perhaps this should be d_mark_dontcache(inode), which also marks
-the inode as I_DONTCACHE so that everything is evicted on last
-reference...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
