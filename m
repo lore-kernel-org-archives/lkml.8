@@ -2,755 +2,233 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C68C55191
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F98EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4772F2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="k+S08MId"
+	by mail.kernel.org (Postfix) with ESMTP id 729E92168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgDWHui (ORCPT
+        id S1727798AbgDWHum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:50:38 -0400
-Received: from ns.pmeerw.net ([84.19.176.117]:33012 "EHLO ns.pmeerw.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727782AbgDWHuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:50:37 -0400
-Received: by ns.pmeerw.net (Postfix, from userid 1000)
-        id C85DDE07AE; Thu, 23 Apr 2020 09:50:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
-        t=1587628231; bh=FRmT+uyPimm5LAK+3xInL+CyChUpcrdMbVba2qjVX6E=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=k+S08MIdpVT4QRlZE+GGWP9G7MFh6NiDSn6CI431Pb6QK3d3K9w5jUkQFSDOtm3T/
-         B0SweSj5roHoijJyIThYIzz0eWo+VfGKkB9VMra2C3jjBVFEt56qt1QhfXI2zZPbJr
-         zUN+ealKuKwqPkkEsnjSYFNz1jjKIhtN7dLGvwbs=
-Received: from localhost (localhost [127.0.0.1])
-        by ns.pmeerw.net (Postfix) with ESMTP id 054D7E06B0;
-        Thu, 23 Apr 2020 09:50:31 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 09:50:30 +0200 (CEST)
-From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-To:     Gwendal Grignou <gwendal@chromium.org>
-cc:     enric.balletbo@collabora.com, jic23@kernel.org,
-        bleung@chromium.org, groeck@chromium.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: cros_ec_light: Add support for RGB sensor
-In-Reply-To: <20200423000230.82750-3-gwendal@chromium.org>
-Message-ID: <alpine.DEB.2.21.2004230920330.25067@vps.pmeerw.net>
-References: <20200423000230.82750-1-gwendal@chromium.org> <20200423000230.82750-3-gwendal@chromium.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 23 Apr 2020 03:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgDWHty (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 03:49:54 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B24C08C5F2;
+        Thu, 23 Apr 2020 00:49:54 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jRWcE-0008P4-Je; Thu, 23 Apr 2020 09:49:46 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4AF831C0493;
+        Thu, 23 Apr 2020 09:49:41 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 07:49:40 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: objtool/core] x86,ftrace: Fix ftrace_regs_caller() unwind
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200416115118.749606694@infradead.org>
+References: <20200416115118.749606694@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <158762818087.28353.3866847854011199128.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, Gwendal Grignou wrote:
+The following commit has been merged into the objtool/core branch of tip:
 
-comments below
+Commit-ID:     0298739b7983cf9bf4fcfb4bfb815c539bdb87ca
+Gitweb:        https://git.kernel.org/tip/0298739b7983cf9bf4fcfb4bfb815c539bdb87ca
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 01 Apr 2020 16:53:19 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 22 Apr 2020 10:53:50 +02:00
 
-> Add support for color sensors behind EC like TCS3400.
-> The color data can be presented in Red Green Blue color space (RGB) or
-> the CIE 1931 XYZ color space (XYZ).
-> In XYZ mode, the sensor is configured for auto calibrating its channels
-> and is the "normal" mode.
-> The driver tells the EC to switch between the 2 modes by using the
-> calibration command.
-> When the sensor is in calibration mode, only clear and RGB channels are
-> available. In normal mode, only clear and XYZ are.
-> When RGB channels are enabled, the sensor switches to calibration mode
-> when the buffer is enabled.
-> 
-> When reading trhough sysfs command, set calibration mode and then read
-> the channel(s). A command will be issue for each read, so the channels
-> may come from different sensor sample.
-> When using the buffer, after setting the mask, when the buffer is
-> enabled, the calibration will be set based on the channel mask.
-> 
-> libiio tools can be used to gather sensor information:
-> iio_readdev -s 10 cros-ec-light \
-> illuminance_clear illuminance_x illuminance_y illuminance_z
-> 
-> To match IIO ABI, the clear illuminance channel has been renamed
-> in_illuminance_clear_raw from in_illuminance_input.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
->  drivers/iio/light/cros_ec_light_prox.c        | 470 +++++++++++++++---
->  drivers/platform/chrome/cros_ec_sensorhub.c   |   3 +
->  .../linux/iio/common/cros_ec_sensors_core.h   |   1 -
->  .../linux/platform_data/cros_ec_commands.h    |   2 +
->  4 files changed, 405 insertions(+), 71 deletions(-)
-> 
-> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
-> index 2198b50909ed0..57eee557a785c 100644
-> --- a/drivers/iio/light/cros_ec_light_prox.c
-> +++ b/drivers/iio/light/cros_ec_light_prox.c
-> @@ -17,82 +17,190 @@
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> +#include <linux/platform_data/cros_ec_sensorhub.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  
->  /*
-> - * We only represent one entry for light or proximity. EC is merging different
-> - * light sensors to return the what the eye would see. For proximity, we
-> - * currently support only one light source.
-> + * We may present up to 7 channels:
-> + *
-> + * +-----+-----+-----+-----+-----+-----+-----+
-> + * |Clear|  X  |  Y  |  Z  | RED |BLUE |GREEN|
-> + * |Prox |     |     |     |     |     |     |
-> + * +-----+-----+-----+-----+-----+-----+-----+
-> + *
-> + * Prox[imity] is presented by proximity sensors.
-> + * The clear channel is supported by single and color light sensors.
-> + * Color light sensor either reports color information in the RGB space or
-> + * the CIE 1931 XYZ (XYZ) color space.
->   */
-> -#define CROS_EC_LIGHT_PROX_MAX_CHANNELS (1 + 1)
-> +#define CROS_EC_LIGHT_CLEAR_OR_PROXIMITY_MASK 1
-> +#define CROS_EC_LIGHT_XYZ_SPACE_MASK (0x7 << 1)
-> +#define CROS_EC_LIGHT_RGB_SPACE_MASK (0x7 << 4)
+x86,ftrace: Fix ftrace_regs_caller() unwind
 
-could use GENMASK()
+The ftrace_regs_caller() trampoline does something 'funny' when there
+is a direct-caller present. In that case it stuffs the 'direct-caller'
+address on the return stack and then exits the function. This then
+results in 'returning' to the direct-caller with the exact registers
+we came in with -- an indirect tail-call without using a register.
 
-> +
-> +/*
-> + * We always represent one entry for light or proximity, and all
-> + * samples can be timestamped.
-> + */
-> +#define CROS_EC_LIGHT_PROX_MIN_CHANNELS (1 + 1)
-> +
-> +static const unsigned long cros_ec_light_prox_bitmasks[] = {
-> +	CROS_EC_LIGHT_CLEAR_OR_PROXIMITY_MASK,
-> +	CROS_EC_LIGHT_XYZ_SPACE_MASK,
-> +	CROS_EC_LIGHT_XYZ_SPACE_MASK | CROS_EC_LIGHT_CLEAR_OR_PROXIMITY_MASK,
-> +	CROS_EC_LIGHT_RGB_SPACE_MASK,
-> +	CROS_EC_LIGHT_RGB_SPACE_MASK | CROS_EC_LIGHT_CLEAR_OR_PROXIMITY_MASK,
+This however (rightfully) confuses objtool because the function shares
+a few instruction in order to have a single exit path, but the stack
+layout is different for them, depending through which path we came
+there.
 
-so it's not possible to read all 7 channels in one go?
-maybe that's not really needed
+This is currently cludged by forcing the stack state to the non-direct
+case, but this generates actively wrong (ORC) unwind information for
+the direct case, leading to potential broken unwinds.
 
-> +	0,
-> +};
-> +
-> +#define CROS_EC_IDX_TO_CHAN(_idx) (((_idx) - 1) % CROS_EC_SENSOR_MAX_AXIS)
+Fix this issue by fully separating the exit paths. This results in
+having to poke a second RET into the trampoline copy, see
+ftrace_regs_caller_ret.
 
-may CROS_EC_LIGHT_IDX_TO_CHAN for consistency
+This brings us to a second objtool problem, in order for it to
+perceive the 'jmp ftrace_epilogue' as a function exit, it needs to be
+recognised as a tail call. In order to make that happen,
+ftrace_epilogue needs to be the start of an STT_FUNC, so re-arrange
+code to make this so.
 
-MAX_AXIS sounds more like something for an accelerometer (which also has 3 
-components by incident)
+Finally, a third issue is that objtool requires functions to exit with
+the same stack layout they started with, which is obviously violated
+in the direct case, employ the new HINT_RET_OFFSET to tell objtool
+this is an expected exception.
 
-X, Y, Z is not documented (sysfs-bus-iio) to can represent color 
-components
+Together, this results in generating correct ORC unwind information
+for the ftrace_regs_caller() function and it's trampoline copies.
 
->  
->  /* State data for ec_sensors iio driver. */
->  struct cros_ec_light_prox_state {
->  	/* Shared by all sensors */
->  	struct cros_ec_sensors_core_state core;
-> +	struct iio_chan_spec *channel;
->  
-> -	struct iio_chan_spec channels[CROS_EC_LIGHT_PROX_MAX_CHANNELS];
-> +	/* Calibration information for the color channels. */
-> +	struct calib_data rgb_calib[CROS_EC_SENSOR_MAX_AXIS];
->  };
->  
-> +static void cros_ec_light_channel_common(struct iio_chan_spec *channel)
-> +{
-> +	channel->info_mask_shared_by_all =
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
-> +	channel->info_mask_shared_by_all_available =
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20200416115118.749606694@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/ftrace.c    | 12 ++++++++++--
+ arch/x86/kernel/ftrace_64.S | 32 +++++++++++++++-----------------
+ 2 files changed, 25 insertions(+), 19 deletions(-)
 
-why is this needed, _SAMP_FREQ twice?
-
-> +	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
-> +	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
-> +	channel->scan_type.shift = 0;
-> +	channel->scan_index = 0;
-> +	channel->ext_info = cros_ec_sensors_ext_info;
-> +	channel->scan_type.sign = 'u';
-> +}
-> +
-> +static int
-> +cros_ec_light_extra_send_host_cmd(struct cros_ec_sensors_core_state *state,
-> +				  int increment, u16 opt_length)
-> +{
-> +	u8 save_sensor_num = state->param.info.sensor_num;
-> +	int ret;
-> +
-> +	state->param.info.sensor_num += increment;
-> +	ret = cros_ec_motion_send_host_cmd(state, opt_length);
-> +	state->param.info.sensor_num = save_sensor_num;
-> +	return ret;
-> +}
-> +
-> +static int cros_ec_light_prox_read_data(struct iio_dev *indio_dev,
-> +					struct iio_chan_spec const *chan,
-> +					int *val)
-> +{
-> +	struct cros_ec_light_prox_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +	int idx = chan->scan_index;
-> +	s16 data;
-> +
-> +	/*
-> +	 * The data coming from the light sensor is
-> +	 * pre-processed and represents the ambient light
-> +	 * illuminance reading expressed in lux.
-> +	 */
-> +	if (idx == 0) {
-> +		ret = cros_ec_sensors_read_cmd(indio_dev, 1, &data);
-> +		if (ret < 0)
-> +			return ret;
-> +		*val = data;
-> +	} else {
-> +		ret = cros_ec_light_extra_send_host_cmd(
-> +				&st->core, 1, sizeof(st->core.resp->data));
-> +		if (ret)
-> +			return ret;
-> +		*val = st->core.resp->data.data[CROS_EC_IDX_TO_CHAN(idx)];
-> +	}
-> +	return IIO_VAL_INT;
-> +}
-> +
-> +static int cros_ec_light_read_color_scale(struct cros_ec_light_prox_state *st,
-> +					  int idx, int *val, int *val2)
-> +{
-> +	int ret, i;
-> +	u16 scale;
-> +
-> +	st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_SCALE;
-> +	st->core.param.sensor_scale.flags = 0;
-> +	if (idx == 0)
-> +		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +	else
-> +		ret = cros_ec_light_extra_send_host_cmd(&st->core, 1, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (idx == 0) {
-> +		scale = st->core.resp->sensor_scale.scale[0];
-> +		st->core.calib[0].scale = scale;
-> +	} else {
-> +		for (i = CROS_EC_SENSOR_X; i < CROS_EC_SENSOR_MAX_AXIS; i++)
-> +			st->rgb_calib[i].scale =
-> +				st->core.resp->sensor_scale.scale[i];
-> +		scale = st->rgb_calib[CROS_EC_IDX_TO_CHAN(idx)].scale;
-> +	}
-> +	/*
-> +	 * scale is a number x.y, where x is coded on 1 bit,
-> +	 * y coded on 15 bits, between 0 and 9999.
-> +	 */
-> +	*val = scale >> 15;
-> +	*val2 = ((scale & 0x7FFF) * 1000000LL) /
-> +		MOTION_SENSE_DEFAULT_SCALE;
-> +	return IIO_VAL_INT_PLUS_MICRO;
-> +}
-> +
->  static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
->  				   struct iio_chan_spec const *chan,
->  				   int *val, int *val2, long mask)
->  {
->  	struct cros_ec_light_prox_state *st = iio_priv(indio_dev);
-> -	u16 data = 0;
-> -	s64 val64;
-> -	int ret;
-> +	int i, ret = IIO_VAL_INT;
->  	int idx = chan->scan_index;
-> +	s64 val64;
->  
->  	mutex_lock(&st->core.cmd_lock);
-> -
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> -		if (chan->type == IIO_PROXIMITY) {
-> -			ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> -						     (s16 *)&data);
-> -			if (ret)
-> -				break;
-> -			*val = data;
-> -			ret = IIO_VAL_INT;
-> -		} else {
-> -			ret = -EINVAL;
-> -		}
-> -		break;
-> -	case IIO_CHAN_INFO_PROCESSED:
-> -		if (chan->type == IIO_LIGHT) {
-> -			ret = cros_ec_sensors_read_cmd(indio_dev, 1 << idx,
-> -						     (s16 *)&data);
-> -			if (ret)
-> -				break;
-> -			/*
-> -			 * The data coming from the light sensor is
-> -			 * pre-processed and represents the ambient light
-> -			 * illuminance reading expressed in lux.
-> -			 */
-> -			*val = data;
-> -			ret = IIO_VAL_INT;
-> -		} else {
-> -			ret = -EINVAL;
-> -		}
-> +		ret = cros_ec_light_prox_read_data(indio_dev, chan, val);
->  		break;
->  	case IIO_CHAN_INFO_CALIBBIAS:
->  		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_OFFSET;
->  		st->core.param.sensor_offset.flags = 0;
->  
-> -		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +		if (idx == 0)
-> +			ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +		else
-> +			ret = cros_ec_light_extra_send_host_cmd(
-> +					&st->core, 1, 0);
->  		if (ret)
->  			break;
-> -
-> -		/* Save values */
-> -		st->core.calib[0].offset =
-> -			st->core.resp->sensor_offset.offset[0];
-> -
-> -		*val = st->core.calib[idx].offset;
-> +		if (idx == 0) {
-> +			*val = st->core.calib[0].offset =
-> +				st->core.resp->sensor_offset.offset[0];
-> +		} else {
-> +			for (i = CROS_EC_SENSOR_X; i < CROS_EC_SENSOR_MAX_AXIS;
-> +			     i++)
-> +				st->rgb_calib[i].offset =
-> +					st->core.resp->sensor_offset.offset[i];
-> +			*val = st->rgb_calib[CROS_EC_IDX_TO_CHAN(idx)].offset;
-> +		}
->  		ret = IIO_VAL_INT;
->  		break;
->  	case IIO_CHAN_INFO_CALIBSCALE:
-> +		if (indio_dev->num_channels > CROS_EC_LIGHT_PROX_MIN_CHANNELS) {
-> +			ret = cros_ec_light_read_color_scale(st, idx, val,
-> +							     val2);
-> +			break;
-> +		}
-> +		/* RANGE is used for calibration in 1 channel sensors. */
-> +		fallthrough;
-> +	case IIO_CHAN_INFO_SCALE:
->  		/*
->  		 * RANGE is used for calibration
->  		 * scale is a number x.y, where x is coded on 16 bits,
-> @@ -121,29 +229,84 @@ static int cros_ec_light_prox_read(struct iio_dev *indio_dev,
->  	return ret;
->  }
->  
-> +static int cros_ec_light_write_color_scale(struct cros_ec_light_prox_state *st,
-> +					   int idx, int val, int val2)
-> +{
-> +	int i;
-> +	u16 scale;
-> +
-> +	if (val >= 2) {
-> +		/*
-> +		 * The user space is sending values already
-> +		 * multiplied by MOTION_SENSE_DEFAULT_SCALE.
-> +		 */
-> +		scale = val;
-> +	} else {
-> +		u64 val64 = val2 * MOTION_SENSE_DEFAULT_SCALE;
-> +
-> +		do_div(val64, 1000000);
-> +		scale = (val << 15) | val64;
-> +	}
-> +
-> +	st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_SCALE;
-> +	st->core.param.sensor_offset.flags = MOTION_SENSE_SET_OFFSET;
-> +	st->core.param.sensor_offset.temp = EC_MOTION_SENSE_INVALID_CALIB_TEMP;
-> +	if (idx == 0) {
-> +		st->core.calib[0].scale = scale;
-> +		st->core.param.sensor_scale.scale[0] = scale;
-> +		return cros_ec_motion_send_host_cmd(&st->core, 0);
-> +	}
-> +
-> +	st->rgb_calib[CROS_EC_IDX_TO_CHAN(idx)].scale = scale;
-> +	for (i = CROS_EC_SENSOR_X; i < CROS_EC_SENSOR_MAX_AXIS; i++)
-> +		st->core.param.sensor_scale.scale[i] = st->rgb_calib[i].scale;
-> +	return cros_ec_light_extra_send_host_cmd(&st->core, 1, 0);
-> +}
-> +
->  static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
->  			       struct iio_chan_spec const *chan,
->  			       int val, int val2, long mask)
->  {
->  	struct cros_ec_light_prox_state *st = iio_priv(indio_dev);
-> -	int ret;
-> +	int ret, i;
->  	int idx = chan->scan_index;
->  
->  	mutex_lock(&st->core.cmd_lock);
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_CALIBBIAS:
-> -		st->core.calib[idx].offset = val;
->  		/* Send to EC for each axis, even if not complete */
->  		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_OFFSET;
->  		st->core.param.sensor_offset.flags = MOTION_SENSE_SET_OFFSET;
-> -		st->core.param.sensor_offset.offset[0] =
-> -			st->core.calib[0].offset;
->  		st->core.param.sensor_offset.temp =
->  					EC_MOTION_SENSE_INVALID_CALIB_TEMP;
-> -		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +		if (idx == 0) {
-> +			st->core.calib[0].offset = val;
-> +			st->core.param.sensor_offset.offset[0] = val;
-> +			ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> +		} else {
-> +			st->rgb_calib[CROS_EC_IDX_TO_CHAN(idx)].offset = val;
-> +			for (i = CROS_EC_SENSOR_X;
-> +			     i < CROS_EC_SENSOR_MAX_AXIS;
-> +			     i++)
-> +				st->core.param.sensor_offset.offset[i] =
-> +					st->rgb_calib[i].offset;
-> +			ret = cros_ec_light_extra_send_host_cmd(
-> +					&st->core, 1, 0);
-> +		}
->  		break;
->  	case IIO_CHAN_INFO_CALIBSCALE:
-> +		if (indio_dev->num_channels > CROS_EC_LIGHT_PROX_MIN_CHANNELS) {
-> +			ret = cros_ec_light_write_color_scale(st, idx,
-> +							      val, val2);
-> +			break;
-> +		}
-> +		/*
-> +		 * For sensors with only one channel, _RANGE is used
-> +		 * instead of _SCALE.
-> +		 */
-> +		fallthrough;
-> +	case IIO_CHAN_INFO_SCALE:
->  		st->core.param.cmd = MOTIONSENSE_CMD_SENSOR_RANGE;
->  		st->core.param.sensor_range.data = (val << 16) | (val2 / 100);
->  		ret = cros_ec_motion_send_host_cmd(&st->core, 0);
-> @@ -159,27 +322,154 @@ static int cros_ec_light_prox_write(struct iio_dev *indio_dev,
->  	return ret;
->  }
->  
-> +static int cros_ec_light_push_data(struct iio_dev *indio_dev,
-> +				   s16 *data,
-> +				   s64 timestamp)
-> +{
-> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> +	unsigned long scan_mask;
-> +
-> +	if (!st || !indio_dev->active_scan_mask)
-> +		return 0;
-> +
-> +	scan_mask = *indio_dev->active_scan_mask;
-> +	if ((scan_mask & ~CROS_EC_LIGHT_CLEAR_OR_PROXIMITY_MASK) == 0)
-> +		/*
-> +		 * Only one channel at most is used.
-> +		 * Use regular push function.
-> +		 */
-> +		return cros_ec_sensors_push_data(indio_dev, data, timestamp);
-> +
-> +	if (scan_mask & CROS_EC_LIGHT_CLEAR_OR_PROXIMITY_MASK)
-> +		/*
-> +		 * Save clear channel, will be used when RGB data arrives.
-> +		 */
-> +		st->samples[0] = data[0];
-> +
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_light_push_data_rgb(struct iio_dev *indio_dev,
-> +				       s16 *data,
-> +				       s64 timestamp)
-> +{
-> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> +	s16 *out;
-> +	unsigned long scan_mask;
-> +	unsigned int i;
-> +
-> +	if (!st || !indio_dev->active_scan_mask)
-> +		return 0;
-> +
-> +	scan_mask = *indio_dev->active_scan_mask;
-> +	/*
-> +	 * Send all data needed.
-> +	 */
-> +	out = (s16 *)st->samples;
-> +	for_each_set_bit(i,
-> +			 indio_dev->active_scan_mask,
-> +			 indio_dev->masklength) {
-> +		if (i > 0)
-> +			*out = data[CROS_EC_IDX_TO_CHAN(i)];
-> +		out++;
-> +	}
-> +	iio_push_to_buffers_with_timestamp(indio_dev, st->samples, timestamp);
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t cros_ec_light_capture(int irq, void *p)
-> +{
-> +	struct iio_poll_func *pf = p;
-> +	struct iio_dev *indio_dev = pf->indio_dev;
-> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> +	int ret, i, idx = 0;
-> +	s16 data;
-> +	const unsigned long scan_mask = *indio_dev->active_scan_mask;
-> +
-> +	mutex_lock(&st->cmd_lock);
-> +
-> +	/* Clear capture data. */
-> +	memset(st->samples, 0, indio_dev->scan_bytes);
-> +
-> +	/* Read first channel. */
-> +	ret = cros_ec_sensors_read_cmd(indio_dev, 1, &data);
-> +	if (ret < 0) {
-> +		mutex_unlock(&st->cmd_lock);
-> +		goto done;
-> +	}
-> +	if (scan_mask & CROS_EC_LIGHT_CLEAR_OR_PROXIMITY_MASK)
-> +		((s16 *)st->samples)[idx++] = data;
-> +
-> +	/* Read remaining channels. */
-> +	if ((scan_mask & CROS_EC_LIGHT_XYZ_SPACE_MASK) ||
-> +	    (scan_mask & CROS_EC_LIGHT_RGB_SPACE_MASK)) {
-> +		ret = cros_ec_light_extra_send_host_cmd(
-> +				st, 1, sizeof(st->resp->data));
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->cmd_lock);
-> +			goto done;
-> +		}
-> +		for (i = 0; i < CROS_EC_SENSOR_MAX_AXIS; i++)
-> +			((s16 *)st->samples)[idx++] = st->resp->data.data[i];
-> +	}
-> +	mutex_unlock(&st->cmd_lock);
-> +
-> +	iio_push_to_buffers_with_timestamp(indio_dev, st->samples,
-> +					   iio_get_time_ns(indio_dev));
-> +
-> +done:
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int cros_ec_light_prox_update_scan_mode(struct iio_dev *indio_dev,
-> +					       const unsigned long *scan_mask)
-> +{
-> +	struct cros_ec_sensors_core_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +	bool enable_raw_mode;
-> +
-> +	if (*scan_mask & CROS_EC_LIGHT_XYZ_SPACE_MASK)
-> +		enable_raw_mode = false;
-> +	else if (*scan_mask & CROS_EC_LIGHT_RGB_SPACE_MASK)
-> +		enable_raw_mode = true;
-> +	else
-> +		/* Just clear channel or proxmity, nothing to do. */
-> +		return 0;
-> +
-> +	mutex_lock(&st->cmd_lock);
-> +	st->param.cmd = MOTIONSENSE_CMD_PERFORM_CALIB;
-> +	st->param.perform_calib.enable = enable_raw_mode;
-> +	ret = cros_ec_motion_send_host_cmd(st, 0);
-> +	mutex_unlock(&st->cmd_lock);
-> +
-> +	return ret;
-> +}
-> +
->  static const struct iio_info cros_ec_light_prox_info = {
->  	.read_raw = &cros_ec_light_prox_read,
->  	.write_raw = &cros_ec_light_prox_write,
->  	.read_avail = &cros_ec_sensors_core_read_avail,
-> +	.update_scan_mode = &cros_ec_light_prox_update_scan_mode,
->  };
->  
->  static int cros_ec_light_prox_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> +	struct cros_ec_sensorhub *sensor_hub = dev_get_drvdata(dev->parent);
->  	struct iio_dev *indio_dev;
->  	struct cros_ec_light_prox_state *state;
->  	struct iio_chan_spec *channel;
-> -	int ret;
-> +	int ret, i, num_channels = CROS_EC_LIGHT_PROX_MIN_CHANNELS;
->  
->  	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
->  	if (!indio_dev)
->  		return -ENOMEM;
->  
->  	ret = cros_ec_sensors_core_init(pdev, indio_dev, true,
-> -					cros_ec_sensors_capture,
-> -					cros_ec_sensors_push_data);
-> +					cros_ec_light_capture,
-> +					cros_ec_light_push_data);
->  	if (ret)
->  		return ret;
->  
-> @@ -189,28 +479,40 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
->  	state = iio_priv(indio_dev);
->  	state->core.type = state->core.resp->info.type;
->  	state->core.loc = state->core.resp->info.location;
-> -	channel = state->channels;
->  
-> -	/* Common part */
-> -	channel->info_mask_shared_by_all =
-> -		BIT(IIO_CHAN_INFO_SAMP_FREQ);
-> -	channel->info_mask_shared_by_all_available =
-> -		BIT(IIO_CHAN_INFO_SAMP_FREQ);
-> -	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
-> -	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
-> -	channel->scan_type.shift = 0;
-> -	channel->scan_index = 0;
-> -	channel->ext_info = cros_ec_sensors_ext_info;
-> -	channel->scan_type.sign = 'u';
-> +	/* Check if we need more sensors for RGB (or XYZ). */
-> +	state->core.param.cmd = MOTIONSENSE_CMD_INFO;
-> +	if (cros_ec_light_extra_send_host_cmd(&state->core, 1, 0) == 0 &&
-> +	    state->core.resp->info.type == MOTIONSENSE_TYPE_LIGHT_RGB)
-> +		num_channels += 2 * CROS_EC_SENSOR_MAX_AXIS;
-> +
-> +	channel = devm_kcalloc(dev, num_channels, sizeof(*channel), 0);
-> +	if (!channel)
-> +		return -ENOMEM;
-> +
-> +	indio_dev->channels = channel;
-> +	indio_dev->num_channels = num_channels;
-> +	indio_dev->available_scan_masks = cros_ec_light_prox_bitmasks;
->  
-> +	cros_ec_light_channel_common(channel);
->  	/* Sensor specific */
->  	switch (state->core.type) {
->  	case MOTIONSENSE_TYPE_LIGHT:
->  		channel->type = IIO_LIGHT;
-> +		if (num_channels > CROS_EC_LIGHT_PROX_MIN_CHANNELS) {
-> +			/*
-> +			 * To set a global scale, as CALIB_SCALE for RGB sensor
-> +			 * is limited between 0 and 2.
-> +			 */
-> +			channel->info_mask_shared_by_all |=
-> +				BIT(IIO_CHAN_INFO_SCALE);
-> +		}
->  		channel->info_mask_separate =
-> -			BIT(IIO_CHAN_INFO_PROCESSED) |
-> +			BIT(IIO_CHAN_INFO_RAW) |
->  			BIT(IIO_CHAN_INFO_CALIBBIAS) |
->  			BIT(IIO_CHAN_INFO_CALIBSCALE);
-> +		channel->modified = 1;
-> +		channel->channel2 = IIO_MOD_LIGHT_CLEAR;
->  		break;
->  	case MOTIONSENSE_TYPE_PROX:
->  		channel->type = IIO_PROXIMITY;
-> @@ -223,20 +525,48 @@ static int cros_ec_light_prox_probe(struct platform_device *pdev)
->  		dev_warn(dev, "Unknown motion sensor\n");
->  		return -EINVAL;
->  	}
-> +	channel++;
-> +
-> +	if (num_channels > CROS_EC_LIGHT_PROX_MIN_CHANNELS) {
-> +		u8 sensor_num = state->core.param.info.sensor_num;
-> +		int idx;
-> +
-> +		for (i = CROS_EC_SENSOR_X, idx = 1; i < CROS_EC_SENSOR_MAX_AXIS;
-> +				i++, channel++, idx++) {
-> +			cros_ec_light_channel_common(channel);
-> +			channel->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +			channel->scan_index = idx;
-> +			channel->modified = 1;
-> +			channel->channel2 = IIO_MOD_X + i;
-> +			channel->type = IIO_LIGHT;
-> +		}
-> +		for (i = CROS_EC_SENSOR_X; i < CROS_EC_SENSOR_MAX_AXIS;
-> +				i++, channel++, idx++) {
-> +			cros_ec_light_channel_common(channel);
-> +			channel->info_mask_separate =
-> +				BIT(IIO_CHAN_INFO_RAW) |
-> +				BIT(IIO_CHAN_INFO_CALIBBIAS) |
-> +				BIT(IIO_CHAN_INFO_CALIBSCALE);
-> +			channel->scan_index = idx;
-> +			channel->modified = 1;
-> +			channel->channel2 = IIO_MOD_LIGHT_RED + i;
-> +			channel->type = IIO_LIGHT;
-> +		}
-> +		cros_ec_sensorhub_register_push_data(
-> +				sensor_hub,
-> +				sensor_num + 1,
-> +				indio_dev,
-> +				cros_ec_light_push_data_rgb);
-> +	}
->  
->  	/* Timestamp */
-> -	channel++;
->  	channel->type = IIO_TIMESTAMP;
->  	channel->channel = -1;
-> -	channel->scan_index = 1;
-> +	channel->scan_index = num_channels - 1;
->  	channel->scan_type.sign = 's';
->  	channel->scan_type.realbits = 64;
->  	channel->scan_type.storagebits = 64;
->  
-> -	indio_dev->channels = state->channels;
-> -
-> -	indio_dev->num_channels = CROS_EC_LIGHT_PROX_MAX_CHANNELS;
-> -
->  	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
->  
->  	return devm_iio_device_register(dev, indio_dev);
-> diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
-> index b7f2c00db5e1e..f85191ab2ee34 100644
-> --- a/drivers/platform/chrome/cros_ec_sensorhub.c
-> +++ b/drivers/platform/chrome/cros_ec_sensorhub.c
-> @@ -103,6 +103,9 @@ static int cros_ec_sensorhub_register(struct device *dev,
->  		case MOTIONSENSE_TYPE_LIGHT:
->  			name = "cros-ec-light";
->  			break;
-> +		case MOTIONSENSE_TYPE_LIGHT_RGB:
-> +			/* Processed with cros-ec-light. */
-> +			continue;
->  		case MOTIONSENSE_TYPE_ACTIVITY:
->  			name = "cros-ec-activity";
->  			break;
-> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-> index 7bc961defa87e..c31766c64bf94 100644
-> --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> @@ -26,7 +26,6 @@ enum {
->  
->  /*
->   * 4 16 bit channels are allowed.
-> - * Good enough for current sensors, they use up to 3 16 bit vectors.
->   */
->  #define CROS_EC_SAMPLE_SIZE  (sizeof(s64) * 2)
->  
-> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-> index 3286ac00b0436..72ee6b049da62 100644
-> --- a/include/linux/platform_data/cros_ec_commands.h
-> +++ b/include/linux/platform_data/cros_ec_commands.h
-> @@ -2342,6 +2342,7 @@ enum motionsensor_type {
->  	MOTIONSENSE_TYPE_ACTIVITY = 5,
->  	MOTIONSENSE_TYPE_BARO = 6,
->  	MOTIONSENSE_TYPE_SYNC = 7,
-> +	MOTIONSENSE_TYPE_LIGHT_RGB = 8,
->  	MOTIONSENSE_TYPE_MAX,
->  };
->  
-> @@ -2375,6 +2376,7 @@ enum motionsensor_chip {
->  	MOTIONSENSE_CHIP_LSM6DS3 = 17,
->  	MOTIONSENSE_CHIP_LSM6DSO = 18,
->  	MOTIONSENSE_CHIP_LNG2DM = 19,
-> +	MOTIONSENSE_CHIP_TCS3400 = 20,
->  	MOTIONSENSE_CHIP_MAX,
->  };
->  
-> 
-
--- 
-
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 37a0aea..867c126 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -282,7 +282,8 @@ static inline void tramp_free(void *tramp) { }
+ 
+ /* Defined as markers to the end of the ftrace default trampolines */
+ extern void ftrace_regs_caller_end(void);
+-extern void ftrace_epilogue(void);
++extern void ftrace_regs_caller_ret(void);
++extern void ftrace_caller_end(void);
+ extern void ftrace_caller_op_ptr(void);
+ extern void ftrace_regs_caller_op_ptr(void);
+ 
+@@ -334,7 +335,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 		call_offset = (unsigned long)ftrace_regs_call;
+ 	} else {
+ 		start_offset = (unsigned long)ftrace_caller;
+-		end_offset = (unsigned long)ftrace_epilogue;
++		end_offset = (unsigned long)ftrace_caller_end;
+ 		op_offset = (unsigned long)ftrace_caller_op_ptr;
+ 		call_offset = (unsigned long)ftrace_call;
+ 	}
+@@ -366,6 +367,13 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	if (WARN_ON(ret < 0))
+ 		goto fail;
+ 
++	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
++		ip = trampoline + (ftrace_regs_caller_ret - ftrace_regs_caller);
++		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
++		if (WARN_ON(ret < 0))
++			goto fail;
++	}
++
+ 	/*
+ 	 * The address of the ftrace_ops that is used for this trampoline
+ 	 * is stored at the end of the trampoline. This will be used to
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 369e61f..7657dc7 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -157,8 +157,12 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+ 	 * think twice before adding any new code or changing the
+ 	 * layout here.
+ 	 */
+-SYM_INNER_LABEL(ftrace_epilogue, SYM_L_GLOBAL)
++SYM_INNER_LABEL(ftrace_caller_end, SYM_L_GLOBAL)
+ 
++	jmp ftrace_epilogue
++SYM_FUNC_END(ftrace_caller);
++
++SYM_FUNC_START(ftrace_epilogue)
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
+ 	jmp ftrace_stub
+@@ -170,14 +174,12 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
+  */
+ SYM_INNER_LABEL_ALIGN(ftrace_stub, SYM_L_WEAK)
+ 	retq
+-SYM_FUNC_END(ftrace_caller)
++SYM_FUNC_END(ftrace_epilogue)
+ 
+ SYM_FUNC_START(ftrace_regs_caller)
+ 	/* Save the current flags before any operations that can change them */
+ 	pushfq
+ 
+-	UNWIND_HINT_SAVE
+-
+ 	/* added 8 bytes to save flags */
+ 	save_mcount_regs 8
+ 	/* save_mcount_regs fills in first two parameters */
+@@ -233,7 +235,10 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
+ 	movq ORIG_RAX(%rsp), %rax
+ 	movq %rax, MCOUNT_REG_SIZE-8(%rsp)
+ 
+-	/* If ORIG_RAX is anything but zero, make this a call to that */
++	/*
++	 * If ORIG_RAX is anything but zero, make this a call to that.
++	 * See arch_ftrace_set_direct_caller().
++	 */
+ 	movq ORIG_RAX(%rsp), %rax
+ 	cmpq	$0, %rax
+ 	je	1f
+@@ -244,20 +249,14 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
+ 	movq %rax, MCOUNT_REG_SIZE(%rsp)
+ 
+ 	restore_mcount_regs 8
++	/* Restore flags */
++	popfq
+ 
+-	jmp	2f
++SYM_INNER_LABEL(ftrace_regs_caller_ret, SYM_L_GLOBAL);
++	UNWIND_HINT_RET_OFFSET
++	jmp	ftrace_epilogue
+ 
+ 1:	restore_mcount_regs
+-
+-
+-2:
+-	/*
+-	 * The stack layout is nondetermistic here, depending on which path was
+-	 * taken.  This confuses objtool and ORC, rightfully so.  For now,
+-	 * pretend the stack always looks like the non-direct case.
+-	 */
+-	UNWIND_HINT_RESTORE
+-
+ 	/* Restore flags */
+ 	popfq
+ 
+@@ -268,7 +267,6 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
+ 	 * to the return.
+ 	 */
+ SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
+-
+ 	jmp ftrace_epilogue
+ 
+ SYM_FUNC_END(ftrace_regs_caller)
