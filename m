@@ -2,83 +2,99 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CB4C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DFFC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 774BE20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BFD720661
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 19:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dqXRnrqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgDWTQ3 (ORCPT
+        id S1728308AbgDWTRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:16:29 -0400
-Received: from 8.mo177.mail-out.ovh.net ([46.105.61.98]:53460 "EHLO
-        8.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgDWTQ3 (ORCPT
+        Thu, 23 Apr 2020 15:17:50 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:34926 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgDWTRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 15:16:29 -0400
-X-Greylist: delayed 1809 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 15:16:28 EDT
-Received: from player796.ha.ovh.net (unknown [10.110.171.173])
-        by mo177.mail-out.ovh.net (Postfix) with ESMTP id BE17C12D3A6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Apr 2020 20:37:12 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player796.ha.ovh.net (Postfix) with ESMTPSA id DBDDC11A47C5D;
-        Thu, 23 Apr 2020 18:37:06 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH 1/3] docs: sysctl/kernel: document cad_pid
-Date:   Thu, 23 Apr 2020 20:36:49 +0200
-Message-Id: <20200423183651.15365-1-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 23 Apr 2020 15:17:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1587669469; x=1619205469;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jt1/ckSRkhCCZj848GJDeClGoNfbc1ra8uCc3PfjFkY=;
+  b=dqXRnrqR2/+l1Uf4tKHgNPmzZhRD46IjwsahmaXjm5nPou/4w18+0jhU
+   RmoNaHkCcYe7E9c1xlVn+dbiUY5jlOVJMKyocxoNbSMWt6Mq+proWM4e9
+   E4c4weVKTfnc00tKFjxlJb4J1okMMWTo4QCjKYJFt4eL2izu08VoK6BTp
+   qbxOr33F0O1s6foZSYjDM+kTj/o/lcEMD9KHpe4xp29SUnGNrbVMonk6P
+   g56XK9tFa6MLuKgeJW7UDSuPQNSFmud517yvkwSWX/V9IN9Kqvk7f3XJX
+   tMrMOSWmD63A4XYN2V9Rjf4w+gcS4bfVtCOsh6lMkHZWYGz9G0ZMNUkoF
+   Q==;
+IronPort-SDR: rsI0zVj6PkOkATLFwBc196W/Mj98ccoaPbRdLMfh0LBkUo/oVVYeEJWYNggn0G4q9g3ysnLcu4
+ mXrRpNZ1vv2YCjBpdLPNkovPAwH6uN73cdaTxhfvVncruWdnfJZo0WbIme7dL3NolM4GinBYcv
+ bJWPHUMh8a89BJI7j2L9yUwy2N0yZ/ikklAp2yU8ENKtL6t6c+K+Xo4ug9TQvDvgNUb/Sfat6O
+ bB1RJCdYycrquqlljExgJvurBlGsJHoUotUPfaW7cZcKjUE+hwkeJbwE12MBwbrrFcdKkka8UL
+ 6NM=
+X-IronPort-AV: E=Sophos;i="5.73,307,1583218800"; 
+   d="scan'208";a="74384503"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Apr 2020 12:17:48 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 Apr 2020 12:17:48 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 23 Apr 2020 12:17:47 -0700
+Date:   Thu, 23 Apr 2020 21:17:47 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+CC:     Po Liu <Po.Liu@nxp.com>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <claudiu.manoil@nxp.com>, <vladimir.oltean@nxp.com>,
+        <alexandru.marginean@nxp.com>, <michael.chan@broadcom.com>,
+        <vishal@chelsio.com>, <saeedm@mellanox.com>, <leon@kernel.org>,
+        <jiri@mellanox.com>, <idosch@mellanox.com>,
+        <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
+        <kuba@kernel.org>, <jhs@mojatatu.com>, <xiyou.wangcong@gmail.com>,
+        <simon.horman@netronome.com>, <pablo@netfilter.org>,
+        <moshe@mellanox.com>, <m-karicheri2@ti.com>,
+        <andre.guedes@linux.intel.com>, <stephen@networkplumber.org>
+Subject: Re: [v3,net-next  1/4] net: qos: introduce a gate control flow action
+Message-ID: <20200423191747.vzfmh3x3qerqbx7z@ws.localdomain>
+References: <20200418011211.31725-5-Po.Liu@nxp.com>
+ <20200422024852.23224-1-Po.Liu@nxp.com>
+ <20200422024852.23224-2-Po.Liu@nxp.com>
+ <878sim2jcs.fsf@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 16165670866134453637
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejleeirdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <878sim2jcs.fsf@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on the implementation in kernel/sysctl.c (the proc_do_cad_pid()
-function), kernel/reboot.c, and include/linux/sched/signal.h.
+On 23.04.2020 10:38, Vinicius Costa Gomes wrote:
+>EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>
+>Po Liu <Po.Liu@nxp.com> writes:
+>>> tc filter add dev eth0 parent ffff: protocol ip \
+>>          flower src_ip 192.168.0.20 \
+>>          action gate index 2 clockid CLOCK_TAI \
+>>          sched-entry open 200000000 -1 8000000 \
+>>          sched-entry close 100000000 -1 -1
+>
+>From the insight that Vladimir gave, it really makes it easier for me to
+>understand if you added these filters and actions in two steps. The
+>first, you would add the "time based" actions and the second you would
+>plug the filters into the actions. And I think this would match real
+>world usage better.
+I agree.
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 55b24eada13c..82bfd5892663 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -116,6 +116,16 @@ run. The statistics can be seen using ``bpftool``.
- = ===================================
- 
- 
-+cad_pid
-+=======
-+
-+This is the pid which will be signalled on reboot (notably, by
-+Ctrl-Alt-Delete). Writing a value to this file which doesn't
-+correspond to a running process will result in ``-ESRCH``.
-+
-+See also `ctrl-alt-del`_.
-+
-+
- cap_last_cap
- ============
- 
-
-base-commit: 7b9121040d83eb9e332f7dbc140eca17643d3586
--- 
-2.20.1
-
+/Allan
