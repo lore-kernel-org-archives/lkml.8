@@ -2,80 +2,110 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DE5C55185
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0514DC55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1A202075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAC02080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 01:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sODo5jYW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rr+E4ojc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgDWBYU (ORCPT
+        id S1726078AbgDWBbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Apr 2020 21:24:20 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31930 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725846AbgDWBYT (ORCPT
+        Wed, 22 Apr 2020 21:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgDWBbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Apr 2020 21:24:19 -0400
-X-UUID: 933b61af9163417fa800debf136076a2-20200423
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=n69err7fZ+dUEdayQQ/ds4lOY0vJ/aaYZuP0ALEneYI=;
-        b=sODo5jYW1KGP42KOk/BcU5+1EADLT/hogKmhIwSI4FCuzLtVEy33o+xsJy8dI42hnYpPl5gP8+pnvbHB6UUhaiSLvILJBMii1ByJh3QFXwPqMynC2F7dviDxKfMX84nd6vfqoiF2DkUFHPRyEtKQ8j5vDYPLksEogftU2laF2lw=;
-X-UUID: 933b61af9163417fa800debf136076a2-20200423
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <fengping.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 397310574; Thu, 23 Apr 2020 09:24:17 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Apr 2020 09:24:05 +0800
-Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Apr 2020 09:24:09 +0800
-From:   Fengping yu <fengping.yu@mediatek.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        <linux-input@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v5] add mtk matrix keypad driver for keypad on MTK SoC 
-Date:   Thu, 23 Apr 2020 09:19:56 +0800
-Message-ID: <20200423011958.30521-1-fengping.yu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 22 Apr 2020 21:31:33 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 737CAC03C1AA;
+        Wed, 22 Apr 2020 18:31:33 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id a9so2266179ybc.8;
+        Wed, 22 Apr 2020 18:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qTERN+i0HIChPpFfmgcmeaOzlSbySSWPcFYAbeYUgFo=;
+        b=rr+E4ojcCqOtxYzaHP++U+89MxK5MiZjXlb5Qb9nqsg9otkLEszW9zKDREFSW6adY4
+         ihYDJRt2EpNRNRrZxo1hzL9zLecZqgElRxoLRO2UQLyv0t/EJh4fKPNyk+Mc9NwRZZF2
+         oKYvcS3Tb4V3ElMicauImL9A4P7MqJe0mu36ZXTEjhL7HLxrESS6M9pUQ/HO8TU23+Df
+         NHVni4I8FA9QqHq4jZzOyUsgghQlxerauUtojYGDYnJUISHQCgIdLo5LfcbUfBcTMMMV
+         cFJ4B/tO2d+r+idJyo3OVLe9I1A8d4MWzi9JgVgp8Odp8VKr8Odyj2OoCQnk7D1W6/W9
+         Os0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qTERN+i0HIChPpFfmgcmeaOzlSbySSWPcFYAbeYUgFo=;
+        b=gqxwpjduUFDffkMYeCO//+iTXN4zj11K1bHD1CaXmnPpQom5+dnuxma3Uudv56Pn0b
+         jHH39E/HlnWyWB29w9A8phqfYiZ/AwzB17AvYZWbzBRrtZGgyomEa9BKKFpj2HopBqoH
+         wR9wgve3ZOnyrAGtO3R46sMLLAwQFoENSMSp+oHajGZ+IJdT3zfHytDkWHc241IMEuro
+         Pg2ZKGCiCV7Xa7R9Gpk8wk3NI2rYD1xE2bHSSCrh1c+DI4qFPCKXTU55OCShJuo//ouA
+         jTV0kbLZU/DJ+FMB33pVPhSZVIpPGqD2F2TNH2Hemv7vgGXYApgqXxnlgUsQVCgQOQl5
+         QzUA==
+X-Gm-Message-State: AGi0PuYyVioKZORU8QWl0vftBFx5J0TeWvSy5ij+3+SAHGmCfyujzcQ7
+        jrUyDdy9rOotDQDkTS25UUEso8E1vwew7cYBJis=
+X-Google-Smtp-Source: APiQypKJMu3AyBtHt03zMEEtlNqfRN+lKkkWcS4V5OtidAVtmrzo7IAb6GE/EErIjP0YvJxe7VTaI7uyfOjCnDHmn+w=
+X-Received: by 2002:a25:e907:: with SMTP id n7mr2857011ybd.85.1587605492519;
+ Wed, 22 Apr 2020 18:31:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C4F198DFD9281E00ED4062512287613C53AF1CF5D317FAAF98071E88C786B0462000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200423103101.0d416eb8@canb.auug.org.au>
+In-Reply-To: <20200423103101.0d416eb8@canb.auug.org.au>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 22 Apr 2020 20:31:21 -0500
+Message-ID: <CAH2r5mvUwDAfW0Eh1cLvSxukBkySYrW7Bf-f35bMdzHu81EG9A@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the cifs tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paulo Alcantara <pc@cjr.nz>, Aurelien Aptel <aaptel@suse.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpDaGFuZ2Ugc2luY2UgdjQ6DQotIHJlbW92ZSBleHRyYSBzcGFjZSBhbmQgcmVkdW5kYW50IGxp
-bmVzDQotIHJlbW92ZSBkaXNhYmxlX2lycV9ub3N5bmMgYW5kIGVuYWJsZV9pcnEgaW4gaXJxIGhh
-bmRsZXINCi0gcHV0IGRlZmNvbmZpZyBhcyBhIHNpbmdsZSBwYXRjaA0KLSB1bmlmaWVkIGRldmlj
-ZSBwcm9wZXJ0aWVzIGludGVyZmFjZSBmb3IgQUNQSSBhbmQgZGV2aWNlIHRyZWVzDQotIGZpeGVk
-IG90aGVyIGlzc3VlIGFjY29yZGluZyByZXZpZXdlciBjb21tZW50cw0KDQpmZW5ncGluZy55dSAo
-Myk6DQogIGR0LWJpbmRpbmdzOiBhZGQgbWF0cml4IGtleXBhZCBkb2N1bWVudGF0aW9uDQogIGFy
-bTY0OiBjb25maWdzOiBkZWZjb25maWc6IGVuYWJsZSBtdGsga2V5cGFkIGNvbmZpZw0KICBkcml2
-ZXJzOiBpbnB1dDoga2V5Ym9hcmQ6IGFkZCBtdGsga2V5cGFkIGRyaXZlcg0KDQogLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC50eHQgICAgIHwgIDYxICsrKysrDQogYXJjaC9h
-cm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJz
-L2lucHV0L2tleWJvYXJkL0tjb25maWcgICAgICAgICAgICAgICAgfCAgIDkgKw0KIGRyaXZlcnMv
-aW5wdXQva2V5Ym9hcmQvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMSArDQogZHJpdmVycy9p
-bnB1dC9rZXlib2FyZC9tdGsta3BkLmMgICAgICAgICAgICAgIHwgMjQyICsrKysrKysrKysrKysr
-KysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgMzE0IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L210ay1rcGQudHh0
-DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvbXRrLWtwZC5jDQoN
-Ci0tDQoyLjE4LjANCg0K
+Fixed.  updated cifs-2.6.git for-next with Paulo's respun version of
+two patches to address the missing #ifdef
 
+Should be ok now.
+
+On Wed, Apr 22, 2020 at 7:31 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the cifs tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+>
+> fs/cifs/connect.c: In function 'cifs_find_tcon':
+> fs/cifs/connect.c:3378:45: error: 'struct cifs_tcon' has no member named 'dfs_path'
+>  3378 |   if (!match_tcon(tcon, volume_info) || tcon->dfs_path)
+>       |                                             ^~
+>
+> Caused by commit
+>
+>   f73409e5babd ("cifs: do not share tcons with DFS")
+>
+> # CONFIG_CIFS_DFS_UPCALL is not set
+>
+> I have reverted that commit for today.
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Thanks,
+
+Steve
