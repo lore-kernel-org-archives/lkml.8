@@ -2,75 +2,153 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4282FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F5EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA17206B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A3B2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="O7+gDV4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgDWFnf (ORCPT
+        id S1726810AbgDWFoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:43:35 -0400
-Received: from smtp25.cstnet.cn ([159.226.251.25]:50870 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbgDWFne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:43:34 -0400
-Received: from ubuntu.localdomain (unknown [111.198.230.252])
-        by APP-05 (Coremail) with SMTP id zQCowADn73_xKqFeXadlAw--.52076S2;
-        Thu, 23 Apr 2020 13:43:17 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: sched : Remove unnecessary cast in kfree
-Date:   Thu, 23 Apr 2020 13:43:13 +0800
-Message-Id: <20200423054313.10535-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowADn73_xKqFeXadlAw--.52076S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5t7k0a2IF6w4xM7kC6x804xWl14x267AK
-        xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
-        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I
-        6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr
-        1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvE
-        ncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I
-        8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK
-        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
-        x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8P5r7UUUUU==
-X-Originating-IP: [111.198.230.252]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgAPA10Tew886AAAsk
+        Thu, 23 Apr 2020 01:44:17 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17876 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbgDWFoQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 01:44:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1587620578; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=WEXPfoDkTWR/J9oQ9Jcu7q/a/EFKCDDKjQO2CAHp2ijGoscDdlo4HyceiMs/n8zMB8/PyX3CFPQhD0dhwlAMta1YuthFxuys8tCAVPSxLiThRHeZrNgUdQrqb0fjrHP/m6RSUyLwuSo60uQLNKaqMejC5AOOMEInULT2bvzITAo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1587620578; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=p0Hue82OArHegP34/EQC99f2PxSUyGy0fvP1kcei0ek=; 
+        b=Lqh3ZFfPQNHk+KReY/uCf6LxTjL1w/abhWPo7X+YAx4gZ7d7GdyYgBPPQrbjRE5oopJe0PaHPWFllMrx7utrTHEYfaiBmh+TJLsnABmCJjEa/RgNrR+RndKhHs6JjmC/rp+MpgqE32A0BXqWdhuRz869SpvjWMX9xw24/E19FrM=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587620578;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=p0Hue82OArHegP34/EQC99f2PxSUyGy0fvP1kcei0ek=;
+        b=O7+gDV4+us94bD1eMWGrcE2y8xlgPk4WYi+XXKNEK4r6a30aHvXJ5TsQzXVS1ez9
+        GGg94lSbvV4EKhj+hPewIDkylwxf2o8dCXaiUZuVUXmXWj/KqIV6nf8vMZy2a3519N5
+        AD3tg2QdF4MfiUOeo4+mz7/YfJMjQD0Y4U9bJo18=
+Received: from [127.0.0.1] (122.235.213.3 [122.235.213.3]) by mx.zoho.com.cn
+        with SMTPS id 1587620575832526.5212172311194; Thu, 23 Apr 2020 13:42:55 +0800 (CST)
+Date:   Thu, 23 Apr 2020 13:42:52 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+CC:     linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit kernel
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com> <20200422143258.1250960-1-jiaxun.yang@flygoat.com> <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org>
+Message-ID: <B307BFAC-9973-4444-B69A-40B054210E84@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecassary casts in the argument to kfree.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- net/sched/em_ipt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sched/em_ipt.c b/net/sched/em_ipt.c
-index eecfe072c508..18755d29fd15 100644
---- a/net/sched/em_ipt.c
-+++ b/net/sched/em_ipt.c
-@@ -199,7 +199,7 @@ static void em_ipt_destroy(struct tcf_ematch *em)
- 		im->match->destroy(&par);
- 	}
- 	module_put(im->match->me);
--	kfree((void *)im);
-+	kfree(im);
- }
- 
- static int em_ipt_match(struct sk_buff *skb, struct tcf_ematch *em,
--- 
-2.17.1
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=888=
+:10:12, "Maciej W=2E Rozycki" <macro@linux-mips=2Eorg> =E5=86=99=E5=88=B0:
+>On Wed, 22 Apr 2020, Jiaxun Yang wrote:
+>
+>> Reviewed-by: Maciej W=2E Rozycki <macro@linux-mips=2Eorg>
+>
+> Hmm, that was for an earlier version of the patch, and reviews obviously=
+=20
+>do not automatically carry over to subsequent versions, as it cannot be=
+=20
+>claimed that they are as good in the reviewer's eyes as the actual versio=
+n=20
+>reviewed was=2E
+>
+>> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+>> index e1c44aed8156=2E=2E68c0f22fefc0 100644
+>> --- a/arch/mips/Makefile
+>> +++ b/arch/mips/Makefile
+>> @@ -288,12 +288,23 @@ ifdef CONFIG_64BIT
+>>    endif
+>>  endif
+>> =20
+>> +# When linking a 32-bit executable the LLVM linker cannot cope with a
+>> +# 32-bit load address that has been sign-extended to 64 bits=2E  Simpl=
+y
+>> +# remove the upper 32 bits then, as it is safe to do so with other
+>> +# linkers=2E
+>> +ifdef CONFIG_64BIT
+>> +	load-ld			=3D $(load-y)
+>> +else
+>> +	load-ld			=3D $(subst 0xffffffff,0x,$(load-y))
+>> +endif
+>> +
+>>  KBUILD_AFLAGS	+=3D $(cflags-y)
+>>  KBUILD_CFLAGS	+=3D $(cflags-y)
+>> -KBUILD_CPPFLAGS +=3D -DVMLINUX_LOAD_ADDRESS=3D$(load-y)
+>> +KBUILD_CPPFLAGS +=3D -DVMLINUX_LOAD_ADDRESS=3D$(load-y) -DVMLINUX_LINK=
+_ADDRESS=3D$(load-ld)
+>>  KBUILD_CPPFLAGS +=3D -DDATAOFFSET=3D$(if $(dataoffset-y),$(dataoffset-=
+y),0)
+>> =20
+>>  bootvars-y	=3D VMLINUX_LOAD_ADDRESS=3D$(load-y) \
+>> +		  VMLINUX_LINK_ADDRESS=3D$(load-ld) \
+>>  		  VMLINUX_ENTRY_ADDRESS=3D$(entry-y) \
+>>  		  PLATFORM=3D"$(platform-y)" \
+>>  		  ITS_INPUTS=3D"$(its-y)"
+>
+> Hmm, to be honest I find the nomenclature confusing: VMLINUX_LOAD_ADDRES=
+S=20
+>and VMLINUX_LINK_ADDRESS sound like synonyms to me and also look very=20
+>similar, so I expect people will be confused and scratch their heads in=
+=20
+>the future=2E  Due to the obscurity of the problem I think there is littl=
+e=20
+>room for manoeuvre here really, but how about using LINKER_LOAD_ADDRESS=
+=20
+>for the new variable?
+>
+> Alternatively, have you made any attempt to verify if actually replacing=
+=20
+>the setting for VMLINUX_LOAD_ADDRESS would be safe?  Glancing over its us=
+e=20
+>there do not appear to be many places=2E
 
+Limited experiments showed it should be fine=2E=2E=2E
+
+But MIPS kernel has some design I'm not really familiar with like SYM32 fo=
+r
+64-bit kernel and special address space design for Trap-and-emul KVM=2E
+
+I'm not 100 sure it's safe so I didn't do so=2E
+
+>
+>  Maciej
+
+--=20
+Jiaxun Yang
