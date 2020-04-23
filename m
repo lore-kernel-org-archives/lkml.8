@@ -2,161 +2,375 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF13C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E819EC55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 487752073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPI/id/t"
+	by mail.kernel.org (Postfix) with ESMTP id C82A0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 13:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587648689;
+	bh=iWE+rAJqoliinNWYMX0l/i083DIXMGzS/yNwnCypFR0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=00T/10a+6Zj0uRgiBaDBcqR4HrBnIh57QpP1YF0wq4UE3ARAzfO5U0re/EBB1GtY/
+	 oOxNBvztaLWjoyL9G9KOmlVORBa9aSYvQbWANiIbZf6aFtKRArBe1Nbp3IAYfcrOg6
+	 n2oDyI9w4ks6EEXD07ojCw5jaPm9KwV83JQyLG4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgDWN2a (ORCPT
+        id S1728001AbgDWNb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726224AbgDWN23 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:28:29 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93672C08E934;
-        Thu, 23 Apr 2020 06:28:29 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id d15so5241103wrx.3;
-        Thu, 23 Apr 2020 06:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=H+kR0UcPOO6MRdLEzgHE+vv3y4TUhkBdKhYsw9irPWw=;
-        b=RPI/id/t6l5PqqaFmS+oq7ZoVqwl/0FeLJ3Xvmgm4BjC/GSrZc30HFIA3bd780ZyNp
-         QRACaq3CWo/Y9RZQm5Dntm0D7cx2TFvElMhb9v+Co+KgNzEfHU0f99cTzDy9NHYG9j7K
-         nJGMkbogwc+KlKgU40owfPE3bORQGnSnV6s6lQH6uvuBU0JRRRj8DyjLpcu3FHYTKVO0
-         mhjSdNqkfVMOExwmy3rdDr/PhMTh9gKgitG0KY9xCEciZSwiHUuq3zvxD3n8mMiJTxEg
-         box8fxZV8zgE8Ij/cwmXN/2gFfu4azXZgdpMpmxfggiWjlzHsR3uWEsr7u4p3kd1xXad
-         G86g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H+kR0UcPOO6MRdLEzgHE+vv3y4TUhkBdKhYsw9irPWw=;
-        b=NBDOQbcsdHn6D6LqYXpSlNgXymIA3AA5bUS78HOYA+7QJu59pYZRcNUCNmt8lIndC6
-         QWeJKmTHDqgWeLcgnF5EJ3D7q+/83+/XE03r2VDuGWlLXDUlCCNHr1C1lDtFiXXMqoo3
-         IIkIaMtzPwpS1b5gUTh7frbO+iO8qQ7XeTd0PJuqw7K6UJHgZnnp/EbCdZThzg4d4jR9
-         KpMvURvL5kTFhd9zEKgLJnrzOexSrLT2YPF0Q822nmXpH/ITyecxI7NkMpvClZCar23h
-         1NtBHYJCCmCP3WqyddIf/Oc3SclLpqSs/L3Q2Ir/rB3XHmXFdJFzhEdm2mq836BjlZ+B
-         xhSA==
-X-Gm-Message-State: AGi0PuaK+vcbnSSsTyt4chY2Bt6SPtkKADBZrfUEMuLHSQaLs2M8O9Yl
-        ykFv0Zcy48Fv/Ie4tg6W1C115wFfMryIGw==
-X-Google-Smtp-Source: APiQypL00MM7opxNieTqA6f4ccQWl4aOFoowwL2e4/vkcJL487OI1qTQuZqKZuXMAad1M5XSGGVPKQ==
-X-Received: by 2002:a5d:6a92:: with SMTP id s18mr4699435wru.50.1587648508339;
-        Thu, 23 Apr 2020 06:28:28 -0700 (PDT)
-Received: from localhost.localdomain (89-212-21-243.static.t-2.net. [89.212.21.243])
-        by smtp.googlemail.com with ESMTPSA id l15sm3552703wmi.48.2020.04.23.06.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 06:28:27 -0700 (PDT)
-From:   Andrej Picej <andpicej@gmail.com>
-Cc:     primoz.fiser@norik.com, Andrej Picej <andpicej@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (lm70) Add support for ACPI
-Date:   Thu, 23 Apr 2020 15:27:33 +0200
-Message-Id: <20200423132733.7743-1-andpicej@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 23 Apr 2020 09:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727075AbgDWNb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:31:28 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA91A2073A;
+        Thu, 23 Apr 2020 13:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587648688;
+        bh=iWE+rAJqoliinNWYMX0l/i083DIXMGzS/yNwnCypFR0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fnbCY7O64cNwOBCiZ3cxHxx30Tn1no0cgKS0Jyjr/SyOIlu1mEytbAzzSZS+s2UaY
+         2kHB++Ws450Fb7hHQeU5O9VniZAYPBMafsWuPbVYX5UsnQoy0M2b519eccLYl0XoU4
+         7QglosV3XCtLYFlvKO5a/32IWxBwwgfo8Gw+m4EI=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jRbws-005mVi-3U; Thu, 23 Apr 2020 14:31:26 +0100
+Date:   Thu, 23 Apr 2020 14:31:18 +0100
+Message-ID: <86r1wetjkp.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/6] irqchip: Add Loongson HyperTransport Vector support
+In-Reply-To: <20200422142428.1249684-2-jiaxun.yang@flygoat.com>
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
+        <20200422142428.1249684-2-jiaxun.yang@flygoat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, chenhc@lemote.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds support for lm70 commpatible drivers with systems that
-use ACPI.
+On Wed, 22 Apr 2020 15:24:21 +0100,
+Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+> 
+> This controller appears on Loongson-3 chips for receiving interrupt
+> vectors from PCH's PIC and PCH's PCIe MSI interrupts. It usually act
+> as the top of irq hierarchy.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  drivers/irqchip/Kconfig              |   8 +
+>  drivers/irqchip/Makefile             |   1 +
+>  drivers/irqchip/irq-loongson-htvec.c | 217 +++++++++++++++++++++++++++
+>  3 files changed, 226 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-loongson-htvec.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index a85aada04a64..de4564e2ea88 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -532,4 +532,12 @@ config LOONGSON_HTPIC
+>  	help
+>  	  Support for the Loongson-3 HyperTransport PIC Controller.
+>  
+> +config LOONGSON_HTVEC
+> +	bool "Loongson3 HyperTransport Interrupt Vector Controller"
+> +	depends on MACH_LOONGSON64 || COMPILE_TEST
+> +	default MACH_LOONGSON64
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	help
+> +	  Support for the Loongson3 HyperTransport Interrupt Vector Controller.
+> +
+>  endmenu
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 37bbe39bf909..74561879f5a7 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -107,3 +107,4 @@ obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+>  obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
+>  obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
+> +obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
+> diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
+> new file mode 100644
+> index 000000000000..e155ebb99efb
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-loongson-htvec.c
+> @@ -0,0 +1,217 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + *  Loongson HyperTransport Interrupt Vector support
+> + */
+> +
+> +#define pr_fmt(fmt) "htvec: " fmt
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +
+> +/* Registers */
+> +#define HTVEC_EN_OFF		0x20
+> +#define HTVEC_MAX_PARENT_IRQ 4
+> +
+> +#define VEC_COUNT_PER_REG	32
+> +#define VEC_REG_COUNT		4
+> +#define VEC_COUNT		(VEC_COUNT_PER_REG * VEC_REG_COUNT)
+> +#define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
+> +#define VEC_REG_BIT(irq_id)	((irq_id) % VEC_COUNT_PER_REG)
+> +
+> +struct htvec {
+> +	void __iomem *base;
+> +	struct irq_domain *htvec_domain;
+> +	raw_spinlock_t htvec_lock;
 
-Signed-off-by: Andrej Picej <andpicej@gmail.com>
----
- drivers/hwmon/lm70.c | 45 ++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 39 insertions(+), 6 deletions(-)
+nit: please align member of the structure vertically:
 
-diff --git a/drivers/hwmon/lm70.c b/drivers/hwmon/lm70.c
-index 4122e59f0bb4..0e809cac2cf4 100644
---- a/drivers/hwmon/lm70.c
-+++ b/drivers/hwmon/lm70.c
-@@ -25,6 +25,9 @@
- #include <linux/spi/spi.h>
- #include <linux/slab.h>
- #include <linux/of_device.h>
-+#include <linux/acpi.h>
-+#include <acpi/acpi_bus.h>
-+#include <acpi/acpi_drivers.h>
- 
- 
- #define DRVNAME		"lm70"
-@@ -148,18 +151,47 @@ static const struct of_device_id lm70_of_ids[] = {
- MODULE_DEVICE_TABLE(of, lm70_of_ids);
- #endif
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id lm70_acpi_ids[] = {
-+	{
-+		.id = "LM000070",
-+		.driver_data = LM70_CHIP_LM70,
-+	},
-+	{
-+		.id = "TMP00121",
-+		.driver_data = LM70_CHIP_TMP121,
-+	},
-+	{
-+		.id = "LM000071",
-+		.driver_data = LM70_CHIP_LM71,
-+	},
-+	{
-+		.id = "LM000074",
-+		.driver_data = LM70_CHIP_LM74,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, lm70_acpi_ids);
-+#endif
-+
- static int lm70_probe(struct spi_device *spi)
- {
--	const struct of_device_id *match;
-+	const struct of_device_id *of_match;
-+	const struct acpi_device_id *acpi_match;
- 	struct device *hwmon_dev;
- 	struct lm70 *p_lm70;
- 	int chip;
- 
--	match = of_match_device(lm70_of_ids, &spi->dev);
--	if (match)
--		chip = (int)(uintptr_t)match->data;
--	else
--		chip = spi_get_device_id(spi)->driver_data;
-+	of_match = of_match_device(lm70_of_ids, &spi->dev);
-+	if (of_match)
-+		chip = (int)(uintptr_t)of_match->data;
-+	else {
-+		acpi_match = acpi_match_device(lm70_acpi_ids, &spi->dev);
-+		if (acpi_match)
-+			chip = (int)(uintptr_t)acpi_match->driver_data;
-+		else
-+			chip = spi_get_device_id(spi)->driver_data;
-+	}
- 
- 	/* signaling is SPI_MODE_0 */
- 	if (spi->mode & (SPI_CPOL | SPI_CPHA))
-@@ -195,6 +227,7 @@ static struct spi_driver lm70_driver = {
- 	.driver = {
- 		.name	= "lm70",
- 		.of_match_table	= of_match_ptr(lm70_of_ids),
-+		.acpi_match_table = ACPI_PTR(lm70_acpi_ids),
- 	},
- 	.id_table = lm70_ids,
- 	.probe	= lm70_probe,
+struct htvec {		  
+	void __iomem		*base;
+	struct irq_domain	*htvec_d
+	raw_spinlock_t		htvec_lock;
+};
+
+> +};
+> +
+> +static void htvec_irq_dispatch(struct irq_desc *desc)
+> +{
+> +	struct htvec *priv = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	uint32_t pending;
+
+In the kernel, please use u32. uint32_t is reserved for uapi code.
+
+> +	bool handled = false;
+> +	int i;
+> +
+> +	chained_irq_enter(chip, desc);
+
+If this is a chained interrupt controller, it isn't the top-level
+interrupt controller, as it obviously feed into another one.
+
+> +
+> +	for (i = 0; i < VEC_REG_COUNT; i++) {
+> +		pending = readl(priv->base + 4 * i);
+> +		/* Ack all IRQs at once, otherwise IRQ flood might happen */
+> +		writel(pending, priv->base + 4 * i);
+> +		while (pending) {
+> +			int bit = __ffs(pending);
+> +
+> +			generic_handle_irq(irq_linear_revmap(priv->htvec_domain,
+> +						bit + 32 * i));
+
+Isn't this 32 actually VEC_COUNT_PER_REG?
+
+> +			pending &= ~BIT(bit);
+> +			handled = true;
+> +		}
+> +	}
+> +
+> +	if (!handled)
+> +		spurious_interrupt();
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void htvec_bitset(void __iomem *addr, int bit)
+> +{
+> +	u32 reg;
+> +
+> +	addr += VEC_REG_IDX(bit) * 4;
+> +	reg = readl(addr);
+> +	reg |= BIT(VEC_REG_BIT(bit));
+> +	writel(reg, addr);
+> +}
+> +
+> +static void htvec_bitclr(void __iomem *addr, int bit)
+> +{
+> +	u32 reg;
+> +
+> +	addr += VEC_REG_IDX(bit) * 4;
+> +	reg = readl(addr);
+> +	reg &= ~BIT(VEC_REG_BIT(bit));
+> +	writel(reg, addr);
+> +}
+
+Given that these two functions have only a single call site, please
+move them into their respective caller. At least we won't have to
+worry about the locking.
+
+> +
+> +static void htvec_mask_irq(struct irq_data *d)
+> +{
+> +	struct htvec *priv = irq_data_get_irq_chip_data(d);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&priv->htvec_lock, flags);
+> +	htvec_bitclr(priv->base + HTVEC_EN_OFF, d->hwirq);
+> +	raw_spin_unlock_irqrestore(&priv->htvec_lock, flags);
+> +}
+> +
+> +static void htvec_unmask_irq(struct irq_data *d)
+> +{
+> +	struct htvec *priv = irq_data_get_irq_chip_data(d);
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&priv->htvec_lock, flags);
+> +	htvec_bitset(priv->base + HTVEC_EN_OFF, d->hwirq);
+> +	raw_spin_unlock_irqrestore(&priv->htvec_lock, flags);
+> +}
+> +
+> +static struct irq_chip htvec_irq_chip = {
+> +	.name			= "LOONGSON_HTVEC",
+> +	.irq_mask		= htvec_mask_irq,
+> +	.irq_unmask		= htvec_unmask_irq,
+> +};
+> +
+> +static int htvec_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				  unsigned int nr_irqs, void *arg)
+> +{
+> +	struct htvec *priv = domain->host_data;
+> +	unsigned long hwirq;
+> +	unsigned int type;
+> +
+> +	irq_domain_translate_onecell(domain, arg, &hwirq, &type);
+> +
+> +	/* Not much to do, just setup the irqdata */
+> +	irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+> +					&htvec_irq_chip, priv);
+
+What sets the flow handler?
+
+Another thing is that you ignore the "nr_irqs" parameter, while you
+are handling it in the free callback. You have to be consistent.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void htvec_domain_free(struct irq_domain *domain, unsigned int virq,
+> +				  unsigned int nr_irqs)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		struct irq_data *d = irq_domain_get_irq_data(domain, virq + i);
+> +
+> +		irq_set_handler(virq + i, NULL);
+> +		irq_domain_reset_irq_data(d);
+> +	}
+> +}
+> +
+> +static const struct irq_domain_ops htvec_domain_ops = {
+> +	.translate = irq_domain_translate_onecell,
+> +	.alloc	= htvec_domain_alloc,
+> +	.free	= htvec_domain_free,
+> +};
+> +
+> +static void htvec_reset(struct htvec *priv)
+> +{
+> +	u32 idx;
+> +
+> +	/* Clear IRQ cause registers, mask all interrupts */
+> +	for (idx = 0; idx < VEC_REG_COUNT; idx++) {
+> +		writel_relaxed(0x0, priv->base + HTVEC_EN_OFF + 4 * idx);
+> +		writel_relaxed(0xFFFFFFFF, priv->base);
+> +	}
+> +}
+> +
+> +static int htvec_of_init(struct device_node *node,
+> +				struct device_node *parent)
+> +{
+> +	struct htvec *priv;
+> +	int err, parent_irq[4], num_parents = 0, i;
+> +
+> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	raw_spin_lock_init(&priv->htvec_lock);
+> +	priv->base = of_iomap(node, 0);
+> +	if (!priv->base) {
+> +		err = -ENOMEM;
+> +		goto free_priv;
+> +	}
+> +
+> +	/* Interrupt may come from any of the 4 interrupt line */
+> +	for (i = 0; i < HTVEC_MAX_PARENT_IRQ; i++) {
+> +		parent_irq[i] = irq_of_parse_and_map(node, i);
+> +		if (parent_irq[i] <= 0)
+> +			break;
+> +
+> +		num_parents++;
+> +	}
+> +
+> +	if (!num_parents) {
+> +		pr_err("Failed to get parent irqs\n");
+> +		err = -ENODEV;
+> +		goto iounmap_base;
+> +	}
+> +
+> +	priv->htvec_domain = irq_domain_create_linear(of_node_to_fwnode(node),
+> +						   VEC_COUNT,
+> +						   &htvec_domain_ops,
+> +						   priv);
+> +	if (!priv->htvec_domain) {
+> +		pr_err("Failed to create IRQ domain\n");
+> +		err = -ENOMEM;
+> +		goto iounmap_base;
+> +	}
+> +
+> +	htvec_reset(priv);
+> +
+> +	for (i = 0; i < num_parents; i++) {
+> +		irq_set_chained_handler_and_data(parent_irq[i],
+> +						htvec_irq_dispatch, priv);
+> +	}
+
+Useless braces.
+
+> +
+> +	return 0;
+> +
+> +iounmap_base:
+> +	iounmap(priv->base);
+> +free_priv:
+> +	kfree(priv);
+> +
+> +	return err;
+> +}
+> +
+> +IRQCHIP_DECLARE(htvec, "loongson,htvec-1.0", htvec_of_init);
+
+Thanks,
+
+	M.
+
 -- 
-2.17.1
-
+Jazz is not dead, it just smells funny.
