@@ -2,177 +2,112 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D36C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1574FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D6F2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE96B2074F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:14:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="FbnfA7t8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgDWFMW (ORCPT
+        id S1726565AbgDWFON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:12:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:37814 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgDWFMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:12:21 -0400
-IronPort-SDR: WrhYc+t6JOklM1PUaz60L6OKaRrTcVjckYaBWBGx7BZJjlvDplEinWkHLxDnQgIQhTcpC4XtnV
- 3vzqHIQliPQQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 22:12:21 -0700
-IronPort-SDR: CaLeYimjrE1X7uWVc9FtYpX1vYLIdIO3dWZk/8E64x85IpEKhr0IbiEnZ4StGXbr+va5BgiGpm
- 84jyyHJAt8tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,305,1583222400"; 
-   d="scan'208";a="365895105"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2020 22:12:19 -0700
-Date:   Thu, 23 Apr 2020 13:09:34 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>, linux-fpga@vger.kernel.org,
+        Thu, 23 Apr 2020 01:14:13 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:37472 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725562AbgDWFOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 01:14:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=00QdfgWbICLjOQqr+eyyelgIderli09+aEykugx5RcA=; b=F
+        bnfA7t8ONTH01mN0KCRERzjifAVRWkGUYtSH0ZPEBP6ZxwIoGdY9uwTI50iCFEZq
+        xotLnqPIILyeyEa7dEyavkI4erm2hIxwDj7lH3Frz+TrBpDj+cJoVxjIPRadg0/X
+        R9m7LIVIKeMCIg/QqetSlBrAIVFfKlxpkXmM0EG3Q4=
+Received: from localhost.localdomain (unknown [120.229.255.80])
+        by app1 (Coremail) with SMTP id XAUFCgAXHaH5I6FeO6g8AA--.30594S3;
+        Thu, 23 Apr 2020 13:13:30 +0800 (CST)
+From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
+To:     Andrew Hendry <andrew.hendry@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-x25@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: How to upload fpga firmware
-Message-ID: <20200423050934.GC30060@yilunxu-OptiPlex-7050>
-References: <20200422114432.GM1694@pengutronix.de>
- <20200423013648.GA2430@epycbox.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423013648.GA2430@epycbox.lan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+Subject: [PATCH] net/x25: Fix x25_neigh refcnt leak when reveiving frame
+Date:   Thu, 23 Apr 2020 13:13:03 +0800
+Message-Id: <1587618786-13481-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XAUFCgAXHaH5I6FeO6g8AA--.30594S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF1UXr4DGrykuw15WF4kJFb_yoWktrc_CF
+        n7tws7Xw12yr1xG3yxtw45AFyIvw17Xa1v9FWxtFWxZFyjgFyxAF93Xrn3Wr1fW3yxArn8
+        JFnxGr97Awn7ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbTAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE
+        3s1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+        1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+        4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI48JMx
+        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+        wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+        vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxK
+        x2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+        v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYR6wDUUUU
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz:
+x25_lapb_receive_frame() invokes x25_get_neigh(), which returns a
+reference of the specified x25_neigh object to "nb" with increased
+refcnt.
 
-On Wed, Apr 22, 2020 at 06:36:48PM -0700, Moritz Fischer wrote:
-> Hi Sascha,
-> 
-> On Wed, Apr 22, 2020 at 01:44:32PM +0200, Sascha Hauer wrote:
-> > Hi,
-> > 
-> > I wonder what can be done with the mainline state of drivers/fpga/. The
-> > entry to the framework seems to be fpga_mgr_load(). The only user of
-> > this function is fpga_region_program_fpga(). This in turn is only called
-> > in response of applying a device tree overlay. A device tree overlay is
-> > applied with of_overlay_fdt_apply() which has no users in the Kernel.
-> 
-> Yes. It is waiting for dt_overlays one way or another. I personally
-> don't currently have the bandwidth to work actively on this.
-> 
-> > My current task is to load a firmware to a FPGA. The code all seems to
-> > be there in the Kernel, it only lacks a way to trigger it. I am not very
-> > interested in device tree overlays since the FPGA appears as a PCI
-> > device (although applying a dtbo could enable the PCIe controller device
-> > tree node). Is there some mainline way to upload FPGA firmware? At the
-> > moment we are using the attached patch to trigger loading the firmware
-> > from userspace. Would something like this be acceptable for mainline?
-> 
-> We've looked into this sort of patches over the years and never came to
-> a general interface that really works.
-> 
-> The OPAE folks (and other users I know of) usually use FPGA Manager with
-> a higher layer on top of it that moves the bitstream into the kernel via
-> an ioctl().
-> 
-> One concept I had toyed with mentally, but haven't really gotten around
-> to implement is a 'discoverable' region, that would deal with the
-> necessary re-enumeration via a callback and have a sysfs interface
-> similar to what the patch below has.
-> This would essentially cover use-cases where you have a discoverable
-> device implemented in FPGA logic, such as say an FPGA hanging off of
-> PCIe bus that can get loaded over USB, a CPLD or some other side-band
-> mechanism. After loading the image you'd have to rescan the PCIe bus -
-> which - imho is the kernel's job.
+When x25_lapb_receive_frame() returns, local variable "nb" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Seems you mentioned the static region update. I have the pcie based FPGA
-card, and the pcie endpoint is implemented in FPGA static region. So after
-I have written image into Flash (over USB or other ways), and trying to
-load it to FPGA, the pcie endpoint is also disfunctional, the pcie device
-is actually lost. We need to rescan the pcie bus after loading is finished.
+The reference counting issue happens in one path of
+x25_lapb_receive_frame(). When pskb_may_pull() returns false, the
+function forgets to decrease the refcnt increased by x25_get_neigh(),
+causing a refcnt leak.
 
-The concern is that when the pcie device lost, the 'discoverable' region
-created by the pcie driver is also destroyed. When you rescaned the pcie
-device back, it is like everything is start over again (pci probe, fpga
-region creation, subdev enumeration ...) rather than just a re-enumeration
-callback for discoverable region.
+Fix this issue by calling x25_neigh_put() when pskb_may_pull() returns
+false.
 
-How do you think about it?
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ net/x25/x25_dev.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> 
-> What I really wanna avoid is creating another /dev/fpga0 / /dev/xdevcfg
-> that completely leaves the kernel in the dark about the fact that it
-> reconfigures a bit of hardware hanging off the bus.
+diff --git a/net/x25/x25_dev.c b/net/x25/x25_dev.c
+index 00e782335cb0..25bf72ee6cad 100644
+--- a/net/x25/x25_dev.c
++++ b/net/x25/x25_dev.c
+@@ -115,8 +115,10 @@ int x25_lapb_receive_frame(struct sk_buff *skb, struct net_device *dev,
+ 		goto drop;
+ 	}
+ 
+-	if (!pskb_may_pull(skb, 1))
++	if (!pskb_may_pull(skb, 1)) {
++		x25_neigh_put(nb);
+ 		return 0;
++	}
+ 
+ 	switch (skb->data[0]) {
+ 
+-- 
+2.7.4
 
-I have the FPGA board whose image binary for static region is stored in Flash.
-I was able to enumerate the Flash as MTD device and update it directly, (now
-switch to another interface for security support). 
-Do you mean I should avoid doing that cause FPGA region device is unaware of
-the update? Some interface in FPGA region would be better choice?
-
-Thanks!
-
-> 
-> In my ideal world you'd create a pci driver that binds to your device,
-> and creates mfd style subdevices for whatever you'd want your design to
-> do. One of these devices would be an FPGA and a FPGA region attached to
-> that FPGA manager. Your top level driver would co-ordinate the fact that
-> you are re-programming parts of the FPGA and create / destroy devices as
-> needed for the hardware contained in the bitstream.
-> 
-> [..]
-> > +static ssize_t firmware_name_show(struct device *dev,
-> > +				  struct device_attribute *attr,
-> > +				  char *buf)
-> > +{
-> > +	struct fpga_region *region = to_fpga_region(dev);
-> > +
-> > +	if (!region->info || !region->info->firmware_name)
-> > +		return 0;
-> > +
-> > +	return sprintf(buf, "%s\n", region->info->firmware_name);
-> > +}
-> > +
-> > +static ssize_t firmware_name_store(struct device *dev,
-> > +				   struct device_attribute *attr,
-> > +				   const char *firmware_name, size_t count)
-> > +{
-> > +	struct fpga_region *region = to_fpga_region(dev);
-> > +	struct fpga_image_info *info = region->info;
-> > +	int error;
-> > +
-> > +	if (!info) {
-> > +		info = fpga_image_info_alloc(dev);
-> > +		if (!info)
-> > +			return -ENOMEM;
-> > +	} else if (info->firmware_name) {
-> > +		devm_kfree(dev, info->firmware_name);
-> > +	}
-> > +
-> > +	info->firmware_name = devm_kstrdup(dev, firmware_name, GFP_KERNEL);
-> > +	if (!info->firmware_name)
-> > +		return -ENOMEM;
-> > +
-> > +	if (count >  0 && info->firmware_name[count - 1] == '\n')
-> > +		info->firmware_name[count - 1] = '\0';
-> > +
-> > +	region->info = info;
-> > +	error = fpga_region_program_fpga(region);
-> > +	if (error) {
-> > +		devm_kfree(dev, info->firmware_name);
-> > +		info->firmware_name = NULL;
-> > +	}
-> > +
-> > +	return error ? error : count;
-> > +}
-> 
-> Cheers,
-> Moritz
