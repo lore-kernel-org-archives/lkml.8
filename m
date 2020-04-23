@@ -7,42 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1C3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43869C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB2921582
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C4321582
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 07:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgDWHt6 (ORCPT
+        id S1727109AbgDWHuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37912 "EHLO
+        Thu, 23 Apr 2020 03:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgDWHt4 (ORCPT
+        with ESMTP id S1727057AbgDWHt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:49:56 -0400
+        Thu, 23 Apr 2020 03:49:57 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D0EDC08E934;
-        Thu, 23 Apr 2020 00:49:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B00C03C1AB;
+        Thu, 23 Apr 2020 00:49:56 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jRWcJ-0008WD-Ip; Thu, 23 Apr 2020 09:49:51 +0200
+        id 1jRWcJ-0008SA-1W; Thu, 23 Apr 2020 09:49:51 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 981B31C04CF;
-        Thu, 23 Apr 2020 09:49:48 +0200 (CEST)
-Date:   Thu, 23 Apr 2020 07:49:48 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 64FAA1C047B;
+        Thu, 23 Apr 2020 09:49:44 +0200 (CEST)
+Date:   Thu, 23 Apr 2020 07:49:44 -0000
+From:   "tip-bot2 for Julien Thierry" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Fix 32bit cross builds
-Cc:     youling257@gmail.com,
+Subject: [tip: objtool/core] objtool: Split out arch-specific CFI definitions
+Cc:     Julien Thierry <jthierry@redhat.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158762818821.28353.10396771197870031810.tip-bot2@tip-bot2>
+Message-ID: <158762818401.28353.4361966704110954019.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,35 +60,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     963d5669171adcd59b45cad58fab81bbd599c3c8
-Gitweb:        https://git.kernel.org/tip/963d5669171adcd59b45cad58fab81bbd599c3c8
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 20 Apr 2020 10:33:32 +02:00
+Commit-ID:     6f8ca67683962d408c7a337664212669bd3e8355
+Gitweb:        https://git.kernel.org/tip/6f8ca67683962d408c7a337664212669bd3e8355
+Author:        Julien Thierry <jthierry@redhat.com>
+AuthorDate:    Fri, 27 Mar 2020 15:28:46 
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 22 Apr 2020 10:53:49 +02:00
 
-objtool: Fix 32bit cross builds
+objtool: Split out arch-specific CFI definitions
 
-Apparently there's people doing 64bit builds on 32bit machines.
+Some CFI definitions used by generic objtool code have no reason to vary
+from one architecture to another.  Keep those definitions in generic
+code and move the arch-specific ones to a new arch-specific header.
 
-Fixes: 74b873e49d92 ("objtool: Optimize find_rela_by_dest_range()")
-Reported-by: youling257@gmail.com
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- tools/objtool/elf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/Makefile                    |  3 ++-
+ tools/objtool/arch/x86/include/cfi_regs.h | 25 ++++++++++++++++++++++-
+ tools/objtool/cfi.h                       | 21 +-----------------
+ 3 files changed, 29 insertions(+), 20 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/include/cfi_regs.h
 
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index ebbb10c..0b79c23 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -99,7 +99,7 @@ static inline u32 sec_offset_hash(struct section *sec, unsigned long offset)
- 	offset &= OFFSET_STRIDE_MASK;
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index d1ab0cc..6b91388 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -35,7 +35,8 @@ all: $(OBJTOOL)
  
- 	ol = offset;
--	oh = offset >> 32;
-+	oh = (offset >> 16) >> 16;
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+-	    -I$(srctree)/tools/arch/$(SRCARCH)/include
++	    -I$(srctree)/tools/arch/$(SRCARCH)/include	\
++	    -I$(srctree)/tools/objtool/arch/$(SRCARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+ CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+diff --git a/tools/objtool/arch/x86/include/cfi_regs.h b/tools/objtool/arch/x86/include/cfi_regs.h
+new file mode 100644
+index 0000000..79bc517
+--- /dev/null
++++ b/tools/objtool/arch/x86/include/cfi_regs.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef _OBJTOOL_CFI_REGS_H
++#define _OBJTOOL_CFI_REGS_H
++
++#define CFI_AX			0
++#define CFI_DX			1
++#define CFI_CX			2
++#define CFI_BX			3
++#define CFI_SI			4
++#define CFI_DI			5
++#define CFI_BP			6
++#define CFI_SP			7
++#define CFI_R8			8
++#define CFI_R9			9
++#define CFI_R10			10
++#define CFI_R11			11
++#define CFI_R12			12
++#define CFI_R13			13
++#define CFI_R14			14
++#define CFI_R15			15
++#define CFI_RA			16
++#define CFI_NUM_REGS		17
++
++#endif /* _OBJTOOL_CFI_REGS_H */
+diff --git a/tools/objtool/cfi.h b/tools/objtool/cfi.h
+index 4427bf8..1a3e7b8 100644
+--- a/tools/objtool/cfi.h
++++ b/tools/objtool/cfi.h
+@@ -6,30 +6,13 @@
+ #ifndef _OBJTOOL_CFI_H
+ #define _OBJTOOL_CFI_H
  
- 	__jhash_mix(ol, oh, idx);
++#include "cfi_regs.h"
++
+ #define CFI_UNDEFINED		-1
+ #define CFI_CFA			-2
+ #define CFI_SP_INDIRECT		-3
+ #define CFI_BP_INDIRECT		-4
  
+-#define CFI_AX			0
+-#define CFI_DX			1
+-#define CFI_CX			2
+-#define CFI_BX			3
+-#define CFI_SI			4
+-#define CFI_DI			5
+-#define CFI_BP			6
+-#define CFI_SP			7
+-#define CFI_R8			8
+-#define CFI_R9			9
+-#define CFI_R10			10
+-#define CFI_R11			11
+-#define CFI_R12			12
+-#define CFI_R13			13
+-#define CFI_R14			14
+-#define CFI_R15			15
+-#define CFI_RA			16
+-#define CFI_NUM_REGS		17
+-
+ struct cfi_reg {
+ 	int base;
+ 	int offset;
