@@ -2,128 +2,148 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC408C54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86293C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D03E216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 16:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BA120704
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 17:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eIMON1Le"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbgDWQ6X (ORCPT
+        id S1729848AbgDWRAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:58:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:44234 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729674AbgDWQ6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:58:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85EE330E;
-        Thu, 23 Apr 2020 09:58:22 -0700 (PDT)
-Received: from [10.37.12.89] (unknown [10.37.12.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B9B73F68F;
-        Thu, 23 Apr 2020 09:57:48 -0700 (PDT)
-Subject: Re: [PATCH v6 04/10] PM / EM: add support for other devices than CPUs
- in Energy Model
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200410084210.24932-1-lukasz.luba@arm.com>
- <20200410084210.24932-5-lukasz.luba@arm.com>
- <20200423151250.GB65632@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <ff1c8cc5-f64d-6156-7d30-97b8426c6f99@arm.com>
-Date:   Thu, 23 Apr 2020 17:57:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 23 Apr 2020 13:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729674AbgDWRAV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Apr 2020 13:00:21 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50901C09B042;
+        Thu, 23 Apr 2020 10:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SLXXj8i9vi69xcCnNJQ1dfaFIQxrJ+YqvKu0gtVCAnQ=; b=eIMON1LeXDi2bpKRQUdKsX28Z
+        sXPQjqYmJL/INAPNPDWJ4OIROoVRHub4XPPLyxOZuUC4I/Mnnd47yBIFp6nNG0mV5RU1mQMsN1zkD
+        XnxVvCum5qsMvAaSVZRvkbW0axQPcB9pZwGUYqZvoXu2gJ79TG3nBD/z4OSn2VcnsI2GKeaUHNY5S
+        XAphacigPIzIdUnQ9qogMpqRidDg0CVK0OXl/EADqiw7LoC1tnKzv6j+OGlYMwDH2i2bQLV+Zo9it
+        76DOJYBybNHwPa61WElYI+/4ru2Xda0r42mktZuW8/RmmnXfGIHweL5TzvVUbtCKVzccnK7hM3AvE
+        MOWx03tQQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54318)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jRfCr-0007au-Mo; Thu, 23 Apr 2020 18:00:09 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jRfCl-0000rV-JN; Thu, 23 Apr 2020 18:00:03 +0100
+Date:   Thu, 23 Apr 2020 18:00:03 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
+        Nadav Haklai <nadavh@marvell.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to handle
+ RSS tables
+Message-ID: <20200423170003.GT25745@shell.armlinux.org.uk>
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+ <20190524100554.8606-4-maxime.chevallier@bootlin.com>
+ <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200423151250.GB65632@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/23/20 4:12 PM, Daniel Lezcano wrote:
-> On Fri, Apr 10, 2020 at 09:42:04AM +0100, Lukasz Luba wrote:
->> Add support for other devices that CPUs. The registration function
->> does not require a valid cpumask pointer and is ready to handle new
->> devices. Some of the internal structures has been reorganized in order to
->> keep consistent view (like removing per_cpu pd pointers). To track usage
->> of the Energy Model structures, they are protected with kref.
+On Tue, Apr 14, 2020 at 01:43:02AM +0200, Matteo Croce wrote:
+> On Tue, Apr 14, 2020 at 1:21 AM Maxime Chevallier
+> <maxime.chevallier@bootlin.com> wrote:
+> >
+> > The PPv2 controller has 8 RSS tables that are shared across all ports on
+> > a given PPv2 instance. The previous implementation allocated one table
+> > per port, leaving others unused.
+> >
+> > By using RSS contexts, we can make use of multiple RSS tables per
+> > port, one being the default table (always id 0), the other ones being
+> > used as destinations for flow steering, in the same way as rx rings.
+> >
+> > This commit introduces RSS contexts management in the PPv2 driver. We
+> > always reserve one table per port, allocated when the port is probed.
+> >
+> > The global table list is stored in the struct mvpp2, as it's a global
+> > resource. Each port then maintains a list of indices in that global
+> > table, that way each port can have it's own numbering scheme starting
+> > from 0.
+> >
+> > One limitation that seems unavoidable is that the hashing parameters are
+> > shared across all RSS contexts for a given port. Hashing parameters for
+> > ctx 0 will be applied to all contexts.
+> >
+> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 > 
-> Why not add the energy model structure in the struct device directly?
-
-Do you mean this structure?
-https://elixir.bootlin.com/linux/latest/source/include/linux/device.h#L537
-
-and to put something like:
-struct device {
-...
-	struct dev_pm_domain	*pm_domain;
-#ifdef CONFIG_ENERGY_MODEL
-	struct em_perf_domain	*em_pd;
-#endif
-...
-};
-
+> Hi all,
 > 
-> For instance for the em_cpu_get() function, the cpu id allows to retrieve the
-> cpu device and then from there, the energy model instead of browsing another
-> list. The em_device life cycle will be tied to the struct device.
-
-That would be perfect.
-
+> I noticed that enabling rxhash blocks the RX on my Macchiatobin. It
+> works fine with the 10G ports (the RX rate goes 4x up) but it
+> completely kills the gigabit interface.
 > 
-> Then when the struct device and the em_device are connected, add the debugfs
-> with a struct device list for those which are energy aware, so you end up with
-> a structure:
+> # 10G port
+> root@macchiatobin:~# iperf3 -c 192.168.0.2
+> Connecting to host 192.168.0.2, port 5201
+> [  5] local 192.168.0.1 port 42394 connected to 192.168.0.2 port 5201
+> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+> [  5]   0.00-1.00   sec   941 MBytes  7.89 Gbits/sec  4030    250 KBytes
+> [  5]   1.00-2.00   sec   933 MBytes  7.82 Gbits/sec  4393    240 KBytes
+> root@macchiatobin:~# ethtool -K eth0 rxhash on
+> root@macchiatobin:~# iperf3 -c 192.168.0.2
+> Connecting to host 192.168.0.2, port 5201
+> [  5] local 192.168.0.1 port 42398 connected to 192.168.0.2 port 5201
+> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+> [  5]   0.00-1.00   sec   860 MBytes  7.21 Gbits/sec  428    410 KBytes
+> [  5]   1.00-2.00   sec   859 MBytes  7.20 Gbits/sec  185    563 KBytes
 > 
-> struct em_device {
-> 	struct device *dev;
-> 	struct list_head em_dev_list;
-> };
+> # gigabit port
+> root@macchiatobin:~# iperf3 -c turbo
+> Connecting to host turbo, port 5201
+> [  5] local 192.168.85.42 port 45144 connected to 192.168.85.6 port 5201
+> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+> [  5]   0.00-1.00   sec   113 MBytes   948 Mbits/sec    0    407 KBytes
+> [  5]   1.00-2.00   sec   112 MBytes   942 Mbits/sec    0    428 KBytes
+> root@macchiatobin:~# ethtool -K eth2 rxhash on
+> root@macchiatobin:~# iperf3 -c turbo
+> iperf3: error - unable to connect to server: Resource temporarily unavailable
 > 
-> (a global single dentry for debugfs to do a recursive delete is enough).
-> 
-> Locks when inspecting and add/removal called from the struct device release
-> function. So no need of an extra refcounting.
-> 
-> Does it make sense?
-> 
+> I've bisected and it seems that this commit causes the issue. I tried
+> to revert it on nex-next as a second test, but the code has changed a
+> lot much since, generating too much conflicts.
+> Can you have a look into this?
 
-Indeed it looks much cleaner/simpler.
+This behaviour on eth2 is confirmed here on v5.6.  Turning on rxhash
+appears to prevent eth2 working.
 
-I will try to address this idea and get rid of refcounting.
+Maxime, please look into this regression, thanks.
 
-This should be doable in this patch (4/10). In the v7 I will keep your
-ACKs for other patches that you have already commented.
-
-Thank you for your suggestions and review.
-
-Regards,
-Lukasz
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
