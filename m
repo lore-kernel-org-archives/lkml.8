@@ -2,99 +2,107 @@ Return-Path: <SRS0=rw9U=6H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDD0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFB9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF884208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:29:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GApN3mpn"
+	by mail.kernel.org (Postfix) with ESMTP id 57EC8206B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 05:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgDWF3S (ORCPT
+        id S1726794AbgDWF3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 01:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
+        Thu, 23 Apr 2020 01:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726027AbgDWF3R (ORCPT
+        by vger.kernel.org with ESMTP id S1726008AbgDWF3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Apr 2020 01:29:17 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF68C03C1AB;
-        Wed, 22 Apr 2020 22:29:17 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id r17so3715154lff.2;
-        Wed, 22 Apr 2020 22:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OvwANZ50BYHbdM53cjg6Ie9KQxCh8TcIYuZW9bMZWgo=;
-        b=GApN3mpnXSsQdVgpO16HhRHm9D1UrgLe4GItyxL85AvES2eFwsurcz7JqpuGO/QpE6
-         vwo0YNln1qG9Rb1IROFKqgw61A9NT2O6ewlrXGb1fVRAlPK0oMBzdLgRdIrK2206nwiX
-         KuWFclv+4jA8Qf8wf1ZmvRYjcnq9L/gjn5POj884T7Fm7B4TKyBNjd88fpoe+FguYTW3
-         oQRbRtKdSCB7eaq+X8QwHHOgltPd5VIMjTVBr1HAE7czIyi3YSxYwH7nCKoqJsWccHMW
-         LzdaUYmlTijiYs7vIxTPGms8+t7V2bLK6MRZCDccD+lKuIA6iFg2pZrehKsdAmxoFHwF
-         8/Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OvwANZ50BYHbdM53cjg6Ie9KQxCh8TcIYuZW9bMZWgo=;
-        b=Cm31vu1YPXbIOMjmXipzWR0ho2iYve28AM1hncq3rodF8aLgMuZ2tCmdtrgEBswoZY
-         mTWGkpETmAUtIuK4wiH0n97gmOTlVzUFIKhd4S+wKJ9nXpdb+BS4YYFtJStDB+VLDtTO
-         ql5CG465bMYSazhttBl78tx0DBd8hkTk8hn2J3DACOWRwX10PvzEP0XtivICEABrr2Z0
-         dQJhT/fY4tT4GmYVzrqg49duphJZlHOR2DaYtAm7Ar65Mc49VnAMJTQmcZO2cgAhamrV
-         2x56XotOqJ9SPOff9otsc3FBZAqkS039nwG/UnYcKn6+BAJw4AR18gGRadzBUQ1eFiAw
-         Mgtw==
-X-Gm-Message-State: AGi0PuYXE7gm5DIiSFT+m3lp+IpJ58dGXn2YxoNd7uE+9eEQTRVBIdaS
-        183dopo0ELss7yaFknMV+OAjCHmFbNjyVeWsOl8=
-X-Google-Smtp-Source: APiQypIBAfdsfyIcYH5jTMKcB5AikSQ0/9NuwH9FYspTBf/i9YuCKHSBz8UMRJTv1vpiZ1TqZIdKEthn4AXRo5ktzXc=
-X-Received: by 2002:ac2:569b:: with SMTP id 27mr1280515lfr.134.1587619755739;
- Wed, 22 Apr 2020 22:29:15 -0700 (PDT)
+        Thu, 23 Apr 2020 01:29:24 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18999C03C1AB
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Apr 2020 22:29:24 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jRUQG-0006GN-6K; Thu, 23 Apr 2020 07:29:16 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jRUQF-0004xt-Pj; Thu, 23 Apr 2020 07:29:15 +0200
+Date:   Thu, 23 Apr 2020 07:29:15 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Fengping yu <fengping.yu@mediatek.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com, linux-input@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5] add mtk matrix keypad driver for keypad on MTK SoC
+Message-ID: <20200423052915.355mc7qvrofmv743@pengutronix.de>
+References: <20200423011958.30521-1-fengping.yu@mediatek.com>
 MIME-Version: 1.0
-References: <20200421002804.5118-1-luke.r.nels@gmail.com>
-In-Reply-To: <20200421002804.5118-1-luke.r.nels@gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 22 Apr 2020 22:29:04 -0700
-Message-ID: <CAADnVQ+taVOr+Zr44eGgOoHXD6y-T-KBKco4KbFZ26jAOsa90A@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf, riscv: Fix tail call count off by one in RV32
- BPF JIT
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Xi Wang <xi.wang@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423011958.30521-1-fengping.yu@mediatek.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:28:26 up 159 days, 20:47, 157 users,  load average: 0.04, 0.06,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 5:28 PM Luke Nelson <lukenels@cs.washington.edu> wrote:
->
-> This patch fixes an off by one error in the RV32 JIT handling for BPF
-> tail call. Currently, the code decrements TCC before checking if it
-> is less than zero. This limits the maximum number of tail calls to 32
-> instead of 33 as in other JITs. The fix is to instead check the old
-> value of TCC before decrementing.
->
-> Fixes: 5f316b65e99f ("riscv, bpf: Add RV32G eBPF JIT")
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Hi Fengping,
 
-Applied. Thanks
+On 20-04-23 09:19, Fengping yu wrote:
+> 
+> Change since v4:
+> - remove extra space and redundant lines
+> - remove disable_irq_nosync and enable_irq in irq handler
+> - put defconfig as a single patch
+> - unified device properties interface for ACPI and device trees
+
+This is a good changelog for reviewers.
+
+> - fixed other issue according reviewer comments
+
+This one is a bit useless..
+
+Regards,
+  Marco
+
+> fengping.yu (3):
+>   dt-bindings: add matrix keypad documentation
+>   arm64: configs: defconfig: enable mtk keypad config
+>   drivers: input: keyboard: add mtk keypad driver
+> 
+>  .../devicetree/bindings/input/mtk-kpd.txt     |  61 +++++
+>  arch/arm64/configs/defconfig                  |   1 +
+>  drivers/input/keyboard/Kconfig                |   9 +
+>  drivers/input/keyboard/Makefile               |   1 +
+>  drivers/input/keyboard/mtk-kpd.c              | 242 ++++++++++++++++++
+>  5 files changed, 314 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/mtk-kpd.txt
+>  create mode 100644 drivers/input/keyboard/mtk-kpd.c
+> 
+> --
+> 2.18.0
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
