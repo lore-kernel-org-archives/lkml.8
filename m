@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49626C2BA19
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A77C54FCB
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 300C32077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFF32077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgDWXVj (ORCPT
+        id S1729035AbgDWXWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:21:39 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48516 "EHLO
+        Thu, 23 Apr 2020 19:22:04 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:48480 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728195AbgDWXGc (ORCPT
+        by vger.kernel.org with ESMTP id S1728183AbgDWXGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:32 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvL-0004bI-1i; Fri, 24 Apr 2020 00:06:27 +0100
+        id 1jRkvL-0004bi-JS; Fri, 24 Apr 2020 00:06:27 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvJ-00E6i8-Kv; Fri, 24 Apr 2020 00:06:25 +0100
+        id 1jRkvK-00E6im-42; Fri, 24 Apr 2020 00:06:26 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ben Hutchings" <ben.hutchings@codethink.co.uk>,
-        "Qu Wenruo" <wqu@suse.com>, "Xu Wen" <wen.xu@gatech.edu>,
-        "David Sterba" <dsterba@suse.com>,
-        "Gu Jinxiang" <gujx@cn.fujitsu.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Fri, 24 Apr 2020 00:04:37 +0100
-Message-ID: <lsq.1587683028.51843587@decadent.org.uk>
+        "Qu Wenruo" <quwenruo@cn.fujitsu.com>,
+        "Mike Snitzer" <snitzer@redhat.com>
+Date:   Fri, 24 Apr 2020 00:04:45 +0100
+Message-ID: <lsq.1587683028.41233826@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 050/245] btrfs: validate type when reading a chunk
+Subject: [PATCH 3.16 058/245] dm flakey: fix reads to be issued if
+ drop_writes configured
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,71 +56,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gu Jinxiang <gujx@cn.fujitsu.com>
+From: Mike Snitzer <snitzer@redhat.com>
 
-commit 315409b0098fb2651d86553f0436b70502b29bb2 upstream.
+commit 299f6230bc6d0ccd5f95bb0fb865d80a9c7d5ccc upstream.
 
-Reported in https://bugzilla.kernel.org/show_bug.cgi?id=199839, with an
-image that has an invalid chunk type but does not return an error.
+v4.8-rc3 commit 99f3c90d0d ("dm flakey: error READ bios during the
+down_interval") overlooked the 'drop_writes' feature, which is meant to
+allow reads to be issued rather than errored, during the down_interval.
 
-Add chunk type check in btrfs_check_chunk_valid, to detect the wrong
-type combinations.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=199839
-Reported-by: Xu Wen <wen.xu@gatech.edu>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Gu Jinxiang <gujx@cn.fujitsu.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 4.4: Use root->fs_info instead of fs_info]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 99f3c90d0d ("dm flakey: error READ bios during the down_interval")
+Reported-by: Qu Wenruo <quwenruo@cn.fujitsu.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/volumes.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/md/dm-flakey.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -5815,6 +5815,8 @@ static int btrfs_check_chunk_valid(struc
- 	u16 num_stripes;
- 	u16 sub_stripes;
- 	u64 type;
-+	u64 features;
-+	bool mixed = false;
+--- a/drivers/md/dm-flakey.c
++++ b/drivers/md/dm-flakey.c
+@@ -291,15 +291,13 @@ static int flakey_map(struct dm_target *
+ 		pb->bio_submitted = true;
  
- 	length = btrfs_chunk_length(leaf, chunk);
- 	stripe_len = btrfs_chunk_stripe_len(leaf, chunk);
-@@ -5855,6 +5857,32 @@ static int btrfs_check_chunk_valid(struc
- 			  btrfs_chunk_type(leaf, chunk));
- 		return -EIO;
- 	}
+ 		/*
+-		 * Map reads as normal only if corrupt_bio_byte set.
++		 * Error reads if neither corrupt_bio_byte or drop_writes are set.
++		 * Otherwise, flakey_end_io() will decide if the reads should be modified.
+ 		 */
+ 		if (bio_data_dir(bio) == READ) {
+-			/* If flags were specified, only corrupt those that match. */
+-			if (fc->corrupt_bio_byte && (fc->corrupt_bio_rw == READ) &&
+-			    all_corrupt_bio_flags_match(bio, fc))
+-				goto map_bio;
+-			else
++			if (!fc->corrupt_bio_byte && !test_bit(DROP_WRITES, &fc->flags))
+ 				return -EIO;
++			goto map_bio;
+ 		}
+ 
+ 		/*
+@@ -336,14 +334,21 @@ static int flakey_end_io(struct dm_targe
+ 	struct flakey_c *fc = ti->private;
+ 	struct per_bio_data *pb = dm_per_bio_data(bio, sizeof(struct per_bio_data));
+ 
+-	/*
+-	 * Corrupt successful READs while in down state.
+-	 */
+ 	if (!error && pb->bio_submitted && (bio_data_dir(bio) == READ)) {
+-		if (fc->corrupt_bio_byte)
++		if (fc->corrupt_bio_byte && (fc->corrupt_bio_rw == READ) &&
++		    all_corrupt_bio_flags_match(bio, fc)) {
++			/*
++			 * Corrupt successful matching READs while in down state.
++			 */
+ 			corrupt_bio_data(bio, fc);
+-		else
 +
-+	if ((type & BTRFS_BLOCK_GROUP_TYPE_MASK) == 0) {
-+		btrfs_err(root->fs_info, "missing chunk type flag: 0x%llx", type);
-+		return -EIO;
-+	}
-+
-+	if ((type & BTRFS_BLOCK_GROUP_SYSTEM) &&
-+	    (type & (BTRFS_BLOCK_GROUP_METADATA | BTRFS_BLOCK_GROUP_DATA))) {
-+		btrfs_err(root->fs_info,
-+			"system chunk with data or metadata type: 0x%llx", type);
-+		return -EIO;
-+	}
-+
-+	features = btrfs_super_incompat_flags(root->fs_info->super_copy);
-+	if (features & BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS)
-+		mixed = true;
-+
-+	if (!mixed) {
-+		if ((type & BTRFS_BLOCK_GROUP_METADATA) &&
-+		    (type & BTRFS_BLOCK_GROUP_DATA)) {
-+			btrfs_err(root->fs_info,
-+			"mixed chunk type in non-mixed mode: 0x%llx", type);
-+			return -EIO;
++		} else if (!test_bit(DROP_WRITES, &fc->flags)) {
++			/*
++			 * Error read during the down_interval if drop_writes
++			 * wasn't configured.
++			 */
+ 			return -EIO;
 +		}
-+	}
-+
- 	if ((type & BTRFS_BLOCK_GROUP_RAID10 && sub_stripes != 2) ||
- 	    (type & BTRFS_BLOCK_GROUP_RAID1 && num_stripes < 1) ||
- 	    (type & BTRFS_BLOCK_GROUP_RAID5 && num_stripes < 2) ||
+ 	}
+ 
+ 	return error;
 
