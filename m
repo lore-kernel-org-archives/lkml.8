@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322FDC54FCB
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D006FC55192
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B65820784
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CDA20784
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgDWXS3 (ORCPT
+        id S1729716AbgDWXSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:18:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49038 "EHLO
+        Thu, 23 Apr 2020 19:18:25 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49062 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728281AbgDWXGi (ORCPT
+        by vger.kernel.org with ESMTP id S1728284AbgDWXGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:38 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvP-0004fU-Kr; Fri, 24 Apr 2020 00:06:31 +0100
+        id 1jRkvO-0004fD-VF; Fri, 24 Apr 2020 00:06:31 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvN-00E6mB-SS; Fri, 24 Apr 2020 00:06:29 +0100
+        id 1jRkvM-00E6ll-Re; Fri, 24 Apr 2020 00:06:28 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Fri, 24 Apr 2020 00:05:16 +0100
-Message-ID: <lsq.1587683028.516575867@decadent.org.uk>
+        "Emiliano Ingrassia" <ingrassia@epigenesys.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 00:05:11 +0100
+Message-ID: <lsq.1587683028.859467660@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 089/245] USB: atm: ueagle-atm: add missing endpoint check
+Subject: [PATCH 3.16 084/245] usb: core: urb: fix URB structure
+ initialization function
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,88 +56,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Emiliano Ingrassia <ingrassia@epigenesys.com>
 
-commit 09068c1ad53fb077bdac288869dec2435420bdc4 upstream.
+commit 1cd17f7f0def31e3695501c4f86cd3faf8489840 upstream.
 
-Make sure that the interrupt interface has an endpoint before trying to
-access its endpoint descriptors to avoid dereferencing a NULL pointer.
+Explicitly initialize URB structure urb_list field in usb_init_urb().
+This field can be potentially accessed uninitialized and its
+initialization is coherent with the usage of list_del_init() in
+usb_hcd_unlink_urb_from_ep() and usb_giveback_urb_bh() and its
+explicit initialization in usb_hcd_submit_urb() error path.
 
-The driver binds to the interrupt interface with interface number 0, but
-must not assume that this interface or its current alternate setting are
-the first entries in the corresponding configuration arrays.
-
-Fixes: b72458a80c75 ("[PATCH] USB: Eagle and ADI 930 usb adsl modem driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210112601.3561-2-johan@kernel.org
+Signed-off-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Link: https://lore.kernel.org/r/20191127160355.GA27196@ingrassia.epigenesys.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/atm/ueagle-atm.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/usb/core/urb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/atm/ueagle-atm.c
-+++ b/drivers/usb/atm/ueagle-atm.c
-@@ -2167,10 +2167,11 @@ resubmit:
- /*
-  * Start the modem : init the data and start kernel thread
-  */
--static int uea_boot(struct uea_softc *sc)
-+static int uea_boot(struct uea_softc *sc, struct usb_interface *intf)
- {
--	int ret, size;
- 	struct intr_pkt *intr;
-+	int ret = -ENOMEM;
-+	int size;
- 
- 	uea_enters(INS_TO_USBDEV(sc));
- 
-@@ -2195,6 +2196,11 @@ static int uea_boot(struct uea_softc *sc
- 	if (UEA_CHIP_VERSION(sc) == ADI930)
- 		load_XILINX_firmware(sc);
- 
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
-+		ret = -ENODEV;
-+		goto err0;
-+	}
-+
- 	intr = kmalloc(size, GFP_KERNEL);
- 	if (!intr) {
- 		uea_err(INS_TO_USBDEV(sc),
-@@ -2211,8 +2217,7 @@ static int uea_boot(struct uea_softc *sc
- 	usb_fill_int_urb(sc->urb_int, sc->usb_dev,
- 			 usb_rcvintpipe(sc->usb_dev, UEA_INTR_PIPE),
- 			 intr, size, uea_intr, sc,
--			 sc->usb_dev->actconfig->interface[0]->altsetting[0].
--			 endpoint[0].desc.bInterval);
-+			 intf->cur_altsetting->endpoint[0].desc.bInterval);
- 
- 	ret = usb_submit_urb(sc->urb_int, GFP_KERNEL);
- 	if (ret < 0) {
-@@ -2227,6 +2232,7 @@ static int uea_boot(struct uea_softc *sc
- 	sc->kthread = kthread_create(uea_kthread, sc, "ueagle-atm");
- 	if (IS_ERR(sc->kthread)) {
- 		uea_err(INS_TO_USBDEV(sc), "failed to create thread\n");
-+		ret = PTR_ERR(sc->kthread);
- 		goto err2;
+--- a/drivers/usb/core/urb.c
++++ b/drivers/usb/core/urb.c
+@@ -40,6 +40,7 @@ void usb_init_urb(struct urb *urb)
+ 	if (urb) {
+ 		memset(urb, 0, sizeof(*urb));
+ 		kref_init(&urb->kref);
++		INIT_LIST_HEAD(&urb->urb_list);
+ 		INIT_LIST_HEAD(&urb->anchor_list);
  	}
- 
-@@ -2241,7 +2247,7 @@ err1:
- 	kfree(intr);
- err0:
- 	uea_leaves(INS_TO_USBDEV(sc));
--	return -ENOMEM;
-+	return ret;
  }
- 
- /*
-@@ -2604,7 +2610,7 @@ static int uea_bind(struct usbatm_data *
- 	if (ret < 0)
- 		goto error;
- 
--	ret = uea_boot(sc);
-+	ret = uea_boot(sc, intf);
- 	if (ret < 0)
- 		goto error_rm_grp;
- 
 
