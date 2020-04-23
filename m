@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9E8C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F93C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A10732077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB002077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgDWXRX (ORCPT
+        id S1729673AbgDWXR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:17:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49330 "EHLO
+        Thu, 23 Apr 2020 19:17:28 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:49316 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728327AbgDWXGm (ORCPT
+        by vger.kernel.org with ESMTP id S1728326AbgDWXGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:42 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvS-0004hY-5i; Fri, 24 Apr 2020 00:06:34 +0100
+        id 1jRkvS-0004h9-5m; Fri, 24 Apr 2020 00:06:34 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvP-00E6o4-Uz; Fri, 24 Apr 2020 00:06:31 +0100
+        id 1jRkvP-00E6nh-Dz; Fri, 24 Apr 2020 00:06:31 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Josef Bacik" <josef@toxicpanda.com>,
-        "David Sterba" <dsterba@suse.com>
-Date:   Fri, 24 Apr 2020 00:05:40 +0100
-Message-ID: <lsq.1587683028.838988406@decadent.org.uk>
+        "Felipe Balbi" <balbi@kernel.org>,
+        "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 00:05:35 +0100
+Message-ID: <lsq.1587683028.712606342@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 113/245] btrfs: do not call synchronize_srcu() in
- inode_tree_del
+Subject: [PATCH 3.16 108/245] usb: dwc3: pci: add ID for the Intel Comet
+ Lake -H variant
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,52 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit f72ff01df9cf5db25c76674cac16605992d15467 upstream.
+commit 3c3caae4cd6e122472efcf64759ff6392fb6bce2 upstream.
 
-Testing with the new fsstress uncovered a pretty nasty deadlock with
-lookup and snapshot deletion.
+The original ID that was added for Comet Lake PCH was
+actually for the -LP (low power) variant even though the
+constant for it said CMLH. Changing that while at it.
 
-Process A
-unlink
- -> final iput
-   -> inode_tree_del
-     -> synchronize_srcu(subvol_srcu)
-
-Process B
-btrfs_lookup  <- srcu_read_lock() acquired here
-  -> btrfs_iget
-    -> find inode that has I_FREEING set
-      -> __wait_on_freeing_inode()
-
-We're holding the srcu_read_lock() while doing the iget in order to make
-sure our fs root doesn't go away, and then we are waiting for the inode
-to finish freeing.  However because the free'ing process is doing a
-synchronize_srcu() we deadlock.
-
-Fix this by dropping the synchronize_srcu() in inode_tree_del().  We
-don't need people to stop accessing the fs root at this point, we're
-only adding our empty root to the dead roots list.
-
-A larger much more invasive fix is forthcoming to address how we deal
-with fs roots, but this fixes the immediate problem.
-
-Fixes: 76dda93c6ae2 ("Btrfs: add snapshot/subvolume destroy ioctl")
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-[bwh: Backported to 3.16: No fs_info variable was used here]
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Link: https://lore.kernel.org/r/20191212093713.60614-1-heikki.krogerus@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16:
+ - No properties support
+ - Adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -5140,7 +5140,6 @@ static void inode_tree_del(struct inode
- 	spin_unlock(&root->inode_lock);
- 
- 	if (empty && btrfs_root_refs(&root->root_item) == 0) {
--		synchronize_srcu(&root->fs_info->subvol_srcu);
- 		spin_lock(&root->inode_lock);
- 		empty = RB_EMPTY_ROOT(&root->inode_tree);
- 		spin_unlock(&root->inode_lock);
+ drivers/usb/dwc3/dwc3-pci.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -37,7 +37,8 @@
+ #define PCI_DEVICE_ID_INTEL_BXT_M	0x1aaa
+ #define PCI_DEVICE_ID_INTEL_APL		0x5aaa
+ #define PCI_DEVICE_ID_INTEL_KBP		0xa2b0
+-#define PCI_DEVICE_ID_INTEL_CMLH	0x02ee
++#define PCI_DEVICE_ID_INTEL_CMLLP	0x02ee
++#define PCI_DEVICE_ID_INTEL_CMLH	0x06ee
+ #define PCI_DEVICE_ID_INTEL_GLK		0x31aa
+ #define PCI_DEVICE_ID_INTEL_CNPLP	0x9dee
+ #define PCI_DEVICE_ID_INTEL_CNPH	0xa36e
+@@ -200,6 +201,7 @@ static const struct pci_device_id dwc3_p
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BSW), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_BYT), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_MRFLD), },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CMLLP), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CMLH), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTLP), },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SPTH), },
 
