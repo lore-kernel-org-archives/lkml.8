@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04281C54FD0
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3D6C55186
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E15D920780
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58AB20780
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 Apr 2020 23:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgDWXNK (ORCPT
+        id S1728631AbgDWXNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:13:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50052 "EHLO
+        Thu, 23 Apr 2020 19:13:13 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50072 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728500AbgDWXGv (ORCPT
+        by vger.kernel.org with ESMTP id S1728506AbgDWXGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Apr 2020 19:06:51 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvZ-0004n5-02; Fri, 24 Apr 2020 00:06:41 +0100
+        id 1jRkvY-0004mp-RF; Fri, 24 Apr 2020 00:06:40 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jRkvV-00E6vg-CG; Fri, 24 Apr 2020 00:06:37 +0100
+        id 1jRkvU-00E6v2-Cr; Fri, 24 Apr 2020 00:06:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Vladis Dronov" <vdronov@redhat.com>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
-Date:   Fri, 24 Apr 2020 00:06:40 +0100
-Message-ID: <lsq.1587683028.245534157@decadent.org.uk>
+        "Luo Jiaxing" <luojiaxing@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James Bottomley" <James.Bottomley@HansenPartnership.com>,
+        "John Garry" <john.garry@huawei.com>
+Date:   Fri, 24 Apr 2020 00:06:35 +0100
+Message-ID: <lsq.1587683028.993324332@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 173/245] Input: gtco - fix endpoint sanity check
+Subject: [PATCH 3.16 168/245] scsi: enclosure: Fix stale device oops with
+ hot replug
 In-Reply-To: <lsq.1587683027.831233700@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,57 +58,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-commit a8eeb74df5a6bdb214b2b581b14782c5f5a0cf83 upstream.
+commit 529244bd1afc102ab164429d338d310d5d65e60d upstream.
 
-The driver was checking the number of endpoints of the first alternate
-setting instead of the current one, something which could lead to the
-driver binding to an invalid interface.
+Doing an add/remove/add on a SCSI device in an enclosure leads to an oops
+caused by poisoned values in the enclosure device list pointers.  The
+reason is because we are keeping the enclosure device across the enclosed
+device add/remove/add but the current code is doing a
+device_add/device_del/device_add on it.  This is the wrong thing to do in
+sysfs, so fix it by not doing a device_del on the enclosure device simply
+because of a hot remove of the drive in the slot.
 
-This in turn could cause the driver to misbehave or trigger a WARN() in
-usb_submit_urb() that kernels with panic_on_warn set would choke on.
+[mkp: added missing email addresses]
 
-Fixes: 162f98dea487 ("Input: gtco - fix crash on detecting device without endpoints")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Vladis Dronov <vdronov@redhat.com>
-Link: https://lore.kernel.org/r/20191210113737.4016-5-johan@kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 43d8eb9cfd0a ("[SCSI] ses: add support for enclosure component hot removal")
+Link: https://lore.kernel.org/r/1578532892.3852.10.camel@HansenPartnership.com
+Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Reported-by: Luo Jiaxing <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/input/tablet/gtco.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/misc/enclosure.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/input/tablet/gtco.c
-+++ b/drivers/input/tablet/gtco.c
-@@ -886,18 +886,14 @@ static int gtco_probe(struct usb_interfa
+--- a/drivers/misc/enclosure.c
++++ b/drivers/misc/enclosure.c
+@@ -364,10 +364,9 @@ int enclosure_remove_device(struct enclo
+ 		cdev = &edev->component[i];
+ 		if (cdev->dev == dev) {
+ 			enclosure_remove_links(cdev);
+-			device_del(&cdev->cdev);
+ 			put_device(dev);
+ 			cdev->dev = NULL;
+-			return device_add(&cdev->cdev);
++			return 0;
+ 		}
  	}
- 
- 	/* Sanity check that a device has an endpoint */
--	if (usbinterface->altsetting[0].desc.bNumEndpoints < 1) {
-+	if (usbinterface->cur_altsetting->desc.bNumEndpoints < 1) {
- 		dev_err(&usbinterface->dev,
- 			"Invalid number of endpoints\n");
- 		error = -EINVAL;
- 		goto err_free_urb;
- 	}
- 
--	/*
--	 * The endpoint is always altsetting 0, we know this since we know
--	 * this device only has one interrupt endpoint
--	 */
--	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
-+	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
- 
- 	/* Some debug */
- 	dev_dbg(&usbinterface->dev, "gtco # interfaces: %d\n", usbinterface->num_altsetting);
-@@ -984,7 +980,7 @@ static int gtco_probe(struct usb_interfa
- 	input_dev->dev.parent = &usbinterface->dev;
- 
- 	/* Setup the URB, it will be posted later on open of input device */
--	endpoint = &usbinterface->altsetting[0].endpoint[0].desc;
-+	endpoint = &usbinterface->cur_altsetting->endpoint[0].desc;
- 
- 	usb_fill_int_urb(gtco->urbinfo,
- 			 gtco->usbdev,
+ 	return -ENODEV;
 
